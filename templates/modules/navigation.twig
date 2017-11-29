@@ -1,0 +1,37 @@
+<nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class = "menu-toggle" aria-controls = "primary-menu" aria-expanded = "false"><i class="fa fa-bars"></i></button>
+    <ul id="menu-primary" class="menu nav-menu">
+        <li {% if active == 'location' %}class="active"{% endif %}>
+            <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
+        </li> 
+        <li {% if active == 'finances' %}class="active"{% endif %}>
+            <a href="{{ path_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
+            <ul class="dropdown-content">
+                <li><a href="{{ path_for('finances_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ path_for('finances_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
+                <li><a href="{{ path_for('finances_categories_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ path_for('finances_monthly') }}"><i class="fa fa-calendar" aria-hidden="true"></i> {{lang["FINANCES_MONTHLY"]}}</a></li>
+                <li><a href="{{ path_for('finances_monthly_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ path_for('finances_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+            </ul>
+        </li>
+        <li {% if active == 'fuel' %}class="active"{% endif %}>
+            <a href="{{ path_for('fuel') }}">{{lang["MENU_FUEL"]}}</a>
+            <ul class="dropdown-content">
+                <li><a href="{{ path_for('fuel_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ path_for('fuel_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+            </ul>
+        </li>
+        <li {% if active == 'users' %}class="active"{% endif %}>
+            <a href="{{ path_for('users') }}">{{lang["USERS"]}}</a>
+            <ul class="dropdown-content">
+                <li><a href="{{ path_for('users_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li><a href="{{ path_for('users_change_password') }}">{{lang["CHANGE_PASSWORD"]}}</a></li>
+            </ul>
+        </li>
+    </ul>                        
+</nav>

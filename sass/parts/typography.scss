@@ -1,0 +1,43 @@
+html {
+    /* Needed for reference of @include font-size() */
+    font-size: 10px;
+}
+
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+body,
+button,
+input,
+select,
+optgroup,
+textarea {
+    color: $color_text-main;
+    font-family: $font_main;
+    @include font-size(1.6);
+    line-height: $font_line-height-body;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    clear: both;
+    font-weight: 600;
+}
+
+h1, h2{
+    @include font-size(2.4);
+}
+
+p {
+    margin-bottom: 1.5em;
+}
+
+dfn, cite, em, i {
+    font-style: italic;
+}
+

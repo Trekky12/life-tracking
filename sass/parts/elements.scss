@@ -1,0 +1,57 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after { /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
+    box-sizing: inherit;
+}
+
+
+img {
+    height: auto; 
+    max-width: 100%; 
+    display:block;
+}
+
+table {
+    margin: 0 0 1.5em;
+    width: 100%;   
+}
+
+
+.alert {
+    padding: 20px;
+    margin-bottom: 15px;
+    color: #FFFFFF;
+
+    &.danger{
+        background-color: #f44336;
+    }
+
+    &.success{
+        background-color: #4CAF50;
+    }
+
+    p{
+        margin:0;
+    }
+
+    .closebtn {
+        margin-left: 15px;
+        color: #FFFFFF;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+
+        &::hover {
+            color: black;
+        } 
+    }
+}
+
+

@@ -1,0 +1,41 @@
+{% extends "base.twig" %}
+
+{% set active = 'location' %}
+
+
+{% block javascript %}
+    <script>
+    </script>
+    <script src="/static/js/location.min.js"></script>
+{% endblock %}
+
+
+
+
+{% block body %}
+
+    <div id="search" class="page-content">
+        <form method="GET" id="search-form" class="page-content">
+            <div class="element">
+                <label for="fromSelect">{{lang["FROM"]}}</label>
+                <input type="text" id="fromSelect" />
+                <input type="hidden" id="from" name="from" value="{{from}}"/>
+            </div>
+            <div class="element">
+                <label for="toSelect">{{lang["TO"]}}</label>
+                <input type="text" id="toSelect" />
+                <input type="hidden" id="to" name="to" value="{{to}}"/>
+            </div>
+            <div class="element">
+                <input type="submit" value="{{lang["SHOW"]}}"/>
+            </div>
+        </form>       
+        <i id="show-filter" class="hiddenSearch" aria-hidden="true"></i>
+    </div>
+
+
+{% endblock %}
+
+{% block bottom %}
+    <div id="mapid"></div>
+{% endblock %}

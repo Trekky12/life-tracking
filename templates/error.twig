@@ -1,0 +1,26 @@
+{% extends "base.twig" %}
+
+{% set active = 'error' %}
+
+
+{% block javascript %}
+{% endblock %}
+
+
+
+{% block body %}
+
+    <div class="alert {{message_type}}">
+        <span class="closebtn" >&times;</span>
+        <span class="alert-message">
+            <p>{{message}}</p>
+        </span>
+    </div>
+
+    <div class="inner-content">
+        <div class="page-content">
+            {{lang["ERROR"]}}
+        </div>
+    </div>
+
+{% endblock %}

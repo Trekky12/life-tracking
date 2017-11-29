@@ -1,0 +1,80 @@
+#mapid{
+    position:absolute;
+    top:96px;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:-1;
+
+    @media screen and (min-width: $size_mobile_navigation){
+        top:50px;   
+    }
+}
+
+#show-filter{
+    display:block;
+    @include font-size(4);
+    text-align:center;
+    width:100%;
+    line-height: 1;
+
+    &:hover{
+        cursor: pointer;
+    }
+
+    &::before{
+        content: "\f106";
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        transition: all 250ms;
+    }
+    
+    &.hiddenSearch::before{
+        content: "\f107";
+        transition: all 250ms;
+    }
+}
+
+
+#search{
+
+    box-shadow: 0 10px 5px -5px rgba(0,0,0,0.16);
+
+    background-color: $color_background-body;
+
+    margin-left:-5px;
+    margin-right:-5px;
+    margin-top:-2.5rem;
+    padding:0.5rem;
+
+
+    #search-form{
+        display:none;
+        padding: 1rem;
+    }
+
+
+    .element{
+        display:block;
+        width:100%;
+        label{
+            width: 10%;
+        }
+        input{
+            @include font-size(1.2);
+            padding:4px 12px;
+            width: 100%;
+        }
+        input[type="submit"]{
+            margin-top:1rem;
+            width:100%;
+        }
+    }
+
+    @media screen and (min-width: $size_mobile_navigation){
+        max-width: $size_mobile;
+        margin: 0 auto;
+
+    }
+}

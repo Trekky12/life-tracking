@@ -1,0 +1,41 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2></div>
+        <div class="page-content">
+            <table id="finance_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["DATE"]}}</th>
+                        <th>{{lang["TIME"]}}</th>
+                        <th>{{lang["TYPE"]}}</th>
+                        <th>{{lang["CATEGORY"]}}</th>
+                        <th>{{lang["DESCRIPTION"]}}</th>
+                        <th>{{lang["VALUE"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in list%}
+                        <tr>
+                            <td data-title="{{lang["DATE"]}}">{{entry.date}}</td> 
+                            <td data-title="{{lang["TIME"]}}">{{entry.time}}</td> 
+                            <td data-title="{{lang["TYPE"]}}">{% if entry.type == 0 %} {{lang["FINANCES_SPENDING"]}} {% else %} {{lang["FINANCES_INCOME"]}} {% endif %}</td> 
+                            <td data-title="{{lang["CATEGORY"]}}">{{categories[entry.category].name}}</td> 
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description}}</td> 
+                            <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
+                            <td><a href="{{  path_for('finances_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  path_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+.two-columns{
+    display:block;
+
+    .left, .right{
+        flex: 1;
+    }
+
+    .large {
+        flex-grow: 1;
+    }
+
+    .label{
+        margin-right: 2rem;
+    }
+
+    &.small{
+        display:flex;
+    }
+}
+
+@media screen and (min-width: $size_mobile){
+    .two-columns{
+        display:flex;
+
+        .left{
+            margin-right:10px;
+        }
+        .right{
+            margin-left:10px;
+        }
+    }
+}

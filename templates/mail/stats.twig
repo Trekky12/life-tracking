@@ -1,0 +1,30 @@
+{% extends "mail/mail.twig" %}
+
+
+{% block body %}
+
+    {% embed 'mail/modules/content.twig' %}
+        {% block content %}
+            <h1>{{headline}}</h1>
+            <p>{{content}}</p>
+        {% endblock %}
+    {% endembed %}
+    
+    {% embed 'mail/modules/content.twig' %}
+        {% block content %}
+            <h2>{{LANG_YOUR_BALANCE}}</h2>
+        {% endblock %}
+    {% endembed %}
+    {% include 'mail/modules/summary.twig' %}
+    
+    {% embed 'mail/modules/content.twig' %}
+        {% block content %}
+            <h2>{{LANG_YOUR_BIGGEST_EXPENSES}}</h2>
+        {% endblock %}
+    {% endembed %}
+    {% include 'mail/modules/expenses.twig' %}
+    {#
+    {% include 'mail/modules/columns.twig' %}
+    #}
+
+{% endblock %}

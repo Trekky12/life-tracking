@@ -1,0 +1,40 @@
+<?php
+
+namespace App\FinancesMonthly;
+
+class FinancesEntryMonthly extends \App\Base\Model {
+
+    public function parseData(array $data) {
+
+        if (isset($data['id'])) {
+            $this->id = $data['id'];
+        }
+
+        $this->dt = $this->exists('dt', $data) ? $data['dt'] : date('Y-m-d G:i:s');
+
+        $this->start = $this->exists('start', $data) ? $data['start'] : null;
+        $this->end = $this->exists('end', $data) ? $data['end'] : null;
+
+        $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->category = $this->exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->description = $this->exists('description', $data) ? filter_var($data['description'], FILTER_SANITIZE_STRING) : null;
+        $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
+        
+        $this->last_run = $this->exists('last_run', $data) ? filter_var($data['last_run'], FILTER_SANITIZE_STRING) : null;
+        
+        /**
+         * Parsing Errors
+         */
+        if (!in_array($this->type, array(0, 1))) {
+             $this->parsing_errors[] = "WRONG_TYPE";
+        }
+        if (is_null($this->value)) {
+            $this->parsing_errors[] = "VALUE_CANNOT_BE_EMPTY";
+        }
+        if (is_null($this->description)) {
+            $this->parsing_errors[] = "DESCRIPTION_CANNOT_BE_EMPTY";
+        }
+    }
+
+}

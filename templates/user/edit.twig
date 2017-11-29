@@ -1,0 +1,60 @@
+{% extends "base.twig" %}
+
+{% set active = 'users' %}
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["USERS"]}}</h2></div>
+        <div class="page-content">
+
+            <form action="{{  path_for('users_save', {'id' : entry.id}) }}" method="POST">
+                {% if not entry is null %}
+                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+
+                <div class="form-group">
+                    <label for="inputLogin">{{lang["LOGIN"]}}</label>
+                    <input type="text" class="form-control" id="inputLogin" name="login" {% if not entry is null %}value="{{entry.login}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputLastName">{{lang["LASTNAME"]}}</label>
+                    <input type="text" class="form-control" id="inputLastName" name="lastname" {% if not entry is null %}value="{{entry.lastname}}"{% endif %}>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputMail">{{lang["MAIL"]}}</label>
+                    <input type="email" class="form-control" id="inputMail" name="mail" {% if not entry is null %}value="{{entry.mail}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputRole">{{lang["ROLE"]}}</label>
+                    <select name="role" id="inputRole" class="form-control">
+                        {% for role in roles %}
+                            <option value="{{ role}}" {% if not entry is null and role == entry.role %}selected{% endif %}>{{ role}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPassword">{{lang["PASSWORD"]}}</label>
+                    <input name="setpassword" id="inputPassword" class="form-control" type="password" >
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

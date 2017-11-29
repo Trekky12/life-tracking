@@ -1,0 +1,39 @@
+<tr>
+    <td>
+        <table class="mcnTextBlock" style="min-width:100%;" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tbody class="mcnTextBlockOuter">
+                <tr>
+                    <td class="mcnTextBlockInner" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;" valign="top">
+                        <!--[if mso]>
+                        <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                            <tr>
+                                <td valign="top" width="600" style="width:600px;">
+                        <![endif]-->
+                        <table style="max-width:100%; min-width:100%;" class="mcnTextContentContainer" align="left" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                                {% for expense in expenses %}
+                                    <tr>
+                                        <td class="mcnTextContent" style="width: 60px; padding-right: 3px; color: #aaa; " valign="center">
+                                            {{expense.date|date('d.m.')}}
+                                        </td>
+                                        <td  class="mcnTextContent" style="" valign="top">
+                                            {{expense.description}}
+                                        </td>
+                                        <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; width: 150px; white-space: nowrap; color: #f30" valign="top">
+                                            {{expense.value}} {{currency}}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!--[if mso]>
+                                </td>
+                            </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>

@@ -1,0 +1,7 @@
+/vendor/
+/logs/*
+/nbproject/
+/node_modules/
+composer.phar
+composer.lock
+/src/settings.php

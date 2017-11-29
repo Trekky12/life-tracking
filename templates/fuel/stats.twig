@@ -1,0 +1,23 @@
+{% extends "base.twig" %}
+
+{% set active = 'fuel' %}
+
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            
+        });
+    </script>
+{% endblock %}
+
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["MENU_FUEL"]}} {{lang["STATS"]}}</h2></div>
+        <div class="page-content">
+            <canvas id="fuelChart" data-values="{{data}}" data-labels="{{labels}}"></canvas>
+        </div>
+    </div>
+{% endblock %}

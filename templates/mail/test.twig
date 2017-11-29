@@ -1,0 +1,11 @@
+{% extends "mail/mail.twig" %}
+
+
+{% block body %}
+    {% embed 'mail/modules/content.twig' %}
+        {% block content %}
+            <h1>{{headline}}</h1>
+            <p>{{content}}</p>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

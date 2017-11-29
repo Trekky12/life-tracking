@@ -1,0 +1,98 @@
+.main-navigation{
+
+    .menu-toggle {
+        cursor: pointer;
+        background: none;
+        border: none;
+        outline: none;
+        @include font-size(3);
+        padding: 0;
+        color: $color_blue;
+
+        position:absolute;
+        top:0;
+        right:5px;
+        z-index:100;
+
+        @media screen and (min-width: $size_mobile_navigation){
+            display: none;
+        }
+    }
+
+    &.toggled ul{
+        display:block;
+    }
+
+    ul{
+        margin:0;
+        padding:0;
+        list-style-type: none;
+        clear: both;
+        //overflow: hidden;
+        display:none;
+        @media screen and (min-width: $size_mobile_navigation){
+            display:flex;
+            justify-content: center;
+        }
+
+        li{
+            a{
+                text-decoration: none;
+                color: $color_blue;
+                display: block;
+                padding: 0.5em 1em;
+                @media screen and (min-width: $size_mobile_navigation){
+                    padding: 0.6em 1em;
+                }
+
+                &:hover{
+                    color: $color_blue_light;
+                }
+            }
+
+            position:relative;
+            z-index:1;
+
+
+            &.active > a{
+                font-weight: 600;
+            }
+
+            .dropdown-content {
+
+                border-top: 1px solid #e5e5e5;
+                border-bottom: 1px solid #e5e5e5;
+                
+                li{
+                    @include font-size(1.2);
+                }
+                .divider{
+                    height: 1px;
+                    margin: 0;
+                    overflow: hidden;
+                    background-color: #e5e5e5;
+                }
+            }
+
+            @media screen and (min-width: $size_mobile_navigation){
+                .dropdown-content {
+                    border:none;
+                    display: none;
+                    position: absolute;
+                    background-color: $color_background-body;
+                    min-width: 200px;
+                    padding-top:5px;
+                    box-shadow: 0 6px 5px 0 rgba(0,0,0,0.16),0 10px 10px 0 rgba(0,0,0,0.12);
+                    z-index: 0;
+                    li{
+                        @include font-size(1.4);
+                    }
+                }
+
+                &:hover .dropdown-content{
+                    display:block;
+                }
+            }
+        }
+    }
+}

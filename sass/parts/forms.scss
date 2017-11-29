@@ -1,0 +1,110 @@
+button, input[type="submit"] {
+    cursor: pointer;
+    border-width: 2px;
+    border-style: solid;
+    border-color:transparent;
+
+    color: #FFFFFF;
+    background-color: $color_blue_light;
+
+    padding: 8px 25px;
+    transition: all 0.3s ease;
+
+    outline:none;
+
+    &:hover {
+        background: none;
+        border-width: 2px;
+        border-style: solid;
+        border-color: $color_blue_light;
+
+        color: $color_blue_light;
+
+    }
+
+    &:focus{
+        outline:none;
+    }
+
+    &.gray{
+        background-color: #cccccc;
+
+
+        &:hover{
+            background-color: #FFFFFF;
+            border-color: #000000;
+            color: #000000;
+        }
+    }
+
+    &.danger{
+        background-color: #ec7063;
+
+        &:hover{
+            background-color: #FFFFFF;
+            border-color: #ec7063;
+            color: #ec7063;
+        }
+    }
+
+
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"],
+textarea {
+    color: $color_text-input;
+    border: 1px solid $color_border-input;
+    border-radius: 0px;
+    padding: 8px 12px;
+    max-width: 100%;
+
+    &:focus {
+        color: $color_text-input-focus;
+    }
+}
+
+select {
+    border: 1px solid $color_border-input;
+    border-radius:0px;
+}
+
+textarea {
+    width: 100%;
+}
+
+
+.form-group{
+    position: relative;
+    margin-bottom: 20px;
+}
+.form-control{
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    @include font-size(1.4);
+}
+label:not(.radio):not(.checkbox){
+    @include font-size(1.4);
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:focus {
+    border-color: #e9322d;
+    box-shadow: 0 0 6px #f8b9b7;
+}

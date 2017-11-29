@@ -1,0 +1,24 @@
+{
+  "name": "life-tracking",
+  "version": "1.0.0",
+  "description": "record android location with tasker, record finances, fuel consumption",
+  "main": "index.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^2.7.1",
+    "datatables.net": "^1.10.16",
+    "datatables.net-dt": "^1.10.16",
+    "datatables.net-plugins": "^1.10.15",
+    "datatables.net-responsive": "^2.2.0",
+    "datatables.net-responsive-dt": "^2.2.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "jquery-ui": "^1.12.1",
+    "leaflet": "^1.2.0",
+    "normalize.css": "^7.0.0"
+  }
+}
