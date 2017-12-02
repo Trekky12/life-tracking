@@ -51,7 +51,7 @@ $lang["IN"] = "in";
 
 $lang["FINANCES_MONTHLY"] = "Regulary Entries";
 
-$lang["FUEL_FULL"] = "fuel";
+$lang["FUEL_FULL"] = "full";
 $lang["FUEL_PARTLY"] = "partly";
 $lang["PRICE"] = "Price";
 $lang["TOTAL_PRICE"] = "Total price";

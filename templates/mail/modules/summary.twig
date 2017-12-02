@@ -15,7 +15,7 @@
                                     <td  class="mcnTextContent" style="" valign="top">
                                         {{LANG_INCOMES}}
                                     </td>
-                                    <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; width: 150px; white-space: nowrap; color: #008800" valign="top">
+                                    <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; width: 150px; white-space: nowrap; color: #008800!important; text-decoration: none!important;" valign="top">
                                         {{balance["income"]}} {{currency}}
                                     </td>
                                 </tr>
@@ -23,7 +23,7 @@
                                     <td  class="mcnTextContent" style="" valign="top">
                                         {{LANG_SPENDINGS}}
                                     </td>
-                                    <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; width: 150px; white-space: nowrap; color: #ff0000" valign="top">
+                                    <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; width: 150px; white-space: nowrap; color: #ff0000!important; text-decoration: none!important;" valign="top">
                                         {{balance["spendings"]}} {{currency}}
                                     </td>
                                 </tr>
@@ -31,7 +31,7 @@
                                     <td  class="mcnTextContent" style="" valign="top">
                                         {{LANG_DIFFERENCE}}
                                     </td>
-                                    <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; width: 150px; white-space: nowrap; {% if balance["difference"] > 0 %}color: #008800{% else %}color: #ff0000{% endif %}" valign="top">
+                                    <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; width: 150px; white-space: nowrap; color:{% if balance["difference"] > 0 %}#008800{% else %}#ff0000{% endif %}!important; text-decoration: none!important;" valign="top">
                                         {{balance["difference"]}} {{currency}}
                                     </td>
                                 </tr>

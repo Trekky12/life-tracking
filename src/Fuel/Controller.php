@@ -39,21 +39,20 @@ class Controller extends \App\Base\Controller {
         /**
          * Reset if set
          */
-        if(!$entry->calc_consumption){
-            $this->mapper->setConsumption($id, null);
-        }
+        $this->mapper->setConsumption($id, null);
 
         /**
-         * Calculate Consumption
+         * Calculate Consumption when full
          */
-        if ($entry->mileage && $entry->calc_consumption && $lastMileage) {
+        if ($entry->mileage && $entry->calc_consumption && $entry->type == 1 && $lastMileage) {
             
             $lastFull = $this->mapper->getLastFull($id, $entry->mileage);
             if ($lastFull) {
                 
                 $distance = $entry->mileage - $lastFull->mileage;
-                $volume = $this->mapper->getVolume($entry->mileage, $lastFull->mileage);
+                $volume = $this->mapper->getVolume($entry->date, $lastFull->date);
                 $consumption = ($volume / $distance) * 100;
+
                 
                 $this->mapper->setConsumption($id, $consumption);
             }

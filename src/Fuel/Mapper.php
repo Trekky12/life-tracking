@@ -11,21 +11,21 @@ class Mapper extends \App\Base\Mapper {
                 . " AND mileage <= :mileage"
                 . " AND volume IS NOT NULL "
                 . " AND total_price IS NOT NULL ";
-                
-        
+
+
         $bindings = array("id" => $id, "mileage" => $mileage);
         $this->filterByUser($sql, $bindings);
-        
-        $sql .=  " ORDER BY mileage DESC LIMIT 1";
-        
+
+        $sql .= " ORDER BY mileage DESC LIMIT 1";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-        
+
 
         if ($stmt->rowCount() > 0) {
             return intval($stmt->fetchColumn());
-        } 
-        
+        }
+
         return null;
     }
 
@@ -55,26 +55,28 @@ class Mapper extends \App\Base\Mapper {
 
         $bindings = array("id" => $id, "mileage" => $mileage);
         $this->filterByUser($sql, $bindings);
-        
+
         $sql .= " ORDER BY mileage DESC LIMIT 1";
 
-        $stmt = $this->db->prepare($sql);        
+        $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
 
         if ($stmt->rowCount() > 0) {
             return new $this->model($stmt->fetch());
-        } 
+        }
         return null;
     }
-    
-   public function getVolume($mileage, $lastMileage) {
-        $sql = "SELECT SUM(volume) FROM " . $this->getTable() . "
-                    WHERE mileage < :mileage and mileage >= :lastMileage ";
-        
-        $bindings = array("mileage" => $mileage, "lastMileage" => $lastMileage);
+
+    public function getVolume($date, $lastDate) {
+        $sql = "SELECT SUM(volume) FROM " . $this->getTable() . " "
+                . "WHERE date <= :date "
+                . " AND date > :lastDate ";
+
+        $bindings = array("date" => $date, "lastDate" => $lastDate);
         $this->filterByUser($sql, $bindings);
-        
+
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
