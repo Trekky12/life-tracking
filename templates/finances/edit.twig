@@ -53,11 +53,22 @@
                     <input type="number" class="form-control" id="inputValue" name="value" step="any" {% if not entry is null %}value="{{entry.value}}{% endif %}">
                 </div>
 
-                {% if not entry is null %}
                 <div class="form-group">
-                    <label for="inputNotice">{{lang["NOTICE"]}}</label>
-                    <input type="text" class="form-control" id="inputNotice" name="notice" {% if not entry is null %}value="{{entry.notice}}{% endif %}">
+                    <label class="checkbox" for="checkboxCommon">
+                        <input name="set_common" type="checkbox" id="checkboxCommon" {% if entry is not null and entry.common == 1 %}checked{% endif %}>
+                        {{lang["COMMON"]}}
+                    </label>
                 </div>
+                <div class="form-group" id="commonValue" {% if entry is null or (entry is not null and entry.common == 0) %}style="display:none;"{% endif %}>
+                    <label for="inputCommonValue">{{lang["COMMON_VALUE"]}}</label>
+                    <input type="number" class="form-control" id="inputCommonValue" name="common_value" step="any" {% if not entry is null %}value="{{entry.common_value}}{% endif %}">
+                </div>
+
+                {% if not entry is null %}
+                    <div class="form-group">
+                        <label for="inputNotice">{{lang["NOTICE"]}}</label>
+                        <input type="text" class="form-control" id="inputNotice" name="notice" {% if not entry is null %}value="{{entry.notice}}{% endif %}">
+                    </div>
                 {% endif %}
 
                 <div class="form-group">

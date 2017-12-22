@@ -69,12 +69,21 @@ CREATE TABLE finances (
     category int(11) UNSIGNED  NOT NULL DEFAULT 1,
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) NOT NULL,
+    common int(1) DEFAULT 0,
+    common_value DECIMAL(10,2),
     notice TEXT DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
-     FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*
+ALTER TABLE finances ADD common int(1) DEFAULT 0 AFTER value;
+ALTER TABLE finances ADD common_value DECIMAL(10,2) AFTER common;
+
+ALTER TABLE finances_monthly ADD common int(1) DEFAULT 0 AFTER value;
+ALTER TABLE finances_monthly ADD common_value DECIMAL(10,2) AFTER common;
+*/
 
 DROP TABLE IF EXISTS finances_monthly;
 CREATE TABLE finances_monthly (
@@ -87,6 +96,8 @@ CREATE TABLE finances_monthly (
     category int(11) UNSIGNED NOT NULL DEFAULT 1,
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) NOT NULL,
+    common int(1) DEFAULT 0,
+    common_value DECIMAL(10,2),
     notice TEXT DEFAULT NULL,
     last_run TIMESTAMP NULL DEFAULT NULL,
     PRIMARY KEY (id),

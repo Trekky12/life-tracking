@@ -46,10 +46,6 @@
         }
 
         /**
-         * DatePicker
-         */
-
-        /**
          * Datepicker on Location
          */
         var from = $("#fromSelect").datepicker({
@@ -79,6 +75,7 @@
         function getDate(element) {
             var date;
             try {
+                var dateFormat = $(element).datepicker("option", "dateFormat");
                 date = $.datepicker.parseDate(dateFormat, element.value);
             } catch (error) {
                 date = null;
@@ -160,7 +157,7 @@
                 },
                 type: 'line',
                 options: {
-                    
+
                 }
             });
         }
@@ -267,8 +264,8 @@
                 },
                 //value
                 {
-                  "targets": [5],
-                  "render": function (data, type, row) {
+                    "targets": [5],
+                    "render": function (data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             return data + " " + i18n.currency;
                         }
@@ -318,8 +315,8 @@
                     }
                 },
                 {
-                  "targets": [5],
-                  "render": function (data, type, row) {
+                    "targets": [5],
+                    "render": function (data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             return data + " " + i18n.currency;
                         }
@@ -401,8 +398,8 @@
                     "responsivePriority": -1
                 },
                 {
-                  "targets": [1,2,3],
-                  "render": function (data, type, row) {
+                    "targets": [1, 2, 3],
+                    "render": function (data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             return data + " " + i18n.currency;
                         }
@@ -460,7 +457,7 @@
                 "url": jsObject.datatable
             },
             "paging": true,
-            "order": [[0, 'asc']],
+            "order": [[2, 'desc'], [0, 'asc']],
             "responsive": true,
             "autoWidth": false,
             "columnDefs": [
@@ -473,8 +470,8 @@
                     "responsivePriority": -1
                 },
                 {
-                  "targets": [2],
-                  "render": function (data, type, row) {
+                    "targets": [2],
+                    "render": function (data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             return data + " " + i18n.currency;
                         }
@@ -491,7 +488,7 @@
                 "url": jsObject.datatable
             },
             "paging": true,
-            "order": [[0, 'asc']],
+            "order": [[1, 'desc'], [0, 'asc']],
             "responsive": true,
             "autoWidth": false,
             "columnDefs": [
@@ -504,8 +501,8 @@
                     "responsivePriority": -1
                 },
                 {
-                  "targets": [1],
-                  "render": function (data, type, row) {
+                    "targets": [1],
+                    "render": function (data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             return data + " " + i18n.currency;
                         }
@@ -517,6 +514,31 @@
             ]
         });
 
+
+        /**
+         * Common finances
+         */
+        if ($('#checkboxCommon').length) {
+
+            $('#checkboxCommon').on('change', function () {
+                $('#commonValue').toggle();
+
+                var value = $('#inputValue').val();
+                
+                if (value) {
+                    if ($(this).is(':checked')) {
+                        // move value to common Value and the half into value
+                        $('#inputCommonValue').val(value);
+                        $('#inputValue').val(value / 2);
+                    } else {
+                        // move commonValue to value and reset commonValue
+                        $('#inputValue').val($('#inputCommonValue').val());
+                        $('#inputCommonValue').val(null);
+                    }
+                }
+            });
+
+        }
 
 
     });

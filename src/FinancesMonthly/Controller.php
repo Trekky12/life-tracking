@@ -56,6 +56,8 @@ class Controller extends \App\Base\Controller {
                     'category' => $mentry->category,
                     'description' => $mentry->description,
                     'value' => $mentry->value,
+                    'common' => $mentry->common,
+                    'common_value' => $mentry->common_value,
                     'notice' => $mentry->notice,
                     'user' => $mentry->user
                 ]);

@@ -84,6 +84,7 @@ $lang["NAME"] = "Name";
 $lang["LASTNAME"] = "Lastname";
 $lang["MAIL"] = "E-Mail";
 $lang["ROLE"] = "Role";
+$lang["PASSWORD"] = "Password";
 $lang["CHANGE_PASSWORD"] = "Change password";
 $lang["OLD_PASSWORD"] = "Old password";
 $lang["NEW_PASSWORD"] = "New password";
@@ -112,5 +113,8 @@ $lang["THISISATESTEMAIL"] = "This is a test email";
 $lang["YOUR_MONTHLY_STATISTIC"] = "Your monthly statistics for %s";
 $lang["YOUR_BALANCE"] = "Your balance";
 $lang["YOUR_BIGGEST_EXPENSES"] = "Your biggest expenses";
+
+$lang["COMMON"] = "Common";
+$lang["COMMON_VALUE"] = "Common value";
 
 return $lang;
