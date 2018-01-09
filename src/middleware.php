@@ -58,8 +58,13 @@ $app->add(function ($request, $response, $next) use ($container) {
     
     if (!is_null($username)) {
         $usermapper = new \App\User\Mapper($container, 'users');
-        $user = $usermapper->getUserFromLogin($username);
-        $container->get('helper')->setUser($user);
+        try{
+            $user = $usermapper->getUserFromLogin($username);
+            $container->get('helper')->setUser($user);
+        }catch (\Exception $e){
+            $logger = $container->get('logger');
+            $logger->addInfo('Login FAILED', array('user' => $username, 'error' => $e->getMessage()));
+        }
     }
 
     return $next($request, $response);
