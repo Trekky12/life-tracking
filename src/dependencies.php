@@ -84,6 +84,15 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
+$container["info"] = [
+    'PHP_AUTH_USER' => array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : null,
+    'REMOTE_ADDR' => array_key_exists('REMOTE_ADDR', $_SERVER) ? $_SERVER['REMOTE_ADDR'] : null,
+    'HTTP_USER_AGENT' => array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : null,
+    'REQUEST_METHOD' => array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : null,
+    'QUERY_STRING' => array_key_exists('QUERY_STRING', $_SERVER) ? $_SERVER['QUERY_STRING'] : null,
+    'REQUEST_URI' => array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null
+];
+
 /**
  * Custom Error Handler
  * @see http://www.slimframework.com/docs/handlers/error.html
@@ -92,16 +101,18 @@ $container['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
 
         $logger = $c->get('logger');
-        $logger->addError($exception->getMessage(), array('IP' => $_SERVER["REMOTE_ADDR"]));
-
-        //$error_code = $exception->getCode() !== 0 && strstr($exception->getMessage(), 'SQLSTATE') === FALSE ? $exception->getCode() : 500;
-
+        $logger->addError($exception->getMessage(), $c["info"]);
+        
         return $c->get('view')->render($response, 'error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);
     };
 };
 
 $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
+        
+        $logger = $c->get('logger');
+        $logger->addInfo("Page not found", $c["info"]);
+        
         return $c->get('view')->render($response, 'error.twig', ['message' => $c->get('helper')->getTranslatedString("NOTFOUND"), 'message_type' => 'danger']);
     };
 };
