@@ -310,7 +310,7 @@ class SSP {
 
             $whereAllSql = 'WHERE ' . $whereAll;
         }
-
+        
         // Main query to actually get the data
         $data = self::sql_exec($db, $bindings, "SELECT `" . implode("`, `", self::pluck($columns, 'db')) . "`
 			 FROM `$table`

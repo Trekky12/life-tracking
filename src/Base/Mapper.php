@@ -8,18 +8,18 @@ class Mapper {
 
     protected $db;
     protected $userid;
-    protected $filterByUser = false;
+    protected $filterByUser = true;
     protected $table_prefix = '';
     protected $table = '';
     protected $id = "id";
-    protected $model = '';
+    protected $model = '\App\Base\Model';
 
-    public function __construct(ContainerInterface $ci, $table = '', $model = '\App\Base\Model', $filterByUser = true) {
+    public function __construct(ContainerInterface $ci, $table = null, $model = null, $filterByUser = null) {
         $this->ci = $ci;
         $this->db = $this->ci->get('db');
-        $this->table = $table;
-        $this->model = $model;
-        $this->filterByUser = $filterByUser;
+        $this->table = !is_null($table) ? $table : $this->table;
+        $this->model = !is_null($model) ? $model : $this->model;
+        $this->filterByUser = !is_null($filterByUser) ? $filterByUser : $this->filterByUser;
 
         if ($this->filterByUser) {
             $user = $this->ci->get('helper')->getUser();
@@ -69,6 +69,7 @@ class Mapper {
         if ($limit && !is_null($limit)) {
             $sql .= " LIMIT {$limit}";
         }
+
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

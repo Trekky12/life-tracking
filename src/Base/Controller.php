@@ -31,7 +31,7 @@ abstract class Controller {
      * this function is called after successfully saving an entry
      * @param type $id
      */
-    protected function afterSave($id){
+    protected function afterSave($id, $data){
         // do nothing
     }
 
@@ -56,7 +56,7 @@ abstract class Controller {
                 $this->ci->get('flash')->addMessage('message',$this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
             }
             
-            $this->afterSave($id);
+            $this->afterSave($id, $data);
 
             $this->ci->get('flash')->addMessage('message_type', 'success');
         }

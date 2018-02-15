@@ -4,6 +4,10 @@ namespace App\Fuel;
 
 class Mapper extends \App\Base\Mapper {
 
+    protected $table = 'fuel';
+    protected $model = '\App\Fuel\FuelEntry';
+    protected $filterByUser = false;
+
     public function getLastMileage($id, $mileage) {
         $sql = "SELECT mileage FROM " . $this->getTable() . "  "
                 . "WHERE id != :id "
@@ -99,6 +103,61 @@ class Mapper extends \App\Base\Mapper {
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
+    }
+
+    public function getAllofCars($sorted = false, $limit = false, $user_cars = array()) {
+        
+        if(empty($user_cars)){
+            return [];
+        }
+        $sql = "SELECT * FROM " . $this->getTable();
+
+        $bindings = array();
+        foreach ($user_cars as $idx => $car) {
+            $bindings[":car_" . $idx] = $car;
+        }
+
+        $sql .= " WHERE car IN (" . implode(',', array_keys($bindings)) . ")";
+
+        if ($sorted && !is_null($sorted)) {
+            $sql .= " ORDER BY {$sorted}";
+        }
+
+        if ($limit && !is_null($limit)) {
+            $sql .= " LIMIT {$limit}";
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->model($row);
+        }
+        return $results;
+    }
+
+    public function countwithCars($user_cars) {
+        if(empty($user_cars)){
+            return 0;
+        }
+        $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable();
+
+        $bindings = array();
+        foreach ($user_cars as $idx => $car) {
+            $bindings[":car_" . $idx] = $car;
+        }
+
+        $sql .= " WHERE car IN (" . implode(',', array_keys($bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return intval($stmt->fetchColumn());
+        }
+        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
 }

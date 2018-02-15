@@ -7,11 +7,14 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    private $car_mapper;
+
     public function init() {
         $this->model = '\App\User\User';
         $this->index_route = 'users';
 
-        $this->mapper = new \App\User\Mapper($this->ci, 'users', $this->model, false);
+        $this->mapper = new \App\User\Mapper($this->ci);
+        $this->car_mapper = new \App\Car\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -29,7 +32,10 @@ class Controller extends \App\Base\Controller {
             $entry = $this->mapper->get($entry_id);
         }
 
-        return $this->ci->view->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles()]);
+        $cars = $this->car_mapper->getAll('name');
+        $user_cars = (array) $this->car_mapper->getUserCars($entry_id);
+
+        return $this->ci->view->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles(), "cars" => $cars, "user_cars" => $user_cars]);
     }
 
     public function changePassword(Request $request, Response $response) {
@@ -105,6 +111,19 @@ class Controller extends \App\Base\Controller {
 
     private function roles() {
         return ['user', 'admin'];
+    }
+
+    protected function afterSave($id, $data) {
+
+        $this->car_mapper->deleteUserCar($id);
+         
+        if(is_array($data["cars"])){
+            $cars = array();
+            foreach($data["cars"] as $car){
+                $cars[] = filter_var($car, FILTER_SANITIZE_NUMBER_INT);
+            }
+            $this->car_mapper->addUserCar($id, $cars);   
+        }
     }
 
 }

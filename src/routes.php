@@ -3,12 +3,7 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->map(['GET', 'POST'], '/', function (Request $request, Response $response) {
-
-    $data = $request->getParsedBody();
-    $logger = $this->get('logger');
-    $logger->addInfo('Mainpage Call: ', is_array($data) ? $data : array());
-
+$app->get('/', function (Request $request, Response $response) {
     return $response->withRedirect($this->get('router')->pathFor('finances'), 302);
 })->setName('index');
 
@@ -62,6 +57,13 @@ $app->group('/fuel', function() {
 
     $this->get('/table/', '\App\Fuel\Controller:table')->setName('fuel_table');
     $this->get('/stats/', '\App\Fuel\Controller:stats')->setName('fuel_stats');
+    
+    $this->group('/cars', function() {
+        $this->get('/', '\App\Car\Controller:index')->setName('cars');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Car\Controller:edit')->setName('cars_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Car\Controller:save')->setName('cars_save');
+        $this->delete('/delete/{id}', '\App\Car\Controller:delete')->setName('cars_delete');
+    });
 });
 
 $app->group('/users', function() {

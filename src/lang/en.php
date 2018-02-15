@@ -117,4 +117,7 @@ $lang["YOUR_BIGGEST_EXPENSES"] = "Your biggest expenses";
 $lang["COMMON"] = "Common";
 $lang["COMMON_VALUE"] = "Common value";
 
+$lang["CAR"] = "Car";
+$lang["CARS"] = "Cars";
+
 return $lang;

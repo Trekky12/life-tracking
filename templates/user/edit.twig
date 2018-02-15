@@ -28,7 +28,7 @@
                     <label for="inputLastName">{{lang["LASTNAME"]}}</label>
                     <input type="text" class="form-control" id="inputLastName" name="lastname" {% if not entry is null %}value="{{entry.lastname}}"{% endif %}>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="inputMail">{{lang["MAIL"]}}</label>
                     <input type="email" class="form-control" id="inputMail" name="mail" {% if not entry is null %}value="{{entry.mail}}"{% endif %}>
@@ -46,6 +46,15 @@
                 <div class="form-group">
                     <label for="inputPassword">{{lang["PASSWORD"]}}</label>
                     <input name="setpassword" id="inputPassword" class="form-control" type="password" >
+                </div>
+
+                <div class="form-group">
+                    <label for="car">{{lang["CARS"]}}</label>
+                    <select class="form-control" id="car" name="cars[]" multiple="true">
+                        {% for car in cars %}
+                            <option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) or car.id in user_cars %}selected{% endif %}>{{car.name}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
                 <div class="form-group">

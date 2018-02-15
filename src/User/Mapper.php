@@ -3,6 +3,10 @@
 namespace App\User;
 
 class Mapper extends \App\Base\Mapper {
+    
+    protected $table = 'users';
+    protected $model = '\App\User\User';
+    protected $filterByUser = false;
 
     public function getUserFromLogin($login) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE login = :login ";

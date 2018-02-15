@@ -15,10 +15,10 @@ class Controller extends \App\Base\Controller {
         $this->model = '\App\FinancesMonthly\FinancesEntryMonthly';
         $this->index_route = 'finances_monthly';
 
-        $this->mapper = new \App\FinancesMonthly\Mapper($this->ci, 'finances_monthly', $this->model);
+        $this->mapper = new \App\FinancesMonthly\Mapper($this->ci);
         $this->cat_mapper = new \App\Base\Mapper($this->ci, 'finances_categories', '\App\FinancesCategory\Category');
-        $this->finance_mapper = new \App\Finances\Mapper($this->ci, 'finances', '\App\Finances\FinancesEntry');
-        $this->user_mapper = new \App\User\Mapper($this->ci, 'users', '\App\User\User', false);
+        $this->finance_mapper = new \App\Finances\Mapper($this->ci);
+        $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {

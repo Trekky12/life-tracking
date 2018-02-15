@@ -5,15 +5,13 @@ namespace App\Location;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-
-class Controller extends \App\Base\Controller{
-
-    protected $ci;
-
+class Controller extends \App\Base\Controller {
 
     public function init() {
-
-        $this->mapper = new Mapper($this->ci, 'locations', '\App\Location\Location');
+        $this->model = '\App\Location\Location';
+        $this->index_route = 'location';
+        
+        $this->mapper = new \App\Location\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -43,7 +41,7 @@ class Controller extends \App\Base\Controller{
     public function save(Request $request, Response $response) {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        
+
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
         $location = new Location($data);
@@ -75,7 +73,6 @@ class Controller extends \App\Base\Controller{
 
         return array($from, $to);
     }
-
 
     public function getAddress(Request $request, Response $response) {
 

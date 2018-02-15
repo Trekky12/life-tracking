@@ -7,25 +7,48 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    private $car_mapper;
+
     public function init() {
         $this->model = '\App\Fuel\FuelEntry';
         $this->index_route = 'fuel';
-        $this->edit_template = 'fuel/edit.twig';
 
-        $this->mapper = new \App\Fuel\Mapper($this->ci, 'fuel', $this->model);
+        $this->mapper = new \App\Fuel\Mapper($this->ci);
+        $this->car_mapper = new \App\Car\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->mapper->getAll('date DESC', 10);
-        $datacount = $this->mapper->count();
-        return $this->ci->view->render($response, 'fuel/index.twig', ['list' => $list, 'datacount' => $datacount]);
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_cars = $this->car_mapper->getUserCars($user);
+        $list = $this->mapper->getAllofCars('date DESC', 10, $user_cars);
+        $datacount = $this->mapper->countwithCars($user_cars);
+        $cars = $this->car_mapper->getAll();
+
+        return $this->ci->view->render($response, 'fuel/index.twig', ['list' => $list, 'datacount' => $datacount, 'cars' => $cars]);
     }
 
-    protected function afterSave($id) {
-        
+    public function edit(Request $request, Response $response) {
+
+        $entry_id = $request->getAttribute('id');
+
+        $entry = null;
+        if (!empty($entry_id)) {
+            $entry = $this->mapper->get($entry_id);
+        }
+
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_cars = $this->car_mapper->getUserCars($user);
+        $cars = $this->car_mapper->getAll('name');
+
+
+        return $this->ci->view->render($response, 'fuel/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars]);
+    }
+
+    protected function afterSave($id, $data) {
+
         $entry = $this->mapper->get($id);
 
-        
+
         /**
          * Set Distance
          */
@@ -35,7 +58,7 @@ class Controller extends \App\Base\Controller {
                 $this->mapper->setDistance($id, $lastMileage);
             }
         }
-        
+
         /**
          * Reset if set
          */
@@ -45,56 +68,88 @@ class Controller extends \App\Base\Controller {
          * Calculate Consumption when full
          */
         if ($entry->mileage && $entry->calc_consumption && $entry->type == 1 && $lastMileage) {
-            
+
             $lastFull = $this->mapper->getLastFull($id, $entry->mileage);
             if ($lastFull) {
-                
+
                 $distance = $entry->mileage - $lastFull->mileage;
                 $volume = $this->mapper->getVolume($entry->date, $lastFull->date);
                 $consumption = ($volume / $distance) * 100;
 
-                
+
                 $this->mapper->setConsumption($id, $consumption);
             }
         }
     }
 
     public function stats(Request $request, Response $response) {
-        $list = $this->mapper->getAll('date ASC');
+//$list = $this->mapper->getAll('date ASC');
+
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_cars = $this->car_mapper->getUserCars($user);
+        $list = $this->mapper->getAllofCars('date ASC', false, $user_cars);
+
+        $cars = $this->car_mapper->getAll();
+
 
         $data = [];
-        $dates = [];
+        $labels = [];
+        $raw_data = [];
+        /**
+         * Create Labels
+         */
         foreach ($list as $el) {
             if (!empty($el->consumption) && !empty($el->date)) {
-                $dates[] = $el->date;
-                $data[] = $el->consumption;
+                $raw_data[] = array("label" => $el->date, "car" => $el->car, "consumption" => $el->consumption);
             }
         }
+        /**
+         * Fill each array for each cars with null
+         */
+        foreach ($user_cars as $uc) {
+            $data[$uc]["data"] = array_fill(0, count($raw_data), null);
+            $data[$uc]["name"] = $cars[$uc]->name;
+        }
+        /**
+         * Replace null values with correct values at corresponding positions
+         */
+        foreach ($raw_data as $idx => $el) {
+            $labels[] = $el["label"];
+            $data[$el["car"]]["data"][$idx] = $el["consumption"];
+        }
 
-        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => json_encode($data, JSON_NUMERIC_CHECK), "labels" => json_encode($dates)]);
+        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => $data, "labels" => json_encode($labels)]);
     }
 
     public function table(Request $request, Response $response) {
 
 
         $requestData = $request->getQueryParams();
+        $cars = $this->car_mapper->getAll();
 
         $columns = array(
             array('db' => 'date', 'dt' => 0),
-            array('db' => 'mileage', 'dt' => 1),
-            array('db' => 'price', 'dt' => 2),
-            array('db' => 'volume', 'dt' => 3),
-            array('db' => 'total_price', 'dt' => 4),
+            array(
+                'db' => 'car',
+                'dt' => 1,
+                'formatter' => function( $d, $row ) use ($cars) {
+                    return $cars[$d]->name;
+                }
+            ),
+            array('db' => 'mileage', 'dt' => 2),
+            array('db' => 'price', 'dt' => 3),
+            array('db' => 'volume', 'dt' => 4),
+            array('db' => 'total_price', 'dt' => 5),
             array(
                 'db' => 'type',
-                'dt' => 5,
+                'dt' => 6,
                 'formatter' => function( $d, $row ) {
                     return $d == 0 ? $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY") : $this->ci->get('helper')->getTranslatedString("FUEL_FULL");
                 }
             ),
-            array('db' => 'consumption', 'dt' => 6),
-            array('db' => 'location', 'dt' => 7),
-            array('db' => 'notice', 'dt' => 8),
+            array('db' => 'consumption', 'dt' => 7),
+            array('db' => 'location', 'dt' => 8),
+            //array('db' => 'notice', 'dt' => 9),
             array(
                 'db' => 'id',
                 'dt' => 9,
@@ -114,14 +169,18 @@ class Controller extends \App\Base\Controller {
         );
 
 
-        $user = $this->ci->get('helper')->getUser();
-        $whereUser = $user ? "(user = {$user->id} OR user IS NULL)" : "";
+        $user = $this->ci->get('helper')->getUser()->id;
+        //$whereUser = $user ? "(user = {$user} OR user IS NULL)" : "";
+
+        $user_cars = $this->car_mapper->getUserCars($user);
+        $whereCar = !empty($user_cars) ? "(car IN (" . implode(',', $user_cars) . "))" : " 1!=1";
+
 
         /**
          * @see https://github.com/DataTables/DataTablesSrc/blob/master/examples/server_side/scripts/ssp.class.php
          */
         $pdo = $this->ci->get('db');
-        $data = \App\Main\SSP::complex($requestData, $pdo, "fuel", "id", $columns, null, $whereUser);
+        $data = \App\Main\SSP::complex($requestData, $pdo, "fuel", "id", $columns, null, $whereCar);
         return $response->withJson($data);
     }
 

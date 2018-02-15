@@ -13,7 +13,7 @@ class Controller extends \App\Base\Controller {
         $this->model = '\App\Finances\FinancesEntry';
         $this->index_route = 'finances';
 
-        $this->mapper = new \App\Finances\Mapper($this->ci, 'finances', $this->model);
+        $this->mapper = new \App\Finances\Mapper($this->ci);
         $this->cat_mapper = new \App\Base\Mapper($this->ci, 'finances_categories', '\App\FinancesCategory\Category');
     }
 

@@ -18,6 +18,7 @@ class FuelEntry extends \App\Base\Model {
         $this->total_price = $this->exists('total_price', $data) ? filter_var($data['total_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->location = $this->exists('location', $data) ? filter_var($data['location'], FILTER_SANITIZE_STRING) : null;
         $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
+        $this->car = $this->exists('car', $data) ? filter_var($data['car'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         // 0=>full, 1 => partly
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : null;

@@ -141,26 +141,7 @@
         /**
          * Charts
          */
-        if ($("#fuelChart").length) {
-            var fuelChart = new Chart($("#fuelChart"), {
-                data: {
-                    labels: $("#fuelChart").data('labels'),
-                    datasets: [
-                        {
-                            label: lang.consumption,
-                            data: $("#fuelChart").data('values'),
-                            fill: false,
-                            borderColor: "#FF0000"
-
-                        }
-                    ]
-                },
-                type: 'line',
-                options: {
-
-                }
-            });
-        }
+        
 
         if ($("#financeSummaryChart").length) {
             var fuelChart = new Chart($("#financeSummaryChart"), {

@@ -3,6 +3,9 @@
 namespace App\Finances;
 
 class Mapper extends \App\Base\Mapper {
+    
+    protected $table = 'finances';
+    protected $model = '\App\Finances\FinancesEntry';
 
     private function getSQL($select, $where) {
         $sql = "SELECT {$select} "

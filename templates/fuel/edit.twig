@@ -16,7 +16,18 @@
                     <input name="distance"  type="hidden" value="{{entry.distance}}">
                     <input name="consumption" type="hidden" value="{{entry.consumption}}">
                 {% endif %}
-
+                
+                <div class="form-group">
+                    <label for="car">{{lang["CAR"]}}</label>
+                    <select class="form-control" id="car" name="car">
+                        {% for car in cars %}
+                            {% if car.id in user_cars %}
+                            <option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %}selected{% endif %}>{{car.name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
                 <div class="form-group two-columns">
                     <div class="left">
                         <label class="radio" for="radioPart">
@@ -31,7 +42,7 @@
                         </label>
                     </div>
                 </div>
-
+                        
                 <div class="form-group">
                     <label for="dateSelect">{{lang["DATE"]}}</label>
                     <input type="text" class="form-control" id="dateSelect"  placeholder="" >

@@ -3,6 +3,9 @@
 namespace App\FinancesMonthly;
 
 class Mapper extends \App\Base\Mapper {
+    
+    protected $table = 'finances_monthly';
+    protected $model = '\App\FinancesMonthly\FinancesEntryMonthly';
 
     public function getMonthlyEntries() {
         $sql = "SELECT * FROM " . $this->getTable() . " "

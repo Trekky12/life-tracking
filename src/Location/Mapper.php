@@ -3,6 +3,9 @@
 namespace App\Location;
 
 class Mapper extends \App\Base\Mapper {
+    
+    protected $table = 'locations';
+    protected $model = '\App\Location\Location';
 
     public function getMarkers($from, $to) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE DATE(dt) >= :from AND DATE(dt) <= :to";
