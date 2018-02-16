@@ -103,7 +103,7 @@ $container['errorHandler'] = function ($c) {
         $logger = $c->get('logger');
         $logger->addError($exception->getMessage(), $c["info"]);
         
-        return $c->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
+        return $c->get('view')->render($response, 'error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);
     };
 };
 

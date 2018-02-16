@@ -36,7 +36,7 @@ $app->add(new \Slim\Middleware\HttpBasicAuthentication([
             $logger->addInfo('Login FAILED', $info);
         }
         
-        return $container['view']->render($response, 'error.twig', ["message" => $arguments["message"], "message_type" => "danger"]);
+        return $container['view']->render($response, 'error.twig', ["message" => $container->get('helper')->getTranslatedString("NO_ACCESS"), "message_type" => "danger"]);
     }
 ]));
 
