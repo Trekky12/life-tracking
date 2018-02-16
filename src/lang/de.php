@@ -120,4 +120,10 @@ $lang["COMMON_VALUE"] = "Gemeinsamer Wert";
 $lang["CAR"] = "Auto";
 $lang["CARS"] = "Autos";
 
+$lang["NO_ACCESS"] = "Kein Zugriff erlaubt";
+
+$lang["BOARD"] = "Board";
+$lang["STACK"] = "Stapel";
+$lang["CARD"] = "Karte";
+
 return $lang;

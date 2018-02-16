@@ -120,4 +120,11 @@ $lang["COMMON_VALUE"] = "Common value";
 $lang["CAR"] = "Car";
 $lang["CARS"] = "Cars";
 
+$lang["NO_ACCESS"] = "No Access allowed";
+
+$lang["BOARD"] = "Board";
+$lang["STACK"] = "Stack";
+$lang["CARD"] = "Card";
+
+
 return $lang;

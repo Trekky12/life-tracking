@@ -97,6 +97,7 @@ class Helper {
 
     public function setUser(\App\User\User $user) {
         $this->user = $user;
+        $this->container->get('view')->getEnvironment()->addGlobal("user", $this->user);
     }
 
     public function getUser() {

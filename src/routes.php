@@ -63,8 +63,12 @@ $app->group('/fuel', function() {
         $this->get('/edit/[{id:[0-9]+}]', '\App\Car\Controller:edit')->setName('cars_edit');
         $this->post('/save/[{id:[0-9]+}]', '\App\Car\Controller:save')->setName('cars_save');
         $this->delete('/delete/{id}', '\App\Car\Controller:delete')->setName('cars_delete');
-    });
+    })->add('App\Main\AdminMiddleware');
 });
+
+$app->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
+
+$app->map(['GET', 'POST'], '/changepassword', '\App\User\Controller:changePassword')->setName('users_change_password');
 
 $app->group('/users', function() {
     $this->get('/', '\App\User\Controller:index')->setName('users');
@@ -72,9 +76,6 @@ $app->group('/users', function() {
     $this->post('/save/[{id:[0-9]+}]', '\App\User\Controller:save')->setName('users_save');
     $this->delete('/delete/{id}', '\App\User\Controller:delete')->setName('users_delete');
 
-    $this->map(['GET', 'POST'], '/changepassword', '\App\User\Controller:changePassword')->setName('users_change_password');
-    
     $this->get('/testmail/{id:[0-9]+}', '\App\User\Controller:testMail')->setName('users_test_mail');
-});
+})->add('App\Main\AdminMiddleware');
 
-$app->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');

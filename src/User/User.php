@@ -33,5 +33,9 @@ class User extends \App\Base\Model {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }
     }
+    
+    public function isAdmin(){
+        return $this->role == 'admin' ? true : false;
+    }
 
 }

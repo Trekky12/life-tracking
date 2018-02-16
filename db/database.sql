@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
     PRIMARY KEY(id),
     UNIQUE(login)
 );
-INSERT INTO users (login, password) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK');
+INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
 
 DROP TABLE IF EXISTS locations;
@@ -106,29 +106,6 @@ CREATE TABLE finances_monthly (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS fuel;
-CREATE TABLE fuel (
-    id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user INTEGER unsigned DEFAULT NULL,
-    date DATE NOT NULL,
-    mileage int(20) UNSIGNED DEFAULT NULL,
-    price DECIMAL(6,2) DEFAULT NULL,
-    volume DECIMAL(6,2) DEFAULT NULL,
-    total_price DECIMAL(6,2) DEFAULT NULL,
-    type int(1) DEFAULT NULL,
-    distance INT(20) DEFAULT NULL,
-    calc_consumption int(1) DEFAULT 1,
-    consumption DECIMAL(6,2) DEFAULT NULL,
-    location varchar(255) DEFAULT NULL,
-    notice TEXT DEFAULT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES users(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE fuel ADD car INTEGER unsigned DEFAULT NULL REFERENCES cars(id) AFTER user;
-ALTER TABLE fuel ADD CONSTRAINT fuel_ibfk_2 FOREIGN KEY (car) REFERENCES cars(id);
-
 DROP TABLE IF EXISTS cars;
 CREATE TABLE cars (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -147,3 +124,31 @@ CREATE TABLE user_cars (
     FOREIGN KEY(user) REFERENCES users(id),
     FOREIGN KEY(car) REFERENCES cars(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS fuel;
+CREATE TABLE fuel (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user INTEGER unsigned DEFAULT NULL,
+    car INTEGER unsigned DEFAULT NULL,
+    date DATE NOT NULL,
+    mileage int(20) UNSIGNED DEFAULT NULL,
+    price DECIMAL(6,2) DEFAULT NULL,
+    volume DECIMAL(6,2) DEFAULT NULL,
+    total_price DECIMAL(6,2) DEFAULT NULL,
+    type int(1) DEFAULT NULL,
+    distance INT(20) DEFAULT NULL,
+    calc_consumption int(1) DEFAULT 1,
+    consumption DECIMAL(6,2) DEFAULT NULL,
+    location varchar(255) DEFAULT NULL,
+    notice TEXT DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES users(id),
+    FOREIGN KEY(car) REFERENCES cars(id),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
+ALTER TABLE fuel ADD car INTEGER unsigned DEFAULT NULL REFERENCES cars(id) AFTER user;
+ALTER TABLE fuel ADD CONSTRAINT fuel_ibfk_2 FOREIGN KEY (car) REFERENCES cars(id);
+*/
+

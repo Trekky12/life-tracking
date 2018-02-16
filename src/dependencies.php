@@ -54,7 +54,7 @@ $container['view'] = function ($c) {
      */
     $i18n = $c->get('settings')['app']['i18n'];
     $view->getEnvironment()->addGlobal('i18n', $i18n);
-
+   
 
     return $view;
 };
@@ -103,7 +103,7 @@ $container['errorHandler'] = function ($c) {
         $logger = $c->get('logger');
         $logger->addError($exception->getMessage(), $c["info"]);
         
-        return $c->get('view')->render($response, 'error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);
+        return $c->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
     };
 };
 
