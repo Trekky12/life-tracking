@@ -33,6 +33,10 @@ table {
     &.success{
         background-color: #4CAF50;
     }
+    
+    &.info{
+        background-color: $color_blue;
+    }
 
     p{
         margin:0;

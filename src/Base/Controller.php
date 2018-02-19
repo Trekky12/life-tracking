@@ -26,23 +26,23 @@ abstract class Controller {
      * @var $edit_template;
      */
     abstract function init();
-    
+
     /**
      * this function is called after successfully saving an entry
      * @param type $id
      */
-    protected function afterSave($id, $data){
+    protected function afterSave($id, $data) {
         // do nothing
     }
 
     public function save(Request $request, Response $response) {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        
-        $data['user'] = $this->ci->get('helper')->getUser()->id;       
+
+        $data['user'] = $this->ci->get('helper')->getUser()->id;
 
         $entry = new $this->model($data);
-        
+
         if ($entry->hasParsingErrors()) {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
@@ -51,14 +51,19 @@ abstract class Controller {
             if ($id == null) {
                 $id = $this->mapper->insert($entry);
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_ADD"));
+                $this->ci->get('flash')->addMessage('message_type', 'success');
             } else {
-                $this->mapper->update($entry);
-                $this->ci->get('flash')->addMessage('message',$this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
+                $elements_changed = $this->mapper->update($entry);
+                if ($elements_changed > 0) {
+                    $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
+                    $this->ci->get('flash')->addMessage('message_type', 'success');
+                } else {
+                    $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
+                    $this->ci->get('flash')->addMessage('message_type', 'info');
+                }
             }
-            
-            $this->afterSave($id, $data);
 
-            $this->ci->get('flash')->addMessage('message_type', 'success');
+            $this->afterSave($id, $data);
         }
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
@@ -81,7 +86,7 @@ abstract class Controller {
             }
         } catch (\Exception $e) {
             $data['error'] = $e->getMessage();
-            $this->ci->get('flash')->addMessage('message',$this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
+            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
         }
 
@@ -89,7 +94,7 @@ abstract class Controller {
 
         return $newResponse;
     }
-    
+
     public function edit(Request $request, Response $response) {
 
         $entry_id = $request->getAttribute('id');

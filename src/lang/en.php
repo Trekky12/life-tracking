@@ -68,6 +68,7 @@ $lang["ELEMENT_NOT_FOUND"] = "Element not found";
 $lang["NO_DATA"] = "No Data found";
 $lang["UPDATE_FAILED"] = "Update failed";
 $lang["DELETE_FAILED"] = "Delete failed";
+$lang["ENTRY_NOT_CHANGED"] = "Entry was not changed";
 
 $lang["ENTRY_SUCCESS_ADD"] = "Entry successfully added";
 $lang["ENTRY_SUCCESS_UPDATE"] = "Entry successfully updated";

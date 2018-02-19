@@ -108,6 +108,7 @@ class Mapper {
         }
         $sql = "UPDATE " . $this->getTable() . " SET " . implode(", ", $parts) . " WHERE {$this->id} = :{$this->id}";
 
+        $this->filterByUser($sql, $data_array);
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -115,19 +116,22 @@ class Mapper {
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
+        return $stmt->rowCount();
     }
 
     public function delete($id) {
         $sql = "DELETE FROM " . $this->getTable() . "  WHERE {$this->id} = :id";
+        
+        $bindings = array("id" => $id);
+        $this->filterByUser($sql, $bindings);
+        
         $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            "id" => $id
-        ]);
+        $result = $stmt->execute($bindings);
+        
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
-        } else {
-            return true;
-        }
+        } 
+        return $stmt->rowCount() > 0;
     }
 
     public function count() {
@@ -221,6 +225,16 @@ class Mapper {
                 $bindings["user"] = $this->userid;
             }
         }
+    }
+
+    protected function isUsersDataset($data, $key = "user") {
+        if ($this->filterByUser && !is_null($this->userid)) {
+            if ($data[$key] == $this->userid) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
 }

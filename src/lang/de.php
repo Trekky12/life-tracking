@@ -68,6 +68,7 @@ $lang["ELEMENT_NOT_FOUND"] = "Element nicht gefunden";
 $lang["NO_DATA"] = "Keine Daten gefunden";
 $lang["UPDATE_FAILED"] = "Aktualisieren fehlgeschlagen";
 $lang["DELETE_FAILED"] = "Löschen fehlgeschlagen";
+$lang["ENTRY_NOT_CHANGED"] = "Eintrag wurde nicht geändert";
 
 $lang["ENTRY_SUCCESS_ADD"] = "Eintrag erfolgreich hinzugefügt";
 $lang["ENTRY_SUCCESS_UPDATE"] = "Eintrag erfolgreich aktualisiert";
