@@ -3,6 +3,7 @@
 return [
     'settings' => [
         'displayErrorDetails' => false,
+        'determineRouteBeforeAppMiddleware' => true,
         // view settings
         'view' => [
             'template_path' => __DIR__ . '/../templates/',

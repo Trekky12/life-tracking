@@ -1,9 +1,12 @@
 <nav id="site-navigation" class="main-navigation" role="navigation">
     <button class = "menu-toggle" aria-controls = "primary-menu" aria-expanded = "false"><i class="fa fa-bars"></i></button>
     <ul id="menu-primary" class="menu nav-menu">
+        {% if user.module_location == 1 %}
         <li {% if active == 'location' %}class="active"{% endif %}>
             <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
         </li> 
+        {% endif %}
+        {% if user.module_finance == 1 %}
         <li {% if active == 'finances' %}class="active"{% endif %}>
             <a href="{{ path_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
             <ul class="dropdown-content">
@@ -18,6 +21,8 @@
                 <li><a href="{{ path_for('finances_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
             </ul>
         </li>
+        {% endif %}
+        {% if user.module_fuel == 1 %}
         <li {% if active == 'fuel' %}class="active"{% endif %}>
             <a href="{{ path_for('fuel') }}">{{lang["MENU_FUEL"]}}</a>
             <ul class="dropdown-content">
@@ -31,6 +36,7 @@
                 <li><a href="{{ path_for('fuel_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
             </ul>
         </li>
+        {% endif %}
         <li {% if active == 'users' %}class="active"{% endif %}>
             <a href="{% if user.isAdmin() %}{{ path_for('users') }}{%else %}#{%endif%}">{{lang["USERS"]}}</a>
             <ul class="dropdown-content">

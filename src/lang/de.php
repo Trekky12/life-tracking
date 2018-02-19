@@ -123,6 +123,8 @@ $lang["CARS"] = "Autos";
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";
 
+$lang["MODULES"] = "Module";
+
 $lang["BOARD"] = "Board";
 $lang["STACK"] = "Stapel";
 $lang["CARD"] = "Karte";

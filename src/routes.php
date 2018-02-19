@@ -40,7 +40,8 @@ $app->group('/finances', function() {
 
         $this->get('/update', '\App\FinancesMonthly\Controller:update');
     });
-});
+})->add('App\Middleware\ModuleMiddleware');
+
 $app->group('/location', function() {
     $this->get('/', '\App\Location\Controller:index')->setName('location');
     $this->post('/record', '\App\Location\Controller:save')->setName('record');
@@ -63,7 +64,7 @@ $app->group('/fuel', function() {
         $this->get('/edit/[{id:[0-9]+}]', '\App\Car\Controller:edit')->setName('cars_edit');
         $this->post('/save/[{id:[0-9]+}]', '\App\Car\Controller:save')->setName('cars_save');
         $this->delete('/delete/{id}', '\App\Car\Controller:delete')->setName('cars_delete');
-    })->add('App\Main\AdminMiddleware');
+    })->add('App\Middleware\AdminMiddleware');
 });
 
 $app->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
@@ -77,5 +78,5 @@ $app->group('/users', function() {
     $this->delete('/delete/{id}', '\App\User\Controller:delete')->setName('users_delete');
 
     $this->get('/testmail/{id:[0-9]+}', '\App\User\Controller:testMail')->setName('users_test_mail');
-})->add('App\Main\AdminMiddleware');
+})->add('App\Middleware\AdminMiddleware');
 

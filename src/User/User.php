@@ -32,10 +32,32 @@ class User extends \App\Base\Model {
         if (!is_null($password)) {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }
+        
+
+        $set_module_location = $this->exists('set_module_location', $data) ? filter_var($data['set_module_location'], FILTER_SANITIZE_STRING) : 0;
+        $this->module_location = $set_module_location === 'on' ? 1 : 0;
+        $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : $this->module_location;
+        
+        $set_module_finance = $this->exists('set_module_finance', $data) ? filter_var($data['set_module_finance'], FILTER_SANITIZE_STRING) : 0;
+        $this->module_finance = $set_module_finance === 'on' ? 1 : 0;
+        $this->module_finance = $this->exists('module_finance', $data) ? filter_var($data['module_finance'], FILTER_SANITIZE_NUMBER_INT) : $this->module_finance;
+        
+        $set_module_fuel = $this->exists('set_module_fuel', $data) ? filter_var($data['set_module_fuel'], FILTER_SANITIZE_STRING) : 0;
+        $this->module_fuel = $set_module_fuel === 'on' ? 1 : 0;
+        $this->module_fuel = $this->exists('module_fuel', $data) ? filter_var($data['module_fuel'], FILTER_SANITIZE_NUMBER_INT) : $this->module_fuel;
+
     }
     
     public function isAdmin(){
         return $this->role == 'admin' ? true : false;
+    }
+    
+    public function setCars($cars){
+        $this->cars = $cars;
+    }
+    
+    public function getCars(){
+        return $this->cars;
     }
 
 }

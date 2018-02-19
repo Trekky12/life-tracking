@@ -52,9 +52,30 @@
                     <label for="car">{{lang["CARS"]}}</label>
                     <select class="form-control" id="car" name="cars[]" multiple="true">
                         {% for car in cars %}
-                            <option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) or car.id in user_cars %}selected{% endif %}>{{car.name}}</option>
+                            <option value="{{car.id}}" {% if (not entry is null and car.id in entry.getCars()) %}selected{% endif %}>{{car.name}}</option>
                         {% endfor %}
                     </select>
+                </div>
+
+                <p>{{lang["MODULES"]}}</p>
+                <div class="form-group">
+
+                    <label class="checkbox" for="checkboxLocationModule">
+                        <input name="set_module_location" type="checkbox" id="checkboxLocationModule" {% if entry is null or entry.module_location == 1 %}checked{% endif %}>
+                        {{lang["MENU_LOCATION"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxFinanceModule">
+                        <input name="set_module_finance" type="checkbox" id="checkboxFinanceModule" {% if entry is null or entry.module_finance == 1 %}checked{% endif %}>
+                        {{lang["MENU_FINANCES"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxFuelModule">
+                        <input name="set_module_fuel" type="checkbox" id="checkboxFuelModule" {% if entry is null or entry.module_fuel == 1 %}checked{% endif %}>
+                        {{lang["MENU_FUEL"]}}
+                    </label>
                 </div>
 
                 <div class="form-group">

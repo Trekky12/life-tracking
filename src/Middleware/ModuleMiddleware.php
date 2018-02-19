@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Middleware;
+
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+use Interop\Container\ContainerInterface;
+
+class ModuleMiddleware {
+
+    protected $ci;
+
+    public function __construct(ContainerInterface $ci) {
+        $this->ci = $ci;
+    }
+
+    public function __invoke(Request $request, Response $response, $next) {
+
+        $user = $this->ci->get('helper')->getUser();
+
+        $route = $request->getAttribute('route')->getPattern();
+
+        // Filter only specific routes
+        if (!$this->startsWith($route, '/finances') && !$this->startsWith($route, '/location') && !$this->startsWith($route, '/fuel')) {
+            return $next($request, $response);
+        }
+        
+        // Has access
+        if (!is_null($user) && (
+                $this->startsWith($route, '/finances') && $user->module_finance == 1 ||
+                $this->startsWith($route, '/location') && $user->module_location == 1 ||
+                $this->startsWith($route, '/fuel') && $user->module_fuel == 1
+                )) {
+            return $next($request, $response);
+        }
+
+        return $this->ci->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
+    }
+
+    /**
+     * @see https://stackoverflow.com/a/834355
+     */
+    private function startsWith($haystack, $needle) {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+}

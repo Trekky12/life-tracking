@@ -8,11 +8,17 @@ CREATE TABLE IF NOT EXISTS users (
     lastname varchar(255) DEFAULT NULL,
     mail varchar(255) DEFAULT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'user',
+    module_location int(1) DEFAULT 0,
+    module_finance int(1) DEFAULT 0,
+    module_fuel int(1) DEFAULT 0,
     PRIMARY KEY(id),
     UNIQUE(login)
 );
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
+/*ALTER TABLE users ADD module_location int(1) DEFAULT 0 AFTER role;
+ALTER TABLE users ADD module_finance int(1) DEFAULT 0 AFTER module_location;
+ALTER TABLE users ADD module_fuel int(1) DEFAULT 0 AFTER module_finance;*/
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (

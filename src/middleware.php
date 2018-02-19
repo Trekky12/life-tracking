@@ -1,5 +1,25 @@
 <?php
+/**
+ * this file defines the middlewares registered
+ * (The last middleware layer added is the first to be executed)
+ */
 
+
+/**
+ * Restrict sccess of modules
+ */
+$app->add('App\Middleware\ModuleMiddleware');
+
+/**
+ * Save logged In User
+ * 
+ */
+$app->add('App\Middleware\UserMiddleware');
+
+
+/**
+ * Basic Auth
+ */
 $container = $app->getContainer();
 $info = [
     'PHP_AUTH_USER' => array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : null,
@@ -40,25 +60,3 @@ $app->add(new \Slim\Middleware\HttpBasicAuthentication([
     }
 ]));
 
-/**
- * Save logged In User
- */
-$app->add(function ($request, $response, $next) use ($container) {
-
-    $username = array_key_exists("PHP_AUTH_USER", $_SERVER) ? $_SERVER["PHP_AUTH_USER"] : null;
-
-    $container->get('view')->getEnvironment()->addGlobal('loggedIn', $username);
-    
-    if (!is_null($username)) {
-        $usermapper = new \App\User\Mapper($container, 'users');
-        try{
-            $user = $usermapper->getUserFromLogin($username);
-            $container->get('helper')->setUser($user);
-        }catch (\Exception $e){
-            $logger = $container->get('logger');
-            $logger->addInfo('Login FAILED', array('user' => $username, 'error' => $e->getMessage()));
-        }
-    }
-
-    return $next($request, $response);
-});
