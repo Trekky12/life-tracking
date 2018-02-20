@@ -30,13 +30,9 @@ class Controller extends \App\Base\Controller {
         $entry = null;
         if (!empty($entry_id)) {
             $entry = $this->mapper->get($entry_id);
-            $user_cars = (array) $this->car_mapper->getUserCars($entry_id);
-            $entry->setCars($user_cars);
         }
 
-        $cars = $this->car_mapper->getAll('name');
-
-        return $this->ci->view->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles(), "cars" => $cars]);
+        return $this->ci->view->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles()]);
     }
 
     public function changePassword(Request $request, Response $response) {
@@ -112,19 +108,6 @@ class Controller extends \App\Base\Controller {
 
     private function roles() {
         return ['user', 'admin'];
-    }
-
-    protected function afterSave($id, $data) {
-
-        $this->car_mapper->deleteUserCar($id);
-         
-        if(is_array($data["cars"])){
-            $cars = array();
-            foreach($data["cars"] as $car){
-                $cars[] = filter_var($car, FILTER_SANITIZE_NUMBER_INT);
-            }
-            $this->car_mapper->addUserCar($id, $cars);   
-        }
     }
 
 }

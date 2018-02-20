@@ -13,10 +13,13 @@ abstract class Controller {
     protected $model;
     protected $index_route;
     protected $edit_template;
+    protected $user_mapper;
 
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
         $this->init();
+        
+        $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
     /**
@@ -63,6 +66,24 @@ abstract class Controller {
                 }
             }
 
+            /**
+             * Save m-n user table 
+             */
+            if ($this->mapper->hasUserTable()) {
+                $this->mapper->deleteUsers($id);
+
+                if (array_key_exists("users", $data) && is_array($data["users"])) {
+                    $users = array();
+                    foreach ($data["users"] as $user) {
+                        $users[] = filter_var($user, FILTER_SANITIZE_NUMBER_INT);
+                    }
+                    $this->mapper->addUsers($id, $users);
+                }
+            }
+
+            /**
+             * Custom Hook
+             */
             $this->afterSave($id, $data);
         }
 
@@ -102,9 +123,16 @@ abstract class Controller {
         $entry = null;
         if (!empty($entry_id)) {
             $entry = $this->mapper->get($entry_id);
+            
+            if ($this->mapper->hasUserTable()) {
+                $entry_users = $this->mapper->getUsers($entry_id);
+                $entry->setUsers($entry_users);
+            }
         }
 
-        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry]);
+        $users = ($this->mapper->hasUserTable()) ? $this->user_mapper->getAll('name') : array();
+
+        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'users' => $users]);
     }
 
 }

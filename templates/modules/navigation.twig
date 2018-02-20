@@ -37,6 +37,14 @@
             </ul>
         </li>
         {% endif %}
+        {% if user.module_boards == 1 %}
+        <li {% if active == 'boards' %}class="active"{% endif %}>
+            <a href="{{ path_for('boards') }}">{{lang["BOARDS"]}}</a>
+            <ul class="dropdown-content">
+                <li><a href="{{ path_for('boards_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+            </ul>
+        </li> 
+        {% endif %}
         <li {% if active == 'users' %}class="active"{% endif %}>
             <a href="{% if user.isAdmin() %}{{ path_for('users') }}{%else %}#{%endif%}">{{lang["USERS"]}}</a>
             <ul class="dropdown-content">

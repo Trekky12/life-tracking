@@ -45,19 +45,16 @@ class User extends \App\Base\Model {
         $set_module_fuel = $this->exists('set_module_fuel', $data) ? filter_var($data['set_module_fuel'], FILTER_SANITIZE_STRING) : 0;
         $this->module_fuel = $set_module_fuel === 'on' ? 1 : 0;
         $this->module_fuel = $this->exists('module_fuel', $data) ? filter_var($data['module_fuel'], FILTER_SANITIZE_NUMBER_INT) : $this->module_fuel;
+        
+        $set_module_boards = $this->exists('set_module_boards', $data) ? filter_var($data['set_module_boards'], FILTER_SANITIZE_STRING) : 0;
+        $this->module_boards = $set_module_boards === 'on' ? 1 : 0;
+        $this->module_boards = $this->exists('module_boards', $data) ? filter_var($data['module_boards'], FILTER_SANITIZE_NUMBER_INT) : $this->module_boards;
 
     }
     
     public function isAdmin(){
         return $this->role == 'admin' ? true : false;
     }
-    
-    public function setCars($cars){
-        $this->cars = $cars;
-    }
-    
-    public function getCars(){
-        return $this->cars;
-    }
+
 
 }

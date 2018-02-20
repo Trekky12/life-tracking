@@ -75,4 +75,12 @@ class Model {
         return $this->parsing_errors;
     }
 
+    public function setUsers($users){
+        $this->users = $users;
+    }
+    
+    public function getUsers(){
+        return $this->users;
+    }
+
 }

@@ -125,6 +125,7 @@ $lang["NO_ACCESS"] = "No Access allowed";
 
 $lang["MODULES"] = "Modules";
 
+$lang["BOARDS"] = "Boards";
 $lang["BOARD"] = "Board";
 $lang["STACK"] = "Stack";
 $lang["CARD"] = "Card";

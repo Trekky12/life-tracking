@@ -40,7 +40,7 @@ $app->group('/finances', function() {
 
         $this->get('/update', '\App\FinancesMonthly\Controller:update');
     });
-})->add('App\Middleware\ModuleMiddleware');
+});
 
 $app->group('/location', function() {
     $this->get('/', '\App\Location\Controller:index')->setName('location');
@@ -80,3 +80,12 @@ $app->group('/users', function() {
     $this->get('/testmail/{id:[0-9]+}', '\App\User\Controller:testMail')->setName('users_test_mail');
 })->add('App\Middleware\AdminMiddleware');
 
+
+
+$app->group('/boards', function() {
+    $this->get('/', '\App\Board\Controller:index')->setName('boards');
+    $this->get('/edit/[{id:[0-9]+}]', '\App\Board\Controller:edit')->setName('boards_edit');
+    $this->post('/save/[{id:[0-9]+}]', '\App\Board\Controller:save')->setName('boards_save');
+    $this->delete('/delete/{id}', '\App\Board\Controller:delete')->setName('boards_delete');
+
+});

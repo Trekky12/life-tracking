@@ -494,6 +494,39 @@
                 }
             ]
         });
+        
+        
+        $("#cars_table").DataTable({
+            "paging": true,
+            "info": true,
+            "columnDefs": [
+                {
+                    "targets": [1, 2],
+                    "orderable": false
+                }
+            ],
+            "language": {
+                "url": jsObject.datatable
+            },
+            "responsive": true,
+            "autoWidth": false
+        });
+        
+        $("#boards_table").DataTable({
+            "paging": true,
+            "info": true,
+            "columnDefs": [
+                {
+                    "targets": [1, 2],
+                    "orderable": false
+                }
+            ],
+            "language": {
+                "url": jsObject.datatable
+            },
+            "responsive": true,
+            "autoWidth": false
+        });
 
 
         /**

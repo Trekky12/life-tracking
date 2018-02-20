@@ -13,6 +13,9 @@ class Mapper {
     protected $table = '';
     protected $id = "id";
     protected $model = '\App\Base\Model';
+    protected $hasUserTable = false;
+    protected $user_table = "";
+    protected $element_name = "";
 
     public function __construct(ContainerInterface $ci, $table = null, $model = null, $filterByUser = null) {
         $this->ci = $ci;
@@ -121,16 +124,16 @@ class Mapper {
 
     public function delete($id) {
         $sql = "DELETE FROM " . $this->getTable() . "  WHERE {$this->id} = :id";
-        
+
         $bindings = array("id" => $id);
         $this->filterByUser($sql, $bindings);
-        
+
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
-        
+
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
-        } 
+        }
         return $stmt->rowCount() > 0;
     }
 
@@ -235,6 +238,91 @@ class Mapper {
             return false;
         }
         return true;
+    }
+
+    /**
+     * ===========================================================================
+     * m-n table with user
+     * ===========================================================================
+     */
+    public function setUserTable($table, $element_name) {
+        $this->hasUserTable = true;
+        $this->user_table = $table;
+        $this->element_name = $element_name;
+    }
+
+    public function hasUserTable() {
+        return $this->hasUserTable;
+    }
+
+    public function deleteUsers($element) {
+        if ($this->hasUserTable) {
+            $sql = "DELETE FROM " . $this->getTable($this->user_table) . "  WHERE {$this->element_name} = :element";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute([
+                "element" => $element,
+            ]);
+            if (!$result) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            }
+            return true;
+        }
+    }
+
+    public function addUsers($element, $users = array()) {
+        if ($this->hasUserTable) {
+            $data_array = array();
+            $keys_array = array();
+            foreach ($users as $idx => $user) {
+                $data_array["element" . $idx] = $element;
+                $data_array["user" . $idx] = $user;
+                $keys_array[] = "(:element" . $idx . " , :user" . $idx . ")";
+            }
+
+            $sql = "INSERT INTO " . $this->getTable($this->user_table) . " ({$this->element_name}, user) "
+                    . "VALUES " . implode(", ", $keys_array) . "";
+
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute($data_array);
+
+            if (!$result) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+            } else {
+                return $this->db->lastInsertId();
+            }
+        }
+    }
+
+    public function getUsers($id) {
+        if ($this->hasUserTable) {
+            $sql = "SELECT user FROM " . $this->getTable($this->user_table) . " WHERE {$this->element_name} = :id";
+
+            $bindings = array("id" => $id);
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($bindings);
+
+            $results = [];
+            while ($el = $stmt->fetchColumn()) {
+                $results[] = intval($el);
+            }
+            return $results;
+        }
+    }
+    
+    public function getElementsOfUser($id) {
+        $sql = "SELECT {$this->element_name} FROM " . $this->getTable($this->user_table) . " WHERE user = :id";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($el = $stmt->fetchColumn()) {
+            $results[] = intval($el);
+        }
+        return $results;
     }
 
 }

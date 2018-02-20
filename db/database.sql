@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
     module_location int(1) DEFAULT 0,
     module_finance int(1) DEFAULT 0,
     module_fuel int(1) DEFAULT 0,
+    module_boards int(1) DEFAULT 0,
     PRIMARY KEY(id),
     UNIQUE(login)
 );
@@ -18,7 +19,8 @@ INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo7
 
 /*ALTER TABLE users ADD module_location int(1) DEFAULT 0 AFTER role;
 ALTER TABLE users ADD module_finance int(1) DEFAULT 0 AFTER module_location;
-ALTER TABLE users ADD module_fuel int(1) DEFAULT 0 AFTER module_finance;*/
+ALTER TABLE users ADD module_fuel int(1) DEFAULT 0 AFTER module_finance;
+ALTER TABLE users ADD module_boards int(1) DEFAULT 0 AFTER module_fuel;*/
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
@@ -122,13 +124,23 @@ CREATE TABLE cars (
 
 
 DROP TABLE IF EXISTS user_cars;
-CREATE TABLE user_cars (
+/*CREATE TABLE user_cars (
     dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user INTEGER unsigned DEFAULT NULL,
     car INTEGER unsigned DEFAULT NULL,
     UNIQUE(user, car),
     FOREIGN KEY(user) REFERENCES users(id),
     FOREIGN KEY(car) REFERENCES cars(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;*/
+
+DROP TABLE IF EXISTS cars_user;
+CREATE TABLE cars_user (
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    car INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(car, user),
+    FOREIGN KEY(car) REFERENCES cars(id) ON DELETE CASCADE,
+    FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS fuel;
@@ -158,3 +170,21 @@ ALTER TABLE fuel ADD car INTEGER unsigned DEFAULT NULL REFERENCES cars(id) AFTER
 ALTER TABLE fuel ADD CONSTRAINT fuel_ibfk_2 FOREIGN KEY (car) REFERENCES cars(id);
 */
 
+DROP TABLE IF EXISTS boards;
+CREATE TABLE boards (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    name varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS boards_user;
+CREATE TABLE boards_user (
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    board INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(board, user),
+    FOREIGN KEY(board) REFERENCES boards(id)  ON DELETE CASCADE,
+    FOREIGN KEY(user) REFERENCES users(id)  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

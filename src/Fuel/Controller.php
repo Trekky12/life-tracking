@@ -15,11 +15,12 @@ class Controller extends \App\Base\Controller {
 
         $this->mapper = new \App\Fuel\Mapper($this->ci);
         $this->car_mapper = new \App\Car\Mapper($this->ci);
+        $this->car_mapper->setUserTable("cars_user", "car");
     }
 
     public function index(Request $request, Response $response) {
         $user = $this->ci->get('helper')->getUser()->id;
-        $user_cars = $this->car_mapper->getUserCars($user);
+        $user_cars = $this->car_mapper->getElementsOfUser($user);
         $list = $this->mapper->getAllofCars('date DESC', 10, $user_cars);
         $datacount = $this->mapper->countwithCars($user_cars);
         $cars = $this->car_mapper->getAll();
@@ -37,7 +38,7 @@ class Controller extends \App\Base\Controller {
         }
 
         $user = $this->ci->get('helper')->getUser()->id;
-        $user_cars = $this->car_mapper->getUserCars($user);
+        $user_cars = $this->car_mapper->getElementsOfUser($user);
         $cars = $this->car_mapper->getAll('name');
 
 
@@ -86,7 +87,7 @@ class Controller extends \App\Base\Controller {
 //$list = $this->mapper->getAll('date ASC');
 
         $user = $this->ci->get('helper')->getUser()->id;
-        $user_cars = $this->car_mapper->getUserCars($user);
+        $user_cars = $this->car_mapper->getElementsOfUser($user);
         $list = $this->mapper->getAllofCars('date ASC', false, $user_cars);
 
         $cars = $this->car_mapper->getAll();
@@ -172,7 +173,7 @@ class Controller extends \App\Base\Controller {
         $user = $this->ci->get('helper')->getUser()->id;
         //$whereUser = $user ? "(user = {$user} OR user IS NULL)" : "";
 
-        $user_cars = $this->car_mapper->getUserCars($user);
+        $user_cars = $this->car_mapper->getElementsOfUser($user);
         $whereCar = !empty($user_cars) ? "(car IN (" . implode(',', $user_cars) . "))" : " 1!=1";
 
 
