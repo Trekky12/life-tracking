@@ -41,6 +41,7 @@ class Controller extends \App\Base\Controller {
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         $cars = $this->car_mapper->getAll('name');
 
+        $this->preEdit($entry_id);
 
         return $this->ci->view->render($response, 'fuel/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars]);
     }
@@ -84,7 +85,7 @@ class Controller extends \App\Base\Controller {
     }
 
     public function stats(Request $request, Response $response) {
-//$list = $this->mapper->getAll('date ASC');
+        //$list = $this->mapper->getAll('date ASC');
 
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
@@ -184,5 +185,49 @@ class Controller extends \App\Base\Controller {
         $data = \App\Main\SSP::complex($requestData, $pdo, "fuel", "id", $columns, null, $whereCar);
         return $response->withJson($data);
     }
+
+    
+    /**
+     * Does the user have access to this dataset?
+     */
+    protected function preEdit($id) {
+
+        if (!is_null($id)) {
+            $entry = $this->mapper->get($id);
+            $user = $this->ci->get('helper')->getUser()->id;
+            $user_cars = $this->car_mapper->getElementsOfUser($user);
+            if (!in_array($entry->car, $user_cars)) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            }
+        }
+    }
+    
+    /**
+     * Does the user have access to this dataset?
+     */
+    protected function preSave($id, $data) {
+        if (!is_null($id)) {
+            $user = $this->ci->get('helper')->getUser()->id;
+            $user_cars = $this->car_mapper->getElementsOfUser($user);
+            if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            }
+        }
+    }
+
+    /**
+     * Does the user have access to this dataset?
+     */
+    protected function preDelete($id) {
+        if (!is_null($id)) {
+            $entry = $this->mapper->get($id);
+            $user = $this->ci->get('helper')->getUser()->id;
+            $user_cars = $this->car_mapper->getElementsOfUser($user);
+            if (!in_array($entry->car, $user_cars)) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            }
+        }
+    }
+
 
 }

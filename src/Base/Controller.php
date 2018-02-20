@@ -18,7 +18,7 @@ abstract class Controller {
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
         $this->init();
-        
+
         $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
@@ -33,8 +33,40 @@ abstract class Controller {
     /**
      * this function is called after successfully saving an entry
      * @param type $id
+     * @param type $data
      */
     protected function afterSave($id, $data) {
+        // do nothing
+    }
+
+    /**
+     * The following hooks can be used for additional access checks
+     */
+    
+    /**
+     * this function is called before saving an entry
+     * @param type $id
+     * @param type $data
+     */
+    protected function preSave($id, $data) {
+        // do nothing
+    }
+    
+    /**
+     * this function is called before deleting an entry
+     * @param type $id
+     * @param type $data
+     */
+    protected function preDelete($id){
+        // do nothing
+    }
+    
+    /**
+     * this function is called before editing an entry
+     * @param type $id
+     * @param type $data
+     */
+    protected function preEdit($id){
         // do nothing
     }
 
@@ -50,6 +82,11 @@ abstract class Controller {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
         } else {
+
+            /**
+             * Custom Hook
+             */
+            $this->preSave($id, $data);
 
             if ($id == null) {
                 $id = $this->mapper->insert($entry);
@@ -93,6 +130,12 @@ abstract class Controller {
     public function delete(Request $request, Response $response) {
 
         $id = $request->getAttribute('id');
+
+        /**
+         * Custom Hook
+         */
+        $this->preDelete($id);
+
         $data = ['is_deleted' => false, 'error' => ''];
 
         try {
@@ -123,7 +166,7 @@ abstract class Controller {
         $entry = null;
         if (!empty($entry_id)) {
             $entry = $this->mapper->get($entry_id);
-            
+
             if ($this->mapper->hasUserTable()) {
                 $entry_users = $this->mapper->getUsers($entry_id);
                 $entry->setUsers($entry_users);
@@ -131,6 +174,8 @@ abstract class Controller {
         }
 
         $users = ($this->mapper->hasUserTable()) ? $this->user_mapper->getAll('name') : array();
+        
+        $this->preEdit($entry_id);
 
         return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'users' => $users]);
     }

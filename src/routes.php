@@ -14,7 +14,7 @@ $app->group('/finances', function() {
     $this->delete('/delete/{id}', '\App\Finances\Controller:delete')->setName('finances_delete');
 
     $this->post('/record/', '\App\Finances\Controller:record');
-    
+
     $this->get('/table/', '\App\Finances\Controller:table')->setName('finances_table');
 
     $this->group('/stats', function() {
@@ -58,7 +58,7 @@ $app->group('/fuel', function() {
 
     $this->get('/table/', '\App\Fuel\Controller:table')->setName('fuel_table');
     $this->get('/stats/', '\App\Fuel\Controller:stats')->setName('fuel_stats');
-    
+
     $this->group('/cars', function() {
         $this->get('/', '\App\Car\Controller:index')->setName('cars');
         $this->get('/edit/[{id:[0-9]+}]', '\App\Car\Controller:edit')->setName('cars_edit');
@@ -88,4 +88,7 @@ $app->group('/boards', function() {
     $this->post('/save/[{id:[0-9]+}]', '\App\Board\Controller:save')->setName('boards_save');
     $this->delete('/delete/{id}', '\App\Board\Controller:delete')->setName('boards_delete');
 
+    $this->group('/view', function() {
+        $this->get('/{hash}', '\App\Board\Controller:view')->setName('boards_view');
+    });
 });

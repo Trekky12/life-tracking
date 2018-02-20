@@ -18,23 +18,29 @@ class ModuleMiddleware {
 
         $user = $this->ci->get('helper')->getUser();
 
-        $route = $request->getAttribute('route')->getPattern();
+        $baseRoute = $request->getAttribute('route');
 
-        // Filter only specific routes
-        if (!$this->startsWith($route, '/finances') && !$this->startsWith($route, '/location') && !$this->startsWith($route, '/fuel')) {
-            return $next($request, $response);
-        }
-        
-        // Has access
-        if (!is_null($user) && (
-                $this->startsWith($route, '/finances') && $user->module_finance == 1 ||
-                $this->startsWith($route, '/location') && $user->module_location == 1 ||
-                $this->startsWith($route, '/fuel') && $user->module_fuel == 1
-                )) {
-            return $next($request, $response);
-        }
+        if (!is_null($baseRoute)) {
+            $route = $baseRoute->getPattern();
 
-        return $this->ci->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
+            // Filter only specific routes
+            if (!$this->startsWith($route, '/finances') && !$this->startsWith($route, '/location') && !$this->startsWith($route, '/fuel')) {
+                return $next($request, $response);
+            }
+
+            // Has access
+            if (!is_null($user) && (
+                    $this->startsWith($route, '/finances') && $user->module_finance == 1 ||
+                    $this->startsWith($route, '/location') && $user->module_location == 1 ||
+                    $this->startsWith($route, '/fuel') && $user->module_fuel == 1
+                    )) {
+                return $next($request, $response);
+            }
+            // No Access
+            return $this->ci->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
+        }
+        // Route not found
+        return $next($request, $response);
     }
 
     /**

@@ -173,11 +173,14 @@ ALTER TABLE fuel ADD CONSTRAINT fuel_ibfk_2 FOREIGN KEY (car) REFERENCES cars(id
 DROP TABLE IF EXISTS boards;
 CREATE TABLE boards (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
     dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     name varchar(255) DEFAULT NULL,
-    PRIMARY KEY (id)
+    hash VARCHAR(255) NOT NULL,
+    archive INT(1) DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS boards_user;
 CREATE TABLE boards_user (
@@ -186,5 +189,40 @@ CREATE TABLE boards_user (
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(board, user),
     FOREIGN KEY(board) REFERENCES boards(id)  ON DELETE CASCADE,
+    FOREIGN KEY(user) REFERENCES users(id)  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS stacks;
+CREATE TABLE stacks (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    board INTEGER unsigned DEFAULT NULL,
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    name varchar(255) DEFAULT NULL,
+    archive INT(1) DEFAULT 0,
+    PRIMARY KEY (id),
+   FOREIGN KEY(board) REFERENCES boards(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS cards;
+CREATE TABLE cards (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    stack INTEGER unsigned DEFAULT NULL,
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    title varchar(255) DEFAULT NULL,
+    text TEXT DEFAULT NULL,
+    due_date TIMESTAMP NULL DEFAULT NULL,
+    state INT(1) DEFAULT NULL,
+    archive INT(1) DEFAULT 0,
+    PRIMARY KEY (id),
+   FOREIGN KEY(stack) REFERENCES stacks(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS cards_users;
+CREATE TABLE cards_users (
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    card INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(card, user),
+    FOREIGN KEY(card) REFERENCES cards(id)  ON DELETE CASCADE,
     FOREIGN KEY(user) REFERENCES users(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -96,9 +96,8 @@ class Mapper {
 
         if ($stmt->rowCount() > 0) {
             return new $this->model($stmt->fetch());
-        } else {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
         }
+        throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
 
     public function update(Model $data) {
@@ -309,7 +308,7 @@ class Mapper {
             return $results;
         }
     }
-    
+
     public function getElementsOfUser($id) {
         $sql = "SELECT {$this->element_name} FROM " . $this->getTable($this->user_table) . " WHERE user = :id";
 

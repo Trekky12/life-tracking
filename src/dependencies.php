@@ -116,3 +116,13 @@ $container['notFoundHandler'] = function ($c) {
         return $c->get('view')->render($response, 'error.twig', ['message' => $c->get('helper')->getTranslatedString("NOTFOUND"), 'message_type' => 'danger']);
     };
 };
+
+$container['notAllowedHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        
+        $logger = $c->get('logger');
+        $logger->addInfo("Page not allowed", $c["info"]);
+        
+        return $c->get('view')->render($response, 'error.twig', ['message' => $c->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
+    };
+};

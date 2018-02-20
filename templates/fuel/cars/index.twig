@@ -20,7 +20,7 @@
                         <tr>
                             <td data-title="{{lang["NAME"]}}">{{car.name}}</td> 
                             <td><a href="{{  path_for('cars_edit', {'id' : car.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
-                            <td><a href="#" data-url="{{  path_for('cars_delete', {'id' : car.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+                            <td><a href="#" data-url="{{  path_for('cars_delete', {'id' : car.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
