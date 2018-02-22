@@ -9,7 +9,6 @@ class Controller extends \App\Base\Controller {
 
     private $cat_mapper;
     private $finance_mapper;
-    private $user_mapper;
 
     public function init() {
         $this->model = '\App\FinancesMonthly\FinancesEntryMonthly';
@@ -18,7 +17,6 @@ class Controller extends \App\Base\Controller {
         $this->mapper = new \App\FinancesMonthly\Mapper($this->ci);
         $this->cat_mapper = new \App\Base\Mapper($this->ci, 'finances_categories', '\App\FinancesCategory\Category');
         $this->finance_mapper = new \App\Finances\Mapper($this->ci);
-        $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -90,7 +88,7 @@ class Controller extends \App\Base\Controller {
 
         foreach ($users as $user) {
             if ($user->mail) {
-                
+
                 /**
                  * Calculate Statistic
                  */
@@ -98,28 +96,32 @@ class Controller extends \App\Base\Controller {
                 $balance["income"] = $this->finance_mapper->statsMailBalance($user->id, $month, $year, 1);
                 $balance["spendings"] = $this->finance_mapper->statsMailBalance($user->id, $month, $year, 0);
                 $balance["difference"] = $balance["income"] - $balance["spendings"];
-               
+
                 $expenses = $this->finance_mapper->statsMailExpenses($user->id, $month, $year, 10);
 
-                /**
-                 * Send mail
-                 */
-                $variables = array(
-                    'header' => '',
-                    'subject' => $subject,
-                    'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                    'content' => sprintf($this->ci->get('helper')->getTranslatedString('YOUR_MONTHLY_STATISTIC'), $fmt->format($dateObj)),
-                    'LANG_YOUR_BALANCE' => $this->ci->get('helper')->getTranslatedString('YOUR_BALANCE'),
-                    'LANG_YOUR_BIGGEST_EXPENSES' => $this->ci->get('helper')->getTranslatedString('YOUR_BIGGEST_EXPENSES'),
-                    'LANG_INCOMES' => $this->ci->get('helper')->getTranslatedString('FINANCES_INCOMES'),
-                    'LANG_SPENDINGS' => $this->ci->get('helper')->getTranslatedString('FINANCES_SPENDINGS'),
-                    'LANG_DIFFERENCE' => $this->ci->get('helper')->getTranslatedString('DIFFERENCE'),
-                    'balance' => $balance,
-                    'currency' => $this->ci->get('settings')['app']['i18n']['currency'],
-                    'expenses' => $expenses
-                );
+                
+                if ($balance["income"] > 0 || $balance["spendings"] > 0) {
 
-                $this->ci->get('helper')->send_mail('mail/stats.twig', $user->mail, $subject, $variables);
+                    /**
+                     * Send mail
+                     */
+                    $variables = array(
+                        'header' => '',
+                        'subject' => $subject,
+                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('YOUR_MONTHLY_STATISTIC'), $fmt->format($dateObj)),
+                        'LANG_YOUR_BALANCE' => $this->ci->get('helper')->getTranslatedString('YOUR_BALANCE'),
+                        'LANG_YOUR_BIGGEST_EXPENSES' => $this->ci->get('helper')->getTranslatedString('YOUR_BIGGEST_EXPENSES'),
+                        'LANG_INCOMES' => $this->ci->get('helper')->getTranslatedString('FINANCES_INCOMES'),
+                        'LANG_SPENDINGS' => $this->ci->get('helper')->getTranslatedString('FINANCES_SPENDINGS'),
+                        'LANG_DIFFERENCE' => $this->ci->get('helper')->getTranslatedString('DIFFERENCE'),
+                        'balance' => $balance,
+                        'currency' => $this->ci->get('settings')['app']['i18n']['currency'],
+                        'expenses' => $expenses
+                    );
+
+                    $this->ci->get('helper')->send_mail('mail/stats.twig', $user->mail, $subject, $variables);
+                }
             }
         }
     }

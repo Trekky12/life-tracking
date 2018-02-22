@@ -22,6 +22,13 @@ ALTER TABLE users ADD module_finance int(1) DEFAULT 0 AFTER module_location;
 ALTER TABLE users ADD module_fuel int(1) DEFAULT 0 AFTER module_finance;
 ALTER TABLE users ADD module_boards int(1) DEFAULT 0 AFTER module_fuel;*/
 
+DROP TABLE IF EXISTS banlist;
+CREATE TABLE banlist (
+    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ip VARCHAR(255) NOT NULL,
+    username varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

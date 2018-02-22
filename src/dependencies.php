@@ -85,12 +85,12 @@ $container['db'] = function ($c) {
 };
 
 $container["info"] = [
-    'PHP_AUTH_USER' => array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : null,
-    'REMOTE_ADDR' => array_key_exists('REMOTE_ADDR', $_SERVER) ? $_SERVER['REMOTE_ADDR'] : null,
-    'HTTP_USER_AGENT' => array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : null,
-    'REQUEST_METHOD' => array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : null,
-    'QUERY_STRING' => array_key_exists('QUERY_STRING', $_SERVER) ? $_SERVER['QUERY_STRING'] : null,
-    'REQUEST_URI' => array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null
+    'PHP_AUTH_USER' => array_key_exists('PHP_AUTH_USER', $_SERVER) ? filter_var($_SERVER['PHP_AUTH_USER'], FILTER_SANITIZE_STRING) : null,
+    'REMOTE_ADDR' => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP),
+    'HTTP_USER_AGENT' => filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING),
+    'REQUEST_METHOD' => filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING),
+    'QUERY_STRING' => filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_STRING),
+    'REQUEST_URI' => filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING),
 ];
 
 /**

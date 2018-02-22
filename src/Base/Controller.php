@@ -42,7 +42,7 @@ abstract class Controller {
     /**
      * The following hooks can be used for additional access checks
      */
-    
+
     /**
      * this function is called before saving an entry
      * @param type $id
@@ -51,22 +51,22 @@ abstract class Controller {
     protected function preSave($id, $data) {
         // do nothing
     }
-    
+
     /**
      * this function is called before deleting an entry
      * @param type $id
      * @param type $data
      */
-    protected function preDelete($id){
+    protected function preDelete($id) {
         // do nothing
     }
-    
+
     /**
      * this function is called before editing an entry
      * @param type $id
      * @param type $data
      */
-    protected function preEdit($id){
+    protected function preEdit($id) {
         // do nothing
     }
 
@@ -110,10 +110,7 @@ abstract class Controller {
                 $this->mapper->deleteUsers($id);
 
                 if (array_key_exists("users", $data) && is_array($data["users"])) {
-                    $users = array();
-                    foreach ($data["users"] as $user) {
-                        $users[] = filter_var($user, FILTER_SANITIZE_NUMBER_INT);
-                    }
+                    $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
                     $this->mapper->addUsers($id, $users);
                 }
             }
@@ -174,7 +171,7 @@ abstract class Controller {
         }
 
         $users = ($this->mapper->hasUserTable()) ? $this->user_mapper->getAll('name') : array();
-        
+
         $this->preEdit($entry_id);
 
         return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'users' => $users]);

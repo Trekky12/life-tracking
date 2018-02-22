@@ -122,6 +122,7 @@ $lang["CAR"] = "Car";
 $lang["CARS"] = "Cars";
 
 $lang["NO_ACCESS"] = "No Access allowed";
+$lang["BANNED"] = "Too many failed login attempts. You are banned!";
 
 $lang["MODULES"] = "Modules";
 
