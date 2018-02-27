@@ -131,4 +131,10 @@ $lang["BOARD"] = "Board";
 $lang["STACK"] = "Stapel";
 $lang["CARD"] = "Karte";
 
+$lang["FILE_UPLOAD_ERROR"] = "Fehler beim Hochladen";
+$lang["IMAGE"] = "Bild";
+$lang["PROFILE_IMAGE"] = "Profilbild";
+$lang["IMAGE_SET"] = "Profilbild gesetzt";
+$lang["IMAGE_DELETED"] = "Profilbild gelöscht";
+
 return $lang;

@@ -17,7 +17,7 @@
         <div class="page-header"><h2>{{lang["CHANGE_PASSWORD"]}}</h2></div>
         <div class="page-content">
 
-            <form action="{{  path_for('users_change_password', {'id' : entry.id}) }}" method="POST">
+            <form action="{{  path_for('users_change_password') }}" method="POST">
                 <div class="form-group">
                     <label>{{lang["LOGIN"]}}</label>
                     <p>{{user.login}}</p>

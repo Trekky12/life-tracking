@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     lastname varchar(255) DEFAULT NULL,
     mail varchar(255) DEFAULT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'user',
+    image VARCHAR(255) NULL,
     module_location int(1) DEFAULT 0,
     module_finance int(1) DEFAULT 0,
     module_fuel int(1) DEFAULT 0,
@@ -20,7 +21,9 @@ INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo7
 /*ALTER TABLE users ADD module_location int(1) DEFAULT 0 AFTER role;
 ALTER TABLE users ADD module_finance int(1) DEFAULT 0 AFTER module_location;
 ALTER TABLE users ADD module_fuel int(1) DEFAULT 0 AFTER module_finance;
-ALTER TABLE users ADD module_boards int(1) DEFAULT 0 AFTER module_fuel;*/
+ALTER TABLE users ADD module_boards int(1) DEFAULT 0 AFTER module_fuel;
+ALTER TABLE users ADD image VARCHAR(255) NULL AFTER role;
+*/
 
 DROP TABLE IF EXISTS banlist;
 CREATE TABLE banlist (

@@ -4,3 +4,6 @@
 /node_modules/
 composer.phar
 /src/settings.php
+
+/public/uploads/*
+!/public/uploads/.gitkeep 

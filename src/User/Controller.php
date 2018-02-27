@@ -4,6 +4,7 @@ namespace App\User;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Controller extends \App\Base\Controller {
 
@@ -56,8 +57,7 @@ class Controller extends \App\Base\Controller {
              * Verify old password
              */
             if (!password_verify($old_password, $user->password)) {
-
-                return $this->ci->view->render($response, 'user/changepw.twig', array("user" => $user, "message" => $this->ci->get('helper')->getTranslatedString("PASSWORD_WRONG_OLD"), "message_type" => "danger"));
+                return $this->ci->view->render($response, 'profile/changepw.twig', array("user" => $user, "message" => $this->ci->get('helper')->getTranslatedString("PASSWORD_WRONG_OLD"), "message_type" => "danger"));
             }
 
             /**
@@ -68,10 +68,9 @@ class Controller extends \App\Base\Controller {
 
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PASSWORD_CHANGE_SUCCESS"));
             $this->ci->get('flash')->addMessage('message_type', 'success');
-
-            return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+            return $response->withRedirect($this->ci->get('router')->pathFor('users_change_password'), 301);
         }
-        return $this->ci->view->render($response, 'user/changepw.twig', ["user" => $user]);
+        return $this->ci->view->render($response, 'profile/changepw.twig', ["user" => $user]);
     }
 
     public function testMail(Request $request, Response $response) {
@@ -108,6 +107,70 @@ class Controller extends \App\Base\Controller {
 
     private function roles() {
         return ['user', 'admin'];
+    }
+
+    public function setProfileImage(Request $request, Response $response) {
+
+
+        $user = $this->ci->get('helper')->getUser();
+
+
+        if ($request->isPost()) {
+
+            /**
+             * Handle uploaded file
+             * @link https://akrabat.com/psr-7-file-uploads-in-slim-3/
+             */
+            $files = $request->getUploadedFiles();
+
+            if (!array_key_exists('image', $files) || empty($files['image'])) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString("FILE_UPLOAD_ERROR"));
+            }
+
+            $image = $files['image'];
+
+
+            if ($image->getError() === UPLOAD_ERR_OK) {
+
+                $settings = $this->ci->get('settings');
+                $folder = $settings['app']['upload_folder'];
+
+                $uploadFileName = $image->getClientFilename();
+                $file_extension = pathinfo($uploadFileName, PATHINFO_EXTENSION);
+                $file_wo_extension = pathinfo($uploadFileName, PATHINFO_FILENAME);
+                $file_name = hash('sha256', time() . rand(0, 1000000) . $user->id) . '_' . $file_wo_extension;
+                $complete_file_name = $folder . '/' . $file_name;
+
+                $image->moveTo($complete_file_name . '.' . $file_extension);
+                /**
+                 * Create Thumbnail
+                 */
+                $img = Image::make($complete_file_name . '.' . $file_extension);
+                /**
+                 * @link http://image.intervention.io/api/resize
+                 */
+                /* $img->resize( 100, null, function ($constraint) {
+                  $constraint->aspectRatio();
+                  } ); */
+                $img->fit(100, 100);
+                $img->save($complete_file_name . '-small.' . $file_extension);
+
+                $img->fit(20, 20);
+                $img->save($complete_file_name . '-mini.' . $file_extension);
+
+                $this->mapper->update_image($user->id, $file_name . '.' . $file_extension);
+                
+                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("IMAGE_SET"));
+                $this->ci->get('flash')->addMessage('message_type', 'success');
+                
+            } else if ($image->getError() === UPLOAD_ERR_NO_FILE) {
+                $this->mapper->update_image($user->id, null);
+                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("IMAGE_DELETED"));
+                $this->ci->get('flash')->addMessage('message_type', 'success');
+            }
+            return $response->withRedirect($this->ci->get('router')->pathFor('users_profile_image'), 301);
+        }
+        return $this->ci->view->render($response, 'profile/image.twig', ["user" => $user]);
     }
 
 }

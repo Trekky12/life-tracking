@@ -69,7 +69,10 @@ $app->group('/fuel', function() {
 
 $app->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
 
-$app->map(['GET', 'POST'], '/changepassword', '\App\User\Controller:changePassword')->setName('users_change_password');
+$app->group('/profile', function() {
+    $this->map(['GET', 'POST'], '/changepassword', '\App\User\Controller:changePassword')->setName('users_change_password');
+    $this->map(['GET', 'POST'], '/image', '\App\User\Controller:setProfileImage')->setName('users_profile_image');
+});
 
 $app->group('/users', function() {
     $this->get('/', '\App\User\Controller:index')->setName('users');

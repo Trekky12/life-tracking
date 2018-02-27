@@ -37,7 +37,8 @@ return [
             'mail' => [
                 'fromName' => 'Life-Tracking',
                 'fromAddress' => 'tracking@my-domain.de'
-            ]
+            ],
+            'upload_folder' => 'uploads'
         ]
     ]
 ];

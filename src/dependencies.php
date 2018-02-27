@@ -5,8 +5,7 @@ $container = $app->getContainer();
 /**
  * Set Settings for global Helper Class
  */
-
-$container['helper'] = function($c){
+$container['helper'] = function($c) {
     return new \App\Main\Helper($c);
 };
 
@@ -54,7 +53,12 @@ $container['view'] = function ($c) {
      */
     $i18n = $c->get('settings')['app']['i18n'];
     $view->getEnvironment()->addGlobal('i18n', $i18n);
-   
+
+    /**
+     * Include Uploads folder
+     */
+    $uploads = $c->get('settings')['app']['upload_folder'];
+    $view->getEnvironment()->addGlobal('uploads_folder', $uploads);
 
     return $view;
 };
@@ -102,27 +106,27 @@ $container['errorHandler'] = function ($c) {
 
         $logger = $c->get('logger');
         $logger->addError($exception->getMessage(), $c["info"]);
-        
+
         return $c->get('view')->render($response, 'error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);
     };
 };
 
 $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
-        
+
         $logger = $c->get('logger');
         $logger->addInfo("Page not found", $c["info"]);
-        
+
         return $c->get('view')->render($response, 'error.twig', ['message' => $c->get('helper')->getTranslatedString("NOTFOUND"), 'message_type' => 'danger']);
     };
 };
 
 $container['notAllowedHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
-        
+
         $logger = $c->get('logger');
         $logger->addInfo("Page not allowed", $c["info"]);
-        
+
         return $c->get('view')->render($response, 'error.twig', ['message' => $c->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
     };
 };

@@ -21,7 +21,7 @@ class User extends \App\Base\Model {
         /**
          * No default value for password, otherwise it will be deleted 
          */
-        if($this->exists('password', $data)){
+        if ($this->exists('password', $data)) {
             $this->password = filter_var($data['password'], FILTER_SANITIZE_STRING);
         }
 
@@ -32,29 +32,38 @@ class User extends \App\Base\Model {
         if (!is_null($password)) {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }
-        
+
+        $this->image = $this->exists('image', $data) ? filter_var($data['image'], FILTER_SANITIZE_STRING) : $this->image;
+
 
         $set_module_location = $this->exists('set_module_location', $data) ? filter_var($data['set_module_location'], FILTER_SANITIZE_STRING) : 0;
         $this->module_location = $set_module_location === 'on' ? 1 : 0;
         $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : $this->module_location;
-        
+
         $set_module_finance = $this->exists('set_module_finance', $data) ? filter_var($data['set_module_finance'], FILTER_SANITIZE_STRING) : 0;
         $this->module_finance = $set_module_finance === 'on' ? 1 : 0;
         $this->module_finance = $this->exists('module_finance', $data) ? filter_var($data['module_finance'], FILTER_SANITIZE_NUMBER_INT) : $this->module_finance;
-        
+
         $set_module_fuel = $this->exists('set_module_fuel', $data) ? filter_var($data['set_module_fuel'], FILTER_SANITIZE_STRING) : 0;
         $this->module_fuel = $set_module_fuel === 'on' ? 1 : 0;
         $this->module_fuel = $this->exists('module_fuel', $data) ? filter_var($data['module_fuel'], FILTER_SANITIZE_NUMBER_INT) : $this->module_fuel;
-        
+
         $set_module_boards = $this->exists('set_module_boards', $data) ? filter_var($data['set_module_boards'], FILTER_SANITIZE_STRING) : 0;
         $this->module_boards = $set_module_boards === 'on' ? 1 : 0;
         $this->module_boards = $this->exists('module_boards', $data) ? filter_var($data['module_boards'], FILTER_SANITIZE_NUMBER_INT) : $this->module_boards;
-
     }
-    
-    public function isAdmin(){
+
+    public function isAdmin() {
         return $this->role == 'admin' ? true : false;
     }
 
+    public function get_thumbnail($size = 'small') {
+        if (!empty($this->image)) {
+            $file_extension = pathinfo($this->image, PATHINFO_EXTENSION);
+            $file_wo_extension = pathinfo($this->image, PATHINFO_FILENAME);
+            return $file_wo_extension . '-' . $size . '.' . $file_extension;
+        }
+        return null;
+    }
 
 }

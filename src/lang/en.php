@@ -131,5 +131,10 @@ $lang["BOARD"] = "Board";
 $lang["STACK"] = "Stack";
 $lang["CARD"] = "Card";
 
+$lang["FILE_UPLOAD_ERROR"] = "Error at data upload";
+$lang["IMAGE"] = "Image";
+$lang["PROFILE_IMAGE"] = "Profile image";
+$lang["IMAGE_SET"] = "Image setted";
+$lang["IMAGE_DELETED"] = "Image deleted";
 
 return $lang;

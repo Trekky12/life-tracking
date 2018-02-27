@@ -3,7 +3,7 @@
 namespace App\User;
 
 class Mapper extends \App\Base\Mapper {
-    
+
     protected $table = 'users';
     protected $model = '\App\User\User';
     protected $filterByUser = false;
@@ -32,6 +32,18 @@ class Mapper extends \App\Base\Mapper {
         }
         if ($stmt->rowCount() === 0) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'), 404);
+        }
+    }
+
+    public function update_image($id, $image) {
+        $sql = "UPDATE " . $this->getTable() . " SET image=:image WHERE id=:id";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "image" => $image,
+            "id" => $id
+        ]);
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
