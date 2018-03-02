@@ -1,0 +1,98 @@
+.board-content{
+
+}
+
+.board-header{
+    background: $color_blue;
+    margin:0 auto;
+    color: $color_background-body;
+    text-align:center;
+
+}
+.stack-wrapper{
+    position: relative;
+    min-height: calc(100vh - #{$header_height} - 20px - 36px - 20px);
+
+    display:flex;
+    flex:1;
+    overflow-x: auto;
+}
+
+.stack, .stack-dummy{
+    display: flex;
+    flex-direction:column;
+    flex: 0 0 250px;
+
+    padding: 0;
+    margin-right: 0.2rem;
+    //background: $color_background-screen;
+    padding-right: 0.2rem;
+    overflow-y: auto;
+
+
+
+    &:hover{
+        cursor:pointer;
+    }
+
+    .stack-header{
+        background: $color_blue_light;
+        //text-align:center;
+        @include font-size(2);
+        color: $color_background-body;
+        margin: 1rem;
+        font-weight: 300;
+        padding:0 1rem 0 1rem;
+        display:flex;
+        justify-content: space-between;
+
+        .edit-bar{
+            display:flex;
+            align-items: center;
+            @include font-size(1.2);
+
+            i{
+                padding:0 3px;
+            }
+        }
+    }
+
+
+    &.stack-border{
+        border-right: 1px solid #aaaaaa;
+    }
+
+}
+
+.stack-dummy{
+    border-right: 0;
+}
+
+.create-stack, .create-card{
+    @include font-size(1.4);
+    margin: 1rem;
+    color: #a1a1a1!important;
+    
+    &:hover{
+        color: $color_text-main!important;
+    }
+}
+
+.board-card{
+    min-height:50px;
+    background: #FFFFFF;
+    margin:0 1rem 1rem 1rem;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box; 
+    background-color: $color_background-body;
+    padding: 0.5rem;
+
+    &:hover{
+        cursor:pointer;
+    }
+}
+
+.board-card-dummy{
+    margin:0 1rem 1rem 1rem;
+}

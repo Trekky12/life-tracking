@@ -126,15 +126,18 @@ $lang["BANNED"] = "Too many failed login attempts. You are banned!";
 
 $lang["MODULES"] = "Modules";
 
-$lang["BOARDS"] = "Boards";
-$lang["BOARD"] = "Board";
-$lang["STACK"] = "Stack";
-$lang["CARD"] = "Card";
-
 $lang["FILE_UPLOAD_ERROR"] = "Error at data upload";
 $lang["IMAGE"] = "Image";
 $lang["PROFILE_IMAGE"] = "Profile image";
 $lang["IMAGE_SET"] = "Image setted";
 $lang["IMAGE_DELETED"] = "Image deleted";
+
+$lang["BOARDS"] = "Boards";
+$lang["BOARD"] = "Board";
+$lang["STACK"] = "Stack";
+$lang["CARD"] = "Card";
+
+$lang["ADD_STACK"] = "Add Stack";
+$lang["ADD_CARD"] = "Add Card";
 
 return $lang;

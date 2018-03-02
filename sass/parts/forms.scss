@@ -1,16 +1,19 @@
-button, input[type="submit"] {
-    cursor: pointer;
-    border-width: 2px;
-    border-style: solid;
-    border-color:transparent;
+button, input[type="submit"], .button {
 
-    color: #FFFFFF;
-    background-color: $color_blue_light;
+    &, &:focus{
+        cursor: pointer;
+        border-width: 2px;
+        border-style: solid;
+        border-color:transparent;
 
-    padding: 8px 25px;
-    transition: all 0.3s ease;
+        color: #FFFFFF;
+        background-color: $color_blue_light;
 
-    outline:none;
+        padding: 8px 25px;
+        transition: all 0.3s ease;
+
+        outline:none;
+    }
 
     &:hover {
         background: none;
@@ -22,9 +25,6 @@ button, input[type="submit"] {
 
     }
 
-    &:focus{
-        outline:none;
-    }
 
     &.gray{
         background-color: #cccccc;

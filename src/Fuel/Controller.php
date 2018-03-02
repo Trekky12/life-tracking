@@ -15,7 +15,6 @@ class Controller extends \App\Base\Controller {
 
         $this->mapper = new \App\Fuel\Mapper($this->ci);
         $this->car_mapper = new \App\Car\Mapper($this->ci);
-        $this->car_mapper->setUserTable("cars_user", "car");
     }
 
     public function index(Request $request, Response $response) {
@@ -186,7 +185,6 @@ class Controller extends \App\Base\Controller {
         return $response->withJson($data);
     }
 
-    
     /**
      * Does the user have access to this dataset?
      */
@@ -201,17 +199,15 @@ class Controller extends \App\Base\Controller {
             }
         }
     }
-    
+
     /**
      * Does the user have access to this dataset?
      */
     protected function preSave($id, $data) {
-        if (!is_null($id)) {
-            $user = $this->ci->get('helper')->getUser()->id;
-            $user_cars = $this->car_mapper->getElementsOfUser($user);
-            if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
-            }
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_cars = $this->car_mapper->getElementsOfUser($user);
+        if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 
@@ -228,6 +224,5 @@ class Controller extends \App\Base\Controller {
             }
         }
     }
-
 
 }

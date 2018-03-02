@@ -2,6 +2,59 @@
 
 {% set active = 'boards' %}
 
+{% block javascript %}
+    <script src="/static/js/boards.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="board-header">
+        <h2>{{board.name}}</h2>
+    </div>
+{% endblock %}        
+
 {% block bottom %}
-   {{board.name}}
+    <div id="stack-add-form" class="dialog-form" title="{{lang["STACK"]}}">
+        <form>
+            <input name="board" type="hidden" value="{{board.id}}">
+            <div class="form-group">
+                <label for="inputName">{{lang["NAME"]}}</label>
+                <input class="form-control" id="inputName" name="name" type="text">
+            </div>
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </form>
+    </div>
+
+    <div id="card-add-form" class="dialog-form" title="{{lang["CARD"]}}">
+        <form>
+            <input name="stack" type="hidden" value="">
+            <div class="form-group">
+                <label for="inputTitle">{{lang["TITLE"]}}</label>
+                <input class="form-control" id="inputTitle" name="title" type="text">
+            </div>
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </form>
+    </div>
+
+    <div class="board-content">
+        <div class="stack-wrapper">
+            {% for stack in stacks %}
+                <div class="stack stack-border" id="stack_{{stack.id}}">
+                    <div class="stack-header"><span class="title">{{stack.name}}</span><span class="edit-bar"><i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i></div>
+
+                    {% for card in stack.cards %}
+                        <div class="board-card" id="card_{{card.id}}">
+                            {{card.title}}
+                        </div>
+                    {% endfor %}
+
+                    <div class="board-card-dummy">
+                        <a class="create-card" href="#" data-stack="{{stack.id}}"><i class="fa fa-plus"></i> {{lang["ADD_CARD"]}}</a>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="stack-dummy">
+                <a class="create-stack" href="#"><i class="fa fa-plus"></i> {{lang["ADD_STACK"]}}</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

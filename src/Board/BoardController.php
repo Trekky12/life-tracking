@@ -5,17 +5,17 @@ namespace App\Board;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class Controller extends \App\Base\Controller {
+class BoardController extends \App\Base\Controller {
 
     public function init() {
         $this->model = '\App\Board\Board';
         $this->index_route = 'boards';
         $this->edit_template = 'boards/edit.twig';
 
-        $this->mapper = new \App\Board\Mapper($this->ci);
-        $this->mapper->setUserTable("boards_user", "board");
-
+        $this->mapper = new \App\Board\BoardMapper($this->ci);
         $this->user_mapper = new \App\User\Mapper($this->ci);
+        $this->stack_mapper = new \App\Board\StackMapper($this->ci);
+        $this->card_mapper = new \App\Board\CardMapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -54,13 +54,17 @@ class Controller extends \App\Base\Controller {
         if (!in_array($user, $board_user)) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
         }
-        
+
         /**
          * Get stacks with cards
          */
-        
-        
-        return $this->ci->view->render($response, 'boards/view.twig', ['board' => $board]);
+        $stacks = $this->stack_mapper->getStacksFromBoard($board->id);
+
+        foreach ($stacks as &$stack) {
+            $stack->cards = $this->card_mapper->getCardsFromStack($stack->id);
+        }
+
+        return $this->ci->view->render($response, 'boards/view.twig', ['board' => $board, 'stacks' => $stacks]);
     }
 
 }

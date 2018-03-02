@@ -44,7 +44,7 @@ $app->group('/finances', function() {
 
 $app->group('/location', function() {
     $this->get('/', '\App\Location\Controller:index')->setName('location');
-    $this->post('/record', '\App\Location\Controller:save')->setName('record');
+    $this->post('/record', '\App\Location\Controller:saveAPI')->setName('record');
     $this->get('/markers', '\App\Location\Controller:getMarkers')->setName('getMarkers');
     $this->delete('/delete/[{id}]', '\App\Location\Controller:delete')->setName('delete_marker');
     $this->get('/address/[{id}]', '\App\Location\Controller:getAddress')->setName('get_address');
@@ -86,12 +86,21 @@ $app->group('/users', function() {
 
 
 $app->group('/boards', function() {
-    $this->get('/', '\App\Board\Controller:index')->setName('boards');
-    $this->get('/edit/[{id:[0-9]+}]', '\App\Board\Controller:edit')->setName('boards_edit');
-    $this->post('/save/[{id:[0-9]+}]', '\App\Board\Controller:save')->setName('boards_save');
-    $this->delete('/delete/{id}', '\App\Board\Controller:delete')->setName('boards_delete');
+    $this->get('/', '\App\Board\BoardController:index')->setName('boards');
+    $this->get('/edit/[{id:[0-9]+}]', '\App\Board\BoardController:edit')->setName('boards_edit');
+    $this->post('/save/[{id:[0-9]+}]', '\App\Board\BoardController:save')->setName('boards_save');
+    $this->delete('/delete/{id}', '\App\Board\BoardController:delete')->setName('boards_delete');
 
     $this->group('/view', function() {
-        $this->get('/{hash}', '\App\Board\Controller:view')->setName('boards_view');
+        $this->get('/{hash}', '\App\Board\BoardController:view')->setName('boards_view');
+    });
+
+    $this->group('/stacks', function() {
+        $this->post('/add', '\App\Board\StackController:saveAPI')->setName('stack_save');
+        $this->post('/updatePosition', '\App\Board\StackController:updatePosition')->setName('stack_update_position');
+    });
+    $this->group('/card', function() {
+        $this->post('/add', '\App\Board\CardController:saveAPI')->setName('card_save');
+        $this->post('/updatePosition', '\App\Board\CardController:updatePosition')->setName('card_update_position');
     });
 });

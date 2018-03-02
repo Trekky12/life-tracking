@@ -209,9 +209,14 @@ CREATE TABLE stacks (
     dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     name varchar(255) DEFAULT NULL,
     archive INT(1) DEFAULT 0,
+    position INT(10) NULL,
     PRIMARY KEY (id),
    FOREIGN KEY(board) REFERENCES boards(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
+ALTER TABLE stacks ADD position INT(10) NULL AFTER archive;
+*/
 
 DROP TABLE IF EXISTS cards;
 CREATE TABLE cards (
@@ -223,9 +228,15 @@ CREATE TABLE cards (
     due_date TIMESTAMP NULL DEFAULT NULL,
     state INT(1) DEFAULT NULL,
     archive INT(1) DEFAULT 0,
+    position INT(10) NULL,
     PRIMARY KEY (id),
    FOREIGN KEY(stack) REFERENCES stacks(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
+ALTER TABLE cards ADD position INT(10) NULL AFTER archive;
+*/
+
 
 DROP TABLE IF EXISTS cards_users;
 CREATE TABLE cards_users (

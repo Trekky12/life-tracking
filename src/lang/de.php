@@ -126,15 +126,18 @@ $lang["BANNED"] = "Zuviele fehlgeschlagene Login-Versuche. Du wurdest gesperrt. 
 
 $lang["MODULES"] = "Module";
 
-$lang["BOARDS"] = "Boards";
-$lang["BOARD"] = "Board";
-$lang["STACK"] = "Stapel";
-$lang["CARD"] = "Karte";
-
 $lang["FILE_UPLOAD_ERROR"] = "Fehler beim Hochladen";
 $lang["IMAGE"] = "Bild";
 $lang["PROFILE_IMAGE"] = "Profilbild";
 $lang["IMAGE_SET"] = "Profilbild gesetzt";
 $lang["IMAGE_DELETED"] = "Profilbild gelöscht";
+
+$lang["BOARDS"] = "Boards";
+$lang["BOARD"] = "Board";
+$lang["STACK"] = "Stapel";
+$lang["CARD"] = "Karte";
+
+$lang["ADD_STACK"] = "Stapel hinzufügen";
+$lang["ADD_CARD"] = "Karte hinzufügen";
 
 return $lang;

@@ -38,22 +38,6 @@ class Controller extends \App\Base\Controller {
         return $response->withJSON($markers);
     }
 
-    public function save(Request $request, Response $response) {
-        $id = $request->getAttribute('id');
-        $data = $request->getParsedBody();
-
-        $data['user'] = $this->ci->get('helper')->getUser()->id;
-
-        $location = new Location($data);
-
-
-        if ($id == null) {
-            $this->mapper->insert($location);
-        } else {
-            $this->mapper->update($location);
-        }
-        return $response->withJSON(array('status' => 'success'));
-    }
 
     private function getDateRange($data) {
 

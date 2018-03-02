@@ -77,6 +77,7 @@ abstract class Controller {
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
         $entry = new $this->model($data);
+        
 
         if ($entry->hasParsingErrors()) {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));
@@ -122,6 +123,16 @@ abstract class Controller {
         }
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+    }
+
+    public function saveAPI(Request $request, Response $response) {
+        try {
+            $return = $this->save($request, $response);
+        } catch (\Exception $e) {
+            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+        }
+
+        return $response->withJSON(array('status' => 'success'));
     }
 
     public function delete(Request $request, Response $response) {

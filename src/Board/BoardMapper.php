@@ -2,11 +2,14 @@
 
 namespace App\Board;
 
-class Mapper extends \App\Base\Mapper {
+class BoardMapper extends \App\Base\Mapper {
 
     protected $table = "boards";
     protected $model = "\App\Board\Board";
     protected $filterByUser = true;
+    protected $hasUserTable = true;
+    protected $user_table = "boards_user";
+    protected $element_name = "board";
 
     public function getBoardFromHash($hash) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE  hash = :hash";
@@ -48,6 +51,23 @@ class Mapper extends \App\Base\Mapper {
         while ($row = $stmt->fetch()) {
             $key = reset($row);
             $results[$key] = new $this->model($row);
+        }
+        return $results;
+    }
+    
+    public function getUserStacks($id){
+        $sql = "SELECT st.id FROM " . $this->getTable($this->user_table) . " ub, " . $this->getTable("stacks") . " st "
+                . " WHERE ub.user = :id "
+                . " AND st.board = ub.board";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($el = $stmt->fetchColumn()) {
+            $results[] = intval($el);
         }
         return $results;
     }

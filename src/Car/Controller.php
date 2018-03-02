@@ -14,7 +14,6 @@ class Controller extends \App\Base\Controller {
         $this->edit_template = 'fuel/cars/edit.twig';
         
         $this->mapper = new \App\Car\Mapper($this->ci);
-        $this->mapper->setUserTable("cars_user", "car");
     }
 
     public function index(Request $request, Response $response) {
