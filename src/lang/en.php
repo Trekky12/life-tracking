@@ -140,4 +140,7 @@ $lang["CARD"] = "Card";
 $lang["ADD_STACK"] = "Add Stack";
 $lang["ADD_CARD"] = "Add Card";
 
+$lang["REALLY_ARCHIVE"] = "Do you really want to archive the entry?";
+$lang["UPDATE"] = "Update";
+
 return $lang;

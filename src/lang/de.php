@@ -140,4 +140,7 @@ $lang["CARD"] = "Karte";
 $lang["ADD_STACK"] = "Stapel hinzufügen";
 $lang["ADD_CARD"] = "Karte hinzufügen";
 
+$lang["REALLY_ARCHIVE"] = "Soll der Eintrag wirklich archiviert werden?";
+$lang["UPDATE"] = "Aktualisieren";
+
 return $lang;

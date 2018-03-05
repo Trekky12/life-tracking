@@ -39,21 +39,18 @@
         background: $color_blue_light;
         //text-align:center;
         @include font-size(2);
-        color: $color_background-body;
+
         margin: 1rem;
         font-weight: 300;
         padding:0 1rem 0 1rem;
         display:flex;
         justify-content: space-between;
 
-        .edit-bar{
-            display:flex;
-            align-items: center;
-            @include font-size(1.2);
-
-            i{
-                padding:0 3px;
-            }
+        &, a{
+            color: $color_background-body;
+        }
+        a:hover{
+            color: $color_background-screen;
         }
     }
 
@@ -61,7 +58,22 @@
     &.stack-border{
         border-right: 1px solid #aaaaaa;
     }
+}
 
+.edit-bar{
+    display:flex;
+    align-items: center;
+    @include font-size(1.2);
+
+    i{
+        padding:0 3px;
+    }
+    &, a{
+        color: $color_background-body;
+    }
+    a:hover{
+        color: $color_background-screen;
+    }
 }
 
 .stack-dummy{
@@ -72,12 +84,16 @@
     @include font-size(1.4);
     margin: 1rem;
     color: #a1a1a1!important;
-    
+
     &:hover{
         color: $color_text-main!important;
     }
 }
 
+.card-wrapper{
+    // So cards can be dropped on empty stacks
+    min-height: 10px;
+}
 .board-card{
     min-height:50px;
     background: #FFFFFF;

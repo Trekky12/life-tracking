@@ -19,28 +19,56 @@ class StackController extends \App\Base\Controller {
      */
     protected function preSave($id, $data) {
         $user = $this->ci->get('helper')->getUser()->id;
-        $user_boards = $this->board_mapper->getElementsOfUser($user);
-        if (!array_key_exists("board", $data) || !in_array($data["board"], $user_boards)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+
+        if (!is_null($id)) {
+            $user_stacks = $this->board_mapper->getUserStacks($user);
+            if (!in_array($id, $user_stacks)) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            }
+        } elseif (is_array($data)) {
+            $user_boards = $this->board_mapper->getElementsOfUser($user);
+            if (!array_key_exists("board", $data) || !in_array($data["board"], $user_boards)) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            }
         }
     }
 
     public function updatePosition(Request $request, Response $response) {
         $data = $request->getParsedBody();
-        /**
-         * Save new order
-         * @see https://stackoverflow.com/a/15635201
-         */
-        if (array_key_exists("stack", $data) && !empty($data["stack"])) {
-            try {
+
+        try {
+            $user = $this->ci->get('helper')->getUser()->id;
+            $user_stacks = $this->board_mapper->getUserStacks($user);
+            /**
+             * Save new order
+             * @see https://stackoverflow.com/a/15635201
+             */
+            if (array_key_exists("stack", $data) && !empty($data["stack"])) {
                 foreach ($data['stack'] as $position => $item) {
-                    $this->mapper->updatePosition($item, $position);
+                    if (in_array($item, $user_stacks)) {
+                        $this->mapper->updatePosition($item, $position);
+                    }
                 }
-            } catch (\Exception $e) {
-                return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+                return $response->withJSON(array('status' => 'success'));
             }
+        } catch (\Exception $e) {
+            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
-        return $response->withJSON(array('status' => 'success'));
+        return $response->withJSON(array('status' => 'error'));
+    }
+
+    public function archive(Request $request, Response $response) {
+        try {
+            $id = $request->getAttribute('id');
+
+            $this->preSave($id, null);
+
+            $is_archived = $this->mapper->setArchive($id, 1);
+            $newResponse = $response->withJson(['is_archived' => $is_archived]);
+            return $newResponse;
+        } catch (\Exception $e) {
+            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+        }
     }
 
 }

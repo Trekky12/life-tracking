@@ -96,11 +96,18 @@ $app->group('/boards', function() {
     });
 
     $this->group('/stacks', function() {
-        $this->post('/add', '\App\Board\StackController:saveAPI')->setName('stack_save');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Board\StackController:saveAPI')->setName('stack_save');
         $this->post('/updatePosition', '\App\Board\StackController:updatePosition')->setName('stack_update_position');
+        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\StackController:delete')->setName('stack_delete');
+        $this->post('/archive/[{id:[0-9]+}]', '\App\Board\StackController:archive')->setName('stack_archive');
+        $this->get('/data/[{id:[0-9]+}]', '\App\Board\StackController:getAPI')->setName('stack_get');
     });
     $this->group('/card', function() {
-        $this->post('/add', '\App\Board\CardController:saveAPI')->setName('card_save');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Board\CardController:saveAPI')->setName('card_save');
         $this->post('/updatePosition', '\App\Board\CardController:updatePosition')->setName('card_update_position');
+        $this->post('/moveCard', '\App\Board\CardController:moveCard')->setName('card_move_stack');
+        $this->get('/data/[{id:[0-9]+}]', '\App\Board\CardController:getAPI')->setName('card_get');
+        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\CardController:delete')->setName('card_delete');
+        $this->post('/archive/[{id:[0-9]+}]', '\App\Board\CardController:archive')->setName('card_archive');
     });
 });

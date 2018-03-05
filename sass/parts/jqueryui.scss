@@ -19,7 +19,7 @@
         background: $color_blue;
         color: #FFFFFF;
         font-weight: 600;
-        
+
         .ui-button{
             background: $color_blue;
             color: #FFFFFF;
@@ -35,4 +35,13 @@
 
 .ui-widget-overlay{
     opacity: 0.7;
+}
+
+.ui-dialog .ui-dialog-title{
+    float:none;
+}
+
+.ui-dialog-titlebar{
+    display:flex;
+    justify-content: space-between;
 }

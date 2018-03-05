@@ -71,14 +71,31 @@
                 'finances_table': "{{path_for("finances_table")}}",
                 'fuel_table': "{{path_for("fuel_table")}}",
                 'datacount' : '{{datacount}}',
-                'stack_add_url': '{{path_for("stack_save")}}',
+                'stack_save': '{{path_for("stack_save")}}',
                 'stack_position_url': '{{path_for("stack_update_position")}}',
                 'card_add_url': '{{path_for("card_save")}}',
                 'card_position_url': '{{path_for("card_update_position")}}',
+                'card_movestack_url' : '{{path_for("card_move_stack")}}',
+                'stack_get_url' : '{{path_for("stack_get")}}',
+                'stack_delete' : '{{path_for("stack_delete")}}',
+                'stack_archive' :'{{path_for("stack_archive")}}',
+                'card_get_url' : '{{path_for("card_get")}}',
+                'card_delete' : '{{path_for("card_delete")}}',
+                'card_archive' :'{{path_for("card_archive")}}',
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};
-            var lang = {"really_delete": '{{lang["REALLY_DELETE"]}}', 'address': '{{lang["ADDRESS"]}}', 'delete_text': '{{lang["DELETE"]}}', 'accuracy': '{{lang["ACCURACY"]}}', 'consumption': '{{lang["CONSUMPTION"]}}', 'add': '{{lang["ADD"]}}', 'cancel': '{{lang["CANCEL"]}}'};
+            var lang = {
+                "really_delete": '{{lang["REALLY_DELETE"]}}', 
+                'address': '{{lang["ADDRESS"]}}', 
+                'delete_text': '{{lang["DELETE"]}}', 
+                'accuracy': '{{lang["ACCURACY"]}}', 
+                'consumption': '{{lang["CONSUMPTION"]}}', 
+                'add': '{{lang["ADD"]}}', 
+                'cancel': '{{lang["CANCEL"]}}',
+                'really_archive': '{{lang["REALLY_ARCHIVE"]}}',
+                'update' : '{{lang["UPDATE"]}}'
+            };
 
         </script>
         {% block javascript %}

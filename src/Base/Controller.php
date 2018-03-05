@@ -77,7 +77,7 @@ abstract class Controller {
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
         $entry = new $this->model($data);
-        
+
 
         if ($entry->hasParsingErrors()) {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));
@@ -186,6 +186,20 @@ abstract class Controller {
         $this->preEdit($entry_id);
 
         return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'users' => $users]);
+    }
+
+    public function getAPI(Request $request, Response $response) {
+
+        $entry_id = $request->getAttribute('id');
+
+        try {
+            $this->preSave($entry_id, null);
+            $entry = $this->mapper->get($entry_id);
+        } catch (\Exception $e) {
+            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+        }
+
+        return $response->withJson(['entry' => $entry->get_fields()]);
     }
 
 }

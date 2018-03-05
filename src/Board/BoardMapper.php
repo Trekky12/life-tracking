@@ -71,5 +71,23 @@ class BoardMapper extends \App\Base\Mapper {
         }
         return $results;
     }
+    
+    public function getUserCards($id){
+        $sql = "SELECT ca.id FROM " . $this->getTable($this->user_table) . " ub, " . $this->getTable("stacks") . " st, " . $this->getTable("cards") . " ca "
+                . " WHERE ub.user = :id "
+                . " AND st.board = ub.board "
+                . " AND st.id = ca.stack";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($el = $stmt->fetchColumn()) {
+            $results[] = intval($el);
+        }
+        return $results;
+    }
 
 }

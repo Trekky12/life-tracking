@@ -36,7 +36,6 @@
                 url: url,
                 method: 'DELETE',
                 success: function (response) {
-                    console.log(response['is_deleted'] === true);
                     window.location.reload();
                 },
                 error: function (data) {
