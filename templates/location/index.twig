@@ -15,14 +15,14 @@
     <div id="search" class="page-content">
         <form method="GET" id="search-form" class="page-content">
             <div class="element">
-                <label for="fromSelect">{{lang["FROM"]}}</label>
-                <input type="text" id="fromSelect" />
-                <input type="hidden" id="from" name="from" value="{{from}}"/>
+                <label for="dateStart">{{lang["FROM"]}}</label>
+                <input type="text" id="dateStart" />
+                <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
             </div>
             <div class="element">
-                <label for="toSelect">{{lang["TO"]}}</label>
-                <input type="text" id="toSelect" />
-                <input type="hidden" id="to" name="to" value="{{to}}"/>
+                <label for="dateEnd">{{lang["TO"]}}</label>
+                <input type="text" id="dateEnd" />
+                <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
             </div>
             <div class="element">
                 <input type="submit" value="{{lang["SHOW"]}}"/>

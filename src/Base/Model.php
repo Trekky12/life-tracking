@@ -2,7 +2,7 @@
 
 namespace App\Base;
 
-class Model {
+class Model implements \JsonSerializable {
 
     protected $fields = array();
 
@@ -44,12 +44,17 @@ class Model {
         foreach ($this->fields as $k => $v) {
             $temp[$k] = $v;
         }
-        
+
         /**
          * No User
          */
-        if (array_key_exists("user", $temp) && $removeUser) {
-            unset($temp["user"]);
+        if ($removeUser) {
+            if (array_key_exists("user", $temp)) {
+                unset($temp["user"]);
+            }
+            if (array_key_exists("password", $temp)) {
+                unset($temp["password"]);
+            }
         }
         return $temp;
     }
@@ -75,12 +80,16 @@ class Model {
         return $this->parsing_errors;
     }
 
-    public function setUsers($users){
+    public function setUsers($users) {
         $this->users = $users;
     }
-    
-    public function getUsers(){
+
+    public function getUsers() {
         return $this->users;
+    }
+
+    public function jsonSerialize() {
+        return $this->get_fields(true);
     }
 
 }

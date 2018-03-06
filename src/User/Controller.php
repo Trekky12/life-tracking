@@ -155,7 +155,7 @@ class Controller extends \App\Base\Controller {
                 $img->fit(100, 100);
                 $img->save($complete_file_name . '-small.' . $file_extension);
 
-                $img->fit(20, 20);
+                $img->fit(50, 50);
                 $img->save($complete_file_name . '-mini.' . $file_extension);
 
                 $this->mapper->update_image($user->id, $file_name . '.' . $file_extension);

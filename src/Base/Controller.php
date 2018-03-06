@@ -195,11 +195,16 @@ abstract class Controller {
         try {
             $this->preSave($entry_id, null);
             $entry = $this->mapper->get($entry_id);
+
+            if ($this->mapper->hasUserTable()) {
+                $entry_users = $this->mapper->getUsers($entry_id);
+                $entry->setUsers($entry_users);
+            }
         } catch (\Exception $e) {
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
-
-        return $response->withJson(['entry' => $entry->get_fields()]);
+        
+        return $response->withJson(['entry' => $entry]);
     }
 
 }

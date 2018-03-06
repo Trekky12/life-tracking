@@ -42,12 +42,12 @@
                     <input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %}value="{{entry.description}}"{% endif %}>
                 </div>
                 <div class="form-group">
-                    <label for="from">{{lang["START"]}}</label>
+                    <label for="dateStart">{{lang["START"]}}</label>
                     <input type="text" class="form-control" id="dateStart" >
                     <input type="hidden" class="form-control" id="inputStart" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}">
                 </div>
                 <div class="form-group">
-                    <label for="to">{{lang["END"]}}</label>
+                    <label for="dateEnd">{{lang["END"]}}</label>
                     <input type="text" class="form-control" id="dateEnd" >
                     <input type="hidden" class="form-control" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}">
                 </div>

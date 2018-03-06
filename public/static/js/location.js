@@ -20,8 +20,8 @@
                 type: 'GET',
                 url: jsObject.marker_url,
                 data: {
-                    from: $('#from').val(),
-                    to: $('#to').val()
+                    from: $('#inputStart').val(),
+                    to: $('#inputEnd').val()
                 },
                 success: function (data) {
                     drawMap(data);
@@ -97,8 +97,27 @@
                         if (response['data']['police']) {
                             output += response['data']['police'] + '\n';
                         }
+                        
+                        if (response['data']['road']) {
+                            output += response['data']['road'];
+                        }
+                        
+                        if (response['data']['house_number']) {
+                            output += response['data']['house_number'];
+                        }
+                        
+                        if (response['data']['road'] || response['data']['house_number']) {
+                             output += '\n';
+                        }
+                        
+                        if (response['data']['postcode']) {
+                            output += response['data']['postcode'];
+                        }
+                        
+                        if (response['data']['city']) {
+                            output += response['data']['city'];
+                        }
 
-                        output += response['data']['road'] + ' ' + response['data']['house_number'] + '\n' + response['data']['postcode'] + ' ' + response['data']['city'];
                         alert(output);
                     }
                 }

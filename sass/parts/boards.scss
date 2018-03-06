@@ -80,7 +80,7 @@
     border-right: 0;
 }
 
-.create-stack, .create-card{
+.create-stack, .create-card, .add-user-to-card{
     @include font-size(1.4);
     margin: 1rem;
     color: #a1a1a1!important;
@@ -103,12 +103,88 @@
     box-sizing: border-box; 
     background-color: $color_background-body;
     padding: 0.5rem;
+    position:relative;
+    word-wrap: break-word;
+    overflow:hidden;
 
     &:hover{
         cursor:pointer;
+    }
+
+
+    .card-member{
+        //float:right;
+        display:flex;
+        justify-content: flex-end;
+    }
+
+    .card-date{
+        @include font-size(1.2);
+        border-radius: 5px;
+        background: $color_background-screen;
+        padding: 0.1rem 0.5rem;
+        margin: 0.2rem;
+        color: $color_text-main;
+        &::before{
+            content: "\f073";
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            transition: all 250ms;
+            @include font-size(1);
+            margin-right: 5px;
+            position: relative;
+            top: -1px;
+        }
+        
+        &.due{
+            background: $color_red;
+            color: $color_background-body;
+        }
+        
     }
 }
 
 .board-card-dummy{
     margin:0 1rem 1rem 1rem;
 }
+
+.avatar-small, .avatar-mini{
+    border-radius: 50%;
+    border: 3px solid #CCC;
+    width: 50px;
+    height: 50px;
+    margin: 0.5rem;
+    cursor:pointer;
+    display:block;
+
+    &.selected{
+        border: 3px solid $color_blue;
+    }
+
+    &.avatar-initials{
+        padding: 0.5rem;
+    }
+}
+
+.avatar-mini{
+    width: 25px;
+    height: 25px;
+    margin: 0.2rem;
+    border: 2px solid $color_blue;
+
+    &.avatar-initials{
+        padding: 0.1rem;
+    }
+}
+
+#card-add-form{
+    .member-list{
+        display:flex;
+        align-items: center;
+    }
+
+}
+
+
+

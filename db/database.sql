@@ -224,9 +224,9 @@ CREATE TABLE cards (
     stack INTEGER unsigned DEFAULT NULL,
     dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     title varchar(255) DEFAULT NULL,
-    text TEXT DEFAULT NULL,
-    due_date TIMESTAMP NULL DEFAULT NULL,
-    state INT(1) DEFAULT NULL,
+    date DATE DEFAULT NULL,
+    time TIME DEFAULT NULL,
+    description TEXT DEFAULT NULL,
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
     PRIMARY KEY (id),
@@ -235,11 +235,14 @@ CREATE TABLE cards (
 
 /*
 ALTER TABLE cards ADD position INT(10) NULL AFTER archive;
+ALTER TABLE cards ADD date DATE DEFAULT NULL AFTER title;
+ALTER TABLE cards ADD time TIME DEFAULT NULL AFTER date;
+ALTER TABLE cards ADD description TEXT DEFAULT NULL AFTER time;
 */
 
 
-DROP TABLE IF EXISTS cards_users;
-CREATE TABLE cards_users (
+DROP TABLE IF EXISTS cards_user;
+CREATE TABLE cards_user (
     dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     card INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,

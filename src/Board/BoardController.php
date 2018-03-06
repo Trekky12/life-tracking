@@ -64,7 +64,12 @@ class BoardController extends \App\Base\Controller {
             $stack->cards = $this->card_mapper->getCardsFromStack($stack->id);
         }
 
-        return $this->ci->view->render($response, 'boards/view.twig', ['board' => $board, 'stacks' => $stacks]);
+        
+        $users = $this->user_mapper->getAll('name');
+        
+        $card_user = $this->card_mapper->getCardsUser();
+
+        return $this->ci->view->render($response, 'boards/view.twig', ['board' => $board, 'stacks' => $stacks, "users" => $users, "card_user" => $card_user]);
     }
 
 }

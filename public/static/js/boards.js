@@ -92,8 +92,8 @@
 
         cardDialog = $("#card-add-form").dialog({
             autoOpen: false,
-            height: 220,
-            width: 350,
+            height: 650,
+            width: 550,
             modal: true,
             buttons: [
                 {
@@ -112,6 +112,14 @@
                     class: "button gray"
                 }
             ],
+            open: function () {
+                var $textarea = cardDialog.find('textarea[name="description"]');
+                if ($textarea.val() !== '') {
+                    $textarea.height($textarea[0].scrollHeight);
+                } else {
+                    $textarea.height("auto");
+                }
+            },
             create: function () {
                 $(this).parent().children(".ui-dialog-titlebar").append('<span class="edit-bar"></span>');
             },
@@ -144,6 +152,29 @@
                     cardDialog.find('input[name="title"]').val(response.entry.title);
                     cardDialog.find('input[name="position"]').val(response.entry.position);
                     cardDialog.find('input[name="stack"]').val(response.entry.stack);
+                    cardDialog.find('input[name="date"]').val(response.entry.date);
+                    if (response.entry.date) {
+                        cardDialog.find('input.date-display').datepicker("setDate", moment(response.entry.date).toDate());
+                    }
+                    cardDialog.find('input[name="time"]').val(response.entry.time);
+                    cardDialog.find('textarea[name="description"]').val(response.entry.description);
+
+                    cardDialog.find('select[name="users[]"]').val(response.entry.users);
+
+                    var users = cardDialog.find('.avatar-small');
+
+                    $.each(users, function (idx, user) {
+                        var user_id = $(user).data('user');
+
+                        if (jQuery.inArray(user_id, response.entry.users) !== -1) {
+                            $(user).addClass('selected');
+                        } else {
+                            $(user).removeClass('selected');
+                        }
+
+                    });
+
+
                     $('#card-add-btn').button('option', 'label', lang.update);
                     var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + response.entry.id + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
                                     <a href='#' data-url='" + jsObject.card_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
@@ -160,6 +191,7 @@
          */
         $(".stack-wrapper").sortable({
             items: ".stack",
+            axis: "x",
             start: function (event, ui) {
                 ui.item.removeClass('stack-border');
             },
@@ -221,6 +253,35 @@
                 }
             });
         });
+
+
+        /**
+         * Select user on avatar click in hidden multi-select
+         */
+        $('#card-add-form .avatar-small').on('click', function (e) {
+            var user_id = $(this).data('user');
+            var option = $("#card-add-form select#users option[value='" + user_id + "']");
+            if (option.prop("selected")) {
+                option.prop("selected", false);
+                $(this).removeClass('selected');
+            } else {
+                option.prop("selected", true);
+                $(this).addClass('selected');
+            }
+        });
+
+        $('.add-user-to-card').on('click', function (e) {
+            e.preventDefault();
+            $(this).siblings('.dropdown-content').css("display", "block");
+        });
+
+        $('.avatar-small').disableSelection();
+
+        $("textarea").on("input change", function () {
+            $(this).height("auto").height($(this)[0].scrollHeight);
+        });
+
+        //$('.card-date').html(moment($('.card-date')).format(i18n.dateformatJS));
 
 
     });

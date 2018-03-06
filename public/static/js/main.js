@@ -45,45 +45,7 @@
         }
 
         /**
-         * Datepicker on Location
-         */
-        var from = $("#fromSelect").datepicker({
-            defaultDate: "+1w",
-            changeMonth: true,
-            altField: "#from",
-            altFormat: "yy-mm-dd"
-        }).on("change", function () {
-            to.datepicker("option", "minDate", getDate(this));
-        });
-        if ($("#from").val()) {
-            $('#fromSelect').datepicker("setDate", moment($("#from").val()).toDate());
-        }
-
-        var to = $("#toSelect").datepicker({
-            defaultDate: "+1w",
-            changeMonth: true,
-            altFormat: "yy-mm-dd",
-            altField: "#to"
-        }).on("change", function () {
-            from.datepicker("option", "maxDate", getDate(this));
-        });
-        if ($("#to").val()) {
-            $('#toSelect').datepicker("setDate", moment($("#to").val()).toDate());
-        }
-
-        function getDate(element) {
-            var date;
-            try {
-                var dateFormat = $(element).datepicker("option", "dateFormat");
-                date = $.datepicker.parseDate(dateFormat, element.value);
-            } catch (error) {
-                date = null;
-            }
-            return date;
-        }
-
-        /**
-         * Datepicker on Add Fuel or Add Finances
+         * Default Datepicker
          */
 
         $("#dateSelect").datepicker({
@@ -98,26 +60,47 @@
 
 
         /**
-         * Datepicker on monthly finance entries
+         * Datepicker Range
          */
-        $("#dateStart").datepicker({
+        var datepickerStart = $("#dateStart").datepicker({
             defaultDate: "+1w",
             changeMonth: true,
             altFormat: "yy-mm-dd",
             altField: '#inputStart'
+        }).on("change", function () {
+            datepickerEnd.datepicker("option", "minDate", getDate(this));
         });
+        // show language dependend value of altField
         if ($("#inputStart").val()) {
             $('#dateStart').datepicker("setDate", moment($("#inputStart").val()).toDate());
         }
 
-        $("#dateEnd").datepicker({
+        var datepickerEnd = $("#dateEnd").datepicker({
             defaultDate: "+1w",
             changeMonth: true,
             altFormat: "yy-mm-dd",
             altField: '#inputEnd'
+        }).on("change", function () {
+            datepickerStart.datepicker("option", "maxDate", getDate(this));
         });
+        // show language dependend value of altField
         if ($("#inputEnd").val()) {
             $('#dateEnd').datepicker("setDate", moment($("#inputEnd").val()).toDate());
+        }
+        
+        // Init with other values
+        datepickerEnd.datepicker("option", "minDate", getDate(datepickerStart[0]));
+        datepickerStart.datepicker("option", "maxDate", getDate(datepickerEnd[0]));
+
+        function getDate(element) {
+            var date;
+            try {
+                var dateFormat = $(element).datepicker("option", "dateFormat");
+                date = $.datepicker.parseDate(dateFormat, element.value);
+            } catch (error) {
+                date = null;
+            }
+            return date;
         }
 
 
@@ -140,7 +123,7 @@
         /**
          * Charts
          */
-        
+
 
         if ($("#financeSummaryChart").length) {
             var fuelChart = new Chart($("#financeSummaryChart"), {
@@ -493,8 +476,8 @@
                 }
             ]
         });
-        
-        
+
+
         $("#cars_table").DataTable({
             "paging": true,
             "info": true,
@@ -510,7 +493,7 @@
             "responsive": true,
             "autoWidth": false
         });
-        
+
         $("#boards_table").DataTable({
             "paging": true,
             "info": true,
@@ -537,7 +520,7 @@
                 $('#commonValue').toggle();
 
                 var value = $('#inputValue').val();
-                
+
                 if (value) {
                     if ($(this).is(':checked')) {
                         // move value to common Value and the half into value
