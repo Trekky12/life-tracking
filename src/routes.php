@@ -110,4 +110,10 @@ $app->group('/boards', function() {
         $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\CardController:delete')->setName('card_delete');
         $this->post('/archive/[{id:[0-9]+}]', '\App\Board\CardController:archive')->setName('card_archive');
     });
+    
+    $this->group('/labels', function() {
+        $this->post('/save/[{id:[0-9]+}]', '\App\Board\LabelController:saveAPI')->setName('label_save');
+        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\LabelController:delete')->setName('label_delete');
+        $this->get('/data/[{id:[0-9]+}]', '\App\Board\LabelController:getAPI')->setName('label_get');
+    });
 });

@@ -11,11 +11,12 @@
 }
 .stack-wrapper{
     position: relative;
-    min-height: calc(100vh - #{$header_height} - 20px - 36px - 20px);
-
-    display:flex;
-    flex:1;
     overflow-x: auto;
+
+    @media screen and (min-width: $size_mobile) {
+        min-height: calc(100vh - #{$header_height} - 20px - 36px - 20px);
+        display:flex;
+    }
 }
 
 .stack, .stack-dummy{
@@ -25,11 +26,7 @@
 
     padding: 0;
     margin-right: 0.2rem;
-    //background: $color_background-screen;
     padding-right: 0.2rem;
-    overflow-y: auto;
-
-
 
     &:hover{
         cursor:pointer;
@@ -37,7 +34,6 @@
 
     .stack-header{
         background: $color_blue_light;
-        //text-align:center;
         @include font-size(2);
 
         margin: 1rem;
@@ -45,6 +41,10 @@
         padding:0 1rem 0 1rem;
         display:flex;
         justify-content: space-between;
+
+        @media screen and (max-width: $size_mobile) {
+            word-break: break-all;
+        }
 
         &, a{
             color: $color_background-body;
@@ -80,7 +80,7 @@
     border-right: 0;
 }
 
-.create-stack, .create-card, .add-user-to-card{
+.create-stack, .create-card, .add-user-to-card, .create-label{
     @include font-size(1.4);
     margin: 1rem;
     color: #a1a1a1!important;
@@ -90,15 +90,16 @@
     }
 }
 
-.card-wrapper{
+.card-wrapper, .stack-dummy{
     // So cards can be dropped on empty stacks
     min-height: 10px;
 }
-.board-card{
-    min-height:50px;
-    background: #FFFFFF;
-    margin:0 1rem 1rem 1rem;
 
+.board-card, .card-placeholder{
+    min-height:50px;
+    margin:0 1rem 1rem 1rem;
+}
+.board-card{
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     box-sizing: border-box; 
     background-color: $color_background-body;
@@ -106,6 +107,7 @@
     position:relative;
     word-wrap: break-word;
     overflow:hidden;
+    word-break: break-all;
 
     &:hover{
         cursor:pointer;
@@ -113,17 +115,12 @@
 
 
     .card-member{
-        //float:right;
         display:flex;
         justify-content: flex-end;
     }
 
     .card-date{
-        @include font-size(1.2);
-        border-radius: 5px;
         background: $color_background-screen;
-        padding: 0.1rem 0.5rem;
-        margin: 0.2rem;
         color: $color_text-main;
         &::before{
             content: "\f073";
@@ -136,17 +133,37 @@
             position: relative;
             top: -1px;
         }
-        
+
         &.due{
             background: $color_red;
             color: $color_background-body;
         }
-        
+
+    }
+}
+
+.card-date, .label{
+    @include font-size(1.2);
+    border-radius: 5px;
+    padding: 0.1rem 0.5rem;
+    margin: 0.2rem;
+
+    a{
+        cursor:pointer;
+        color: inherit;
+
+        &:hover{
+            color:inherit;
+        }
     }
 }
 
 .board-card-dummy{
     margin:0 1rem 1rem 1rem;
+}
+
+.card-placeholder{
+    border: 1px dashed $color_text-main;
 }
 
 .avatar-small, .avatar-mini{
@@ -177,14 +194,96 @@
         padding: 0.1rem;
     }
 }
+.member-list{
+    display:flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
 
-#card-add-form{
-    .member-list{
+.sidebar {
+    height: 100%;
+    width: 200px; 
+    position: fixed;
+    z-index: 1; 
+    top: 0; 
+    right: 0;
+    background-color: $color_background-body;
+    //overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 50px;
+    transition: 0.2s;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+
+    #sidebar-toggle{
+        @include font-size(2);
+        line-height: 1;
+        transition: all 250ms;
+        position:absolute;
+        left:-30px;
+        width: 30px;
+        height:30px;
+        background-color: $color_background-body;
         display:flex;
-        align-items: center;
+        justify-content: center;
+        align-items:center;
+        border-bottom-left-radius: 3px;
+        box-shadow: -7px 1px 9px 0px rgba(0,0,0,0.16);
+
+
+        &:hover{
+            cursor: pointer;
+        }
+
+        &::before{
+            content: "\f054";
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+        }
+
+
+    }
+    &.small {
+        width: 0px;
+        #sidebar-toggle::before{
+            content: "\f053";
+        }
     }
 
+    .sidebar-inner{
+        width: 200px;
+        padding: 1rem;
+
+        h2{
+            margin-top:0;
+        }
+    }
+}
+
+.sidebar-box{
+    border-bottom: 1px solid $color_background-screen;
+    padding-bottom:1rem;
+    h4{
+        margin-top:0;
+        margin-bottom: 0.2rem;
+        @include font-size(1.3);
+    }
+
+    .avatar-small{
+        border: 2px solid $color_blue;
+    }
 }
 
 
+.color-wrapper{
+    background-color:black;
+    height:32px;
+    width:32px;
+    
+    &:hover{
+        cursor:pointer;
+    }
+}
 
+input[type="color"]{
+    visibility:hidden;
+}

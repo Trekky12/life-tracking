@@ -73,7 +73,7 @@
                 'datacount' : '{{datacount}}',
                 'stack_save': '{{path_for("stack_save")}}',
                 'stack_position_url': '{{path_for("stack_update_position")}}',
-                'card_add_url': '{{path_for("card_save")}}',
+                'card_save': '{{path_for("card_save")}}',
                 'card_position_url': '{{path_for("card_update_position")}}',
                 'card_movestack_url' : '{{path_for("card_move_stack")}}',
                 'stack_get_url' : '{{path_for("stack_get")}}',
@@ -82,6 +82,9 @@
                 'card_get_url' : '{{path_for("card_get")}}',
                 'card_delete' : '{{path_for("card_delete")}}',
                 'card_archive' :'{{path_for("card_archive")}}',
+                'label_save': '{{path_for("label_save")}}',
+                'label_get_url' : '{{path_for("label_get")}}',
+                'label_delete' : '{{path_for("label_delete")}}',
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

@@ -99,7 +99,7 @@
                         }
                         
                         if (response['data']['road']) {
-                            output += response['data']['road'];
+                            output += response['data']['road']+" ";
                         }
                         
                         if (response['data']['house_number']) {
@@ -111,7 +111,7 @@
                         }
                         
                         if (response['data']['postcode']) {
-                            output += response['data']['postcode'];
+                            output += response['data']['postcode']+" ";
                         }
                         
                         if (response['data']['city']) {

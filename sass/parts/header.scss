@@ -8,6 +8,8 @@
     }
     
     background-color: $color_background-body;
+    position:relative;
+    z-index: 2;
 
     .header-inner{
 

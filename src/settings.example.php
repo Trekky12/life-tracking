@@ -27,6 +27,7 @@ return [
                 'php' => 'en_US',
                 'datatables' => 'English.lang',
                 'dateformatJS' => 'YYYY-MM-DD',
+                'twig' => 'Y-m-d',
                 'currency' => '€'
             ],
             'location' => [

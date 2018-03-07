@@ -16,6 +16,7 @@ class BoardController extends \App\Base\Controller {
         $this->user_mapper = new \App\User\Mapper($this->ci);
         $this->stack_mapper = new \App\Board\StackMapper($this->ci);
         $this->card_mapper = new \App\Board\CardMapper($this->ci);
+        $this->label_mapper = new \App\Board\LabelMapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -64,12 +65,20 @@ class BoardController extends \App\Base\Controller {
             $stack->cards = $this->card_mapper->getCardsFromStack($stack->id);
         }
 
-        
+
         $users = $this->user_mapper->getAll('name');
-        
+
         $card_user = $this->card_mapper->getCardsUser();
 
-        return $this->ci->view->render($response, 'boards/view.twig', ['board' => $board, 'stacks' => $stacks, "users" => $users, "card_user" => $card_user]);
+        $labels = $this->label_mapper->getLabelsFromBoard($board->id);
+
+        return $this->ci->view->render($response, 'boards/view.twig', [
+                    'board' => $board,
+                    'stacks' => $stacks,
+                    "users" => $users,
+                    "card_user" => $card_user,
+                    "labels" => $labels
+        ]);
     }
 
 }

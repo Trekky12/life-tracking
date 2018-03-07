@@ -3,6 +3,7 @@
 {% set active = 'boards' %}
 
 {% block javascript %}
+    <script src="/static/assets/js/jquery.ui.touch-punch.min.js"></script>
     <script src="/static/js/boards.js"></script>
 {% endblock %}
 
@@ -26,7 +27,7 @@
         </form>
     </div>
 
-    <div id="card-add-form" class="dialog-form" title="{{lang["CARD"]}}">
+    <div id="card-form" class="dialog-form" title="{{lang["CARD"]}}">
         <form>
             <input name="stack" type="hidden" value="">
             <input name="id" type="hidden" value="">
@@ -73,6 +74,55 @@
         </form>
     </div>
 
+    <div id="label-form" class="dialog-form" title="{{lang["LABEL"]}}">
+        <form>
+            <input name="board" type="hidden" value="{{board.id}}">
+            <input name="id" type="hidden" value="">
+            <div class="form-group">
+                <label for="inputName">{{lang["NAME"]}}</label>
+                <input class="form-control" id="inputName" name="name" type="text">
+            </div>
+            <div class="form-group">
+                <h4>{{lang["COLOR"]}}</h4>
+                <label for="inputColor" class="color-wrapper">
+                    <input class="form-control" id="inputColor" name="color" type="color">
+                </label>
+            </div>
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </form>
+    </div>
+
+    <div class="sidebar">
+        <i id="sidebar-toggle" aria-hidden="true"></i>
+        <div class="sidebar-inner">
+            <div class="sidebar-box">
+                <h4>{{lang["USERS"]}}</h4>
+                <div class="member-list">
+                    {% for user in users %}
+                        {% if user.get_thumbnail() != '' %}
+                            <img alt="{{user.login}}" src="/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar-small" data-user="{{user.id}}">
+                        {% else %}
+                            <svg alt="{{user.login}}" class="avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}">
+                            <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+                            </svg>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <h4>{{lang["LABELS"]}}</h4>
+                <div class="label-list">
+                    {% for label in labels %}
+                        <span class="label" style="background-color:{{label.color}}; color:{{label.getTextColorYIQ()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name}}</a></span>
+                    {% endfor %}
+                </div>
+                <a class="create-label" href="#"><i class="fa fa-plus"></i> {{lang["ADD_LABEL"]}}</a>
+            </div>
+        </div>
+    </div>
+
+
     <div class="board-content">
         <div class="stack-wrapper">
             {% for stack in stacks %}
@@ -93,7 +143,7 @@
                             <div class="board-card" id="card_{{card.id}}" data-card="{{card.id}}">
                                 <div class="card-title">{{card.title}}</div>
                                 {% if card.date or card.time %}
-                                    <span class="card-date {% if "now"|date('Y-m-d') >= card.date|date('Y-m-d') %}due{% endif %}">{{card.date}} {{card.time}}</span>
+                                    <span class="card-date {% if "now"|date('Y-m-d') >= card.date|date('Y-m-d') %}due{% endif %}">{{card.date|date(i18n.twig)}} {{ card.time is empty ? "" : card.time|date("H:i") }}</span>
                                 {% endif %}
                                 <div class="card-member">
                                     {% for user in card_user[card.id] %}
@@ -106,7 +156,7 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
-      
+
                             </div>
                         {% endfor %}
                     </div>

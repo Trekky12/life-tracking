@@ -136,14 +136,19 @@ $lang["BOARDS"] = "Boards";
 $lang["BOARD"] = "Board";
 $lang["STACK"] = "Stack";
 $lang["CARD"] = "Card";
+$lang["LABEL"] = "Label";
+$lang["LABELS"] = "Labels";
 
 $lang["ADD_STACK"] = "Add Stack";
 $lang["ADD_CARD"] = "Add Card";
 $lang["ADD_USER"] = "Add User";
+$lang["ADD_LABEL"] = "Add Label";
 
 $lang["REALLY_ARCHIVE"] = "Do you really want to archive the entry?";
 $lang["UPDATE"] = "Update";
 
 $lang["TITLE"] = "Title";
+$lang["COLOR"] = "Color";
+$lang["WRONG_COLOR_TYPE"] = "The color was wrong submitted!";
 
 return $lang;

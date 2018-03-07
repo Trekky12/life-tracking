@@ -3,7 +3,7 @@
     $(document).ready(function () {
 
 
-        var stackDialog, stackForm, cardDialog, cardForm;
+        var stackDialog, stackForm, cardDialog, cardForm, labelDialog, labelForm;
 
         function save(dialog, url) {
             var id = dialog.find('input[name="id"]').val();
@@ -27,8 +27,9 @@
          */
         stackDialog = $("#stack-form").dialog({
             autoOpen: false,
-            height: 250,
-            width: 350,
+            //height: 250,
+            autoResize: true,
+            width: 330,
             modal: true,
             buttons: [
                 {
@@ -90,17 +91,20 @@
          * ==================================================
          */
 
-        cardDialog = $("#card-add-form").dialog({
+        cardDialog = $("#card-form").dialog({
             autoOpen: false,
-            height: 650,
-            width: 550,
+            //height: 650,
+            autoResize: true,
+            //width: 550,
             modal: true,
+            //@see https://stackoverflow.com/a/31322508
+            width: $(window).width() > 550 ? 550 : 'auto',
             buttons: [
                 {
                     text: lang.add,
                     id: "card-add-btn",
                     click: function () {
-                        save(cardDialog, jsObject.card_add_url);
+                        save(cardDialog, jsObject.card_save);
                     },
                     class: "button"
                 },
@@ -133,7 +137,7 @@
 
         cardForm = cardDialog.find("form").on("submit", function (event) {
             event.preventDefault();
-            save(cardDialog, jsObject.card_add_url);
+            save(cardDialog, jsObject.card_save);
         });
 
         $("a.create-card").on("click", function () {
@@ -186,17 +190,86 @@
 
         /**
          * ==================================================
+         *              Add/edit labels
+         * ==================================================
+         */
+        labelDialog = $("#label-form").dialog({
+            autoOpen: false,
+            //height: 250,
+            autoResize: true,
+            width: 330,
+            modal: true,
+            buttons: [
+                {
+                    text: lang.add,
+                    id: "label-add-btn",
+                    click: function () {
+                        save(labelDialog, jsObject.label_save);
+                    },
+                    class: "button"
+                },
+                {
+                    text: lang.cancel,
+                    click: function () {
+                        $(this).dialog("close");
+                    },
+                    class: "button gray"
+                }
+            ],
+            create: function () {
+                $(this).parent().children(".ui-dialog-titlebar").append('<span class="edit-bar"></span>');
+            },
+            close: function () {
+                $(this).parent().find(".ui-dialog-titlebar .edit-bar").html('');
+                labelForm[ 0 ].reset();
+                $('#label-add-btn').button('option', 'label', lang.add);
+            }
+        });
+        labelForm = labelDialog.find("form").on("submit", function (event) {
+            event.preventDefault();
+            save(labelDialog, jsObject.label_save);
+        });
+
+        $("a.create-label").on("click", function () {
+            labelDialog.dialog("open");
+        });
+
+        $("a.edit-label").on("click", function () {
+            var label = $(this).data('label');
+            $.ajax({
+                url: jsObject.label_get_url + label,
+                method: 'GET',
+                success: function (response) {
+                    labelDialog.find('input[name="id"]').val(response.entry.id);
+                    labelDialog.find('input[name="name"]').val(response.entry.name);
+                    labelDialog.find('input[name="color"]').val(response.entry.color);
+                    labelDialog.find('input[name="color"]').parent('.color-wrapper').css("background-color", response.entry.color);
+                    $('#label-add-btn').button('option', 'label', lang.update);
+                    var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                    labelDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
+                    labelDialog.dialog("open");
+                }
+            });
+        });
+
+        /**
+         * ==================================================
          *              Sort stacks and cards
          * ==================================================
          */
         $(".stack-wrapper").sortable({
             items: ".stack",
             axis: "x",
+            tolerance: 'pointer',
+            helper: 'clone',
+            handle: ".stack-header",
+            cursor: "move",
+            containment: 'parent',
             start: function (event, ui) {
-                ui.item.removeClass('stack-border');
+                ui.helper.removeClass('stack-border');
             },
             stop: function (event, ui) {
-                ui.item.addClass('stack-border');
+                //ui.item.addClass('stack-border');
             },
             update: function (event, ui) {
                 var data = $(this).sortable('serialize');
@@ -211,6 +284,8 @@
         $(".card-wrapper").sortable({
             connectWith: ".card-wrapper",
             dropOnEmpty: true,
+            helper: 'clone', // do not fire click events @see https://stackoverflow.com/a/2977904
+            placeholder: "card-placeholder",
             update: function (event, ui) {
                 var data = $(this).sortable('serialize');
                 $.ajax({
@@ -258,9 +333,9 @@
         /**
          * Select user on avatar click in hidden multi-select
          */
-        $('#card-add-form .avatar-small').on('click', function (e) {
+        $('#card-form .avatar-small').on('click', function (e) {
             var user_id = $(this).data('user');
-            var option = $("#card-add-form select#users option[value='" + user_id + "']");
+            var option = $("#card-form select#users option[value='" + user_id + "']");
             if (option.prop("selected")) {
                 option.prop("selected", false);
                 $(this).removeClass('selected');
@@ -283,6 +358,37 @@
 
         //$('.card-date').html(moment($('.card-date')).format(i18n.dateformatJS));
 
+        mobileFunctions();
+        $(window).resize(function () {
+            mobileFunctions();
+        });
 
+
+        $('#sidebar-toggle').on('click', function () {
+            $(this).parent().toggleClass('small');
+        });
+
+            
+        // replace color picker placeholder with chosen color
+        $(document).on('change', 'input[type="color"]', function () {
+            $(this).parent('.color-wrapper').css('background-color', "" + $(this).val());
+        });
+        
+        function mobileFunctions(){
+            cardDialog.dialog({
+                width: $(window).width() > 550 ? 550 : 'auto'
+            });
+            if ($('.menu-toggle').css('display') !== 'none') {
+                $('.sidebar').addClass('small');
+                $(".stack-wrapper").sortable({
+                    axis: false
+                });
+            }else{
+                $('.sidebar').removeClass('small');
+                $(".stack-wrapper").sortable({
+                    axis: "x"
+                });
+            }
+        }
     });
 })(jQuery);
