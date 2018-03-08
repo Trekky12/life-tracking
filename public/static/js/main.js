@@ -57,6 +57,11 @@
         if ($("#inputDate").val()) {
             $('#dateSelect').datepicker("setDate", moment($("#inputDate").val()).toDate());
         }
+        // clear alt field
+        $("#dateSelect").change(function () {
+            if (!$(this).val())
+                $("#inputDate").val('');
+        });
 
 
         /**
@@ -87,7 +92,7 @@
         if ($("#inputEnd").val()) {
             $('#dateEnd').datepicker("setDate", moment($("#inputEnd").val()).toDate());
         }
-        
+
         // Init with other values
         datepickerEnd.datepicker("option", "minDate", getDate(datepickerStart[0]));
         datepickerStart.datepicker("option", "maxDate", getDate(datepickerEnd[0]));

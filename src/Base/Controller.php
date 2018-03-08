@@ -69,6 +69,26 @@ abstract class Controller {
     protected function preEdit($id) {
         // do nothing
     }
+    
+    /**
+     * this function is called before getting an entry on a GET API request
+     * @param type $id
+     * @param type $entry
+     */
+    protected function preGetAPI($id){
+        $this->preSave($id, null);
+    }
+    
+    /**
+     * this function is called before returning the entry on a GET API request
+     * here you can modify the entry 
+     * @param type $id
+     * @param type $entry
+     * @return type
+     */
+    protected function afterGetAPI($id, $entry){
+        return $entry;
+    }
 
     public function save(Request $request, Response $response) {
         $id = $request->getAttribute('id');
@@ -193,18 +213,19 @@ abstract class Controller {
         $entry_id = $request->getAttribute('id');
 
         try {
-            $this->preSave($entry_id, null);
+            $this->preGetAPI($entry_id);
             $entry = $this->mapper->get($entry_id);
 
             if ($this->mapper->hasUserTable()) {
                 $entry_users = $this->mapper->getUsers($entry_id);
                 $entry->setUsers($entry_users);
             }
+            $rentry = $this->afterGetAPI($entry_id, $entry);
         } catch (\Exception $e) {
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
         
-        return $response->withJson(['entry' => $entry]);
+        return $response->withJson(['entry' => $rentry]);
     }
 
 }

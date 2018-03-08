@@ -72,12 +72,15 @@ class BoardController extends \App\Base\Controller {
 
         $labels = $this->label_mapper->getLabelsFromBoard($board->id);
 
+        $card_label = $this->label_mapper->getCardsLabel();
+
         return $this->ci->view->render($response, 'boards/view.twig', [
                     'board' => $board,
                     'stacks' => $stacks,
                     "users" => $users,
                     "card_user" => $card_user,
-                    "labels" => $labels
+                    "labels" => $labels,
+                    "card_label" => $card_label
         ]);
     }
 

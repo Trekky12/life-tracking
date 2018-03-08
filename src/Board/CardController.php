@@ -13,6 +13,7 @@ class CardController extends \App\Base\Controller {
         $this->mapper = new \App\Board\CardMapper($this->ci);
         $this->board_mapper = new \App\Board\BoardMapper($this->ci);
         $this->stack_mapper = new \App\Board\StackMapper($this->ci);
+        $this->label_mapper = new \App\Board\LabelMapper($this->ci);
     }
 
     /**
@@ -32,6 +33,50 @@ class CardController extends \App\Base\Controller {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
+    }
+
+    /**
+     * Save labels
+     */
+    protected function afterSave($id, $data) {
+        // card check is already done in preSave()
+        try {
+            // remove old labels
+            $this->label_mapper->deleteLabelsFromCard($id);
+
+            // add new labels
+            if (array_key_exists("labels", $data) && is_array($data["labels"])) {
+                $labels = filter_var_array($data["labels"], FILTER_SANITIZE_NUMBER_INT);
+
+                // check if label is on this board
+                $board = $this->mapper->getCardBoard($id);
+                $board_labels = $this->label_mapper->getLabelsFromBoard($board);
+                $board_labels_ids = array_map(function($label) {
+                    return $label->id;
+                }, $board_labels);
+                
+                // Only add labels of this board
+                $filtered_labels = array_filter($labels, function($label) use($board_labels_ids) {
+                    return in_array($label, $board_labels_ids);
+                });
+
+                $this->label_mapper->addLabelsToCard($id, $filtered_labels);
+            }
+        } catch (\Exception $e) {
+            
+        }
+    }
+
+    /**
+     * append card labels to output
+     * @param type $id
+     * @param type $entry
+     * @return type
+     */
+    protected function afterGetAPI($id, $entry) {
+        $card_labels = $this->label_mapper->getLabelsFromCard($id);
+        $entry->labels = $card_labels;
+        return $entry;
     }
 
     public function updatePosition(Request $request, Response $response) {

@@ -64,8 +64,8 @@ class CardMapper extends \App\Base\Mapper {
         }
         return true;
     }
-    
-    public function getCardsUser(){
+
+    public function getCardsUser() {
         $sql = "SELECT card, user FROM " . $this->getTable($this->user_table) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -74,12 +74,26 @@ class CardMapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = intval($row["card"]);
-            if(!array_key_exists($key, $results)){
+            if (!array_key_exists($key, $results)) {
                 $results[$key] = array();
             }
             $results[$key][] = intval($row["user"]);
         }
         return $results;
+    }
+
+    public function getCardBoard($id) {
+        $sql = "SELECT st.board FROM " . $this->getTable() . " ca, " . $this->getTable("stacks") . " st WHERE ca.id = :id AND ca.stack = st.id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            "id" => $id
+        ]);
+
+        if ($stmt->rowCount() > 0) {
+            return intval($stmt->fetchColumn());
+        }
+        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
 }

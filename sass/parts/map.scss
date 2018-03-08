@@ -49,6 +49,10 @@
     padding:0.5rem;
     position: relative;
     z-index: 2;
+    
+    @media screen and (min-width: $size_mobile_navigation){
+        z-index: 1;
+    }
 
 
     #search-form{

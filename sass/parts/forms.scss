@@ -9,7 +9,7 @@ button, input[type="submit"], .button {
         color: #FFFFFF;
         background-color: $color_blue_light;
 
-        padding: 8px 25px;
+        padding: 0.8rem 2.5rem;
         transition: all 0.3s ease;
 
         outline:none;
@@ -90,12 +90,12 @@ textarea {
 
 .form-group{
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
 }
 .form-control{
     display: block;
     width: 100%;
-    padding: 8px 12px;
+    padding: 0.8rem 1.2rem;
     @include font-size(1.4);
 }
 label:not(.radio):not(.checkbox){

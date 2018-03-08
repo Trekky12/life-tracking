@@ -51,10 +51,19 @@
             create: function () {
                 $(this).parent().children(".ui-dialog-titlebar").append('<span class="edit-bar"></span>');
             },
+            open: function (event, ui) {
+                // Do not autofocus on first element when on mobile
+                if ($('.menu-toggle').css('display') !== 'none') {
+                    $(this).parent().focus();
+                }
+            },
             close: function () {
-                $(this).parent().find(".ui-dialog-titlebar .edit-bar").html('');
-                stackForm[ 0 ].reset();
                 $('#stack-add-btn').button('option', 'label', lang.add);
+
+                stackForm[ 0 ].reset();
+                stackForm.find('input[type="hidden"].reset-field').val('');
+
+                $(this).parent().find(".ui-dialog-titlebar .edit-bar").html('');
             }
         });
         stackForm = stackDialog.find("form").on("submit", function (event) {
@@ -66,7 +75,7 @@
             stackDialog.dialog("open");
         });
 
-        $("a.edit-stack").on("click", function () {
+        $(".stack-header").on("click", function () {
             var stack = $(this).data('stack');
             $.ajax({
                 url: jsObject.stack_get_url + stack,
@@ -117,21 +126,34 @@
                 }
             ],
             open: function () {
+                // expand textarea
                 var $textarea = cardDialog.find('textarea[name="description"]');
                 if ($textarea.val() !== '') {
                     $textarea.height($textarea[0].scrollHeight);
                 } else {
                     $textarea.height("auto");
                 }
+
+                // Do not autofocus on first element when on mobile
+                if ($('.menu-toggle').css('display') !== 'none') {
+                    $(this).parent().focus();
+                }
             },
             create: function () {
                 $(this).parent().children(".ui-dialog-titlebar").append('<span class="edit-bar"></span>');
             },
             close: function () {
-                cardForm[ 0 ].reset();
-                cardForm.find('input[name="stack"]').val("");
                 $('#card-add-btn').button('option', 'label', lang.add);
+
+                cardForm[ 0 ].reset();
+                cardForm.find('input[type="hidden"].reset-field').val('');
+
                 $(this).parent().find(".ui-dialog-titlebar .edit-bar").html('');
+
+                cardForm.find('.show-sibling').removeClass('hidden');
+                cardForm.find('.hidden-field').addClass('hidden');
+
+                cardDialog.find('textarea[name="description"]').height("auto");
             }
         });
 
@@ -146,6 +168,7 @@
             cardDialog.dialog("open");
         });
 
+
         $(".board-card").on("click", function () {
             var card = $(this).data('card');
             $.ajax({
@@ -156,36 +179,63 @@
                     cardDialog.find('input[name="title"]').val(response.entry.title);
                     cardDialog.find('input[name="position"]').val(response.entry.position);
                     cardDialog.find('input[name="stack"]').val(response.entry.stack);
-                    cardDialog.find('input[name="date"]').val(response.entry.date);
+
                     if (response.entry.date) {
+                        var datefield = cardDialog.find('input[name="date"]');
+                        datefield.val(response.entry.date);
                         cardDialog.find('input.date-display').datepicker("setDate", moment(response.entry.date).toDate());
+
+                        datefield.parent().siblings('.show-sibling').addClass('hidden');
+                        datefield.parent().removeClass('hidden');
                     }
-                    cardDialog.find('input[name="time"]').val(response.entry.time);
-                    cardDialog.find('textarea[name="description"]').val(response.entry.description);
+                    if (response.entry.time) {
+                        var timefield = cardDialog.find('input[name="time"]');
+                        timefield.val(response.entry.time);
+
+                        timefield.parent().siblings('.show-sibling').addClass('hidden');
+                        timefield.parent().removeClass('hidden');
+                    }
+                    if (response.entry.description) {
+                        var descrfield = cardDialog.find('textarea[name="description"]');
+                        descrfield.val(response.entry.description);
+
+                        descrfield.parent().siblings('.show-sibling').addClass('hidden');
+                        descrfield.parent().removeClass('hidden');
+                    }
 
                     cardDialog.find('select[name="users[]"]').val(response.entry.users);
 
-                    var users = cardDialog.find('.avatar-small');
+                    var users = cardDialog.find('.avatar-small, .avatar-small');
 
                     $.each(users, function (idx, user) {
                         var user_id = $(user).data('user');
-
                         if (jQuery.inArray(user_id, response.entry.users) !== -1) {
                             $(user).addClass('selected');
                         } else {
                             $(user).removeClass('selected');
                         }
-
                     });
+
+                    cardDialog.find('select[name="labels[]"]').val(response.entry.labels);
 
 
                     $('#card-add-btn').button('option', 'label', lang.update);
                     var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + response.entry.id + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
                                     <a href='#' data-url='" + jsObject.card_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
                     cardDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
+
+                    $('select#card-label-list').trigger('chosen:updated');
+
                     cardDialog.dialog("open");
                 }
             });
+
+        });
+
+        // show hidden fields on card-dialog
+        $('.show-sibling').on('click', function (e) {
+            $(this).addClass('hidden');
+            $(this).siblings('.hidden-field').removeClass('hidden').find('input, textarea').focus();
         });
 
         /**
@@ -219,10 +269,20 @@
             create: function () {
                 $(this).parent().children(".ui-dialog-titlebar").append('<span class="edit-bar"></span>');
             },
+            open: function (event, ui) {
+                // Do not autofocus on first element when on mobile
+                if ($('.menu-toggle').css('display') !== 'none') {
+                    $(this).parent().focus();
+                }
+            },
             close: function () {
-                $(this).parent().find(".ui-dialog-titlebar .edit-bar").html('');
-                labelForm[ 0 ].reset();
                 $('#label-add-btn').button('option', 'label', lang.add);
+
+                labelForm[ 0 ].reset();
+                labelForm.find('input[type="hidden"].reset-field').val('');
+
+                $(this).parent().find(".ui-dialog-titlebar .edit-bar").html('');
+                $(this).find('.color-wrapper').css("background-color", 'black');
             }
         });
         labelForm = labelDialog.find("form").on("submit", function (event) {
@@ -333,7 +393,7 @@
         /**
          * Select user on avatar click in hidden multi-select
          */
-        $('#card-form .avatar-small').on('click', function (e) {
+        $('#card-form .avatar').on('click', function (e) {
             var user_id = $(this).data('user');
             var option = $("#card-form select#users option[value='" + user_id + "']");
             if (option.prop("selected")) {
@@ -345,18 +405,18 @@
             }
         });
 
-        $('.add-user-to-card').on('click', function (e) {
-            e.preventDefault();
-            $(this).siblings('.dropdown-content').css("display", "block");
-        });
+        /*$('.add-user-to-card').on('click', function (e) {
+         e.preventDefault();
+         $(this).siblings('.dropdown-content').css("display", "block");
+         });*/
 
-        $('.avatar-small').disableSelection();
+        $('.avatar').disableSelection();
 
+        // Expand textarea on input
         $("textarea").on("input change", function () {
             $(this).height("auto").height($(this)[0].scrollHeight);
         });
 
-        //$('.card-date').html(moment($('.card-date')).format(i18n.dateformatJS));
 
         mobileFunctions();
         $(window).resize(function () {
@@ -368,13 +428,13 @@
             $(this).parent().toggleClass('small');
         });
 
-            
+
         // replace color picker placeholder with chosen color
         $(document).on('change', 'input[type="color"]', function () {
             $(this).parent('.color-wrapper').css('background-color', "" + $(this).val());
         });
-        
-        function mobileFunctions(){
+
+        function mobileFunctions() {
             cardDialog.dialog({
                 width: $(window).width() > 550 ? 550 : 'auto'
             });
@@ -383,12 +443,36 @@
                 $(".stack-wrapper").sortable({
                     axis: false
                 });
-            }else{
+            } else {
                 $('.sidebar').removeClass('small');
                 $(".stack-wrapper").sortable({
                     axis: "x"
                 });
             }
         }
+
+        $("select#card-label-list").chosen({
+            width: "100%",
+            disable_search: true,
+            placeholder_text_multiple: lang.labels
+        });
+
+        /**
+         * Stick sidebar to top when scrolling
+         */
+        function sidebarAdjustments() {
+            var $sidebar = $('.sidebar');
+            if ($(window).scrollTop() < $('#masthead').outerHeight()) {
+                $sidebar.css("padding-top", $('#masthead').outerHeight() - $(window).scrollTop());
+            } else {
+                $sidebar.css("padding-top", 0);
+            }
+        }
+        sidebarAdjustments();
+        $(window).scroll(function () {
+            sidebarAdjustments();
+        });
+
+
     });
 })(jQuery);

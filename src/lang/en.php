@@ -143,6 +143,9 @@ $lang["ADD_STACK"] = "Add Stack";
 $lang["ADD_CARD"] = "Add Card";
 $lang["ADD_USER"] = "Add User";
 $lang["ADD_LABEL"] = "Add Label";
+$lang["ADD_DATE"] = "Add Date";
+$lang["ADD_TIME"] = "Add Time";
+$lang["ADD_DESCRIPTION"] = "Add Description";
 
 $lang["REALLY_ARCHIVE"] = "Do you really want to archive the entry?";
 $lang["UPDATE"] = "Update";

@@ -143,6 +143,9 @@ $lang["ADD_STACK"] = "Stapel hinzufügen";
 $lang["ADD_CARD"] = "Karte hinzufügen";
 $lang["ADD_USER"] = "Nutzer hinzufügen";
 $lang["ADD_LABEL"] = "Label hinzufügen";
+$lang["ADD_DATE"] = "Datum hinzufügen";
+$lang["ADD_TIME"] = "Uhrzeit hinzufügen";
+$lang["ADD_DESCRIPTION"] = "Beschreibung hinzufügen";
 
 $lang["REALLY_ARCHIVE"] = "Soll der Eintrag wirklich archiviert werden?";
 $lang["UPDATE"] = "Aktualisieren";
