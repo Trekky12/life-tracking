@@ -2,6 +2,7 @@
 /logs/*
 /nbproject/
 /node_modules/
+/bower_components/
 composer.phar
 /src/settings.php
 
