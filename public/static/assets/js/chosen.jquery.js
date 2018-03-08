@@ -57,7 +57,9 @@
             group_array_index: group_position,
             group_label: group_position != null ? this.parsed[group_position].label : null,
             classes: option.className,
-            style: option.style.cssText
+            style: option.style.cssText,
+            background_color: (option.getAttribute("data-background-color") !== '' ? option.getAttribute("data-background-color") : ''),
+            text_color: (option.getAttribute("data-text-color") !== '' ? option.getAttribute("data-text-color") : '')
           });
         } else {
           this.parsed.push({
@@ -261,6 +263,10 @@
       if (option.title) {
         option_el.title = option.title;
       }
+      
+      option_el.setAttribute("data-background-color", option.background_color); 
+      option_el.setAttribute("data-text-color", option.text_color); 
+      
       return this.outerHTML(option_el);
     };
 
@@ -1085,6 +1091,14 @@
         })(this));
         choice.append(close_link);
       }
+      
+     if(item.background_color !== '' && item.background_color !== null){
+       choice.css("background-color", item.background_color);
+     }
+     if(item.text_color !== '' && item.text_color !== null){
+       choice.css("color", item.text_color);
+     }
+      
       return this.search_container.before(choice);
     };
 

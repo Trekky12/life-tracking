@@ -68,7 +68,7 @@
                     <label>{{lang["LABELS"]}}</label>
                     <select class="form-control" id="card-label-list" name="labels[]" multiple="true">
                         {% for label in labels %}
-                            <option value="{{label.id}}">{{label.name}}</option>
+                            <option value="{{label.id}}" data-background-color="{{label.color}}" data-text-color="{{label.getTextColorYIQ()}}" style="background-color:{{label.color}}; color:{{label.getTextColorYIQ()}}">{{label.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
