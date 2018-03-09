@@ -67,8 +67,8 @@
       1,                // detail
       touch.screenX,    // screenX
       touch.screenY,    // screenY
-      touch.clientX + $(window).scrollLeft(),    // clientX + scrollLeft - fix for zoomed devices while dragging
-      touch.clientY + $(window).scrollTop(),    // clientY + scrollTop - fix for zoomed devices while dragging
+      touch.clientX,// + $(window).scrollLeft(),    // clientX + scrollLeft - fix for zoomed devices while dragging
+      touch.clientY,// + $(window).scrollTop(),    // clientY + scrollTop - fix for zoomed devices while dragging
       false,            // ctrlKey
       false,            // altKey
       false,            // shiftKey
