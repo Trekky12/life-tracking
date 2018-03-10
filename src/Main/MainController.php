@@ -30,4 +30,8 @@ class MainController {
         return $response->withJson($json);
     }
 
+    public function index(Request $request, Response $response) {
+        return $this->ci->get('view')->render($response, 'index.twig', []);
+    }
+
 }

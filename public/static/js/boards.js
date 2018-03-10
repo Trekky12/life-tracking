@@ -104,10 +104,10 @@
             autoOpen: false,
             //height: 650,
             autoResize: true,
-            //width: 550,
+            width: 550,
             modal: true,
             //@see https://stackoverflow.com/a/31322508
-            width: $(window).width() > 550 ? 550 : 'auto',
+            //width: $(window).width() > 550 ? 550 : 'auto',
             buttons: [
                 {
                     text: lang.add,
@@ -405,11 +405,6 @@
             }
         });
 
-        /*$('.add-user-to-card').on('click', function (e) {
-         e.preventDefault();
-         $(this).siblings('.dropdown-content').css("display", "block");
-         });*/
-
         $('.avatar').disableSelection();
 
         // Expand textarea on input
@@ -425,7 +420,17 @@
 
 
         $('#sidebar-toggle').on('click', function () {
-            $(this).parent().toggleClass('small');
+            if ($('.menu-toggle').css('display') !== 'none') {
+                $(this).parent().toggleClass('mobile-visible');
+                // mobile visible means desktop visible
+                // default is visible so remove possible hidden class
+                $(this).parent().removeClass('desktop-hidden');
+            } else {
+                $(this).parent().toggleClass('desktop-hidden');
+                // desktop visible means mobile hidden
+                // default is hidden so remove possible visible class
+                $(this).parent().removeClass('mobile-visible');
+            }
         });
 
 
@@ -435,16 +440,16 @@
         });
 
         function mobileFunctions() {
+            //@see https://stackoverflow.com/a/31322508
             cardDialog.dialog({
                 width: $(window).width() > 550 ? 550 : 'auto'
             });
+           
             if ($('.menu-toggle').css('display') !== 'none') {
-                $('.sidebar').addClass('small');
                 $(".stack-wrapper").sortable({
                     axis: false
                 });
             } else {
-                $('.sidebar').removeClass('small');
                 $(".stack-wrapper").sortable({
                     axis: "x"
                 });

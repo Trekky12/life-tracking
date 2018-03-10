@@ -69,6 +69,7 @@
     .card-wrapper, .stack-dummy{
         // So cards can be dropped on empty stacks
         min-height: 10px;
+        position: relative;
     }
 
     .board-card, .card-placeholder{
@@ -157,52 +158,53 @@
 }
 
 /* inspired by https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
+
+#sidebar-toggle{
+    @include font-size(2);
+    line-height: 1;
+    transition: all 250ms;
+    position:absolute;
+    left:-30px;
+    width: 30px;
+    height:30px;
+    background-color: $color_background-body;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    border-bottom-left-radius: 3px;
+    box-shadow: -7px 1px 9px 0px rgba(0,0,0,0.16);
+
+    &:hover{
+        cursor: pointer;
+    }
+
+    &::before{
+        content: "\f053";
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+    }
+}
+
 .sidebar {
     height: 100%;
-    width: 200px; 
     position: fixed;
     z-index: 1; 
     top: 0; 
     right: 0;
     background-color: $color_background-body;
-    //overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 50px;
     transition: 0.2s width;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
 
-    #sidebar-toggle{
-        @include font-size(2);
-        line-height: 1;
-        transition: all 250ms;
-        position:absolute;
-        left:-30px;
-        width: 30px;
-        height:30px;
-        background-color: $color_background-body;
-        display:flex;
-        justify-content: center;
-        align-items:center;
-        border-bottom-left-radius: 3px;
-        box-shadow: -7px 1px 9px 0px rgba(0,0,0,0.16);
+    // Default Mobile: sidebar hidden
+    width: 0px;
+    // click on toggle: show on mobile
+    &.mobile-visible {
+        width: 200px;
 
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &::before{
-            content: "\f054";
-            font: normal normal normal 14px/1 FontAwesome;
-            font-size: inherit;
-            text-rendering: auto;
-        }
-
-
-    }
-    &.small {
-        width: 0px;
         #sidebar-toggle::before{
-            content: "\f053";
+            content: "\f054";
         }
     }
 
@@ -214,6 +216,24 @@
             margin-top:0;
         }
     }
+}
+@media screen and (min-width: $size_mobile) {
+    // Default Desktop: sidebar visible
+    .sidebar{
+        width: 200px; 
+        // click on toggle: hide on desktop
+        &.desktop-hidden {
+            width: 0px;
+            #sidebar-toggle::before{
+                content: "\f053";
+            }
+        }
+    }
+    #sidebar-toggle::before{
+        content: "\f054";
+    }
+
+
 }
 
 .sidebar-box{

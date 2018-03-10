@@ -1,11 +1,6 @@
 <?php
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-
-$app->get('/', function (Request $request, Response $response) {
-    return $response->withRedirect($this->get('router')->pathFor('finances'), 302);
-})->setName('index');
+$app->get('/', '\App\Main\MainController:index')->setName('index');
 
 $app->group('/finances', function() {
     $this->get('/', '\App\Finances\Controller:index')->setName('finances');

@@ -7,27 +7,27 @@
 
     margin-right: -.5rem;
     margin-left: -.5rem;
+    
+    &.small{
+        max-width: $size_content-width-small;
+        margin: 0 auto;
+    }
 
 }
 
 .card{
-
     display:flex;
     flex-grow:1;
     flex-shrink: 1;
 
     box-sizing: border-box;
 
-
     padding-right: .5rem;
     padding-left: .5rem;
     padding-bottom: 1rem;
+    flex-basis: (100%/ 2);
 
-    @media screen and (min-width: $size_mobile) {
-        flex-basis: (100%/ 2);
-    }
-
-    @media screen and (min-width: $size_desktop) {
+    @media screen and (min-width: $size_tablet) {
         flex-basis: (100%/ 4);
     }
 
@@ -62,6 +62,17 @@
 
         p{
             padding: .5rem;
+        }
+
+        i{
+            @include font-size(5);
+            margin: 2rem;
+            @media screen and (min-width: $size_mobile) {
+                @include font-size(7);
+            }
+            @media screen and (min-width: $size_tablet) {
+                @include font-size(10);
+            }
         }
     }
 }
