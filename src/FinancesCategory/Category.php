@@ -10,7 +10,7 @@ class Category extends \App\Base\Model {
             $this->id = $data['id'];
         }
 
-        $this->dt = $this->exists('dt', $data) ? $data['dt'] : date('Y-m-d G:i:s');
+        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
 
         if(empty($this->name)){

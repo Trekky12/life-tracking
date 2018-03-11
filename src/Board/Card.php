@@ -10,7 +10,7 @@ class Card extends \App\Base\Model {
             $this->id = $data['id'];
         }
 
-        $this->dt = $this->exists('dt', $data) ? $data['dt'] : date('Y-m-d G:i:s');
+        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
         $this->title = $this->exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING) : null;
 
         $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : null;

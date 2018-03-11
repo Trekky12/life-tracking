@@ -1,7 +1,8 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     login VARCHAR(50) NOT NULL,
     password VARCHAR(255) NULL,
     name varchar(255) DEFAULT NULL,
@@ -18,16 +19,10 @@ CREATE TABLE IF NOT EXISTS users (
 );
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
-/*ALTER TABLE users ADD module_location int(1) DEFAULT 0 AFTER role;
-ALTER TABLE users ADD module_finance int(1) DEFAULT 0 AFTER module_location;
-ALTER TABLE users ADD module_fuel int(1) DEFAULT 0 AFTER module_finance;
-ALTER TABLE users ADD module_boards int(1) DEFAULT 0 AFTER module_fuel;
-ALTER TABLE users ADD image VARCHAR(255) NULL AFTER role;
-*/
 
 DROP TABLE IF EXISTS banlist;
 CREATE TABLE banlist (
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip VARCHAR(255) NOT NULL,
     username varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -35,7 +30,8 @@ CREATE TABLE banlist (
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     identifier varchar(255) DEFAULT NULL,
     device varchar(255) DEFAULT NULL,
@@ -68,18 +64,20 @@ CREATE TABLE locations (
 DROP TABLE IF EXISTS finances_categories;
 CREATE TABLE finances_categories (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
-     FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `finances_categories` (`id`, `user`, `name`) VALUES (1, 1, 'not categorized');
 
 DROP TABLE IF EXISTS finances;
 CREATE TABLE finances (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     type int(1) DEFAULT 1,
     date DATE NOT NULL,
@@ -95,18 +93,12 @@ CREATE TABLE finances (
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE finances ADD common int(1) DEFAULT 0 AFTER value;
-ALTER TABLE finances ADD common_value DECIMAL(10,2) AFTER common;
-
-ALTER TABLE finances_monthly ADD common int(1) DEFAULT 0 AFTER value;
-ALTER TABLE finances_monthly ADD common_value DECIMAL(10,2) AFTER common;
-*/
 
 DROP TABLE IF EXISTS finances_monthly;
 CREATE TABLE finances_monthly (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     start DATE DEFAULT NULL,
     end DATE DEFAULT NULL,
@@ -127,25 +119,16 @@ CREATE TABLE finances_monthly (
 DROP TABLE IF EXISTS cars;
 CREATE TABLE cars (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS user_cars;
-/*CREATE TABLE user_cars (
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user INTEGER unsigned DEFAULT NULL,
-    car INTEGER unsigned DEFAULT NULL,
-    UNIQUE(user, car),
-    FOREIGN KEY(user) REFERENCES users(id),
-    FOREIGN KEY(car) REFERENCES cars(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;*/
-
 DROP TABLE IF EXISTS cars_user;
 CREATE TABLE cars_user (
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     car INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(car, user),
@@ -156,7 +139,8 @@ CREATE TABLE cars_user (
 DROP TABLE IF EXISTS fuel;
 CREATE TABLE fuel (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     car INTEGER unsigned DEFAULT NULL,
     date DATE NOT NULL,
@@ -175,16 +159,13 @@ CREATE TABLE fuel (
     FOREIGN KEY(car) REFERENCES cars(id),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE fuel ADD car INTEGER unsigned DEFAULT NULL REFERENCES cars(id) AFTER user;
-ALTER TABLE fuel ADD CONSTRAINT fuel_ibfk_2 FOREIGN KEY (car) REFERENCES cars(id);
-*/
 
 DROP TABLE IF EXISTS boards;
 CREATE TABLE boards (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     user INTEGER unsigned DEFAULT NULL,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) NOT NULL,
     archive INT(1) DEFAULT 0,
@@ -194,7 +175,7 @@ CREATE TABLE boards (
 
 DROP TABLE IF EXISTS boards_user;
 CREATE TABLE boards_user (
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     board INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(board, user),
@@ -206,7 +187,8 @@ DROP TABLE IF EXISTS stacks;
 CREATE TABLE stacks (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     board INTEGER unsigned DEFAULT NULL,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
@@ -214,15 +196,13 @@ CREATE TABLE stacks (
    FOREIGN KEY(board) REFERENCES boards(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE stacks ADD position INT(10) NULL AFTER archive;
-*/
 
 DROP TABLE IF EXISTS cards;
 CREATE TABLE cards (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     stack INTEGER unsigned DEFAULT NULL,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     title varchar(255) DEFAULT NULL,
     date DATE DEFAULT NULL,
     time TIME DEFAULT NULL,
@@ -233,17 +213,9 @@ CREATE TABLE cards (
    FOREIGN KEY(stack) REFERENCES stacks(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE cards ADD position INT(10) NULL AFTER archive;
-ALTER TABLE cards ADD date DATE DEFAULT NULL AFTER title;
-ALTER TABLE cards ADD time TIME DEFAULT NULL AFTER date;
-ALTER TABLE cards ADD description TEXT DEFAULT NULL AFTER time;
-*/
-
-
 DROP TABLE IF EXISTS cards_user;
 CREATE TABLE cards_user (
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     card INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(card, user),
@@ -256,7 +228,8 @@ DROP TABLE IF EXISTS labels;
 CREATE TABLE labels (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     board INTEGER unsigned DEFAULT NULL,
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
     color VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
@@ -265,10 +238,65 @@ CREATE TABLE labels (
 
 DROP TABLE IF EXISTS cards_label;
 CREATE TABLE cards_label (
-    dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     card INTEGER unsigned DEFAULT NULL,
     label INTEGER unsigned DEFAULT NULL,
     UNIQUE(card, label),
     FOREIGN KEY(card) REFERENCES cards(id)  ON DELETE CASCADE,
     FOREIGN KEY(label) REFERENCES labels(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE users CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE users ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
+UPDATE users set createdOn = changedOn;
+
+ALTER TABLE locations CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE locations ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
+UPDATE locations set createdOn = changedOn;
+
+ALTER TABLE finances_categories CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE finances_categories ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
+UPDATE finances_categories set createdOn = changedOn;
+
+ALTER TABLE finances CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE finances ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
+UPDATE finances set createdOn = changedOn;
+
+ALTER TABLE finances_monthly CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE finances_monthly ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
+UPDATE finances_monthly set createdOn = changedOn;
+
+ALTER TABLE cars CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE cars ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
+UPDATE cars set createdOn = changedOn;
+
+ALTER TABLE fuel CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE fuel ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
+UPDATE fuel set createdOn = changedOn;
+
+ALTER TABLE boards CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE boards ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER user;
+UPDATE boards set createdOn = changedOn;
+
+ALTER TABLE stacks CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE stacks ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER board;
+UPDATE stacks set createdOn = changedOn;
+
+ALTER TABLE cards CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE cards ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER stack;
+UPDATE cards set createdOn = changedOn;
+
+ALTER TABLE labels CHANGE dt changedOn TIMESTAMP NULL;
+ALTER TABLE labels ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER board;
+UPDATE labels set createdOn = changedOn;
+
+ALTER TABLE banlist CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE cars_user CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE boards_user CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE cards_user CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE cards_label CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+*/
+
+

@@ -68,7 +68,7 @@
                     <label>{{lang["LABELS"]}}</label>
                     <select class="form-control" id="card-label-list" name="labels[]" multiple="true">
                         {% for label in labels %}
-                            <option value="{{label.id}}" data-background-color="{{label.color}}" data-text-color="{{label.getTextColorYIQ()}}" style="background-color:{{label.color}}; color:{{label.getTextColorYIQ()}}">{{label.name}}</option>
+                            <option value="{{label.id}}" data-background-color="{{label.color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -141,7 +141,7 @@
                 <h4>{{lang["LABELS"]}}</h4>
                 <div class="card-label-list">
                     {% for label in labels %}
-                        <span class="card-label" style="background-color:{{label.color}}; color:{{label.getTextColorYIQ()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name}}</a></span>
+                        <span class="card-label" style="background-color:{{label.color}}; color:{{label.getTextColor()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name}}</a></span>
                         {% endfor %}
                 </div>
                 <a class="create-label add-element-text" href="#"><i class="fa fa-plus"></i> {{lang["ADD_LABEL"]}}</a>
@@ -174,7 +174,7 @@
                             <div class="board-card{%if card.archive == 1%} archived{%endif%}" id="card_{{card.id}}" data-card="{{card.id}}">
                                 <div class="card-labels">
                                     {% for label in card_label[card.id] %}
-                                        <div class="card-label" style="background-color:{{labels[label].color}}; color:{{labels[label].getTextColorYIQ()}}"></div>
+                                        <div class="card-label" style="background-color:{{labels[label].color}}; color:{{labels[label].getTextColor()}}"></div>
                                     {% endfor %}
                                 </div>
 

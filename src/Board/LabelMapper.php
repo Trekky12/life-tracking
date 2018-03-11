@@ -9,7 +9,7 @@ class LabelMapper extends \App\Base\Mapper {
     protected $filterByUser = false;
 
     public function getLabelsFromBoard($board) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board ORDER BY dt";
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board ORDER BY changedOn";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([

@@ -10,7 +10,7 @@ class FuelEntry extends \App\Base\Model {
             $this->id = $data['id'];
         }
 
-        $this->dt = $this->exists('dt', $data) ? $data['dt'] : date('Y-m-d G:i:s');
+        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
         $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : date('Y-m-d');
         $this->mileage = $this->exists('mileage', $data) ? filter_var($data['mileage'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->price = $this->exists('price', $data) ? filter_var($data['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;

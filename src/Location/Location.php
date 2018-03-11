@@ -12,7 +12,7 @@ class Location extends \App\Base\Model{
             $this->id = $data['id'];
         }
 
-        $this->dt = $this->exists('dt', $data) ? $data['dt'] : date('Y-m-d G:i:s');
+        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
 
         $this->identifier = $this->exists('identifier', $data) ? filter_var($data['identifier'], FILTER_SANITIZE_STRING) : null;
         $this->device = $this->exists('device', $data) ? filter_var($data['device'], FILTER_SANITIZE_STRING) : null;
@@ -89,7 +89,7 @@ class Location extends \App\Base\Model{
     }
 
     public function getPosition() {
-        return ['id'=> $this->id, 'dt' => $this->dt, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
+        return ['id'=> $this->id, 'dt' => $this->changedOn, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
     }
 
 }

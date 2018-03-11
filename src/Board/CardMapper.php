@@ -21,7 +21,7 @@ class CardMapper extends \App\Base\Mapper {
             $bindings["archive"] = $archive;
         }
 
-        $sql .= "ORDER BY position, dt";
+        $sql .= "ORDER BY position, changedOn";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

@@ -18,7 +18,7 @@ class StackMapper extends \App\Base\Mapper {
             $bindings["archive"] = $archive;
         }
 
-        $sql .= "ORDER BY position, dt";
+        $sql .= "ORDER BY position, changedOn";
 
 
         $stmt = $this->db->prepare($sql);

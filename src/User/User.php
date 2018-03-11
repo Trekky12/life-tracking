@@ -10,7 +10,7 @@ class User extends \App\Base\Model {
             $this->id = $data['id'];
         }
 
-        $this->dt = $this->exists('dt', $data) ? $data['dt'] : date('Y-m-d G:i:s');
+        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
 
         $this->login = $this->exists('login', $data) ? filter_var($data['login'], FILTER_SANITIZE_STRING) : null;
         $this->lastname = $this->exists('lastname', $data) ? filter_var($data['lastname'], FILTER_SANITIZE_STRING) : null;
