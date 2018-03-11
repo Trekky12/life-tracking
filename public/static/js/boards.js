@@ -85,7 +85,7 @@
                     stackDialog.find('input[name="name"]').val(response.entry.name);
                     stackDialog.find('input[name="position"]').val(response.entry.position);
                     $('#stack-add-btn').button('option', 'label', lang.update);
-                    var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + response.entry.id + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
+                    var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + response.entry.id + "' data-archive='" + response.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
                                     <a href='#' data-url='" + jsObject.stack_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
                     stackDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
                     stackDialog.dialog("open");
@@ -220,7 +220,7 @@
 
 
                     $('#card-add-btn').button('option', 'label', lang.update);
-                    var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + response.entry.id + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
+                    var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + response.entry.id + "' data-archive='" + response.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
                                     <a href='#' data-url='" + jsObject.card_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
                     cardDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
 
@@ -374,12 +374,20 @@
         $('body').on('click', '.btn-archive', function (e) {
             e.preventDefault();
             var url = $(this).data('url');
-            if (!confirm(lang.really_archive)) {
-                return false;
+            var is_archived = $(this).data('archive');
+            if (is_archived === 1) {
+                if (!confirm(lang.undo_archive)) {
+                    return false;
+                }
+            } else {
+                if (!confirm(lang.really_archive)) {
+                    return false;
+                }
             }
             $.ajax({
                 url: url,
                 method: 'POST',
+                data: {'archive': is_archived ? 0 : 1},
                 success: function (response) {
                     window.location.reload();
                 },
@@ -444,7 +452,7 @@
             cardDialog.dialog({
                 width: $(window).width() > 550 ? 550 : 'auto'
             });
-           
+
             if ($('.menu-toggle').css('display') !== 'none') {
                 $(".stack-wrapper").sortable({
                     axis: false
@@ -476,6 +484,23 @@
         sidebarAdjustments();
         $(window).scroll(function () {
             sidebarAdjustments();
+        });
+
+        /**
+         * Show archived items?
+         */
+        $('#checkboxArchivedItems').on('click', function (e) {
+            $.ajax({
+                url: jsObject.set_archive,
+                method: 'POST',
+                data: {'state': $(this).is(":checked") ? 1 : 0},
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (data) {
+                    alert(data);
+                }
+            });
         });
 
 

@@ -104,4 +104,12 @@ class Helper {
         return $this->user;
     }
 
+    public function setSessionVar($key, $var) {
+        $_SESSION[$key] = $var;
+    }
+
+    public function getSessionVar($key, $fallback = null) {
+        return array_key_exists($key, $_SESSION) ? filter_var($_SESSION[$key]) : $fallback;
+    }
+
 }

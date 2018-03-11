@@ -9,13 +9,20 @@ class StackMapper extends \App\Base\Mapper {
     protected $filterByUser = false;
 
     public function getStacksFromBoard($board, $archive = 0) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board AND archive = :archive ORDER BY position, dt";
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board ";
+
+        $bindings = ["board" => $board];
+
+        if ($archive == 0) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
+        }
+
+        $sql .= "ORDER BY position, dt";
+
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            "board" => $board,
-            "archive" => $archive
-        ]);
+        $stmt->execute($bindings);
 
         $results = [];
         while ($row = $stmt->fetch()) {

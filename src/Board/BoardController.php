@@ -55,14 +55,17 @@ class BoardController extends \App\Base\Controller {
         if (!in_array($user, $board_user)) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
         }
+        
+        $show_archive = $this->ci->get('helper')->getSessionVar('show_archive', 0);
+        
 
         /**
          * Get stacks with cards
          */
-        $stacks = $this->stack_mapper->getStacksFromBoard($board->id);
+        $stacks = $this->stack_mapper->getStacksFromBoard($board->id, $show_archive);
 
         foreach ($stacks as &$stack) {
-            $stack->cards = $this->card_mapper->getCardsFromStack($stack->id);
+            $stack->cards = $this->card_mapper->getCardsFromStack($stack->id, $show_archive);
         }
 
 
@@ -80,8 +83,20 @@ class BoardController extends \App\Base\Controller {
                     "users" => $users,
                     "card_user" => $card_user,
                     "labels" => $labels,
-                    "card_label" => $card_label
+                    "card_label" => $card_label,
+                    "show_archive" => $show_archive
         ]);
+    }
+    
+    public function setArchive(Request $request, Response $response) {
+        $data = $request->getParsedBody();
+
+        if(array_key_exists("state", $data) && in_array($data["state"], array(0,1))){
+            $this->ci->get('helper')->setSessionVar('show_archive', $data["state"]);
+        }
+        
+        return $response->withJSON(array('status' => 'success'));
+        
     }
 
 }

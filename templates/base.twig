@@ -86,6 +86,7 @@
                 'label_save': '{{path_for("label_save")}}',
                 'label_get_url': '{{path_for("label_get")}}',
                 'label_delete': '{{path_for("label_delete")}}',
+                'set_archive': '{{path_for("set_archive")}}'
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};
@@ -99,7 +100,8 @@
                 'cancel': '{{lang["CANCEL"]}}',
                 'really_archive': '{{lang["REALLY_ARCHIVE"]}}',
                 'update': '{{lang["UPDATE"]}}',
-                'labels': '{{lang["LABELS"]}}'
+                'labels': '{{lang["LABELS"]}}',
+                'undo_archive': '{{lang["UNDO_ARCHIVE"]}}'
             };
 
         </script>

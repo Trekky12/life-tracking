@@ -58,14 +58,20 @@ class StackController extends \App\Base\Controller {
     }
 
     public function archive(Request $request, Response $response) {
+        $data = $request->getParsedBody();
         try {
             $id = $request->getAttribute('id');
 
             $this->preSave($id, null);
 
-            $is_archived = $this->mapper->setArchive($id, 1);
-            $newResponse = $response->withJson(['is_archived' => $is_archived]);
-            return $newResponse;
+            if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
+
+                $is_archived = $this->mapper->setArchive($id, $data["archive"]);
+                $newResponse = $response->withJson(['is_archived' => $is_archived]);
+                return $newResponse;
+            } else {
+                return $response->withJSON(array('status' => 'error', "error" => "missing data"));
+            }
         } catch (\Exception $e) {
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }

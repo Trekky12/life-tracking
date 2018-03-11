@@ -12,13 +12,19 @@ class CardMapper extends \App\Base\Mapper {
     protected $element_name = "card";
 
     public function getCardsFromStack($stack, $archive = 0) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE stack = :stack AND archive = :archive ORDER BY position, dt";
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE stack = :stack ";
+
+        $bindings = ["stack" => $stack];
+
+        if ($archive == 0) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
+        }
+
+        $sql .= "ORDER BY position, dt";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            "stack" => $stack,
-            "archive" => $archive
-        ]);
+        $stmt->execute($bindings);
 
         $results = [];
         while ($row = $stmt->fetch()) {

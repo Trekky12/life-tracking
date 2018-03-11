@@ -54,7 +54,7 @@ class CardController extends \App\Base\Controller {
                 $board_labels_ids = array_map(function($label) {
                     return $label->id;
                 }, $board_labels);
-                
+
                 // Only add labels of this board
                 $filtered_labels = array_filter($labels, function($label) use($board_labels_ids) {
                     return in_array($label, $board_labels_ids);
@@ -124,12 +124,20 @@ class CardController extends \App\Base\Controller {
     }
 
     public function archive(Request $request, Response $response) {
+        $data = $request->getParsedBody();
         try {
             $id = $request->getAttribute('id');
 
             $this->preSave($id, null);
 
-            $is_archived = $this->mapper->setArchive($id, 1);
+            if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
+
+                $is_archived = $this->mapper->setArchive($id, $data["archive"]);
+                $newResponse = $response->withJson(['is_archived' => $is_archived]);
+                return $newResponse;
+            } else {
+                return $response->withJSON(array('status' => 'error', "error" => "missing data"));
+            }
             $newResponse = $response->withJson(['is_archived' => $is_archived]);
             return $newResponse;
         } catch (\Exception $e) {

@@ -146,6 +146,12 @@
                 </div>
                 <a class="create-label add-element-text" href="#"><i class="fa fa-plus"></i> {{lang["ADD_LABEL"]}}</a>
             </div>
+            <div class="sidebar-box">
+                <label class="checkbox" for="checkboxArchivedItems">
+                    <input name="set_archived_items" type="checkbox" id="checkboxArchivedItems" {% if show_archive is not null and show_archive == 1 %}checked{% endif %}>
+                    {{lang["SHOW_ARCHIVED_ITEMS"]}}
+                </label>
+            </div>
         </div>
     </div>
 
@@ -153,7 +159,7 @@
     <div class="board-content">
         <div class="stack-wrapper">
             {% for stack in stacks %}
-                <div class="stack stack-border" id="stack_{{stack.id}}" >
+                <div class="stack stack-border{%if stack.archive == 1%} archived{%endif%}" id="stack_{{stack.id}}" >
 
                     <div class="stack-header" data-stack="{{stack.id}}">
                         <span class="title">{{stack.name}}</a></span>
@@ -165,7 +171,7 @@
 
                     <div class="card-wrapper" data-stack="{{stack.id}}">
                         {% for card in stack.cards %}
-                            <div class="board-card" id="card_{{card.id}}" data-card="{{card.id}}">
+                            <div class="board-card{%if card.archive == 1%} archived{%endif%}" id="card_{{card.id}}" data-card="{{card.id}}">
                                 <div class="card-labels">
                                     {% for label in card_label[card.id] %}
                                         <div class="card-label" style="background-color:{{labels[label].color}}; color:{{labels[label].getTextColorYIQ()}}"></div>

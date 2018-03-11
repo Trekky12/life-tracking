@@ -111,4 +111,6 @@ $app->group('/boards', function() {
         $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\LabelController:delete')->setName('label_delete');
         $this->get('/data/[{id:[0-9]+}]', '\App\Board\LabelController:getAPI')->setName('label_get');
     });
+    
+    $this->post('/setArchive', '\App\Board\BoardController:setArchive')->setName('set_archive');
 });

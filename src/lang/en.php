@@ -154,4 +154,7 @@ $lang["TITLE"] = "Title";
 $lang["COLOR"] = "Color";
 $lang["WRONG_COLOR_TYPE"] = "The color was wrong submitted!";
 
+$lang["SHOW_ARCHIVED_ITEMS"] = "Show archived items";
+$lang["UNDO_ARCHIVE"] = "Do you really want to cancel archiving this entry?";
+
 return $lang;

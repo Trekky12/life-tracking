@@ -215,6 +215,15 @@
         h2{
             margin-top:0;
         }
+        
+        label.checkbox, .create-label{
+            @include font-size(1.2);
+        }
+        #checkboxArchivedItems{
+            position:relative;
+            top:2px;
+        }
+
     }
 }
 @media screen and (min-width: $size_mobile) {
@@ -286,22 +295,21 @@
 
 }
 
-.create-label{
-    padding-bottom:1rem;
-}
-
 
 /* General */
 .add-element-text{
     @include font-size(1.4);
-    margin: 1rem;
+    margin: 1rem 1rem 0 1rem;
     color: #a1a1a1!important;
+    display:block;
 
     &:hover{
         color: $color_text-main!important;
     }
 }
-
+.create-card{
+    margin-top:0;
+}
 .card-date, .card-label{
     @include font-size(1.2);
     border-radius: 5px;
@@ -389,4 +397,14 @@
     border-radius:5px;
     border:none;
     box-shadow: 0 0 1px #000;
+}
+
+.stack.archived{
+    .stack-header{
+        background-color: #AAA;
+    }
+}
+
+.board-card.archived{
+    background: none;
 }
