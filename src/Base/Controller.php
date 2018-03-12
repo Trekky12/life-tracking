@@ -95,9 +95,8 @@ abstract class Controller {
         $data = $request->getParsedBody();
 
         $data['user'] = $this->ci->get('helper')->getUser()->id;
-
+        
         $entry = new $this->model($data);
-
 
         if ($entry->hasParsingErrors()) {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));

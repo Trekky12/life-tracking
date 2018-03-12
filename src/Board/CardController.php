@@ -33,6 +33,7 @@ class CardController extends \App\Base\Controller {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
+
     }
 
     /**

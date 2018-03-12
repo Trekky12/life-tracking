@@ -219,6 +219,13 @@ CREATE TABLE cards (
    FOREIGN KEY(stack) REFERENCES stacks(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/**
+ALTER TABLE cards ADD createdBy INTEGER unsigned DEFAULT NULL AFTER createdOn;
+ALTER TABLE cards ADD changedBy INTEGER unsigned DEFAULT NULL AFTER changedOn;
+ALTER TABLE cards ADD CONSTRAINT cards_ibfk_2 FOREIGN KEY(createdBy) REFERENCES users(id);
+ALTER TABLE cards ADD CONSTRAINT cards_ibfk_3 FOREIGN KEY(changedBy) REFERENCES users(id);
+*/
+
 DROP TABLE IF EXISTS cards_user;
 CREATE TABLE cards_user (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -251,58 +258,5 @@ CREATE TABLE cards_label (
     FOREIGN KEY(card) REFERENCES cards(id)  ON DELETE CASCADE,
     FOREIGN KEY(label) REFERENCES labels(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/**
-ALTER TABLE users CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE users ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
-UPDATE users set createdOn = changedOn;
-
-ALTER TABLE locations CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE locations ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
-UPDATE locations set createdOn = changedOn;
-
-ALTER TABLE finances_categories CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE finances_categories ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
-UPDATE finances_categories set createdOn = changedOn;
-
-ALTER TABLE finances CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE finances ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
-UPDATE finances set createdOn = changedOn;
-
-ALTER TABLE finances_monthly CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE finances_monthly ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
-UPDATE finances_monthly set createdOn = changedOn;
-
-ALTER TABLE cars CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE cars ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
-UPDATE cars set createdOn = changedOn;
-
-ALTER TABLE fuel CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE fuel ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER id;
-UPDATE fuel set createdOn = changedOn;
-
-ALTER TABLE boards CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE boards ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER user;
-UPDATE boards set createdOn = changedOn;
-
-ALTER TABLE stacks CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE stacks ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER board;
-UPDATE stacks set createdOn = changedOn;
-
-ALTER TABLE cards CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE cards ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER stack;
-UPDATE cards set createdOn = changedOn;
-
-ALTER TABLE labels CHANGE dt changedOn TIMESTAMP NULL;
-ALTER TABLE labels ADD createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER board;
-UPDATE labels set createdOn = changedOn;
-
-ALTER TABLE banlist CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE cars_user CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE boards_user CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE cards_user CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE cards_label CHANGE dt createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
-*/
 
 

@@ -8,12 +8,6 @@ class Location extends \App\Base\Model{
 
     public function parseData(array $data) {
 
-        if (isset($data['id'])) {
-            $this->id = $data['id'];
-        }
-
-        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
-
         $this->identifier = $this->exists('identifier', $data) ? filter_var($data['identifier'], FILTER_SANITIZE_STRING) : null;
         $this->device = $this->exists('device', $data) ? filter_var($data['device'], FILTER_SANITIZE_STRING) : null;
         $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : null;

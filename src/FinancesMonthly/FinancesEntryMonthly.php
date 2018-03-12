@@ -6,12 +6,6 @@ class FinancesEntryMonthly extends \App\Base\Model {
 
     public function parseData(array $data) {
 
-        if (isset($data['id'])) {
-            $this->id = $data['id'];
-        }
-
-        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
-
         $this->start = $this->exists('start', $data) ? $data['start'] : null;
         $this->end = $this->exists('end', $data) ? $data['end'] : null;
 

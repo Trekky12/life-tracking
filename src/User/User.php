@@ -6,12 +6,6 @@ class User extends \App\Base\Model {
 
     public function parseData(array $data) {
 
-        if (isset($data['id'])) {
-            $this->id = $data['id'];
-        }
-
-        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
-
         $this->login = $this->exists('login', $data) ? filter_var($data['login'], FILTER_SANITIZE_STRING) : null;
         $this->lastname = $this->exists('lastname', $data) ? filter_var($data['lastname'], FILTER_SANITIZE_STRING) : null;
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
