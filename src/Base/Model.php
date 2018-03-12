@@ -52,9 +52,6 @@ class Model implements \JsonSerializable {
             if (array_key_exists("user", $temp)) {
                 unset($temp["user"]);
             }
-            if (array_key_exists("password", $temp)) {
-                unset($temp["password"]);
-            }
         }
         return $temp;
     }

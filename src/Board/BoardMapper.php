@@ -27,7 +27,7 @@ class BoardMapper extends \App\Base\Mapper {
 
     public function getVisibleBoards($sorted = false, $limit = false) {
         $sql = "SELECT b.* FROM " . $this->getTable() . " b, " . $this->getTable("boards_user") . " bu ";
-        $sql .= "WHERE b.id = bu.board AND bu.user = :user";
+        $sql .= "WHERE (b.id = bu.board AND bu.user = :user) OR b.user = :user";
         
 
         $bindings = array();

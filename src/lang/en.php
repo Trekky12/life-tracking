@@ -157,4 +157,8 @@ $lang["WRONG_COLOR_TYPE"] = "The color was wrong submitted!";
 $lang["SHOW_ARCHIVED_ITEMS"] = "Show archived items";
 $lang["UNDO_ARCHIVE"] = "Do you really want to cancel archiving this entry?";
 
+$lang["OTHER_SETTINGS"] = "Other settings";
+$lang["FORCE_PW_CHANGE"] = "Force password change";
+$lang["BOARD_NOTIFICATION_MAILS"] = "Mail notifications on boards";
+
 return $lang;

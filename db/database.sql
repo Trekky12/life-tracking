@@ -14,11 +14,17 @@ CREATE TABLE IF NOT EXISTS users (
     module_finance int(1) DEFAULT 0,
     module_fuel int(1) DEFAULT 0,
     module_boards int(1) DEFAULT 0,
+    force_pw_change int(1) DEFAULT 1,
+    board_notification_mails int(1) DEFAULT 1,
     PRIMARY KEY(id),
     UNIQUE(login)
 );
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
+/**
+ALTER TABLE users ADD force_pw_change int(1) DEFAULT 1 AFTER module_boards;
+ALTER TABLE users ADD board_notification_mails int(1) DEFAULT 1 AFTER force_pw_change;
+*/
 
 DROP TABLE IF EXISTS banlist;
 CREATE TABLE banlist (

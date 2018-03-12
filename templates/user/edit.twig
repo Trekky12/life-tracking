@@ -47,10 +47,9 @@
                     <label for="inputPassword">{{lang["PASSWORD"]}}</label>
                     <input name="setpassword" id="inputPassword" class="form-control" type="password" >
                 </div>
-                    
+
                 <p>{{lang["MODULES"]}}</p>
                 <div class="form-group">
-
                     <label class="checkbox" for="checkboxLocationModule">
                         <input name="set_module_location" type="checkbox" id="checkboxLocationModule" {% if entry is null or entry.module_location == 1 %}checked{% endif %}>
                         {{lang["MENU_LOCATION"]}}
@@ -72,6 +71,19 @@
                     <label class="checkbox" for="checkboxBoardsModule">
                         <input name="set_module_boards" type="checkbox" id="checkboxBoardsModule" {% if entry is null or entry.module_boards == 1 %}checked{% endif %}>
                         {{lang["BOARDS"]}}
+                    </label>
+                </div>
+                <p>{{lang["OTHER_SETTINGS"]}}</p>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxForcePWChange">
+                        <input name="set_force_pw_change" type="checkbox" id="checkboxForcePWChange" {% if entry is null or entry.force_pw_change == 1 %}checked{% endif %}>
+                        {{lang["FORCE_PW_CHANGE"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxBoardNotification">
+                        <input name="set_board_notification_mails" type="checkbox" id="checkboxBoardNotification" {% if entry is null or entry.board_notification_mails == 1 %}checked{% endif %}>
+                        {{lang["BOARD_NOTIFICATION_MAILS"]}}
                     </label>
                 </div>
 

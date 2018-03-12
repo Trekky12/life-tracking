@@ -35,7 +35,6 @@ class User extends \App\Base\Model {
 
         $this->image = $this->exists('image', $data) ? filter_var($data['image'], FILTER_SANITIZE_STRING) : $this->image;
 
-
         $set_module_location = $this->exists('set_module_location', $data) ? filter_var($data['set_module_location'], FILTER_SANITIZE_STRING) : 0;
         $this->module_location = $set_module_location === 'on' ? 1 : 0;
         $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : $this->module_location;
@@ -51,6 +50,16 @@ class User extends \App\Base\Model {
         $set_module_boards = $this->exists('set_module_boards', $data) ? filter_var($data['set_module_boards'], FILTER_SANITIZE_STRING) : 0;
         $this->module_boards = $set_module_boards === 'on' ? 1 : 0;
         $this->module_boards = $this->exists('module_boards', $data) ? filter_var($data['module_boards'], FILTER_SANITIZE_NUMBER_INT) : $this->module_boards;
+        
+        $set_force_pw_change = $this->exists('set_force_pw_change', $data) ? filter_var($data['set_force_pw_change'], FILTER_SANITIZE_STRING) : 1;
+        $this->force_pw_change = $set_force_pw_change === 'on' ? 1 : 0;
+        $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : $this->force_pw_change;
+        
+        $set_board_notification_mails = $this->exists('set_board_notification_mails', $data) ? filter_var($data['set_board_notification_mails'], FILTER_SANITIZE_STRING) : 1;
+        $this->board_notification_mails = $set_board_notification_mails === 'on' ? 1 : 0;
+        $this->board_notification_mails = $this->exists('board_notification_mails', $data) ? filter_var($data['board_notification_mails'], FILTER_SANITIZE_NUMBER_INT) : $this->board_notification_mails;
+        
+
     }
 
     public function isAdmin() {

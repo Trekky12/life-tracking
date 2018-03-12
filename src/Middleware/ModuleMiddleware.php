@@ -24,7 +24,7 @@ class ModuleMiddleware {
             $route = $baseRoute->getPattern();
 
             // Filter only specific routes
-            if (!$this->startsWith($route, '/finances') && !$this->startsWith($route, '/location') && !$this->startsWith($route, '/fuel')) {
+            if (!$this->startsWith($route, '/finances') && !$this->startsWith($route, '/location') && !$this->startsWith($route, '/fuel') && !$this->startsWith($route, '/boards')) {
                 return $next($request, $response);
             }
 
@@ -32,7 +32,8 @@ class ModuleMiddleware {
             if (!is_null($user) && (
                     $this->startsWith($route, '/finances') && $user->module_finance == 1 ||
                     $this->startsWith($route, '/location') && $user->module_location == 1 ||
-                    $this->startsWith($route, '/fuel') && $user->module_fuel == 1
+                    $this->startsWith($route, '/fuel') && $user->module_fuel == 1 ||
+                    $this->startsWith($route, '/boards') && $user->module_boards == 1
                     )) {
                 return $next($request, $response);
             }

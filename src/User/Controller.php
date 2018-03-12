@@ -68,7 +68,7 @@ class Controller extends \App\Base\Controller {
 
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PASSWORD_CHANGE_SUCCESS"));
             $this->ci->get('flash')->addMessage('message_type', 'success');
-            return $response->withRedirect($this->ci->get('router')->pathFor('users_change_password'), 301);
+            return $response->withRedirect($this->ci->get('router')->pathFor('index'), 301);
         }
         return $this->ci->view->render($response, 'profile/changepw.twig', ["user" => $user]);
     }

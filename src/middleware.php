@@ -10,8 +10,12 @@
 $app->add('App\Middleware\ModuleMiddleware');
 
 /**
+ * Check if user needs to change the password
+ */
+$app->add('App\Middleware\PWChangeMiddleware');
+
+/**
  * Save logged In User
- * 
  */
 $app->add('App\Middleware\UserMiddleware');
 

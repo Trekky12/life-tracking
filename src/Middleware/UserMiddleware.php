@@ -25,6 +25,7 @@ class UserMiddleware {
             try {
                 $user = $usermapper->getUserFromLogin($username);
                 $this->ci->get('helper')->setUser($user);
+                
             } catch (\Exception $e) {
                 $logger = $this->ci->get('logger');
                 $logger->addInfo('Login FAILED', array('user' => $username, 'error' => $e->getMessage()));

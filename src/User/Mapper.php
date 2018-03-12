@@ -21,11 +21,12 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function update_password($id, $new_password) {
-        $sql = "UPDATE " . $this->getTable() . " SET password=:password WHERE id=:id";
+        $sql = "UPDATE " . $this->getTable() . " SET password=:password, force_pw_change =:force_pw_change WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "password" => $new_password,
-            "id" => $id
+            "id" => $id,
+            "force_pw_change" => 0
         ]);
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
