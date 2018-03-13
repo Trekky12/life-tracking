@@ -161,4 +161,10 @@ $lang["OTHER_SETTINGS"] = "Other settings";
 $lang["FORCE_PW_CHANGE"] = "Force password change";
 $lang["BOARD_NOTIFICATION_MAILS"] = "Mail notifications on boards";
 
+$lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Your user account at %s";
+$lang["MAIL_USER_ACCOUNT_CREATED"] = "someone created a user account for you at <a href='%s'>%s</a>";
+$lang["MAIL_YOUR_USERNAME"] = "Your username: %s";
+$lang["MAIL_YOUR_PASSWORD"] = "Password: %s";
+$lang["MAIL_FORCE_CHANGE_PASSWORD"] = "You need to change your password after the first login!";
+
 return $lang;

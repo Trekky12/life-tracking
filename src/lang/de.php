@@ -161,4 +161,13 @@ $lang["OTHER_SETTINGS"] = "Sonstige Einstellungen";
 $lang["FORCE_PW_CHANGE"] = "Passwortänderung erzwingen";
 $lang["BOARD_NOTIFICATION_MAILS"] = "E-Mail Benachrichtigungen bei Boards";
 
+$lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Dein Benutzeraccount bei %s";
+$lang["MAIL_USER_ACCOUNT_CREATED"] = "für dich wurde ein Benutzeraccount auf <a href='%s'>%s</a> erstellt.";
+$lang["MAIL_YOUR_USERNAME"] = "Dein Benutzername lautet: %s";
+$lang["MAIL_YOUR_PASSWORD"] = "Passwort: %s";
+$lang["MAIL_FORCE_CHANGE_PASSWORD"] = "Nach dem ersten Anmelden musst du dein Passwort ändern!";
+
+$lang["MAIL_ADDED_TO_CARD"] = "Du wurdest zu einer Karte hinzugefügt";
+$lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</a> zur Karte \"%s\" hinzugefügt.";
+
 return $lang;

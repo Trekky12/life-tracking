@@ -7,6 +7,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class CardController extends \App\Base\Controller {
 
+    private $card_users_preSave = array();
+    private $card_users_afterSave = array();
+
     public function init() {
         $this->model = '\App\Board\Card';
 
@@ -14,6 +17,7 @@ class CardController extends \App\Base\Controller {
         $this->board_mapper = new \App\Board\BoardMapper($this->ci);
         $this->stack_mapper = new \App\Board\StackMapper($this->ci);
         $this->label_mapper = new \App\Board\LabelMapper($this->ci);
+        $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
     /**
@@ -21,19 +25,24 @@ class CardController extends \App\Base\Controller {
      */
     protected function preSave($id, $data) {
         $user = $this->ci->get('helper')->getUser()->id;
+        $this->card_users_preSave = array();
 
         if (!is_null($id)) {
             $user_cards = $this->board_mapper->getUserCards($user);
             if (!in_array($id, $user_cards)) {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
+
+            /**
+             * Get users pre change
+             */
+            $this->card_users_preSave = $this->mapper->getUsers($id);
         } elseif (is_array($data)) {
             $user_stacks = $this->board_mapper->getUserStacks($user);
             if (!array_key_exists("stack", $data) || !in_array($data["stack"], $user_stacks)) {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
-
     }
 
     /**
@@ -41,6 +50,8 @@ class CardController extends \App\Base\Controller {
      */
     protected function afterSave($id, $data) {
         // card check is already done in preSave()
+        $board_id = $this->mapper->getCardBoard($id);
+
         try {
             // remove old labels
             $this->label_mapper->deleteLabelsFromCard($id);
@@ -50,8 +61,7 @@ class CardController extends \App\Base\Controller {
                 $labels = filter_var_array($data["labels"], FILTER_SANITIZE_NUMBER_INT);
 
                 // check if label is on this board
-                $board = $this->mapper->getCardBoard($id);
-                $board_labels = $this->label_mapper->getLabelsFromBoard($board);
+                $board_labels = $this->label_mapper->getLabelsFromBoard($board_id);
                 $board_labels_ids = array_map(function($label) {
                     return $label->id;
                 }, $board_labels);
@@ -65,6 +75,54 @@ class CardController extends \App\Base\Controller {
             }
         } catch (\Exception $e) {
             
+        }
+
+        /**
+         * Notify changed users
+         */
+        $my_user_id = intval($this->ci->get('helper')->getUser()->id);
+        $this->card_users_afterSave = $this->mapper->getUsers($id);
+        $new_users = array_diff($this->card_users_afterSave, $this->card_users_preSave);
+
+        $board = $this->board_mapper->get($board_id);
+        $card = $this->mapper->get($id);
+        
+        $subject = $this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD');
+
+        foreach ($new_users as $nu) {
+
+            // except self
+            if ($nu !== $my_user_id) {
+                $user = $this->user_mapper->get($nu);
+
+                if ($user->mail && $user->board_notification_mails == 1) {
+                    
+                    $variables = array(
+                        'header' => '',
+                        'subject' => $subject,
+                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->hash)), $board->name, $card->title)
+                        . '<br/>'
+                    );
+
+                    if ($card->description) {
+                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('DESCRIPTION') . ':</strong> <br/>' . nl2br($card->description).'<br/>';
+                    }
+                    if ($card->date) {
+                        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+                        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+                        $fmt->setPattern('dd. MMMM y');
+
+                        $dateObj = new \DateTime($card->date);
+                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('DATE') . ':</strong> <br/>' . $fmt->format($dateObj) .'<br/>';
+                    }
+                    if ($card->time) {
+                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('TIME') . ':</strong> <br/>' . $card->time.'<br/>';
+                    }
+
+                    $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
+                }
+            }
         }
     }
 

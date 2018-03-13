@@ -6,6 +6,7 @@ class Helper {
 
     private $container;
     private $user;
+    private $basePath;
 
     public function __construct($container) {
         $this->container = $container;
@@ -110,6 +111,14 @@ class Helper {
 
     public function getSessionVar($key, $fallback = null) {
         return array_key_exists($key, $_SESSION) ? filter_var($_SESSION[$key]) : $fallback;
+    }
+
+    public function setPath($path) {
+        $this->path = $path;
+    }
+
+    public function getPath() {
+        return $this->path;
     }
 
 }

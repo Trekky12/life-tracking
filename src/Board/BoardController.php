@@ -68,7 +68,6 @@ class BoardController extends \App\Base\Controller {
             $stack->cards = $this->card_mapper->getCardsFromStack($stack->id, $show_archive);
         }
 
-
         $users = $this->user_mapper->getAll('name');
 
         $card_user = $this->card_mapper->getCardsUser();

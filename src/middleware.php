@@ -19,6 +19,11 @@ $app->add('App\Middleware\PWChangeMiddleware');
  */
 $app->add('App\Middleware\UserMiddleware');
 
+/**
+ * Save Base URL
+ */
+$app->add('App\Middleware\BaseURLMiddleware');
+
 
 /**
  * Basic Auth

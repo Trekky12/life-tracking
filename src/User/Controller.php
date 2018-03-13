@@ -89,7 +89,7 @@ class Controller extends \App\Base\Controller {
                 'content' => $this->ci->get('helper')->getTranslatedString('THISISATESTEMAIL')
             );
 
-            $return = $this->ci->get('helper')->send_mail('mail/test.twig', $entry->mail, $subject, $variables);
+            $return = $this->ci->get('helper')->send_mail('mail/general.twig', $entry->mail, $subject, $variables);
 
             if ($return) {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("USER_EMAIL_SUCCESS"));
@@ -159,10 +159,9 @@ class Controller extends \App\Base\Controller {
                 $img->save($complete_file_name . '-mini.' . $file_extension);
 
                 $this->mapper->update_image($user->id, $file_name . '.' . $file_extension);
-                
+
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("IMAGE_SET"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
-                
             } else if ($image->getError() === UPLOAD_ERR_NO_FILE) {
                 $this->mapper->update_image($user->id, null);
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("IMAGE_DELETED"));
@@ -171,6 +170,37 @@ class Controller extends \App\Base\Controller {
             return $response->withRedirect($this->ci->get('router')->pathFor('users_profile_image'), 301);
         }
         return $this->ci->view->render($response, 'profile/image.twig', ["user" => $user]);
+    }
+
+    protected function afterSave($id, $data) {
+        // notify new user
+        // is new user?
+        if (!array_key_exists("id", $data)) {
+            $user = $this->mapper->get($id);
+            if ($user->mail && $user->board_notification_mails == 1) {
+
+                $subject = sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->ci->get('helper')->getPath());
+
+                $variables = array(
+                    'header' => '',
+                    'subject' => $subject,
+                    'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
+                    'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_USER_ACCOUNT_CREATED'), $this->ci->get('helper')->getPath(), $this->ci->get('helper')->getPath())
+                    . '<br/><br/>'
+                    . sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_USERNAME'), $user->login)
+                );
+
+                if (array_key_exists("set_password", $data)) {
+                    $variables["content"] .= '<br/>' . sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["set_password"]);
+                }
+
+                if ($user->force_pw_change == 1) {
+                    $variables["content"] .= '<br/><br/>'. $this->ci->get('helper')->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
+                }
+
+                $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
+            }
+        }
     }
 
 }

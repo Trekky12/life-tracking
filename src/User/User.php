@@ -22,7 +22,7 @@ class User extends \App\Base\Model {
         /**
          * Set Password only from request
          */
-        $password = $this->exists('setpassword', $data) ? filter_var($data['setpassword'], FILTER_SANITIZE_STRING) : null;
+        $password = $this->exists('set_password', $data) ? filter_var($data['set_password'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($password)) {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }

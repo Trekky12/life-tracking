@@ -20,10 +20,11 @@ class PWChangeMiddleware {
 
         $route = $request->getAttribute('route');
 
+
         /**
          * Redirect to change password page 
          */
-        if (!is_null($user) && !is_null($route) && ($user->force_pw_change != 1 || $route->getName() === 'users_change_password')) {
+        if (!is_null($user) && ($user->force_pw_change != 1 || (!is_null($route) && $route->getName() === 'users_change_password'))) {
             return $next($request, $response);
         }
         return $response->withRedirect($this->ci->get('router')->pathFor('users_change_password'), 302);
