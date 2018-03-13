@@ -39,6 +39,7 @@
 
 .ui-dialog .ui-dialog-title{
     float:none;
+    @include font-size(1.6);
 }
 
 .ui-dialog-titlebar{

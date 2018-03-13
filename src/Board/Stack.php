@@ -5,6 +5,11 @@ namespace App\Board;
 class Stack extends \App\Base\Model {
 
     public function parseData(array $data) {
+        
+        // new stack --> save createdBy
+        if ( !$this->exists('id', $data)) {
+            $this->createdBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
+        }
 
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
 
@@ -13,6 +18,8 @@ class Stack extends \App\Base\Model {
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
         
         $this->archive = $this->exists('archive', $data) ? filter_var($data['archive'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        
+        $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
 
 
         if (empty($this->name)) {

@@ -32,24 +32,28 @@ class StackMapper extends \App\Base\Mapper {
         return $results;
     }
 
-    public function updatePosition($id, $position) {
-        $sql = "UPDATE " . $this->getTable() . " SET position=:position WHERE id=:id";
+    public function updatePosition($id, $position, $user) {
+        $sql = "UPDATE " . $this->getTable() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "position" => $position,
-            "id" => $id
+            "id" => $id,
+            "changedOn" => date('Y-m-d G:i:s'),
+            "changedBy" => $user
         ]);
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
-    public function setArchive($id, $archive) {
-        $sql = "UPDATE " . $this->getTable() . " SET archive=:archive WHERE id=:id";
+    public function setArchive($id, $archive, $user) {
+        $sql = "UPDATE " . $this->getTable() . " SET archive=:archive, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "archive" => $archive,
-            "id" => $id
+            "id" => $id,
+            "changedOn" => date('Y-m-d G:i:s'),
+            "changedBy" => $user
         ]);
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));

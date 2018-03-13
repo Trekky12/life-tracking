@@ -194,7 +194,9 @@ CREATE TABLE stacks (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     board INTEGER unsigned DEFAULT NULL,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
     changedOn TIMESTAMP NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
@@ -202,13 +204,21 @@ CREATE TABLE stacks (
    FOREIGN KEY(board) REFERENCES boards(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*
+ALTER TABLE stacks ADD createdBy INTEGER unsigned DEFAULT NULL AFTER createdOn;
+ALTER TABLE stacks ADD changedBy INTEGER unsigned DEFAULT NULL AFTER changedOn;
+ALTER TABLE stacks ADD CONSTRAINT stacks_ibfk_2 FOREIGN KEY(createdBy) REFERENCES users(id);
+ALTER TABLE stacks ADD CONSTRAINT stacks_ibfk_3 FOREIGN KEY(changedBy) REFERENCES users(id);
+*/
 
 DROP TABLE IF EXISTS cards;
 CREATE TABLE cards (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     stack INTEGER unsigned DEFAULT NULL,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
     changedOn TIMESTAMP NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
     title varchar(255) DEFAULT NULL,
     date DATE DEFAULT NULL,
     time TIME DEFAULT NULL,

@@ -46,7 +46,7 @@ class StackController extends \App\Base\Controller {
             if (array_key_exists("stack", $data) && !empty($data["stack"])) {
                 foreach ($data['stack'] as $position => $item) {
                     if (in_array($item, $user_stacks)) {
-                        $this->mapper->updatePosition($item, $position);
+                        $this->mapper->updatePosition($item, $position, $user);
                     }
                 }
                 return $response->withJSON(array('status' => 'success'));
@@ -66,7 +66,8 @@ class StackController extends \App\Base\Controller {
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
 
-                $is_archived = $this->mapper->setArchive($id, $data["archive"]);
+                $user = $this->ci->get('helper')->getUser()->id;
+                $is_archived = $this->mapper->setArchive($id, $data["archive"], $user);
                 $newResponse = $response->withJson(['is_archived' => $is_archived]);
                 return $newResponse;
             } else {

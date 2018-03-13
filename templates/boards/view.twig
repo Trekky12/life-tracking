@@ -9,7 +9,7 @@
 {% block javascript %}
     <script src="/static/assets/js/jquery.ui.touch-punch.min.js"></script>
     <script src="/static/assets/js/chosen.jquery.min.js"></script>
-    <script src="/static/js/boards.js"></script>
+    <script src="/static/js/boards.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -127,9 +127,9 @@
                 <div class="member-list">
                     {% for user in users %}
                         {% if user.get_thumbnail() != '' %}
-                            <img alt="{{user.login}}" src="/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar-small" data-user="{{user.id}}">
+                            <img alt="{{user.login}}" src="/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar-small" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
                         {% else %}
-                            <svg alt="{{user.login}}" class="avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}">
+                            <svg alt="{{user.login}}" class="avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
                             <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
                             </svg>
                         {% endif %}

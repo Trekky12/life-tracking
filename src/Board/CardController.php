@@ -150,7 +150,7 @@ class CardController extends \App\Base\Controller {
 
                 foreach ($data['card'] as $position => $item) {
                     if (in_array($item, $user_cards)) {
-                        $this->mapper->updatePosition($item, $position);
+                        $this->mapper->updatePosition($item, $position,$user);
                     }
                 }
                 return $response->withJSON(array('status' => 'success'));
@@ -173,7 +173,7 @@ class CardController extends \App\Base\Controller {
             $user_stacks = $this->board_mapper->getUserStacks($user);
 
             if (!is_null($stack) && !is_null($card) && in_array($stack, $user_stacks) && in_array($card, $user_cards)) {
-                $this->mapper->moveCard($card, $stack);
+                $this->mapper->moveCard($card, $stack, $user);
                 return $response->withJSON(array('status' => 'success'));
             }
         } catch (\Exception $e) {
@@ -190,8 +190,8 @@ class CardController extends \App\Base\Controller {
             $this->preSave($id, null);
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
-
-                $is_archived = $this->mapper->setArchive($id, $data["archive"]);
+                $user = $this->ci->get('helper')->getUser()->id;
+                $is_archived = $this->mapper->setArchive($id, $data["archive"], $user);
                 $newResponse = $response->withJson(['is_archived' => $is_archived]);
                 return $newResponse;
             } else {

@@ -38,14 +38,14 @@
                     click: function () {
                         save(stackDialog, jsObject.stack_save);
                     },
-                    class: "button"
+                    "class": "button"
                 },
                 {
                     text: lang.cancel,
                     click: function () {
                         $(this).dialog("close");
                     },
-                    class: "button gray"
+                    "class": "button gray"
                 }
             ],
             create: function () {
@@ -115,14 +115,14 @@
                     click: function () {
                         save(cardDialog, jsObject.card_save);
                     },
-                    class: "button"
+                    "class": "button"
                 },
                 {
                     text: lang.cancel,
                     click: function () {
                         $(this).dialog("close");
                     },
-                    class: "button gray"
+                    "class": "button gray"
                 }
             ],
             open: function () {
@@ -256,14 +256,14 @@
                     click: function () {
                         save(labelDialog, jsObject.label_save);
                     },
-                    class: "button"
+                    "class": "button"
                 },
                 {
                     text: lang.cancel,
                     click: function () {
                         $(this).dialog("close");
                     },
-                    class: "button gray"
+                    "class": "button gray"
                 }
             ],
             create: function () {
@@ -503,6 +503,21 @@
             });
         });
 
+
+        $('.avatar-small').tooltip();
+
+        /**
+         * Auto Update page
+         */
+        setInterval(function () {
+            var isOpenStack = stackDialog.dialog( "isOpen" );
+            var isOpenCard = cardDialog.dialog( "isOpen" );
+            var isOpenLabel = labelDialog.dialog( "isOpen" );
+            
+            if(!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true){
+                window.location.reload();
+            }
+        }, 30000);
 
     });
 })(jQuery);
