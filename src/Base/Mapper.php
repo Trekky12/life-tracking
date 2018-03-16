@@ -85,11 +85,13 @@ class Mapper {
         return $results;
     }
 
-    public function get($id) {
+    public function get($id, $filtered = true) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE  {$this->id} = :id";
 
         $bindings = array("id" => $id);
-        $this->filterByUser($sql, $bindings);
+        if ($filtered) {
+            $this->filterByUser($sql, $bindings);
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

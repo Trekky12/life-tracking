@@ -89,6 +89,6 @@ class BoardMapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
+        
 
 }

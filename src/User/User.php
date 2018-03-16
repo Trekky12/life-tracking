@@ -27,7 +27,9 @@ class User extends \App\Base\Model {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }
 
-        $this->image = $this->exists('image', $data) ? filter_var($data['image'], FILTER_SANITIZE_STRING) : $this->image;
+        if($this->exists('image', $data)){
+            $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
+        }
 
         $set_module_location = $this->exists('set_module_location', $data) ? filter_var($data['set_module_location'], FILTER_SANITIZE_STRING) : 0;
         $this->module_location = $set_module_location === 'on' ? 1 : 0;

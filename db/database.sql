@@ -254,10 +254,16 @@ CREATE TABLE labels (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
-    color VARCHAR(255) DEFAULT NULL,
+    background_color VARCHAR(255) DEFAULT NULL,
+    text_color VARCHAR(255) DEFAULT '#000000',
     PRIMARY KEY (id),
    FOREIGN KEY(board) REFERENCES boards(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE labels CHANGE color background_color VARCHAR(255) DEFAULT NULL;
+ALTER TABLE labels ADD text_color VARCHAR(255) DEFAULT '#000000' AFTER background_color;
+*/
 
 DROP TABLE IF EXISTS cards_label;
 CREATE TABLE cards_label (
@@ -268,5 +274,6 @@ CREATE TABLE cards_label (
     FOREIGN KEY(card) REFERENCES cards(id)  ON DELETE CASCADE,
     FOREIGN KEY(label) REFERENCES labels(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 

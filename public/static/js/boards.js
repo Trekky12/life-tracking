@@ -154,6 +154,11 @@
                 cardForm.find('.hidden-field').addClass('hidden');
 
                 cardDialog.find('textarea[name="description"]').height("auto");
+
+                cardDialog.find('#createdBy').html("");
+                cardDialog.find('#createdOn').html("");
+                cardDialog.find('#changedBy').html("");
+                cardDialog.find('#changedOn').html("");
             }
         });
 
@@ -179,6 +184,7 @@
                     cardDialog.find('input[name="title"]').val(response.entry.title);
                     cardDialog.find('input[name="position"]').val(response.entry.position);
                     cardDialog.find('input[name="stack"]').val(response.entry.stack);
+                    cardDialog.find('input[name="archive"]').val(response.entry.archive);
 
                     if (response.entry.date) {
                         var datefield = cardDialog.find('input[name="date"]');
@@ -204,6 +210,11 @@
                     }
 
                     cardDialog.find('select[name="users[]"]').val(response.entry.users);
+
+                    cardDialog.find('#createdBy').html(response.entry.createdBy);
+                    cardDialog.find('#createdOn').html(moment(response.entry.createdOn).format(i18n.dateformatJSFull));
+                    cardDialog.find('#changedBy').html(response.entry.changedBy);
+                    cardDialog.find('#changedOn').html(moment(response.entry.changedOn).format(i18n.dateformatJSFull));
 
                     var users = cardDialog.find('.avatar-small, .avatar-small');
 
@@ -302,8 +313,11 @@
                 success: function (response) {
                     labelDialog.find('input[name="id"]').val(response.entry.id);
                     labelDialog.find('input[name="name"]').val(response.entry.name);
-                    labelDialog.find('input[name="color"]').val(response.entry.color);
-                    labelDialog.find('input[name="color"]').parent('.color-wrapper').css("background-color", response.entry.color);
+                    labelDialog.find('input[name="background_color"]').val(response.entry.background_color);
+                    labelDialog.find('input[name="background_color"]').parent('.color-wrapper').css("background-color", response.entry.background_color);
+                    labelDialog.find('input[name="text_color"]').val(response.entry.text_color);
+                    labelDialog.find('input[name="text_color"]').parent('.color-wrapper').css("background-color", response.entry.text_color);
+
                     $('#label-add-btn').button('option', 'label', lang.update);
                     var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
                     labelDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
@@ -510,11 +524,11 @@
          * Auto Update page
          */
         setInterval(function () {
-            var isOpenStack = stackDialog.dialog( "isOpen" );
-            var isOpenCard = cardDialog.dialog( "isOpen" );
-            var isOpenLabel = labelDialog.dialog( "isOpen" );
-            
-            if(!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true){
+            var isOpenStack = stackDialog.dialog("isOpen");
+            var isOpenCard = cardDialog.dialog("isOpen");
+            var isOpenLabel = labelDialog.dialog("isOpen");
+
+            if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true) {
                 window.location.reload();
             }
         }, 30000);

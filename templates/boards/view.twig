@@ -38,8 +38,14 @@
             <input name="stack" type="hidden" value="" class="reset-field"/>
             <input name="id" type="hidden" value="" class="reset-field"/>
             <input name="position" type="hidden" value="" class="reset-field"/>
+            <input name="archive" type="hidden" value="" class="reset-field"/>
+            <div class="form-group card-dates">
+                <span>{{lang["CHANGED_BY"]}}:</span> <span id="changedBy"></span> (<span id="changedOn"></span>) | 
+                <span>{{lang["CREATED_BY"]}}:</span> <span id="createdBy"></span> (<span id="createdOn"></span>)
+            </div>
             <div class="form-group hidden">
                 <select class="form-control" id="users" name="users[]" multiple="true">
+                    {# not using "if user.id in board_user" so users removed and readded to the board are still on assigned cards #}
                     {% for user in users %}
                         <option value="{{user.id}}">{{user.login}}</option>
                     {% endfor %}
@@ -53,7 +59,7 @@
                 <div class="form-group left">
                     <label>{{lang["USERS"]}}</label>
                     <div class="member-list">
-                        {% for user in users %}
+                        {% for user in users if user.id in board_user %}
                             {% if user.get_thumbnail() != '' %}
                                 <img alt="{{user.login}}" src="/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
                             {% else %}
@@ -68,7 +74,7 @@
                     <label>{{lang["LABELS"]}}</label>
                     <select class="form-control" id="card-label-list" name="labels[]" multiple="true">
                         {% for label in labels %}
-                            <option value="{{label.id}}" data-background-color="{{label.color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
+                            <option value="{{label.id}}" data-background-color="{{label.background_color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -109,11 +115,19 @@
                 <label for="inputName">{{lang["NAME"]}}</label>
                 <input class="form-control" id="inputName" name="name" type="text"/>
             </div>
-            <div class="form-group">
-                <h4>{{lang["COLOR"]}}</h4>
-                <label for="inputColor" class="color-wrapper">
-                    <input class="form-control" id="inputColor" name="color" type="color"/>
-                </label>
+            <div class="two-columns form-group">
+                <div class="left">
+                    <h4>{{lang["BACKGROUND"]}} {{lang["COLOR"]}}</h4>
+                    <label for="inputBackgroundColor" class="color-wrapper">
+                        <input class="form-control" id="inputBackgroundColor" name="background_color" type="color"/>
+                    </label>
+                </div>
+                    <div class="right">
+                    <h4>{{lang["TEXT"]}} {{lang["COLOR"]}}</h4>
+                    <label for="inputTextColor" class="color-wrapper">
+                        <input class="form-control" id="inputTextColor" name="text_color" type="color"/>
+                    </label>
+                </div>
             </div>
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px" />
         </form>
@@ -125,7 +139,7 @@
             <div class="sidebar-box">
                 <h4>{{lang["USERS"]}}</h4>
                 <div class="member-list">
-                    {% for user in users %}
+                    {% for user in users if user.id in board_user %}
                         {% if user.get_thumbnail() != '' %}
                             <img alt="{{user.login}}" src="/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar-small" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
                         {% else %}
@@ -141,7 +155,7 @@
                 <h4>{{lang["LABELS"]}}</h4>
                 <div class="card-label-list">
                     {% for label in labels %}
-                        <span class="card-label" style="background-color:{{label.color}}; color:{{label.getTextColor()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name}}</a></span>
+                        <span class="card-label" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name}}</a></span>
                         {% endfor %}
                 </div>
                 <a class="create-label add-element-text" href="#"><i class="fa fa-plus"></i> {{lang["ADD_LABEL"]}}</a>
@@ -174,7 +188,7 @@
                             <div class="board-card{%if card.archive == 1%} archived{%endif%}" id="card_{{card.id}}" data-card="{{card.id}}">
                                 <div class="card-labels">
                                     {% for label in card_label[card.id] %}
-                                        <div class="card-label" style="background-color:{{labels[label].color}}; color:{{labels[label].getTextColor()}}"></div>
+                                        <div class="card-label" style="background-color:{{labels[label].background_color}}; color:{{labels[label].getTextColor()}}"></div>
                                     {% endfor %}
                                 </div>
 
@@ -183,7 +197,7 @@
                                     <span class="card-date {% if "now"|date('Y-m-d') >= card.date|date('Y-m-d') %}due{% endif %}">{{card.date is empty ? "" : card.date|date(i18n.twig)}} {{ card.time is empty ? "" : card.time|date("H:i") }}</span>
                                 {% endif %}
                                 <div class="card-member">
-                                    {% for user in card_user[card.id] %}
+                                    {% for user in card_user[card.id] if user in board_user %}
                                         {% if users[user].get_thumbnail() != '' %}
                                             <img src="/{{uploads_folder}}/{{users[user].get_thumbnail('mini')}}" class="avatar-mini">
                                         {% else %}

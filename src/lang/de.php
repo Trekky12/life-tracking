@@ -153,6 +153,8 @@ $lang["UPDATE"] = "Aktualisieren";
 $lang["TITLE"] = "Titel";
 $lang["COLOR"] = "Farbe";
 $lang["WRONG_COLOR_TYPE"] = "Die Farbe wurde falsch angegeben!";
+$lang["BACKGROUND"] = "Hintergrund";
+$lang["TEXT"] = "Text";
 
 $lang["SHOW_ARCHIVED_ITEMS"] = "Zeige archivierte Elemente";
 $lang["UNDO_ARCHIVE"] = "Soll die Archivierung für den Eintrag wirklich aufgehoben werden?";
@@ -169,5 +171,11 @@ $lang["MAIL_FORCE_CHANGE_PASSWORD"] = "Nach dem ersten Anmelden musst du dein Pa
 
 $lang["MAIL_ADDED_TO_CARD"] = "Du wurdest zu einer Karte hinzugefügt";
 $lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</a> zur Karte \"%s\" hinzugefügt.";
+
+$lang["MAIL_ADDED_TO_BOARD"] = "Du wurdest zu einem Board hinzugefügt";
+$lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%s'>%s</a> hinzugefügt.";
+
+$lang["CREATED_BY"] = "Erstellt von";
+$lang["CHANGED_BY"] = "Geändert von";
 
 return $lang;

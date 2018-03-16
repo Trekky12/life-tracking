@@ -186,16 +186,16 @@ class Controller extends \App\Base\Controller {
                     'subject' => $subject,
                     'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
                     'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_USER_ACCOUNT_CREATED'), $this->ci->get('helper')->getPath(), $this->ci->get('helper')->getPath())
-                    . '<br/><br/>'
+                    . '<br/>&nbsp;<br/>&nbsp;'
                     . sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_USERNAME'), $user->login)
                 );
 
                 if (array_key_exists("set_password", $data)) {
-                    $variables["content"] .= '<br/>' . sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["set_password"]);
+                    $variables["content"] .= '<br/>&nbsp;' . sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["set_password"]);
                 }
 
                 if ($user->force_pw_change == 1) {
-                    $variables["content"] .= '<br/><br/>'. $this->ci->get('helper')->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
+                    $variables["content"] .= '<br/>&nbsp;<br/>&nbsp;'. $this->ci->get('helper')->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
                 }
 
                 $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);

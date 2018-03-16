@@ -10,22 +10,24 @@ class Label extends \App\Base\Model {
 
         $this->board = $this->exists('board', $data) ? filter_var($data['board'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->color = $this->exists('color', $data) ? filter_var($data['color'], FILTER_SANITIZE_STRING) : null;
+        $this->background_color = $this->exists('background_color', $data) ? filter_var($data['background_color'], FILTER_SANITIZE_STRING) : null;
+        $this->text_color = $this->exists('text_color', $data) ? filter_var($data['text_color'], FILTER_SANITIZE_STRING) : null;
 
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
 
-        if (!preg_match("/^#[a-f0-9]{6}$/i", $this->color)) {
+        if (!preg_match("/^#[a-f0-9]{6}$/i", $this->background_color) || !preg_match("/^#[a-f0-9]{6}$/i", $this->text_color)) {
             $this->parsing_errors[] = "WRONG_COLOR_TYPE";
         }
     }
 
     public function getTextColor() {
-        if (!is_null($this->color)) {
+        if (!is_null($this->text_color)) {
             //return $this->getTextColorLumDiff();
-            return $this->getTextColorYIQ();
+            //return $this->getTextColorYIQ();
+            return $this->text_color;
         }
         return '#000000';
     }
