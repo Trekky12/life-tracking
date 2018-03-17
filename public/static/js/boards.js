@@ -143,6 +143,9 @@
                     forceSync: true,
                     spellChecker: false,
                     promptURLs: true,
+                    status: false,
+                    styleSelectedText: $('.menu-toggle').css('display') !== 'none' ? false : true,
+                    minHeight: '50px',
                     
                 });
                 if ($textarea.val() !== '') {
@@ -183,6 +186,7 @@
                 cardDialog.find('#createdOn').html("");
                 cardDialog.find('#changedBy').html("");
                 cardDialog.find('#changedOn').html("");
+                cardDialog.find('.form-group.card-dates').addClass('hidden');
                 
             }
         });
@@ -241,6 +245,7 @@
                     cardDialog.find('#createdOn').html(moment(response.entry.createdOn).format(i18n.dateformatJSFull));
                     cardDialog.find('#changedBy').html(response.entry.changedBy);
                     cardDialog.find('#changedOn').html(moment(response.entry.changedOn).format(i18n.dateformatJSFull));
+                    cardDialog.find('.form-group.card-dates').removeClass('hidden');
 
                     var users = cardDialog.find('.avatar-small, .avatar-small');
 

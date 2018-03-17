@@ -107,7 +107,11 @@ class CardController extends \App\Base\Controller {
                     );
 
                     if ($card->description) {
-                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('DESCRIPTION') . ':</strong> <br/>' . nl2br($card->description).'<br/>&nbsp;';
+                        //$description = nl2br($card->description);
+                        $parser = new \Michelf\Markdown();
+                        //$parser->hard_wrap  = true;
+                        $description = $parser->transform(str_replace("\n", "\n\n", $card->description));
+                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('DESCRIPTION') . ':</strong> <br/>' . $description .'<br/>&nbsp;';
                     }
                     if ($card->date) {
                         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
@@ -145,7 +149,7 @@ class CardController extends \App\Base\Controller {
             $entry->changedBy = $users[$entry->changedBy]->name;
         }
         if($entry->description){
-            $entry->description = htmlspecialchars_decode($entry->description);
+            $entry->description = html_entity_decode(htmlspecialchars_decode($entry->description));
         }
         
         return $entry;
@@ -215,6 +219,10 @@ class CardController extends \App\Base\Controller {
         } catch (\Exception $e) {
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
+    }
+    
+    public function reminder(Request $request, Response $response) {
+        return $response->withJSON(array('status' => 'success'));
     }
 
 }

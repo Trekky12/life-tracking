@@ -3,13 +3,19 @@
 ## Features
 
 * track your location with tasker
-* track your income and spendings
+* track income and spendings
 * manage income/spendings categories
-* automatically add monthly income/spendings (cron required)
-* track your fuel consumption
+* automatically add monthly income/spendings
+* track fuel consumption for multiple cars with multiple users
 * income/spendings and fuel statistics
+** monthly statistics via mail
 * multi-language support
 * multi-user support
+** profile image
+** change password
+* kanban like boards 
+** stacks
+** cards with labels, date, description, assigned users
 
 ## Installation
 
@@ -21,6 +27,7 @@
 * install the required composer dependencies with ``composer install``
 * you can login with the default user ``admin`` and password ``admin``
 * create a cronjob which calls ``http://<user>:<password>@<your-domain>/finances/monthly/update`` every month
+* create a cronjob which calls ``http://<user>:<password>@<your-domain>/boards/reminder`` daily
 
 
 More information available on http://www.haegi.org

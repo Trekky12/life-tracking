@@ -1,4 +1,4 @@
-button, input[type="submit"], .button {
+button:not(.fa), input[type="submit"], .button {
 
     &, &:focus{
         cursor: pointer;

@@ -418,5 +418,18 @@
 }
 
 .CodeMirror, .CodeMirror-scroll {
-	min-height: 50px;
+    min-height: 50px;
+}
+
+.editor-toolbar{
+    button{
+        font: normal normal normal 14px/1 FontAwesome;
+    }
+    button.active, button:hover {
+        background: #95a5a6;
+    }
+}
+
+.editor-preview-side>p, .editor-preview>p{
+    margin-bottom: 0.5rem;
 }

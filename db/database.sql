@@ -176,8 +176,12 @@ CREATE TABLE boards (
     hash VARCHAR(255) NOT NULL,
     archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
+    UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*
+ALTER TABLE boards ADD UNIQUE(hash);
+*/
 
 DROP TABLE IF EXISTS boards_user;
 CREATE TABLE boards_user (

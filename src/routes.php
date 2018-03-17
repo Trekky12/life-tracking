@@ -113,4 +113,6 @@ $app->group('/boards', function() {
     });
     
     $this->post('/setArchive', '\App\Board\BoardController:setArchive')->setName('set_archive');
+    
+    $this->get('/reminder', '\App\Board\CardController:reminder');
 });

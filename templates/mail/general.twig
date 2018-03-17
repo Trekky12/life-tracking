@@ -4,8 +4,10 @@
 {% block body %}
     {% embed 'mail/modules/content.twig' %}
         {% block content %}
-            <h1>{{headline}}</h1>
-            <p>{{content|raw}}</p>
+            <div id="inner-content">
+                <h1>{{headline}}</h1>
+                <p>{{content|raw}}</p>
+            </div>
         {% endblock %}
     {% endembed %}
 {% endblock %}

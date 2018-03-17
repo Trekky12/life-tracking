@@ -18,7 +18,8 @@
         "slim/twig-view": "^2.3",
         "phpmailer/phpmailer": "^6.0",
         "kanellov/slim-twig-flash": "^0.2.0",
-        "intervention/image": "^2.4"
+        "intervention/image": "^2.4",
+        "michelf/php-markdown": "^1.8"
     },
     "autoload": {
         "psr-4": {
