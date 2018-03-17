@@ -416,3 +416,7 @@
 .board-card.archived{
     background: none;
 }
+
+.CodeMirror, .CodeMirror-scroll {
+	min-height: 50px;
+}

@@ -144,6 +144,9 @@ class CardController extends \App\Base\Controller {
         if($entry->changedBy){
             $entry->changedBy = $users[$entry->changedBy]->name;
         }
+        if($entry->description){
+            $entry->description = htmlspecialchars_decode($entry->description);
+        }
         
         return $entry;
     }

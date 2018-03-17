@@ -4,8 +4,14 @@
 
 
         var stackDialog, stackForm, cardDialog, cardForm, labelDialog, labelForm;
+        var simplemde = null;
 
         function save(dialog, url) {
+            /*if(simplemde){
+                simplemde.toTextArea();
+                simplemde = null;
+            }*/
+            
             var id = dialog.find('input[name="id"]').val();
             $.ajax({
                 url: url + id,
@@ -19,6 +25,7 @@
                 }
             });
         }
+        
 
         /**
          * ==================================================
@@ -128,11 +135,23 @@
             open: function () {
                 // expand textarea
                 var $textarea = cardDialog.find('textarea[name="description"]');
+                simplemde = new SimpleMDE({ 
+                    element: $textarea[0],
+                    autosave: {
+                        enabled: false
+                    },
+                    forceSync: true,
+                    spellChecker: false,
+                    promptURLs: true,
+                    
+                });
                 if ($textarea.val() !== '') {
-                    $textarea.height($textarea[0].scrollHeight);
+                    //$textarea.height($textarea[0].scrollHeight);
+                    simplemde.togglePreview();
                 } else {
-                    $textarea.height("auto");
+                    //$textarea.height("auto");
                 }
+               
 
                 // Do not autofocus on first element when on mobile
                 if ($('.menu-toggle').css('display') !== 'none') {
@@ -144,6 +163,11 @@
             },
             close: function () {
                 $('#card-add-btn').button('option', 'label', lang.add);
+                
+                if(simplemde){
+                    simplemde.toTextArea();
+                    simplemde = null;
+                }
 
                 cardForm[ 0 ].reset();
                 cardForm.find('input[type="hidden"].reset-field').val('');
@@ -159,6 +183,7 @@
                 cardDialog.find('#createdOn').html("");
                 cardDialog.find('#changedBy').html("");
                 cardDialog.find('#changedOn').html("");
+                
             }
         });
 
@@ -201,10 +226,11 @@
                         timefield.parent().siblings('.show-sibling').addClass('hidden');
                         timefield.parent().removeClass('hidden');
                     }
+                    
+                    var descrfield = cardDialog.find('textarea[name="description"]');
                     if (response.entry.description) {
-                        var descrfield = cardDialog.find('textarea[name="description"]');
                         descrfield.val(response.entry.description);
-
+  
                         descrfield.parent().siblings('.show-sibling').addClass('hidden');
                         descrfield.parent().removeClass('hidden');
                     }
@@ -245,8 +271,13 @@
 
         // show hidden fields on card-dialog
         $('.show-sibling').on('click', function (e) {
+            e.preventDefault();
             $(this).addClass('hidden');
             $(this).siblings('.hidden-field').removeClass('hidden').find('input, textarea').focus();
+            if(simplemde){
+                simplemde.codemirror.refresh();
+            }
+            return false;
         });
 
         /**
@@ -430,9 +461,9 @@
         $('.avatar').disableSelection();
 
         // Expand textarea on input
-        $("textarea").on("input change", function () {
+        /*$("textarea").on("input change", function () {
             $(this).height("auto").height($(this)[0].scrollHeight);
-        });
+        });*/
 
 
         mobileFunctions();
@@ -532,6 +563,7 @@
                 window.location.reload();
             }
         }, 30000);
+
 
     });
 })(jQuery);

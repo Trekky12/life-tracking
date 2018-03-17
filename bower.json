@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "jqueryui-touch-punch": "https://github.com/ivanmoralesv/jquery-ui-touch-punch.git#^0.4.1",
-    "chosen": "^1.8.3"
+    "chosen": "^1.8.3",
+    "simplemde": "^1.11.2"
   }
 }
