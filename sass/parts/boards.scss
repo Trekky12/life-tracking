@@ -344,7 +344,9 @@
     }
 
     .ui-dialog-buttonpane button{
-        padding: 0.5rem 1rem;
+        &,&:hover, &:focus{
+            padding: 0.5rem 1rem;
+        }
     }
 
     .avatar-small{
@@ -432,4 +434,11 @@
 
 .editor-preview-side>p, .editor-preview>p{
     margin-bottom: 0.5rem;
+}
+
+
+body.boards{
+    .alert.success{
+        display:none;
+    }
 }

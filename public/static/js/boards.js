@@ -7,11 +7,6 @@
         var simplemde = null;
 
         function save(dialog, url) {
-            /*if(simplemde){
-                simplemde.toTextArea();
-                simplemde = null;
-            }*/
-            
             var id = dialog.find('input[name="id"]').val();
             $.ajax({
                 url: url + id,
@@ -25,7 +20,7 @@
                 }
             });
         }
-        
+
 
         /**
          * ==================================================
@@ -78,11 +73,13 @@
             save(stackDialog, jsObject.stack_save);
         });
 
-        $("a.create-stack").on("click", function () {
+        $("a.create-stack").on("click", function (event) {
+            event.preventDefault();
             stackDialog.dialog("open");
         });
 
-        $(".stack-header").on("click", function () {
+        $(".stack-header").on("click", function (event) {
+            event.preventDefault();
             var stack = $(this).data('stack');
             $.ajax({
                 url: jsObject.stack_get_url + stack,
@@ -135,7 +132,7 @@
             open: function () {
                 // expand textarea
                 var $textarea = cardDialog.find('textarea[name="description"]');
-                simplemde = new SimpleMDE({ 
+                simplemde = new SimpleMDE({
                     element: $textarea[0],
                     autosave: {
                         enabled: false
@@ -146,7 +143,7 @@
                     status: false,
                     styleSelectedText: $('.menu-toggle').css('display') !== 'none' ? false : true,
                     minHeight: '50px',
-                    
+
                 });
                 if ($textarea.val() !== '') {
                     //$textarea.height($textarea[0].scrollHeight);
@@ -154,7 +151,7 @@
                 } else {
                     //$textarea.height("auto");
                 }
-               
+
 
                 // Do not autofocus on first element when on mobile
                 if ($('.menu-toggle').css('display') !== 'none') {
@@ -166,8 +163,8 @@
             },
             close: function () {
                 $('#card-add-btn').button('option', 'label', lang.add);
-                
-                if(simplemde){
+
+                if (simplemde) {
                     simplemde.toTextArea();
                     simplemde = null;
                 }
@@ -187,7 +184,7 @@
                 cardDialog.find('#changedBy').html("");
                 cardDialog.find('#changedOn').html("");
                 cardDialog.find('.form-group.card-dates').addClass('hidden');
-                
+
             }
         });
 
@@ -196,14 +193,16 @@
             save(cardDialog, jsObject.card_save);
         });
 
-        $("a.create-card").on("click", function () {
+        $("a.create-card").on("click", function (event) {
+            event.preventDefault();
             var stack_id = $(this).data('stack');
             cardForm.find('input[name="stack"]').val(stack_id);
             cardDialog.dialog("open");
         });
 
 
-        $(".board-card").on("click", function () {
+        $(".board-card").on("click", function (event) {
+            event.preventDefault();
             var card = $(this).data('card');
             $.ajax({
                 url: jsObject.card_get_url + card,
@@ -230,11 +229,11 @@
                         timefield.parent().siblings('.show-sibling').addClass('hidden');
                         timefield.parent().removeClass('hidden');
                     }
-                    
+
                     var descrfield = cardDialog.find('textarea[name="description"]');
                     if (response.entry.description) {
                         descrfield.val(response.entry.description);
-  
+
                         descrfield.parent().siblings('.show-sibling').addClass('hidden');
                         descrfield.parent().removeClass('hidden');
                     }
@@ -279,7 +278,7 @@
             e.preventDefault();
             $(this).addClass('hidden');
             $(this).siblings('.hidden-field').removeClass('hidden').find('input, textarea').focus();
-            if(simplemde){
+            if (simplemde) {
                 simplemde.codemirror.refresh();
             }
             return false;
@@ -337,11 +336,13 @@
             save(labelDialog, jsObject.label_save);
         });
 
-        $("a.create-label").on("click", function () {
+        $("a.create-label").on("click", function (event) {
+            event.preventDefault();
             labelDialog.dialog("open");
         });
 
-        $("a.edit-label").on("click", function () {
+        $("a.edit-label").on("click", function (event) {
+            event.preventDefault();
             var label = $(this).data('label');
             $.ajax({
                 url: jsObject.label_get_url + label,
@@ -421,8 +422,8 @@
          *              Archive
          * ==================================================
          */
-        $('body').on('click', '.btn-archive', function (e) {
-            e.preventDefault();
+        $('body').on('click', '.btn-archive', function (event) {
+            event.preventDefault();
             var url = $(this).data('url');
             var is_archived = $(this).data('archive');
             if (is_archived === 1) {
@@ -451,7 +452,8 @@
         /**
          * Select user on avatar click in hidden multi-select
          */
-        $('#card-form .avatar').on('click', function (e) {
+        $('#card-form .avatar').on('click', function (event) {
+            event.preventDefault();
             var user_id = $(this).data('user');
             var option = $("#card-form select#users option[value='" + user_id + "']");
             if (option.prop("selected")) {
@@ -467,8 +469,8 @@
 
         // Expand textarea on input
         /*$("textarea").on("input change", function () {
-            $(this).height("auto").height($(this)[0].scrollHeight);
-        });*/
+         $(this).height("auto").height($(this)[0].scrollHeight);
+         });*/
 
 
         mobileFunctions();
@@ -477,7 +479,8 @@
         });
 
 
-        $('#sidebar-toggle').on('click', function () {
+        $('#sidebar-toggle').on('click', function (event) {
+            event.preventDefault();
             if ($('.menu-toggle').css('display') !== 'none') {
                 $(this).parent().toggleClass('mobile-visible');
                 // mobile visible means desktop visible
@@ -539,7 +542,8 @@
         /**
          * Show archived items?
          */
-        $('#checkboxArchivedItems').on('click', function (e) {
+        $('#checkboxArchivedItems').on('click', function (event) {
+            event.preventDefault();
             $.ajax({
                 url: jsObject.set_archive,
                 method: 'POST',
@@ -569,6 +573,17 @@
             }
         }, 30000);
 
+
+        /**
+         * With SimpleMDE the dialog form is not submitted on Enter 
+         * so this is a ugly hack to submit the form on enter
+         */
+        cardDialog.keypress(function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                save(cardDialog, jsObject.card_save);
+            }
+        });
 
     });
 })(jQuery);

@@ -108,4 +108,45 @@ class CardMapper extends \App\Base\Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
+    public function getCardReminder() {
+        $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board, b.hash "
+                . "FROM " . $this->getTable() . " c, "
+                . "     " . $this->getTable("stacks") . " s,  "
+                . "     " . $this->getTable("boards") . " b, "
+                . "     " . $this->getTable($this->user_table) . " cu "
+                . " WHERE c.stack = s.id AND s.board = b.id "
+                . " AND cu.card = c.id "
+                . " AND date <= CURDATE() ";
+
+        $bindings = [];
+
+
+        $sql .= "ORDER BY date DESC, time DESC, board";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $user = intval($row["user"]);
+            $today = intval($row["today"]);
+            $board = $row["board"];
+            
+            if (!array_key_exists($user, $results)) {
+                $results[$user] = array();
+            }
+            if (!array_key_exists($today, $results[$user])) {
+                $results[$user][$today] = array();
+            }
+            
+            if (!array_key_exists($board, $results[$user][$today])) {
+                $results[$user][$today][$board]["hash"] = $row["hash"];
+                $results[$user][$today][$board]["cards"] = array();
+            }
+            
+            
+            $results[$user][$today][$board]["cards"][] = $row;
+        }
+        return $results;
+    }
+
 }

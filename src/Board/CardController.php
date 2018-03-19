@@ -43,7 +43,6 @@ class CardController extends \App\Base\Controller {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
-
     }
 
     /**
@@ -51,7 +50,7 @@ class CardController extends \App\Base\Controller {
      */
     protected function afterSave($id, $data) {
         // card check is already done in preSave()
-        $board_id = $this->mapper->getCardBoard($id);       
+        $board_id = $this->mapper->getCardBoard($id);
 
         try {
             // remove old labels
@@ -84,26 +83,27 @@ class CardController extends \App\Base\Controller {
         $my_user_id = intval($this->ci->get('helper')->getUser()->id);
         $this->users_afterSave = $this->mapper->getUsers($id);
         $new_users = array_diff($this->users_afterSave, $this->users_preSave);
+        $users = $this->user_mapper->getAll();
 
         $board = $this->board_mapper->get($board_id, false);
         $card = $this->mapper->get($id);
-        
+
         $subject = $this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD');
 
         foreach ($new_users as $nu) {
 
             // except self
             if ($nu !== $my_user_id) {
-                $user = $this->user_mapper->get($nu);
+                $user = $users[$nu];
 
                 if ($user->mail && $user->board_notification_mails == 1) {
-                    
+
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
                         'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->hash)), $board->name, $card->title)
-                        . '<br/>&nbsp;'
+                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->hash)), $board->name, $card->title),
+                        'extra' => ''
                     );
 
                     if ($card->description) {
@@ -111,7 +111,7 @@ class CardController extends \App\Base\Controller {
                         $parser = new \Michelf\Markdown();
                         //$parser->hard_wrap  = true;
                         $description = $parser->transform(str_replace("\n", "\n\n", $card->description));
-                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('DESCRIPTION') . ':</strong> <br/>' . $description .'<br/>&nbsp;';
+                        $variables["extra"] .= '<h2>' . $this->ci->get('helper')->getTranslatedString('DESCRIPTION') . ':</h2><div id="description">' . $description . '</div>';
                     }
                     if ($card->date) {
                         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
@@ -119,10 +119,10 @@ class CardController extends \App\Base\Controller {
                         $fmt->setPattern('dd. MMMM y');
 
                         $dateObj = new \DateTime($card->date);
-                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('DATE') . ':</strong> <br/>' . $fmt->format($dateObj) .'<br/>&nbsp;';
+                        $variables["extra"] .= '<h2>' . $this->ci->get('helper')->getTranslatedString('DATE') . ':</h2>' . $fmt->format($dateObj) . '';
                     }
                     if ($card->time) {
-                        $variables["content"] .= '<br/><strong>' . $this->ci->get('helper')->getTranslatedString('TIME') . ':</strong> <br/>' . $card->time.'<br/>&nbsp;';
+                        $variables["extra"] .= '<h2>' . $this->ci->get('helper')->getTranslatedString('TIME') . ':</h2>' . $card->time . '';
                     }
 
                     $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
@@ -140,18 +140,18 @@ class CardController extends \App\Base\Controller {
     protected function afterGetAPI($id, $entry) {
         $card_labels = $this->label_mapper->getLabelsFromCard($id);
         $entry->labels = $card_labels;
-        
+
         $users = $this->user_mapper->getAll();
-        if($entry->createdBy){
+        if ($entry->createdBy) {
             $entry->createdBy = $users[$entry->createdBy]->name;
         }
-        if($entry->changedBy){
+        if ($entry->changedBy) {
             $entry->changedBy = $users[$entry->changedBy]->name;
         }
-        if($entry->description){
+        if ($entry->description) {
             $entry->description = html_entity_decode(htmlspecialchars_decode($entry->description));
         }
-        
+
         return $entry;
     }
 
@@ -167,7 +167,7 @@ class CardController extends \App\Base\Controller {
 
                 foreach ($data['card'] as $position => $item) {
                     if (in_array($item, $user_cards)) {
-                        $this->mapper->updatePosition($item, $position,$user);
+                        $this->mapper->updatePosition($item, $position, $user);
                     }
                 }
                 return $response->withJSON(array('status' => 'success'));
@@ -220,8 +220,66 @@ class CardController extends \App\Base\Controller {
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
     }
-    
+
     public function reminder(Request $request, Response $response) {
+
+        $due_cards = $this->mapper->getCardReminder();
+        $users = $this->user_mapper->getAll();
+
+        $subject = $this->ci->get('helper')->getTranslatedString('MAIL_CARD_REMINDER');
+
+        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+        $fmt->setPattern('dd. MMMM y');
+
+
+        foreach ($due_cards as $user_id => $cards) {
+            $user = $users[$user_id];
+
+            if ($user->mail && $user->board_notification_mails == 1) {
+                $variables = array(
+                    'header' => '',
+                    'subject' => $subject,
+                    'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
+                    'content' => $this->ci->get('helper')->getTranslatedString('MAIL_CARD_REMINDER_DETAIL')
+                );
+
+                $user_cards = $due_cards[$user_id];
+
+                $mail_content = '';
+
+                foreach ($user_cards as $today => $cards) {
+
+                    if ($today == 1) {
+                        $mail_content .= '<h2>' . $this->ci->get('helper')->getTranslatedString('TODAY') . ':</h2>';
+                    } else {
+                        $mail_content .= '<h2>' . $this->ci->get('helper')->getTranslatedString('OVERDUE') . ':</h2>';
+                    }
+                    foreach ($cards as $board => $board_cards) {
+                        $url = $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board_cards["hash"]));
+                        $mail_content .= '<h3><a href="' . $url . '">Board: ' . $board . '</a></h3>';
+                        $mail_content .= '<ul>';
+                        $mail_content .= implode('', array_map(function($c) use ($fmt, $today) {
+                                    $output = '<li>' . $c["title"];
+                                    if ($today != 1) {
+                                        $dateObj = new \DateTime($c["date"]);
+                                        $output .= ' (' . $fmt->format($dateObj) . ')';
+                                    }
+                                    $output .= '</li>';
+                                    return $output;
+                                }, $board_cards["cards"]));
+                        $mail_content .= '</ul>';
+                    }
+                }
+
+                $variables['extra'] = $mail_content;
+
+                if (!empty($mail_content)) {
+                    $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
+                }
+            }
+        }
+
         return $response->withJSON(array('status' => 'success'));
     }
 

@@ -178,4 +178,9 @@ $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "you have been added to the board <a href=
 $lang["CREATED_BY"] = "Created by";
 $lang["CHANGED_BY"] = "Changed by";
 
+$lang["MAIL_CARD_REMINDER"] = "Due cards reminder";
+$lang["MAIL_CARD_REMINDER_DETAIL"] = "the following cards are due:";
+$lang["TODAY"] = "Today";
+$lang["OVERDUE"] = "Overdue";
+
 return $lang;

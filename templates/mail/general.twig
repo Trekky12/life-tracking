@@ -5,8 +5,13 @@
     {% embed 'mail/modules/content.twig' %}
         {% block content %}
             <div id="inner-content">
-                <h1>{{headline}}</h1>
+                <h1 id="headline">{{headline}}</h1>
                 <p>{{content|raw}}</p>
+                {% if extra %}
+                    <div id="extra">
+                        {{extra|raw}}
+                    </div>
+                {% endif %}
             </div>
         {% endblock %}
     {% endembed %}
