@@ -86,7 +86,8 @@
                 'label_save': '{{path_for("label_save")}}',
                 'label_get_url': '{{path_for("label_get")}}',
                 'label_delete': '{{path_for("label_delete")}}',
-                'set_archive': '{{path_for("set_archive")}}'
+                'set_archive': '{{path_for("set_archive")}}',
+                'comment_save': '{{path_for("comment_save")}}'
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};
@@ -101,7 +102,8 @@
                 'really_archive': '{{lang["REALLY_ARCHIVE"]}}',
                 'update': '{{lang["UPDATE"]}}',
                 'labels': '{{lang["LABELS"]}}',
-                'undo_archive': '{{lang["UNDO_ARCHIVE"]}}'
+                'undo_archive': '{{lang["UNDO_ARCHIVE"]}}',
+                'really_close': '{{lang["REALLY_CLOSE"]}}'
             };
 
         </script>

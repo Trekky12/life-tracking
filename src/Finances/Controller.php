@@ -14,7 +14,7 @@ class Controller extends \App\Base\Controller {
         $this->index_route = 'finances';
 
         $this->mapper = new \App\Finances\Mapper($this->ci);
-        $this->cat_mapper = new \App\Base\Mapper($this->ci, 'finances_categories', '\App\FinancesCategory\Category');
+        $this->cat_mapper = new \App\FinancesCategory\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {

@@ -21,10 +21,6 @@ CREATE TABLE IF NOT EXISTS users (
 );
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
-/**
-ALTER TABLE users ADD force_pw_change int(1) DEFAULT 1 AFTER module_boards;
-ALTER TABLE users ADD board_notification_mails int(1) DEFAULT 1 AFTER force_pw_change;
-*/
 
 DROP TABLE IF EXISTS banlist;
 CREATE TABLE banlist (
@@ -127,9 +123,16 @@ CREATE TABLE cars (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
+ALTER TABLE cars ADD user INTEGER unsigned DEFAULT NULL AFTER changedOn;
+ALTER TABLE cars ADD CONSTRAINT cars_ibfk_1 FOREIGN KEY(user) REFERENCES users(id);
+*/
 
 
 DROP TABLE IF EXISTS cars_user;
@@ -179,9 +182,7 @@ CREATE TABLE boards (
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*
-ALTER TABLE boards ADD UNIQUE(hash);
-*/
+
 
 DROP TABLE IF EXISTS boards_user;
 CREATE TABLE boards_user (
@@ -208,12 +209,6 @@ CREATE TABLE stacks (
    FOREIGN KEY(board) REFERENCES boards(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE stacks ADD createdBy INTEGER unsigned DEFAULT NULL AFTER createdOn;
-ALTER TABLE stacks ADD changedBy INTEGER unsigned DEFAULT NULL AFTER changedOn;
-ALTER TABLE stacks ADD CONSTRAINT stacks_ibfk_2 FOREIGN KEY(createdBy) REFERENCES users(id);
-ALTER TABLE stacks ADD CONSTRAINT stacks_ibfk_3 FOREIGN KEY(changedBy) REFERENCES users(id);
-*/
 
 DROP TABLE IF EXISTS cards;
 CREATE TABLE cards (
@@ -229,16 +224,18 @@ CREATE TABLE cards (
     description TEXT DEFAULT NULL,
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
+    hash VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
-   FOREIGN KEY(stack) REFERENCES stacks(id)
+    UNIQUE(hash),
+    FOREIGN KEY(stack) REFERENCES stacks(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /**
-ALTER TABLE cards ADD createdBy INTEGER unsigned DEFAULT NULL AFTER createdOn;
-ALTER TABLE cards ADD changedBy INTEGER unsigned DEFAULT NULL AFTER changedOn;
-ALTER TABLE cards ADD CONSTRAINT cards_ibfk_2 FOREIGN KEY(createdBy) REFERENCES users(id);
-ALTER TABLE cards ADD CONSTRAINT cards_ibfk_3 FOREIGN KEY(changedBy) REFERENCES users(id);
+ALTER TABLE cards ADD hash VARCHAR(255) NOT NULL AFTER position;
+UPDATE cards set hash = CRC32(CONCAT(createdOn,title));
+ALTER TABLE cards ADD UNIQUE(hash);
 */
+
 
 DROP TABLE IF EXISTS cards_user;
 CREATE TABLE cards_user (
@@ -257,16 +254,18 @@ CREATE TABLE labels (
     board INTEGER unsigned DEFAULT NULL,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     background_color VARCHAR(255) DEFAULT NULL,
     text_color VARCHAR(255) DEFAULT '#000000',
     PRIMARY KEY (id),
-   FOREIGN KEY(board) REFERENCES boards(id)
+    FOREIGN KEY(board) REFERENCES boards(id),
+    FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/**
-ALTER TABLE labels CHANGE color background_color VARCHAR(255) DEFAULT NULL;
-ALTER TABLE labels ADD text_color VARCHAR(255) DEFAULT '#000000' AFTER background_color;
+/*
+ALTER TABLE labels ADD user INTEGER unsigned DEFAULT NULL AFTER changedOn;
+ALTER TABLE labels ADD CONSTRAINT labels_ibfk_2 FOREIGN KEY(user) REFERENCES users(id);
 */
 
 DROP TABLE IF EXISTS cards_label;
@@ -280,4 +279,15 @@ CREATE TABLE cards_label (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
+DROP TABLE IF EXISTS comments;
+CREATE TABLE comments (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    card INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    comment TEXT DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(card) REFERENCES cards(id),
+    FOREIGN KEY(user) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

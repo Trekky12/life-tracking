@@ -7,6 +7,7 @@ class StackMapper extends \App\Base\Mapper {
     protected $table = "stacks";
     protected $model = "\App\Board\Stack";
     protected $filterByUser = false;
+    protected $insertUser = false;
 
     public function getStacksFromBoard($board, $archive = 0) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board ";

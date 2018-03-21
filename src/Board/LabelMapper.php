@@ -7,6 +7,7 @@ class LabelMapper extends \App\Base\Mapper {
     protected $table = "labels";
     protected $model = "\App\Board\Label";
     protected $filterByUser = false;
+    protected $insertUser = true;
 
     public function getLabelsFromBoard($board) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board ORDER BY changedOn";

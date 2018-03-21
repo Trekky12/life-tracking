@@ -15,7 +15,7 @@ class Controller extends \App\Base\Controller {
         $this->index_route = 'finances_monthly';
 
         $this->mapper = new \App\FinancesMonthly\Mapper($this->ci);
-        $this->cat_mapper = new \App\Base\Mapper($this->ci, 'finances_categories', '\App\FinancesCategory\Category');
+        $this->cat_mapper = new \App\FinancesCategory\Mapper($this->ci);
         $this->finance_mapper = new \App\Finances\Mapper($this->ci);
     }
 

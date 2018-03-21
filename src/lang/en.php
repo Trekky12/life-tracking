@@ -183,4 +183,8 @@ $lang["MAIL_CARD_REMINDER_DETAIL"] = "the following cards are due:";
 $lang["TODAY"] = "Today";
 $lang["OVERDUE"] = "Overdue";
 
+$lang["COMMENT"] = "comment";
+$lang["ADD_COMMENT"] = "add comment";
+$lang["REALLY_CLOSE"] = "Are you sure you want to leave this Site?";
+
 return $lang;

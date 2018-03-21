@@ -4,7 +4,24 @@
     margin:0 auto;
     color: $color_background-body;
     text-align:center;
+}
 
+#loading-overlay{
+    position:absolute;
+    left:0;
+    bottom:0;
+    right:0;
+    top:0;
+    background:#000;
+    opacity:0.7;
+    filter:alpha(opacity=70);
+    z-index:1000;
+    i, span{
+        position:absolute;
+        top:50%;
+        left:50%;
+        color: #FFFFFF;
+    }
 }
 
 .board-content{
@@ -91,7 +108,7 @@
         &:hover{
             cursor:pointer;
         }
-        
+
         .bottom-row{
             display:flex;
             justify-content: space-between;
@@ -221,7 +238,7 @@
         h2{
             margin-top:0;
         }
-        
+
         label.checkbox, .create-label{
             @include font-size(1.2);
         }
@@ -375,7 +392,7 @@
     input[type="color"]{
         visibility:hidden;
     }
-    
+
     .two-columns{
         align-items:center;
     }

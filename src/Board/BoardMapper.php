@@ -6,7 +6,8 @@ class BoardMapper extends \App\Base\Mapper {
 
     protected $table = "boards";
     protected $model = "\App\Board\Board";
-    protected $filterByUser = true;
+    protected $filterByUser = false;
+    protected $insertUser = true;
     protected $hasUserTable = true;
     protected $user_table = "boards_user";
     protected $element_name = "board";

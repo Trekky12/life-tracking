@@ -7,6 +7,7 @@ class Mapper extends \App\Base\Mapper {
     protected $table = 'fuel';
     protected $model = '\App\Fuel\FuelEntry';
     protected $filterByUser = false;
+    protected $insertUser = true;
 
     public function getLastMileage($id, $mileage) {
         $sql = "SELECT mileage FROM " . $this->getTable() . "  "

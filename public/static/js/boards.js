@@ -2,17 +2,20 @@
 
     $(document).ready(function () {
 
-
         var stackDialog, stackForm, cardDialog, cardForm, labelDialog, labelForm;
         var simplemde = null;
+        var allowedReload = false;
 
         function save(dialog, url) {
+            $('#loading-overlay').removeClass('hidden');
+            cleanURL();
             var id = dialog.find('input[name="id"]').val();
             $.ajax({
                 url: url + id,
                 method: 'POST',
                 data: dialog.find('form').serialize(),
                 success: function (response) {
+                    allowedReload = true;
                     window.location.reload();
                 },
                 error: function (data) {
@@ -80,20 +83,25 @@
 
         $(".stack-header").on("click", function (event) {
             event.preventDefault();
+            $('#loading-overlay').removeClass('hidden');
             var stack = $(this).data('stack');
             $.ajax({
                 url: jsObject.stack_get_url + stack,
                 method: 'GET',
                 success: function (response) {
-                    stackDialog.find('input[name="id"]').val(response.entry.id);
-                    stackDialog.find('input[name="name"]').val(response.entry.name);
-                    stackDialog.find('input[name="position"]').val(response.entry.position);
-                    $('#stack-add-btn').button('option', 'label', lang.update);
-                    var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + response.entry.id + "' data-archive='" + response.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
+                    if (response.status !== 'error') {
+                        stackDialog.find('input[name="id"]').val(response.entry.id);
+                        stackDialog.find('input[name="name"]').val(response.entry.name);
+                        stackDialog.find('input[name="position"]').val(response.entry.position);
+                        $('#stack-add-btn').button('option', 'label', lang.update);
+                        var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + response.entry.id + "' data-archive='" + response.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
                                     <a href='#' data-url='" + jsObject.stack_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
-                    stackDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
-                    stackDialog.dialog("open");
+                        stackDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
+                        stackDialog.dialog("open");
+                    }
                 }
+            }).done(function () {
+                $('#loading-overlay').addClass('hidden');
             });
         });
 
@@ -185,6 +193,8 @@
                 cardDialog.find('#changedOn').html("");
                 cardDialog.find('.form-group.card-dates').addClass('hidden');
 
+                cleanURL();
+
             }
         });
 
@@ -204,74 +214,85 @@
         $(".board-card").on("click", function (event) {
             event.preventDefault();
             var card = $(this).data('card');
+            loadAndOpenCard(card);
+        });
+
+        function loadAndOpenCard(card) {
+            $('#loading-overlay').removeClass('hidden');
+            //addCardtoURL(card);
             $.ajax({
                 url: jsObject.card_get_url + card,
                 method: 'GET',
                 success: function (response) {
-                    cardDialog.find('input[name="id"]').val(response.entry.id);
-                    cardDialog.find('input[name="title"]').val(response.entry.title);
-                    cardDialog.find('input[name="position"]').val(response.entry.position);
-                    cardDialog.find('input[name="stack"]').val(response.entry.stack);
-                    cardDialog.find('input[name="archive"]').val(response.entry.archive);
+                    if (response.status !== 'error') {
+                        cardDialog.find('input[name="id"]').val(response.entry.id);
+                        cardDialog.find('input[name="title"]').val(response.entry.title);
+                        cardDialog.find('input[name="position"]').val(response.entry.position);
+                        cardDialog.find('input[name="stack"]').val(response.entry.stack);
+                        cardDialog.find('input[name="archive"]').val(response.entry.archive);
 
-                    if (response.entry.date) {
-                        var datefield = cardDialog.find('input[name="date"]');
-                        datefield.val(response.entry.date);
-                        cardDialog.find('input.date-display').datepicker("setDate", moment(response.entry.date).toDate());
+                        if (response.entry.date) {
+                            var datefield = cardDialog.find('input[name="date"]');
+                            datefield.val(response.entry.date);
+                            cardDialog.find('input.date-display').datepicker("setDate", moment(response.entry.date).toDate());
 
-                        datefield.parent().siblings('.show-sibling').addClass('hidden');
-                        datefield.parent().removeClass('hidden');
-                    }
-                    if (response.entry.time) {
-                        var timefield = cardDialog.find('input[name="time"]');
-                        timefield.val(response.entry.time);
-
-                        timefield.parent().siblings('.show-sibling').addClass('hidden');
-                        timefield.parent().removeClass('hidden');
-                    }
-
-                    var descrfield = cardDialog.find('textarea[name="description"]');
-                    if (response.entry.description) {
-                        descrfield.val(response.entry.description);
-
-                        descrfield.parent().siblings('.show-sibling').addClass('hidden');
-                        descrfield.parent().removeClass('hidden');
-                    }
-
-                    cardDialog.find('select[name="users[]"]').val(response.entry.users);
-
-                    cardDialog.find('#createdBy').html(response.entry.createdBy);
-                    cardDialog.find('#createdOn').html(moment(response.entry.createdOn).format(i18n.dateformatJSFull));
-                    cardDialog.find('#changedBy').html(response.entry.changedBy);
-                    cardDialog.find('#changedOn').html(moment(response.entry.changedOn).format(i18n.dateformatJSFull));
-                    cardDialog.find('.form-group.card-dates').removeClass('hidden');
-
-                    var users = cardDialog.find('.avatar-small, .avatar-small');
-
-                    $.each(users, function (idx, user) {
-                        var user_id = $(user).data('user');
-                        if (jQuery.inArray(user_id, response.entry.users) !== -1) {
-                            $(user).addClass('selected');
-                        } else {
-                            $(user).removeClass('selected');
+                            datefield.parent().siblings('.show-sibling').addClass('hidden');
+                            datefield.parent().removeClass('hidden');
                         }
-                    });
+                        if (response.entry.time) {
+                            var timefield = cardDialog.find('input[name="time"]');
+                            timefield.val(response.entry.time);
 
-                    cardDialog.find('select[name="labels[]"]').val(response.entry.labels);
+                            timefield.parent().siblings('.show-sibling').addClass('hidden');
+                            timefield.parent().removeClass('hidden');
+                        }
+
+                        var descrfield = cardDialog.find('textarea[name="description"]');
+                        if (response.entry.description) {
+                            descrfield.val(response.entry.description);
+
+                            descrfield.parent().siblings('.show-sibling').addClass('hidden');
+                            descrfield.parent().removeClass('hidden');
+                        }
+
+                        cardDialog.find('select[name="users[]"]').val(response.entry.users);
+
+                        cardDialog.find('#createdBy').html(response.entry.createdBy);
+                        cardDialog.find('#createdOn').html(moment(response.entry.createdOn).format(i18n.dateformatJSFull));
+                        cardDialog.find('#changedBy').html(response.entry.changedBy);
+                        cardDialog.find('#changedOn').html(moment(response.entry.changedOn).format(i18n.dateformatJSFull));
+                        cardDialog.find('.form-group.card-dates').removeClass('hidden');
+
+                        var users = cardDialog.find('.avatar-small, .avatar-small');
+
+                        $.each(users, function (idx, user) {
+                            var user_id = $(user).data('user');
+                            if (jQuery.inArray(user_id, response.entry.users) !== -1) {
+                                $(user).addClass('selected');
+                            } else {
+                                $(user).removeClass('selected');
+                            }
+                        });
+
+                        cardDialog.find('select[name="labels[]"]').val(response.entry.labels);
 
 
-                    $('#card-add-btn').button('option', 'label', lang.update);
-                    var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + response.entry.id + "' data-archive='" + response.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
+                        $('#card-add-btn').button('option', 'label', lang.update);
+                        var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + response.entry.id + "' data-archive='" + response.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
                                     <a href='#' data-url='" + jsObject.card_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
-                    cardDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
+                        cardDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
 
-                    $('select#card-label-list').trigger('chosen:updated');
+                        $('select#card-label-list').trigger('chosen:updated');
 
-                    cardDialog.dialog("open");
+                        cardDialog.dialog("open");
+                    } else {
+                        cleanURL();
+                    }
                 }
+            }).done(function () {
+                $('#loading-overlay').addClass('hidden');
             });
-
-        });
+        }
 
         // show hidden fields on card-dialog
         $('.show-sibling').on('click', function (e) {
@@ -343,23 +364,28 @@
 
         $("a.edit-label").on("click", function (event) {
             event.preventDefault();
+            $('#loading-overlay').removeClass('hidden');
             var label = $(this).data('label');
             $.ajax({
                 url: jsObject.label_get_url + label,
                 method: 'GET',
                 success: function (response) {
-                    labelDialog.find('input[name="id"]').val(response.entry.id);
-                    labelDialog.find('input[name="name"]').val(response.entry.name);
-                    labelDialog.find('input[name="background_color"]').val(response.entry.background_color);
-                    labelDialog.find('input[name="background_color"]').parent('.color-wrapper').css("background-color", response.entry.background_color);
-                    labelDialog.find('input[name="text_color"]').val(response.entry.text_color);
-                    labelDialog.find('input[name="text_color"]').parent('.color-wrapper').css("background-color", response.entry.text_color);
+                    if (response.status !== 'error') {
+                        labelDialog.find('input[name="id"]').val(response.entry.id);
+                        labelDialog.find('input[name="name"]').val(response.entry.name);
+                        labelDialog.find('input[name="background_color"]').val(response.entry.background_color);
+                        labelDialog.find('input[name="background_color"]').parent('.color-wrapper').css("background-color", response.entry.background_color);
+                        labelDialog.find('input[name="text_color"]').val(response.entry.text_color);
+                        labelDialog.find('input[name="text_color"]').parent('.color-wrapper').css("background-color", response.entry.text_color);
 
-                    $('#label-add-btn').button('option', 'label', lang.update);
-                    var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
-                    labelDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
-                    labelDialog.dialog("open");
+                        $('#label-add-btn').button('option', 'label', lang.update);
+                        var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + response.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                        labelDialog.parent().find(".ui-dialog-titlebar .edit-bar").html(edit_bar);
+                        labelDialog.dialog("open");
+                    }
                 }
+            }).done(function () {
+                $('#loading-overlay').addClass('hidden');
             });
         });
 
@@ -582,6 +608,61 @@
             if (event.keyCode === 13) {
                 event.preventDefault();
                 save(cardDialog, jsObject.card_save);
+            }
+        });
+
+
+        $('#addComment').on('click', function (event) {
+            event.preventDefault();
+            var card = cardDialog.find('input[name="id"]').val();
+            var comment = cardDialog.find('textarea[name="comment"]').val();
+            $.ajax({
+                url: jsObject.comment_save,
+                method: 'POST',
+                data: {'card': card, 'comment': comment},
+                success: function (response) {
+                    //window.location.reload();
+                },
+                error: function (data) {
+                    alert(data);
+                }
+            });
+        });
+
+
+        /**
+         * Open card by GET parameter
+         */
+        var res = window.location.href.match(/(?:\?card=([0-9]*))/);
+        if (res !== null && res.length > 1) {
+            var card = res[1];
+            loadAndOpenCard(card);
+        }
+
+        function cleanURL() {
+            var uri = window.location.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            }
+        }
+
+        function addCardtoURL(card) {
+            var uri = window.location.toString();
+            var separator = uri.indexOf("?") > 0 ? "&" : "?";
+            if (uri.indexOf("card") <= 0) {
+                window.history.replaceState({}, document.title, uri + separator + "card=" + card);
+            }
+        }
+
+
+        $(window).on('beforeunload', function () {
+            var isOpenStack = stackDialog.dialog("isOpen");
+            var isOpenCard = cardDialog.dialog("isOpen");
+            var isOpenLabel = labelDialog.dialog("isOpen");
+
+            if (!allowedReload && (isOpenStack === true || isOpenCard === true || isOpenLabel === true)) {
+                return lang.really_close;
             }
         });
 

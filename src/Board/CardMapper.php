@@ -7,6 +7,7 @@ class CardMapper extends \App\Base\Mapper {
     protected $table = "cards";
     protected $model = "\App\Board\Card";
     protected $filterByUser = false;
+    protected $insertUser = false;
     protected $hasUserTable = true;
     protected $user_table = "cards_user";
     protected $element_name = "card";

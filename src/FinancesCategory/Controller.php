@@ -13,7 +13,7 @@ class Controller extends \App\Base\Controller {
         $this->index_route = 'finances_categories';
         $this->edit_template = 'finances/category/edit.twig';
         
-        $this->mapper = new \App\Base\Mapper($this->ci, 'finances_categories', $this->model );
+        $this->mapper = new \App\FinancesCategory\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {

@@ -183,4 +183,8 @@ $lang["MAIL_CARD_REMINDER_DETAIL"] = "die folgenden Karten sind fällig:";
 $lang["TODAY"] = "Heute";
 $lang["OVERDUE"] = "Überfällig";
 
+$lang["COMMENT"] = "Kommentar";
+$lang["ADD_COMMENT"] = "Kommentar hinzufügen";
+$lang["REALLY_CLOSE"] = "Soll die Seite wirklich geschlossen werden?";
+
 return $lang;

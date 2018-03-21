@@ -104,6 +104,8 @@ $app->group('/boards', function() {
         $this->get('/data/[{id:[0-9]+}]', '\App\Board\CardController:getAPI')->setName('card_get');
         $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\CardController:delete')->setName('card_delete');
         $this->post('/archive/[{id:[0-9]+}]', '\App\Board\CardController:archive')->setName('card_archive');
+        
+        $this->post('/saveComment/[{id:[0-9]+}]', '\App\Board\CommentController:saveAPI')->setName('comment_save');
     });
     
     $this->group('/labels', function() {

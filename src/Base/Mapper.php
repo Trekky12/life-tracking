@@ -4,11 +4,12 @@ namespace App\Base;
 
 use Interop\Container\ContainerInterface;
 
-class Mapper {
+abstract class Mapper {
 
     protected $db;
     protected $userid;
     protected $filterByUser = true;
+    protected $insertUser = true;
     protected $table_prefix = '';
     protected $table = '';
     protected $id = "id";
@@ -17,14 +18,15 @@ class Mapper {
     protected $user_table = "";
     protected $element_name = "";
 
-    public function __construct(ContainerInterface $ci, $table = null, $model = null, $filterByUser = null) {
+    public function __construct(ContainerInterface $ci, $table = null, $model = null, $filterByUser = null, $insertUser = null) {
         $this->ci = $ci;
         $this->db = $this->ci->get('db');
         $this->table = !is_null($table) ? $table : $this->table;
         $this->model = !is_null($model) ? $model : $this->model;
         $this->filterByUser = !is_null($filterByUser) ? $filterByUser : $this->filterByUser;
+        $this->insertUser = !is_null($insertUser) ? $insertUser : $this->insertUser;
 
-        if ($this->filterByUser) {
+        if ($this->filterByUser || $this->insertUser) {
             $user = $this->ci->get('helper')->getUser();
             $this->userid = $user ? $user->id : null;
         }
@@ -39,7 +41,7 @@ class Mapper {
 
     public function insert(Model $data) {
 
-        $data_array = $data->get_fields(!$this->filterByUser);
+        $data_array = $data->get_fields(!$this->insertUser);
 
         $sql = "INSERT INTO " . $this->getTable() . " "
                 . "        (" . implode(", ", array_keys($data_array)) . ") "
@@ -104,7 +106,7 @@ class Mapper {
 
     public function update(Model $data) {
 
-        $data_array = $data->get_fields(!$this->filterByUser);
+        $data_array = $data->get_fields(!$this->insertUser);
 
         $parts = array();
         foreach (array_keys($data_array) as $row) {
