@@ -147,7 +147,7 @@
         </form>
     </div>
 
-    <div class="sidebar">
+    <div class="sidebar {% if sidebar["mobilevisible"] == 1 %}mobile-visible{% elseif sidebar["desktophidden"] == 1 %}desktop-hidden{% endif %}">
         <i id="sidebar-toggle" aria-hidden="true"></i>
         <div class="sidebar-inner">
             <div class="sidebar-box">

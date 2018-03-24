@@ -80,6 +80,9 @@ class BoardController extends \App\Base\Controller {
 
         $card_label = $this->label_mapper->getCardsLabel();
 
+        $sidebar_mobilevisible = filter_input(INPUT_COOKIE, 'sidebar_mobilevisible', FILTER_SANITIZE_NUMBER_INT);
+        $sidebar_desktophidden = filter_input(INPUT_COOKIE, 'sidebar_desktophidden', FILTER_SANITIZE_NUMBER_INT);
+
 
         return $this->ci->view->render($response, 'boards/view.twig', [
                     'board' => $board,
@@ -89,7 +92,11 @@ class BoardController extends \App\Base\Controller {
                     "labels" => $labels,
                     "card_label" => $card_label,
                     "show_archive" => $show_archive,
-                    "board_user" => $board_user
+                    "board_user" => $board_user,
+                    "sidebar" => [
+                        "mobilevisible" => $sidebar_mobilevisible,
+                        "desktophidden" => $sidebar_desktophidden,
+                    ]
         ]);
     }
 
@@ -121,7 +128,7 @@ class BoardController extends \App\Base\Controller {
         $my_user_id = intval($this->ci->get('helper')->getUser()->id);
         $this->users_afterSave = $this->mapper->getUsers($id);
         $new_users = array_diff($this->users_afterSave, $this->users_preSave);
-        
+
         $board = $this->mapper->get($id);
 
         $subject = $this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_BOARD');

@@ -466,6 +466,7 @@
                 method: 'POST',
                 data: {'archive': is_archived ? 0 : 1},
                 success: function (response) {
+                    allowedReload = true;
                     window.location.reload();
                 },
                 error: function (data) {
@@ -508,15 +509,36 @@
         $('#sidebar-toggle').on('click', function (event) {
             event.preventDefault();
             if ($('.menu-toggle').css('display') !== 'none') {
-                $(this).parent().toggleClass('mobile-visible');
                 // mobile visible means desktop visible
                 // default is visible so remove possible hidden class
                 $(this).parent().removeClass('desktop-hidden');
+                
+                // change state
+                $(this).parent().toggleClass('mobile-visible');
+                
+                // set cookie
+                if($(this).parent().hasClass('mobile-visible')){
+                    setCookie('sidebar_mobilevisible', 1);
+                    setCookie('sidebar_desktophidden', 0);
+                }else{
+                    setCookie('sidebar_mobilevisible', 0);
+                }
+                
             } else {
-                $(this).parent().toggleClass('desktop-hidden');
                 // desktop visible means mobile hidden
                 // default is hidden so remove possible visible class
                 $(this).parent().removeClass('mobile-visible');
+                
+                // change state
+                $(this).parent().toggleClass('desktop-hidden');
+                
+                 // set cookie
+                if($(this).parent().hasClass('desktop-hidden')){
+                    setCookie('sidebar_desktophidden', 1);
+                    setCookie('sidebar_mobilevisible', 0);
+                }else{
+                    setCookie('sidebar_desktophidden', 0);
+                }
             }
         });
 
@@ -575,6 +597,7 @@
                 method: 'POST',
                 data: {'state': $(this).is(":checked") ? 1 : 0},
                 success: function (response) {
+                    allowedReload = true;
                     window.location.reload();
                 },
                 error: function (data) {
@@ -665,6 +688,21 @@
                 return lang.really_close;
             }
         });
+
+
+        function setCookie(name, value, expiryDays, path) {
+            expiryDays = expiryDays || 365;
+
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + expiryDays);
+
+            var cookie = [
+                name + '=' + value,
+                'expires=' + exdate.toUTCString(),
+                'path=' + path || '/'
+            ];
+            document.cookie = cookie.join(';');
+        }
 
     });
 })(jQuery);
