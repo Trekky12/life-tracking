@@ -117,15 +117,16 @@ class CardMapper extends \App\Base\Mapper {
                 . "     " . $this->getTable($this->user_table) . " cu "
                 . " WHERE c.stack = s.id AND s.board = b.id "
                 . " AND cu.card = c.id "
+                . " AND c.archive = :archive "                
                 . " AND date <= CURDATE() ";
 
-        $bindings = [];
+        $bindings = ["archive" => 0];
 
 
         $sql .= "ORDER BY date DESC, time DESC, board";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute();
+        $stmt->execute($bindings);
         $results = [];
         while ($row = $stmt->fetch()) {
             $user = intval($row["user"]);
