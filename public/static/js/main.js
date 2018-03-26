@@ -36,6 +36,7 @@
                 url: url,
                 method: 'DELETE',
                 success: function (response) {
+                    allowedReload = true;
                     window.location.reload();
                 },
                 error: function (data) {
@@ -47,9 +48,7 @@
         /**
          * Default Datepicker
          */
-
         $("#dateSelect").datepicker({
-            defaultDate: "+1w",
             changeMonth: true,
             altFormat: "yy-mm-dd",
             altField: '#inputDate'
@@ -68,7 +67,6 @@
          * Datepicker Range
          */
         var datepickerStart = $("#dateStart").datepicker({
-            defaultDate: "+1w",
             changeMonth: true,
             altFormat: "yy-mm-dd",
             altField: '#inputStart'
@@ -81,7 +79,6 @@
         }
 
         var datepickerEnd = $("#dateEnd").datepicker({
-            defaultDate: "+1w",
             changeMonth: true,
             altFormat: "yy-mm-dd",
             altField: '#inputEnd'

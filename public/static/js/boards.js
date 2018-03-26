@@ -4,7 +4,6 @@
 
         var stackDialog, stackForm, cardDialog, cardForm, labelDialog, labelForm;
         var simplemde = null;
-        var allowedReload = false;
 
         function save(dialog, url) {
             $('#loading-overlay').removeClass('hidden');
@@ -192,6 +191,12 @@
                 cardDialog.find('#changedBy').html("");
                 cardDialog.find('#changedOn').html("");
                 cardDialog.find('.form-group.card-dates').addClass('hidden');
+                
+                cardDialog.find('select[name="labels[]"]').val('');
+                $('select#card-label-list').trigger('chosen:updated');
+                
+                cardDialog.find('select[name="users[]"]').val('');
+                cardDialog.find('.avatar-small, .avatar-small').removeClass('selected');
 
                 cleanURL();
 
@@ -255,7 +260,7 @@
                             descrfield.parent().removeClass('hidden');
                         }
 
-                        cardDialog.find('select[name="users[]"]').val(response.entry.users);
+                        
 
                         cardDialog.find('#createdBy').html(response.entry.createdBy);
                         cardDialog.find('#createdOn').html(moment(response.entry.createdOn).format(i18n.dateformatJSFull));
@@ -263,8 +268,8 @@
                         cardDialog.find('#changedOn').html(moment(response.entry.changedOn).format(i18n.dateformatJSFull));
                         cardDialog.find('.form-group.card-dates').removeClass('hidden');
 
+                        cardDialog.find('select[name="users[]"]').val(response.entry.users);
                         var users = cardDialog.find('.avatar-small, .avatar-small');
-
                         $.each(users, function (idx, user) {
                             var user_id = $(user).data('user');
                             if (jQuery.inArray(user_id, response.entry.users) !== -1) {
@@ -591,7 +596,6 @@
          * Show archived items?
          */
         $('#checkboxArchivedItems').on('click', function (event) {
-            event.preventDefault();
             $.ajax({
                 url: jsObject.set_archive,
                 method: 'POST',
@@ -604,6 +608,7 @@
                     alert(data);
                 }
             });
+            return;
         });
 
 

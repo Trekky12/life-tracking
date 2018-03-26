@@ -170,7 +170,7 @@ $lang["MAIL_YOUR_PASSWORD"] = "Passwort: %s";
 $lang["MAIL_FORCE_CHANGE_PASSWORD"] = "Nach dem ersten Anmelden musst du dein Passwort ändern!";
 
 $lang["MAIL_ADDED_TO_CARD"] = "Du wurdest zu einer Karte hinzugefügt";
-$lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</a> zur Karte \"%s\" hinzugefügt.";
+$lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</a> im Stapel %s zur Karte \"%s\" hinzugefügt.";
 
 $lang["MAIL_ADDED_TO_BOARD"] = "Du wurdest zu einem Board hinzugefügt";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%s'>%s</a> hinzugefügt.";

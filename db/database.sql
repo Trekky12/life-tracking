@@ -26,7 +26,8 @@ DROP TABLE IF EXISTS banlist;
 CREATE TABLE banlist (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip VARCHAR(255) NOT NULL,
-    username varchar(255) DEFAULT NULL
+    username varchar(255) DEFAULT NULL,
+    changedOn TIMESTAMP NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS locations;

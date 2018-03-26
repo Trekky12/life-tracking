@@ -7,6 +7,7 @@ class BanlistMapper extends \App\Base\Mapper {
     protected $table = "banlist";
     protected $model = "\App\Base\Model";
     protected $filterByUser = false;
+    protected $insertUser = false;
 
     public function getFailedLoginAttempts($ip) {
         $sql = "SELECT COUNT(ip) FROM " . $this->getTable() . " WHERE ip = :ip";

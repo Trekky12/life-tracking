@@ -88,6 +88,8 @@ class CardController extends \App\Base\Controller {
         $board = $this->board_mapper->get($board_id, false);
         $card = $this->mapper->get($id);
 
+        $stack = $this->stack_mapper->get($card->stack);
+
         $subject = $this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD');
 
         foreach ($new_users as $nu) {
@@ -102,7 +104,7 @@ class CardController extends \App\Base\Controller {
                         'header' => '',
                         'subject' => $subject,
                         'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->hash)), $board->name, $card->title),
+                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->hash)), $board->name, $stack->name, $card->title),
                         'extra' => ''
                     );
 
@@ -225,6 +227,7 @@ class CardController extends \App\Base\Controller {
 
         $due_cards = $this->mapper->getCardReminder();
         $users = $this->user_mapper->getAll();
+        $stacks = $this->stack_mapper->getAll();
 
         $subject = $this->ci->get('helper')->getTranslatedString('MAIL_CARD_REMINDER');
 
@@ -248,26 +251,33 @@ class CardController extends \App\Base\Controller {
 
                 $mail_content = '';
 
-                foreach ($user_cards as $today => $cards) {
+                foreach ($user_cards as $today => $stacks) {
 
                     if ($today == 1) {
                         $mail_content .= '<h2>' . $this->ci->get('helper')->getTranslatedString('TODAY') . ':</h2>';
                     } else {
                         $mail_content .= '<h2>' . $this->ci->get('helper')->getTranslatedString('OVERDUE') . ':</h2>';
                     }
-                    foreach ($cards as $board => $board_cards) {
-                        $url = $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board_cards["hash"]));
-                        $mail_content .= '<h3><a href="' . $url . '">Board: ' . $board . '</a></h3>';
+                    foreach ($stacks as $board_name => $board) {
+                        $url = $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board["hash"]));
+                        $mail_content .= '<h3><a href="' . $url . '">Board: ' . $board_name . '</a></h3>';
                         $mail_content .= '<ul>';
-                        $mail_content .= implode('', array_map(function($c) use ($fmt, $today) {
-                                    $output = '<li>' . $c["title"];
-                                    if ($today != 1) {
-                                        $dateObj = new \DateTime($c["date"]);
-                                        $output .= ' (' . $fmt->format($dateObj) . ')';
-                                    }
-                                    $output .= '</li>';
-                                    return $output;
-                                }, $board_cards["cards"]));
+
+                        foreach ($board["stacks"] as $stack_name => $cards) {
+                            $mail_content .= '<li>' . $stack_name;
+                            $mail_content .= '  <ul>';
+                            $mail_content .= implode('', array_map(function($c) use ($fmt, $today) {
+                                        $output = '<li>' . $c["title"];
+                                        if ($today != 1) {
+                                            $dateObj = new \DateTime($c["date"]);
+                                            $output .= ' (' . $fmt->format($dateObj) . ')';
+                                        }
+                                        $output .= '</li>';
+                                        return $output;
+                                    }, $cards));
+                            $mail_content .= '  </ul>';
+                            $mail_content .= '</li>';
+                        }
                         $mail_content .= '</ul>';
                     }
                 }

@@ -11,7 +11,7 @@
     <script src="/static/assets/js/jquery.ui.touch-punch.min.js"></script>
     <script src="/static/assets/js/chosen.jquery.min.js"></script>
     <script src="/static/assets/js/simplemde.min.js"></script>
-    <script src="/static/js/boards.js"></script>
+    <script src="/static/js/boards.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -176,7 +176,7 @@
             </div>
             <div class="sidebar-box">
                 <label class="checkbox" for="checkboxArchivedItems">
-                    <input name="set_archived_items" type="checkbox" id="checkboxArchivedItems" {% if show_archive is not null and show_archive == 1 %}checked{% endif %}>
+                    <input name="set_archived_items" type="checkbox" id="checkboxArchivedItems" {% if show_archive is not null and show_archive == 1 %}checked="checked"{% endif %}>
                     {{lang["SHOW_ARCHIVED_ITEMS"]}}
                 </label>
             </div>
