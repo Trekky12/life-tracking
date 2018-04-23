@@ -139,7 +139,7 @@ class BoardController extends \App\Base\Controller {
             if ($nu !== $my_user_id) {
                 $user = $this->user_mapper->get($nu);
 
-                if ($user->mail && $user->board_notification_mails == 1) {
+                if ($user->mail && $user->mails_board == 1) {
 
                     $variables = array(
                         'header' => '',

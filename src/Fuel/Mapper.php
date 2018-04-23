@@ -7,19 +7,19 @@ class Mapper extends \App\Base\Mapper {
     protected $table = 'fuel';
     protected $model = '\App\Fuel\FuelEntry';
     protected $filterByUser = false;
-    protected $insertUser = true;
+    protected $insertUser = false;
 
-    public function getLastMileage($id, $mileage) {
+    public function getLastMileage($id, $mileage, $car) {
         $sql = "SELECT mileage FROM " . $this->getTable() . "  "
                 . "WHERE id != :id "
                 . " AND mileage IS NOT NULL "
                 . " AND mileage <= :mileage"
                 . " AND volume IS NOT NULL "
-                . " AND total_price IS NOT NULL ";
+                . " AND total_price IS NOT NULL "
+                . " AND car = :car ";
 
 
-        $bindings = array("id" => $id, "mileage" => $mileage);
-        $this->filterByUser($sql, $bindings);
+        $bindings = array("id" => $id, "mileage" => $mileage, "car" => $car);
 
         $sql .= " ORDER BY mileage DESC LIMIT 1";
 
@@ -48,7 +48,7 @@ class Mapper extends \App\Base\Mapper {
         }
     }
 
-    public function getLastFull($id, $mileage) {
+    public function getLastFull($id, $mileage, $car) {
         $sql = "SELECT * FROM " . $this->getTable() . "  "
                 . "WHERE id != :id "
                 . " AND mileage IS NOT NULL "
@@ -56,10 +56,10 @@ class Mapper extends \App\Base\Mapper {
                 . " AND volume IS NOT NULL "
                 . " AND total_price IS NOT NULL "
                 . " AND type = 1 "
-                . " AND type IS NOT NULL";
+                . " AND type IS NOT NULL"
+                . " AND car = :car ";
 
-        $bindings = array("id" => $id, "mileage" => $mileage);
-        $this->filterByUser($sql, $bindings);
+        $bindings = array("id" => $id, "mileage" => $mileage, "car" => $car);
 
         $sql .= " ORDER BY mileage DESC LIMIT 1";
 
@@ -73,14 +73,13 @@ class Mapper extends \App\Base\Mapper {
         return null;
     }
 
-    public function getVolume($date, $lastDate) {
+    public function getVolume($car, $date, $lastDate) {
         $sql = "SELECT SUM(volume) FROM " . $this->getTable() . " "
-                . "WHERE date <= :date "
+                . "WHERE car = :car "
+                . " AND date <= :date "
                 . " AND date > :lastDate ";
 
-        $bindings = array("date" => $date, "lastDate" => $lastDate);
-        $this->filterByUser($sql, $bindings);
-
+        $bindings = array("car" => $car, "date" => $date, "lastDate" => $lastDate);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -107,8 +106,8 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getAllofCars($sorted = false, $limit = false, $user_cars = array()) {
-        
-        if(empty($user_cars)){
+
+        if (empty($user_cars)) {
             return [];
         }
         $sql = "SELECT * FROM " . $this->getTable();
@@ -140,7 +139,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function countwithCars($user_cars) {
-        if(empty($user_cars)){
+        if (empty($user_cars)) {
             return 0;
         }
         $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable();
@@ -159,6 +158,41 @@ class Mapper extends \App\Base\Mapper {
             return intval($stmt->fetchColumn());
         }
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+    }
+
+    public function minMileage() {
+        $sql = "SELECT car, MIN(date) as date FROM " . $this->getTable() . " "
+                . " WHERE mileage IS NOT NULL "
+                . " GROUP BY car";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = $row["date"];
+        }
+        return $results;
+    }
+
+    public function sumMileageInterval($car, $date) {
+        $sql = "SELECT MIN(mileage) as min, MAX(mileage) as max, :date as start, DATE_ADD(:date, INTERVAL 1 YEAR) as end , MAX(mileage) - MIN(mileage) as diff "
+                . " FROM " . $this->getTable() . " "
+                . " WHERE car = :car "
+                . " AND date BETWEEN :date AND DATE_ADD(:date, INTERVAL 1 YEAR)"
+                . " LIMIT 1";
+
+        $bindings = array(
+            "car" => $car,
+            "date" => $date
+        );
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        return $stmt->fetch(\PDO::FETCH_BOTH);
     }
 
 }

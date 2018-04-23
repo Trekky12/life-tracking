@@ -33,6 +33,18 @@ class FuelEntry extends \App\Base\Model {
          */
         $this->calc_consumption = $this->exists('calc_consumption', $data) ? filter_var($data['calc_consumption'], FILTER_SANITIZE_NUMBER_INT) : $this->calc_consumption;
 
+        
+         // new entry --> save createdBy
+        if (!$this->exists('id', $data)) {
+            $this->createdBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
+        }
+        // get value from db
+        if ($this->exists('createdBy', $data)) {
+            $this->createdBy = filter_var($data['createdBy'], FILTER_SANITIZE_NUMBER_INT);
+        }
+        
+        $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
+        
         /**
          * Parsing Errors
          */

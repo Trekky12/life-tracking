@@ -87,7 +87,7 @@ class Controller extends \App\Base\Controller {
         $subject = sprintf('[Life-Tracking] %s %s %s %s', $this->ci->get('helper')->getTranslatedString('STATS'), $this->ci->get('helper')->getTranslatedString('FOR'), $fmt->format($dateObj), $year);
 
         foreach ($users as $user) {
-            if ($user->mail) {
+            if ($user->mail && $user->mails_finances == 1) {
 
                 /**
                  * Calculate Statistic

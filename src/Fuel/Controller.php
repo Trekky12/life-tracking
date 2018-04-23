@@ -54,7 +54,7 @@ class Controller extends \App\Base\Controller {
          * Set Distance
          */
         if ($entry->mileage) {
-            $lastMileage = $this->mapper->getLastMileage($id, $entry->mileage);
+            $lastMileage = $this->mapper->getLastMileage($id, $entry->mileage, $entry->car);
             if ($lastMileage) {
                 $this->mapper->setDistance($id, $lastMileage);
             }
@@ -70,13 +70,12 @@ class Controller extends \App\Base\Controller {
          */
         if ($entry->mileage && $entry->calc_consumption && $entry->type == 1 && $lastMileage) {
 
-            $lastFull = $this->mapper->getLastFull($id, $entry->mileage);
+            $lastFull = $this->mapper->getLastFull($id, $entry->mileage, $entry->car);
             if ($lastFull) {
 
                 $distance = $entry->mileage - $lastFull->mileage;
-                $volume = $this->mapper->getVolume($entry->date, $lastFull->date);
+                $volume = $this->mapper->getVolume($entry->car, $entry->date, $lastFull->date);
                 $consumption = ($volume / $distance) * 100;
-
 
                 $this->mapper->setConsumption($id, $consumption);
             }
@@ -88,17 +87,17 @@ class Controller extends \App\Base\Controller {
 
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
-        $list = $this->mapper->getAllofCars('date ASC', false, $user_cars);
+        $list = $this->mapper->getAllofCars('date ASC, mileage ASC', false, $user_cars);
 
         $cars = $this->car_mapper->getAll();
 
 
-        $data = [];
-        $labels = [];
-        $raw_data = [];
         /**
          * Create Labels
          */
+        $data = [];
+        $labels = [];
+        $raw_data = [];
         foreach ($list as $el) {
             if (!empty($el->consumption) && !empty($el->date)) {
                 $raw_data[] = array("label" => $el->date, "car" => $el->car, "consumption" => $el->consumption);
@@ -119,7 +118,30 @@ class Controller extends \App\Base\Controller {
             $data[$el["car"]]["data"][$idx] = $el["consumption"];
         }
 
-        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => $data, "labels" => json_encode($labels)]);
+
+        // Get intervals
+        $minMileages = $this->mapper->minMileage();
+
+        $table = [];
+
+        foreach ($minMileages as $car => $minDate) {
+            // is allowed?
+            if (in_array($car, $user_cars)) {
+
+                if (!array_key_exists($car, $table)) {
+                    $table[$car] = array();
+                }
+
+                do {
+                    $miledata = $this->mapper->sumMileageInterval($car, $minDate);
+                    $minDate = $miledata["end"];
+                    if ($miledata["diff"] > 0) {
+                        $table[$car][] = $miledata;
+                    }
+                } while ($miledata["diff"] > 0);
+            }
+        }
+        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => $data, "labels" => json_encode($labels), "table" => $table, "cars" => $cars]);
     }
 
     public function table(Request $request, Response $response) {
@@ -145,6 +167,9 @@ class Controller extends \App\Base\Controller {
                 'db' => 'type',
                 'dt' => 6,
                 'formatter' => function( $d, $row ) {
+                    if ($row["volume"] <= 0) {
+                        return '';
+                    }
                     return $d == 0 ? $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY") : $this->ci->get('helper')->getTranslatedString("FUEL_FULL");
                 }
             ),

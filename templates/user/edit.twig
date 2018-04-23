@@ -80,10 +80,29 @@
                         {{lang["FORCE_PW_CHANGE"]}}
                     </label>
                 </div>
+                <p>{{lang["MAIL_SETTINGS"]}}</p>
                 <div class="form-group">
-                    <label class="checkbox" for="checkboxBoardNotification">
-                        <input name="set_board_notification_mails" type="checkbox" id="checkboxBoardNotification" {% if entry is null or entry.board_notification_mails == 1 %}checked{% endif %}>
-                        {{lang["BOARD_NOTIFICATION_MAILS"]}}
+                    <label class="checkbox" for="checkboxMailsUser">
+                        <input name="set_mails_user" type="checkbox" id="checkboxMailsUser" {% if entry is null or entry.mails_user == 1 %}checked{% endif %}>
+                        {{lang["MAILS_USER"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsFinances">
+                        <input name="set_mails_finances" type="checkbox" id="checkboxMailsFinances" {% if entry is null or entry.mails_finances == 1 %}checked{% endif %}>
+                        {{lang["MAILS_FINANCES"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsBoard">
+                        <input name="set_mails_board" type="checkbox" id="checkboxMailsBoard" {% if entry is null or entry.mails_board == 1 %}checked{% endif %}>
+                        {{lang["MAILS_BOARD"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsBoardReminder">
+                        <input name="set_mails_board_reminder" type="checkbox" id="checkboxMailsBoardReminder" {% if entry is null or entry.mails_board_reminder == 1 %}checked{% endif %}>
+                        {{lang["MAILS_BOARD_REMINDER"]}}
                     </label>
                 </div>
 

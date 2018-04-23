@@ -51,9 +51,21 @@ class User extends \App\Base\Model {
         $this->force_pw_change = $set_force_pw_change === 'on' ? 1 : 0;
         $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : $this->force_pw_change;
         
-        $set_board_notification_mails = $this->exists('set_board_notification_mails', $data) ? filter_var($data['set_board_notification_mails'], FILTER_SANITIZE_STRING) : 1;
-        $this->board_notification_mails = $set_board_notification_mails === 'on' ? 1 : 0;
-        $this->board_notification_mails = $this->exists('board_notification_mails', $data) ? filter_var($data['board_notification_mails'], FILTER_SANITIZE_NUMBER_INT) : $this->board_notification_mails;
+        $set_mails_user = $this->exists('set_mails_user', $data) ? filter_var($data['set_mails_user'], FILTER_SANITIZE_STRING) : 1;
+        $this->mails_user = $set_mails_user === 'on' ? 1 : 0;
+        $this->mails_user = $this->exists('mails_user', $data) ? filter_var($data['mails_user'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_user;
+        
+        $set_mails_finances = $this->exists('set_mails_finances', $data) ? filter_var($data['set_mails_finances'], FILTER_SANITIZE_STRING) : 1;
+        $this->mails_finances = $set_mails_finances === 'on' ? 1 : 0;
+        $this->mails_finances = $this->exists('mails_finances', $data) ? filter_var($data['mails_finances'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_finances;
+        
+        $set_mails_board = $this->exists('set_mails_board', $data) ? filter_var($data['set_mails_board'], FILTER_SANITIZE_STRING) : 1;
+        $this->mails_board = $set_mails_board === 'on' ? 1 : 0;
+        $this->mails_board = $this->exists('mails_board', $data) ? filter_var($data['mails_board'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_board;
+        
+        $set_mails_board_reminder = $this->exists('set_mails_board_reminder', $data) ? filter_var($data['set_mails_board_reminder'], FILTER_SANITIZE_STRING) : 1;
+        $this->mails_board_reminder = $set_mails_board_reminder === 'on' ? 1 : 0;
+        $this->mails_board_reminder = $this->exists('mails_board_reminder', $data) ? filter_var($data['mails_board_reminder'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_board_reminder;
         
 
     }

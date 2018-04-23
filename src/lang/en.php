@@ -60,6 +60,7 @@ $lang["LOCATION"] = "Location";
 $lang["NOTICE"] = "Notice";
 $lang["CONSUMPTION"] = "Consumption";
 $lang["MILEAGE"] = "Mileage";
+$lang["MILEAGE_PER_YEAR"] = "km/year";
 
 $lang["REALLY_DELETE"] = "Do you really want to delete the entry?";
 $lang["ERROR"] = "Unfortunately the page couldn't load because of an error.";
@@ -161,7 +162,11 @@ $lang["UNDO_ARCHIVE"] = "Do you really want to cancel archiving this entry?";
 
 $lang["OTHER_SETTINGS"] = "Other settings";
 $lang["FORCE_PW_CHANGE"] = "Force password change";
-$lang["BOARD_NOTIFICATION_MAILS"] = "Mail notifications on boards";
+$lang["MAIL_SETTINGS"] = "Mail notifications";
+$lang["MAILS_BOARD"] = "added to board/card";
+$lang["MAILS_BOARD_REMINDER"] = "card reminder";
+$lang["MAILS_USER"] = "creation of user";
+$lang["MAILS_FINANCES"] = "monthly finance stats";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Your user account at %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "someone created a user account for you at <a href='%s'>%s</a>";

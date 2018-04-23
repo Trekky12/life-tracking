@@ -60,6 +60,7 @@ $lang["LOCATION"] = "Ort";
 $lang["NOTICE"] = "Bemerkung";
 $lang["CONSUMPTION"] = "Verbrauch";
 $lang["MILEAGE"] = "Kilometerstand";
+$lang["MILEAGE_PER_YEAR"] = "km/Jahr";
 
 $lang["REALLY_DELETE"] = "Soll der Eintrag wirklich gelöscht werden?";
 $lang["ERROR"] = "Leider konnte die Seite aufgrund eines Fehlers nicht aufgerufen werden.";
@@ -161,7 +162,11 @@ $lang["UNDO_ARCHIVE"] = "Soll die Archivierung für den Eintrag wirklich aufgeho
 
 $lang["OTHER_SETTINGS"] = "Sonstige Einstellungen";
 $lang["FORCE_PW_CHANGE"] = "Passwortänderung erzwingen";
-$lang["BOARD_NOTIFICATION_MAILS"] = "E-Mail Benachrichtigungen bei Boards";
+$lang["MAIL_SETTINGS"] = "Benachrichtigungsmails";
+$lang["MAILS_BOARD"] = "Hinzufügen zu Board/Karte";
+$lang["MAILS_BOARD_REMINDER"] = "Karten-Erinnerung";
+$lang["MAILS_USER"] = "Erstellen des Nutzers";
+$lang["MAILS_FINANCES"] = "monatliche Finanzstatistik";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Dein Benutzeraccount bei %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "für dich wurde ein Benutzeraccount auf <a href='%s'>%s</a> erstellt.";

@@ -177,7 +177,7 @@ class Controller extends \App\Base\Controller {
         // is new user?
         if (!array_key_exists("id", $data)) {
             $user = $this->mapper->get($id);
-            if ($user->mail && $user->board_notification_mails == 1) {
+            if ($user->mail && $user->mails_user == 1) {
 
                 $subject = sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->ci->get('helper')->getPath());
 

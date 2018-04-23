@@ -98,7 +98,7 @@ class CardController extends \App\Base\Controller {
             if ($nu !== $my_user_id) {
                 $user = $users[$nu];
 
-                if ($user->mail && $user->board_notification_mails == 1) {
+                if ($user->mail && $user->mails_board == 1) {
 
                     $variables = array(
                         'header' => '',
@@ -239,7 +239,7 @@ class CardController extends \App\Base\Controller {
         foreach ($due_cards as $user_id => $cards) {
             $user = $users[$user_id];
 
-            if ($user->mail && $user->board_notification_mails == 1) {
+            if ($user->mail && $user->mails_board_reminder == 1) {
                 $variables = array(
                     'header' => '',
                     'subject' => $subject,

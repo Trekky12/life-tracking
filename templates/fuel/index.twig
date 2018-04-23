@@ -32,7 +32,7 @@
                             <td data-title="{{lang["PRICE"]}}">{{entry.price}}</td> 
                             <td data-title="{{lang["VOLUME"]}}">{{entry.volume}}</td> 
                             <td data-title="{{lang["TOTAL_PRICE"]}}">{{entry.total_price}}</td> 
-                            <td data-title="{{lang["TYPE"]}}">{% if entry.type == 1 %} {{lang["FUEL_FULL"]}} {% else %} {{lang["FUEL_PARTLY"]}} {% endif %}</td> 
+                            <td data-title="{{lang["TYPE"]}}">{% if entry.volume > 0 %}{% if entry.type == 1 %} {{lang["FUEL_FULL"]}} {% else %} {{lang["FUEL_PARTLY"]}} {% endif %}{% endif %}</td> 
                             <td data-title="{{lang["CONSUMPTION"]}}">{{entry.consumption}}</td> 
                             <td data-title="{{lang["LOCATION"]}}">{{entry.location}}</td> 
                             <!--<td data-title="{{lang["NOTICE"]}}">{{entry.notice}}</td> -->

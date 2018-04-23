@@ -15,12 +15,21 @@ CREATE TABLE IF NOT EXISTS users (
     module_fuel int(1) DEFAULT 0,
     module_boards int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
-    board_notification_mails int(1) DEFAULT 1,
+    mails_user int(1) DEFAULT 1,
+    mails_finances int(1) DEFAULT 1,
+    mails_board int(1) DEFAULT 1,
+    mails_board_reminder int(1) DEFAULT 1,
     PRIMARY KEY(id),
     UNIQUE(login)
 );
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
+/**
+ALTER TABLE users ADD mails_user int(1) DEFAULT 1 AFTER force_pw_change; 
+ALTER TABLE users ADD mails_finances int(1) DEFAULT 1 AFTER mails_user; 
+ALTER TABLE users CHANGE board_notification_mails mails_board INT(1) DEFAULT 1; 
+ALTER TABLE users ADD mails_board_reminder int(1) DEFAULT 1 AFTER mails_board; 
+*/
 
 DROP TABLE IF EXISTS banlist;
 CREATE TABLE banlist (
@@ -130,11 +139,6 @@ CREATE TABLE cars (
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE cars ADD user INTEGER unsigned DEFAULT NULL AFTER changedOn;
-ALTER TABLE cars ADD CONSTRAINT cars_ibfk_1 FOREIGN KEY(user) REFERENCES users(id);
-*/
-
 
 DROP TABLE IF EXISTS cars_user;
 CREATE TABLE cars_user (
@@ -151,7 +155,8 @@ CREATE TABLE fuel (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
-    user INTEGER unsigned DEFAULT NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
     car INTEGER unsigned DEFAULT NULL,
     date DATE NOT NULL,
     mileage int(20) UNSIGNED DEFAULT NULL,
@@ -165,9 +170,17 @@ CREATE TABLE fuel (
     location varchar(255) DEFAULT NULL,
     notice TEXT DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES users(id),
+    FOREIGN KEY(createdBy) REFERENCES users(id),
+    FOREIGN KEY(changedBy) REFERENCES users(id),
     FOREIGN KEY(car) REFERENCES cars(id),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+/**
+ALTER TABLE fuel ADD changedBy INTEGER unsigned DEFAULT NULL AFTER user;
+ALTER TABLE fuel ADD CONSTRAINT fuel_ibfk_3 FOREIGN KEY (changedBy) REFERENCES users(id);
+ALTER TABLE fuel CHANGE user createdBy INTEGER UNSIGNED DEFAULT NULL; 
+*/
 
 
 DROP TABLE IF EXISTS boards;
@@ -231,13 +244,6 @@ CREATE TABLE cards (
     FOREIGN KEY(stack) REFERENCES stacks(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/**
-ALTER TABLE cards ADD hash VARCHAR(255) NOT NULL AFTER position;
-UPDATE cards set hash = CRC32(CONCAT(createdOn,title));
-ALTER TABLE cards ADD UNIQUE(hash);
-*/
-
-
 DROP TABLE IF EXISTS cards_user;
 CREATE TABLE cards_user (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -264,10 +270,6 @@ CREATE TABLE labels (
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE labels ADD user INTEGER unsigned DEFAULT NULL AFTER changedOn;
-ALTER TABLE labels ADD CONSTRAINT labels_ibfk_2 FOREIGN KEY(user) REFERENCES users(id);
-*/
 
 DROP TABLE IF EXISTS cards_label;
 CREATE TABLE cards_label (

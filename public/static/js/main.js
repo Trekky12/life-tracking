@@ -341,6 +341,19 @@
             "ajax": jsObject.fuel_table,
             "deferLoading": jsObject.datacount
         });
+        
+
+        $(".mileage_year_table").DataTable({
+            "order": [[0, 'asc']],
+            "dom": '<"top">rt<"bottom"ip>',
+            "language": {
+                "url": jsObject.datatable
+            },
+            "paging": true,
+            "info": true,
+            "responsive": true,
+            "autoWidth": false
+        });
 
         $("#stats_table").DataTable({
             "language": {

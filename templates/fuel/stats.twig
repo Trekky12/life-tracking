@@ -6,38 +6,38 @@
 {% block javascript %}
     <script>
         $(document).ready(function () {
-            var COLORS = [
-		'#4dc9f6',
-		'#f67019',
-		'#f53794',
-		'#537bc4',
-		'#acc236',
-		'#166a8f',
-		'#00a950',
-		'#58595b',
-		'#8549ba'
-	];
-            if ($("#fuelChart").length) {
-                var fuelChart = new Chart($("#fuelChart"), {
-                    data: {
-                        labels: $("#fuelChart").data('labels'),
-                        datasets: [
-                                {% for el in data %}
-                                {
-                                    label: lang.consumption + " {{el["name"]}}",
-                                    data: {{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
-                                    fill: false,
-                                    borderColor: COLORS[{{loop.index}}]
-                                },
-                                {% endfor %}
-                            ]
-                        },
-                        type: 'line',
-                        options: {
+        var COLORS = [
+                '#4dc9f6',
+                '#f67019',
+                '#f53794',
+                '#537bc4',
+                '#acc236',
+                '#166a8f',
+                '#00a950',
+                '#58595b',
+                '#8549ba'
+        ];
+        if ($("#fuelChart").length) {
+        var fuelChart = new Chart($("#fuelChart"), {
+        data: {
+        labels: $("#fuelChart").data('labels'),
+                datasets: [
+        {% for el in data %}
+                    {
+                    label: lang.consumption + " {{el["name"]}}",
+                            data:{{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
+                            fill: false,
+                            borderColor: COLORS[{{loop.index}}]
+                    },
+        {% endfor %}
+                    ]
+            },
+                    type: 'line',
+                    options: {
 
-                        }
-                    });
-                }
+                    }
+            });
+            }
             });
     </script>
 {% endblock %}
@@ -49,6 +49,32 @@
         <div class="page-header"><h2>{{lang["MENU_FUEL"]}} {{lang["STATS"]}}</h2></div>
         <div class="page-content">
             <canvas id="fuelChart" data-labels="{{labels}}"></canvas>
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["MILEAGE_PER_YEAR"]}}</h2></div>
+        <div class="page-content">
+            {% for car, entries in table %}
+
+                <h2>{{cars[car].name}}</h2>
+
+                <table class="mileage_year_table table table-hover small">
+                    <thead>
+                        <tr>
+                            <th>{{lang["DATE"]}}</th>
+                            <th>{{lang["MILEAGE_PER_YEAR"]}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in entries %}
+                            <tr>
+                                <td data-title="{{lang["DATE"]}}">{{entry.start|date(i18n.twig)}} - {{entry.end|date(i18n.twig)}}</td> 
+                                <td data-title="{{lang["MILEAGE_PER_YEAR"]}}">{{entry.diff}}</td> 
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
