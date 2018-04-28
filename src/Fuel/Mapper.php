@@ -161,9 +161,17 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function minMileage() {
-        $sql = "SELECT car, MIN(date) as date FROM " . $this->getTable() . " "
-                . " WHERE mileage IS NOT NULL "
-                . " GROUP BY car";
+        /**
+         * @see https://stackoverflow.com/a/15292049
+         */
+        $sql = "SELECT f1.car, f1.date, f1.mileage "
+                . "FROM " . $this->getTable() . " f1 "
+                . "INNER JOIN "
+                . "(  "
+                . "SELECT car, MIN(date) minDate From " . $this->getTable() . " GROUP BY car "
+                . ") f2 "
+                . "ON f1.car=f2.car "
+                . "WHERE f1.date=f2.minDate";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -172,16 +180,17 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = $row["date"];
+            $results[$key]["date"] = $row["date"];
+            $results[$key]["mileage"] = $row["mileage"];
         }
         return $results;
     }
 
     public function sumMileageInterval($car, $date) {
-        $sql = "SELECT MIN(mileage) as min, MAX(mileage) as max, :date as start, DATE_ADD(:date, INTERVAL 1 YEAR) as end , MAX(mileage) - MIN(mileage) as diff "
+        $sql = "SELECT MAX(mileage) as max, :date as start, DATE_ADD(:date, INTERVAL 1 YEAR) as end"
                 . " FROM " . $this->getTable() . " "
                 . " WHERE car = :car "
-                . " AND date BETWEEN :date AND DATE_ADD(:date, INTERVAL 1 YEAR)"
+                . " AND date <= DATE_ADD(:date, INTERVAL 1 YEAR)"
                 . " LIMIT 1";
 
         $bindings = array(
@@ -193,6 +202,22 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
 
         return $stmt->fetch(\PDO::FETCH_BOTH);
+    }
+
+    public function getTotalMileage() {
+        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTable() . " "
+                . " GROUP BY car";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = $row;
+        }
+        return $results;
     }
 
 }

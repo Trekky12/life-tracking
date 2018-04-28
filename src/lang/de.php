@@ -61,6 +61,7 @@ $lang["NOTICE"] = "Bemerkung";
 $lang["CONSUMPTION"] = "Verbrauch";
 $lang["MILEAGE"] = "Kilometerstand";
 $lang["MILEAGE_PER_YEAR"] = "km/Jahr";
+$lang["KM"] = "km";
 
 $lang["REALLY_DELETE"] = "Soll der Eintrag wirklich gelöscht werden?";
 $lang["ERROR"] = "Leider konnte die Seite aufgrund eines Fehlers nicht aufgerufen werden.";

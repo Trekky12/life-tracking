@@ -56,7 +56,7 @@
         <div class="page-content">
             {% for car, entries in table %}
 
-                <h2>{{cars[car].name}}</h2>
+                <h2>{{cars[car].name}} ({% if totalMileages[car]["max"] > totalMileages[car]["min"] %}{{totalMileages[car]["diff"]}} {{lang["KM"]}}{% endif %})</h2>
 
                 <table class="mileage_year_table table table-hover small">
                     <thead>

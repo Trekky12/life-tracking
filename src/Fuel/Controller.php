@@ -122,9 +122,12 @@ class Controller extends \App\Base\Controller {
         // Get intervals
         $minMileages = $this->mapper->minMileage();
 
+        // Get total distance
+        $totalMileages = $this->mapper->getTotalMileage();
+
         $table = [];
 
-        foreach ($minMileages as $car => $minDate) {
+        foreach ($minMileages as $car => $min) {
             // is allowed?
             if (in_array($car, $user_cars)) {
 
@@ -132,16 +135,30 @@ class Controller extends \App\Base\Controller {
                     $table[$car] = array();
                 }
 
+                $mindate = $min["date"];
+                $last_mileage = $min["mileage"];
+                $diff = 0;
+
                 do {
-                    $miledata = $this->mapper->sumMileageInterval($car, $minDate);
-                    $minDate = $miledata["end"];
+                    $miledata = $this->mapper->sumMileageInterval($car, $mindate);
+
+                    // calculate diff 
+                    $diff = $miledata["max"] - $last_mileage;
+                    $miledata["diff"] = $diff;
+
+                    
                     if ($miledata["diff"] > 0) {
                         $table[$car][] = $miledata;
                     }
-                } while ($miledata["diff"] > 0);
+                    
+                    // this end date is new min date
+                    $mindate = $miledata["end"];
+                    $last_mileage = $miledata["max"];
+                    
+                } while ($diff > 0);
             }
         }
-        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => $data, "labels" => json_encode($labels), "table" => $table, "cars" => $cars]);
+        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => $data, "labels" => json_encode($labels), "table" => $table, "cars" => $cars, "totalMileages" => $totalMileages]);
     }
 
     public function table(Request $request, Response $response) {

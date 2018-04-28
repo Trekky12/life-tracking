@@ -61,6 +61,7 @@ $lang["NOTICE"] = "Notice";
 $lang["CONSUMPTION"] = "Consumption";
 $lang["MILEAGE"] = "Mileage";
 $lang["MILEAGE_PER_YEAR"] = "km/year";
+$lang["KM"] = "km";
 
 $lang["REALLY_DELETE"] = "Do you really want to delete the entry?";
 $lang["ERROR"] = "Unfortunately the page couldn't load because of an error.";
