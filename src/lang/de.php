@@ -62,6 +62,8 @@ $lang["CONSUMPTION"] = "Verbrauch";
 $lang["MILEAGE"] = "Kilometerstand";
 $lang["MILEAGE_PER_YEAR"] = "km/Jahr";
 $lang["KM"] = "km";
+$lang["START_WITH_YEAR"] = "Berechnungsgrundlage 01.01.";
+$lang["START_WITH_FIRST_ENTRY"] = "Berechnungsgrundlage 1. Eintrag";
 
 $lang["REALLY_DELETE"] = "Soll der Eintrag wirklich gelöscht werden?";
 $lang["ERROR"] = "Leider konnte die Seite aufgrund eines Fehlers nicht aufgerufen werden.";

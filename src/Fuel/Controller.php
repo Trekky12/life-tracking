@@ -127,6 +127,10 @@ class Controller extends \App\Base\Controller {
 
         $table = [];
 
+        // Get Calculation type
+        $calculation_type = $this->ci->get('helper')->getSessionVar('mileage_type', 0);
+        
+
         foreach ($minMileages as $car => $min) {
             // is allowed?
             if (in_array($car, $user_cars)) {
@@ -135,7 +139,14 @@ class Controller extends \App\Base\Controller {
                     $table[$car] = array();
                 }
 
-                $mindate = $min["date"];
+                if (intval($calculation_type) === 0) {
+                    $mindate = $min["date"];
+                } else {
+                    $date = \DateTime::createFromFormat("Y-m-d", $min["date"]);
+                    $date->modify('first day of january ' . $date->format('Y'));
+                    $mindate = $date->format("Y-m-d");
+                }
+
                 $last_mileage = $min["mileage"];
                 $diff = 0;
 
@@ -146,19 +157,29 @@ class Controller extends \App\Base\Controller {
                     $diff = $miledata["max"] - $last_mileage;
                     $miledata["diff"] = $diff;
 
-                    
+
+
                     if ($miledata["diff"] > 0) {
                         $table[$car][] = $miledata;
                     }
-                    
+
                     // this end date is new min date
                     $mindate = $miledata["end"];
                     $last_mileage = $miledata["max"];
-                    
                 } while ($diff > 0);
             }
         }
-        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => $data, "labels" => json_encode($labels), "table" => $table, "cars" => $cars, "totalMileages" => $totalMileages]);
+        return $this->ci->view->render($response, 'fuel/stats.twig', ['data' => $data, "labels" => json_encode($labels), "table" => $table, "cars" => $cars, "totalMileages" => $totalMileages, "mileage_calc_type" => $calculation_type]);
+    }
+
+    public function setYearlyMileageCalcTyp(Request $request, Response $response) {
+        $data = $request->getParsedBody();
+
+        if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1))) {
+            $this->ci->get('helper')->setSessionVar('mileage_type', $data["state"]);
+        }
+
+        return $response->withJSON(array('status' => 'success'));
     }
 
     public function table(Request $request, Response $response) {

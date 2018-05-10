@@ -88,7 +88,6 @@ class Mapper extends \App\Base\Mapper {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
-        $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 

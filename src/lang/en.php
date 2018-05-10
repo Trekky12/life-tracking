@@ -62,6 +62,8 @@ $lang["CONSUMPTION"] = "Consumption";
 $lang["MILEAGE"] = "Mileage";
 $lang["MILEAGE_PER_YEAR"] = "km/year";
 $lang["KM"] = "km";
+$lang["START_WITH_YEAR"] = "calculation base 01.01.";
+$lang["START_WITH_FIRST_ENTRY"] = "calculation base 1. entry";
 
 $lang["REALLY_DELETE"] = "Do you really want to delete the entry?";
 $lang["ERROR"] = "Unfortunately the page couldn't load because of an error.";

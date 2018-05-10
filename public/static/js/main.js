@@ -550,6 +550,24 @@
             });
 
         }
+        
+        /**
+         * Set km/year calculation base
+         */
+        $('.set_calculation_date').on('click', function (event) {
+            $.ajax({
+                url: jsObject.set_mileage_type,
+                method: 'POST',
+                data: {'state': $(this).data("type") === 1 && $(this).is(":checked") ? 1 : 0},
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (data) {
+                    alert(data);
+                }
+            });
+            return;
+        });
 
 
     });

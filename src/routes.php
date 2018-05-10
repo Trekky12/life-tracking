@@ -53,6 +53,7 @@ $app->group('/fuel', function() {
 
     $this->get('/table/', '\App\Fuel\Controller:table')->setName('fuel_table');
     $this->get('/stats/', '\App\Fuel\Controller:stats')->setName('fuel_stats');
+    $this->post('/setYearlyMileageCalcTyp', '\App\Fuel\Controller:setYearlyMileageCalcTyp')->setName('set_mileage_type');
 
     $this->group('/cars', function() {
         $this->get('/', '\App\Car\Controller:index')->setName('cars');
@@ -104,17 +105,17 @@ $app->group('/boards', function() {
         $this->get('/data/[{id:[0-9]+}]', '\App\Board\CardController:getAPI')->setName('card_get');
         $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\CardController:delete')->setName('card_delete');
         $this->post('/archive/[{id:[0-9]+}]', '\App\Board\CardController:archive')->setName('card_archive');
-        
+
         $this->post('/saveComment/[{id:[0-9]+}]', '\App\Board\CommentController:saveAPI')->setName('comment_save');
     });
-    
+
     $this->group('/labels', function() {
         $this->post('/save/[{id:[0-9]+}]', '\App\Board\LabelController:saveAPI')->setName('label_save');
         $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\LabelController:delete')->setName('label_delete');
         $this->get('/data/[{id:[0-9]+}]', '\App\Board\LabelController:getAPI')->setName('label_get');
     });
-    
+
     $this->post('/setArchive', '\App\Board\BoardController:setArchive')->setName('set_archive');
-    
+
     $this->get('/reminder', '\App\Board\CardController:reminder');
 });
