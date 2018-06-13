@@ -21,11 +21,11 @@
                 </div>
             </div>
         {% endif %}
-        {%if user.module_fuel == 1 %}
+        {%if user.module_cars == 1 %}
             <div class="card">
                 <div class="card-content">
-                    <h3><a href="{{path_for('fuel')}}">{{lang["MENU_FUEL"]}}</a></h3>
-                    <a href="{{path_for('fuel')}}"><i class="fa fa-road" aria-hidden="true"></i></a>
+                    <h3><a href="{{path_for('car_service')}}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a></h3>
+                    <a href="{{path_for('car_service')}}"><i class="fa fa-road" aria-hidden="true"></i></a>
                 </div>
             </div>
         {% endif %}

@@ -1,5 +1,8 @@
 <?php
 
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+
 $app->get('/', '\App\Main\MainController:index')->setName('index');
 
 $app->group('/finances', function() {
@@ -45,17 +48,25 @@ $app->group('/location', function() {
     $this->get('/address/[{id}]', '\App\Location\Controller:getAddress')->setName('get_address');
 });
 
-$app->group('/fuel', function() {
-    $this->get('/', '\App\Fuel\Controller:index')->setName('fuel');
-    $this->get('/edit/[{id:[0-9]+}]', '\App\Fuel\Controller:edit')->setName('fuel_edit');
-    $this->post('/save/[{id:[0-9]+}]', '\App\Fuel\Controller:save')->setName('fuel_save');
-    $this->delete('/delete/{id}', '\App\Fuel\Controller:delete')->setName('fuel_delete');
+$app->group('/cars', function() {
 
-    $this->get('/table/', '\App\Fuel\Controller:table')->setName('fuel_table');
-    $this->get('/stats/', '\App\Fuel\Controller:stats')->setName('fuel_stats');
-    $this->post('/setYearlyMileageCalcTyp', '\App\Fuel\Controller:setYearlyMileageCalcTyp')->setName('set_mileage_type');
+    $this->get('/', function (Request $request, Response $response) {
+        return $response->withRedirect($this->get('router')->pathFor('car_service'), 302);
+    });
 
-    $this->group('/cars', function() {
+    $this->group('/service', function() {
+        $this->get('/', '\App\CarService\Controller:index')->setName('car_service');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\CarService\Controller:edit')->setName('car_service_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\CarService\Controller:save')->setName('car_service_save');
+        $this->delete('/delete/{id}', '\App\CarService\Controller:delete')->setName('car_service_delete');
+
+        $this->get('/table/fuel/', '\App\CarService\Controller:tableFuel')->setName('car_service_fuel_table');
+        $this->get('/table/service/', '\App\CarService\Controller:tableService')->setName('car_service_service_table');
+        $this->get('/stats/', '\App\CarService\Controller:stats')->setName('car_service_stats');
+        $this->post('/setYearlyMileageCalcTyp', '\App\CarService\Controller:setYearlyMileageCalcTyp')->setName('set_mileage_type');
+    });
+
+    $this->group('/control', function() {
         $this->get('/', '\App\Car\Controller:index')->setName('cars');
         $this->get('/edit/[{id:[0-9]+}]', '\App\Car\Controller:edit')->setName('cars_edit');
         $this->post('/save/[{id:[0-9]+}]', '\App\Car\Controller:save')->setName('cars_save');

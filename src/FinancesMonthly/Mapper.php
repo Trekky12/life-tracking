@@ -13,9 +13,10 @@ class Mapper extends \App\Base\Mapper {
                 // in date range
                 . " (start <= CURDATE() OR start IS NULL) AND ( end >= CURDATE() OR end IS NULL) "
                 // not run this month
-                . " AND (MONTH(last_run) != MONTH(CURRENT_DATE()) OR last_run IS NULL)";
+                . " AND (MONTH(last_run) != MONTH(CURRENT_DATE()) OR last_run IS NULL)"
+                // start day is today
+                . " AND ( DAY(start) = DAY(CURRENT_DATE()) OR start IS NULL)";
         
-
         $stmt = $this->db->query($sql);
 
         $results = [];

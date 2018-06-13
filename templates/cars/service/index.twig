@@ -1,0 +1,88 @@
+{% extends "base.twig" %}
+
+{% set active = 'car_service' %}
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["CAR_REFUEL"]}}</h2></div>
+        <div class="page-content">
+            <table id="fuel_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["DATE"]}}</th>
+                        <th>{{lang["CAR"]}}</th>
+                        <th>{{lang["MILEAGE"]}}</th>
+                        <th>{{lang["PRICE"]}}</th>
+                        <th>{{lang["VOLUME"]}}</th>
+                        <th>{{lang["TOTAL_PRICE"]}}</th>
+                        <th>{{lang["TYPE"]}}</th>
+                        <th>{{lang["CONSUMPTION"]}}</th>
+                        <th>{{lang["LOCATION"]}}</th>
+                        <!--<th>{{lang["NOTICE"]}}</th>-->
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in fuel_table %}
+                        <tr>
+                            <td data-title="{{lang["DATE"]}}">{{entry.date}}</td> 
+                            <td data-title="{{lang["CAR"]}}">{{cars[entry.car].name}}</td> 
+                            <td data-title="{{lang["MILEAGE"]}}">{{entry.mileage}}</td> 
+                            <td data-title="{{lang["PRICE"]}}">{{entry.fuel_price}}</td> 
+                            <td data-title="{{lang["VOLUME"]}}">{{entry.fuel_volume}}</td> 
+                            <td data-title="{{lang["TOTAL_PRICE"]}}">{{entry.fuel_total_price}}</td> 
+                            <td data-title="{{lang["TYPE"]}}">{% if entry.fuel_volume > 0 %}{% if entry.fuel_type == 1 %} {{lang["FUEL_FULL"]}} {% else %} {{lang["FUEL_PARTLY"]}} {% endif %}{% endif %}</td> 
+                            <td data-title="{{lang["CONSUMPTION"]}}">{{entry.fuel_consumption}}</td> 
+                            <td data-title="{{lang["LOCATION"]}}">{{entry.fuel_location}}</td> 
+                            <!--<td data-title="{{lang["NOTICE"]}}">{{entry.notice}}</td> -->
+                            <td><a href="{{  path_for('car_service_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  path_for('car_service_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+                
+                
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["CAR_SERVICE"]}}</h2></div>
+        <div class="page-content">
+            <table id="service_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["DATE"]}}</th>
+                        <th>{{lang["CAR"]}}</th>
+                        <th>{{lang["MILEAGE"]}}</th>
+                        <th>{{lang["CAR_SERVICE_OIL"]}}</th>
+                        <th>{{lang["CAR_SERVICE_WATER_WIPER"]}}</th>
+                        <th>{{lang["CAR_SERVICE_AIR"]}}</th>
+                        <th>{{lang["CAR_SERVICE_TIRE_CHANGE"]}}</th>
+                        <th>{{lang["CAR_SERVICE_GARAGE"]}}</th>
+                        <!--<th>{{lang["NOTICE"]}}</th>-->
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in service_table %}
+                        <tr>
+                            <td data-title="{{lang["DATE"]}}">{{entry.date}}</td> 
+                            <td data-title="{{lang["CAR"]}}">{{cars[entry.car].name}}</td> 
+                            <td data-title="{{lang["MILEAGE"]}}">{{entry.mileage}}</td> 
+                            <td data-title="{{lang["CAR_SERVICE_OIL"]}}">{% if entry.isServiceOil()%}x{%endif%}</td> 
+                            <td data-title="{{lang["CAR_SERVICE_WATER_WIPER"]}}">{% if entry.isServiceWaterWiper()%}x{%endif%}</td> 
+                            <td data-title="{{lang["CAR_SERVICE_AIR"]}}">{% if entry.isServiceAir()%}x{%endif%}</td> 
+                            <td data-title="{{lang["CAR_SERVICE_TIRE_CHANGE"]}}">{% if entry.isServiceTireChange() > 0 %}x{% endif %}</td> 
+                            <td data-title="{{lang["CAR_SERVICE_GARAGE"]}}">{% if entry.isServiceGarage() %}x{%endif%}</td> 
+                            <!--<td data-title="{{lang["NOTICE"]}}">{{entry.notice}}</td> -->
+                            <td><a href="{{  path_for('car_service_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  path_for('car_service_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

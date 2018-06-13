@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Fuel;
+namespace App\CarService;
 
 class Mapper extends \App\Base\Mapper {
 
-    protected $table = 'fuel';
-    protected $model = '\App\Fuel\FuelEntry';
+    protected $table = 'cars_service';
+    protected $model = '\App\CarService\CarServiceEntry';
     protected $filterByUser = false;
     protected $insertUser = false;
 
@@ -14,12 +14,13 @@ class Mapper extends \App\Base\Mapper {
                 . "WHERE id != :id "
                 . " AND mileage IS NOT NULL "
                 . " AND mileage <= :mileage"
-                . " AND volume IS NOT NULL "
-                . " AND total_price IS NOT NULL "
-                . " AND car = :car ";
+                . " AND fuel_volume IS NOT NULL "
+                . " AND fuel_total_price IS NOT NULL "
+                . " AND car = :car "
+                . " AND type = :type ";
 
 
-        $bindings = array("id" => $id, "mileage" => $mileage, "car" => $car);
+        $bindings = array("id" => $id, "mileage" => $mileage, "car" => $car, "type" => 0);
 
         $sql .= " ORDER BY mileage DESC LIMIT 1";
 
@@ -35,7 +36,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function setDistance($id, $lastMileage = 0) {
-        $sql = "UPDATE " . $this->getTable() . " SET distance  = mileage - :mileage WHERE id = :id";
+        $sql = "UPDATE " . $this->getTable() . " SET fuel_distance  = mileage - :mileage WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -53,13 +54,14 @@ class Mapper extends \App\Base\Mapper {
                 . "WHERE id != :id "
                 . " AND mileage IS NOT NULL "
                 . " AND mileage <= :mileage "
-                . " AND volume IS NOT NULL "
-                . " AND total_price IS NOT NULL "
-                . " AND type = 1 "
-                . " AND type IS NOT NULL"
-                . " AND car = :car ";
+                . " AND fuel_volume IS NOT NULL "
+                . " AND fuel_total_price IS NOT NULL "
+                . " AND fuel_type = 1 "
+                . " AND fuel_type IS NOT NULL"
+                . " AND car = :car "
+                . " AND type = :type ";
 
-        $bindings = array("id" => $id, "mileage" => $mileage, "car" => $car);
+        $bindings = array("id" => $id, "mileage" => $mileage, "car" => $car, "type" => 0);
 
         $sql .= " ORDER BY mileage DESC LIMIT 1";
 
@@ -74,12 +76,13 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getVolume($car, $date, $lastDate) {
-        $sql = "SELECT SUM(volume) FROM " . $this->getTable() . " "
+        $sql = "SELECT SUM(fuel_volume) FROM " . $this->getTable() . " "
                 . "WHERE car = :car "
                 . " AND date <= :date "
-                . " AND date > :lastDate ";
+                . " AND date > :lastDate "
+                . " AND type = :type ";
 
-        $bindings = array("car" => $car, "date" => $date, "lastDate" => $lastDate);
+        $bindings = array("car" => $car, "date" => $date, "lastDate" => $lastDate, "type" => 0);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -92,7 +95,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function setConsumption($id, $consumption = 0) {
-        $sql = "UPDATE " . $this->getTable() . " SET consumption  = :consumption WHERE id = :id";
+        $sql = "UPDATE " . $this->getTable() . " SET fuel_consumption  = :consumption WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -105,19 +108,20 @@ class Mapper extends \App\Base\Mapper {
         }
     }
 
-    public function getAllofCars($sorted = false, $limit = false, $user_cars = array()) {
+    public function getAllofCars($sorted = false, $limit = false, $user_cars = array(), $type = 0) {
 
         if (empty($user_cars)) {
             return [];
         }
         $sql = "SELECT * FROM " . $this->getTable();
 
-        $bindings = array();
+        $bindings = array("type" => $type);
         foreach ($user_cars as $idx => $car) {
             $bindings[":car_" . $idx] = $car;
         }
 
         $sql .= " WHERE car IN (" . implode(',', array_keys($bindings)) . ")";
+        $sql .= " AND type = :type ";
 
         if ($sorted && !is_null($sorted)) {
             $sql .= " ORDER BY {$sorted}";
@@ -138,18 +142,19 @@ class Mapper extends \App\Base\Mapper {
         return $results;
     }
 
-    public function countwithCars($user_cars) {
+    public function countwithCars($user_cars, $type = 0) {
         if (empty($user_cars)) {
             return 0;
         }
         $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable();
 
-        $bindings = array();
+        $bindings = array("type" => $type);
         foreach ($user_cars as $idx => $car) {
             $bindings[":car_" . $idx] = $car;
         }
 
         $sql .= " WHERE car IN (" . implode(',', array_keys($bindings)) . ")";
+        $sql .= " AND type = :type ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -218,6 +223,60 @@ class Mapper extends \App\Base\Mapper {
             $results[$key] = $row;
         }
         return $results;
+    }
+
+    public function dataTableService($where, $bindings, $order, $limit) {
+
+        $sql = "SELECT * FROM " . $this->getTable() . "";
+
+        if (!empty($where)) {
+            $sql .= " {$where}";
+        }
+        if (!empty($order)) {
+            $sql .= " {$order}";
+        }
+        if (!empty($limit)) {
+            $sql .= " {$limit}";
+        }
+
+        $stmt = $this->db->prepare($sql);
+
+        if (is_array($bindings)) {
+            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
+                $binding = $bindings[$i];
+                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
+            }
+        }
+
+        $stmt->execute();
+        //return $stmt->fetchAll(\PDO::FETCH_BOTH);
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->model($row);
+        }
+        return $results;
+    }
+
+    public function dataTableServiceCount($where, $bindings) {
+        $sql = "SELECT COUNT(id) FROM " . $this->getTable() . "";
+        if (!empty($where)) {
+            $sql .= " {$where}";
+        }
+
+        $stmt = $this->db->prepare($sql);
+        if (is_array($bindings)) {
+            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
+                $binding = $bindings[$i];
+                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
+            }
+        }
+
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return intval($stmt->fetchColumn());
+        }
+        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
 }

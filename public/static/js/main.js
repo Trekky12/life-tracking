@@ -341,7 +341,35 @@
             "ajax": jsObject.fuel_table,
             "deferLoading": jsObject.datacount
         });
-        
+
+        $("#service_table").DataTable({
+            "order": [[0, 'desc']],
+            "columnDefs": [
+                {
+                    "targets": [8, 9],
+                    "orderable": false
+                },
+                {
+                    "targets": [0],
+                    "render": function (data, type, row) {
+                        return moment(data).format(i18n.dateformatJS);
+                    }
+                }
+            ],
+            "dom": '<"top"f>rt<"bottom"ip>',
+            "language": {
+                "url": jsObject.datatable
+            },
+            "paging": true,
+            "info": true,
+            "responsive": true,
+            "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
+            "ajax": jsObject.service_table,
+            "deferLoading": jsObject.datacount2
+        });
+
 
         $(".mileage_year_table").DataTable({
             "order": [[0, 'asc']],
@@ -550,7 +578,7 @@
             });
 
         }
-        
+
         /**
          * Set km/year calculation base
          */
@@ -568,6 +596,21 @@
             });
             return;
         });
+
+        $("input.carServiceType").change(function () {
+            $("#carServiceFuel").toggleClass('hidden');
+            $("#carServiceService").toggleClass('hidden');
+        });
+
+        $(".slider").slider({
+            create: function (event, ui) {
+                $(this).slider("option", "min", $(this).data("min"));
+                $(this).slider("option", "max", $(this).data("max"));
+                $(this).slider("value", $(this).data("level"));
+            },
+            slide: function (event, ui) {
+                $(this).siblings('.slider-value').val(ui.value);
+            }});
 
 
     });

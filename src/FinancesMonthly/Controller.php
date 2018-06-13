@@ -41,10 +41,6 @@ class Controller extends \App\Base\Controller {
 
     public function update(Request $request, Response $response) {
 
-        //$date = new \DateTime('now');
-        // Is first of month?
-        // $date->format("d") === "01"
-
         $mentries = $this->mapper->getMonthlyEntries();
 
         if ($mentries) {
@@ -68,7 +64,11 @@ class Controller extends \App\Base\Controller {
             $this->mapper->updateLastRun($mentry_ids);
         }
 
-        $this->sendSummary();
+        // Is first of month?
+        $date = new \DateTime('now');
+        if ($date->format("d") === "01") {
+            $this->sendSummary();
+        }
 
         return $response->withJSON(array('result' => 'success'));
     }
@@ -99,7 +99,7 @@ class Controller extends \App\Base\Controller {
 
                 $expenses = $this->finance_mapper->statsMailExpenses($user->id, $month, $year, 10);
 
-                
+
                 if ($balance["income"] > 0 || $balance["spendings"] > 0) {
 
                     /**

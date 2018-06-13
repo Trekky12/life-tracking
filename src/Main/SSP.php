@@ -124,6 +124,15 @@ class SSP {
 
             if (count($orderBy)) {
                 $order = 'ORDER BY ' . implode(', ', $orderBy);
+
+                // Add ID to order clause
+                $column_names = array_map(function($row) {
+                    return array_key_exists("db", $row) ? $row["db"] : null;
+                }, $columns);
+
+                if (in_array("id", $column_names)) {
+                    $order .= ', id';
+                }
             }
         }
 
@@ -310,7 +319,7 @@ class SSP {
 
             $whereAllSql = 'WHERE ' . $whereAll;
         }
-        
+
         // Main query to actually get the data
         $data = self::sql_exec($db, $bindings, "SELECT `" . implode("`, `", self::pluck($columns, 'db')) . "`
 			 FROM `$table`

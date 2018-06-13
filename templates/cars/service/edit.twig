@@ -1,0 +1,211 @@
+{% extends "base.twig" %}
+
+{% set active = 'car_service' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" id="gasolineForm" action="{{  path_for('car_service_save', {'id' : entry.id}) }}" method="POST">
+
+                {% if not entry is null %}
+                    {# Hidden fields for ID to recognize updates and for not available fields so they don't get overwritten with null #}
+                    <input name="id" type="hidden" value="{{entry.id}}">
+                    <input name="fuel_distance"  type="hidden" value="{{entry.fuel_distance}}">
+                    <input name="fuel_consumption" type="hidden" value="{{entry.fuel_consumption}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="car">{{lang["CAR"]}}</label>
+                    <select class="form-control" id="car" name="car">
+                        {% for car in cars %}
+                            {% if car.id in user_cars %}
+                                <option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %}selected{% endif %}>{{car.name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group two-columns">
+                    <div class="left">
+                        <label class="radio" for="radioRefuel">
+                            <input name="type" type="radio" data-toggle="radio" value="0" id="radioRefuel" class="carServiceType" {% if entry is null or (not entry is null and entry.type == 0) %}checked{% endif %}>
+                            {{lang["CAR_REFUEL"]}}
+                        </label>                               
+                    </div>
+                    <div class="right">
+                        <label class="radio" for="radioService">
+                            <input name="type" type="radio" data-toggle="radio" value="1" id="radioService" class="carServiceType" {% if not entry is null and entry.type == 1 %}checked{% endif %}>
+                            {{lang["CAR_SERVICE"]}}
+                        </label>
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <label for="dateSelect">{{lang["DATE"]}}</label>
+                    <input type="text" class="form-control" id="dateSelect"  placeholder="" >
+                    <input type="hidden" class="form-control" id="inputDate" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" >
+                </div>
+                <div class="form-group">
+                    <label for="inputGMileage">{{lang["MILEAGE"]}}</label>
+                    <input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" placeholder="" {% if not entry is null %}value="{{entry.mileage}}"{% endif %}>
+                </div>
+
+                <div id="carServiceFuel" {% if not entry is null and entry.type == 1 %}class="hidden"{% endif %}>
+                    <div class="form-group two-columns">
+                        <div class="left">
+                            <label class="radio" for="radioPart">
+                                <input name="fuel_type" type="radio" data-toggle="radio" value="0" id="radioPart" {% if entry is null or (not entry is null and entry.fuel_type == 0) %}checked{% endif %}>
+                                {{lang["FUEL_PARTLY"]}}
+                            </label>                               
+                        </div>
+                        <div class="right">
+                            <label class="radio" for="radioFull">
+                                <input name="fuel_type" type="radio" data-toggle="radio" value="1" id="radioFull" {% if not entry is null and entry.fuel_type == 1 %}checked{% endif %}>
+                                {{lang["FUEL_FULL"]}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxCalcConsumption">
+                            <input name="set_calc_consumption" type="checkbox" id="checkboxCalcConsumption" {% if entry is null or entry.fuel_calc_consumption == 1 %}checked{% endif %}>
+                            {{lang["CALC_CONSUMPTION"]}}
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputGPrice">{{lang["PRICE"]}}/l</label>
+                        <input type="number" class="form-control" id="inputGPrice" name="fuel_price" step="any" placeholder="" {% if not entry is null %}value="{{entry.fuel_price}}"{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputGVol">{{lang["VOLUME"]}}</label>
+                        <input type="number" class="form-control" id="inputGVol" name="fuel_volume" step="any" placeholder="" {% if not entry is null %}value="{{entry.fuel_volume}}"{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputGTotalPrice">{{lang["TOTAL_PRICE"]}}</label>
+                        <input type="number" class="form-control" id="inputGTotalPrice" name="fuel_total_price" step="any" placeholder="" {% if not entry is null %}value="{{entry.fuel_total_price}}"{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputGLocation">{{lang["LOCATION"]}}</label>
+                        <input type="text" class="form-control" id="inputGLocation" name="fuel_location" placeholder="" {% if not entry is null %}value="{{entry.fuel_location}}"{% endif %}>
+                    </div>
+                </div>
+
+                {# Default hidden #}
+                <div id="carServiceService" {% if entry is null or (not entry is null and entry.type == 0) %}class="hidden"{% endif %}>
+                    <h4>{{lang["CAR_SERVICE_OIL"]}}</h4>
+                    <div class="form-group two-columns">
+                        <div class="left">
+                            <div class="form-group">
+                                <h4>{{lang["BEFORE"]}}</h4>
+                                <div class="slider-wrapper">
+                                    <input type="hidden" class="slider-value form-control"  name="service_oil_before"  {% if not entry is null %}value="{{entry.service_oil_before}}"{% endif %}>
+                                    <div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_oil_before}}{% else %}0{% endif %}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="form-group">
+                                <h4>{{lang["AFTER"]}}</h4>
+                                <div class="slider-wrapper">
+                                    <input type="hidden" class="slider-value form-control"  name="service_oil_after"  {% if not entry is null %}value="{{entry.service_oil_after}}"{% endif %}>
+                                    <div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_oil_after}}{% else %}0{% endif %}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4>{{lang["CAR_SERVICE_WATER_WIPER"]}}</h4>
+                    <div class="form-group two-columns">
+                        <div class="left">
+                            <h4>{{lang["BEFORE"]}}</h4>
+                            <div class="slider-wrapper">
+                                <input type="hidden" class="slider-value form-control"  name="service_water_wiper_before"  {% if not entry is null %}value="{{entry.service_water_wiper_before}}"{% endif %}>
+                                <div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_water_wiper_before}}{% else %}0{% endif %}"></div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="form-group">
+                                <h4>{{lang["AFTER"]}}</h4>
+                                <div class="slider-wrapper">
+                                    <input type="hidden" class="slider-value form-control"  name="service_water_wiper_after"  {% if not entry is null %}value="{{entry.service_water_wiper_after}}"{% endif %}>
+                                    <div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_water_wiper_after}}{% else %}0{% endif %}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4>{{lang["CAR_SERVICE_AIR"]}}</h4>
+                    <div class="form-group two-columns">
+                        <div class="left">
+                            <h4>{{lang["BEFORE"]}}</h4>
+                            <div class="form-group">
+                                <div class="two-columns">
+                                    <div class="left">
+                                        <label for="inputServiceAirFrontLeftBefore">{{lang["CAR_FRONT"]}} {{lang["LEFT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirFrontLeftBefore" name="service_air_front_left_before" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_front_left_before}}"{% endif %}>
+                                        <label for="inputServiceAirBackLeftBefore">{{lang["CAR_BACK"]}} {{lang["LEFT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirBackLeftBefore" name="service_air_back_left_before" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_back_left_before}}"{% endif %}>
+                                    </div>
+                                    <div class="right">
+                                        <label for="inputServiceAirFrontRightBefore">{{lang["CAR_FRONT"]}} {{lang["RIGHT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirFrontRightBefore" name="service_air_front_right_before" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_front_right_before}}"{% endif %}>
+                                        <label for="inputServiceAirBackRightBefore">{{lang["CAR_BACK"]}} {{lang["RIGHT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirBackRightBefore" name="service_air_back_right_before" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_back_right_before}}"{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <h4>{{lang["AFTER"]}}</h4>
+                            <div class="form-group">
+                                <div class="two-columns">
+                                    <div class="left">
+                                        <label for="inputServiceAirFrontLeftAfter">{{lang["CAR_FRONT"]}} {{lang["LEFT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirFrontLeftAfter" name="service_air_front_left_after" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_front_left_after}}"{% endif %}>
+                                        <label for="inputServiceAirBackLeftAfter">{{lang["CAR_BACK"]}} {{lang["LEFT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirBackLeftAfter" name="service_air_back_left_after" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_back_left_after}}"{% endif %}>
+                                    </div>
+                                    <div class="right">
+                                        <label for="inputServiceAirFrontRightAfter">{{lang["CAR_FRONT"]}} {{lang["RIGHT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirFrontRightAfter" name="service_air_front_right_after" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_front_right_after}}"{% endif %}>
+                                        <label for="inputServiceAirBackRightAfter">{{lang["CAR_BACK"]}} {{lang["RIGHT"]}}</label>
+                                        <input type="number" class="form-control" id="inputServiceAirBackRightAfter" name="service_air_back_right_after" step="any" placeholder="" {% if not entry is null %}value="{{entry.service_air_back_right_after}}"{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxTireChange">
+                            <input name="set_service_tire_change" type="checkbox" id="checkboxTireChange" {% if not entry is null and entry.service_tire_change == 1 %}checked{% endif %}>
+                            {{lang["CAR_SERVICE_TIRE_CHANGE"]}}
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxGarage">
+                            <input name="set_service_garage" type="checkbox" id="checkboxGarage" {% if not entry is null and entry.service_garage == 1 %}checked{% endif %}>
+                            {{lang["CAR_SERVICE_GARAGE"]}}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputGNotice">{{lang["NOTICE"]}}</label>
+                    <textarea class="form-control" id="inputGNotice" name="notice">{% if not entry is null %}{{entry.notice}}{% endif %}</textarea>
+                </div>
+
+
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

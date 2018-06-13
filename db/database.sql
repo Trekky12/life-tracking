@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     image VARCHAR(255) NULL,
     module_location int(1) DEFAULT 0,
     module_finance int(1) DEFAULT 0,
-    module_fuel int(1) DEFAULT 0,
+    module_cars int(1) DEFAULT 0,
     module_boards int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
     mails_user int(1) DEFAULT 1,
@@ -25,10 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
 /**
-ALTER TABLE users ADD mails_user int(1) DEFAULT 1 AFTER force_pw_change; 
-ALTER TABLE users ADD mails_finances int(1) DEFAULT 1 AFTER mails_user; 
-ALTER TABLE users CHANGE board_notification_mails mails_board INT(1) DEFAULT 1; 
-ALTER TABLE users ADD mails_board_reminder int(1) DEFAULT 1 AFTER mails_board; 
+ALTER TABLE users CHANGE module_fuel module_cars int(1) DEFAULT 0;
 */
 
 DROP TABLE IF EXISTS banlist;
@@ -150,8 +147,8 @@ CREATE TABLE cars_user (
     FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS fuel;
-CREATE TABLE fuel (
+DROP TABLE IF EXISTS cars_service;
+CREATE TABLE cars_service (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
@@ -160,15 +157,30 @@ CREATE TABLE fuel (
     car INTEGER unsigned DEFAULT NULL,
     date DATE NOT NULL,
     mileage int(20) UNSIGNED DEFAULT NULL,
-    price DECIMAL(6,2) DEFAULT NULL,
-    volume DECIMAL(6,2) DEFAULT NULL,
-    total_price DECIMAL(6,2) DEFAULT NULL,
     type int(1) DEFAULT NULL,
-    distance INT(20) DEFAULT NULL,
-    calc_consumption int(1) DEFAULT 1,
-    consumption DECIMAL(6,2) DEFAULT NULL,
-    location varchar(255) DEFAULT NULL,
+    fuel_price DECIMAL(6,2) DEFAULT NULL,
+    fuel_volume DECIMAL(6,2) DEFAULT NULL,
+    fuel_total_price DECIMAL(6,2) DEFAULT NULL,
+    fuel_type int(1) DEFAULT NULL,
+    fuel_distance INT(20) DEFAULT NULL,
+    fuel_calc_consumption int(1) DEFAULT 1,
+    fuel_consumption DECIMAL(6,2) DEFAULT NULL,
+    fuel_location varchar(255) DEFAULT NULL,
     notice TEXT DEFAULT NULL,
+    service_oil_before INT(3) DEFAULT NULL,
+    service_oil_after INT(3) DEFAULT NULL,
+    service_water_wiper_before INT(3) DEFAULT NULL,
+    service_water_wiper_after INT(3) DEFAULT NULL,
+    service_air_front_left_before DECIMAL(2,1) DEFAULT NULL,
+    service_air_front_left_after DECIMAL(2,1) DEFAULT NULL,
+    service_air_front_right_before DECIMAL(2,1) DEFAULT NULL,
+    service_air_front_right_after DECIMAL(2,1) DEFAULT NULL,
+    service_air_back_left_before DECIMAL(2,1) DEFAULT NULL,
+    service_air_back_left_after DECIMAL(2,1) DEFAULT NULL,
+    service_air_back_right_before DECIMAL(2,1) DEFAULT NULL,
+    service_air_back_right_after DECIMAL(2,1) DEFAULT NULL,
+    service_tire_change int(1) DEFAULT NULL,
+    service_garage int(1) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(createdBy) REFERENCES users(id),
     FOREIGN KEY(changedBy) REFERENCES users(id),
@@ -177,9 +189,32 @@ CREATE TABLE fuel (
 
 
 /**
-ALTER TABLE fuel ADD changedBy INTEGER unsigned DEFAULT NULL AFTER user;
-ALTER TABLE fuel ADD CONSTRAINT fuel_ibfk_3 FOREIGN KEY (changedBy) REFERENCES users(id);
-ALTER TABLE fuel CHANGE user createdBy INTEGER UNSIGNED DEFAULT NULL; 
+ALTER TABLE cars_service CHANGE type fuel_type int(1) DEFAULT NULL; 
+ALTER TABLE cars_service CHANGE price fuel_price DECIMAL(6,2) DEFAULT NULL;
+ALTER TABLE cars_service CHANGE volume fuel_volume DECIMAL(6,2) DEFAULT NULL;
+ALTER TABLE cars_service CHANGE total_price fuel_total_price DECIMAL(6,2) DEFAULT NULL;
+ALTER TABLE cars_service CHANGE distance fuel_distance INT(20) DEFAULT NULL;
+ALTER TABLE cars_service CHANGE calc_consumption fuel_calc_consumption int(1) DEFAULT 1;
+ALTER TABLE cars_service CHANGE consumption fuel_consumption DECIMAL(6,2) DEFAULT NULL;
+ALTER TABLE cars_service CHANGE location fuel_location varchar(255) DEFAULT NULL;
+ALTER TABLE cars_service ADD type INT(1) NULL AFTER mileage; 
+UPDATE cars_service set type = 0;
+
+ALTER TABLE cars_service ADD service_oil_before INT(3) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_oil_after INT(3) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_water_wiper_before INT(3) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_water_wiper_after INT(3) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_front_left_before DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_front_left_after DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_front_right_before DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_front_right_after DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_back_left_before DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_back_left_after DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_back_right_before DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_air_back_right_after DECIMAL(2,1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_tire_change int(1) DEFAULT NULL;
+ALTER TABLE cars_service ADD service_garage int(1) DEFAULT NULL;
+
 */
 
 
