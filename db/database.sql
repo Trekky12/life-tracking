@@ -125,6 +125,22 @@ CREATE TABLE finances_monthly (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+DROP TABLE IF EXISTS finances_categories_assignment;
+CREATE TABLE finances_categories_assignment (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    description varchar(255) NOT NULL,
+    category int(11) unsigned DEFAULT NULL,
+    min_value DECIMAL(10,2) DEFAULT NULL,
+    max_value DECIMAL(10,2) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 DROP TABLE IF EXISTS cars;
 CREATE TABLE cars (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

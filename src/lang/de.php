@@ -28,7 +28,7 @@ $lang["SUM"] = "Summe";
 
 $lang["CATEGORY"] = "Kategorie";
 $lang["DESCRIPTION"] = "Beschreibung";
-$lang["VALUE"] = "Wert";
+$lang["VALUE"] = "Betrag";
 
 $lang["SAVE"] = "Speichern";
 $lang["CANCEL"] = "Abbrechen";
@@ -93,8 +93,9 @@ $lang["ENTRY_ERROR_DELETE"] = "Eintrag konnte nicht gelöscht werden";
 $lang["ENTRY_SUCCESS_DELETE"] = "Eintrag wurde erfolgreich gelöscht";
 $lang["WRONG_TYPE"] = "Falscher Typ";
 $lang["NAME_CANNOT_BE_EMPTY"] = "Name darf nicht leer sein";
-$lang["VALUE_CANNOT_BE_EMPTY"] = "Der Wert muss eingetragen werden";
+$lang["VALUE_CANNOT_BE_EMPTY"] = "Der Betrag muss eingetragen werden";
 $lang["DESCRIPTION_CANNOT_BE_EMPTY"] = "Die Beschreibung muss eingetragen werden";
+$lang["CATEGORY_CANNOT_BE_EMPTY"] = "Die Kategorie muss eingetragen werden";
 
 $lang["USERS"] = "Benutzer";
 $lang["LOGIN"] = "Benutzername";
@@ -133,10 +134,15 @@ $lang["YOUR_BALANCE"] = "Deine Bilanz";
 $lang["YOUR_BIGGEST_EXPENSES"] = "Deine größten Ausgaben";
 
 $lang["COMMON"] = "Gemeinsam";
-$lang["COMMON_VALUE"] = "Gemeinsamer Wert";
+$lang["COMMON_VALUE"] = "Gemeinsamer Betrag";
 
 $lang["CAR"] = "Auto";
 $lang["CARS"] = "Autos";
+
+$lang["FINANCES_CATEGORY_ASSIGNMENTS"] = "Kategorie Zuweisungen";
+$lang["MIN_VALUE"] = "min. Betrag";
+$lang["MAX_VALUE"] = "max. Betrag";
+
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";
 $lang["BANNED"] = "Zuviele fehlgeschlagene Login-Versuche. Du wurdest gesperrt. ";

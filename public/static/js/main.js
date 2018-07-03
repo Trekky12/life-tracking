@@ -261,6 +261,22 @@
             "responsive": true,
             "autoWidth": false
         });
+        
+        $("#category_assignment_table").DataTable({
+            "paging": true,
+            "info": true,
+            "columnDefs": [
+                {
+                    "targets": [4,5],
+                    "orderable": false
+                }
+            ],
+            "language": {
+                "url": jsObject.datatable
+            },
+            "responsive": true,
+            "autoWidth": false
+        });
 
         $("#monthly_table").DataTable({
             "paging": false,

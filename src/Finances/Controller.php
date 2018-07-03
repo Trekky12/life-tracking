@@ -8,6 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     private $cat_mapper;
+    private $cat_assignments_mapper;
 
     public function init() {
         $this->model = '\App\Finances\FinancesEntry';
@@ -15,6 +16,7 @@ class Controller extends \App\Base\Controller {
 
         $this->mapper = new \App\Finances\Mapper($this->ci);
         $this->cat_mapper = new \App\FinancesCategory\Mapper($this->ci);
+        $this->cat_assignments_mapper = new \App\FinancesCategoryAssignment\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -37,6 +39,15 @@ class Controller extends \App\Base\Controller {
 
         return $this->ci->view->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories]);
     }
+    
+    public function afterSave($id, $data) {
+        if(!array_key_exists("category", $data) || (array_key_exists("category", $data) && $data["category"] == 1)){
+            $cat = $this->cat_assignments_mapper->get_category($data["description"], $data["value"]);
+            if(!is_null($cat)){
+                $this->mapper->set_category($id, $cat);
+            }
+        }
+    }
 
     public function record(Request $request, Response $response) {
         $data = $request->getParsedBody();
@@ -56,7 +67,9 @@ class Controller extends \App\Base\Controller {
 
         if (!$entry->hasParsingErrors()) {
             try {
-                $this->mapper->insert($entry);
+                $this->preSave(null, $data);
+                $id = $this->mapper->insert($entry);
+                $this->afterSave($id, $data);
             } catch (\Exception $e) {
                 return $response->withJSON(array('status' => 'error', 'data' => $e->getMessage()));
             }

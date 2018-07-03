@@ -1,0 +1,37 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</h2></div>
+        <div class="page-content">
+            <table id="category_assignment_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["DESCRIPTION"]}}</th>
+                        <th>{{lang["CATEGORY"]}}</th>
+                        <th>{{lang["MIN_VALUE"]}}</th>
+                        <th>{{lang["MAX_VALUE"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                        <tr>
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{assignment.description}}</td> 
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{categories[assignment.category].name}}</td> 
+                            <td data-title="{{lang["MIN_VALUE"]}}">{{assignment.min_value}}</td> 
+                            <td data-title="{{lang["MAX_VALUE"]}}">{{assignment.max_value}}</td> 
+                            <td><a href="{{  path_for('finances_categories_assignment_edit', {'id' : assignment.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  path_for('finances_categories_assignment_delete', {'id' : assignment.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

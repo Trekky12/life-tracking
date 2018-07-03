@@ -95,6 +95,7 @@ $lang["WRONG_TYPE"] = "Wrong type";
 $lang["NAME_CANNOT_BE_EMPTY"] = "Name cannot be empty";
 $lang["VALUE_CANNOT_BE_EMPTY"] = "Value cannot be empty";
 $lang["DESCRIPTION_CANNOT_BE_EMPTY"] = "Description cannot be empty";
+$lang["CATEGORY_CANNOT_BE_EMPTY"] = "Category cannot be empty";
 
 $lang["USERS"] = "Users";
 $lang["LOGIN"] = "Login";
@@ -137,6 +138,10 @@ $lang["COMMON_VALUE"] = "Common value";
 
 $lang["CAR"] = "Car";
 $lang["CARS"] = "Cars";
+
+$lang["FINANCES_CATEGORY_ASSIGNMENTS"] = "category assignments";
+$lang["MIN_VALUE"] = "min. value";
+$lang["MAX_VALUE"] = "max. value";
 
 $lang["NO_ACCESS"] = "No Access allowed";
 $lang["BANNED"] = "Too many failed login attempts. You are banned!";

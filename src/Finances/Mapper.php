@@ -204,5 +204,16 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
+    
+    public function set_category($id, $category) {
+        $sql = "UPDATE " . $this->getTable() . " SET category = :category WHERE id  = :id";
+        $bindings = array("id" => $id, "category" => $category);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
 
 }

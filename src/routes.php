@@ -28,6 +28,13 @@ $app->group('/finances', function() {
         $this->get('/edit/[{id:[0-9]+}]', '\App\FinancesCategory\Controller:edit')->setName('finances_categories_edit');
         $this->post('/save/[{id:[0-9]+}]', '\App\FinancesCategory\Controller:save')->setName('finances_categories_save');
         $this->delete('/delete/{id}', '\App\FinancesCategory\Controller:delete')->setName('finances_categories_delete');
+
+        $this->group('/assignment', function() {
+            $this->get('/', '\App\FinancesCategoryAssignment\Controller:index')->setName('finances_categories_assignment');
+            $this->get('/edit/[{id:[0-9]+}]', '\App\FinancesCategoryAssignment\Controller:edit')->setName('finances_categories_assignment_edit');
+            $this->post('/save/[{id:[0-9]+}]', '\App\FinancesCategoryAssignment\Controller:save')->setName('finances_categories_assignment_save');
+            $this->delete('/delete/{id}', '\App\FinancesCategoryAssignment\Controller:delete')->setName('finances_categories_assignment_delete');
+        });
     });
 
     $this->group('/monthly', function() {
