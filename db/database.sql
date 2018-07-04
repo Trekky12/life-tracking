@@ -77,10 +77,15 @@ CREATE TABLE finances_categories (
     changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
+    is_default int(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `finances_categories` (`id`, `user`, `name`) VALUES (1, 1, 'not categorized');
+
+/*
+ALTER TABLE finances_categories ADD is_default INT(1) DEFAULT 0 AFTER name; 
+*/
 
 DROP TABLE IF EXISTS finances;
 CREATE TABLE finances (
@@ -91,7 +96,7 @@ CREATE TABLE finances (
     type int(1) DEFAULT 1,
     date DATE NOT NULL,
     time TIME NOT NULL,
-    category int(11) UNSIGNED  NOT NULL DEFAULT 1,
+    category int(11) UNSIGNED DEFAULT NULL,
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) NOT NULL,
     common int(1) DEFAULT 0,
@@ -136,7 +141,21 @@ CREATE TABLE finances_categories_assignment (
     min_value DECIMAL(10,2) DEFAULT NULL,
     max_value DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(user) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS finances_budgets;
+CREATE TABLE finances_budgets (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    description varchar(255) NOT NULL,
+    category int(11) unsigned DEFAULT NULL,
+    value DECIMAL(10,2) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

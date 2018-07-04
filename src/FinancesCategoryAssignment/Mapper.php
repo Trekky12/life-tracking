@@ -11,12 +11,12 @@ class Mapper extends \App\Base\Mapper {
         $sql = "SELECT category FROM " . $this->getTable() . " "
                 . " WHERE "
                 // same description
-                . " (description = :description ) "
+                . " (LOWER(description) = LOWER(:description) ) "
                 // value in range
                 . " AND (( :value >= min_value ) OR min_value IS NULL)"
                 . " AND (( :value < max_value ) OR max_value IS NULL)";
                 
-        $bindings = array("description" => $description, "value" => floatval($value));
+        $bindings = array("description" => trim($description), "value" => floatval($value));
         $this->filterByUser($sql, $bindings);
         
         $sql .= " LIMIT 1";

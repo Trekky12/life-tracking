@@ -142,6 +142,9 @@ $lang["CARS"] = "Autos";
 $lang["FINANCES_CATEGORY_ASSIGNMENTS"] = "Kategorie Zuweisungen";
 $lang["MIN_VALUE"] = "min. Betrag";
 $lang["MAX_VALUE"] = "max. Betrag";
+$lang["DEFAULT"] = "Standard";
+
+$lang["BUDGET"] = "Budget";
 
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";

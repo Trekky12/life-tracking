@@ -251,7 +251,7 @@
             "info": true,
             "columnDefs": [
                 {
-                    "targets": [1, 2],
+                    "targets": [2, 3],
                     "orderable": false
                 }
             ],

@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CARS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["CARS"]}}</h2> {% if user.isAdmin() %}<a href="{{  path_for('cars_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>{% endif %}</div>
         <div class="page-content">
             <table id="cars_table" class="table table-hover small">
                 <thead>

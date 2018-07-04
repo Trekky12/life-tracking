@@ -83,7 +83,28 @@ class Location extends \App\Base\Model{
     }
 
     public function getPosition() {
-        return ['id'=> $this->id, 'dt' => $this->changedOn, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
+        $data = [
+            'id'=> $this->id, 
+            'dt' => $this->changedOn
+        ];
+        
+        $diff_gps = $this->times - $this->gps_tms;
+        $diff_net = $this->times - $this->net_tms;
+        
+        if($diff_gps > $diff_net){
+            $data['lat'] = $this->net_lat;
+            $data['lng'] = $this->net_lng;
+            $data['acc'] = $this->net_acc;
+            $data['type'] = 'net';
+        }else{
+            $data['lat'] = $this->gps_lat;
+            $data['lng'] = $this->gps_lng;
+            $data['acc'] = $this->gps_acc;
+            $data['type'] = 'gps';
+        }
+        //return ['id'=> $this->id, 'dt' => $this->changedOn, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
+        //return [ 'id'=> $this->id, 'dt' => $this->changedOn, 'lat' => $this->gps_lat, 'lng' => $this->gps_lng, 'acc' => $this->gps_acc];
+        return $data;
     }
 
 }

@@ -5,8 +5,9 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2> <a href="{{  path_for('finances_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
         <div class="page-content">
+
             <table id="finance_table" class="table table-hover small">
                 <thead>
                     <tr>

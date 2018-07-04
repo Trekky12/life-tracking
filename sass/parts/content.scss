@@ -10,12 +10,20 @@
     background-color:$color_blue;
     margin-bottom: 1rem;
     
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    
     &, a{
         color: $color_background-body;
     }
 
     h1, h2{
         margin:0;
+    }
+    
+    button{
+        padding: 0.2rem 1rem!important;
     }
 }
 
@@ -32,6 +40,6 @@
     padding-bottom: 2rem;
 }
 
-#go-back-btn{
+.btn-top, #go-back-btn{
     margin-bottom:2rem;
 }

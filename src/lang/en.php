@@ -142,6 +142,9 @@ $lang["CARS"] = "Cars";
 $lang["FINANCES_CATEGORY_ASSIGNMENTS"] = "category assignments";
 $lang["MIN_VALUE"] = "min. value";
 $lang["MAX_VALUE"] = "max. value";
+$lang["DEFAULT"] = "default";
+
+$lang["BUDGET"] = "Budget";
 
 $lang["NO_ACCESS"] = "No Access allowed";
 $lang["BANNED"] = "Too many failed login attempts. You are banned!";

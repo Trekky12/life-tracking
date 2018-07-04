@@ -18,6 +18,13 @@
                     <label for="inputName">{{lang["NAME"]}}</label>
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name}}"{% endif %}>
                 </div>
+                
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxDefault">
+                        <input name="set_default" type="checkbox" id="checkboxDefault" {% if entry is not null and entry.is_default == 1 %}checked{% endif %}>
+                        {{lang["DEFAULT"]}}
+                    </label>
+                </div>
 
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

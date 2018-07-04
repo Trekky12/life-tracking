@@ -10,16 +10,17 @@
         <li {% if active == 'finances' %}class="active"{% endif %}>
             <a href="{{ path_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
             <ul class="dropdown-content">
-                <li><a href="{{ path_for('finances_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                <li role="separator" class="divider"></li>
+                <li class="hidden"><a href="{{ path_for('finances_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li role="separator" class="divider hidden"></li>
                 <li><a href="{{ path_for('finances_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
-                <li><a href="{{ path_for('finances_categories_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                <li role="separator" class="divider"></li>
+                <li class="hidden"><a href="{{ path_for('finances_categories_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li role="separator" class="divider hidden"></li>
                 <li><a href="{{ path_for('finances_monthly') }}"><i class="fa fa-calendar" aria-hidden="true"></i> {{lang["FINANCES_MONTHLY"]}}</a></li>
-                <li><a href="{{ path_for('finances_monthly_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                <li role="separator" class="divider"></li>
+                <li class="hidden"><a href="{{ path_for('finances_monthly_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li role="separator" class="divider hidden"></li>
                 <li><a href="{{ path_for('finances_categories_assignment') }}"><i class="fa fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
-                <li><a href="{{ path_for('finances_categories_assignment_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li class="hidden"><a href="{{ path_for('finances_categories_assignment_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li><a href="{{ path_for('finances_budgets') }}"><i class="fa fa-money" aria-hidden="true"></i> {{lang["BUDGET"]}}</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ path_for('finances_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
             </ul>
@@ -29,11 +30,11 @@
         <li {% if active == 'car_service' %}class="active"{% endif %}>
             <a href="{{ path_for('car_service') }}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a>
             <ul class="dropdown-content">
-                <li><a href="{{ path_for('car_service_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                <li class="hidden"><a href="{{ path_for('car_service_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
                 {% if user.isAdmin() %}
-                    <li role="separator" class="divider"></li>
+                    <li role="separator" class="divider hidden"></li>
                     <li><a href="{{ path_for('cars') }}"><i class="fa fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
-                    <li><a href="{{ path_for('cars_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                    <li class="hidden"><a href="{{ path_for('cars_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
                 {% endif %}
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ path_for('car_service_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
@@ -43,8 +44,8 @@
         {% if user.module_boards == 1 %}
         <li {% if active == 'boards' %}class="active"{% endif %}>
             <a href="{{ path_for('boards') }}">{{lang["BOARDS"]}}</a>
-            <ul class="dropdown-content">
-                <li><a href="{{ path_for('boards_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+            <ul class="dropdown-content hidden">
+                <li class="hidden"><a href="{{ path_for('boards_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
             </ul>
         </li> 
         {% endif %}
@@ -52,7 +53,7 @@
             <a href="{% if user.isAdmin() %}{{ path_for('users') }}{%else %}#{%endif%}">{{lang["USERS"]}}</a>
             <ul class="dropdown-content">
                 {% if user.isAdmin() %}
-                    <li><a href="{{ path_for('users_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+                    <li class="hidden"><a href="{{ path_for('users_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
                 {% endif %}
                 <li><a href="{{ path_for('users_change_password') }}">{{lang["CHANGE_PASSWORD"]}}</a></li>
                 <li><a href="{{ path_for('users_profile_image') }}">{{lang["PROFILE_IMAGE"]}}</a></li>

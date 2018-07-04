@@ -28,12 +28,12 @@ button:not(.fa):not(.menu-toggle), input[type="submit"], .button {
 
     &.gray{
         background-color: #cccccc;
-
+        color: #000000;
 
         &:hover{
-            background-color: #FFFFFF;
-            border-color: #000000;
-            color: #000000;
+            background-color: transparent;
+            border-color: #cccccc;
+            color: #cccccc;
         }
     }
 
@@ -45,6 +45,24 @@ button:not(.fa):not(.menu-toggle), input[type="submit"], .button {
             border-color: #ec7063;
             color: #ec7063;
         }
+    }
+
+    &.white{
+
+
+        background-color: transparent;
+        border-color: #FFFFFF;
+        color: #FFFFFF;
+
+        &:hover{
+            background-color: #FFFFFF;
+            border-color: transparent;
+            color: #000000;
+        }
+    }
+
+    &.add-btn{
+
     }
 
 

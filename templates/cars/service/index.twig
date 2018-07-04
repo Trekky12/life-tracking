@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CAR_REFUEL"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["CAR_REFUEL"]}}</h2> <a href="{{  path_for('car_service_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
         <div class="page-content">
             <table id="fuel_table" class="table table-hover small">
                 <thead>

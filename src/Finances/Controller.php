@@ -39,11 +39,21 @@ class Controller extends \App\Base\Controller {
 
         return $this->ci->view->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories]);
     }
-    
+
     public function afterSave($id, $data) {
-        if(!array_key_exists("category", $data) || (array_key_exists("category", $data) && $data["category"] == 1)){
-            $cat = $this->cat_assignments_mapper->get_category($data["description"], $data["value"]);
-            if(!is_null($cat)){
+        $entry = $this->mapper->get($id);
+        $default_cat = $this->cat_mapper->get_default();
+
+        // when there is no category set the default category
+        if (is_null($entry->category)) {
+            $entry->category = $default_cat;
+            $this->mapper->set_category($id, $default_cat);
+        }
+
+        // when it is default category then check if there is a auto assignment possible
+        if ($entry->category == $default_cat) {
+            $cat = $this->cat_assignments_mapper->get_category($entry->description, $entry->value);
+            if (!is_null($cat)) {
                 $this->mapper->set_category($id, $cat);
             }
         }
@@ -53,17 +63,17 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
 
         $data['user'] = $this->ci->get('helper')->getUser()->id;
-        
-        $data = array_map(function($el){
+
+        $data = array_map(function($el) {
             return urldecode($el);
         }, $data);
 
-        if(array_key_exists('value', $data)){
-            $data['value'] =  str_replace(',', '.', $data["value"]);
+        if (array_key_exists('value', $data)) {
+            $data['value'] = str_replace(',', '.', $data["value"]);
         }
 
         $entry = new FinancesEntry($data);
-        
+
 
         if (!$entry->hasParsingErrors()) {
             try {
@@ -73,8 +83,8 @@ class Controller extends \App\Base\Controller {
             } catch (\Exception $e) {
                 return $response->withJSON(array('status' => 'error', 'data' => $e->getMessage()));
             }
-            
-            return $response->withJSON(array('status' => 'success', 'data' => $entry->date . ': ' . $entry->description . ' ' . $entry->value .' - '. $this->ci->get('helper')->getTranslatedString('ENTRY_SUCCESS')));
+
+            return $response->withJSON(array('status' => 'success', 'data' => $entry->date . ' (' . $entry->time . '): ' . $entry->description . ' ' . $entry->value . ' - ' . $this->ci->get('helper')->getTranslatedString('ENTRY_SUCCESS')));
         }
         return $response->withJSON(array('status' => 'error', 'data' => 'error'));
     }
@@ -93,7 +103,7 @@ class Controller extends \App\Base\Controller {
         $stats = $this->mapper->statsYear($year);
 
         list($data, $spendings, $income, $labels) = $this->createChartData($stats, "month");
-        
+
         return $this->ci->view->render($response, 'finances/stats/year.twig', ['stats' => $data, "year" => $year, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
     }
 
