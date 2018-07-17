@@ -2,33 +2,50 @@
 
 {% set active = 'finances' %}
 
+{% block javascript %}
+    <script src="/static/assets/js/mustache.min.js"></script>
+    <script src="/static/js/budget.js?ver=20180704"></script>
+{% endblock %}
+
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> <a href="{{  path_for('finances_budgets_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> <a href="{{path_for('finances_budgets_edit')}}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["EDIT"]}}</button></a></div>
         <div class="page-content">
-            <table id="category_assignment_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["DESCRIPTION"]}}</th>
-                        <th>{{lang["CATEGORY"]}}</th>
-                        <th>{{lang["VALUE"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for budget in budgets %}
-                        <tr>
-                            <td data-title="{{lang["DESCRIPTION"]}}">{{budget.description}}</td> 
-                            <td data-title="{{lang["DESCRIPTION"]}}">{{categories[budget.category].name}}</td> 
-                            <td data-title="{{lang["VALUE"]}}">{{budget.value}}</td> 
-                            <td><a href="{{  path_for('finances_budgets_edit', {'id' : budget.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
-                            <td><a href="#" data-url="{{  path_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% for budget in budgets %}
+                <div class="budget-entry">
+                    <h3>{{budget.description}}</h3>
+                    {% if budget.id in budget_categories|keys %}
+                        <div class="categories-list">
+                            {% if budget_categories[budget.id]|length > 1 %}
+                                {{lang["CATEGORIES"]}}:
+                            {% else %}
+                                {{lang["CATEGORY"]}}:    
+                            {% endif %}
+                            {% for cat in budget_categories[budget.id] %}
+                                {{categories[cat].name}}{% if loop.index < budget_categories[budget.id]|length %},{%endif%}        
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="values">
+                        <span>0 {{currency}}</span>
+                        <span class="{%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}">{{budget.sum}} {{currency}}</span>
+                        <span>{{budget.value}} {{currency}}</span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress {%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}" style="width:{{budget.percent}}%">{{budget.percent}}%</div>
+                    </div> 
+
+                    <div class="remaining">
+                        {{lang["REMAINING"]}}: {{budget.diff}} {{currency}}
+                    </div>
+
+
+                </div>
+            {% endfor %}
+
         </div>
     </div>
 

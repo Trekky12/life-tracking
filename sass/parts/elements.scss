@@ -27,11 +27,11 @@ table {
     color: #FFFFFF;
 
     &.danger{
-        background-color: #f44336;
+        background-color: $color_red;
     }
 
     &.success{
-        background-color: #4CAF50;
+        background-color: $color_green;
     }
     
     &.info{

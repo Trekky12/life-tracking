@@ -63,7 +63,7 @@ class Controller extends \App\Base\Controller {
         $id = $request->getAttribute('id');
         $loc = $this->mapper->get($id);
 
-        $query = 'http://nominatim.openstreetmap.org/reverse?format=json&lat=' . $loc->net_lat . '&lon=' . $loc->net_lng;
+        $query = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' . $loc->net_lat . '&lon=' . $loc->net_lng;
 
         list($status, $result) = $this->ci->get('helper')->request($query);
 

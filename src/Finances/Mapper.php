@@ -123,7 +123,7 @@ class Mapper extends \App\Base\Mapper {
         $this->filterByUser($sql, $bindings, false, "f.");
 
         $sql .= " GROUP BY YEAR(date), MONTH(date), type, category";
-
+        
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 

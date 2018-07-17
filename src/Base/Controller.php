@@ -69,16 +69,16 @@ abstract class Controller {
     protected function preEdit($id) {
         // do nothing
     }
-    
+
     /**
      * this function is called before getting an entry on a GET API request
      * @param type $id
      * @param type $entry
      */
-    protected function preGetAPI($id){
+    protected function preGetAPI($id) {
         $this->preSave($id, null);
     }
-    
+
     /**
      * this function is called before returning the entry on a GET API request
      * here you can modify the entry 
@@ -86,16 +86,21 @@ abstract class Controller {
      * @param type $entry
      * @return type
      */
-    protected function afterGetAPI($id, $entry){
+    protected function afterGetAPI($id, $entry) {
         return $entry;
     }
 
     public function save(Request $request, Response $response) {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-
         $data['user'] = $this->ci->get('helper')->getUser()->id;
-        
+
+        $this->insertOrUpdate($id, $data);
+
+        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+    }
+
+    protected function insertOrUpdate($id, $data) {
         $entry = new $this->model($data);
 
         if ($entry->hasParsingErrors()) {
@@ -140,8 +145,7 @@ abstract class Controller {
              */
             $this->afterSave($id, $data);
         }
-
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+        return array($id, $entry);
     }
 
     public function saveAPI(Request $request, Response $response) {
@@ -223,7 +227,7 @@ abstract class Controller {
         } catch (\Exception $e) {
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
-        
+
         return $response->withJson(['entry' => $rentry]);
     }
 

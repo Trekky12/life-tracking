@@ -9,9 +9,9 @@
         <div class="page-header">
             <h2>{{lang["FINANCES_SPENDINGS"]}}/{{lang["FINANCES_INCOMES"]}} {{lang["IN"]}} {{year}}
             </h2>
+            <button class="white" id="go-back-btn">{{lang["BACK"]}}</button>
         </div>
         <div class="page-content">
-            <button id="go-back-btn">{{lang["BACK"]}}</button>
 
             <canvas id="financeSummaryChart" data-values1="{{data1}}" data-values2="{{data2}}" data-labels="{{labels}}" data-label1="{{lang["FINANCES_SPENDINGS"]}}" data-label2="{{lang["FINANCES_INCOMES"]}}"></canvas>
 
@@ -32,7 +32,7 @@
                                 <a href="{{  path_for('finances_stats_month_type', {'type' : 1, 'year' : year, 'month' : month }) }}">{{entry[1]}}</a>
                             </td> 
                             <td data-title="{{lang["FINANCES_SPENDINGS"]}}">
-                                 <a href="{{  path_for('finances_stats_month_type', {'type' : 0, 'year' : year, 'month' : month }) }}">{{entry[0]}}</a>
+                                <a href="{{  path_for('finances_stats_month_type', {'type' : 0, 'year' : year, 'month' : month }) }}">{{entry[0]}}</a>
                             </td> 
                             <td data-title="{{lang["DIFFERENCE"]}}">{{entry[1] - entry[0]}}</td> 
                         </tr>

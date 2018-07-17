@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "bourbon-neat": "^3.0.0",
     "chart.js": "^2.7.1",
     "datatables.net": "^1.10.16",
     "datatables.net-dt": "^1.10.16",
@@ -19,6 +20,7 @@
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
     "leaflet": "^1.2.0",
+    "mustache": "^2.3.0",
     "normalize.css": "^7.0.0"
   }
 }

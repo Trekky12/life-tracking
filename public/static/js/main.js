@@ -24,8 +24,10 @@
          */
         $('body').on('click', '.btn-delete', function (e) {
             e.preventDefault();
-            var url = $(this).data('url');
-            deleteObject(url);
+            if ($(this).data('url')) {
+                var url = $(this).data('url');
+                deleteObject(url);
+            }
         });
 
         function deleteObject(url) {
@@ -261,13 +263,13 @@
             "responsive": true,
             "autoWidth": false
         });
-        
+
         $("#category_assignment_table").DataTable({
             "paging": true,
             "info": true,
             "columnDefs": [
                 {
-                    "targets": [4,5],
+                    "targets": [4, 5],
                     "orderable": false
                 }
             ],

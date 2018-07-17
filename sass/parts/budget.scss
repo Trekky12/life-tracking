@@ -1,0 +1,101 @@
+.budget-entry{
+    @media screen and (min-width: $size_mobile){
+
+        @include grid-container;
+
+        .form-group{
+
+            &.category, &.description{
+                @include grid-column(3);
+            }
+            &.value{
+                @include grid-column(2);
+            }
+            &.cat-costs{
+                @include grid-column(3);
+                h4{
+                    margin-top:2px;
+                }
+                .category_costs{
+                    margin-top: 1.5rem;
+                }
+            }
+        }
+
+        .btn-delete{
+            @include grid-column(1);
+            text-align:right;
+        }
+
+    }
+
+    &.edit{
+        border-bottom: 1px solid $color_text-main;
+    }
+    margin-bottom: 1rem;
+
+    @media screen and (max-width: $size_mobile) {
+        .btn-delete{
+            margin-bottom: 1rem;
+            display:block;
+            text-align:center;
+        }
+    }
+
+    h3{
+        margin-bottom:0;
+    }
+
+    .values{
+        display:flex;
+        justify-content: space-between;
+        @include font-size(1.2);
+        font-weight: 600;
+
+        .red{
+            color: $color_red;
+        }
+        .green{
+            color: $color_green;
+        }
+        .orange{
+            color: $color_orange;
+        }
+    }
+
+    .progress-bar{
+        border: 1px solid $color_border-input ;
+        overflow:hidden;
+
+
+        .progress{
+            background-color: $color_border-input;
+            height:24px;
+            display:flex;
+            justify-content: center;
+            align-items:center;
+            color: $color_text-main;
+            font-weight: 600;
+
+            @include font-size(1.2);
+            max-width: 100%;
+
+            &.red{
+                background-color: $color_red;
+                color: $color_background-body;
+            }
+            &.green{
+                background-color: $color_green;
+                color: $color_background-body;
+            }
+            &.orange{
+                background-color: $color_orange;
+                color: $color_background-body;
+            }
+        }
+    }
+    
+    .categories-list{
+        @include font-size(1.1);
+    }
+}

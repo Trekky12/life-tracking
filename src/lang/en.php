@@ -27,6 +27,7 @@ $lang["MONTH"] = "Month";
 $lang["SUM"] = "Sum";
 
 $lang["CATEGORY"] = "Category";
+$lang["CATEGORIES"] = "Categories";
 $lang["DESCRIPTION"] = "Description";
 $lang["VALUE"] = "Value";
 
@@ -91,6 +92,7 @@ $lang["ENTRY_SUCCESS_ADD"] = "Entry successfully added";
 $lang["ENTRY_SUCCESS_UPDATE"] = "Entry successfully updated";
 $lang["ENTRY_ERROR_DELETE"] = "Entry could'n be deleted";
 $lang["ENTRY_SUCCESS_DELETE"] = "Entry successfully deleted";
+$lang["ENTRY_ERROR"] = "An error occured";
 $lang["WRONG_TYPE"] = "Wrong type";
 $lang["NAME_CANNOT_BE_EMPTY"] = "Name cannot be empty";
 $lang["VALUE_CANNOT_BE_EMPTY"] = "Value cannot be empty";
@@ -145,6 +147,11 @@ $lang["MAX_VALUE"] = "max. value";
 $lang["DEFAULT"] = "default";
 
 $lang["BUDGET"] = "Budget";
+$lang["CHOOSE"] = "- Choose -";
+$lang["MONTHLY"] = "monthly";
+$lang["REMAINS"] = "remains";
+$lang["REMAINING"] = "remaining";
+$lang["EDIT"] = "edit";
 
 $lang["NO_ACCESS"] = "No Access allowed";
 $lang["BANNED"] = "Too many failed login attempts. You are banned!";

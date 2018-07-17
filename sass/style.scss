@@ -2,8 +2,8 @@
 Life-Tracking Style
 based on the _s wordpress theme
 */
-
-@import "variables";
+@import "neat";
+@import "parts/variables";
 @import "parts/mixins";
 @import "parts/typography";
 @import "parts/elements";
@@ -20,3 +20,4 @@ based on the _s wordpress theme
 @import "parts/jqueryui";
 @import "parts/boards";
 @import "parts/grid";
+@import "parts/budget";

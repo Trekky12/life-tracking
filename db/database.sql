@@ -96,7 +96,7 @@ CREATE TABLE finances (
     type int(1) DEFAULT 1,
     date DATE NOT NULL,
     time TIME NOT NULL,
-    category int(11) UNSIGNED DEFAULT NULL,
+    category int(11) UNSIGNED  NOT NULL DEFAULT 1,
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) NOT NULL,
     common int(1) DEFAULT 0,
@@ -145,6 +145,7 @@ CREATE TABLE finances_categories_assignment (
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 DROP TABLE IF EXISTS finances_budgets;
 CREATE TABLE finances_budgets (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -152,12 +153,21 @@ CREATE TABLE finances_budgets (
     changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     description varchar(255) NOT NULL,
-    category int(11) unsigned DEFAULT NULL,
     value DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS finances_budgets_categories;
+CREATE TABLE finances_budgets_categories (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    budget INTEGER unsigned DEFAULT NULL,
+    category INTEGER unsigned DEFAULT NULL,
+    UNIQUE(budget, category),
+    FOREIGN KEY(budget) REFERENCES finances_budgets(id)  ON DELETE CASCADE,
+    FOREIGN KEY(category) REFERENCES finances_categories(id)  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 DROP TABLE IF EXISTS cars;

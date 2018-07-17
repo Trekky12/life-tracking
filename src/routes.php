@@ -39,9 +39,12 @@ $app->group('/finances', function() {
 
     $this->group('/budgets', function() {
         $this->get('/', '\App\FinancesBudget\Controller:index')->setName('finances_budgets');
-        $this->get('/edit/[{id:[0-9]+}]', '\App\FinancesBudget\Controller:edit')->setName('finances_budgets_edit');
-        $this->post('/save/[{id:[0-9]+}]', '\App\FinancesBudget\Controller:save')->setName('finances_budgets_save');
+        $this->get('/edit/', '\App\FinancesBudget\Controller:edit')->setName('finances_budgets_edit');
+        //$this->post('/save/[{id:[0-9]+}]', '\App\FinancesBudget\Controller:save')->setName('finances_budgets_save');
+        $this->post('/saveAll', '\App\FinancesBudget\Controller:saveAll')->setName('finances_budgets_save_all');
         $this->delete('/delete/{id}', '\App\FinancesBudget\Controller:delete')->setName('finances_budgets_delete');
+        
+        $this->get('/costs/', '\App\FinancesBudget\Controller:getCategoryCosts')->setName('finances_budgets_category_costs');
     });
 
     $this->group('/monthly', function() {

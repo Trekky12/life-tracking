@@ -27,6 +27,7 @@ $lang["MONTH"] = "Monat";
 $lang["SUM"] = "Summe";
 
 $lang["CATEGORY"] = "Kategorie";
+$lang["CATEGORIES"] = "Kategorien";
 $lang["DESCRIPTION"] = "Beschreibung";
 $lang["VALUE"] = "Betrag";
 
@@ -91,6 +92,7 @@ $lang["ENTRY_SUCCESS_ADD"] = "Eintrag erfolgreich hinzugefügt";
 $lang["ENTRY_SUCCESS_UPDATE"] = "Eintrag erfolgreich aktualisiert";
 $lang["ENTRY_ERROR_DELETE"] = "Eintrag konnte nicht gelöscht werden";
 $lang["ENTRY_SUCCESS_DELETE"] = "Eintrag wurde erfolgreich gelöscht";
+$lang["ENTRY_ERROR"] = "Es ist ein Fehler aufgetreten";
 $lang["WRONG_TYPE"] = "Falscher Typ";
 $lang["NAME_CANNOT_BE_EMPTY"] = "Name darf nicht leer sein";
 $lang["VALUE_CANNOT_BE_EMPTY"] = "Der Betrag muss eingetragen werden";
@@ -145,6 +147,11 @@ $lang["MAX_VALUE"] = "max. Betrag";
 $lang["DEFAULT"] = "Standard";
 
 $lang["BUDGET"] = "Budget";
+$lang["CHOOSE"] = "- Auswählen -";
+$lang["MONTHLY"] = "monatliche";
+$lang["REMAINS"] = "Rest";
+$lang["REMAINING"] = "verbleibend";
+$lang["EDIT"] = "Bearbeiten";
 
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";

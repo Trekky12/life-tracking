@@ -10,9 +10,9 @@
             <h2>{% if type == 0 %} {{lang["FINANCES_SPENDINGS"]}} {% else %} {{lang["FINANCES_INCOMES"]}} {% endif %}
                 {{lang["IN"]}} {{month}}/{{year}}
             </h2>
+            <button class="white" id="go-back-btn">{{lang["BACK"]}}</button>
         </div>
         <div class="page-content">
-            <button id="go-back-btn">{{lang["BACK"]}}</button>
             
             <canvas id="financeDetailChart" data-values="{{data}}" data-labels="{{labels}}"></canvas>
             

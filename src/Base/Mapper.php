@@ -139,6 +139,21 @@ abstract class Mapper {
         }
         return $stmt->rowCount() > 0;
     }
+    
+    public function deleteAll() {
+        $sql = "DELETE FROM " . $this->getTable() . "";
+
+        $bindings = array();
+        $this->filterByUser($sql, $bindings);
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+        }
+        return $stmt->rowCount() > 0;
+    }
 
     public function count() {
         $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable();
