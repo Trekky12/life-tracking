@@ -20,7 +20,7 @@
         <span class="sr-only">Loading...</span>
     </div>
     <div class="board-header">
-        <h2>{{board.name}}</h2>
+        <h2>{{board.name|raw}}</h2>
     </div>
 {% endblock %}        
 
@@ -169,7 +169,7 @@
                 <h4>{{lang["LABELS"]}}</h4>
                 <div class="card-label-list">
                     {% for label in labels %}
-                        <span class="card-label" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name}}</a></span>
+                        <span class="card-label" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name|raw}}</a></span>
                         {% endfor %}
                 </div>
                 <a class="create-label add-element-text" href="#"><i class="fa fa-plus"></i> {{lang["ADD_LABEL"]}}</a>
@@ -190,7 +190,7 @@
                 <div class="stack stack-border{%if stack.archive == 1%} archived{%endif%}" id="stack_{{stack.id}}" >
 
                     <div class="stack-header" data-stack="{{stack.id}}">
-                        <span class="title">{{stack.name}}</a></span>
+                        <span class="title">{{stack.name|raw}}</a></span>
                         <span class="edit-bar">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                         </span>
@@ -206,7 +206,7 @@
                                     {% endfor %}
                                 </div>
 
-                                <div class="card-title">{{card.title}}</div>
+                                <div class="card-title">{{card.title|raw}}</div>
                                 {% if card.date or card.time %}
                                     <span class="card-date {% if "now"|date('Y-m-d') >= card.date|date('Y-m-d') %}due{% endif %}">{{card.date is empty ? "" : card.date|date(i18n.twig)}} {{ card.time is empty ? "" : card.time|date("H:i") }}</span>
                                 {% endif %}

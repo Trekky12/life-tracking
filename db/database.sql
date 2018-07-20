@@ -154,9 +154,14 @@ CREATE TABLE finances_budgets (
     user INTEGER unsigned DEFAULT NULL,
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) DEFAULT NULL,
+    is_hidden INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
+ALTER TABLE finances_budgets ADD is_hidden INT(1) DEFAULT 0 AFTER value; 
+*/
 
 DROP TABLE IF EXISTS finances_budgets_categories;
 CREATE TABLE finances_budgets_categories (

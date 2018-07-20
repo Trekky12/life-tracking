@@ -22,7 +22,7 @@
                     <select class="form-control" id="car" name="car">
                         {% for car in cars %}
                             {% if car.id in user_cars %}
-                                <option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %}selected{% endif %}>{{car.name}}</option>
+                                <option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %}selected{% endif %}>{{car.name|raw}}</option>
                             {% endif %}
                         {% endfor %}
                     </select>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputGLocation">{{lang["LOCATION"]}}</label>
-                        <input type="text" class="form-control" id="inputGLocation" name="fuel_location" placeholder="" {% if not entry is null %}value="{{entry.fuel_location}}"{% endif %}>
+                        <input type="text" class="form-control" id="inputGLocation" name="fuel_location" placeholder="" {% if not entry is null %}value="{{entry.fuel_location|raw}}"{% endif %}>
                     </div>
                 </div>
 
@@ -194,7 +194,7 @@
 
                 <div class="form-group">
                     <label for="inputGNotice">{{lang["NOTICE"]}}</label>
-                    <textarea class="form-control" id="inputGNotice" name="notice">{% if not entry is null %}{{entry.notice}}{% endif %}</textarea>
+                    <textarea class="form-control" id="inputGNotice" name="notice">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
                 </div>
 
 

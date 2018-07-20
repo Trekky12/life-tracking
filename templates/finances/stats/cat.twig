@@ -7,7 +7,7 @@
     <div class="inner-content">
         <div class="page-header">
             <h2>{% if type == 0 %} {{lang["FINANCES_SPENDINGS"]}} {% else %} {{lang["FINANCES_INCOMES"]}} {% endif %}
-                {{lang["IN"]}} {{month}}/{{year}} {{lang["FOR"]}} {{lang["CATEGORY"]}} {{category}}
+                {{lang["IN"]}} {{month}}/{{year}} {{lang["FOR"]}} {{lang["CATEGORY"]}} {{category|raw}}
             </h2>
             <button class="white" id="go-back-btn">{{lang["BACK"]}}</button>
         </div>
@@ -27,7 +27,7 @@
                 <tbody>
                     {% for entry in stats %}
                         <tr>
-                            <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description}}</td> 
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td> 
                             <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
                             <td><a href="{{  path_for('finances_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
                             <td><a href="#" data-url="{{  path_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>

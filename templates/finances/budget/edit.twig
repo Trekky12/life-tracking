@@ -1,0 +1,157 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block javascript %}
+    <script src="/static/assets/js/mustache.min.js"></script>
+    <script src="/static/assets/js/chosen.jquery.min.js"></script>
+    <script src="/static/js/budget.js?ver=20180704"></script>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/chosen.min.css" />
+{% endblock %}
+
+{% block body %}
+    <script id="budgetTemplate" type="x-tmpl-mustache">
+        <div class="budget-entry edit">
+            <div class="form-group description">
+                <label for="inputDescription_{% verbatim %}{{index}}{% endverbatim %}">{{lang["DESCRIPTION"]}}</label>
+                {% verbatim %}
+                <input required type="text" class="form-control description" id="inputDescription_{{index}}}" name="budget[{{index}}][description]">
+                {% endverbatim %}
+            </div>
+
+            <div class="form-group category">
+                <label for="category_{% verbatim %}{{index}}{% endverbatim %}">{{lang["CATEGORY"]}}</label>
+                {% verbatim %}
+                <select class="form-control category" id="category_{{index}}" name="budget[{{index}}][category][]" multiple>
+                {% endverbatim %}
+                {% for cat in categories %}
+                    <option value="{{cat.id}}">{{cat.name|raw}}</option>
+                {% endfor %}
+                </select>
+            </div>  
+            
+            <div class="form-group cat-costs">
+                <h4>{{lang["MONTHLY"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
+                <div class="category_costs">
+                </div> 
+            </div>
+                            
+            <div class="form-group value">
+                <label for="inputValue_{% verbatim %}{{index}}{% endverbatim %}">{{lang["BUDGET"]}}</label>
+                {% verbatim %}
+                <input type="number" required class="form-control value" id="inputValue_{{index}}" name="budget[{{index}}][value]" step="any">
+                {% endverbatim %}
+            </div>
+            
+            <div class="form-group is_hidden">
+                
+                <label class="checkbox" for="checkboxHidden_{% verbatim %}{{index}}{% endverbatim %}">
+                    {% verbatim %}
+                    <input name="budget[{{index}}][set_hidden]" type="checkbox" id="checkboxHidden_{{index}}">
+                    {% endverbatim %}
+                    {{lang["HIDE_ENTRY"]}}
+                </label>
+                
+            </div>
+            
+            <a href="#" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+        </div>
+    </script> 
+
+
+
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> <a href="#" id="add_budget"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-content">
+
+            <div>
+                <h3>{{lang["BUDGET"]}}: <span id="income" data-value="{{income}}">{{income}}</span> {{currency}} ({{lang["REMAINING"]}}: <span id="remaining_budget" data-income="{{income}}">{{income-budget_sum}}</span> {{currency}})</h3>
+            </div>
+
+            <form class="form-horizontal" id="budgetForm" action="{{  path_for('finances_budgets_save_all') }}" method="POST">
+
+                {% for budget in budgets %}
+                    <div class="budget-entry edit {%if budget.id not in budget_categories|keys%}remaining{%endif%}">
+                        <input type="hidden" name="budget[{{loop.index-1}}][id]" value="{{budget.id}}">
+                        <div class="form-group description">
+                            <label for="inputDescription_{{loop.index-1}}">{{lang["DESCRIPTION"]}}</label>
+                            <input required type="text" class="form-control description" id="inputDescription_{{loop.index-1}}" name="budget[{{loop.index-1}}][description]" value="{{budget.description|raw}}">
+                        </div>
+
+                        <div class="form-group category">
+                            {% if budget.id in budget_categories|keys %}
+                                <label for="category_{{loop.index}}">{{lang["CATEGORY"]}}</label>
+                                <select class="form-control category" id="category_{{loop.index}}" name="budget[{{loop.index-1}}][category][]" multiple>
+                                    {% for cat in categories %}
+                                        <option value="{{cat.id}}" {% if cat.id in budget_categories[budget.id] %}selected{%endif%}>{{cat.name|raw}}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>  
+
+                        <div class="form-group cat-costs">
+                            {% if budget.id in budget_categories|keys %}
+                                <h4>{{lang["MONTHLY"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
+                                <div class="category_costs">
+                                    {% for mcat in monthly %}
+                                        {% if mcat.category == budget.category %}
+                                            {{mcat.sum}} {{currency}}
+                                        {%endif %}
+                                    {% endfor %}
+                                </div> 
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group value">
+                            <label for="inputValue_{{loop.index-1}}">{{lang["BUDGET"]}}</label>
+                            <input required type="number" class="form-control value" id="inputValue_{{loop.index-1}}" name="budget[{{loop.index-1}}][value]" step="any" value="{{budget.value}}">
+                        </div>
+                        
+                        <div class="form-group is_hidden">
+                            {%if budget.id in budget_categories|keys%}
+                                <label class="checkbox" for="checkboxHidden_{{loop.index-1}}">
+                                    <input name="budget[{{loop.index-1}}][set_hidden]" type="checkbox" id="checkboxHidden_{{loop.index-1}}" {% if budget.is_hidden == 1 %}checked{% endif %}>
+                                    {{lang["HIDE_ENTRY"]}}
+                                </label>
+                            {% endif %}
+                        </div>
+                        
+                        {% if budget.id in budget_categories|keys %}
+                            <a href="#" data-url="{{  path_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {# Add Entry for remaining budget, uncategorized #}
+                {% if not hasRemainsBudget %}
+                    <div class="budget-entry edit remaining">
+                        <input type="hidden" name="budget[{{budgets|length}}][id]" value="{{budget.id}}">
+                        <div class="form-group description">
+                            <label for="inputDescription_{{budgets|length}}">{{lang["DESCRIPTION"]}}</label>
+                            <input required type="text" class="form-control description" id="inputDescription_{{budgets|length}}" name="budget[{{budgets|length}}][description]" value="{{lang["REMAINS"]}}">
+                        </div>
+                        <div class="form-group category"></div>
+                        <div class="form-group cat-costs"></div>
+
+
+                        <div class="form-group value">
+                            <label for="inputValue_{{budgets|length}}">{{lang["BUDGET"]}}</label>
+                            <input required type="number" class="form-control value" id="inputValue_{{budgets|length}}" name="budget[{{budgets|length}}][value]" step="any" value="{{budget.value}}">
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="form-group submit-btn">
+                    <button type="submit" id="save-budget">{{lang["SAVE"]}}</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}

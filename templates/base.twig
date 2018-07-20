@@ -36,7 +36,7 @@
 
         <div id="content" class="site-content container">
             {% if flash() is not empty %}
-                <div class="alert {{flash('message_type')[0]}}">
+                <div class="alert {{flash('message_type')|last}}">
                     <span class="closebtn" >&times;</span>
                     <span class="alert-message">
                         {% for msg in flash('message') %}

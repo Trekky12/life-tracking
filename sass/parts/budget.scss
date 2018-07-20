@@ -5,20 +5,28 @@
 
         .form-group{
 
-            &.category, &.description{
+            &.category{   
+                @include grid-column(2);
+            }
+            &.description{
                 @include grid-column(3);
             }
             &.value{
                 @include grid-column(2);
             }
             &.cat-costs{
-                @include grid-column(3);
+                @include grid-column(2);
                 h4{
                     margin-top:2px;
                 }
                 .category_costs{
                     margin-top: 1.5rem;
                 }
+            }
+            
+            &.is_hidden{
+                @include grid-column(2);
+                margin-top: 3rem;
             }
         }
 

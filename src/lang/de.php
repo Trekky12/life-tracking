@@ -152,6 +152,8 @@ $lang["MONTHLY"] = "monatliche";
 $lang["REMAINS"] = "Rest";
 $lang["REMAINING"] = "verbleibend";
 $lang["EDIT"] = "Bearbeiten";
+$lang["REMAINING_BUDGET"] = "verbleibendes Budget";
+$lang["HIDE_ENTRY"] = "Eintrag verbergen";
 
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";

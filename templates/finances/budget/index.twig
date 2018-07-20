@@ -1,0 +1,52 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block javascript %}
+    <script src="/static/assets/js/mustache.min.js"></script>
+    <script src="/static/js/budget.js?ver=20180704"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> <a href="{{path_for('finances_budgets_edit')}}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["EDIT"]}}</button></a></div>
+        <div class="page-content">
+            {% for budget in budgets if budget.is_hidden == 0 %}
+                <div class="budget-entry">
+                    <h3>{{budget.description|raw}}</h3>
+                    {% if budget.id in budget_categories|keys %}
+                        <div class="categories-list">
+                            {% if budget_categories[budget.id]|length > 1 %}
+                                {{lang["CATEGORIES"]}}:
+                            {% else %}
+                                {{lang["CATEGORY"]}}:    
+                            {% endif %}
+                            {% for cat in budget_categories[budget.id] %}
+                                {{categories[cat].name|raw}}{% if loop.index < budget_categories[budget.id]|length %},{%endif%}        
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="values">
+                        <span>0 {{currency}}</span>
+                        <span class="{%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}">{{budget.sum}} {{currency}}</span>
+                        <span>{{budget.value}} {{currency}}</span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress {%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}" style="width:{{budget.percent}}%">{{budget.percent}}%</div>
+                    </div> 
+
+                    <div class="remaining">
+                        {{lang["REMAINING"]}}: {{budget.diff}} {{currency}}
+                    </div>
+
+
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}

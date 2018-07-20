@@ -24,36 +24,36 @@ $app->group('/finances', function() {
 
 
     $this->group('/categories', function() {
-        $this->get('/', '\App\FinancesCategory\Controller:index')->setName('finances_categories');
-        $this->get('/edit/[{id:[0-9]+}]', '\App\FinancesCategory\Controller:edit')->setName('finances_categories_edit');
-        $this->post('/save/[{id:[0-9]+}]', '\App\FinancesCategory\Controller:save')->setName('finances_categories_save');
-        $this->delete('/delete/{id}', '\App\FinancesCategory\Controller:delete')->setName('finances_categories_delete');
+        $this->get('/', '\App\Finances\Category\Controller:index')->setName('finances_categories');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Finances\Category\Controller:edit')->setName('finances_categories_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Category\Controller:save')->setName('finances_categories_save');
+        $this->delete('/delete/{id}', '\App\Finances\Category\Controller:delete')->setName('finances_categories_delete');
 
         $this->group('/assignment', function() {
-            $this->get('/', '\App\FinancesCategoryAssignment\Controller:index')->setName('finances_categories_assignment');
-            $this->get('/edit/[{id:[0-9]+}]', '\App\FinancesCategoryAssignment\Controller:edit')->setName('finances_categories_assignment_edit');
-            $this->post('/save/[{id:[0-9]+}]', '\App\FinancesCategoryAssignment\Controller:save')->setName('finances_categories_assignment_save');
-            $this->delete('/delete/{id}', '\App\FinancesCategoryAssignment\Controller:delete')->setName('finances_categories_assignment_delete');
+            $this->get('/', '\App\Finances\Assignment\Controller:index')->setName('finances_categories_assignment');
+            $this->get('/edit/[{id:[0-9]+}]', '\App\Finances\Assignment\Controller:edit')->setName('finances_categories_assignment_edit');
+            $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Assignment\Controller:save')->setName('finances_categories_assignment_save');
+            $this->delete('/delete/{id}', '\App\Finances\Assignment\Controller:delete')->setName('finances_categories_assignment_delete');
         });
     });
 
     $this->group('/budgets', function() {
-        $this->get('/', '\App\FinancesBudget\Controller:index')->setName('finances_budgets');
-        $this->get('/edit/', '\App\FinancesBudget\Controller:edit')->setName('finances_budgets_edit');
-        //$this->post('/save/[{id:[0-9]+}]', '\App\FinancesBudget\Controller:save')->setName('finances_budgets_save');
-        $this->post('/saveAll', '\App\FinancesBudget\Controller:saveAll')->setName('finances_budgets_save_all');
-        $this->delete('/delete/{id}', '\App\FinancesBudget\Controller:delete')->setName('finances_budgets_delete');
+        $this->get('/', '\App\Finances\Budget\Controller:index')->setName('finances_budgets');
+        $this->get('/edit/', '\App\Finances\Budget\Controller:edit')->setName('finances_budgets_edit');
+        //$this->post('/save/[{id:[0-9]+}]', '\App\Finances\Budget\Controller:save')->setName('finances_budgets_save');
+        $this->post('/saveAll', '\App\Finances\Budget\Controller:saveAll')->setName('finances_budgets_save_all');
+        $this->delete('/delete/{id}', '\App\Finances\Budget\Controller:delete')->setName('finances_budgets_delete');
         
-        $this->get('/costs/', '\App\FinancesBudget\Controller:getCategoryCosts')->setName('finances_budgets_category_costs');
+        $this->get('/costs/', '\App\Finances\Budget\Controller:getCategoryCosts')->setName('finances_budgets_category_costs');
     });
 
     $this->group('/monthly', function() {
-        $this->get('/', '\App\FinancesMonthly\Controller:index')->setName('finances_monthly');
-        $this->get('/edit/[{id:[0-9]+}]', '\App\FinancesMonthly\Controller:edit')->setName('finances_monthly_edit');
-        $this->post('/save/[{id:[0-9]+}]', '\App\FinancesMonthly\Controller:save')->setName('finances_monthly_save');
-        $this->delete('/delete/{id}', '\App\FinancesMonthly\Controller:delete')->setName('finances_monthly_delete');
+        $this->get('/', '\App\Finances\Monthly\Controller:index')->setName('finances_monthly');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Finances\Monthly\Controller:edit')->setName('finances_monthly_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Monthly\Controller:save')->setName('finances_monthly_save');
+        $this->delete('/delete/{id}', '\App\Finances\Monthly\Controller:delete')->setName('finances_monthly_delete');
 
-        $this->get('/update', '\App\FinancesMonthly\Controller:update');
+        $this->get('/update', '\App\Finances\Monthly\Controller:update');
     });
 });
 
@@ -72,15 +72,15 @@ $app->group('/cars', function() {
     });
 
     $this->group('/service', function() {
-        $this->get('/', '\App\CarService\Controller:index')->setName('car_service');
-        $this->get('/edit/[{id:[0-9]+}]', '\App\CarService\Controller:edit')->setName('car_service_edit');
-        $this->post('/save/[{id:[0-9]+}]', '\App\CarService\Controller:save')->setName('car_service_save');
-        $this->delete('/delete/{id}', '\App\CarService\Controller:delete')->setName('car_service_delete');
+        $this->get('/', '\App\Car\Service\Controller:index')->setName('car_service');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Car\Service\Controller:edit')->setName('car_service_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Car\Service\Controller:save')->setName('car_service_save');
+        $this->delete('/delete/{id}', '\App\Car\Service\Controller:delete')->setName('car_service_delete');
 
-        $this->get('/table/fuel/', '\App\CarService\Controller:tableFuel')->setName('car_service_fuel_table');
-        $this->get('/table/service/', '\App\CarService\Controller:tableService')->setName('car_service_service_table');
-        $this->get('/stats/', '\App\CarService\Controller:stats')->setName('car_service_stats');
-        $this->post('/setYearlyMileageCalcTyp', '\App\CarService\Controller:setYearlyMileageCalcTyp')->setName('set_mileage_type');
+        $this->get('/table/fuel/', '\App\Car\Service\Controller:tableFuel')->setName('car_service_fuel_table');
+        $this->get('/table/service/', '\App\Car\Service\Controller:tableService')->setName('car_service_service_table');
+        $this->get('/stats/', '\App\Car\Service\Controller:stats')->setName('car_service_stats');
+        $this->post('/setYearlyMileageCalcTyp', '\App\Car\Service\Controller:setYearlyMileageCalcTyp')->setName('set_mileage_type');
     });
 
     $this->group('/control', function() {
@@ -110,40 +110,40 @@ $app->group('/users', function() {
 
 
 $app->group('/boards', function() {
-    $this->get('/', '\App\Board\BoardController:index')->setName('boards');
-    $this->get('/edit/[{id:[0-9]+}]', '\App\Board\BoardController:edit')->setName('boards_edit');
-    $this->post('/save/[{id:[0-9]+}]', '\App\Board\BoardController:save')->setName('boards_save');
-    $this->delete('/delete/{id}', '\App\Board\BoardController:delete')->setName('boards_delete');
+    $this->get('/', '\App\Board\Controller:index')->setName('boards');
+    $this->get('/edit/[{id:[0-9]+}]', '\App\Board\Controller:edit')->setName('boards_edit');
+    $this->post('/save/[{id:[0-9]+}]', '\App\Board\Controller:save')->setName('boards_save');
+    $this->delete('/delete/{id}', '\App\Board\Controller:delete')->setName('boards_delete');
 
     $this->group('/view', function() {
-        $this->get('/{hash}', '\App\Board\BoardController:view')->setName('boards_view');
+        $this->get('/{hash}', '\App\Board\Controller:view')->setName('boards_view');
     });
 
     $this->group('/stacks', function() {
-        $this->post('/save/[{id:[0-9]+}]', '\App\Board\StackController:saveAPI')->setName('stack_save');
-        $this->post('/updatePosition', '\App\Board\StackController:updatePosition')->setName('stack_update_position');
-        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\StackController:delete')->setName('stack_delete');
-        $this->post('/archive/[{id:[0-9]+}]', '\App\Board\StackController:archive')->setName('stack_archive');
-        $this->get('/data/[{id:[0-9]+}]', '\App\Board\StackController:getAPI')->setName('stack_get');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Board\Stack\Controller:saveAPI')->setName('stack_save');
+        $this->post('/updatePosition', '\App\Board\Stack\Controller:updatePosition')->setName('stack_update_position');
+        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\Stack\Controller:delete')->setName('stack_delete');
+        $this->post('/archive/[{id:[0-9]+}]', '\App\Board\Stack\Controller:archive')->setName('stack_archive');
+        $this->get('/data/[{id:[0-9]+}]', '\App\Board\Stack\Controller:getAPI')->setName('stack_get');
     });
     $this->group('/card', function() {
-        $this->post('/save/[{id:[0-9]+}]', '\App\Board\CardController:saveAPI')->setName('card_save');
-        $this->post('/updatePosition', '\App\Board\CardController:updatePosition')->setName('card_update_position');
-        $this->post('/moveCard', '\App\Board\CardController:moveCard')->setName('card_move_stack');
-        $this->get('/data/[{id:[0-9]+}]', '\App\Board\CardController:getAPI')->setName('card_get');
-        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\CardController:delete')->setName('card_delete');
-        $this->post('/archive/[{id:[0-9]+}]', '\App\Board\CardController:archive')->setName('card_archive');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Board\Card\Controller:saveAPI')->setName('card_save');
+        $this->post('/updatePosition', '\App\Board\Card\Controller:updatePosition')->setName('card_update_position');
+        $this->post('/moveCard', '\App\Board\Card\Controller:moveCard')->setName('card_move_stack');
+        $this->get('/data/[{id:[0-9]+}]', '\App\Board\Card\Controller:getAPI')->setName('card_get');
+        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\Card\Controller:delete')->setName('card_delete');
+        $this->post('/archive/[{id:[0-9]+}]', '\App\Board\Card\Controller:archive')->setName('card_archive');
 
         $this->post('/saveComment/[{id:[0-9]+}]', '\App\Board\CommentController:saveAPI')->setName('comment_save');
     });
 
     $this->group('/labels', function() {
-        $this->post('/save/[{id:[0-9]+}]', '\App\Board\LabelController:saveAPI')->setName('label_save');
-        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\LabelController:delete')->setName('label_delete');
-        $this->get('/data/[{id:[0-9]+}]', '\App\Board\LabelController:getAPI')->setName('label_get');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Board\Label\Controller:saveAPI')->setName('label_save');
+        $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\Label\Controller:delete')->setName('label_delete');
+        $this->get('/data/[{id:[0-9]+}]', '\App\Board\Label\Controller:getAPI')->setName('label_get');
     });
 
-    $this->post('/setArchive', '\App\Board\BoardController:setArchive')->setName('set_archive');
+    $this->post('/setArchive', '\App\Board\Controller:setArchive')->setName('set_archive');
 
-    $this->get('/reminder', '\App\Board\CardController:reminder');
+    $this->get('/reminder', '\App\Board\Card\Controller:reminder');
 });

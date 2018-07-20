@@ -24,7 +24,7 @@
                 datasets: [
         {% for el in data %}
                     {
-                    label: lang.consumption + " {{el["name"]}}",
+                    label: lang.consumption + " {{el["name"]|raw}}",
                             data:{{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
                             fill: false,
                             borderColor: COLORS[{{loop.index}}]
@@ -72,7 +72,7 @@
             
             {% for car, entries in table %}
 
-                <h2>{{cars[car].name}} ({% if totalMileages[car]["max"] > totalMileages[car]["min"] %}{{totalMileages[car]["diff"]}} {{lang["KM"]}}{% endif %})</h2>
+                <h2>{{cars[car].name|raw}} ({% if totalMileages[car]["max"] > totalMileages[car]["min"] %}{{totalMileages[car]["diff"]}} {{lang["KM"]}}{% endif %})</h2>
 
                 <table class="mileage_year_table table table-hover small">
                     <thead>

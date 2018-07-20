@@ -27,8 +27,8 @@
                             <td data-title="{{lang["TYPE"]}}">{% if entry.type == 0 %} {{lang["FINANCES_SPENDING"]}} {% else %} {{lang["FINANCES_INCOME"]}} {% endif %}</td> 
                             <td data-title="{{lang["START"]}}">{{entry.start}}</td> 
                             <td data-title="{{lang["END"]}}">{{entry.end}}</td> 
-                            <td data-title="{{lang["CATEGORY"]}}">{{categories[entry.category].name}}</td> 
-                            <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description}}</td> 
+                            <td data-title="{{lang["CATEGORY"]}}">{{categories[entry.category].name|raw}}</td> 
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td> 
                             <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
                             <td><a href="{{  path_for('finances_monthly_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
                             <td><a href="#" data-url="{{  path_for('finances_monthly_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>

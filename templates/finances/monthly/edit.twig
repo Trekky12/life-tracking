@@ -31,15 +31,14 @@
                 <div class="form-group">
                     <label for="category">{{lang["CATEGORY"]}}</label>
                     <select class="form-control" id="category" name="category">
-                        <option value=""></option>
                         {% for cat in categories %}
-                            <option value="{{cat.id}}" {% if not entry is null and cat.id == entry.category %}selected{% endif %}>{{cat.name}}</option>
+                            <option value="{{cat.id}}" {% if not entry is null and cat.id == entry.category %}selected{% endif %}>{{cat.name|raw}}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
-                    <input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %}value="{{entry.description}}"{% endif %}>
+                    <input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %}value="{{entry.description|raw}}"{% endif %}>
                 </div>
                 <div class="form-group">
                     <label for="dateStart">{{lang["START"]}}</label>
@@ -69,7 +68,7 @@
 
                 <div class="form-group">
                     <label for="inputNotice">{{lang["NOTICE"]}}</label>
-                    <input type="text" class="form-control" id="inputNotice" name="notice" {% if not entry is null %}value="{{entry.notice}}{% endif %}">
+                    <input type="text" class="form-control" id="inputNotice" name="notice" {% if not entry is null %}value="{{entry.notice|raw}}{% endif %}">
                 </div>
 
                 <div class="form-group">

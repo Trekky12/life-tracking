@@ -22,8 +22,8 @@
                 <tbody>
                     {% for assignment in assignments %}
                         <tr>
-                            <td data-title="{{lang["DESCRIPTION"]}}">{{assignment.description}}</td> 
-                            <td data-title="{{lang["DESCRIPTION"]}}">{{categories[assignment.category].name}}</td> 
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{assignment.description|raw}}</td> 
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{categories[assignment.category].name|raw}}</td> 
                             <td data-title="{{lang["MIN_VALUE"]}}">{{assignment.min_value}}</td> 
                             <td data-title="{{lang["MAX_VALUE"]}}">{{assignment.max_value}}</td> 
                             <td><a href="{{  path_for('finances_categories_assignment_edit', {'id' : assignment.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>

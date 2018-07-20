@@ -152,6 +152,8 @@ $lang["MONTHLY"] = "monthly";
 $lang["REMAINS"] = "remains";
 $lang["REMAINING"] = "remaining";
 $lang["EDIT"] = "edit";
+$lang["REMAINING_BUDGET"] = "remaining Budget";
+$lang["HIDE_ENTRY"] = "hide entry";
 
 $lang["NO_ACCESS"] = "No Access allowed";
 $lang["BANNED"] = "Too many failed login attempts. You are banned!";

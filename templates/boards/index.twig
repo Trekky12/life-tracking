@@ -18,7 +18,7 @@
                 <tbody>
                     {% for board in boards %}
                         <tr>
-                            <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('boards_view', {'hash' : board.hash}) }}">{{board.name}}</a></td> 
+                            <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('boards_view', {'hash' : board.hash}) }}">{{board.name|raw}}</a></td> 
                             <td>
                                 {% if board.user == user.id %}
                                     <a href="{{  path_for('boards_edit', {'id' : board.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>

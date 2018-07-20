@@ -9,14 +9,16 @@ class Controller extends \App\Base\Controller {
 
     private $cat_mapper;
     private $cat_assignments_mapper;
+    private $budget_mapper;
 
     public function init() {
         $this->model = '\App\Finances\FinancesEntry';
         $this->index_route = 'finances';
 
-        $this->mapper = new \App\Finances\Mapper($this->ci);
-        $this->cat_mapper = new \App\FinancesCategory\Mapper($this->ci);
-        $this->cat_assignments_mapper = new \App\FinancesCategoryAssignment\Mapper($this->ci);
+        $this->mapper = new Mapper($this->ci);
+        $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
+        $this->cat_assignments_mapper = new \App\Finances\Assignment\Mapper($this->ci);
+        $this->budget_mapper = new \App\Finances\Budget\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -56,7 +58,59 @@ class Controller extends \App\Base\Controller {
             if (!is_null($cat)) {
                 $this->mapper->set_category($id, $cat);
             }
+            $entry->category = $cat;
         }
+        return $this->checkBudget($id);
+    }
+
+    private function checkBudget($id) {
+        $entry = $this->mapper->get($id);
+
+        $budgets = $this->budget_mapper->getBudgetsFromCategory($entry->category);
+
+        $all_budgets = $this->budget_mapper->getBudgets();
+
+        $results = array();
+
+        // remains
+        if (empty($budgets)) {
+            $remains = $this->budget_mapper->getRemainsBudget();
+            if ($remains) {
+                $remains->sum = $this->budget_mapper->getRemainsExpenses();
+                $remains->diff = $remains->value - $remains->sum;
+                $remains->percent = round((($remains->sum / $remains->value) * 100), 2);
+
+                $type = 'success';
+                if ($remains->percent > 80) {
+                    $type = 'danger';
+                } elseif ($remains->percent > 50) {
+                    $type = 'warning';
+                }
+
+                $message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . $remains->description . "): " . $remains->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
+
+                array_push($results, array('message' => $message, 'type' => $type));
+            }
+        } else {
+            // Budget of category:
+            foreach ($budgets as $budget) {
+                $type = 'success';
+                if ($all_budgets[$budget->id]->percent > 80) {
+                    $type = 'danger';
+                } elseif ($all_budgets[$budget->id]->percent > 50) {
+                    $type = 'warning';
+                }
+                $message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
+
+                array_push($results, array('message' => $message, 'type' => $type));
+            }
+        }
+
+        foreach ($results as $result) {
+            $this->ci->get('flash')->addMessage('budget_message_type', $result["type"]);
+            $this->ci->get('flash')->addMessage('budget_message', $result["message"]);
+        }
+        return $results;
     }
 
     public function record(Request $request, Response $response) {
@@ -79,12 +133,22 @@ class Controller extends \App\Base\Controller {
             try {
                 $this->preSave(null, $data);
                 $id = $this->mapper->insert($entry);
-                $this->afterSave($id, $data);
+                $budgets = $this->afterSave($id, $data);
             } catch (\Exception $e) {
                 return $response->withJSON(array('status' => 'error', 'data' => $e->getMessage()));
             }
+            
+            $message = $entry->date . ' '
+                    . '(' . $entry->time . '): '
+                    . '' . $entry->description . ' ' . $entry->value . ' - ' . $this->ci->get('helper')->getTranslatedString('ENTRY_SUCCESS');
+            
+            if(!empty($budgets)){
+                foreach($budgets as $budget){
+                    $message .= ' | '.$budget["message"];
+                }
+            }
 
-            return $response->withJSON(array('status' => 'success', 'data' => $entry->date . ' (' . $entry->time . '): ' . $entry->description . ' ' . $entry->value . ' - ' . $this->ci->get('helper')->getTranslatedString('ENTRY_SUCCESS')));
+            return $response->withJSON(array('status' => 'success', 'data' => $message));
         }
         return $response->withJSON(array('status' => 'error', 'data' => 'error'));
     }
@@ -115,7 +179,8 @@ class Controller extends \App\Base\Controller {
         $stats = $this->mapper->statsMonthType($year, $month, $type);
 
         $labels = array_map(function($e) {
-            return $e["category"];
+            $cat = htmlspecialchars_decode($e["category"]);
+            return $cat;
         }, $stats);
         $data = array_map(function($e) {
             return $e["sum"];
@@ -123,6 +188,7 @@ class Controller extends \App\Base\Controller {
 
         $labels = json_encode(array_values($labels), JSON_NUMERIC_CHECK);
         $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
+
 
         return $this->ci->view->render($response, 'finances/stats/month.twig', [
                     'stats' => $stats,
@@ -148,15 +214,18 @@ class Controller extends \App\Base\Controller {
         $data = [];
 
         foreach ($stats as $el) {
-            if (!array_key_exists($el["description"], $data)) {
-                $data[$el["description"]] = 0;
+            // filter special characters
+            $cat = htmlspecialchars_decode($el["description"]);
+
+            if (!array_key_exists($cat, $data)) {
+                $data[$cat] = 0;
             }
-            $data[$el["description"]] += $el["value"];
+            $data[$cat] += $el["value"];
         }
+
 
         $labels = json_encode(array_keys($data), JSON_NUMERIC_CHECK);
         $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
-
 
         return $this->ci->view->render($response, 'finances/stats/cat.twig', [
                     "stats" => $stats,
