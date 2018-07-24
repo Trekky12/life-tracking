@@ -42,6 +42,9 @@ class Controller extends \App\Base\Controller {
     public function edit(Request $request, Response $response) {
 
         $entry_id = $request->getAttribute('id');
+        
+        // GET Param 'type'
+        $type = $request->getParam('type');
 
         $entry = null;
         if (!empty($entry_id)) {
@@ -54,7 +57,7 @@ class Controller extends \App\Base\Controller {
 
         $this->preEdit($entry_id);
 
-        return $this->ci->view->render($response, 'cars/service/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars]);
+        return $this->ci->view->render($response, 'cars/service/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars, 'type' => $type]);
     }
 
     protected function afterSave($id, $data) {

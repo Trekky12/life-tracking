@@ -35,7 +35,10 @@
                     </div>
 
                     <div class="progress-bar">
-                        <div class="progress {%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}" style="width:{{budget.percent}}%">{{budget.percent}}%</div>
+                        <div class="progress {%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}" style="width:{{budget.percent}}%">{%if budget.percent >= 25 %}{{budget.percent}}%{%endif%}</div>
+                        {%if budget.percent < 25 %}
+                            <div class="progress progress-text">{{budget.percent}}%</div>
+                        {% endif %}
                     </div> 
 
                     <div class="remaining">

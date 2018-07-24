@@ -72,12 +72,13 @@
     }
 
     .progress-bar{
+        display:flex;
         border: 1px solid $color_border-input ;
         overflow:hidden;
+        position:relative;
 
 
         .progress{
-            background-color: $color_border-input;
             height:24px;
             display:flex;
             justify-content: center;
@@ -100,6 +101,14 @@
                 background-color: $color_orange;
                 color: $color_background-body;
             }
+        }
+        
+        .progress-text{
+            text-align:center;
+            width: 100%;
+            position:absolute;
+            left:0;
+            right:0;
         }
     }
     

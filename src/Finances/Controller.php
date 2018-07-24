@@ -65,50 +65,56 @@ class Controller extends \App\Base\Controller {
 
     private function checkBudget($id) {
         $entry = $this->mapper->get($id);
-
-        $budgets = $this->budget_mapper->getBudgetsFromCategory($entry->category);
-
-        $all_budgets = $this->budget_mapper->getBudgets();
-
         $results = array();
 
-        // remains
-        if (empty($budgets)) {
-            $remains = $this->budget_mapper->getRemainsBudget();
-            if ($remains) {
-                $remains->sum = $this->budget_mapper->getRemainsExpenses();
-                $remains->diff = $remains->value - $remains->sum;
-                $remains->percent = round((($remains->sum / $remains->value) * 100), 2);
+        $date = new \DateTime($entry->date);
+        $now = new \DateTime('now');
 
-                $type = 'success';
-                if ($remains->percent > 80) {
-                    $type = 'danger';
-                } elseif ($remains->percent > 50) {
-                    $type = 'warning';
+        if (($date->format('m') == $now->format('m')) && $entry->type == 0) {
+
+            $budgets = $this->budget_mapper->getBudgetsFromCategory($entry->category);
+            $all_budgets = $this->budget_mapper->getBudgets();
+
+            // remains
+            if (empty($budgets)) {
+                $remains = $this->budget_mapper->getRemainsBudget();
+                if ($remains) {
+                    $remains->sum = $this->budget_mapper->getRemainsExpenses();
+                    $remains->diff = $remains->value - $remains->sum;
+                    $remains->percent = round((($remains->sum / $remains->value) * 100), 2);
+
+                    $type = 'success';
+                    if ($remains->percent > 80) {
+                        $type = 'danger';
+                    } elseif ($remains->percent > 50) {
+                        $type = 'warning';
+                    }
+
+                    //$message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . $remains->description . "): " . $remains->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
+                    $message = $this->ci->get('helper')->getTranslatedString("BUDGET") . " (" . $remains->description . "): " . $remains->percent . "%";
+
+                    array_push($results, array('message' => $message, 'type' => $type));
                 }
+            } else {
+                // Budget of category:
+                foreach ($budgets as $budget) {
+                    $type = 'success';
+                    if ($all_budgets[$budget->id]->percent > 80) {
+                        $type = 'danger';
+                    } elseif ($all_budgets[$budget->id]->percent > 50) {
+                        $type = 'warning';
+                    }
+                    //$message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
+                    $message = $this->ci->get('helper')->getTranslatedString("BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->percent . "%";
 
-                $message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . $remains->description . "): " . $remains->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
-
-                array_push($results, array('message' => $message, 'type' => $type));
-            }
-        } else {
-            // Budget of category:
-            foreach ($budgets as $budget) {
-                $type = 'success';
-                if ($all_budgets[$budget->id]->percent > 80) {
-                    $type = 'danger';
-                } elseif ($all_budgets[$budget->id]->percent > 50) {
-                    $type = 'warning';
+                    array_push($results, array('message' => $message, 'type' => $type));
                 }
-                $message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
-
-                array_push($results, array('message' => $message, 'type' => $type));
             }
-        }
 
-        foreach ($results as $result) {
-            $this->ci->get('flash')->addMessage('budget_message_type', $result["type"]);
-            $this->ci->get('flash')->addMessage('budget_message', $result["message"]);
+            foreach ($results as $result) {
+                $this->ci->get('flash')->addMessage('budget_message_type', $result["type"]);
+                $this->ci->get('flash')->addMessage('budget_message', $result["message"]);
+            }
         }
         return $results;
     }
@@ -137,14 +143,14 @@ class Controller extends \App\Base\Controller {
             } catch (\Exception $e) {
                 return $response->withJSON(array('status' => 'error', 'data' => $e->getMessage()));
             }
-            
+
             $message = $entry->date . ' '
                     . '(' . $entry->time . '): '
                     . '' . $entry->description . ' ' . $entry->value . ' - ' . $this->ci->get('helper')->getTranslatedString('ENTRY_SUCCESS');
-            
-            if(!empty($budgets)){
-                foreach($budgets as $budget){
-                    $message .= ' | '.$budget["message"];
+
+            if (!empty($budgets)) {
+                foreach ($budgets as $budget) {
+                    $message .= ' | ' . $budget["message"];
                 }
             }
 

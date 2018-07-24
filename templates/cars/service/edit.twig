@@ -31,13 +31,13 @@
                 <div class="form-group two-columns">
                     <div class="left">
                         <label class="radio" for="radioRefuel">
-                            <input name="type" type="radio" data-toggle="radio" value="0" id="radioRefuel" class="carServiceType" {% if entry is null or (not entry is null and entry.type == 0) %}checked{% endif %}>
+                            <input name="type" type="radio" data-toggle="radio" value="0" id="radioRefuel" class="carServiceType" {% if (entry is null or (not entry is null and entry.type == 0)) and (type is null ) %}checked{% endif %}>
                             {{lang["CAR_REFUEL"]}}
                         </label>                               
                     </div>
                     <div class="right">
                         <label class="radio" for="radioService">
-                            <input name="type" type="radio" data-toggle="radio" value="1" id="radioService" class="carServiceType" {% if not entry is null and entry.type == 1 %}checked{% endif %}>
+                            <input name="type" type="radio" data-toggle="radio" value="1" id="radioService" class="carServiceType" {% if (not entry is null and entry.type == 1) or (not type is null and type == 'service') %}checked{% endif %}>
                             {{lang["CAR_SERVICE"]}}
                         </label>
                     </div>
@@ -56,7 +56,7 @@
                     <input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" placeholder="" {% if not entry is null %}value="{{entry.mileage}}"{% endif %}>
                 </div>
 
-                <div id="carServiceFuel" {% if not entry is null and entry.type == 1 %}class="hidden"{% endif %}>
+                <div id="carServiceFuel" {% if (not entry is null and entry.type == 1) or (not type is null and type == 'service') %}class="hidden"{% endif %}>
                     <div class="form-group two-columns">
                         <div class="left">
                             <label class="radio" for="radioPart">
@@ -96,7 +96,7 @@
                 </div>
 
                 {# Default hidden #}
-                <div id="carServiceService" {% if entry is null or (not entry is null and entry.type == 0) %}class="hidden"{% endif %}>
+                <div id="carServiceService" {% if (entry is null and type is null) or (not entry is null and entry.type == 0) %}class="hidden"{% endif %}>
                     <h4>{{lang["CAR_SERVICE_OIL"]}}</h4>
                     <div class="form-group two-columns">
                         <div class="left">
