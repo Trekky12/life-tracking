@@ -26,7 +26,7 @@
 * insert the default location and i18n settings in ``settings.php``
 * install the required composer dependencies with ``composer install``
 * you can login with the default user ``admin`` and password ``admin``
-* create a cronjob which calls ``http://<user>:<password>@<your-domain>/cron`` daily at 6:00
+* create a cronjob which calls ``http://<your-domain>/cron`` every hour
 
 
 More information available on http://www.haegi.org
