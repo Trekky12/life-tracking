@@ -24,9 +24,6 @@ CREATE TABLE IF NOT EXISTS users (
 );
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
-/**
-ALTER TABLE users CHANGE module_fuel module_cars int(1) DEFAULT 0;
-*/
 
 DROP TABLE IF EXISTS banlist;
 CREATE TABLE banlist (
@@ -82,10 +79,6 @@ CREATE TABLE finances_categories (
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `finances_categories` (`id`, `user`, `name`) VALUES (1, 1, 'not categorized');
-
-/*
-ALTER TABLE finances_categories ADD is_default INT(1) DEFAULT 0 AFTER name; 
-*/
 
 DROP TABLE IF EXISTS finances;
 CREATE TABLE finances (
@@ -159,9 +152,6 @@ CREATE TABLE finances_budgets (
     FOREIGN KEY(user) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE finances_budgets ADD is_hidden INT(1) DEFAULT 0 AFTER value; 
-*/
 
 DROP TABLE IF EXISTS finances_budgets_categories;
 CREATE TABLE finances_budgets_categories (
@@ -172,7 +162,6 @@ CREATE TABLE finances_budgets_categories (
     FOREIGN KEY(budget) REFERENCES finances_budgets(id)  ON DELETE CASCADE,
     FOREIGN KEY(category) REFERENCES finances_categories(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 DROP TABLE IF EXISTS cars;
@@ -236,36 +225,6 @@ CREATE TABLE cars_service (
     FOREIGN KEY(changedBy) REFERENCES users(id),
     FOREIGN KEY(car) REFERENCES cars(id),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-/**
-ALTER TABLE cars_service CHANGE type fuel_type int(1) DEFAULT NULL; 
-ALTER TABLE cars_service CHANGE price fuel_price DECIMAL(6,2) DEFAULT NULL;
-ALTER TABLE cars_service CHANGE volume fuel_volume DECIMAL(6,2) DEFAULT NULL;
-ALTER TABLE cars_service CHANGE total_price fuel_total_price DECIMAL(6,2) DEFAULT NULL;
-ALTER TABLE cars_service CHANGE distance fuel_distance INT(20) DEFAULT NULL;
-ALTER TABLE cars_service CHANGE calc_consumption fuel_calc_consumption int(1) DEFAULT 1;
-ALTER TABLE cars_service CHANGE consumption fuel_consumption DECIMAL(6,2) DEFAULT NULL;
-ALTER TABLE cars_service CHANGE location fuel_location varchar(255) DEFAULT NULL;
-ALTER TABLE cars_service ADD type INT(1) NULL AFTER mileage; 
-UPDATE cars_service set type = 0;
-
-ALTER TABLE cars_service ADD service_oil_before INT(3) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_oil_after INT(3) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_water_wiper_before INT(3) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_water_wiper_after INT(3) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_front_left_before DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_front_left_after DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_front_right_before DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_front_right_after DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_back_left_before DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_back_left_after DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_back_right_before DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_air_back_right_after DECIMAL(2,1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_tire_change int(1) DEFAULT NULL;
-ALTER TABLE cars_service ADD service_garage int(1) DEFAULT NULL;
-
-*/
 
 
 DROP TABLE IF EXISTS boards;
