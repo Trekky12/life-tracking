@@ -4,21 +4,21 @@
 
 * track your location with tasker
 * track income and spendings
-** manage income/spendings categories
-** automatically add monthly income/spendings
-** automatically assign a category to income/spendings
-** manage monthly budgets
-** income/spendings and budget statistics
-** monthly statistics via mail
+  * manage income/spendings categories
+  * automatically add monthly income/spendings
+  * automatically assign a category to income/spendings
+  * manage monthly budgets
+  * income/spendings and budget statistics
+  * monthly statistics via mail
 * track fuel consumption for multiple cars with multiple users 
-** statistics of fuel consumption and km/year
+  * statistics of fuel consumption and km/year
 * multi-language support
 * multi-user support
-** profile image
-** change password
+  * profile image
+  * change password
 * kanban like boards 
-** stacks
-** cards with labels, date, description, assigned users
+  * stacks
+  * cards with labels, date, description, assigned users
 
 ## Installation
 
