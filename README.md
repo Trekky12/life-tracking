@@ -4,11 +4,14 @@
 
 * track your location with tasker
 * track income and spendings
-* manage income/spendings categories
-* automatically add monthly income/spendings
-* track fuel consumption for multiple cars with multiple users
-* income/spendings and fuel statistics
+** manage income/spendings categories
+** automatically add monthly income/spendings
+** automatically assign a category to income/spendings
+** manage monthly budgets
+** income/spendings and budget statistics
 ** monthly statistics via mail
+* track fuel consumption for multiple cars with multiple users 
+** statistics of fuel consumption and km/year
 * multi-language support
 * multi-user support
 ** profile image
