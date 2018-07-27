@@ -39,7 +39,7 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, 'finances/monthly/edit.twig', ['entry' => $entry, 'categories' => $categories]);
     }
 
-    public function update(Request $request, Response $response) {
+    public function update() {
 
         $mentries = $this->mapper->getMonthlyEntries();
 
@@ -64,16 +64,10 @@ class Controller extends \App\Base\Controller {
             $this->mapper->updateLastRun($mentry_ids);
         }
 
-        // Is first of month?
-        $date = new \DateTime('now');
-        if ($date->format("d") === "01") {
-            $this->sendSummary();
-        }
-
-        return $response->withJSON(array('result' => 'success'));
+        return true;
     }
 
-    private function sendSummary() {
+    public function sendSummary() {
 
         $users = $this->user_mapper->getAll();
 
@@ -85,7 +79,7 @@ class Controller extends \App\Base\Controller {
         $year = $dateObj->format("Y");
 
         $subject = sprintf('[Life-Tracking] %s %s %s %s', $this->ci->get('helper')->getTranslatedString('STATS'), $this->ci->get('helper')->getTranslatedString('FOR'), $fmt->format($dateObj), $year);
-
+        
         foreach ($users as $user) {
             if ($user->mail && $user->mails_finances == 1) {
 
@@ -98,7 +92,6 @@ class Controller extends \App\Base\Controller {
                 $balance["difference"] = $balance["income"] - $balance["spendings"];
 
                 $expenses = $this->finance_mapper->statsMailExpenses($user->id, $month, $year, 10);
-
 
                 if ($balance["income"] > 0 || $balance["spendings"] > 0) {
 

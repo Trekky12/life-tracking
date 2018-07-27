@@ -6,6 +6,9 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
 
+/**
+ * Save Base URL for Links in E-Mails
+ */
 class BaseURLMiddleware {
 
     protected $ci;
@@ -16,9 +19,6 @@ class BaseURLMiddleware {
 
     public function __invoke(Request $request, Response $response, $next) {
 
-        /**
-         * Save Base URL
-         */
         $host = $request->getUri()->getHost();
         $scheme = $request->getUri()->getScheme();
         $basePath = $request->getUri()->getBasePath();
@@ -28,7 +28,7 @@ class BaseURLMiddleware {
             $basePath = $basePath . '/' . $basePath;
         }
 
-        $path =  ($scheme ? $scheme . ':' : '') . ($host ? '//' . $host : '') . rtrim($basePath, '/');
+        $path = ($scheme ? $scheme . ':' : '') . ($host ? '//' . $host : '') . rtrim($basePath, '/');
 
         $this->ci->get('helper')->setPath($path);
 

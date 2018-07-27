@@ -10,3 +10,5 @@ composer.phar
 !/public/uploads/.gitkeep 
 
 koala-config.json
+
+public/test.php

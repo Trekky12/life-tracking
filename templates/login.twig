@@ -1,0 +1,22 @@
+{% extends "base.twig" %}
+
+{% set active = 'login' %}
+
+{% block bottom %}
+    <div class="center-block">
+        <form class="form small horizontal" role="form" name="login" id="login" method="post">
+            <div class="form-group">
+                <label for="inputUsername" class="control-label hidden">{{lang["LOGIN"]}}</label>
+                <input name="username" class="form-control" id="inputUsername" placeholder="{{lang["LOGIN"]}}" value="" autofocus="" required="" type="text">
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="control-label hidden">{{lang["PASSWORD"]}}</label>
+                <input name="password" class="form-control" id="inputPassword" placeholder="{{lang["PASSWORD"]}}" required="" type="password">
+            </div>
+            <div class="form-group">
+                <button type="submit">{{lang["DO_LOGIN"]}}</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

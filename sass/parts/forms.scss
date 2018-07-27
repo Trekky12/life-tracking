@@ -126,3 +126,17 @@ input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:fo
     border-color: #e9322d;
     box-shadow: 0 0 6px #f8b9b7;
 }
+
+form{
+
+    &#login.small{
+        max-width: $size_content-width-small/3;
+        //@include center-block();
+        width:100%;
+        
+        button{
+            width:100%;
+        }
+    }
+
+}

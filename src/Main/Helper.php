@@ -4,12 +4,12 @@ namespace App\Main;
 
 class Helper {
 
-    private $container;
-    private $user;
-    private $basePath;
+    private $ci;
+    private $usermapper;
 
     public function __construct($container) {
-        $this->container = $container;
+        $this->ci = $container;
+        $this->usermapper = new \App\User\Mapper($this->ci);
     }
 
     public function request($URL, $method = 'GET', $data = array(), $secure = true) {
@@ -61,8 +61,9 @@ class Helper {
     }
 
     public function send_mail($template, $to, $subject = '', $body = array()) {
-        $fromName = $this->container->get('settings')['app']['mail']['fromName'];
-        $fromAddress = $this->container->get('settings')['app']['mail']['fromAddress'];
+
+        $fromName = $this->ci->get('settings')['app']['mail']['fromName'];
+        $fromAddress = $this->ci->get('settings')['app']['mail']['fromAddress'];
 
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
         $mail->setFrom($fromAddress, $fromName, false);
@@ -80,13 +81,13 @@ class Helper {
 
         $mail->Subject = $subject;
 
-        $mail->Body = $this->container->get('view')->fetch($template, $body);
+        $mail->Body = $this->ci->get('view')->fetch($template, $body);
 
         return $mail->send();
     }
 
     public function getLanguage() {
-        $selected_language = $this->container->get('settings')['app']['i18n']['template'];
+        $selected_language = $this->ci->get('settings')['app']['i18n']['template'];
         $lang = require __DIR__ . '/../lang/' . $selected_language . '.php';
         return $lang;
     }
@@ -97,12 +98,23 @@ class Helper {
     }
 
     public function setUser(\App\User\User $user) {
-        $this->user = $user;
-        $this->container->get('view')->getEnvironment()->addGlobal("user", $this->user);
+        $_SESSION["user"] = $user;
     }
 
     public function getUser() {
-        return $this->user;
+        if (array_key_exists("user", $_SESSION)) {
+            $userFromSession = $_SESSION["user"];
+
+            // refresh user for possible changed access rights
+            $user = $this->usermapper->get($userFromSession->id);
+            $this->setUser($user);
+
+            // add user to view
+            $this->ci->get('view')->getEnvironment()->addGlobal("user", $user);
+
+            return $user;
+        }
+        return null;
     }
 
     public function setSessionVar($key, $var) {
@@ -113,12 +125,68 @@ class Helper {
         return array_key_exists($key, $_SESSION) ? filter_var($_SESSION[$key]) : $fallback;
     }
 
+    public function deleteSessionVar($key) {
+        $_SESSION[$key] = null;
+        unset($_SESSION[$key]);
+    }
+
     public function setPath($path) {
         $this->path = $path;
+        // add path to view
+        $this->ci->get('view')->getEnvironment()->addGlobal("baseURL", $path);
     }
 
     public function getPath() {
         return $this->path;
+    }
+
+    public function checkLogin($username = null, $password = null) {
+
+        $logger = $this->ci->get('logger');
+        $info = $this->ci->get('info');
+        $banlist = new \App\Main\BanlistMapper($this->ci);
+
+        if (!is_null($username) && !is_null($password)) {
+
+            try {
+                $user = $this->usermapper->getUserFromLogin($username);
+
+                if (password_verify($password, $user->password)) {
+                    $this->setUser($user);
+                    $banlist->deleteFailedLoginAttempts($info["REMOTE_ADDR"]);
+
+                    $info["login"] = $username;
+                    $logger->addInfo('LOGIN successfully', $info);
+
+                    return true;
+                }
+            } catch (\Exception $e) {
+                $logger = $this->ci->get('logger');
+                $logger->addInfo('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
+            }
+
+
+            // wrong login!
+
+            $this->ci->get('helper')->deleteSessionVar("user");
+
+            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("WRONG_LOGIN"));
+            $this->ci->get('flash')->addMessage('message_type', 'danger');
+
+
+            $logger = $this->ci->get('logger');
+            $info["user"] = $username;
+            $logger->addInfo('Login WRONG', $info);
+
+            /**
+             * Log failed login to database
+             */
+            if (!is_null($username) && !is_null($info["REMOTE_ADDR"])) {
+                $model = new \App\Base\Model(array('ip' => $info["REMOTE_ADDR"], 'username' => $username));
+                $banlist->insert($model);
+            }
+        }
+        return false;
     }
 
 }

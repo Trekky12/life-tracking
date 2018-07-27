@@ -227,7 +227,7 @@ class Controller extends \App\Base\Controller {
         }
     }
 
-    public function reminder(Request $request, Response $response) {
+    public function reminder() {
 
         $due_cards = $this->mapper->getCardReminder();
         $users = $this->user_mapper->getAll();
@@ -294,7 +294,7 @@ class Controller extends \App\Base\Controller {
             }
         }
 
-        return $response->withJSON(array('status' => 'success'));
+        return true;
     }
 
 }

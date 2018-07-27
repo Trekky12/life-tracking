@@ -113,6 +113,7 @@ $lang["NEW_PASSWORD_REPLY"] = "Repeat new password";
 $lang["PASSWORD1AND2MUSTMATCH"] = "Both new passwords must match";
 $lang["PASSWORD_CHANGE_SUCCESS"] = "Password successfully changed";
 $lang["PASSWORD_WRONG_OLD"] = "Old password is wrong";
+$lang["DO_LOGIN"] = "Log-In";
 
 $lang["NOTFOUND"] = "Unfortunately the page couldn't be found";
 $lang["COUNT"] = "Count";
@@ -156,6 +157,7 @@ $lang["REMAINING_BUDGET"] = "remaining Budget";
 $lang["HIDE_ENTRY"] = "hide entry";
 
 $lang["NO_ACCESS"] = "No Access allowed";
+$lang["WRONG_LOGIN"] = "Wrong login!";
 $lang["BANNED"] = "Too many failed login attempts. You are banned!";
 
 $lang["MODULES"] = "Modules";

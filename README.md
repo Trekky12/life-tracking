@@ -26,8 +26,7 @@
 * insert the default location and i18n settings in ``settings.php``
 * install the required composer dependencies with ``composer install``
 * you can login with the default user ``admin`` and password ``admin``
-* create a cronjob which calls ``http://<user>:<password>@<your-domain>/finances/monthly/update`` every month
-* create a cronjob which calls ``http://<user>:<password>@<your-domain>/boards/reminder`` daily
+* create a cronjob which calls ``http://<user>:<password>@<your-domain>/cron`` daily at 6:00
 
 
 More information available on http://www.haegi.org

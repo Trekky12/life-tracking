@@ -164,6 +164,7 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
 
         $stmt->execute();
+        
         return floatval($stmt->fetchColumn());
     }
     

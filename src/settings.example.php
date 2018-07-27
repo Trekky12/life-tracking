@@ -40,7 +40,12 @@ return [
                 'fromName' => 'Life-Tracking',
                 'fromAddress' => 'tracking@my-domain.de'
             ],
-            'upload_folder' => 'uploads'
+            'upload_folder' => 'uploads',
+            'guest_access' => [
+                'login',
+                'logout',
+                'cron'
+            ]
         ]
     ]
 ];

@@ -113,6 +113,7 @@ $lang["NEW_PASSWORD_REPLY"] = "Neues Passwort wiederholen";
 $lang["PASSWORD1AND2MUSTMATCH"] = "Beide neuen Passwörter müssen übereinstimmen";
 $lang["PASSWORD_CHANGE_SUCCESS"] = "Passwort erfolgreich geändert";
 $lang["PASSWORD_WRONG_OLD"] = "Altes Passwort ist falsch";
+$lang["DO_LOGIN"] = "Anmelden";
 
 $lang["NOTFOUND"] = "Leider wurde die Seite nicht gefunden";
 $lang["COUNT"] = "Anzahl";
@@ -157,6 +158,7 @@ $lang["HIDE_ENTRY"] = "Eintrag verbergen";
 
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";
+$lang["WRONG_LOGIN"] = "Falsche Zugangsdaten!";
 $lang["BANNED"] = "Zuviele fehlgeschlagene Login-Versuche. Du wurdest gesperrt. ";
 
 $lang["MODULES"] = "Module";

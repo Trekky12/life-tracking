@@ -88,14 +88,16 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
-$container["info"] = [
-    'PHP_AUTH_USER' => array_key_exists('PHP_AUTH_USER', $_SERVER) ? filter_var($_SERVER['PHP_AUTH_USER'], FILTER_SANITIZE_STRING) : null,
-    'REMOTE_ADDR' => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP),
-    'HTTP_USER_AGENT' => filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING),
-    'REQUEST_METHOD' => filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING),
-    'QUERY_STRING' => filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_STRING),
-    'REQUEST_URI' => filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING),
-];
+$container["info"] = function($c) {
+    return [
+        'USER' => array_key_exists('user', $_SESSION) ? $_SESSION["user"]->login : null,
+        'REMOTE_ADDR' => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP),
+        'HTTP_USER_AGENT' => filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING),
+        'REQUEST_METHOD' => filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING),
+        'QUERY_STRING' => filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_STRING),
+        'REQUEST_URI' => filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING),
+    ];
+};
 
 /**
  * Custom Error Handler

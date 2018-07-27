@@ -4,47 +4,49 @@
 
 {% block body %}
 
-    <div class="grid small">
-        {%if user.module_location == 1 %}
-            <div class="card">
-                <div class="card-content">
-                    <h3><a href="{{path_for('location')}}">{{lang["MENU_LOCATION"]}}</a></h3>
-                    <a href="{{path_for('location')}}"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
-                </div>
-            </div>
-        {% endif %}
-        {%if user.module_finance == 1 %}
-            <div class="card">
-                <div class="card-content">
-                    <h3><a href="{{path_for('finances')}}">{{lang["MENU_FINANCES"]}}</a></h3>
-                    <a href="{{path_for('finances')}}"><i class="fa fa-money" aria-hidden="true"></i></a>
-                </div>
-            </div>
-        {% endif %}
-        {%if user.module_cars == 1 %}
-            <div class="card">
-                <div class="card-content">
-                    <h3><a href="{{path_for('car_service')}}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a></h3>
-                    <a href="{{path_for('car_service')}}"><i class="fa fa-road" aria-hidden="true"></i></a>
-                </div>
-            </div>
-        {% endif %}
-        {%if user.module_boards == 1 %}
-            <div class="card">
-                <div class="card-content">
-                    <h3><a href="{{path_for('boards')}}">{{lang["BOARDS"]}}</a></h3>
-                    <a href="{{path_for('boards')}}"><i class="fa fa-tasks" aria-hidden="true"></i></a>
-                </div>
-            </div>
-        {% endif %}
-        {%if user.isAdmin() %}
-            <div class="card">
-                <div class="card-content">
-                    <h3><a href="{{path_for('users')}}">{{lang["USERS"]}}</a></h3>
-                    <a href="{{path_for('users')}}"><i class="fa fa-users" aria-hidden="true"></i></a>
-                </div>
-            </div>
-        {% endif %}
-    </div>
 
+        <div class="grid small">
+            {%if user.module_location == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('location')}}">{{lang["MENU_LOCATION"]}}</a></h3>
+                        <a href="{{path_for('location')}}"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
+            {%if user.module_finance == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('finances')}}">{{lang["MENU_FINANCES"]}}</a></h3>
+                        <a href="{{path_for('finances')}}"><i class="fa fa-money" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
+            {%if user.module_cars == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('car_service')}}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a></h3>
+                        <a href="{{path_for('car_service')}}"><i class="fa fa-road" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
+            {%if user.module_boards == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('boards')}}">{{lang["BOARDS"]}}</a></h3>
+                        <a href="{{path_for('boards')}}"><i class="fa fa-tasks" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
+            {%if user.isAdmin() %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('users')}}">{{lang["USERS"]}}</a></h3>
+                        <a href="{{path_for('users')}}"><i class="fa fa-users" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    
 {% endblock %}

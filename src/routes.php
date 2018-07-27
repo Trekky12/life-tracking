@@ -3,7 +3,15 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->get('/', '\App\Main\MainController:index')->setName('index');
+$app->group('', function() {
+    $this->get('/', '\App\Main\MainController:index')->setName('index');
+    $this->map(['GET', 'POST'], '/login', '\App\Main\MainController:login')->setName('login');
+    $this->get('/logout', '\App\Main\MainController:logout')->setName('logout');
+
+    $this->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
+
+    $this->get('/cron', '\App\Main\MainController:cron')->setName('cron');
+});
 
 $app->group('/finances', function() {
     $this->get('/', '\App\Finances\Controller:index')->setName('finances');
@@ -43,7 +51,7 @@ $app->group('/finances', function() {
         //$this->post('/save/[{id:[0-9]+}]', '\App\Finances\Budget\Controller:save')->setName('finances_budgets_save');
         $this->post('/saveAll', '\App\Finances\Budget\Controller:saveAll')->setName('finances_budgets_save_all');
         $this->delete('/delete/{id}', '\App\Finances\Budget\Controller:delete')->setName('finances_budgets_delete');
-        
+
         $this->get('/costs/', '\App\Finances\Budget\Controller:getCategoryCosts')->setName('finances_budgets_category_costs');
     });
 
@@ -52,8 +60,6 @@ $app->group('/finances', function() {
         $this->get('/edit/[{id:[0-9]+}]', '\App\Finances\Monthly\Controller:edit')->setName('finances_monthly_edit');
         $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Monthly\Controller:save')->setName('finances_monthly_save');
         $this->delete('/delete/{id}', '\App\Finances\Monthly\Controller:delete')->setName('finances_monthly_delete');
-
-        $this->get('/update', '\App\Finances\Monthly\Controller:update');
     });
 });
 
@@ -91,7 +97,6 @@ $app->group('/cars', function() {
     })->add('App\Middleware\AdminMiddleware');
 });
 
-$app->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
 
 $app->group('/profile', function() {
     $this->map(['GET', 'POST'], '/changepassword', '\App\User\Controller:changePassword')->setName('users_change_password');
@@ -144,6 +149,4 @@ $app->group('/boards', function() {
     });
 
     $this->post('/setArchive', '\App\Board\Controller:setArchive')->setName('set_archive');
-
-    $this->get('/reminder', '\App\Board\Card\Controller:reminder');
 });

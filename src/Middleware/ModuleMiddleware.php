@@ -15,7 +15,7 @@ class ModuleMiddleware {
     }
 
     public function __invoke(Request $request, Response $response, $next) {
-
+        
         $user = $this->ci->get('helper')->getUser();
 
         $baseRoute = $request->getAttribute('route');
