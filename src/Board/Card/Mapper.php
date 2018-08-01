@@ -4,12 +4,12 @@ namespace App\Board\Card;
 
 class Mapper extends \App\Base\Mapper {
 
-    protected $table = "cards";
+    protected $table = "boards_cards";
     protected $model = "\App\Board\Card\Card";
     protected $filterByUser = false;
     protected $insertUser = false;
     protected $hasUserTable = true;
-    protected $user_table = "cards_user";
+    protected $user_table = "boards_cards_user";
     protected $element_name = "card";
 
     public function getCardsFromStack($stack, $archive = 0) {
@@ -96,7 +96,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getCardBoard($id) {
-        $sql = "SELECT st.board FROM " . $this->getTable() . " ca, " . $this->getTable("stacks") . " st WHERE ca.id = :id AND ca.stack = st.id";
+        $sql = "SELECT st.board FROM " . $this->getTable() . " ca, " . $this->getTable("boards_stacks") . " st WHERE ca.id = :id AND ca.stack = st.id";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -112,7 +112,7 @@ class Mapper extends \App\Base\Mapper {
     public function getCardReminder() {
         $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board, b.hash, s.name as stack "
                 . "FROM " . $this->getTable() . " c, "
-                . "     " . $this->getTable("stacks") . " s,  "
+                . "     " . $this->getTable("boards_stacks") . " s,  "
                 . "     " . $this->getTable("boards") . " b, "
                 . "     " . $this->getTable($this->user_table) . " cu "
                 . " WHERE c.stack = s.id AND s.board = b.id "

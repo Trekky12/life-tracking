@@ -4,7 +4,7 @@ namespace App\Main;
 
 class BanlistMapper extends \App\Base\Mapper {
 
-    protected $table = "banlist";
+    protected $table = "global_banlist";
     protected $model = "\App\Base\Model";
     protected $filterByUser = false;
     protected $insertUser = false;

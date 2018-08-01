@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS users;
-CREATE TABLE IF NOT EXISTS users (
+DROP TABLE IF EXISTS global_users;
+CREATE TABLE IF NOT EXISTS global_users (
     id INTEGER unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
@@ -22,11 +22,11 @@ CREATE TABLE IF NOT EXISTS users (
     PRIMARY KEY(id),
     UNIQUE(login)
 );
-INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
+INSERT INTO global_users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
 
-DROP TABLE IF EXISTS banlist;
-CREATE TABLE banlist (
+DROP TABLE IF EXISTS global_banlist;
+CREATE TABLE global_banlist (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip VARCHAR(255) NOT NULL,
     username varchar(255) DEFAULT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE locations (
     cell_sig varchar(255) DEFAULT NULL,
     cell_srv varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS finances_categories;
@@ -76,9 +76,9 @@ CREATE TABLE finances_categories (
     name varchar(255) DEFAULT NULL,
     is_default int(1) DEFAULT 0,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `finances_categories` (`id`, `user`, `name`) VALUES (1, 1, 'not categorized');
+INSERT INTO finances_categories (id, user, name) VALUES (1, 1, 'not categorized');
 
 DROP TABLE IF EXISTS finances;
 CREATE TABLE finances (
@@ -97,7 +97,7 @@ CREATE TABLE finances (
     notice TEXT DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -119,7 +119,7 @@ CREATE TABLE finances_monthly (
     last_run TIMESTAMP NULL DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -135,7 +135,7 @@ CREATE TABLE finances_categories_assignment (
     max_value DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -149,7 +149,7 @@ CREATE TABLE finances_budgets (
     value DECIMAL(10,2) DEFAULT NULL,
     is_hidden INT(1) DEFAULT 0,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -172,7 +172,7 @@ CREATE TABLE cars (
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -183,7 +183,7 @@ CREATE TABLE cars_user (
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(car, user),
     FOREIGN KEY(car) REFERENCES cars(id) ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS cars_service;
@@ -221,8 +221,8 @@ CREATE TABLE cars_service (
     service_tire_change int(1) DEFAULT NULL,
     service_garage int(1) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(createdBy) REFERENCES users(id),
-    FOREIGN KEY(changedBy) REFERENCES users(id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id),
+    FOREIGN KEY(changedBy) REFERENCES global_users(id),
     FOREIGN KEY(car) REFERENCES cars(id),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -238,7 +238,7 @@ CREATE TABLE boards (
     archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -249,11 +249,11 @@ CREATE TABLE boards_user (
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(board, user),
     FOREIGN KEY(board) REFERENCES boards(id)  ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES users(id)  ON DELETE CASCADE
+    FOREIGN KEY(user) REFERENCES global_users(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS stacks;
-CREATE TABLE stacks (
+DROP TABLE IF EXISTS boards_stacks;
+CREATE TABLE boards_stacks (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     board INTEGER unsigned DEFAULT NULL,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -268,8 +268,8 @@ CREATE TABLE stacks (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS cards;
-CREATE TABLE cards (
+DROP TABLE IF EXISTS boards_cards;
+CREATE TABLE boards_cards (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     stack INTEGER unsigned DEFAULT NULL,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -285,22 +285,22 @@ CREATE TABLE cards (
     hash VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
-    FOREIGN KEY(stack) REFERENCES stacks(id)
+    FOREIGN KEY(stack) REFERENCES boards_stacks(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS cards_user;
-CREATE TABLE cards_user (
+DROP TABLE IF EXISTS boards_cards_user;
+CREATE TABLE boards_cards_user (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     card INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(card, user),
-    FOREIGN KEY(card) REFERENCES cards(id)  ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES users(id)  ON DELETE CASCADE
+    FOREIGN KEY(card) REFERENCES boards_cards(id)  ON DELETE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS labels;
-CREATE TABLE labels (
+DROP TABLE IF EXISTS boards_labels;
+CREATE TABLE boards_labels (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     board INTEGER unsigned DEFAULT NULL,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -311,23 +311,23 @@ CREATE TABLE labels (
     text_color VARCHAR(255) DEFAULT '#000000',
     PRIMARY KEY (id),
     FOREIGN KEY(board) REFERENCES boards(id),
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS cards_label;
-CREATE TABLE cards_label (
+DROP TABLE IF EXISTS boards_cards_label;
+CREATE TABLE boards_cards_label (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     card INTEGER unsigned DEFAULT NULL,
     label INTEGER unsigned DEFAULT NULL,
     UNIQUE(card, label),
-    FOREIGN KEY(card) REFERENCES cards(id)  ON DELETE CASCADE,
-    FOREIGN KEY(label) REFERENCES labels(id)  ON DELETE CASCADE
+    FOREIGN KEY(card) REFERENCES  boards_cards(id)  ON DELETE CASCADE,
+    FOREIGN KEY(label) REFERENCES boards_labels(id)  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS comments;
-CREATE TABLE comments (
+DROP TABLE IF EXISTS boards_comments;
+CREATE TABLE boards_comments (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     card INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
@@ -335,6 +335,20 @@ CREATE TABLE comments (
     changedOn TIMESTAMP NULL,
     comment TEXT DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(card) REFERENCES cards(id),
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(card) REFERENCES boards_cards(id),
+    FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS global_settings;
+CREATE TABLE global_settings (
+  id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  changedOn TIMESTAMP NULL,
+  name varchar(255) NOT NULL,
+  value text,
+  type varchar(255) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO global_settings (name, value, type) VALUES ('lastRunMonthly', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'); 

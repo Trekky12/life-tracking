@@ -4,7 +4,7 @@ namespace App\Board\Label;
 
 class Mapper extends \App\Base\Mapper {
 
-    protected $table = "labels";
+    protected $table = "boards_labels";
     protected $model = "\App\Board\Label\Label";
     protected $filterByUser = false;
     protected $insertUser = true;
@@ -26,7 +26,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function deleteLabelsFromCard($card) {
-        $sql = "DELETE FROM " . $this->getTable("cards_label") . "  WHERE card = :card";
+        $sql = "DELETE FROM " . $this->getTable("boards_cards_label") . "  WHERE card = :card";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "card" => $card,
@@ -46,7 +46,7 @@ class Mapper extends \App\Base\Mapper {
             $keys_array[] = "(:card" . $idx . " , :label" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTable("cards_label") . " (card, label) "
+        $sql = "INSERT INTO " . $this->getTable("boards_cards_label") . " (card, label) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -60,7 +60,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getLabelsFromCard($card) {
-        $sql = "SELECT label FROM " . $this->getTable("cards_label") . " WHERE card = :card";
+        $sql = "SELECT label FROM " . $this->getTable("boards_cards_label") . " WHERE card = :card";
 
         $bindings = array("card" => $card);
 
@@ -75,7 +75,7 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getCardsLabel() {
-        $sql = "SELECT card, label FROM " . $this->getTable("cards_label") . "";
+        $sql = "SELECT card, label FROM " . $this->getTable("boards_cards_label") . "";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

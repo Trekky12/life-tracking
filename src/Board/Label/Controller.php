@@ -8,7 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     public function init() {
-        $this->model = '\App\Board\Label';
+        $this->model = '\App\Board\Label\Label';
 
         $this->mapper = new Mapper($this->ci);
         $this->board_mapper = new \App\Board\Mapper($this->ci);

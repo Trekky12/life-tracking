@@ -57,7 +57,7 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getUserStacks($id){
-        $sql = "SELECT st.id FROM " . $this->getTable($this->user_table) . " ub, " . $this->getTable("stacks") . " st "
+        $sql = "SELECT st.id FROM " . $this->getTable($this->user_table) . " ub, " . $this->getTable("boards_stacks") . " st "
                 . " WHERE ub.user = :id "
                 . " AND st.board = ub.board";
 
@@ -74,7 +74,7 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getUserCards($id){
-        $sql = "SELECT ca.id FROM " . $this->getTable($this->user_table) . " ub, " . $this->getTable("stacks") . " st, " . $this->getTable("cards") . " ca "
+        $sql = "SELECT ca.id FROM " . $this->getTable($this->user_table) . " ub, " . $this->getTable("boards_stacks") . " st, " . $this->getTable("boards_cards") . " ca "
                 . " WHERE ub.user = :id "
                 . " AND st.board = ub.board "
                 . " AND st.id = ca.stack";

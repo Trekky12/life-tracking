@@ -4,7 +4,7 @@ namespace App\Board\Stack;
 
 class Mapper extends \App\Base\Mapper {
 
-    protected $table = "stacks";
+    protected $table = "boards_stacks";
     protected $model = "\App\Board\Stack\Stack";
     protected $filterByUser = false;
     protected $insertUser = false;

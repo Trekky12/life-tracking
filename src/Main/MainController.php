@@ -65,30 +65,39 @@ class MainController {
         $logger->addInfo('LOGOUT', $info);
 
         $this->ci->get('helper')->deleteSessionVar("user");
-        
+
         return $response->withRedirect($this->ci->get('router')->pathFor('index'), 302);
     }
 
     public function cron(Request $request, Response $response) {
 
+        $settings_mapper = new \App\Settings\SettingsMapper($this->ci);
+
+        $lastRunMonthly = $settings_mapper->getSetting("lastRunMonthly");
+        $lastRunFinanceSummary = $settings_mapper->getSetting("lastRunFinanceSummary");
+        $lastRunCardReminder = $settings_mapper->getSetting("lastRunCardReminder");
+
         $date = new \DateTime('now');
-        
+
         $monthly_ctrl = new \App\Finances\Monthly\Controller($this->ci);
-        
+
         // Update monthly finances @ 06:00
-        if ($date->format("H") === "06") {
+        if ($date->format("H") === "06" && $lastRunMonthly->getDayDiff() > 0) {
             $monthly_ctrl->update();
+            $settings_mapper->updateLastRun("lastRunMonthly");
         }
-        
+
         // Is first of month @ 08:00? Send Finance Summary
-        if ($date->format("d") === "01" && $date->format("H") === "08") {
+        if ($date->format("d") === "01" && $date->format("H") === "08" && $lastRunFinanceSummary->getDayDiff() > 0) {
             $monthly_ctrl->sendSummary();
+            $settings_mapper->updateLastRun("lastRunFinanceSummary");
         }
 
         // card reminder @ 09:00
-        if($date->format("H") === "09"){
+        if ($date->format("H") === "09" && $lastRunCardReminder->getDayDiff() > 0) {
             $card_ctrl = new \App\Board\Card\Controller($this->ci);
             $card_ctrl->reminder();
+            $settings_mapper->updateLastRun("lastRunCardReminder");
         }
 
         return $response->withJSON(array('result' => 'success'));
