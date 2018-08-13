@@ -22,6 +22,8 @@ class FinancesEntry extends \App\Base\Model {
         $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : $this->common;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
+        
+        $this->fixed = $this->exists('fixed', $data) ? filter_var($data['fixed'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         /**
          * Clean date/time

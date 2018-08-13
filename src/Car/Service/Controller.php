@@ -42,7 +42,7 @@ class Controller extends \App\Base\Controller {
     public function edit(Request $request, Response $response) {
 
         $entry_id = $request->getAttribute('id');
-        
+
         // GET Param 'type'
         $type = $request->getParam('type');
 
@@ -132,7 +132,7 @@ class Controller extends \App\Base\Controller {
         foreach ($raw_data as $idx => $el) {
             $labels[] = $el["label"];
             $data[$el["car"]]["data"][$idx] = $el["consumption"];
-        }       
+        }
 
         // Get intervals
         $minMileages = $this->mapper->minMileage();
@@ -145,6 +145,7 @@ class Controller extends \App\Base\Controller {
         // Get Calculation type
         $calculation_type = $this->ci->get('helper')->getSessionVar('mileage_type', 0);
 
+        $mileage_year = [];
 
         foreach ($minMileages as $car => $min) {
             // is allowed?
@@ -172,8 +173,6 @@ class Controller extends \App\Base\Controller {
                     $diff = $miledata["max"] - $last_mileage;
                     $miledata["diff"] = $diff;
 
-
-
                     if ($miledata["diff"] > 0) {
                         $table[$car][] = $miledata;
                     }
@@ -182,9 +181,42 @@ class Controller extends \App\Base\Controller {
                     $mindate = $miledata["end"];
                     $last_mileage = $miledata["max"];
                 } while ($diff > 0);
+
+                /**
+                 * Get first element in the array => recent year
+                 */
+                $recent_year = end($table[$car]);
+                $last_interval_start = new \DateTime($recent_year["start"]);
+                $last_interval_end = new \DateTime($recent_year["end"]);
+                $current_date = new \DateTime('now');
+
+                $is_in_interval = $current_date >= $last_interval_start && $current_date <= $last_interval_end;
+
+                $max_mileage_year = $cars[$car]->mileage_year;
+                
+                if ($is_in_interval && !is_null($max_mileage_year)) {
+                    // maybe it is a leap year
+                    $days_of_year = $last_interval_start->diff($last_interval_end)->days;
+                    // days since start
+                    $current_day_of_year = $last_interval_start->diff($current_date)->days;
+
+                    $possible_mileage_today = round($current_day_of_year / $days_of_year * $max_mileage_year);
+                    $mileage_year[$car] = ["possible" => $possible_mileage_today, "remaining" => $possible_mileage_today - $recent_year["diff"], "current" => $recent_year["diff"]];
+                }
             }
         }
-        return $this->ci->view->render($response, 'cars/stats.twig', ['data' => $data, "labels" => json_encode($labels), "table" => $table, "cars" => $cars, "totalMileages" => $totalMileages, "mileage_calc_type" => $calculation_type]);
+
+
+
+        return $this->ci->view->render($response, 'cars/stats.twig', [
+                    'data' => $data,
+                    "labels" => json_encode($labels),
+                    "table" => $table,
+                    "cars" => $cars,
+                    "totalMileages" => $totalMileages,
+                    "mileage_calc_type" => $calculation_type,
+                    "mileage_year" => $mileage_year
+        ]);
     }
 
     public function setYearlyMileageCalcTyp(Request $request, Response $response) {

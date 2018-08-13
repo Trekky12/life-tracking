@@ -221,6 +221,7 @@ class Controller extends \App\Base\Controller {
 
         foreach ($stats as $el) {
             // filter special characters
+            // group by description
             $cat = htmlspecialchars_decode($el["description"]);
 
             if (!array_key_exists($cat, $data)) {
@@ -346,6 +347,51 @@ class Controller extends \App\Base\Controller {
 
         $dateObj = \DateTime::createFromFormat('!m', $month);
         return $fmt->format($dateObj);
+    }
+
+    public function statsBudget(Request $request, Response $response) {
+        $budget = $request->getAttribute('budget');
+
+        $budget_name = $this->budget_mapper->get($budget);
+
+        $is_remains = $this->budget_mapper->isRemainsBudget($budget);
+
+        if ($is_remains) {
+            $stats = $this->mapper->statsBudgetRemains();
+        } else {
+            $stats = $this->mapper->statsBudget($budget);
+        }
+
+        $categories = $this->budget_mapper->getCategoriesFromBudget($budget);
+
+        $data = [];
+
+        foreach ($stats as $el) {
+            // filter special characters
+            // group by category/description
+            if (count($categories) > 1 || $is_remains) {
+                $key = htmlspecialchars_decode($el["category"]);
+            } else {
+                $key = htmlspecialchars_decode($el["description"]);
+            }
+
+            if (!array_key_exists($key, $data)) {
+                $data[$key] = 0;
+            }
+            $data[$key] += $el["value"];
+        }
+
+
+        $labels = json_encode(array_keys($data), JSON_NUMERIC_CHECK);
+        $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
+
+
+        return $this->ci->view->render($response, 'finances/stats/budget.twig', [
+                    "stats" => $stats,
+                    "budget" => $budget_name->description,
+                    "data" => $data,
+                    "labels" => $labels]
+        );
     }
 
 }

@@ -6,7 +6,7 @@
         
         $('select.category').each(function () {
             var $select = $(this);
-            get_monthly_costs($select);
+            get_recurring_costs($select);
         });
         
 
@@ -33,7 +33,7 @@
         $('body').on('change', 'select.category', function (e) {
             var $select = $(this);
             
-            get_monthly_costs($select);
+            get_recurring_costs($select);
             //category_costs
             var $description = $select.parent().parent().find('input.description');
 
@@ -67,7 +67,7 @@
             });
         }
         
-        function get_monthly_costs($select){
+        function get_recurring_costs($select){
             
             var $category_costs = $select.parent().parent().find('.category_costs');
             

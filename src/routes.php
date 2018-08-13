@@ -28,6 +28,7 @@ $app->group('/finances', function() {
         $this->get('/{year:[0-9]{4}}/', '\App\Finances\Controller:statsYear')->setName('finances_stats_year');
         $this->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/', '\App\Finances\Controller:statsMonthType')->setName('finances_stats_month_type');
         $this->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/{category:[0-9]+}', '\App\Finances\Controller:statsMonthCategory')->setName('finances_stats_month_category');
+        $this->get('/budget/{budget:[0-9]+}', '\App\Finances\Controller:statsBudget')->setName('finances_stats_budget');
     });
 
 
@@ -55,11 +56,11 @@ $app->group('/finances', function() {
         $this->get('/costs/', '\App\Finances\Budget\Controller:getCategoryCosts')->setName('finances_budgets_category_costs');
     });
 
-    $this->group('/monthly', function() {
-        $this->get('/', '\App\Finances\Monthly\Controller:index')->setName('finances_monthly');
-        $this->get('/edit/[{id:[0-9]+}]', '\App\Finances\Monthly\Controller:edit')->setName('finances_monthly_edit');
-        $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Monthly\Controller:save')->setName('finances_monthly_save');
-        $this->delete('/delete/{id}', '\App\Finances\Monthly\Controller:delete')->setName('finances_monthly_delete');
+    $this->group('/recurring', function() {
+        $this->get('/', '\App\Finances\Recurring\Controller:index')->setName('finances_recurring');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Finances\Recurring\Controller:edit')->setName('finances_recurring_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Recurring\Controller:save')->setName('finances_recurring_save');
+        $this->delete('/delete/{id}', '\App\Finances\Recurring\Controller:delete')->setName('finances_recurring_delete');
     });
 });
 
@@ -139,7 +140,7 @@ $app->group('/boards', function() {
         $this->delete('/delete/[{id:[0-9]+}]', '\App\Board\Card\Controller:delete')->setName('card_delete');
         $this->post('/archive/[{id:[0-9]+}]', '\App\Board\Card\Controller:archive')->setName('card_archive');
 
-        $this->post('/saveComment/[{id:[0-9]+}]', '\App\Board\CommentController:saveAPI')->setName('comment_save');
+        $this->post('/saveComment/[{id:[0-9]+}]', '\App\Board\Comment\Controller:saveAPI')->setName('comment_save');
     });
 
     $this->group('/labels', function() {

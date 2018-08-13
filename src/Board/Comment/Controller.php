@@ -9,7 +9,7 @@ class Controller extends \App\Base\Controller {
 
     
     public function init() {
-        $this->model = '\App\Board\Comment';
+        $this->model = '\App\Board\Comment\Comment';
         
         $this->mapper = new Mapper($this->ci);
         $this->board_mapper = new \App\Board\Mapper($this->ci);

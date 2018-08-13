@@ -649,7 +649,8 @@
                 method: 'POST',
                 data: {'card': card, 'comment': comment},
                 success: function (response) {
-                    //window.location.reload();
+                    allowedReload = true;
+                    window.location.reload();
                 },
                 error: function (data) {
                     alert(data);

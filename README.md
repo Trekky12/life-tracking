@@ -5,7 +5,7 @@
 * track your location with tasker
 * track income and spendings
   * manage income/spendings categories
-  * automatically add monthly income/spendings
+  * automatically add recurring income/spendings in different intervals
   * automatically assign a category to income/spendings
   * manage monthly budgets
   * income/spendings and budget statistics
@@ -22,6 +22,8 @@
 
 ## Installation
 
+* the application requires the class 'IntlDateFormatter'
+  * installation is described at http://php.net/manual/en/intl.installation.php
 * the web-root of your domain need to point to the ``public`` directory
 * create a new database and import the file ``database.sql`` in the ``db`` directory
 * copy the file ``settings.example.php`` in the folder ``src`` and rename it to ``settings.php``

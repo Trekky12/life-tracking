@@ -109,6 +109,14 @@
             position:absolute;
             left:0;
             right:0;
+            z-index:20;
+        }
+        
+        .state{
+            position: absolute;
+            border-right: 2px dashed $color_text-main;
+            z-index:10;
+            height:24px;
         }
     }
     

@@ -54,26 +54,28 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["MILEAGE_PER_YEAR"]}}</h2></div>
         <div class="page-content">
-            
+
             <div class="two-columns">
-                    <div class="left">
-                        <label class="radio" for="calculation_type_0">
-                            <input class="set_calculation_date" name="calculation_type" data-type="0" type="radio" id="calculation_type_0" {% if mileage_calc_type is not null and mileage_calc_type == 0 %}checked="checked"{% endif %}>
-                            {{lang["START_WITH_FIRST_ENTRY"]}}
-                        </label>
-                    </div>
-                    <div class="right">
-                        <label class="radio" for="calculation_type_1">
-                            <input class="set_calculation_date" name="calculation_type" data-type="1" type="radio" id="calculation_type_1" {% if mileage_calc_type is not null and mileage_calc_type == 1 %}checked="checked"{% endif %}>
-                            {{lang["START_WITH_YEAR"]}}
-                        </label>
-                    </div>
+                <div class="left">
+                    <label class="radio" for="calculation_type_0">
+                        <input class="set_calculation_date" name="calculation_type" data-type="0" type="radio" id="calculation_type_0" {% if mileage_calc_type is not null and mileage_calc_type == 0 %}checked="checked"{% endif %}>
+                        {{lang["START_WITH_FIRST_ENTRY"]}}
+                    </label>
                 </div>
-            
+                <div class="right">
+                    <label class="radio" for="calculation_type_1">
+                        <input class="set_calculation_date" name="calculation_type" data-type="1" type="radio" id="calculation_type_1" {% if mileage_calc_type is not null and mileage_calc_type == 1 %}checked="checked"{% endif %}>
+                        {{lang["START_WITH_YEAR"]}}
+                    </label>
+                </div>
+            </div>
+
             {% for car, entries in table %}
 
                 <h2>{{cars[car].name|raw}} ({% if totalMileages[car]["max"] > totalMileages[car]["min"] %}{{totalMileages[car]["diff"]}} {{lang["KM"]}}{% endif %})</h2>
-
+                {% if car in mileage_year|keys and cars[car].mileage_year > 0 %}
+                    <strong>{{lang["MILEAGE_PER_YEAR"]}}: {{cars[car].mileage_year}} | {{lang["STATE_TODAY_MAX"]}}: {{mileage_year[car]["possible"]}} {{lang["KM"]}} ({{mileage_year[car]["remaining"]}} {{lang["KM"]}} {{lang["REMAINING"]}})</strong>
+                {% endif %}
                 <table class="mileage_year_table table table-hover small">
                     <thead>
                         <tr>

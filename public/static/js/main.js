@@ -280,9 +280,9 @@
             "autoWidth": false
         });
 
-        $("#monthly_table").DataTable({
-            "paging": false,
-            "info": false,
+        $("#recurring_table").DataTable({
+            "paging": true,
+            "info": true,
             "order": [
                 [3, 'desc']
             ],
@@ -571,6 +571,37 @@
             "autoWidth": false
         });
 
+
+        $("#stats_budget_table").DataTable({
+            "language": {
+                "url": jsObject.datatable
+            },
+            "paging": true,
+            "order": [[2, 'desc'], [1, 'asc'], [0, 'asc']],
+            "responsive": true,
+            "autoWidth": false,
+            "columnDefs": [
+                {
+                    "targets": [3, 4],
+                    "orderable": false
+                },
+                {
+                    "targets": [0],
+                    "responsivePriority": -1
+                },
+                {
+                    "targets": [2],
+                    "render": function (data, type, row) {
+                        if (type === 'display' || type === 'filter') {
+                            return data + " " + i18n.currency;
+                        }
+                        return data;
+
+                    },
+                    "responsivePriority": -1
+                }
+            ]
+        });
 
         /**
          * Common finances

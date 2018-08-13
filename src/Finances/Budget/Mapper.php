@@ -182,5 +182,22 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
+    
+    public function isRemainsBudget($budget){
+        $sql = "SELECT b.id FROM " . $this->getTable() . " b LEFT JOIN " . $this->getTable("finances_budgets_categories") . " bc ON b.id = bc.budget "
+                . "WHERE category IS NULL "
+                . "AND b.id = :budget";
 
+        $bindings = array("budget" => $budget);
+        $this->filterByUser($sql, $bindings);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+    
 }

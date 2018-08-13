@@ -26,6 +26,12 @@ $lang["YEAR"] = "Jahr";
 $lang["MONTH"] = "Monat";
 $lang["SUM"] = "Summe";
 
+$lang["DAY"] = "Tag";
+$lang["WEEK"] = "Woche";
+$lang["INTERVAL"] = "Intervall";
+$lang["UNIT"] = "Einheit";
+$lang["MULTIPLIER"] = "Multiplikator";
+
 $lang["CATEGORY"] = "Kategorie";
 $lang["CATEGORIES"] = "Kategorien";
 $lang["DESCRIPTION"] = "Beschreibung";
@@ -50,7 +56,7 @@ $lang["FINANCES_INCOMES"] = "Einnahmen";
 $lang["FOR"] = "für";
 $lang["IN"] = "in";
 
-$lang["FINANCES_MONTHLY"] = "Regelmäßige Einträge";
+$lang["FINANCES_RECURRING"] = "Regelmäßige Einträge";
 
 $lang["FUEL_FULL"] = "vollgetankt";
 $lang["FUEL_PARTLY"] = "nachgetankt";
@@ -78,6 +84,7 @@ $lang["CAR_SERVICE_AIR"] = "Luftdruck";
 $lang["CAR_SERVICE_WATER_WIPER"] = "Scheibenwischwasser";
 $lang["CAR_SERVICE_TIRE_CHANGE"] = "Radwechsel";
 $lang["CAR_SERVICE_GARAGE"] = "Werkstattbesuch";
+$lang["STATE_TODAY_MAX"] = "Stand heute (max.)";
 
 $lang["REALLY_DELETE"] = "Soll der Eintrag wirklich gelöscht werden?";
 $lang["ERROR"] = "Leider konnte die Seite aufgrund eines Fehlers nicht aufgerufen werden.";
@@ -98,6 +105,7 @@ $lang["NAME_CANNOT_BE_EMPTY"] = "Name darf nicht leer sein";
 $lang["VALUE_CANNOT_BE_EMPTY"] = "Der Betrag muss eingetragen werden";
 $lang["DESCRIPTION_CANNOT_BE_EMPTY"] = "Die Beschreibung muss eingetragen werden";
 $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Die Kategorie muss eingetragen werden";
+$lang["WRONG_UNIT"] = "Falsche Einheit";
 
 $lang["USERS"] = "Benutzer";
 $lang["LOGIN"] = "Benutzername";
@@ -150,6 +158,7 @@ $lang["DEFAULT"] = "Standard";
 $lang["BUDGET"] = "Budget";
 $lang["CHOOSE"] = "- Auswählen -";
 $lang["MONTHLY"] = "monatliche";
+$lang["RECURRING"] = "wiederkehrende";
 $lang["REMAINS"] = "Rest";
 $lang["REMAINING"] = "verbleibend";
 $lang["EDIT"] = "Bearbeiten";

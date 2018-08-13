@@ -11,6 +11,7 @@
             <form class="form-horizontal" id="financeForm" action="{{  path_for('finances_save', {'id' : entry.id}) }}" method="POST">
                 {% if not entry is null %}
                     <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                    <input name="fixed" type="hidden" value="{{entry.fixed}}">
                 {% endif %}
 
                 <div class="form-group two-columns">
@@ -37,7 +38,7 @@
                 </div>
                 <div class="form-group">
                     <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
-                    <input type="text" reuired class="form-control" id="inputDescription" name="description" {% if not entry is null %}value="{{entry.description|raw}}"{% endif %}>
+                    <input type="text" required class="form-control" id="inputDescription" name="description" {% if not entry is null %}value="{{entry.description|raw}}"{% endif %}>
                 </div>
                 <div class="form-group">
                     <label for="dateSelect">{{lang["DATE"]}}</label>

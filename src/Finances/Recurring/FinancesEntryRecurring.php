@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Finances\Monthly;
+namespace App\Finances\Recurring;
 
-class FinancesEntryMonthly extends \App\Base\Model {
+class FinancesEntryRecurring extends \App\Base\Model {
 
     public function parseData(array $data) {
 
@@ -22,6 +22,9 @@ class FinancesEntryMonthly extends \App\Base\Model {
 
         $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : $this->common;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        
+        $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : 'month';
+        $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
 
 
         /**
@@ -36,6 +39,14 @@ class FinancesEntryMonthly extends \App\Base\Model {
         if (is_null($this->description)) {
             $this->parsing_errors[] = "DESCRIPTION_CANNOT_BE_EMPTY";
         }
+        if (!in_array($this->unit, array_keys(self::getUnits()))) {
+            $this->parsing_errors[] = "WRONG_UNIT";
+        }
     }
+    
+    public static function getUnits(){
+        return array("day" => "DAY", "week" => "WEEK", "month" => "MONTH", "year" => "YEAR");
+    }
+            
 
 }

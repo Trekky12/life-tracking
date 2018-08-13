@@ -8,7 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     private $cat_mapper;
-    private $monthly_mapper;
+    private $recurring_mapper;
 
     public function init() {
         $this->model = '\App\Finances\Budget\Budget';
@@ -16,7 +16,7 @@ class Controller extends \App\Base\Controller {
 
         $this->mapper = new Mapper($this->ci);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
-        $this->monthly_mapper = new \App\Finances\Monthly\Mapper($this->ci);
+        $this->recurring_mapper = new \App\Finances\Recurring\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -35,11 +35,18 @@ class Controller extends \App\Base\Controller {
 
         $budget_categories = $this->mapper->getBudgetCategories();
 
+        // Current day of month
+        $date = new \DateTime('now');
+        // Current Day of Month / Count Days of Month
+        $date_status = round($date->format('j') / $date->format('t') * 100, 2);
+
+
         return $this->ci->view->render($response, 'finances/budget/index.twig', [
                     'budgets' => $budgets,
                     'categories' => $categories,
                     'currency' => $this->ci->get('settings')['app']['i18n']['currency'],
                     'budget_categories' => $budget_categories,
+                    'date_status' => $date_status
         ]);
     }
 
@@ -49,8 +56,8 @@ class Controller extends \App\Base\Controller {
 
         $categories = $this->cat_mapper->getAll('name');
 
-        $monthly = $this->monthly_mapper->getSumOfAllCategories();
-        $income = $this->monthly_mapper->getSum(1);
+        $recurring = $this->recurring_mapper->getSumOfAllCategories();
+        $income = $this->recurring_mapper->getSum(1);
         $budget_sum = $this->mapper->getSum();
         $has_remains_budget = $this->mapper->hasRemainsBudget();
 
@@ -60,7 +67,7 @@ class Controller extends \App\Base\Controller {
                     'budgets' => $budgets,
                     'categories' => $categories,
                     'income' => $income,
-                    'monthly' => $monthly,
+                    'recurring' => $recurring,
                     'currency' => $this->ci->get('settings')['app']['i18n']['currency'],
                     'hasRemainsBudget' => $has_remains_budget,
                     'budget_sum' => $budget_sum,
@@ -95,7 +102,7 @@ class Controller extends \App\Base\Controller {
 
         try {
             $categories = filter_var_array($category, FILTER_SANITIZE_NUMBER_INT);
-            $sum = $this->monthly_mapper->getSumOfCategories($categories);
+            $sum = $this->recurring_mapper->getSumOfCategories($categories);
         } catch (\Exception $e) {
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }

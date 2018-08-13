@@ -95,14 +95,14 @@ CREATE TABLE finances (
     common int(1) DEFAULT 0,
     common_value DECIMAL(10,2),
     notice TEXT DEFAULT NULL,
+    fixed int(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-DROP TABLE IF EXISTS finances_monthly;
-CREATE TABLE finances_monthly (
+DROP TABLE IF EXISTS finances_recurring;
+CREATE TABLE finances_recurring (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
@@ -117,11 +117,12 @@ CREATE TABLE finances_monthly (
     common_value DECIMAL(10,2),
     notice TEXT DEFAULT NULL,
     last_run TIMESTAMP NULL DEFAULT NULL,
+    unit varchar(255) DEFAULT 'month',
+    multiplier int(5) DEFAULT 1
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS finances_categories_assignment;
 CREATE TABLE finances_categories_assignment (
@@ -138,7 +139,6 @@ CREATE TABLE finances_categories_assignment (
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 DROP TABLE IF EXISTS finances_budgets;
 CREATE TABLE finances_budgets (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -148,6 +148,7 @@ CREATE TABLE finances_budgets (
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) DEFAULT NULL,
     is_hidden INT(1) DEFAULT 0,
+--    saved DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -171,10 +172,14 @@ CREATE TABLE cars (
     changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
+    mileage_year INT(20) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/**
+ALTER TABLE cars ADD mileage_year INT(20) DEFAULT NULL AFTER name; 
+*/
 
 DROP TABLE IF EXISTS cars_user;
 CREATE TABLE cars_user (
@@ -351,4 +356,4 @@ CREATE TABLE global_settings (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO global_settings (name, value, type) VALUES ('lastRunMonthly', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'); 
+INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'); 

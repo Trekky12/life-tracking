@@ -73,23 +73,23 @@ class MainController {
 
         $settings_mapper = new \App\Settings\SettingsMapper($this->ci);
 
-        $lastRunMonthly = $settings_mapper->getSetting("lastRunMonthly");
+        $lastRunRecurring = $settings_mapper->getSetting("lastRunRecurring");
         $lastRunFinanceSummary = $settings_mapper->getSetting("lastRunFinanceSummary");
         $lastRunCardReminder = $settings_mapper->getSetting("lastRunCardReminder");
 
         $date = new \DateTime('now');
 
-        $monthly_ctrl = new \App\Finances\Monthly\Controller($this->ci);
+        $recurring_ctrl = new \App\Finances\Recurring\Controller($this->ci);
 
-        // Update monthly finances @ 06:00
-        if ($date->format("H") === "06" && $lastRunMonthly->getDayDiff() > 0) {
-            $monthly_ctrl->update();
-            $settings_mapper->updateLastRun("lastRunMonthly");
+        // Update recurring finances @ 06:00
+        if ($date->format("H") === "06" && $lastRunRecurring->getDayDiff() > 0) {
+            $recurring_ctrl->update();
+            $settings_mapper->updateLastRun("lastRunRecurring");
         }
 
         // Is first of month @ 08:00? Send Finance Summary
         if ($date->format("d") === "01" && $date->format("H") === "08" && $lastRunFinanceSummary->getDayDiff() > 0) {
-            $monthly_ctrl->sendSummary();
+            $recurring_ctrl->sendSummary();
             $settings_mapper->updateLastRun("lastRunFinanceSummary");
         }
 

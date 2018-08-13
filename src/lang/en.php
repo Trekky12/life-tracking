@@ -26,6 +26,12 @@ $lang["YEAR"] = "Year";
 $lang["MONTH"] = "Month";
 $lang["SUM"] = "Sum";
 
+$lang["DAY"] = "Day";
+$lang["WEEK"] = "Week";
+$lang["INTERVAL"] = "Interval";
+$lang["UNIT"] = "Unit";
+$lang["MULTIPLIER"] = "Multiplier";
+
 $lang["CATEGORY"] = "Category";
 $lang["CATEGORIES"] = "Categories";
 $lang["DESCRIPTION"] = "Description";
@@ -50,7 +56,7 @@ $lang["FINANCES_INCOMES"] = "Income";
 $lang["FOR"] = "for";
 $lang["IN"] = "in";
 
-$lang["FINANCES_MONTHLY"] = "Regulary Entries";
+$lang["FINANCES_RECURRING"] = "Recurring Einträge";
 
 $lang["FUEL_FULL"] = "full";
 $lang["FUEL_PARTLY"] = "partly";
@@ -78,6 +84,7 @@ $lang["CAR_SERVICE_AIR"] = "air pressure";
 $lang["CAR_SERVICE_WATER_WIPER"] = "wiper water level";
 $lang["CAR_SERVICE_TIRE_CHANGE"] = "wheel change";
 $lang["CAR_SERVICE_GARAGE"] = "garage visit";
+$lang["STATE_TODAY_MAX"] = "State today (max.)";
 
 $lang["REALLY_DELETE"] = "Do you really want to delete the entry?";
 $lang["ERROR"] = "Unfortunately the page couldn't load because of an error.";
@@ -98,6 +105,7 @@ $lang["NAME_CANNOT_BE_EMPTY"] = "Name cannot be empty";
 $lang["VALUE_CANNOT_BE_EMPTY"] = "Value cannot be empty";
 $lang["DESCRIPTION_CANNOT_BE_EMPTY"] = "Description cannot be empty";
 $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Category cannot be empty";
+$lang["WRONG_UNIT"] = "Wrong unit";
 
 $lang["USERS"] = "Users";
 $lang["LOGIN"] = "Login";
@@ -150,6 +158,7 @@ $lang["DEFAULT"] = "default";
 $lang["BUDGET"] = "Budget";
 $lang["CHOOSE"] = "- Choose -";
 $lang["MONTHLY"] = "monthly";
+$lang["RECURRING"] = "recurring";
 $lang["REMAINS"] = "remains";
 $lang["REMAINING"] = "remaining";
 $lang["EDIT"] = "edit";

@@ -34,7 +34,7 @@
             </div>  
             
             <div class="form-group cat-costs">
-                <h4>{{lang["MONTHLY"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
+                <h4>{{lang["RECURRING"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
                 <div class="category_costs">
                 </div> 
             </div>
@@ -95,11 +95,11 @@
 
                         <div class="form-group cat-costs">
                             {% if budget.id in budget_categories|keys %}
-                                <h4>{{lang["MONTHLY"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
+                                <h4>{{lang["RECURRING"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
                                 <div class="category_costs">
-                                    {% for mcat in monthly %}
-                                        {% if mcat.category == budget.category %}
-                                            {{mcat.sum}} {{currency}}
+                                    {% for rcat in recurring %}
+                                        {% if rcat.category == budget.category %}
+                                            {{rcat.sum}} {{currency}}
                                         {%endif %}
                                     {% endfor %}
                                 </div> 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Finances\Monthly;
+namespace App\Finances\Recurring;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -11,10 +11,10 @@ class Controller extends \App\Base\Controller {
     private $finance_mapper;
 
     public function init() {
-        $this->model = '\App\Finances\Monthly\FinancesEntryMonthly';
-        $this->index_route = 'finances_monthly';
+        $this->model = '\App\Finances\Recurring\FinancesEntryRecurring';
+        $this->index_route = 'finances_recurring';
 
-        $this->mapper = new \App\Finances\Monthly\Mapper($this->ci);
+        $this->mapper = new Mapper($this->ci);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
         $this->finance_mapper = new \App\Finances\Mapper($this->ci);
     }
@@ -22,7 +22,7 @@ class Controller extends \App\Base\Controller {
     public function index(Request $request, Response $response) {
         $list = $this->mapper->getAll();
         $categories = $this->cat_mapper->getAll();
-        return $this->ci->view->render($response, 'finances/monthly/index.twig', ['list' => $list, 'categories' => $categories]);
+        return $this->ci->view->render($response, 'finances/recurring/index.twig', ['list' => $list, 'categories' => $categories]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -36,12 +36,12 @@ class Controller extends \App\Base\Controller {
 
         $categories = $this->cat_mapper->getAll('name');
 
-        return $this->ci->view->render($response, 'finances/monthly/edit.twig', ['entry' => $entry, 'categories' => $categories]);
+        return $this->ci->view->render($response, 'finances/recurring/edit.twig', ['entry' => $entry, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()]);
     }
 
     public function update() {
 
-        $mentries = $this->mapper->getMonthlyEntries();
+        $mentries = $this->mapper->getRecurringEntries();
 
         if ($mentries) {
             foreach ($mentries as $mentry) {
@@ -53,7 +53,8 @@ class Controller extends \App\Base\Controller {
                     'common' => $mentry->common,
                     'common_value' => $mentry->common_value,
                     'notice' => $mentry->notice,
-                    'user' => $mentry->user
+                    'user' => $mentry->user,
+                    'fixed' => 1
                 ]);
                 $this->finance_mapper->insert($entry);
             }
@@ -79,7 +80,7 @@ class Controller extends \App\Base\Controller {
         $year = $dateObj->format("Y");
 
         $subject = sprintf('[Life-Tracking] %s %s %s %s', $this->ci->get('helper')->getTranslatedString('STATS'), $this->ci->get('helper')->getTranslatedString('FOR'), $fmt->format($dateObj), $year);
-        
+
         foreach ($users as $user) {
             if ($user->mail && $user->mails_finances == 1) {
 
@@ -117,6 +118,22 @@ class Controller extends \App\Base\Controller {
                 }
             }
         }
+    }
+
+    protected function afterSave($id, $data) {
+        $entry = $this->mapper->get($id);
+
+        /**
+         * When the entry is new but has an past start date set the last run to this date
+         */
+        if (is_null($entry->last_run) && !is_null($entry->start)) {
+            $start = new \DateTime($entry->start);
+            $now = new \DateTime('now');
+            if ($now > $start) {
+                $this->mapper->setLastRun($id, $start->format("Y-m-d"));
+            }
+        }
+
     }
 
 }

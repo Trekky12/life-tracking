@@ -3,7 +3,7 @@
 namespace App\Finances;
 
 class Mapper extends \App\Base\Mapper {
-    
+
     protected $table = 'finances';
     protected $model = '\App\Finances\FinancesEntry';
 
@@ -123,7 +123,7 @@ class Mapper extends \App\Base\Mapper {
         $this->filterByUser($sql, $bindings, false, "f.");
 
         $sql .= " GROUP BY YEAR(date), MONTH(date), type, category";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
@@ -158,16 +158,16 @@ class Mapper extends \App\Base\Mapper {
                 . "GROUP BY type";
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type, "user" => $user);
-                
+
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
         $stmt->execute();
-        
+
         return floatval($stmt->fetchColumn());
     }
-    
+
     public function statsMailExpenses($user, $month, $year, $limit = 5) {
         $sql = "SELECT f.date, f.description, fc.name as category, f.value "
                 . "FROM " . $this->getTable() . " f, " . $this->getTable("finances_categories") . " fc "
@@ -176,10 +176,10 @@ class Mapper extends \App\Base\Mapper {
                 . "AND YEAR(f.date) = :year "
                 . "AND f.type = :type "
                 . "AND f.user = :user ";
-        
-        $bindings = array("year" => $year, "month" => $month, "type" => 0, "user" => $user);        
+
+        $bindings = array("year" => $year, "month" => $month, "type" => 0, "user" => $user);
         $sql .= "ORDER BY value desc LIMIT {$limit}";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
@@ -205,7 +205,7 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
-    
+
     public function set_category($id, $category) {
         $sql = "UPDATE " . $this->getTable() . " SET category = :category WHERE id  = :id";
         $bindings = array("id" => $id, "category" => $category);
@@ -215,6 +215,45 @@ class Mapper extends \App\Base\Mapper {
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
+    }
+
+    public function statsBudget($budget) {
+
+        $sql = "SELECT f.id, f.type, f.description, fc.name as category, f.value FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc,  " . $this->getTable("finances_budgets_categories") . " fbc "
+                . "WHERE f.category = fbc.category "
+                . "AND fc.id = f.category "
+                . "AND fbc.budget = :budget "
+                . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
+                . "AND YEAR(date) = YEAR(CURRENT_DATE()) "
+                . "AND f.type = :type ";
+
+        $bindings = array("budget" => $budget, "type" => 0);
+        $this->filterByUser($sql, $bindings, false, "f.");
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_BOTH);
+    }
+
+    public function statsBudgetRemains() {
+
+        $sql = "SELECT f.id, f.type, f.description, fc.name as category, f.value FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc  "
+                . "WHERE f.category NOT IN (SELECT category FROM " . $this->getTable("finances_budgets_categories") . " ) "
+                . "AND fc.id = f.category "
+                . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
+                . "AND YEAR(date) = YEAR(CURRENT_DATE()) "
+                . "AND f.type = :type ";
+
+        $bindings = array("type" => 0);
+        $this->filterByUser($sql, $bindings, false, "f.");
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
 }

@@ -4,6 +4,7 @@
 
 {% block javascript %}
     <script src="/static/assets/js/mustache.min.js"></script>
+    <script src="/static/assets/js/chosen.jquery.min.js"></script>
     <script src="/static/js/budget.min.js?ver=20180727"></script>
 {% endblock %}
 
@@ -14,7 +15,7 @@
         <div class="page-content">
             {% for budget in budgets if budget.is_hidden == 0 %}
                 <div class="budget-entry">
-                    <h3>{{budget.description|raw}}</h3>
+                    <h3><a href="{{path_for('finances_stats_budget', {'budget' : budget.id})}}">{{budget.description|raw}}</a></h3>
                     {% if budget.id in budget_categories|keys %}
                         <div class="categories-list">
                             {% if budget_categories[budget.id]|length > 1 %}
@@ -39,6 +40,7 @@
                         {%if budget.percent < 25 %}
                             <div class="progress progress-text">{{budget.percent}}%</div>
                         {% endif %}
+                        <div class="state" style="width:{{date_status}}%"></div>
                     </div> 
 
                     <div class="remaining">
