@@ -162,7 +162,7 @@ class Controller extends \App\Base\Controller {
     public function stats(Request $request, Response $response) {
         $stats = $this->mapper->statsTotal();
 
-        list($data, $spendings, $income, $labels) = $this->createChartData($stats);
+        list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats);
 
 
         return $this->ci->view->render($response, 'finances/stats/index.twig', ['stats' => $data, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
@@ -172,7 +172,7 @@ class Controller extends \App\Base\Controller {
         $year = $request->getAttribute('year');
         $stats = $this->mapper->statsYear($year);
 
-        list($data, $spendings, $income, $labels) = $this->createChartData($stats, "month");
+        list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats, "month");
 
         return $this->ci->view->render($response, 'finances/stats/year.twig', ['stats' => $data, "year" => $year, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
     }
@@ -322,6 +322,10 @@ class Controller extends \App\Base\Controller {
         $income_data = array_map(function($el) {
             return $el[1];
         }, $data);
+        
+        $diff_data = array_map(function($el) {
+            return $el[1] - $el[0];
+        }, $data);
 
         $labels = array_keys($data);
 
@@ -334,8 +338,10 @@ class Controller extends \App\Base\Controller {
         $spendings = json_encode(array_values($spendings_data), JSON_NUMERIC_CHECK);
         $income = json_encode(array_values($income_data), JSON_NUMERIC_CHECK);
         $labels = json_encode($labels, JSON_NUMERIC_CHECK);
+        
+        $diff = json_encode(array_values($diff_data), JSON_NUMERIC_CHECK);
 
-        return array($data, $spendings, $income, $labels);
+        return array($data, $spendings, $income, $labels, $diff);
     }
 
     private function getMonthName($month) {
