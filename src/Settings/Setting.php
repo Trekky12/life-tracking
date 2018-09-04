@@ -44,7 +44,14 @@ class Setting extends \App\Base\Model {
             return null;
         }
         $current_time = new \DateTime();
-        $diff = $current_time->diff($this->getValue());
+        $value = $this->getValue();
+        
+        // don't calculate 24 hour difference but absolute days 
+        // so the time is not interesing
+        $current_time->setTime(0, 0, 0);
+        $value->setTime(0, 0, 0);
+
+        $diff = $current_time->diff($value);
         return $diff->days;
     }
 
