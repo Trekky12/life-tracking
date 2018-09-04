@@ -52,6 +52,9 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'success'));
             }
         } catch (\Exception $e) {
+            $logger = $this->ci->get('logger');
+            $logger->addError("Update Stack Position", array("data" => $data, "error" => $e->getMessage()));
+            
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
         return $response->withJSON(array('status' => 'error'));
@@ -59,8 +62,8 @@ class Controller extends \App\Base\Controller {
 
     public function archive(Request $request, Response $response) {
         $data = $request->getParsedBody();
+        $id = $request->getAttribute('id');
         try {
-            $id = $request->getAttribute('id');
 
             $this->preSave($id, null);
 
@@ -74,6 +77,9 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'error', "error" => "missing data"));
             }
         } catch (\Exception $e) {
+            $logger = $this->ci->get('logger');
+            $logger->addError("Archive Stack", array("data" => $data, "id" => $id, "error" => $e->getMessage()));
+            
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
     }

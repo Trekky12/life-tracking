@@ -74,7 +74,8 @@ class Controller extends \App\Base\Controller {
                 $this->label_mapper->addLabelsToCard($id, $filtered_labels);
             }
         } catch (\Exception $e) {
-            
+            $logger = $this->ci->get('logger');
+            $logger->addError("After Card Save", array("data" => $id, "error" => $e->getMessage()));
         }
 
         /**
@@ -179,6 +180,9 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'success'));
             }
         } catch (\Exception $e) {
+            $logger = $this->ci->get('logger');
+            $logger->addError("Update Card Position", array("data" => $data, "error" => $e->getMessage()));
+            
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
         return $response->withJSON(array('status' => 'error'));
@@ -200,6 +204,9 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'success'));
             }
         } catch (\Exception $e) {
+            $logger = $this->ci->get('logger');
+            $logger->addError("Move Card", array("data" => $data, "error" => $e->getMessage()));
+            
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
         return $response->withJSON(array('status' => 'error'));
@@ -207,9 +214,8 @@ class Controller extends \App\Base\Controller {
 
     public function archive(Request $request, Response $response) {
         $data = $request->getParsedBody();
+        $id = $request->getAttribute('id');
         try {
-            $id = $request->getAttribute('id');
-
             $this->preSave($id, null);
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
@@ -223,6 +229,9 @@ class Controller extends \App\Base\Controller {
             $newResponse = $response->withJson(['is_archived' => $is_archived]);
             return $newResponse;
         } catch (\Exception $e) {
+            $logger = $this->ci->get('logger');
+            $logger->addError("Archive Card", array("data" => $data, "id" => $id, "error" => $e->getMessage()));
+            
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
     }

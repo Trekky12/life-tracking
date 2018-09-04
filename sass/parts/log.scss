@@ -1,0 +1,43 @@
+#logviewer{
+    height:calc(100vh - 150px);
+    background: #FFFFFF;
+    padding: 1rem;
+    font-family:monospace;
+    @include font-size(1.1);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    @media screen and (min-width: $size_mobile_navigation){
+        overflow-x: auto;
+        height:calc(100vh - 120px);
+    }
+
+    .log-entry{
+        word-wrap:break-word;
+        @media screen and (min-width: $size_mobile_navigation){
+            white-space: nowrap;
+        }
+        &.INFO{
+            color: $color_blue_light;
+        }
+        &.ERROR, &.EMERGENCY, &.ALERT, &.CRITICAL{
+            color: $color_red;
+        }
+        &.WARNING{
+            color: $color_orange;
+        }
+        &.NOTICE, &.DEBUG{
+            color: $color_green;
+        }
+    }
+}
+
+#logviewer-filter{
+    @media screen and (min-width: $size_mobile_navigation){
+        display:flex;
+        justify-content:space-between;
+    }
+    label{
+        @include font-size(1.1);
+    }
+}

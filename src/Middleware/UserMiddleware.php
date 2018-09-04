@@ -21,14 +21,13 @@ class UserMiddleware {
          * Do not allow access for banned ips
          */
         $logger = $this->ci->get('logger');
-        $info = $this->ci->get('info');
-        //$logger->addInfo('SITE CALL', $info);
+        //$logger->addInfo('SITE CALL');
 
         $banlist = new \App\Main\BanlistMapper($this->ci);
-        $attempts = $banlist->getFailedLoginAttempts($info["REMOTE_ADDR"]);
+        $attempts = $banlist->getFailedLoginAttempts($this->ci->get('helper')->getIP());
 
         if ($attempts > 2) {
-            $logger->addInfo('BANNED', $info);
+            $logger->addWarning('BANNED');
             return $this->ci->get('view')->render($response, 'error.twig', ["message" => $this->ci->get('helper')->getTranslatedString("BANNED"), "message_type" => "danger"]);
         }
 
@@ -48,7 +47,7 @@ class UserMiddleware {
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {
 
-            $logger->addInfo('Site CALL', $info);
+            $logger->addInfo('Site CALL');
 
             return $next($request, $response);
         }
@@ -73,10 +72,17 @@ class UserMiddleware {
                 }
             }
 
-            if ($this->ci->get('helper')->checkLogin($username, $password)) {
-                return $next($request, $response);
+            if (!is_null($username) && !is_null($password)) {
+                $logger->addDebug('HTTP Auth', array("user" => $username));
+                if ($this->ci->get('helper')->checkLogin($username, $password)) {
+                    return $next($request, $response);
+                }
+
+                $logger->addWarning('HTTP Auth failed', array("user" => $username));
             }
         }
+
+        $logger->addDebug('Go to Login');
 
         // redirect to the login page
         return $response->withRedirect($this->ci->get('router')->pathFor('login'), 302);

@@ -22,7 +22,7 @@ class Controller extends \App\Base\Controller {
     public function index(Request $request, Response $response) {
         $list = $this->mapper->getAll();
         $categories = $this->cat_mapper->getAll();
-        return $this->ci->view->render($response, 'finances/recurring/index.twig', ['list' => $list, 'categories' => $categories]);
+        return $this->ci->view->render($response, 'finances/recurring/index.twig', ['list' => $list, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -42,6 +42,9 @@ class Controller extends \App\Base\Controller {
     public function update() {
 
         $mentries = $this->mapper->getRecurringEntries();
+        
+        $logger = $this->ci->get('logger');
+        $logger->addDebug('Recurring Entries', $mentries);
 
         if ($mentries) {
             foreach ($mentries as $mentry) {

@@ -106,6 +106,7 @@ $lang["VALUE_CANNOT_BE_EMPTY"] = "Der Betrag muss eingetragen werden";
 $lang["DESCRIPTION_CANNOT_BE_EMPTY"] = "Die Beschreibung muss eingetragen werden";
 $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Die Kategorie muss eingetragen werden";
 $lang["WRONG_UNIT"] = "Falsche Einheit";
+$lang["LAST_RUN"] = "Letzter Lauf";
 
 $lang["USERS"] = "Benutzer";
 $lang["LOGIN"] = "Benutzername";

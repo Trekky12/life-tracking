@@ -11,6 +11,8 @@ $app->group('', function() {
     $this->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
 
     $this->get('/cron', '\App\Main\MainController:cron')->setName('cron');
+    
+    $this->get('/logfile', '\App\Main\MainController:showLog')->setName('logfile')->add('App\Middleware\AdminMiddleware');
 });
 
 $app->group('/finances', function() {

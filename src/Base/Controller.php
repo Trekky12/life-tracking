@@ -103,9 +103,13 @@ abstract class Controller {
     protected function insertOrUpdate($id, $data) {
         $entry = new $this->model($data);
 
+        $logger = $this->ci->get('logger');
+
         if ($entry->hasParsingErrors()) {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
+
+            $logger->addError("Insert failed " . $this->model, array("message" => $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0])));
         } else {
 
             /**
@@ -117,14 +121,20 @@ abstract class Controller {
                 $id = $this->mapper->insert($entry);
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_ADD"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
+
+                $logger->addInfo("Insert Entry " . $this->model, array("id" => $id));
             } else {
                 $elements_changed = $this->mapper->update($entry);
                 if ($elements_changed > 0) {
                     $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
                     $this->ci->get('flash')->addMessage('message_type', 'success');
+
+                    $logger->addInfo("Update Entry " . $this->model, array("id" => $id));
                 } else {
                     $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
                     $this->ci->get('flash')->addMessage('message_type', 'info');
+
+                    $logger->addInfo("No Update of Entry " . $this->model, array("id" => $id));
                 }
             }
 
@@ -152,6 +162,10 @@ abstract class Controller {
         try {
             $return = $this->save($request, $response);
         } catch (\Exception $e) {
+
+            $logger = $this->ci->get('logger');
+            $logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
 
@@ -161,6 +175,8 @@ abstract class Controller {
     public function delete(Request $request, Response $response) {
 
         $id = $request->getAttribute('id');
+
+        $logger = $this->ci->get('logger');
 
         /**
          * Custom Hook
@@ -175,14 +191,20 @@ abstract class Controller {
             if ($is_deleted) {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_DELETE"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
+
+                $logger->addInfo("Delete successfully " . $this->model, array("id" => $id));
             } else {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
                 $this->ci->get('flash')->addMessage('message_type', 'danger');
+
+                $logger->addError("Delete failed " . $this->model,  array("id" => $id));
             }
         } catch (\Exception $e) {
             $data['error'] = $e->getMessage();
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
+
+            $logger->addError("Delete failed " . $this->model, array("id" => $id, "error" => $e->getMessage()));
         }
 
         $newResponse = $response->withJson($data);
@@ -225,6 +247,9 @@ abstract class Controller {
             }
             $rentry = $this->afterGetAPI($entry_id, $entry);
         } catch (\Exception $e) {
+            $logger = $this->ci->get('logger');
+            $logger->addError("Get API " . $this->model, array("id" => $entry_id, "error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
 

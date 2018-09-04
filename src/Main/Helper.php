@@ -56,6 +56,10 @@ class Helper {
 
             return array($status_code, $result);
         } catch (Exception $e) {
+
+            $logger = $this->ci->get('logger');
+            $logger->addError("CURL", array("URL" => $URL, "method" => $method, "data" => $data, "error" => $e->getMessage()));
+
             print $e->getMessage();
         }
     }
@@ -109,10 +113,17 @@ class Helper {
             $user = $this->usermapper->get($userFromSession->id);
             $this->setUser($user);
 
-            // add user to view
+            // add updated user to view
             $this->ci->get('view')->getEnvironment()->addGlobal("user", $user);
 
             return $user;
+        }
+        return null;
+    }
+    
+    public function getUserLogin(){
+        if (array_key_exists("user", $_SESSION)) {
+            return $_SESSION["user"]->login;
         }
         return null;
     }
@@ -143,7 +154,6 @@ class Helper {
     public function checkLogin($username = null, $password = null) {
 
         $logger = $this->ci->get('logger');
-        $info = $this->ci->get('info');
         $banlist = new \App\Main\BanlistMapper($this->ci);
 
         if (!is_null($username) && !is_null($password)) {
@@ -153,16 +163,14 @@ class Helper {
 
                 if (password_verify($password, $user->password)) {
                     $this->setUser($user);
-                    $banlist->deleteFailedLoginAttempts($info["REMOTE_ADDR"]);
+                    $banlist->deleteFailedLoginAttempts($this->getIP());
 
-                    $info["login"] = $username;
-                    $logger->addInfo('LOGIN successfully', $info);
+                    $logger->addInfo('LOGIN successfully', array("login" => $username));
 
                     return true;
                 }
             } catch (\Exception $e) {
-                $logger = $this->ci->get('logger');
-                $logger->addInfo('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
+                $logger->addError('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
             }
 
 
@@ -173,20 +181,24 @@ class Helper {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("WRONG_LOGIN"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
 
-
-            $logger = $this->ci->get('logger');
-            $info["user"] = $username;
-            $logger->addInfo('Login WRONG', $info);
+            $logger->addWarning('Login WRONG', array("login" => $username));
 
             /**
              * Log failed login to database
              */
-            if (!is_null($username) && !is_null($info["REMOTE_ADDR"])) {
-                $model = new \App\Base\Model(array('ip' => $info["REMOTE_ADDR"], 'username' => $username));
+            if (!is_null($username) && !is_null($this->getIP())) {
+                $model = new \App\Base\Model(array('ip' => $this->getIP(), 'username' => $username));
                 $banlist->insert($model);
             }
         }
         return false;
+    }
+
+    public function getIP() {
+        return filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+    }
+    public function getURI() {
+        return filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING);
     }
 
 }

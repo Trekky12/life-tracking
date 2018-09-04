@@ -120,6 +120,9 @@ class Controller extends \App\Base\Controller {
     }
 
     public function record(Request $request, Response $response) {
+
+        $logger = $this->ci->get('logger');
+
         $data = $request->getParsedBody();
 
         $data['user'] = $this->ci->get('helper')->getUser()->id;
@@ -140,7 +143,13 @@ class Controller extends \App\Base\Controller {
                 $this->preSave(null, $data);
                 $id = $this->mapper->insert($entry);
                 $budgets = $this->afterSave($id, $data);
+                
+                $logger->addInfo("Record Finances", array("id" => $id));
+                
             } catch (\Exception $e) {
+
+                $logger->addError("Record Finances", array("error" => $e->getMessage()));
+
                 return $response->withJSON(array('status' => 'error', 'data' => $e->getMessage()));
             }
 
@@ -322,7 +331,7 @@ class Controller extends \App\Base\Controller {
         $income_data = array_map(function($el) {
             return $el[1];
         }, $data);
-        
+
         $diff_data = array_map(function($el) {
             return $el[1] - $el[0];
         }, $data);
@@ -338,7 +347,7 @@ class Controller extends \App\Base\Controller {
         $spendings = json_encode(array_values($spendings_data), JSON_NUMERIC_CHECK);
         $income = json_encode(array_values($income_data), JSON_NUMERIC_CHECK);
         $labels = json_encode($labels, JSON_NUMERIC_CHECK);
-        
+
         $diff = json_encode(array_values($diff_data), JSON_NUMERIC_CHECK);
 
         return array($data, $spendings, $income, $labels, $diff);

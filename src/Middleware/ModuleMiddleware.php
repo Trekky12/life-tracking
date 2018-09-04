@@ -15,7 +15,7 @@ class ModuleMiddleware {
     }
 
     public function __invoke(Request $request, Response $response, $next) {
-        
+
         $user = $this->ci->get('helper')->getUser();
 
         $baseRoute = $request->getAttribute('route');
@@ -38,6 +38,9 @@ class ModuleMiddleware {
                 return $next($request, $response);
             }
             // No Access
+            $logger = $this->ci->get('logger');
+            $logger->addWarning("No Access");
+
             return $this->ci->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
         }
         // Route not found

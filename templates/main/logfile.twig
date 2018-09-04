@@ -1,0 +1,67 @@
+{% extends "base.twig" %}
+
+{% set active = 'index' %}
+
+{% block body %}
+    <div id="logviewer-filter">
+        <span class="log-filter">
+            <input type="checkbox" id="show-debug" data-type="DEBUG" checked/>
+            <label for="show-debug">DEBUG</label>
+        </span>
+        <span class="log-filter">
+            <input type="checkbox" id="show-info" data-type="INFO" checked/>
+            <label for="show-info">INFO</label>
+        </span>
+        <span class="log-filter">
+            <input type="checkbox" id="show-notice" data-type="NOTICE" checked/>
+            <label for="show-notice">NOTICE</label>
+        </span>
+        <span class="log-filter">
+            <input type="checkbox" id="show-warning" data-type="WARNING" checked/>
+            <label for="show-warning">WARNING</label>
+        </span>
+        <span class="log-filter">
+            <input type="checkbox" id="show-error" data-type="ERROR" checked/>
+            <label for="show-error">ERROR</label>
+        </span>
+        <span class="log-filter">
+            <input type="checkbox" id="show-critical" data-type="CRITICAL" checked/>
+            <label for="show-critical">CRITICAL</label>
+        </span>
+        <span class="log-filter">
+            <input type="checkbox" id="show-alert" data-type="ALERT" checked/>
+            <label for="show-alert">ALERT</label>
+        </span>
+        <span class="log-filter">
+            <input type="checkbox" id="show-emergency" data-type="EMERGENCY" checked/>
+            <label for="show-emergency">EMERGENCY</label>
+        </span>
+    </div>
+    <div id="logviewer">
+        {% for log in logfile %}
+            {% if not log["hide"] %}
+                <div class="log-entry {{log["level"]}}">
+                    [{{log["date"]}}] {{log["level"]}}
+
+                    {%if log["user"] %}
+                        // {{log["user"]}}
+                    {% endif %} 
+
+                    // {{log["message"]}}   
+
+                    // URL: {{log["url"]}}
+
+                    {%if log["context"] %}
+                        // {{log["context"]}}
+                    {%endif %}
+
+                    {%if log["level"] not in ["INFO", "NOTICE"]  %}
+                        // {{log["extra"]}}
+                    {%endif %}
+
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

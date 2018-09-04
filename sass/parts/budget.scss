@@ -109,13 +109,13 @@
             position:absolute;
             left:0;
             right:0;
-            z-index:20;
+            z-index:1;
         }
         
         .state{
             position: absolute;
             border-right: 2px dashed $color_text-main;
-            z-index:10;
+            z-index:1;
             height:24px;
         }
     }

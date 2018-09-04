@@ -73,6 +73,27 @@ $container['logger'] = function ($c) {
     $logger = new Monolog\Logger($settings['name']);
     $logger->pushProcessor(new Monolog\Processor\UidProcessor());
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], Monolog\Logger::DEBUG));
+    $logger->pushProcessor(function ($record) use ($c) {
+        $user = $c->get('helper')->getUserLogin();
+        
+        if (!is_null($user)) {
+            $record['extra']['user'] = $user;
+        }
+
+        return $record;
+    });
+
+    $extraFields = [
+        'url' => 'REQUEST_URI',
+        'ip' => 'REMOTE_ADDR',
+        'http_method' => 'REQUEST_METHOD',
+        'server' => 'SERVER_NAME',
+        'referrer' => 'HTTP_REFERER',
+        'query' => 'QUERY_STRING',
+        'user_agent' => 'HTTP_USER_AGENT'
+    ];
+
+    $logger->pushProcessor(new Monolog\Processor\WebProcessor(null, $extraFields));
     return $logger;
 };
 
@@ -88,22 +109,12 @@ $container['db'] = function ($c) {
         $pdo->exec("set names utf8");
         return $pdo;
     } catch (\PDOException $e) {
-        $logger = $c->get('logger');
-        $logger->addError($e->getMessage(), $c["info"]);
+        $logger = $c['logger'];
+        $logger->addCritical($e->getMessage());
         die("No access to database");
     }
 };
 
-$container["info"] = function($c) {
-    return [
-        'USER' => array_key_exists('user', $_SESSION) ? $_SESSION["user"]->login : null,
-        'REMOTE_ADDR' => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP),
-        'HTTP_USER_AGENT' => filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING),
-        'REQUEST_METHOD' => filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING),
-        'QUERY_STRING' => filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_SANITIZE_STRING),
-        'REQUEST_URI' => filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING),
-    ];
-};
 
 /**
  * Custom Error Handler
@@ -113,7 +124,7 @@ $container['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
 
         $logger = $c->get('logger');
-        $logger->addError($exception->getMessage(), $c["info"]);
+        $logger->addCritical($exception->getMessage());
 
         return $c->get('view')->render($response, 'error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);
     };
@@ -123,7 +134,7 @@ $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
 
         $logger = $c->get('logger');
-        $logger->addInfo("Page not found", $c["info"]);
+        $logger->addWarning("Page not found");
 
         return $c->get('view')->render($response, 'error.twig', ['message' => $c->get('helper')->getTranslatedString("NOTFOUND"), 'message_type' => 'danger']);
     };
@@ -133,8 +144,17 @@ $container['notAllowedHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
 
         $logger = $c->get('logger');
-        $logger->addInfo("Page not allowed", $c["info"]);
+        $logger->addWarning("Page not allowed");
 
         return $c->get('view')->render($response, 'error.twig', ['message' => $c->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
+    };
+};
+
+$container['phpErrorHandler'] = function ($c) {
+    return function ($request, $response, $error) use ($c) {
+        $logger = $c->get('logger');
+        $logger->addCritical($error->getMessage());
+
+        return $c->get('view')->render($response, 'error.twig', ['message' => $error->getMessage(), 'message_type' => 'danger']);
     };
 };

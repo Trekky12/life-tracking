@@ -288,17 +288,23 @@
             ],
             "columnDefs": [
                 {
-                    "targets": [6, 7],
+                    "targets": [8, 9],
                     "orderable": false
                 },
                 {
-                    "targets": [1, 2],
+                    "targets": [4, 5],
                     "render": function (data, type, row) {
                         return data ? moment(data).format(i18n.dateformatJS) : "";
                     }
                 },
                 {
-                    "targets": [5],
+                    "targets": [7],
+                    "render": function (data, type, row) {
+                        return data ? moment(data).format(i18n.dateformatJSFull) : "";
+                    }
+                },
+                {
+                    "targets": [3],
                     "render": function (data, type, row) {
                         if (type === 'display' || type === 'filter') {
                             return data + " " + i18n.currency;
@@ -659,7 +665,23 @@
             },
             slide: function (event, ui) {
                 $(this).siblings('.slider-value').val(ui.value);
-            }});
+            }
+        });
+
+        /**
+         * Logviewer autoscroll to bottom
+         */
+        if ($('#logviewer').length) {
+            $('#logviewer').scrollTop($('#logviewer')[0].scrollHeight);
+
+            $('.log-filter input[type="checkbox"]').on('change', function (el) {
+                var type = $(this).data('type');
+
+                $('#logviewer .log-entry.' + type).toggle();
+                $('#logviewer').scrollTop($('#logviewer')[0].scrollHeight);
+
+            });
+        }
 
 
     });

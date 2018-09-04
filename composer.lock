@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "15e2ac02ac693cd6c7690176c6a65056",
+    "content-hash": "698e39ab960017ff6a0d2fb6eba66e8b",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -36,6 +36,45 @@
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
             "time": "2017-02-14T19:40:03+00:00"
+        },
+        {
+            "name": "ddtraceweb/monolog-parser",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ddtraceweb/monolog-parser.git",
+                "reference": "1aa1a4af21c28796d89adacac096bb370b73a42b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ddtraceweb/monolog-parser/zipball/1aa1a4af21c28796d89adacac096bb370b73a42b",
+                "reference": "1aa1a4af21c28796d89adacac096bb370b73a42b",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Dubture": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Gruendler",
+                    "email": "r.gruendler@gmail.com"
+                }
+            ],
+            "description": "A parser for monolog log entries",
+            "time": "2015-06-25T08:36:59+00:00"
         },
         {
             "name": "guzzlehttp/psr7",

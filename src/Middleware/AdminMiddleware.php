@@ -21,6 +21,10 @@ class AdminMiddleware {
         if (!is_null($user) && $user->isAdmin()) {
             return $next($request, $response);
         }
+
+        $logger = $this->ci->get('logger');
+        $logger->addWarning("No Admin");
+
         return $this->ci->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
     }
 
