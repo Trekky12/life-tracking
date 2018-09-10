@@ -17,8 +17,8 @@
         @media screen and (min-width: $size_mobile_navigation){
             white-space: nowrap;
         }
-        &.INFO{
-            color: $color_blue_light;
+        &.INFO, &.NOTICE{
+            color: $color_blue;
         }
         &.ERROR, &.EMERGENCY, &.ALERT, &.CRITICAL{
             color: $color_red;
@@ -26,8 +26,9 @@
         &.WARNING{
             color: $color_orange;
         }
-        &.NOTICE, &.DEBUG{
-            color: $color_green;
+        &.DEBUG{
+            //color: $color_green;
+            color: $color_blue_light
         }
     }
 }

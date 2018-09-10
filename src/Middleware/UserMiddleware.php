@@ -47,7 +47,7 @@ class UserMiddleware {
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {
 
-            $logger->addInfo('Site CALL');
+            $logger->addDebug('Site CALL');
 
             return $next($request, $response);
         }

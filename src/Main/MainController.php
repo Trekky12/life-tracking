@@ -62,7 +62,7 @@ class MainController {
     public function logout(Request $request, Response $response) {
 
         $logger = $this->ci->get('logger');
-        $logger->addInfo('LOGOUT');
+        $logger->addNotice('LOGOUT');
 
         $this->ci->get('helper')->deleteSessionVar("user");
 

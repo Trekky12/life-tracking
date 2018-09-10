@@ -122,19 +122,19 @@ abstract class Controller {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_ADD"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
-                $logger->addInfo("Insert Entry " . $this->model, array("id" => $id));
+                $logger->addNotice("Insert Entry " . $this->model, array("id" => $id));
             } else {
                 $elements_changed = $this->mapper->update($entry);
                 if ($elements_changed > 0) {
                     $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
                     $this->ci->get('flash')->addMessage('message_type', 'success');
 
-                    $logger->addInfo("Update Entry " . $this->model, array("id" => $id));
+                    $logger->addNotice("Update Entry " . $this->model, array("id" => $id));
                 } else {
                     $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
                     $this->ci->get('flash')->addMessage('message_type', 'info');
 
-                    $logger->addInfo("No Update of Entry " . $this->model, array("id" => $id));
+                    $logger->addNotice("No Update of Entry " . $this->model, array("id" => $id));
                 }
             }
 
@@ -192,7 +192,7 @@ abstract class Controller {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_DELETE"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
-                $logger->addInfo("Delete successfully " . $this->model, array("id" => $id));
+                $logger->addNotice("Delete successfully " . $this->model, array("id" => $id));
             } else {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
                 $this->ci->get('flash')->addMessage('message_type', 'danger');

@@ -42,11 +42,11 @@ class Controller extends \App\Base\Controller {
     public function update() {
 
         $mentries = $this->mapper->getRecurringEntries();
-        
-        $logger = $this->ci->get('logger');
-        $logger->addDebug('Recurring Entries', $mentries);
 
         if ($mentries) {
+            $logger = $this->ci->get('logger');
+            $logger->addDebug('Recurring Entries', $mentries);
+
             foreach ($mentries as $mentry) {
                 $entry = new \App\Finances\FinancesEntry([
                     'type' => $mentry->type,
@@ -136,7 +136,6 @@ class Controller extends \App\Base\Controller {
                 $this->mapper->setLastRun($id, $start->format("Y-m-d"));
             }
         }
-
     }
 
 }

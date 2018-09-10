@@ -165,7 +165,7 @@ class Helper {
                     $this->setUser($user);
                     $banlist->deleteFailedLoginAttempts($this->getIP());
 
-                    $logger->addInfo('LOGIN successfully', array("login" => $username));
+                    $logger->addNotice('LOGIN successfully', array("login" => $username));
 
                     return true;
                 }
