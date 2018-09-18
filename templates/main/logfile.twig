@@ -55,7 +55,7 @@
                         // {{log["context"]}}
                     {%endif %}
 
-                    <span class="log-extra {%if log["level"] in ["INFO", "NOTICE"] or (log["message"] == "Site CALL") %}hidden{%endif %}">
+                    <span class="log-extra {%if log["level"] in ["INFO", "NOTICE", "DEBUG"] or (log["message"] in ["Site CALL", "HTTP Auth"]) %}hidden{%endif %}">
                         // {{log["extra"]}}
                     </span>
 
