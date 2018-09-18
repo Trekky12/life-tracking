@@ -683,6 +683,12 @@
             });
         }
 
+        /**
+         * Reset lastrun when startdate on recurring entries is changed
+         */
+        $("#financesRecurringForm #dateStart").on("change", function () {
+            $("#financesRecurringForm input[name=last_run]").val("");
+        });
 
     });
 })(jQuery);
