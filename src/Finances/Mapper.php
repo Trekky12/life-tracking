@@ -60,6 +60,7 @@ class Mapper extends \App\Base\Mapper {
         $sql = $this->getSQL("COUNT(f.id)", $where);
         $this->filterByUser($sql, $bindings, true, "f.");
 
+
         $stmt = $this->db->prepare($sql);
         if (is_array($bindings)) {
             for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
@@ -70,7 +71,35 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
-            return intval($stmt->fetchColumn());
+            return $stmt->fetchColumn();
+        }
+        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+    }
+
+    public function dataTableSum($where, $bindings, $type = 0) {
+        
+        if ($where != '') {
+            $where .= " AND type = :binding_type";
+        } else {
+            $where .= " WHERE type = :binding_type";
+        }
+        array_push($bindings, ['key' => ":binding_type", 'val' => $type, 'type' => \PDO::PARAM_INT]);
+        
+        $sql = $this->getSQL("SUM(f.value)", $where);
+
+        $this->filterByUser($sql, $bindings, true, "f.");
+
+        $stmt = $this->db->prepare($sql);
+        if (is_array($bindings)) {
+            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
+                $binding = $bindings[$i];
+                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
+            }
+        }
+
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchColumn();
         }
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
@@ -126,7 +155,7 @@ class Mapper extends \App\Base\Mapper {
 
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
-    
+
     public function statsCategoryDetail($year, $type, $category) {
 
         $sql = "SELECT id, type, description, value FROM " . $this->getTable() . " "

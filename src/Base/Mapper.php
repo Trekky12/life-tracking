@@ -170,7 +170,7 @@ abstract class Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    public function dataTable($where, $bindings, $order, $limit) {
+    /*public function dataTable($where, $bindings, $order, $limit) {
         $sql = "SELECT * FROM " . $this->getTable() . " ";
 
         if (!empty($where)) {
@@ -205,8 +205,8 @@ abstract class Mapper {
         return $results;
     }
 
-    public function dataTableCount($where, $bindings) {
-        $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable() . " ";
+    public function dataTableAggregation($where, $bindings, $aggregation = "COUNT"){
+        $sql = "SELECT $aggregation({$this->id}) FROM " . $this->getTable() . " ";
         if (!empty($where)) {
             $sql .= "{$where}";
         }
@@ -226,7 +226,7 @@ abstract class Mapper {
             return intval($stmt->fetchColumn());
         }
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
-    }
+    }*/
 
     protected function filterByUser(&$sql, &$bindings, $datatable = false, $alias = "") {
 

@@ -190,6 +190,7 @@
         /**
          * Tables
          */
+        var totalFinancesSum = null;
 
         $("#finance_table").DataTable({
             "language": {
@@ -244,8 +245,25 @@
             ],
             "processing": true,
             "serverSide": true,
-            "ajax": jsObject.finances_table,
-            "deferLoading": jsObject.datacount
+            "ajax": {
+                "url": jsObject.finances_table,
+                "dataSrc": function (data) {
+                    totalFinancesSum = data.recordsTotal !== data.recordsFiltered ? data.sum : null;
+                    return data.data;
+                }
+            },
+            "deferLoading": jsObject.datacount,
+            /**
+             * @see https://datatables.net/forums/discussion/comment/130741/#Comment_130741
+             */
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var content = "";
+                if (totalFinancesSum !== null) {
+                    content = totalFinancesSum + " " + i18n.currency;
+                }
+                $(api.column(5).footer()).html(content);
+            }
         });
 
         $("#category_table").DataTable({

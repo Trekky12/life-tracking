@@ -229,9 +229,9 @@ class Controller extends \App\Base\Controller {
         $stats = $this->mapper->statsMonthCategory($year, $month, $type, $category);
 
         $category_name = $this->cat_mapper->get($category);
-        
+
         list($labels, $data) = $this->preparePieChartGrouped($stats);
-        
+
 
         return $this->ci->view->render($response, 'finances/stats/month_cat.twig', [
                     "stats" => $stats,
@@ -313,11 +313,15 @@ class Controller extends \App\Base\Controller {
         $data = $this->mapper->dataTable($where, $bindings, $order, $limit);
         $recordsFiltered = $this->mapper->dataTableCount($where, $bindings);
         $recordsTotal = $this->mapper->count();
+        
+        // subtract expenses from income
+        $recordSum = $this->mapper->dataTableSum($where, $bindings, 0) -  $this->mapper->dataTableSum($where, $bindings, 1);
 
         return $response->withJson([
                     "draw" => isset($requestData['draw']) ? intval($requestData['draw']) : 0,
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
+                    "sum" => $recordSum,
                     "data" => \App\Main\SSP::data_output($columns, $data)
                         ]
         );
@@ -389,7 +393,7 @@ class Controller extends \App\Base\Controller {
         $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
         return array($labels, $data);
     }
-    
+
     private function preparePieChartGrouped($stats) {
         $data = [];
 
