@@ -8,7 +8,7 @@
     <div class="inner-content">
         <div class="page-header">
             <h2>{% if type == 0 %} {{lang["FINANCES_SPENDINGS"]}} {% else %} {{lang["FINANCES_INCOMES"]}} {% endif %}
-                {{lang["IN"]}} {{month}}/{{year}}
+                {{lang["IN"]}} {{year}}
             </h2>
             <button class="white" id="go-back-btn">{{lang["BACK"]}}</button>
         </div>
@@ -31,7 +31,7 @@
                             <td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td> 
                             <td data-title="{{lang["COUNT"]}}">{{entry.count}}</td> 
                             <td data-title="{{lang["SUM"]}}">{{entry.sum}}</td> 
-                            <td><a href="{{  path_for('finances_stats_month_category', {'year' : entry.year, 'month' : entry.month, 'type' :entry.type, 'category' : entry.category_id}) }}"><span class="fa fa-pie-chart fa-lg"></span></a></td>
+                            <td><a href="{{  path_for('finances_stats_category_detail', {'year' : entry.year, 'type' :entry.type, 'category' : entry.category_id}) }}"><span class="fa fa-pie-chart fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -87,26 +87,58 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
     public function statsYear($year) {
-        $sql = "SELECT YEAR(date) as year, MONTH(date) as month, type,  SUM(value) as sum, COUNT(value) as count "
+        $sql = "SELECT YEAR(date) as year, MONTH(date) as month, type, SUM(value) as sum, COUNT(value) as count "
                 . "FROM " . $this->getTable() . " "
                 . "WHERE YEAR(date) = :year ";
 
         $bindings = array("year" => $year);
         $this->filterByUser($sql, $bindings);
 
-        $sql .= " GROUP BY YEAR(date), MONTH(date), type"
-                . " ORDER BY YEAR(date) DESC, MONTH(date) DESC";
+        $sql .= " GROUP BY YEAR(date), MONTH(date), type";
+        $sql .= " ORDER BY YEAR(date) DESC, MONTH(date) DESC";
+
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+        return $stmt->fetchAll(\PDO::FETCH_BOTH);
+    }
+
+    public function statsCategory($year, $type) {
+        $sql = "SELECT YEAR(date) as year, type, fc.name as category, fc.id as category_id, SUM(value) as sum, COUNT(value) as count "
+                . "FROM " . $this->getTable() . " f, " . $this->getTable("finances_categories") . " fc "
+                . "WHERE f.category = fc.id "
+                . " AND YEAR(date) = :year "
+                . "AND f.type = :type ";
+
+        $bindings = array("year" => $year, "type" => $type);
+        $this->filterByUser($sql, $bindings, false, "f.");
+
+        $sql .= " GROUP BY YEAR(date), type, category";
+        $sql .= " ORDER BY YEAR(date) DESC, sum DESC, category ASC";
 
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
-        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_BOTH);
+    }
+    
+    public function statsCategoryDetail($year, $type, $category) {
+
+        $sql = "SELECT id, type, description, value FROM " . $this->getTable() . " "
+                . "WHERE category = :category "
+                . "AND YEAR(date) = :year "
+                . "AND type = :type ";
+
+        $bindings = array("year" => $year, "type" => $type, "category" => $category);
+        $this->filterByUser($sql, $bindings);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
@@ -126,8 +158,6 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
-        $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
@@ -144,8 +174,6 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
-        $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
@@ -162,9 +190,6 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
-        $stmt->execute();
-
         return floatval($stmt->fetchColumn());
     }
 
@@ -182,27 +207,6 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_BOTH);
-    }
-
-    /**
-     * not used
-     */
-    public function statsCategory() {
-        $sql = "SELECT YEAR(date) as year, type, fc.name as category, SUM(value) as sum, COUNT(value) as count FROM " . $this->getTable() . " f, " . $this->getTable("finances_categories") . " fc WHERE f.category = fc.id ";
-
-        $bindings = array("year" => $year, "month" => $month);
-        $this->filterByUser($sql, $bindings);
-
-        $sql .= " GROUP BY YEAR(date), type, category";
-
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
-
-        $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
@@ -232,8 +236,6 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
-        $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
@@ -251,8 +253,6 @@ class Mapper extends \App\Base\Mapper {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
-        $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 

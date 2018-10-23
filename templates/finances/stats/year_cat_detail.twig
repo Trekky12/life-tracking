@@ -2,40 +2,40 @@
 
 {% set active = 'finances' %}
 
-
 {% block body %}
 
     <div class="inner-content">
         <div class="page-header">
             <h2>{% if type == 0 %} {{lang["FINANCES_SPENDINGS"]}} {% else %} {{lang["FINANCES_INCOMES"]}} {% endif %}
-                {{lang["IN"]}} {{month}}/{{year}}
+                {{lang["IN"]}} {{year}} {{lang["FOR"]}} {{lang["CATEGORY"]}} {{category|raw}}
             </h2>
             <button class="white" id="go-back-btn">{{lang["BACK"]}}</button>
         </div>
         <div class="page-content">
             
             <canvas id="financeDetailChart" data-values="{{data}}" data-labels="{{labels}}"></canvas>
-            
-            <table id="stats_month_table" class="table table-hover small">
+
+            <table id="stats_cat_table" class="table table-hover small">
                 <thead>
                     <tr>
-                        <th>{{lang["CATEGORY"]}}</th>
-                        <th>{{lang["COUNT"]}}</th>
-                        <th>{{lang["SUM"]}}</th>
+                        <th>{{lang["DESCRIPTION"]}}</th>
+                        <th>{{lang["VALUE"]}}</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for entry in stats %}
                         <tr>
-                            <td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td> 
-                            <td data-title="{{lang["COUNT"]}}">{{entry.count}}</td> 
-                            <td data-title="{{lang["SUM"]}}">{{entry.sum}}</td> 
-                            <td><a href="{{  path_for('finances_stats_month_category', {'year' : entry.year, 'month' : entry.month, 'type' :entry.type, 'category' : entry.category_id}) }}"><span class="fa fa-pie-chart fa-lg"></span></a></td>
+                            <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td> 
+                            <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
+                            <td><a href="{{  path_for('finances_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  path_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
         </div>
     </div>
 

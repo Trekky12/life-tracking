@@ -412,7 +412,7 @@
                 "url": jsObject.datatable
             },
             "paging": true,
-            "order": [[0, 'desc'], [1, 'desc']],
+            "order": [[0, 'desc']],
             "columnDefs": [
                 {
                     "targets": [0],
@@ -438,7 +438,7 @@
                     }
                 },
                 {
-                    "targets": [3],
+                    "targets": [4],
                     "orderable": false
                 }
             ],

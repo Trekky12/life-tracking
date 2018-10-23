@@ -143,9 +143,8 @@ class Controller extends \App\Base\Controller {
                 $this->preSave(null, $data);
                 $id = $this->mapper->insert($entry);
                 $budgets = $this->afterSave($id, $data);
-                
+
                 $logger->addInfo("Record Finances", array("id" => $id));
-                
             } catch (\Exception $e) {
 
                 $logger->addError("Record Finances", array("error" => $e->getMessage()));
@@ -186,27 +185,32 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, 'finances/stats/year.twig', ['stats' => $data, "year" => $year, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
     }
 
+    public function statsCategory(Request $request, Response $response) {
+        $year = $request->getAttribute('year');
+        $type = $request->getAttribute('type');
+
+        $stats = $this->mapper->statsCategory($year, $type);
+        list($labels, $data) = $this->preparePieChart($stats);
+
+        return $this->ci->view->render($response, 'finances/stats/year_cat.twig', [
+                    "stats" => $stats,
+                    "type" => $type,
+                    "year" => $year,
+                    "data" => $data,
+                    "labels" => $labels]);
+    }
+
     public function statsMonthType(Request $request, Response $response) {
         $year = $request->getAttribute('year');
         $month = $request->getAttribute('month');
         $type = $request->getAttribute('type');
 
         $stats = $this->mapper->statsMonthType($year, $month, $type);
-
-        $labels = array_map(function($e) {
-            $cat = htmlspecialchars_decode($e["category"]);
-            return $cat;
-        }, $stats);
-        $data = array_map(function($e) {
-            return $e["sum"];
-        }, $stats);
-
-        $labels = json_encode(array_values($labels), JSON_NUMERIC_CHECK);
-        $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
+        list($labels, $data) = $this->preparePieChart($stats);
 
 
         return $this->ci->view->render($response, 'finances/stats/month.twig', [
-                    'stats' => $stats,
+                    "stats" => $stats,
                     "month" => $month,
                     "year" => $year,
                     "type" => $type,
@@ -225,27 +229,35 @@ class Controller extends \App\Base\Controller {
         $stats = $this->mapper->statsMonthCategory($year, $month, $type, $category);
 
         $category_name = $this->cat_mapper->get($category);
+        
+        list($labels, $data) = $this->preparePieChartGrouped($stats);
+        
 
-        $data = [];
-
-        foreach ($stats as $el) {
-            // filter special characters
-            // group by description
-            $cat = htmlspecialchars_decode($el["description"]);
-
-            if (!array_key_exists($cat, $data)) {
-                $data[$cat] = 0;
-            }
-            $data[$cat] += $el["value"];
-        }
-
-
-        $labels = json_encode(array_keys($data), JSON_NUMERIC_CHECK);
-        $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
-
-        return $this->ci->view->render($response, 'finances/stats/cat.twig', [
+        return $this->ci->view->render($response, 'finances/stats/month_cat.twig', [
                     "stats" => $stats,
                     "month" => $month,
+                    "year" => $year,
+                    "type" => $type,
+                    "category" => $category_name->name,
+                    "data" => $data,
+                    "labels" => $labels]
+        );
+    }
+
+    public function statsCategoryDetail(Request $request, Response $response) {
+        $year = $request->getAttribute('year');
+        $category = $request->getAttribute('category');
+        $type = $request->getAttribute('type');
+
+
+        $stats = $this->mapper->statsCategoryDetail($year, $type, $category);
+
+        $category_name = $this->cat_mapper->get($category);
+
+        list($labels, $data) = $this->preparePieChartGrouped($stats);
+
+        return $this->ci->view->render($response, 'finances/stats/year_cat_detail.twig', [
+                    "stats" => $stats,
                     "year" => $year,
                     "type" => $type,
                     "category" => $category_name->name,
@@ -362,6 +374,40 @@ class Controller extends \App\Base\Controller {
 
         $dateObj = \DateTime::createFromFormat('!m', $month);
         return $fmt->format($dateObj);
+    }
+
+    private function preparePieChart($stats) {
+        $labels = array_map(function($e) {
+            $cat = htmlspecialchars_decode($e["category"]);
+            return $cat;
+        }, $stats);
+        $data = array_map(function($e) {
+            return $e["sum"];
+        }, $stats);
+
+        $labels = json_encode(array_values($labels), JSON_NUMERIC_CHECK);
+        $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
+        return array($labels, $data);
+    }
+    
+    private function preparePieChartGrouped($stats) {
+        $data = [];
+
+        foreach ($stats as $el) {
+            // filter special characters
+            // group by description
+            $cat = htmlspecialchars_decode($el["description"]);
+
+            if (!array_key_exists($cat, $data)) {
+                $data[$cat] = 0;
+            }
+            $data[$cat] += $el["value"];
+        }
+
+
+        $labels = json_encode(array_keys($data), JSON_NUMERIC_CHECK);
+        $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
+        return array($labels, $data);
     }
 
     public function statsBudget(Request $request, Response $response) {

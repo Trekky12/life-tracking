@@ -91,7 +91,7 @@ class Location extends \App\Base\Model{
         $diff_gps = $this->times - $this->gps_tms;
         $diff_net = $this->times - $this->net_tms;
         
-        if($diff_gps > $diff_net){
+        if($diff_gps > $diff_net && !is_null($this->net_lat) && !is_null($this->net_lng)){
             $data['lat'] = $this->net_lat;
             $data['lng'] = $this->net_lng;
             $data['acc'] = $this->net_acc;

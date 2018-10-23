@@ -11,7 +11,7 @@ $app->group('', function() {
     $this->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
 
     $this->get('/cron', '\App\Main\MainController:cron')->setName('cron');
-    
+
     $this->get('/logfile', '\App\Main\MainController:showLog')->setName('logfile')->add('App\Middleware\AdminMiddleware');
 });
 
@@ -27,6 +27,8 @@ $app->group('/finances', function() {
 
     $this->group('/stats', function() {
         $this->get('/', '\App\Finances\Controller:stats')->setName('finances_stats');
+        $this->get('/{year:[0-9]{4}}/categories/{type:[0-1]}', '\App\Finances\Controller:statsCategory')->setName('finances_stats_category');
+        $this->get('/{year:[0-9]{4}}/categories/{type:[0-1]}/{category:[0-9]+}', '\App\Finances\Controller:statsCategoryDetail')->setName('finances_stats_category_detail');
         $this->get('/{year:[0-9]{4}}/', '\App\Finances\Controller:statsYear')->setName('finances_stats_year');
         $this->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/', '\App\Finances\Controller:statsMonthType')->setName('finances_stats_month_type');
         $this->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/{category:[0-9]+}', '\App\Finances\Controller:statsMonthCategory')->setName('finances_stats_month_category');
