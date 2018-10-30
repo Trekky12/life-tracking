@@ -45,7 +45,8 @@ return [
                 'login',
                 'logout',
                 'cron'
-            ]
+            ],
+            'secret' => 'my_hash_secret'
         ]
     ]
 ];

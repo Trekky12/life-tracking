@@ -238,4 +238,6 @@ $lang["COMMENT"] = "Kommentar";
 $lang["ADD_COMMENT"] = "Kommentar hinzufügen";
 $lang["REALLY_CLOSE"] = "Soll die Seite wirklich geschlossen werden?";
 
+$lang["TOKEN_INVALID"] = "Token falsch";
+
 return $lang;

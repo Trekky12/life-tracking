@@ -16,7 +16,7 @@ class UserMiddleware {
 
     public function __invoke(Request $request, Response $response, $next) {
 
-
+        
         /**
          * Do not allow access for banned ips
          */
@@ -74,7 +74,7 @@ class UserMiddleware {
 
             if (!is_null($username) && !is_null($password)) {
                 $logger->addDebug('HTTP Auth', array("user" => $username));
-                if ($this->ci->get('helper')->checkLogin($username, $password)) {
+                if ($this->ci->get('helper')->checkLogin($username, $password, false)) {
                     return $next($request, $response);
                 }
 

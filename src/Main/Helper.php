@@ -2,14 +2,20 @@
 
 namespace App\Main;
 
+use \Firebase\JWT\JWT;
+
 class Helper {
 
     private $ci;
     private $usermapper;
+    private $tokenmapper;
+    // cache the user object
+    private $user = null;
 
     public function __construct($container) {
         $this->ci = $container;
         $this->usermapper = new \App\User\Mapper($this->ci);
+        $this->tokenmapper = new \App\User\Token\Mapper($this->ci);
     }
 
     public function request($URL, $method = 'GET', $data = array(), $secure = true) {
@@ -101,29 +107,70 @@ class Helper {
         return array_key_exists($key, $lang) ? $lang[$key] : $key;
     }
 
-    public function setUser(\App\User\User $user) {
-        $_SESSION["user"] = $user;
+    public function setUser($user_id, $cookie = true) {
+        //setcookie("user", $user_id);
+
+        if ($cookie) {
+            $secret = $this->ci->get('settings')['app']['secret'];
+
+            $token = hash('sha512', $secret . time() . $user_id);
+            setcookie("token", $token, time() + (3600 * 24 * 365)); // 1 year
+            // save token in database
+            $this->tokenmapper->addToken($user_id, $token, $this->getIP(), $this->getAgent());
+        } else {
+            $_SESSION["user"] = $user_id;
+        }
     }
 
     public function getUser() {
-        if (array_key_exists("user", $_SESSION)) {
-            $userFromSession = $_SESSION["user"];
+
+        if (!is_null($this->user)) {
+            return $this->user;
+        }
+
+        // Get User from token in cookie
+        $token = filter_input(INPUT_COOKIE, "token");
+        if (!is_null($token) && $token !== FALSE) {
+
+            try {
+                $user_id = $this->tokenmapper->getUserFromToken($token);
+            } catch (\Exception $e) {
+                $logger = $this->ci->get('logger');
+                $logger->addError("No Token in database");
+
+                $this->logout();
+                return null;
+            }
+
 
             // refresh user for possible changed access rights
-            $user = $this->usermapper->get($userFromSession->id);
-            $this->setUser($user);
+            $this->user = $this->usermapper->get($user_id);
+
+            // add user object to view
+            $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
+
+            $this->tokenmapper->updateTokenData($token, $this->getIP(), $this->getAgent());
+
+            return $this->user;
+        }
+        // get user from session
+        else if (array_key_exists("user", $_SESSION)) {
+            $user_id = $_SESSION["user"];
+
+            // refresh user for possible changed access rights
+            $this->user = $this->usermapper->get($user_id);
 
             // add updated user to view
-            $this->ci->get('view')->getEnvironment()->addGlobal("user", $user);
+            $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
 
-            return $user;
+            return $this->user;
         }
         return null;
     }
-    
-    public function getUserLogin(){
-        if (array_key_exists("user", $_SESSION)) {
-            return $_SESSION["user"]->login;
+
+    public function getUserLogin() {
+        if (!is_null($this->user)) {
+            return $this->user->login;
         }
         return null;
     }
@@ -151,7 +198,7 @@ class Helper {
         return $this->path;
     }
 
-    public function checkLogin($username = null, $password = null) {
+    public function checkLogin($username = null, $password = null, $setCookie = true) {
 
         $logger = $this->ci->get('logger');
         $banlist = new \App\Main\BanlistMapper($this->ci);
@@ -162,7 +209,7 @@ class Helper {
                 $user = $this->usermapper->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
-                    $this->setUser($user);
+                    $this->setUser($user->id, $setCookie);
                     $banlist->deleteFailedLoginAttempts($this->getIP());
 
                     $logger->addNotice('LOGIN successfully', array("login" => $username));
@@ -176,7 +223,7 @@ class Helper {
 
             // wrong login!
 
-            $this->ci->get('helper')->deleteSessionVar("user");
+            $this->ci->get('helper')->logout();
 
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("WRONG_LOGIN"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
@@ -194,11 +241,26 @@ class Helper {
         return false;
     }
 
+    public function logout() {
+        $token = filter_input(INPUT_COOKIE, "token");
+        if (!is_null($token) && $token !== FALSE) {
+            $this->tokenmapper->deleteToken($token);
+        }
+        setcookie("token", "", time() - 3600);
+        
+        $this->deleteSessionVar("user");
+    }
+
     public function getIP() {
         return filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
     }
+
     public function getURI() {
         return filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING);
+    }
+
+    public function getAgent() {
+        return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING);
     }
 
 }

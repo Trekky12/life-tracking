@@ -64,7 +64,7 @@ class MainController {
         $logger = $this->ci->get('logger');
         $logger->addNotice('LOGOUT');
 
-        $this->ci->get('helper')->deleteSessionVar("user");
+        $this->ci->get('helper')->logout();
 
         return $response->withRedirect($this->ci->get('router')->pathFor('index'), 302);
     }

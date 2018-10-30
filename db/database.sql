@@ -33,6 +33,20 @@ CREATE TABLE global_banlist (
     changedOn TIMESTAMP NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS global_tokens;
+CREATE TABLE global_tokens (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned NOT NULL,
+    token VARCHAR(140) NOT NULL,
+    ip VARCHAR(255) NULL,
+    agent VARCHAR(255) NULL,
+    PRIMARY KEY (id),
+    UNIQUE(token),
+    FOREIGN KEY(user) REFERENCES global_users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
