@@ -258,7 +258,7 @@ class Mapper extends \App\Base\Mapper {
         return $results;
     }
 
-    public function dataTableServiceCount($where, $bindings) {
+    public function dataTableServiceCount($where = null, $bindings = null) {
         $sql = "SELECT COUNT(id) FROM " . $this->getTable() . "";
         if (!empty($where)) {
             $sql .= " {$where}";

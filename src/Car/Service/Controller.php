@@ -376,8 +376,9 @@ class Controller extends \App\Base\Controller {
             $data[] = $my_row;
         }
 
-        $recordsFiltered = $this->mapper->dataTableServiceCount($whereAllSql, $bindings);
-        $recordsTotal = $this->mapper->count();
+        $recordsFiltered = $this->mapper->dataTableServiceCount($where, $bindings);
+        $recordsTotal = $this->mapper->dataTableServiceCount($whereAllSql, $bindings);
+
 
         return $response->withJson([
                     "draw" => isset($requestData['draw']) ? intval($requestData['draw']) : 0,
