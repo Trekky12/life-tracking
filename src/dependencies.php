@@ -17,6 +17,31 @@ $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
 
+/**
+ * CSRF Guard
+ */
+$container['csrf'] = function ($c) {
+    $guard = new \Slim\Csrf\Guard();
+    $guard->setFailureCallable(function ($request, $response, $next) use($c) {
+
+        $route = $request->getAttribute('route');
+        $allowed_routes = $c['settings']['app']['csrf_exlude'];
+
+        // DELETE currently not working since the body is empty
+        if ((!is_null($route) && in_array($route->getName(), $allowed_routes)) || $request->getMethod() == "DELETE") {
+            return $next($request, $response);
+        }
+
+        $logger = $c['logger'];
+        $logger->addCritical("Failed CSRF check");
+
+        $body = new \Slim\Http\Body(fopen('php://temp', 'r+'));
+        $body->write('Failed CSRF check!');
+        return $response->withStatus(400)->withHeader('Content-type', 'text/plain')->withBody($body);
+    });
+    return $guard;
+};
+
 
 /**
  * Twig View
@@ -32,9 +57,13 @@ $container['view'] = function ($c) {
     ));
 
     $view->addExtension(new Knlv\Slim\Views\TwigMessages(
-            new \Slim\Flash\Messages()
+            //new \Slim\Flash\Messages()
+            $c['flash']
     ));
 
+    $view->addExtension(new \App\Main\CsrfExtension(
+            $c['csrf']
+    ));
 
 
     /**
@@ -75,7 +104,7 @@ $container['logger'] = function ($c) {
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], Monolog\Logger::DEBUG));
     $logger->pushProcessor(function ($record) use ($c) {
         $user = $c->get('helper')->getUserLogin();
-        
+
         if (!is_null($user)) {
             $record['extra']['user'] = $user;
         }

@@ -1,9 +1,15 @@
 <?php
 
+$container = $app->getContainer();
 /**
  * this file defines the middlewares registered
  * (The last middleware layer added is the first to be executed)
  */
+/**
+ * CSRF Protection
+ */
+$app->add($container->get('csrf'));
+
 /**
  * Restrict sccess of modules
  */

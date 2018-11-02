@@ -5,6 +5,9 @@
 {% block bottom %}
     <div class="center-block">
         <form class="form small horizontal" role="form" name="login" id="login" method="post">
+            <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+            <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                
             <div class="form-group">
                 <label for="inputUsername" class="control-label hidden">{{lang["LOGIN"]}}</label>
                 <input name="username" class="form-control" id="inputUsername" placeholder="{{lang["LOGIN"]}}" value="" autofocus="" required="" type="text">

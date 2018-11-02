@@ -18,6 +18,9 @@
         <div class="page-content">
 
             <form action="{{  path_for('users_change_password') }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                
                 <div class="form-group">
                     <label>{{lang["LOGIN"]}}</label>
                     <p>{{user.login}}</p>

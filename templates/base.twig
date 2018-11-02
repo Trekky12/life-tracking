@@ -102,7 +102,11 @@
                 'label_delete': '{{path_for("label_delete")}}',
                 'set_archive': '{{path_for("set_archive")}}',
                 'comment_save': '{{path_for("comment_save")}}',
-                'get_category_costs': '{{path_for("finances_budgets_category_costs")}}'
+                'get_category_costs': '{{path_for("finances_budgets_category_costs")}}',
+                'csrf_keys_name' : '{{csrf.keys.name}}',
+                'csrf_name' : '{{csrf.name}}',
+                'csrf_keys_value' : '{{csrf.keys.value}}',
+                'csrf_value' : '{{csrf.value}}'
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

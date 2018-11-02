@@ -73,7 +73,9 @@
             </div>
 
             <form class="form-horizontal" id="budgetForm" action="{{  path_for('finances_budgets_save_all') }}" method="POST">
-
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                
                 {% for budget in budgets %}
                     <div class="budget-entry edit {%if budget.id not in budget_categories|keys%}remaining{%endif%}">
                         <input type="hidden" name="budget[{{loop.index-1}}][id]" value="{{budget.id}}">

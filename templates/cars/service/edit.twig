@@ -9,7 +9,9 @@
         <div class="page-content">
 
             <form class="form-horizontal" id="gasolineForm" action="{{  path_for('car_service_save', {'id' : entry.id}) }}" method="POST">
-
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                
                 {% if not entry is null %}
                     {# Hidden fields for ID to recognize updates and for not available fields so they don't get overwritten with null #}
                     <input name="id" type="hidden" value="{{entry.id}}">
