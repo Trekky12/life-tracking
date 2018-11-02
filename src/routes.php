@@ -21,7 +21,7 @@ $app->group('/finances', function() {
     $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Controller:save')->setName('finances_save');
     $this->delete('/delete/{id}', '\App\Finances\Controller:delete')->setName('finances_delete');
 
-    $this->post('/record/', '\App\Finances\Controller:record');
+    $this->post('/record/', '\App\Finances\Controller:record')->setName('finances_record');
 
     $this->get('/table/', '\App\Finances\Controller:table')->setName('finances_table');
 
@@ -70,7 +70,7 @@ $app->group('/finances', function() {
 
 $app->group('/location', function() {
     $this->get('/', '\App\Location\Controller:index')->setName('location');
-    $this->post('/record', '\App\Location\Controller:saveAPI')->setName('record');
+    $this->post('/record', '\App\Location\Controller:saveAPI')->setName('location_record');
     $this->get('/markers', '\App\Location\Controller:getMarkers')->setName('getMarkers');
     $this->delete('/delete/[{id}]', '\App\Location\Controller:delete')->setName('delete_marker');
     $this->get('/address/[{id}]', '\App\Location\Controller:getAddress')->setName('get_address');

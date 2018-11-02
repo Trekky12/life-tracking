@@ -2,14 +2,13 @@
 
 namespace App\Main;
 
-use \Firebase\JWT\JWT;
-
 class Helper {
 
     private $ci;
     private $usermapper;
     private $tokenmapper;
     // cache the user object
+    private $user_id = null;
     private $user = null;
 
     public function __construct($container) {
@@ -107,23 +106,23 @@ class Helper {
         return array_key_exists($key, $lang) ? $lang[$key] : $key;
     }
 
-    public function setUser($user_id, $cookie = true) {
-        //setcookie("user", $user_id);
+    public function setUser($user_id) {
 
-        if ($cookie) {
-            $secret = $this->ci->get('settings')['app']['secret'];
+        // cache the user
+        $this->user = $this->usermapper->get($user_id);
+        // add user to view
+        $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
 
-            $token = hash('sha512', $secret . time() . $user_id);
-            setcookie("token", $token, time() + (3600 * 24 * 365)); // 1 year
-            // save token in database
-            $this->tokenmapper->addToken($user_id, $token, $this->getIP(), $this->getAgent());
-        } else {
-            $_SESSION["user"] = $user_id;
-        }
+        // Create and save access token
+        $secret = $this->ci->get('settings')['app']['secret'];
+        $token = hash('sha512', $secret . time() . $user_id);
+        setcookie("token", $token, time() + (3600 * 24 * 365)); // 1 year
+        $this->tokenmapper->addToken($user_id, $token, $this->getIP(), $this->getAgent());
     }
 
     public function getUser() {
 
+        // get cached user object
         if (!is_null($this->user)) {
             return $this->user;
         }
@@ -142,7 +141,6 @@ class Helper {
                 return null;
             }
 
-
             // refresh user for possible changed access rights
             $this->user = $this->usermapper->get($user_id);
 
@@ -153,18 +151,7 @@ class Helper {
 
             return $this->user;
         }
-        // get user from session
-        else if (array_key_exists("user", $_SESSION)) {
-            $user_id = $_SESSION["user"];
 
-            // refresh user for possible changed access rights
-            $this->user = $this->usermapper->get($user_id);
-
-            // add updated user to view
-            $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
-
-            return $this->user;
-        }
         return null;
     }
 
@@ -198,7 +185,7 @@ class Helper {
         return $this->path;
     }
 
-    public function checkLogin($username = null, $password = null, $setCookie = true) {
+    public function checkLogin($username = null, $password = null) {
 
         $logger = $this->ci->get('logger');
         $banlist = new \App\Main\BanlistMapper($this->ci);
@@ -209,7 +196,7 @@ class Helper {
                 $user = $this->usermapper->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
-                    $this->setUser($user->id, $setCookie);
+                    $this->setUser($user->id);
                     $banlist->deleteFailedLoginAttempts($this->getIP());
 
                     $logger->addNotice('LOGIN successfully', array("login" => $username));
@@ -247,7 +234,7 @@ class Helper {
             $this->tokenmapper->deleteToken($token);
         }
         setcookie("token", "", time() - 3600);
-        
+
         $this->deleteSessionVar("user");
     }
 

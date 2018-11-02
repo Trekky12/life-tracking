@@ -21,6 +21,7 @@
     "jquery-ui": "^1.12.1",
     "leaflet": "^1.2.0",
     "mustache": "^2.3.0",
-    "normalize.css": "^7.0.0"
+    "normalize.css": "^7.0.0",
+    "sw-toolbox": "^3.6.0"
   }
 }

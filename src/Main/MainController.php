@@ -32,6 +32,15 @@ class MainController {
     }
 
     public function index(Request $request, Response $response) {
+        $pwa = $request->getQueryParam('pwa', null);
+        // is PWA? redirect to start page
+        if (!is_null($pwa)) {
+            $user = $this->ci->get('helper')->getUser();
+            if (!is_null($user) && !empty($user->start_url)) {
+                return $response->withRedirect($user->start_url, 301);
+            }
+        }
+
         return $this->ci->get('view')->render($response, 'main/index.twig', []);
     }
 

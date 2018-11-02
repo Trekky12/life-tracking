@@ -240,4 +240,7 @@ $lang["REALLY_CLOSE"] = "Soll die Seite wirklich geschlossen werden?";
 
 $lang["TOKEN_INVALID"] = "Token falsch";
 
+$lang["PWA_SETTINGS"] = "App Einstellungen";
+$lang["START_URL"] = "Start URL";
+
 return $lang;

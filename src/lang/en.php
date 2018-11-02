@@ -239,4 +239,7 @@ $lang["REALLY_CLOSE"] = "Are you sure you want to leave this Site?";
 
 $lang["TOKEN_INVALID"] = "Token invalid";
 
+$lang["PWA_SETTINGS"] = "App Settings";
+$lang["START_URL"] = "Start URL";
+
 return $lang;

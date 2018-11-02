@@ -1,5 +1,5 @@
 {
-    "name": "",
+    "name": "Life-Tracking",
     "short_name": "",
     "icons": [
         {
@@ -15,5 +15,7 @@
     ],
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+    "start_url" : "/?pwa=1",
+    "scope" : "/"
 }

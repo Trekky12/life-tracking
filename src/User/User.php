@@ -11,6 +11,7 @@ class User extends \App\Base\Model {
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
         $this->mail = $this->exists('mail', $data) ? filter_var($data['mail'], FILTER_SANITIZE_EMAIL) : null;
         $this->role = $this->exists('role', $data) ? filter_var($data['role'], FILTER_SANITIZE_STRING) : null;
+        $this->start_url = $this->exists('start_url', $data) ? filter_var($data['start_url'], FILTER_SANITIZE_STRING) : null;
 
         /**
          * No default value for password, otherwise it will be deleted 

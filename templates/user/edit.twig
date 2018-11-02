@@ -48,7 +48,7 @@
                     <input name="set_password" id="inputPassword" class="form-control" type="password" >
                 </div>
 
-                <p>{{lang["MODULES"]}}</p>
+                <h3>{{lang["MODULES"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxLocationModule">
                         <input name="set_module_location" type="checkbox" id="checkboxLocationModule" {% if entry is null or entry.module_location == 1 %}checked{% endif %}>
@@ -73,14 +73,14 @@
                         {{lang["BOARDS"]}}
                     </label>
                 </div>
-                <p>{{lang["OTHER_SETTINGS"]}}</p>
+                <h3>{{lang["OTHER_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxForcePWChange">
                         <input name="set_force_pw_change" type="checkbox" id="checkboxForcePWChange" {% if entry is null or entry.force_pw_change == 1 %}checked{% endif %}>
                         {{lang["FORCE_PW_CHANGE"]}}
                     </label>
                 </div>
-                <p>{{lang["MAIL_SETTINGS"]}}</p>
+                <h3>{{lang["MAIL_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxMailsUser">
                         <input name="set_mails_user" type="checkbox" id="checkboxMailsUser" {% if entry is null or entry.mails_user == 1 %}checked{% endif %}>
@@ -104,6 +104,11 @@
                         <input name="set_mails_board_reminder" type="checkbox" id="checkboxMailsBoardReminder" {% if entry is null or entry.mails_board_reminder == 1 %}checked{% endif %}>
                         {{lang["MAILS_BOARD_REMINDER"]}}
                     </label>
+                </div>
+                <h3>{{lang["PWA_SETTINGS"]}}</h3>
+                <div class="form-group">
+                    <label for="inputStartURL">{{lang["START_URL"]}}</label>
+                    <input type="text" class="form-control" id="inputStartURL" name="start_url" {% if not entry is null %}value="{{entry.start_url}}"{% endif %}>
                 </div>
 
                 <div class="form-group">

@@ -1,3 +1,14 @@
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js?v=20181030');
+        navigator.serviceWorker.ready.then(function (registration) {
+            console.log('Service worker successfully registered on scope', registration.scope);
+        })
+    });
+}
+
+
 (function ($) {
 
     $(document).ready(function ( ) {
