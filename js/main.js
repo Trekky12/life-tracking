@@ -45,16 +45,19 @@ if ('serviceWorker' in navigator) {
             if (!confirm(lang.really_delete)) {
                 return false;
             }
-            $.ajax({
-                url: url,
+
+            fetch(url, {
                 method: 'DELETE',
-                success: function (response) {
-                    allowedReload = true;
-                    window.location.reload();
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
                 },
-                error: function (data) {
-                    alert(data);
-                }
+                body: "csrf_name=" + jsObject.csrf_name + "&csrf_value=" + jsObject.csrf_value
+            }).then(function (response) {
+                allowedReload = true;
+                window.location.reload();
+            }).catch(function (error) {
+                alert(error);
             });
         }
 
