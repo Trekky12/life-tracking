@@ -74,7 +74,7 @@ class UserMiddleware {
 
             if (!is_null($username) && !is_null($password)) {
                 $logger->addDebug('HTTP Auth', array("user" => $username));
-                if ($this->ci->get('helper')->checkLogin($username, $password)) {
+                if ($this->ci->get('helper')->checkLogin($username, $password, true)) {
                     return $next($request, $response);
                 }
 

@@ -106,7 +106,7 @@ class Helper {
         return array_key_exists($key, $lang) ? $lang[$key] : $key;
     }
 
-    public function setUser($user_id) {
+    public function setUser($user_id, $save = true) {
 
         // cache the user
         $this->user = $this->usermapper->get($user_id);
@@ -114,10 +114,12 @@ class Helper {
         $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
 
         // Create and save access token
-        $secret = $this->ci->get('settings')['app']['secret'];
-        $token = hash('sha512', $secret . time() . $user_id);
-        setcookie("token", $token, time() + (3600 * 24 * 365)); // 1 year
-        $this->tokenmapper->addToken($user_id, $token, $this->getIP(), $this->getAgent());
+        if ($save) {
+            $secret = $this->ci->get('settings')['app']['secret'];
+            $token = hash('sha512', $secret . time() . $user_id);
+            setcookie("token", $token, time() + (3600 * 24 * 365)); // 1 year
+            $this->tokenmapper->addToken($user_id, $token, $this->getIP(), $this->getAgent());
+        }
     }
 
     public function getUser() {
@@ -185,7 +187,7 @@ class Helper {
         return $this->path;
     }
 
-    public function checkLogin($username = null, $password = null) {
+    public function checkLogin($username = null, $password = null, $http_basic_auth = false) {
 
         $logger = $this->ci->get('logger');
         $banlist = new \App\Main\BanlistMapper($this->ci);
@@ -196,7 +198,7 @@ class Helper {
                 $user = $this->usermapper->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
-                    $this->setUser($user->id);
+                    $this->setUser($user->id, !$http_basic_auth);
                     $banlist->deleteFailedLoginAttempts($this->getIP());
 
                     $logger->addNotice('LOGIN successfully', array("login" => $username));
