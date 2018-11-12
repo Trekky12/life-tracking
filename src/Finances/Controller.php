@@ -230,7 +230,7 @@ class Controller extends \App\Base\Controller {
 
         $category_name = $this->cat_mapper->get($category);
 
-        list($labels, $data) = $this->preparePieChartGrouped($stats);
+        list($labels, $data, $count) = $this->preparePieChartGrouped($stats);
 
 
         return $this->ci->view->render($response, 'finances/stats/month_cat.twig', [
@@ -254,7 +254,7 @@ class Controller extends \App\Base\Controller {
 
         $category_name = $this->cat_mapper->get($category);
 
-        list($labels, $data) = $this->preparePieChartGrouped($stats);
+        list($labels, $data, $count) = $this->preparePieChartGrouped($stats);
 
         return $this->ci->view->render($response, 'finances/stats/year_cat_detail.twig', [
                     "stats" => $stats,
@@ -262,7 +262,8 @@ class Controller extends \App\Base\Controller {
                     "type" => $type,
                     "category" => $category_name->name,
                     "data" => $data,
-                    "labels" => $labels]
+                    "labels" => $labels,
+                    "count" => $count]
         );
     }
 
@@ -313,9 +314,9 @@ class Controller extends \App\Base\Controller {
         $data = $this->mapper->dataTable($where, $bindings, $order, $limit);
         $recordsFiltered = $this->mapper->dataTableCount($where, $bindings);
         $recordsTotal = $this->mapper->count();
-        
+
         // subtract expenses from income
-        $recordSum = $this->mapper->dataTableSum($where, $bindings, 0) -  $this->mapper->dataTableSum($where, $bindings, 1);
+        $recordSum = $this->mapper->dataTableSum($where, $bindings, 0) - $this->mapper->dataTableSum($where, $bindings, 1);
 
         return $response->withJson([
                     "draw" => isset($requestData['draw']) ? intval($requestData['draw']) : 0,
@@ -405,13 +406,14 @@ class Controller extends \App\Base\Controller {
             if (!array_key_exists($cat, $data)) {
                 $data[$cat] = 0;
             }
-            $data[$cat] += $el["value"];
+            $data[$cat] += floatval($el["value"]);
         }
 
-
+        $count = count($data);
         $labels = json_encode(array_keys($data), JSON_NUMERIC_CHECK);
         $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
-        return array($labels, $data);
+
+        return array($labels, $data, $count);
     }
 
     public function statsBudget(Request $request, Response $response) {

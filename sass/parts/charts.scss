@@ -1,3 +1,7 @@
 #financeSummaryChart, #financeDetailChart{
     max-height: 250px;
+    
+    &.big{
+        max-height: 500px;
+    }
 }

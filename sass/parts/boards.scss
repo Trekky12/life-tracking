@@ -26,6 +26,10 @@
 
 .board-content{
 
+    @media screen and (max-width: $size_mobile) {   
+        margin-right: 10%;
+    }
+
     /* Stack */
 
     .stack-wrapper{
