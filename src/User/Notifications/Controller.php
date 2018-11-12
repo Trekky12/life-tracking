@@ -57,6 +57,8 @@ class Controller extends \App\Base\Controller {
     public function subscribe(Request $request, Response $response) {
 
         $data = json_decode($request->getBody(), true);
+        
+        
 
         $logger = $this->ci->get('logger');
 
@@ -64,6 +66,7 @@ class Controller extends \App\Base\Controller {
         $entry->ip = $this->ci->get('helper')->getIP();
         $entry->agent = $this->ci->get('helper')->getAgent();
         $entry->user = $this->ci->get('helper')->getUser()->id;
+        $entry->changedOn = date('Y-m-d G:i:s');
 
         if ($request->isPost()) {
             $logger->addInfo('Subscription insert', $entry->get_fields());

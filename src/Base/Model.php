@@ -26,7 +26,7 @@ class Model implements \JsonSerializable {
             $this->id = filter_var($data['id'], FILTER_SANITIZE_NUMBER_INT);
         }
 
-        $this->changedOn = $this->exists('changedOn', $data) || (array_key_exists('changedOn', $data) && is_null($data['changedOn'])) ? $data['changedOn'] : date('Y-m-d G:i:s');
+        $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d G:i:s');
     }
 
     public function __get($key) {
