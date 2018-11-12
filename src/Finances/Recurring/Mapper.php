@@ -120,11 +120,11 @@ class Mapper extends \App\Base\Mapper {
 
 
         $sql = "SELECT SUM(sum) FROM ( ";
-        $sql .= "   SELECT value*multiplier as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'month' ";
+        $sql .= "   SELECT value/multiplier as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'month' ";
         $sql .= "   UNION ALL ";
-        $sql .= "   SELECT value*(4*multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'week' ";
+        $sql .= "   SELECT value*(4/multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'week' ";
         $sql .= "   UNION ALL ";
-        $sql .= "   SELECT value*(30*multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'day' ";
+        $sql .= "   SELECT value*(30/multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'day' ";
         $sql .= "   UNION ALL ";
         $sql .= "   SELECT value/(12*multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'year' ";
         $sql .= ") f";

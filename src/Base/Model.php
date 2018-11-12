@@ -19,14 +19,14 @@ class Model implements \JsonSerializable {
 
     public function __construct(array $data) {
         $this->parseData($data);
-        
+
         $this->user = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        
+
         if ($this->exists('id', $data)) {
             $this->id = filter_var($data['id'], FILTER_SANITIZE_NUMBER_INT);
         }
 
-        $this->changedOn = $this->exists('changedOn', $data) || is_null($data['changedOn']) ? $data['changedOn'] : date('Y-m-d G:i:s');
+        $this->changedOn = $this->exists('changedOn', $data) || (array_key_exists('changedOn', $data) && is_null($data['changedOn'])) ? $data['changedOn'] : date('Y-m-d G:i:s');
     }
 
     public function __get($key) {
