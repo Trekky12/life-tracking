@@ -85,7 +85,7 @@ class Location extends \App\Base\Model{
     public function getPosition() {
         $data = [
             'id'=> $this->id, 
-            'dt' => $this->changedOn
+            'dt' => $this->createdOn
         ];
         
         $diff_gps = $this->times - $this->gps_tms;
@@ -102,8 +102,8 @@ class Location extends \App\Base\Model{
             $data['acc'] = $this->gps_acc;
             $data['type'] = 'gps';
         }
-        //return ['id'=> $this->id, 'dt' => $this->changedOn, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
-        //return [ 'id'=> $this->id, 'dt' => $this->changedOn, 'lat' => $this->gps_lat, 'lng' => $this->gps_lng, 'acc' => $this->gps_acc];
+        //return ['id'=> $this->id, 'dt' => $this->createdOn, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
+        //return [ 'id'=> $this->id, 'dt' => $this->createdOn, 'lat' => $this->gps_lat, 'lng' => $this->gps_lng, 'acc' => $this->gps_acc];
         return $data;
     }
 

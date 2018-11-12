@@ -8,7 +8,7 @@ class Mapper extends \App\Base\Mapper {
     protected $model = '\App\Location\Location';
 
     public function getMarkers($from, $to) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE DATE(changedOn) >= :from AND DATE(changedOn) <= :to";
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE DATE(createdOn) >= :from AND DATE(createdOn) <= :to";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(["from" => $from, "to" => $to]);
 
