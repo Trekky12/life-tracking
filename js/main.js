@@ -164,7 +164,12 @@
             });
         }
 
-        var defaultColors = ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6', '#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11', '#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#3B3EAC'];
+        //var defaultColors = ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6', '#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11', '#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#3B3EAC'];
+        var defaultColors = randomColor({
+            count: 100,
+            hue: 'blue',
+            luminosity: 'bright'
+        });
 
         if ($("#financeDetailChart").length) {
             var fuelChart = new Chart($("#financeDetailChart"), {
@@ -174,7 +179,8 @@
                         {
 
                             backgroundColor: defaultColors,
-                            data: $("#financeDetailChart").data('values')
+                            data: $("#financeDetailChart").data('values'),
+                            label: 'test'
                         }
                     ]
                 },
@@ -184,6 +190,17 @@
                     maintainAspectRatio: false,
                     legend: {
                         position: 'top'
+                    },
+                    tooltips: {
+                        // @see https://stackoverflow.com/a/44010778
+                        callbacks: {
+                            title: function (tooltipItem, data) {
+                                return data['labels'][tooltipItem[0]['index']];
+                            },
+                            label: function (tooltipItem, chart) {
+                                return chart['datasets'][tooltipItem['datasetIndex']]['data'][tooltipItem['index']].toFixed(2) + " " + i18n.currency;
+                            }
+                        }
                     }
                 }
             });
@@ -265,7 +282,12 @@
                 if (totalFinancesSum !== null) {
                     content = totalFinancesSum + " " + i18n.currency;
                 }
-                $(api.column(5).footer()).html(content);
+                
+                if (!api.column(5).responsiveHidden()) {
+                    $(api.column(4).footer()).html(content);
+                } else {
+                    $(api.column(5).footer()).html(content);
+                }
             }
         });
 
@@ -629,7 +651,7 @@
                 }
             ]
         });
-        
+
         $("#notifications_table").DataTable({
             "paging": true,
             "info": true,
