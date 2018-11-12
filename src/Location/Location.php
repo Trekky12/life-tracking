@@ -38,6 +38,10 @@ class Location extends \App\Base\Model{
         $this->cell_srv = $this->exists('cell_srv', $data) ? filter_var($data['cell_srv'], FILTER_SANITIZE_STRING) : null;
         
         $this->processAdditionalTaskerData($data);
+        
+        if ($this->exists('createdOn', $data)) {
+            $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
+        }
     }
 
     /**
