@@ -175,6 +175,7 @@ $lang["MODULES"] = "Module";
 
 $lang["FILE_UPLOAD_ERROR"] = "Fehler beim Hochladen";
 $lang["IMAGE"] = "Bild";
+$lang["PROFILE"] = "Profil";
 $lang["PROFILE_IMAGE"] = "Profilbild";
 $lang["IMAGE_SET"] = "Profilbild gesetzt";
 $lang["IMAGE_DELETED"] = "Profilbild gelöscht";
@@ -242,5 +243,23 @@ $lang["TOKEN_INVALID"] = "Token falsch";
 
 $lang["PWA_SETTINGS"] = "App Einstellungen";
 $lang["START_URL"] = "Start URL";
+$lang["SETTINGS"] = "Einstellungen";
+$lang["LOGOUT"] = "Abmelden";
+$lang["NOTIFICATIONS"] = "Benachrichtigungen";
+
+$lang["IP_ADDRESS"] = "IP-Adresse";
+$lang["USER_AGENT"] = "User Agent";
+$lang["CREATED_ON"] = "angelegt";
+$lang["CHANGED_ON"] = "bearbeitet";
+
+$lang["CONTENT"] = "Inhalt";
+$lang["SEND"] = "Senden";
+$lang["NOTIFICATION_SEND_SUCCESS"] = "Benachrichtigung erfolgreich versendet";
+$lang["NOTIFICATION_SEND_FAILURE"] = "Benachrichtigung konnte nicht versendet werden";
+
+$lang["DISABLE_NOTIFICATIONS"] = "Benachrichtigungen ausschalten";
+$lang["ENABLE_NOTIFICATIONS"] = "Benachrichtigungen einschalten";
+$lang["LOADING"] = "Lade...";
+$lang["NO_NOTIFICATIONS_POSSIBLE"] = "Benachrichtigungen werden nicht unterstützt";
 
 return $lang;

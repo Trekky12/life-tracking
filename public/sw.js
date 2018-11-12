@@ -1,12 +1,15 @@
 'use strict';
-importScripts('static/assets/js/sw-toolbox.js'); 
+importScripts('static/assets/js/sw-toolbox.js');
 
+const cacheName = 'pwa-life-tracking-v2';
 const staticAssets = [
     '/',
-    '/static/js/main.min.js',
     '/static/style.css',
-    '/static/js/navigation.min.js',
-    '/static/js/location.min.js',
+    '/static/js/main.js',
+    '/static/js/navigation.js',
+    '/static/js/location.js',
+    '/static/js/budget.js',
+    '/static/js/boards.js',
     '/static/assets/js/moment-with-locales.min.js',
     '/static/assets/js/leaflet.js',
     '/static/assets/js/jquery.min.js',
@@ -32,6 +35,57 @@ const staticAssets = [
     '/dataTable'
 ];
 
-toolbox.precache(staticAssets); 
-toolbox.router.get('/static/*', toolbox.cacheFirst); 
-toolbox.router.get('/*', toolbox.networkFirst, { networkTimeoutSeconds: 3});
+self.toolbox.options.cache = {
+    name: cacheName
+};
+
+toolbox.precache(staticAssets);
+toolbox.router.get('/static/*', toolbox.cacheFirst);
+toolbox.router.get('/*', toolbox.networkFirst, {
+    networkTimeoutSeconds: 3
+});
+
+
+self.addEventListener('push', function (event) {
+    console.log('[Service Worker] Push Received.');
+
+    var data = event.data.json();
+
+    console.log(data);
+
+    const title = data.title;
+    const options = {
+        body: data.body,
+        icon: '/static/assets/favicon/android-chrome-192x192.png',
+        data: data.data ? data.data : '/',
+        vibrate: [100, 200, 100,200,100,200]
+    };
+
+    const notificationPromise = self.registration.showNotification(title, options);
+    event.waitUntil(notificationPromise);
+});
+
+self.addEventListener('notificationclick', function (event) {
+    console.log('[Service Worker] Notification click Received.');
+    
+    const data = event.notification.data;
+    
+    console.log(data);
+    
+    event.notification.close();
+
+    // This looks to see if the current is already open and
+    // focuses if it is
+    event.waitUntil(clients.matchAll({
+        type: "window"
+    }).then(function (clientList) {
+        for (var i = 0; i < clientList.length; i++) {
+            var client = clientList[i];
+            console.log(client.url.toString().startsWith(data));
+            if (client.url.toString().startsWith(data) && 'focus' in client)
+                return client.focus();
+        }
+        if (clients.openWindow)
+            return clients.openWindow('/');
+    }));
+});

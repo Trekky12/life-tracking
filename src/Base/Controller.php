@@ -94,6 +94,14 @@ abstract class Controller {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
+        
+        // Remove CSRF attributes
+        if(array_key_exists('csrf_name', $data)){
+            unset($data["csrf_name"]);
+        }
+        if(array_key_exists('csrf_value', $data)){
+            unset($data["csrf_value"]);
+        }
 
         $this->insertOrUpdate($id, $data);
 
@@ -102,7 +110,7 @@ abstract class Controller {
 
     protected function insertOrUpdate($id, $data) {
         $entry = new $this->model($data);
-
+        
         $logger = $this->ci->get('logger');
 
         if ($entry->hasParsingErrors()) {

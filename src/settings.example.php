@@ -56,7 +56,12 @@ return [
             // we need to exclude some routes from CSRF protection for remote triggers
             'csrf_exlude' => [
                 'finances_record',
-                'location_record'
+                'location_record',
+                'notifications_subscribe'
+            ],
+            // push notifications settings
+            'push' => [
+                'applicationServerPublicKey' => 'BEddEMqK4Cq6WUQNNQyqNjASr/YjVZYcjjKgJW728eHCNdPXVXY+nfTXZCkql0462Bi1zxIgOpaVDqtScfCkiEE='
             ]
         ]
     ]

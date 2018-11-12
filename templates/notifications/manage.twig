@@ -1,0 +1,26 @@
+{% extends "base.twig" %}
+
+{% set active = 'profile' %}
+
+{% block body %}
+
+    {% if message is defined %}
+        <div class="alert {{message_type}}">
+            <span class="closebtn" >&times;</span>
+            <span class="alert-message">
+                <p>{{message}}</p>
+            </span>
+        </div>
+    {% endif %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
+        <div class="page-content">
+            <button class="js-push-btn">
+                {{lang["ENABLE_NOTIFICATIONS"]}}
+            </button>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

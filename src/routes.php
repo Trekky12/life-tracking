@@ -118,6 +118,17 @@ $app->group('/users', function() {
 })->add('App\Middleware\AdminMiddleware');
 
 
+$app->group('/notifications', function() {
+    $this->group('', function() {
+        $this->get('/', '\App\User\Notifications\Controller:index')->setName('notifications');
+        $this->delete('/delete/{id}', '\App\User\Notifications\Controller:delete')->setName('notifications_delete');
+        $this->map(['GET', 'POST'], '/test/{id:[0-9]+}', '\App\User\Notifications\Controller:testNotification')->setName('notifications_test');
+    })->add('App\Middleware\AdminMiddleware');
+   
+    $this->get('/manage/', '\App\User\Notifications\Controller:manage')->setName('notifications_manage');
+    $this->map(['POST', 'PUT', 'DELETE'], '/subscribe/', '\App\User\Notifications\Controller:subscribe')->setName('notifications_subscribe');
+});
+
 
 $app->group('/boards', function() {
     $this->get('/', '\App\Board\Controller:index')->setName('boards');

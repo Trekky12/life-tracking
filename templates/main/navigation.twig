@@ -2,63 +2,63 @@
     <button class = "menu-toggle" aria-controls = "primary-menu" aria-expanded = "false"><i class="fa fa-bars"></i></button>
     <ul id="menu-primary" class="menu nav-menu">
         {% if user.module_location == 1 %}
-        <li {% if active == 'location' %}class="active"{% endif %}>
-            <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
-        </li> 
+            <li {% if active == 'location' %}class="active"{% endif %}>
+                <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
+            </li> 
         {% endif %}
         {% if user.module_finance == 1 %}
-        <li {% if active == 'finances' %}class="active"{% endif %}>
-            <a href="{{ path_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
-            <ul class="dropdown-content">
-                <li class="hidden"><a href="{{ path_for('finances_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                <li role="separator" class="divider hidden"></li>
-                <li><a href="{{ path_for('finances_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
-                <li class="hidden"><a href="{{ path_for('finances_categories_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                <li role="separator" class="divider hidden"></li>
-                <li><a href="{{ path_for('finances_recurring') }}"><i class="fa fa-calendar" aria-hidden="true"></i> {{lang["FINANCES_RECURRING"]}}</a></li>
-                <li class="hidden"><a href="{{ path_for('finances_recurring_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                <li role="separator" class="divider hidden"></li>
-                <li><a href="{{ path_for('finances_categories_assignment') }}"><i class="fa fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
-                <li class="hidden"><a href="{{ path_for('finances_categories_assignment_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                <li><a href="{{ path_for('finances_budgets') }}"><i class="fa fa-money" aria-hidden="true"></i> {{lang["BUDGET"]}}</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="{{ path_for('finances_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
-            </ul>
-        </li>
+            <li {% if active == 'finances' %}class="active"{% endif %}>
+                <a href="{{ path_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ path_for('finances_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
+                    <li><a href="{{ path_for('finances_recurring') }}"><i class="fa fa-calendar" aria-hidden="true"></i> {{lang["FINANCES_RECURRING"]}}</a></li>
+                    <li><a href="{{ path_for('finances_categories_assignment') }}"><i class="fa fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
+                    <li><a href="{{ path_for('finances_budgets') }}"><i class="fa fa-money" aria-hidden="true"></i> {{lang["BUDGET"]}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{{ path_for('finances_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+                </ul>
+            </li>
         {% endif %}
         {% if user.module_cars == 1 %}
-        <li {% if active == 'car_service' %}class="active"{% endif %}>
-            <a href="{{ path_for('car_service') }}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a>
-            <ul class="dropdown-content">
-                <li class="hidden"><a href="{{ path_for('car_service_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                {% if user.isAdmin() %}
-                    <li role="separator" class="divider hidden"></li>
-                    <li><a href="{{ path_for('cars') }}"><i class="fa fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
-                    <li class="hidden"><a href="{{ path_for('cars_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-                {% endif %}
-                <li role="separator" class="divider"></li>
-                <li><a href="{{ path_for('car_service_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
-            </ul>
-        </li>
+            <li {% if active == 'car_service' %}class="active"{% endif %}>
+                <a href="{{ path_for('car_service') }}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ path_for('car_service_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+                </ul>
+            </li>
         {% endif %}
         {% if user.module_boards == 1 %}
-        <li {% if active == 'boards' %}class="active"{% endif %}>
-            <a href="{{ path_for('boards') }}">{{lang["BOARDS"]}}</a>
-            <ul class="dropdown-content hidden">
-                <li class="hidden"><a href="{{ path_for('boards_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
-            </ul>
-        </li> 
+            <li {% if active == 'boards' %}class="active"{% endif %}>
+                <a href="{{ path_for('boards') }}">{{lang["BOARDS"]}}</a>
+            </li> 
         {% endif %}
-        <li {% if active == 'users' %}class="active"{% endif %}>
-            <a href="{% if user.isAdmin() %}{{ path_for('users') }}{%else %}#{%endif%}">{{lang["USERS"]}}</a>
-            <ul class="dropdown-content">
-                {% if user.isAdmin() %}
-                    <li class="hidden"><a href="{{ path_for('users_edit') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</a></li>
+        <li {% if active == 'profile' %}class="active"{% endif %}>
+            <a href="#" class="profile"> 
+                {% if user.get_thumbnail() != '' %}
+                    <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
+                {% else %}
+                    <svg class="avatar-mini navi avatar-initials" viewBox="0 0 24 15">
+                        <text x="50%" y="14" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+                    </svg>
                 {% endif %}
+                {{user.login}}
+            </a>
+            <ul class="dropdown-content">
                 <li><a href="{{ path_for('users_change_password') }}">{{lang["CHANGE_PASSWORD"]}}</a></li>
                 <li><a href="{{ path_for('users_profile_image') }}">{{lang["PROFILE_IMAGE"]}}</a></li>
-                <li><a href="{{ path_for('logout') }}" >Logout<i class="fa fa-sign-out pull-right"></i></a></li>
+                <li><a href="{{ path_for('notifications_manage') }}">{{lang["NOTIFICATIONS"]}}<i class="fa fa-bell-o pull-right"></i></a></li>
+                <li><a href="{{ path_for('logout') }}" >{{lang["LOGOUT"]}}<i class="fa fa-sign-out pull-right"></i></a></li>
             </ul>
         </li>
+        {% if user.isAdmin() %}
+            <li {% if active == 'settings' %}class="active"{% endif %}>
+                <a href="#">{{lang["SETTINGS"]}}</a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ path_for('users') }}"><i class="fa fa-user-o" aria-hidden="true"></i> {{lang["USERS"]}}</a></li>
+                    <li><a href="{{ path_for('cars') }}"><i class="fa fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
+                    <li><a href="{{ path_for('notifications') }}"><i class="fa fa-bell" aria-hidden="true"></i> {{lang["NOTIFICATIONS"]}}</a></li>
+                </ul>
+            </li>
+        {% endif %}
     </ul>                        
 </nav>

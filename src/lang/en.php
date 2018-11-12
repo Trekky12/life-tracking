@@ -174,6 +174,7 @@ $lang["MODULES"] = "Modules";
 
 $lang["FILE_UPLOAD_ERROR"] = "Error at data upload";
 $lang["IMAGE"] = "Image";
+$lang["PROFILE"] = "Profile";
 $lang["PROFILE_IMAGE"] = "Profile image";
 $lang["IMAGE_SET"] = "Image setted";
 $lang["IMAGE_DELETED"] = "Image deleted";
@@ -241,5 +242,24 @@ $lang["TOKEN_INVALID"] = "Token invalid";
 
 $lang["PWA_SETTINGS"] = "App Settings";
 $lang["START_URL"] = "Start URL";
+$lang["SETTINGS"] = "Settings";
+$lang["LOGOUT"] = "Logout";
+$lang["NOTIFICATIONS"] = "Notifications";
+
+$lang["IP_ADDRESS"] = "IP address";
+$lang["USER_AGENT"] = "User agent";
+$lang["CREATED_ON"] = "created";
+$lang["CHANGED_ON"] = "changed";
+
+$lang["CONTENT"] = "Content";
+$lang["SEND"] = "Send";
+
+$lang["NOTIFICATION_SEND_SUCCESS"] = "Notification successfully send";
+$lang["NOTIFICATION_SEND_FAILURE"] = "Sending of notification failed";
+
+$lang["DISABLE_PUSH_NOTIFICATIONS"] = "Disable Notifications";
+$lang["ENABLE_PUSH_NOTIFICATIONS"] = "Enable Notifications";
+$lang["LOADING"] = "Loading...";
+$lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"] = "Notifications not supported";
 
 return $lang;

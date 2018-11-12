@@ -19,6 +19,9 @@
 * kanban like boards 
   * stacks
   * cards with labels, date, description, assigned users
+* stay logged-in
+* progressive web app
+  * using web push api for notifications
 
 ## Installation
 
@@ -32,6 +35,10 @@
 * install the required composer dependencies with ``composer install``
 * you can login with the default user ``admin`` and password ``admin``
 * create a cronjob which calls ``http://<your-domain>/cron`` every hour
+
+
+## Notes
+* when using push notifications PHP 7.1 with GMP is needed
 
 
 More information available on http://www.haegi.org

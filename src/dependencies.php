@@ -28,7 +28,7 @@ $container['csrf'] = function ($c) {
         $allowed_routes = $c['settings']['app']['csrf_exlude'];
 
         // DELETE currently not working since the body is empty
-        if ((!is_null($route) && in_array($route->getName(), $allowed_routes)) || $request->getMethod() == "DELETE") {
+        if (!is_null($route) && in_array($route->getName(), $allowed_routes)) {
             return $next($request, $response);
         }
 
@@ -88,6 +88,12 @@ $container['view'] = function ($c) {
      */
     $uploads = $c->get('settings')['app']['upload_folder'];
     $view->getEnvironment()->addGlobal('uploads_folder', $uploads);
+
+    /**
+     * Include Push settings
+     */
+    $push = $c->get('settings')['app']['push'];
+    $view->getEnvironment()->addGlobal('push', $push);
 
     return $view;
 };

@@ -11,4 +11,4 @@ composer.phar
 
 koala-config.json
 
-public/test.php
+public/test*

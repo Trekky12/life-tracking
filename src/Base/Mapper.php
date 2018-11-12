@@ -87,8 +87,12 @@ abstract class Mapper {
         return $results;
     }
 
-    public function get($id, $filtered = true) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE  {$this->id} = :id";
+    public function get($id, $filtered = true, $parameter = null) {
+        
+        // possibilty do define another parameter
+        $whereID = !is_null($parameter) ? $parameter : $this->id;
+        
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE  {$whereID} = :id";
 
         $bindings = array("id" => $id);
         if ($filtered) {
@@ -104,7 +108,10 @@ abstract class Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
 
-    public function update(Model $data) {
+    public function update(Model $data, $parameter = null) {
+        
+        // possibilty do define another parameter
+        $whereID = !is_null($parameter) ? $parameter : $this->id;
 
         $data_array = $data->get_fields(!$this->insertUser);
 
@@ -112,7 +119,7 @@ abstract class Mapper {
         foreach (array_keys($data_array) as $row) {
             array_push($parts, " " . $row . " = :" . $row . "");
         }
-        $sql = "UPDATE " . $this->getTable() . " SET " . implode(", ", $parts) . " WHERE {$this->id} = :{$this->id}";
+        $sql = "UPDATE " . $this->getTable() . " SET " . implode(", ", $parts) . " WHERE {$whereID} = :{$whereID}";
 
         $this->filterByUser($sql, $data_array);
 
@@ -125,9 +132,13 @@ abstract class Mapper {
         return $stmt->rowCount();
     }
 
-    public function delete($id) {
-        $sql = "DELETE FROM " . $this->getTable() . "  WHERE {$this->id} = :id";
-
+    public function delete($id, $parameter = null) {
+        
+        // possibilty do define another parameter
+        $whereID = !is_null($parameter) ? $parameter : $this->id;
+        
+        $sql = "DELETE FROM " . $this->getTable() . "  WHERE {$whereID} = :id";
+        
         $bindings = array("id" => $id);
         $this->filterByUser($sql, $bindings);
 

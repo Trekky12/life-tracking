@@ -25,9 +25,6 @@ CREATE TABLE IF NOT EXISTS global_users (
 );
 INSERT INTO global_users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
-/**
-ALTER TABLE global_users ADD start_url varchar(255) DEFAULT NULL;
-*/
 
 DROP TABLE IF EXISTS global_banlist;
 CREATE TABLE global_banlist (
@@ -48,6 +45,23 @@ CREATE TABLE global_tokens (
     agent VARCHAR(255) NULL,
     PRIMARY KEY (id),
     UNIQUE(token),
+    FOREIGN KEY(user) REFERENCES global_users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS global_notifications;
+CREATE TABLE global_notifications (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned NOT NULL,
+    endpoint VARCHAR(512) NOT NULL,
+    auth VARCHAR(255) NULL,
+    p256dh VARCHAR(255) NULL,
+    contentEncoding VARCHAR(255) NULL,
+    ip VARCHAR(255) NULL,
+    agent VARCHAR(255) NULL,
+    PRIMARY KEY (id),
+    UNIQUE(endpoint),
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

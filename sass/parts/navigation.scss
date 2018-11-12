@@ -23,6 +23,7 @@
         display:block;
     }
 
+
     ul{
         margin:0;
         padding:0;
@@ -50,6 +51,7 @@
                 }
             }
 
+
             position:relative;
             z-index:10;
 
@@ -62,9 +64,13 @@
 
                 border-top: 1px solid #e5e5e5;
                 border-bottom: 1px solid #e5e5e5;
-                
+
                 li{
                     @include font-size(1.2);
+                    
+                    a{
+                        font-weight: 300;
+                    }
                 }
                 .divider{
                     height: 1px;
@@ -93,6 +99,20 @@
                     display:block;
                 }
             }
+        }
+    }
+
+
+    a.profile{
+        display:flex;
+
+        justify-content: center;
+
+        .avatar-mini.navi{
+            display:inline-block;
+            margin-right: 10px;
+            width: 20px;
+            height:20px;
         }
     }
 }

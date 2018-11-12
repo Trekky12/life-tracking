@@ -1,14 +1,3 @@
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js?v=20181030');
-        navigator.serviceWorker.ready.then(function (registration) {
-            console.log('Service worker successfully registered on scope', registration.scope);
-        })
-    });
-}
-
-
 (function ($) {
 
     $(document).ready(function ( ) {
@@ -639,6 +628,22 @@ if ('serviceWorker' in navigator) {
                     "responsivePriority": -1
                 }
             ]
+        });
+        
+        $("#notifications_table").DataTable({
+            "paging": true,
+            "info": true,
+            "columnDefs": [
+                {
+                    "targets": [5, 6],
+                    "orderable": false
+                }
+            ],
+            "language": {
+                "url": jsObject.datatable
+            },
+            "responsive": true,
+            "autoWidth": false
         });
 
         /**
