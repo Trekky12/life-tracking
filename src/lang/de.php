@@ -82,7 +82,7 @@ $lang["RIGHT"] = "rechts";
 $lang["CAR_SERVICE_OIL"] = "Ölstand";
 $lang["CAR_SERVICE_AIR"] = "Luftdruck";
 $lang["CAR_SERVICE_WATER_WIPER"] = "Scheibenwischwasser";
-$lang["CAR_SERVICE_TIRE_CHANGE"] = "Radwechsel";
+$lang["CAR_SERVICE_TIRE_CHANGE"] = "Reifenwechsel";
 $lang["CAR_SERVICE_GARAGE"] = "Werkstattbesuch";
 $lang["STATE_TODAY_MAX"] = "Stand heute (max.)";
 
