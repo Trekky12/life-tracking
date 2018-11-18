@@ -13,6 +13,8 @@ $app->group('', function() {
     $this->get('/cron', '\App\Main\MainController:cron')->setName('cron');
 
     $this->get('/logfile', '\App\Main\MainController:showLog')->setName('logfile')->add('App\Middleware\AdminMiddleware');
+    
+    $this->post('/tokens', '\App\Main\MainController:getCSRFTokens')->setName('get_csrf_tokens');
 });
 
 $app->group('/finances', function() {

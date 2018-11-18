@@ -2,6 +2,11 @@
 
     $(document).ready(function () {
 
+        // get initial tokens
+        getCSRFToken().then(function(token){
+            console.log('new tokens generated');
+        });
+
         var stackDialog, stackForm, cardDialog, cardForm, labelDialog, labelForm;
         var simplemde = null;
 
@@ -9,18 +14,27 @@
             $('#loading-overlay').removeClass('hidden');
             cleanURL();
             var id = dialog.find('input[name="id"]').val();
-            $.ajax({
-                url: url + id,
-                method: 'POST',
-                data: dialog.find('form').serialize(),
-                success: function (response) {
-                    allowedReload = true;
-                    window.location.reload();
-                },
-                error: function (data) {
-                    alert(data);
-                }
+
+            var data = dialog.find('form').serialize();
+            
+            getCSRFToken().then(function (token) {
+                console.log(token);
+                data += '&' + encodeToken(token);
+
+                $.ajax({
+                    url: url + id,
+                    method: 'POST',
+                    data: data,
+                    success: function (response) {
+                        allowedReload = true;
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        alert(data);
+                    }
+                });
             });
+
         }
 
 
@@ -191,10 +205,10 @@
                 cardDialog.find('#changedBy').html("");
                 cardDialog.find('#changedOn').html("");
                 cardDialog.find('.form-group.card-dates').addClass('hidden');
-                
+
                 cardDialog.find('select[name="labels[]"]').val('');
                 $('select#card-label-list').trigger('chosen:updated');
-                
+
                 cardDialog.find('select[name="users[]"]').val('');
                 cardDialog.find('.avatar-small, .avatar-small').removeClass('selected');
 
@@ -260,7 +274,7 @@
                             descrfield.parent().removeClass('hidden');
                         }
 
-                        
+
 
                         cardDialog.find('#createdBy').html(response.entry.createdBy);
                         cardDialog.find('#createdOn').html(moment(response.entry.createdOn).format(i18n.dateformatJSFull));
@@ -415,11 +429,17 @@
             },
             update: function (event, ui) {
                 var data = $(this).sortable('serialize');
-                $.ajax({
-                    data: data,
-                    type: 'POST',
-                    url: jsObject.stack_position_url
+
+                getCSRFToken().then(function (token) {
+                    data += '&' + encodeToken(token);
+
+                    $.ajax({
+                        data: data,
+                        type: 'POST',
+                        url: jsObject.stack_position_url
+                    });
                 });
+
             }
         }).disableSelection();
 
@@ -430,20 +450,32 @@
             placeholder: "card-placeholder",
             update: function (event, ui) {
                 var data = $(this).sortable('serialize');
-                $.ajax({
-                    data: data,
-                    type: 'POST',
-                    url: jsObject.card_position_url
+                
+                getCSRFToken().then(function (token) {
+                    data += '&' + encodeToken(token);
+                    $.ajax({
+                        data: data,
+                        type: 'POST',
+                        url: jsObject.card_position_url
+                    });
                 });
             },
             // Move card to another stack
             receive: function (event, ui) {
                 var stack = $(this).data('stack');
                 var card = ui.item.data('card');
-                $.ajax({
-                    data: {'card': card, 'stack': stack},
-                    type: 'POST',
-                    url: jsObject.card_movestack_url
+
+                var data = {'card': card, 'stack': stack};
+
+                getCSRFToken().then(function (token) {
+                    data['csrf_name'] = token.csrf_name;
+                    data['csrf_value'] = token.csrf_value;
+
+                    $.ajax({
+                        data: data,
+                        type: 'POST',
+                        url: jsObject.card_movestack_url
+                    });
                 });
             }
         }).disableSelection();
@@ -466,18 +498,26 @@
                     return false;
                 }
             }
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: {'archive': is_archived ? 0 : 1},
-                success: function (response) {
-                    allowedReload = true;
-                    window.location.reload();
-                },
-                error: function (data) {
-                    alert(data);
-                }
+            var data = {'archive': is_archived ? 0 : 1};
+
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: data,
+                    success: function (response) {
+                        allowedReload = true;
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        alert(data);
+                    }
+                });
             });
+
         });
 
 
@@ -517,31 +557,31 @@
                 // mobile visible means desktop visible
                 // default is visible so remove possible hidden class
                 $(this).parent().removeClass('desktop-hidden');
-                
+
                 // change state
                 $(this).parent().toggleClass('mobile-visible');
-                
+
                 // set cookie
-                if($(this).parent().hasClass('mobile-visible')){
+                if ($(this).parent().hasClass('mobile-visible')) {
                     setCookie('sidebar_mobilevisible', 1);
                     setCookie('sidebar_desktophidden', 0);
-                }else{
+                } else {
                     setCookie('sidebar_mobilevisible', 0);
                 }
-                
+
             } else {
                 // desktop visible means mobile hidden
                 // default is hidden so remove possible visible class
                 $(this).parent().removeClass('mobile-visible');
-                
+
                 // change state
                 $(this).parent().toggleClass('desktop-hidden');
-                
-                 // set cookie
-                if($(this).parent().hasClass('desktop-hidden')){
+
+                // set cookie
+                if ($(this).parent().hasClass('desktop-hidden')) {
                     setCookie('sidebar_desktophidden', 1);
                     setCookie('sidebar_mobilevisible', 0);
-                }else{
+                } else {
                     setCookie('sidebar_desktophidden', 0);
                 }
             }
@@ -596,18 +636,27 @@
          * Show archived items?
          */
         $('#checkboxArchivedItems').on('click', function (event) {
-            $.ajax({
-                url: jsObject.set_archive,
-                method: 'POST',
-                data: {'state': $(this).is(":checked") ? 1 : 0},
-                success: function (response) {
-                    allowedReload = true;
-                    window.location.reload();
-                },
-                error: function (data) {
-                    alert(data);
-                }
+
+            var data = {'state': $(this).is(":checked") ? 1 : 0};
+
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
+
+                $.ajax({
+                    url: jsObject.set_archive,
+                    method: 'POST',
+                    data: data,
+                    success: function (response) {
+                        allowedReload = true;
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        alert(data);
+                    }
+                });
             });
+
             return;
         });
 
@@ -644,18 +693,28 @@
             event.preventDefault();
             var card = cardDialog.find('input[name="id"]').val();
             var comment = cardDialog.find('textarea[name="comment"]').val();
-            $.ajax({
-                url: jsObject.comment_save,
-                method: 'POST',
-                data: {'card': card, 'comment': comment},
-                success: function (response) {
-                    allowedReload = true;
-                    window.location.reload();
-                },
-                error: function (data) {
-                    alert(data);
-                }
+
+            var data = {'card': card, 'comment': comment};
+
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
+
+
+                $.ajax({
+                    url: jsObject.comment_save,
+                    method: 'POST',
+                    data: data,
+                    success: function (response) {
+                        allowedReload = true;
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        alert(data);
+                    }
+                });
             });
+
         });
 
 

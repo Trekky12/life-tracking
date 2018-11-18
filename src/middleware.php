@@ -8,7 +8,7 @@ $container = $app->getContainer();
 /**
  * CSRF Protection
  */
-//$app->add($container->get('csrf'));
+$app->add($container->get('csrf'));
 
 /**
  * Restrict sccess of modules

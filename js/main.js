@@ -1,11 +1,80 @@
+/* global jsObject */
+
+// csrf token array
+var tokens = [{'csrf_name': jsObject.csrf_name, 'csrf_value': jsObject.csrf_value}];
+
+moment.locale(i18n.template);
+
+function getCSRFToken() {
+
+    // get new tokens
+    if (tokens.length <= 2) {
+        var last_token = tokens.pop();
+        return getNewTokens(last_token);
+    }
+
+    if (tokens.length > 1) {
+        return new Promise(function (resolve, reject) {
+            resolve(tokens.pop());
+        });
+    }
+}
+
+function encodeToken(token) {
+    return 'csrf_name=' + token.csrf_name + '&csrf_value=' + token.csrf_value;
+}
+
+function getNewTokens(token) {
+    return fetch(jsObject.csrf_tokens_url, {
+        method: 'POST',
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: 'csrf_name=' + token.csrf_name + '&csrf_value=' + token.csrf_value
+    }).then(function (response) {
+        return response.json();
+    }).then(function (json) {
+        tokens = json;
+    }).then(function () {
+        return tokens.pop();
+    }).catch(function (error) {
+        alert(error);
+    });
+}
+
+function deleteObject(url) {
+    if (!confirm(lang.really_delete)) {
+        return false;
+    }
+
+    getCSRFToken(true).then(function (token) {
+        fetch(url, {
+            method: 'DELETE',
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: encodeToken(token)
+        }).then(function (response) {
+            allowedReload = true;
+            window.location.reload();
+        }).catch(function (error) {
+            alert(error);
+        });
+    });
+
+}
+
 (function ($) {
 
     $(document).ready(function ( ) {
 
+
         /**
          * i18n
          */
-        moment.locale(i18n.template);
+        
         $.datepicker.setDefaults($.datepicker.regional[i18n.template]);
 
 
@@ -30,25 +99,7 @@
             }
         });
 
-        function deleteObject(url) {
-            if (!confirm(lang.really_delete)) {
-                return false;
-            }
 
-            fetch(url, {
-                method: 'DELETE',
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: "csrf_name=" + jsObject.csrf_name + "&csrf_value=" + jsObject.csrf_value
-            }).then(function (response) {
-                allowedReload = true;
-                window.location.reload();
-            }).catch(function (error) {
-                alert(error);
-            });
-        }
 
         /**
          * Default Datepicker
@@ -282,7 +333,7 @@
                 if (totalFinancesSum !== null) {
                     content = totalFinancesSum + " " + i18n.currency;
                 }
-                
+
                 if (!api.column(5).responsiveHidden()) {
                     $(api.column(4).footer()).html(content);
                 } else {

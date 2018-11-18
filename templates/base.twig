@@ -94,7 +94,8 @@
                 'csrf_keys_name': '{{csrf.keys.name}}',
                 'csrf_name': '{{csrf.name}}',
                 'csrf_keys_value': '{{csrf.keys.value}}',
-                'csrf_value': '{{csrf.value}}'
+                'csrf_value': '{{csrf.value}}',
+                'csrf_tokens_url': '{{path_for('get_csrf_tokens')}}'
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

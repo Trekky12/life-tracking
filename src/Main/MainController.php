@@ -182,4 +182,17 @@ class MainController {
         return $this->ci->view->render($response, 'main/logfile.twig', array("logfile" => $logfile));
     }
 
+    public function getCSRFTokens(Request $request, Response $response) {
+
+        $data = $request->getParsedBody();
+        $count = array_key_exists('count', $data) ? intval(filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT)) : 5;
+
+        $tokens = [];
+        for ($i = 0; $i < $count; $i++) {
+            $tokens[] = $this->ci->get('csrf')->generateToken();
+        }
+
+        return $response->withJson($tokens);
+    }
+
 }
