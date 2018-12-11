@@ -67,9 +67,10 @@ class Controller extends \App\Base\Controller {
 
         list($status, $result) = $this->ci->get('helper')->request($query);
 
-        $newResponse = ['status' => 'success', 'data' => []];
+        $newResponse = ['status' => 'error', 'data' => []];
 
         if ($status == 200) {
+            $newResponse['status'] = 'success';
             $array = json_decode($result, true);
             if (is_array($array) && array_key_exists("address", $array)) {
                 $newResponse['data'] = $array["address"];

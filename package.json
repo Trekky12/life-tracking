@@ -16,13 +16,17 @@
     "datatables.net-plugins": "^1.10.15",
     "datatables.net-responsive": "^2.2.0",
     "datatables.net-responsive-dt": "^2.2.0",
+    "flatpickr": "^4.5.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
-    "jquery-ui": "^1.12.1",
     "leaflet": "^1.2.0",
+    "mobius1-selectr": "^2.4.6",
     "mustache": "^2.3.0",
     "normalize.css": "^7.0.0",
+    "nouislider": "^12.1.0",
     "randomcolor": "^0.5.3",
+    "simplemde": "^1.11.2",
+    "sortablejs": "^1.7.0",
     "sw-toolbox": "^3.6.0"
   }
 }

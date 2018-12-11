@@ -1,96 +1,123 @@
-(function ($) {
-
-    $(document).ready(function ( ) {
-        
-        add_chosen();
-        
-        $('select.category').each(function () {
-            var $select = $(this);
-            get_recurring_costs($select);
-        });
-        
+'use strict';
 
 
-        var template = $('#budgetTemplate').html();
-        Mustache.parse(template);
-        
-        $('#add_budget').on('click', function (e) {
-            e.preventDefault();
-            // Get already selected categories
-            
-            var index = $('.budget-entry').length;
-
-            var rendered = Mustache.render(template, {index: index});
-
-            $('#budgetForm .budget-entry.remaining').before(rendered);
-            
-            add_chosen();
-
-            index++;
-        });
+const budgetSelect = document.querySelectorAll('select.category');
+budgetSelect.forEach(function (item, idx) {
+    get_recurring_costs(item);
+    add_selectr(item);
+});
 
 
-        $('body').on('change', 'select.category', function (e) {
-            var $select = $(this);
-            
-            get_recurring_costs($select);
-            //category_costs
-            var $description = $select.parent().parent().find('input.description');
+var template = document.getElementById('budgetTemplate').innerHTML;
+Mustache.parse(template);
 
-            // Set default description based on category
-            if ($description.val().length === 0) {
-                $description.val($select.find('option:selected').text());
-            }
-        });
 
-        $('body').on('click', '.btn-delete', function (e) {
-            if (!$(this).data('url')) {
-                e.preventDefault();
-                $(this).parent().remove();
-            }
-        });
+document.getElementById('add_budget').addEventListener('click', function (e) {
+    e.preventDefault();
 
-        $('body').on('change keyup', 'input.value', function (e) {
-            var income = parseFloat($('#remaining_budget').data('income'));
-            var sum = 0;
-            $('input.value').each(function () {
-                sum += parseFloat($(this).val());
-            });
-            $('#remaining_budget').text(income - sum);
-        });
 
-        function add_chosen() {
-            $("select.form-control.category").chosen({
-                width: "100%",
-                disable_search: true,
-                placeholder_text_multiple: lang.categories
-            });
+    var index = document.querySelectorAll('.budget-entry').length;
+
+    var rendered = Mustache.render(template, {index: index});
+
+    let budget = document.querySelector('#budgetForm .budget-entry.remaining');
+    budget.insertAdjacentHTML('beforebegin', rendered);
+
+    add_selectr('#category_' + index);
+});
+
+document.addEventListener('click', function (event) {
+    let closest = event.target.closest('.btn-delete');
+    if (closest) {
+        let url = closest.dataset.url;
+        if (!url) {
+            event.preventDefault();
+            closest.parentNode.remove();
         }
-        
-        function get_recurring_costs($select){
-            
-            var $category_costs = $select.parent().parent().find('.category_costs');
-            
-            $category_costs.html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
-            
-            $.ajax({
-                url: jsObject.get_category_costs,
-                method: 'GET',
-                data: {'category': $select.val()},
-                success: function (response) {
-                    var sum = '';
-                    if (response['value'] > 0) {
-                        sum = response['value'] + ' ' + i18n.currency;
-                    }else{
-                        sum = '-';
-                    }
-                    $category_costs.html(sum);
-                },
-                error: function (data) {
-                    alert(data);
+    }
+});
+
+
+document.addEventListener('change', function (event) {
+    let closest = event.target.closest('select.category');
+    if (closest) {
+        //category_costs
+        get_recurring_costs(closest);
+
+        // Set default description based on category
+        let description = closest.closest('.budget-entry').querySelector('input.description');
+
+        if (description.value.length === 0) {
+            description.value = closest.options[closest.selectedIndex].text;
+        }
+    }
+});
+
+
+['change', 'keyup'].forEach(function (evt) {
+    document.addEventListener(evt, function (event) {
+        let closest = event.target.closest('input.value');
+        if (closest) {
+            let remaining = document.getElementById('remaining_budget');
+            var income = parseFloat(remaining.dataset.income);
+            var sum = 0;
+
+            let values = document.querySelectorAll('input.value');
+            values.forEach(function (item, idx) {
+                if (item.value) {
+                    sum += parseFloat(item.value);
                 }
             });
+            remaining.innerHTML = income - sum;
         }
-
     });
-})(jQuery);
+});
+
+
+function add_selectr(element) {
+
+    new Selectr(element, {
+        searchable: false,
+        placeholder: lang.categories
+        /*renderOption: function (option) {
+            var template = [
+                "<div class='select-option-label'><span>",
+                option.textContent,
+                "</span></div>"
+            ];
+            return template.join('');
+        }, renderSelection: function (option) {
+            var template = ['<div class="select-label"><span>', option.textContent.trim(), '</span></div>'];
+            return template.join('');
+        }*/
+    });
+}
+
+function get_recurring_costs(select) {
+
+    var category_costs = select.closest('.budget-entry').querySelector('.category_costs');
+    category_costs.innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>';
+    var colOfSelectedOpt = select.selectedOptions;
+    var values = [];
+    for (var i = 0; i < colOfSelectedOpt.length; i++) {
+        values.push(colOfSelectedOpt[i].value);
+    }
+
+    fetch(jsObject.get_category_costs + '?category[]=' + values.join('&category[]='), {
+        method: 'GET',
+        credentials: "same-origin"
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        var sum = '';
+        if (data['value'] > 0) {
+            sum = data['value'] + ' ' + i18n.currency;
+        } else {
+            sum = '-';
+        }
+        category_costs.innerHTML = sum;
+    }).catch(function (error) {
+        alert(error);
+    });
+
+}

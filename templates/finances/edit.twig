@@ -45,8 +45,7 @@
                 </div>
                 <div class="form-group">
                     <label for="dateSelect">{{lang["DATE"]}}</label>
-                    <input type="text" class="form-control" id="dateSelect" >
-                    <input type="hidden" class="form-control" id="inputDate" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
+                    <input type="text" class="form-control" id="dateSelect" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">  
                 </div>
                 {% if not entry is null %}
                     <div class="form-group">
@@ -65,7 +64,7 @@
                         {{lang["COMMON"]}}
                     </label>
                 </div>
-                <div class="form-group" id="commonValue" {% if entry is null or (entry is not null and entry.common == 0) %}style="display:none;"{% endif %}>
+                <div class="form-group {% if entry is null or (entry is not null and entry.common == 0) %}hidden{% endif %}" id="commonValue">
                     <label for="inputCommonValue">{{lang["COMMON_VALUE"]}}</label>
                     <input type="number" class="form-control" id="inputCommonValue" name="common_value" step="any" {% if not entry is null %}value="{{entry.common_value}}{% endif %}">
                 </div>

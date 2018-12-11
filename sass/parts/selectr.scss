@@ -1,0 +1,23 @@
+.selectr-boards{
+
+    .selectr-tag{
+        padding:0;
+        .select-label{
+            padding: 2px 25px 2px 8px;
+        }
+    }
+
+    .selectr-option{
+        padding:0;
+        .select-option-label{
+            padding: 5px 20px;
+        }
+
+        &.selected{
+            .select-option-label{
+                background-color: #ddd !important;
+                color: $color_text-main !important;
+            }
+        }
+    }
+}

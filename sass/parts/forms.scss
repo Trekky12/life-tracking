@@ -1,4 +1,4 @@
-button:not(.fa):not(.menu-toggle), input[type="submit"], .button {
+button:not(.fa):not(.menu-toggle):not(.selectr-tag-remove), input[type="submit"], .button {
 
     &, &:focus{
         cursor: pointer;
@@ -133,7 +133,7 @@ form{
         max-width: $size_content-width-small/3;
         //@include center-block();
         width:100%;
-        
+
         button{
             width:100%;
         }

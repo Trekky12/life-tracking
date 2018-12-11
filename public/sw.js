@@ -1,7 +1,7 @@
 'use strict';
 importScripts('static/assets/js/sw-toolbox.js');
 
-const cacheName = 'pwa-life-tracking-v2';
+const cacheName = 'pwa-life-tracking-v3';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -14,7 +14,6 @@ const staticAssets = [
     '/static/assets/js/leaflet.js',
     '/static/assets/js/jquery.min.js',
     '/static/assets/js/jquery.dataTables.min.js',
-    '/static/assets/js/jquery-ui.min.js',
     '/static/assets/js/dataTables.responsive.min.js',
     '/static/assets/js/Chart.min.js',
     '/static/assets/images/ui-icons_444444_256x240.png',
@@ -30,7 +29,6 @@ const staticAssets = [
     '/static/assets/css/normalize.min.css',
     '/static/assets/css/leaflet.css',
     '/static/assets/css/jquery.dataTables.min.css',
-    '/static/assets/css/jquery-ui.css',
     '/static/assets/css/font-awesome.min.css',
     '/dataTable'
 ];

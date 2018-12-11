@@ -3,13 +3,13 @@
 {% set active = 'finances' %}
 
 {% block javascript %}
-    <script src="/static/assets/js/mustache.min.js"></script>
-    <script src="/static/assets/js/chosen.jquery.min.js"></script>
-    <script src="/static/js/budget.js?ver=20180727"></script>
+    <script src="{{base_url()}}/static/assets/js/mustache.min.js"></script>
+    <script src="{{base_url()}}/static/assets/js/selectr.min.js"></script>
+    <script src="{{base_url()}}/static/js/budget.js?ver=20181122"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="/static/assets/css/chosen.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/selectr.min.css" />
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@
             <div class="form-group description">
                 <label for="inputDescription_{% verbatim %}{{index}}{% endverbatim %}">{{lang["DESCRIPTION"]}}</label>
                 {% verbatim %}
-                <input required type="text" class="form-control description" id="inputDescription_{{index}}}" name="budget[{{index}}][description]">
+                <input required type="text" class="form-control description" id="inputDescription_{{index}}" name="budget[{{index}}][description]">
                 {% endverbatim %}
             </div>
 

@@ -5,7 +5,6 @@
 
 {% block javascript %}
     <script>
-        $(document).ready(function () {
         var COLORS = [
                 '#4dc9f6',
                 '#f67019',
@@ -17,28 +16,25 @@
                 '#58595b',
                 '#8549ba'
         ];
-        if ($("#fuelChart").length) {
-        var fuelChart = new Chart($("#fuelChart"), {
-        data: {
-        labels: $("#fuelChart").data('labels'),
+        let fuelChart = document.querySelector("#fuelChart");
+        if (fuelChart) {
+            new Chart(fuelChart, {
+                data: {
+                labels: JSON.parse(fuelChart.dataset.labels),
                 datasets: [
-        {% for el in data %}
-                    {
-                    label: lang.consumption + " {{el["name"]|raw}}",
-                            data:{{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
-                            fill: false,
-                            borderColor: COLORS[{{loop.index}}]
-                    },
-        {% endfor %}
+                    {% for el in data %}
+                        {
+                        label: lang.consumption + " {{el["name"]|raw}}",
+                                data:{{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
+                                fill: false,
+                                borderColor: COLORS[{{loop.index}}]
+                        },
+                    {% endfor %}
                     ]
-            },
-                    type: 'line',
-                    options: {
-
-                    }
+                },
+                type: 'line'
             });
-            }
-            });
+        }
     </script>
 {% endblock %}
 

@@ -54,7 +54,7 @@
                         {{lang["COMMON"]}}
                     </label>
                 </div>
-                <div class="form-group" id="commonValue" {% if entry is null or (entry is not null and entry.common == 0) %}style="display:none;"{% endif %}>
+                <div class="form-group {% if entry is null or (entry is not null and entry.common == 0) %}hidden{% endif %}" id="commonValue">
                     <label for="inputCommonValue">{{lang["COMMON_VALUE"]}}</label>
                     <input type="number" class="form-control" id="inputCommonValue" name="common_value" step="any" {% if not entry is null %}value="{{entry.common_value}}{% endif %}">
                 </div>
@@ -66,13 +66,11 @@
                 <h3>{{lang["INTERVAL"]}}</h3>
                 <div class="form-group">
                     <label for="dateStart">{{lang["START"]}}</label>
-                    <input type="text" class="form-control" id="dateStart" >
-                    <input type="hidden" class="form-control" id="inputStart" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}">
+                    <input type="text" class="form-control" id="dateSelect" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}">
                 </div>
                 <div class="form-group">
                     <label for="dateEnd">{{lang["END"]}}</label>
-                    <input type="text" class="form-control" id="dateEnd" >
-                    <input type="hidden" class="form-control" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}">
+                    <input type="text" class="form-control" id="dateSelectEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}">
                 </div>
                 <div class="form-group">
                     <label for="inputUnit">{{lang["UNIT"]}}</label>

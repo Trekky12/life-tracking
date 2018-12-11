@@ -2,6 +2,15 @@
 
 {% set active = 'car_service' %}
 
+{% block javascript %}
+    <script src="{{base_url()}}/static/assets/js/nouislider.min.js"></script>
+    <script src="{{base_url()}}/static/js/car_service.js?ver=20181122"></script>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/nouislider.min.css" />
+{% endblock %}
+
 {% block body %}
 
     <div class="inner-content">
@@ -50,8 +59,7 @@
 
                 <div class="form-group">
                     <label for="dateSelect">{{lang["DATE"]}}</label>
-                    <input type="text" class="form-control" id="dateSelect"  placeholder="" >
-                    <input type="hidden" class="form-control" id="inputDate" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" >
+                    <input type="text" class="form-control" id="dateSelect"  placeholder="" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
                 </div>
                 <div class="form-group">
                     <label for="inputGMileage">{{lang["MILEAGE"]}}</label>

@@ -1,5 +1,5 @@
 <nav id="site-navigation" class="main-navigation" role="navigation">
-    <button class = "menu-toggle" aria-controls = "primary-menu" aria-expanded = "false"><i class="fa fa-bars"></i></button>
+    <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false"><i class="fa fa-bars"></i></button>
     <ul id="menu-primary" class="menu nav-menu">
         {% if user.module_location == 1 %}
             <li {% if active == 'location' %}class="active"{% endif %}>

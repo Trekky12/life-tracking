@@ -1,0 +1,1 @@
+var sliders=document.querySelectorAll(".slider");sliders.forEach(function(e,t){noUiSlider.create(e,{start:e.dataset.level,step:5,range:{min:parseInt(e.dataset.min),max:parseInt(e.dataset.max)}}),e.noUiSlider.on("change",function(t,a){e.parentNode.querySelector(".slider-value").value=parseInt(this.get())})});
