@@ -268,62 +268,43 @@ class Controller extends \App\Base\Controller {
     }
 
     public function table(Request $request, Response $response) {
-
         $requestData = $request->getQueryParams();
 
-        $columns = array(
-            array('db' => 'date', 'dt' => 0),
-            array('db' => 'time', 'dt' => 1),
-            array(
-                'db' => 'type',
-                'dt' => 2,
-                'formatter' => function( $d, $row ) {
-                    return $d == 0 ? $this->ci->get('helper')->getTranslatedString("FINANCES_SPENDING") : $this->ci->get('helper')->getTranslatedString("FINANCES_INCOME");
-                }
-            ),
-            array('db' => 'category', 'dt' => 3,),
-            array('db' => 'description', 'dt' => 4),
-            array('db' => 'value', 'dt' => 5),
-            array(
-                'db' => 'id',
-                'dt' => 6,
-                'formatter' => function( $d, $row ) {
-                    $link = $this->ci->get('router')->pathFor('finances_edit', ['id' => $d]);
-                    return '<a href="' . $link . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-                }
-            ),
-            array(
-                'db' => 'id',
-                'dt' => 7,
-                'formatter' => function( $d, $row ) {
-                    $link = $this->ci->get('router')->pathFor('finances_delete', ['id' => $d]);
-                    return '<a href="#" data-url="' . $link . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
-                }
-            )
-        );
+        $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        /**
-         * @see https://github.com/DataTables/DataTablesSrc/blob/master/examples/server_side/scripts/ssp.class.php
-         */
-        $bindings = array();
+        $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
+        $searchQuery = empty($search) || $search === "null" ? null : $search;
 
-        $limit = \App\Main\SSP::limit($requestData, $columns);
-        $order = \App\Main\SSP::order($requestData, $columns);
-        $where = \App\Main\SSP::filter($requestData, $columns, $bindings);
+        $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
 
-        $data = $this->mapper->dataTable($where, $bindings, $order, $limit);
-        $recordsFiltered = $this->mapper->dataTableCount($where, $bindings);
+        $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
+
+
+
         $recordsTotal = $this->mapper->count();
+        $recordsFiltered = $recordsTotal;
+        if (!is_null($searchQuery)) {
+            $recordsFiltered = $this->mapper->tableCount($searchQuery);
+        }
 
         // subtract expenses from income
-        $recordSum = $this->mapper->dataTableSum($where, $bindings, 0) - $this->mapper->dataTableSum($where, $bindings, 1);
+        $recordSum = $this->mapper->tableSum($searchQuery, 0) - $this->mapper->tableSum($searchQuery, 1);
+
+        $lang = [0 => $this->ci->get('helper')->getTranslatedString("FINANCES_SPENDING"), 1 => $this->ci->get('helper')->getTranslatedString("FINANCES_INCOME")];
+
+        $data = $this->mapper->tableData($start, $length, $searchQuery, $sortColumn, $sortDirection, $lang);
+        foreach ($data as &$row) {
+            $row[6] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $row[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[7] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $row[7]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+        }
 
         return $response->withJson([
-                    "draw" => isset($requestData['draw']) ? intval($requestData['draw']) : 0,
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
-                    "sum" => $recordSum,
-                    "data" => \App\Main\SSP::data_output($columns, $data)
+                    "sum" => round($recordSum, 2),
+                    "data" => $data
                         ]
         );
     }

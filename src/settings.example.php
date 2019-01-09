@@ -26,7 +26,6 @@ return [
             'i18n' => [
                 'template' => 'en',
                 'php' => 'en_US',
-                'datatables' => 'English.lang',
                 'dateformatJS' => 'YYYY-MM-DD',
                 'dateformatJSFull' => 'DD.MM.YYYY HH:mm:ss',
                 'twig' => 'Y-m-d',

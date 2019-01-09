@@ -15,22 +15,6 @@ class MainController {
         $this->ci = $ci;
     }
 
-    public function getDatatableLang(Request $request, Response $response) {
-        $lang = $this->ci->get('settings')['app']['i18n']['datatables'];
-
-        $file = file_get_contents(__DIR__ . '/../lang/dataTables/' . $lang);
-
-        /**
-         * Remove comments from file
-         * @see https://stackoverflow.com/a/19136663
-         */
-        $file = preg_replace('!^[ \t]*/\*.*?\*/[ \t]*[\r\n]!s', '', $file);
-
-        $json = json_decode($file);
-
-        return $response->withJson($json);
-    }
-
     public function index(Request $request, Response $response) {
         $pwa = $request->getQueryParam('pwa', null);
         // is PWA? redirect to start page
@@ -165,9 +149,8 @@ class MainController {
                 $line["message"] = $log['message'];
                 $line["extra"] = preg_replace($regex, '$1', print_r($log['extra'], true));
                 $line["context"] = !empty($log["context"]) ? preg_replace($regex, '$1', print_r($log['context'], true)) : null;
-                $line["hide"] = strpos($log["message"], "/dataTable") == 0 && strpos($log["message"], "?draw=2") == 0 ? false : true;
-
                 $line["url"] = array_key_exists("url", $log['extra']) ? $log['extra']["url"] : null;
+                $line["hide"] = strpos($line["url"], "datatable=1") == 0 ? false : true;
 
                 if (strlen($line["url"]) > 100 && array_key_exists("query", $log['extra'])) {
                     $line["url"] = str_replace($log['extra']["query"], "...", $line["url"]);

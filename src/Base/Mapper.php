@@ -113,18 +113,18 @@ abstract class Mapper {
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
 
-        $data_array = $data->get_fields(!$this->insertUser);
+        $bindings = $data->get_fields(!$this->insertUser);
 
         $parts = array();
-        foreach (array_keys($data_array) as $row) {
+        foreach (array_keys($bindings) as $row) {
             array_push($parts, " " . $row . " = :" . $row . "");
         }
         $sql = "UPDATE " . $this->getTable() . " SET " . implode(", ", $parts) . " WHERE {$whereID} = :{$whereID}";
 
-        $this->filterByUser($sql, $data_array);
+        $this->filterByUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute($data_array);
+        $result = $stmt->execute($bindings);
 
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
@@ -181,65 +181,7 @@ abstract class Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    /*public function dataTable($where, $bindings, $order, $limit) {
-        $sql = "SELECT * FROM " . $this->getTable() . " ";
-
-        if (!empty($where)) {
-            $sql .= " {$where}";
-        }
-
-        $this->filterByUser($sql, $bindings, true);
-
-
-        if (!empty($order)) {
-            $sql .= " {$order}";
-        }
-        if (!empty($limit)) {
-            $sql .= " {$limit}";
-        }
-
-
-        $stmt = $this->db->prepare($sql);
-
-        if (is_array($bindings)) {
-            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
-                $binding = $bindings[$i];
-                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
-            }
-        }
-
-        $stmt->execute();
-        $results = [];
-        while ($row = $stmt->fetch()) {
-            $results[] = new $this->model($row);
-        }
-        return $results;
-    }
-
-    public function dataTableAggregation($where, $bindings, $aggregation = "COUNT"){
-        $sql = "SELECT $aggregation({$this->id}) FROM " . $this->getTable() . " ";
-        if (!empty($where)) {
-            $sql .= "{$where}";
-        }
-
-        $this->filterByUser($sql, $bindings, true);
-
-        $stmt = $this->db->prepare($sql);
-        if (is_array($bindings)) {
-            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
-                $binding = $bindings[$i];
-                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
-            }
-        }
-
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            return intval($stmt->fetchColumn());
-        }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
-    }*/
-
-    protected function filterByUser(&$sql, &$bindings, $datatable = false, $alias = "") {
+    protected function filterByUser(&$sql, &$bindings, $alias = "") {
 
         if ($this->filterByUser && !is_null($this->userid)) {
 
@@ -251,11 +193,7 @@ abstract class Mapper {
 
             $sql .= " ({$alias}user = :user OR {$alias}user IS NULL) ";
 
-            if ($datatable) {
-                array_push($bindings, array("key" => "user", "val" => $this->userid, "type" => \PDO::PARAM_INT));
-            } else {
-                $bindings["user"] = $this->userid;
-            }
+            $bindings["user"] = $this->userid;            
         }
     }
 

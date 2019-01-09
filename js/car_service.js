@@ -1,3 +1,5 @@
+'use strict';
+
 var sliders = document.querySelectorAll('.slider');
 sliders.forEach(function (item, idx) {
     noUiSlider.create(item, {

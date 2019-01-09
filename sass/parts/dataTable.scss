@@ -1,0 +1,20 @@
+/*!
+ * DataTables
+ */
+
+.dt-wrapper{
+    &, select, label, input{
+        @include font-size(1.2);
+        @media screen and (min-width: $size_mobile) {
+            @include font-size(1.4);
+        }
+    }
+
+    .dt-top,
+    .dt-bottom {
+        flex-direction: column;
+        @media screen and (min-width: $size_mobile) {
+            flex-direction: row;
+        }
+    }
+}

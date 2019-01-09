@@ -7,102 +7,100 @@ class Mapper extends \App\Base\Mapper {
     protected $table = 'finances';
     protected $model = '\App\Finances\FinancesEntry';
 
-    private function getSQL($select, $where) {
+
+    private function getTableSQL($select) {
         $sql = "SELECT {$select} "
                 . " FROM " . $this->getTable() . " f INNER JOIN " . $this->getTable('finances_categories') . " fc "
-                . " ON f.category = fc.id";
-
-
-        if (!empty($where)) {
-            $sql .= " {$where}";
-
-            /**
-             * Replace ambigious columns id with correct table
-             */
-            $sql = str_replace('`id`', 'f.`id`', $sql);
-
-            /**
-             * Replace category index with name in category table
-             */
-            $sql = str_replace('`category`', 'fc.`name`', $sql);
-        }
-
-
+                . " ON f.category = fc.id "
+                . " WHERE "
+                . " (f.date LIKE :searchQuery OR "
+                . " f.time LIKE :searchQuery OR "
+                . " f.type LIKE :searchQuery OR "
+                . " fc.name LIKE :searchQuery OR "
+                . " f.description LIKE :searchQuery OR "
+                . " f.value LIKE :searchQuery )";
         return $sql;
     }
 
-    public function dataTable($where, $bindings, $order, $limit) {
+    public function tableCount($searchQuery) {
 
-        $sql = $this->getSQL("f.id as id, f.date, f.time, f.description, f.value, f.type, fc.name as category", $where);
-        $this->filterByUser($sql, $bindings, true, "f.");
+        $bindings = array("searchQuery" => "%" . $searchQuery . "%");
 
-        if (!empty($order)) {
-            $sql .= " {$order}";
-        }
-        if (!empty($limit)) {
-            $sql .= " {$limit}";
-        }
+        $sql = $this->getTableSQL("COUNT(f.id)");
+
+        $this->filterByUser($sql, $bindings, "f.");
 
         $stmt = $this->db->prepare($sql);
 
-        if (is_array($bindings)) {
-            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
-                $binding = $bindings[$i];
-                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
-            }
-        }
-
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_BOTH);
-    }
-
-    public function dataTableCount($where, $bindings) {
-        $sql = $this->getSQL("COUNT(f.id)", $where);
-        $this->filterByUser($sql, $bindings, true, "f.");
-
-
-        $stmt = $this->db->prepare($sql);
-        if (is_array($bindings)) {
-            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
-                $binding = $bindings[$i];
-                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
-            }
-        }
-
-        $stmt->execute();
+        $stmt->execute($bindings);
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    public function dataTableSum($where, $bindings, $type = 0) {
-        
-        if ($where != '') {
-            $where .= " AND type = :binding_type";
-        } else {
-            $where .= " WHERE type = :binding_type";
-        }
-        array_push($bindings, ['key' => ":binding_type", 'val' => $type, 'type' => \PDO::PARAM_INT]);
-        
-        $sql = $this->getSQL("SUM(f.value)", $where);
+    public function tableData($start, $limit, $searchQuery, $sortColumn, $sortDirection, $lang) {
 
-        $this->filterByUser($sql, $bindings, true, "f.");
+        $bindings = array("searchQuery" => "%" . $searchQuery . "%");
+
+        $sort = "date";
+        switch ($sortColumn) {
+            case 0:
+                $sort = "date";
+                break;
+            case 1:
+                $sort = "time";
+                break;
+            case 2:
+                $sort = "type";
+                break;
+            case 3:
+                $sort = "category";
+                break;
+            case 4:
+                $sort = "description";
+                break;
+            case 5:
+                $sort = "value";
+                break;
+        }
+
+        $select = "f.date, f.time, "
+                . "CASE WHEN f.type = 0 THEN '{$lang[0]}' ELSE '{$lang[1]}' END, "
+                . "fc.name as category, f.description, f.value, f.id, f.id";
+        $sql = $this->getTableSQL($select);
+
+        $this->filterByUser($sql, $bindings, "f.");
+
+        $sql .= " ORDER BY {$sort} {$sortDirection}, f.id {$sortDirection}";
+
+        $sql .= " LIMIT {$start}, {$limit}";
 
         $stmt = $this->db->prepare($sql);
-        if (is_array($bindings)) {
-            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
-                $binding = $bindings[$i];
-                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
-            }
-        }
 
-        $stmt->execute();
+        $stmt->execute($bindings);
+        return $stmt->fetchAll(\PDO::FETCH_NUM);
+    }
+
+    public function tableSum($searchQuery, $type = 0) {
+
+        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "type" => $type);
+
+        $sql = $this->getTableSQL("SUM(f.value)");
+
+        $this->filterByUser($sql, $bindings, "f.");
+
+        $sql .= " AND type = :type";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute($bindings);
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
+
 
     public function statsTotal() {
         $sql = "SELECT YEAR(date) as year, type,  SUM(value) as sum, COUNT(value) as count FROM " . $this->getTable();
@@ -144,7 +142,7 @@ class Mapper extends \App\Base\Mapper {
                 . "AND f.type = :type ";
 
         $bindings = array("year" => $year, "type" => $type);
-        $this->filterByUser($sql, $bindings, false, "f.");
+        $this->filterByUser($sql, $bindings, "f.");
 
         $sql .= " GROUP BY YEAR(date), type, category";
         $sql .= " ORDER BY YEAR(date) DESC, sum DESC, category ASC";
@@ -181,7 +179,7 @@ class Mapper extends \App\Base\Mapper {
                 . "AND type = :type ";
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type);
-        $this->filterByUser($sql, $bindings, false, "f.");
+        $this->filterByUser($sql, $bindings, "f.");
 
         $sql .= " GROUP BY YEAR(date), MONTH(date), type, category";
 
@@ -261,7 +259,7 @@ class Mapper extends \App\Base\Mapper {
                 . "AND f.type = :type ";
 
         $bindings = array("budget" => $budget, "type" => 0);
-        $this->filterByUser($sql, $bindings, false, "f.");
+        $this->filterByUser($sql, $bindings, "f.");
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -278,7 +276,7 @@ class Mapper extends \App\Base\Mapper {
                 . "AND f.type = :type ";
 
         $bindings = array("type" => 0);
-        $this->filterByUser($sql, $bindings, false, "f.");
+        $this->filterByUser($sql, $bindings, "f.");
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

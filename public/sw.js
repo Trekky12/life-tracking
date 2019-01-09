@@ -1,7 +1,7 @@
 'use strict';
 importScripts('static/assets/js/sw-toolbox.js');
 
-const cacheName = 'pwa-life-tracking-v3';
+const cacheName = 'pwa-life-tracking-v4';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -10,27 +10,32 @@ const staticAssets = [
     '/static/js/location.js',
     '/static/js/budget.js',
     '/static/js/boards.js',
-    '/static/assets/js/moment-with-locales.min.js',
-    '/static/assets/js/leaflet.js',
-    '/static/assets/js/jquery.min.js',
-    '/static/assets/js/jquery.dataTables.min.js',
-    '/static/assets/js/dataTables.responsive.min.js',
+    '/static/js/tables.js',
+    '/static/js/car_service.js',
     '/static/assets/js/Chart.min.js',
-    '/static/assets/images/ui-icons_444444_256x240.png',
-    '/static/assets/images/sort_desc.png',
-    '/static/assets/images/sort_both.png',
+    '/static/assets/js/Sortable.min.js',
+    '/static/assets/js/datatables.js',
+    '/static/assets/js/flatpickr.js',
+    '/static/assets/js/leaflet.js',
+    '/static/assets/js/moment-with-locales.min.js',
+    '/static/assets/js/mustache.min.js',
+    '/static/assets/js/nouislider.min.js',
+    '/static/assets/js/randomColor.min.js',
+    '/static/assets/js/selectr.min.js',
+    '/static/assets/js/simplemde.min.js',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff2',
     '/static/assets/fonts/fontawesome-webfont.woff2',
     '/static/assets/favicon/android-chrome-192x192.png',
-    '/static/assets/css/responsive.dataTables.min.css',
-    '/static/assets/css/open-sans.css',
-    '/static/assets/css/normalize.min.css',
-    '/static/assets/css/leaflet.css',
-    '/static/assets/css/jquery.dataTables.min.css',
+    '/static/assets/css/flatpickr.min.css',
     '/static/assets/css/font-awesome.min.css',
-    '/dataTable'
+    '/static/assets/css/leaflet.min.css',
+    '/static/assets/css/normalize.min.css',
+    '/static/assets/css/nouislider.min.css',
+    '/static/assets/css/open-sans.css',
+    '/static/assets/css/selectr.min.css',
+    '/static/assets/css/simplemde.min.css'
 ];
 
 self.toolbox.options.cache = {

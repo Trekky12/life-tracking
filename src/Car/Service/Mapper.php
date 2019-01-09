@@ -225,58 +225,176 @@ class Mapper extends \App\Base\Mapper {
         return $results;
     }
 
-    public function dataTableService($where, $bindings, $order, $limit) {
+    private function getTableSQL($select, $searchQuery, $user_cars, $type) {
 
-        $sql = "SELECT * FROM " . $this->getTable() . "";
-
-        if (!empty($where)) {
-            $sql .= " {$where}";
-        }
-        if (!empty($order)) {
-            $sql .= " {$order}";
-        }
-        if (!empty($limit)) {
-            $sql .= " {$limit}";
+        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "type" => $type);
+        $car_bindings = array();
+        foreach ($user_cars as $idx => $car) {
+            $car_bindings[":car_" . $idx] = $car;
         }
 
-        $stmt = $this->db->prepare($sql);
+        $sql = "SELECT {$select} "
+                . " FROM " . $this->getTable() . " cs INNER JOIN " . $this->getTable('cars') . " c "
+                . " ON cs.car = c.id "
+                . " WHERE "
+                . " ("
+                . " cs.date LIKE :searchQuery OR "
+                . " cs.mileage LIKE :searchQuery OR "
+                . " cs.fuel_price LIKE :searchQuery OR "
+                . " c.name LIKE :searchQuery OR "
+                . " cs.fuel_volume LIKE :searchQuery OR "
+                . " cs.fuel_total_price LIKE :searchQuery OR"
+                . " cs.fuel_consumption LIKE :searchQuery OR"
+                . " cs.fuel_location LIKE :searchQuery OR"
+                . " cs.notice LIKE :searchQuery "
+                . ")"
+                . " AND c.id IN (" . implode(',', array_keys($car_bindings)) . ") "
+                . " AND type = :type ";
 
-        if (is_array($bindings)) {
-            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
-                $binding = $bindings[$i];
-                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
-            }
-        }
-
-        $stmt->execute();
-        //return $stmt->fetchAll(\PDO::FETCH_BOTH);
-        $results = [];
-        while ($row = $stmt->fetch()) {
-            $key = reset($row);
-            $results[$key] = new $this->model($row);
-        }
-        return $results;
+        return array($sql, array_merge($bindings, $car_bindings));
     }
 
-    public function dataTableServiceCount($where = null, $bindings = null) {
-        $sql = "SELECT COUNT(id) FROM " . $this->getTable() . "";
-        if (!empty($where)) {
-            $sql .= " {$where}";
-        }
+    public function tableCount($searchQuery, $user_cars, $type = 0) {
+
+        list($sql, $bindings) = $this->getTableSQL("COUNT(cs.id)", $searchQuery, $user_cars, $type);
 
         $stmt = $this->db->prepare($sql);
-        if (is_array($bindings)) {
-            for ($i = 0, $ien = count($bindings); $i < $ien; $i++) {
-                $binding = $bindings[$i];
-                $stmt->bindValue($binding['key'], $binding['val'], $binding['type']);
-            }
-        }
 
-        $stmt->execute();
+        $stmt->execute($bindings);
         if ($stmt->rowCount() > 0) {
-            return intval($stmt->fetchColumn());
+            return $stmt->fetchColumn();
         }
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+    }
+
+    public function tableDataFuel($start, $limit, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars) {
+
+        $type = 0;
+        $sort = "date";
+        switch ($sortColumn) {
+            case 0:
+                $sort = "date";
+                break;
+            case 1:
+                $sort = "name";
+                break;
+            case 2:
+                $sort = "mileage";
+                break;
+            case 3:
+                $sort = "fuel_price";
+                break;
+            case 4:
+                $sort = "fuel_volume";
+                break;
+            case 5:
+                $sort = "fuel_total_price";
+                break;
+            case 6:
+                $sort = "fuel_type";
+                break;
+            case 7:
+                $sort = "fuel_consumption";
+                break;
+            case 8:
+                $sort = "fuel_location";
+                break;
+        }
+
+        $select = "cs.date, c.name, cs.mileage, cs.fuel_price, cs.fuel_volume, cs.fuel_total_price, "
+                . "CASE "
+                . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 0 THEN '{$lang[0]}' "
+                . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 1 THEN '{$lang[1]}'"
+                . " ELSE '' END as fuel_type, "
+                . "cs.fuel_consumption, cs.fuel_location, "
+                . "cs.id, cs.id";
+
+        list($sql, $bindings) = $this->getTableSQL($select, $searchQuery, $user_cars, $type);
+
+        $sql .= " ORDER BY {$sort} {$sortDirection}, cs.id {$sortDirection}";
+
+        $sql .= " LIMIT {$start}, {$limit}";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute($bindings);
+        return $stmt->fetchAll(\PDO::FETCH_NUM);
+    }
+
+    public function tableDataService($start, $limit, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars) {
+
+        $type = 1;
+        $sort = "date";
+        switch ($sortColumn) {
+            case 0:
+                $sort = "date";
+                break;
+            case 1:
+                $sort = "name";
+                break;
+            case 2:
+                $sort = "mileage";
+                break;
+            case 3:
+                $sort = "oil";
+                break;
+            case 4:
+                $sort = "water_wiper";
+                break;
+            case 5:
+                $sort = "air";
+                break;
+            case 6:
+                $sort = "tire_change";
+                break;
+            case 7:
+                $sort = "garage";
+                break;
+        }
+
+        $select = "cs.date, c.name, cs.mileage, "
+                . "CASE "
+                . " WHEN cs.service_oil_before > 0 OR cs.service_oil_after > 0 "
+                . " THEN 'x'  "
+                . " ELSE '' "
+                . "END as oil, "
+                . "CASE "
+                . " WHEN cs.service_water_wiper_before > 0 OR cs.service_water_wiper_after > 0 "
+                . " THEN 'x'  "
+                . " ELSE '' "
+                . "END as water_wiper, "
+                . "CASE "
+                . " WHEN cs.service_air_front_left_before > 0 OR cs.service_air_front_left_after > 0 OR "
+                . "      cs.service_air_front_right_before > 0 OR cs.service_air_front_right_after > 0 OR "
+                . "      cs.service_air_back_left_before > 0 OR cs.service_air_back_left_after > 0 OR "
+                . "      cs.service_air_back_right_before > 0 OR cs.service_air_back_right_after > 0 "
+                . " THEN 'x'  "
+                . " ELSE '' "
+                . "END as air, "
+                . "CASE "
+                . " WHEN cs.service_tire_change > 0 "
+                . " THEN 'x'  "
+                . " ELSE '' "
+                . "END as tire_change, "
+                . "CASE "
+                . " WHEN cs.service_garage > 0 "
+                . " THEN 'x'  "
+                . " ELSE '' "
+                . "END as garage, "
+                . "cs.id, cs.id";
+
+        list($sql, $bindings) = $this->getTableSQL($select, $searchQuery, $user_cars, $type);
+
+
+
+        $sql .= " ORDER BY {$sort} {$sortDirection}, cs.id {$sortDirection}";
+
+        $sql .= " LIMIT {$start}, {$limit}";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute($bindings);
+        return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
 
 }

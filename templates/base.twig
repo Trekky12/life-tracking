@@ -13,23 +13,18 @@
         <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/open-sans.css" />
         <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/normalize.min.css" />
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/leaflet.css" />
-        
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/jquery.dataTables.min.css" />
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/responsive.dataTables.min.css" />
-        
         <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/flatpickr.min.css" />
-
+        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/style.css?ver=20181122" />
+        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/style.css?ver=20190107" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{base_url()}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{base_url()}}/static/assets/favicon/favicon-32x32.png?v=20180727">
         <link rel="icon" type="image/png" sizes="16x16" href="{{base_url()}}/static/assets/favicon/favicon-16x16.png?v=20180727">
         <link rel="manifest" href="{{base_url()}}/static/assets/favicon/site.webmanifest?v=20181102">
         <link rel="mask-icon" href="{{base_url()}}/static/assets/favicon/safari-pinned-tab.svg?v=20180727" color="#5bbad5">
-        <link rel="shortcut icon" href="{{base_url()}}/static/assets/favicon/favicon.ico?v=20180727">
+        <link rel="shortcut icon" href="{{base_url()}}/favicon.ico?v=20180727">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="msapplication-config" content="{{base_url()}}/static/assets/favicon/browserconfig.xml?v=20180727">
         <meta name="theme-color" content="#ffffff">
@@ -68,7 +63,6 @@
                 'marker_url': '{{ path_for("getMarkers") }}',
                 'delete_marker_url': '{{ path_for("delete_marker") }}',
                 'get_address_url': '{{ path_for("get_address") }}',
-                'datatable': '{{path_for('datatable_lang')}}',
                 'finances_table': "{{path_for("finances_table")}}",
                 'fuel_table': "{{path_for("car_service_fuel_table")}}",
                 'service_table': "{{path_for("car_service_service_table")}}",
@@ -122,27 +116,23 @@
                 'loading': '{{lang["LOADING"]}}'
             };
         </script>
-        <script src="{{base_url()}}/static/assets/js/jquery.min.js" type="text/javascript"></script>
-        <script src="{{base_url()}}/static/assets/js/jquery.dataTables.min.js" type="text/javascript"></script>        
-        <script src="{{base_url()}}/static/assets/js/dataTables.responsive.min.js" type="text/javascript"></script>        
-        
+
         <script src="{{base_url()}}/static/assets/js/flatpickr.js" type="text/javascript"></script>
         <script src="{{base_url()}}/static/assets/js/i18n/{{i18n.template}}.js" type="text/javascript"></script>
-
         <script src="{{base_url()}}/static/assets/js/moment-with-locales.min.js" type="text/javascript"></script>  
         <script src="{{base_url()}}/static/assets/js/Chart.min.js" type="text/javascript"></script>  
         <script src="{{base_url()}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
-        
+        <script src="{{base_url()}}/static/assets/js/jstable.min.js" type="text/javascript"></script>  
 
-        <script src="{{base_url()}}/static/js/tables.js?ver=20181122" type="text/javascript"></script>
- 
         <script src="{{base_url()}}/static/js/navigation.js" type="text/javascript"></script>
         <script src="{{base_url()}}/static/js/main.js?ver=20181122" type="text/javascript"></script>
-        
+        <script src="{{base_url()}}/static/js/tables.js?ver=20181122" type="text/javascript"></script>
+
+
         {% if not user is null %}
-        <script src="{{base_url()}}/static/js/app.js?ver=20181122" type="text/javascript"></script>
+        <script src="{{base_url()}}/static/js/app.js?ver=20190108" type="text/javascript"></script>
         {% endif %}
-        
+
         {% block javascript %}
         {% endblock %}
     </body>

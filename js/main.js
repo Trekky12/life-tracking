@@ -116,7 +116,6 @@ function initialize() {
 
     /**
      * Reset lastrun when startdate on recurring entries is changed
-     * ( not working with jquery ui datepicker ) 
      */
     let recurring_start = document.querySelector('#financesRecurringForm #dateSelect');
     if (recurring_start !== null) {

@@ -119,7 +119,6 @@ class Controller extends \App\Base\Controller {
         $res = $webPush->sendNotification(
                 $subscription, $data, true
         );
-        $logger->addInfo('PUSH Result', array("data" => $res));
         return $res;
     }
 

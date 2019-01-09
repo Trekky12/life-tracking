@@ -1,4 +1,4 @@
-
+'use strict';
 // get initial tokens
 getCSRFToken().then(function (token) {
     console.log('new tokens generated');

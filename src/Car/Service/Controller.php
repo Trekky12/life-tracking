@@ -228,166 +228,87 @@ class Controller extends \App\Base\Controller {
 
         return $response->withJSON(array('status' => 'success'));
     }
-
+    
+    
     public function tableFuel(Request $request, Response $response) {
-
-
         $requestData = $request->getQueryParams();
-        $cars = $this->car_mapper->getAll();
 
-        $columns = array(
-            array('db' => 'date', 'dt' => 0),
-            array(
-                'db' => 'car',
-                'dt' => 1,
-                'formatter' => function( $d, $row ) use ($cars) {
-                    return $cars[$d]->name;
-                }
-            ),
-            array('db' => 'mileage', 'dt' => 2),
-            array('db' => 'fuel_price', 'dt' => 3),
-            array('db' => 'fuel_volume', 'dt' => 4),
-            array('db' => 'fuel_total_price', 'dt' => 5),
-            array(
-                'db' => 'fuel_type',
-                'dt' => 6,
-                'formatter' => function( $d, $row ) {
-                    if ($row["fuel_volume"] <= 0) {
-                        return '';
-                    }
-                    return $d == 0 ? $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY") : $this->ci->get('helper')->getTranslatedString("FUEL_FULL");
-                }
-            ),
-            array('db' => 'fuel_consumption', 'dt' => 7),
-            array('db' => 'fuel_location', 'dt' => 8),
-            //array('db' => 'notice', 'dt' => 9),
-            array(
-                'db' => 'id',
-                'dt' => 9,
-                'formatter' => function( $d, $row ) {
-                    $link = $this->ci->get('router')->pathFor('car_service_edit', ['id' => $d]);
-                    return '<a href="' . $link . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-                }
-            ),
-            array(
-                'db' => 'id',
-                'dt' => 10,
-                'formatter' => function( $d, $row ) {
-                    $link = $this->ci->get('router')->pathFor('car_service_delete', ['id' => $d]);
-                    return '<a href="#" data-url="' . $link . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
-                }
-            )
-        );
+        $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
+        $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
+        $searchQuery = empty($search) || $search === "null" ? null : $search;
 
+        $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
+
+        $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
+        
         $user = $this->ci->get('helper')->getUser()->id;
-        //$whereUser = $user ? "(user = {$user} OR user IS NULL)" : "";
-
         $user_cars = $this->car_mapper->getElementsOfUser($user);
-        $where = !empty($user_cars) ? "(car IN (" . implode(',', $user_cars) . "))" : " 1!=1";
-
-        $where .= (!empty($where) ? " AND " : "" ) . " type = 0 ";
-
-
-        /**
-         * @see https://github.com/DataTables/DataTablesSrc/blob/master/examples/server_side/scripts/ssp.class.php
-         */
-        $pdo = $this->ci->get('db');
-        $data = \App\Main\SSP::complex($requestData, $pdo, "cars_service", "id", $columns, null, $where);
-        return $response->withJson($data);
-    }
-
-    public function tableService(Request $request, Response $response) {
-
-
-        $requestData = $request->getQueryParams();
-        $cars = $this->car_mapper->getAll();
-
-        $columns = array(
-            array('db' => 'date', 'dt' => 0),
-            array(
-                'db' => 'car',
-                'dt' => 1,
-                'formatter' => function( $d, $row ) use ($cars) {
-                    return $cars[$d]->name;
-                }
-            ),
-            array('db' => 'mileage', 'dt' => 2),
-            array('db' => 'service_oil_before', 'dt' => 3),
-            array('db' => 'service_water_wiper_before', 'dt' => 4),
-            array('db' => 'service_air_front_left_before', 'dt' => 5),
-            array('db' => 'service_tire_change', 'dt' => 6),
-            array('db' => 'service_garage', 'dt' => 7),
-            array(
-                'db' => 'id',
-                'dt' => 8,
-                'formatter' => function( $d, $row ) {
-                    $link = $this->ci->get('router')->pathFor('car_service_edit', ['id' => $d]);
-                    return '<a href="' . $link . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-                }
-            ),
-            array(
-                'db' => 'id',
-                'dt' => 9,
-                'formatter' => function( $d, $row ) {
-                    $link = $this->ci->get('router')->pathFor('car_service_delete', ['id' => $d]);
-                    return '<a href="#" data-url="' . $link . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
-                }
-            )
-        );
-
-
-        $user = $this->ci->get('helper')->getUser()->id;
-
-        $user_cars = $this->car_mapper->getElementsOfUser($user);
-        $whereAll = !empty($user_cars) ? "(car IN (" . implode(',', $user_cars) . "))" : " 1!=1";
-        $whereAll .= (!empty($whereAll) ? " AND " : "" ) . " type = 1 ";
-
-
-        //$pdo = $this->ci->get('db');
-        //$data = \App\Main\SSP::complex($requestData, $pdo, "cars_service", "id", $columns, null, $whereAll);
-        //return $response->withJson($data);
-
-        $bindings = array();
-
-        $limit = \App\Main\SSP::limit($requestData, $columns);
-        $order = \App\Main\SSP::order($requestData, $columns);
-        $where = \App\Main\SSP::filter($requestData, $columns, $bindings);
-
-        // concat $where and $whereAll
-        $where = $where ? $where . ' AND ' . $whereAll : 'WHERE ' . $whereAll;
-        $whereAllSql = 'WHERE ' . $whereAll;
-
-
-        $raw_data = $this->mapper->dataTableService($where, $bindings, $order, $limit);
-        $data = array();
-        foreach ($raw_data as $row) {
-            $my_row = array(
-                "date" => $row->date,
-                "car" => $row->car,
-                "mileage" => $row->mileage,
-                "id" => $row->id,
-                "service_oil_before" => $row->isServiceOil() ? 'x' : '',
-                "service_water_wiper_before" => $row->isServiceWaterWiper() ? 'x' : '',
-                "service_air_front_left_before" => $row->isServiceAir() ? 'x' : '',
-                "service_tire_change" => $row->isServiceTireChange() ? 'x' : '',
-                "service_garage" => $row->isServiceGarage() ? 'x' : '',
-            );
-            $data[] = $my_row;
+        
+        $recordsTotal = $this->mapper->countwithCars($user_cars);
+        $recordsFiltered = $recordsTotal;
+        if (!is_null($searchQuery)) {
+            $recordsFiltered = $this->mapper->tableCount($searchQuery, $user_cars, 0);
         }
 
-        $recordsFiltered = $this->mapper->dataTableServiceCount($where, $bindings);
-        $recordsTotal = $this->mapper->dataTableServiceCount($whereAllSql, $bindings);
+        $lang = [0 => $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY"), 1 => $this->ci->get('helper')->getTranslatedString("FUEL_FULL")];
 
+        $data = $this->mapper->tableDataFuel($start, $length, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars);
+        foreach ($data as &$row) {
+            $row[9] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[10] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+        }
 
         return $response->withJson([
-                    "draw" => isset($requestData['draw']) ? intval($requestData['draw']) : 0,
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
-                    "data" => \App\Main\SSP::data_output($columns, $data)
+                    "data" => $data
                         ]
         );
     }
+    
+    public function tableService(Request $request, Response $response) {
+        $requestData = $request->getQueryParams();
+
+        $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
+
+        $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
+        $searchQuery = empty($search) || $search === "null" ? null : $search;
+
+        $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
+
+        $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
+        
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_cars = $this->car_mapper->getElementsOfUser($user);
+        
+        $recordsTotal = $this->mapper->countwithCars($user_cars, 1);
+        $recordsFiltered = $recordsTotal;
+        if (!is_null($searchQuery)) {
+            $recordsFiltered = $this->mapper->tableCount($searchQuery, $user_cars, 1);
+        }
+
+        $lang = [0 => $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY"), 1 => $this->ci->get('helper')->getTranslatedString("FUEL_FULL")];
+
+        $data = $this->mapper->tableDataService($start, $length, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars);
+        
+        foreach ($data as &$row) {
+            $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[9] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+        }
+
+        return $response->withJson([
+                    "recordsTotal" => intval($recordsTotal),
+                    "recordsFiltered" => intval($recordsFiltered),
+                    "data" => $data
+                        ]
+        );
+    }
+
 
     /**
      * Does the user have access to this dataset?

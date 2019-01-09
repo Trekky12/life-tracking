@@ -8,8 +8,6 @@ $app->group('', function() {
     $this->map(['GET', 'POST'], '/login', '\App\Main\MainController:login')->setName('login');
     $this->get('/logout', '\App\Main\MainController:logout')->setName('logout');
 
-    $this->get('/dataTable', '\App\Main\MainController:getDatatableLang')->setName('datatable_lang');
-
     $this->get('/cron', '\App\Main\MainController:cron')->setName('cron');
 
     $this->get('/logfile', '\App\Main\MainController:showLog')->setName('logfile')->add('App\Middleware\AdminMiddleware');
