@@ -175,11 +175,14 @@ labels.forEach(function (item, idx) {
 
 const cardModal = document.getElementById("card-modal");
 
-document.getElementById("create-card").addEventListener("click", function (event) {
-    event.preventDefault();
-    var stack_id = this.dataset.stack;
-    cardModal.querySelector('input[name="stack"]').value = stack_id;
-    setDialogOpen(cardModal, true);
+let create_card_link = document.querySelectorAll('.create-card');
+create_card_link.forEach(function (item, idx) {
+    item.addEventListener("click", function (event) {
+        event.preventDefault();
+        var stack_id = this.dataset.stack;
+        cardModal.querySelector('input[name="stack"]').value = stack_id;
+        setDialogOpen(cardModal, true);
+    });
 });
 
 cardModal.querySelector("form").addEventListener('submit', function (e) {
