@@ -50,23 +50,23 @@ function getNewTokens(token) {
 }
 
 function deleteObject(url, type) {
-    
-    let confirm_text =  lang.really_delete;
-    if(type === "board"){
+
+    let confirm_text = lang.really_delete;
+    if (type === "board") {
         confirm_text = lang.really_delete_board;
     }
-    if(type === "stack"){
+    if (type === "stack") {
         confirm_text = lang.really_delete_stack;
     }
-    if(type === "card"){
+    if (type === "card") {
         confirm_text = lang.really_delete_card;
     }
-    if(type === "label"){
+    if (type === "label") {
         confirm_text = confirm_text = lang.really_delete_label;
     }
-    
-    
-    if(!confirm(confirm_text)) {
+
+
+    if (!confirm(confirm_text)) {
         return false;
     }
 
@@ -181,7 +181,15 @@ function initialize() {
         item.addEventListener('click', function (event) {
             event.preventDefault();
 
-            let state = (item.dataset.type === "1" && item.checked ? 1 : 0);
+            let state = 0;
+            if (item.checked) {
+                if (item.dataset.type === "1") {
+                    state = 1;
+                }
+                if (item.dataset.type === "2") {
+                    state = 2;
+                }
+            }
             getCSRFToken(true).then(function (token) {
 
                 var data = token;
@@ -352,3 +360,46 @@ flatpickr('#dateSelectEnd', {
     "locale": i18n.template
 });
 
+
+
+
+/**
+ * Add Geolocation
+ */
+function getLocation(lat, lng) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            console.log(position);
+
+            lat.value = position.coords.latitude;
+            lng.value = position.coords.longitude;
+
+        }, function (error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    console.log("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    console.log("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    console.log("An unknown error occurred.");
+                    break;
+            }
+        });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+if (document.querySelector('#financeForm') !== null || document.querySelector('#gasolineForm') !== null) {
+    let lat = document.querySelector('input[name="lat"]');
+    let lng = document.querySelector('input[name="lng"]');
+
+    if (lat.value.length === 0 && lng.value.length === 0) {
+        getLocation(lat, lng);
+    }
+}

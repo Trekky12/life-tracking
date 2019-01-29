@@ -68,9 +68,12 @@ $lang["NOTICE"] = "Notice";
 $lang["CONSUMPTION"] = "Consumption";
 $lang["MILEAGE"] = "Mileage";
 $lang["MILEAGE_PER_YEAR"] = "km/year";
+$lang["MILEAGE_TERM"] = "Term (years)";
+$lang["MILEAGE_TRAVELLED"] = "km driven";
 $lang["KM"] = "km";
 $lang["START_WITH_YEAR"] = "calculation base 01.01.";
 $lang["START_WITH_FIRST_ENTRY"] = "calculation base 1. entry";
+$lang["START_WITH_STARTDATE"] = "calculation base term start";
 $lang["CAR_REFUEL"] = "Refuel";
 $lang["CAR_SERVICE"] = "Service";
 $lang["AFTER"] = "after";
@@ -266,5 +269,7 @@ $lang["REALLY_DELETE_STACK"] = "Do you really want to delete the stack with all 
 $lang["REALLY_DELETE_BOARD"] = "Do you really want to delete the board with all stacks, cards and labels?";
 $lang["REALLY_DELETE_CARD"] = "Do you really want to delete the card?";
 $lang["REALLY_DELETE_LABEL"] = "Do you really want to delete the label?";
+
+$lang["YOU_ARE_OFFLINE"] = "You are currently offline!";
 
 return $lang;

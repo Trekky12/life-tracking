@@ -204,13 +204,19 @@ CREATE TABLE cars (
     changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
-    mileage_year INT(20) DEFAULT NULL,
+    mileage_per_year INT(20) DEFAULT NULL,
+    mileage_term INT(3) DEFAULT NULL,
+    mileage_start_date DATE DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /**
 ALTER TABLE cars ADD mileage_year INT(20) DEFAULT NULL AFTER name; 
+
+ALTER TABLE cars CHANGE mileage_year mileage_per_year INT(20) DEFAULT NULL; 
+ALTER TABLE cars ADD mileage_term INT(3) DEFAULT NULL AFTER mileage_per_year; 
+ALTER TABLE cars ADD mileage_start_date DATE DEFAULT NULL AFTER mileage_term; 
 */
 
 DROP TABLE IF EXISTS cars_user;

@@ -18,23 +18,23 @@
         ];
         let fuelChart = document.querySelector("#fuelChart");
         if (fuelChart) {
-            new Chart(fuelChart, {
-                data: {
-                labels: JSON.parse(fuelChart.dataset.labels),
+        new Chart(fuelChart, {
+        data: {
+        labels: JSON.parse(fuelChart.dataset.labels),
                 datasets: [
-                    {% for el in data %}
-                        {
-                        label: lang.consumption + " {{el["name"]|raw}}",
-                                data:{{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
-                                fill: false,
-                                borderColor: COLORS[{{loop.index}}]
+        {% for el in data %}
+                                {
+                                label: lang.consumption + " {{el["name"]|raw}}",
+                                        data:{{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
+                                        fill: false,
+                                        borderColor: COLORS[{{loop.index}}]
+                                },
+        {% endfor %}
+                                ]
                         },
-                    {% endfor %}
-                    ]
-                },
-                type: 'line'
-            });
-        }
+                                type: 'line'
+                        });
+                        }
     </script>
 {% endblock %}
 
@@ -55,22 +55,30 @@
                 <div class="left">
                     <label class="radio" for="calculation_type_0">
                         <input class="set_calculation_date" name="calculation_type" data-type="0" type="radio" id="calculation_type_0" {% if mileage_calc_type is not null and mileage_calc_type == 0 %}checked="checked"{% endif %}>
+                        {{lang["START_WITH_STARTDATE"]}}                        
+                    </label>
+                </div>
+                <div class="left">
+                    <label class="radio" for="calculation_type_1">
+                        <input class="set_calculation_date" name="calculation_type" data-type="1" type="radio" id="calculation_type_1" {% if mileage_calc_type is not null and mileage_calc_type == 1 %}checked="checked"{% endif %}>
                         {{lang["START_WITH_FIRST_ENTRY"]}}
                     </label>
                 </div>
                 <div class="right">
-                    <label class="radio" for="calculation_type_1">
-                        <input class="set_calculation_date" name="calculation_type" data-type="1" type="radio" id="calculation_type_1" {% if mileage_calc_type is not null and mileage_calc_type == 1 %}checked="checked"{% endif %}>
+                    <label class="radio" for="calculation_type_2">
+                        <input class="set_calculation_date" name="calculation_type" data-type="2" type="radio" id="calculation_type_2" {% if mileage_calc_type is not null and mileage_calc_type == 2 %}checked="checked"{% endif %}>
                         {{lang["START_WITH_YEAR"]}}
                     </label>
                 </div>
             </div>
 
             {% for car, entries in table %}
-
                 <h2>{{cars[car].name|raw}} ({% if totalMileages[car]["max"] > totalMileages[car]["min"] %}{{totalMileages[car]["diff"]}} {{lang["KM"]}}{% endif %})</h2>
-                {% if car in mileage_year|keys and cars[car].mileage_year > 0 %}
-                    <strong>{{lang["MILEAGE_PER_YEAR"]}}: {{cars[car].mileage_year}} | {{lang["STATE_TODAY_MAX"]}}: {{mileage_year[car]["possible"]}} {{lang["KM"]}} ({{mileage_year[car]["remaining"]}} {{lang["KM"]}} {{lang["REMAINING"]}})</strong>
+
+                {% if car in mileage_year|keys and cars[car].mileage_per_year > 0 and cars[car].mileage_term > 0 %}
+
+                    <p class="no-margin-bottom"><strong>{{lang["MILEAGE_TRAVELLED"]}}: {{mileage_year[car]["current"]}} {{lang["KM"]}}, {{lang["STATE_TODAY_MAX"]}}: {{mileage_year[car]["possible"]}} {{lang["KM"]}} ({{mileage_year[car]["remaining"]}} {{lang["KM"]}} {{lang["REMAINING"]}})</strong></p>
+                    <p class="small"><em>{{lang["START"]}}: {{cars[car].mileage_start_date|date(i18n.twig)}}, {{lang["MILEAGE_PER_YEAR"]}}: {{cars[car].mileage_per_year}}, {{lang["MILEAGE_TERM"]}}: {{cars[car].mileage_term}}</em></p>
                 {% endif %}
                 <table class="mileage_year_table table table-hover small">
                     <thead>

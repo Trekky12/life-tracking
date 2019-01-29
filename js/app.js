@@ -4,6 +4,34 @@
  */
 'use strict';
 
+window.addEventListener("online", handleNetworkChange);
+window.addEventListener("offline", handleNetworkChange);
+handleNetworkChange();
+
+function handleNetworkChange(event) {
+    if (navigator.onLine) {
+        document.body.classList.remove("offline");
+        document.getElementById("offline-alert").classList.add("hidden");
+        setFormFields(false);
+    } else {
+        document.body.classList.add("offline");
+        document.getElementById("offline-alert").classList.remove("hidden");
+        setFormFields(true);
+    }
+}
+
+function setFormFields(value) {
+    let fields = document.querySelectorAll('form input, form select, form button[type="submit"]');
+    fields.forEach(function (item, idx) {
+        if (value) {
+            item.setAttribute("disabled", true);
+        } else {
+            item.removeAttribute("disabled");
+        }
+    });
+}
+
+
 const pushButton = document.querySelector('.js-push-btn');
 
 let isSubscribed = false;
@@ -188,6 +216,4 @@ function updateButton(state) {
             break;
     }
 }
-
-
 

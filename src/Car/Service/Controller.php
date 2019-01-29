@@ -139,6 +139,7 @@ class Controller extends \App\Base\Controller {
 
         // Get total distance
         $totalMileages = $this->mapper->getTotalMileage();
+        $totalMileagesWithStartDate = $this->mapper->getTotalMileage(true);
 
         $table = [];
 
@@ -156,6 +157,8 @@ class Controller extends \App\Base\Controller {
                 }
 
                 if (intval($calculation_type) === 0) {
+                    $mindate = !is_null($cars[$car]->mileage_start_date) ? $cars[$car]->mileage_start_date : $min["date"];
+                } elseif (intval($calculation_type) === 1) {
                     $mindate = $min["date"];
                 } else {
                     $date = \DateTime::createFromFormat("Y-m-d", $min["date"]);
@@ -163,9 +166,11 @@ class Controller extends \App\Base\Controller {
                     $mindate = $date->format("Y-m-d");
                 }
 
+                /**
+                 * Table Data
+                 */
                 $last_mileage = $min["mileage"];
                 $diff = 0;
-
                 do {
                     $miledata = $this->mapper->sumMileageInterval($car, $mindate);
 
@@ -183,30 +188,43 @@ class Controller extends \App\Base\Controller {
                 } while ($diff > 0);
 
                 /**
-                 * Get first element in the array => recent year
+                 * Get Mileage per Year
                  */
+                // Get first element in the array => recent year
                 $recent_year = end($table[$car]);
-                $last_interval_start = new \DateTime($recent_year["start"]);
-                $last_interval_end = new \DateTime($recent_year["end"]);
                 $current_date = new \DateTime('now');
 
-                $is_in_interval = $current_date >= $last_interval_start && $current_date <= $last_interval_end;
+                /**
+                 * Calculate only per year
+                 */
+                // $year_start = new \DateTime($recent_year["start"]);
+                // $year_end = new \DateTime($recent_year["end"]);
+                // $max_mileage_year = $cars[$car]->mileage_per_year;
+                // $current_mileage_year = $recent_year["diff"];
 
-                $max_mileage_year = $cars[$car]->mileage_year;
-                
-                if ($is_in_interval && !is_null($max_mileage_year)) {
+                /**
+                 * Calculate per term with specific start date
+                 */
+                $year_start = new \DateTime($cars[$car]->mileage_start_date);
+                $year_end = clone $year_start;
+                $year_end->add(new \DateInterval('P' . $cars[$car]->mileage_term . 'Y'));
+                $max_mileage = $cars[$car]->mileage_per_year * $cars[$car]->mileage_term;
+                $current_mileage_year = array_key_exists($car, $totalMileagesWithStartDate) ? $totalMileagesWithStartDate[$car]["diff"] : null;
+
+                $is_in_interval = $current_date >= $year_start && $current_date <= $year_end;
+
+                if ($is_in_interval && !is_null($max_mileage) && !is_null($current_mileage_year)) {
                     // maybe it is a leap year
-                    $days_of_year = $last_interval_start->diff($last_interval_end)->days;
+                    $days_of_year = $year_start->diff($year_end)->days;
                     // days since start
-                    $current_day_of_year = $last_interval_start->diff($current_date)->days;
+                    $current_day_of_year = $year_start->diff($current_date)->days;
 
-                    $possible_mileage_today = round($current_day_of_year / $days_of_year * $max_mileage_year);
-                    $mileage_year[$car] = ["possible" => $possible_mileage_today, "remaining" => $possible_mileage_today - $recent_year["diff"], "current" => $recent_year["diff"]];
+                    $possible_mileage_today = round($current_day_of_year / $days_of_year * $max_mileage);
+
+                    $mileage_year[$car] = ["possible" => $possible_mileage_today, "remaining" => $possible_mileage_today - $current_mileage_year, "current" => $current_mileage_year];
                 }
             }
         }
-
-
 
         return $this->ci->view->render($response, 'cars/stats.twig', [
                     'data' => $data,
@@ -222,14 +240,13 @@ class Controller extends \App\Base\Controller {
     public function setYearlyMileageCalcTyp(Request $request, Response $response) {
         $data = $request->getParsedBody();
 
-        if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1))) {
+        if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1, 2))) {
             $this->ci->get('helper')->setSessionVar('mileage_type', $data["state"]);
         }
 
         return $response->withJSON(array('status' => 'success'));
     }
-    
-    
+
     public function tableFuel(Request $request, Response $response) {
         $requestData = $request->getQueryParams();
 
@@ -243,10 +260,10 @@ class Controller extends \App\Base\Controller {
         $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
-        
+
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
-        
+
         $recordsTotal = $this->mapper->countwithCars($user_cars);
         $recordsFiltered = $recordsTotal;
         if (!is_null($searchQuery)) {
@@ -268,7 +285,7 @@ class Controller extends \App\Base\Controller {
                         ]
         );
     }
-    
+
     public function tableService(Request $request, Response $response) {
         $requestData = $request->getQueryParams();
 
@@ -282,10 +299,10 @@ class Controller extends \App\Base\Controller {
         $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
-        
+
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
-        
+
         $recordsTotal = $this->mapper->countwithCars($user_cars, 1);
         $recordsFiltered = $recordsTotal;
         if (!is_null($searchQuery)) {
@@ -295,7 +312,7 @@ class Controller extends \App\Base\Controller {
         $lang = [0 => $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY"), 1 => $this->ci->get('helper')->getTranslatedString("FUEL_FULL")];
 
         $data = $this->mapper->tableDataService($start, $length, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars);
-        
+
         foreach ($data as &$row) {
             $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
             $row[9] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
@@ -308,7 +325,6 @@ class Controller extends \App\Base\Controller {
                         ]
         );
     }
-
 
     /**
      * Does the user have access to this dataset?

@@ -209,9 +209,14 @@ class Mapper extends \App\Base\Mapper {
         return $stmt->fetch(\PDO::FETCH_BOTH);
     }
 
-    public function getTotalMileage() {
-        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTable() . " "
-                . " GROUP BY car";
+    public function getTotalMileage($startdate = null) {
+        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTable() . " cs,  " . $this->getTable("cars") . " c " ;
+        $sql .= "WHERE c.id = cs.car ";
+
+        if (!is_null($startdate)) {
+            $sql .= " AND cs.date >= c.mileage_start_date ";
+        }
+        $sql .= " GROUP BY car";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

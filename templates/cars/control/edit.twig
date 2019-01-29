@@ -10,7 +10,7 @@
             <form class="form-horizontal" id="financeForm" action="{{  path_for('cars_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                
+
                 {% if not entry is null %}
                     <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
                 {% endif %}
@@ -30,9 +30,20 @@
                     </select>
                 </div>
 
+                <h3>{{lang["STATS"]}}</h3>
                 <div class="form-group">
                     <label for="inputMileageYear">{{lang["MILEAGE_PER_YEAR"]}}</label>
-                    <input type="number" class="form-control" id="inputMileageYear" name="mileage_year" step="1" placeholder="" {% if not entry is null %}value="{{entry.mileage_year}}"{% endif %}>
+                    <input type="number" class="form-control" id="inputMileageYear" name="mileage_per_year" step="1" placeholder="" {% if not entry is null %}value="{{entry.mileage_per_year}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputTerm">{{lang["MILEAGE_TERM"]}}</label>
+                    <input type="number" class="form-control" id="inputTerm" name="mileage_term" step="1" placeholder="" {% if not entry is null %}value="{{entry.mileage_term}}"{% endif %}>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dateSelect">{{lang["START"]}} {{lang["DATE"]}}</label>
+                    <input type="text" class="form-control" id="dateSelect"  placeholder="" name="mileage_start_date" value="{% if not entry is null %}{{entry.mileage_start_date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
                 </div>
 
                 <div class="form-group">

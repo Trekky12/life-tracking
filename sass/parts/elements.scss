@@ -60,4 +60,7 @@ table {
     }
 }
 
-
+.small{
+    @include font-size(1.2);
+    margin:0;
+}

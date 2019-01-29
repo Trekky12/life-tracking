@@ -21,6 +21,24 @@
         top:50%;
         left:50%;
         color: #FFFFFF;
+
+        margin-right:0;
+        margin-bottom:0;
+    }
+
+    i{
+        margin-top: -20px;
+        margin-left: -20px;
+        width: 40px;
+        height: 40px;
+        font-size: 40px;
+    }
+    span{
+        margin-top: -10px;
+        margin-left: -10px;
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
     }
 }
 
@@ -285,7 +303,7 @@
     .avatar-wrapper{
         //position:relative;
         cursor:pointer;
-        
+
     }
 
     .avatar-small{

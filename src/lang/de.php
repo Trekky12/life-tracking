@@ -68,9 +68,12 @@ $lang["NOTICE"] = "Bemerkung";
 $lang["CONSUMPTION"] = "Verbrauch";
 $lang["MILEAGE"] = "Kilometerstand";
 $lang["MILEAGE_PER_YEAR"] = "km/Jahr";
+$lang["MILEAGE_TERM"] = "Laufzeit (Jahre)";
+$lang["MILEAGE_TRAVELLED"] = "gefahrene Kilometer";
 $lang["KM"] = "km";
 $lang["START_WITH_YEAR"] = "Berechnungsgrundlage 01.01.";
 $lang["START_WITH_FIRST_ENTRY"] = "Berechnungsgrundlage 1. Eintrag";
+$lang["START_WITH_STARTDATE"] = "Berechnungsgrundlage Start Laufzeit";
 $lang["CAR_REFUEL"] = "Tanken";
 $lang["CAR_SERVICE"] = "Wartung";
 $lang["AFTER"] = "nachher";
@@ -266,5 +269,7 @@ $lang["REALLY_DELETE_STACK"] = "Soll der Stapel mit allen Karten wirklich gelös
 $lang["REALLY_DELETE_BOARD"] = "Soll das Board mit allen Stapeln, Karten und Labeln wirklich gelöscht werden?";
 $lang["REALLY_DELETE_CARD"] = "Soll die Karte wirklich gelöscht werden?";
 $lang["REALLY_DELETE_LABEL"] = "Soll das Label wirklich gelöscht werden?";
+
+$lang["YOU_ARE_OFFLINE"] = "Sie sind derzeit offline!";
 
 return $lang;
