@@ -84,11 +84,11 @@ self.addEventListener('notificationclick', function (event) {
     }).then(function (clientList) {
         for (var i = 0; i < clientList.length; i++) {
             var client = clientList[i];
-            console.log(client.url.toString().startsWith(data));
-            if (client.url.toString().startsWith(data) && 'focus' in client)
+            console.log(client.url.toString().startsWith(data.url));
+            if (client.url.toString().startsWith(data.url) && 'focus' in client)
                 return client.focus();
         }
         if (clients.openWindow)
-            return clients.openWindow('/');
+            return clients.openWindow(data.path);
     }));
 });

@@ -111,13 +111,13 @@ class Controller extends \App\Base\Controller {
             )
         );
 
-        $data = '{"title":"' . $title . '", "body":"' . $content . '", "data":"' . $this->ci->get('helper')->getPath() . '"}';
+        $data = array("title" => $title, "body" => $content, "data" => array("url" => $this->ci->get('helper')->getPath(), "path" => "/notifications/"));
 
         $logger->addInfo('PUSH', array("data" => $data));
 
         $webPush = new WebPush($auth);
         $res = $webPush->sendNotification(
-                $subscription, $data, true
+                $subscription, json_encode($data), true
         );
         return $res;
     }
