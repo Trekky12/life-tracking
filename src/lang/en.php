@@ -262,4 +262,9 @@ $lang["ENABLE_PUSH_NOTIFICATIONS"] = "Enable Notifications";
 $lang["LOADING"] = "Loading...";
 $lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"] = "Notifications not supported";
 
+$lang["REALLY_DELETE_STACK"] = "Do you really want to delete the stack with all cards?";
+$lang["REALLY_DELETE_BOARD"] = "Do you really want to delete the board with all stacks, cards and labels?";
+$lang["REALLY_DELETE_CARD"] = "Do you really want to delete the card?";
+$lang["REALLY_DELETE_LABEL"] = "Do you really want to delete the label?";
+
 return $lang;

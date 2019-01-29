@@ -26,7 +26,7 @@
                             </td>
                             <td>
                                 {% if board.user == user.id %}
-                                    <a href="#" data-url="{{  path_for('boards_delete', {'id' : board.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+                                    <a href="#" data-url="{{  path_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-type="board"><span class="fa fa-trash fa-lg"></span></a>
                                 {% endif %}
                             </td>
                         </tr>

@@ -262,4 +262,9 @@ $lang["ENABLE_NOTIFICATIONS"] = "Benachrichtigungen einschalten";
 $lang["LOADING"] = "Lade...";
 $lang["NO_NOTIFICATIONS_POSSIBLE"] = "Benachrichtigungen werden nicht unterstützt";
 
+$lang["REALLY_DELETE_STACK"] = "Soll der Stapel mit allen Karten wirklich gelöscht werden?";
+$lang["REALLY_DELETE_BOARD"] = "Soll das Board mit allen Stapeln, Karten und Labeln wirklich gelöscht werden?";
+$lang["REALLY_DELETE_CARD"] = "Soll die Karte wirklich gelöscht werden?";
+$lang["REALLY_DELETE_LABEL"] = "Soll das Label wirklich gelöscht werden?";
+
 return $lang;

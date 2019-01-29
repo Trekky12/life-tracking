@@ -10,6 +10,8 @@ class Controller extends \App\Base\Controller {
     private $cat_mapper;
     private $cat_assignments_mapper;
     private $budget_mapper;
+    
+    static $GROUP_CATEGORIES_BUDGET_CHART = 5;
 
     public function init() {
         $this->model = '\App\Finances\FinancesEntry';
@@ -249,7 +251,6 @@ class Controller extends \App\Base\Controller {
         $category = $request->getAttribute('category');
         $type = $request->getAttribute('type');
 
-
         $stats = $this->mapper->statsCategoryDetail($year, $type, $category);
 
         $category_name = $this->cat_mapper->get($category);
@@ -417,7 +418,7 @@ class Controller extends \App\Base\Controller {
         foreach ($stats as $el) {
             // filter special characters
             // group by category/description
-            if (count($categories) > 1 || $is_remains) {
+            if (count($categories) >= self::$GROUP_CATEGORIES_BUDGET_CHART || $is_remains) {
                 $key = htmlspecialchars_decode($el["category"]);
             } else {
                 $key = htmlspecialchars_decode($el["description"]);

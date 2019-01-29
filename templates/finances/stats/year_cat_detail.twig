@@ -12,12 +12,14 @@
             <button class="white" id="go-back-btn">{{lang["BACK"]}}</button>
         </div>
         <div class="page-content">
-            
+
             <canvas id="financeDetailChart" data-values="{{data}}" data-labels="{{labels}}" {%if count > 20 %}class="big"{%endif%}></canvas>
 
             <table id="stats_cat_table" class="table table-hover small">
                 <thead>
                     <tr>
+                        <th>{{lang["DATE"]}}</th>
+                        <th>{{lang["TIME"]}}</th>
                         <th>{{lang["DESCRIPTION"]}}</th>
                         <th>{{lang["VALUE"]}}</th>
                         <th></th>
@@ -27,6 +29,8 @@
                 <tbody>
                     {% for entry in stats %}
                         <tr>
+                            <td data-title="{{lang["DATE"]}}">{{entry.date}}</td> 
+                            <td data-title="{{lang["TIME"]}}">{{entry.time}}</td> 
                             <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td> 
                             <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
                             <td><a href="{{  path_for('finances_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>

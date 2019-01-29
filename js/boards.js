@@ -73,7 +73,7 @@ stackHeaders.forEach(function (item, idx) {
                 stackModal.querySelector('input[name="position"]').value = data.entry.position;
 
                 var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
-                                    <a href='#' data-url='" + jsObject.stack_delete + data.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                                    <a href='#' data-url='" + jsObject.stack_delete + data.entry.id + "' class='btn-delete' data-type='stack'><i class='fa fa-trash' aria-hidden='true'></i></a>";
 
                 stackModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
@@ -149,7 +149,7 @@ labels.forEach(function (item, idx) {
                 labelModal.querySelector('input[name="text_color"]').value = data.entry.text_color;
                 labelModal.querySelector('input[name="text_color"]').parentElement.style.backgroundColor = data.entry.text_color;
 
-                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-type='label'><i class='fa fa-trash' aria-hidden='true'></i></a>";
 
                 labelModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
@@ -188,6 +188,17 @@ create_card_link.forEach(function (item, idx) {
 cardModal.querySelector("form").addEventListener('submit', function (e) {
     e.preventDefault();
     save(cardModal, jsObject.card_save);
+});
+
+/**
+ * With SimpleMDE the dialog form is not submitted on Enter 
+ * so this is a ugly hack to submit the form on enter
+ */
+cardModal.addEventListener('keypress', function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        save(cardModal, jsObject.card_save);
+    }
 });
 
 document.getElementById("card-close-btn").addEventListener('click', function (e) {
@@ -306,11 +317,11 @@ function loadAndOpenCard(card) {
 
 
             var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'><i class='fa fa-archive' aria-hidden='true'></i></a> \n\
-                                    <a href='#' data-url='" + jsObject.card_delete + data.entry.id + "' class='btn-delete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                                    <a href='#' data-url='" + jsObject.card_delete + data.entry.id + "' class='btn-delete' data-type='card'><i class='fa fa-trash' aria-hidden='true'></i></a>";
 
             cardModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
-            document.getElementById('stack-add-btn').value = lang.update;
+            document.getElementById('card-add-btn').value = lang.update;
             setDialogOpen(cardModal, true);
         } else {
             cleanURL();

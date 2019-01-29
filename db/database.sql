@@ -275,7 +275,7 @@ CREATE TABLE boards (
     archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -301,7 +301,7 @@ CREATE TABLE boards_stacks (
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
     PRIMARY KEY (id),
-   FOREIGN KEY(board) REFERENCES boards(id)
+   FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -322,7 +322,7 @@ CREATE TABLE boards_cards (
     hash VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
-    FOREIGN KEY(stack) REFERENCES boards_stacks(id)
+    FOREIGN KEY(stack) REFERENCES boards_stacks(id) ON DELETE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS boards_cards_user;
@@ -347,8 +347,8 @@ CREATE TABLE boards_labels (
     background_color VARCHAR(255) DEFAULT NULL,
     text_color VARCHAR(255) DEFAULT '#000000',
     PRIMARY KEY (id),
-    FOREIGN KEY(board) REFERENCES boards(id),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -358,8 +358,8 @@ CREATE TABLE boards_cards_label (
     card INTEGER unsigned DEFAULT NULL,
     label INTEGER unsigned DEFAULT NULL,
     UNIQUE(card, label),
-    FOREIGN KEY(card) REFERENCES  boards_cards(id)  ON DELETE CASCADE,
-    FOREIGN KEY(label) REFERENCES boards_labels(id)  ON DELETE CASCADE
+    FOREIGN KEY(card) REFERENCES  boards_cards(id) ON DELETE CASCADE,
+    FOREIGN KEY(label) REFERENCES boards_labels(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -372,8 +372,8 @@ CREATE TABLE boards_comments (
     changedOn TIMESTAMP NULL,
     comment TEXT DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(card) REFERENCES boards_cards(id),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(card) REFERENCES boards_cards(id) ON DELETE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

@@ -49,8 +49,24 @@ function getNewTokens(token) {
     });
 }
 
-function deleteObject(url) {
-    if (!confirm(lang.really_delete)) {
+function deleteObject(url, type) {
+    
+    let confirm_text =  lang.really_delete;
+    if(type === "board"){
+        confirm_text = lang.really_delete_board;
+    }
+    if(type === "stack"){
+        confirm_text = lang.really_delete_stack;
+    }
+    if(type === "card"){
+        confirm_text = lang.really_delete_card;
+    }
+    if(type === "label"){
+        confirm_text = confirm_text = lang.really_delete_label;
+    }
+    
+    
+    if(!confirm(confirm_text)) {
         return false;
     }
 
@@ -99,7 +115,8 @@ function initialize() {
             let url = closest.dataset.url;
             if (url) {
                 event.preventDefault();
-                deleteObject(url);
+                let type = closest.dataset.type ? closest.dataset.type : "default";
+                deleteObject(url, type);
             }
         }
     });
@@ -252,7 +269,7 @@ function initCharts() {
     });
     let financeDetailChart = document.querySelector("#financeDetailChart");
     if (financeDetailChart) {
-        new Chart(financeDetailChart, {
+        var fdChart = new Chart(financeDetailChart, {
             data: {
                 labels: JSON.parse(financeDetailChart.dataset.labels),
                 datasets: [
@@ -269,7 +286,8 @@ function initCharts() {
                 responsive: true,
                 maintainAspectRatio: false,
                 legend: {
-                    position: 'top'
+                    position: 'top',
+                    display: false
                 },
                 tooltips: {
                     // @see https://stackoverflow.com/a/44010778
@@ -281,9 +299,42 @@ function initCharts() {
                             return chart['datasets'][tooltipItem['datasetIndex']]['data'][tooltipItem['index']].toFixed(2) + " " + i18n.currency;
                         }
                     }
+                },
+                // @see https://github.com/chartjs/Chart.js/issues/5049, 
+                // https://github.com/chartjs/Chart.js/issues/3761,
+                // https://jsfiddle.net/asimovwasright/xs15f60y/
+                legendCallback: function (chart) {
+                    let ul = document.createElement("ul");
+                    ul.id = "chart-legend";
+                    var items = chart.legend.legendItems;
+                    items.forEach(function (item, idx) {
+                        let li = document.createElement("li");
+                        li.innerHTML = item.text;
+
+                        let span = document.createElement('span');
+                        span.classList = "legend-item";
+                        span.style = "background-color:" + item.fillStyle + ";";
+                        li.insertBefore(span, li.firstChild);
+
+                        li.setAttribute("title", item.text);
+
+                        li.addEventListener("click", function (event) {
+                            event.target.closest('li').classList.toggle('excluded');
+
+                            var index = idx;
+                            var ci = fdChart.chart;
+                            var meta = ci.legend.legendItems[index];
+                            ci.data.datasets[0]._meta[ci.id].data[index].hidden = (!meta.hidden) ? true : null;
+                            ci.update();
+                        });
+
+                        ul.appendChild(li);
+                    });
+                    return ul;
                 }
             }
         });
+        financeDetailChart.before(fdChart.generateLegend());
     }
 }
 

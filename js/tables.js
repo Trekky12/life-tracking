@@ -222,7 +222,17 @@ var statsCatTable = new JSTable("#stats_cat_table", {
     labels: tableLabels,
     columns: [
         {
-            select: 1,
+            select: 0,
+            type: "date",
+            format: "MYSQL",
+            sortable: true,
+            sort: "desc",
+            render: function (data) {
+                return moment(data).format(i18n.dateformatJS);
+            }
+        },
+        {
+            select: 3,
             sortable: true,
             sort: "desc",
             render: function (data) {
@@ -230,7 +240,7 @@ var statsCatTable = new JSTable("#stats_cat_table", {
             }
         },
         {
-            select: [2, 3],
+            select: [4, 5],
             sortable: false,
             searchable: false
         }
@@ -242,7 +252,17 @@ var statsBudgetTable = new JSTable("#stats_budget_table", {
     labels: tableLabels,
     columns: [
         {
-            select: 2,
+            select: 0,
+            type: "date",
+            format: "MYSQL",
+            sortable: true,
+            sort: "desc",
+            render: function (data) {
+                return moment(data).format(i18n.dateformatJS);
+            }
+        },
+        {
+            select: 4,
             sortable: true,
             sort: "desc",
             render: function (data) {
@@ -250,7 +270,7 @@ var statsBudgetTable = new JSTable("#stats_budget_table", {
             }
         },
         {
-            select: [3, 4],
+            select: [5, 6],
             sortable: false,
             searchable: false
         }
