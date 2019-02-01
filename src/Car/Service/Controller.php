@@ -207,7 +207,9 @@ class Controller extends \App\Base\Controller {
                  */
                 $year_start = new \DateTime($cars[$car]->mileage_start_date);
                 $year_end = clone $year_start;
-                $year_end->add(new \DateInterval('P' . $cars[$car]->mileage_term . 'Y'));
+                if(!is_null($cars[$car]->mileage_term)){
+                    $year_end->add(new \DateInterval('P' . $cars[$car]->mileage_term . 'Y'));
+                }
                 $max_mileage = $cars[$car]->mileage_per_year * $cars[$car]->mileage_term;
                 $current_mileage_year = array_key_exists($car, $totalMileagesWithStartDate) ? $totalMileagesWithStartDate[$car]["diff"] : null;
 
