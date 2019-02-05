@@ -7,7 +7,6 @@ class Mapper extends \App\Base\Mapper {
     protected $table = 'finances';
     protected $model = '\App\Finances\FinancesEntry';
 
-
     private function getTableSQL($select) {
         $sql = "SELECT {$select} "
                 . " FROM " . $this->getTable() . " f INNER JOIN " . $this->getTable('finances_categories') . " fc "
@@ -100,7 +99,6 @@ class Mapper extends \App\Base\Mapper {
         }
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
-
 
     public function statsTotal() {
         $sql = "SELECT YEAR(date) as year, type,  SUM(value) as sum, COUNT(value) as count FROM " . $this->getTable();
@@ -281,6 +279,23 @@ class Mapper extends \App\Base\Mapper {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
+    }
+
+    public function getMarkers($from, $to) {
+        $bindings = ["from" => $from, "to" => $to];
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+        
+        $this->filterByUser($sql, $bindings);
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->model($row);
+        }
+        return $results;
     }
 
 }

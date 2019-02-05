@@ -116,11 +116,12 @@ class Mapper extends \App\Base\Mapper {
         $sql = "SELECT * FROM " . $this->getTable();
 
         $bindings = array("type" => $type);
+        $car_bindings = array();
         foreach ($user_cars as $idx => $car) {
-            $bindings[":car_" . $idx] = $car;
+            $car_bindings[":car_" . $idx] = $car;
         }
 
-        $sql .= " WHERE car IN (" . implode(',', array_keys($bindings)) . ")";
+        $sql .= " WHERE car IN (" . implode(',', array_keys($car_bindings)) . ")";
         $sql .= " AND type = :type ";
 
         if ($sorted && !is_null($sorted)) {
@@ -132,7 +133,7 @@ class Mapper extends \App\Base\Mapper {
         }
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $car_bindings));
 
         $results = [];
         while ($row = $stmt->fetch()) {
@@ -149,15 +150,16 @@ class Mapper extends \App\Base\Mapper {
         $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable();
 
         $bindings = array("type" => $type);
+        $car_bindings = array();
         foreach ($user_cars as $idx => $car) {
-            $bindings[":car_" . $idx] = $car;
+            $car_bindings[":car_" . $idx] = $car;
         }
 
-        $sql .= " WHERE car IN (" . implode(',', array_keys($bindings)) . ")";
+        $sql .= " WHERE car IN (" . implode(',', array_keys($car_bindings)) . ")";
         $sql .= " AND type = :type ";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $car_bindings));
 
         if ($stmt->rowCount() > 0) {
             return intval($stmt->fetchColumn());
@@ -401,5 +403,36 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
+    
+    
+    public function getMarkers($from, $to, $user_cars = []) {
+        
+        if (empty($user_cars)) {
+            return [];
+        }
+        
+        $bindings = ["from" => $from, "to" => $to];
+        
+        $car_bindings = array();
+        foreach ($user_cars as $idx => $car) {
+            $car_bindings[":car_" . $idx] = $car;
+        }
+
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+        $sql .= " AND car IN (" . implode(',', array_keys($car_bindings)) . ")";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(array_merge($bindings, $car_bindings));
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->model($row);
+        }
+        return $results;
+    }
+    
+    
+       
 
 }

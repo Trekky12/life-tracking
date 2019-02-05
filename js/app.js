@@ -38,7 +38,7 @@ let isSubscribed = false;
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js?v=20190108').then(function (registration) {
+        navigator.serviceWorker.register('/sw.js?v=20190131').then(function (registration) {
             console.log('Service worker successfully registered on scope', registration.scope);
 
             initialize();

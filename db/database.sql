@@ -128,10 +128,19 @@ CREATE TABLE finances (
     common_value DECIMAL(10,2),
     notice TEXT DEFAULT NULL,
     fixed int(1) DEFAULT 0,
+    lat DECIMAL(16,14) DEFAULT NULL,
+    lng DECIMAL(16,14) DEFAULT NULL,
+    acc DECIMAL(6,3) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE finances    ADD lat DECIMAL(16,14) DEFAULT NULL AFTER fixed, 
+                        ADD lng DECIMAL(16,14) DEFAULT NULL AFTER lat, 
+                        ADD acc DECIMAL(6,3) DEFAULT NULL AFTER lng;
+*/
 
 DROP TABLE IF EXISTS finances_recurring;
 CREATE TABLE finances_recurring (
@@ -211,13 +220,6 @@ CREATE TABLE cars (
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/**
-ALTER TABLE cars ADD mileage_year INT(20) DEFAULT NULL AFTER name; 
-
-ALTER TABLE cars CHANGE mileage_year mileage_per_year INT(20) DEFAULT NULL; 
-ALTER TABLE cars ADD mileage_term INT(3) DEFAULT NULL AFTER mileage_per_year; 
-ALTER TABLE cars ADD mileage_start_date DATE DEFAULT NULL AFTER mileage_term; 
-*/
 
 DROP TABLE IF EXISTS cars_user;
 CREATE TABLE cars_user (
@@ -263,12 +265,20 @@ CREATE TABLE cars_service (
     service_air_back_right_after DECIMAL(2,1) DEFAULT NULL,
     service_tire_change int(1) DEFAULT NULL,
     service_garage int(1) DEFAULT NULL,
+    lat DECIMAL(16,14) DEFAULT NULL,
+    lng DECIMAL(16,14) DEFAULT NULL,
+    acc DECIMAL(6,3) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(createdBy) REFERENCES global_users(id),
     FOREIGN KEY(changedBy) REFERENCES global_users(id),
     FOREIGN KEY(car) REFERENCES cars(id),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/**
+ALTER TABLE cars_service    ADD lat DECIMAL(16,14) DEFAULT NULL AFTER service_garage, 
+                            ADD lng DECIMAL(16,14) DEFAULT NULL AFTER lat, 
+                            ADD acc DECIMAL(6,3) DEFAULT NULL AFTER lng;
+*/
 
 DROP TABLE IF EXISTS boards;
 CREATE TABLE boards (

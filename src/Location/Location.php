@@ -99,13 +99,15 @@ class Location extends \App\Base\Model{
             $data['lat'] = $this->net_lat;
             $data['lng'] = $this->net_lng;
             $data['acc'] = $this->net_acc;
-            $data['type'] = 'net';
+            $data['source'] = 'net';
         }else{
             $data['lat'] = $this->gps_lat;
             $data['lng'] = $this->gps_lng;
             $data['acc'] = $this->gps_acc;
-            $data['type'] = 'gps';
+            $data['source'] = 'gps';
         }
+        
+        $data["type"] = 0;
         //return ['id'=> $this->id, 'dt' => $this->createdOn, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
         //return [ 'id'=> $this->id, 'dt' => $this->createdOn, 'lat' => $this->gps_lat, 'lng' => $this->gps_lng, 'acc' => $this->gps_acc];
         return $data;

@@ -272,4 +272,7 @@ $lang["REALLY_DELETE_LABEL"] = "Soll das Label wirklich gelöscht werden?";
 
 $lang["YOU_ARE_OFFLINE"] = "Sie sind derzeit offline!";
 
+$lang["SET_CURRENT_LOCATION"] = "Aktuellen Standort setzen";
+$lang["REMOVE_LOCATION"] = "Standort entfernen";
+
 return $lang;

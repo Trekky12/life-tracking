@@ -11,11 +11,30 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     subdomains: ['a', 'b', 'c']
 }).addTo(mymap);
 
+var greenIcon = new L.Icon({
+    iconUrl: '/static/assets/images/marker-icon-green.png',
+    shadowUrl: '/static/assets/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+var yellowIcon = new L.Icon({
+    iconUrl: '/static/assets/images/marker-icon-yellow.png',
+    shadowUrl: '/static/assets/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+const from = document.getElementById('inputStart').value;
+const to = document.getElementById('inputEnd').value;
+
 getMarkers();
 
 function getMarkers() {
-    let from = document.getElementById('inputStart').value;
-    let to = document.getElementById('inputEnd').value;
     fetch(jsObject.marker_url + '?from=' + from + '&to=' + to, {
         method: 'GET',
         credentials: "same-origin",
@@ -25,47 +44,71 @@ function getMarkers() {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        drawMap(data);
+        drawMarkers(data);
     }).catch(function (error) {
         alert(error);
     });
 }
 
-function drawMap(markers) {
+function drawMarkers(markers) {
 
     var my_latlngs = [];
     var my_markers = [];
+
 
     var marker_idx = 0;
     for (marker_idx in markers) {
 
         let marker = markers[marker_idx];
 
+        let type = marker.type;
+
         if (marker.lat === null || marker.lng === null) {
-            return;
+            continue;
         }
 
-        var dateString = marker.dt;
+        var dateString = marker.dt + '<br/>';
         var accuracyString = "";
         if (marker.acc > 0) {
-            accuracyString = '<br/>' + lang.accuracy + ' : ' + marker.acc + ' m';
+            accuracyString = lang.accuracy + ' : ' + marker.acc + ' m<br/>';
         }
-        var addressString = '<br/><a href="#" data-id="' + marker.id + '" class="btn-get-address">' + lang.address + '</a>';
+        var addressString = '<a href="#" data-lat="' + marker.lat + '" data-lng="' + marker.lng + '" class="btn-get-address">' + lang.address + '</a>';
         var removeString = '<br/><br/><a href="#" data-url="' + jsObject.delete_marker_url + marker.id + '" class="btn-delete">' + lang.delete_text + '</a>';
 
-        var my_marker = L.marker([marker.lat, marker.lng]).bindPopup(dateString + accuracyString + addressString + removeString);
-        my_marker.addTo(mymap);
-        my_latlngs.push([marker.lat, marker.lng, marker_idx]);
+        let popup = dateString + accuracyString + addressString;
+
+        let options = {};
+        let circle_options = {
+            opacity: 0.5,
+            radius: marker.acc
+        };
+
+        if (type === 0) {
+            popup += removeString;
+        }
+
+        if (type === 1) {
+            options['icon'] = greenIcon;
+            circle_options['color'] = 'green';
+            popup += '<br/><br/><strong>' + marker.description + ' - ' + marker.value + ' ' + i18n.currency + '</strong>';
+        }
+
+        if (type === 2) {
+            options['icon'] = yellowIcon;
+            circle_options['color'] = 'yellow';
+
+            let description = marker.description == 0 ? lang.car_refuel : lang.car_service;
+            popup += '<br/><br/><strong>' + description + '</strong>';
+        }
+
+        var my_marker = L.marker([marker.lat, marker.lng], options).bindPopup(popup);
 
 
         if (marker.acc > 0) {
             var circle = null;
 
             my_marker.on('mouseover', function (e) {
-                circle = L.circle([marker.lat, marker.lng], {
-                    opacity: 0.5,
-                    radius: marker.acc
-                }).addTo(mymap);
+                circle = L.circle([marker.lat, marker.lng], circle_options).addTo(mymap);
             });
 
             my_marker.on('mouseout', function (e) {
@@ -73,70 +116,22 @@ function drawMap(markers) {
             });
 
         }
-
+        if (type === 0) {
+            my_latlngs.push([marker.lat, marker.lng, marker_idx]);
+        }
         my_markers.push(my_marker);
+        my_marker.addTo(mymap);
     }
 
     var polyline = L.polyline(my_latlngs).addTo(mymap);
 
-    var group = new L.featureGroup(my_markers);
-    mymap.fitBounds(group.getBounds());
+    if (my_markers.length > 0) {
+        var group = new L.featureGroup(my_markers);
+        mymap.fitBounds(group.getBounds());
+    }
 
     return true;
 }
-
-
-/**
- * Get Adress of marker
- */
-document.addEventListener('click', function (event) {
-    // https://stackoverflow.com/a/50901269
-    let closest = event.target.closest('.btn-get-address');
-    if (closest) {
-        let id = closest.dataset.id;
-        if (id) {
-            event.preventDefault();
-            fetch(jsObject.get_address_url + id, {
-                method: 'GET',
-                credentials: "same-origin"
-            }).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                if (data['status'] === 'success') {
-                    var output = '';
-
-                    if (data['data']['police']) {
-                        output += data['data']['police'] + '\n';
-                    }
-
-                    if (data['data']['road']) {
-                        output += data['data']['road'] + " ";
-                    }
-
-                    if (data['data']['house_number']) {
-                        output += data['data']['house_number'];
-                    }
-
-                    if (data['data']['road'] || data['data']['house_number']) {
-                        output += '\n';
-                    }
-
-                    if (data['data']['postcode']) {
-                        output += data['data']['postcode'] + " ";
-                    }
-
-                    if (data['data']['city']) {
-                        output += data['data']['city'];
-                    }
-
-                    alert(output);
-                }
-            }).catch(function (error) {
-                alert(error);
-            });
-        }
-    }
-});
 
 
 /**

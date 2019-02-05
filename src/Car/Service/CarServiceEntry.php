@@ -75,6 +75,10 @@ class CarServiceEntry extends \App\Base\Model {
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
 
+        $this->lat = $this->exists('lat', $data) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->lng = $this->exists('lng', $data) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        
         /**
          * Parsing Errors
          */
@@ -103,12 +107,25 @@ class CarServiceEntry extends \App\Base\Model {
                 !is_null($this->service_air_back_right_before) ||
                 !is_null($this->service_air_back_right_after);
     }
-    
+
     public function isServiceTireChange() {
         return !is_null($this->service_tire_change) && $this->service_tire_change != 0;
     }
+
     public function isServiceGarage() {
         return !is_null($this->service_garage) && $this->service_garage != 0;
+    }
+    
+
+    public function getPosition() {
+        return [
+            'id' => $this->id, 
+            'dt' => $this->date, 
+            'lat' => $this->lat, 
+            'lng' => $this->lng, 
+            'acc' => $this->acc, 
+            'description' => $this->type,
+            'type' => 2];
     }
 
 }

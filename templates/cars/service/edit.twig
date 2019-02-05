@@ -2,13 +2,18 @@
 
 {% set active = 'car_service' %}
 
-{% block javascript %}
-    <script src="{{base_url()}}/static/assets/js/nouislider.min.js"></script>
-    <script src="{{base_url()}}/static/js/car_service.js?ver=20181122"></script>
-{% endblock %}
+{% set hasMap = not entry.lat is null and not entry.lng is null %}
 
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/nouislider.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/leaflet.min.css" />
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{base_url()}}/static/assets/js/nouislider.min.js"></script>
+    <script src="{{base_url()}}/static/js/car_service.js?ver=20181122"></script>
+    <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
+    <script src="{{base_url()}}/static/js/geolocation.js?ver=20190130"></script>
 {% endblock %}
 
 {% block body %}
@@ -20,7 +25,11 @@
             <form class="form-horizontal" id="gasolineForm" action="{{  path_for('car_service_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                
+
+                <input type="hidden" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
+                <input type="hidden" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
+                <input type="hidden" name="acc" value="{% if not entry is null %}{{entry.acc}}{% endif %}">
+
                 {% if not entry is null %}
                     {# Hidden fields for ID to recognize updates and for not available fields so they don't get overwritten with null #}
                     <input name="id" type="hidden" value="{{entry.id}}">
@@ -207,6 +216,14 @@
                     <textarea class="form-control" id="inputGNotice" name="notice">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
                 </div>
 
+                {% if not entry is null %}
+                    <h3>{{lang["LOCATION"]}}</h3>
+                    <div id="geo-map"></div>
+                    <div class="form-group map-btn">
+                        <button id="update-location" class="gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                        <button id="delete-location" class="danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                    </div>
+                {% endif %}
 
 
                 <div class="form-group">

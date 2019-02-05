@@ -1,7 +1,7 @@
 'use strict';
 importScripts('static/assets/js/sw-toolbox.js');
 
-const cacheName = 'pwa-life-tracking-v4';
+const cacheName = 'pwa-life-tracking-v6';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -12,6 +12,7 @@ const staticAssets = [
     '/static/js/boards.js',
     '/static/js/tables.js',
     '/static/js/car_service.js',
+    '/static/js/geolocation.js',
     '/static/assets/js/Chart.min.js',
     '/static/assets/js/Sortable.min.js',
     '/static/assets/js/datatables.js',

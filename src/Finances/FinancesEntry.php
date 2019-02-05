@@ -22,8 +22,12 @@ class FinancesEntry extends \App\Base\Model {
         $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : $this->common;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-        
+
         $this->fixed = $this->exists('fixed', $data) ? filter_var($data['fixed'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
+        $this->lat = $this->exists('lat', $data) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->lng = $this->exists('lng', $data) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         /**
          * Clean date/time
@@ -48,6 +52,18 @@ class FinancesEntry extends \App\Base\Model {
         if (is_null($this->description)) {
             $this->parsing_errors[] = "DESCRIPTION_CANNOT_BE_EMPTY";
         }
+    }
+
+    public function getPosition() {
+        return [
+            'id' => $this->id, 
+            'dt' => $this->date . ' ' . $this->time, 
+            'lat' => $this->lat, 
+            'lng' => $this->lng, 
+            'acc' => $this->acc, 
+            'description' => $this->description,
+            'value' => $this->value,
+            'type' => 1];
     }
 
 }

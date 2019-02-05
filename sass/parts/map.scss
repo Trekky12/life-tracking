@@ -29,7 +29,7 @@
         text-rendering: auto;
         transition: all 250ms;
     }
-    
+
     &.hiddenSearch::before{
         content: "\f107";
         transition: all 250ms;
@@ -49,7 +49,7 @@
     padding:0.5rem;
     position: relative;
     z-index: 2;
-    
+
     @media screen and (min-width: $size_mobile_navigation){
         z-index: 1;
     }
@@ -61,11 +61,11 @@
         transition: height .3s linear;
         overflow:hidden;
         padding:0;
-        
+
         &.collapsed{
             height: 0!important;
         }
-        
+
         .search-form-inner{
             padding:1rem;
         }
@@ -94,4 +94,22 @@
         margin: 0 auto;
 
     }
+}
+
+@media screen and (min-width: $size_mobile_navigation){
+    #geo-map.visible ~ .map-btn{
+        display:flex;
+        justify-content: flex-end;
+    }
+}
+
+#update-location{
+    margin-right: 5px;
+}
+#update-location, #delete-location{
+    margin-top:1rem;
+    margin-bottom:2rem;  
+    @include font-size(1.2);
+    padding: 1rem 0.5rem;
+    line-height:1;
 }

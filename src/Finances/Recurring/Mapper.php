@@ -94,10 +94,9 @@ class Mapper extends \App\Base\Mapper {
     public function getSumOfCategories($categories = array(), $type = 0) {
 
         $bindings = array("type" => $type, "user" => $this->userid);
-        $keys_array = array();
+        $cat_bindings = array();
         foreach ($categories as $idx => $category) {
-            $bindings["category" . $idx] = $category;
-            $keys_array[] = ":category" . $idx . "";
+            $cat_bindings[":category_" . $idx] = $category;
         }
 
 
@@ -115,7 +114,7 @@ class Mapper extends \App\Base\Mapper {
 
         $where = " WHERE type = :type "
                 . "AND (start <= CURDATE() OR start IS NULL) AND ( end >= CURDATE() OR end IS NULL) "
-                . "AND category IN (" . implode(", ", $keys_array) . ") "
+                . "AND category IN (" . implode(", ", array_keys($cat_bindings)) . ") "
                 . "AND user = :user ";
 
 
@@ -131,7 +130,7 @@ class Mapper extends \App\Base\Mapper {
 
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $cat_bindings));
 
         return intval($stmt->fetchColumn());
     }

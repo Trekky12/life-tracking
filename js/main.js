@@ -361,45 +361,55 @@ flatpickr('#dateSelectEnd', {
 });
 
 
-
-
 /**
- * Add Geolocation
+ * Get Adress of marker
  */
-function getLocation(lat, lng) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            console.log(position);
+document.addEventListener('click', function (event) {
+    // https://stackoverflow.com/a/50901269
+    let closest = event.target.closest('.btn-get-address');
+    if (closest) {
+        let lat = closest.dataset.lat;
+        let lng = closest.dataset.lng;
+        if (lat && lng) {
+            event.preventDefault();
+            fetch(jsObject.get_address_url + '?lat=' + lat + '&lng=' + lng, {
+                method: 'GET',
+                credentials: "same-origin"
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                if (data['status'] === 'success') {
+                    var output = '';
 
-            lat.value = position.coords.latitude;
-            lng.value = position.coords.longitude;
+                    if (data['data']['police']) {
+                        output += data['data']['police'] + '\n';
+                    }
 
-        }, function (error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    console.log("User denied the request for Geolocation.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    console.log("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    console.log("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    console.log("An unknown error occurred.");
-                    break;
-            }
-        });
-    } else {
-        console.log("Geolocation is not supported by this browser.");
+                    if (data['data']['road']) {
+                        output += data['data']['road'] + " ";
+                    }
+
+                    if (data['data']['house_number']) {
+                        output += data['data']['house_number'];
+                    }
+
+                    if (data['data']['road'] || data['data']['house_number']) {
+                        output += '\n';
+                    }
+
+                    if (data['data']['postcode']) {
+                        output += data['data']['postcode'] + " ";
+                    }
+
+                    if (data['data']['city']) {
+                        output += data['data']['city'];
+                    }
+
+                    alert(output);
+                }
+            }).catch(function (error) {
+                alert(error);
+            });
+        }
     }
-}
-
-if (document.querySelector('#financeForm') !== null || document.querySelector('#gasolineForm') !== null) {
-    let lat = document.querySelector('input[name="lat"]');
-    let lng = document.querySelector('input[name="lng"]');
-
-    if (lat.value.length === 0 && lng.value.length === 0) {
-        getLocation(lat, lng);
-    }
-}
+});
