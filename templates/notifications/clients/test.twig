@@ -1,0 +1,36 @@
+{% extends "base.twig" %}
+
+{% set active = 'settings' %}
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
+        <div class="page-content">
+
+            <form action="{{  path_for('notifications_clients_test', {'id' : entry.id}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+
+                <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+
+
+                <div class="form-group">
+                    <label for="inputTitle">{{lang["TITLE"]}}</label>
+                    <input required type="text" class="form-control" id="inputTitle" name="title"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputContent">{{lang["CONTENT"]}}</label>
+                    <input required type="text" class="form-control" id="inputContent" name="content"/>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{{lang["SEND"]}}</button>
+                    <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

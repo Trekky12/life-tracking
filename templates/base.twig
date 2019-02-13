@@ -91,13 +91,15 @@
                 'set_archive': '{{path_for("set_archive")}}',
                 'comment_save': '{{path_for("comment_save")}}',
                 'get_category_costs': '{{path_for("finances_budgets_category_costs")}}',
-                'notifications_subscribe': '{{path_for("notifications_subscribe")}}',
+                'notifications_subscribe': '{{path_for("notifications_clients_subscribe")}}',
                 'applicationServerPublicKey': '{{push.publicKey}}',
                 'csrf_keys_name': '{{csrf.keys.name}}',
                 'csrf_name': '{{csrf.name}}',
                 'csrf_keys_value': '{{csrf.keys.value}}',
                 'csrf_value': '{{csrf.value}}',
-                'csrf_tokens_url': '{{path_for('get_csrf_tokens')}}'
+                'csrf_tokens_url': '{{path_for('get_csrf_tokens')}}',
+                'notifications_clients_categories': '{{path_for('notifications_clients_categories')}}',
+                'notifications_clients_set_category': '{{path_for('notifications_clients_set_category')}}'
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

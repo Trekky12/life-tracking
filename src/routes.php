@@ -11,7 +11,7 @@ $app->group('', function() {
     $this->get('/cron', '\App\Main\MainController:cron')->setName('cron');
 
     $this->get('/logfile', '\App\Main\MainController:showLog')->setName('logfile')->add('App\Middleware\AdminMiddleware');
-    
+
     $this->post('/tokens', '\App\Main\MainController:getCSRFTokens')->setName('get_csrf_tokens');
 });
 
@@ -119,14 +119,27 @@ $app->group('/users', function() {
 
 
 $app->group('/notifications', function() {
-    $this->group('', function() {
-        $this->get('/', '\App\User\Notifications\Controller:index')->setName('notifications');
-        $this->delete('/delete/{id}', '\App\User\Notifications\Controller:delete')->setName('notifications_delete');
-        $this->map(['GET', 'POST'], '/test/{id:[0-9]+}', '\App\User\Notifications\Controller:testNotification')->setName('notifications_test');
+
+    $this->group('/clients', function() {
+        $this->get('/', '\App\Notifications\Clients\Controller:index')->setName('notifications_clients');
+        $this->delete('/delete/{id}', '\App\Notifications\Clients\Controller:delete')->setName('notifications_clients_delete');
+        $this->map(['GET', 'POST'], '/test/{id:[0-9]+}', '\App\Notifications\Controller:testNotification')->setName('notifications_clients_test');
     })->add('App\Middleware\AdminMiddleware');
-   
-    $this->get('/manage/', '\App\User\Notifications\Controller:manage')->setName('notifications_manage');
-    $this->map(['POST', 'PUT', 'DELETE'], '/subscribe/', '\App\User\Notifications\Controller:subscribe')->setName('notifications_subscribe');
+
+    $this->get('/manage/', '\App\Notifications\Controller:manage')->setName('notifications_clients_manage');
+    $this->map(['POST', 'PUT', 'DELETE'], '/subscribe/', '\App\Notifications\Clients\Controller:subscribe')->setName('notifications_clients_subscribe');
+
+    $this->group('/categories', function() {
+        $this->get('/', '\App\Notifications\Categories\Controller:index')->setName('notifications_categories');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Notifications\Categories\Controller:edit')->setName('notifications_categories_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Notifications\Categories\Controller:save')->setName('notifications_categories_save');
+        $this->delete('/delete/{id}', '\App\Notifications\Categories\Controller:delete')->setName('notifications_categories_delete');
+    })->add('App\Middleware\AdminMiddleware');
+    
+    $this->get('/notify', '\App\Notifications\Controller:notifyByCategory');
+    $this->post('/getCategories', '\App\Notifications\Clients\Controller:getCategoriesFromEndpoint')->setName('notifications_clients_categories');
+    $this->post('/setCategorySubscription', '\App\Notifications\Clients\Controller:setCategoryOfEndpoint')->setName('notifications_clients_set_category');
+    
 });
 
 

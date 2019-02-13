@@ -48,8 +48,8 @@ CREATE TABLE global_tokens (
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS global_notifications;
-CREATE TABLE global_notifications (
+DROP TABLE IF EXISTS notifications_clients;
+CREATE TABLE notifications_clients (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
@@ -64,6 +64,10 @@ CREATE TABLE global_notifications (
     UNIQUE(endpoint),
     FOREIGN KEY(user) REFERENCES global_users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ RENAME TABLE global_notifications TO notifications_clients; 
+*/
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
@@ -405,3 +409,25 @@ CREATE TABLE global_settings (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'); 
+
+
+DROP TABLE IF EXISTS notifications_categories;
+CREATE TABLE notifications_categories (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) NOT NULL,
+    identifier varchar(255) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(identifier),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS notifications_categories_clients;
+CREATE TABLE notifications_categories_clients (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    client INTEGER unsigned DEFAULT NULL,
+    UNIQUE(category, client),
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE,
+    FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,7 +1,7 @@
 'use strict';
 importScripts('static/assets/js/sw-toolbox.js');
 
-const cacheName = 'pwa-life-tracking-v6';
+const cacheName = 'pwa-life-tracking-v7';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -15,7 +15,7 @@ const staticAssets = [
     '/static/js/geolocation.js',
     '/static/assets/js/Chart.min.js',
     '/static/assets/js/Sortable.min.js',
-    '/static/assets/js/datatables.js',
+    '/static/assets/js/jstable.min.js',
     '/static/assets/js/flatpickr.js',
     '/static/assets/js/leaflet.js',
     '/static/assets/js/moment-with-locales.min.js',
@@ -62,7 +62,7 @@ self.addEventListener('push', function (event) {
         body: data.body,
         icon: '/static/assets/favicon/android-chrome-192x192.png',
         data: data.data ? data.data : '/',
-        vibrate: [100, 200, 100,200,100,200]
+        vibrate: [100,200,100,200,100,200]
     };
 
     const notificationPromise = self.registration.showNotification(title, options);

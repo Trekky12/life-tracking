@@ -275,4 +275,8 @@ $lang["YOU_ARE_OFFLINE"] = "You are currently offline!";
 $lang["SET_CURRENT_LOCATION"] = "Set current location";
 $lang["REMOVE_LOCATION"] = "Remove location";
 
+$lang["NOTIFICATIONS_CATEGORIES"] = "Notification categories";
+$lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifier cannot be empty";
+$lang["IDENTIFIER"] = "Identifier";
+
 return $lang;

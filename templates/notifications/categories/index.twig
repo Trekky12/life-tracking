@@ -1,0 +1,31 @@
+{% extends "base.twig" %}
+
+{% set active = 'settings' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h2> <a href="{{  path_for('notifications_categories_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-content">
+            <table id="notifications_categories_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["NAME"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cat in categories %}
+                        <tr>
+                            <td data-title="{{lang["NAME"]}}">{{cat.name|raw}}</td> 
+                            <td><a href="{{  path_for('notifications_categories_edit', {'id' : cat.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  path_for('notifications_categories_delete', {'id' : cat.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

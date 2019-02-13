@@ -376,3 +376,21 @@ var serviceTable = new JSTable("#service_table", {
     serverSide: true,
     ajax: jsObject.service_table
 });
+
+
+var notificationsCategoryTable = new JSTable("#notifications_categories_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

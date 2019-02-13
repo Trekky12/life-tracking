@@ -1,8 +1,8 @@
 <?php
 
-namespace App\User\Notifications;
+namespace App\Notifications\Clients;
 
-class Notification extends \App\Base\Model {
+class NotificationClient extends \App\Base\Model {
 
     public function parseData(array $data) {
 

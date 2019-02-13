@@ -32,7 +32,9 @@ function setFormFields(value) {
 }
 
 
-const pushButton = document.querySelector('.js-push-btn');
+const pushButton = document.querySelector('#enable_notifications');
+const categoriesList = document.querySelector('#notifications_categories_list');
+const categoriesElements = document.querySelectorAll('#notifications_categories_list input.set_notifications_category');
 
 let isSubscribed = false;
 
@@ -84,20 +86,24 @@ function initialize() {
     });
 
 
+
     // Keep server in sync of subscription
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
         return serviceWorkerRegistration.pushManager.getSubscription();
     }).then(function (subscription) {
         updateButton('disabled');
         if (!subscription) {
-            return;
+            throw "No Subscription returned";
         }
-        updateSubscriptionOnServer(subscription, 'PUT').then(function(){
-            updateButton('enabled');
-        });
+        return updateSubscriptionOnServer(subscription, 'PUT');
+    }).then(function (subscription) {
+        getCategorySubscriptions(subscription);
+    }).then(function () {
+        updateButton('enabled');
     }).catch(function (e) {
         console.error('Error when updating the subscription', e);
     });
+
 }
 
 
@@ -114,9 +120,11 @@ function subscribeUser() {
         });
     }).then(function (subscription) {
         console.log('User is subscribed.');
-        updateSubscriptionOnServer(subscription, 'POST').then(function () {
-            updateButton('enabled');
-        });
+        return updateSubscriptionOnServer(subscription, 'POST');
+    }).then(function (subscription) {
+        getCategorySubscriptions(subscription);
+    }).then(function () {
+        updateButton('enabled');
     }).catch(function (e) {
         if (Notification.permission === 'denied') {
             console.warn('Notifications are denied by the user.');
@@ -135,15 +143,15 @@ function unsubscribeUser() {
 
         if (!subscription) {
             updateButton('disabled');
-            return;
+            throw "No Subscription returned";
         }
 
-        updateSubscriptionOnServer(subscription, 'DELETE');
-        return subscription;
+        return updateSubscriptionOnServer(subscription, 'DELETE');
     }).then(function (subscription) {
         subscription.unsubscribe();
         console.log('User is unsubscribed.');
     }).then(function () {
+        categoriesList.classList.add("hidden");
         updateButton('disabled');
     }).catch(function (error) {
         console.error('Error unsubscribing', error);
@@ -158,15 +166,22 @@ function updateSubscriptionOnServer(subscription, method = 'POST') {
     const token = subscription.getKey('auth');
     const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
 
+    let data = {
+        endpoint: subscription.endpoint,
+        publicKey: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
+        authToken: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null,
+        contentEncoding: contentEncoding
+    };
+
     return fetch(jsObject.notifications_subscribe, {
         method,
         credentials: "same-origin",
-        body: JSON.stringify({
-            endpoint: subscription.endpoint,
-            publicKey: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
-            authToken: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null,
-            contentEncoding: contentEncoding
-        })
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(function () {
+        return subscription;
     }).catch(function (error) {
         console.error(error);
     });
@@ -217,3 +232,74 @@ function updateButton(state) {
     }
 }
 
+
+function getCategorySubscriptions(subscription) {
+    if (categoriesList !== null) {
+        let endpoint = subscription.endpoint;
+        let data = {"endpoint": endpoint};
+
+        getCSRFToken().then(function (token) {
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
+
+            fetch(jsObject.notifications_clients_categories, {
+                method: 'POST',
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                if (data.status !== 'error') {
+
+                    categoriesElements.forEach(function (item, idx) {
+                        let val = parseInt(item.value);
+
+                        if (data.data.indexOf(val) !== -1) {
+                            item.setAttribute("checked", true);
+                        } else {
+                            item.removeAttribute("checked");
+                        }
+
+                        item.addEventListener('click', function () {
+                            if (item.checked) {
+                                setCategorySubscriptions(endpoint, 1, val);
+                            } else {
+                                setCategorySubscriptions(endpoint, 0, val);
+                            }
+                        });
+                    });
+                    categoriesList.classList.remove("hidden");
+                }
+            }).catch(function (error) {
+                alert(error);
+            });
+        });
+    }
+}
+
+function setCategorySubscriptions(endpoint, type, category) {
+    let data = {"endpoint": endpoint, "category": category, "type": type};
+
+    getCSRFToken().then(function (token) {
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
+        fetch(jsObject.notifications_clients_set_category, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+        }).catch(function (error) {
+            alert(error);
+        });
+    });
+}

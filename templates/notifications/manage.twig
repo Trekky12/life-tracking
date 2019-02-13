@@ -16,9 +16,21 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
         <div class="page-content">
-            <button class="js-push-btn">
+            <button id="enable_notifications">
                 {{lang["ENABLE_NOTIFICATIONS"]}}
             </button>
+
+            <div id="notifications_categories_list" class="hidden">
+                <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+                {% for cat in categories %}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxCategory_{{cat.id}}">
+                            <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
+                            {{cat.name}}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
