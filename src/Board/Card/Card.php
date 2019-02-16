@@ -45,11 +45,11 @@ class Card extends \App\Base\Model {
         /**
          * Clean date/time
          */
-        if (!is_null($this->date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
+        if (!empty($this->date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
             $this->date = date('Y-m-d');
         }
 
-        if (!is_null($this->time) && !preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->time)) {
+        if (!empty($this->time) && !preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->time)) {
             $this->time = date('H:i:s');
         }
 

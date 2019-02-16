@@ -61,5 +61,19 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
     }
+    
+    public function deleteOldTokens($month = 6){
+        $sql = "DELETE FROM " . $this->getTable() . " WHERE DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0";
+
+        $bindings = ["month" => $month];
+        
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+        }
+        return $stmt->rowCount();
+    }
 
 }

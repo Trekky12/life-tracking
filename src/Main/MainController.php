@@ -101,6 +101,9 @@ class MainController {
             $card_ctrl = new \App\Board\Card\Controller($this->ci);
             $card_ctrl->reminder();
             $settings_mapper->updateLastRun("lastRunCardReminder");
+
+//            $token_ctrl = new \App\User\Token\Controller($this->ci);
+//            $token_ctrl->deleteOldTokens();
         }
 
         return $response->withJSON(array('result' => 'success'));

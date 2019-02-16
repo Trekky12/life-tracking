@@ -242,6 +242,8 @@ $lang["ADD_COMMENT"] = "add comment";
 $lang["REALLY_CLOSE"] = "Are you sure you want to leave this Site?";
 
 $lang["TOKEN_INVALID"] = "Token invalid";
+$lang["LOGIN_TOKENS"] = "Login Tokens";
+$lang["LOGIN_TOKENS_CLEAN"] = "Clean";
 
 $lang["PWA_SETTINGS"] = "App Settings";
 $lang["START_URL"] = "Start URL";

@@ -243,6 +243,8 @@ $lang["ADD_COMMENT"] = "Kommentar hinzufügen";
 $lang["REALLY_CLOSE"] = "Soll die Seite wirklich geschlossen werden?";
 
 $lang["TOKEN_INVALID"] = "Token falsch";
+$lang["LOGIN_TOKENS"] = "Login Tokens";
+$lang["LOGIN_TOKENS_CLEAN"] = "Bereingen";
 
 $lang["PWA_SETTINGS"] = "App Einstellungen";
 $lang["START_URL"] = "Start URL";

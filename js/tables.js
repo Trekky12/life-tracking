@@ -318,6 +318,12 @@ var notificationsTable = new JSTable("#notifications_table", {
             sort: "asc"
         },
         {
+            select: [3,4],
+            render: function (data) {
+                return moment(data).format(i18n.dateformatJSFull);
+            }
+        },
+        {
             select: [5, 6],
             sortable: false,
             searchable: false
@@ -389,6 +395,29 @@ var notificationsCategoryTable = new JSTable("#notifications_categories_table", 
         },
         {
             select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var tokensCategoryTable = new JSTable("#tokens_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: [3,4],
+            render: function (data) {
+                return moment(data).format(i18n.dateformatJSFull);
+            }
+        },
+        {
+            select: 4,
+            sortable: true,
+            sort: "desc"
+        },
+        {
+            select: [5],
             sortable: false,
             searchable: false
         }

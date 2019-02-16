@@ -115,6 +115,12 @@ $app->group('/users', function() {
     $this->delete('/delete/{id}', '\App\User\Controller:delete')->setName('users_delete');
 
     $this->get('/testmail/{id:[0-9]+}', '\App\User\Controller:testMail')->setName('users_test_mail');
+
+    $this->group('/tokens', function() {
+        $this->get('/', '\App\User\Token\Controller:index')->setName('login_tokens');
+        $this->delete('/delete/{id}', '\App\User\Token\Controller:delete')->setName('login_tokens_delete');
+        $this->get('/deleteOld', '\App\User\Token\Controller:deleteOld')->setName('login_tokens_delete_old');
+    });
 })->add('App\Middleware\AdminMiddleware');
 
 
@@ -135,11 +141,10 @@ $app->group('/notifications', function() {
         $this->post('/save/[{id:[0-9]+}]', '\App\Notifications\Categories\Controller:save')->setName('notifications_categories_save');
         $this->delete('/delete/{id}', '\App\Notifications\Categories\Controller:delete')->setName('notifications_categories_delete');
     })->add('App\Middleware\AdminMiddleware');
-    
+
     $this->get('/notify', '\App\Notifications\Controller:notifyByCategory');
     $this->post('/getCategories', '\App\Notifications\Clients\Controller:getCategoriesFromEndpoint')->setName('notifications_clients_categories');
     $this->post('/setCategorySubscription', '\App\Notifications\Clients\Controller:setCategoryOfEndpoint')->setName('notifications_clients_set_category');
-    
 });
 
 
