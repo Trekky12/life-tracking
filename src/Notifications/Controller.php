@@ -30,8 +30,8 @@ class Controller extends \App\Base\Controller {
         $requestData = $request->getQueryParams();
 
         $category = array_key_exists("type", $requestData) ? filter_var($requestData["type"], FILTER_SANITIZE_STRING) : "";
-        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : "";
-        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : "";
+        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_SANITIZE_STRING) : "";
+        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_SANITIZE_STRING) : "";
 
         $clients = [];
         try {
