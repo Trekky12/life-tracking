@@ -28,7 +28,8 @@ class CsrfExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
                 ],
                 'name' => $csrfName,
                 'value' => $csrfValue
-            ]
+            ],
+            'csrf_js' => $this->csrf->generateToken()
         ];
     }
 

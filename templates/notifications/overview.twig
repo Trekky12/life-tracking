@@ -1,0 +1,35 @@
+{% extends "base.twig" %}
+
+{% set active = 'profile' %}
+
+{% block javascript %}
+    <script src="{{base_url()}}/static/assets/js/mustache.min.js"></script>
+{% endblock %}
+
+{% block body %}
+
+    {% if message is defined %}
+        <div class="alert {{message_type}}">
+            <span class="closebtn" >&times;</span>
+            <span class="alert-message">
+                <p>{{message}}</p>
+            </span>
+        </div>
+    {% endif %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>  <a href="{{  path_for('notifications_clients_manage') }}"><button class="white"><i class="fa fa-gears" aria-hidden="true"></i> {{lang["SETTINGS"]}}</button></a></div>
+    </div>
+    <div class="notifications_overview">
+        <div id="notifications">
+        </div>
+        <div id="loadingIcon" class="centered hidden">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+        </div>
+        <div id="loadMore" class="centered hidden">
+            <button>Mehr Laden</button>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

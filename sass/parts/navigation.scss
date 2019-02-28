@@ -67,7 +67,7 @@
 
                 li{
                     @include font-size(1.2);
-                    
+
                     a{
                         font-weight: 300;
                     }
@@ -113,6 +113,26 @@
             margin-right: 10px;
             width: 20px;
             height:20px;
+        }
+
+        position:relative;
+
+        &.has-Notification{
+            &[data-badge]:after {
+                content:attr(data-badge);
+                position:absolute;
+                top:4px;
+                right:4px;
+                font-size:.6em;
+                background:$color_red;
+                color:$color_background-body;
+                width:15px;
+                height:15px;
+                text-align:center;
+                line-height:15px;
+                border-radius:50%;
+                box-shadow:0 0 1px #CCC;
+            }
         }
     }
 }

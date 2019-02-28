@@ -132,6 +132,7 @@ $app->group('/notifications', function() {
         $this->map(['GET', 'POST'], '/test/{id:[0-9]+}', '\App\Notifications\Controller:testNotification')->setName('notifications_clients_test');
     })->add('App\Middleware\AdminMiddleware');
 
+    $this->get('/', '\App\Notifications\Controller:overview')->setName('notifications');
     $this->get('/manage/', '\App\Notifications\Controller:manage')->setName('notifications_clients_manage');
     $this->map(['POST', 'PUT', 'DELETE'], '/subscribe/', '\App\Notifications\Clients\Controller:subscribe')->setName('notifications_clients_subscribe');
 
@@ -145,6 +146,10 @@ $app->group('/notifications', function() {
     $this->get('/notify', '\App\Notifications\Controller:notifyByCategory');
     $this->post('/getCategories', '\App\Notifications\Clients\Controller:getCategoriesFromEndpoint')->setName('notifications_clients_categories');
     $this->post('/setCategorySubscription', '\App\Notifications\Clients\Controller:setCategoryOfEndpoint')->setName('notifications_clients_set_category');
+    
+    $this->post('/getNotifications', '\App\Notifications\Controller:getNotificationsFromEndpoint')->setName('notifications_get');
+    $this->post('/getUnreadNotifications', '\App\Notifications\Controller:getUnreadNotificationsFromEndpoint')->setName('notifications_get_unread');
+    
 });
 
 

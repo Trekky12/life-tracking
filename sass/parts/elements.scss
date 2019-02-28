@@ -24,26 +24,33 @@ table {
 .alert {
     padding: 20px;
     margin-bottom: 15px;
-    color: #FFFFFF;
+    color: $color_text-main;
 
     &.danger{
         background-color: $color_red;
+        color: $color_background-body;
     }
 
     &.success{
         background-color: $color_green;
+        color: $color_background-body;
     }
     &.warning{
         background-color: $color_orange;
+        color: $color_background-body;
     }
     &.info{
         background-color: $color_blue;
+        color: $color_background-body;
     }
+
+}
+
+.alert, .notification {
 
     p{
         margin:0;
     }
-
     .closebtn {
         margin-left: 15px;
         color: #FFFFFF;
@@ -60,7 +67,45 @@ table {
     }
 }
 
+.notification{
+
+    background-color: $color_background-body;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+
+    max-width: $size_content-width-small;
+    margin: 0 auto;
+
+    margin-bottom: 15px;
+
+    &.seen{
+        //border: 1px solid $color_text-main;
+        //box-shadow: 0 0 6px #f8b9b7;
+
+        .notification-header{
+            background-color: $color_background-screen;
+            color: $color_text-input;
+        }
+    }
+
+    h2{
+        margin: 0;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .createdOn{
+        @include font-size(1.2);
+        font-style: italic;
+        margin-top: 1rem;
+    }
+
+}
+
 .small{
     @include font-size(1.2);
     margin:0;
+}
+
+#loadingIcon{
+    @include font-size(4);
 }

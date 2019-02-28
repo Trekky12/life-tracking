@@ -1,8 +1,9 @@
 'use strict';
 // get initial tokens
-getCSRFToken().then(function (token) {
+/*getCSRFToken().then(function (token) {
     console.log('new tokens generated');
 });
+*/
 
 const selector = new Selectr("select#card-label-list", {
     searchable: false,
@@ -383,22 +384,23 @@ document.getElementById('addComment').addEventListener('click', function (event)
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
 
-        fetch(jsObject.comment_save, {
+        return fetch(jsObject.comment_save, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            allowedReload = true;
-            window.location.reload();
-        }).catch(function (error) {
-            alert(error);
         });
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        allowedReload = true;
+        window.location.reload();
+    }).catch(function (error) {
+        alert(error);
     });
+
 });
 
 /**
@@ -602,23 +604,24 @@ function save(dialog, url) {
         data["csrf_name"] = token.csrf_name;
         data["csrf_value"] = token.csrf_value;
 
-        fetch(url + id, {
+        return fetch(url + id, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            allowedReload = true;
-            window.location.reload();
-        }).catch(function (error) {
-            alert(error);
         });
-
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        allowedReload = true;
+        window.location.reload();
+    }).catch(function (error) {
+        alert(error);
     });
+
+
 
 }
 
@@ -646,22 +649,23 @@ document.addEventListener('click', function (event) {
             data['csrf_name'] = token.csrf_name;
             data['csrf_value'] = token.csrf_value;
 
-            fetch(url, {
+            return fetch(url, {
                 method: 'POST',
                 credentials: "same-origin",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            }).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                allowedReload = true;
-                window.location.reload();
-            }).catch(function (error) {
-                alert(error);
             });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            allowedReload = true;
+            window.location.reload();
+        }).catch(function (error) {
+            alert(error);
         });
+
     }
 });
 
@@ -715,22 +719,23 @@ checkBoxArchivedItems.addEventListener('click', function (event) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
 
-        fetch(jsObject.set_archive, {
+        return fetch(jsObject.set_archive, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            allowedReload = true;
-            window.location.reload();
-        }).catch(function (error) {
-            alert(error);
         });
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        allowedReload = true;
+        window.location.reload();
+    }).catch(function (error) {
+        alert(error);
     });
+
 
     return;
 });
@@ -798,19 +803,20 @@ var sortable = new Sortable(stacks, {
             data['csrf_name'] = token.csrf_name;
             data['csrf_value'] = token.csrf_value;
 
-            fetch(jsObject.stack_position_url, {
+            return fetch(jsObject.stack_position_url, {
                 method: 'POST',
                 credentials: "same-origin",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                alert(error);
             });
+        }).then(function (response) {
+            return response.json();
+        }).catch(function (error) {
+            alert(error);
         });
+
     }
 });
 
@@ -830,18 +836,19 @@ movableCards.forEach(function (card) {
                 data['csrf_name'] = token.csrf_name;
                 data['csrf_value'] = token.csrf_value;
 
-                fetch(jsObject.card_position_url, {
+                return fetch(jsObject.card_position_url, {
                     method: 'POST',
                     credentials: "same-origin",
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
-                }).then(function (response) {
-                    return response.json();
-                }).catch(function (error) {
-                    alert(error);
+
                 });
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                alert(error);
             });
         },
         // Moved card to new stack
@@ -855,18 +862,19 @@ movableCards.forEach(function (card) {
                 data['csrf_name'] = token.csrf_name;
                 data['csrf_value'] = token.csrf_value;
 
-                fetch(jsObject.card_movestack_url, {
+                return fetch(jsObject.card_movestack_url, {
                     method: 'POST',
                     credentials: "same-origin",
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
-                }).then(function (response) {
-                    return response.json();
-                }).catch(function (error) {
-                    alert(error);
+
                 });
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                alert(error);
             });
         }
     });

@@ -71,20 +71,21 @@ function deleteObject(url, type) {
     }
 
     getCSRFToken(true).then(function (token) {
-        fetch(url, {
+        return fetch(url, {
             method: 'DELETE',
             credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(token)
-        }).then(function (response) {
-            allowedReload = true;
-            window.location.reload();
-        }).catch(function (error) {
-            alert(error);
         });
+    }).then(function (response) {
+        allowedReload = true;
+        window.location.reload();
+    }).catch(function (error) {
+        alert(error);
     });
+
 
 }
 
@@ -195,20 +196,21 @@ function initialize() {
                 var data = token;
                 data["state"] = state;
 
-                fetch(jsObject.set_mileage_type, {
+                return fetch(jsObject.set_mileage_type, {
                     method: 'POST',
                     credentials: "same-origin",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(data)
-                }).then(function (response) {
-                    allowedReload = true;
-                    window.location.reload();
-                }).catch(function (error) {
-                    alert(error);
                 });
+            }).then(function (response) {
+                allowedReload = true;
+                window.location.reload();
+            }).catch(function (error) {
+                alert(error);
             });
+
         });
     });
 

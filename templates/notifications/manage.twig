@@ -20,6 +20,9 @@
                 {{lang["ENABLE_NOTIFICATIONS"]}}
             </button>
 
+            <div id="loadingIcon" class="centered hidden">
+                <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            </div>
             <div id="notifications_categories_list" class="hidden">
                 <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
                 {% for cat in categories %}

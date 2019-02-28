@@ -60,7 +60,11 @@ return [
             ],
             // push notifications settings
             'push' => [
-                'applicationServerPublicKey' => 'BEddEMqK4Cq6WUQNNQyqNjASr/YjVZYcjjKgJW728eHCNdPXVXY+nfTXZCkql0462Bi1zxIgOpaVDqtScfCkiEE='
+                'publicKey' => '',
+                'privateKey' => '',
+                'subject' => '',
+                'TTL' => 3600,
+                'urgency' => 'normal',
             ]
         ]
     ]

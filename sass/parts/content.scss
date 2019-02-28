@@ -4,7 +4,7 @@
     margin-bottom: 2rem;
 }
 
-.page-header{
+.page-header, .notification-header{
     margin: 0;
     overflow: hidden;
     background-color:$color_blue;
@@ -20,6 +20,7 @@
 
     h1, h2{
         margin:0;
+        margin-right: 1rem;
     }
     
     button{
@@ -27,7 +28,7 @@
     }
 }
 
-.page-content, .page-header{
+.page-content, .page-header, .notification-header, .notification-content{
     padding: 0.5rem 1rem;
 
     @media screen and (min-width: $size_tablet) {

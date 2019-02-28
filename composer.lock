@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6cf57c5af27f96a318872e17f9ef0ef",
+    "content-hash": "054182ec6416e52f6529c7e3815f8bca",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -499,19 +499,21 @@
         },
         {
             "name": "minishlink/web-push",
-            "version": "v4.0.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-push-libs/web-push-php.git",
-                "reference": "5c2d2a5003e338c1ef23604204a9bcaa9d944a24"
+                "reference": "db3bca92f150e18be4e77efbdc9d11d40fe48db9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-push-libs/web-push-php/zipball/5c2d2a5003e338c1ef23604204a9bcaa9d944a24",
-                "reference": "5c2d2a5003e338c1ef23604204a9bcaa9d944a24",
+                "url": "https://api.github.com/repos/web-push-libs/web-push-php/zipball/db3bca92f150e18be4e77efbdc9d11d40fe48db9",
+                "reference": "db3bca92f150e18be4e77efbdc9d11d40fe48db9",
                 "shasum": ""
             },
             "require": {
+                "ext-gmp": "*",
+                "ext-json": "*",
                 "guzzlehttp/guzzle": "^6.2",
                 "lib-openssl": "*",
                 "php": "^7.1",
@@ -519,7 +521,8 @@
                 "web-token/jwt-signature": "^1.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.9.2",
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "phpstan/phpstan": "^0.11",
                 "phpunit/phpunit": "^7.0"
             },
             "type": "library",
@@ -548,7 +551,7 @@
                 "push",
                 "web"
             ],
-            "time": "2018-05-13T14:59:18+00:00"
+            "time": "2019-02-25T18:43:47+00:00"
         },
         {
             "name": "monolog/monolog",

@@ -1,7 +1,7 @@
 'use strict';
 importScripts('static/assets/js/sw-toolbox.js');
 
-const cacheName = 'pwa-life-tracking-v7';
+const cacheName = 'pwa-life-tracking-v9';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -61,26 +61,80 @@ self.addEventListener('push', function (event) {
     const options = {
         body: data.body,
         icon: '/static/assets/favicon/android-chrome-192x192.png',
-        data: data.data ? data.data : '/',
-        vibrate: [100,200,100,200,100,200]
+        data: data.data,
+        vibrate: [100, 200, 100, 200, 100, 200, 100, 200]
     };
 
+    // if we don't send the notification (e.g. not to focused clients) then there is a notification on desktop chrome
+    // when the tab is in the background that the background tab is updated
     const notificationPromise = self.registration.showNotification(title, options);
     event.waitUntil(notificationPromise);
+    
+    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
+    event.waitUntil(
+        clients.matchAll().then(clis => {
+            //const client = clis.find(c => {
+            //    return c.focused === true && c.visibilityState === 'visible';
+            //});
+            
+            //console.log(client);
+        
+            //if (clis.length === 0) {
+            //if(client !== undefined){
+                // Send a message to the page to update the UI
+                //console.log('Application is already open!');
+                // @see https://web-push-book.gauntface.com/chapter-05/04-common-notification-patterns/
+                clis.forEach(cli => {
+                    cli.postMessage({
+                        type: 1,
+                        time: new Date().toString()
+                    });
+                });
+            //}
+            // Show notification
+            //self.registration.showNotification(title, options);
+        })
+    );
 });
 
 self.addEventListener('notificationclick', function (event) {
     console.log('[Service Worker] Notification click Received.');
-    
+
     const data = event.notification.data;
-    
+
     console.log(data);
-    
+
     event.notification.close();
 
-    // This looks to see if the current is already open and
-    // focuses if it is
-    event.waitUntil(clients.matchAll({
+    // Focus open window or open new
+    // @see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#2_using_the_notifications_api
+    // @see https://github.com/google-developer-training/pwa-training-labs/blob/master/push-notification-lab/
+    event.waitUntil(
+        clients.matchAll().then(clis => {
+            const client = clis.find(c => {
+                //return c.visibilityState === 'visible';
+                return c.focused === true && c.visibilityState === 'visible';
+            });
+            
+            clis.forEach(cli => {
+                cli.postMessage({
+                    message: 'Notification clicked',
+                    time: new Date().toString()
+                });
+            });
+
+            if (client !== undefined) {
+                client.navigate(data.path);
+                client.focus();
+            } else {
+                // there are no visible windows. Open one.
+                clients.openWindow(data.path);
+            }
+        })
+    );
+    
+    //@see https://developers.google.com/web/fundamentals/push-notifications/common-notification-patterns#focus_an_existing_window
+    /*event.waitUntil(clients.matchAll({
         type: "window"
     }).then(function (clientList) {
         for (var i = 0; i < clientList.length; i++) {
@@ -92,4 +146,14 @@ self.addEventListener('notificationclick', function (event) {
         if (clients.openWindow)
             return clients.openWindow(data.path);
     }));
+    */
+    
+    // Close all notifications
+    self.registration.getNotifications().then(notifications => {
+        console.log(notifications);
+        notifications.forEach(notification => {
+            notification.close();
+        });
+    });
+
 });
