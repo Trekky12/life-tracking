@@ -310,7 +310,7 @@ function getCategorySubscriptions(subscription) {
                 categoriesList.classList.remove("hidden");
             }
         }).catch(function (error) {
-            alert(error);
+            console.log(error);
         });
     }
 
@@ -337,7 +337,7 @@ function setCategorySubscriptions(endpoint, type, category) {
     }).then(function (data) {
         return data;
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 
 }
@@ -427,7 +427,7 @@ function getNotifications(subscription) {
 
             }
         }).catch(function (error) {
-            alert(error);
+            console.log(error);
         });
     }
     return emptyPromise();

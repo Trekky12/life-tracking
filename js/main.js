@@ -45,7 +45,7 @@ function getNewTokens(token) {
     }).then(function () {
         return tokens.pop();
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 }
 
@@ -83,7 +83,7 @@ function deleteObject(url, type) {
         allowedReload = true;
         window.location.reload();
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 
 
@@ -208,7 +208,7 @@ function initialize() {
                 allowedReload = true;
                 window.location.reload();
             }).catch(function (error) {
-                alert(error);
+                console.log(error);
             });
 
         });
@@ -410,7 +410,7 @@ document.addEventListener('click', function (event) {
                     alert(output);
                 }
             }).catch(function (error) {
-                alert(error);
+                console.log(error);
             });
         }
     }

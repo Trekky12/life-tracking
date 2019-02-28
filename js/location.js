@@ -46,7 +46,7 @@ function getMarkers() {
     }).then(function (data) {
         drawMarkers(data);
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 }
 

@@ -117,7 +117,7 @@ function get_recurring_costs(select) {
         }
         category_costs.innerHTML = sum;
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 
 }

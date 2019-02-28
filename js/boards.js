@@ -84,7 +84,7 @@ stackHeaders.forEach(function (item, idx) {
         }).then(function () {
             document.getElementById('loading-overlay').classList.add('hidden');
         }).catch(function (error) {
-            alert(error);
+            console.log(error);
         });
 
     });
@@ -162,7 +162,7 @@ labels.forEach(function (item, idx) {
         }).then(function () {
             document.getElementById('loading-overlay').classList.add('hidden');
         }).catch(function (error) {
-            alert(error);
+            console.log(error);
         });
     });
 });
@@ -330,7 +330,7 @@ function loadAndOpenCard(card) {
     }).then(function () {
         document.getElementById('loading-overlay').classList.add('hidden');
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 
 }
@@ -398,7 +398,7 @@ document.getElementById('addComment').addEventListener('click', function (event)
         allowedReload = true;
         window.location.reload();
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 
 });
@@ -618,7 +618,7 @@ function save(dialog, url) {
         allowedReload = true;
         window.location.reload();
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 
 
@@ -663,7 +663,7 @@ document.addEventListener('click', function (event) {
             allowedReload = true;
             window.location.reload();
         }).catch(function (error) {
-            alert(error);
+            console.log(error);
         });
 
     }
@@ -733,7 +733,7 @@ checkBoxArchivedItems.addEventListener('click', function (event) {
         allowedReload = true;
         window.location.reload();
     }).catch(function (error) {
-        alert(error);
+        console.log(error);
     });
 
 
@@ -814,7 +814,7 @@ var sortable = new Sortable(stacks, {
         }).then(function (response) {
             return response.json();
         }).catch(function (error) {
-            alert(error);
+            console.log(error);
         });
 
     }
@@ -848,7 +848,7 @@ movableCards.forEach(function (card) {
             }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                alert(error);
+                console.log(error);
             });
         },
         // Moved card to new stack
@@ -874,7 +874,7 @@ movableCards.forEach(function (card) {
             }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                alert(error);
+                console.log(error);
             });
         }
     });
