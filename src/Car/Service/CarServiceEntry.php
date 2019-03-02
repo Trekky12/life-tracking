@@ -98,14 +98,14 @@ class CarServiceEntry extends \App\Base\Model {
     }
 
     public function isServiceAir() {
-        return !is_null($this->service_air_front_left_before) ||
-                !is_null($this->service_air_front_left_after) ||
-                !is_null($this->service_air_front_right_before) ||
-                !is_null($this->service_air_front_right_after) ||
-                !is_null($this->service_air_back_left_before) ||
-                !is_null($this->service_air_back_left_after) ||
-                !is_null($this->service_air_back_right_before) ||
-                !is_null($this->service_air_back_right_after);
+        return $this->service_air_front_left_before > 0 ||
+                $this->service_air_front_left_after > 0 ||
+                $this->service_air_front_right_before > 0 ||
+                $this->service_air_front_right_after > 0 ||
+                $this->service_air_back_left_before > 0 ||
+                $this->service_air_back_left_after > 0 ||
+                $this->service_air_back_right_before > 0 ||
+                $this->service_air_back_right_after > 0;
     }
 
     public function isServiceTireChange() {
