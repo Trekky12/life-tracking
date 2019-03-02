@@ -36,7 +36,7 @@ const pushButton = document.querySelector('#enable_notifications');
 const categoriesList = document.querySelector('#notifications_categories_list');
 const categoriesElements = document.querySelectorAll('#notifications_categories_list input.set_notifications_category');
 const notificationsList = document.querySelector('#notifications');
-const loadingIcon = document.querySelector('#loadingIcon');
+const loadingIcon = document.querySelector('#loadingIconNotifications');
 const loadMore = document.querySelector('#loadMore');
 const menuProfile = document.querySelector('#menu-primary .profile');
 
@@ -90,18 +90,23 @@ function initialize() {
         });
     }
 
-
     // Keep server in sync of subscription
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
         return serviceWorkerRegistration.pushManager.getSubscription();
     }).then(function (subscription) {
         updateButton('disabled');
+
         if (!subscription) {
             redirect();
             throw "No Subscription returned";
         }
-        return updateSubscriptionOnServer(subscription, 'PUT');
+        return updateSubscriptionOnServer(subscription, 'PUT').then(function () {
+            return subscription;
+        });
+
     }).then(function (subscription) {
+        updateButton('enabled');
+
         return getUnreadNotifications(subscription).then(function () {
             return subscription;
         });
@@ -115,19 +120,27 @@ function initialize() {
         });
     }).then(function (subscription) {
         loadMoreFunctions(subscription);
-    }).then(function () {
-        updateButton('enabled');
     }).catch(function (e) {
         console.error('Error when updating the subscription', e);
+    }).finally(function () {
+        if (pushButton !== null) {
+            pushButton.classList.remove("hidden");
+        }
+        if (loadingIcon !== null) {
+            loadingIcon.classList.add("hidden");
+        }
     });
 
     navigator.serviceWorker.addEventListener('message', function (event) {
         console.log('Received a message from service worker');
         //alert(event.data.type);
-        if(event.data.type == 1){
+        if (event.data.type == 1) {
             console.log(event.data.type);
             let count = parseInt(menuProfile.dataset.badge);
-            setNotificationCount(count+1);
+            setNotificationCount(count + 1);
+        }
+        if (event.data.type == 2) {
+            console.log("Notification Click");
         }
     });
 
@@ -147,7 +160,9 @@ function subscribeUser() {
         });
     }).then(function (subscription) {
         console.log('User is subscribed.');
-        return updateSubscriptionOnServer(subscription, 'POST');
+        return updateSubscriptionOnServer(subscription, 'POST').then(function () {
+            return subscription;
+        });
     }).then(function (subscription) {
         return getCategorySubscriptions(subscription);
     }).then(function () {
@@ -173,7 +188,9 @@ function unsubscribeUser() {
             throw "No Subscription returned";
         }
 
-        return updateSubscriptionOnServer(subscription, 'DELETE');
+        return updateSubscriptionOnServer(subscription, 'DELETE').then(function () {
+            return subscription;
+        });
     }).then(function (subscription) {
         subscription.unsubscribe();
         console.log('User is unsubscribed.');
@@ -200,15 +217,18 @@ function updateSubscriptionOnServer(subscription, method = 'POST') {
         contentEncoding: contentEncoding
     };
 
-    return fetch(jsObject.notifications_subscribe, {
-        method,
-        credentials: "same-origin",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(function () {
-        return subscription;
+    return getCSRFToken().then(function (token) {
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
+        return fetch(jsObject.notifications_subscribe, {
+            method,
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
     }).catch(function (error) {
         console.error(error);
     });
@@ -397,12 +417,15 @@ function getNotifications(subscription) {
 
                     let hTitle = document.createElement("h2");
                     hTitle.innerHTML = item.title;
-
-                    let spanCategory = document.createElement("span");
-                    spanCategory.innerHTML = lang.category + ": " + data.categories[item.category].name;
-
+                    
                     header.appendChild(hTitle);
-                    header.appendChild(spanCategory);
+
+                    if(item.category){
+                        let spanCategory = document.createElement("span");
+                        spanCategory.innerHTML = lang.category + ": " + data.categories[item.category].name;
+                        
+                        header.appendChild(spanCategory);
+                    }
 
                     let divMessage = document.createElement("div");
                     divMessage.classList = 'notification-content';
@@ -497,7 +520,7 @@ function emptyPromise(val = null) {
     });
 }
 
-function setNotificationCount(count){
+function setNotificationCount(count) {
     let unseenCount = parseInt(count);
     menuProfile.dataset.badge = unseenCount;
     if (unseenCount > 0) {

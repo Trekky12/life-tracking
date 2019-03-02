@@ -1,7 +1,7 @@
 'use strict';
 importScripts('static/assets/js/sw-toolbox.js');
 
-const cacheName = 'pwa-life-tracking-v9';
+const cacheName = 'pwa-life-tracking-v10';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -118,7 +118,7 @@ self.addEventListener('notificationclick', function (event) {
             
             clis.forEach(cli => {
                 cli.postMessage({
-                    message: 'Notification clicked',
+                    type: 2,
                     time: new Date().toString()
                 });
             });

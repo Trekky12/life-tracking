@@ -68,9 +68,13 @@ class Controller extends \App\Base\Controller {
 
             $data = $request->getParsedBody();
             $title = array_key_exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING) : null;
-            $content = array_key_exists('content', $data) ? filter_var($data['content'], FILTER_SANITIZE_STRING) : null;
+            $message = array_key_exists('message', $data) ? filter_var($data['message'], FILTER_SANITIZE_STRING) : null;
 
-            $result = $this->sendNotification($entry, $title, $content);
+
+            $notification = new Notification(["title" => $title, "message" => $message, "client" => $entry->id]);
+            $id = $this->mapper->insert($notification);
+            $result = $this->sendNotification($entry, $title, $message, $id);
+
             if ($result) {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("NOTIFICATION_SEND_SUCCESS"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
@@ -124,7 +128,7 @@ class Controller extends \App\Base\Controller {
         ];
         $res = $webPush->sendNotification($subscription, json_encode($notification), true, $options);
 
-        foreach($res as $report){
+        foreach ($res as $report) {
             if ($report->isSuccess()) {
                 $logger->addInfo('[PUSH] Message sent successfully', array("endpoint" => $report->getEndpoint()));
             } else {
@@ -135,6 +139,11 @@ class Controller extends \App\Base\Controller {
                     "expired" => $report->isSubscriptionExpired()
                 ];
                 $logger->addError('[PUSH] Message failed to sent', $data);
+
+                if ($report->isSubscriptionExpired()) {
+                    $this->mapper->delete($entry->id);
+                    $logger->addError('[PUSH] Remove expired endpoint', $report->getEndpoint());
+                }
             }
         }
         //$logger->addError('[PUSH] Result', ["data" => $report]);

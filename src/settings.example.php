@@ -56,7 +56,6 @@ return [
             'csrf_exlude' => [
                 'finances_record',
                 'location_record',
-                'notifications_clients_subscribe'
             ],
             // push notifications settings
             'push' => [

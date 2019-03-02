@@ -16,13 +16,14 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
         <div class="page-content">
-            <button id="enable_notifications">
+            <button id="enable_notifications" class="hidden">
                 {{lang["ENABLE_NOTIFICATIONS"]}}
             </button>
 
-            <div id="loadingIcon" class="centered hidden">
+            <div id="loadingIconNotifications" class="centered">
                 <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
+            
             <div id="notifications_categories_list" class="hidden">
                 <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
                 {% for cat in categories %}
