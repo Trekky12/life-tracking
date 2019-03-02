@@ -45,29 +45,8 @@ CREATE TABLE global_tokens (
     agent VARCHAR(255) NULL,
     PRIMARY KEY (id),
     UNIQUE(token),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS notifications_clients;
-CREATE TABLE notifications_clients (
-    id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changedOn TIMESTAMP NULL,
-    user INTEGER unsigned NOT NULL,
-    endpoint VARCHAR(512) NOT NULL,
-    auth VARCHAR(255) NULL,
-    p256dh VARCHAR(255) NULL,
-    contentEncoding VARCHAR(255) NULL,
-    ip VARCHAR(255) NULL,
-    agent VARCHAR(255) NULL,
-    PRIMARY KEY (id),
-    UNIQUE(endpoint),
-    FOREIGN KEY(user) REFERENCES global_users(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/**
- RENAME TABLE global_notifications TO notifications_clients; 
-*/
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
@@ -100,7 +79,7 @@ CREATE TABLE locations (
     cell_sig varchar(255) DEFAULT NULL,
     cell_srv varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS finances_categories;
@@ -112,7 +91,7 @@ CREATE TABLE finances_categories (
     name varchar(255) DEFAULT NULL,
     is_default int(1) DEFAULT 0,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO finances_categories (id, user, name) VALUES (1, 1, 'not categorized');
 
@@ -125,7 +104,7 @@ CREATE TABLE finances (
     type int(1) DEFAULT 1,
     date DATE NOT NULL,
     time TIME NOT NULL,
-    category int(11) UNSIGNED  NOT NULL DEFAULT 1,
+    category int(11) UNSIGNED DEFAULT NULL ,
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) NOT NULL,
     common int(1) DEFAULT 0,
@@ -136,15 +115,9 @@ CREATE TABLE finances (
     lng DECIMAL(16,14) DEFAULT NULL,
     acc DECIMAL(6,3) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/**
-ALTER TABLE finances    ADD lat DECIMAL(16,14) DEFAULT NULL AFTER fixed, 
-                        ADD lng DECIMAL(16,14) DEFAULT NULL AFTER lat, 
-                        ADD acc DECIMAL(6,3) DEFAULT NULL AFTER lng;
-*/
 
 DROP TABLE IF EXISTS finances_recurring;
 CREATE TABLE finances_recurring (
@@ -155,7 +128,7 @@ CREATE TABLE finances_recurring (
     start DATE DEFAULT NULL,
     end DATE DEFAULT NULL,
     type int(1) DEFAULT 1,
-    category int(11) UNSIGNED NOT NULL DEFAULT 1,
+    category int(11) UNSIGNED DEFAULT NULL,
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) NOT NULL,
     common int(1) DEFAULT 0,
@@ -165,8 +138,8 @@ CREATE TABLE finances_recurring (
     unit varchar(255) DEFAULT 'month',
     multiplier int(5) DEFAULT 1
     PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS finances_categories_assignment;
@@ -180,8 +153,8 @@ CREATE TABLE finances_categories_assignment (
     min_value DECIMAL(10,2) DEFAULT NULL,
     max_value DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES finances_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS finances_budgets;
@@ -195,9 +168,8 @@ CREATE TABLE finances_budgets (
     is_hidden INT(1) DEFAULT 0,
 --    saved DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS finances_budgets_categories;
 CREATE TABLE finances_budgets_categories (
@@ -205,10 +177,9 @@ CREATE TABLE finances_budgets_categories (
     budget INTEGER unsigned DEFAULT NULL,
     category INTEGER unsigned DEFAULT NULL,
     UNIQUE(budget, category),
-    FOREIGN KEY(budget) REFERENCES finances_budgets(id)  ON DELETE CASCADE,
-    FOREIGN KEY(category) REFERENCES finances_categories(id)  ON DELETE CASCADE
+    FOREIGN KEY(budget) REFERENCES finances_budgets(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS cars;
 CREATE TABLE cars (
@@ -221,9 +192,8 @@ CREATE TABLE cars (
     mileage_term INT(3) DEFAULT NULL,
     mileage_start_date DATE DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES global_users(id)
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS cars_user;
 CREATE TABLE cars_user (
@@ -231,8 +201,8 @@ CREATE TABLE cars_user (
     car INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(car, user),
-    FOREIGN KEY(car) REFERENCES cars(id) ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE
+    FOREIGN KEY(car) REFERENCES cars(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS cars_service;
@@ -273,16 +243,10 @@ CREATE TABLE cars_service (
     lng DECIMAL(16,14) DEFAULT NULL,
     acc DECIMAL(6,3) DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(createdBy) REFERENCES global_users(id),
-    FOREIGN KEY(changedBy) REFERENCES global_users(id),
-    FOREIGN KEY(car) REFERENCES cars(id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(car) REFERENCES cars(id) ON DELETE CASCADE ON UPDATE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/**
-ALTER TABLE cars_service    ADD lat DECIMAL(16,14) DEFAULT NULL AFTER service_garage, 
-                            ADD lng DECIMAL(16,14) DEFAULT NULL AFTER lat, 
-                            ADD acc DECIMAL(6,3) DEFAULT NULL AFTER lng;
-*/
 
 DROP TABLE IF EXISTS boards;
 CREATE TABLE boards (
@@ -295,9 +259,8 @@ CREATE TABLE boards (
     archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS boards_user;
 CREATE TABLE boards_user (
@@ -305,8 +268,8 @@ CREATE TABLE boards_user (
     board INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(board, user),
-    FOREIGN KEY(board) REFERENCES boards(id)  ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id)  ON DELETE CASCADE
+    FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS boards_stacks;
@@ -321,9 +284,10 @@ CREATE TABLE boards_stacks (
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
     PRIMARY KEY (id),
-   FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE,
+    FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS boards_cards;
 CREATE TABLE boards_cards (
@@ -342,7 +306,9 @@ CREATE TABLE boards_cards (
     hash VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
-    FOREIGN KEY(stack) REFERENCES boards_stacks(id) ON DELETE CASCADE,
+    FOREIGN KEY(stack) REFERENCES boards_stacks(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS boards_cards_user;
@@ -351,10 +317,9 @@ CREATE TABLE boards_cards_user (
     card INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
     UNIQUE(card, user),
-    FOREIGN KEY(card) REFERENCES boards_cards(id)  ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id)  ON DELETE CASCADE
+    FOREIGN KEY(card) REFERENCES boards_cards(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS boards_labels;
 CREATE TABLE boards_labels (
@@ -367,10 +332,9 @@ CREATE TABLE boards_labels (
     background_color VARCHAR(255) DEFAULT NULL,
     text_color VARCHAR(255) DEFAULT '#000000',
     PRIMARY KEY (id),
-    FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE,
+    FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS boards_cards_label;
 CREATE TABLE boards_cards_label (
@@ -378,10 +342,9 @@ CREATE TABLE boards_cards_label (
     card INTEGER unsigned DEFAULT NULL,
     label INTEGER unsigned DEFAULT NULL,
     UNIQUE(card, label),
-    FOREIGN KEY(card) REFERENCES  boards_cards(id) ON DELETE CASCADE,
-    FOREIGN KEY(label) REFERENCES boards_labels(id) ON DELETE CASCADE
+    FOREIGN KEY(card) REFERENCES  boards_cards(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(label) REFERENCES boards_labels(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS boards_comments;
 CREATE TABLE boards_comments (
@@ -392,10 +355,9 @@ CREATE TABLE boards_comments (
     changedOn TIMESTAMP NULL,
     comment TEXT DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(card) REFERENCES boards_cards(id) ON DELETE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE
+    FOREIGN KEY(card) REFERENCES boards_cards(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS global_settings;
 CREATE TABLE global_settings (
@@ -422,14 +384,31 @@ CREATE TABLE notifications_categories (
     UNIQUE(identifier),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS notifications_clients;
+CREATE TABLE notifications_clients (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned NOT NULL,
+    endpoint VARCHAR(512) NOT NULL,
+    auth VARCHAR(255) NULL,
+    p256dh VARCHAR(255) NULL,
+    contentEncoding VARCHAR(255) NULL,
+    ip VARCHAR(255) NULL,
+    agent VARCHAR(255) NULL,
+    PRIMARY KEY (id),
+    UNIQUE(endpoint),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS notifications_categories_clients;
 CREATE TABLE notifications_categories_clients (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     client INTEGER unsigned DEFAULT NULL,
     UNIQUE(category, client),
-    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE,
-    FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS notifications;
@@ -443,6 +422,6 @@ CREATE TABLE notifications (
     message varchar(255) NOT NULL,
     seen TIMESTAMP NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE,
-    FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
