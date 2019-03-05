@@ -255,7 +255,7 @@ CREATE TABLE boards (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
-    hash VARCHAR(255) NOT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
     archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),

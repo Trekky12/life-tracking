@@ -22,7 +22,8 @@
         "michelf/php-markdown": "^1.8",
         "ddtraceweb/monolog-parser": "^1.2",
         "slim/csrf": "^0.8.3",
-        "minishlink/web-push": "^5.2"
+        "minishlink/web-push": "^5.2",
+        "hashids/hashids": "^3.0"
     },
     "autoload": {
         "psr-4": {

@@ -5,6 +5,8 @@ namespace App\Board;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+use Hashids\Hashids;
+
 class Controller extends \App\Base\Controller {
 
     private $users_preSave = array();
@@ -25,24 +27,6 @@ class Controller extends \App\Base\Controller {
     public function index(Request $request, Response $response) {
         $boards = $this->mapper->getVisibleBoards('name');
         return $this->ci->view->render($response, 'boards/index.twig', ['boards' => $boards]);
-    }
-
-    public function edit(Request $request, Response $response) {
-
-        $entry_id = $request->getAttribute('id');
-
-        $entry = null;
-        if (!empty($entry_id)) {
-            $entry = $this->mapper->get($entry_id);
-            $board_user = $this->mapper->getUsers($entry_id);
-            $entry->setUsers($board_user);
-        }
-
-        $users = $this->user_mapper->getAll('name');
-
-        $this->preEdit($entry_id);
-
-        return $this->ci->view->render($response, 'boards/edit.twig', ['entry' => $entry, "users" => $users]);
     }
 
     public function view(Request $request, Response $response) {
@@ -121,6 +105,16 @@ class Controller extends \App\Base\Controller {
      * notify user
      */
     protected function afterSave($id, $data) {
+        $board = $this->mapper->get($id);
+        
+        /**
+         * save hash
+         */
+        if (empty($board->hash)) {
+            $hashids = new Hashids('', 10);
+            $hash = $hashids->encode($id);
+            $this->mapper->setHash($id, $hash);
+        }
 
         /**
          * Notify new users
@@ -128,8 +122,6 @@ class Controller extends \App\Base\Controller {
         $my_user_id = intval($this->ci->get('helper')->getUser()->id);
         $this->users_afterSave = $this->mapper->getUsers($id);
         $new_users = array_diff($this->users_afterSave, $this->users_preSave);
-
-        $board = $this->mapper->get($id);
 
         $subject = $this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_BOARD');
 

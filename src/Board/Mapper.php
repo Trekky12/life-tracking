@@ -90,6 +90,20 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
+    
+    public function setHash($id, $hash) {
+        $sql = "UPDATE " . $this->getTable() . " SET hash  = :hash WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            'hash' => $hash,
+            'id' => $id
+        ]);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
         
 
 }
