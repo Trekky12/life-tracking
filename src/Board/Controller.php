@@ -99,6 +99,7 @@ class Controller extends \App\Base\Controller {
      */
     protected function preSave($id, $data) {
         $this->users_preSave = $this->mapper->getUsers($id);
+        $this->allowOwnerOnly($id);
     }
 
     /**
@@ -142,6 +143,28 @@ class Controller extends \App\Base\Controller {
 
                     $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
                 }
+            }
+        }
+    }
+    
+    /**
+     * Does the user have access to this dataset?
+     */
+    protected function preEdit($id) {
+        $this->allowOwnerOnly($id);
+    }
+
+    protected function preDelete($id) {
+        $this->allowOwnerOnly($id);
+    }
+
+    private function allowOwnerOnly($board_id) {
+        $user = $this->ci->get('helper')->getUser()->id;
+        if (!is_null($board_id)) {
+            $board = $this->mapper->get($board_id);
+
+            if ($board->user !== $user) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
     }
