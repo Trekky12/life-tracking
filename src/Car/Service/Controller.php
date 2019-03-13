@@ -346,7 +346,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, $data) {
+    protected function preSave($id, &$data) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {

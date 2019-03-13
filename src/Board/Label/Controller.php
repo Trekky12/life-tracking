@@ -17,7 +17,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, $data) {
+    protected function preSave($id, &$data) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_boards = $this->board_mapper->getElementsOfUser($user);
         

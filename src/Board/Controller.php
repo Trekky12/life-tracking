@@ -97,7 +97,7 @@ class Controller extends \App\Base\Controller {
     /**
      * save users 
      */
-    protected function preSave($id, $data) {
+    protected function preSave($id, &$data) {
         $this->users_preSave = $this->mapper->getUsers($id);
         $this->allowOwnerOnly($id);
     }

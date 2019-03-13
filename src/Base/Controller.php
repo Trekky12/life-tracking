@@ -48,7 +48,7 @@ abstract class Controller {
      * @param type $id
      * @param type $data
      */
-    protected function preSave($id, $data) {
+    protected function preSave($id, &$data) {
         // do nothing
     }
 
@@ -109,8 +109,12 @@ abstract class Controller {
     }
 
     protected function insertOrUpdate($id, $data) {
+        /**
+         * Custom Hook
+         */
+        $this->preSave($id, $data);
         $entry = new $this->model($data);
-        
+
         $logger = $this->ci->get('logger');
 
         if ($entry->hasParsingErrors()) {
@@ -119,11 +123,6 @@ abstract class Controller {
 
             $logger->addError("Insert failed " . $this->model, array("message" => $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0])));
         } else {
-
-            /**
-             * Custom Hook
-             */
-            $this->preSave($id, $data);
 
             if ($id == null) {
                 $id = $this->mapper->insert($entry);
