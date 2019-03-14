@@ -281,4 +281,6 @@ $lang["NOTIFICATIONS_CATEGORIES"] = "Benachrichtigungskategorien";
 $lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifikator darf nicht leer sein";
 $lang["IDENTIFIER"] = "Identifikator";
 
+$lang["CRAWLERS"] = "Crawlers";
+
 return $lang;

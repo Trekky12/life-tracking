@@ -48,6 +48,10 @@ class User extends \App\Base\Model {
         $this->module_boards = $set_module_boards === 'on' ? 1 : 0;
         $this->module_boards = $this->exists('module_boards', $data) ? filter_var($data['module_boards'], FILTER_SANITIZE_NUMBER_INT) : $this->module_boards;
         
+        $set_module_crawlers = $this->exists('set_module_crawlers', $data) ? filter_var($data['set_module_crawlers'], FILTER_SANITIZE_STRING) : 0;
+        $this->module_crawlers = $set_module_crawlers === 'on' ? 1 : 0;
+        $this->module_crawlers = $this->exists('module_crawlers', $data) ? filter_var($data['module_crawlers'], FILTER_SANITIZE_NUMBER_INT) : $this->module_crawlers;
+        
         $set_force_pw_change = $this->exists('set_force_pw_change', $data) ? filter_var($data['set_force_pw_change'], FILTER_SANITIZE_STRING) : 1;
         $this->force_pw_change = $set_force_pw_change === 'on' ? 1 : 0;
         $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : $this->force_pw_change;

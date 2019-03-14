@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     module_finance int(1) DEFAULT 0,
     module_cars int(1) DEFAULT 0,
     module_boards int(1) DEFAULT 0,
+    module_crawlers int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
     mails_user int(1) DEFAULT 1,
     mails_finances int(1) DEFAULT 1,
@@ -25,6 +26,9 @@ CREATE TABLE IF NOT EXISTS global_users (
 );
 INSERT INTO global_users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 
+/**
+ALTER TABLE global_users ADD module_crawlers INT(1) DEFAULT 0 AFTER module_boards; 
+*/
 
 DROP TABLE IF EXISTS global_banlist;
 CREATE TABLE global_banlist (

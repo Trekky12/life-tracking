@@ -76,6 +76,12 @@
                         {{lang["BOARDS"]}}
                     </label>
                 </div>
+                    <div class="form-group">
+                    <label class="checkbox" for="checkboxCrawlersModule">
+                        <input name="set_module_crawlers" type="checkbox" id="checkboxCrawlersModule" {% if entry is null or entry.module_crawlers == 1 %}checked{% endif %}>
+                        {{lang["CRAWLERS"]}}
+                    </label>
+                </div>
                 <h3>{{lang["OTHER_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxForcePWChange">
