@@ -30,7 +30,7 @@
         <meta name="theme-color" content="#ffffff">
     </head>
 
-    <body class="{{active}}">
+    <body class="{{active}}{%if boardsview == 1%} boards-view{%endif%}">
 
         {% if not user is null %}
             <header id="masthead" class="site-header">
