@@ -8,7 +8,7 @@ class Board extends \App\Base\Model {
 
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
         
-        $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : hash('CRC32', time() . rand(0, 1000000) .  $this->name);
+        $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
         if(empty($this->name)){
             $this->parsing_errors[] ="NAME_CANNOT_BE_EMPTY";
