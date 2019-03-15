@@ -423,3 +423,19 @@ var tokensCategoryTable = new JSTable("#tokens_table", {
         }
     ]
 });
+
+var crawlersTable = new JSTable("#crawlers_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "asc"
+        },
+        {
+            select: [1, 2, 3, 4],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

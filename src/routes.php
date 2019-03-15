@@ -146,10 +146,9 @@ $app->group('/notifications', function() {
     $this->get('/notify', '\App\Notifications\Controller:notifyByCategory');
     $this->post('/getCategories', '\App\Notifications\Clients\Controller:getCategoriesFromEndpoint')->setName('notifications_clients_categories');
     $this->post('/setCategorySubscription', '\App\Notifications\Clients\Controller:setCategoryOfEndpoint')->setName('notifications_clients_set_category');
-    
+
     $this->post('/getNotifications', '\App\Notifications\Controller:getNotificationsFromEndpoint')->setName('notifications_get');
     $this->post('/getUnreadNotifications', '\App\Notifications\Controller:getUnreadNotificationsFromEndpoint')->setName('notifications_get_unread');
-    
 });
 
 
@@ -188,4 +187,12 @@ $app->group('/boards', function() {
     });
 
     $this->post('/setArchive', '\App\Board\Controller:setArchive')->setName('set_archive');
+});
+
+$app->group('/crawlers', function() {
+    $this->get('/', '\App\Crawler\Controller:index')->setName('crawlers');
+    $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\Controller:edit')->setName('crawlers_edit');
+    $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\Controller:save')->setName('crawlers_save');
+    $this->delete('/delete/{id}', '\App\Crawler\Controller:delete')->setName('crawlers_delete');
+
 });
