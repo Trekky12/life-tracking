@@ -439,3 +439,19 @@ var crawlersTable = new JSTable("#crawlers_table", {
         }
     ]
 });
+
+var crawlersHeadersTable = new JSTable("#crawlers_headers_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 4,
+            sort: "asc"
+        },
+        {
+            select: [5,6],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

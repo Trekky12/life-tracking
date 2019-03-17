@@ -194,5 +194,11 @@ $app->group('/crawlers', function() {
     $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\Controller:edit')->setName('crawlers_edit');
     $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\Controller:save')->setName('crawlers_save');
     $this->delete('/delete/{id}', '\App\Crawler\Controller:delete')->setName('crawlers_delete');
-
+    
+    $this->group('/headers/{crawler:[0-9]+}', function() {
+        $this->get('/', '\App\Crawler\CrawlerHeader\Controller:index')->setName('crawlers_headers');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:edit')->setName('crawlers_headers_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:save')->setName('crawlers_headers_save');
+        $this->delete('/delete/{id}', '\App\Crawler\CrawlerHeader\Controller:delete')->setName('crawlers_headers_delete');
+    });
 });

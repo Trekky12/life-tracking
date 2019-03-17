@@ -21,7 +21,11 @@
                     {% for crawler in crawlers %}
                         <tr>
                             <td data-title="{{lang["NAME"]}}">{{crawler.name|raw}}</td> 
-                            <td></td>
+                            <td>
+                                {% if crawler.user == user.id %}
+                                    <a href="{{  path_for('crawlers_headers', {'crawler' : crawler.id}) }}"><span class="fa fa-table fa-lg"></span></a>
+                                {% endif %}
+                            </td>
                             <td></td>
                             <td>
                                 {% if crawler.user == user.id %}

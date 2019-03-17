@@ -282,5 +282,13 @@ $lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifier cannot be empty";
 $lang["IDENTIFIER"] = "Identifier";
 
 $lang["CRAWLERS"] = "Crawlers";
+$lang["HEADLINES"] = "Headlines";
+$lang["HEADLINE_ADD"] = "add Headline";
+
+$lang["HEADLINE"] = "Headline";
+$lang["FIELD_NAME"] = "field name";
+$lang["FIELD_LINK"] = "field link";
+$lang["FIELD_CONTENT"] = "field content";
+$lang["POSITION"] = "position";
 
 return $lang;

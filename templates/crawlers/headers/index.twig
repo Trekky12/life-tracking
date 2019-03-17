@@ -1,0 +1,47 @@
+{% extends "base.twig" %}
+
+{% set active = 'crawlers' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINES"]}}</h2> <a href="{{  path_for('crawlers_headers_edit', {'crawler': crawler.id}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-content">
+            <table id="crawlers_headers_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["HEADLINE"]}}</th>
+                        <th>{{lang["FIELD_NAME"]}}</th>
+                        <th>{{lang["FIELD_LINK"]}}</th>
+                        <th>{{lang["FIELD_CONTENT"]}}</th>
+                        <th>{{lang["POSITION"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for header in headers %}
+                        <tr>
+                            <td data-title="{{lang["HEADLINE"]}}">{{header.headline|raw}}</td> 
+                            <td data-title="{{lang["FIELD_NAME"]}}">{{header.field_name}}</td> 
+                            <td data-title="{{lang["FIELD_LINK"]}}">{{header.field_link}}</td> 
+                            <td data-title="{{lang["FIELD_CONTENT"]}}">{{header.field_content|raw}}</td> 
+                            <td data-title="{{lang["POSITION"]}}">{{header.position}}</td> 
+                            <td>
+                                {% if crawler.user == user.id %}
+                                    <a href="{{  path_for('crawlers_headers_edit', {'id' : header.id, 'crawler' : crawler.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if crawler.user == user.id %}
+                                    <a href="#" data-url="{{  path_for('crawlers_headers_delete', {'id' : header.id, 'crawler' : crawler.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

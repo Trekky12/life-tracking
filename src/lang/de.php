@@ -282,5 +282,13 @@ $lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifikator darf nicht leer sein";
 $lang["IDENTIFIER"] = "Identifikator";
 
 $lang["CRAWLERS"] = "Crawlers";
+$lang["HEADLINES"] = "Überschriften";
+$lang["HEADLINE_ADD"] = "Überschrift hinzufügen";
+
+$lang["HEADLINE"] = "Überschrift";
+$lang["FIELD_NAME"] = "Feldname";
+$lang["FIELD_LINK"] = "Feldverlinkung";
+$lang["FIELD_CONTENT"] = "Feldinhalt";
+$lang["POSITION"] = "Position";
 
 return $lang;
