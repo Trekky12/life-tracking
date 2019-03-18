@@ -204,4 +204,6 @@ $app->group('/crawlers', function() {
         $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:save')->setName('crawlers_headers_save');
         $this->delete('/delete/{id}', '\App\Crawler\CrawlerHeader\Controller:delete')->setName('crawlers_headers_delete');
     });
+
+    $this->post('/record/', '\App\Crawler\CrawlerDataset\Controller:saveAPI')->setName('crawler_record');
 });
