@@ -291,4 +291,6 @@ $lang["FIELD_LINK"] = "field link";
 $lang["FIELD_CONTENT"] = "field content";
 $lang["POSITION"] = "position";
 
+$lang["DATE_CRAWL"] = "crawldate";
+
 return $lang;

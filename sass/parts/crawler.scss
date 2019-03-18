@@ -1,0 +1,39 @@
+#crawler-filter{
+
+    padding: 5px 10px;
+
+    .btn-element, .filter-element{
+        margin-top:1rem;
+        input{
+            width:100%;
+        }
+        select {
+            height:44px;
+        }
+    }
+
+    @media screen and (min-width: $size_mobile) {
+        display:flex;
+        justify-content:space-between;
+
+        .btn-element, .filter-element{
+            margin-top:0px;
+            margin-left:1rem;  
+        }
+    }
+
+    .date-filter{
+
+        @media screen and (min-width: $size_mobile) {
+            display:flex;
+            align-items: center;
+        }
+
+        .flatpickr-input{
+            height:44px;
+        }
+    }
+
+
+
+}

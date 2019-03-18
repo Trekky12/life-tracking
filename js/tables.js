@@ -455,3 +455,27 @@ var crawlersHeadersTable = new JSTable("#crawlers_headers_table", {
         }
     ]
 });
+
+var crawlersDataTable = new JSTable("#crawlers_data_table", {
+    perPage: 20,
+    perPageSelect: [10, 20,50,100,200],
+    labels: tableLabels,
+    sortable:false,
+    columns: [
+        {
+            select: [0],
+            sort: "desc",
+            sortable: true,
+            render: function (data) {
+                return moment(data).format(i18n.dateformatJSFull);
+            }
+        }
+    ],
+    deferLoading: jsObject.datacount,
+    serverSide: true,
+    ajax: jsObject.crawler_table,
+    ajaxParams: {
+        "from" : jsObject.crawler_filter_from,
+        "to" : jsObject.crawler_filter_to
+    }
+});

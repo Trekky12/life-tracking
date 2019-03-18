@@ -100,7 +100,15 @@
                 'notifications_clients_set_category': '{{path_for('notifications_clients_set_category')}}',
                 'notifications_clients_manage': '{{path_for('notifications_clients_manage')}}',
                 'notifications_get': '{{path_for('notifications_get')}}',
-                'notifications_get_unread': '{{path_for('notifications_get_unread')}}'
+                'notifications_get_unread': '{{path_for('notifications_get_unread')}}',
+                
+                {% if not hasCrawlerTable is null %}
+                'crawler_table': '{{path_for('crawlers_table', {'hash': crawler.hash})}}',
+                'crawler_filter_from': '{{from}}',
+                'crawler_filter_to': '{{to}}',
+                'crawler_filter': '{{path_for('set_crawler_filter')}}'
+                {% endif %}
+                    
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

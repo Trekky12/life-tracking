@@ -15,11 +15,104 @@ class Controller extends \App\Base\Controller {
 
         $this->mapper = new Mapper($this->ci);
         $this->user_mapper = new \App\User\Mapper($this->ci);
+        $this->dataset_mapper = new \App\Crawler\CrawlerDataset\Mapper($this->ci);
+        $this->header_mapper = new \App\Crawler\CrawlerHeader\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
         $crawlers = $this->mapper->getVisibleCrawlers('name');
         return $this->ci->view->render($response, 'crawlers/index.twig', ['crawlers' => $crawlers]);
+    }
+
+    public function view(Request $request, Response $response) {
+
+        $data = $request->getQueryParams();
+        list($from, $to) = $this->ci->get('helper')->getDateRange($data);
+
+        $hash = $request->getAttribute('hash');
+        $crawler = $this->mapper->getCrawlerFromHash($hash);
+
+        $this->checkAccess($crawler->id);
+
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
+
+        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, "changedOn", "changedOn DESC, id DESC", 21);
+        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, "changedOn");
+
+        return $this->ci->view->render($response, 'crawlers/view.twig', [
+                    "crawler" => $crawler,
+                    "from" => $from,
+                    "to" => $to,
+                    "headers" => $headers,
+                    "datasets" => $datasets,
+                    "datacount" => $datacount,
+                    "hasCrawlerTable" => true
+        ]);
+    }
+
+    public function table(Request $request, Response $response) {
+
+        $requestData = $request->getQueryParams();
+
+        list($from, $to) = $this->ci->get('helper')->getDateRange($requestData);
+
+        $hash = $request->getAttribute('hash');
+        $crawler = $this->mapper->getCrawlerFromHash($hash);
+
+        $this->checkAccess($crawler->id);
+
+        $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
+
+        $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
+        $searchQuery = empty($search) || $search === "null" ? null : $search;
+
+        $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
+
+        $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
+
+        $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, "changedOn");
+        $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, "changedOn", $searchQuery);
+
+        $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, "changedOn", $start, $length, $searchQuery, $sortColumn, $sortDirection);
+
+        // sort not possible
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
+
+        $rendered_data = [];
+        foreach ($data as $dataset) {
+            $row = [];
+
+            $row[] = $dataset->changedOn;
+
+            foreach ($headers as $header) {
+                $field = [];
+                if (!empty($header->field_link)) {
+                    $field[] = '<a href="' . $dataset->getDataValue($header->field_link) . '" target="_blank">';
+                }
+
+                if (!empty($header->field_content)) {
+                    $field[] = $header->getFieldContent();
+                } else {
+                    $field[] = $dataset->getDataValue($header->field_name);
+                }
+
+                if (!empty($header->field_link)) {
+                    $field[] = '</a>';
+                }
+                $row[] = implode("", $field);
+            }
+            $rendered_data[] = $row;
+        }
+
+
+        return $response->withJson([
+                    "recordsTotal" => intval($recordsTotal),
+                    "recordsFiltered" => intval($recordsFiltered),
+                    "data" => $rendered_data
+                        ]
+        );
     }
 
     /**
@@ -48,6 +141,17 @@ class Controller extends \App\Base\Controller {
         }
     }
 
+    /**
+     * Is the user allowed to view this crawler?
+     */
+    private function checkAccess($id) {
+        $crawler_users = $this->mapper->getUsers($id);
+        $user = $this->ci->get('helper')->getUser()->id;
+        if (!in_array($user, $crawler_users)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+        }
+    }
+
     protected function afterSave($id, $data) {
         $dataset = $this->mapper->get($id);
         if (empty($dataset->hash)) {
@@ -56,5 +160,4 @@ class Controller extends \App\Base\Controller {
             $this->mapper->setHash($id, $hash);
         }
     }
-
 }

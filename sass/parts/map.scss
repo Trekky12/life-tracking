@@ -71,7 +71,13 @@
         }
     }
 
+    @media screen and (min-width: $size_mobile_navigation){
+        max-width: $size_mobile;
+        margin: 0 auto;
+    }
+}
 
+#search, #crawler-filter{
     .element{
         display:block;
         width:100%;
@@ -87,12 +93,6 @@
             margin-top:1rem;
             width:100%;
         }
-    }
-
-    @media screen and (min-width: $size_mobile_navigation){
-        max-width: $size_mobile;
-        margin: 0 auto;
-
     }
 }
 
