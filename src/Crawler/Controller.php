@@ -36,9 +36,8 @@ class Controller extends \App\Base\Controller {
 
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
 
-        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, "changedOn", "changedOn DESC, id DESC", 21);
-        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, "changedOn");
-
+        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), $this->getFilter(), "DESC", 20);
+        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
         return $this->ci->view->render($response, 'crawlers/view.twig', [
                     "crawler" => $crawler,
                     "from" => $from,
@@ -46,7 +45,8 @@ class Controller extends \App\Base\Controller {
                     "headers" => $headers,
                     "datasets" => $datasets,
                     "datacount" => $datacount,
-                    "hasCrawlerTable" => true
+                    "hasCrawlerTable" => true,
+                    "filter" => $this->getFilter()
         ]);
     }
 
@@ -72,10 +72,10 @@ class Controller extends \App\Base\Controller {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, "changedOn");
-        $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, "changedOn", $searchQuery);
+        $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
+        $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter(), $searchQuery);
 
-        $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, "changedOn", $start, $length, $searchQuery, $sortColumn, $sortDirection);
+        $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, $this->getFilter(), $start, $length, $searchQuery, $sortColumn, $sortDirection);
 
         // sort not possible
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
@@ -84,7 +84,11 @@ class Controller extends \App\Base\Controller {
         foreach ($data as $dataset) {
             $row = [];
 
-            $row[] = $dataset->changedOn;
+            if ($this->getFilter() === "changedOn") {
+                $row[] = $dataset->changedOn;
+            } else {
+                $row[] = $dataset->createdOn;
+            }
 
             foreach ($headers as $header) {
                 $field = [];
@@ -159,5 +163,19 @@ class Controller extends \App\Base\Controller {
             $hash = $hashids->encode($id);
             $this->mapper->setHash($id, $hash);
         }
+    }
+
+    public function setFilter(Request $request, Response $response) {
+        $data = $request->getParsedBody();
+
+        if (array_key_exists("state", $data) && in_array($data["state"], array("createdOn", "changedOn"))) {
+            $this->ci->get('helper')->setSessionVar('crawler_filter', $data["state"]);
+        }
+
+        return $response->withJSON(array('status' => 'success'));
+    }
+
+    private function getFilter() {
+        return $this->ci->get('helper')->getSessionVar('crawler_filter', "createdOn");
     }
 }

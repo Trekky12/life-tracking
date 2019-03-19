@@ -292,5 +292,7 @@ $lang["FIELD_CONTENT"] = "Feldinhalt";
 $lang["POSITION"] = "Position";
 
 $lang["DATE_CRAWL"] = "Abrufdatum";
+$lang["SHOW_ONLY_NEW_ENTRIES"] = "Zeige nur neue Einträge";
+$lang["SHOW_NEW_UPDATED_ENTRIES"] = "Zeige neue und aktualisierte Einträge";
 
 return $lang;

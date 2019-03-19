@@ -8,6 +8,7 @@
 
 {% block javascript %}
     <script src="{{base_url()}}/static/js/datefilter.js?ver=20190306"></script>
+    <script src="{{base_url()}}/static/js/crawler.js?ver=20190306"></script>
 {% endblock %}
 
 {% block body %}
@@ -27,6 +28,12 @@
                         <input type="submit" value="{{lang["SHOW"]}}"/>
                     </div>
                 </div>
+                <div class="filter-element">
+                    <select class="form-control" id="filterCrawlerDatasets" >
+                        <option value="createdOn" {% if filter =="createdOn" %}selected{% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
+                        <option value="changedOn" {% if filter =="changedOn" %}selected{% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
+                    </select>
+                </div>
 
             </form>   
 
@@ -42,7 +49,7 @@
                 <tbody>
                     {% for dataset in datasets %}
                         <tr>
-                            <th>{{dataset.changedOn}}</th>
+                            <th>{% if filter == "createdOn" %}{{dataset.createdOn}}{% else %}{{dataset.changedOn}}{% endif %}</th>
                                 {% for header in headers %}
                                 <td>
                                     {% if not header.field_link is empty %}

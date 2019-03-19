@@ -206,4 +206,5 @@ $app->group('/crawlers', function() {
     });
 
     $this->post('/record/', '\App\Crawler\CrawlerDataset\Controller:saveAPI')->setName('crawler_record');
+    $this->post('/setFilter', '\App\Crawler\Controller:setFilter')->setName('set_crawler_filter');
 });
