@@ -12,7 +12,8 @@ a {
         color: $color_link-hover;
     }
     &:focus {
-        outline: thin dotted;
+        //outline: thin dotted;
+        outline: none;
     }
     &:hover,
         &:active {

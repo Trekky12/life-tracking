@@ -34,6 +34,55 @@
         }
     }
 
+}
 
+#crawler_links{
+
+    margin:0;
+    list-style-type: none;
+    padding-left:0;
+
+    // first level
+    & > li {
+        overflow: hidden;
+        margin-bottom: 1rem;
+        
+        & > a{
+            display:block;
+            background-color: $color_blue_light;
+            padding: 0.5rem 1rem;
+            color: $color_background-body;
+
+            &:after {
+                float: right;
+                content: "\f067";
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: inherit;
+                text-rendering: auto;
+                transition: all 250ms;
+                @include font-size(1.6);
+                color: $color_background-body;
+                position: relative;
+                top: 5px;
+            }
+        }
+
+        // submenu 
+        ul{
+            display:none;
+            padding-top: 0.5rem;
+            padding-bottom: 1rem;
+        }
+        &.active {
+            ul{
+                display:block;
+            }
+
+            & > a:after{
+                content: "\f068";
+            }
+        }
+
+    }
 
 }

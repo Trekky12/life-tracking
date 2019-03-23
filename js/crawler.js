@@ -29,3 +29,11 @@ filterCrawlerDatasets.addEventListener('change', function (event) {
 
     return;
 });
+
+let crawlerLinks = document.querySelectorAll('#crawler_links > li > a');
+crawlerLinks.forEach(function (item, idx) {
+    item.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.target.parentElement.classList.toggle('active');
+    });
+});

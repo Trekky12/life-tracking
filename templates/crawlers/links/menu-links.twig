@@ -1,0 +1,12 @@
+{# from https://stackoverflow.com/a/8467939 #}
+
+{% for link in links %}
+    <li>
+        <a href="{{ link.link }}" target="_blank" rel="noreferrer">{{ link.name |raw }}</a>
+        {% if link.children %}
+            <ul>
+                {% include "crawlers/links/menu-links.twig" with {'links': link.children} %}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}

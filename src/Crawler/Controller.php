@@ -17,6 +17,7 @@ class Controller extends \App\Base\Controller {
         $this->user_mapper = new \App\User\Mapper($this->ci);
         $this->dataset_mapper = new \App\Crawler\CrawlerDataset\Mapper($this->ci);
         $this->header_mapper = new \App\Crawler\CrawlerHeader\Mapper($this->ci);
+        $this->link_mapper = new \App\Crawler\CrawlerLink\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -38,6 +39,10 @@ class Controller extends \App\Base\Controller {
 
         $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), $this->getFilter(), "DESC", 20);
         $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
+
+        $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
+        $links_tree = $this->buildTree($links);
+
         return $this->ci->view->render($response, 'crawlers/view.twig', [
                     "crawler" => $crawler,
                     "from" => $from,
@@ -46,7 +51,8 @@ class Controller extends \App\Base\Controller {
                     "datasets" => $datasets,
                     "datacount" => $datacount,
                     "hasCrawlerTable" => true,
-                    "filter" => $this->getFilter()
+                    "filter" => $this->getFilter(),
+                    "links" => $links_tree
         ]);
     }
 
@@ -178,4 +184,21 @@ class Controller extends \App\Base\Controller {
     private function getFilter() {
         return $this->ci->get('helper')->getSessionVar('crawler_filter', "createdOn");
     }
+
+    private function buildTree(array $elements, $parentId = null) {
+        $branch = array();
+
+        foreach ($elements as $element) {
+            if ($element->parent == $parentId) {
+                $children = $this->buildTree($elements, $element->id);
+                if ($children) {
+                    $element->children = $children;
+                }
+                $branch[] = $element;
+            }
+        }
+
+        return $branch;
+    }
+
 }

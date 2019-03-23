@@ -75,4 +75,14 @@
         </div>
     </div>
 
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["LINKLIST"]}}</div>
+        <div class="page-content">
+            <ul id="crawler_links">
+                {% include "crawlers/links/menu-links.twig" with {'links':links} only %}
+            </ul>
+        </div>
+    </div>
+
+
 {% endblock %}        

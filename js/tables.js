@@ -479,3 +479,19 @@ var crawlersDataTable = new JSTable("#crawlers_data_table", {
         "to" : jsObject.crawler_filter_to
     }
 });
+
+var crawlersLinksTable = new JSTable("#crawlers_links_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "asc"
+        },
+        {
+            select: [4,5],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

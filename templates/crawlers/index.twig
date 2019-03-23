@@ -26,7 +26,11 @@
                                     <a href="{{  path_for('crawlers_headers', {'crawler' : crawler.id}) }}"><span class="fa fa-table fa-lg"></span></a>
                                 {% endif %}
                             </td>
-                            <td></td>
+                            <td>
+                                {% if crawler.user == user.id %}
+                                    <a href="{{  path_for('crawlers_links', {'crawler' : crawler.id}) }}"><span class="fa fa-external-link fa-lg"></span></a>
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if crawler.user == user.id %}
                                     <a href="{{  path_for('crawlers_edit', {'id' : crawler.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>
