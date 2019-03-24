@@ -251,5 +251,13 @@ class Helper {
     public function getAgent() {
         return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING);
     }
-
+    
+    public function getRequestURI(\Psr\Http\Message\RequestInterface $request) {
+        $requestURI = $request->getUri();
+        $path = $requestURI->getPath();
+        $params = $requestURI->getQuery();
+        $uri = strlen($params) > 0 ? $path . '?' . $params : $path;
+        return $uri;
+    }
+    
 }
