@@ -68,6 +68,13 @@ class UserMiddleware {
         }
 
         $logger->addDebug('Go to Login');
+        
+        /**
+         * Save target URI for later redirect
+         */
+        
+        $uri = $this->ci->get('helper')->getRequestURI($request);
+        $this->ci->get('helper')->setSessionVar("redirectURI", $uri);
 
         // redirect to the login page
         return $response->withRedirect($this->ci->get('router')->pathFor('login'), 302);

@@ -11,6 +11,11 @@ $container = $app->getContainer();
 $app->add($container->get('csrf'));
 
 /**
+ * Redirect to initial URI
+ */
+$app->add('App\Middleware\RedirectMiddleware');
+
+/**
  * Restrict access to modules
  */
 $app->add('App\Middleware\ModuleMiddleware');
