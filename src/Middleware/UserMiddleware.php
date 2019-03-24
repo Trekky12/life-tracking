@@ -15,22 +15,7 @@ class UserMiddleware {
     }
 
     public function __invoke(Request $request, Response $response, $next) {
-
-        
-        /**
-         * Do not allow access for banned ips
-         */
         $logger = $this->ci->get('logger');
-        //$logger->addInfo('SITE CALL');
-
-        $banlist = new \App\Main\BanlistMapper($this->ci);
-        $attempts = $banlist->getFailedLoginAttempts($this->ci->get('helper')->getIP());
-
-        if ($attempts > 2) {
-            $logger->addWarning('BANNED');
-            return $this->ci->get('view')->render($response, 'error.twig', ["message" => $this->ci->get('helper')->getTranslatedString("BANNED"), "message_type" => "danger"]);
-        }
-
 
         /**
          *  Always allow access to guest routes

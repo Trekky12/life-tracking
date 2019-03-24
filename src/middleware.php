@@ -11,7 +11,7 @@ $container = $app->getContainer();
 $app->add($container->get('csrf'));
 
 /**
- * Restrict sccess of modules
+ * Restrict access to modules
  */
 $app->add('App\Middleware\ModuleMiddleware');
 
@@ -24,6 +24,11 @@ $app->add('App\Middleware\PWChangeMiddleware');
  * Save logged In User
  */
 $app->add('App\Middleware\UserMiddleware');
+
+/**
+ * Check if IP is banned
+ */
+$app->add('App\Middleware\BanlistMiddleware');
 
 /**
  * Save Base URL for Links in E-Mail
