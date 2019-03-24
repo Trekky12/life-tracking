@@ -15,7 +15,6 @@ Mustache.parse(template);
 document.getElementById('add_budget').addEventListener('click', function (e) {
     e.preventDefault();
 
-
     var index = document.querySelectorAll('.budget-entry').length;
 
     var rendered = Mustache.render(template, {index: index});
@@ -24,17 +23,6 @@ document.getElementById('add_budget').addEventListener('click', function (e) {
     budget.insertAdjacentHTML('beforebegin', rendered);
 
     add_selectr('#category_' + index);
-});
-
-document.addEventListener('click', function (event) {
-    let closest = event.target.closest('.btn-delete');
-    if (closest) {
-        let url = closest.dataset.url;
-        if (!url) {
-            event.preventDefault();
-            closest.parentNode.remove();
-        }
-    }
 });
 
 
