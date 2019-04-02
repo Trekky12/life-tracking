@@ -7,6 +7,8 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 use Hashids\Hashids;
 
+use Dflydev\FigCookies\FigRequestCookies;
+
 class Controller extends \App\Base\Controller {
 
     private $users_preSave = array();
@@ -64,9 +66,10 @@ class Controller extends \App\Base\Controller {
 
         $card_label = $this->label_mapper->getCardsLabel();
 
-        $sidebar_mobilevisible = filter_input(INPUT_COOKIE, 'sidebar_mobilevisible', FILTER_SANITIZE_NUMBER_INT);
-        $sidebar_desktophidden = filter_input(INPUT_COOKIE, 'sidebar_desktophidden', FILTER_SANITIZE_NUMBER_INT);
-
+        //$sidebar_mobilevisible = filter_input(INPUT_COOKIE, 'sidebar_mobilevisible', FILTER_SANITIZE_NUMBER_INT);
+        //$sidebar_desktophidden = filter_input(INPUT_COOKIE, 'sidebar_desktophidden', FILTER_SANITIZE_NUMBER_INT);
+        $sidebar_mobilevisible = FigRequestCookies::get($request, 'sidebar_mobilevisible');
+        $sidebar_desktophidden = FigRequestCookies::get($request, 'sidebar_desktophidden');
 
         return $this->ci->view->render($response, 'boards/view.twig', [
                     'board' => $board,
@@ -78,8 +81,8 @@ class Controller extends \App\Base\Controller {
                     "show_archive" => $show_archive,
                     "board_user" => $board_user,
                     "sidebar" => [
-                        "mobilevisible" => $sidebar_mobilevisible,
-                        "desktophidden" => $sidebar_desktophidden,
+                        "mobilevisible" => $sidebar_mobilevisible->getValue(),
+                        "desktophidden" => $sidebar_desktophidden->getValue(),
                     ]
         ]);
     }

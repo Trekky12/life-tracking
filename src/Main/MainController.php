@@ -5,7 +5,12 @@ namespace App\Main;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
+
 use Dubture\Monolog\Reader\LogReader;
+
+use Dflydev\FigCookies\FigRequestCookies;
+use Dflydev\FigCookies\FigResponseCookies;
+use Dflydev\FigCookies\SetCookie;
 
 class MainController {
 
@@ -43,10 +48,21 @@ class MainController {
             $password = array_key_exists('password', $data) ? filter_var($data['password'], FILTER_SANITIZE_STRING) : null;
 
             if ($this->ci->get('helper')->checkLogin($username, $password)) {
+                $token = $this->ci->get('helper')->saveToken();
+
+                // add token to cookie
+                $cookie = SetCookie::create('token')
+                        ->withValue($token)
+                        ->rememberForever();
+
+                $response = FigResponseCookies::set($response, $cookie);
+
                 return $response->withRedirect($this->ci->get('router')->pathFor('index'), 301);
             }
-            // redirect to login page to delete the POST Data and remove the user from the twig-view
-            return $response->withRedirect($this->ci->get('router')->pathFor('login'), 301);
+            
+            // redirect to logout to delete the POST Data and remove the user from the twig-view
+            return $this->logout($request, $response);
+            //return $response->withRedirect($this->ci->get('router')->pathFor('login'), 301);
         }
 
         return $this->ci->view->render($response, 'main/login.twig', array());
@@ -57,9 +73,12 @@ class MainController {
         $logger = $this->ci->get('logger');
         $logger->addNotice('LOGOUT');
 
-        $this->ci->get('helper')->logout();
+        // remove token from database and cookies
+        $token = FigRequestCookies::get($request, 'token');
+        $this->ci->get('helper')->removeToken($token->getValue());
+        $response = FigResponseCookies::expire($response, 'token');
 
-        return $response->withRedirect($this->ci->get('router')->pathFor('index'), 302);
+        return $response->withRedirect($this->ci->get('router')->pathFor('login'), 302);
     }
 
     public function cron(Request $request, Response $response) {
