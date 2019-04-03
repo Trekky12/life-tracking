@@ -21,10 +21,15 @@ class RedirectMiddleware {
         $redirectURI = $this->ci->get('helper')->getSessionVar("redirectURI");
         $uri = $this->ci->get('helper')->getRequestURI($request);
         
-        $this->ci->get('helper')->deleteSessionVar("redirectURI");
+        // do not delete redirectURI when we are on forced pages
+        $route = $request->getAttribute('route');
+        if (!is_null($route) && !in_array($route->getName(), array("login", "users_change_password") )) {
+            $this->ci->get('helper')->deleteSessionVar("redirectURI");
 
-        if (!is_null($user) && !is_null($redirectURI) && $redirectURI !== $uri) {
-            return $response->withRedirect($redirectURI, 301);
+            if (!is_null($user) && !is_null($redirectURI) && $redirectURI !== $uri) {
+                return $response->withRedirect($redirectURI, 301);
+            }
+        
         }
 
         return $next($request, $response);
