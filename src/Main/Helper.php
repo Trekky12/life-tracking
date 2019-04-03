@@ -262,6 +262,8 @@ class Helper {
         }
 
         return array($from, $to);
+        
+    }
 
     public function getRequestURI(\Psr\Http\Message\RequestInterface $request) {
         $requestURI = $request->getUri();
