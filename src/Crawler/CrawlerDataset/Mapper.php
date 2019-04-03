@@ -18,13 +18,13 @@ class Mapper extends \App\Base\Mapper {
         return $sql;
     }
 
-    public function getFromCrawler($crawler, $from, $to, $filter = "changedOn", $order = "changedOn", $sortDirection = "DESC", $limit = null) {
+    public function getFromCrawler($crawler, $from, $to, $filter = "changedOn", $order = "changedOn DESC, id DESC", $limit = null) {
 
         $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => "%"];
 
         $sql = $this->getTableSQL("*", $filter);
 
-        $sql .= "ORDER BY {$order} {$sortDirection}, id {$sortDirection}";
+        $sql .= "ORDER BY {$order}";
 
         if (!is_null($limit)) {
             $sql .= " LIMIT {$limit}";
@@ -58,16 +58,9 @@ class Mapper extends \App\Base\Mapper {
 
         $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => "%" . $searchQuery . "%"];
 
-        $sort = "changedOn";
-        switch ($sortColumn) {
-            default:           
-                $sort = $filter === "changedOn" ? "changedOn" : "createdOn";
-                break;
-        }
-
         $sql = $this->getTableSQL("*", $filter);
 
-        $sql .= " ORDER BY {$sort} {$sortDirection}, id {$sortDirection}";
+        $sql .= " ORDER BY {$sortColumn} {$sortDirection}, id {$sortDirection}";
 
         $sql .= " LIMIT {$start}, {$limit}";
 

@@ -300,4 +300,6 @@ $lang["DATE_CRAWL"] = "crawldate";
 $lang["SHOW_ONLY_NEW_ENTRIES"] = "Show only new entries";
 $lang["SHOW_NEW_UPDATED_ENTRIES"] = "Show new and updated entries";
 
+$lang["SORTABLE"] = "sortable";
+
 return $lang;

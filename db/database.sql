@@ -465,12 +465,17 @@ CREATE TABLE crawlers_headers (
     field_name varchar(255) DEFAULT NULL,
     field_link varchar(255) DEFAULT NULL,
     field_content varchar(255) DEFAULT NULL,
+    sortable INT(1) DEFAULT 0,
     position INT(10) NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(crawler) REFERENCES crawlers(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE crawlers_headers ADD sortable INT(1) DEFAULT 0 AFTER field_content;
+*/
 
 DROP TABLE IF EXISTS crawlers_dataset;
 CREATE TABLE crawlers_dataset (
@@ -481,7 +486,7 @@ CREATE TABLE crawlers_dataset (
     createdBy INTEGER unsigned DEFAULT NULL,
     changedBy INTEGER unsigned DEFAULT NULL,
     identifier varchar(255) DEFAULT NULL,
-    data TEXT,
+    data JSON,
     PRIMARY KEY (id),
     FOREIGN KEY(crawler) REFERENCES crawlers(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,

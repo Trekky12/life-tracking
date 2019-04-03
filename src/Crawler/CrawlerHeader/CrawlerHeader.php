@@ -18,6 +18,11 @@ class CrawlerHeader extends \App\Base\Model {
         $this->field_name = $this->exists('field_name', $data) ? filter_var($data['field_name'], FILTER_SANITIZE_STRING) : null;
         $this->field_link = $this->exists('field_link', $data) ? filter_var($data['field_link'], FILTER_SANITIZE_STRING) : null;
         $this->field_content = $this->exists('field_content', $data) ? filter_var($data['field_content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+        $this->sortable = $this->exists('sortable', $data) ? filter_var($data['sortable'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        
+        $set_sortable = $this->exists('set_sortable', $data) ? filter_var($data['set_sortable'], FILTER_SANITIZE_STRING) : 0;
+        $this->sortable = $set_sortable === 'on' ? 1 : 0;
+        $this->sortable = $this->exists('sortable', $data) ? filter_var($data['sortable'], FILTER_SANITIZE_NUMBER_INT) : $this->sortable;
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 

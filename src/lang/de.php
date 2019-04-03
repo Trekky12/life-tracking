@@ -290,7 +290,6 @@ $lang["FIELD_NAME"] = "Feldname";
 $lang["FIELD_LINK"] = "Feldverlinkung";
 $lang["FIELD_CONTENT"] = "Feldinhalt";
 $lang["POSITION"] = "Position";
-
 $lang["LINKLIST"] = "Linkliste";
 $lang["LINK"] = "Link";
 $lang["PARENT_LINK"] = "übergeordneter Link";
@@ -299,5 +298,7 @@ $lang["NONE"] = "- Keiner -";
 $lang["DATE_CRAWL"] = "Abrufdatum";
 $lang["SHOW_ONLY_NEW_ENTRIES"] = "Zeige nur neue Einträge";
 $lang["SHOW_NEW_UPDATED_ENTRIES"] = "Zeige neue und aktualisierte Einträge";
+
+$lang["SORTABLE"] = "sortierbar";
 
 return $lang;

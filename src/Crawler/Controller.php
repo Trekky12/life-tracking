@@ -37,7 +37,7 @@ class Controller extends \App\Base\Controller {
 
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
 
-        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), $this->getFilter(), "DESC", 20);
+        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), "changedOn DESC, id DESC", 21);
         $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
 
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
@@ -74,17 +74,30 @@ class Controller extends \App\Base\Controller {
         $searchQuery = empty($search) || $search === "null" ? null : $search;
 
         $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
-        $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
-
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
         $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
         $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter(), $searchQuery);
 
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
+        $headers_numeric = array_values($headers);
+
+        $sortColumn = $this->getFilter();
+        // get sort column of array
+        if (!empty($sort) && $sort !== "null" && is_numeric($sort) && count($headers) >= $sort) {
+            $column = $headers_numeric[$sort-1];
+            // is this column really sortable?
+            if(intval($column->sortable) === 1 ){
+                $columnName = $column->field_name;
+                // JSON_EXTRACT
+                $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
+            }
+        }
+
         $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, $this->getFilter(), $start, $length, $searchQuery, $sortColumn, $sortDirection);
 
         // sort not possible
-        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
+
 
         $rendered_data = [];
         foreach ($data as $dataset) {
