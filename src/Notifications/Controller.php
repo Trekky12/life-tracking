@@ -142,7 +142,7 @@ class Controller extends \App\Base\Controller {
 
                 if ($report->isSubscriptionExpired()) {
                     $this->mapper->delete($entry->id);
-                    $logger->addError('[PUSH] Remove expired endpoint', $report->getEndpoint());
+                    $logger->addError('[PUSH] Remove expired endpoint', array("endpoint" => $report->getEndpoint()));
                 }
             }
         }

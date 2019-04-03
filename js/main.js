@@ -113,11 +113,13 @@ function initialize() {
         // https://stackoverflow.com/a/50901269
         let closest = event.target.closest('.btn-delete');
         if (closest) {
+            event.preventDefault();
             let url = closest.dataset.url;
             if (url) {
-                event.preventDefault();
                 let type = closest.dataset.type ? closest.dataset.type : "default";
                 deleteObject(url, type);
+            }else{
+                closest.parentNode.remove();
             }
         }
     });

@@ -6,6 +6,9 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
 
+use Dflydev\FigCookies\FigRequestCookies;
+use Dflydev\FigCookies\FigResponseCookies;
+
 class UserMiddleware {
 
     protected $ci;
@@ -15,22 +18,16 @@ class UserMiddleware {
     }
 
     public function __invoke(Request $request, Response $response, $next) {
-
-        
-        /**
-         * Do not allow access for banned ips
-         */
         $logger = $this->ci->get('logger');
-        //$logger->addInfo('SITE CALL');
-
-        $banlist = new \App\Main\BanlistMapper($this->ci);
-        $attempts = $banlist->getFailedLoginAttempts($this->ci->get('helper')->getIP());
-
-        if ($attempts > 2) {
-            $logger->addWarning('BANNED');
-            return $this->ci->get('view')->render($response, 'error.twig', ["message" => $this->ci->get('helper')->getTranslatedString("BANNED"), "message_type" => "danger"]);
+    
+        /**
+         * Get and Cache User Object from Token for later use
+         */
+        $token = FigRequestCookies::get($request, 'token');        
+        if(!$this->ci->get('helper')->setUserFromToken($token->getValue())){
+            // token not in database -> delete cookie
+            $response = FigResponseCookies::expire($response, 'token');
         }
-
 
         /**
          *  Always allow access to guest routes
@@ -41,14 +38,14 @@ class UserMiddleware {
             return $next($request, $response);
         }
 
-
+        /**
+         * Check User Object
+         */
         $user = $this->ci->get('helper')->getUser();
-
+        
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {
-
             $logger->addDebug('Site CALL');
-
             return $next($request, $response);
         }
         // Check for HTTP Authentication
@@ -74,15 +71,22 @@ class UserMiddleware {
 
             if (!is_null($username) && !is_null($password)) {
                 $logger->addDebug('HTTP Auth', array("user" => $username));
-                if ($this->ci->get('helper')->checkLogin($username, $password, true)) {
+                if ($this->ci->get('helper')->checkLogin($username, $password)) {
                     return $next($request, $response);
                 }
 
                 $logger->addWarning('HTTP Auth failed', array("user" => $username));
             }
         }
-
+        
         $logger->addDebug('Go to Login');
+        
+        /**
+         * Save target URI for later redirect
+         */
+        
+        $uri = $this->ci->get('helper')->getRequestURI($request);
+        $this->ci->get('helper')->setSessionVar("redirectURI", $uri);
 
         // redirect to the login page
         return $response->withRedirect($this->ci->get('router')->pathFor('login'), 302);

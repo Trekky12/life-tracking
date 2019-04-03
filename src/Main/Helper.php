@@ -106,31 +106,22 @@ class Helper {
         return array_key_exists($key, $lang) ? $lang[$key] : $key;
     }
 
-    public function setUser($user_id, $save = true) {
-
+    public function setUser($user_id) {
         // cache the user
         $this->user = $this->usermapper->get($user_id);
         // add user to view
         $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
-
-        // Create and save access token
-        if ($save) {
-            $secret = $this->ci->get('settings')['app']['secret'];
-            $token = hash('sha512', $secret . time() . $user_id);
-            setcookie("token", $token, time() + (3600 * 24 * 365)); // 1 year
-            $this->tokenmapper->addToken($user_id, $token, $this->getIP(), $this->getAgent());
-        }
     }
 
     public function getUser() {
-
         // get cached user object
         if (!is_null($this->user)) {
             return $this->user;
         }
+        return null;
+    }
 
-        // Get User from token in cookie
-        $token = filter_input(INPUT_COOKIE, "token");
+    public function setUserFromToken($token) {
         if (!is_null($token) && $token !== FALSE) {
 
             try {
@@ -139,8 +130,7 @@ class Helper {
                 $logger = $this->ci->get('logger');
                 $logger->addError("No Token in database");
 
-                $this->logout();
-                return null;
+                return false;
             }
 
             // refresh user for possible changed access rights
@@ -151,10 +141,27 @@ class Helper {
 
             $this->tokenmapper->updateTokenData($token, $this->getIP(), $this->getAgent());
 
-            return $this->user;
+            return true;
         }
 
+        return false;
+    }
+
+    public function saveToken() {
+        $user = $this->getUser();
+        if (!is_null($user)) {
+            $secret = $this->ci->get('settings')['app']['secret'];
+            $token = hash('sha512', $secret . time() . $user->id);
+            $this->tokenmapper->addToken($user->id, $token, $this->getIP(), $this->getAgent());
+            return $token;
+        }
         return null;
+    }
+
+    public function removeToken($token) {
+        if (!is_null($token) && $token !== FALSE) {
+            $this->tokenmapper->deleteToken($token);
+        }
     }
 
     public function getUserLogin() {
@@ -187,7 +194,7 @@ class Helper {
         return $this->path;
     }
 
-    public function checkLogin($username = null, $password = null, $http_basic_auth = false) {
+    public function checkLogin($username = null, $password = null) {
 
         $logger = $this->ci->get('logger');
         $banlist = new \App\Main\BanlistMapper($this->ci);
@@ -198,7 +205,7 @@ class Helper {
                 $user = $this->usermapper->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
-                    $this->setUser($user->id, !$http_basic_auth);
+                    $this->setUser($user->id);
                     $banlist->deleteFailedLoginAttempts($this->getIP());
 
                     $logger->addNotice('LOGIN successfully', array("login" => $username));
@@ -211,9 +218,6 @@ class Helper {
 
 
             // wrong login!
-
-            $this->ci->get('helper')->logout();
-
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("WRONG_LOGIN"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
 
@@ -228,16 +232,6 @@ class Helper {
             }
         }
         return false;
-    }
-
-    public function logout() {
-        $token = filter_input(INPUT_COOKIE, "token");
-        if (!is_null($token) && $token !== FALSE) {
-            $this->tokenmapper->deleteToken($token);
-        }
-        setcookie("token", "", time() - 3600);
-
-        $this->deleteSessionVar("user");
     }
 
     public function getIP() {
@@ -268,6 +262,13 @@ class Helper {
         }
 
         return array($from, $to);
+
+    public function getRequestURI(\Psr\Http\Message\RequestInterface $request) {
+        $requestURI = $request->getUri();
+        $path = $requestURI->getPath();
+        $params = $requestURI->getQuery();
+        $uri = strlen($params) > 0 ? $path . '?' . $params : $path;
+        return $uri;
     }
 
 }
