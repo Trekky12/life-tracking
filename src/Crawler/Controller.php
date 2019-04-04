@@ -37,7 +37,7 @@ class Controller extends \App\Base\Controller {
 
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
 
-        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), "changedOn DESC, id DESC", 21);
+        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), $this->getFilter()." DESC, id DESC", 21);
         $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
 
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
