@@ -141,8 +141,8 @@ class Controller extends \App\Base\Controller {
                 $logger->addError('[PUSH] Message failed to sent', $data);
 
                 if ($report->isSubscriptionExpired()) {
-                    $this->mapper->delete($entry->id);
-                    $logger->addError('[PUSH] Remove expired endpoint', array("endpoint" => $report->getEndpoint()));
+                    $this->client_mapper->delete($entry->id);
+                    $logger->addError('[PUSH] Remove expired endpoint', array("id" => $entry->id, "endpoint" => $report->getEndpoint()));
                 }
             }
         }
