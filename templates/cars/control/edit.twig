@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label for="users">{{lang["USERS"]}}</label>
                     <select class="form-control" id="users" name="users[]" multiple="true">
-                        {% for user in users %}
+                        {% for user in users if user.module_cars == 1%}
                             <option value="{{user.id}}" {% if (not entry is null and user.id in entry.getUsers()) %}selected{% endif %}>{{user.login}}</option>
                         {% endfor %}
                     </select>
