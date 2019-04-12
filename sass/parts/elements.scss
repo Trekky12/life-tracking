@@ -87,10 +87,27 @@ table {
         }
     }
 
-    h2{
-        margin: 0;
-        overflow: hidden;
-        margin-bottom: 1rem;
+    .notification-header{
+
+        h2{
+            margin: 0;
+            overflow: hidden;
+
+            @include font-size(1.4);
+
+            @media screen and (min-width: $size_tablet) {
+                @include font-size(1.8);
+            }
+        }
+        
+        span{
+            @include font-size(1.2);
+            
+            @media screen and (min-width: $size_tablet) {
+                @include font-size(1.4);
+            }
+            
+        }
     }
 
     .createdOn{
