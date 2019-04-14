@@ -99,14 +99,13 @@ table {
                 @include font-size(1.8);
             }
         }
-        
+
         span{
             @include font-size(1.2);
             
             @media screen and (min-width: $size_tablet) {
                 @include font-size(1.4);
             }
-            
         }
     }
 
@@ -125,4 +124,28 @@ table {
 
 #loadingIconNotifications{
     @include font-size(4);
+}
+
+.filter-content{
+
+    .filter-element{
+        margin-top:1rem;
+        input{
+            width:100%;
+        }
+        select {
+            height:44px;
+        }
+    }
+
+    @media screen and (min-width: $size_mobile) {
+        display:flex;
+        justify-content:space-between;
+        align-items: center;
+
+        .filter-element{
+            margin-top:0px;
+            margin-left:1rem;  
+        }
+    }
 }
