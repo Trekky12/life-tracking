@@ -1,26 +1,6 @@
-#crawler-filter{
+#search-filter{
 
     padding: 5px 10px;
-
-    .btn-element, .filter-element{
-        margin-top:1rem;
-        input{
-            width:100%;
-        }
-        select {
-            height:44px;
-        }
-    }
-
-    @media screen and (min-width: $size_mobile) {
-        display:flex;
-        justify-content:space-between;
-
-        .btn-element, .filter-element{
-            margin-top:0px;
-            margin-left:1rem;  
-        }
-    }
 
     .date-filter{
 
@@ -46,7 +26,7 @@
     & > li {
         overflow: hidden;
         margin-bottom: 1rem;
-        
+
         & > a{
             display:block;
             background-color: $color_blue_light;
