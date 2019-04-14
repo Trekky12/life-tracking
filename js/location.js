@@ -32,10 +32,25 @@ var yellowIcon = new L.Icon({
 const from = document.getElementById('inputStart').value;
 const to = document.getElementById('inputEnd').value;
 
+const hideLocation = document.getElementById('hideLocation').checked;
+const hideFinances = document.getElementById('hideFinances').checked;
+const hideCars = document.getElementById('hideCars').checked;
+
 getMarkers();
 
 function getMarkers() {
-    fetch(jsObject.marker_url + '?from=' + from + '&to=' + to, {
+    var hide = [];
+    if(hideLocation){
+        hide.push("location");
+    }
+    if(hideFinances){
+        hide.push("finances");
+    }
+    if(hideCars){
+        hide.push("cars");
+    }
+    
+    fetch(jsObject.marker_url + '?from=' + from + '&to=' + to + '&hide[]=' + hide.join('&hide[]='), {
         method: 'GET',
         credentials: "same-origin",
         headers: {

@@ -6,7 +6,7 @@
     right:0;
     z-index:-1;
 
-    @media screen and (min-width: $size_mobile_navigation){
+    @media screen and (min-width: $size_mobile){
         top:50px;   
     }
 }
@@ -48,9 +48,9 @@
     margin-top:-2.5rem;
     padding:0.5rem;
     position: relative;
-    z-index: 2;
+    z-index: 10;
 
-    @media screen and (min-width: $size_mobile_navigation){
+    @media screen and (min-width: $size_mobile){
         z-index: 1;
     }
 
@@ -67,34 +67,62 @@
         }
 
         .search-form-inner{
-            padding:1rem;
+            padding:1rem 1rem 0rem 1rem ;
+        }
+
+        input[type="submit"]{
+            @media screen and (min-width: $size_mobile) {
+                margin-top:1rem;
+            }
+            width:100%;
+        }
+
+        .checkboxes{
+            display:flex;
+            justify-content:center;
+
+            input[type=checkbox] + label:hover{
+                cursor:pointer;
+            }
+            input[type=checkbox] { 
+                display:none; 
+            }
+            input[type=checkbox] + label:before {
+                font-family: FontAwesome;
+                display: inline-block;
+                color: $color_blue;
+                margin-left: 1rem;
+                margin-right:1rem;
+                @include font-size(3); 
+
+                @media screen and (min-width: $size_mobile) {
+                    @include font-size(4); 
+                }
+            }
+
+            input[type=checkbox]#hideLocation + label:before {
+                content: "\f041"; 
+            }
+            input[type=checkbox]#hideFinances + label:before {
+                content: "\f0d6"; 
+            }
+            input[type=checkbox]#hideCars + label:before {
+                content: "\f018"; 
+            }
+
+
+            input[type=checkbox]:checked + label:before { 
+                color: $color_border-input;
+            }
         }
     }
 
-    @media screen and (min-width: $size_mobile_navigation){
+    @media screen and (min-width: $size_mobile){
         max-width: $size_mobile;
         margin: 0 auto;
     }
 }
 
-#search, #crawler-filter{
-    .element{
-        display:block;
-        width:100%;
-        label{
-            width: 10%;
-        }
-        input{
-            @include font-size(1.2);
-            padding:4px 12px;
-            width: 100%;
-        }
-        input[type="submit"]{
-            margin-top:1rem;
-            width:100%;
-        }
-    }
-}
 
 @media screen and (min-width: $size_mobile_navigation){
     #geo-map.visible ~ .map-btn{

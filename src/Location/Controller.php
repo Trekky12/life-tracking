@@ -23,7 +23,20 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
 
-        return $this->ci->view->render($response, 'location/index.twig', ['tracks' => $my_locations, 'from' => $from, 'to' => $to]);
+        // Filtered markers
+        $hide = $request->getQueryParam('hide');
+        list($hide_location, $hide_finances, $hide_cars) = $this->getHidden($hide);
+
+        return $this->ci->view->render($response, 'location/index.twig', [
+                    "tracks" => $my_locations,
+                    "from" => $from,
+                    "to" => $to,
+                    "hide" => [
+                        "location" => $hide_location,
+                        "finances" => $hide_finances,
+                        "cars" => $hide_cars
+                    ]
+        ]);
     }
 
     public function getMarkers(Request $request, Response $response) {
@@ -31,26 +44,37 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
 
-        $locations = $this->mapper->getMarkers($from, $to);
-        $location_markers = array_map(function($loc) {
-            return $loc->getPosition();
-        }, $locations);
+        $hide = $request->getQueryParam('hide');
+        list($hide_location, $hide_finances, $hide_cars) = $this->getHidden($hide);
+        
+        $location_markers = [];
+        if (!$hide_location) {
+            $locations = $this->mapper->getMarkers($from, $to);
+            $location_markers = array_map(function($loc) {
+                return $loc->getPosition();
+            }, $locations);
+        }
 
-        $finance_locations = $this->finance_mapper->getMarkers($from, $to);
-        $finance_markers = array_map(function($loc) {
-            return $loc->getPosition();
-        }, $finance_locations);
+        $finance_markers = [];
+        if (!$hide_finances) {
+            $finance_locations = $this->finance_mapper->getMarkers($from, $to);
+            $finance_markers = array_map(function($loc) {
+                return $loc->getPosition();
+            }, $finance_locations);
+        }
 
-        $user = $this->ci->get('helper')->getUser()->id;
-        $user_cars = $this->car_mapper->getElementsOfUser($user);
-        $carservice_locations = $this->carservice_mapper->getMarkers($from, $to, $user_cars);
-        $carservice_markers = array_map(function($loc) {
-            return $loc->getPosition();
-        }, $carservice_locations);
+        $carservice_markers = [];
+        if (!$hide_cars) {
+            $user = $this->ci->get('helper')->getUser()->id;
+            $user_cars = $this->car_mapper->getElementsOfUser($user);
+            $carservice_locations = $this->carservice_mapper->getMarkers($from, $to, $user_cars);
+            $carservice_markers = array_map(function($loc) {
+                return $loc->getPosition();
+            }, $carservice_locations);
+        }
 
         return $response->withJSON(array_merge($location_markers, $finance_markers, $carservice_markers));
     }
-
 
     public function getAddress(Request $request, Response $response) {
 
@@ -80,6 +104,27 @@ class Controller extends \App\Base\Controller {
         }
 
         return $response->withJson($newResponse);
+    }
+
+    private function getHidden($hide) {
+        $hide_location = false;
+        $hide_finances = false;
+        $hide_cars = false;
+
+        if (!is_null($hide)) {
+            $hidden_markers = filter_var_array($hide, FILTER_SANITIZE_STRING);
+
+            if (in_array("location", $hidden_markers)) {
+                $hide_location = true;
+            }
+            if (in_array("finances", $hidden_markers)) {
+                $hide_finances = true;
+            }
+            if (in_array("cars", $hidden_markers)) {
+                $hide_cars = true;
+            }
+        }
+        return array($hide_location, $hide_finances, $hide_cars);
     }
 
 }
