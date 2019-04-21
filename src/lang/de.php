@@ -300,5 +300,8 @@ $lang["SHOW_ONLY_NEW_ENTRIES"] = "Zeige nur neue Einträge";
 $lang["SHOW_NEW_UPDATED_ENTRIES"] = "Zeige neue und aktualisierte Einträge";
 
 $lang["SORTABLE"] = "sortierbar";
+$lang["PREVIOUS_VALUE"] = "vorheriger Wert anzeigen (nach Aktualisierung)";
+$lang["PREFIX"] = "Prefix";
+$lang["SUFFIX"] = "Suffix";
 
 return $lang;

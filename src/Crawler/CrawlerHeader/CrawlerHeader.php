@@ -23,6 +23,15 @@ class CrawlerHeader extends \App\Base\Model {
         $set_sortable = $this->exists('set_sortable', $data) ? filter_var($data['set_sortable'], FILTER_SANITIZE_STRING) : 0;
         $this->sortable = $set_sortable === 'on' ? 1 : 0;
         $this->sortable = $this->exists('sortable', $data) ? filter_var($data['sortable'], FILTER_SANITIZE_NUMBER_INT) : $this->sortable;
+        
+        $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        
+        $set_diff = $this->exists('set_diff', $data) ? filter_var($data['set_diff'], FILTER_SANITIZE_STRING) : 0;
+        $this->diff = $set_diff === 'on' ? 1 : 0;
+        $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_INT) : $this->diff;
+        
+        $this->prefix = $this->exists('prefix', $data) ? filter_var($data['prefix'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+        $this->suffix = $this->exists('suffix', $data) ? filter_var($data['suffix'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
@@ -44,8 +53,17 @@ class CrawlerHeader extends \App\Base\Model {
         }
     }
 
-    public function getFieldContent() {
-        return htmlspecialchars_decode($this->field_content);
+    public function getHTML($element = "field") {
+        $field = $this->field_content;
+        switch($element){
+            case "prefix":
+                $field = $this->prefix;
+                break;
+            case "suffix":
+                $field = $this->suffix;
+                break;
+        }
+        return htmlspecialchars_decode($field);
     }
-
+    
 }

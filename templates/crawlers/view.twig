@@ -42,7 +42,7 @@
                     <tr>
                         <th>{{lang["DATE_CRAWL"]}}</th>
                             {% for header in headers %}
-                            <th {% if header.sortable == 1 %}data-sortable="true"{%endif%}>{{header.headline}}</th>
+                            <th {% if header.sortable == 1 %}data-sortable="true"{% else %}data-sortable="false"{% endif %}>{{header.headline}}</th>
                             {% endfor %}
                     </tr>
                 </thead>
@@ -55,12 +55,22 @@
                                     {% if not header.field_link is empty %}
                                         <a href="{{dataset.getDataValue(header.field_link)}}" target="_blank">
                                         {% endif %}
+                                        {# no whitespaces #}
+                                        {%- if not header.prefix is empty -%}
+                                            {{header.getHTML("prefix")|raw}}
+                                        {%- endif -%}
 
-                                        {% if not header.field_content is empty %}
-                                            {{header.getFieldContent()|raw}}
-                                        {% else %}
+                                        {%- if not header.field_content is empty -%}
+                                            {{header.getHTML()|raw}}
+                                        {%- elseif header.diff == 1 -%}
+                                            {{dataset.getDataValue(header.field_name, "diff")}}
+                                        {%- else -%}
                                             {{dataset.getDataValue(header.field_name)}}
-                                        {% endif %}
+                                        {%- endif -%}
+
+                                        {%- if not header.suffix is empty -%}
+                                            {{header.getHTML("suffix")|raw}}
+                                        {%- endif -%}
 
                                         {% if not header.field_link is empty %}
                                         </a>

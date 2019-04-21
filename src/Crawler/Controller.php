@@ -89,8 +89,13 @@ class Controller extends \App\Base\Controller {
             // is this column really sortable?
             if(intval($column->sortable) === 1 ){
                 $columnName = $column->field_name;
+
                 // JSON_EXTRACT
-                $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
+                if (intval($column->diff) === 1) {
+                    $sortColumn = "JSON_EXTRACT(diff, '$.{$columnName}')";
+                } else {
+                    $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
+                }
             }
         }
 
@@ -115,10 +120,20 @@ class Controller extends \App\Base\Controller {
                     $field[] = '<a href="' . $dataset->getDataValue($header->field_link) . '" target="_blank">';
                 }
 
+                if (!empty($header->prefix)) {
+                    $field[] = $header->getHTML("prefix");
+                }
+
                 if (!empty($header->field_content)) {
-                    $field[] = $header->getFieldContent();
+                    $field[] = $header->getHTML();
+                } elseif (intval($header->diff) === 1) {
+                    $field[] = $dataset->getDataValue($header->field_name, "diff");
                 } else {
                     $field[] = $dataset->getDataValue($header->field_name);
+                }
+
+                if (!empty($header->suffix)) {
+                    $field[] = $header->getHTML("suffix");
                 }
 
                 if (!empty($header->field_link)) {

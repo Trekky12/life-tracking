@@ -29,9 +29,18 @@ class Controller extends \App\Base\Controller {
             $data["user"] = $this->ci->get('helper')->getUser()->id;
 
             if (!is_null($identifier)) {
-                $dataset_id = $this->mapper->getIDFromIdentifier($crawler->id, $identifier);
-                if (!is_null($dataset_id)) {
+                $dataset = $this->mapper->getIDFromIdentifier($crawler->id, $identifier);
+
+                // entry is already present so it needs to be updated 
+                if (!is_null($dataset)) {
+                    $dataset_id = $dataset->id;
+
+                    $new = $data["data"];
+                    $old = $dataset->getData();
+                    $diff = $this->dataDiff($old, $new);
+                    
                     $data["id"] = $dataset_id;
+                    $data["diff"] = $diff;
                 }
             }
 
@@ -52,6 +61,25 @@ class Controller extends \App\Base\Controller {
         if (array_key_exists("data", $data) && is_array($data["data"])) {
             $data["data"] = json_encode($data["data"]);
         }
+        if (array_key_exists("diff", $data) && is_array($data["diff"])) {
+            $data["diff"] = json_encode($data["diff"]);
+        }
+    }
+
+    private function dataDiff($old, $new) {
+        return array_diff_assoc($old, $new);
+        /*
+        $diff = [];
+        foreach ($old as $key => $value) {
+            if (!array_key_exists($key, $new) || $new[$key] != $value) {
+                $diff[$key] = $value;
+            } else {
+                $diff[$key] = NULL;
+            }
+        }
+        return $diff;
+         *
+         */
     }
 
 }

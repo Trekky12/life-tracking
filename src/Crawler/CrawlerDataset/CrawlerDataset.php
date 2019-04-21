@@ -16,7 +16,8 @@ class CrawlerDataset extends \App\Base\Model {
         $this->crawler = $this->exists('crawler', $data) ? filter_var($data['crawler'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->data = $this->exists('data', $data) ? $data['data'] : null;
-        
+        $this->diff = $this->exists('diff', $data) ? $data['diff'] : null;
+
         /**
          * Values from DB
          */
@@ -31,9 +32,16 @@ class CrawlerDataset extends \App\Base\Model {
         }
     }
 
-    public function getDataValue($field) {
-        $data = json_decode($this->data, true);
-        return array_key_exists($field, $data) ? $data[$field] : null;
+    public function getDataValue($field, $type = "data") {
+        $data = $this->getData($type);
+        return is_array($data) && array_key_exists($field, $data) ? $data[$field] : null;
+    }
+
+    public function getData($type = "data") {
+        if ($type === "diff") {
+            return json_decode($this->diff, true);
+        }
+        return json_decode($this->data, true);
     }
 
 }

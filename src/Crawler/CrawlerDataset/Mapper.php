@@ -77,7 +77,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getIDFromIdentifier($crawler, $identifier) {
-        $sql = "SELECT id FROM " . $this->getTable() . " WHERE identifier = :identifier AND crawler = :crawler";
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE identifier = :identifier AND crawler = :crawler";
 
         $bindings = array("identifier" => $identifier, "crawler" => $crawler);
 
@@ -85,7 +85,7 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() == 1) {
-            return $stmt->fetchColumn();
+            return new $this->model($stmt->fetch());
         }
         return null;
     }
