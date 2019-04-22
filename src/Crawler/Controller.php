@@ -37,7 +37,20 @@ class Controller extends \App\Base\Controller {
 
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
 
-        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), $this->getFilter()." DESC, id DESC", 21);
+        /**
+         * Sorting
+         */
+        // defaults
+        $sortColumn = $this->getFilter();
+        $sortDirection = "DESC";
+        
+        $initialSortColumn = $this->header_mapper->getInitialSortColumn($crawler->id);
+        if (!is_null($initialSortColumn)) {
+            $sortColumn = $this->getSortFromColumn($initialSortColumn);
+            $sortDirection = $initialSortColumn->sort;
+        }
+
+        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), $sortColumn, $sortDirection, 21);
         $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
 
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
@@ -67,42 +80,22 @@ class Controller extends \App\Base\Controller {
 
         $this->checkAccess($crawler->id);
 
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
+
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
         $searchQuery = empty($search) || $search === "null" ? null : $search;
 
-        $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $sortColumnIndex = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $sortColumn = $this->getSortColumnFromColumnIndex($headers, $sortColumnIndex);
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
         $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
         $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter(), $searchQuery);
 
-        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
-        $headers_numeric = array_values($headers);
-
-        $sortColumn = $this->getFilter();
-        // get sort column of array
-        if (!empty($sort) && $sort !== "null" && is_numeric($sort) && count($headers) >= $sort) {
-            $column = $headers_numeric[$sort-1];
-            // is this column really sortable?
-            if(intval($column->sortable) === 1 ){
-                $columnName = $column->field_name;
-
-                // JSON_EXTRACT
-                if (intval($column->diff) === 1) {
-                    $sortColumn = "JSON_EXTRACT(diff, '$.{$columnName}')";
-                } else {
-                    $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
-                }
-            }
-        }
-
         $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, $this->getFilter(), $start, $length, $searchQuery, $sortColumn, $sortDirection);
-
-        // sort not possible
-
 
         $rendered_data = [];
         foreach ($data as $dataset) {
@@ -227,6 +220,33 @@ class Controller extends \App\Base\Controller {
         }
 
         return $branch;
+    }
+
+    private function getSortColumnFromColumnIndex($headers, $sortColumnIndex) {
+        $headers_numeric = array_values($headers);
+
+        $sortColumn = $this->getFilter();
+        // get sort column of array
+        if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && count($headers) >= $sortColumnIndex) {
+            $column = $headers_numeric[$sortColumnIndex - 1];
+            // is this column really sortable?
+            if (intval($column->sortable) === 1) {
+                $sortColumn = $this->getSortFromColumn($column);
+            }
+        }
+        return $sortColumn;
+    }
+
+    private function getSortFromColumn($column) {
+        $columnName = $column->field_name;
+
+        // JSON_EXTRACT
+        if (intval($column->diff) === 1) {
+            $sortColumn = "JSON_EXTRACT(diff, '$.{$columnName}')";
+        } else {
+            $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
+        }
+        return $sortColumn;
     }
 
 }

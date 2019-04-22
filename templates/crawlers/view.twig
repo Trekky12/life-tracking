@@ -42,7 +42,7 @@
                     <tr>
                         <th>{{lang["DATE_CRAWL"]}}</th>
                             {% for header in headers %}
-                            <th {% if header.sortable == 1 %}data-sortable="true"{% else %}data-sortable="false"{% endif %}>{{header.headline}}</th>
+                            <th {% if header.sortable == 1 %}data-sortable="true"{% else %}data-sortable="false"{% endif %} {% if not header.sort is null %}data-sort="{{ header.sort }}"{% endif %}>{{header.headline}}</th>
                             {% endfor %}
                     </tr>
                 </thead>

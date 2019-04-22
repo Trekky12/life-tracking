@@ -34,6 +34,8 @@ class CrawlerHeader extends \App\Base\Model {
         $this->suffix = $this->exists('suffix', $data) ? filter_var($data['suffix'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
+        
+        $this->sort = $this->exists('sort', $data) ? filter_var($data['sort'], FILTER_SANITIZE_STRING) : null;
 
         /**
          * Values from DB

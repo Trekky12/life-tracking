@@ -303,5 +303,9 @@ $lang["SORTABLE"] = "sortierbar";
 $lang["PREVIOUS_VALUE"] = "vorheriger Wert anzeigen (nach Aktualisierung)";
 $lang["PREFIX"] = "Prefix";
 $lang["SUFFIX"] = "Suffix";
+$lang["SORT"] = "Sortierung";
+$lang["ASC"] = "aufsteigend";
+$lang["DESC"] = "absteigend";
+$lang["NO_INITIAL_SORTING"] = "keine initiale Sortierung";
 
 return $lang;

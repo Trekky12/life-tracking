@@ -469,6 +469,7 @@ CREATE TABLE crawlers_headers (
     diff INT(1) DEFAULT 0,
     prefix varchar(255) DEFAULT NULL,
     suffix varchar(255) DEFAULT NULL,
+    sort varchar(10) DEFAULT NULL,
     position INT(10) NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(crawler) REFERENCES crawlers(id) ON DELETE CASCADE ON UPDATE CASCADE,

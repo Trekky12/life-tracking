@@ -35,8 +35,8 @@ class Controller extends \App\Base\Controller {
         }
 
         $this->preEdit($entry_id);
-
-        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'crawler' => $crawler]);
+        
+        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'crawler' => $crawler, "sortOptions" => $this->sortOptions()]);
     }
 
     public function save(Request $request, Response $response) {
@@ -82,6 +82,20 @@ class Controller extends \App\Base\Controller {
             if ($crawler->user !== $user) {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
+        }
+    }
+    
+    private function sortOptions(){
+        return [null => $this->ci->get('helper')->getTranslatedString('NO_INITIAL_SORTING'), "asc" => $this->ci->get('helper')->getTranslatedString('ASC'), "desc" => $this->ci->get('helper')->getTranslatedString('DESC')];
+    }
+    
+    public function afterSave($id, $data) {
+        $header = $this->mapper->get($id);
+        
+        // only one header can be initial sorted 
+        // so remove the sort value on all others
+        if(!is_null($header->sort)){
+            $this->mapper->unset_sort($id);
         }
     }
 

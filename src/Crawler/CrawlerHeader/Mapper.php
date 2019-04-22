@@ -29,4 +29,29 @@ class Mapper extends \App\Base\Mapper {
         return $results;
     }
 
+    public function unset_sort($header) {
+        $sql = "UPDATE " . $this->getTable() . " SET sort = :sort WHERE id != :id";
+        $bindings = array("id" => $header, "sort" => null);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+    
+     public function getInitialSortColumn($crawler) {
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE crawler = :crawler AND sort IS NOT NULL AND sortable = :sortable LIMIT 1";
+
+        $bindings = array("crawler" => $crawler, "sortable" => 1);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+        
+        if ($stmt->rowCount() > 0) {
+            return new $this->model($stmt->fetch());
+        }
+        return null;
+    }
+
 }
