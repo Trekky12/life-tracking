@@ -38,6 +38,14 @@
                     </div>
                 </div>
             {% endif %}
+            {%if user.module_crawlers == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('crawlers')}}">{{lang["CRAWLERS"]}}</a></h3>
+                        <a href="{{path_for('crawlers')}}"><i class="fa fa-database" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
     
