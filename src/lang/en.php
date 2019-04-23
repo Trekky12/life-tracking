@@ -309,4 +309,6 @@ $lang["ASC"] = "increasing";
 $lang["DESC"] = "decreasing";
 $lang["NO_INITIAL_SORTING"] = "no initial sorting";
 
+$lang["DEFAULT_FILTER"] = "default filter";
+
 return $lang;

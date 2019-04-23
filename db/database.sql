@@ -438,6 +438,7 @@ CREATE TABLE crawlers (
     changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) DEFAULT NULL,
+    filter VARCHAR(50) NULL DEFAULT 'createdOn',
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE

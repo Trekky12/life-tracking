@@ -37,7 +37,7 @@ class Controller extends \App\Base\Controller {
 
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
 
-        $filter = $this->getFilter($crawler->hash);
+        $filter = $this->getFilter($crawler);
 
         /**
          * Sorting
@@ -80,7 +80,7 @@ class Controller extends \App\Base\Controller {
         $hash = $request->getAttribute('hash');
         $crawler = $this->mapper->getCrawlerFromHash($hash);
 
-        $filter = $this->getFilter($crawler->hash);
+        $filter = $this->getFilter($crawler);
 
         $this->checkAccess($crawler->id);
 
@@ -214,8 +214,10 @@ class Controller extends \App\Base\Controller {
         return $response->withJSON(array('status' => 'error'));
     }
 
-    private function getFilter($hash) {
-        return $this->ci->get('helper')->getSessionVar("crawler_filter_{$hash}", "createdOn");
+    private function getFilter($crawler) {
+        $default = $crawler->filter; //"createdOn";
+        $hash = $crawler->hash;
+        return $this->ci->get('helper')->getSessionVar("crawler_filter_{$hash}", $default);
     }
 
     private function buildTree(array $elements, $parentId = null) {
