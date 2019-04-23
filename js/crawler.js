@@ -3,7 +3,7 @@
 let filterCrawlerDatasets = document.getElementById('filterCrawlerDatasets');
 filterCrawlerDatasets.addEventListener('change', function (event) {
 
-    var data = {'state': filterCrawlerDatasets.value};
+    var data = {'state': filterCrawlerDatasets.value, 'hash': jsObject.crawler_hash};
 
     getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;

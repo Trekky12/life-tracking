@@ -37,21 +37,23 @@ class Controller extends \App\Base\Controller {
 
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
 
+        $filter = $this->getFilter($crawler->hash);
+
         /**
          * Sorting
          */
         // defaults
-        $sortColumn = $this->getFilter();
+        $sortColumn = $filter;
         $sortDirection = "DESC";
-        
+
         $initialSortColumn = $this->header_mapper->getInitialSortColumn($crawler->id);
         if (!is_null($initialSortColumn)) {
             $sortColumn = $this->getSortFromColumn($initialSortColumn);
             $sortDirection = $initialSortColumn->sort;
         }
 
-        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $this->getFilter(), $sortColumn, $sortDirection, 21);
-        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
+        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 21);
+        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
 
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
         $links_tree = $this->buildTree($links);
@@ -64,7 +66,7 @@ class Controller extends \App\Base\Controller {
                     "datasets" => $datasets,
                     "datacount" => $datacount,
                     "hasCrawlerTable" => true,
-                    "filter" => $this->getFilter(),
+                    "filter" => $filter,
                     "links" => $links_tree
         ]);
     }
@@ -78,6 +80,8 @@ class Controller extends \App\Base\Controller {
         $hash = $request->getAttribute('hash');
         $crawler = $this->mapper->getCrawlerFromHash($hash);
 
+        $filter = $this->getFilter($crawler->hash);
+
         $this->checkAccess($crawler->id);
 
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
@@ -89,19 +93,19 @@ class Controller extends \App\Base\Controller {
         $searchQuery = empty($search) || $search === "null" ? null : $search;
 
         $sortColumnIndex = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
-        $sortColumn = $this->getSortColumnFromColumnIndex($headers, $sortColumnIndex);
+        $sortColumn = $this->getSortColumnFromColumnIndex($headers, $sortColumnIndex, $filter);
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter());
-        $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $this->getFilter(), $searchQuery);
+        $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
+        $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter, $searchQuery);
 
-        $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, $this->getFilter(), $start, $length, $searchQuery, $sortColumn, $sortDirection);
+        $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, $filter, $start, $length, $searchQuery, $sortColumn, $sortDirection);
 
         $rendered_data = [];
         foreach ($data as $dataset) {
             $row = [];
 
-            if ($this->getFilter() === "changedOn") {
+            if ($filter === "changedOn") {
                 $row[] = $dataset->changedOn;
             } else {
                 $row[] = $dataset->createdOn;
@@ -193,17 +197,25 @@ class Controller extends \App\Base\Controller {
     }
 
     public function setFilter(Request $request, Response $response) {
+
         $data = $request->getParsedBody();
 
-        if (array_key_exists("state", $data) && in_array($data["state"], array("createdOn", "changedOn"))) {
-            $this->ci->get('helper')->setSessionVar('crawler_filter', $data["state"]);
-        }
+        if (array_key_exists("hash", $data)) {
+            $hash = filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS);
+            $crawler = $this->mapper->getCrawlerFromHash($hash);
+            
+            $this->checkAccess($crawler->id);
 
-        return $response->withJSON(array('status' => 'success'));
+            if (array_key_exists("state", $data) && in_array($data["state"], array("createdOn", "changedOn"))) {
+                $this->ci->get('helper')->setSessionVar("crawler_filter_{$hash}", $data["state"]);
+                return $response->withJSON(array('status' => 'success'));
+            }
+        }
+        return $response->withJSON(array('status' => 'error'));
     }
 
-    private function getFilter() {
-        return $this->ci->get('helper')->getSessionVar('crawler_filter', "createdOn");
+    private function getFilter($hash) {
+        return $this->ci->get('helper')->getSessionVar("crawler_filter_{$hash}", "createdOn");
     }
 
     private function buildTree(array $elements, $parentId = null) {
@@ -222,10 +234,9 @@ class Controller extends \App\Base\Controller {
         return $branch;
     }
 
-    private function getSortColumnFromColumnIndex($headers, $sortColumnIndex) {
+    private function getSortColumnFromColumnIndex($headers, $sortColumnIndex, $sortColumn) {
         $headers_numeric = array_values($headers);
 
-        $sortColumn = $this->getFilter();
         // get sort column of array
         if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && count($headers) >= $sortColumnIndex) {
             $column = $headers_numeric[$sortColumnIndex - 1];

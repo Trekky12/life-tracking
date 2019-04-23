@@ -106,7 +106,8 @@
                 'crawler_table': '{{path_for('crawlers_table', {'hash': crawler.hash})}}',
                 'crawler_filter_from': '{{from}}',
                 'crawler_filter_to': '{{to}}',
-                'crawler_filter': '{{path_for('set_crawler_filter')}}'
+                'crawler_filter': '{{path_for('set_crawler_filter')}}',
+                'crawler_hash': '{{crawler.hash}}'
                 {% endif %}
                     
             };
