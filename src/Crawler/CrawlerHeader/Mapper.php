@@ -9,14 +9,19 @@ class Mapper extends \App\Base\Mapper {
     protected $filterByUser = false;
     protected $insertUser = false;
 
-    public function getFromCrawler($id, $order = null) {
+    public function getFromCrawler($id, $order = 'position', $hide_diff = false) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE crawler = :id ";
-        
-        if(!is_null($order)){
-            $sql .= " ORDER BY {$order}";
-        }
 
         $bindings = array("id" => $id);
+
+        if ($hide_diff) {
+            $sql .= " AND (diff = :diff OR diff IS NULL) ";
+            $bindings["diff"] = 0;
+        }
+
+        if (!is_null($order)) {
+            $sql .= " ORDER BY {$order}";
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -39,15 +44,15 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
-     public function getInitialSortColumn($crawler) {
+
+    public function getInitialSortColumn($crawler) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE crawler = :crawler AND sort IS NOT NULL AND sortable = :sortable LIMIT 1";
 
         $bindings = array("crawler" => $crawler, "sortable" => 1);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-        
+
         if ($stmt->rowCount() > 0) {
             return new $this->model($stmt->fetch());
         }

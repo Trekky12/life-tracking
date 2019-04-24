@@ -35,9 +35,11 @@ class Controller extends \App\Base\Controller {
 
         $this->checkAccess($crawler->id);
 
-        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
-
         $filter = $this->getFilter($crawler);
+        $hide_diff = $filter == "createdOn";
+        
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position', $hide_diff);
+        
 
         /**
          * Sorting
@@ -79,12 +81,13 @@ class Controller extends \App\Base\Controller {
 
         $hash = $request->getAttribute('hash');
         $crawler = $this->mapper->getCrawlerFromHash($hash);
-
-        $filter = $this->getFilter($crawler);
-
+        
         $this->checkAccess($crawler->id);
 
-        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position');
+        $filter = $this->getFilter($crawler);
+        $hide_diff = $filter == "createdOn";
+
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position', $hide_diff);
 
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
