@@ -4,7 +4,7 @@
     bottom:0;
     left:0;
     right:0;
-    z-index:-1;
+    z-index:0;
 
     @media screen and (min-width: $size_mobile){
         top:50px;   
@@ -50,14 +50,12 @@
     position: relative;
     z-index: 10;
 
-    @media screen and (min-width: $size_mobile){
+    @media screen and (min-width: $size_mobile_navigation){
         z-index: 1;
     }
 
 
     #search-form{
-        //display:none;
-        //padding: 1rem;
         transition: height .3s linear;
         overflow:hidden;
         padding:0;
@@ -71,54 +69,14 @@
         }
 
         input[type="submit"]{
-            @media screen and (min-width: $size_mobile) {
-                margin-top:1rem;
-            }
+            margin-top:1rem;
             width:100%;
         }
 
-        .checkboxes{
-            display:flex;
-            justify-content:center;
-
-            input[type=checkbox] + label:hover{
-                cursor:pointer;
-            }
-            input[type=checkbox] { 
-                display:none; 
-            }
-            input[type=checkbox] + label:before {
-                font-family: FontAwesome;
-                display: inline-block;
-                color: $color_blue;
-                margin-left: 1rem;
-                margin-right:1rem;
-                @include font-size(3); 
-
-                @media screen and (min-width: $size_mobile) {
-                    @include font-size(4); 
-                }
-            }
-
-            input[type=checkbox]#hideLocation + label:before {
-                content: "\f041"; 
-            }
-            input[type=checkbox]#hideFinances + label:before {
-                content: "\f0d6"; 
-            }
-            input[type=checkbox]#hideCars + label:before {
-                content: "\f018"; 
-            }
-
-
-            input[type=checkbox]:checked + label:before { 
-                color: $color_border-input;
-            }
-        }
     }
 
     @media screen and (min-width: $size_mobile){
-        max-width: $size_mobile;
+        max-width: $size_content-width-xsmall;
         margin: 0 auto;
     }
 }
@@ -140,4 +98,99 @@
     @include font-size(1.2);
     padding: 1rem 0.5rem;
     line-height:1;
+}
+
+
+// Marker Clusters
+
+.marker-cluster {
+    background-clip: padding-box;
+    border-radius: 20px;
+    div {
+        width: 30px;
+        height: 30px;
+        margin-left: 5px;
+        margin-top: 5px;
+
+        text-align: center;
+        border-radius: 15px;
+        @include font-size(1.2);
+        span {
+            line-height: 30px;
+        }
+    }
+
+    &.location {
+        background-color: rgba(82, 172, 248, 0.6);
+        div {
+            background-color: rgba(0, 138, 255, 0.6);
+        }
+    }
+
+    &.finances {
+        background-color: rgba(181, 226, 140, 0.6);
+        div {
+            background-color: rgba(110, 204, 57, 0.6);
+        }
+    }
+
+    &.cars {
+        background-color: rgba(241, 211, 87, 0.6);
+        div {
+            background-color: rgba(240, 194, 12, 0.6);
+        }
+    }
+}
+
+.leaflet-control-layers-expanded{
+    padding: 6px 6px 6px 6px;
+}
+.leaflet-control-layers-overlays{
+
+    label{
+        display:block!important;
+        text-align: center;
+    }
+
+    input[type=checkbox] + span:hover{
+        cursor:pointer;
+
+    }
+    input[type=checkbox] { 
+        display:none; 
+    }
+    input[type=checkbox] + span span:before {
+        font-family: FontAwesome;
+        display: inline-block;
+        color: $color_border-input;
+        margin-left: 1rem;
+        margin-right:1rem;
+        @include font-size(2); 
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            @include font-size(3); 
+        }
+    }
+
+    input[type=checkbox]:checked + span span:before { 
+        color: $color_blue;
+    }
+
+    input[type=checkbox] + span span#layerLocation:before  {
+        content: "\f124"; 
+    }
+    input[type=checkbox] + span span#layerFinances:before  {
+        content: "\f0d6"; 
+    }
+    input[type=checkbox] + span span#layerCars:before  {
+        content: "\f018"; 
+    }
+    input[type=checkbox] + span span#layerDirections:before  {
+        content: "\f07e"; 
+    }
+
+    input[type=checkbox] + span span#toggleClustering:before  {
+        content: "\f247"; 
+    }
+
 }

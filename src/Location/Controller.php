@@ -25,16 +25,14 @@ class Controller extends \App\Base\Controller {
 
         // Filtered markers
         $hide = $request->getQueryParam('hide');
-        list($hide_location, $hide_finances, $hide_cars) = $this->getHidden($hide);
+        list($hide_clusters) = $this->getHidden($hide);
 
         return $this->ci->view->render($response, 'location/index.twig', [
                     "tracks" => $my_locations,
                     "from" => $from,
                     "to" => $to,
                     "hide" => [
-                        "location" => $hide_location,
-                        "finances" => $hide_finances,
-                        "cars" => $hide_cars
+                        "clusters" => $hide_clusters
                     ]
         ]);
     }
@@ -44,34 +42,22 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
 
-        $hide = $request->getQueryParam('hide');
-        list($hide_location, $hide_finances, $hide_cars) = $this->getHidden($hide);
-        
-        $location_markers = [];
-        if (!$hide_location) {
-            $locations = $this->mapper->getMarkers($from, $to);
-            $location_markers = array_map(function($loc) {
-                return $loc->getPosition();
-            }, $locations);
-        }
+        $locations = $this->mapper->getMarkers($from, $to);
+        $location_markers = array_map(function($loc) {
+            return $loc->getPosition();
+        }, $locations);
 
-        $finance_markers = [];
-        if (!$hide_finances) {
-            $finance_locations = $this->finance_mapper->getMarkers($from, $to);
-            $finance_markers = array_map(function($loc) {
-                return $loc->getPosition();
-            }, $finance_locations);
-        }
+        $finance_locations = $this->finance_mapper->getMarkers($from, $to);
+        $finance_markers = array_map(function($loc) {
+            return $loc->getPosition();
+        }, $finance_locations);
 
-        $carservice_markers = [];
-        if (!$hide_cars) {
-            $user = $this->ci->get('helper')->getUser()->id;
-            $user_cars = $this->car_mapper->getElementsOfUser($user);
-            $carservice_locations = $this->carservice_mapper->getMarkers($from, $to, $user_cars);
-            $carservice_markers = array_map(function($loc) {
-                return $loc->getPosition();
-            }, $carservice_locations);
-        }
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_cars = $this->car_mapper->getElementsOfUser($user);
+        $carservice_locations = $this->carservice_mapper->getMarkers($from, $to, $user_cars);
+        $carservice_markers = array_map(function($loc) {
+            return $loc->getPosition();
+        }, $carservice_locations);
 
         return $response->withJSON(array_merge($location_markers, $finance_markers, $carservice_markers));
     }
@@ -107,24 +93,16 @@ class Controller extends \App\Base\Controller {
     }
 
     private function getHidden($hide) {
-        $hide_location = false;
-        $hide_finances = false;
-        $hide_cars = false;
+        $hide_clusters = false;
 
         if (!is_null($hide)) {
             $hidden_markers = filter_var_array($hide, FILTER_SANITIZE_STRING);
 
-            if (in_array("location", $hidden_markers)) {
-                $hide_location = true;
-            }
-            if (in_array("finances", $hidden_markers)) {
-                $hide_finances = true;
-            }
-            if (in_array("cars", $hidden_markers)) {
-                $hide_cars = true;
+            if (in_array("clusters", $hidden_markers)) {
+                $hide_clusters = true;
             }
         }
-        return array($hide_location, $hide_finances, $hide_cars);
+        return array($hide_clusters);
     }
 
 }

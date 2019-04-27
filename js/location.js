@@ -32,25 +32,58 @@ var yellowIcon = new L.Icon({
 const from = document.getElementById('inputStart').value;
 const to = document.getElementById('inputEnd').value;
 
-const hideLocation = document.getElementById('hideLocation').checked;
-const hideFinances = document.getElementById('hideFinances').checked;
-const hideCars = document.getElementById('hideCars').checked;
+var controlLayer = null;
+var circleLayer = new L.LayerGroup();
+
+let markers = [];
+
+/**
+ * Layers for Control
+ */
+var clusterToggleLayer = new L.LayerGroup();
+let layerLocation = new L.LayerGroup();
+let layerFinances = new L.LayerGroup();
+let layerCars = new L.LayerGroup();
+let layerDirections = new L.LayerGroup();
+
+/**
+ * Sub-Layer for individual markers and clusters
+ */
+let layerLocationMarkers = new L.LayerGroup();
+let layerFinancesMarkers = new L.LayerGroup();
+let layerCarsMarkers = new L.LayerGroup();
+// Clusters
+let layerLocationClusters = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        return createClusterIcon(cluster, "location");
+    },
+    maxClusterRadius: 50
+});
+let layerFinancesClusters = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        return createClusterIcon(cluster, "finances");
+    },
+    maxClusterRadius: 50
+});
+let layerCarsClusters = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        return createClusterIcon(cluster, "cars");
+    },
+    maxClusterRadius: 50
+});
+
+
+// when acc circle is visible (mouseover on marker) and the map is zoomed 
+// the mouseout event which removes the circle is not triggered 
+// so do this manually
+mymap.on('zoom', function () {
+    removeCircleLayer();
+});
 
 getMarkers();
 
 function getMarkers() {
-    var hide = [];
-    if(hideLocation){
-        hide.push("location");
-    }
-    if(hideFinances){
-        hide.push("finances");
-    }
-    if(hideCars){
-        hide.push("cars");
-    }
-    
-    fetch(jsObject.marker_url + '?from=' + from + '&to=' + to + '&hide[]=' + hide.join('&hide[]='), {
+    return fetch(jsObject.marker_url + '?from=' + from + '&to=' + to, {
         method: 'GET',
         credentials: "same-origin",
         headers: {
@@ -59,29 +92,31 @@ function getMarkers() {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        drawMarkers(data);
+        markers = data;
+        drawMarkers(data, false);
     }).catch(function (error) {
         console.log(error);
     });
 }
 
-function drawMarkers(markers) {
+function drawMarkers(markers, hideClusters = false) {
 
-    var my_latlngs = [];
-    var my_markers = [];
+    let my_latlngs = [];
+    let my_markers = [];
 
-
-    var marker_idx = 0;
+    let marker_idx = 0;
     for (marker_idx in markers) {
 
         let marker = markers[marker_idx];
 
         let type = marker.type;
 
+        // ignore markers without location data
         if (marker.lat === null || marker.lng === null) {
             continue;
         }
 
+        // create popup
         var dateString = marker.dt + '<br/>';
         var accuracyString = "";
         if (marker.acc > 0) {
@@ -95,58 +130,160 @@ function drawMarkers(markers) {
         let options = {};
         let circle_options = {
             opacity: 0.5,
-            radius: marker.acc
+            radius: marker.acc,
+            weight: 5,
+            color: '#3388ff'
         };
 
-        if (type === 0) {
-            popup += removeString;
+        switch (type) {
+            case 0:
+                popup += removeString;
+                break;
+            case 1:
+                options['icon'] = greenIcon;
+                circle_options['color'] = 'green';
+                popup += '<br/><br/><strong>' + marker.description + ' - ' + marker.value + ' ' + i18n.currency + '</strong>';
+                break;
+            case 2:
+                options['icon'] = yellowIcon;
+                circle_options['color'] = 'yellow';
+
+                let description = marker.description == 0 ? lang.car_refuel : lang.car_service;
+                popup += '<br/><br/><strong>' + description + '</strong>';
+                break;
+
         }
 
-        if (type === 1) {
-            options['icon'] = greenIcon;
-            circle_options['color'] = 'green';
-            popup += '<br/><br/><strong>' + marker.description + ' - ' + marker.value + ' ' + i18n.currency + '</strong>';
-        }
-
-        if (type === 2) {
-            options['icon'] = yellowIcon;
-            circle_options['color'] = 'yellow';
-
-            let description = marker.description == 0 ? lang.car_refuel : lang.car_service;
-            popup += '<br/><br/><strong>' + description + '</strong>';
-        }
-
+        // create marker object
         var my_marker = L.marker([marker.lat, marker.lng], options).bindPopup(popup);
 
-
+        // add accuracy circle
         if (marker.acc > 0) {
-            var circle = null;
-
             my_marker.on('mouseover', function (e) {
-                circle = L.circle([marker.lat, marker.lng], circle_options).addTo(mymap);
+                let circle = L.circle([marker.lat, marker.lng], circle_options);
+                let poly_options = {
+                    weight: 10,
+                    color: circle_options['color']
+                };
+                let poly = L.polygon([[marker.lat, marker.lng]], poly_options);
+                
+                circleLayer.addLayer(circle);
+                circleLayer.addLayer(poly);
             });
 
             my_marker.on('mouseout', function (e) {
-                mymap.removeLayer(circle);
+                removeCircleLayer();
             });
 
         }
-        if (type === 0) {
-            my_latlngs.push([marker.lat, marker.lng, marker_idx]);
+
+        // add marker to marker group and cluster group
+        switch (type) {
+            case 0:
+                layerLocationMarkers.addLayer(my_marker);
+                layerLocationClusters.addLayer(my_marker);
+                my_latlngs.push([marker.lat, marker.lng, marker_idx]);
+                break;
+            case 1:
+                layerFinancesMarkers.addLayer(my_marker);
+                layerFinancesClusters.addLayer(my_marker);
+                break;
+            case 2:
+                layerCarsMarkers.addLayer(my_marker);
+                layerCarsClusters.addLayer(my_marker);
+                break;
         }
+
         my_markers.push(my_marker);
-        my_marker.addTo(mymap);
     }
 
-    var polyline = L.polyline(my_latlngs).addTo(mymap);
+    // toggle between clusters/individual markers
+    if (hideClusters) {
+        layerLocation.addLayer(layerLocationMarkers);
+        layerFinances.addLayer(layerFinancesMarkers);
+        layerCars.addLayer(layerCarsMarkers);
+    } else {
+        layerLocation.addLayer(layerLocationClusters);
+        layerFinances.addLayer(layerFinancesClusters);
+        layerCars.addLayer(layerCarsClusters);
+    }
+    mymap.addLayer(layerLocation);
+    mymap.addLayer(layerFinances);
+    mymap.addLayer(layerCars);
 
+    // fit bounds of markers
     if (my_markers.length > 0) {
         var group = new L.featureGroup(my_markers);
         mymap.fitBounds(group.getBounds());
     }
 
-    return true;
+    // create directions polyline
+    var polyline = L.polyline(my_latlngs);
+    layerDirections.addLayer(polyline);
+
+    // dummy layer control
+    if (!hideClusters) {
+        clusterToggleLayer.addTo(mymap);
+    }
+
+    // layer control
+    controlLayer = L.control.layers(null, null, {
+        collapsed: false
+    });
+    controlLayer.addOverlay(clusterToggleLayer, "<span id='toggleClustering'></span>");
+    controlLayer.addOverlay(layerLocation, "<span id='layerLocation'></span>");
+    controlLayer.addOverlay(layerFinances, "<span id='layerFinances'></span>");
+    controlLayer.addOverlay(layerCars, "<span id='layerCars'></span>");
+    controlLayer.addOverlay(layerDirections, "<span id='layerDirections'></span>");
+    controlLayer.addTo(mymap);
+
+    // empty circle layer
+    circleLayer.addTo(mymap);
 }
+/**
+ * Hide directions when location history is disabled
+ */
+mymap.on('overlayremove', function (eventLayer) {
+    if (eventLayer.layer === layerLocation) {
+        controlLayer.removeLayer(layerDirections);
+
+        // @see https://gis.stackexchange.com/a/180773
+        setTimeout(function () {
+            mymap.removeLayer(layerDirections);
+        }, 10);
+    }
+
+    /**
+     * Switch Sub-Layers
+     */
+    if (eventLayer.layer === clusterToggleLayer) {
+        layerLocation.removeLayer(layerLocationClusters);
+        layerFinances.removeLayer(layerFinancesClusters);
+        layerCars.removeLayer(layerCarsClusters);
+
+        layerLocation.addLayer(layerLocationMarkers);
+        layerFinances.addLayer(layerFinancesMarkers);
+        layerCars.addLayer(layerCarsMarkers);
+    }
+});
+mymap.on('overlayadd', function (eventLayer) {
+    if (eventLayer.layer === layerLocation && !mymap.hasLayer(layerDirections)) {
+        controlLayer.addOverlay(layerDirections, "<span id='layerDirections'></span>");
+    }
+    /**
+     * Switch Sub-Layers
+     */
+    if (eventLayer.layer === clusterToggleLayer) {
+        layerLocation.removeLayer(layerLocationMarkers);
+        layerFinances.removeLayer(layerFinancesMarkers);
+        layerCars.removeLayer(layerCarsMarkers);
+
+        layerLocation.addLayer(layerLocationClusters);
+        layerFinances.addLayer(layerFinancesClusters);
+        layerCars.addLayer(layerCarsClusters);
+    }
+});
+
 
 
 /**
@@ -164,4 +301,15 @@ if (locationFilter !== null) {
         searchForm.classList.toggle('collapsed');
         locationFilter.classList.toggle('hiddenSearch');
     });
+}
+
+
+function createClusterIcon(cluster, c) {
+    var childCount = cluster.getChildCount();
+    return new L.DivIcon({html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster ' + c, iconSize: new L.Point(40, 40)});
+
+}
+
+function removeCircleLayer() {
+    circleLayer.clearLayers();
 }

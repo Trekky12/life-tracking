@@ -4,10 +4,12 @@
 
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/leaflet.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/MarkerCluster.css" />
 {% endblock %}
 
 {% block javascript %}
     <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
+    <script src="{{base_url()}}/static/assets/js/leaflet.markercluster.js" type="text/javascript"></script>
     <script src="{{base_url()}}/static/js/location.js?ver=20181122"></script>
     <script src="{{base_url()}}/static/js/datefilter.js?ver=20181122"></script>
 {% endblock %}
@@ -18,25 +20,12 @@
     <div id="search" class="page-content">
         <form method="GET" id="search-form" class="page-content collapsed">
             <div class="search-form-inner"> 
-                <div class=" filter-content">
-                    <div class="left">
-                        <input type="text" id="dateRange" value="{{from}} to {{to}}" />
-
-                        <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-                        <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
-                    </div>
-                    <div class="right checkboxes">
-                        <input id="hideLocation" type="checkbox" {% if hide["location"] %}checked="checked"{% endif %} name="hide[]" value="location"/>
-                        <label for="hideLocation"></label>
-                        <input id="hideFinances" type="checkbox" {% if hide["finances"] %}checked="checked"{% endif %} name="hide[]" value="finances"/>
-                        <label for="hideFinances"></label>
-                        <input id="hideCars" type="checkbox" {% if hide["cars"] %}checked="checked"{% endif %} name="hide[]" value="cars"/>
-                        <label for="hideCars"></label>
-                    </div>
+                <div class="filter-content">
+                    <input type="text" id="dateRange" value="{{from}} to {{to}}" />
+                    <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+                    <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
                 </div>
-
                 <input type="submit" value="{{lang["SHOW"]}}"/>
-
             </div>
         </form>       
         <i id="show-filter" class="hiddenSearch" aria-hidden="true"></i>

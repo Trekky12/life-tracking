@@ -11,7 +11,7 @@ body{
     padding-left: 5px;
     padding-right: 5px;
 
-    @media screen and (min-width: $size_mobile){
+    @media screen and (min-width: $size_mobile_navigation){
         padding-left: 20px;
         padding-right: 20px;
     }
