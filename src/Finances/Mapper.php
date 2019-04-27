@@ -71,7 +71,7 @@ class Mapper extends \App\Base\Mapper {
 
         $this->filterByUser($sql, $bindings, "f.");
 
-        $sql .= " ORDER BY {$sort} {$sortDirection}, f.id {$sortDirection}";
+        $sql .= " ORDER BY {$sort} {$sortDirection}, f.time {$sortDirection}, f.id {$sortDirection}";
 
         $sql .= " LIMIT {$start}, {$limit}";
 
