@@ -24,9 +24,9 @@
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                <input type="hidden" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
-                <input type="hidden" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
-                <input type="hidden" name="acc" value="{% if not entry is null %}{{entry.acc}}{% endif %}">
+                <input type="hidden" id="geoLat" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
+                <input type="hidden" id="geoLng" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
+                <input type="hidden" id="geoAcc" name="acc" value="{% if not entry is null %}{{entry.acc}}{% endif %}">
 
 
                 {% if not entry is null %}

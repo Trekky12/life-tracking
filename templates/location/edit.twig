@@ -1,0 +1,57 @@
+{% extends "base.twig" %}
+
+{% set active = 'location' %}
+
+{% set hasMap = not entry.lat is null and not entry.lng is null %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/leaflet.min.css" />
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
+    <script src="{{base_url()}}/static/js/geolocation.js?ver=20190130"></script>
+{% endblock %}
+
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["MENU_LOCATION"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" id="locationForm" action="{{  path_for('location_save', {'id' : entry.id}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                <input type="hidden" id="geoLat" name="gps_lat" value="{% if not entry is null %}{{entry.gps_lat}}{% endif %}">
+                <input type="hidden" id="geoLng" name="gps_lng" value="{% if not entry is null %}{{entry.gps_lng}}{% endif %}">
+                <input type="hidden" id="geoAcc" name="gps_acc" value="{% if not entry is null %}{{entry.gps_acc}}{% endif %}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                {#
+                <div class="form-group">
+                    <label for="inputIdentifier">{{lang["IDENTIFIER"]}}</label>
+                    <input type="text" class="form-control" id="inputIdentifier" name="identifier" {% if not entry is null %}value="{{entry.identifier}}{% endif %}">
+                </div>
+                #}
+
+                <div id="geo-map"></div>
+                <div class="form-group map-btn">
+                    <button id="update-location" class="gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                    <button id="delete-location" class="danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

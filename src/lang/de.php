@@ -310,4 +310,6 @@ $lang["NO_INITIAL_SORTING"] = "keine initiale Sortierung";
 
 $lang["DEFAULT_FILTER"] = "Standard Filter";
 
+$lang["ADD_LOCATION"] = 'Ort hinzufügen';
+
 return $lang;

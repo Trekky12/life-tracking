@@ -311,4 +311,6 @@ $lang["NO_INITIAL_SORTING"] = "no initial sorting";
 
 $lang["DEFAULT_FILTER"] = "default filter";
 
+$lang["ADD_LOCATION"] = 'add location';
+
 return $lang;

@@ -4,6 +4,9 @@
         {% if user.module_location == 1 %}
             <li {% if active == 'location' %}class="active"{% endif %}>
                 <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ path_for('location_edit') }}"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{lang["ADD_LOCATION"]}}</a></li>
+                </ul>
             </li> 
         {% endif %}
         {% if user.module_finance == 1 %}

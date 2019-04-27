@@ -1,8 +1,8 @@
 'use strict';
 
-const latField = document.querySelector('input[name="lat"]');
-const lngField = document.querySelector('input[name="lng"]');
-const accField = document.querySelector('input[name="acc"]');
+const latField = document.querySelector('input#geoLat');
+const lngField = document.querySelector('input#geoLng');
+const accField = document.querySelector('input#geoAcc');
 const idField = document.querySelector('input[name="id"]');
 const updateLoc = document.querySelector('#update-location');
 const deleteLoc = document.querySelector('#delete-location');
@@ -35,7 +35,8 @@ function getLocation() {
 }
 
 
-if ((latField !== null && lngField !== null && accField !== null && idField === null) && (document.querySelector('#financeForm') !== null || document.querySelector('#gasolineForm') !== null)) {
+if ( (latField !== null && lngField !== null && accField !== null && idField === null) &&
+     (document.querySelector('#financeForm') !== null || document.querySelector('#gasolineForm') !== null || document.querySelector('#locationForm') !== null)) {
     if (latField.value.length === 0 && lngField.value.length === 0 && accField.value.length === 0) {
         getLocation();
     }
@@ -129,11 +130,11 @@ function drawMap() {
             }).addTo(my_map);
 
         }
-        
+
         if (my_marker !== null) {
             my_map.removeLayer(my_marker)
         }
-        
+
         /**
          * Init Marker
          */
@@ -151,7 +152,7 @@ function drawMap() {
             clearTimeout(timeout);
             //mymap.panTo(new L.LatLng(position.lat, position.lng));
         });
-        
+
         my_marker.addTo(my_map);
 
         my_map.on('click', function (e) {
@@ -177,7 +178,7 @@ function drawMap() {
             let circle = null;
 
             my_marker.off('mouseover');
-            
+
             my_marker.on('mouseover', function (event) {
                 circle = L.circle(event.target.getLatLng(), {
                     opacity: 0.5,
@@ -211,7 +212,7 @@ function removeMap() {
     latField.value = "";
     lngField.value = "";
     accField.value = "";
-    
+
     clearTimeout(timeout);
 }
 

@@ -74,6 +74,9 @@ $app->group('/location', function() {
     $this->get('/markers', '\App\Location\Controller:getMarkers')->setName('getMarkers');
     $this->delete('/delete/[{id}]', '\App\Location\Controller:delete')->setName('delete_marker');
     $this->get('/address/[{id}]', '\App\Location\Controller:getAddress')->setName('get_address');
+    
+    $this->get('/edit/[{id:[0-9]+}]', '\App\Location\Controller:edit')->setName('location_edit');
+    $this->post('/save/[{id:[0-9]+}]', '\App\Location\Controller:save')->setName('location_save');
 });
 
 $app->group('/cars', function() {
