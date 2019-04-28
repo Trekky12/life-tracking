@@ -53,26 +53,33 @@
                                 {% for header in headers %}
                                 <td>
                                     {% if not header.field_link is empty %}
-                                        <a href="{{dataset.getDataValue(header.field_link)}}" target="_blank">
-                                        {% endif %}
-                                        {# no whitespaces #}
-                                        {%- if not header.prefix is empty -%}
-                                            {{header.getHTML("prefix")|raw}}
+                                        
+                                        {% set link = dataset.getDataValue(header.field_link) %}
+                                        {% if header.diff == 1 -%}
+                                           {% set link = dataset.getDataValue(header.field_link, "diff") %}
                                         {%- endif -%}
+                                        
+                                        <a href="{{link}}" target="_blank">
+                                    {% endif %}
+                                    
+                                    {# no whitespaces #}
+                                    {%- if not header.prefix is empty -%}
+                                        {{header.getHTML("prefix")|raw}}
+                                    {%- endif -%}
 
-                                        {%- if not header.field_content is empty -%}
-                                            {{header.getHTML()|raw}}
-                                        {%- elseif header.diff == 1 -%}
-                                            {{dataset.getDataValue(header.field_name, "diff")}}
-                                        {%- else -%}
-                                            {{dataset.getDataValue(header.field_name)}}
-                                        {%- endif -%}
+                                    {%- if not header.field_content is empty -%}
+                                        {{header.getHTML()|raw}}
+                                    {%- elseif header.diff == 1 -%}
+                                        {{dataset.getDataValue(header.field_name, "diff")}}
+                                    {%- else -%}
+                                        {{dataset.getDataValue(header.field_name)}}
+                                    {%- endif -%}
 
-                                        {%- if not header.suffix is empty -%}
-                                            {{header.getHTML("suffix")|raw}}
-                                        {%- endif -%}
+                                    {%- if not header.suffix is empty -%}
+                                        {{header.getHTML("suffix")|raw}}
+                                    {%- endif -%}
 
-                                        {% if not header.field_link is empty %}
+                                    {% if not header.field_link is empty %}
                                         </a>
                                     {% endif %}
                                 </td>
