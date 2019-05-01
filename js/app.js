@@ -368,7 +368,6 @@ function setCategorySubscriptions(endpoint, type, category) {
 
 }
 
-
 function getNotifications(subscription) {
     if (notificationsList !== null) {
 
@@ -505,7 +504,9 @@ function loadMoreFunctions(subscription) {
         document.addEventListener('scroll', function () {
             let body = document.body;
             let html = document.documentElement;
-            if ((html.scrollTop > 0 && (html.scrollTop + html.clientHeight >= html.scrollHeight)) || (body.scrollTop > 0 && (body.scrollTop + body.clientHeight >= body.scrollHeight))) {
+            let offset = 100;
+            
+            if ((html.scrollTop > 0 && (html.scrollTop + html.clientHeight + offset >= html.scrollHeight)) || (body.scrollTop > 0 && (body.scrollTop + body.clientHeight + offset >= body.scrollHeight))) {
                 if (!loadMore.classList.contains('hidden')) {
                     getNotifications(subscription);
                 }
