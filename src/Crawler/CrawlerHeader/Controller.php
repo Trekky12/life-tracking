@@ -35,8 +35,13 @@ class Controller extends \App\Base\Controller {
         }
 
         $this->preEdit($entry_id);
-        
-        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'crawler' => $crawler, "sortOptions" => $this->sortOptions()]);
+
+        return $this->ci->view->render($response, $this->edit_template, [
+                    'entry' => $entry,
+                    'crawler' => $crawler,
+                    "sortOptions" => $this->sortOptions(),
+                    "castOptions" => $this->castOptions()
+        ]);
     }
 
     public function save(Request $request, Response $response) {
@@ -84,19 +89,34 @@ class Controller extends \App\Base\Controller {
             }
         }
     }
-    
-    private function sortOptions(){
+
+    private function sortOptions() {
         return [null => $this->ci->get('helper')->getTranslatedString('NO_INITIAL_SORTING'), "asc" => $this->ci->get('helper')->getTranslatedString('ASC'), "desc" => $this->ci->get('helper')->getTranslatedString('DESC')];
     }
-    
+
     public function afterSave($id, $data) {
         $header = $this->mapper->get($id);
-        
+
         // only one header can be initial sorted 
         // so remove the sort value on all others
-        if(!is_null($header->sort)){
+        if (!is_null($header->sort)) {
             $this->mapper->unset_sort($id);
         }
+    }
+    
+    // @see https://dev.mysql.com/doc/refman/8.0/en/cast-functions.html#function_cast
+    private function castOptions() {
+        return [
+            null => $this->ci->get('helper')->getTranslatedString('CAST_NONE'),
+            "BINARY" => $this->ci->get('helper')->getTranslatedString('CAST_BINARY'),
+            "CHAR" => $this->ci->get('helper')->getTranslatedString('CAST_CHAR'),
+            "DATE" => $this->ci->get('helper')->getTranslatedString('CAST_DATE'),
+            "DATETIME" => $this->ci->get('helper')->getTranslatedString('CAST_DATETIME'),
+            "DECIMAL" => $this->ci->get('helper')->getTranslatedString('CAST_DECIMAL'),
+            "SIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_SIGNED'),
+            "TIME" => $this->ci->get('helper')->getTranslatedString('CAST_TIME'),
+            "UNSIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_UNSIGNED'),    
+        ];
     }
 
 }

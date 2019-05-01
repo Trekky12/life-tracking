@@ -36,6 +36,7 @@ class CrawlerHeader extends \App\Base\Model {
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
         
         $this->sort = $this->exists('sort', $data) ? filter_var($data['sort'], FILTER_SANITIZE_STRING) : null;
+        $this->datatype = $this->exists('datatype', $data) ? filter_var($data['datatype'], FILTER_SANITIZE_STRING) : null;
 
         /**
          * Values from DB
@@ -49,7 +50,11 @@ class CrawlerHeader extends \App\Base\Model {
         if ($this->exists('changedBy', $data)) {
             $this->changedBy = filter_var($data['changedBy'], FILTER_SANITIZE_NUMBER_INT);
         }
-
+        
+        if(!in_array($this->datatype, array(null, "BINARY","CHAR","DATE","DATETIME","DECIMAL","SIGNED","TIME","UNSIGNED"))){
+            $this->datatype = null;
+        }
+        
         if (empty($this->headline)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }

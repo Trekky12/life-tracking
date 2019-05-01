@@ -471,6 +471,7 @@ CREATE TABLE crawlers_headers (
     prefix varchar(255) DEFAULT NULL,
     suffix varchar(255) DEFAULT NULL,
     sort varchar(10) DEFAULT NULL,
+    datatype varchar(20) DEFAULT NULL,
     position INT(10) NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(crawler) REFERENCES crawlers(id) ON DELETE CASCADE ON UPDATE CASCADE,

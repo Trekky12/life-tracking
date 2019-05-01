@@ -268,6 +268,11 @@ class Controller extends \App\Base\Controller {
         } else {
             $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
         }
+        
+        if(!is_null($column->datatype)){
+            $sortColumn = "CAST({$sortColumn} AS {$column->datatype})";
+        }
+        
         return $sortColumn;
     }
 

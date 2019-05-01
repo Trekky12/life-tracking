@@ -312,4 +312,16 @@ $lang["DEFAULT_FILTER"] = "Standard Filter";
 
 $lang["ADD_LOCATION"] = 'Ort hinzufügen';
 
+$lang["DATA_TYPE"] = "Datentyp";
+$lang["CAST_NONE"] = "Standard";
+$lang["CAST_BINARY"] = "Binär";
+$lang["CAST_CHAR"] = "Charakter";
+$lang["CAST_DATE"] = "Datum (YYYY-MM-DD)";
+$lang["CAST_DATETIME"] = "Datum und Zeit (YYYY-MM-DD HH:MM:SS)";
+$lang["CAST_DECIMAL"] = "Dezimal";
+$lang["CAST_SIGNED"] = "Ganzzahl";
+$lang["CAST_TIME"] = "Zeit (HH:MM:SS)";
+$lang["CAST_UNSIGNED"] = "positiv Ganzzahl";
+
+
 return $lang;

@@ -313,4 +313,15 @@ $lang["DEFAULT_FILTER"] = "default filter";
 
 $lang["ADD_LOCATION"] = 'add location';
 
+$lang["DATA_TYPE"] = "data type";
+$lang["CAST_NONE"] = "default";
+$lang["CAST_BINARY"] = "binary";
+$lang["CAST_CHAR"] = "character";
+$lang["CAST_DATE"] = "date (YYYY-MM-DD)";
+$lang["CAST_DATETIME"] = "date and time (YYYY-MM-DD HH:MM:SS)";
+$lang["CAST_DECIMAL"] = "decimal";
+$lang["CAST_SIGNED"] = "signed integer";
+$lang["CAST_TIME"] = "time (HH:MM:SS)";
+$lang["CAST_UNSIGNED"] = "unsigned integer";
+
 return $lang;
