@@ -38,7 +38,9 @@ const categoriesElements = document.querySelectorAll('#notifications_categories_
 const notificationsList = document.querySelector('#notifications');
 const loadingIcon = document.querySelector('#loadingIconNotifications');
 const loadMore = document.querySelector('#loadMore');
-const menuProfile = document.querySelector('#menu-primary .profile');
+//const menuProfile = document.querySelector('#menu-primary .profile');
+const badges = document.querySelectorAll('.header-inner .badge');
+const bell = document.querySelector('#iconBell')
 
 let isSubscribed = false;
 
@@ -56,6 +58,7 @@ if ('serviceWorker' in navigator) {
 }
 
 function initialize() {
+
 
     // only on notifications pages
     /*if (pushButton === null && notificationsList === null) {
@@ -106,6 +109,7 @@ function initialize() {
 
     }).then(function (subscription) {
         updateButton('enabled');
+        bell.classList.remove('disabled');
 
         return getUnreadNotifications(subscription).then(function () {
             return subscription;
@@ -136,8 +140,7 @@ function initialize() {
         //alert(event.data.type);
         if (event.data.type == 1) {
             console.log(event.data.type);
-            let count = parseInt(menuProfile.dataset.badge);
-            setNotificationCount(count + 1);
+            setNotificationCount();
         }
         if (event.data.type == 2) {
             console.log("Notification Click");
@@ -259,11 +262,13 @@ function updateButton(state) {
             pushButton.disabled = false;
             pushButton.textContent = lang.disable_notifications;
             isSubscribed = true;
+            bell.classList.remove('disabled');
             break;
         case 'disabled':
             pushButton.disabled = false;
             pushButton.textContent = lang.enable_notifications;
             isSubscribed = false;
+            bell.classList.add('disabled');
             break;
         case 'computing':
             pushButton.disabled = true;
@@ -272,6 +277,7 @@ function updateButton(state) {
         case 'incompatible':
             pushButton.disabled = true;
             pushButton.textContent = lang.no_notifications_possible;
+            bell.classList.add('disabled');
             break;
         default:
             console.error('Unhandled push button state', state);
@@ -417,13 +423,13 @@ function getNotifications(subscription) {
 
                     let hTitle = document.createElement("h2");
                     hTitle.innerHTML = item.title;
-                    
+
                     header.appendChild(hTitle);
 
                     if(item.category){
                         let spanCategory = document.createElement("span");
                         spanCategory.innerHTML = lang.category + ": " + data.categories[item.category].name;
-                        
+
                         header.appendChild(spanCategory);
                     }
 
@@ -482,13 +488,7 @@ function getUnreadNotifications(subscription) {
         return response.json();
     }).then(function (data) {
         if (data.status !== 'error') {
-
-            let count = parseInt(data.data);
-            if (count > 0) {
-                menuProfile.classList.add("has-Notification");
-                menuProfile.dataset.badge = count;
-            }
-
+            setNotificationCount(data.data);
         }
     }).catch(function (error) {
         console.log(error);
@@ -521,11 +521,17 @@ function emptyPromise(val = null) {
 }
 
 function setNotificationCount(count) {
-    let unseenCount = parseInt(count);
-    menuProfile.dataset.badge = unseenCount;
-    if (unseenCount > 0) {
-        menuProfile.classList.add("has-Notification");
-    } else {
-        menuProfile.classList.remove("has-Notification");
-    }
+    badges.forEach(function (badge, idx) {
+        let unseenCount = parseInt(count);
+        if (count === undefined) {
+            unseenCount = parseInt(badge.dataset.badge) + 1;
+        }
+
+        badge.dataset.badge = unseenCount;
+        if (unseenCount > 0) {
+            badge.classList.add("has-Notification");
+        } else {
+            badge.classList.remove("has-Notification");
+        }
+    });
 }

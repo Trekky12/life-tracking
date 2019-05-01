@@ -1,5 +1,30 @@
+<div id="mobile-header-icons">
+    {% if user.module_location == 1 %}
+        <a href="{{ path_for('location') }}"><i class="fa fa-map-marker"></i></a>
+    {% endif %}
+    {% if user.module_finance == 1 %}
+        <a href="{{ path_for('finances') }}"><i class="fa fa-money"></i></a>
+    {% endif %}
+    {% if user.module_cars == 1 %}
+        <a href="{{ path_for('car_service') }}"><i class="fa fa-road"></i></a>
+    {% endif %}
+    {% if user.module_boards == 1 %}
+        <a href="{{ path_for('boards') }}"><i class="fa fa-tasks"></i></a>
+    {% endif %}
+    {% if user.module_crawlers == 1 %}
+        <a href="{{ path_for('crawlers') }}"><i class="fa fa-database"></i></a>
+    {% endif %}
+    <a href="{{ path_for('notifications') }}" class="badge disabled" data-badge="0" id="iconBell"><i class="fa fa-bell-o"></i></a>
+    <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+</div>
+
 <nav id="site-navigation" class="main-navigation" role="navigation">
-    <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false"><i class="fa fa-bars"></i></button>
+
     <ul id="menu-primary" class="menu nav-menu">
         {% if user.module_location == 1 %}
             <li {% if active == 'location' %}class="active"{% endif %}>
@@ -41,7 +66,7 @@
             </li> 
         {% endif %}
         <li {% if active == 'profile' %}class="active"{% endif %}>
-            <a href="#" class="profile" data-badge="0"> 
+            <a href="{{ path_for('notifications') }}" class="profile badge" data-badge="0"> 
                 {% if user.get_thumbnail() != '' %}
                     <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
                 {% else %}

@@ -4,6 +4,10 @@
     margin:0 auto;
     color: $color_background-body;
     text-align:center;
+    
+    h2{
+        margin-top:0;
+    }
 }
 
 #loading-overlay{
@@ -238,7 +242,7 @@
     top: 0; 
     right: 0;
     background-color: $color_background-body;
-    padding-top: 50px;
+    padding-top: $header_height;
     transition: 0.2s width;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
 

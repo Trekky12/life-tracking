@@ -75,6 +75,15 @@
                         {% endfor %}
                     </select>
                 </div>
+                    
+                <div class="form-group">
+                    <label for="datatype">{{lang["DATA_TYPE"]}}</label>
+                    <select class="form-control" id="datatype" name="datatype">
+                        {% for key, cast in castOptions %}
+                            <option value="{{key}}" {% if not entry is null and key == entry.datatype %}selected{% endif %}>{{cast}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
                 <div class="form-group btn">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

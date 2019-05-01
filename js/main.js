@@ -417,3 +417,29 @@ document.addEventListener('click', function (event) {
         }
     }
 });
+
+/**
+ * mobile navigation
+ */
+const menuButton = document.getElementById('menu-toggle');
+const navigation = document.getElementById('site-navigation');
+const menuList = navigation.getElementsByTagName('ul')[0];
+const body = document.getElementsByTagName("BODY")[0];
+const boardsSidebar = document.getElementById('sidebar');
+const initialHeaderHeight = document.getElementById('masthead').offsetHeight;
+
+menuButton.addEventListener('click', function (evt) {
+    if (navigation.classList.contains('toggled')) {
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuList.setAttribute('aria-expanded', 'false');
+        if (boardsSidebar) {
+            boardsSidebar.style.paddingTop = initialHeaderHeight + 'px';
+        }
+    } else {
+        menuButton.setAttribute('aria-expanded', 'true');
+        menuList.setAttribute('aria-expanded', 'true');
+    }
+    navigation.classList.toggle("toggled");
+    menuButton.classList.toggle("open");
+    body.classList.toggle("mobile-navigation-open");
+});

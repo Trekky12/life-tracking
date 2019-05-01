@@ -1,26 +1,146 @@
-.main-navigation{
+// header is fixed
+#masthead{
+    position:fixed;
+    width:100%;
+    top: 0;
+}
+#content, .board-content{
+    position:relative;
+    top: $header_height + $header_height_margin;
+}
 
-    .menu-toggle {
-        cursor: pointer;
-        background: none;
-        border: none;
-        outline: none;
-        @include font-size(3);
-        padding: 0;
+// when mobile navigation is opened the header should be no longer 
+// fixed for vertical scrolling
+body.mobile-navigation-open{
+    #masthead{
+        position:relative;
+    }
+    #content, .board-content{
+        top:0px;
+    }
+    
+    #sidebar{
+        padding-top:0px;
+    }
+}
+
+#mobile-header-icons{
+    display: flex;
+    justify-content: flex-end;
+    align-items:center;
+    height: $header_height;
+
+    i{
+        @include font-size(2.5);
         color: $color_blue;
+        margin-left:2rem;
+    }
 
+    .disabled i{
+        color: $color_border-input;
+    }
+
+    @media screen and (min-width: $size_mobile_navigation){
+        display: none;
+    }
+
+    a{
+        //@see https://stackoverflow.com/a/21003770  
+        user-select: none;
+
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+
+#menu-toggle {
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+
+    width:25px;
+    height:30px;
+    transform:rotate(0deg);
+    transition:.5s ease-in-out;
+    outline:none;
+    margin-left:2rem;
+    
+    -webkit-tap-highlight-color: transparent;
+
+
+    /*position:absolute;
+    right:5px;
+    top:0;
+    z-index:100;
+
+@media screen and (min-width: $size_mobile_navigation){
+    display: none;
+}*/
+    .bar {
+        display:block;
         position:absolute;
-        top:0;
-        right:5px;
-        z-index:100;
+        height:4px;
+        width:100%;
+        background:$color_blue;
+        opacity:1;
+        left:0;
+        transform:rotate(0deg);
+        transition:.25s ease-in-out;
 
-        @media screen and (min-width: $size_mobile_navigation){
-            display: none;
+        &:nth-child(1) {
+            top:4px
+        }
+        &:nth-child(2),&:nth-child(3) {
+            top:12px
+        }
+        &:nth-child(4) {
+            top:20px
+        }
+
+    }
+
+    &.open{
+        .bar{
+            &:nth-child(1) {
+                top:8px;
+                width:0;
+                left:50%
+            }
+            &:nth-child(2) {
+                transform:rotate(45deg)
+            }
+            &:nth-child(3) {
+                transform:rotate(-45deg)
+            }
+            &:nth-child(4) {
+                top:16px;
+                width:0;
+                left:50%
+            }
         }
     }
+}
+
+
+#site-navigation{
+
+    display:flex;
+    flex-direction: column;
+    text-align:center;
+
+    @media screen and (min-width: $size_mobile_navigation) {
+        align-items:center;
+        flex-direction: row;
+        text-align:initial;
+    }
+
 
     &.toggled ul{
         display:block;
+        border-top: 1px solid #e5e5e5;
     }
 
 
@@ -105,7 +225,6 @@
 
     a.profile{
         display:flex;
-
         justify-content: center;
 
         .avatar-mini.navi{
@@ -115,24 +234,39 @@
             height:20px;
         }
 
+        &.has-Notification[data-badge]:after {
+            top:4px;
+            right:4px;
+
+            // hide on mobile
+            display:none;
+            @media screen and (min-width: $size_mobile_navigation){
+                display:block;
+            }
+        }
+
+    }
+}
+
+.header-inner{
+    a.has-Notification{
         position:relative;
 
-        &.has-Notification{
-            &[data-badge]:after {
-                content:attr(data-badge);
-                position:absolute;
-                top:4px;
-                right:4px;
-                font-size:.6em;
-                background:$color_red;
-                color:$color_background-body;
-                width:15px;
-                height:15px;
-                text-align:center;
-                line-height:15px;
-                border-radius:50%;
-                box-shadow:0 0 1px #CCC;
-            }
+        &[data-badge]:after {
+            content:attr(data-badge);
+            position:absolute;
+            font-size:.6em;
+            background:$color_red;
+            color:$color_background-body;
+            width:15px;
+            height:15px;
+            text-align:center;
+            line-height:15px;
+            border-radius:50%;
+            box-shadow:0 0 1px #CCC;
+
+            top:-4px;
+            right:-4px;
         }
     }
 }

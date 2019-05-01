@@ -530,7 +530,7 @@ function unfreeze() {
 }
 
 function isMobile() {
-    return isVisible(document.getElementById('menu-toggle'));
+    return isVisible(document.getElementById('mobile-header-icons'));
 }
 
 function isVisible(element) {
@@ -707,6 +707,7 @@ sidebarToggle.addEventListener('click', function (event) {
     }
 });
 
+
 /**
  * Show archived items?
  */
@@ -768,10 +769,13 @@ window.addEventListener('beforeunload', function (event) {
 /**
  * Stick sidebar to top when scrolling
  */
-function sidebarAdjustments() {
-    const sidebar = document.getElementById('sidebar');
+const sidebar = document.getElementById('sidebar');
+const header = document.getElementById('masthead');
+const pageBody = document.getElementsByTagName("BODY")[0];
 
-    let headerHeight = document.getElementById('masthead').offsetHeight;
+function sidebarAdjustments() {
+
+    let headerHeight = header.offsetHeight;
     let scroll = window.scrollY;
     if (scroll < headerHeight) {
         let value = headerHeight - scroll;
@@ -781,11 +785,13 @@ function sidebarAdjustments() {
     }
 }
 
-sidebarAdjustments();
+/* Do not apply sidebar adjustments on fixed header */
+//sidebarAdjustments();
 window.addEventListener('scroll', function () {
-    sidebarAdjustments();
+    if (pageBody.classList.contains("mobile-navigation-open")) {
+        sidebarAdjustments();
+    } 
 });
-
 
 var stacks = document.querySelector('.stack-wrapper');
 var sortable = new Sortable(stacks, {
