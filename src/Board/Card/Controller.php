@@ -23,7 +23,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, $data) {
+    protected function preSave($id, &$data) {
         $user = $this->ci->get('helper')->getUser()->id;
         $this->users_preSave = array();
 
@@ -216,7 +216,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
         $id = $request->getAttribute('id');
         try {
-            $this->preSave($id, null);
+            $this->preSave($id, $data);
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
                 $user = $this->ci->get('helper')->getUser()->id;

@@ -76,7 +76,8 @@ abstract class Controller {
      * @param type $entry
      */
     protected function preGetAPI($id) {
-        $this->preSave($id, null);
+        $data = null;
+        $this->preSave($id, $data);
     }
 
     /**
