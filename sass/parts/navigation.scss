@@ -34,6 +34,10 @@ body.mobile-navigation-open{
         @include font-size(2.5);
         color: $color_blue;
         margin-left:2rem;
+        
+        &:hover, &:focus{
+            color: $color_blue_light;
+        }
     }
 
     .disabled i{

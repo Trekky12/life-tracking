@@ -53,8 +53,11 @@ if ('serviceWorker' in navigator) {
 
         }).catch(function (error) {
             console.error('Service Worker Error', error);
+            notificationsDisabled('incompatible');
         });
     });
+}else{
+    notificationsDisabled('incompatible');
 }
 
 function initialize() {
@@ -67,19 +70,19 @@ function initialize() {
 
     if (!('PushManager' in window)) {
         console.warn('Push notifications are not supported by this browser');
-        updateButton('incompatible');
+        notificationsDisabled('incompatible');
         return;
     }
 
     if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
         console.warn('Notifications are not supported by this browser');
-        updateButton('incompatible');
+        notificationsDisabled('incompatible');
         return;
     }
 
     if (Notification.permission === 'denied') {
         console.warn('Notifications are denied by the user');
-        updateButton('incompatible');
+        notificationsDisabled('incompatible');
         return;
     }
 
@@ -97,9 +100,10 @@ function initialize() {
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
         return serviceWorkerRegistration.pushManager.getSubscription();
     }).then(function (subscription) {
-        updateButton('disabled');
+        //updateButton('disabled');
 
         if (!subscription) {
+            notificationsDisabled('disabled');
             redirect();
             throw "No Subscription returned";
         }
@@ -109,7 +113,7 @@ function initialize() {
 
     }).then(function (subscription) {
         updateButton('enabled');
-        bell.classList.remove('disabled');
+        //bell.classList.remove('disabled');
 
         return getUnreadNotifications(subscription).then(function () {
             return subscription;
@@ -535,4 +539,9 @@ function setNotificationCount(count) {
             badge.classList.remove("has-Notification");
         }
     });
+}
+
+function notificationsDisabled(state){
+    updateButton(state);
+    bell.classList.add('disabled');
 }
