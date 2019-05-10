@@ -118,7 +118,7 @@ function initialize() {
             if (url) {
                 let type = closest.dataset.type ? closest.dataset.type : "default";
                 deleteObject(url, type);
-            }else{
+            } else {
                 closest.parentNode.remove();
             }
         }
@@ -438,6 +438,10 @@ menuButton.addEventListener('click', function (evt) {
     } else {
         menuButton.setAttribute('aria-expanded', 'true');
         menuList.setAttribute('aria-expanded', 'true');
+
+        //@see https://www.w3schools.com/howto/howto_js_scroll_to_top.asp
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
     navigation.classList.toggle("toggled");
     menuButton.classList.toggle("open");
