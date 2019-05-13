@@ -4,19 +4,30 @@
  */
 'use strict';
 
+var isCached = false;
+
 window.addEventListener("online", handleNetworkChange);
 window.addEventListener("offline", handleNetworkChange);
 handleNetworkChange();
 
 function handleNetworkChange(event) {
-    if (navigator.onLine) {
-        document.body.classList.remove("offline");
-        document.getElementById("offline-alert").classList.add("hidden");
-        setFormFields(false);
-    } else {
+    setOffline(!navigator.onLine);
+}
+
+function setOffline(offline) {
+    if (offline) {
         document.body.classList.add("offline");
         document.getElementById("offline-alert").classList.remove("hidden");
         setFormFields(true);
+    } else {
+        document.body.classList.remove("offline");
+        document.getElementById("offline-alert").classList.add("hidden");
+        setFormFields(false);
+        
+        // the page is from cache but now we are online, so reload
+        if(isCached){
+            window.location.reload();
+        }
     }
 }
 
@@ -40,9 +51,19 @@ const loadingIcon = document.querySelector('#loadingIconNotifications');
 const loadMore = document.querySelector('#loadMore');
 //const menuProfile = document.querySelector('#menu-primary .profile');
 const badges = document.querySelectorAll('.header-inner .badge');
-const bell = document.querySelector('#iconBell')
+const bell = document.querySelector('#iconBell');
 
 let isSubscribed = false;
+
+// set offline mode when current page is cached
+// reset the info in the localStorage and save the 
+// info in a local variable 
+if (localStorage.getItem('isCached')) {
+    localStorage.removeItem('isCached');
+    console.log('this is cached!');
+    setOffline(true);
+    isCached = true;
+}
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
@@ -56,11 +77,13 @@ if ('serviceWorker' in navigator) {
             notificationsDisabled('incompatible');
         });
     });
-}else{
+} else {
     notificationsDisabled('incompatible');
 }
 
 function initialize() {
+
+
 
 
     // only on notifications pages
@@ -142,12 +165,20 @@ function initialize() {
     navigator.serviceWorker.addEventListener('message', function (event) {
         console.log('Received a message from service worker');
         //alert(event.data.type);
-        if (event.data.type == 1) {
+        if (event.data.type === 1) {
+            console.log("Notification received");
             console.log(event.data.type);
             setNotificationCount();
         }
-        if (event.data.type == 2) {
+        if (event.data.type === 2) {
             console.log("Notification Click");
+        }
+        if (event.data.type === 3) {
+            console.log("Loaded content from cache instead of network!");
+            // after loading the response from cache the cache is loaded
+            // afterwards possible variables are no longer available
+            // so save the info that the page is from cache in the localStorage
+            localStorage.setItem('isCached', true);
         }
     });
 
@@ -429,7 +460,7 @@ function getNotifications(subscription) {
 
                     header.appendChild(hTitle);
 
-                    if(item.category){
+                    if (item.category) {
                         let spanCategory = document.createElement("span");
                         spanCategory.innerHTML = lang.category + ": " + data.categories[item.category].name;
 
@@ -509,7 +540,7 @@ function loadMoreFunctions(subscription) {
             let body = document.body;
             let html = document.documentElement;
             let offset = 100;
-            
+
             if ((html.scrollTop > 0 && (html.scrollTop + html.clientHeight + offset >= html.scrollHeight)) || (body.scrollTop > 0 && (body.scrollTop + body.clientHeight + offset >= body.scrollHeight))) {
                 if (!loadMore.classList.contains('hidden')) {
                     getNotifications(subscription);
@@ -541,7 +572,7 @@ function setNotificationCount(count) {
     });
 }
 
-function notificationsDisabled(state){
+function notificationsDisabled(state) {
     updateButton(state);
     bell.classList.add('disabled');
 }

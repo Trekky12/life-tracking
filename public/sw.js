@@ -1,7 +1,15 @@
 'use strict';
-importScripts('static/assets/js/sw-toolbox.js');
 
-const cacheName = 'pwa-life-tracking-v10';
+/**
+ * based on 
+ * https://vaadin.com/tutorials/learn-pwa/turn-website-into-a-pwa
+ * https://serviceworke.rs/strategy-network-or-cache_service-worker_doc.html
+ * https://medium.com/web-on-the-edge/offline-posts-with-progressive-web-apps-fc2dc4ad895
+ * https://serviceworke.rs/offline-fallback_service-worker_doc.html
+ * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
+ */
+
+const cacheName = 'pwa-life-tracking-v20190510';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -36,18 +44,188 @@ const staticAssets = [
     '/static/assets/css/nouislider.min.css',
     '/static/assets/css/open-sans.css',
     '/static/assets/css/selectr.min.css',
-    '/static/assets/css/simplemde.min.css'
+    '/static/assets/css/simplemde.min.css',
+    '/static/assets/css/jstable.css',
+    '/static/assets/js/i18n/de.js',
 ];
 
-self.toolbox.options.cache = {
-    name: cacheName
-};
+const NETWORK_TIMEOUT = 1000;
 
-toolbox.precache(staticAssets);
-toolbox.router.get('/static/*', toolbox.cacheFirst);
-toolbox.router.get('/*', toolbox.networkFirst, {
-    networkTimeoutSeconds: 3
+
+self.addEventListener('install', event => {
+    console.log('Attempting to install service worker and cache static assets');
+    event.waitUntil(
+        caches.open(cacheName).then(cache => {
+            return cache.addAll(staticAssets);
+        })
+    );
 });
+
+self.addEventListener('activate', event => {
+    console.log('Activating new service worker...');
+
+    const cacheWhitelist = [cacheName];
+
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+});
+
+self.addEventListener('fetch', event => {
+    const req = event.request;
+
+    if (event.request.method !== 'GET') {
+        console.log('WORKER: fetch event ignored.', event.request.method, event.request.url);
+        return;
+    }
+
+    if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
+        return event.respondWith(cacheFirst(req));
+    } else {
+        return event.respondWith(networkFirst(req));
+    }
+
+});
+
+function networkFirst(req) {
+    return _fromNetwork(req.clone(), NETWORK_TIMEOUT).catch(function () {
+
+        //console.log('network error!', req);
+        /**
+         * No result from network so try cache instead
+         */
+        return _fromCache(req.clone()).then(function (result) {
+            //console.log('try from cache', req);
+            _notifyCache(req);
+            return result;
+        }).catch(function (result) {
+            //console.log('no network and nothing in cache found', req);
+            _notifyCache(req);
+            return _fromCache('/');
+        });
+    });
+}
+
+
+function cacheFirst(req) {
+    return _fromCache(req).catch(function () {
+        //console.log('error cachefirst');
+        //console.log(req);
+        return networkFirst(req);
+    });
+}
+/**
+ * Notify client that this request was from cache instead of network
+ */
+function _notifyCache(req) {
+    
+    if (req.headers.get('accept').includes('text/html')) {
+        _sendMessageToClients(3);
+    }else{
+        console.log(req.headers.get('accept'));
+    }
+}
+
+
+/**
+ * @see https://serviceworke.rs/strategy-network-or-cache_service-worker_doc.html
+ */
+function _fromCache(request) {
+    return caches.open(cacheName).then(function (cache) {
+        return cache.match(request).then(function (cachedResponse) {
+            return cachedResponse || Promise.reject('no-match');
+        });
+    });
+}
+
+/**
+ * this function tries to get the data from the network
+ * it returns after a response or after a timeout
+ * 
+ * the result of the fetch is still processed, because a promise can't be canceled
+ * so the response is in cached if the fetch is successfully after the timeout
+ * 
+ * it is possible to implement this with a timeout wrapper Promise 
+ * or with a promise race.
+ * 
+ * @see https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
+ * 
+ * @param {type} request
+ * @param {type} timeout
+ * @returns {Promise}
+ */
+function _fromNetwork(request, timeout) {
+    /**
+     * Promice.race
+     */
+    var timeoutId;
+    var promises = [];
+    var cacheWhenTimedOutPromise = new Promise(function (resolve, reject) {
+        timeoutId = setTimeout(function () {
+            reject('timeout');
+        }, timeout);
+    });
+    promises.push(cacheWhenTimedOutPromise);
+
+    var networkPromise = _fetchAndCache(request.clone()).then(function (response) {
+        //console.log('fetch success');
+        clearTimeout(timeoutId);
+        return response;
+    });
+
+    promises.push(networkPromise);
+
+    return Promise.race(promises);
+
+    /**
+     * Promice Timeout Wrapper
+     */
+//    return new Promise(function (resolve, reject) {
+//        var timeoutId = setTimeout(function (t) {
+//            reject();
+//        }, timeout);
+//        _fetchAndCache(request.clone()).then(function (response) {
+//            clearTimeout(timeoutId);
+//            resolve(response);
+//        }, reject);
+//    });
+}
+
+
+/**
+ * fetch the request and save it into cache
+ */
+function _fetchAndCache(request) {
+    return fetch(request.clone()).then(function (response) {
+        /**
+         * save new fetched result in cache (asynchron)
+         */
+        caches.open(cacheName).then(function (cache) {
+            cache.put(request, response);
+        });
+        return response.clone();
+    });
+}
+
+function _sendMessageToClients(message) {
+    self.clients.matchAll().then(clis => {
+        clis.forEach(cli => {
+            cli.postMessage({
+                type: message,
+                time: new Date().toString()
+            });
+        });
+    });
+}
+
 
 
 self.addEventListener('push', function (event) {
@@ -69,32 +247,37 @@ self.addEventListener('push', function (event) {
     // when the tab is in the background that the background tab is updated
     const notificationPromise = self.registration.showNotification(title, options);
     event.waitUntil(notificationPromise);
-    
+
     //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
     event.waitUntil(
-        clients.matchAll().then(clis => {
-            //const client = clis.find(c => {
-            //    return c.focused === true && c.visibilityState === 'visible';
-            //});
-            
-            //console.log(client);
-        
-            //if (clis.length === 0) {
-            //if(client !== undefined){
-                // Send a message to the page to update the UI
-                //console.log('Application is already open!');
-                // @see https://web-push-book.gauntface.com/chapter-05/04-common-notification-patterns/
-                clis.forEach(cli => {
-                    cli.postMessage({
-                        type: 1,
-                        time: new Date().toString()
-                    });
-                });
-            //}
-            // Show notification
-            //self.registration.showNotification(title, options);
-        })
-    );
+//            clients.matchAll().then(clis => {
+//
+//            // only visible clients
+////            const client = clis.find(c => {
+////                return c.focused === true && c.visibilityState === 'visible';
+////            });
+//
+//            //console.log(client);
+//
+////            if (clis.length === 0) {
+////                if (client !== undefined) {
+//                    // Send a message to the page to update the UI
+//                    //console.log('Application is already open!');
+//                    // @see https://web-push-book.gauntface.com/chapter-05/04-common-notification-patterns/
+//                    clis.forEach(cli => {
+//                        cli.postMessage({
+//                            type: 1,
+//                            time: new Date().toString()
+//                        });
+//                    });
+////                }
+////            }
+//            // Show notification
+////            self.registration.showNotification(title, options);
+//        })
+
+            _sendMessageToClients(1)
+            );
 });
 
 self.addEventListener('notificationclick', function (event) {
@@ -115,7 +298,7 @@ self.addEventListener('notificationclick', function (event) {
                 //return c.visibilityState === 'visible';
                 return c.focused === true && c.visibilityState === 'visible';
             });
-            
+
             clis.forEach(cli => {
                 cli.postMessage({
                     type: 2,
@@ -132,22 +315,22 @@ self.addEventListener('notificationclick', function (event) {
             }
         })
     );
-    
+
     //@see https://developers.google.com/web/fundamentals/push-notifications/common-notification-patterns#focus_an_existing_window
-    /*event.waitUntil(clients.matchAll({
-        type: "window"
-    }).then(function (clientList) {
-        for (var i = 0; i < clientList.length; i++) {
-            var client = clientList[i];
-            console.log(client.url.toString().startsWith(data.url));
-            if (client.url.toString().startsWith(data.url) && 'focus' in client)
-                return client.focus();
-        }
-        if (clients.openWindow)
-            return clients.openWindow(data.path);
-    }));
-    */
-    
+//    event.waitUntil(clients.matchAll({
+//        type: "window"
+//    }).then(function (clientList) {
+//        for (var i = 0; i < clientList.length; i++) {
+//            var client = clientList[i];
+//            console.log(client.url.toString().startsWith(data.url));
+//            if (client.url.toString().startsWith(data.url) && 'focus' in client)
+//                return client.focus();
+//        }
+//        if (clients.openWindow)
+//            return clients.openWindow(data.path);
+//    }));
+
+
     // Close all notifications
     self.registration.getNotifications().then(notifications => {
         console.log(notifications);
