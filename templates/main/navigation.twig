@@ -1,20 +1,20 @@
 <div id="mobile-header-icons">
     {% if user.module_location == 1 %}
-        <a href="{{ path_for('location') }}"><i class="fa fa-map-marker"></i></a>
+        <a href="{{ path_for('location') }}" {% if active == 'location' %}class="active"{% endif %}><i class="fa fa-map-marker"></i></a>
     {% endif %}
     {% if user.module_finance == 1 %}
-        <a href="{{ path_for('finances') }}"><i class="fa fa-money"></i></a>
+        <a href="{{ path_for('finances') }}" {% if active == 'finances' %}class="active"{% endif %}><i class="fa fa-money"></i></a>
     {% endif %}
     {% if user.module_cars == 1 %}
-        <a href="{{ path_for('car_service') }}"><i class="fa fa-road"></i></a>
+        <a href="{{ path_for('car_service') }}" {% if active == 'car_service' %}class="active"{% endif %}><i class="fa fa-road"></i></a>
     {% endif %}
     {% if user.module_boards == 1 %}
-        <a href="{{ path_for('boards') }}"><i class="fa fa-tasks"></i></a>
+        <a href="{{ path_for('boards') }}" {% if active == 'boards' %}class="active"{% endif %}><i class="fa fa-tasks"></i></a>
     {% endif %}
     {% if user.module_crawlers == 1 %}
-        <a href="{{ path_for('crawlers') }}"><i class="fa fa-database"></i></a>
+        <a href="{{ path_for('crawlers') }}" {% if active == 'crawlers' %}class="active"{% endif %}><i class="fa fa-database"></i></a>
     {% endif %}
-    <a href="{{ path_for('notifications') }}" class="badge" data-badge="0" id="iconBell"><i class="fa fa-bell-o"></i></a>
+    <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %}" data-badge="0" id="iconBell"><i class="fa fa-bell-o"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
         <span class="bar"></span>
         <span class="bar"></span>

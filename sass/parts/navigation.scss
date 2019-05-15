@@ -39,6 +39,10 @@ body.mobile-navigation-open{
             color: $color_blue_light;
         }
     }
+    
+    a.active i{
+         color: $color_blue_light;
+    }
 
     .disabled i{
         color: $color_border-input;
