@@ -239,7 +239,7 @@ $lang["OVERDUE"] = "Overdue";
 
 $lang["COMMENT"] = "comment";
 $lang["ADD_COMMENT"] = "add comment";
-$lang["REALLY_CLOSE"] = "Are you sure you want to leave this Site?";
+$lang["REALLY_CLOSE_PAGE"] = "Are you sure you want to leave this Site?";
 
 $lang["TOKEN_INVALID"] = "Token invalid";
 $lang["LOGIN_TOKENS"] = "Login Tokens";
@@ -271,6 +271,10 @@ $lang["REALLY_DELETE_STACK"] = "Do you really want to delete the stack with all 
 $lang["REALLY_DELETE_BOARD"] = "Do you really want to delete the board with all stacks, cards and labels?";
 $lang["REALLY_DELETE_CARD"] = "Do you really want to delete the card?";
 $lang["REALLY_DELETE_LABEL"] = "Do you really want to delete the label?";
+
+$lang["REALLY_CLOSE_STACK"] = "Do you really want to close the stack?";
+$lang["REALLY_CLOSE_CARD"] = "Do you really want to close the card?";
+$lang["REALLY_CLOSE_LABEL"] = "Do you really want to close the label?";
 
 $lang["YOU_ARE_OFFLINE"] = "You are currently offline!";
 

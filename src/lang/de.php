@@ -240,7 +240,7 @@ $lang["OVERDUE"] = "Überfällig";
 
 $lang["COMMENT"] = "Kommentar";
 $lang["ADD_COMMENT"] = "Kommentar hinzufügen";
-$lang["REALLY_CLOSE"] = "Soll die Seite wirklich geschlossen werden?";
+$lang["REALLY_CLOSE_PAGE"] = "Soll die Seite wirklich geschlossen werden?";
 
 $lang["TOKEN_INVALID"] = "Token falsch";
 $lang["LOGIN_TOKENS"] = "Login Tokens";
@@ -271,6 +271,10 @@ $lang["REALLY_DELETE_STACK"] = "Soll der Stapel mit allen Karten wirklich gelös
 $lang["REALLY_DELETE_BOARD"] = "Soll das Board mit allen Stapeln, Karten und Labeln wirklich gelöscht werden?";
 $lang["REALLY_DELETE_CARD"] = "Soll die Karte wirklich gelöscht werden?";
 $lang["REALLY_DELETE_LABEL"] = "Soll das Label wirklich gelöscht werden?";
+
+$lang["REALLY_CLOSE_STACK"] = "Soll der Stapel wirklich geschlossen werden?";
+$lang["REALLY_CLOSE_CARD"] = "Soll die Karte wirklich geschlossen werden?";
+$lang["REALLY_CLOSE_LABEL"] = "Soll das Label wirklich geschlossen werden?";
 
 $lang["YOU_ARE_OFFLINE"] = "Sie sind derzeit offline!";
 

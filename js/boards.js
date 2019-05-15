@@ -1,9 +1,9 @@
 'use strict';
 // get initial tokens
 /*getCSRFToken().then(function (token) {
-    console.log('new tokens generated');
-});
-*/
+ console.log('new tokens generated');
+ });
+ */
 
 const selector = new Selectr("select#card-label-list", {
     searchable: false,
@@ -24,7 +24,7 @@ const selector = new Selectr("select#card-label-list", {
 
 var simplemde = null;
 
-document.addEventListener('keypress', function (event) {
+document.addEventListener('keydown', function (event) {
     if (event.keyCode === 27) {
         if (isVisible(stackModal)) {
             setDialogOpen(stackModal, false);
@@ -447,6 +447,21 @@ function setDialogOpen(element, state) {
         }
 
     } else {
+        let confirm_text = lang.really_close;
+
+        if (element === stackModal) {
+            confirm_text = lang.really_close_stack;
+        }
+        if (element === cardModal) {
+            confirm_text = lang.really_close_card;
+        }
+        if (element === labelModal) {
+            confirm_text = lang.really_close_label;
+        }
+
+        if (!confirm(confirm_text)) {
+            return false;
+        }
 
         unfreeze();
 
@@ -761,7 +776,7 @@ window.addEventListener('beforeunload', function (event) {
     var isOpenLabel = isVisible(labelModal);
 
     if (!allowedReload && (isOpenStack === true || isOpenCard === true || isOpenLabel === true)) {
-        event.returnValue = lang.really_close;
+        event.returnValue = lang.really_close_page;
     }
 });
 
@@ -790,7 +805,7 @@ function sidebarAdjustments() {
 window.addEventListener('scroll', function () {
     if (pageBody.classList.contains("mobile-navigation-open")) {
         sidebarAdjustments();
-    } 
+    }
 });
 
 var stacks = document.querySelector('.stack-wrapper');
