@@ -7,25 +7,27 @@ class Mapper extends \App\Base\Mapper {
     protected $table = 'finances';
     protected $model = '\App\Finances\FinancesEntry';
 
-    private function getTableSQL($select) {
+    private function getTableSQL($select, $filter = false) {
         $sql = "SELECT {$select} "
                 . " FROM " . $this->getTable() . " f INNER JOIN " . $this->getTable('finances_categories') . " fc "
-                . " ON f.category = fc.id "
-                . " WHERE "
-                . " (f.date LIKE :searchQuery OR "
-                . " f.time LIKE :searchQuery OR "
-                . " f.type LIKE :searchQuery OR "
-                . " fc.name LIKE :searchQuery OR "
-                . " f.description LIKE :searchQuery OR "
-                . " f.value LIKE :searchQuery )";
+                . " ON f.category = fc.id ";
+        if ($filter) {
+            $sql .= " WHERE "
+                    . " (f.date LIKE :searchQuery OR "
+                    . " f.time LIKE :searchQuery OR "
+                    . " f.type LIKE :searchQuery OR "
+                    . " fc.name LIKE :searchQuery OR "
+                    . " f.description LIKE :searchQuery OR "
+                    . " f.value LIKE :searchQuery )";
+        }
         return $sql;
     }
 
-    public function tableCount($searchQuery) {
+    public function tableCount($searchQuery = "%") {
 
-        $bindings = array("searchQuery" => "%" . $searchQuery . "%");
+        $bindings = array("searchQuery" => $searchQuery);
 
-        $sql = $this->getTableSQL("COUNT(f.id)");
+        $sql = $this->getTableSQL("COUNT(f.id)", true);
 
         $this->filterByUser($sql, $bindings, "f.");
 
@@ -38,7 +40,7 @@ class Mapper extends \App\Base\Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    public function tableData($start, $limit, $searchQuery, $sortColumn, $sortDirection, $lang) {
+    public function getFinanceData($sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         $bindings = array("searchQuery" => "%" . $searchQuery . "%");
 
@@ -64,16 +66,21 @@ class Mapper extends \App\Base\Mapper {
                 break;
         }
 
+        $spending = $this->ci->get('helper')->getTranslatedString("FINANCES_SPENDING");
+        $income = $this->ci->get('helper')->getTranslatedString("FINANCES_INCOME");
+
         $select = "f.date, f.time, "
-                . "CASE WHEN f.type = 0 THEN '{$lang[0]}' ELSE '{$lang[1]}' END, "
+                . "CASE WHEN f.type = 0 THEN '{$spending}' ELSE '{$income}' END, "
                 . "fc.name as category, f.description, f.value, f.id, f.id";
-        $sql = $this->getTableSQL($select);
+        $sql = $this->getTableSQL($select, true);
 
         $this->filterByUser($sql, $bindings, "f.");
 
         $sql .= " ORDER BY {$sort} {$sortDirection}, f.time {$sortDirection}, f.id {$sortDirection}";
 
-        $sql .= " LIMIT {$start}, {$limit}";
+        if (!is_null($limit)) {
+            $sql .= " LIMIT {$start}, {$limit}";
+        }
 
         $stmt = $this->db->prepare($sql);
 
@@ -81,11 +88,11 @@ class Mapper extends \App\Base\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
 
-    public function tableSum($searchQuery, $type = 0) {
+    public function tableSum($searchQuery = "%", $type = 0) {
 
-        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "type" => $type);
+        $bindings = array("searchQuery" => $searchQuery, "type" => $type);
 
-        $sql = $this->getTableSQL("SUM(f.value)");
+        $sql = $this->getTableSQL("SUM(f.value)", true);
 
         $this->filterByUser($sql, $bindings, "f.");
 
@@ -284,9 +291,9 @@ class Mapper extends \App\Base\Mapper {
     public function getMarkers($from, $to) {
         $bindings = ["from" => $from, "to" => $to];
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
-        
+
         $this->filterByUser($sql, $bindings);
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 

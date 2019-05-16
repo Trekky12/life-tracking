@@ -47,43 +47,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for dataset in datasets %}
+                    {% for row in datasets %}
                         <tr>
-                            <th>{% if filter == "createdOn" %}{{dataset.createdOn}}{% else %}{{dataset.changedOn}}{% endif %}</th>
-                                {% for header in headers %}
-                                <td>
-                                    {% if not header.field_link is empty %}
-                                        
-                                        {% set link = dataset.getDataValue(header.field_link) %}
-                                        {% if header.diff == 1 -%}
-                                           {% set link = dataset.getDataValue(header.field_link, "diff") %}
-                                        {%- endif -%}
-                                        
-                                        <a href="{{link}}" target="_blank">
-                                    {% endif %}
-                                    
-                                    {# no whitespaces #}
-                                    {%- if not header.prefix is empty -%}
-                                        {{header.getHTML("prefix")|raw}}
-                                    {%- endif -%}
-
-                                    {%- if not header.field_content is empty -%}
-                                        {{header.getHTML()|raw}}
-                                    {%- elseif header.diff == 1 -%}
-                                        {{dataset.getDataValue(header.field_name, "diff")}}
-                                    {%- else -%}
-                                        {{dataset.getDataValue(header.field_name)}}
-                                    {%- endif -%}
-
-                                    {%- if not header.suffix is empty -%}
-                                        {{header.getHTML("suffix")|raw}}
-                                    {%- endif -%}
-
-                                    {% if not header.field_link is empty %}
-                                        </a>
-                                    {% endif %}
-                                </td>
-                            {% endfor %}    
+                            {% for column in row %}
+                                <td>{{ column | raw}}</td>
+                            {% endfor %}
                         </tr>
                     {% endfor %}
                 </tbody>

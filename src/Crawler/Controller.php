@@ -37,9 +37,9 @@ class Controller extends \App\Base\Controller {
 
         $filter = $this->getFilter($crawler);
         $hide_diff = $filter == "createdOn";
-        
+
         $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position', $hide_diff);
-        
+
 
         /**
          * Sorting
@@ -54,8 +54,9 @@ class Controller extends \App\Base\Controller {
             $sortDirection = $initialSortColumn->sort;
         }
 
-        $datasets = $this->dataset_mapper->getFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 21);
         $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
+        $datasets = $this->dataset_mapper->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 20);
+        $rendered_data = $this->renderTableRows($datasets, $headers, $filter);        
 
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
         $links_tree = $this->buildTree($links);
@@ -65,7 +66,7 @@ class Controller extends \App\Base\Controller {
                     "from" => $from,
                     "to" => $to,
                     "headers" => $headers,
-                    "datasets" => $datasets,
+                    "datasets" => $rendered_data,
                     "datacount" => $datacount,
                     "hasCrawlerTable" => true,
                     "filter" => $filter,
@@ -81,7 +82,7 @@ class Controller extends \App\Base\Controller {
 
         $hash = $request->getAttribute('hash');
         $crawler = $this->mapper->getCrawlerFromHash($hash);
-        
+
         $this->checkAccess($crawler->id);
 
         $filter = $this->getFilter($crawler);
@@ -93,70 +94,23 @@ class Controller extends \App\Base\Controller {
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
-        $searchQuery = empty($search) || $search === "null" ? null : $search;
+        $searchQuery = empty($search) || $search === "null" ? "%" : "%" . $search . "%";
 
         $sortColumnIndex = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
         $sortColumn = $this->getSortColumnFromColumnIndex($headers, $sortColumnIndex, $filter);
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
         $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
-        $recordsFiltered = $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter, $searchQuery);
+        $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter, $searchQuery);
 
-        $data = $this->dataset_mapper->tableData($crawler->id, $from, $to, $filter, $start, $length, $searchQuery, $sortColumn, $sortDirection);
-
-        $rendered_data = [];
-        foreach ($data as $dataset) {
-            $row = [];
-
-            if ($filter === "changedOn") {
-                $row[] = $dataset->changedOn;
-            } else {
-                $row[] = $dataset->createdOn;
-            }
-
-            foreach ($headers as $header) {
-                $field = [];
-                if (!empty($header->field_link)) {
-                    
-                    $link = $dataset->getDataValue($header->field_link);
-                    if (intval($header->diff) === 1) {
-                        $link = $dataset->getDataValue($header->field_link, "diff");
-                    }
-                    
-                    $field[] = '<a href="' . $link . '" target="_blank">';
-                }
-
-                if (!empty($header->prefix)) {
-                    $field[] = $header->getHTML("prefix");
-                }
-
-                if (!empty($header->field_content)) {
-                    $field[] = $header->getHTML();
-                } elseif (intval($header->diff) === 1) {
-                    $field[] = $dataset->getDataValue($header->field_name, "diff");
-                } else {
-                    $field[] = $dataset->getDataValue($header->field_name);
-                }
-
-                if (!empty($header->suffix)) {
-                    $field[] = $header->getHTML("suffix");
-                }
-
-                if (!empty($header->field_link)) {
-                    $field[] = '</a>';
-                }
-                $row[] = implode("", $field);
-            }
-            $rendered_data[] = $row;
-        }
-
+        $data = $this->dataset_mapper->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $rendered_data = $this->renderTableRows($data, $headers, $filter);
 
         return $response->withJson([
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
                     "data" => $rendered_data
-                        ]
-        );
+        ]);
     }
 
     /**
@@ -212,7 +166,7 @@ class Controller extends \App\Base\Controller {
         if (array_key_exists("hash", $data)) {
             $hash = filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS);
             $crawler = $this->mapper->getCrawlerFromHash($hash);
-            
+
             $this->checkAccess($crawler->id);
 
             if (array_key_exists("state", $data) && in_array($data["state"], array("createdOn", "changedOn"))) {
@@ -268,12 +222,61 @@ class Controller extends \App\Base\Controller {
         } else {
             $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
         }
-        
+
         if(!is_null($column->datatype)){
             $sortColumn = "CAST({$sortColumn} AS {$column->datatype})";
         }
-        
+
         return $sortColumn;
+    }
+
+    private function renderTableRows(array $table, $headers, $filter) {
+        $rendered_data = [];
+        foreach ($table as $dataset) {
+            $row = [];
+
+            if ($filter === "changedOn") {
+                $row[] = $dataset->changedOn;
+            } else {
+                $row[] = $dataset->createdOn;
+            }
+
+            foreach ($headers as $header) {
+                $field = [];
+                if (!empty($header->field_link)) {
+
+                    $link = $dataset->getDataValue($header->field_link);
+                    if (intval($header->diff) === 1) {
+                        $link = $dataset->getDataValue($header->field_link, "diff");
+                    }
+
+                    $field[] = '<a href="' . $link . '" target="_blank">';
+                }
+
+                if (!empty($header->prefix)) {
+                    $field[] = $header->getHTML("prefix");
+                }
+
+                if (!empty($header->field_content)) {
+                    $field[] = $header->getHTML();
+                } elseif (intval($header->diff) === 1) {
+                    $field[] = $dataset->getDataValue($header->field_name, "diff");
+                } else {
+                    $field[] = $dataset->getDataValue($header->field_name);
+                }
+
+                if (!empty($header->suffix)) {
+                    $field[] = $header->getHTML("suffix");
+                }
+
+                if (!empty($header->field_link)) {
+                    $field[] = '</a>';
+                }
+                $row[] = implode("", $field);
+            }
+            $rendered_data[] = $row;
+        }
+        return $rendered_data;
     }
 
 }

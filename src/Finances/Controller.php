@@ -10,7 +10,6 @@ class Controller extends \App\Base\Controller {
     private $cat_mapper;
     private $cat_assignments_mapper;
     private $budget_mapper;
-    
     static $GROUP_CATEGORIES_BUDGET_CHART = 5;
 
     public function init() {
@@ -24,10 +23,14 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->mapper->getAll('date DESC, time DESC', 10);
-        $categories = $this->cat_mapper->getAll();
-        $datacount = $this->mapper->count();
-        return $this->ci->view->render($response, 'finances/index.twig', ['list' => $list, 'categories' => $categories, "datacount" => $datacount]);
+        $list = $this->mapper->getFinanceData('date', 'DESC', 10);
+        $table = $this->renderTableRows($list);
+        $datacount = $this->mapper->tableCount();
+
+        return $this->ci->view->render($response, 'finances/index.twig', [
+                    "list" => $table,
+                    "datacount" => $datacount
+        ]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -275,39 +278,28 @@ class Controller extends \App\Base\Controller {
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
-        $searchQuery = empty($search) || $search === "null" ? null : $search;
+        $searchQuery = empty($search) || $search === "null" ? "%" : "%" . $search . "%";
 
         $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
         $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-
-
         $recordsTotal = $this->mapper->count();
-        $recordsFiltered = $recordsTotal;
-        if (!is_null($searchQuery)) {
-            $recordsFiltered = $this->mapper->tableCount($searchQuery);
-        }
+        $recordsFiltered = $this->mapper->tableCount($searchQuery);
 
         // subtract expenses from income
         $recordSum = $this->mapper->tableSum($searchQuery, 0) - $this->mapper->tableSum($searchQuery, 1);
 
-        $lang = [0 => $this->ci->get('helper')->getTranslatedString("FINANCES_SPENDING"), 1 => $this->ci->get('helper')->getTranslatedString("FINANCES_INCOME")];
-
-        $data = $this->mapper->tableData($start, $length, $searchQuery, $sortColumn, $sortDirection, $lang);
-        foreach ($data as &$row) {
-            $row[6] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $row[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[7] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $row[7]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
-        }
+        $data = $this->mapper->getFinanceData($sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $table = $this->renderTableRows($data);
 
         return $response->withJson([
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
                     "sum" => round($recordSum, 2),
-                    "data" => $data
-                        ]
-        );
+                    "data" => $table
+        ]);
     }
 
     private function createChartData($stats, $key = "year") {
@@ -441,6 +433,14 @@ class Controller extends \App\Base\Controller {
                     "data" => $data,
                     "labels" => $labels]
         );
+    }
+
+    private function renderTableRows(array $table) {
+        foreach ($table as &$row) {
+            $row[6] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $row[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[7] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $row[7]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+        }
+        return $table;
     }
 
 }

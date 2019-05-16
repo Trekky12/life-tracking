@@ -14,35 +14,12 @@ class Mapper extends \App\Base\Mapper {
                 . " WHERE crawler = :crawler "
                 . "   AND DATE({$filter}) >= :from "
                 . "   AND DATE({$filter}) <= :to "
-                . "AND data LIKE :searchQuery ";
+                . "AND LOWER(data) LIKE LOWER(:searchQuery) ";
         return $sql;
     }
 
-    public function getFromCrawler($crawler, $from, $to, $filter = "changedOn", $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null) {
-
-        $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => "%"];
-
-        $sql = $this->getTableSQL("*", $filter);
-
-        $sql .= "ORDER BY {$sortColumn} {$sortDirection}, id {$sortDirection}";
-
-        if (!is_null($limit)) {
-            $sql .= " LIMIT {$limit}";
-        }
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
-
-        $results = [];
-        while ($row = $stmt->fetch()) {
-            $key = reset($row);
-            $results[$key] = new $this->model($row);
-        }
-        return $results;
-    }
-
-    public function getCountFromCrawler($crawler, $from, $to, $filter = "changedOn", $searchQuery = "") {
-        $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => "%" . $searchQuery . "%"];
+    public function getCountFromCrawler($crawler, $from, $to, $filter = "changedOn", $searchQuery = "%") {
+        $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => $searchQuery];
         $sql = $this->getTableSQL("COUNT(*)", $filter);
 
         $stmt = $this->db->prepare($sql);
@@ -54,15 +31,17 @@ class Mapper extends \App\Base\Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    public function tableData($crawler, $from, $to, $filter, $start, $limit, $searchQuery, $sortColumn, $sortDirection) {
+    public function getDataFromCrawler($crawler, $from, $to, $filter = "changedOn", $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
-        $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => "%" . $searchQuery . "%"];
+        $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => $searchQuery];
 
         $sql = $this->getTableSQL("*", $filter);
 
         $sql .= " ORDER BY {$sortColumn} {$sortDirection}, id {$sortDirection}";
 
-        $sql .= " LIMIT {$start}, {$limit}";
+        if (!is_null($limit)) {
+            $sql .= " LIMIT {$start}, {$limit}";
+        }
 
         $stmt = $this->db->prepare($sql);
 
