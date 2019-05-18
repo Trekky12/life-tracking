@@ -7,27 +7,27 @@ class Mapper extends \App\Base\Mapper {
     protected $table = 'finances';
     protected $model = '\App\Finances\FinancesEntry';
 
-    private function getTableSQL($select, $filter = false) {
+    private function getTableSQL($select) {
         $sql = "SELECT {$select} "
                 . " FROM " . $this->getTable() . " f INNER JOIN " . $this->getTable('finances_categories') . " fc "
-                . " ON f.category = fc.id ";
-        if ($filter) {
-            $sql .= " WHERE "
-                    . " (f.date LIKE :searchQuery OR "
-                    . " f.time LIKE :searchQuery OR "
-                    . " f.type LIKE :searchQuery OR "
-                    . " fc.name LIKE :searchQuery OR "
-                    . " f.description LIKE :searchQuery OR "
-                    . " f.value LIKE :searchQuery )";
-        }
+                . " ON f.category = fc.id "
+                . " WHERE (DATE(f.date) >= :from "
+                . "   AND DATE(f.date) <= :to ) "
+                . " AND "
+                . " (f.date LIKE :searchQuery OR "
+                . " f.time LIKE :searchQuery OR "
+                . " f.type LIKE :searchQuery OR "
+                . " fc.name LIKE :searchQuery OR "
+                . " f.description LIKE :searchQuery OR "
+                . " f.value LIKE :searchQuery )";
         return $sql;
     }
 
-    public function tableCount($searchQuery = "%") {
+    public function tableCount($from, $to, $searchQuery = "%") {
 
-        $bindings = array("searchQuery" => $searchQuery);
+        $bindings = array("searchQuery" => $searchQuery, "from" => $from, "to" => $to);
 
-        $sql = $this->getTableSQL("COUNT(f.id)", true);
+        $sql = $this->getTableSQL("COUNT(f.id)");
 
         $this->filterByUser($sql, $bindings, "f.");
 
@@ -40,9 +40,9 @@ class Mapper extends \App\Base\Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    public function getFinanceData($sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getFinanceData($from, $to, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
-        $bindings = array("searchQuery" => "%" . $searchQuery . "%");
+        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "from" => $from, "to" => $to);
 
         $sort = "date";
         switch ($sortColumn) {
@@ -72,7 +72,7 @@ class Mapper extends \App\Base\Mapper {
         $select = "f.date, f.time, "
                 . "CASE WHEN f.type = 0 THEN '{$spending}' ELSE '{$income}' END, "
                 . "fc.name as category, f.description, f.value, f.id, f.id";
-        $sql = $this->getTableSQL($select, true);
+        $sql = $this->getTableSQL($select);
 
         $this->filterByUser($sql, $bindings, "f.");
 
@@ -88,11 +88,11 @@ class Mapper extends \App\Base\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
 
-    public function tableSum($searchQuery = "%", $type = 0) {
+    public function tableSum($from, $to, $searchQuery = "%", $type = 0) {
 
-        $bindings = array("searchQuery" => $searchQuery, "type" => $type);
+        $bindings = array("searchQuery" => $searchQuery, "type" => $type, "from" => $from, "to" => $to);
 
-        $sql = $this->getTableSQL("SUM(f.value)", true);
+        $sql = $this->getTableSQL("SUM(f.value)");
 
         $this->filterByUser($sql, $bindings, "f.");
 
@@ -303,6 +303,24 @@ class Mapper extends \App\Base\Mapper {
             $results[$key] = new $this->model($row);
         }
         return $results;
+    }
+
+    public function getMinMaxDate() {
+        $sql = "SELECT MIN(date) as min, MAX(date) as max FROM " . $this->getTable() . "";
+
+        $bindings = [];
+        $this->filterByUser($sql, $bindings);
+
+        $sql .= " LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $result = ["min" => date('Y-m-d'), "max" => date('Y-m-d')];
+        if ($stmt->rowCount() === 1){
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+        return $result;
     }
 
 }

@@ -23,13 +23,27 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->mapper->getFinanceData('date', 'DESC', 10);
+        
+        $d = new \DateTime('first day of this month');
+        $defaultFrom = $d->format('Y-m-d');
+        
+        $data = $request->getQueryParams();
+        list($from, $to) = $this->ci->get('helper')->getDateRange($data, $defaultFrom); //$range["min"], $max);
+
+        $list = $this->mapper->getFinanceData($from, $to, 'date', 'DESC', 10);
         $table = $this->renderTableRows($list);
-        $datacount = $this->mapper->tableCount();
+        $datacount = $this->mapper->tableCount($from, $to);
+        
+        $range = $this->mapper->getMinMaxDate();
+        $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
         return $this->ci->view->render($response, 'finances/index.twig', [
                     "list" => $table,
-                    "datacount" => $datacount
+                    "datacount" => $datacount,
+                    "from" => $from,
+                    "to" => $to,
+                    "min" => $range["min"],
+                    "max" => $max
         ]);
     }
 
@@ -274,6 +288,8 @@ class Controller extends \App\Base\Controller {
     public function table(Request $request, Response $response) {
         $requestData = $request->getQueryParams();
 
+        list($from, $to) = $this->ci->get('helper')->getDateRange($requestData);
+
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -285,13 +301,13 @@ class Controller extends \App\Base\Controller {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $recordsTotal = $this->mapper->count();
-        $recordsFiltered = $this->mapper->tableCount($searchQuery);
+        $recordsTotal = $this->mapper->tableCount($from, $to);
+        $recordsFiltered = $this->mapper->tableCount($from, $to, $searchQuery);
 
         // subtract expenses from income
-        $recordSum = $this->mapper->tableSum($searchQuery, 0) - $this->mapper->tableSum($searchQuery, 1);
+        $recordSum = $this->mapper->tableSum($from, $to, $searchQuery, 0) - $this->mapper->tableSum($from, $to, $searchQuery, 1);
 
-        $data = $this->mapper->getFinanceData($sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->mapper->getFinanceData($from, $to, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderTableRows($data);
 
         return $response->withJson([

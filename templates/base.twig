@@ -105,10 +105,15 @@
                 
                 {% if not hasCrawlerTable is null %}
                 'crawler_table': '{{path_for('crawlers_table', {'hash': crawler.hash})}}',
-                'crawler_filter_from': '{{from}}',
-                'crawler_filter_to': '{{to}}',
                 'crawler_filter': '{{path_for('set_crawler_filter')}}',
-                'crawler_hash': '{{crawler.hash}}'
+                'crawler_hash': '{{crawler.hash}}',
+                {% endif %}
+                    
+                {% if not from is null %}    
+                'dateFrom': '{{from}}',
+                {% endif %}
+                {% if not to is null %}    
+                'dateTo': '{{to}}',
                 {% endif %}
                     
             };

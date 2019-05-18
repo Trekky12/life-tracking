@@ -1,21 +1,3 @@
-#search-filter{
-
-    padding: 5px 10px;
-
-    .date-filter{
-
-        @media screen and (min-width: $size_mobile) {
-            display:flex;
-            align-items: center;
-        }
-
-        .flatpickr-input{
-            height:44px;
-        }
-    }
-
-}
-
 #crawler_links{
 
     margin:0;

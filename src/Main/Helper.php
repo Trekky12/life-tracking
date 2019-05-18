@@ -246,10 +246,17 @@ class Helper {
         return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING);
     }
 
-    public function getDateRange($data) {
+    public function getDateRange($data, $defaultFrom = null, $defaultTo = null) {
 
-        $from = array_key_exists('from', $data) && !empty($data['from']) ? filter_var($data['from'], FILTER_SANITIZE_STRING) : date('Y-m-d');
-        $to = array_key_exists('to', $data) && !empty($data['to']) ? filter_var($data['to'], FILTER_SANITIZE_STRING) : date('Y-m-d');
+        if (is_null($defaultFrom)) {
+            $defaultFrom = date('Y-m-d');
+        }
+        if (is_null($defaultTo)) {
+            $defaultTo = date('Y-m-d');
+        }
+
+        $from = array_key_exists('from', $data) && !empty($data['from']) ? filter_var($data['from'], FILTER_SANITIZE_STRING) : $defaultFrom;
+        $to = array_key_exists('to', $data) && !empty($data['to']) ? filter_var($data['to'], FILTER_SANITIZE_STRING) : $defaultTo;
 
         /**
          * Clean dates
@@ -257,12 +264,11 @@ class Helper {
         $dateRegex = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/";
         if (!preg_match($dateRegex, $from) || !preg_match($dateRegex, $to)) {
 
-            $from = preg_match($dateRegex, $from) ? $from : date('Y-m-d');
-            $to = preg_match($dateRegex, $to) ? $to : date('Y-m-d');
+            $from = preg_match($dateRegex, $from) ? $from : $defaultFrom;
+            $to = preg_match($dateRegex, $to) ? $to : $defaultTo;
         }
 
         return array($from, $to);
-        
     }
 
     public function getRequestURI(\Psr\Http\Message\RequestInterface $request) {

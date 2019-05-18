@@ -328,4 +328,7 @@ $lang["CAST_SIGNED"] = "signed integer";
 $lang["CAST_TIME"] = "time (HH:MM:SS)";
 $lang["CAST_UNSIGNED"] = "unsigned integer";
 
+$lang["SHOW_THIS_MONTH"] = "this month";
+$lang["SHOW_ALL"] = "total range";
+
 return $lang;

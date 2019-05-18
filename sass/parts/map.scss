@@ -37,51 +37,6 @@
 }
 
 
-#search{
-
-    box-shadow: 0 10px 5px -5px rgba(0,0,0,0.16);
-
-    background-color: $color_background-body;
-
-    margin-left:-5px;
-    margin-right:-5px;
-    margin-top:-2.5rem;
-    padding:0.5rem;
-    position: relative;
-    z-index: 10;
-
-    @media screen and (min-width: $size_mobile_navigation){
-        z-index: 1;
-    }
-
-
-    #search-form{
-        transition: height .3s linear;
-        overflow:hidden;
-        padding:0;
-
-        &.collapsed{
-            height: 0!important;
-        }
-
-        .search-form-inner{
-            padding:1rem 1rem 0rem 1rem ;
-        }
-
-        input[type="submit"]{
-            margin-top:1rem;
-            width:100%;
-        }
-
-    }
-
-    @media screen and (min-width: $size_mobile){
-        max-width: $size_content-width-xsmall;
-        margin: 0 auto;
-    }
-}
-
-
 @media screen and (min-width: $size_mobile_navigation){
     #geo-map.visible ~ .map-btn{
         display:flex;

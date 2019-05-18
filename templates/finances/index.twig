@@ -2,6 +2,10 @@
 
 {% set active = 'finances' %}
 
+{% block javascript %}
+    <script src="{{base_url()}}/static/js/datefilter.js?ver=20190306"></script>
+{% endblock %}
+
 {% block body %}
     {% if flash("budget_message") is not empty %}
         {% for msg in flash('budget_message') %}
@@ -17,6 +21,28 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2> <a href="{{  path_for('finances_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
         <div class="page-content">
+
+            <form method="GET" id="search-filter" class="hidden1">
+                <div class="filter-content">
+                    <div class="date-filter">
+                        <div class="date-element">
+                            <input type="text" id="dateRange" value="{{from}} to {{to}}" />
+
+                            <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+                            <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+                        </div>
+                        <div class="filter-element">
+                            <input type="submit" value="{{lang["SHOW"]}}"/>
+                        </div>
+                        <div class="filter-element">
+                            <a href="{{ path_for('finances') }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
+                        </div>
+                        <div class="filter-element">
+                            <a href="{{ path_for('finances') }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
+                        </div>
+                    </div>
+                </div>
+            </form>   
 
             <table id="finance_table" class="table table-hover small">
                 <thead>

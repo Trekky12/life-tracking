@@ -327,5 +327,8 @@ $lang["CAST_SIGNED"] = "Ganzzahl";
 $lang["CAST_TIME"] = "Zeit (HH:MM:SS)";
 $lang["CAST_UNSIGNED"] = "positiv Ganzzahl";
 
+$lang["SHOW_THIS_MONTH"] = "Dieser Monat";
+$lang["SHOW_ALL"] = "Gesamter Zeitraum";
+
 
 return $lang;

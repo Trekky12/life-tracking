@@ -40,7 +40,11 @@ var financeTable = new JSTable("#finance_table", {
     ],
     deferLoading: jsObject.datacount,
     serverSide: true,
-    ajax: jsObject.finances_table
+    ajax: jsObject.finances_table,
+    ajaxParams: {
+        "from": jsObject.dateFrom,
+        "to": jsObject.dateTo
+    }
 });
 
 /*financeTable.on("sort", function (column, direction) {
@@ -475,8 +479,8 @@ var crawlersDataTable = new JSTable("#crawlers_data_table", {
     serverSide: true,
     ajax: jsObject.crawler_table,
     ajaxParams: {
-        "from" : jsObject.crawler_filter_from,
-        "to" : jsObject.crawler_filter_to
+        "from": jsObject.dateFrom,
+        "to": jsObject.dateTo
     }
 });
 
