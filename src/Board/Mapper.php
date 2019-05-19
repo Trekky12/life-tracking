@@ -12,24 +12,10 @@ class Mapper extends \App\Base\Mapper {
     protected $user_table = "boards_user";
     protected $element_name = "board";
 
-    public function getBoardFromHash($hash) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE  hash = :hash";
-
-        $bindings = array("hash" => $hash);
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
-
-        if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
-        }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
-    }
-
     public function getVisibleBoards($sorted = false, $limit = false) {
-        $sql = "SELECT b.* FROM " . $this->getTable() . " b, " . $this->getTable("boards_user") . " bu ";
-        $sql .= "WHERE (b.id = bu.board AND bu.user = :user) OR b.user = :user";
-        
+        $sql = "SELECT b.* FROM " . $this->getTable() . " b LEFT JOIN " . $this->getTable($this->user_table) . " bu ";
+        $sql .= " ON b.id = bu.board ";
+        $sql .= "WHERE bu.user = :user OR b.user = :user";
 
         $bindings = array();
         if (!is_null($this->userid)) {
@@ -90,20 +76,5 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
-    public function setHash($id, $hash) {
-        $sql = "UPDATE " . $this->getTable() . " SET hash  = :hash WHERE id = :id";
-
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            'hash' => $hash,
-            'id' => $id
-        ]);
-
-        if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
-        }
-    }
-        
 
 }

@@ -31,7 +31,7 @@ class Controller extends \App\Base\Controller {
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
 
         $hash = $request->getAttribute('hash');
-        $crawler = $this->mapper->getCrawlerFromHash($hash);
+        $crawler = $this->mapper->getFromHash($hash);
 
         $this->checkAccess($crawler->id);
 
@@ -81,7 +81,7 @@ class Controller extends \App\Base\Controller {
         list($from, $to) = $this->ci->get('helper')->getDateRange($requestData);
 
         $hash = $request->getAttribute('hash');
-        $crawler = $this->mapper->getCrawlerFromHash($hash);
+        $crawler = $this->mapper->getFromHash($hash);
 
         $this->checkAccess($crawler->id);
 
@@ -165,7 +165,7 @@ class Controller extends \App\Base\Controller {
 
         if (array_key_exists("hash", $data)) {
             $hash = filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS);
-            $crawler = $this->mapper->getCrawlerFromHash($hash);
+            $crawler = $this->mapper->getFromHash($hash);
 
             $this->checkAccess($crawler->id);
 

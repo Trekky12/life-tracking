@@ -291,5 +291,32 @@ abstract class Mapper {
         }
         return $results;
     }
+    
+    public function getFromHash($hash) {
+        $sql = "SELECT * FROM " . $this->getTable() . " WHERE  hash = :hash";
 
+        $bindings = array("hash" => $hash);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return new $this->model($stmt->fetch());
+        }
+        throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
+    }
+
+    public function setHash($id, $hash) {
+        $sql = "UPDATE " . $this->getTable() . " SET hash  = :hash WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            'hash' => $hash,
+            'id' => $id
+        ]);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+        }
+    }    
 }

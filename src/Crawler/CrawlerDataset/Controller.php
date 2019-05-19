@@ -24,7 +24,7 @@ class Controller extends \App\Base\Controller {
 
         $dataset_id = null;
         try {
-            $crawler = $this->crawler_mapper->getCrawlerFromHash($crawlerhash);
+            $crawler = $this->crawler_mapper->getFromHash($crawlerhash);
             $data["crawler"] = $crawler->id;
             $data["user"] = $this->ci->get('helper')->getUser()->id;
 

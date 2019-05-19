@@ -34,7 +34,7 @@ class Controller extends \App\Base\Controller {
     public function view(Request $request, Response $response) {
         $hash = $request->getAttribute('hash');
 
-        $board = $this->mapper->getBoardFromHash($hash);
+        $board = $this->mapper->getFromHash($hash);
 
         /**
          * Is the user allowed to view this board?
