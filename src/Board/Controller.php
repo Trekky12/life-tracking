@@ -161,15 +161,5 @@ class Controller extends \App\Base\Controller {
         $this->allowOwnerOnly($id);
     }
 
-    private function allowOwnerOnly($board_id) {
-        $user = $this->ci->get('helper')->getUser()->id;
-        if (!is_null($board_id)) {
-            $board = $this->mapper->get($board_id);
-
-            if ($board->user !== $user) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
-            }
-        }
-    }
 
 }

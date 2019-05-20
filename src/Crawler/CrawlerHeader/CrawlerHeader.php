@@ -38,18 +38,6 @@ class CrawlerHeader extends \App\Base\Model {
         $this->sort = $this->exists('sort', $data) ? filter_var($data['sort'], FILTER_SANITIZE_STRING) : null;
         $this->datatype = $this->exists('datatype', $data) ? filter_var($data['datatype'], FILTER_SANITIZE_STRING) : null;
 
-        /**
-         * Values from DB
-         */
-        if ($this->exists('createdBy', $data)) {
-            $this->createdBy = filter_var($data['createdBy'], FILTER_SANITIZE_NUMBER_INT);
-        }
-        if ($this->exists('createdOn', $data)) {
-            $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
-        }
-        if ($this->exists('changedBy', $data)) {
-            $this->changedBy = filter_var($data['changedBy'], FILTER_SANITIZE_NUMBER_INT);
-        }
         
         if(!in_array($this->datatype, array(null, "BINARY","CHAR","DATE","DATETIME","DECIMAL","SIGNED","TIME","UNSIGNED"))){
             $this->datatype = null;

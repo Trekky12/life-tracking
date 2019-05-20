@@ -40,7 +40,7 @@ class Mapper extends \App\Base\Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    public function getFinanceData($from, $to, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableData($from, $to, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         $bindings = array("searchQuery" => "%" . $searchQuery . "%", "from" => $from, "to" => $to);
 

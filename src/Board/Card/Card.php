@@ -27,22 +27,6 @@ class Card extends \App\Base\Model {
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         /**
-         * Values from DB
-         */
-        if ($this->exists('createdBy', $data)) {
-            $this->createdBy = filter_var($data['createdBy'], FILTER_SANITIZE_NUMBER_INT);
-        }
-        if ($this->exists('createdOn', $data)) {
-            $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
-        }
-        if ($this->exists('changedBy', $data)) {
-            $this->changedBy = filter_var($data['changedBy'], FILTER_SANITIZE_NUMBER_INT);
-        }
-        if ($this->exists('hash', $data)) {
-            $this->hash = filter_var($data['hash'], FILTER_SANITIZE_STRING);
-        }
-
-        /**
          * Clean date/time
          */
         if (!empty($this->date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {

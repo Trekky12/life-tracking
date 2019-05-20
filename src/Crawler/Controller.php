@@ -128,17 +128,6 @@ class Controller extends \App\Base\Controller {
         $this->allowOwnerOnly($id);
     }
 
-    private function allowOwnerOnly($crawler_id) {
-        $user = $this->ci->get('helper')->getUser()->id;
-        if (!is_null($crawler_id)) {
-            $crawler = $this->mapper->get($crawler_id);
-
-            if ($crawler->user !== $user) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
-            }
-        }
-    }
-
     /**
      * Is the user allowed to view this crawler?
      */

@@ -47,14 +47,6 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
-        // Remove CSRF attributes
-        if (array_key_exists('csrf_name', $data)) {
-            unset($data["csrf_name"]);
-        }
-        if (array_key_exists('csrf_value', $data)) {
-            unset($data["csrf_value"]);
-        }
-
         $this->insertOrUpdate($id, $data);
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler]), 301);
@@ -64,22 +56,22 @@ class Controller extends \App\Base\Controller {
      * Does the user have access to this dataset?
      */
     protected function preSave($id, &$data) {
-        $this->allowOwnerOnly($id);
+        $this->allowParentOwnerOnly($id);
     }
 
     protected function preEdit($id) {
-        $this->allowOwnerOnly($id);
+        $this->allowParentOwnerOnly($id);
     }
 
     protected function preDelete($id) {
-        $this->allowOwnerOnly($id);
+        $this->allowParentOwnerOnly($id);
     }
 
-    private function allowOwnerOnly($link_id) {
+    private function allowParentOwnerOnly($element_id) {
         $user = $this->ci->get('helper')->getUser()->id;
-        if (!is_null($link_id)) {
-            $link = $this->mapper->get($link_id);
-            $crawler = $this->crawler_mapper->get($link->crawler);
+        if (!is_null($element_id)) {
+            $element = $this->mapper->get($element_id);
+            $crawler = $this->crawler_mapper->get($element->crawler);
 
             if ($crawler->user !== $user) {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);

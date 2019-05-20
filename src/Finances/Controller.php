@@ -30,7 +30,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data, $defaultFrom); //$range["min"], $max);
 
-        $list = $this->mapper->getFinanceData($from, $to, 'date', 'DESC', 10);
+        $list = $this->mapper->getTableData($from, $to, 0, 'DESC', 10);
         $table = $this->renderTableRows($list);
         $datacount = $this->mapper->tableCount($from, $to);
         
@@ -307,7 +307,7 @@ class Controller extends \App\Base\Controller {
         // subtract expenses from income
         $recordSum = $this->mapper->tableSum($from, $to, $searchQuery, 0) - $this->mapper->tableSum($from, $to, $searchQuery, 1);
 
-        $data = $this->mapper->getFinanceData($from, $to, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->mapper->getTableData($from, $to, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderTableRows($data);
 
         return $response->withJson([

@@ -95,14 +95,6 @@ abstract class Controller {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
-        
-        // Remove CSRF attributes
-        if(array_key_exists('csrf_name', $data)){
-            unset($data["csrf_name"]);
-        }
-        if(array_key_exists('csrf_value', $data)){
-            unset($data["csrf_value"]);
-        }
 
         $this->insertOrUpdate($id, $data);
 
@@ -110,6 +102,15 @@ abstract class Controller {
     }
 
     protected function insertOrUpdate($id, $data) {
+
+        // Remove CSRF attributes
+        if (array_key_exists('csrf_name', $data)) {
+            unset($data["csrf_name"]);
+        }
+        if (array_key_exists('csrf_value', $data)) {
+            unset($data["csrf_value"]);
+        }
+        
         /**
          * Custom Hook
          */
@@ -262,6 +263,17 @@ abstract class Controller {
         }
 
         return $response->withJson(['entry' => $rentry]);
+    }
+
+    protected function allowOwnerOnly($element_id) {
+        $user = $this->ci->get('helper')->getUser()->id;
+        if (!is_null($element_id)) {
+            $element = $this->mapper->get($element_id);
+
+            if ($element->user !== $user) {
+                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            }
+        }
     }
 
 }

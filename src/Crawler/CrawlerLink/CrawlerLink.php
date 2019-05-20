@@ -21,19 +21,6 @@ class CrawlerLink extends \App\Base\Model {
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
-        /**
-         * Values from DB
-         */
-        if ($this->exists('createdBy', $data)) {
-            $this->createdBy = filter_var($data['createdBy'], FILTER_SANITIZE_NUMBER_INT);
-        }
-        if ($this->exists('createdOn', $data)) {
-            $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
-        }
-        if ($this->exists('changedBy', $data)) {
-            $this->changedBy = filter_var($data['changedBy'], FILTER_SANITIZE_NUMBER_INT);
-        }
-
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
