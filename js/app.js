@@ -58,13 +58,14 @@ let isSubscribed = false;
 // set offline mode when current page is cached
 // reset the info in the localStorage and save the 
 // info in a local variable 
-if (localStorage.getItem('isCached')) {
-    localStorage.removeItem('isCached');
-    console.log('this is cached!');
-    setOffline(true);
-    isCached = true;
-}
-
+document.addEventListener("DOMContentLoaded",function(){
+    if (localStorage.getItem('isCached')) {
+        localStorage.removeItem('isCached');
+        console.log('this is cached!');
+        setOffline(true);
+        isCached = true;
+    }
+});
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js?v=20190227').then(function (registration) {
