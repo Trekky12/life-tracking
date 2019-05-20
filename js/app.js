@@ -130,8 +130,12 @@ function initialize() {
             redirect();
             throw "No Subscription returned";
         }
-        return updateSubscriptionOnServer(subscription, 'PUT').then(function () {
+        return updateSubscriptionOnServer(subscription, 'PUT').then(function (data) {
             return subscription;
+        }).catch(function(){
+            notificationsDisabled('disabled');
+            redirect();
+            throw "No Subscription on server";
         });
 
     }).then(function (subscription) {
@@ -266,9 +270,14 @@ function updateSubscriptionOnServer(subscription, method = 'POST') {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
+        }).then(function(response){
+            return response.json();
+        }).then(function(data){
+            if(data.status != "success"){
+                throw "Error updating subscription";
+            }
+            return data;
         });
-    }).catch(function (error) {
-        console.error(error);
     });
 
 }

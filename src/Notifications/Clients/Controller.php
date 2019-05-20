@@ -32,29 +32,34 @@ class Controller extends \App\Base\Controller {
         $entry->agent = $this->ci->get('helper')->getAgent();
         $entry->user = $this->ci->get('helper')->getUser()->id;
         $entry->changedOn = date('Y-m-d G:i:s');
+        
+        $result = array('status' => 'error');
 
         if ($request->isPost()) {
             $logger->addInfo('Subscription insert', $entry->get_fields());
             $this->mapper->insert($entry);
+            $result['status'] = 'success';
         }
         if ($request->isPut()) {
             $entry->changedOn = date('Y-m-d G:i:s');
 
             try {
                 $this->mapper->get($entry->endpoint, true, 'endpoint');
+                $this->mapper->update($entry, "endpoint");
+                $result['status'] = 'success';
             } catch (\Exception $e) {
                 // No Entry found so create one
-                $logger->addWarning('Subscription not on server but on client', $entry->get_fields());
-                $this->mapper->insert($entry);
+                //$logger->addWarning('Subscription not on server but on client', $entry->get_fields());
+                //$this->mapper->insert($entry);
             }
-            $this->mapper->update($entry, "endpoint");
         }
         if ($request->isDelete()) {
             $logger->addInfo('Subscription delete', $entry->get_fields());
             $this->mapper->delete($entry->endpoint, "endpoint");
+            $result['status'] = 'success';
         }
 
-        return $response->withJSON(array('status' => 'success'));
+        return $response->withJSON($result);
     }
 
     public function getCategoriesFromEndpoint(Request $request, Response $response) {
