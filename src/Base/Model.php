@@ -84,7 +84,7 @@ class Model implements \JsonSerializable {
     }
 
     protected function exists($key, $data) {
-        return array_key_exists($key, $data) && !is_null($data[$key]) && $data[$key] !== "" && $data[$key] != '%' . $key;
+        return array_key_exists($key, $data) && !is_null($data[$key]) && $data[$key] !== "" && $data[$key] !== '%' . $key;
     }
 
     public function log() {

@@ -23,17 +23,17 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        
+
         $d = new \DateTime('first day of this month');
         $defaultFrom = $d->format('Y-m-d');
-        
+
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data, $defaultFrom); //$range["min"], $max);
 
         $list = $this->mapper->getTableData($from, $to, 0, 'DESC', 10);
         $table = $this->renderTableRows($list);
         $datacount = $this->mapper->tableCount($from, $to);
-        
+
         $range = $this->mapper->getMinMaxDate();
         $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
@@ -452,11 +452,20 @@ class Controller extends \App\Base\Controller {
     }
 
     private function renderTableRows(array $table) {
-        foreach ($table as &$row) {
-            $row[6] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $row[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[7] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $row[7]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
-        }
-        return $table;
-    }
+        $rendered_data = [];
+        foreach ($table as $dataset) {
+            $row = [];
+            $row[] = $dataset[0];
+            $row[] = $dataset[1];
+            $row[] = $dataset[2] == 0 ? $this->ci->get('helper')->getTranslatedString("FINANCES_SPENDING") : $this->ci->get('helper')->getTranslatedString("FINANCES_INCOME");
+            $row[] = $dataset[3];
+            $row[] = $dataset[4];
+            $row[] = $dataset[5];
+            $row[] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
 
+            $rendered_data[] = $row;
+        }
+        return $rendered_data;
+    }
 }

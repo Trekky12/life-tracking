@@ -66,12 +66,9 @@ class Mapper extends \App\Base\Mapper {
                 break;
         }
 
-        $spending = $this->ci->get('helper')->getTranslatedString("FINANCES_SPENDING");
-        $income = $this->ci->get('helper')->getTranslatedString("FINANCES_INCOME");
-
         $select = "f.date, f.time, "
-                . "CASE WHEN f.type = 0 THEN '{$spending}' ELSE '{$income}' END, "
-                . "fc.name as category, f.description, f.value, f.id, f.id";
+                . "f.type, "
+                . "fc.name as category, f.description, f.value, f.id";
         $sql = $this->getTableSQL($select);
 
         $this->filterByUser($sql, $bindings, "f.");

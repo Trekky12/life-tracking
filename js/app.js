@@ -23,7 +23,7 @@ function setOffline(offline) {
         document.body.classList.remove("offline");
         document.getElementById("offline-alert").classList.add("hidden");
         setFormFields(false);
-        
+
         // the page is from cache but now we are online, so reload
         if(isCached){
             window.location.reload();
@@ -34,10 +34,12 @@ function setOffline(offline) {
 function setFormFields(value) {
     let fields = document.querySelectorAll('form input, form select, form button[type="submit"]');
     fields.forEach(function (item, idx) {
-        if (value) {
-            item.setAttribute("disabled", true);
-        } else {
-            item.removeAttribute("disabled");
+        if (!item.classList.contains("disabled")) {
+            if (value) {
+                item.setAttribute("disabled", true);
+            } else {
+                item.removeAttribute("disabled");
+            }
         }
     });
 }
