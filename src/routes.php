@@ -198,24 +198,27 @@ $app->group('/crawlers', function() {
     $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\Controller:save')->setName('crawlers_save');
     $this->delete('/delete/{id}', '\App\Crawler\Controller:delete')->setName('crawlers_delete');
 
-    $this->get('/view/{hash}', '\App\Crawler\Controller:view')->setName('crawlers_view');
-    $this->get('/table/{hash}', '\App\Crawler\Controller:table')->setName('crawlers_table');
 
-    $this->group('/headers/{crawler:[0-9]+}', function() {
-        $this->get('/', '\App\Crawler\CrawlerHeader\Controller:index')->setName('crawlers_headers');
-        $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:edit')->setName('crawlers_headers_edit');
-        $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:save')->setName('crawlers_headers_save');
-        $this->delete('/delete/{id}', '\App\Crawler\CrawlerHeader\Controller:delete')->setName('crawlers_headers_delete');
-    });
-    
-    $this->group('/links/{crawler:[0-9]+}', function() {
-        $this->get('/', '\App\Crawler\CrawlerLink\Controller:index')->setName('crawlers_links');
-        $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\CrawlerLink\Controller:edit')->setName('crawlers_links_edit');
-        $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\CrawlerLink\Controller:save')->setName('crawlers_links_save');
-        $this->delete('/delete/{id}', '\App\Crawler\CrawlerLink\Controller:delete')->setName('crawlers_links_delete');
-    });
-    
+    $this->group('/{crawler}', function() {
 
-    $this->post('/record/', '\App\Crawler\CrawlerDataset\Controller:saveAPI')->setName('crawler_record');
-    $this->post('/setFilter', '\App\Crawler\Controller:setFilter')->setName('set_crawler_filter');
+        $this->get('/view/', '\App\Crawler\Controller:view')->setName('crawlers_view');
+        $this->get('/table/', '\App\Crawler\Controller:table')->setName('crawlers_table');
+        $this->post('/setFilter/', '\App\Crawler\Controller:setFilter')->setName('set_crawler_filter');
+        
+        $this->post('/record/', '\App\Crawler\CrawlerDataset\Controller:saveAPI')->setName('crawler_record');
+
+        $this->group('/headers', function() {
+            $this->get('/', '\App\Crawler\CrawlerHeader\Controller:index')->setName('crawlers_headers');
+            $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:edit')->setName('crawlers_headers_edit');
+            $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:save')->setName('crawlers_headers_save');
+            $this->delete('/delete/{id}', '\App\Crawler\CrawlerHeader\Controller:delete')->setName('crawlers_headers_delete');
+        });
+
+        $this->group('/links', function() {
+            $this->get('/', '\App\Crawler\CrawlerLink\Controller:index')->setName('crawlers_links');
+            $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\CrawlerLink\Controller:edit')->setName('crawlers_links_edit');
+            $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\CrawlerLink\Controller:save')->setName('crawlers_links_save');
+            $this->delete('/delete/{id}', '\App\Crawler\CrawlerLink\Controller:delete')->setName('crawlers_links_delete');
+        });
+    });
 });

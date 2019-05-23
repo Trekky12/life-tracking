@@ -17,8 +17,8 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $crawler_id = $request->getAttribute('crawler');
-        $crawler = $this->crawler_mapper->get($crawler_id);
+        $crawler_hash = $request->getAttribute('crawler');
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
         $links = $this->mapper->getFromCrawler($crawler->id);
         return $this->ci->view->render($response, 'crawlers/links/index.twig', ['links' => $links, "crawler" => $crawler]);
     }
@@ -26,8 +26,8 @@ class Controller extends \App\Base\Controller {
     public function edit(Request $request, Response $response) {
 
         $entry_id = $request->getAttribute('id');
-        $crawler_id = $request->getAttribute('crawler');
-        $crawler = $this->crawler_mapper->get($crawler_id);
+        $crawler_hash = $request->getAttribute('crawler');
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
 
         $entry = null;
         if (!empty($entry_id)) {
@@ -43,13 +43,13 @@ class Controller extends \App\Base\Controller {
 
     public function save(Request $request, Response $response) {
         $id = $request->getAttribute('id');
-        $crawler = $request->getAttribute('crawler');
+        $crawler_hash = $request->getAttribute('crawler');
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
         $this->insertOrUpdate($id, $data);
 
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler]), 301);
+        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
     }
 
     /**

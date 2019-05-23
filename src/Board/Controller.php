@@ -27,7 +27,7 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $boards = $this->mapper->getVisibleBoards('name');
+        $boards = $this->mapper->getUserItems('name');
         return $this->ci->view->render($response, 'boards/index.twig', ['boards' => $boards]);
     }
 

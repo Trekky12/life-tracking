@@ -21,7 +21,7 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $crawlers = $this->mapper->getVisibleCrawlers('name');
+        $crawlers = $this->mapper->getUserItems('name');
         return $this->ci->view->render($response, 'crawlers/index.twig', ['crawlers' => $crawlers]);
     }
 
@@ -30,7 +30,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
 
-        $hash = $request->getAttribute('hash');
+        $hash = $request->getAttribute('crawler');
         $crawler = $this->mapper->getFromHash($hash);
 
         $this->checkAccess($crawler->id);
@@ -80,7 +80,7 @@ class Controller extends \App\Base\Controller {
 
         list($from, $to) = $this->ci->get('helper')->getDateRange($requestData);
 
-        $hash = $request->getAttribute('hash');
+        $hash = $request->getAttribute('crawler');
         $crawler = $this->mapper->getFromHash($hash);
 
         $this->checkAccess($crawler->id);
@@ -150,10 +150,10 @@ class Controller extends \App\Base\Controller {
 
     public function setFilter(Request $request, Response $response) {
 
-        $data = $request->getParsedBody();
+        $data = $request->getParsedBody();        
+        $hash = $request->getAttribute('crawler');
 
-        if (array_key_exists("hash", $data)) {
-            $hash = filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS);
+        if (!is_null($hash)) {
             $crawler = $this->mapper->getFromHash($hash);
 
             $this->checkAccess($crawler->id);

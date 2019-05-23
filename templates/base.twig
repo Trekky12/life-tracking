@@ -104,9 +104,8 @@
                 'notifications_get_unread': '{{path_for('notifications_get_unread')}}',
                 
                 {% if not hasCrawlerTable is null %}
-                'crawler_table': '{{path_for('crawlers_table', {'hash': crawler.hash})}}',
-                'crawler_filter': '{{path_for('set_crawler_filter')}}',
-                'crawler_hash': '{{crawler.hash}}',
+                'crawler_table': '{{path_for('crawlers_table', {'crawler': crawler.hash})}}',
+                'crawler_filter': '{{path_for('set_crawler_filter', {'crawler': crawler.hash})}}',
                 {% endif %}
                     
                 {% if not from is null %}    

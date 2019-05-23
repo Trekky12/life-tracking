@@ -292,6 +292,36 @@ abstract class Mapper {
         return $results;
     }
     
+    public function getUserItems($sorted = false, $limit = false) {
+        $sql = "SELECT t.* FROM " . $this->getTable() . " t LEFT JOIN " . $this->getTable($this->user_table) . " tu ";
+        $sql .= " ON t.id = tu.{$this->element_name} ";
+        $sql .= " WHERE tu.user = :user OR t.user = :user";
+
+        $bindings = array();
+        if (!is_null($this->userid)) {
+            $bindings["user"] = $this->userid;
+        }
+
+        if ($sorted && !is_null($sorted)) {
+            $sql .= " ORDER BY {$sorted}";
+        }
+
+        if ($limit && !is_null($limit)) {
+            $sql .= " LIMIT {$limit}";
+        }
+
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->model($row);
+        }
+        return $results;
+    }    
+    
     public function getFromHash($hash) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE  hash = :hash";
 

@@ -19,7 +19,7 @@ class Controller extends \App\Base\Controller {
 
         $data = $request->getParsedBody();
 
-        $crawlerhash = array_key_exists("crawler", $data) ? filter_var($data["crawler"], FILTER_SANITIZE_STRING) : null;
+        $crawlerhash = $request->getAttribute('crawler');
         $identifier = array_key_exists("identifier", $data) ? filter_var($data["identifier"], FILTER_SANITIZE_STRING) : null;
 
         $dataset_id = null;

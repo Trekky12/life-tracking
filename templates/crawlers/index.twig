@@ -20,15 +20,15 @@
                 <tbody>
                     {% for crawler in crawlers %}
                         <tr>
-                            <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('crawlers_view', {'hash' : crawler.hash}) }}">{{crawler.name|raw}}</a></td> 
+                            <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('crawlers_view', {'crawler' : crawler.hash}) }}">{{crawler.name|raw}}</a></td> 
                             <td>
                                 {% if crawler.user == user.id %}
-                                    <a href="{{  path_for('crawlers_headers', {'crawler' : crawler.id}) }}"><span class="fa fa-table fa-lg"></span></a>
+                                    <a href="{{  path_for('crawlers_headers', {'crawler' : crawler.hash}) }}"><span class="fa fa-table fa-lg"></span></a>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if crawler.user == user.id %}
-                                    <a href="{{  path_for('crawlers_links', {'crawler' : crawler.id}) }}"><span class="fa fa-external-link fa-lg"></span></a>
+                                    <a href="{{  path_for('crawlers_links', {'crawler' : crawler.hash}) }}"><span class="fa fa-external-link fa-lg"></span></a>
                                 {% endif %}
                             </td>
                             <td>
