@@ -1,0 +1,45 @@
+{% extends "base.twig" %}
+
+{% set active = 'splitbills' %}
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD_BILL"]}}</button></a></div>
+    </div>
+
+    <div class="inner-content">
+        <div class="page-content">
+            <table id="splitbills_bills_table" class="table table-hover small" data-currency="{{group.currency}}">
+                <thead>
+                    <tr>
+                        <th>{{lang["DATE"]}}</th>
+                        <th>{{lang["TIME"]}}</th>
+                        <th>{{lang["NAME"]}}</th>
+                        <th>{{ lang["SPEND"] }}</th>
+                        <th>{{ lang["PAID"] }}</th>
+                        <th>{{ lang["BALANCE"] }}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bill in bills %}
+                        <tr>
+                            <td>{{ bill[0] }}</td>
+                            <td>{{ bill[1] }}</td>
+                            <td>{{ bill[2] }}</td>
+                            <td>{{ bill[3] }}</td>
+                            <td>{{ bill[4] }}</td>
+                            <td>{{ bill[5] }}</td>
+                            <td>{{ bill[6]|raw }}</td>
+                            <td>{{ bill[7]|raw }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}        

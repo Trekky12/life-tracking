@@ -46,6 +46,14 @@
                     </div>
                 </div>
             {% endif %}
+            {%if user.module_splitbills == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('splitbill_groups')}}">{{lang["SPLITBILLS"]}}</a></h3>
+                        <a href="{{path_for('splitbill_groups')}}"><i class="fa fa-handshake-o" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
     

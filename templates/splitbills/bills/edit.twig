@@ -1,0 +1,102 @@
+{% extends "base.twig" %}
+
+{% set active = 'splitbills' %}
+
+{% set hasMap = not entry.lat is null and not entry.lng is null %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/leaflet.min.css" />
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
+    <script src="{{base_url()}}/static/js/geolocation.js?ver=20190130"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["SPLITBILL_BILL"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" id="splitbillsBillsForm" action="{{  path_for('splitbill_bills_save', {'id' : entry.id, 'group' : group.hash}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                <input name="sbgroup" type="hidden" value="{{group.id}}">
+                
+                <input type="hidden" id="geoLat" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
+                <input type="hidden" id="geoLng" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
+                <input type="hidden" id="geoAcc" name="acc" value="{% if not entry is null %}{{entry.acc}}{% endif %}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" required class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                </div>
+
+                <div class="two-columns mobile">
+                    <div class="form-group left">
+                        <label for="dateSelect">{{lang["DATE"]}}</label>
+                        <input type="text" class="form-control" id="dateSelect" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">  
+                    </div>
+                    <div class="form-group right">
+                        <label for="inputTime">{{lang["TIME"]}}</label>
+                        <input type="time" step="1" class="form-control" id="inputTime" name="time" value="{% if not entry is null %}{{entry.time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputValue">{{lang["VALUE"]}}</label>
+                    <input type="number" step="any" class="form-control" id="inputValue" name="value" {% if not entry is null %}value="{{totalValue}}"{% endif %}>
+                </div>
+
+                <h3>{{ lang["PAID"] }}</h3>
+                <div class="userlist">
+                    {% for user_id in group_users %}
+                        <div class="form-group user-entry">
+                            <div class="user">
+                                {{ users[user_id].name }}
+                            </div>
+                            <div class="input-field">
+                                <input type="number" step="any" class="form-control balance_paid" name="balance[{{ user_id }}][paid]" value="{% if not balance is null and user_id in balance|keys  %}{{balance[user_id]["paid"]}}{% else %}0{% endif %}">
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <h3>{{ lang["SPEND"] }}</h3>
+                <div class="userlist">
+                    {% for user_id in group_users %}
+                        <div class="form-group user-entry">
+                            <div class="user">
+                                {{ users[user_id].name }}
+                            </div>
+                            <div class="input-field">
+                                <input type="number" step="any" class="form-control balance_spend" name="balance[{{ user_id }}][spend]" value="{% if not balance is null and user_id in balance|keys  %}{{balance[user_id]["spend"]}}{% else %}0{% endif %}">
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if not entry is null %}
+                    <h3>{{lang["LOCATION"]}}</h3>
+                    <div id="geo-map"></div>
+                    <div class="form-group map-btn">
+                        <button id="update-location" class="gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                        <button id="delete-location" class="danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                    </div>
+                {% endif %}
+
+                <div class="form-group btn">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

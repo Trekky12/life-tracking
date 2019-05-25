@@ -76,12 +76,19 @@
                         {{lang["BOARDS"]}}
                     </label>
                 </div>
-                    <div class="form-group">
+                <div class="form-group">
                     <label class="checkbox" for="checkboxCrawlersModule">
                         <input name="set_module_crawlers" type="checkbox" id="checkboxCrawlersModule" {% if entry is null or entry.module_crawlers == 1 %}checked{% endif %}>
                         {{lang["CRAWLERS"]}}
                     </label>
                 </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxSplitbillsModule">
+                        <input name="set_module_splitbills" type="checkbox" id="checkboxSplitbillsModule" {% if entry is null or entry.module_splitbills == 1 %}checked{% endif %}>
+                        {{lang["SPLITBILLS"]}}
+                    </label>
+                </div>
+                    
                 <h3>{{lang["OTHER_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxForcePWChange">

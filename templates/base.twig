@@ -115,6 +115,10 @@
                 'dateTo': '{{to}}',
                 {% endif %}
                     
+                {% if not hasSplitbillTable is null %}
+                'splitbill_table': '{{path_for('splitbill_bills_table', {'group': group.hash})}}',
+                {% endif %}
+                    
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};
@@ -148,6 +152,7 @@
                 "really_close_stack": '{{lang["REALLY_CLOSE_STACK"]}}',
                 "really_close_card": '{{lang["REALLY_CLOSE_CARD"]}}',
                 "really_close_label": '{{lang["REALLY_CLOSE_LABEL"]}}',
+                "splitbills_numbers_wrong": '{{lang["SPLITBILLS_NUMBERS_WRONG"]}}'
             };
         </script>
 

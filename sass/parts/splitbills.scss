@@ -1,0 +1,31 @@
+#splitbills_bills_table{
+    td span.negative{
+        color:$color_red;
+    }
+    td span.positive{
+        color:$color_green;
+    }
+}
+
+#splitbillsBillsForm{
+    .userlist .user-entry{
+        @include grid-container();
+        
+            .user{
+                @include grid-column(4);
+            }
+            .input-field{
+                @include grid-column(8);
+            }
+        
+        @media screen and (min-width: $size_tablet) {
+            .user{
+                @include grid-column(2);
+            }
+            .input-field{
+                @include grid-column(4);
+            }
+        }
+
+    }
+}

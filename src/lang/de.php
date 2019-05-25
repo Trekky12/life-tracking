@@ -331,4 +331,17 @@ $lang["SHOW_THIS_MONTH"] = "Dieser Monat";
 $lang["SHOW_ALL"] = "Gesamter Zeitraum";
 
 
+$lang["SPLITBILL_GROUPS"] = "Gruppen mit geteilten Ausgaben";
+$lang["SPLITBILLS"] = "geteilte Ausgaben";
+$lang["SPLITBILL_BILL"] = "geteilte Ausgabe";
+$lang["ADD_BILL"] = "Ausgabe hinzufügen";
+
+$lang["SPEND"] = "ausgegeben";
+$lang["PAID"] = "bezahlt";
+$lang["BALANCE"] = "Bilanz";
+$lang["SPLITBILLS_BILL_ERROR"] = "Fehler bei den geteilten Ausgaben! Eintrag wurde nicht hinzugefügt.";
+$lang["SPLITBILLS_NUMBERS_WRONG"] = "Die Summe der gezahlten/ausgegeben Werte stimmt nicht!";
+$lang["SPLITBILLS_ADD_FINANCES"] = "Finanzeintrag automatisch erstellen";
+$lang["CURRENCY"] = "Währung";
+
 return $lang;

@@ -331,4 +331,17 @@ $lang["CAST_UNSIGNED"] = "unsigned integer";
 $lang["SHOW_THIS_MONTH"] = "this month";
 $lang["SHOW_ALL"] = "total range";
 
+$lang["SPLITBILL_GROUPS"] = "Groups with splitted bills";
+$lang["SPLITBILLS"] = "splitted bills";
+$lang["SPLITBILL_BILL"] = "splitted bill";
+$lang["ADD_BILL"] = "add bill";
+
+$lang["SPEND"] = "spend";
+$lang["PAID"] = "paid";
+$lang["BALANCE"] = "balance";
+$lang["SPLITBILLS_BILL_ERROR"] = "Error with splitted bill. Entry was not added.";
+$lang["SPLITBILLS_NUMBERS_WRONG"] = "The sum of spend and paid values is not correct!";
+$lang["SPLITBILLS_ADD_FINANCES"] = "Automatically create finance entries";
+$lang["CURRENCY"] = "currency";
+
 return $lang;

@@ -18,8 +18,6 @@ var financeTable = new JSTable("#finance_table", {
     columns: [
         {
             select: 0,
-            type: "date",
-            format: "MYSQL",
             sortable: true,
             sort: "desc",
             render: function (data) {
@@ -287,7 +285,8 @@ var carsTable = new JSTable("#cars_table", {
     columns: [
         {
             select: 0,
-            sort: "asc"
+            sort: "asc",
+            sortable: true
         },
         {
             select: [1, 2],
@@ -303,7 +302,8 @@ var boardsTable = new JSTable("#boards_table", {
     columns: [
         {
             select: 0,
-            sort: "asc"
+            sort: "asc",
+            sortable: true
         },
         {
             select: [1, 2],
@@ -319,10 +319,11 @@ var notificationsTable = new JSTable("#notifications_table", {
     columns: [
         {
             select: 0,
-            sort: "asc"
+            sort: "asc",
+            sortable: true
         },
         {
-            select: [3,4],
+            select: [3, 4],
             render: function (data) {
                 return moment(data).format(i18n.dateformatJSFull);
             }
@@ -410,7 +411,7 @@ var tokensCategoryTable = new JSTable("#tokens_table", {
     labels: tableLabels,
     columns: [
         {
-            select: [3,4],
+            select: [3, 4],
             render: function (data) {
                 return moment(data).format(i18n.dateformatJSFull);
             }
@@ -434,7 +435,8 @@ var crawlersTable = new JSTable("#crawlers_table", {
     columns: [
         {
             select: 0,
-            sort: "asc"
+            sort: "asc",
+            sortable: true
         },
         {
             select: [1, 2, 3, 4],
@@ -450,10 +452,11 @@ var crawlersHeadersTable = new JSTable("#crawlers_headers_table", {
     columns: [
         {
             select: 4,
-            sort: "asc"
+            sort: "asc",
+            sortable: true
         },
         {
-            select: [5,6],
+            select: [5, 6],
             sortable: false,
             searchable: false
         }
@@ -462,9 +465,9 @@ var crawlersHeadersTable = new JSTable("#crawlers_headers_table", {
 
 var crawlersDataTable = new JSTable("#crawlers_data_table", {
     perPage: 20,
-    perPageSelect: [10, 20,50,100,200],
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
-    sortable:false,
+    sortable: false,
     columns: [
         {
             select: [0],
@@ -490,12 +493,65 @@ var crawlersLinksTable = new JSTable("#crawlers_links_table", {
     columns: [
         {
             select: 0,
-            sort: "asc"
+            sort: "asc",
+            sortable: true
         },
         {
-            select: [4,5],
+            select: [4, 5],
             sortable: false,
             searchable: false
         }
     ]
+});
+
+var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+const splitbillsBillsTableContainer = document.getElementById('splitbills_bills_table');
+var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "desc",
+            sortable: true,
+            render: function (data) {
+                return moment(data).format(i18n.dateformatJS);
+            }
+        },
+        {
+            select: [3, 4],
+            render: function (data) {
+                return data + " " + splitbillsBillsTableContainer.dataset.currency;
+            }
+        },
+        {
+            select: [5],
+            render: function (data) {
+                let dataClass = "negative";
+                if (data >= 0) {
+                    dataClass = "positive";
+                }
+                return "<span class='" + dataClass + "'>" + data + " " + splitbillsBillsTableContainer.dataset.currency + "</span>";
+            }
+        },
+        {
+            select: [6, 7],
+            sortable: false,
+            searchable: false
+        }
+    ],
+    deferLoading: jsObject.datacount,
+    serverSide: true,
+    ajax: jsObject.splitbill_table
 });
