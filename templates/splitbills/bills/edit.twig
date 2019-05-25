@@ -11,6 +11,7 @@
 {% block javascript %}
     <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
     <script src="{{base_url()}}/static/js/geolocation.js?ver=20190130"></script>
+    <script src="{{base_url()}}/static/js/splitbills.js?ver=20190525"></script>
 {% endblock %}
 
 {% block body %}
@@ -55,6 +56,12 @@
                 </div>
 
                 <h3>{{ lang["PAID"] }}</h3>
+                <div class="form-group">
+                    <button class="gray splitbill_btn small" data-type="paid_same">gleichmäßig</button>
+                    {% for user_id in group_users %}
+                        <button class="gray splitbill_btn small" data-type="paid_person" data-id="{{ user_id }}">von {{ users[user_id].name }}</button>    
+                    {% endfor %}
+                </div>
                 <div class="userlist">
                     {% for user_id in group_users %}
                         <div class="form-group user-entry">
@@ -68,6 +75,12 @@
                     {% endfor %}
                 </div>
                 <h3>{{ lang["SPEND"] }}</h3>
+                <div class="form-group">
+                    <button class="gray splitbill_btn small" data-type="spend_same">gleichmäßig</button>
+                    {% for user_id in group_users %}
+                        <button class="gray splitbill_btn small" data-type="spend_person" data-id="{{ user_id }}">nur {{ users[user_id].name }}</button>    
+                    {% endfor %}
+                </div>
                 <div class="userlist">
                     {% for user_id in group_users %}
                         <div class="form-group user-entry">
