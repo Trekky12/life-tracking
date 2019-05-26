@@ -166,9 +166,35 @@ class Controller extends \App\Base\Controller {
             // floating point comparison
             if (!empty($balances) && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
                 $logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
-                
+
+                $finance_mapper = new \App\Finances\Mapper($this->ci);
+                $finance_cat_mapper = new \App\Finances\Category\Mapper($this->ci);
+
                 foreach ($balances as $b) {
                     $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"]);
+
+                    if ($sbgroup->add_finances > 0) {
+                        if ($b["spend"] > 0) {
+                            $entry = new \App\Finances\FinancesEntry([
+                                "date" => $bill->date,
+                                "time" => $bill->time,
+                                "description" => $bill->name,
+                                "type" => 0,
+                                "value" => $b["spend"],
+                                "user" => $b["user"],
+                                "common" => 1,
+                                "common_value" => $totalValue,
+                                "bill" => $bill->id,
+                                "lng" => $bill->lng,
+                                "lat" => $bill->lat,
+                                "acc" => $bill->acc
+                            ]);
+                            $entry->category = $finance_cat_mapper->getDefaultofUser($b["user"]);
+                            $finance_mapper->addOrUpdateFromBill($entry);
+                        } else {
+                            $finance_mapper->deleteEntrywithBill($bill->id, $b["user"]);
+                        }
+                    }
                 }
 
                 // delete entries for users removed from the group

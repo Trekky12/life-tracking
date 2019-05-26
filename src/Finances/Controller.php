@@ -462,10 +462,21 @@ class Controller extends \App\Base\Controller {
             $row[] = $dataset[4];
             $row[] = $dataset[5];
             $row[] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>' : '';
 
             $rendered_data[] = $row;
         }
         return $rendered_data;
     }
+
+    /**
+     * Do not allow deletion of entries with bills
+     */
+    protected function preDelete($id) {
+        $entry = $this->mapper->get($id);
+        if (!is_null($entry->bill)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+        }
+    }
+
 }

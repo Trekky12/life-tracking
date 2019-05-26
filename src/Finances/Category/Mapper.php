@@ -45,4 +45,18 @@ class Mapper extends \App\Base\Mapper {
         }
         return null;
     }
+    
+    public function getDefaultofUser($user) {
+        $bindings = ["is_default" => 1, "user" => $user];
+        
+        $sql = "SELECT id FROM " . $this->getTable() . " WHERE is_default = :is_default AND user =:user LIMIT 1";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return intval($stmt->fetchColumn());
+        }
+        return null;
+    }
 }

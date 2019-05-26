@@ -9,7 +9,7 @@ class Mapper extends \App\Base\Mapper {
 
     private function getTableSQL($select) {
         $sql = "SELECT {$select} "
-                . " FROM " . $this->getTable() . " f INNER JOIN " . $this->getTable('finances_categories') . " fc "
+                . " FROM " . $this->getTable() . " f LEFT JOIN " . $this->getTable('finances_categories') . " fc "
                 . " ON f.category = fc.id "
                 . " WHERE (DATE(f.date) >= :from "
                 . "   AND DATE(f.date) <= :to ) "
@@ -68,7 +68,7 @@ class Mapper extends \App\Base\Mapper {
 
         $select = "f.date, f.time, "
                 . "f.type, "
-                . "fc.name as category, f.description, f.value, f.id";
+                . "fc.name as category, f.description, f.value, f.id, f.bill";
         $sql = $this->getTableSQL($select);
 
         $this->filterByUser($sql, $bindings, "f.");
@@ -318,6 +318,59 @@ class Mapper extends \App\Base\Mapper {
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         }
         return $result;
+    }
+    
+    
+    /**
+     * Bills
+     */
+    
+    public function addOrUpdateFromBill(FinancesEntry $entry) {
+
+        $bindings = ["user" => $entry->user, "bill" => $entry->bill];
+
+        $sql = "SELECT id FROM " . $this->getTable() . "  WHERE bill = :bill AND user =:user ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        // no entry present, so create one
+        if ($stmt->rowCount() > 0) {
+            return $this->updateFromBill($entry);
+        } else {
+            return $this->insert($entry);
+        }
+    }
+
+    private function updateFromBill(FinancesEntry $entry) {
+        $sql = "UPDATE " . $this->getTable() . " SET value = :value, common_value = :common_value, date = :date, time = :time WHERE bill = :bill AND user = :user";
+        $bindings = [
+            "bill" => $entry->bill,
+            "user" => $entry->user,
+            "value" => $entry->value,
+            "common_value" => $entry->common_value,
+            "date" => $entry->date,
+            "time" => $entry->time
+        ];
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+        }
+        return true;
+    }
+
+    public function deleteEntrywithBill($bill, $user) {
+        $sql = "DELETE FROM " . $this->getTable() . "  WHERE bill = :bill AND user =:user ";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "bill" => $bill,
+            "user" => $user
+        ]);
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+        }
+        return true;
     }
 
 }
