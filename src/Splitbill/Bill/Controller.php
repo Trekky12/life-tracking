@@ -30,10 +30,13 @@ class Controller extends \App\Base\Controller {
 
         $users = $this->user_mapper->getAll();
 
+        $balance = $this->calculateBalance($group->id);
+
         return $this->ci->view->render($response, 'splitbills/bills/index.twig', [
                     "bills" => $table,
                     "group" => $group,
                     "datacount" => $datacount,
+                    "balance" => $balance,
                     "hasSplitbillTable" => true,
                     "currency" => $this->ci->get('settings')['app']['i18n']['currency'],
                     "users" => $users
@@ -163,7 +166,7 @@ class Controller extends \App\Base\Controller {
             // floating point comparison
             if (!empty($balances) && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
                 $logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
-
+                
                 foreach ($balances as $b) {
                     $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"]);
                 }
@@ -226,6 +229,69 @@ class Controller extends \App\Base\Controller {
             $rendered_data[] = $row;
         }
         return $rendered_data;
+    }
+
+    private function calculateBalance($group) {
+        $balance = $this->mapper->getTotalBalance($group);
+
+        $me = intval($this->ci->get('helper')->getUser()->id);
+
+        if(!array_key_exists($me, $balance)){
+            return $balance;
+        }
+        
+        $my_balance = $balance[$me]["balance"];
+
+        foreach ($balance as $user_id => &$b) {
+            if ($user_id !== $me) {
+
+                // i owe money
+                if ($my_balance < 0 && $b["balance"] > 0) {
+
+                    // another person owes the user money
+                    // but my debit is now settled
+                    if ($b["balance"] > abs($my_balance)) {
+                        $b["owe"] = -1 * $my_balance;
+                        $my_balance = 0;
+                    }
+                    // I'm the only one who owes this user money
+                    // my debit is now lower
+                    else {
+                        $b["owe"] = $b["balance"];
+                        $my_balance = $my_balance - $b["balance"];
+                    }
+                }
+
+
+                // someone owes me money
+                if ($my_balance > 0 && $b["balance"] < 0) {
+
+                    // another user owes me money
+                    if ($my_balance > abs($b["balance"])) {
+                        $b["owe"] = $b["balance"];
+                        $my_balance = $my_balance - $b["balance"];
+                    }
+                    // only this user owes me money
+                    // my credit is settled
+                    else {
+                        $b["owe"] = -1 * $my_balance;
+                        $my_balance = 0;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Resort Balances
+         * Big credits on top, big debits on top 
+         */
+        uasort($balance, function($a, $b) {
+            if ($b['owe'] > 0) {
+                return $b['owe'] - $a['owe'];
+            }
+            return $a['owe'] - $b['owe'];
+        });
+        return $balance;
     }
 
 }

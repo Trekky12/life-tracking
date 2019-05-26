@@ -344,4 +344,10 @@ $lang["SPLITBILLS_NUMBERS_WRONG"] = "Die Summe der gezahlten/ausgegeben Werte st
 $lang["SPLITBILLS_ADD_FINANCES"] = "Finanzeintrag automatisch erstellen";
 $lang["CURRENCY"] = "Währung";
 
+$lang["PERSON_OWES_ME"] = "%s schuldet mir %s %s";
+$lang["PERSON_RECEIVES_BY_ME"] = "%s bekommt %s %s von mir";
+
+$lang["PERSON_OWES_TOTAL"] = "(schuldet insgesamt %s %s)";
+$lang["PERSON_RECEIVES_TOTAL"] = "(bekommt insgesamt %s %s)";
+
 return $lang;

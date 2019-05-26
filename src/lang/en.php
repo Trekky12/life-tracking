@@ -344,4 +344,10 @@ $lang["SPLITBILLS_NUMBERS_WRONG"] = "The sum of spend and paid values is not cor
 $lang["SPLITBILLS_ADD_FINANCES"] = "Automatically create finance entries";
 $lang["CURRENCY"] = "currency";
 
+$lang["PERSON_OWES_ME"] = "%s owes me %s %s";
+$lang["PERSON_RECEIVES_BY_ME"] = "%s receives %s %s by me";
+
+$lang["PERSON_OWES_TOTAL"] = "(owes total %s %s)";
+$lang["PERSON_RECEIVES_TOTAL"] = "(receives total %s %s)";
+
 return $lang;

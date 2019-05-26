@@ -34,3 +34,38 @@
         margin-right:0.5rem;
     }
 }
+
+#splitbill_overview{
+    @media screen and (max-width: $size_mobile_navigation) {
+        flex-direction:column;
+    }
+    
+    .card{
+        
+        p{
+            @include font-size(2);
+            @media screen and (min-width: $size_mobile_navigation) {
+                @include font-size(4);
+            }
+            margin:0;
+        }
+    }
+    
+    .card.negative h3{
+        background-color: $color_red;
+    }
+    .card.positive h3{
+        background-color: $color_green;
+    }
+}
+
+.splitbill_total{
+    margin-bottom: 1rem;
+    
+    p.negative{
+        color: $color_red;
+    }
+    p.positive{
+        color: $color_green;
+    }
+}
