@@ -168,7 +168,7 @@ class Controller extends \App\Base\Controller {
                 $logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
 
                 $finance_mapper = new \App\Finances\Mapper($this->ci);
-                $finance_cat_mapper = new \App\Finances\Category\Mapper($this->ci);
+                $finance_ctrl = new \App\Finances\Controller($this->ci);
 
                 foreach ($balances as $b) {
                     $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"]);
@@ -189,7 +189,8 @@ class Controller extends \App\Base\Controller {
                                 "lat" => $bill->lat,
                                 "acc" => $bill->acc
                             ]);
-                            $entry->category = $finance_cat_mapper->getDefaultofUser($b["user"]);
+
+                            $entry->category = $finance_ctrl->getDefaultOrAssignedCategory($b["user"], $entry);
                             $finance_mapper->addOrUpdateFromBill($entry);
                         } else {
                             $finance_mapper->deleteEntrywithBill($bill->id, $b["user"]);

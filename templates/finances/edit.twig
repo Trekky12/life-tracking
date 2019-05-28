@@ -28,6 +28,12 @@
                 <input type="hidden" id="geoLng" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
                 <input type="hidden" id="geoAcc" name="acc" value="{% if not entry is null %}{{entry.acc}}{% endif %}">
 
+                {# disabled fields are not submitted so make them hidden #}
+                {% if not entry is null and not entry.bill is null %}
+                    <input type="hidden" name="value" value="{% if not entry is null %}{{entry.value}}{% endif %}">    
+                    <input type="hidden" name="common_value" value="{% if not entry is null %}{{entry.common_value}}{% endif %}">    
+                    <input type="hidden" name="bill" value="{% if not entry is null %}{{entry.bill}}{% endif %}">    
+                {% endif %}
 
                 {% if not entry is null %}
                     <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
