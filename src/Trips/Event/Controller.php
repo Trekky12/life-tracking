@@ -62,6 +62,31 @@ class Controller extends \App\Base\Controller {
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["trip" => $trip]), 301);
     }
 
+    public function getLatLng(Request $request, Response $response) {
+
+        $data = $request->getQueryParams();
+        $address = array_key_exists('address', $data) && !empty($data['address']) ? filter_var($data['address'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+
+        $newResponse = ['status' => 'error', 'data' => []];
+
+        if (!is_null($address)) {
+
+            $query = 'https://nominatim.openstreetmap.org/search?format=json&q=' . urlencode($address);
+
+            list($status, $result) = $this->ci->get('helper')->request($query);
+
+            if ($status == 200) {
+                $newResponse['status'] = 'success';
+                $result = json_decode($result, true);
+                if (is_array($result)) {
+                    $newResponse['data'] = $result;
+                }
+            }
+        }
+
+        return $response->withJson($newResponse);
+    }    
+    
     /**
      * Does the user have access to this dataset?
      */

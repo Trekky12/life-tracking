@@ -24,10 +24,6 @@
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                <input type="hidden" id="geoLat" name="gps_lat" value="{% if not entry is null %}{{entry.gps_lat}}{% endif %}">
-                <input type="hidden" id="geoLng" name="gps_lng" value="{% if not entry is null %}{{entry.gps_lng}}{% endif %}">
-                <input type="hidden" id="geoAcc" name="gps_acc" value="{% if not entry is null %}{{entry.gps_acc}}{% endif %}">
-
                 {% if not entry is null %}
                     <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
                 {% endif %}
@@ -39,11 +35,17 @@
                 </div>
                 #}
 
-                <div id="geo-map"></div>
-                <div class="form-group map-btn">
-                    <button id="update-location" class="gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                    <button id="delete-location" class="danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                <div class="mapWrapper">
+                    <div id="geo-map" class="geo-map"></div>
+                    <div class="form-group map-btn">
+                        <button id="update-location" class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                        <button id="delete-location" class="delete-location danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                    </div>
+                    <input type="hidden" id="geoLat" class="geo-lat" name="gps_lat" value="{% if not entry is null %}{{entry.gps_lat}}{% endif %}">
+                    <input type="hidden" id="geoLng" class="geo-lng" name="gps_lng" value="{% if not entry is null %}{{entry.gps_lng}}{% endif %}">
+                    <input type="hidden" id="geoAcc" class="geo-acc" name="gps_acc" value="{% if not entry is null %}{{entry.gps_acc}}{% endif %}">
                 </div>
+
 
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

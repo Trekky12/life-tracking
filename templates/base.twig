@@ -118,6 +118,7 @@
                 {% if not hasSplitbillTable is null %}
                 'splitbill_table': '{{path_for('splitbill_bills_table', {'group': group.hash})}}',
                 {% endif %}
+                'get_location_of_address': '{{ path_for("get_location_of_address") }}',    
                     
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};

@@ -38,13 +38,13 @@
 
 
 @media screen and (min-width: $size_mobile_navigation){
-    #geo-map.visible ~ .map-btn{
+    .geo-map.visible ~ .map-btn{
         display:flex;
         justify-content: flex-end;
     }
 }
 
-#geo-map{
+.geo-map{
     position:relative;
     z-index:0;
 }
@@ -125,7 +125,7 @@
         color: $color_border-input;
         margin-left: 1rem;
         margin-right:1rem;
-        @include font-size(2); 
+        @include font-size(1.5); 
 
         @media screen and (min-width: $size_mobile_navigation) {
             @include font-size(3); 

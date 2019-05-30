@@ -4,9 +4,11 @@ const latField = document.querySelector('input#geoLat');
 const lngField = document.querySelector('input#geoLng');
 const accField = document.querySelector('input#geoAcc');
 const idField = document.querySelector('input[name="id"]');
-const updateLoc = document.querySelector('#update-location');
-const deleteLoc = document.querySelector('#delete-location');
-const map = document.querySelector('#geo-map');
+
+const mapContainers = document.querySelectorAll('.geo-map');
+const updateLocButtons = document.querySelectorAll('.update-location');
+const deleteLocButtons = document.querySelectorAll('.delete-location');
+const getAdressButtons = document.querySelectorAll('.set_address');
 
 const geoOptions = {
     enableHighAccuracy: true,
@@ -14,63 +16,141 @@ const geoOptions = {
     maximumAge: 0
 };
 
-let my_map = null;
+let map = [];
+let map_marker = [];
+
 let lastAccuracy = 9999999;
-let my_marker = null;
 let timeout = null;
 
-drawMap();
+/**
+ * Init maps
+ */
+mapContainers.forEach(function (mapContainer, idx) {
+    map[idx] = null;
+    map_marker[idx] = null;
+    drawMap(mapContainer, idx);
+});
 
 /**
- * Add Geolocation
+ * Add Geolocation to first map
+ * @param {type} index of map
  */
-function getLocation() {
+function getLocation(index) {
     if (navigator.geolocation) {
-
-        navigator.geolocation.getCurrentPosition(locationRetrieved, locationError, geoOptions);
-
+        navigator.geolocation.getCurrentPosition(function (position) {
+            locationRetrieved(position, index);
+        }, locationError, geoOptions);
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
 }
 
-
-if ( (latField !== null && lngField !== null && accField !== null && idField === null) &&
-     (document.querySelector('#financeForm') !== null || document.querySelector('#gasolineForm') !== null || document.querySelector('#locationForm') !== null)) {
-    if (latField.value.length === 0 && lngField.value.length === 0 && accField.value.length === 0) {
-        getLocation();
-    }
+// automatically get location on new entries
+// and set first index
+if (latField !== null &&
+        lngField !== null &&
+        accField !== null &&
+        idField === null &&
+        latField.value.length === 0 &&
+        lngField.value.length === 0 &&
+        accField.value.length === 0) {
+    getLocation(0);
 }
 
-if (updateLoc !== null) {
-    updateLoc.addEventListener('click', function (e) {
-        e.preventDefault();
-        clearTimeout(timeout);
-        lastAccuracy = 9999999;
-        getLocation();
-        //drawMap();
+if (updateLocButtons !== null) {
+    updateLocButtons.forEach(function (updateLoc, idx) {
+        updateLoc.addEventListener('click', function (e) {
+            e.preventDefault();
+            clearTimeout(timeout);
+            lastAccuracy = 9999999;
+            // we assume the index of the button is the same like the index of the map
+            getLocation(idx);
+        });
     });
 }
 
-if (deleteLoc !== null) {
-    deleteLoc.addEventListener('click', function (e) {
-        e.preventDefault();
-        removeMap();
+if (deleteLocButtons !== null) {
+    deleteLocButtons.forEach(function (deleteLoc, idx) {
+        deleteLoc.addEventListener('click', function (e) {
+            e.preventDefault();
+            let mapContainer = deleteLoc.parentNode.parentNode.querySelector('.geo-map');
+            removeMap(deleteLoc, mapContainer, idx);
+        });
     });
 }
 
-function locationRetrieved(position) {
+if (getAdressButtons !== null) {
+    getAdressButtons.forEach(function (addressButton, idx) {
+        addressButton.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            let address = addressButton.previousElementSibling.value;
+            let lat = addressButton.parentNode.querySelector('input.geo-lat');
+            let lng = addressButton.parentNode.querySelector('input.geo-lng');
+
+            let mapContainer = addressButton.nextElementSibling;
+
+            if (address) {
+                fetch(jsObject.get_location_of_address + '?address=' + address, {
+                    method: 'GET',
+                    credentials: "same-origin"
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    console.log(data);
+                    if (data.status == "success") {
+                        let result = data.data;
+
+                        if (result.length > 0) {
+                            let place = result[0];
+
+                            lat.value = place.lat;
+                            lng.value = place.lon;
+                            // we assume the index of the button is the same like the index of the map
+                            drawMap(mapContainer, idx);
+                        } else {
+                            alert("Nothing found");
+                        }
+                    } else {
+                        alert("Nothing found");
+                    }
+                });
+            }
+
+
+        });
+    });
+}
+
+function locationRetrieved(position, index) {
     console.log(position);
 
     if (position.coords.accuracy < lastAccuracy) {
-
-        latField.value = position.coords.latitude;
-        lngField.value = position.coords.longitude;
-        accField.value = position.coords.accuracy;
+        
+        // default
+        let latElement = latField;
+        let lngElement = lngField;
+        let accElement = accField;
+        
+        let mapContainer = mapContainers[index];
+        
+        // map is available, so take closest map
+        if(mapContainer){
+            latElement = mapContainer.parentNode.querySelector('.geo-lat');
+            lngElement = mapContainer.parentNode.querySelector('.geo-lng');
+            accElement = mapContainer.parentNode.querySelector('.geo-acc');
+        }
+        
+        latElement.value = position.coords.latitude;
+        lngElement.value = position.coords.longitude;
+        accElement.value = position.coords.accuracy;
 
         lastAccuracy = position.coords.accuracy;
-
-        drawMap();
+        
+        // draw map if map is available, otherwise only save the position
+        if(mapContainer){
+            drawMap(mapContainer, index);
+        }
     }
     if (position.coords.accuracy > 50) {
         console.log("Accuracy not exact");
@@ -100,71 +180,76 @@ function locationError(error) {
     }
 }
 
-function drawMap() {
+function drawMap(mapContainer, index) {
 
-    if (map !== null) {
+    if (mapContainer !== null) {
 
-        let lat = latField.value;
-        let lng = lngField.value;
-        let acc = accField.value;
+        let latElement = mapContainer.parentNode.querySelector('.geo-lat');
+        let lngElement = mapContainer.parentNode.querySelector('.geo-lng');
+        let accElement = mapContainer.parentNode.querySelector('.geo-acc');
+        let deleteLoc = mapContainer.parentNode.querySelector('.delete-location');
+
+        if (latElement === null || lngElement === null) {
+            return;
+        }
+
+        let lat = latElement.value;
+        let lng = lngElement.value;
+        let acc = accElement ? accElement.value : 0;
 
         if (lat.length === 0 || lng.length === 0) {
             return;
         }
 
-        if (my_map === null) {
+        /**
+         * Init Map
+         */
+        if (map[index] === null) {
+            mapContainer.style.height = '300px';
+            mapContainer.classList.add("visible");
+            if (deleteLoc) {
+                deleteLoc.classList.remove("hidden");
+            }
 
-            /**
-             * Init Map
-             */
-
-            map.style.height = '300px';
-            map.classList.add("visible");
-            deleteLoc.classList.remove("hidden");
-
-            my_map = L.map('geo-map').setView([default_location.lat, default_location.lng], default_location.zoom);
+            map[index] = L.map(mapContainer).setView([default_location.lat, default_location.lng], default_location.zoom);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 subdomains: ['a', 'b', 'c']
-            }).addTo(my_map);
-
+            }).addTo(map[index]);
         }
 
-        if (my_marker !== null) {
-            my_map.removeLayer(my_marker)
+        if (map_marker[index] !== null) {
+            map[index].removeLayer(map_marker[index]);
         }
 
         /**
          * Init Marker
          */
-        my_marker = L.marker([lat, lng], {draggable: true});
+        map_marker[index] = L.marker([lat, lng], {draggable: true});
 
-        my_marker.on('drag', function (e) {
+        map_marker[index].on('drag', function (e) {
             let marker = e.target;
             let position = marker.getLatLng();
-            latField.value = position.lat;
-            lngField.value = position.lng;
-            accField.value = 0;
+            latElement.value = position.lat;
+            lngElement.value = position.lng;
+            if (accElement) {
+                accElement.value = 0;
+            }
 
-            my_marker._popup.setContent('<a href="#" data-lat="' + position.lat + '" data-lng="' + position.lng + '" class="btn-get-address">' + lang.address + '</a>');
+            marker._popup.setContent('<a href="#" data-lat="' + position.lat + '" data-lng="' + position.lng + '" class="btn-get-address">' + lang.address + '</a>');
 
             clearTimeout(timeout);
-            //mymap.panTo(new L.LatLng(position.lat, position.lng));
         });
 
-        my_marker.addTo(my_map);
+        map_marker[index].addTo(map[index]);
 
-        my_map.on('click', function (e) {
-            my_marker.setLatLng(e.latlng);
-            my_marker.off('mouseover');
-            my_marker.fire('drag');
+        map[index].on('click', function (e) {
+            map_marker[index].setLatLng(e.latlng);
+            map_marker[index].off('mouseover');
+            map_marker[index].fire('drag');
         });
 
-        /**
-         * set Location of marker
-         */
-        //my_marker.setLatLng([lat, lng]);
 
         let accuracyString = "";
         if (acc > 0) {
@@ -172,46 +257,52 @@ function drawMap() {
         }
         let addressString = '<a href="#" data-lat="' + lat + '" data-lng="' + lng + '" class="btn-get-address" id="marker-popup">' + lang.address + '</a>';
 
-        my_marker.bindPopup(accuracyString + addressString);
+        map_marker[index].bindPopup(accuracyString + addressString);
 
         if (acc > 0) {
             let circle = null;
 
-            my_marker.off('mouseover');
+            map_marker[index].off('mouseover');
 
-            my_marker.on('mouseover', function (event) {
+            map_marker[index].on('mouseover', function (event) {
                 circle = L.circle(event.target.getLatLng(), {
                     opacity: 0.5,
                     radius: acc
-                }).addTo(my_map);
+                }).addTo(map[index]);
             });
 
-            my_marker.on('mouseout', function (e) {
-                my_map.removeLayer(circle);
+            map_marker[index].on('mouseout', function (e) {
+                if(map[index].hasLayer(circle)){
+                    map[index].removeLayer(circle);
+                }
             });
 
-            my_marker.on('dragstart', function () {
-                my_marker.off('mouseover');
+            map_marker[index].on('dragstart', function () {
+                map_marker[index].off('mouseover');
             });
         }
 
-        let group = new L.featureGroup([my_marker]);
-        my_map.fitBounds(group.getBounds());
+        let group = new L.featureGroup([map_marker[index]]);
+        map[index].fitBounds(group.getBounds());
 
     }
 }
 
-function removeMap() {
-    map.style.height = '0px';
-    map.classList.remove("visible");
-    deleteLoc.classList.add("hidden");
-    my_map.off();
-    my_map.remove();
-    my_map = null;
+function removeMap(deleteLoc, mapContainer, index) {
 
-    latField.value = "";
-    lngField.value = "";
-    accField.value = "";
+    mapContainer.style.height = '0px';
+    mapContainer.classList.remove("visible");
+    deleteLoc.classList.add("hidden");
+    map[index].off();
+    map[index].remove();
+    map[index] = null;
+
+    let latElement = mapContainer.parentNode.querySelector('.geo-lat');
+    let lngElement = mapContainer.parentNode.querySelector('.geo-lng');
+    let accElement = mapContainer.parentNode.querySelector('.geo-acc');
+    latElement.value = "";
+    lngElement.value = "";
+    accElement.value = "";
 
     clearTimeout(timeout);
 }

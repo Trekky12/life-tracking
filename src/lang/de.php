@@ -370,4 +370,6 @@ $lang["END_ADDRESS"] = "Zieladresse";
 $lang["START_TIME"] = "Startzeit";
 $lang["END_TIME"] = "Endzeit";
 
+$lang["SEARCH_ADDRESS"] = "Suche Adresse";
+
 return $lang;
