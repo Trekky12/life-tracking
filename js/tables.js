@@ -555,3 +555,15 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
     serverSide: true,
     ajax: jsObject.splitbill_table
 });
+
+var tripsTable = new JSTable("#trips_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

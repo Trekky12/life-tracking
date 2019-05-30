@@ -1,0 +1,44 @@
+{% extends "base.twig" %}
+
+{% set active = 'trips' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TRIPS"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" id="tripForm" action="{{  path_for('trips_save', {'id' : entry.id}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                    <input name="hash"  type="hidden" value="{{entry.hash}}">
+                {% endif %}
+
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="users">{{lang["USERS"]}}</label>
+                    <select class="form-control" id="users" name="users[]" multiple="true">
+                        {% for user in users if user.module_trips == 1%}
+                            <option value="{{user.id}}" {% if (not entry is null and user.id in entry.getUsers()) %}selected{% endif %}>{{user.login}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group btn">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

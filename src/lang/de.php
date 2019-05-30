@@ -350,4 +350,24 @@ $lang["PERSON_RECEIVES_BY_ME"] = "%s bekommt %s %s von mir";
 $lang["PERSON_OWES_TOTAL"] = "(schuldet insgesamt %s %s)";
 $lang["PERSON_RECEIVES_TOTAL"] = "(bekommt insgesamt %s %s)";
 
+$lang["TRIPS"] = "Reisen";
+$lang["ADD_EVENT"] = "Event hinzufügen";
+$lang["TRIPS_EVENT"] = "Event";
+$lang["TRIPS_EVENT_IS_DRIVE"] = "Autofahrt";
+$lang["TRIPS_EVENT_IS_FLIGHT"] = "Flug";
+$lang["TRIPS_EVENT_IS_TRAINRIDE"] = "Zugfahrt";
+$lang["TRIPS_EVENT_IS_ACCOMMODATION"] = "Unterkunft";
+
+$lang["EVENT_TYPE_EVENT"] = "Event";
+$lang["EVENT_TYPE_HOTEL"] = "Unterkunft";
+$lang["EVENT_TYPE_FLIGHT"] = "Flug";
+$lang["EVENT_TYPE_DRIVE"] = "Autofahrt";
+$lang["EVENT_TYPE_TRAINRIDE"] = "Zugfahrt";
+$lang["EVENT_TYPE_CARRENTAL"] = "Mietwagen";
+
+$lang["START_ADDRESS"] = "Startadresse";
+$lang["END_ADDRESS"] = "Zieladresse";
+$lang["START_TIME"] = "Startzeit";
+$lang["END_TIME"] = "Endzeit";
+
 return $lang;

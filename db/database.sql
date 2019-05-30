@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     module_boards int(1) DEFAULT 0,
     module_crawlers int(1) DEFAULT 0,
     module_splitbills int(1) DEFAULT 0,
+    module_trips int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
     mails_user int(1) DEFAULT 1,
     mails_finances int(1) DEFAULT 1,
@@ -525,6 +526,7 @@ CREATE TABLE crawlers_links (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+
 DROP TABLE IF EXISTS splitbill_groups;
 CREATE TABLE splitbill_groups (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -579,4 +581,56 @@ CREATE TABLE splitbill_bill_users (
     FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE(bill, user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS trips;
+CREATE TABLE trips (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS trips_user;
+CREATE TABLE trips_user (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    trip INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(trip, user),
+    FOREIGN KEY(trip) REFERENCES trips(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS trips_event;
+CREATE TABLE trips_event (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    trip INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    start_date DATE DEFAULT NULL,
+    start_time TIME DEFAULT NULL,
+    start_address VARCHAR(255) DEFAULT NULL,
+    start_lat DECIMAL(16,14) DEFAULT NULL,
+    start_lng DECIMAL(16,14) DEFAULT NULL,
+    end_date DATE DEFAULT NULL,
+    end_time TIME DEFAULT NULL,
+    end_address VARCHAR(255) DEFAULT NULL,
+    end_lat DECIMAL(16,14) DEFAULT NULL,
+    end_lng DECIMAL(16,14) DEFAULT NULL,
+    type VARCHAR(100) DEFAULT 'EVENT',
+    notice TEXT DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(trip) REFERENCES trips(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
