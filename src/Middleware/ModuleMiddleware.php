@@ -24,7 +24,13 @@ class ModuleMiddleware {
             $route = $baseRoute->getPattern();
 
             // Filter only specific routes
-            if (!$this->startsWith($route, '/finances') && !$this->startsWith($route, '/location') && !$this->startsWith($route, '/cars') && !$this->startsWith($route, '/boards') && !$this->startsWith($route, '/crawlers')) {
+            if (!$this->startsWith($route, '/finances') &&
+                    !$this->startsWith($route, '/location') &&
+                    !$this->startsWith($route, '/cars') &&
+                    !$this->startsWith($route, '/boards') &&
+                    !$this->startsWith($route, '/crawlers') &&
+                    !$this->startsWith($route, '/splitbills')
+                ){
                 return $next($request, $response);
             }
 
@@ -33,8 +39,9 @@ class ModuleMiddleware {
                     $this->startsWith($route, '/finances') && $user->module_finance == 1 ||
                     $this->startsWith($route, '/location') && $user->module_location == 1 ||
                     $this->startsWith($route, '/cars') && $user->module_cars == 1 ||
-                    $this->startsWith($route, '/boards') && $user->module_boards == 1 || 
-                    $this->startsWith($route, '/crawlers') && $user->module_crawlers == 1 
+                    $this->startsWith($route, '/boards') && $user->module_boards == 1 ||
+                    $this->startsWith($route, '/crawlers') && $user->module_crawlers == 1 ||
+                    $this->startsWith($route, '/splitbills') && $user->module_splitbills == 1
                     )) {
                 return $next($request, $response);
             }

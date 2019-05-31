@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     module_cars int(1) DEFAULT 0,
     module_boards int(1) DEFAULT 0,
     module_crawlers int(1) DEFAULT 0,
+    module_splitbills int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
     mails_user int(1) DEFAULT 1,
     mails_finances int(1) DEFAULT 1,
@@ -118,9 +119,12 @@ CREATE TABLE finances (
     lat DECIMAL(16,14) DEFAULT NULL,
     lng DECIMAL(16,14) DEFAULT NULL,
     acc DECIMAL(10,3) DEFAULT NULL,
+    bill INTEGER unsigned DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS finances_recurring;
@@ -518,4 +522,61 @@ CREATE TABLE crawlers_links (
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(parent) REFERENCES crawlers_links(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS splitbill_groups;
+CREATE TABLE splitbill_groups (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    add_finances int(1) DEFAULT 0,
+    currency varchar(100) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS splitbill_groups_user;
+CREATE TABLE splitbill_groups_user (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sbgroup INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(sbgroup, user),
+    FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS splitbill_bill;
+CREATE TABLE splitbill_bill (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    sbgroup INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    lat DECIMAL(16,14) DEFAULT NULL,
+    lng DECIMAL(16,14) DEFAULT NULL,
+    acc DECIMAL(10,3) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS splitbill_bill_users;
+CREATE TABLE splitbill_bill_users (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    bill INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    paid DECIMAL(10,2) DEFAULT NULL,
+    spend DECIMAL(10,2) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

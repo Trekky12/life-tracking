@@ -1,0 +1,71 @@
+#splitbills_bills_table{
+    td span.negative{
+        color:$color_red;
+    }
+    td span.positive{
+        color:$color_green;
+    }
+}
+
+#splitbillsBillsForm{
+    .userlist .user-entry{
+        @include grid-container();
+        
+            .user{
+                @include grid-column(4);
+            }
+            .input-field{
+                @include grid-column(8);
+            }
+        
+        @media screen and (min-width: $size_tablet) {
+            .user{
+                @include grid-column(2);
+            }
+            .input-field{
+                @include grid-column(4);
+            }
+        }
+
+    }
+    
+    .splitbill_btn{
+        margin-bottom:0.5rem;
+        margin-right:0.5rem;
+    }
+}
+
+#splitbill_overview{
+    @media screen and (max-width: $size_mobile_navigation) {
+        flex-direction:column;
+    }
+    
+    .card{
+        
+        p{
+            @include font-size(2);
+            @media screen and (min-width: $size_mobile_navigation) {
+                @include font-size(4);
+            }
+            margin:0;
+        }
+    }
+    
+    .card.negative h3{
+        background-color: $color_red;
+    }
+    .card.positive h3{
+        background-color: $color_green;
+    }
+}
+
+.splitbill_total{
+    margin-bottom: 1rem;
+    
+    p.negative{
+        color: $color_red;
+    }
+    p.positive{
+        color: $color_green;
+    }
+}

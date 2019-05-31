@@ -62,24 +62,34 @@ class Controller extends \App\Base\Controller {
     }
 
     public function afterSave($id, $data) {
-        $entry = $this->mapper->get($id);
-        $default_cat = $this->cat_mapper->get_default();
+        $user_id = $this->ci->get('helper')->getUser()->id;
 
+        $entry = $this->mapper->get($id);
+        $cat = $this->getDefaultOrAssignedCategory($user_id, $entry);
+        if (!is_null($cat)) {
+            $this->mapper->set_category($id, $cat);
+        }
+
+        return $this->checkBudget($id);
+    }
+
+    public function getDefaultOrAssignedCategory($user_id, FinancesEntry $entry) {
+        $default_cat = $this->cat_mapper->getDefaultofUser($user_id);
+        $category = $entry->category;
+        
         // when there is no category set the default category
-        if (is_null($entry->category)) {
-            $entry->category = $default_cat;
-            $this->mapper->set_category($id, $default_cat);
+        if (is_null($category) && !is_null($default_cat)) {
+            $category = $default_cat;
         }
 
         // when it is default category then check if there is a auto assignment possible
-        if ($entry->category == $default_cat) {
-            $cat = $this->cat_assignments_mapper->get_category($entry->description, $entry->value);
+        if ($category == $default_cat) {
+            $cat = $this->cat_assignments_mapper->findMatchingCategory($user_id, $entry->description, $entry->value);
             if (!is_null($cat)) {
-                $this->mapper->set_category($id, $cat);
+                $category = $cat;
             }
-            $entry->category = $cat;
         }
-        return $this->checkBudget($id);
+        return $category;
     }
 
     private function checkBudget($id) {
@@ -462,10 +472,21 @@ class Controller extends \App\Base\Controller {
             $row[] = $dataset[4];
             $row[] = $dataset[5];
             $row[] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>' : '';
 
             $rendered_data[] = $row;
         }
         return $rendered_data;
     }
+
+    /**
+     * Do not allow deletion of entries with bills
+     */
+    protected function preDelete($id) {
+        $entry = $this->mapper->get($id);
+        if (!is_null($entry->bill)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+        }
+    }
+
 }

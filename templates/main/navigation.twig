@@ -14,6 +14,9 @@
     {% if user.module_crawlers == 1 %}
         <a href="{{ path_for('crawlers') }}" {% if active == 'crawlers' %}class="active"{% endif %}><i class="fa fa-database"></i></a>
     {% endif %}
+    {% if user.module_splitbills == 1 %}
+        <a href="{{ path_for('splitbill_groups') }}" {% if active == 'splitbills' %}class="active"{% endif %}><i class="fa fa-handshake-o"></i></a>
+    {% endif %}
     <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %}" data-badge="0" id="iconBell"><i class="fa fa-bell-o"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
         <span class="bar"></span>
@@ -63,6 +66,11 @@
         {% if user.module_crawlers == 1 %}
             <li {% if active == 'crawlers' %}class="active"{% endif %}>
                 <a href="{{ path_for('crawlers') }}">{{lang["CRAWLERS"]}}</a>
+            </li> 
+        {% endif %}
+        {% if user.module_splitbills == 1 %}
+            <li {% if active == 'splitbills' %}class="active"{% endif %}>
+                <a href="{{ path_for('splitbill_groups') }}">{{lang["SPLITBILLS"]}}</a>
             </li> 
         {% endif %}
         <li {% if active == 'profile' %}class="active"{% endif %}>

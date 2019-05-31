@@ -7,20 +7,19 @@ class Mapper extends \App\Base\Mapper {
     protected $table = 'finances_categories_assignment';
     protected $model = '\App\Finances\Assignment\Assignment';
 
-    public function get_category($description, $value) {
+    public function findMatchingCategory($user_id, $description, $value) {
+        
+        $bindings = ["description" => trim($description), "value" => floatval($value), "user" => $user_id];
+        
         $sql = "SELECT category FROM " . $this->getTable() . " "
                 . " WHERE "
                 // same description
                 . " (LOWER(description) = LOWER(:description) ) "
                 // value in range
                 . " AND (( :value >= min_value ) OR min_value IS NULL)"
-                . " AND (( :value < max_value ) OR max_value IS NULL)";
-                
-        $bindings = array("description" => trim($description), "value" => floatval($value));
-        $this->filterByUser($sql, $bindings);
-        
-        $sql .= " LIMIT 1";
-        
+                . " AND (( :value < max_value ) OR max_value IS NULL)"
+                . " AND user =:user LIMIT 1";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
