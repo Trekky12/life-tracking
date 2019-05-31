@@ -246,12 +246,12 @@ class Helper {
         return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING);
     }
 
-    public function getDateRange($data, $defaultFrom = null, $defaultTo = null) {
+    public function getDateRange($data, $defaultFrom = 'today', $defaultTo = 'today') {
 
-        if (is_null($defaultFrom)) {
+        if (strcmp($defaultFrom, 'today') === 0 ) {
             $defaultFrom = date('Y-m-d');
         }
-        if (is_null($defaultTo)) {
+        if (strcmp($defaultTo, 'today') === 0) {
             $defaultTo = date('Y-m-d');
         }
 

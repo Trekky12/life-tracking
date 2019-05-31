@@ -5,3 +5,18 @@
     padding: 1rem 0.5rem;
     line-height:1;
 }
+
+#trip-map{
+    height:250px;
+    margin-bottom: 0;
+    position:relative;
+    z-index:0;
+    @media screen and (min-width: $size_mobile_navigation){
+        height:500px;
+    }
+}
+
+button.trips_overview{
+    margin-bottom:0.5rem;
+    margin-right:0.5rem;
+}

@@ -119,6 +119,9 @@
                 'splitbill_table': '{{path_for('splitbill_bills_table', {'group': group.hash})}}',
                 {% endif %}
                 'get_location_of_address': '{{ path_for("get_location_of_address") }}',    
+                {% if not isTrips is null %}
+                'trip_markers_url': '{{path_for('trips_markers', {'trip': trip.hash})}}',
+                {% endif %}
                     
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};

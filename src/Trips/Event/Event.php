@@ -57,4 +57,69 @@ class Event extends \App\Base\Model {
         }
     }
 
+    public function isFlight() {
+        return strcmp($this->type, "FLIGHT") === 0;
+    }
+
+    public function isDrive() {
+        return strcmp($this->type, "DRIVE") === 0;
+    }
+
+    public function isTrainride() {
+        return strcmp($this->type, "TRAINRIDE") === 0;
+    }
+
+    public function isAccommodation() {
+        return strcmp($this->type, "HOTEL") === 0;
+    }
+
+    public function isCarrental() {
+        return strcmp($this->type, "CARRENTAL") === 0;
+    }
+
+    public function isEvent() {
+        return strcmp($this->type, "EVENT") === 0;
+    }
+    public function isTravel(){
+        return $this->isFlight() || $this->isTrainride() || $this->isDrive();
+    }
+
+    public function getPosition() {
+        $data = [
+            'id' => $this->id,
+            'dt' => $this->createdOn
+        ];
+
+        $data['start_lat'] = $this->start_lat;
+        $data['start_lng'] = $this->start_lng;
+
+        $data['isTravel'] = $this->isTravel();
+        $data['end_lat'] = $this->end_lat;
+        $data['end_lng'] = $this->end_lng;
+
+        $data['isCar'] = $this->isDrive();
+        $data['isPlane'] = $this->isFlight();
+        $data['isTrain'] = $this->isTrainride();
+        $data['isHotel'] = $this->isAccommodation();
+        $data['isCarrental'] = $this->isCarrental();
+        $data['type'] = $this->type;
+
+
+        $data['popup'] = '';
+        if (!empty($this->start_address)) {
+            $data['popup'] .= '<strong>' . $this->start_address . '</strong>';
+        }
+        
+        if (!empty($this->end_address)) {
+            $data['popup'] .= ' nach <strong>' . $this->end_address . '</strong>';
+        }
+        $data['popup'] .= '<br/>';
+        $data['popup'] .= 'Ab: ' . $this->start_date . ' ' . $this->start_time;
+        $data['popup'] .= '<br/>';
+        $data['popup'] .= 'An: ' . $this->end_date . ' ' . $this->end_time;
+
+
+        return $data;
+    }
+
 }

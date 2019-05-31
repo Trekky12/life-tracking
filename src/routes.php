@@ -260,6 +260,8 @@ $app->group('/trips', function() {
     $this->group('/{trip}', function() {
 
         $this->get('/view/', '\App\Trips\Event\Controller:index')->setName('trips_view');
+        $this->get('/markers/', '\App\Trips\Event\Controller:getMarkers')->setName('trips_markers');
+
         $this->group('/event', function() {
             $this->get('/edit/[{id:[0-9]+}]', '\App\Trips\Event\Controller:edit')->setName('trips_event_edit');
             $this->post('/save/[{id:[0-9]+}]', '\App\Trips\Event\Controller:save')->setName('trips_event_save');

@@ -23,11 +23,46 @@ class Controller extends \App\Base\Controller {
 
         $this->checkAccess($trip->id);
 
-        $events = $this->mapper->getFromTrip($trip->id);
+        $data = $request->getQueryParams();
+        list($from, $to) = $this->ci->get('helper')->getDateRange($data, null, null);
+
+        $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time");
+
+        $range = $this->mapper->getMinMaxDate();
+
+        $min = !is_null($range["start_min"]) ? $range["start_min"] : $range["end_min"];
+        $max = !is_null($range["end_max"]) ? $range["end_max"] : $range["start_max"];
+
+        // add last day
+        $dateMax = new \DateTime($max);
+        $dateMax->add(new \DateInterval('P1D'));
+
+        $dateInterval = new \DatePeriod(
+                new \DateTime($min),
+                new \DateInterval('P1D'),
+                $dateMax
+        );
+
+        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+        $fmt->setPattern('EEE dd. MMM');
+        $fmt2 = new \IntlDateFormatter($langugage, NULL, NULL);
+        $fmt2->setPattern('EEEE dd. MMM');
+
+        $dateRange = [];
+        $dateRange['all'] = ["date" => null, "display_date" => "Overview"];
+        foreach ($dateInterval as $d) {
+            $date = $d->format('Y-m-d');
+            $dateRange[$date] = ["date" => $date, "display_date" => $fmt->format($d)];
+        }
 
         return $this->ci->view->render($response, 'trips/events/index.twig', [
                     "events" => $events,
-                    "trip" => $trip
+                    "trip" => $trip,
+                    "isTrips" => true,
+                    "from" => $from,
+                    "to" => $to,
+                    "range" => $dateRange,
         ]);
     }
 
@@ -49,6 +84,25 @@ class Controller extends \App\Base\Controller {
                     'trip' => $trip,
                     'types' => self::eventTypes()
         ]);
+    }
+
+    public function getMarkers(Request $request, Response $response) {
+
+        $hash = $request->getAttribute('trip');
+        $trip = $this->trip_mapper->getFromHash($hash);
+
+        $this->checkAccess($trip->id);
+
+        $data = $request->getQueryParams();
+        list($from, $to) = $this->ci->get('helper')->getDateRange($data, null, null);
+
+        $events = $this->mapper->getFromTrip($trip->id, $from, $to);
+
+        $markers = array_map(function($ev) {
+            return $ev->getPosition();
+        }, $events);
+
+        return $response->withJSON($markers);
     }
 
     public function save(Request $request, Response $response) {

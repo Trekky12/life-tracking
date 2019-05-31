@@ -152,6 +152,25 @@
     input[type=checkbox] + span span#toggleClustering:before  {
         content: "\f247"; 
     }
+    
+    input[type=checkbox] + span span#layerPlanes:before  {
+        content: "\f072"; 
+    }
+    input[type=checkbox] + span span#layerTrains:before  {
+        content: "\f238"; 
+    }
+    input[type=checkbox] + span span#layerStreets:before  {
+        content: "\f018"; 
+    }
+    input[type=checkbox] + span span#layerEvents:before  {
+        content: "\f133"; 
+    }
+    input[type=checkbox] + span span#layerHotels:before  {
+        content: "\f236"; 
+    }
+    input[type=checkbox] + span span#layerCarrental:before  {
+        content: "\f1b9"; 
+    }
 
 }
 
