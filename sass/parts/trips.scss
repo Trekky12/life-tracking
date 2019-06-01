@@ -116,3 +116,60 @@ body.trips .inner-content .page-header{
         }
     }
 }
+
+
+@media print {
+    @page {
+        size: A4;
+        margin:10mm;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact  !important;
+        printer-colors: exact  !important;
+        color-adjust: exact  !important;
+    }
+    
+    .trip_event h3{
+        page-break-after: avoid!important;
+    }
+
+
+    .trip_day, .trip_event{
+        break-inside: avoid !important;
+    }
+
+    #content{
+        top:0;
+        max-width:100%;
+    }
+    .inner-content{
+        box-shadow: none;
+    }
+
+    body, .page-header{
+        background-color: $color_background-body;
+        color: #000000;
+    }
+
+    .site-header,
+    a.change_day, 
+    .trip_event .buttons,
+    .description_text{
+        display:none!important;
+    }
+
+    .description_full{
+        display:block!important;
+    }
+
+    #trip-map{
+        width: 200mm;
+        height: 270mm;
+
+        .leaflet-control-container{
+            display:none;
+        }
+    }
+
+}
