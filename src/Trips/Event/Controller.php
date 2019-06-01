@@ -44,10 +44,12 @@ class Controller extends \App\Base\Controller {
         );
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        
         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
-        $fmt->setPattern('EEE dd. MMM');
         $fmt2 = new \IntlDateFormatter($langugage, NULL, NULL);
-        $fmt2->setPattern('EEEE dd. MMM');
+        $fmt->setPattern($dateFormatPHP["trips_buttons"]);
+        $fmt2->setPattern($dateFormatPHP["trips_list"]);
 
         $dateRange = [];
         $dateRange['all'] = ["date" => null, "display_date" => "Overview"];

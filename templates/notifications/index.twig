@@ -25,8 +25,8 @@
                             <td data-title="{{lang["LOGIN"]}}">{{users[entry.user].login}}</td> 
                             <td data-title="{{lang["IP_ADDRESS"]}}">{{entry.ip}}</td> 
                             <td data-title="{{lang["USER_AGENT"]}}">{{entry.agent}}</td> 
-                            <td data-title="{{lang["CREATED_ON"]}}">{{entry.createdOn|date(i18n.twig)}}</td> 
-                            <td data-title="{{lang["CHANGED_ON"]}}">{{entry.changedOn is null ? "" : entry.changedOn|date(i18n.twig)}}</td>
+                            <td data-title="{{lang["CREATED_ON"]}}">{{entry.createdOn|date(i18n.dateformatTwig.date)}}</td> 
+                            <td data-title="{{lang["CHANGED_ON"]}}">{{entry.changedOn is null ? "" : entry.changedOn|date(i18n.dateformatTwig.date)}}</td>
                             
                             
                             <td><a href="{{  path_for('notifications_test', {'id' : entry.id}) }}"><span class="fa fa-bell-o fa-lg"></span></a></td>

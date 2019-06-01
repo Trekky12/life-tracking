@@ -372,10 +372,10 @@ class Controller extends \App\Base\Controller {
 
     private function getMonthName($month) {
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
 
         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
-        // See: http://userguide.icu-project.org/formatparse/datetime for pattern syntax
-        $fmt->setPattern('MMMM');
+        $fmt->setPattern($dateFormatPHP['month_name']);
 
         $dateObj = \DateTime::createFromFormat('!m', $month);
         return $fmt->format($dateObj);

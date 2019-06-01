@@ -118,8 +118,10 @@ class Controller extends \App\Base\Controller {
                     }
                     if ($card->date) {
                         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+                        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+                        
                         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
-                        $fmt->setPattern('dd. MMMM y');
+                        $fmt->setPattern($dateFormatPHP['month_name_full']);
 
                         $dateObj = new \DateTime($card->date);
                         $variables["extra"] .= '<h2>' . $this->ci->get('helper')->getTranslatedString('DATE') . ':</h2>' . $fmt->format($dateObj) . '';
@@ -245,8 +247,10 @@ class Controller extends \App\Base\Controller {
         $subject = $this->ci->get('helper')->getTranslatedString('MAIL_CARD_REMINDER');
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        
         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
-        $fmt->setPattern('dd. MMMM y');
+        $fmt->setPattern($dateFormatPHP['month_name_full']);
 
 
         foreach ($due_cards as $user_id => $cards) {

@@ -21,7 +21,7 @@ var financeTable = new JSTable("#finance_table", {
             sortable: true,
             sort: "desc",
             render: function (data) {
-                return moment(data).format(i18n.dateformatJS);
+                return moment(data).format(i18n.dateformatJS.date);
             }
         },
         {
@@ -114,7 +114,7 @@ var financesRecurringTable = new JSTable("#recurring_table", {
             type: "date",
             format: "MYSQL",
             render: function (data) {
-                return data ? moment(data).format(i18n.dateformatJS) : "";
+                return data ? moment(data).format(i18n.dateformatJS.date) : "";
             }
         },
         {
@@ -122,7 +122,7 @@ var financesRecurringTable = new JSTable("#recurring_table", {
             type: "date",
             format: "MYSQL",
             render: function (data) {
-                return data ? moment(data).format(i18n.dateformatJSFull) : "";
+                return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
             }
         }
     ]
@@ -230,7 +230,7 @@ var statsCatTable = new JSTable("#stats_cat_table", {
             sortable: true,
             sort: "desc",
             render: function (data) {
-                return moment(data).format(i18n.dateformatJS);
+                return moment(data).format(i18n.dateformatJS.date);
             }
         },
         {
@@ -260,7 +260,7 @@ var statsBudgetTable = new JSTable("#stats_budget_table", {
             sortable: true,
             sort: "desc",
             render: function (data) {
-                return moment(data).format(i18n.dateformatJS);
+                return moment(data).format(i18n.dateformatJS.date);
             }
         },
         {
@@ -325,7 +325,7 @@ var notificationsTable = new JSTable("#notifications_table", {
         {
             select: [3, 4],
             render: function (data) {
-                return moment(data).format(i18n.dateformatJSFull);
+                return moment(data).format(i18n.dateformatJS.datetime);
             }
         },
         {
@@ -347,7 +347,7 @@ var fuelTable = new JSTable("#fuel_table", {
             sortable: true,
             sort: "desc",
             render: function (data) {
-                return moment(data).format(i18n.dateformatJS);
+                return moment(data).format(i18n.dateformatJS.date);
             }
         },
         {
@@ -374,7 +374,7 @@ var serviceTable = new JSTable("#service_table", {
             sortable: true,
             sort: "desc",
             render: function (data) {
-                return moment(data).format(i18n.dateformatJS);
+                return moment(data).format(i18n.dateformatJS.date);
             }
         },
         {
@@ -413,7 +413,7 @@ var tokensCategoryTable = new JSTable("#tokens_table", {
         {
             select: [3, 4],
             render: function (data) {
-                return moment(data).format(i18n.dateformatJSFull);
+                return moment(data).format(i18n.dateformatJS.datetime);
             }
         },
         {
@@ -474,7 +474,7 @@ var crawlersDataTable = new JSTable("#crawlers_data_table", {
             sort: "desc",
             sortable: true,
             render: function (data) {
-                return moment(data).format(i18n.dateformatJSFull);
+                return moment(data).format(i18n.dateformatJS.datetime);
             }
         }
     ],
@@ -526,7 +526,7 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
             sort: "desc",
             sortable: true,
             render: function (data) {
-                return moment(data).format(i18n.dateformatJS);
+                return moment(data).format(i18n.dateformatJS.date);
             }
         },
         {

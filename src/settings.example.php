@@ -26,9 +26,28 @@ return [
             'i18n' => [
                 'template' => 'en',
                 'php' => 'en_US',
-                'dateformatJS' => 'YYYY-MM-DD',
-                'dateformatJSFull' => 'DD.MM.YYYY HH:mm:ss',
-                'twig' => 'Y-m-d',
+                // https://momentjs.com/docs/#/displaying/
+                'dateformatJS' => [
+                    'date' => 'DD.MM.YYYY',
+                    'time' => 'HH:mm:ss',
+                    'datetime' => 'DD.MM.YYYY HH:mm:ss'
+                ],
+                // https://www.php.net/manual/de/function.date.php
+                'dateformatTwig' => [
+                    'date' => 'd.m.Y',
+                    'time' => 'H:i:s',
+                    'datetime' => 'd.m.Y H:i:s'
+                ],
+                // http://userguide.icu-project.org/formatparse/datetime
+                'dateformatPHP' => [
+                    'date' => 'dd.MM.YYYY',
+                    'time' => 'HH:mm:ss',
+                    'datetime' => 'dd.MM.YYYY HH:mm:ss',
+                    'trips_buttons' => 'EEE dd. MMM',
+                    'trips_list' => 'EEEE dd. MMM',
+                    'month_name' => 'MMMM',
+                    'month_name_full' => 'dd. MMMM y',                    
+                ],
                 'currency' => '€'
             ],
             // default location
