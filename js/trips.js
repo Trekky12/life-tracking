@@ -48,15 +48,6 @@ descriptionLinks.forEach(function (item, idx) {
     });
 });
 
-var greenIcon = new L.Icon({
-    iconUrl: '/static/assets/images/marker-icon-green.png',
-    shadowUrl: '/static/assets/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
 const from = document.getElementById('inputStart').value;
 const to = document.getElementById('inputEnd').value;
 
@@ -88,7 +79,6 @@ function drawMarkers(markers) {
     layerEvents.clearLayers();
 
 
-    let my_latlngs = [];
     let my_markers = [];
 
     let marker_idx = 0;
@@ -96,83 +86,117 @@ function drawMarkers(markers) {
 
         let marker = markers[marker_idx];
 
-        //let type = marker.type;
-
-        // ignore markers without location data
-        if (marker.lat === null || marker.lng === null) {
+        // ignore markers without start data
+        if (marker.data.start_lat === null || marker.data.start_lng === null) {
             continue;
         }
 
+        /**
+         * Popup
+         */
+        let popup = "<h4>" + marker.data.name + "</h4>" + marker.data.popup;
+
+
         let options = {};
+        if (marker.isCarrental) {
+            options['icon'] = L.divIcon({
+                html: '<i class="fa fa-2x fa-car"></i>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                className: 'myDivIcon'
+            });
+        } else if (marker.isHotel) {
+            options['icon'] = L.divIcon({
+                html: '<i class="fa fa-2x fa-bed"></i>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                className: 'myDivIcon'
+            });
+        } else if (marker.isEvent) {
+            options['icon'] = L.divIcon({
+                html: '<i class="fa fa-2x fa-calendar-o"></i>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                className: 'myDivIcon'
+            });
+        } else if (marker.isPlane) {
+            options['icon'] = L.divIcon({
+                html: '<i class="fa fa-3x fa-plane"></i>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                className: 'myDivIcon'
+            });
+        }
 
-        if (marker.isTravel) {
+        /**
+         * Start Marker
+         */
+        let start_marker = L.marker([marker.data.start_lat, marker.data.start_lng], options);
+        start_marker.bindPopup(popup);
+        my_markers.push(start_marker);
 
-            if (marker.isPlane) {
-                options['icon'] = greenIcon;
-            }
+        if (marker.isCarrental) {
+            layerCarRentals.addLayer(start_marker);
+        } else if (marker.isHotel) {
+            layerHotels.addLayer(start_marker);
+        } else if (marker.isEvent) {
+            layerEvents.addLayer(start_marker);
+        } else if (marker.isTrain) {
+            layerTrains.addLayer(start_marker);
+        } else if (marker.isPlane) {
+            layerPlanes.addLayer(start_marker);
+        } else if (marker.isCar) {
+            layerCars.addLayer(start_marker);
+        }
 
-            let start_marker = L.marker([marker.start_lat, marker.start_lng], options);
-            let end_marker = L.marker([marker.end_lat, marker.end_lng], options);
-
-            my_markers.push(start_marker);
+        /**
+         * End Marker
+         */
+        if (marker.data.end_lat !== null && marker.data.end_lat !== null) {
+            let end_marker = L.marker([marker.data.end_lat, marker.data.end_lng], options);
             my_markers.push(end_marker);
 
-            let tripLine = [[marker.start_lat, marker.start_lng], [marker.end_lat, marker.end_lng]];
+            let tripLine = [[marker.data.start_lat, marker.data.start_lng], [marker.data.end_lat, marker.data.end_lng]];
 
-            if (marker.isTrain) {
+            if (marker.isCarrental) {
+                layerCarRentals.addLayer(end_marker);
+            } else if (marker.isHotel) {
+                layerHotels.addLayer(end_marker);
+            } else if (marker.isEvent) {
+                layerEvents.addLayer(end_marker);
+            } else if (marker.isTrain) {
                 let trainPolyline = [];
-                trainPolyline[0] = L.polyline(tripLine, {color: 'black', weight: '5'}).bindPopup(marker.popup);
-                trainPolyline[1] = L.polyline(tripLine, {color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0'}).bindPopup(marker.popup);
-                trainPolyline[2] = L.polyline(tripLine, {color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20'}).bindPopup(marker.popup);
+                trainPolyline[0] = L.polyline(tripLine, {color: 'black', weight: '5'}).bindPopup(popup);
+                trainPolyline[1] = L.polyline(tripLine, {color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0'}).bindPopup(popup);
+                trainPolyline[2] = L.polyline(tripLine, {color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20'}).bindPopup(popup);
+                layerTrains.addLayer(L.layerGroup(trainPolyline));
 
-                let trainLayer = L.layerGroup(trainPolyline);
-                layerTrains.addLayer(trainLayer);
+                // remove start marker when there is a polyline
+                layerTrains.removeLayer(start_marker);
             } else if (marker.isPlane) {
-                start_marker.bindPopup(marker.popup);
-                let planePolyline = L.polyline(tripLine, {color: 'black', weight: '3'}).bindPopup(marker.popup);
+                let middle = calculateMidPoint(start_marker, end_marker);
+                let planeCuve = L.curve([
+                    'M', [marker.data.start_lat, marker.data.start_lng],
+                    'Q', middle, [marker.data.end_lat, marker.data.end_lng]
+                ], {color: 'black', weight: '3', dashArray: '10, 10'}).bindPopup(popup);
+
+                //let planePolyline = L.polyline(tripLine, {color: 'black', weight: '3'}).bindPopup(marker.popup);
+                
                 layerPlanes.addLayer(start_marker);
-                layerPlanes.addLayer(planePolyline);
+                layerPlanes.addLayer(planeCuve);
             } else if (marker.isCar) {
                 let streetPolyline = [];
-                streetPolyline[0] = L.polyline(tripLine, {color: 'gray', weight: '5'}).bindPopup(marker.popup);
-                streetPolyline[1] = L.polyline(tripLine, {color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0'}).bindPopup(marker.popup);
+                streetPolyline[0] = L.polyline(tripLine, {color: 'gray', weight: '5'}).bindPopup(popup);
+                streetPolyline[1] = L.polyline(tripLine, {color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0'}).bindPopup(popup);
                 layerCars.addLayer(L.layerGroup(streetPolyline));
+
+                // remove start marker when there is a polyline
+                layerCars.removeLayer(start_marker);
             }
 
-        } else {
-            let marker_options = options;
-            if (marker.isCarrental) {
-                marker_options['icon'] = L.divIcon({
-                    html: '<i class="fa fa-2x fa-car"></i>',
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10],
-                    className: 'myDivIcon'
-                });
-            } else if (marker.isHotel) {
-                marker_options['icon'] = L.divIcon({
-                    html: '<i class="fa fa-2x fa-bed"></i>',
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10],
-                    className: 'myDivIcon'
-                });
-            }
-
-            var my_marker = L.marker([marker.start_lat, marker.start_lng], marker_options);
-
-            my_marker.bindPopup(marker.popup);
-
-            if (marker.isCarrental) {
-                layerCarRentals.addLayer(my_marker);
-            } else if (marker.isHotel) {
-                layerHotels.addLayer(my_marker);
-            } else {
-                layerEvents.addLayer(my_marker);
-            }
-
-            my_markers.push(my_marker);
         }
-    }
 
+    }
 
     // fit bounds of markers
     if (my_markers.length > 0) {
@@ -210,4 +234,31 @@ function initMap() {
     controlLayer.addTo(mymap);
 
     getMarkers(from, to);
+}
+
+
+
+/**
+ * @see https://medium.com/@ryancatalani/creating-consistently-curved-lines-on-leaflet-b59bc03fa9dc
+ * @returns {undefined}
+ */
+function calculateMidPoint(start, end) {
+    let latlng1 = start.getLatLng();
+    let latlng2 = end.getLatLng();
+
+    var offsetX = latlng2.lng - latlng1.lng,
+            offsetY = latlng2.lat - latlng1.lat;
+
+    var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
+            theta = Math.atan2(offsetY, offsetX);
+
+    var thetaOffset = (3.14 / 10);
+
+    var r2 = (r / 2) / (Math.cos(thetaOffset)),
+            theta2 = theta + thetaOffset;
+
+    var midpointX = (r2 * Math.cos(theta2)) + latlng1.lng,
+            midpointY = (r2 * Math.sin(theta2)) + latlng1.lat;
+
+    return [midpointY, midpointX];
 }
