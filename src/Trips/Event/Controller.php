@@ -26,7 +26,8 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data, null, null);
 
-        $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time");
+        // always show all events (hide the one not in range)
+        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time");
 
         $range = $this->mapper->getMinMaxDate();
 
@@ -45,17 +46,49 @@ class Controller extends \App\Base\Controller {
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
         $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
-        
+
         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
         $fmt2 = new \IntlDateFormatter($langugage, NULL, NULL);
         $fmt->setPattern($dateFormatPHP["trips_buttons"]);
         $fmt2->setPattern($dateFormatPHP["trips_list"]);
 
         $dateRange = [];
-        $dateRange['all'] = ["date" => null, "display_date" => "Overview"];
+        $dateRange['all'] = ["date" => null, "display_date" => $this->ci->get('helper')->getTranslatedString("TRIPS_OVERVIEW"), "events" => []];
         foreach ($dateInterval as $d) {
             $date = $d->format('Y-m-d');
-            $dateRange[$date] = ["date" => $date, "display_date" => $fmt->format($d)];
+            $dateRange[$date] = ["date" => $date, "display_date" => $fmt->format($d), "full_date" => $fmt2->format($d), "events" => []];
+        }
+
+
+        $dateFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
+        $timeFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
+        $datetimeFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
+        $dateFormatter->setPattern($dateFormatPHP['date']);
+        $timeFormatter->setPattern($dateFormatPHP['time']);
+        $datetimeFormatter->setPattern($dateFormatPHP['datetime']);
+
+        $fromTranslation = $this->ci->get('helper')->getTranslatedString("FROM");
+        $toTranslation = $this->ci->get('helper')->getTranslatedString("TO");
+
+        foreach ($events as $ev) {
+            $end_date = !empty($ev->end_date) ? $ev->end_date : $ev->start_date;
+            $end = new \DateTime($end_date);
+            $end->add(new \DateInterval('P1D'));
+
+            $interval = new \DatePeriod(
+                    new \DateTime($ev->start_date),
+                    new \DateInterval('P1D'),
+                    $end
+            );
+            
+            foreach ($interval as $event_date) {
+                $datekey = $event_date->format('Y-m-d');
+
+                $dateRange[$datekey]["events"][] = $ev;
+            }
+
+            // create Popup
+            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
         }
 
         return $this->ci->view->render($response, 'trips/events/index.twig', [
@@ -100,9 +133,26 @@ class Controller extends \App\Base\Controller {
 
         $events = $this->mapper->getFromTrip($trip->id, $from, $to);
 
-        $markers = array_map(function($ev) {
-            return $ev->getPosition();
-        }, $events);
+
+        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        
+        $dateFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
+        $timeFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
+        $datetimeFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
+        $dateFormatter->setPattern($dateFormatPHP['date']);
+        $timeFormatter->setPattern($dateFormatPHP['time']);
+        $datetimeFormatter->setPattern($dateFormatPHP['datetime']);
+
+        $fromTranslation = $this->ci->get('helper')->getTranslatedString("FROM");
+        $toTranslation = $this->ci->get('helper')->getTranslatedString("TO");
+
+        $markers = [];
+        foreach ($events as $ev) {
+            // create Popup
+            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>');
+            $markers[] = $ev->getPosition();
+        }
 
         return $response->withJSON($markers);
     }

@@ -20,3 +20,99 @@ button.trips_overview{
     margin-bottom:0.5rem;
     margin-right:0.5rem;
 }
+
+body.trips .inner-content .page-header{
+    margin-bottom:0;
+}
+
+.trip_day{
+
+    h3{
+        @include font-size(1.8);
+        font-weight:600;
+        border-bottom: 1px solid $color_text-main;
+    }
+    .trip_event{
+
+        padding: 0 0 2rem 0;
+
+        h4{
+            margin-top:0;
+            margin-bottom: 1rem;
+            @include font-size(1.6);
+            font-weight:600;
+        }
+
+        .date{
+            margin-bottom: 1rem;
+        }
+
+        .description{
+            @include font-size(1.4);
+
+            .description_full{
+                display:none;
+                padding-top: 0.5rem;
+                padding-bottom: 1rem;
+
+            }
+
+            .description_text{
+                &:before {
+                    content: "\f067";
+                    font: normal normal normal 14px/1 FontAwesome;
+                    font-size: inherit;
+                    text-rendering: auto;
+                    transition: all 250ms;
+                    @include font-size(1.4);
+                    color: $color_text-main;
+                    position: relative;
+                    margin-right: 5px;
+                }
+            }
+
+            &.active {
+                .description_full{
+                    display:block;
+                }
+
+                .description_text:before{
+                    content: "\f068";
+                }
+            }
+
+
+        }
+
+        display:flex;
+        justify-content: space-between;
+
+        .icon{
+            margin-right: 2rem;
+
+            i{
+                margin-top:5px;
+                @include font-size(2);
+                width:20px;
+                @media screen and (min-width: $size_tablet) {
+                    @include font-size(4);
+                    width:70px;
+
+                }
+            }
+        }
+        .text{
+            flex-grow:1;
+        }
+        .buttons{
+            display:flex;
+            flex-direction:column;
+            @media screen and (min-width: $size_tablet) {
+                flex-direction:row;
+            }
+            a{
+                margin-left:1rem;
+            }
+        }
+    }
+}

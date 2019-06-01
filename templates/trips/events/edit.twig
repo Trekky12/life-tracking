@@ -76,7 +76,7 @@
 
                 <div class="form-group">
                     <label for="inputNotice">{{lang["NOTICE"]}}</label>
-                    <textarea class="form-control" id="inputNotice" name="notice">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
+                    <textarea class="form-control" id="inputNotice" name="notice" rows="10">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group btn">

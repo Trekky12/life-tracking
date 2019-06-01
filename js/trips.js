@@ -40,6 +40,13 @@ if (changeDayLinks !== null) {
     });
 }
 
+let descriptionLinks = document.querySelectorAll('.trip_day .description_text');
+descriptionLinks.forEach(function (item, idx) {
+    item.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.target.parentElement.classList.toggle('active');
+    });
+});
 
 var greenIcon = new L.Icon({
     iconUrl: '/static/assets/images/marker-icon-green.png',

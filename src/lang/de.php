@@ -372,4 +372,6 @@ $lang["END_TIME"] = "Endzeit";
 
 $lang["SEARCH_ADDRESS"] = "Suche Adresse";
 
+$lang["TRIPS_OVERVIEW"] = "Übersicht";
+
 return $lang;

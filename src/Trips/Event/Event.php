@@ -80,46 +80,75 @@ class Event extends \App\Base\Model {
     public function isEvent() {
         return strcmp($this->type, "EVENT") === 0;
     }
+
     public function isTravel(){
         return $this->isFlight() || $this->isTrainride() || $this->isDrive();
     }
 
     public function getPosition() {
-        $data = [
-            'id' => $this->id,
-            'dt' => $this->createdOn
-        ];
-
-        $data['start_lat'] = $this->start_lat;
-        $data['start_lng'] = $this->start_lng;
-
         $data['isTravel'] = $this->isTravel();
-        $data['end_lat'] = $this->end_lat;
-        $data['end_lng'] = $this->end_lng;
-
         $data['isCar'] = $this->isDrive();
         $data['isPlane'] = $this->isFlight();
         $data['isTrain'] = $this->isTrainride();
         $data['isHotel'] = $this->isAccommodation();
         $data['isCarrental'] = $this->isCarrental();
-        $data['type'] = $this->type;
+        $data['isEvent'] = $this->isEvent();
 
-
-        $data['popup'] = '';
-        if (!empty($this->start_address)) {
-            $data['popup'] .= '<strong>' . $this->start_address . '</strong>';
-        }
-        
-        if (!empty($this->end_address)) {
-            $data['popup'] .= ' nach <strong>' . $this->end_address . '</strong>';
-        }
-        $data['popup'] .= '<br/>';
-        $data['popup'] .= 'Ab: ' . $this->start_date . ' ' . $this->start_time;
-        $data['popup'] .= '<br/>';
-        $data['popup'] .= 'An: ' . $this->end_date . ' ' . $this->end_time;
-
+        $data['data'] = $this->get_fields();
 
         return $data;
+    }
+
+    public function createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $from, $to, $loc_prefix = '<br/>', $loc_suffix = '<br/>') {
+        $start = null;
+        if (!is_null($this->start_date) && !is_null($this->start_time)) {
+            $d = new \DateTime($this->start_date . ' ' . $this->start_time);
+            $start = $datetimeFormatter->format($d);
+        } else if (!is_null($this->start_date)) {
+            $d = new \DateTime($this->start_date);
+            $start = $dateFormatter->format($d);
+        } else if (!is_null($this->start_time)) {
+            $d = new \DateTime($this->start_time);
+            $start = $timeFormatter->format($d);
+        }
+
+        $end = null;
+        if (!is_null($this->end_date) && !is_null($this->end_time)) {
+            $d = new \DateTime($this->end_date . ' ' . $this->end_time);
+            $end = $datetimeFormatter->format($d);
+        } else if (!is_null($this->end_date)) {
+            $d = new \DateTime($this->end_date);
+            $end = $dateFormatter->format($d);
+        } else if (!is_null($this->end_time)) {
+            $d = new \DateTime($this->end_time);
+            $end = $timeFormatter->format($d);
+        }
+
+        // same day but different end time, so remove day format 
+        if (!is_null($start) && !is_null($end) && strcmp($this->start_date, $this->end_date) === 0 && strcmp($this->start_time, $this->end_time) !== 0 && !is_null($this->end_time)) {
+            $d = new \DateTime($this->end_time);
+            $end = $timeFormatter->format($d);
+        }
+
+        $start_address = '';
+        if (!is_null($this->start_address)) {
+            $start_address = "{$loc_prefix}{$this->start_address}{$loc_suffix}";
+        }
+        $end_address = '';
+        if (!is_null($this->end_address)) {
+            $end_address = "{$loc_prefix}{$this->end_address}{$loc_suffix}";
+        }
+
+        $popup = ""; //"<h4>{$this->name}</h4>";
+        if (!is_null($start) && !is_null($end) && strcmp($start, $end) !== 0) {
+            $popup .= "{$from} {$start}{$start_address}<br/>";
+            $popup .= "{$to} {$end}{$end_address}<br/>";
+        } else if (!is_null($start)) {
+            // there is only a start date or start and end date are the same
+            $popup .= "{$start}{$start_address}<br/>";
+        }
+
+        $this->popup = $popup;
     }
 
 }
