@@ -15,6 +15,7 @@
     "font-awesome": "^4.7.0",
     "leaflet": "^1.4.0",
     "leaflet-curve": "^1.0.0",
+    "leaflet.locatecontrol": "^0.67.0",
     "leaflet.markercluster": "^1.4.1",
     "mobius1-selectr": "^2.4.6",
     "moment": "^2.24.0",

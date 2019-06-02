@@ -181,7 +181,7 @@ function drawMarkers(markers) {
                 ], {color: 'black', weight: '3', dashArray: '10, 10'}).bindPopup(popup);
 
                 //let planePolyline = L.polyline(tripLine, {color: 'black', weight: '3'}).bindPopup(marker.popup);
-                
+
                 layerPlanes.addLayer(start_marker);
                 layerPlanes.addLayer(planeCuve);
             } else if (marker.isCar) {
@@ -232,6 +232,17 @@ function initMap() {
     controlLayer.addOverlay(layerHotels, "<span id='layerHotels'></span>");
     controlLayer.addOverlay(layerEvents, "<span id='layerEvents'></span>");
     controlLayer.addTo(mymap);
+
+    // current location
+    var lc = L.control.locate({
+        strings: {
+            title: lang.set_current_location
+        },
+        locateOptions: {
+            enableHighAccuracy: true
+        }
+    });
+    mymap.addControl(lc);
 
     getMarkers(from, to);
 }
