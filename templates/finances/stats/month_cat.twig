@@ -34,7 +34,7 @@
                             <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td> 
                             <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
                             <td><a href="{{  path_for('finances_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
-                            <td><a href="#" data-url="{{  path_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                            <td>{% if entry.bill is empty %}<a href="#" data-url="{{  path_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -158,7 +158,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsCategoryDetail($year, $type, $category) {
 
-        $sql = "SELECT id, date, time, type, description, value FROM " . $this->getTable() . " "
+        $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTable() . " "
                 . "WHERE category = :category "
                 . "AND YEAR(date) = :year "
                 . "AND type = :type ";
@@ -192,7 +192,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsMonthCategory($year, $month, $type, $category) {
 
-        $sql = "SELECT id, date, time, type, description, value FROM " . $this->getTable() . " "
+        $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTable() . " "
                 . "WHERE category = :category "
                 . "AND MONTH(date) = :month "
                 . "AND YEAR(date) = :year "
@@ -252,7 +252,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsBudget($budget) {
 
-        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc,  " . $this->getTable("finances_budgets_categories") . " fbc "
+        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc,  " . $this->getTable("finances_budgets_categories") . " fbc "
                 . "WHERE f.category = fbc.category "
                 . "AND fc.id = f.category "
                 . "AND fbc.budget = :budget "
@@ -270,7 +270,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsBudgetRemains() {
 
-        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc  "
+        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc  "
                 . "WHERE f.category NOT IN (SELECT category FROM " . $this->getTable("finances_budgets_categories") . " ) "
                 . "AND fc.id = f.category "
                 . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
