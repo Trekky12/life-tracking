@@ -25,7 +25,7 @@
             <div class="description">
                 <a href="#" class="description_text">Beschreibung</a>
                 <div class="description_full">
-                    {{ event.notice|nl2br }}
+                    {{ event.getNotice()|raw|nl2br }}
                 </div>
             </div>
         {% endif %}
