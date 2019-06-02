@@ -132,11 +132,16 @@ class Event extends \App\Base\Model {
 
         $start_address = '';
         if (!is_null($this->start_address)) {
-            $start_address = "{$loc_prefix}{$this->start_address}{$loc_suffix}";
+            $start_address = "{$loc_prefix}<a href=\"geo:{$this->start_lat},{$this->start_lng}\">{$this->start_address}</a>{$loc_suffix}";
+        } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
+            $start_address = " <a href=\"geo:{$this->start_lat},{$this->start_lng}\"><i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
+        
         $end_address = '';
         if (!is_null($this->end_address)) {
-            $end_address = "{$loc_prefix}{$this->end_address}{$loc_suffix}";
+            $end_address = "{$loc_prefix}<a href=\"geo:{$this->end_lat},{$this->end_lng}\">{$this->end_address}</a>{$loc_suffix}";
+        } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
+            $start_address = " <a href=\"geo:{$this->end_lat},{$this->end_lng}\"><i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
 
         $popup = ""; //"<h4>{$this->name}</h4>";
