@@ -52,18 +52,22 @@
             display:flex;
             align-items: center;
         }
-    
+
         button, input, select, .flatpickr-input{
             height: 41px;
         }
-    
+
+        .flatpickr-input{
+            min-width: 200px;
+        }
+
     }
 }
 
 #search, #search-filter{
     button, input, select{
         width: 100%;
-        
+
         @include font-size(1.2);
         @media screen and (min-width: $size_mobile) {
             @include font-size(1.4);
