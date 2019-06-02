@@ -109,15 +109,13 @@ if (getAdressButtons !== null) {
                             // we assume the index of the button is the same like the index of the map
                             drawMap(mapContainer, idx);
                         } else {
-                            alert("Nothing found");
+                            alert(lang.nothing_found);
                         }
                     } else {
-                        alert("Nothing found");
+                        alert(lang.nothing_found);
                     }
                 });
             }
-
-
         });
     });
 }

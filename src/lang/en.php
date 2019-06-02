@@ -373,5 +373,6 @@ $lang["END_TIME"] = "destination time";
 $lang["SEARCH_ADDRESS"] = "search address";
 
 $lang["TRIPS_OVERVIEW"] = "Overview";
+$lang["NOTHING_FOUND"] = "nothing found";
 
 return $lang;
