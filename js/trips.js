@@ -99,32 +99,32 @@ function drawMarkers(markers) {
 
         let options = {};
         if (marker.isCarrental) {
-            options['icon'] = L.divIcon({
-                html: '<i class="fa fa-2x fa-car"></i>',
-                iconSize: [20, 20],
-                iconAnchor: [10, 10],
-                className: 'myDivIcon'
+            options['icon'] = L.ExtraMarkers.icon({
+                icon: 'fa-car',
+                markerColor: 'red',
+                shape: 'circle',
+                prefix: 'fa'
             });
         } else if (marker.isHotel) {
-            options['icon'] = L.divIcon({
-                html: '<i class="fa fa-2x fa-bed"></i>',
-                iconSize: [20, 20],
-                iconAnchor: [10, 10],
-                className: 'myDivIcon'
+            options['icon'] = L.ExtraMarkers.icon({
+                icon: 'fa-bed',
+                markerColor: 'blue',
+                shape: 'circle',
+                prefix: 'fa'
             });
         } else if (marker.isEvent) {
-            options['icon'] = L.divIcon({
-                html: '<i class="fa fa-2x fa-calendar-o"></i>',
-                iconSize: [20, 20],
-                iconAnchor: [10, 10],
-                className: 'myDivIcon'
+            options['icon'] = L.ExtraMarkers.icon({
+                icon: 'fa-calendar-o',
+                markerColor: 'yellow',
+                shape: 'circle',
+                prefix: 'fa'
             });
         } else if (marker.isPlane) {
-            options['icon'] = L.divIcon({
-                html: '<i class="fa fa-3x fa-plane"></i>',
-                iconSize: [20, 20],
-                iconAnchor: [10, 10],
-                className: 'myDivIcon'
+            options['icon'] = L.ExtraMarkers.icon({
+                icon: 'fa-plane',
+                markerColor: 'black',
+                shape: 'circle',
+                prefix: 'fa'
             });
         }
 
