@@ -236,7 +236,8 @@ function initMap() {
     // current location
     var lc = L.control.locate({
         strings: {
-            title: lang.set_current_location
+            title: lang.set_current_location,
+            showPopup: false
         },
         locateOptions: {
             enableHighAccuracy: true
