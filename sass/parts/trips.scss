@@ -14,6 +14,10 @@
     @media screen and (min-width: $size_mobile_navigation){
         height:500px;
     }
+    
+    .leaflet-control-layers-overlays{
+        display:flex;
+    }
 }
 
 button.trips_overview{
