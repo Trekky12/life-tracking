@@ -9,18 +9,23 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20190510';
+const cacheName = 'pwa-life-tracking-v20190602';
 const staticAssets = [
     '/',
     '/static/style.css',
+    '/static/js/app.js',
+    '/static/js/boards.js',
+    '/static/js/budget.js',
+    '/static/js/car_service.js',
+    '/static/js/crawler.js',
+    '/static/js/datefilter.js',
+    '/static/js/geolocation.js',
+    '/static/js/location.js',
     '/static/js/main.js',
     '/static/js/navigation.js',
-    '/static/js/location.js',
-    '/static/js/budget.js',
-    '/static/js/boards.js',
+    '/static/js/splitbills.js',
     '/static/js/tables.js',
-    '/static/js/car_service.js',
-    '/static/js/geolocation.js',
+    '/static/js/trips.js',
     '/static/assets/js/Chart.min.js',
     '/static/assets/js/Sortable.min.js',
     '/static/assets/js/jstable.min.js',
@@ -32,9 +37,10 @@ const staticAssets = [
     '/static/assets/js/randomColor.min.js',
     '/static/assets/js/selectr.min.js',
     '/static/assets/js/simplemde.min.js',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff2',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
     '/static/assets/fonts/fontawesome-webfont.woff2',
     '/static/assets/favicon/android-chrome-192x192.png',
     '/static/assets/css/flatpickr.min.css',
@@ -104,12 +110,17 @@ function networkFirst(req) {
          */
         return _fromCache(req.clone()).then(function (result) {
             //console.log('try from cache', req);
-            _notifyCache(req);
-            return result;
+            return _notifyCache(req).then(function () {
+                return result;
+            });
         }).catch(function (result) {
             //console.log('no network and nothing in cache found', req);
-            _notifyCache(req);
-            return _fromCache('/');
+            return _notifyCache(req).then(function () {
+                if (req.headers.get('accept').includes('text/html')) {
+                    return _fromCache('/');
+                }
+                return Promise.reject('no-match');
+            });
         });
     });
 }
@@ -122,16 +133,18 @@ function cacheFirst(req) {
         return networkFirst(req);
     });
 }
+
 /**
  * Notify client that this request was from cache instead of network
+ * @param {type} req
+ * @returns {Promise}
  */
 function _notifyCache(req) {
-    
     if (req.headers.get('accept').includes('text/html')) {
-        _sendMessageToClients(3);
-    }else{
-        console.log(req.headers.get('accept'));
+        return _sendMessageToClients(3);
     }
+    // resolve empty promise
+    return Promise.resolve('no-notification-needed');
 }
 
 
@@ -215,10 +228,15 @@ function _fetchAndCache(request) {
     });
 }
 
+/**
+ * Send a message to all clients
+ * @param {type} message
+ * @returns {Promise}
+ */
 function _sendMessageToClients(message) {
-    self.clients.matchAll().then(clis => {
-        clis.forEach(cli => {
-            cli.postMessage({
+    return self.clients.matchAll().then(function (clientList) {
+        clientList.forEach(function (client) {
+            client.postMessage({
                 type: message,
                 time: new Date().toString()
             });
@@ -276,8 +294,8 @@ self.addEventListener('push', function (event) {
 ////            self.registration.showNotification(title, options);
 //        })
 
-            _sendMessageToClients(1)
-            );
+        _sendMessageToClients(1)
+    );
 });
 
 self.addEventListener('notificationclick', function (event) {

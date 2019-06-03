@@ -79,14 +79,32 @@ if ('serviceWorker' in navigator) {
             console.error('Service Worker Error', error);
             notificationsDisabled('incompatible');
         });
+
+        navigator.serviceWorker.addEventListener('message', function (event) {
+            console.log('Received a message from service worker');
+            //alert(event.data.type);
+            if (event.data.type === 1) {
+                console.log("Notification received");
+                console.log(event.data.type);
+                setNotificationCount();
+            }
+            if (event.data.type === 2) {
+                console.log("Notification Click");
+            }
+            if (event.data.type === 3) {
+                console.log("Loaded content from cache instead of network!");
+                // after loading the response from cache the cache is loaded
+                // afterwards possible variables are no longer available
+                // so save the info that the page is from cache in the localStorage
+                localStorage.setItem('isCached', true);
+            }
+        });
     });
 } else {
     notificationsDisabled('incompatible');
 }
 
 function initialize() {
-
-
 
 
     // only on notifications pages
@@ -166,26 +184,6 @@ function initialize() {
         }
         if (loadingIcon !== null) {
             loadingIcon.classList.add("hidden");
-        }
-    });
-
-    navigator.serviceWorker.addEventListener('message', function (event) {
-        console.log('Received a message from service worker');
-        //alert(event.data.type);
-        if (event.data.type === 1) {
-            console.log("Notification received");
-            console.log(event.data.type);
-            setNotificationCount();
-        }
-        if (event.data.type === 2) {
-            console.log("Notification Click");
-        }
-        if (event.data.type === 3) {
-            console.log("Loaded content from cache instead of network!");
-            // after loading the response from cache the cache is loaded
-            // afterwards possible variables are no longer available
-            // so save the info that the page is from cache in the localStorage
-            localStorage.setItem('isCached', true);
         }
     });
 
