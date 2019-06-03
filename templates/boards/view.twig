@@ -245,7 +245,7 @@
 
                                 <div class="card-title">{{card.title|raw}}</div>
                                 {% if card.date or card.time %}
-                                    <span class="card-date {% if "now"|date('Y-m-d') >= card.date|date('Y-m-d') %}due{% endif %}">{{card.date is empty ? "" : card.date|date(i18n.twig)}} {{ card.time is empty ? "" : card.time|date("H:i") }}</span>
+                                    <span class="card-date {% if "now"|date('Y-m-d') >= card.date|date('Y-m-d') %}due{% endif %}">{{card.date is empty ? "" : card.date|date(i18n.dateformatTwig.date)}} {{ card.time is empty ? "" : card.time|date("H:i") }}</span>
                                 {% endif %}
                                 <div class="bottom-row">
                                     <div class="icons">

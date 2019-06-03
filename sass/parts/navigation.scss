@@ -18,7 +18,7 @@ body.mobile-navigation-open{
     #content, .board-content{
         top:0px;
     }
-    
+
     #sidebar{
         padding-top:0px;
     }
@@ -31,17 +31,28 @@ body.mobile-navigation-open{
     height: $header_height;
 
     i{
-        @include font-size(2.5);
+        @include font-size(2);
+        margin-left:1.5rem;
+        @media screen and (min-width: $size_mini){
+            @include font-size(2.5);
+            margin-left:2rem;
+        }
         color: $color_blue;
-        margin-left:2rem;
-        
+
+
         &:hover, &:focus{
             color: $color_blue_light;
         }
     }
-    
+
+    a:first-child i{
+        margin-left:0;
+    }
+
+
+
     a.active i{
-         color: $color_blue_light;
+        color: $color_blue_light;
     }
 
     .disabled i{
@@ -75,7 +86,7 @@ body.mobile-navigation-open{
     transition:.5s ease-in-out;
     outline:none;
     margin-left:2rem;
-    
+
     -webkit-tap-highlight-color: transparent;
 
 
@@ -165,6 +176,12 @@ body.mobile-navigation-open{
         }
 
         li{
+
+            @include font-size(1.3);
+            @media screen and (min-width: $size_big){
+                @include font-size(1.6);
+            }
+
             a{
                 text-decoration: none;
                 color: $color_blue;

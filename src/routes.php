@@ -248,3 +248,24 @@ $app->group('/splitbills', function() {
         });
     });
 });
+
+$app->group('/trips', function() {
+    $this->get('/', '\App\Trips\Controller:index')->setName('trips');
+    $this->get('/edit/[{id:[0-9]+}]', '\App\Trips\Controller:edit')->setName('trips_edit');
+    $this->post('/save/[{id:[0-9]+}]', '\App\Trips\Controller:save')->setName('trips_save');
+    $this->delete('/delete/{id}', '\App\Trips\Controller:delete')->setName('trips_delete');
+    
+    $this->get('/search/', '\App\Trips\Event\Controller:getLatLng')->setName('get_location_of_address');
+
+    $this->group('/{trip}', function() {
+
+        $this->get('/view/', '\App\Trips\Event\Controller:index')->setName('trips_view');
+        $this->get('/markers/', '\App\Trips\Event\Controller:getMarkers')->setName('trips_markers');
+
+        $this->group('/event', function() {
+            $this->get('/edit/[{id:[0-9]+}]', '\App\Trips\Event\Controller:edit')->setName('trips_event_edit');
+            $this->post('/save/[{id:[0-9]+}]', '\App\Trips\Event\Controller:save')->setName('trips_event_save');
+            $this->delete('/delete/{id}', '\App\Trips\Event\Controller:delete')->setName('trips_event_delete');
+        });
+    });
+});

@@ -64,6 +64,10 @@ button:not(.fa):not(.menu-toggle):not(.selectr-tag-remove), input[type="submit"]
     &.add-btn{
 
     }
+    
+    &.small{
+        padding: 0.5rem 1rem; 
+    }
 
 
 }

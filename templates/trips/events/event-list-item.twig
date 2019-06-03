@@ -1,0 +1,38 @@
+<div class="trip_event">
+    <div class="icon">
+        {% if event.isAccommodation() %}
+            <i class="fa fa-2x fa-bed"></i>
+        {% elseif event.isTrainride() %}
+            <i class="fa fa-2x fa-train"></i>
+        {% elseif event.isDrive() %}
+            <i class="fa fa-2x fa-road"></i>
+        {% elseif event.isFlight() %}
+            <i class="fa fa-2x fa-plane"></i>
+
+        {% elseif event.isCarrental() %}
+            <i class="fa fa-2x fa-car"></i>
+        {% elseif event.isEvent() %}
+            <i class="fa fa-2x fa-calendar-o"></i>
+        {% endif %}
+    </div>
+    <div class="text">
+        <h4>{{ event.name }}</h4>
+        <div class="date">
+            {{ event.popup |raw}}
+        </div>
+
+        {% if event.notice %}
+            <div class="description">
+                <a href="#" class="description_text">Beschreibung</a>
+                <div class="description_full">
+                    {{ event.getNotice()|raw|nl2br }}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+    <div class="buttons">
+        <a href="{{  path_for('trips_event_edit', {'id' : event.id, 'trip' :trip.hash}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+        <a href="#" data-url="{{  path_for('trips_event_delete', {'id' : event.id, 'trip' : trip.hash}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+    </div>
+</div>

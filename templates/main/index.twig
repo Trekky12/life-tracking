@@ -54,6 +54,14 @@
                     </div>
                 </div>
             {% endif %}
+            {%if user.module_trips == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('trips')}}">{{lang["TRIPS"]}}</a></h3>
+                        <a href="{{path_for('trips')}}"><i class="fa fa-map-o" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
     

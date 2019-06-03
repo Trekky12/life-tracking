@@ -1,0 +1,39 @@
+{% extends "base.twig" %}
+
+{% set active = 'trips' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TRIPS"]}}</h2> <a href="{{  path_for('trips_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-content">
+            <table id="trips_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["NAME"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in trips %}
+                        <tr>
+                            <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('trips_view', {'trip' : trip.hash}) }}">{{trip.name|raw}}</a></td> 
+                            <td>
+                                {% if trip.user == user.id %}
+                                    <a href="{{  path_for('trips_edit', {'id' : trip.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if trip.user == user.id %}
+                                    <a href="#" data-url="{{  path_for('trips_delete', {'id' : trip.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

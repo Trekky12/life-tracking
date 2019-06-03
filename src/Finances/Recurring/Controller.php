@@ -76,8 +76,10 @@ class Controller extends \App\Base\Controller {
         $users = $this->user_mapper->getAll();
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        
         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
-        $fmt->setPattern('MMMM');
+        $fmt->setPattern($dateFormatPHP["month_name"]);
         $dateObj = new \DateTime('first day of last month');
         $month = $dateObj->format("m");
         $year = $dateObj->format("Y");

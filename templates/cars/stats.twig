@@ -78,7 +78,7 @@
                 {% if car in mileage_year|keys and cars[car].mileage_per_year > 0 and cars[car].mileage_term > 0 %}
 
                     <p class="no-margin-bottom"><strong>{{lang["MILEAGE_TRAVELLED"]}}: {{mileage_year[car]["current"]}} {{lang["KM"]}}, {{lang["STATE_TODAY_MAX"]}}: {{mileage_year[car]["possible"]}} {{lang["KM"]}} ({{mileage_year[car]["remaining"]}} {{lang["KM"]}} {{lang["REMAINING"]}})</strong></p>
-                    <p class="small"><em>{{lang["START"]}}: {{cars[car].mileage_start_date|date(i18n.twig)}}, {{lang["MILEAGE_PER_YEAR"]}}: {{cars[car].mileage_per_year}}, {{lang["MILEAGE_TERM"]}}: {{cars[car].mileage_term}}</em></p>
+                    <p class="small"><em>{{lang["START"]}}: {{cars[car].mileage_start_date|date(i18n.dateformatTwig.date)}}, {{lang["MILEAGE_PER_YEAR"]}}: {{cars[car].mileage_per_year}}, {{lang["MILEAGE_TERM"]}}: {{cars[car].mileage_term}}</em></p>
                 {% endif %}
                 <table class="mileage_year_table table table-hover small">
                     <thead>
@@ -90,7 +90,7 @@
                     <tbody>
                         {% for entry in entries %}
                             <tr>
-                                <td data-title="{{lang["DATE"]}}">{{entry.start|date(i18n.twig)}} - {{entry.end|date(i18n.twig)}}</td> 
+                                <td data-title="{{lang["DATE"]}}">{{entry.start|date(i18n.dateformatTwig.date)}} - {{entry.end|date(i18n.dateformatTwig.date)}}</td> 
                                 <td data-title="{{lang["MILEAGE_PER_YEAR"]}}">{{entry.diff}}</td> 
                             </tr>
                         {% endfor %}

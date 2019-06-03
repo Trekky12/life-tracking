@@ -88,7 +88,13 @@
                         {{lang["SPLITBILLS"]}}
                     </label>
                 </div>
-                    
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxTripsModule">
+                        <input name="module_trips" type="checkbox" value="1" id="checkboxTripsModule" {% if entry is null or entry.module_trips == 1 %}checked{% endif %}>
+                        {{lang["TRIPS"]}}
+                    </label>
+                </div>
+                
                 <h3>{{lang["OTHER_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxForcePWChange">

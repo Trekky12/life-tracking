@@ -290,9 +290,9 @@ function loadAndOpenCard(card) {
 
 
             cardModal.querySelector('#createdBy').innerHTML = data.entry.createdBy;
-            cardModal.querySelector('#createdOn').innerHTML = moment(data.entry.createdOn).format(i18n.dateformatJSFull);
+            cardModal.querySelector('#createdOn').innerHTML = moment(data.entry.createdOn).format(i18n.dateformatJS.datetime);
             cardModal.querySelector('#changedBy').innerHTML = data.entry.changedBy;
-            cardModal.querySelector('#changedOn').innerHTML = moment(data.entry.changedOn).format(i18n.dateformatJSFull);
+            cardModal.querySelector('#changedOn').innerHTML = moment(data.entry.changedOn).format(i18n.dateformatJS.datetime);
             cardModal.querySelector('.form-group.card-dates').classList.remove('hidden');
 
             let usersSelect = cardModal.querySelector('select[name="users[]"]');

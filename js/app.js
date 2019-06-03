@@ -487,7 +487,7 @@ function getNotifications(subscription) {
 
                     let divDate = document.createElement("div");
                     divDate.classList = "createdOn";
-                    divDate.innerHTML = moment(item.createdOn).format(i18n.dateformatJSFull);
+                    divDate.innerHTML = moment(item.createdOn).format(i18n.dateformatJS.datetime);
 
                     divMessage.appendChild(pMessage);
                     divMessage.appendChild(divDate);

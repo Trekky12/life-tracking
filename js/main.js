@@ -353,13 +353,13 @@ function initCharts() {
 // date Select on boards, finances, car control
 flatpickr('#dateSelect', {
     "altInput": true,
-    "altFormat": i18n.twig,
+    "altFormat": i18n.dateformatTwig.date,
     "dateFormat": "Y-m-d",
     "locale": i18n.template
 });
 flatpickr('#dateSelectEnd', {
     "altInput": true,
-    "altFormat": i18n.twig,
+    "altFormat": i18n.dateformatTwig.date,
     "dateFormat": "Y-m-d",
     "locale": i18n.template
 });

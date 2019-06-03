@@ -7,9 +7,9 @@ var datepickerEnd = document.getElementById('inputEnd');
 if (datepickerRange && datepickerStart && datepickerEnd) {
     flatpickr(datepickerRange, {
         "altInput": true,
-        "altFormat": i18n.twig,
+        "altFormat": i18n.dateformatTwig.date,
         "dateFormat": "Y-m-d",
-        "locale": i18n.template,
+        "locale": i18n.template, 
         "mode": "range",
         "defaultDate": [datepickerStart.value, datepickerEnd.value],
         "onChange": function (selectedDates) {

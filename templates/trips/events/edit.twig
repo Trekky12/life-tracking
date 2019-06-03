@@ -1,0 +1,91 @@
+{% extends "base.twig" %}
+
+{% set active = 'trips' %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/leaflet.min.css" />
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
+    <script src="{{base_url()}}/static/js/geolocation.js?ver=20190130"></script>
+    <script src="{{base_url()}}/static/js/datefilter.js?ver=20190130"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TRIPS_EVENT"]}} </h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" id="tripsEventForm" action="{{  path_for('trips_event_save', {'id' : entry.id, 'trip' : trip.hash}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                <input name="trip" type="hidden" value="{{trip.id}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" required class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputStartAddress">{{lang["END_ADDRESS"]}}</label>
+                    <input type="text" class="form-control" id="inputStartAddress" name="start_address" value="{% if not entry is null %}{{entry.start_address}}{% endif %}">
+                    <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
+                    <div id="geo-map" class="geo-map"></div>
+                    <input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
+                    <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="dateRange" required value="{% if not entry is null %}{% if not entry.start_date is null %}{{entry.start_date|date('Y-m-d')}}{% endif %}{% if entry.end_date is null %}to {{entry.end_date|date('Y-m-d')}}{% endif %}{% endif %}" />
+                    <input type="hidden" id="inputStart" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date|date('Y-m-d')}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}"/>
+                    <input type="hidden" id="inputEnd" name="end_date" value="{% if not entry is null and not entry.end_date is null %}{{entry.end_date|date('Y-m-d')}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}"/>
+                </div>
+                <div class="two-columns mobile form-group">
+                    <div class="left">
+                        <label for="timeStart">{{lang["START_TIME"]}}</label>
+                        <input type="time" step="1" class="form-control" id="timeStart" name="start_time" value="{% if not entry is null %}{{entry.start_time}}{% endif %}">
+                    </div>
+                    <div class="right">
+                        <label for="timeEnd">{{lang["END_TIME"]}}</label>
+                        <input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% endif %}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputEndAddress">{{lang["START_ADDRESS"]}}</label>
+                    <input type="text" class="form-control" id="inputEndAddress" name="end_address" value="{% if not entry is null %}{{entry.end_address}}{% endif %}">
+                    <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
+                    <div id="geo-map2" class="geo-map"></div>
+                    <input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
+                    <input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="eventType">{{lang["TYPE"]}}</label>
+                    <select class="form-control" id="eventType" name="type">
+                        {% for type in types %}
+                            <option value="{{type}}" {% if not entry is null and type == entry.type %}selected{% endif %}>{{lang["EVENT_TYPE_%s"|format(type)]}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputNotice">{{lang["NOTICE"]}}</label>
+                    <textarea class="form-control" id="inputNotice" name="notice" rows="10">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group btn">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
