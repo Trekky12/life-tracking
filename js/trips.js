@@ -207,7 +207,7 @@ function drawMarkers(markers) {
 }
 
 function initMap() {
-    mymap = L.map('trip-map').setView([default_location.lat, default_location.lng], default_location.zoom);
+    mymap = L.map('trip-map', {fullscreenControl: true}).setView([default_location.lat, default_location.lng], default_location.zoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
