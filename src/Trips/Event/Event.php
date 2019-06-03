@@ -131,17 +131,19 @@ class Event extends \App\Base\Model {
         }
 
         $start_address = '';
+        $start_link = "<a href=\"geo:{$this->start_lat},{$this->start_lng}\" class=\"geo-link start_address\" data-lat=\"{$this->start_lat}\" data-lng=\"{$this->start_lng}\">";
         if (!is_null($this->start_address)) {
-            $start_address = "{$loc_prefix}<a href=\"geo:{$this->start_lat},{$this->start_lng}\">{$this->start_address}</a>{$loc_suffix}";
+            $start_address = "{$loc_prefix}{$start_link}{$this->start_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
-            $start_address = " <a href=\"geo:{$this->start_lat},{$this->start_lng}\"><i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
+            $start_address = " {$start_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
         
         $end_address = '';
+        $end_link = "<a href=\"geo:{$this->end_lat},{$this->end_lng}\" class=\"geo-link end_address\" data-lat=\"{$this->end_lat}\" data-lng=\"{$this->end_lng}\">";
         if (!is_null($this->end_address)) {
-            $end_address = "{$loc_prefix}<a href=\"geo:{$this->end_lat},{$this->end_lng}\">{$this->end_address}</a>{$loc_suffix}";
+            $end_address = "{$loc_prefix}{$end_link}{$this->end_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
-            $start_address = " <a href=\"geo:{$this->end_lat},{$this->end_lng}\"><i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
+            $start_address = " {$end_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
 
         $popup = ""; //"<h4>{$this->name}</h4>";
