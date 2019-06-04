@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="inputStartAddress">{{lang["END_ADDRESS"]}}</label>
+                    <label for="inputStartAddress">{{lang["START_ADDRESS"]}}</label>
                     <input type="text" class="form-control" id="inputStartAddress" name="start_address" value="{% if not entry is null %}{{entry.start_address}}{% endif %}">
                     <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
                     <div id="geo-map" class="geo-map"></div>
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="inputEndAddress">{{lang["START_ADDRESS"]}}</label>
+                    <label for="inputEndAddress">{{lang["END_ADDRESS"]}}</label>
                     <input type="text" class="form-control" id="inputEndAddress" name="end_address" value="{% if not entry is null %}{{entry.end_address}}{% endif %}">
                     <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
                     <div id="geo-map2" class="geo-map"></div>

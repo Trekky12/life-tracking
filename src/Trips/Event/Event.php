@@ -125,9 +125,13 @@ class Event extends \App\Base\Model {
         }
 
         // same day but different end time, so remove day format 
-        if (!is_null($start) && !is_null($end) && strcmp($this->start_date, $this->end_date) === 0 && strcmp($this->start_time, $this->end_time) !== 0 && !is_null($this->end_time)) {
-            $d = new \DateTime($this->end_time);
-            $end = $timeFormatter->format($d);
+        if (!is_null($start) && !is_null($end) && strcmp($this->start_date, $this->end_date) === 0 && strcmp($this->start_time, $this->end_time) !== 0) {
+            if (!is_null($this->end_time)) {
+                $d = new \DateTime($this->end_time);
+                $end = $timeFormatter->format($d);
+            } else {
+                $end = null;
+            }
         }
 
         $start_address = '';
