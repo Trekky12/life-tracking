@@ -14,10 +14,10 @@
     @media screen and (min-width: $size_mobile_navigation){
         height:500px;
     }
-    
-    .leaflet-control-layers-overlays{
+
+    /*.leaflet-control-layers-overlays{
         display:flex;
-    }
+    }*/
 }
 
 button.trips_overview{
@@ -133,14 +133,33 @@ body.trips .inner-content .page-header{
         printer-colors: exact  !important;
         color-adjust: exact  !important;
     }
-    
-    .trip_event h3{
+
+    .trip_day h3{
         page-break-after: avoid!important;
+        break-after: avoid!important;
     }
 
-
     .trip_day, .trip_event{
-        break-inside: avoid !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    .trip_event.has_notice{
+        break-inside: auto!important;
+        page-break-inside: auto!important;
+    }
+    
+    .trip_event.has_notice{
+        page-break-before: avoid;
+    }
+    
+    // show event description only on first day
+    .trip_event.hidden_description_print .description{
+        display:none;
+    }
+    
+    .page-header{
+        display:none;
     }
 
     #content{
@@ -149,6 +168,10 @@ body.trips .inner-content .page-header{
     }
     .inner-content{
         box-shadow: none;
+    }
+
+    body{
+        overflow: visible;
     }
 
     body, .page-header{
@@ -168,8 +191,7 @@ body.trips .inner-content .page-header{
     }
 
     #trip-map{
-        width: 200mm;
-        height: 270mm;
+        display:none;
 
         .leaflet-control-container{
             display:none;

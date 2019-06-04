@@ -38,7 +38,7 @@
                     <h3>{{ item["full_date"] }}</h3>
                     {% if not item["events"] is empty %}
                         {% for event in item["events"] %}
-                            {% include "trips/events/event-list-item.twig" with {'event':event, 'trip':trip} only %}
+                            {% include "trips/events/event-list-item.twig" with {'event':event, 'trip':trip, 'date':item["date"]} only %}
                         {% endfor %}
                     {% endif %}
                 </div>

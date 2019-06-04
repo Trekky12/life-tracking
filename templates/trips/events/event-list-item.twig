@@ -1,4 +1,4 @@
-<div class="trip_event">
+<div class="trip_event  {% if not date is sameas(event.start_date) %}hidden_description_print{% elseif event.notice %}has_notice{%endif %}">
     <div class="icon">
         {% if event.isAccommodation() %}
             <i class="fa fa-2x fa-bed"></i>
