@@ -244,6 +244,12 @@ function initMap() {
         }
     });
     mymap.addControl(lc);
+    
+    L.easyPrint({
+        position: 'bottomleft',
+        sizeModes: ['A4Portrait', 'A4Landscape'],
+        spinnerBgColor: '#1565c0'
+    }).addTo(mymap);
 
     getMarkers(from, to);
 }
