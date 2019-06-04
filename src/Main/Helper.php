@@ -80,7 +80,7 @@ class Helper {
         
         if ($mailSettings["smtp"]) {
             $mail->IsSMTP(); // enable SMTP
-            $mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
+            //$mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
             $mail->SMTPAuth = true; // authentication enabled
             $mail->SMTPSecure = $mailSettings["secure"];
             $mail->Host = $mailSettings["host"];
