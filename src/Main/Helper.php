@@ -70,11 +70,25 @@ class Helper {
     }
 
     public function send_mail($template, $to, $subject = '', $body = array()) {
+        
+        $mailSettings = $this->ci->get('settings')['app']['mail'];
 
-        $fromName = $this->ci->get('settings')['app']['mail']['fromName'];
-        $fromAddress = $this->ci->get('settings')['app']['mail']['fromAddress'];
+        $fromName = $mailSettings["fromName"];
+        $fromAddress = $mailSettings["fromAddress"];
 
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
+        
+        if ($mailSettings["smtp"]) {
+            $mail->IsSMTP(); // enable SMTP
+            $mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
+            $mail->SMTPAuth = true; // authentication enabled
+            $mail->SMTPSecure = $mailSettings["secure"];
+            $mail->Host = $mailSettings["host"];
+            $mail->Port = $mailSettings["port"];
+            $mail->Username = $mailSettings["username"];
+            $mail->Password = $mailSettings["password"];
+        }
+        
         $mail->setFrom($fromAddress, $fromName, false);
         if (is_array($to)) {
             foreach ($to as $address) {
@@ -83,7 +97,7 @@ class Helper {
         } else {
             $mail->addAddress($to);
         }
-        $mail->addAddress($to);
+        
         $mail->addReplyTo($fromAddress, $fromName);
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);

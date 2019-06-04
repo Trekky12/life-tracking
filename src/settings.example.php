@@ -59,7 +59,13 @@ return [
             // mail params
             'mail' => [
                 'fromName' => 'Life-Tracking',
-                'fromAddress' => 'tracking@my-domain.de'
+                'fromAddress' => 'tracking@my-domain.de',
+                'smtp' => false,
+                'username' => '',
+                'password' => '',
+                'host' => '',
+                'port' => '',
+                'secure' => ''
             ],
             // upload folder for images
             'upload_folder' => 'uploads',
