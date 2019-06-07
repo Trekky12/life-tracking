@@ -30,13 +30,14 @@ class Controller extends \App\Base\Controller {
 
         $users = $this->user_mapper->getAll();
 
-        $balance = $this->calculateBalance($group->id);
+        list($balance, $my_balance) = $this->calculateBalance($group->id);
 
         return $this->ci->view->render($response, 'splitbills/bills/index.twig', [
                     "bills" => $table,
                     "group" => $group,
                     "datacount" => $datacount,
                     "balance" => $balance,
+                    "my_balance" => $my_balance,
                     "hasSplitbillTable" => true,
                     "currency" => $this->ci->get('settings')['app']['i18n']['currency'],
                     "users" => $users
@@ -78,6 +79,9 @@ class Controller extends \App\Base\Controller {
 
         $entry_id = $request->getAttribute('id');
 
+        // GET Param 'type'
+        $type = $request->getParam('type');
+
         $hash = $request->getAttribute('group');
         $group = $this->group_mapper->getFromHash($hash);
 
@@ -100,7 +104,8 @@ class Controller extends \App\Base\Controller {
                     'group_users' => $group_users,
                     'users' => $users,
                     'balance' => $balance,
-                    'totalValue' => $totalValue
+                    'totalValue' => $totalValue,
+                    'type' => $type
         ]);
     }
 
@@ -173,7 +178,7 @@ class Controller extends \App\Base\Controller {
                 foreach ($balances as $b) {
                     $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"]);
 
-                    if ($sbgroup->add_finances > 0) {
+                    if ($sbgroup->add_finances > 0 && $bill->settleup != 1) {
                         if ($b["spend"] > 0) {
                             $entry = new \App\Finances\FinancesEntry([
                                 "date" => $bill->date,
@@ -244,9 +249,18 @@ class Controller extends \App\Base\Controller {
             $row[] = $bill->date;
             $row[] = $bill->time;
             $row[] = $bill->name;
-            $row[] = $bill->spend;
-            $row[] = $bill->paid;
-            $row[] = $bill->balance;
+            if ($bill->settleup == 1) {
+                $row[] = $bill->spend; // received
+                $row[] = null;
+                $row[] = $bill->paid;
+                $row[] = null;
+                
+            } else {
+                $row[] = null;
+                $row[] = $bill->spend;
+                $row[] = $bill->paid;
+                $row[] = $bill->balance;
+            }
 
             if ($bill->user == $user) {
                 $row[] = '<a href="' . $this->ci->get('router')->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->hash]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
@@ -263,10 +277,10 @@ class Controller extends \App\Base\Controller {
 
         $me = intval($this->ci->get('helper')->getUser()->id);
 
-        if(!array_key_exists($me, $balance)){
-            return $balance;
+        if (!array_key_exists($me, $balance)) {
+            return array($balance, null);
         }
-        
+
         $my_balance = $balance[$me]["balance"];
 
         foreach ($balance as $user_id => &$b) {
@@ -307,18 +321,23 @@ class Controller extends \App\Base\Controller {
                 }
             }
         }
-
+        
+        $filtered = array_filter($balance, function($b) use ($me){
+            return $b["user"] != $me && ($b['balance'] != 0 or $b['owe'] != 0);
+        });
         /**
          * Resort Balances
          * Big credits on top, big debits on top 
          */
-        uasort($balance, function($a, $b) {
+        uasort($filtered, function($a, $b) {
             if ($b['owe'] > 0) {
                 return $b['owe'] - $a['owe'];
             }
             return $a['owe'] - $b['owe'];
         });
-        return $balance;
+        
+        $my_balance_overview = array_key_exists($me, $balance) ? $balance[$me] : null;
+        return array($filtered, $my_balance_overview);
     }
 
 }

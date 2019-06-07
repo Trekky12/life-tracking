@@ -530,14 +530,21 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
             }
         },
         {
-            select: [3, 4],
+            select: [3, 4, 5],
             render: function (data) {
+                if(data === ""){
+                    return "";
+                }
                 return data + " " + splitbillsBillsTableContainer.dataset.currency;
             }
         },
         {
-            select: [5],
+            select: [6],
             render: function (data) {
+                if(data === ""){
+                    return "";
+                }
+                
                 let dataClass = "negative";
                 if (data >= 0) {
                     dataClass = "positive";
@@ -546,7 +553,7 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
             }
         },
         {
-            select: [6, 7],
+            select: [7, 8],
             sortable: false,
             searchable: false
         }

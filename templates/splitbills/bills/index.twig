@@ -5,27 +5,31 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD_BILL"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
+            <div class="splitbill-buttons">
+            <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD_BILL"]}}</button></a>
+            <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup"><button class="white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a></div>
+        </div>
     </div>
 
-    {% if user.id in balance|keys %}
+    {% if my_balance %}
         <div class="grid" id="splitbill_overview">
             <div class="card negative">
                 <div class="card-content">
-                    <h3>{{ lang["SPEND"] }}</h3>
-                    <p>{{ balance[user.id]["spend"] }} {{group.currency}}</p>
+                    <h3>{{ lang["SPEND"] }}/{{ lang["RECEIVED"] }}</h3>
+                    <p>{{ my_balance["spend"] }} {{group.currency}}</p>
                 </div>
             </div>
             <div class="card positive">
                 <div class="card-content">
                     <h3>{{ lang["PAID"] }}</h3>
-                    <p>{{ balance[user.id]["paid"] }} {{group.currency}}</p>
+                    <p>{{ my_balance["paid"] }} {{group.currency}}</p>
                 </div>
             </div>
-            <div class="card {% if balance[user.id]["balance"] >= 0 %}positive{% else %}negative{% endif %}">
+            <div class="card {% if my_balance["balance"] >= 0 %}positive{% else %}negative{% endif %}">
                 <div class="card-content">
                     <h3>{{ lang["BALANCE"] }}</h3>
-                    <p>{{ balance[user.id]["balance"] }} {{group.currency}}</p>
+                    <p>{{ my_balance["balance"] }} {{group.currency}}</p>
                 </div>
             </div>
         </div>
@@ -34,7 +38,7 @@
     {% if balance|length  > 0 %}
         <div class="inner-content splitbill_total">
             <div class="page-content">
-                {% for user_id, b in balance if b["user"] != user.id and (b['spend'] > 0 or b['paid'] > 0) %}
+                {% for user_id, b in balance %}
 
                     {% set total = '' %}
                     {% if balance|length  > 2 %}
@@ -64,6 +68,7 @@
                         <th>{{lang["DATE"]}}</th>
                         <th>{{lang["TIME"]}}</th>
                         <th>{{lang["NAME"]}}</th>
+                        <th>{{ lang["RECEIVED"] }}</th>
                         <th>{{ lang["SPEND"] }}</th>
                         <th>{{ lang["PAID"] }}</th>
                         <th>{{ lang["BALANCE"] }}</th>
@@ -80,8 +85,9 @@
                             <td>{{ bill[3] }}</td>
                             <td>{{ bill[4] }}</td>
                             <td>{{ bill[5] }}</td>
-                            <td>{{ bill[6]|raw }}</td>
+                            <td>{{ bill[6] }}</td>
                             <td>{{ bill[7]|raw }}</td>
+                            <td>{{ bill[8]|raw }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -375,4 +375,13 @@ $lang["SEARCH_ADDRESS"] = "Suche Adresse";
 $lang["TRIPS_OVERVIEW"] = "Übersicht";
 $lang["NOTHING_FOUND"] = "Nichts gefunden";
 
+$lang["SPLITBILLS_SETTLE_UP"] = "Schulden begleichen";
+$lang["SPLITBILLS_SETTLE_UP_SENDER"] = "Bezahler";
+$lang["SPLITBILLS_SETTLE_UP_RECEIVER"] = "Empfänger";
+
+$lang["SPLITBILLS_ONLY_PERSON"] = "nur %s";
+$lang["SPLITBILLS_BY_PERSON"] = "von %s";
+$lang["SPLITBILLS_EQUALLY"] = "gleichmäßig";
+$lang["RECEIVED"] = "erhalten";
+
 return $lang;

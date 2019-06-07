@@ -69,3 +69,25 @@
         color: $color_green;
     }
 }
+
+.splitbill-buttons{
+    display:flex;
+    flex-direction: column;
+
+    a{
+        margin-left:1rem;
+        margin-bottom:1rem;
+        &:last-child{
+            margin-bottom:0;
+        }
+    }
+
+    @media screen and (min-width: $size_mobile_navigation) {
+        flex-direction: row;
+
+        a{
+            margin-bottom:0;
+        }
+    }
+
+}

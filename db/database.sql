@@ -565,10 +565,15 @@ CREATE TABLE splitbill_bill (
     lat DECIMAL(16,14) DEFAULT NULL,
     lng DECIMAL(16,14) DEFAULT NULL,
     acc DECIMAL(10,3) DEFAULT NULL,
+    settleup INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE splitbill_bill ADD settleup INT(1) DEFAULT 0; 
+*/
 
 DROP TABLE IF EXISTS splitbill_bill_users;
 CREATE TABLE splitbill_bill_users (

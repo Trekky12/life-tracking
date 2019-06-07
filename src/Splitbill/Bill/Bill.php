@@ -16,6 +16,8 @@ class Bill extends \App\Base\Model {
         $this->lng = $this->exists('lng', $data) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         
+        $this->settleup = $this->exists('settleup', $data) ? intval(filter_var($data['settleup'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+        
         /**
          * Clean date/time
          */
@@ -27,7 +29,7 @@ class Bill extends \App\Base\Model {
             $this->time = date('H:i:s');
         }
 
-        if (empty($this->name)) {
+        if (empty($this->name) && $this->settleup == 0) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
 

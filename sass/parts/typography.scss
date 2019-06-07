@@ -20,9 +20,13 @@ optgroup,
 textarea {
     color: $color_text-main;
     font-family: $font_main;
-    @include font-size(1.6);
     line-height: $font_line-height-body;
     font-weight: 400;
+
+    @include font-size(1.4);
+    @media screen and (min-width: $size_mini) {
+        @include font-size(1.6);
+    }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -31,8 +35,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1, h2{
-    @include font-size(1.8);
-    
+    @include font-size(1.6);
+
+    @media screen and (min-width: $size_mini) {
+        @include font-size(1.8);
+    }
+
     @media screen and (min-width: $size_tablet) {
         @include font-size(2.4);
     }

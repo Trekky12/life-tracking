@@ -4,6 +4,10 @@
 
 {% set hasMap = not entry.lat is null and not entry.lng is null %}
 
+{% set settleUp = (type == 'settleup') or (not entry is null and entry.settleup == 1) %}
+
+
+
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/leaflet.min.css" />
 {% endblock %}
@@ -15,9 +19,9 @@
 {% endblock %}
 
 {% block body %}
-
+    
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["SPLITBILL_BILL"]}}</h2></div>
+        <div class="page-header"><h2>{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP"]}}{%else %}{{lang["SPLITBILL_BILL"]}}{% endif %}</h2></div>
         <div class="page-content">
 
             <form class="form-horizontal" id="splitbillsBillsForm" action="{{  path_for('splitbill_bills_save', {'id' : entry.id, 'group' : group.hash}) }}" method="POST">
@@ -26,13 +30,15 @@
 
                 <input name="sbgroup" type="hidden" value="{{group.id}}">
 
+                <input name="settleup" type="hidden" value="{% if settleUp %}1{% else %}0{% endif %}">
+
                 {% if not entry is null %}
                     <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
                 {% endif %}
 
-                <div class="form-group">
+                <div class="form-group {% if settleUp %}hidden{% endif %}">
                     <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" required class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                    <input type="text" required class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% elseif settleUp %}value="{{lang["SPLITBILLS_SETTLE_UP"]}}"{% endif %}>
                 </div>
 
                 <div class="two-columns mobile">
@@ -51,11 +57,11 @@
                     <input type="number" step="any" class="form-control" id="inputValue" name="value" {% if not entry is null %}value="{{totalValue}}"{% endif %}>
                 </div>
 
-                <h3>{{ lang["PAID"] }}</h3>
+                <h3>{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_SENDER"]}}{%else %}{{lang["PAID"]}}{% endif %}</h3>
                 <div class="form-group">
-                    <button class="gray splitbill_btn small" data-type="paid_same">gleichmäßig</button>
+                    <button class="gray splitbill_btn small" data-type="paid_same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
                     {% for user_id in group_users %}
-                        <button class="gray splitbill_btn small" data-type="paid_person" data-id="{{ user_id }}">von {{ users[user_id].name }}</button>    
+                        <button class="gray splitbill_btn small" data-type="paid_person" data-id="{{ user_id }}">{% if settleUp %}{{ users[user_id].name }}{%else %}{{ lang["SPLITBILLS_BY_PERSON"]|format(users[user_id].name) }}{% endif %}</button>    
                     {% endfor %}
                 </div>
                 <div class="userlist">
@@ -70,11 +76,11 @@
                         </div>
                     {% endfor %}
                 </div>
-                <h3>{{ lang["SPEND"] }}</h3>
+                <h3>{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_RECEIVER"]}}{%else %}{{lang["SPEND"]}}{% endif %}</h3>
                 <div class="form-group">
-                    <button class="gray splitbill_btn small" data-type="spend_same">gleichmäßig</button>
+                    <button class="gray splitbill_btn small" data-type="spend_same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
                     {% for user_id in group_users %}
-                        <button class="gray splitbill_btn small" data-type="spend_person" data-id="{{ user_id }}">nur {{ users[user_id].name }}</button>    
+                        <button class="gray splitbill_btn small" data-type="spend_person" data-id="{{ user_id }}">{% if settleUp %}{{ users[user_id].name }}{%else %}{{ lang["SPLITBILLS_ONLY_PERSON"]|format(users[user_id].name) }}{% endif %}</button>    
                     {% endfor %}
                 </div>
                 <div class="userlist">
