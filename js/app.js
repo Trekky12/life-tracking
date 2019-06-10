@@ -148,14 +148,12 @@ function initialize() {
 
         if (!subscription) {
             notificationsDisabled('disabled');
-            redirect();
             throw "No Subscription returned";
         }
         return updateSubscriptionOnServer(subscription, 'PUT').then(function (data) {
             return subscription;
         }).catch(function(){
             notificationsDisabled('disabled');
-            redirect();
             throw "No Subscription on server";
         });
 
@@ -179,12 +177,7 @@ function initialize() {
     }).catch(function (e) {
         console.error('Error when updating the subscription', e);
     }).finally(function () {
-        if (pushButton !== null) {
-            pushButton.classList.remove("hidden");
-        }
-        if (loadingIcon !== null) {
-            loadingIcon.classList.add("hidden");
-        }
+        hideLoadingShowButton();
     });
 
 }
@@ -511,6 +504,15 @@ function redirect() {
     }
 }
 
+function hideLoadingShowButton(){
+    if (pushButton !== null) {
+        pushButton.classList.remove("hidden");
+    }
+    if (loadingIcon !== null) {
+        loadingIcon.classList.add("hidden");
+    }
+}
+
 function getUnreadNotifications(subscription) {
 
     let endpoint = subscription.endpoint;
@@ -585,4 +587,7 @@ function setNotificationCount(count) {
 function notificationsDisabled(state) {
     updateButton(state);
     bell.classList.add('disabled');
+    bell.classList.remove('active');
+    redirect();
+    hideLoadingShowButton();
 }
