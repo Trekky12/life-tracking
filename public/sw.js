@@ -231,9 +231,11 @@ function _fetchAndCache(request) {
         /**
          * save new fetched result in cache (asynchron)
          */
-        caches.open(cacheName).then(function (cache) {
-            cache.put(request, response);
-        });
+        if (request.url.includes(self.location.hostname)) {
+            caches.open(cacheName).then(function (cache) {
+                cache.put(request, response);
+            });
+        }
         return response.clone();
     });
 }
