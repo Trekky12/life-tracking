@@ -60,16 +60,18 @@ const NETWORK_TIMEOUT = 1000;
 
 self.addEventListener('install', event => {
     console.log('Attempting to install service worker and cache static assets');
+    
     event.waitUntil(
         caches.open(cacheName).then(cache => {
             return cache.addAll(staticAssets);
+        }).then(function(){
+            self.skipWaiting();
         })
     );
 });
 
 self.addEventListener('activate', event => {
     console.log('Activating new service worker...');
-
     const cacheWhitelist = [cacheName];
 
     event.waitUntil(
@@ -81,6 +83,8 @@ self.addEventListener('activate', event => {
                     }
                 })
             );
+        }).then(function(){
+            self.clients.claim()
         })
     );
 });
@@ -89,13 +93,17 @@ self.addEventListener('fetch', event => {
     const req = event.request;
 
     if (event.request.method !== 'GET') {
-        console.log('WORKER: fetch event ignored.', event.request.method, event.request.url);
+        //console.log('WORKER: fetch event ignored.', event.request.method, event.request.url);
         return;
     }
 
     if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
         return event.respondWith(cacheFirst(req));
     } else {
+        //console.log('network first', req.url);
+        //self.clients.matchAll().then(function (clientList) {
+        //    console.log("clients", clientList);
+        //});
         return event.respondWith(networkFirst(req));
     }
 
@@ -141,6 +149,7 @@ function cacheFirst(req) {
  */
 function _notifyCache(req) {
     if (req.headers.get('accept').includes('text/html')) {
+        //console.log('notify cache');
         return _sendMessageToClients(3);
     }
     // resolve empty promise
@@ -183,6 +192,7 @@ function _fromNetwork(request, timeout) {
     var promises = [];
     var cacheWhenTimedOutPromise = new Promise(function (resolve, reject) {
         timeoutId = setTimeout(function () {
+            //console.log('timeout');
             reject('timeout');
         }, timeout);
     });
@@ -251,7 +261,7 @@ self.addEventListener('push', function (event) {
 
     var data = event.data.json();
 
-    console.log(data);
+    //console.log(data);
 
     const title = data.title;
     const options = {
@@ -303,7 +313,7 @@ self.addEventListener('notificationclick', function (event) {
 
     const data = event.notification.data;
 
-    console.log(data);
+    //console.log(data);
 
     event.notification.close();
 
