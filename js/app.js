@@ -61,7 +61,11 @@ let isSubscribed = false;
 // reset the info in the localStorage and save the 
 // info in a local variable 
 document.addEventListener("DOMContentLoaded",function(){
-    if (localStorage.getItem('isCached')) {
+    let timestamp = Math.round(document.querySelector("meta[name='timestamp']").getAttribute("content"));
+    let currentTime = Math.round(Date.now()/1000);
+    let offset = 10;
+    
+    if (localStorage.getItem('isCached') || (timestamp + offset <= currentTime ) ) {
         localStorage.removeItem('isCached');
         console.log('this is cached!');
         setOffline(true);
@@ -69,37 +73,36 @@ document.addEventListener("DOMContentLoaded",function(){
     }
 });
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js?v=20190227').then(function (registration) {
-            console.log('Service worker successfully registered on scope', registration.scope);
-
-            initialize();
-
-        }).catch(function (error) {
-            console.error('Service Worker Error', error);
-            notificationsDisabled('incompatible');
-        });
-
-        navigator.serviceWorker.addEventListener('message', function (event) {
-            console.log('Received a message from service worker');
-            //alert(event.data.type);
-            if (event.data.type === 1) {
-                console.log("Notification received");
-                console.log(event.data.type);
-                setNotificationCount();
-            }
-            if (event.data.type === 2) {
-                console.log("Notification Click");
-            }
-            if (event.data.type === 3) {
-                console.log("Loaded content from cache instead of network!");
-                // after loading the response from cache the cache is loaded
-                // afterwards possible variables are no longer available
-                // so save the info that the page is from cache in the localStorage
-                localStorage.setItem('isCached', true);
-            }
-        });
+    
+    navigator.serviceWorker.addEventListener('message', function (event) {
+        console.log('Received a message from service worker');
+        //alert('received message from sw');
+        //alert(event.data.type);
+        if (event.data.type === 1) {
+            console.log("Notification received");
+            console.log(event.data.type);
+            setNotificationCount();
+        }else if (event.data.type === 2) {
+            console.log("Notification Click");
+        }else if (event.data.type === 3) {
+            console.log("Loaded content from cache instead of network!");
+            // after loading the response from cache the cache is loaded
+            // afterwards possible variables are no longer available
+            // so save the info that the page is from cache in the localStorage
+            localStorage.setItem('isCached', true);
+        }else{
+            alert(event.data.type);
+        }
     });
+    
+    navigator.serviceWorker.register('/sw.js').then(function (registration) {
+        console.log('Service worker successfully registered on scope', registration.scope);
+        initialize();
+    }).catch(function (error) {
+        console.error('Service Worker Error', error);
+        notificationsDisabled('incompatible');
+    });
+
 } else {
     notificationsDisabled('incompatible');
 }

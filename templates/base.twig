@@ -29,6 +29,7 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="msapplication-config" content="{{base_url()}}/static/assets/favicon/browserconfig.xml?v=20180727">
         <meta name="theme-color" content="#ffffff">
+        <meta name="timestamp" content="{{ 'now'|date('U') }}">
     </head>
 
     <body class="{{active}}{%if boardsview == 1%} boards-view{%endif%}">
