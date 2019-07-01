@@ -65,12 +65,12 @@
                 </div>
                 <div class="form-group">
                     <label for="dateSelect">{{lang["DATE"]}}</label>
-                    <input type="text" class="form-control" id="dateSelect" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">  
+                    <input type="text" class="form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="dateSelect" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" {% if not entry is null and not entry.bill is null %}disabled="disabled"{% endif %}>  
                 </div>
                 {% if not entry is null %}
                     <div class="form-group">
                         <label for="inputTime">{{lang["TIME"]}}</label>
-                        <input type="time" step="1" class="form-control" id="inputTime" name="time" value="{% if not entry is null %}{{entry.time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}">
+                        <input type="time" step="1" class="form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="inputTime" name="time" value="{% if not entry is null %}{{entry.time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}" {% if not entry is null and not entry.bill is null %}disabled="disabled"{% endif %}>
                     </div>
                 {% endif %}
                 <div class="form-group">
@@ -80,7 +80,7 @@
 
                 <div class="form-group">
                     <label class="checkbox" for="checkboxCommon">
-                        <input name="set_common" type="checkbox" id="checkboxCommon" {% if entry is not null and entry.common == 1 %}checked{% endif %}>
+                        <input name="set_common" type="checkbox" id="checkboxCommon" class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" {% if entry is not null and entry.common == 1 %}checked{% endif %} {% if not entry is null and not entry.bill is null %}disabled{% endif %}>
                         {{lang["COMMON"]}}
                     </label>
                 </div>
@@ -101,9 +101,12 @@
                         <h3>{{lang["LOCATION"]}}</h3>
                         <div id="geo-map" class="geo-map"></div>
                         <div class="form-group map-btn">
-                            <button id="update-location" class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                            <button id="delete-location" class="delete-location danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                            {% if entry.bill is null %}
+                                <button id="update-location" class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                                <button id="delete-location" class="delete-location danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                            {% endif %}
                         </div>
+                        
                     {% endif %}
                     <input type="hidden" id="geoLat" class="geo-lat" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
                     <input type="hidden" id="geoLng" class="geo-lng" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
