@@ -254,7 +254,6 @@ class Controller extends \App\Base\Controller {
                 $row[] = null;
                 $row[] = $bill->paid;
                 $row[] = null;
-                
             } else {
                 $row[] = null;
                 $row[] = $bill->spend;
@@ -274,6 +273,7 @@ class Controller extends \App\Base\Controller {
 
     private function calculateBalance($group) {
         $balance = $this->mapper->getTotalBalance($group);
+        $settled = $this->mapper->getSettledUpSpendings($group, 1);
 
         $me = intval($this->ci->get('helper')->getUser()->id);
 
@@ -284,6 +284,9 @@ class Controller extends \App\Base\Controller {
         $my_balance = $balance[$me]["balance"];
 
         foreach ($balance as $user_id => &$b) {
+            
+            $b["settled"] = array_key_exists($user_id, $settled) ? $settled[$user_id] : 0;
+            
             if ($user_id !== $me) {
 
                 // i owe money
@@ -321,8 +324,8 @@ class Controller extends \App\Base\Controller {
                 }
             }
         }
-        
-        $filtered = array_filter($balance, function($b) use ($me){
+
+        $filtered = array_filter($balance, function($b) use ($me) {
             return $b["user"] != $me && ($b['balance'] != 0 or $b['owe'] != 0);
         });
         /**
@@ -335,7 +338,7 @@ class Controller extends \App\Base\Controller {
             }
             return $a['owe'] - $b['owe'];
         });
-        
+
         $my_balance_overview = array_key_exists($me, $balance) ? $balance[$me] : null;
         return array($filtered, $my_balance_overview);
     }

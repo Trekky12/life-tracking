@@ -121,6 +121,25 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
+    
+    public function getSettledUpSpendings($group, $settleup = 1) {
+        $sql = "SELECT bb.user, SUM(bb.spend) as spend FROM " . $this->getTable() . " b "
+                . " LEFT JOIN " . $this->getTable($this->bill_balance_table) . " bb "
+                . " ON b.id = bb.bill "
+                . " WHERE b.sbgroup = :group AND b.settleup = :settleup "
+                . " GROUP BY bb.user";
+
+        $bindings = array("group" => $group, "settleup" => $settleup);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[intval($row["user"])] = floatval($row["spend"]);
+        }
+        return $results;
+    }
 
     /**
      * Table
