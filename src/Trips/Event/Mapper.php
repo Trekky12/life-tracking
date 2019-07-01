@@ -35,10 +35,12 @@ class Mapper extends \App\Base\Mapper {
         return $results;
     }
     
-    public function getMinMaxDate() {
-        $sql = "SELECT MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max FROM " . $this->getTable() . "";
+    public function getMinMaxDate($id) {
+        $sql = "SELECT MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
+                . " FROM " . $this->getTable() . ""
+                . " WHERE trip = :id ";
 
-        $bindings = [];
+        $bindings = ["id" => $id];
         $this->filterByUser($sql, $bindings);
 
         $sql .= " LIMIT 1";

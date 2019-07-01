@@ -29,20 +29,23 @@ class Controller extends \App\Base\Controller {
         // always show all events (hide the one not in range)
         $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time");
 
-        $range = $this->mapper->getMinMaxDate();
+        $range = $this->mapper->getMinMaxDate($trip->id);
 
         $min = !is_null($range["start_min"]) ? $range["start_min"] : $range["end_min"];
         $max = !is_null($range["end_max"]) ? $range["end_max"] : $range["start_max"];
 
-        // add last day
-        $dateMax = new \DateTime($max);
-        $dateMax->add(new \DateInterval('P1D'));
+        $dateInterval = [];
+        if (!is_null($min) && !is_null($max)) {
+            // add last day
+            $dateMax = new \DateTime($max);
+            $dateMax->add(new \DateInterval('P1D'));
 
-        $dateInterval = new \DatePeriod(
-                new \DateTime($min),
-                new \DateInterval('P1D'),
-                $dateMax
-        );
+            $dateInterval = new \DatePeriod(
+                    new \DateTime($min),
+                    new \DateInterval('P1D'),
+                    $dateMax
+            );
+        }
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
         $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
@@ -58,12 +61,12 @@ class Controller extends \App\Base\Controller {
             $date = $d->format('Y-m-d');
             $dateRange[$date] = ["date" => $date, "display_date" => $fmt->format($d), "full_date" => $fmt2->format($d), "events" => [], "active" => false];
         }
-        
-        if(!empty($from)){
+
+        if (!empty($from)) {
             $dateRange[$from]["active"] = true;
-        }elseif(array_key_exists(date('Y-m-d'), $dateRange)){
+        } elseif (array_key_exists(date('Y-m-d'), $dateRange)) {
             $dateRange[date('Y-m-d')]["active"] = true;
-        }else{
+        } else {
             $dateRange["all"]["active"] = true;
         }
 
@@ -88,7 +91,7 @@ class Controller extends \App\Base\Controller {
                     new \DateInterval('P1D'),
                     $end
             );
-            
+
             foreach ($interval as $event_date) {
                 $datekey = $event_date->format('Y-m-d');
 
@@ -144,7 +147,7 @@ class Controller extends \App\Base\Controller {
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
         $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
-        
+
         $dateFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
         $timeFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
         $datetimeFormatter = new \IntlDateFormatter($langugage, NULL, NULL);
@@ -199,8 +202,8 @@ class Controller extends \App\Base\Controller {
         }
 
         return $response->withJson($newResponse);
-    }    
-    
+    }
+
     /**
      * Does the user have access to this dataset?
      */
