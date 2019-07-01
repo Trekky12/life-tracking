@@ -36,6 +36,8 @@ class Controller extends \App\Base\Controller {
 
         $range = $this->mapper->getMinMaxDate();
         $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
+        
+        $recordSum = round($this->mapper->tableSum($from, $to, 0) - $this->mapper->tableSum($from, $to, 1), 2);
 
         return $this->ci->view->render($response, 'finances/index.twig', [
                     "list" => $table,
@@ -43,7 +45,8 @@ class Controller extends \App\Base\Controller {
                     "from" => $from,
                     "to" => $to,
                     "min" => $range["min"],
-                    "max" => $max
+                    "max" => $max,
+                    "sum" => $recordSum
         ]);
     }
 
@@ -315,7 +318,7 @@ class Controller extends \App\Base\Controller {
         $recordsFiltered = $this->mapper->tableCount($from, $to, $searchQuery);
 
         // subtract expenses from income
-        $recordSum = $this->mapper->tableSum($from, $to, $searchQuery, 0) - $this->mapper->tableSum($from, $to, $searchQuery, 1);
+        $recordSum = round($this->mapper->tableSum($from, $to, 0, $searchQuery) - $this->mapper->tableSum($from, $to, 1, $searchQuery), 2);
 
         $data = $this->mapper->getTableData($from, $to, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderTableRows($data);
@@ -323,7 +326,7 @@ class Controller extends \App\Base\Controller {
         return $response->withJson([
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
-                    "sum" => round($recordSum, 2),
+                    "sum" => $recordSum,
                     "data" => $table
         ]);
     }

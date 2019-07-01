@@ -78,7 +78,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
-                        <th></th>
+                        <th class="{% if sum > 0 %}negative{% else %}positive{% endif %}">{{ sum | abs }} {{ i18n.currency }}</th>
                         <th></th>
                         <th></th>
                     </tr>

@@ -85,7 +85,7 @@ class Mapper extends \App\Base\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
 
-    public function tableSum($from, $to, $searchQuery = "%", $type = 0) {
+    public function tableSum($from, $to, $type = 0, $searchQuery = "%") {
 
         $bindings = array("searchQuery" => $searchQuery, "type" => $type, "from" => $from, "to" => $to);
 

@@ -51,9 +51,14 @@ var financeTable = new JSTable("#finance_table", {
 
 financeTable.on("fetchData", function (data) {
     this.table.getFooterRow().setCellContent(5, null);
-    if (data.recordsFiltered < data.recordsTotal) {
-        this.table.getFooterRow().setCellContent(5, data.sum + " " + i18n.currency);
+    //if (data.recordsFiltered < data.recordsTotal) {
+    this.table.getFooterRow().setCellContent(5, Math.abs(data.sum) + " " + i18n.currency);
+    if (data.sum > 0) {
+        this.table.getFooterRow().setCellClass(5, "negative");
+    }else{
+        this.table.getFooterRow().setCellClass(5, "positive");
     }
+    //}
 });
 
 

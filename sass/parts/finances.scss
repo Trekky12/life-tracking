@@ -1,0 +1,5 @@
+#finance_table tfoot th{
+    &.negative{
+        color: $color_red;
+    }
+}
