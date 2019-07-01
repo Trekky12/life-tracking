@@ -342,14 +342,25 @@ class Mapper extends \App\Base\Mapper {
     }
 
     private function updateFromBill(FinancesEntry $entry) {
-        $sql = "UPDATE " . $this->getTable() . " SET value = :value, common_value = :common_value, date = :date, time = :time WHERE bill = :bill AND user = :user";
+        $sql = "UPDATE " . $this->getTable() . " "
+                . " SET value = :value, "
+                . "     common_value = :common_value, "
+                . "     date = :date, "
+                . "     time = :time, "
+                . "     lat  = :lat,"
+                . "     lng  = :lng, "
+                . "     acc  = :acc "
+                . "WHERE bill = :bill AND user = :user";
         $bindings = [
             "bill" => $entry->bill,
             "user" => $entry->user,
             "value" => $entry->value,
             "common_value" => $entry->common_value,
             "date" => $entry->date,
-            "time" => $entry->time
+            "time" => $entry->time,
+            "lat" => $entry->lat,
+            "lng" => $entry->lng, 
+            "acc" => $entry->acc
         ];
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
