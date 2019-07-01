@@ -186,6 +186,7 @@ function drawMap(mapContainer, index) {
         let lngElement = mapContainer.parentNode.querySelector('.geo-lng');
         let accElement = mapContainer.parentNode.querySelector('.geo-acc');
         let deleteLoc = mapContainer.parentNode.querySelector('.delete-location');
+        let draggableElement = mapContainer.parentNode.querySelector('.geo-draggable');
 
         if (latElement === null || lngElement === null) {
             return;
@@ -194,6 +195,7 @@ function drawMap(mapContainer, index) {
         let lat = latElement.value;
         let lng = lngElement.value;
         let acc = accElement ? accElement.value : 0;
+        let isMovable = draggableElement ? draggableElement.value !== '0' : true;
 
         if (lat.length === 0 || lng.length === 0) {
             return;
@@ -224,30 +226,30 @@ function drawMap(mapContainer, index) {
         /**
          * Init Marker
          */
-        map_marker[index] = L.marker([lat, lng], {draggable: true});
-
-        map_marker[index].on('drag', function (e) {
-            let marker = e.target;
-            let position = marker.getLatLng();
-            latElement.value = position.lat;
-            lngElement.value = position.lng;
-            if (accElement) {
-                accElement.value = 0;
-            }
-
-            marker._popup.setContent('<a href="#" data-lat="' + position.lat + '" data-lng="' + position.lng + '" class="btn-get-address">' + lang.address + '</a>');
-
-            clearTimeout(timeout);
-        });
-
+        map_marker[index] = L.marker([lat, lng], {draggable: isMovable});
         map_marker[index].addTo(map[index]);
 
-        map[index].on('click', function (e) {
-            map_marker[index].setLatLng(e.latlng);
-            map_marker[index].off('mouseover');
-            map_marker[index].fire('drag');
-        });
+        if(isMovable){
+            map_marker[index].on('drag', function (e) {
+                let marker = e.target;
+                let position = marker.getLatLng();
+                latElement.value = position.lat;
+                lngElement.value = position.lng;
+                if (accElement) {
+                    accElement.value = 0;
+                }
 
+                marker._popup.setContent('<a href="#" data-lat="' + position.lat + '" data-lng="' + position.lng + '" class="btn-get-address">' + lang.address + '</a>');
+
+                clearTimeout(timeout);
+            });
+
+            map[index].on('click', function (e) {
+                map_marker[index].setLatLng(e.latlng);
+                map_marker[index].off('mouseover');
+                map_marker[index].fire('drag');
+            });
+        }
 
         let accuracyString = "";
         if (acc > 0) {

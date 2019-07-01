@@ -106,11 +106,14 @@
                                 <button id="delete-location" class="delete-location danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                             {% endif %}
                         </div>
-                        
+
                     {% endif %}
                     <input type="hidden" id="geoLat" class="geo-lat" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
                     <input type="hidden" id="geoLng" class="geo-lng" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
                     <input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="{% if not entry is null %}{{entry.acc}}{% endif %}">
+                    {% if not entry is null and not entry.bill is null %}
+                        <input type="hidden" id="geoDraggable" class="geo-draggable" name="draggable" value="0">
+                    {% endif %}
                 </div>
 
                 <div class="form-group">
