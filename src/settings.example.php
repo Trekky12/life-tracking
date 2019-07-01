@@ -44,7 +44,7 @@ return [
                     'time' => 'HH:mm:ss',
                     'datetime' => 'dd.MM.YYYY HH:mm:ss',
                     'trips_buttons' => 'EEE dd. MMM',
-                    'trips_list' => 'EEEE dd. MMM',
+                    'trips_list' => 'EEEE dd. MMMM yyyy',
                     'month_name' => 'MMMM',
                     'month_name_full' => 'dd. MMMM y',                    
                 ],
