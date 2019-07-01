@@ -55,7 +55,7 @@ const staticAssets = [
     '/static/assets/js/i18n/de.js',
 ];
 
-const NETWORK_TIMEOUT = 1000;
+const NETWORK_TIMEOUT = 3000;
 
 
 self.addEventListener('install', event => {
