@@ -565,6 +565,7 @@ CREATE TABLE splitbill_bill (
     lat DECIMAL(16,14) DEFAULT NULL,
     lng DECIMAL(16,14) DEFAULT NULL,
     acc DECIMAL(10,3) DEFAULT NULL,
+    notice TEXT DEFAULT NULL,
     settleup INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
