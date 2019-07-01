@@ -30,11 +30,11 @@
             <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 
             {% for d in range %}
-                <a class="change_day" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if (not d["date"] is null and from is empty ) or from is not empty and from is not sameas(d["date"])%}gray{% endif %}">{{ d["display_date"] }}</button></a>
+                <a class="change_day" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
             {% endfor %}
 
             {% for item in range if not item["date"] is null %}
-                <div id="trip_day_{{ item["date"] }}" class="trip_day {% if not from is empty and not from is sameas(item["date"]) %}hidden{% endif %}" data-date="{{ item["date"] }}">
+                <div id="trip_day_{{ item["date"] }}" class="trip_day {% if not item["active"] and not range["all"]["active"] %}hidden{% endif %}" data-date="{{ item["date"] }}">
                     <h3>{{ item["full_date"] }}</h3>
                     {% if not item["events"] is empty %}
                         {% for event in item["events"] %}

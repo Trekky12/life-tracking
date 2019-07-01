@@ -56,7 +56,15 @@ class Controller extends \App\Base\Controller {
         $dateRange['all'] = ["date" => null, "display_date" => $this->ci->get('helper')->getTranslatedString("TRIPS_OVERVIEW"), "events" => []];
         foreach ($dateInterval as $d) {
             $date = $d->format('Y-m-d');
-            $dateRange[$date] = ["date" => $date, "display_date" => $fmt->format($d), "full_date" => $fmt2->format($d), "events" => []];
+            $dateRange[$date] = ["date" => $date, "display_date" => $fmt->format($d), "full_date" => $fmt2->format($d), "events" => [], "active" => false];
+        }
+        
+        if(!empty($from)){
+            $dateRange[$from]["active"] = true;
+        }elseif(array_key_exists(date('Y-m-d'), $dateRange)){
+            $dateRange[date('Y-m-d')]["active"] = true;
+        }else{
+            $dateRange["all"]["active"] = true;
         }
 
 

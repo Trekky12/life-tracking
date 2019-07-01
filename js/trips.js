@@ -13,30 +13,36 @@ let mymap = null;
 const tripDays = document.querySelectorAll('.trip_day');
 const changeDayLinks = document.querySelectorAll('.change_day');
 
+const today = moment(Date.now()).format('YYYY-MM-DD');
+const currentDayButton = document.querySelector('.change_day[data-date="' + today + '"]');
+
 if (changeDayLinks !== null) {
     changeDayLinks.forEach(function (changeDayLink, idx) {
         changeDayLink.addEventListener('click', function (e) {
             e.preventDefault();
-            let date = changeDayLink.dataset.date;
-            getMarkers(date, date).then(function () {
-                if (date) {
-                    let currentDay = document.getElementById('trip_day_' + date);
-                    tripDays.forEach(function (el) {
-                        el.classList.add('hidden');
-                    });
-                    currentDay.classList.remove('hidden');
-                } else {
-                    tripDays.forEach(function (el) {
-                        el.classList.remove('hidden');
-                    });
-                }
-                changeDayLinks.forEach(function (el) {
-                    el.querySelector('button').classList.add('gray');
-                });
-                changeDayLink.querySelector('button').classList.remove('gray');
-
-            });
+            changeDay(changeDayLink);
         });
+    });
+}
+
+function changeDay(item) {
+    let date = item.dataset.date;
+    getMarkers(date, date).then(function () {
+        if (date) {
+            let currentDay = document.getElementById('trip_day_' + date);
+            tripDays.forEach(function (el) {
+                el.classList.add('hidden');
+            });
+            currentDay.classList.remove('hidden');
+        } else {
+            tripDays.forEach(function (el) {
+                el.classList.remove('hidden');
+            });
+        }
+        changeDayLinks.forEach(function (el) {
+            el.querySelector('button').classList.add('gray');
+        });
+        item.querySelector('button').classList.remove('gray');
     });
 }
 
@@ -244,14 +250,19 @@ function initMap() {
         }
     });
     mymap.addControl(lc);
-    
+
     L.easyPrint({
         position: 'bottomleft',
         sizeModes: ['A4Portrait', 'A4Landscape'],
         spinnerBgColor: '#1565c0'
     }).addTo(mymap);
 
-    getMarkers(from, to);
+    // select current day
+    if (currentDayButton) {
+        changeDay(currentDayButton);
+    }else{
+        getMarkers(from, to);
+    }
 }
 
 
