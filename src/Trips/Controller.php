@@ -18,7 +18,7 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $trips = $this->mapper->getUserItems('t.createdOn DESC, name');
+        $trips = $this->mapper->getUserItems('t.createdOn ASC, name');
         return $this->ci->view->render($response, 'trips/index.twig', ['trips' => $trips]);
     }
 
