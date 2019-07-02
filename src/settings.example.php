@@ -40,9 +40,9 @@ return [
                 ],
                 // http://userguide.icu-project.org/formatparse/datetime
                 'dateformatPHP' => [
-                    'date' => 'dd.MM.YYYY',
+                    'date' => 'dd.MM.yyyy',
                     'time' => 'HH:mm:ss',
-                    'datetime' => 'dd.MM.YYYY HH:mm:ss',
+                    'datetime' => 'dd.MM.yyyy HH:mm:ss',
                     'trips_buttons' => 'EEE dd. MMM',
                     'trips_list' => 'EEEE dd. MMMM yyyy',
                     'month_name' => 'MMMM',
