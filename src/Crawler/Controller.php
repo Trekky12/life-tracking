@@ -232,6 +232,14 @@ class Controller extends \App\Base\Controller {
 
             foreach ($headers as $header) {
                 $field = [];
+                
+                $content = $dataset->getDataValue($header->field_name);;
+                if (!empty($header->field_content)) {
+                    $content = $header->getHTML();
+                } elseif (intval($header->diff) === 1) {
+                    $content = $dataset->getDataValue($header->field_name, "diff");
+                } 
+                
                 if (!empty($header->field_link)) {
 
                     $link = $dataset->getDataValue($header->field_link);
@@ -242,19 +250,13 @@ class Controller extends \App\Base\Controller {
                     $field[] = '<a href="' . $link . '" target="_blank">';
                 }
 
-                if (!empty($header->prefix)) {
+                if (!empty($header->prefix) && !empty($content)) {
                     $field[] = $header->getHTML("prefix");
                 }
 
-                if (!empty($header->field_content)) {
-                    $field[] = $header->getHTML();
-                } elseif (intval($header->diff) === 1) {
-                    $field[] = $dataset->getDataValue($header->field_name, "diff");
-                } else {
-                    $field[] = $dataset->getDataValue($header->field_name);
-                }
+                $field[] = $content;
 
-                if (!empty($header->suffix)) {
+                if (!empty($header->suffix) && !empty($content)) {
                     $field[] = $header->getHTML("suffix");
                 }
 
