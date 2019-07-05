@@ -50,6 +50,17 @@ class Event extends \App\Base\Model {
         if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->end_time)) {
             $this->end_time = null;
         }
+        
+        // if start date is greater than end date swap both
+        if(!empty($this->start_date) && !empty($this->end_date)){
+            $start = new \DateTime($this->start_date);
+            $end = new \DateTime($this->end_date);
+            
+            if($start > $end){
+                $this->start_date = $end->format('Y-m-d');
+                $this->end_date = $start->format('Y-m-d');
+            }
+        }
 
 
         if (empty($this->name)) {
