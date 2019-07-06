@@ -369,6 +369,8 @@ $lang["START_ADDRESS"] = "start address";
 $lang["END_ADDRESS"] = "destination address";
 $lang["START_TIME"] = "start time";
 $lang["END_TIME"] = "destination time";
+$lang["START_DATE"] = "start date";
+$lang["END_DATE"] = "end date";
 
 $lang["SEARCH_ADDRESS"] = "search address";
 

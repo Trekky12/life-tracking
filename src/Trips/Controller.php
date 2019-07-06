@@ -14,12 +14,14 @@ class Controller extends \App\Base\Controller {
         $this->edit_template = 'trips/edit.twig';
 
         $this->mapper = new Mapper($this->ci);
+        $this->event_mapper = new \App\Trips\Event\Mapper($this->ci);
         $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
         $trips = $this->mapper->getUserItems('t.createdOn DESC, name');
-        return $this->ci->view->render($response, 'trips/index.twig', ['trips' => $trips]);
+        $dates = $this->event_mapper->getMinMaxDates();
+        return $this->ci->view->render($response, 'trips/index.twig', ['trips' => $trips, 'dates' => $dates]);
     }
 
     

@@ -11,6 +11,8 @@
                 <thead>
                     <tr>
                         <th>{{lang["NAME"]}}</th>
+                        <th>{{lang["START_DATE"]}}</th>
+                        <th>{{lang["END_DATE"]}}</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -19,6 +21,8 @@
                     {% for trip in trips %}
                         <tr>
                             <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('trips_view', {'trip' : trip.hash}) }}">{{trip.name|raw}}</a></td> 
+                            <td data-title="{{lang["START_DATE"]}}">{{dates[trip.id].min}}</td>
+                            <td data-title="{{lang["END_DATE"]}}">{{dates[trip.id].max}}</td>
                             <td>
                                 {% if trip.user == user.id %}
                                     <a href="{{  path_for('trips_edit', {'id' : trip.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>

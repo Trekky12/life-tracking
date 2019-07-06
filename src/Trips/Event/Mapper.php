@@ -48,11 +48,33 @@ class Mapper extends \App\Base\Mapper {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
-        $result = ["start_min" => null, "start_max" => null, "end_min" => null, "end_max" => null];
+        $min = null;
+        $max = null;
         if ($stmt->rowCount() === 1){
-            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $min = !is_null($row["start_min"]) ? $row["start_min"] : $row["end_min"];
+            $max = !is_null($row["end_max"]) ? $row["end_max"] : $row["start_max"];
         }
-        return $result;
+        return array($min, $max);
     }
+    
+    public function getMinMaxDates() {
+        $sql = "SELECT trip, MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
+                . " FROM " . $this->getTable() . ""
+                . " GROUP BY trip";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $min = null;
+            $max = null;
+            $min = !is_null($row["start_min"]) ? $row["start_min"] : $row["end_min"];
+            $max = !is_null($row["end_max"]) ? $row["end_max"] : $row["start_max"];
+            $results[$row["trip"]] = ["min" => $min, "max" => $max];
+        }
+        return $results;
+    }    
 
 }

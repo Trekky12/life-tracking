@@ -41,6 +41,7 @@
                     <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
                 </div>
                 <div class="form-group">
+                    <label for="dateRange">{{lang["DATE"]}}</label>
                     <input type="text" id="dateRange" required value="{% if not entry is null %}{% if not entry.start_date is null %}{{entry.start_date|date('Y-m-d')}}{% endif %}{% if entry.end_date is null %}to {{entry.end_date|date('Y-m-d')}}{% endif %}{% endif %}" />
                     <input type="hidden" id="inputStart" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date|date('Y-m-d')}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}"/>
                     <input type="hidden" id="inputEnd" name="end_date" value="{% if not entry is null and not entry.end_date is null %}{{entry.end_date|date('Y-m-d')}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}"/>

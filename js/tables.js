@@ -573,7 +573,27 @@ var tripsTable = new JSTable("#trips_table", {
     labels: tableLabels,
     columns: [
         {
-            select: [1, 2],
+            select: [1],
+            sort: "desc",
+            sortable: true,
+            render: function (data) {
+                if(data === ""){
+                    return "";
+                }
+                return moment(data).format(i18n.dateformatJS.date);
+            }
+        },
+        {
+            select: [2],
+            render: function (data) {
+                if(data === ""){
+                    return "";
+                }
+                return moment(data).format(i18n.dateformatJS.date);
+            }
+        },
+        {
+            select: [3, 4],
             sortable: false,
             searchable: false
         }
