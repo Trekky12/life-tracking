@@ -20,7 +20,8 @@ var financeTable = new JSTable("#finance_table", {
             select: 0,
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.date);
             }
         },
@@ -31,7 +32,8 @@ var financeTable = new JSTable("#finance_table", {
         },
         {
             select: 5,
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data + " " + i18n.currency;
             }
         }
@@ -105,7 +107,8 @@ var financesRecurringTable = new JSTable("#recurring_table", {
             select: 3,
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data + " " + i18n.currency;
             }
         },
@@ -116,17 +119,15 @@ var financesRecurringTable = new JSTable("#recurring_table", {
         },
         {
             select: [4, 5],
-            type: "date",
-            format: "MYSQL",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data ? moment(data).format(i18n.dateformatJS.date) : "";
             }
         },
         {
             select: 7,
-            type: "date",
-            format: "MYSQL",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
             }
         }
@@ -168,7 +169,8 @@ var statsTable = new JSTable("#stats_table", {
         },
         {
             select: [1, 2, 3],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data + " " + i18n.currency;
             }
         },
@@ -188,13 +190,15 @@ var statsYearTable = new JSTable("#stats_year_table", {
             select: 0,
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment().month(data - 1).format("MMMM");
             }
         },
         {
             select: [1, 2, 3],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data + " " + i18n.currency;
             }
         }
@@ -212,7 +216,8 @@ var statsMonthTable = new JSTable("#stats_month_table", {
         },
         {
             select: [2],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data + " " + i18n.currency;
             }
         },
@@ -230,11 +235,10 @@ var statsCatTable = new JSTable("#stats_cat_table", {
     columns: [
         {
             select: 0,
-            type: "date",
-            format: "MYSQL",
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.date);
             }
         },
@@ -242,7 +246,8 @@ var statsCatTable = new JSTable("#stats_cat_table", {
             select: 3,
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data + " " + i18n.currency;
             }
         },
@@ -260,11 +265,10 @@ var statsBudgetTable = new JSTable("#stats_budget_table", {
     columns: [
         {
             select: 0,
-            type: "date",
-            format: "MYSQL",
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.date);
             }
         },
@@ -272,7 +276,8 @@ var statsBudgetTable = new JSTable("#stats_budget_table", {
             select: 4,
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return data + " " + i18n.currency;
             }
         },
@@ -329,7 +334,8 @@ var notificationsTable = new JSTable("#notifications_table", {
         },
         {
             select: [3, 4],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.datetime);
             }
         },
@@ -347,11 +353,10 @@ var fuelTable = new JSTable("#fuel_table", {
     columns: [
         {
             select: 0,
-            type: "date",
-            format: "MYSQL",
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.date);
             }
         },
@@ -374,11 +379,10 @@ var serviceTable = new JSTable("#service_table", {
     columns: [
         {
             select: 0,
-            type: "date",
-            format: "MYSQL",
             sortable: true,
             sort: "desc",
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.date);
             }
         },
@@ -417,7 +421,8 @@ var tokensCategoryTable = new JSTable("#tokens_table", {
     columns: [
         {
             select: [3, 4],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.datetime);
             }
         },
@@ -478,7 +483,8 @@ var crawlersDataTable = new JSTable("#crawlers_data_table", {
             select: [0],
             sort: "desc",
             sortable: true,
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.datetime);
             }
         }
@@ -514,7 +520,17 @@ var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
     labels: tableLabels,
     columns: [
         {
-            select: [1, 2],
+            select: [1],
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                if(data === ""){
+                    return "";
+                }
+                return data + " " + cell.dataset.currency;
+            }
+        },
+        {
+            select: [2, 3],
             sortable: false,
             searchable: false
         }
@@ -530,13 +546,15 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
             select: 0,
             sort: "desc",
             sortable: true,
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.date);
             }
         },
         {
             select: [3, 4, 5],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 if(data === ""){
                     return "";
                 }
@@ -545,7 +563,8 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
         },
         {
             select: [6],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 if(data === ""){
                     return "";
                 }
@@ -576,7 +595,8 @@ var tripsTable = new JSTable("#trips_table", {
             select: [1],
             sort: "desc",
             sortable: true,
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 if(data === ""){
                     return "";
                 }
@@ -585,7 +605,8 @@ var tripsTable = new JSTable("#trips_table", {
         },
         {
             select: [2],
-            render: function (data) {
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
                 if(data === ""){
                     return "";
                 }

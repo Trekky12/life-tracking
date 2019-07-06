@@ -14,11 +14,13 @@ class Controller extends \App\Base\Controller {
         $this->edit_template = 'splitbills/groups/edit.twig';
 
         $this->mapper = new Mapper($this->ci);
+        $this->bill_mapper = new \App\Splitbill\Bill\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
         $groups = $this->mapper->getUserItems('t.createdOn DESC, name');
-        return $this->ci->view->render($response, 'splitbills/groups/index.twig', ['groups' => $groups]);
+        $balances = $this->bill_mapper->getBalances();
+        return $this->ci->view->render($response, 'splitbills/groups/index.twig', ['groups' => $groups, 'balances' => $balances]);
     }
 
     /**

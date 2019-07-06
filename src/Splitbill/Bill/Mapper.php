@@ -140,6 +140,29 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
+    
+    public function getBalances() {
+        $sql = "SELECT b.sbgroup, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTable() . " b "
+                . " LEFT JOIN " . $this->getTable($this->bill_balance_table) . " bb "
+                . " ON b.id = bb.bill "
+                . " WHERE bb.user = :user "
+                . " GROUP BY b.sbgroup";
+
+        $bindings = array("user" => $this->userid);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[intval($row["sbgroup"])] = [
+                "spend" => floatval($row["spend"]),
+                "paid" => floatval($row["paid"]),
+                "balance" => floatval($row["balance"])
+            ];
+        }
+        return $results;
+    }    
 
     /**
      * Table
