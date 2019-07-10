@@ -30,6 +30,8 @@ class FinancesEntry extends \App\Base\Model {
         $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         
         $this->bill = $this->exists('bill', $data) ? filter_var($data['bill'], FILTER_SANITIZE_NUMBER_INT) : null;
+        
+        $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         /**
          * Clean date/time

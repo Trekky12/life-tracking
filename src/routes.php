@@ -66,6 +66,13 @@ $app->group('/finances', function() {
         $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Recurring\Controller:save')->setName('finances_recurring_save');
         $this->delete('/delete/{id}', '\App\Finances\Recurring\Controller:delete')->setName('finances_recurring_delete');
     });
+    
+    $this->group('/methods', function() {
+        $this->get('/', '\App\Finances\Paymethod\Controller:index')->setName('finances_paymethod');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Finances\Paymethod\Controller:edit')->setName('finances_paymethod_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Finances\Paymethod\Controller:save')->setName('finances_paymethod_save');
+        $this->delete('/delete/{id}', '\App\Finances\Paymethod\Controller:delete')->setName('finances_paymethod_delete');
+    });
 });
 
 $app->group('/location', function() {

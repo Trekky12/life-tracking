@@ -10,7 +10,7 @@ class Mapper extends \App\Base\Mapper {
     protected $insertUser = true;
     private $bill_balance_table = "splitbill_bill_users";
 
-    public function addOrUpdateBalance($bill, $user, $paid, $spend) {
+    public function addOrUpdateBalance($bill, $user, $paid, $spend, $paymethod = null) {
 
         $bindings = ["user" => $user, "bill" => $bill];
 
@@ -20,16 +20,16 @@ class Mapper extends \App\Base\Mapper {
 
         // no entry present, so create one
         if ($stmt->rowCount() > 0) {
-            return $this->updateBalance($bill, $user, $paid, $spend);
+            return $this->updateBalance($bill, $user, $paid, $spend, $paymethod);
         } else {
-            return $this->addBalance($bill, $user, $paid, $spend);
+            return $this->addBalance($bill, $user, $paid, $spend, $paymethod);
         }
     }
 
-    private function addBalance($bill, $user, $paid, $spend) {
-        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend];
+    private function addBalance($bill, $user, $paid, $spend, $paymethod) {
+        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod" => $paymethod];
 
-        $sql = "INSERT INTO " . $this->getTable($this->bill_balance_table) . " (user, paid, spend, bill) VALUES (:user, :paid, :spend, :bill)";
+        $sql = "INSERT INTO " . $this->getTable($this->bill_balance_table) . " (user, paid, spend, bill, paymethod) VALUES (:user, :paid, :spend, :bill, :paymethod)";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
@@ -40,10 +40,10 @@ class Mapper extends \App\Base\Mapper {
         return true;
     }
 
-    private function updateBalance($bill, $user, $paid, $spend) {
-        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend];
+    private function updateBalance($bill, $user, $paid, $spend, $paymethod = null) {
+        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod" => $paymethod];
 
-        $sql = "UPDATE " . $this->getTable($this->bill_balance_table) . " SET paid = :paid, spend = :spend WHERE user = :user AND bill = :bill";
+        $sql = "UPDATE " . $this->getTable($this->bill_balance_table) . " SET paid = :paid, spend = :spend, paymethod = :paymethod WHERE user = :user AND bill = :bill";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
@@ -68,7 +68,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getBalance($id) {
-        $sql = "SELECT user, spend, paid, paid-spend as balance FROM " . $this->getTable($this->bill_balance_table) . " WHERE bill = :id";
+        $sql = "SELECT user, spend, paid, paid-spend as balance, paymethod FROM " . $this->getTable($this->bill_balance_table) . " WHERE bill = :id";
 
         $bindings = array("id" => $id);
 

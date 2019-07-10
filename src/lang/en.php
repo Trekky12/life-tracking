@@ -169,6 +169,10 @@ $lang["EDIT"] = "edit";
 $lang["REMAINING_BUDGET"] = "remaining Budget";
 $lang["HIDE_ENTRY"] = "hide entry";
 
+$lang["FINANCES_PAYMETHOD"] = "payment method";
+$lang["FINANCES_PAYMETHODS"] = "payment methods";
+$lang["DROPDOWN_NO_PAYMETHOD"] = "- None -";
+
 $lang["NO_ACCESS"] = "No Access allowed";
 $lang["WRONG_LOGIN"] = "Wrong login!";
 $lang["BANNED"] = "Too many failed login attempts. You are banned!";

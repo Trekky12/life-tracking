@@ -9,26 +9,55 @@
 
 #splitbillsBillsForm{
     .userlist .user-entry{
-        @include grid-container();
-        
-            .user{
-                @include grid-column(4);
+
+        &.header{
+            @include font-size(1.2);
+            display:none;
+        }
+
+        .user, .input-field, .paymethod-field{
+            padding-bottom:1rem;
+        }
+
+        @media screen and (max-width: $size_mobile) {
+
+            .paymethod-field, .input-field{
+                padding-left: 40%; 
+                position: relative;
+                white-space: normal;
+
+                &[data-title]:before{
+                    top: 10px;
+                    left: 0;
+                    width: 40%; 
+                    position: absolute;
+                    content:attr(data-title);
+                    @include font-size(1.2);
+                    text-align:left;
+                    word-break: break-all;
+                }
             }
-            .input-field{
-                @include grid-column(8);
+        }
+        @media screen and (min-width: $size_mobile+1px) {
+            @include grid-container();
+            
+            &.header{
+               display:block; 
             }
-        
-        @media screen and (min-width: $size_tablet) {
+
             .user{
                 @include grid-column(2);
             }
             .input-field{
-                @include grid-column(4);
+                @include grid-column(3);
+            }
+            .paymethod-field{
+                @include grid-column(3);
             }
         }
 
     }
-    
+
     .splitbill_btn{
         margin-bottom:0.5rem;
         margin-right:0.5rem;
@@ -39,9 +68,9 @@
     @media screen and (max-width: $size_mobile_navigation) {
         flex-direction:column;
     }
-    
+
     .card{
-        
+
         p{
             @include font-size(2);
             @media screen and (min-width: $size_mobile_navigation) {
@@ -50,7 +79,7 @@
             margin:0;
         }
     }
-    
+
     .card.negative h3{
         background-color: $color_red;
     }
@@ -61,7 +90,7 @@
 
 .splitbill_total{
     margin-bottom: 1rem;
-    
+
     p.negative{
         color: $color_red;
     }

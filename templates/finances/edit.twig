@@ -81,17 +81,28 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="checkbox" for="checkboxCommon">
-                        <input name="set_common" type="checkbox" id="checkboxCommon" class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" {% if entry is not null and entry.common == 1 %}checked{% endif %} {% if not entry is null and not entry.bill is null %}disabled{% endif %}>
-                        {{lang["COMMON"]}}
-                    </label>
-                </div>
-                <div class="form-group {% if entry is null or (entry is not null and entry.common == 0) %}hidden{% endif %}" id="commonValue">
-                    <label for="inputCommonValue">{{lang["COMMON_VALUE"]}}</label>
-                    <input type="number" class="form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="inputCommonValue" name="common_value" step="any" {% if not entry is null %}value="{{entry.common_value}}{% endif %}" {% if not entry is null and not entry.bill is null %}disabled="disabled"{% endif %}>
+                    <label for="paymethod">{{lang["FINANCES_PAYMETHOD"]}}</label>
+                    <select class="form-control {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}disabled{% endif %}" id="paymethod" name="paymethod" {% if not entry is null %}value="{{entry.value}}{% endif %}" {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}disabled="disabled"{% endif %}>
+                        <option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+                        {% for method in paymethods %}
+                            <option value="{{method.id}}" {% if (not entry is null and method.id == entry.paymethod) or (entry is null and method.is_default == 1) %}selected{% endif %}>{{method.name|raw}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
                 {% if not entry is null %}
+
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxCommon">
+                            <input name="set_common" type="checkbox" id="checkboxCommon" class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" {% if entry is not null and entry.common == 1 %}checked{% endif %} {% if not entry is null and not entry.bill is null %}disabled{% endif %}>
+                            {{lang["COMMON"]}}
+                        </label>
+                    </div>
+                    <div class="form-group {% if entry is null or (entry is not null and entry.common == 0) %}hidden{% endif %}" id="commonValue">
+                        <label for="inputCommonValue">{{lang["COMMON_VALUE"]}}</label>
+                        <input type="number" class="form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="inputCommonValue" name="common_value" step="any" {% if not entry is null %}value="{{entry.common_value}}{% endif %}" {% if not entry is null and not entry.bill is null %}disabled="disabled"{% endif %}>
+                    </div>
+
                     <div class="form-group">
                         <label for="inputNotice">{{lang["NOTICE"]}}</label>
                         <input type="text" class="form-control" id="inputNotice" name="notice" {% if not entry is null %}value="{{entry.notice|raw}}{% endif %}">

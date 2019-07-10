@@ -1,0 +1,33 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["FINANCES_PAYMETHODS"]}}</h2> <a href="{{  path_for('finances_paymethod_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-content">
+            <table id="category_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["NAME"]}}</th>
+                        <th>{{lang["DEFAULT"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for method in paymethods %}
+                        <tr>
+                            <td data-title="{{lang["NAME"]}}">{{method.name|raw}}</td> 
+                            <td data-title="{{lang["DEFAULT"]}}">{% if method.is_default == 1%}x{%endif%}</td> 
+                            <td><a href="{{  path_for('finances_paymethod_edit', {'id' : method.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  path_for('finances_paymethod_delete', {'id' : method.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

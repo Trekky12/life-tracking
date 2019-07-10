@@ -20,6 +20,7 @@ class Controller extends \App\Base\Controller {
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
         $this->cat_assignments_mapper = new \App\Finances\Assignment\Mapper($this->ci);
         $this->budget_mapper = new \App\Finances\Budget\Mapper($this->ci);
+        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -60,8 +61,9 @@ class Controller extends \App\Base\Controller {
         }
 
         $categories = $this->cat_mapper->getAll('name');
+        $paymethods = $this->paymethod_mapper->getAll('name');
 
-        return $this->ci->view->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories]);
+        return $this->ci->view->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods]);
     }
 
     public function afterSave($id, $data) {

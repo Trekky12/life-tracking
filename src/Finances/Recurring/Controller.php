@@ -17,6 +17,7 @@ class Controller extends \App\Base\Controller {
         $this->mapper = new Mapper($this->ci);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
         $this->finance_mapper = new \App\Finances\Mapper($this->ci);
+        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);        
     }
 
     public function index(Request $request, Response $response) {
@@ -35,8 +36,9 @@ class Controller extends \App\Base\Controller {
         }
 
         $categories = $this->cat_mapper->getAll('name');
+        $paymethods = $this->paymethod_mapper->getAll('name');
 
-        return $this->ci->view->render($response, 'finances/recurring/edit.twig', ['entry' => $entry, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()]);
+        return $this->ci->view->render($response, 'finances/recurring/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'units' => FinancesEntryRecurring::getUnits()]);
     }
 
     public function update() {
@@ -57,7 +59,8 @@ class Controller extends \App\Base\Controller {
                     'common_value' => $mentry->common_value,
                     'notice' => $mentry->notice,
                     'user' => $mentry->user,
-                    'fixed' => 1
+                    'fixed' => 1,
+                    'paymethod' => $mentry->paymethod
                 ]);
                 $this->finance_mapper->insert($entry);
             }
@@ -134,6 +137,10 @@ class Controller extends \App\Base\Controller {
         if (is_null($entry->last_run) && !is_null($entry->start)) {
             $start = new \DateTime($entry->start);
             $now = new \DateTime('now');
+            
+            $start->setTime(0, 0, 0);
+            $now->setTime(0, 0, 0);
+            
             if ($now > $start) {
                 $this->mapper->setLastRun($id, $start->format("Y-m-d"));
             }

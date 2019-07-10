@@ -169,6 +169,9 @@ $lang["EDIT"] = "Bearbeiten";
 $lang["REMAINING_BUDGET"] = "verbleibendes Budget";
 $lang["HIDE_ENTRY"] = "Eintrag verbergen";
 
+$lang["FINANCES_PAYMETHOD"] = "Zahlungsmethode";
+$lang["FINANCES_PAYMETHODS"] = "Zahlungsmethoden";
+$lang["DROPDOWN_NO_PAYMETHOD"] = "- Keine -";
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";
 $lang["WRONG_LOGIN"] = "Falsche Zugangsdaten!";

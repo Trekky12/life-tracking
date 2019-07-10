@@ -15,6 +15,7 @@ class Controller extends \App\Base\Controller {
         $this->mapper = new Mapper($this->ci);
         $this->group_mapper = new \App\Splitbill\Group\Mapper($this->ci);
         $this->user_mapper = new \App\User\Mapper($this->ci);
+        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -98,6 +99,8 @@ class Controller extends \App\Base\Controller {
 
         $totalValue = $this->mapper->getBillSpend($entry_id);
 
+        $paymethods = $this->paymethod_mapper->getAllfromUsers($group_users);
+
         return $this->ci->view->render($response, $this->edit_template, [
                     'entry' => $entry,
                     'group' => $group,
@@ -105,7 +108,8 @@ class Controller extends \App\Base\Controller {
                     'users' => $users,
                     'balance' => $balance,
                     'totalValue' => $totalValue,
-                    'type' => $type
+                    'type' => $type,
+                    'paymethods' => $paymethods
         ]);
     }
 
@@ -159,24 +163,25 @@ class Controller extends \App\Base\Controller {
                 if (in_array($user, $splitbill_groups_users)) {
                     $spend = array_key_exists("spend", $bdata) ? floatval(filter_var($bdata["spend"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
                     $paid = array_key_exists("paid", $bdata) ? floatval(filter_var($bdata["paid"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
+                    $paymethod = array_key_exists("paymethod", $bdata) && !empty($bdata["paymethod"]) ? intval(filter_var($bdata["paymethod"], FILTER_SANITIZE_NUMBER_INT)) : null;
 
                     $sum_paid += $paid;
                     $sum_spend += $spend;
 
                     // add entry
-                    $balances[] = ["user" => $user, "spend" => $spend, "paid" => $paid];
+                    $balances[] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod" => $paymethod];
                 }
             }
 
             // floating point comparison
-            if (!empty($balances) && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
+            if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
                 $logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
 
                 $finance_mapper = new \App\Finances\Mapper($this->ci);
                 $finance_ctrl = new \App\Finances\Controller($this->ci);
 
                 foreach ($balances as $b) {
-                    $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"]);
+                    $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"], $b["paymethod"]);
 
                     if ($sbgroup->add_finances > 0 && $bill->settleup != 1) {
                         if ($b["spend"] > 0) {
@@ -192,7 +197,8 @@ class Controller extends \App\Base\Controller {
                                 "bill" => $bill->id,
                                 "lng" => $bill->lng,
                                 "lat" => $bill->lat,
-                                "acc" => $bill->acc
+                                "acc" => $bill->acc,
+                                "paymethod" => $b["paymethod"]
                             ]);
 
                             $entry->category = $finance_ctrl->getDefaultOrAssignedCategory($b["user"], $entry);
@@ -208,7 +214,7 @@ class Controller extends \App\Base\Controller {
                 foreach ($removed_users as $ru) {
                     $this->mapper->deleteBalanceofUser($bill->id, $ru);
                 }
-            } else {
+            } else if($totalValue > 0){
                 $logger->addError('Balance for bill wrong', array("bill" => $bill, "data" => $data));
 
                 // there was an error with the balance, so delete the bill
@@ -284,9 +290,9 @@ class Controller extends \App\Base\Controller {
         $my_balance = $balance[$me]["balance"];
 
         foreach ($balance as $user_id => &$b) {
-            
+
             $b["settled"] = array_key_exists($user_id, $settled) ? $settled[$user_id] : 0;
-            
+
             if ($user_id !== $me) {
 
                 // i owe money

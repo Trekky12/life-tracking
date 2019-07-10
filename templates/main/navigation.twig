@@ -45,8 +45,12 @@
                 <a href="{{ path_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ path_for('finances_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
-                    <li><a href="{{ path_for('finances_recurring') }}"><i class="fa fa-calendar" aria-hidden="true"></i> {{lang["FINANCES_RECURRING"]}}</a></li>
                     <li><a href="{{ path_for('finances_categories_assignment') }}"><i class="fa fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{{ path_for('finances_recurring') }}"><i class="fa fa-calendar" aria-hidden="true"></i> {{lang["FINANCES_RECURRING"]}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{{ path_for('finances_paymethod') }}"><i class="fa fa-credit-card" aria-hidden="true"></i> {{lang["FINANCES_PAYMETHODS"]}}</a></li>
+                    <li role="separator" class="divider"></li>
                     <li><a href="{{ path_for('finances_budgets') }}"><i class="fa fa-money" aria-hidden="true"></i> {{lang["BUDGET"]}}</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ path_for('finances_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
