@@ -92,7 +92,7 @@ class Controller extends \App\Base\Controller {
         // only one header can be initial sorted 
         // so remove the sort value on all others
         if (!is_null($header->sort)) {
-            $this->mapper->unset_sort($id);
+            $this->mapper->unset_sort($id, $header->crawler);
         }
     }
     

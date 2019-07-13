@@ -34,9 +34,9 @@ class Mapper extends \App\Base\Mapper {
         return $results;
     }
 
-    public function unset_sort($header) {
-        $sql = "UPDATE " . $this->getTable() . " SET sort = :sort WHERE id != :id";
-        $bindings = array("id" => $header, "sort" => null);
+    public function unset_sort($header, $crawler) {
+        $sql = "UPDATE " . $this->getTable() . " SET sort = :sort WHERE id != :id and crawler = :crawler";
+        $bindings = array("id" => $header, "sort" => null, "crawler" => $crawler);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
