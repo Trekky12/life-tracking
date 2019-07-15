@@ -1,10 +1,10 @@
 var tableLabels = {
-    placeholder: "Suche...",
-    perPage: "{select} Elemente pro Seite",
-    noRows: "Nichts gefunden",
-    info: "Zeige {start} bis {end} von {rows} Elementen",
-    loading: "Lade...",
-    infoFiltered: "Zeige {start} bis {end} von {rows} Elemente (gefiltert von {rowsTotal} Elementen)"
+    placeholder: lang.searching,
+    perPage: lang.table_perpage,
+    noRows: lang.nothing_found,
+    info: lang.table_info,
+    loading: lang.loading,
+    infoFiltered: lang.table_infofiltered
 };
 
 var financeTable = new JSTable("#finance_table", {
@@ -146,16 +146,19 @@ var usersTable = new JSTable("#users_table", {
     ]
 });
 
-var mileageYearTable = new JSTable(".mileage_year_table", {
-    perPage: 10,
-    labels: tableLabels,
-    columns: [
-        {
-            select: 0,
-            sortable: true,
-            sort: "asc"
-        }
-    ]
+let mileageTables = document.querySelectorAll('table.mileage_year_table');
+mileageTables.forEach(function (item, idx) {
+    new JSTable(item, {
+        perPage: 10,
+        labels: tableLabels,
+        columns: [
+            {
+                select: 0,
+                sortable: true,
+                sort: "asc"
+            }
+        ]
+    });
 });
 
 var statsTable = new JSTable("#stats_table", {

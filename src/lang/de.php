@@ -267,7 +267,6 @@ $lang["NOTIFICATION_SEND_FAILURE"] = "Benachrichtigung konnte nicht versendet we
 
 $lang["DISABLE_NOTIFICATIONS"] = "Benachrichtigungen ausschalten";
 $lang["ENABLE_NOTIFICATIONS"] = "Benachrichtigungen einschalten";
-$lang["LOADING"] = "Lade...";
 $lang["NO_NOTIFICATIONS_POSSIBLE"] = "Benachrichtigungen werden nicht unterstützt";
 
 $lang["REALLY_DELETE_STACK"] = "Soll der Stapel mit allen Karten wirklich gelöscht werden?";
@@ -278,6 +277,13 @@ $lang["REALLY_DELETE_LABEL"] = "Soll das Label wirklich gelöscht werden?";
 $lang["REALLY_CLOSE_STACK"] = "Soll der Stapel wirklich geschlossen werden?";
 $lang["REALLY_CLOSE_CARD"] = "Soll die Karte wirklich geschlossen werden?";
 $lang["REALLY_CLOSE_LABEL"] = "Soll das Label wirklich geschlossen werden?";
+
+$lang["NOTHING_FOUND"] = "Nichts gefunden";
+$lang["LOADING"] = "Lade...";
+$lang["SEARCHING"] = "Suche...";
+$lang["TABLE_PERPAGE"] = "{select} Elemente pro Seite";
+$lang["TABLE_INFO"] = "Zeige {start} bis {end} von {rows} Elementen";
+$lang["TABLE_INFOFILTERED"] = "Zeige {start} bis {end} von {rows} Elemente (gefiltert von {rowsTotal} Elementen)";
 
 $lang["YOU_ARE_OFFLINE"] = "Sie sind derzeit offline!";
 
@@ -378,7 +384,6 @@ $lang["END_DATE"] = "Datum Ende";
 $lang["SEARCH_ADDRESS"] = "Suche Adresse";
 
 $lang["TRIPS_OVERVIEW"] = "Übersicht";
-$lang["NOTHING_FOUND"] = "Nichts gefunden";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "Schulden begleichen";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "Bezahler";

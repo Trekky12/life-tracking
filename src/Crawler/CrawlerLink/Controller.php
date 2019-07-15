@@ -34,7 +34,7 @@ class Controller extends \App\Base\Controller {
             $entry = $this->mapper->get($entry_id);
         }
 
-        $links = $this->mapper->getAll('position');
+        $links = $this->mapper->getFromCrawler($crawler->id, 'position');
 
         $this->preEdit($entry_id);
 

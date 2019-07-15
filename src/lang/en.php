@@ -266,10 +266,9 @@ $lang["SEND"] = "Send";
 $lang["NOTIFICATION_SEND_SUCCESS"] = "Notification successfully send";
 $lang["NOTIFICATION_SEND_FAILURE"] = "Sending of notification failed";
 
-$lang["DISABLE_PUSH_NOTIFICATIONS"] = "Disable Notifications";
-$lang["ENABLE_PUSH_NOTIFICATIONS"] = "Enable Notifications";
-$lang["LOADING"] = "Loading...";
-$lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"] = "Notifications not supported";
+$lang["DISABLE_NOTIFICATIONS"] = "Disable Notifications";
+$lang["ENABLE_NOTIFICATIONS"] = "Enable Notifications";
+$lang["NO_NOTIFICATIONS_POSSIBLE"] = "Notifications not supported";
 
 $lang["REALLY_DELETE_STACK"] = "Do you really want to delete the stack with all cards?";
 $lang["REALLY_DELETE_BOARD"] = "Do you really want to delete the board with all stacks, cards and labels?";
@@ -279,6 +278,13 @@ $lang["REALLY_DELETE_LABEL"] = "Do you really want to delete the label?";
 $lang["REALLY_CLOSE_STACK"] = "Do you really want to close the stack?";
 $lang["REALLY_CLOSE_CARD"] = "Do you really want to close the card?";
 $lang["REALLY_CLOSE_LABEL"] = "Do you really want to close the label?";
+
+$lang["NOTHING_FOUND"] = "nothing found";
+$lang["LOADING"] = "Loading...";
+$lang["SEARCHING"] = "Search...";
+$lang["TABLE_PERPAGE"] = "{select} elements per page";
+$lang["TABLE_INFO"] = "show {start} to {end} of {rows} elements";
+$lang["TABLE_INFOFILTERED"] = "show {start} to {end} of {rows} elements (filtered from {rowsTotal} elements)";
 
 $lang["YOU_ARE_OFFLINE"] = "You are currently offline!";
 
@@ -379,7 +385,6 @@ $lang["END_DATE"] = "end date";
 $lang["SEARCH_ADDRESS"] = "search address";
 
 $lang["TRIPS_OVERVIEW"] = "Overview";
-$lang["NOTHING_FOUND"] = "nothing found";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "settle up";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "sender";
