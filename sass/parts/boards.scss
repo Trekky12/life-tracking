@@ -4,7 +4,7 @@
     margin:0 auto;
     color: $color_background-body;
     text-align:center;
-    
+
     h2{
         margin-top:0;
     }
@@ -47,9 +47,11 @@
 }
 
 .board-content{
+    margin-bottom: 10px;
 
     @media screen and (max-width: $size_mobile) {   
         margin-right: 10%;
+
     }
 
     /* Stack */

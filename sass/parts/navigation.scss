@@ -4,9 +4,9 @@
     width:100%;
     top: 0;
 }
-#content, .board-content{
+#content{
     position:relative;
-    top: $header_height + $header_height_margin;
+    margin-top: $header_height + $header_height_margin;
 }
 
 // when mobile navigation is opened the header should be no longer 
@@ -15,8 +15,8 @@ body.mobile-navigation-open{
     #masthead{
         position:relative;
     }
-    #content, .board-content{
-        top:0px;
+    #content{
+        margin-top:0px;
     }
 
     #sidebar{
