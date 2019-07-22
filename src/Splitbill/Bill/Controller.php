@@ -179,11 +179,14 @@ class Controller extends \App\Base\Controller {
 
                 $finance_mapper = new \App\Finances\Mapper($this->ci);
                 $finance_ctrl = new \App\Finances\Controller($this->ci);
+                $user_mapper = new \App\User\Mapper($this->ci);
 
                 foreach ($balances as $b) {
                     $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"], $b["paymethod"]);
+                    
+                    $userObj = $user_mapper->get($b["user"]);
 
-                    if ($sbgroup->add_finances > 0 && $bill->settleup != 1) {
+                    if ($sbgroup->add_finances > 0 && $bill->settleup != 1 && $userObj->module_finance == 1) {
                         if ($b["spend"] > 0) {
                             $entry = new \App\Finances\FinancesEntry([
                                 "date" => $bill->date,
