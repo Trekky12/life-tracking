@@ -6,9 +6,10 @@
 {% block body %}
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
-            <div class="splitbill-buttons">
-            <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD_BILL"]}}</button></a>
-            <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup"><button class="white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a></div>
+            <div class="buttons">
+                <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD_BILL"]}}</button></a>
+                <a href="{{  path_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup"><button class="white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
+            </div>
         </div>
     </div>
 
