@@ -6,7 +6,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINE"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINE"]}} ({{ crawler.name }})</h2></div>
         <div class="page-content">
 
             <form class="form-horizontal" id="crawlerHeadersForm" action="{{  path_for('crawlers_headers_save', {'id' : entry.id, 'crawler' : crawler.hash}) }}" method="POST">

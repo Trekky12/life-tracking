@@ -5,7 +5,12 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINES"]}}</h2> <a href="{{  path_for('crawlers_headers_edit', {'crawler': crawler.hash}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINES"]}} ({{ crawler.name }})</h2> 
+            <div class="buttons">
+                <a href="{{  path_for('crawlers_headers_clone', {'crawler': crawler.hash}) }}"><button class="white"><i class="fa fa-clone" aria-hidden="true"></i> {{lang["CLONE"]}}</button></a>
+                <a href="{{  path_for('crawlers_headers_edit', {'crawler': crawler.hash}) }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="crawlers_headers_table" class="table table-hover small">
                 <thead>

@@ -298,6 +298,7 @@ $lang["IDENTIFIER"] = "Identifier";
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Headlines";
 $lang["HEADLINE_ADD"] = "add Headline";
+$lang["CLONE_CRAWLER_HEADLINES_FROM"] = "clone crawler headlines from";
 
 $lang["HEADLINE"] = "Headline";
 $lang["FIELD_NAME"] = "field name";
@@ -394,5 +395,7 @@ $lang["SPLITBILLS_ONLY_PERSON"] = "only %s";
 $lang["SPLITBILLS_BY_PERSON"] = "by %s";
 $lang["SPLITBILLS_EQUALLY"] = "equally";
 $lang["RECEIVED"] = "received";
+
+$lang["CLONE"] = "clone";
 
 return $lang;

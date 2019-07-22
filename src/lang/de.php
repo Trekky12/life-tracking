@@ -297,6 +297,7 @@ $lang["IDENTIFIER"] = "Identifikator";
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Überschriften";
 $lang["HEADLINE_ADD"] = "Überschrift hinzufügen";
+$lang["CLONE_CRAWLER_HEADLINES_FROM"] = "Kopiere Crawler Überschriften von";
 
 $lang["HEADLINE"] = "Überschrift";
 $lang["FIELD_NAME"] = "Feldname";
@@ -393,5 +394,7 @@ $lang["SPLITBILLS_ONLY_PERSON"] = "nur %s";
 $lang["SPLITBILLS_BY_PERSON"] = "von %s";
 $lang["SPLITBILLS_EQUALLY"] = "gleichmäßig";
 $lang["RECEIVED"] = "erhalten";
+
+$lang["CLONE"] = "Kopieren";
 
 return $lang;

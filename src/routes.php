@@ -219,6 +219,9 @@ $app->group('/crawlers', function() {
             $this->get('/edit/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:edit')->setName('crawlers_headers_edit');
             $this->post('/save/[{id:[0-9]+}]', '\App\Crawler\CrawlerHeader\Controller:save')->setName('crawlers_headers_save');
             $this->delete('/delete/{id}', '\App\Crawler\CrawlerHeader\Controller:delete')->setName('crawlers_headers_delete');
+            
+            $this->get('/clone/', '\App\Crawler\CrawlerHeader\Controller:clone')->setName('crawlers_headers_clone');
+            $this->post('/cloning/', '\App\Crawler\CrawlerHeader\Controller:cloning')->setName('crawlers_headers_cloning');
         });
 
         $this->group('/links', function() {

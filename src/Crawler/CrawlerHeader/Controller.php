@@ -18,9 +18,12 @@ class Controller extends \App\Base\Controller {
 
     public function index(Request $request, Response $response) {
         $crawler_id = $request->getAttribute('crawler');
-        $crawler_hash = $this->crawler_mapper->getFromHash($crawler_id);
-        $headers = $this->mapper->getFromCrawler($crawler_hash->id);
-        return $this->ci->view->render($response, 'crawlers/headers/index.twig', ['headers' => $headers, "crawler" => $crawler_hash]);
+        $crawler = $this->crawler_mapper->getFromHash($crawler_id);
+
+        $this->allowCrawlerOwnerOnly($crawler);
+
+        $headers = $this->mapper->getFromCrawler($crawler->id);
+        return $this->ci->view->render($response, 'crawlers/headers/index.twig', ['headers' => $headers, "crawler" => $crawler]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -55,6 +58,46 @@ class Controller extends \App\Base\Controller {
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
     }
 
+    public function clone(Request $request, Response $response) {
+
+        $crawler_hash = $request->getAttribute('crawler');
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+        $crawlers = $this->crawler_mapper->getUserItems('name');
+
+        $this->allowCrawlerOwnerOnly($crawler);
+
+        return $this->ci->view->render($response, 'crawlers/headers/clone.twig', [
+                    'crawler' => $crawler,
+                    'crawlers' => $crawlers
+        ]);
+    }
+
+    public function cloning(Request $request, Response $response) {
+
+        $crawler_hash = $request->getAttribute('crawler');
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+
+        $clone_id = $request->getParam('clone');
+        $clone_crawler = $this->crawler_mapper->get($clone_id);
+
+        $this->allowCrawlerOwnerOnly($crawler);
+        $this->allowCrawlerOwnerOnly($clone_crawler);
+
+        $logger = $this->ci->get('logger');
+
+        $clone_elements = $this->mapper->getFromCrawler($clone_id);
+        foreach ($clone_elements as &$clone) {
+            $fromID = $clone->id;
+            $clone->crawler = $crawler->id;
+            $clone->id = null;
+            $id = $this->mapper->insert($clone);
+
+            $logger->addNotice("Duplicate crawler headline", array("from" => $clone_crawler->id, "to" => $crawler->id, "fromID" => $fromID, "toID" => $id));
+        }
+
+        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
+    }
+
     /**
      * Does the user have access to this dataset?
      */
@@ -79,6 +122,13 @@ class Controller extends \App\Base\Controller {
             if ($crawler->user !== $user) {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
+        }
+    }
+
+    private function allowCrawlerOwnerOnly($crawler) {
+        $user = $this->ci->get('helper')->getUser()->id;
+        if ($crawler->user !== $user) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 
