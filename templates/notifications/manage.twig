@@ -5,7 +5,7 @@
 {% block body %}
 
     {% if message is defined %}
-        <div class="alert {{message_type}}">
+        <div class="alert hide-offline {{message_type}}">
             <span class="closebtn" >&times;</span>
             <span class="alert-message">
                 <p>{{message}}</p>

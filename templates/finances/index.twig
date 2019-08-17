@@ -9,7 +9,7 @@
 {% block body %}
     {% if flash("budget_message") is not empty %}
         {% for msg in flash('budget_message') %}
-            <div class="alert {{flash('budget_message_type')[loop.index-1]}}">
+            <div class="alert hide-offline {{flash('budget_message_type')[loop.index-1]}}">
                 <span class="closebtn" >&times;</span>
                 <span class="alert-message">
                     <p>{{ msg }}</p>

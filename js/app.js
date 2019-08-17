@@ -18,11 +18,17 @@ function setOffline(offline) {
     if (offline) {
         document.body.classList.add("offline");
         document.getElementById("offline-alert").classList.remove("hidden");
-        setFormFields(true);
+        setFormFieldsDisabled(true);
+        
+        let alerts = document.querySelectorAll('.alert.hide-offline');
+        alerts.forEach(function (item, idx) {
+            item.classList.add("hidden");
+        });
+        
     } else {
         document.body.classList.remove("offline");
         document.getElementById("offline-alert").classList.add("hidden");
-        setFormFields(false);
+        setFormFieldsDisabled(false);
 
         // the page is from cache but now we are online, so reload
         if(isCached){
@@ -31,7 +37,7 @@ function setOffline(offline) {
     }
 }
 
-function setFormFields(value) {
+function setFormFieldsDisabled(value) {
     let fields = document.querySelectorAll('form input, form select, form button[type="submit"]');
     fields.forEach(function (item, idx) {
         if (!item.classList.contains("disabled")) {
