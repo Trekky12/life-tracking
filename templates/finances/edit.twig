@@ -25,13 +25,12 @@
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
                 {# disabled fields are not submitted so make them hidden #}
-                {% if not entry is null and not entry.bill is null %}
-                    <input type="hidden" name="value" value="{% if not entry is null %}{{entry.value}}{% endif %}">    
-                    <input type="hidden" name="common_value" value="{% if not entry is null %}{{entry.common_value}}{% endif %}">    
+                {% if not entry is null and not entry.bill is null %}  
                     <input type="hidden" name="bill" value="{% if not entry is null %}{{entry.bill}}{% endif %}">    
-                    <input type="hidden" name="date" value="{% if not entry is null %}{{entry.date}}{% endif %}">   
-                    <input type="hidden" name="time" value="{% if not entry is null %}{{entry.time}}{% endif %}"> 
-                    <input type="hidden" name="paymethod" value="{% if not entry is null %}{{entry.paymethod}}{% endif %}">                      
+                {% endif %}
+                
+                {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}
+                    <input type="hidden" name="paymethod" value="{% if not entry is null %}{{entry.paymethod}}{% endif %}">    
                 {% endif %}
 
 
@@ -43,13 +42,13 @@
                 <div class="form-group two-columns mobile">
                     <div class="left">
                         <label class="radio" for="radioSpending">
-                            <input name="type" type="radio" data-toggle="radio" value="0" id="radioSpending" {% if entry is null or (not entry is null and entry.type == 0) %}checked{% endif %}>
+                            <input name="type" type="radio" data-toggle="radio" value="0" id="radioSpending" {% if entry is null or (not entry is null and entry.type == 0) %}checked{% endif %} {% if not entry is null and not entry.bill is null %}disabled="disabled" class="disabled"{% endif %}>
                             {{lang["FINANCES_SPENDING"]}}
                         </label>                               
                     </div>
                     <div class="right">
                         <label class="radio" for="radioIncome">
-                            <input name="type" type="radio" data-toggle="radio" value="1" id="radioIncome" {% if not entry is null and entry.type == 1 %}checked{% endif %}>
+                            <input name="type" type="radio" data-toggle="radio" value="1" id="radioIncome" {% if not entry is null and entry.type == 1 %}checked{% endif %} {% if not entry is null and not entry.bill is null %}disabled="disabled" class="disabled"{% endif %}>
                             {{lang["FINANCES_INCOME"]}}
                         </label>
                     </div>

@@ -33,25 +33,28 @@ class FinancesEntry extends \App\Base\Model {
         
         $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        /**
-         * Clean date/time
-         */
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
-            $this->date = date('Y-m-d');
-        }
 
-        if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->time)) {
-            $this->time = date('H:i:s');
-        }
+        if (is_null($this->bill)) {
+            /**
+             * Clean date/time
+             */
+            if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
+                $this->date = date('Y-m-d');
+            }
 
-        /**
-         * Parsing Errors
-         */
-        if (!in_array($this->type, array(0, 1))) {
-            $this->parsing_errors[] = "WRONG_TYPE";
-        }
-        if (is_null($this->value)) {
-            $this->parsing_errors[] = "VALUE_CANNOT_BE_EMPTY";
+            if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->time)) {
+                $this->time = date('H:i:s');
+            }
+
+            /**
+             * Parsing Errors
+             */
+            if (!in_array($this->type, array(0, 1))) {
+                $this->parsing_errors[] = "WRONG_TYPE";
+            }
+            if (is_null($this->value)) {
+                $this->parsing_errors[] = "VALUE_CANNOT_BE_EMPTY";
+            }
         }
         if (is_null($this->description)) {
             $this->parsing_errors[] = "DESCRIPTION_CANNOT_BE_EMPTY";
@@ -68,6 +71,28 @@ class FinancesEntry extends \App\Base\Model {
             'description' => $this->description,
             'value' => $this->value,
             'type' => 1];
+    }
+    
+    public function get_fields($removeUser = false) {
+        if (is_null($this->bill)) {
+            return parent::get_fields($removeUser);
+        }
+
+        /**
+         * When a finance entry from a bill is edited, 
+         * only the following fields can be updated
+         */
+        $temp = [];
+        $temp["id"] = $this->id;
+        $temp["category"] = $this->category;
+        $temp["description"] = $this->description;
+        $temp["changedOn"] = $this->changedOn;
+        $temp["paymethod"] = $this->paymethod;
+        $temp["notice"] = $this->notice;
+        if (!$removeUser) {
+            $temp["user"] = $this->user;
+        }
+        return $temp;
     }
 
 }

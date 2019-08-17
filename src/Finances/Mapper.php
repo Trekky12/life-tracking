@@ -350,7 +350,10 @@ class Mapper extends \App\Base\Mapper {
                 . "     lat  = :lat,"
                 . "     lng  = :lng, "
                 . "     acc  = :acc, "
-                . "     paymethod  = :paymethod "
+                . "     paymethod  = :paymethod, "
+                . "     type  = :type, "
+                //. "     description  = :description, "
+                . "     common  = :common "
                 . "WHERE bill = :bill AND user = :user";
         $bindings = [
             "bill" => $entry->bill,
@@ -362,7 +365,10 @@ class Mapper extends \App\Base\Mapper {
             "lat" => $entry->lat,
             "lng" => $entry->lng, 
             "acc" => $entry->acc,
-            "paymethod" => $entry->paymethod
+            "paymethod" => $entry->paymethod,
+            //"description" => $entry->description,
+            "type" => $entry->type,
+            "common" => $entry->common
         ];
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
