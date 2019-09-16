@@ -73,26 +73,26 @@ class FinancesEntry extends \App\Base\Model {
             'type' => 1];
     }
     
-    public function get_fields($removeUser = false) {
-        if (is_null($this->bill)) {
-            return parent::get_fields($removeUser);
+    public function get_fields($removeUser = false, $insert = true) {
+        if (!is_null($this->bill) && !$insert) {
+            /**
+             * When a finance entry from a bill is edited, 
+             * only the following fields can be updated
+             */
+            $temp = [];
+            $temp["id"] = $this->id;
+            $temp["category"] = $this->category;
+            $temp["description"] = $this->description;
+            $temp["changedOn"] = $this->changedOn;
+            $temp["paymethod"] = $this->paymethod;
+            $temp["notice"] = $this->notice;
+            if (!$removeUser) {
+                $temp["user"] = $this->user;
+            }
+            return $temp;
         }
-
-        /**
-         * When a finance entry from a bill is edited, 
-         * only the following fields can be updated
-         */
-        $temp = [];
-        $temp["id"] = $this->id;
-        $temp["category"] = $this->category;
-        $temp["description"] = $this->description;
-        $temp["changedOn"] = $this->changedOn;
-        $temp["paymethod"] = $this->paymethod;
-        $temp["notice"] = $this->notice;
-        if (!$removeUser) {
-            $temp["user"] = $this->user;
-        }
-        return $temp;
+        
+        return parent::get_fields($removeUser, $insert);
     }
 
 }

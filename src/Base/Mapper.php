@@ -41,7 +41,7 @@ abstract class Mapper {
 
     public function insert(Model $data) {
 
-        $data_array = $data->get_fields(!$this->insertUser);
+        $data_array = $data->get_fields(!$this->insertUser, true);
 
         $sql = "INSERT INTO " . $this->getTable() . " "
                 . "        (" . implode(", ", array_keys($data_array)) . ") "
@@ -113,7 +113,7 @@ abstract class Mapper {
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
 
-        $bindings = $data->get_fields(!$this->insertUser);
+        $bindings = $data->get_fields(!$this->insertUser, false);
 
         $parts = array();
         foreach (array_keys($bindings) as $row) {

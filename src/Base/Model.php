@@ -62,7 +62,7 @@ class Model implements \JsonSerializable {
         return array_key_exists($key, $this->fields);
     }
 
-    public function get_fields($removeUser = false) {
+    public function get_fields($removeUser = false, $insert = true) {
         $temp = array();
         foreach ($this->fields as $k => $v) {
             $temp[$k] = $v;
@@ -109,7 +109,7 @@ class Model implements \JsonSerializable {
     }
 
     public function jsonSerialize() {
-        return $this->get_fields(true);
+        return $this->get_fields(true, null);
     }
 
 }

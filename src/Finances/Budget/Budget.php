@@ -27,8 +27,8 @@ class Budget extends \App\Base\Model {
     /**
      * Remove fields which are not in the db table
      */
-    public function get_fields($removeUser = false) {
-        $temp = parent::get_fields($removeUser);
+    public function get_fields($removeUser = false, $insert = true) {
+        $temp = parent::get_fields($removeUser, $insert);
 
         unset($temp["sum"]);
         unset($temp["percent"]);
