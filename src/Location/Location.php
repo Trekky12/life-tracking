@@ -37,6 +37,8 @@ class Location extends \App\Base\Model{
         $this->cell_sig = $this->exists('cell_sig', $data) ? filter_var($data['cell_sig'], FILTER_SANITIZE_STRING) : null;
         $this->cell_srv = $this->exists('cell_srv', $data) ? filter_var($data['cell_srv'], FILTER_SANITIZE_STRING) : null;
         
+        $this->steps = $this->exists('steps', $data) ? filter_var($data['steps'], FILTER_SANITIZE_NUMBER_INT) : null;
+        
         $this->processAdditionalTaskerData($data);
         
         if ($this->exists('createdOn', $data)) {

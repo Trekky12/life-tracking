@@ -84,6 +84,7 @@ CREATE TABLE locations (
     cell_id varchar(255) DEFAULT NULL,
     cell_sig varchar(255) DEFAULT NULL,
     cell_srv varchar(255) DEFAULT NULL,
+    steps int(20)  DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
