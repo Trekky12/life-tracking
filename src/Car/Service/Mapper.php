@@ -234,7 +234,7 @@ class Mapper extends \App\Base\Mapper {
 
     private function getTableSQL($select, $searchQuery, $user_cars, $type) {
 
-        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "type" => $type);
+        $bindings = array("searchQuery" => $searchQuery, "type" => $type);
         $car_bindings = array();
         foreach ($user_cars as $idx => $car) {
             $car_bindings[":car_" . $idx] = $car;
@@ -261,7 +261,7 @@ class Mapper extends \App\Base\Mapper {
         return array($sql, array_merge($bindings, $car_bindings));
     }
 
-    public function tableCount($searchQuery, $user_cars, $type = 0) {
+    public function tableCount($user_cars, $type = 0, $searchQuery = "%") {
 
         list($sql, $bindings) = $this->getTableSQL("COUNT(cs.id)", $searchQuery, $user_cars, $type);
 
@@ -274,8 +274,8 @@ class Mapper extends \App\Base\Mapper {
         throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
     }
 
-    public function tableDataFuel($start, $limit, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars) {
-
+    public function tableDataFuel($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+        
         $type = 0;
         $sort = "date";
         switch ($sortColumn) {
@@ -307,11 +307,14 @@ class Mapper extends \App\Base\Mapper {
                 $sort = "fuel_location";
                 break;
         }
+        
+        $partly = $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY");
+        $full = $this->ci->get('helper')->getTranslatedString("FUEL_FULL");
 
         $select = "cs.date, c.name, cs.mileage, cs.fuel_price, cs.fuel_volume, cs.fuel_total_price, "
                 . "CASE "
-                . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 0 THEN '{$lang[0]}' "
-                . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 1 THEN '{$lang[1]}'"
+                . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 0 THEN '{$partly}' "
+                . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 1 THEN '{$full}'"
                 . " ELSE '' END as fuel_type, "
                 . "cs.fuel_consumption, cs.fuel_location, "
                 . "cs.id, cs.id";
@@ -320,7 +323,9 @@ class Mapper extends \App\Base\Mapper {
 
         $sql .= " ORDER BY {$sort} {$sortDirection}, cs.id {$sortDirection}";
 
-        $sql .= " LIMIT {$start}, {$limit}";
+        if (!is_null($limit)) {
+            $sql .= " LIMIT {$start}, {$limit}";
+        }
 
         $stmt = $this->db->prepare($sql);
 
@@ -328,7 +333,7 @@ class Mapper extends \App\Base\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
 
-    public function tableDataService($start, $limit, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars) {
+    public function tableDataService($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         $type = 1;
         $sort = "date";
@@ -393,10 +398,11 @@ class Mapper extends \App\Base\Mapper {
         list($sql, $bindings) = $this->getTableSQL($select, $searchQuery, $user_cars, $type);
 
 
-
         $sql .= " ORDER BY {$sort} {$sortDirection}, cs.id {$sortDirection}";
 
-        $sql .= " LIMIT {$start}, {$limit}";
+        if (!is_null($limit)) {
+            $sql .= " LIMIT {$start}, {$limit}";
+        }
 
         $stmt = $this->db->prepare($sql);
 

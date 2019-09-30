@@ -20,12 +20,14 @@ class Controller extends \App\Base\Controller {
     public function index(Request $request, Response $response) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
+        
+        $fuel_list = $this->mapper->tableDataFuel($user_cars, 'date', 'DESC', 10);
+        $fuel_table = $this->renderFuelTableRows($fuel_list);
+        $fuel_datacount = $this->mapper->tableCount($user_cars, 0);
 
-        $fuel_table = $this->mapper->getAllofCars('date DESC', 10, $user_cars);
-        $fuel_datacount = $this->mapper->countwithCars($user_cars);
-
-        $service_table = $this->mapper->getAllofCars('date DESC', 10, $user_cars, 1);
-        $service_datacount = $this->mapper->countwithCars($user_cars, 1);
+        $service_list = $this->mapper->tableDataService($user_cars, 'date', 'DESC', 10);
+        $service_table = $this->renderServiceTableRows($service_list);
+        $service_datacount = $this->mapper->tableCount($user_cars, 1);
 
         $cars = $this->car_mapper->getAll();
 
@@ -256,7 +258,7 @@ class Controller extends \App\Base\Controller {
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
-        $searchQuery = empty($search) || $search === "null" ? null : $search;
+        $searchQuery = empty($search) || $search === "null" ? "%" : "%" . $search . "%";
 
         $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
         $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
@@ -267,23 +269,17 @@ class Controller extends \App\Base\Controller {
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $recordsTotal = $this->mapper->countwithCars($user_cars);
-        $recordsFiltered = $recordsTotal;
-        if (!is_null($searchQuery)) {
-            $recordsFiltered = $this->mapper->tableCount($searchQuery, $user_cars, 0);
-        }
+        $recordsFiltered = $this->mapper->tableCount($user_cars, 0, $searchQuery);
 
         $lang = [0 => $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY"), 1 => $this->ci->get('helper')->getTranslatedString("FUEL_FULL")];
 
-        $data = $this->mapper->tableDataFuel($start, $length, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars);
-        foreach ($data as &$row) {
-            $row[9] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[10] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
-        }
+        $data = $this->mapper->tableDataFuel($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $table = $this->renderFuelTableRows($data);
 
         return $response->withJson([
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
-                    "data" => $data
+                    "data" => $table
                         ]
         );
     }
@@ -295,7 +291,7 @@ class Controller extends \App\Base\Controller {
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
-        $searchQuery = empty($search) || $search === "null" ? null : $search;
+        $searchQuery = empty($search) || $search === "null" ? "%" : "%" . $search . "%";
 
         $sort = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
         $sortColumn = empty($sort) || $sort === "null" ? null : $sort;
@@ -306,26 +302,33 @@ class Controller extends \App\Base\Controller {
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $recordsTotal = $this->mapper->countwithCars($user_cars, 1);
-        $recordsFiltered = $recordsTotal;
-        if (!is_null($searchQuery)) {
-            $recordsFiltered = $this->mapper->tableCount($searchQuery, $user_cars, 1);
-        }
+        $recordsFiltered = $this->mapper->tableCount($user_cars, 1, $searchQuery);
 
-        $lang = [0 => $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY"), 1 => $this->ci->get('helper')->getTranslatedString("FUEL_FULL")];
-
-        $data = $this->mapper->tableDataService($start, $length, $searchQuery, $sortColumn, $sortDirection, $lang, $user_cars);
-
-        foreach ($data as &$row) {
-            $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[9] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
-        }
+        $data = $this->mapper->tableDataService($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $table = $this->renderServiceTableRows($data);
 
         return $response->withJson([
                     "recordsTotal" => intval($recordsTotal),
                     "recordsFiltered" => intval($recordsFiltered),
-                    "data" => $data
+                    "data" => $table
                         ]
         );
+    }
+    
+    private function renderFuelTableRows(array $table) {
+        foreach ($table as &$row) {
+            $row[9] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[10] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+        }
+        return $table;
+    }
+    
+    private function renderServiceTableRows(array $table) {
+        foreach ($table as &$row) {
+            $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[9] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+        }
+        return $table;
     }
 
     /**
