@@ -145,29 +145,40 @@ class Event extends \App\Base\Model {
             }
         }
 
-        $start_address = '';
+        $start_address = null;
         $start_link = "<a href=\"geo:{$this->start_lat},{$this->start_lng}\" class=\"geo-link start_address\" data-lat=\"{$this->start_lat}\" data-lng=\"{$this->start_lng}\">";
         if (!is_null($this->start_address)) {
-            $start_address = "{$loc_prefix}{$start_link}{$this->start_address}</a>{$loc_suffix}";
+            $start_address = "{$start_link}{$this->start_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
             $start_address = " {$start_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
         
-        $end_address = '';
+        $end_address = null;
         $end_link = "<a href=\"geo:{$this->end_lat},{$this->end_lng}\" class=\"geo-link end_address\" data-lat=\"{$this->end_lat}\" data-lng=\"{$this->end_lng}\">";
         if (!is_null($this->end_address)) {
-            $end_address = "{$loc_prefix}{$end_link}{$this->end_address}</a>{$loc_suffix}";
+            $end_address = "{$end_link}{$this->end_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
             $start_address = " {$end_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
+        
+        // same start and end date? hide end date
+        if(strcmp($start, $end) === 0){
+            $end = null;
+        }
+        
+        $start_sep = !is_null($start) && !is_null($start_address) ? $loc_prefix : "";
+        $start1 = "{$start}{$start_sep}{$start_address}";
+        
+        $end_sep = !is_null($end) && !is_null($end_address) ? $loc_prefix : "";
+        $end1 =  "{$end}{$end_sep}{$end_address}";
 
         $popup = ""; //"<h4>{$this->name}</h4>";
-        if (!is_null($start) && !is_null($end) && strcmp($start, $end) !== 0) {
-            $popup .= "{$from} {$start}{$start_address}<br/>";
-            $popup .= "{$to} {$end}{$end_address}<br/>";
-        } else if (!is_null($start)) {
+        if (!empty($start1) && !empty($end1) && strcmp($start1, $end1) !== 0) {
+            $popup .= "{$from} {$start1}<br/>";
+            $popup .= "{$to} {$end1}<br/>";
+        } else if (!empty($start1)) {
             // there is only a start date or start and end date are the same
-            $popup .= "{$start}{$start_address}<br/>";
+            $popup .= "{$start1}<br/>";
         }
 
         $this->popup = $popup;
