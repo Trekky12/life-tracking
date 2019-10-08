@@ -4,11 +4,22 @@
  */
 'use strict';
 
+const pushButton = document.querySelector('#enable_notifications');
+const categoriesList = document.querySelector('#notifications_categories_list');
+const categoriesElements = document.querySelectorAll('#notifications_categories_list input.set_notifications_category');
+const notificationsList = document.querySelector('#notifications');
+const loadingIcon = document.querySelector('#loadingIconNotifications');
+const loadMore = document.querySelector('#loadMore');
+//const menuProfile = document.querySelector('#menu-primary .profile');
+const badges = document.querySelectorAll('.header-inner .badge');
+const bell = document.querySelector('#iconBell');
+
+let isSubscribed = false;
 var isCached = false;
 
 window.addEventListener("online", handleNetworkChange);
 window.addEventListener("offline", handleNetworkChange);
-handleNetworkChange();
+//handleNetworkChange();
 
 function handleNetworkChange(event) {
     setOffline(!navigator.onLine);
@@ -25,6 +36,9 @@ function setOffline(offline) {
             item.classList.add("hidden");
         });
         
+        // set notifications bell disabled
+        bell.classList.add('disabled');
+        
     } else {
         document.body.classList.remove("offline");
         document.getElementById("offline-alert").classList.add("hidden");
@@ -34,6 +48,10 @@ function setOffline(offline) {
         if(isCached){
             window.location.reload();
         }
+        
+        // init notitications
+        bell.classList.remove('disabled');
+        syncSubscription();
     }
 }
 
@@ -49,19 +67,6 @@ function setFormFieldsDisabled(value) {
         }
     });
 }
-
-
-const pushButton = document.querySelector('#enable_notifications');
-const categoriesList = document.querySelector('#notifications_categories_list');
-const categoriesElements = document.querySelectorAll('#notifications_categories_list input.set_notifications_category');
-const notificationsList = document.querySelector('#notifications');
-const loadingIcon = document.querySelector('#loadingIconNotifications');
-const loadMore = document.querySelector('#loadMore');
-//const menuProfile = document.querySelector('#menu-primary .profile');
-const badges = document.querySelectorAll('.header-inner .badge');
-const bell = document.querySelector('#iconBell');
-
-let isSubscribed = false;
 
 // set offline mode when current page is cached
 // reset the info in the localStorage and save the 
@@ -148,7 +153,11 @@ function initialize() {
             }
         });
     }
+    
+    syncSubscription();
+}
 
+function syncSubscription(){
     // Keep server in sync of subscription
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
         return serviceWorkerRegistration.pushManager.getSubscription();
@@ -188,9 +197,7 @@ function initialize() {
     }).finally(function () {
         hideLoadingShowButton();
     });
-
 }
-
 
 function subscribeUser() {
     const applicationServerKey = urlB64ToUint8Array(jsObject.applicationServerPublicKey);
