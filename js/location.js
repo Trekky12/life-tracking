@@ -123,9 +123,10 @@ function drawMarkers(markers, hideClusters = false) {
             accuracyString = lang.accuracy + ' : ' + marker.acc + ' m<br/>';
         }
         var addressString = '<a href="#" data-lat="' + marker.lat + '" data-lng="' + marker.lng + '" class="btn-get-address">' + lang.address + '</a>';
+        var stepsString = marker.steps > 0 ? lang.steps+': '+ marker.steps + '<br/>': '';
         var removeString = '<br/><br/><a href="#" data-url="' + jsObject.delete_marker_url + marker.id + '" class="btn-delete">' + lang.delete_text + '</a>';
 
-        let popup = dateString + accuracyString + addressString;
+        let popup = dateString + accuracyString + stepsString + addressString;
 
         let options = {};
         let circle_options = {

@@ -112,4 +112,54 @@ class Controller extends \App\Base\Controller {
         }
     }
 
+    public function steps(Request $request, Response $response) {
+        $steps = $this->mapper->getStepsPerYear();
+        list($chart_data, $labels) = $this->createChartData($steps);
+        return $this->ci->view->render($response, 'location/stats/steps.twig', ['stats' => $steps, "data" => $chart_data, "labels" => $labels]);
+    }
+
+    public function stepsYear(Request $request, Response $response) {
+        $year = $request->getAttribute('year');
+        $steps = $this->mapper->getStepsOfYear($year);
+        list($chart_data, $labels) = $this->createChartData($steps, "month");
+        return $this->ci->view->render($response, 'location/stats/steps_year.twig', ['stats' => $steps, "year" => $year, "data" => $chart_data, "labels" => $labels]);
+    }
+
+    public function stepsMonth(Request $request, Response $response) {
+        $year = $request->getAttribute('year');
+        $month = $request->getAttribute('month');
+        $steps = $this->mapper->getStepsOfYearMonth($year, $month);
+        list($chart_data, $labels) = $this->createChartData($steps, "date");
+        return $this->ci->view->render($response, 'location/stats/steps_month.twig', ['stats' => $steps, "year" => $year, "month" => $month, "data" => $chart_data, "labels" => $labels]);
+    }
+
+    private function createChartData($stats, $key = "year") {
+        $data = [];
+
+        foreach ($stats as $el) {
+            if (!array_key_exists($el[$key], $data)) {
+                $data[$el[$key]] = [];
+            }
+
+            $data[$el[$key]] = $el["steps"];
+        }
+
+        $labels = array_keys($data);
+        if ($key === "month") {
+            $labels = array_map(function($l) {
+                return $this->ci->get('helper')->getMonthName($l);
+            }, $labels);
+        }
+        if ($key === "date") {
+            $labels = array_map(function($l) {
+                return $this->ci->get('helper')->getDay($l);
+            }, $labels);
+        }
+
+        $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
+        $labels = json_encode($labels, JSON_NUMERIC_CHECK);
+
+        return array($data, $labels);
+    }
+
 }

@@ -362,7 +362,7 @@ class Controller extends \App\Base\Controller {
 
         if ($key === "month") {
             $labels = array_map(function($l) {
-                return $this->getMonthName($l);
+                return $this->ci->get('helper')->getMonthName($l);
             }, $labels);
         }
 
@@ -373,17 +373,6 @@ class Controller extends \App\Base\Controller {
         $diff = json_encode(array_values($diff_data), JSON_NUMERIC_CHECK);
 
         return array($data, $spendings, $income, $labels, $diff);
-    }
-
-    private function getMonthName($month) {
-        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
-        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
-
-        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
-        $fmt->setPattern($dateFormatPHP['month_name']);
-
-        $dateObj = \DateTime::createFromFormat('!m', $month);
-        return $fmt->format($dateObj);
     }
 
     private function preparePieChart($stats) {

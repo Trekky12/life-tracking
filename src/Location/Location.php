@@ -91,7 +91,8 @@ class Location extends \App\Base\Model{
     public function getPosition() {
         $data = [
             'id'=> $this->id, 
-            'dt' => $this->createdOn
+            'dt' => $this->createdOn,
+            'steps' => $this->steps
         ];
         
         $diff_gps = $this->times - $this->gps_tms;

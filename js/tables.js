@@ -623,3 +623,58 @@ var tripsTable = new JSTable("#trips_table", {
         }
     ]
 });
+
+
+var stepsTable = new JSTable("#steps_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "desc"
+        },
+        {
+            select: 4,
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var stepsYearTable = new JSTable("#steps_year_table", {
+    perPage: 12,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "desc",
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return moment().month(data - 1).format("MMMM");
+            }
+        },
+        {
+            select: 4,
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var stepsMonthTable = new JSTable("#steps_month_table", {
+    perPage: 31,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "desc",
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return moment(data).format(i18n.dateformatJS.date);
+            }
+        }
+    ]
+});

@@ -1,0 +1,44 @@
+{% extends "base.twig" %}
+
+{% set active = 'location' %}
+
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header">
+            <h2>{{lang["STEPS"]}} {{lang["STATS"]}}</h2>
+        </div>
+
+        <div class="page-content">
+
+            <canvas id="stepsSummaryChart" data-values="{{data}}" data-labels="{{labels}}" data-label="{{lang["STEPS_AVG"]}}"></canvas>
+
+            <table id="steps_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["YEAR"]}}</th>
+                        <th>{{lang["STEPS_AVG"]}}</th>
+                        <th>{{lang["STEPS_MAX"]}}</th>
+                        <th>{{lang["STEPS_SUM"]}}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in stats %}
+                        <tr>
+                            <td data-title="{{lang["YEAR"]}}">{{entry[0]}}</td> 
+                            <td data-title="{{lang["STEPS_AVG"]}}">{{ entry[1]|number_format(0, '', '.')}}</td> 
+                            <td data-title="{{lang["STEPS_MAX"]}}">{{ entry[2]|number_format(0, '', '.')}}</td> 
+                            <td data-title="{{lang["STEPS_SUM"]}}">{{ entry[3]|number_format(0, '', '.')}}</td> 
+                            <td>
+                                <a href="{{  path_for('steps_stats_year', { 'year' : entry[0] }) }}"><i class="fa fa-bar-chart fa-lg"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

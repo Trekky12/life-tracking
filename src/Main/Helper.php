@@ -292,5 +292,27 @@ class Helper {
         $uri = strlen($params) > 0 ? $path . '?' . $params : $path;
         return $uri;
     }
+    
+    public function getMonthName($month) {
+        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+
+        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+        $fmt->setPattern($dateFormatPHP['month_name']);
+
+        $dateObj = \DateTime::createFromFormat('!m', $month);
+        return $fmt->format($dateObj);
+    }
+    
+    public function getDay($date) {
+        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+
+        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+        $fmt->setPattern($dateFormatPHP['date']);
+
+        $dateObj = $d = new \DateTime($date);
+        return $fmt->format($dateObj);
+    }
 
 }

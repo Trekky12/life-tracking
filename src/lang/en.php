@@ -398,4 +398,9 @@ $lang["RECEIVED"] = "received";
 
 $lang["CLONE"] = "clone";
 
+$lang["STEPS"] = "steps";
+$lang["STEPS_AVG"] = "average steps";
+$lang["STEPS_MAX"] = "max. steps";
+$lang["STEPS_SUM"] = "total steps";
+
 return $lang;

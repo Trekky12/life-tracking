@@ -37,6 +37,8 @@
                 <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ path_for('location_edit') }}"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{lang["ADD_LOCATION"]}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{{ path_for('steps') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i> {{lang["STEPS"]}}</a></li>
                 </ul>
             </li> 
         {% endif %}

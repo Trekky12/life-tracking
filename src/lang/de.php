@@ -397,4 +397,9 @@ $lang["RECEIVED"] = "erhalten";
 
 $lang["CLONE"] = "Kopieren";
 
+$lang["STEPS"] = "Schritte";
+$lang["STEPS_AVG"] = "durchschnittliche Schritte";
+$lang["STEPS_MAX"] = "max. Schritte";
+$lang["STEPS_SUM"] = "Gesamtanzahl Schritte";
+
 return $lang;

@@ -84,6 +84,12 @@ $app->group('/location', function() {
     
     $this->get('/edit/[{id:[0-9]+}]', '\App\Location\Controller:edit')->setName('location_edit');
     $this->post('/save/[{id:[0-9]+}]', '\App\Location\Controller:save')->setName('location_save');
+    
+    $this->group('/steps', function() {
+        $this->get('/', '\App\Location\Controller:steps')->setName('steps');
+        $this->get('/{year:[0-9]{4}}/', '\App\Location\Controller:stepsYear')->setName('steps_stats_year');
+        $this->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/', '\App\Location\Controller:stepsMonth')->setName('steps_stats_month');
+    });
 });
 
 $app->group('/cars', function() {
