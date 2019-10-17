@@ -101,6 +101,8 @@ if ('serviceWorker' in navigator) {
             // afterwards possible variables are no longer available
             // so save the info that the page is from cache in the localStorage
             localStorage.setItem('isCached', true);
+        }else if (event.data.type === 4) {
+            console.log("Notification dismissed");
         }else{
             alert(event.data.type);
         }
@@ -119,7 +121,7 @@ if ('serviceWorker' in navigator) {
 }
 
 function initialize() {
-
+    
 
     // only on notifications pages
     /*if (pushButton === null && notificationsList === null) {
@@ -160,6 +162,18 @@ function initialize() {
 function syncSubscription(){
     // Keep server in sync of subscription
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
+        
+        // close existing notifications
+        serviceWorkerRegistration.getNotifications().then(notifications => {
+            notifications.forEach(notification => {
+                notification.close();
+            });
+        });
+        
+        return serviceWorkerRegistration;
+        
+    }).then(function(serviceWorkerRegistration) {
+        // get subscription
         return serviceWorkerRegistration.pushManager.getSubscription();
     }).then(function (subscription) {
         //updateButton('disabled');
