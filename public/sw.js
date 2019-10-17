@@ -246,12 +246,15 @@ function _fetchAndCache(request) {
  * @returns {Promise}
  */
 function _sendMessageToClients(message) {
+    
+    let data = {
+        type: message,
+        time: new Date().toString()
+    };
+    
     return self.clients.matchAll().then(function (clientList) {
         clientList.forEach(function (client) {
-            client.postMessage({
-                type: message,
-                time: new Date().toString()
-            });
+            client.postMessage(data);
         });
     });
 }
@@ -270,16 +273,19 @@ self.addEventListener('push', function (event) {
         body: data.body,
         icon: '/static/assets/favicon/android-chrome-192x192.png',
         data: data.data,
+        // not working anymore: https://bugs.chromium.org/p/chromium/issues/detail?id=971422
         vibrate: [100, 200, 100, 200, 100, 200, 100, 200]
     };
 
     // if we don't send the notification (e.g. not to focused clients) then there is a notification on desktop chrome
     // when the tab is in the background that the background tab is updated
+    // to prevent this the notifications is always send
     const notificationPromise = self.registration.showNotification(title, options);
     event.waitUntil(notificationPromise);
+    event.waitUntil(_sendMessageToClients(1));
 
-    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
-    event.waitUntil(
+//    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
+//    event.waitUntil(
 //            clients.matchAll().then(clis => {
 //
 //            // only visible clients
@@ -305,9 +311,7 @@ self.addEventListener('push', function (event) {
 //            // Show notification
 ////            self.registration.showNotification(title, options);
 //        })
-
-        _sendMessageToClients(1)
-    );
+//    );
 });
 
 self.addEventListener('notificationclick', function (event) {
@@ -317,23 +321,22 @@ self.addEventListener('notificationclick', function (event) {
 
     //console.log(data);
 
+    // close current notification
     event.notification.close();
+    
+    // notify all clients that the notification was clicked
+    event.waitUntil(_sendMessageToClients(2));
 
     // Focus open window or open new
     // @see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#2_using_the_notifications_api
     // @see https://github.com/google-developer-training/pwa-training-labs/blob/master/push-notification-lab/
     event.waitUntil(
         clients.matchAll().then(clis => {
+            
+            // get visible or focused client and open the path
             const client = clis.find(c => {
                 //return c.visibilityState === 'visible';
                 return c.focused === true && c.visibilityState === 'visible';
-            });
-
-            clis.forEach(cli => {
-                cli.postMessage({
-                    type: 2,
-                    time: new Date().toString()
-                });
             });
 
             if (client !== undefined) {
@@ -369,4 +372,11 @@ self.addEventListener('notificationclick', function (event) {
         });
     });
 
+});
+
+self.addEventListener('notificationclose', function(event) {
+    const dismissedNotification = event.notification;
+    console.log(dismissedNotification);
+
+    event.waitUntil(_sendMessageToClients(4));
 });
