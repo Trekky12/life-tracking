@@ -31,6 +31,10 @@ class BaseURLMiddleware {
         $path = ($scheme ? $scheme . ':' : '') . ($host ? '//' . $host : '') . rtrim($basePath, '/');
 
         $this->ci->get('helper')->setPath($path);
+        
+        $currentURL = $request->getUri()->getPath();
+        // add to view
+        $this->ci->get('view')->getEnvironment()->addGlobal("currentURL", $currentURL);
 
         return $next($request, $response);
     }
