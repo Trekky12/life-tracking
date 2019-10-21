@@ -13,6 +13,7 @@ $lang["MENU_LOCATION"] = 'Location History';
 $lang["MENU_FINANCES"] = 'Finances';
 $lang["MENU_FUEL"] = 'Fuel';
 $lang["MENU_ADMIN"] = 'Administration';
+$lang["MENU_INDEX"] = "Overview";
 
 $lang["ADD"] = 'Add';
 $lang["FROM"] = 'from';
@@ -402,5 +403,9 @@ $lang["STEPS"] = "steps";
 $lang["STEPS_AVG"] = "average steps";
 $lang["STEPS_MAX"] = "max. steps";
 $lang["STEPS_SUM"] = "total steps";
+
+$lang["MOBILE_FAVORITES"] = "mobile favorites";
+$lang["URL"] = "URL";
+$lang["ICON"] = "icon";
 
 return $lang;

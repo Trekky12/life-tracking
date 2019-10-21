@@ -70,6 +70,16 @@ body.mobile-navigation-open{
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
     }
+
+    &.small{
+
+        i{
+            @include font-size(1.6);
+            @media screen and (min-width: $size_mini){
+                @include font-size(2);
+            }
+        }
+    }
 }
 
 
@@ -81,6 +91,7 @@ body.mobile-navigation-open{
     padding: 0;
 
     width:25px;
+    min-width: 25px;
     height:30px;
     transform:rotate(0deg);
     transition:.5s ease-in-out;
@@ -176,7 +187,6 @@ body.mobile-navigation-open{
         }
 
         li{
-
             @include font-size(1.3);
             @media screen and (min-width: $size_big){
                 @include font-size(1.6);

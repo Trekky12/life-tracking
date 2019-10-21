@@ -10,6 +10,7 @@ $container = $app->getContainer();
  */
 $app->add($container->get('csrf'));
 
+
 /**
  * Redirect to initial URI
  */
@@ -24,6 +25,11 @@ $app->add('App\Middleware\ModuleMiddleware');
  * Check if user needs to change the password
  */
 $app->add('App\Middleware\PWChangeMiddleware');
+
+/**
+ * Get the mobile favorites of the user for the UI
+ */
+$app->add('App\Middleware\MobileFavoritesMiddleware');
 
 /**
  * Save logged In User

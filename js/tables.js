@@ -678,3 +678,20 @@ var stepsMonthTable = new JSTable("#steps_month_table", {
         }
     ]
 });
+
+var mobileFavoritesTable = new JSTable("#mobile_favorites_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [2, 3],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

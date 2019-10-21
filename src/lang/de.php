@@ -13,6 +13,7 @@ $lang["MENU_LOCATION"] = 'Standortverlauf';
 $lang["MENU_FINANCES"] = 'Finanzen';
 $lang["MENU_FUEL"] = 'Benzinverbrauch';
 $lang["MENU_ADMIN"] = 'Administration';
+$lang["MENU_INDEX"] = "Übersicht";
 
 $lang["ADD"] = 'Hinzufügen';
 $lang["FROM"] = 'von';
@@ -401,5 +402,9 @@ $lang["STEPS"] = "Schritte";
 $lang["STEPS_AVG"] = "durchschnittliche Schritte";
 $lang["STEPS_MAX"] = "max. Schritte";
 $lang["STEPS_SUM"] = "Gesamtanzahl Schritte";
+
+$lang["MOBILE_FAVORITES"] = "mobile Favoriten";
+$lang["URL"] = "URL";
+$lang["ICON"] = "Icon";
 
 return $lang;

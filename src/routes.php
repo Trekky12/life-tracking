@@ -122,6 +122,13 @@ $app->group('/cars', function() {
 $app->group('/profile', function() {
     $this->map(['GET', 'POST'], '/changepassword', '\App\User\Controller:changePassword')->setName('users_change_password');
     $this->map(['GET', 'POST'], '/image', '\App\User\Controller:setProfileImage')->setName('users_profile_image');
+        
+    $this->group('/favorites', function() {
+        $this->get('/', '\App\User\MobileFavorites\Controller:index')->setName('users_mobile_favorites');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\User\MobileFavorites\Controller:edit')->setName('users_mobile_favorites_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\User\MobileFavorites\Controller:save')->setName('users_mobile_favorites_save');
+        $this->delete('/delete/{id}', '\App\User\MobileFavorites\Controller:delete')->setName('users_mobile_favorites_delete');
+    });
 });
 
 $app->group('/users', function() {

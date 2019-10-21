@@ -671,3 +671,17 @@ CREATE TABLE trips_event (
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS global_users_mobile_favorites;
+CREATE TABLE global_users_mobile_favorites (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned NOT NULL,
+    position INT(10) NULL,
+    url VARCHAR(255) NULL,
+    icon VARCHAR(100) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

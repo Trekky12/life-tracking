@@ -1,24 +1,36 @@
-<div id="mobile-header-icons">
-    {% if user.module_location == 1 %}
-        <a href="{{ path_for('location') }}" {% if active == 'location' %}class="active"{% endif %}><i class="fa fa-map-marker"></i></a>
-    {% endif %}
-    {% if user.module_finance == 1 %}
-        <a href="{{ path_for('finances') }}" {% if active == 'finances' %}class="active"{% endif %}><i class="fa fa-money"></i></a>
-    {% endif %}
-    {% if user.module_cars == 1 %}
-        <a href="{{ path_for('car_service') }}" {% if active == 'car_service' %}class="active"{% endif %}><i class="fa fa-road"></i></a>
-    {% endif %}
-    {% if user.module_boards == 1 %}
-        <a href="{{ path_for('boards') }}" {% if active == 'boards' %}class="active"{% endif %}><i class="fa fa-tasks"></i></a>
-    {% endif %}
-    {% if user.module_crawlers == 1 %}
-        <a href="{{ path_for('crawlers') }}" {% if active == 'crawlers' %}class="active"{% endif %}><i class="fa fa-database"></i></a>
-    {% endif %}
-    {% if user.module_splitbills == 1 %}
-        <a href="{{ path_for('splitbill_groups') }}" {% if active == 'splitbills' %}class="active"{% endif %}><i class="fa fa-handshake-o"></i></a>
-    {% endif %}
-    {% if user.module_trips == 1 %}
-        <a href="{{ path_for('trips') }}" {% if active == 'trips' %}class="active"{% endif %}><i class="fa fa-map-o"></i></a>
+{% set size = "normal" %}
+{% if mobile_favorites|length == 0 or mobile_favorites|length > 5 %}
+    {% set size = "small" %}
+{% endif %}
+
+<div id="mobile-header-icons" class="{{size}}">
+    <a href="{{ path_for('index') }}" {% if active == 'index' %}class="active"{% endif %}><i class="fa fa-sitemap"></i></a>
+    {% if mobile_favorites|length > 0 %}
+        {%  for favorite in mobile_favorites %}
+            <a href="{{ favorite.url }}" {% if currentURL == favorite.url %}class="active"{% endif %}><i class="fa {{ favorite.icon }}"></i></a>
+        {% endfor %}
+    {% else %}
+        {% if user.module_location == 1 %}
+            <a href="{{ path_for('location') }}" {% if active == 'location' %}class="active"{% endif %}><i class="fa fa-map-marker"></i></a>
+        {% endif %}
+        {% if user.module_finance == 1 %}
+            <a href="{{ path_for('finances') }}" {% if active == 'finances' %}class="active"{% endif %}><i class="fa fa-money"></i></a>
+        {% endif %}
+        {% if user.module_cars == 1 %}
+            <a href="{{ path_for('car_service') }}" {% if active == 'car_service' %}class="active"{% endif %}><i class="fa fa-road"></i></a>
+        {% endif %}
+        {% if user.module_boards == 1 %}
+            <a href="{{ path_for('boards') }}" {% if active == 'boards' %}class="active"{% endif %}><i class="fa fa-tasks"></i></a>
+        {% endif %}
+        {% if user.module_crawlers == 1 %}
+            <a href="{{ path_for('crawlers') }}" {% if active == 'crawlers' %}class="active"{% endif %}><i class="fa fa-database"></i></a>
+        {% endif %}
+        {% if user.module_splitbills == 1 %}
+            <a href="{{ path_for('splitbill_groups') }}" {% if active == 'splitbills' %}class="active"{% endif %}><i class="fa fa-handshake-o"></i></a>
+        {% endif %}
+        {% if user.module_trips == 1 %}
+            <a href="{{ path_for('trips') }}" {% if active == 'trips' %}class="active"{% endif %}><i class="fa fa-map-o"></i></a>
+        {% endif %}
     {% endif %}
     <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %}" data-badge="0" id="iconBell"><i class="fa fa-bell-o"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
@@ -32,6 +44,9 @@
 <nav id="site-navigation" class="main-navigation" role="navigation">
 
     <ul id="menu-primary" class="menu nav-menu">
+        <li {% if active == 'index' %}class="active"{% endif %}>
+            <a href="{{ path_for('index') }}">{{lang["MENU_INDEX"]}}</a>
+        </li> 
         {% if user.module_location == 1 %}
             <li {% if active == 'location' %}class="active"{% endif %}>
                 <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
@@ -87,24 +102,6 @@
                 <a href="{{ path_for('trips') }}">{{lang["TRIPS"]}}</a>
             </li> 
         {% endif %}
-        <li {% if active == 'profile' %}class="active"{% endif %}>
-            <a href="{{ path_for('notifications') }}" class="profile badge" data-badge="0"> 
-                {% if user.get_thumbnail() != '' %}
-                    <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
-                {% else %}
-                    <svg class="avatar-mini navi avatar-initials" viewBox="0 0 24 15">
-                        <text x="50%" y="14" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
-                    </svg>
-                {% endif %}
-                {{user.login}}
-            </a>
-            <ul class="dropdown-content">
-                <li><a href="{{ path_for('users_change_password') }}">{{lang["CHANGE_PASSWORD"]}}</a></li>
-                <li><a href="{{ path_for('users_profile_image') }}">{{lang["PROFILE_IMAGE"]}}</a></li>
-                <li><a href="{{ path_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<i class="fa fa-bell-o pull-right"></i></a></li>
-                <li><a href="{{ path_for('logout') }}" >{{lang["LOGOUT"]}}<i class="fa fa-sign-out pull-right"></i></a></li>
-            </ul>
-        </li>
         {% if user.isAdmin() %}
             <li {% if active == 'settings' %}class="active"{% endif %}>
                 <a href="#">{{lang["SETTINGS"]}}</a>
@@ -119,5 +116,24 @@
                 </ul>
             </li>
         {% endif %}
+        <li {% if active == 'profile' %}class="active"{% endif %}>
+            <a href="{{ path_for('notifications') }}" class="profile badge" data-badge="0"> 
+                {% if user.get_thumbnail() != '' %}
+                    <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
+                {% else %}
+                    <svg class="avatar-mini navi avatar-initials" viewBox="0 0 24 15">
+                    <text x="50%" y="14" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+                    </svg>
+                {% endif %}
+                {{user.login}}
+            </a>
+            <ul class="dropdown-content">
+                <li><a href="{{ path_for('users_change_password') }}">{{lang["CHANGE_PASSWORD"]}}</a></li>
+                <li><a href="{{ path_for('users_profile_image') }}">{{lang["PROFILE_IMAGE"]}}</a></li>
+                <li><a href="{{ path_for('users_mobile_favorites') }}">{{lang["MOBILE_FAVORITES"]}}</a></li>
+                <li><a href="{{ path_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<i class="fa fa-bell-o pull-right"></i></a></li>
+                <li><a href="{{ path_for('logout') }}" >{{lang["LOGOUT"]}}<i class="fa fa-sign-out pull-right"></i></a></li>
+            </ul>
+        </li>
     </ul>                        
 </nav>
