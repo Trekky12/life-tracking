@@ -11,5 +11,17 @@ class MobileFavorite extends \App\Base\Model {
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
     }
+    
+    public function getURL(){
+        
+        $current_date = new \DateTime('now');
+        
+        $url = $this->url;
+        $url = str_replace("\$day\$", $current_date->format("d"), $url);
+        $url = str_replace("\$month\$", $current_date->format("m"), $url);
+        $url = str_replace("\$year\$", $current_date->format("Y"), $url);
+
+        return $url;
+    }
 
 }

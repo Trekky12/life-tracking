@@ -406,5 +406,9 @@ $lang["STEPS_SUM"] = "Gesamtanzahl Schritte";
 $lang["MOBILE_FAVORITES"] = "mobile Favoriten";
 $lang["URL"] = "URL";
 $lang["ICON"] = "Icon";
+$lang["MOBILE_FAVORITES_PLACEHOLDER_INTRO"] = "Es können die folgenden Platzhalter verwendet werden:";
+$lang["CURRENT_DAY"] = "aktueller Tag";
+$lang["CURRENT_MONTH"] = "aktueller Monat";
+$lang["CURRENT_YEAR"] = "aktuelles Jahr";
 
 return $lang;

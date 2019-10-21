@@ -7,7 +7,7 @@
     <a href="{{ path_for('index') }}" {% if active == 'index' %}class="active"{% endif %}><i class="fa fa-sitemap"></i></a>
     {% if mobile_favorites|length > 0 %}
         {%  for favorite in mobile_favorites %}
-            <a href="{{ favorite.url }}" {% if currentURL == favorite.url %}class="active"{% endif %}><i class="fa {{ favorite.icon }}"></i></a>
+            <a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %}class="active"{% endif %}><i class="fa {{ favorite.icon }}"></i></a>
         {% endfor %}
     {% else %}
         {% if user.module_location == 1 %}

@@ -407,5 +407,9 @@ $lang["STEPS_SUM"] = "total steps";
 $lang["MOBILE_FAVORITES"] = "mobile favorites";
 $lang["URL"] = "URL";
 $lang["ICON"] = "icon";
+$lang["MOBILE_FAVORITES_PLACEHOLDER_INTRO"] = "The following placeholders are possible:";
+$lang["CURRENT_DAY"] = "current day";
+$lang["CURRENT_MONTH"] = "current month";
+$lang["CURRENT_YEAR"] = "current year";
 
 return $lang;
