@@ -11,9 +11,15 @@ abstract class Controller {
     protected $ci;
     protected $mapper;
     protected $model;
-    protected $index_route;
-    protected $edit_template;
     protected $user_mapper;
+    
+    // Redirect the user to the index after saving
+    protected $index_route = '';
+    protected $index_params = [];
+    protected $edit_template = '';
+    
+    // use user id from attribute instead of the current user (save/delete)
+    protected $user_from_attribute = false;
 
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
@@ -96,9 +102,20 @@ abstract class Controller {
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
+        // get user from attribute
+        if ($this->user_from_attribute) {
+            $user_id = $request->getAttribute('user');
+            $user = filter_var($user_id, FILTER_SANITIZE_NUMBER_INT);
+            $data['user'] = $user;
+            // use this user for filtering
+            $this->mapper->setUser($user);
+        }
+
         $this->insertOrUpdate($id, $data);
 
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+        $redirect_url = $this->ci->get('router')->pathFor($this->index_route, $this->index_params);
+
+        return $response->withRedirect($redirect_url, 301);
     }
 
     protected function insertOrUpdate($id, $data) {
@@ -187,6 +204,14 @@ abstract class Controller {
 
         $logger = $this->ci->get('logger');
 
+        // get user from attribute
+        if ($this->user_from_attribute) {
+            $user_id = $request->getAttribute('user');
+            $user = filter_var($user_id, FILTER_SANITIZE_NUMBER_INT);
+            // use this user for filtering
+            $this->mapper->setUser($user);
+        }
+        
         /**
          * Custom Hook
          */

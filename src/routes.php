@@ -144,6 +144,15 @@ $app->group('/users', function() {
         $this->delete('/delete/{id}', '\App\User\Token\Controller:delete')->setName('login_tokens_delete');
         $this->get('/deleteOld', '\App\User\Token\Controller:deleteOld')->setName('login_tokens_delete_old');
     });
+
+    $this->group('/{user:[0-9]+}', function() {
+        $this->group('/favorites', function() {
+            $this->get('/', '\App\User\MobileFavorites\ControllerAdmin:index')->setName('users_mobile_favorites_admin');
+            $this->get('/edit/[{id:[0-9]+}]', '\App\User\MobileFavorites\ControllerAdmin:edit')->setName('users_mobile_favorites_edit_admin');
+            $this->post('/save/[{id:[0-9]+}]', '\App\User\MobileFavorites\ControllerAdmin:save')->setName('users_mobile_favorites_save_admin');
+            $this->delete('/delete/{id}', '\App\User\MobileFavorites\ControllerAdmin:delete')->setName('users_mobile_favorites_delete_admin');
+        });
+    });
 })->add('App\Middleware\AdminMiddleware');
 
 

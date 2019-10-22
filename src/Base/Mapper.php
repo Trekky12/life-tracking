@@ -7,28 +7,34 @@ use Interop\Container\ContainerInterface;
 abstract class Mapper {
 
     protected $db;
-    protected $userid;
+    
+    // filter by specific user
     protected $filterByUser = true;
     protected $insertUser = true;
+    protected $userid;
+    
+    // Table prefix and name
     protected $table_prefix = '';
     protected $table = '';
+    // Primary Key Name
     protected $id = "id";
+    
+    // Modell
     protected $model = '\App\Base\Model';
+    
+    // m:n relationship with an usertable
     protected $hasUserTable = false;
     protected $user_table = "";
     protected $element_name = "";
 
-    public function __construct(ContainerInterface $ci, $table = null, $model = null, $filterByUser = null, $insertUser = null) {
+    public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
         $this->db = $this->ci->get('db');
-        $this->table = !is_null($table) ? $table : $this->table;
-        $this->model = !is_null($model) ? $model : $this->model;
-        $this->filterByUser = !is_null($filterByUser) ? $filterByUser : $this->filterByUser;
-        $this->insertUser = !is_null($insertUser) ? $insertUser : $this->insertUser;
 
+        // set ID of current user
         if ($this->filterByUser || $this->insertUser) {
-            $user = $this->ci->get('helper')->getUser();
-            $this->userid = $user ? $user->id : null;
+            $currentUser = $this->ci->get('helper')->getUser();
+            $this->userid = $currentUser ? $currentUser->id : null;
         }
     }
 
@@ -348,5 +354,9 @@ abstract class Mapper {
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
-    }    
+    }
+    
+    public function setUser($user_id) {
+        $this->userid = $user_id;
+    }
 }

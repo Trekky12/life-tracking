@@ -18,6 +18,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,6 +32,7 @@
                             <td><a href="{{  path_for('users_edit', {'id' : entry.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a></td>
                             <td><a href="#" data-url="{{  path_for('users_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
                             <td>{% if entry.mail %}<a href="{{  path_for('users_test_mail', {'id' : entry.id}) }}"><span class="fa fa-envelope fa-lg"></span> {{lang["TESTMAIL"]}}</a>{%endif%}</td>
+                            <td><a href="{{  path_for('users_mobile_favorites_admin', {'user': entry.id}) }}">{{ lang["MOBILE_FAVORITES"] }}</a>
                         </tr>
                     {% endfor %}
                 </tbody>
