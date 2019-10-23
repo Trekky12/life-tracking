@@ -75,7 +75,7 @@ class Controller extends \App\Base\Controller {
 
     public function testMail(Request $request, Response $response) {
 
-        $user_id = $request->getAttribute('id');
+        $user_id = $request->getAttribute('user');
         $entry = $this->mapper->get($user_id);
 
         if ($entry->mail) {

@@ -137,8 +137,6 @@ $app->group('/users', function() {
     $this->post('/save/[{id:[0-9]+}]', '\App\User\Controller:save')->setName('users_save');
     $this->delete('/delete/{id}', '\App\User\Controller:delete')->setName('users_delete');
 
-    $this->get('/testmail/{id:[0-9]+}', '\App\User\Controller:testMail')->setName('users_test_mail');
-
     $this->group('/tokens', function() {
         $this->get('/', '\App\User\Token\Controller:index')->setName('login_tokens');
         $this->delete('/delete/{id}', '\App\User\Token\Controller:delete')->setName('login_tokens_delete');
@@ -146,6 +144,9 @@ $app->group('/users', function() {
     });
 
     $this->group('/{user:[0-9]+}', function() {
+        
+        $this->get('/testmail', '\App\User\Controller:testMail')->setName('users_test_mail');
+        
         $this->group('/favorites', function() {
             $this->get('/', '\App\User\MobileFavorites\ControllerAdmin:index')->setName('users_mobile_favorites_admin');
             $this->get('/edit/[{id:[0-9]+}]', '\App\User\MobileFavorites\ControllerAdmin:edit')->setName('users_mobile_favorites_edit_admin');
