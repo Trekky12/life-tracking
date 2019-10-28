@@ -20,6 +20,7 @@
                     <tr>
                         <th>{{lang["DATE"]}}</th>
                         <th>{{lang["STEPS_SUM"]}}</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,9 @@
                         <tr>
                             <td data-title="{{lang["DATE"]}}">{{entry[0]}}</td> 
                             <td data-title="{{lang["STEPS_SUM"]}}">{{ entry[1]|number_format(0, '', '.')}}</td> 
+                            <td>
+                                <a href="{{  path_for('steps_day_edit', {'date': entry[0] }) }}"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -675,6 +675,11 @@ var stepsMonthTable = new JSTable("#steps_month_table", {
                 let data = cell.innerHTML;
                 return moment(data).format(i18n.dateformatJS.date);
             }
+        },
+        {
+            select: [2],
+            sortable: false,
+            searchable: false
         }
     ]
 });

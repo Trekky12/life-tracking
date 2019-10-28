@@ -1,0 +1,28 @@
+{% extends "base.twig" %}
+
+{% set active = 'location' %}
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["STEPS"]}} ({{ date|date(i18n.dateformatTwig.date) }})</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" id="locationForm" action="{{  path_for('steps_save', {'date' : date}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                <div class="form-group">
+                    <label for="inputSteps">{{lang["STEPS"]}}</label>
+                    <input type="number" step="any" class="form-control" id="inputSteps" name="steps" value="{{ steps }}">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if steps > 0 %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if steps > 0 %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

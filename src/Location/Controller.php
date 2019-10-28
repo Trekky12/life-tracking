@@ -115,14 +115,14 @@ class Controller extends \App\Base\Controller {
     public function steps(Request $request, Response $response) {
         $steps = $this->mapper->getStepsPerYear();
         list($chart_data, $labels) = $this->createChartData($steps);
-        return $this->ci->view->render($response, 'location/stats/steps.twig', ['stats' => $steps, "data" => $chart_data, "labels" => $labels]);
+        return $this->ci->view->render($response, 'location/steps/steps.twig', ['stats' => $steps, "data" => $chart_data, "labels" => $labels]);
     }
 
     public function stepsYear(Request $request, Response $response) {
         $year = $request->getAttribute('year');
         $steps = $this->mapper->getStepsOfYear($year);
         list($chart_data, $labels) = $this->createChartData($steps, "month");
-        return $this->ci->view->render($response, 'location/stats/steps_year.twig', ['stats' => $steps, "year" => $year, "data" => $chart_data, "labels" => $labels]);
+        return $this->ci->view->render($response, 'location/steps/steps_year.twig', ['stats' => $steps, "year" => $year, "data" => $chart_data, "labels" => $labels]);
     }
 
     public function stepsMonth(Request $request, Response $response) {
@@ -130,7 +130,7 @@ class Controller extends \App\Base\Controller {
         $month = $request->getAttribute('month');
         $steps = $this->mapper->getStepsOfYearMonth($year, $month);
         list($chart_data, $labels) = $this->createChartData($steps, "date");
-        return $this->ci->view->render($response, 'location/stats/steps_month.twig', ['stats' => $steps, "year" => $year, "month" => $month, "data" => $chart_data, "labels" => $labels]);
+        return $this->ci->view->render($response, 'location/steps/steps_month.twig', ['stats' => $steps, "year" => $year, "month" => $month, "data" => $chart_data, "labels" => $labels]);
     }
 
     private function createChartData($stats, $key = "year") {

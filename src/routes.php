@@ -86,9 +86,14 @@ $app->group('/location', function() {
     $this->post('/save/[{id:[0-9]+}]', '\App\Location\Controller:save')->setName('location_save');
     
     $this->group('/steps', function() {
-        $this->get('/', '\App\Location\Controller:steps')->setName('steps');
-        $this->get('/{year:[0-9]{4}}/', '\App\Location\Controller:stepsYear')->setName('steps_stats_year');
-        $this->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/', '\App\Location\Controller:stepsMonth')->setName('steps_stats_month');
+        $this->get('/', '\App\Location\Steps\Controller:steps')->setName('steps');
+        $this->get('/{year:[0-9]{4}}/', '\App\Location\Steps\Controller:stepsYear')->setName('steps_stats_year');
+        $this->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/', '\App\Location\Steps\Controller:stepsMonth')->setName('steps_stats_month');
+        
+        $this->group('/{date:[0-9]{4}-[0-9]{2}-[0-9]{2}}', function(){
+            $this->get('/edit/', '\App\Location\Steps\Controller:editSteps')->setName('steps_day_edit');
+            $this->post('/save/', '\App\Location\Steps\Controller:saveSteps')->setName('steps_save');
+        });
     });
 });
 
