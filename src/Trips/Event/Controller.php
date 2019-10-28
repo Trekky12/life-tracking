@@ -120,12 +120,18 @@ class Controller extends \App\Base\Controller {
         if (!empty($entry_id)) {
             $entry = $this->mapper->get($entry_id);
         }
+        
+        $data = $request->getQueryParams();
+        list($from, $to) = $this->ci->get('helper')->getDateRange($data);
+        
         $this->preEdit($entry_id);
 
         return $this->ci->view->render($response, $this->edit_template, [
                     'entry' => $entry,
                     'trip' => $trip,
-                    'types' => self::eventTypes()
+                    'types' => self::eventTypes(),
+                    'from' => $from, 
+                    'to' => $to
         ]);
     }
 

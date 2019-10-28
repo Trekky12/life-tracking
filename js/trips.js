@@ -15,11 +15,23 @@ const changeDayLinks = document.querySelectorAll('.change_day');
 
 const today = moment(Date.now()).format('YYYY-MM-DD');
 const currentDayButton = document.querySelector('.change_day[data-date="' + today + '"]');
+const newEventButton = document.querySelector('#new-event-btn');
+
+let addEventLink = "";
+if (newEventButton){
+    addEventLink = newEventButton.href;
+}
 
 if (changeDayLinks !== null) {
     changeDayLinks.forEach(function (changeDayLink, idx) {
         changeDayLink.addEventListener('click', function (e) {
             e.preventDefault();
+            
+            // add from/to parameters to add event link
+            if(newEventButton){
+                newEventButton.href = addEventLink + changeDayLink.search;
+            }
+            
             changeDay(changeDayLink);
         });
     });
