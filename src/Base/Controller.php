@@ -12,20 +12,22 @@ abstract class Controller {
     protected $mapper;
     protected $model;
     protected $user_mapper;
-    
     // Redirect the user to the index after saving
     protected $index_route = '';
     protected $index_params = [];
     protected $edit_template = '';
-    
     // use user id from attribute instead of the current user (save/delete)
     protected $user_from_attribute = false;
+    // logger
+    protected $logger;
 
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
         $this->init();
 
         $this->user_mapper = new \App\User\Mapper($this->ci);
+
+        $this->logger = $this->ci->get('logger');
     }
 
     /**
@@ -38,10 +40,11 @@ abstract class Controller {
 
     /**
      * this function is called after successfully saving an entry
-     * @param type $id
-     * @param type $data
+     * @param int $id
+     * @param array $data
+     * @param Request $request
      */
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, array $data, Request $request) {
         // do nothing
     }
 
@@ -51,39 +54,40 @@ abstract class Controller {
 
     /**
      * this function is called before saving an entry
-     * @param type $id
-     * @param type $data
+     * @param int $id
+     * @param array $data
+     * @param Request $request
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, array &$data, Request $request) {
         // do nothing
     }
 
     /**
      * this function is called before deleting an entry
-     * @param type $id
-     * @param type $data
+     * @param int $id
+     * @param Request $request
      */
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         // do nothing
     }
 
     /**
      * this function is called before editing an entry
-     * @param type $id
-     * @param type $data
+     * @param int $id
+     * @param Request $request
      */
-    protected function preEdit($id) {
+    protected function preEdit($id, Request $request) {
         // do nothing
     }
 
     /**
      * this function is called before getting an entry on a GET API request
      * @param type $id
-     * @param type $entry
+     * @param Request $request
      */
-    protected function preGetAPI($id) {
+    protected function preGetAPI($id, Request $request) {
         $data = null;
-        $this->preSave($id, $data);
+        $this->preSave($id, $data, $request);
     }
 
     /**
@@ -93,7 +97,7 @@ abstract class Controller {
      * @param type $entry
      * @return type
      */
-    protected function afterGetAPI($id, $entry) {
+    protected function afterGetAPI($id, $entry, Request $request) {
         return $entry;
     }
 
@@ -111,14 +115,14 @@ abstract class Controller {
             $this->mapper->setUser($user);
         }
 
-        $this->insertOrUpdate($id, $data);
+        $this->insertOrUpdate($id, $data, $request);
 
         $redirect_url = $this->ci->get('router')->pathFor($this->index_route, $this->index_params);
 
         return $response->withRedirect($redirect_url, 301);
     }
 
-    protected function insertOrUpdate($id, $data) {
+    protected function insertOrUpdate($id, $data, Request $request) {
 
         // Remove CSRF attributes
         if (array_key_exists('csrf_name', $data)) {
@@ -127,70 +131,68 @@ abstract class Controller {
         if (array_key_exists('csrf_value', $data)) {
             unset($data["csrf_value"]);
         }
-        
+
         /**
          * Custom Hook
          */
-        $this->preSave($id, $data);
-        $entry = new $this->model($data);
+        $this->preSave($id, $data, $request);
 
-        $logger = $this->ci->get('logger');
+        $entry = new $this->model($data);
 
         if ($entry->hasParsingErrors()) {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
 
-            $logger->addError("Insert failed " . $this->model, array("message" => $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0])));
-        } else {
+            $this->logger->addError("Insert failed " . $this->model, array("message" => $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0])));
 
-            if ($id == null) {
-                $id = $this->mapper->insert($entry);
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_ADD"));
+            return array(false, $entry);
+        }
+
+        if ($id == null) {
+            $id = $this->mapper->insert($entry);
+            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_ADD"));
+            $this->ci->get('flash')->addMessage('message_type', 'success');
+
+            $this->logger->addNotice("Insert Entry " . $this->model, array("id" => $id));
+        } else {
+            $elements_changed = $this->mapper->update($entry);
+            if ($elements_changed > 0) {
+                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
-                $logger->addNotice("Insert Entry " . $this->model, array("id" => $id));
+                $this->logger->addNotice("Update Entry " . $this->model, array("id" => $id));
             } else {
-                $elements_changed = $this->mapper->update($entry);
-                if ($elements_changed > 0) {
-                    $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
-                    $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
+                $this->ci->get('flash')->addMessage('message_type', 'info');
 
-                    $logger->addNotice("Update Entry " . $this->model, array("id" => $id));
-                } else {
-                    $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
-                    $this->ci->get('flash')->addMessage('message_type', 'info');
-
-                    $logger->addNotice("No Update of Entry " . $this->model, array("id" => $id));
-                }
+                $this->logger->addNotice("No Update of Entry " . $this->model, array("id" => $id));
             }
-
-            /**
-             * Save m-n user table 
-             */
-            if ($this->mapper->hasUserTable()) {
-                $this->mapper->deleteUsers($id);
-
-                if (array_key_exists("users", $data) && is_array($data["users"])) {
-                    $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
-                    $this->mapper->addUsers($id, $users);
-                }
-            }
-
-            /**
-             * Custom Hook
-             */
-            $this->afterSave($id, $data);
         }
-        return array($id, $entry);
+
+        /**
+         * Save m-n user table 
+         */
+        if ($this->mapper->hasUserTable()) {
+            $this->mapper->deleteUsers($id);
+
+            if (array_key_exists("users", $data) && is_array($data["users"])) {
+                $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
+                $this->mapper->addUsers($id, $users);
+            }
+        }
+        /**
+         * Custom Hook
+         */
+        $this->afterSave($id, $data, $request);
+
+        return array($id, $data);
     }
 
     public function saveAPI(Request $request, Response $response) {
         try {
             $return = $this->save($request, $response);
         } catch (\Exception $e) {
-
-            $logger = $this->ci->get('logger');
-            $logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
+            $this->logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
 
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
@@ -202,8 +204,6 @@ abstract class Controller {
 
         $id = $request->getAttribute('id');
 
-        $logger = $this->ci->get('logger');
-
         // get user from attribute
         if ($this->user_from_attribute) {
             $user_id = $request->getAttribute('user');
@@ -211,11 +211,11 @@ abstract class Controller {
             // use this user for filtering
             $this->mapper->setUser($user);
         }
-        
+
         /**
          * Custom Hook
          */
-        $this->preDelete($id);
+        $this->preDelete($id, $request);
 
         $data = ['is_deleted' => false, 'error' => ''];
 
@@ -226,19 +226,19 @@ abstract class Controller {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_DELETE"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
-                $logger->addNotice("Delete successfully " . $this->model, array("id" => $id));
+                $this->logger->addNotice("Delete successfully " . $this->model, array("id" => $id));
             } else {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
                 $this->ci->get('flash')->addMessage('message_type', 'danger');
 
-                $logger->addError("Delete failed " . $this->model,  array("id" => $id));
+                $this->logger->addError("Delete failed " . $this->model, array("id" => $id));
             }
         } catch (\Exception $e) {
             $data['error'] = $e->getMessage();
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
 
-            $logger->addError("Delete failed " . $this->model, array("id" => $id, "error" => $e->getMessage()));
+            $this->logger->addError("Delete failed " . $this->model, array("id" => $id, "error" => $e->getMessage()));
         }
 
         $newResponse = $response->withJson($data);
@@ -262,7 +262,7 @@ abstract class Controller {
 
         $users = ($this->mapper->hasUserTable()) ? $this->user_mapper->getAll('name') : array();
 
-        $this->preEdit($entry_id);
+        $this->preEdit($entry_id, $request);
 
         return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'users' => $users]);
     }
@@ -272,17 +272,16 @@ abstract class Controller {
         $entry_id = $request->getAttribute('id');
 
         try {
-            $this->preGetAPI($entry_id);
+            $this->preGetAPI($entry_id, $request);
             $entry = $this->mapper->get($entry_id);
 
             if ($this->mapper->hasUserTable()) {
                 $entry_users = $this->mapper->getUsers($entry_id);
                 $entry->setUsers($entry_users);
             }
-            $rentry = $this->afterGetAPI($entry_id, $entry);
+            $rentry = $this->afterGetAPI($entry_id, $entry, $request);
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Get API " . $this->model, array("id" => $entry_id, "error" => $e->getMessage()));
+            $this->logger->addError("Get API " . $this->model, array("id" => $entry_id, "error" => $e->getMessage()));
 
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }

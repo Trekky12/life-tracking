@@ -172,7 +172,7 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, 'profile/image.twig', ["user" => $user]);
     }
 
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
         // notify new user
         // is new user?
         if (!array_key_exists("id", $data)) {

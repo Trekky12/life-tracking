@@ -128,7 +128,7 @@ class Controller extends \App\Base\Controller {
         }
     }
 
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
         $entry = $this->mapper->get($id);
 
         /**

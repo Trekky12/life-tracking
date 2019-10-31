@@ -26,20 +26,20 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
-    protected function preEdit($id) {
+    protected function preEdit($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
 
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
         $dataset = $this->mapper->get($id);
         if (empty($dataset->hash)) {
             $hashids = new Hashids('', 10);

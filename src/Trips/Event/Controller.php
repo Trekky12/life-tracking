@@ -124,7 +124,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
         
-        $this->preEdit($entry_id);
+        $this->preEdit($entry_id, $request);
 
         return $this->ci->view->render($response, $this->edit_template, [
                     'entry' => $entry,
@@ -177,7 +177,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
-        $this->insertOrUpdate($id, $data);
+        $this->insertOrUpdate($id, $data, $request);
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["trip" => $trip]), 301);
     }
@@ -210,15 +210,15 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
-    protected function preEdit($id) {
+    protected function preEdit($id, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 

@@ -37,7 +37,7 @@ class Controller extends \App\Base\Controller {
             $entry = $this->mapper->get($entry_id);
         }
 
-        $this->preEdit($entry_id);
+        $this->preEdit($entry_id, $request);
 
         return $this->ci->view->render($response, $this->edit_template, [
                     'entry' => $entry,
@@ -53,7 +53,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
-        $this->insertOrUpdate($id, $data);
+        $this->insertOrUpdate($id, $data, $request);
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
     }
@@ -101,15 +101,15 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
-    protected function preEdit($id) {
+    protected function preEdit($id, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
@@ -136,7 +136,7 @@ class Controller extends \App\Base\Controller {
         return [null => $this->ci->get('helper')->getTranslatedString('NO_INITIAL_SORTING'), "asc" => $this->ci->get('helper')->getTranslatedString('ASC'), "desc" => $this->ci->get('helper')->getTranslatedString('DESC')];
     }
 
-    public function afterSave($id, $data) {
+    public function afterSave($id, $data, Request $request) {
         $header = $this->mapper->get($id);
 
         // only one header can be initial sorted 

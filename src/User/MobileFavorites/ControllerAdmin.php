@@ -50,12 +50,12 @@ class ControllerAdmin extends \App\Base\Controller {
         if (!empty($entry_id)) {
             $entry = $this->mapper->get($entry_id);
         }
-        $this->preEdit($entry_id);
+        $this->preEdit($entry_id, $request);
 
         return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'for_user' => $user]);
     }
 
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
         // redirect to users list
         $this->index_params = ["user" => $data["user"]];
     }

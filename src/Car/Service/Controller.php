@@ -57,12 +57,12 @@ class Controller extends \App\Base\Controller {
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         $cars = $this->car_mapper->getAll('name');
 
-        $this->preEdit($entry_id);
+        $this->preEdit($entry_id, $request);
 
         return $this->ci->view->render($response, 'cars/service/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars, 'type' => $type]);
     }
 
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
 
         $entry = $this->mapper->get($id);
 
@@ -334,7 +334,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preEdit($id) {
+    protected function preEdit($id, Request $request) {
 
         if (!is_null($id)) {
             $entry = $this->mapper->get($id);
@@ -349,7 +349,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
@@ -360,7 +360,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         if (!is_null($id)) {
             $entry = $this->mapper->get($id);
             $user = $this->ci->get('helper')->getUser()->id;

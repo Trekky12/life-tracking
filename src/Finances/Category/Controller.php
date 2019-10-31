@@ -22,7 +22,7 @@ class Controller extends \App\Base\Controller {
     }
 
     
-    public function afterSave($id, $data) {
+    public function afterSave($id, $data, Request $request) {
         $cat = $this->mapper->get($id);
         
         // Set all other non-default, since there can only be one default category

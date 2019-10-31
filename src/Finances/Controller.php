@@ -66,7 +66,7 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods]);
     }
 
-    public function afterSave($id, $data) {
+    public function afterSave($id, $data, Request $request) {
         $user_id = $this->ci->get('helper')->getUser()->id;
 
         $entry = $this->mapper->get($id);
@@ -174,9 +174,9 @@ class Controller extends \App\Base\Controller {
 
         if (!$entry->hasParsingErrors()) {
             try {
-                $this->preSave(null, $data);
+                $this->preSave(null, $data, $request);
                 $id = $this->mapper->insert($entry);
-                $budgets = $this->afterSave($id, $data);
+                $budgets = $this->afterSave($id, $data, $request);
 
                 $logger->addInfo("Record Finances", array("id" => $id));
             } catch (\Exception $e) {
@@ -476,7 +476,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Do not allow deletion of entries with bills
      */
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         $entry = $this->mapper->get($id);
         if (!is_null($entry->bill)) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);

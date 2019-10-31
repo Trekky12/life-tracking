@@ -100,7 +100,7 @@ class Controller extends \App\Base\Controller {
     /**
      * save users 
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $this->users_preSave = $this->mapper->getUsers($id);
         $this->allowOwnerOnly($id);
     }
@@ -108,7 +108,7 @@ class Controller extends \App\Base\Controller {
     /**
      * notify user
      */
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
         $board = $this->mapper->get($id);
         
         /**
@@ -153,11 +153,11 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preEdit($id) {
+    protected function preEdit($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
 

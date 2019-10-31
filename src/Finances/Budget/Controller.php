@@ -85,7 +85,7 @@ class Controller extends \App\Base\Controller {
             foreach ($data["budget"] as $budget_entry) {
                 $budget_entry["user"] = $user;
                 $bid = array_key_exists("id", $budget_entry) ? filter_var($budget_entry['id'], FILTER_SANITIZE_NUMBER_INT) : null;
-                $this->insertOrUpdate($bid, $budget_entry);
+                $this->insertOrUpdate($bid, $budget_entry, $request);
             }
         }
 
@@ -133,7 +133,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Save categories in m:n table
      */
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
         try {
             // remove old categories
             $this->mapper->deleteCategoriesFromBudget($id);

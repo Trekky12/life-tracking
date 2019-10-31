@@ -44,7 +44,7 @@ class Controller extends \App\Base\Controller {
                 }
             }
 
-            $this->insertOrUpdate($dataset_id, $data);
+            $this->insertOrUpdate($dataset_id, $data, $request);
         } catch (\Exception $e) {
 
             $logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
@@ -57,7 +57,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Encode data as json
      */
-    public function preSave($id, &$data) {
+    public function preSave($id, &$data, Request $request) {
         if (array_key_exists("data", $data) && is_array($data["data"])) {
             $data["data"] = json_encode($data["data"]);
         }

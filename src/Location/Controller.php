@@ -106,7 +106,7 @@ class Controller extends \App\Base\Controller {
         return array($hide_clusters);
     }
 
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         if (!array_key_exists("device", $data)) {
             $data["device"] = $this->ci->get('helper')->getAgent();
         }

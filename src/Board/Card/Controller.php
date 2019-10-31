@@ -23,7 +23,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $user = $this->ci->get('helper')->getUser()->id;
         $this->users_preSave = array();
 
@@ -48,7 +48,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Save labels, notify user
      */
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
         // card check is already done in preSave()
         $board_id = $this->mapper->getCardBoard($id);
 
@@ -142,7 +142,7 @@ class Controller extends \App\Base\Controller {
      * @param type $entry
      * @return type
      */
-    protected function afterGetAPI($id, $entry) {
+    protected function afterGetAPI($id, $entry, Request $request) {
         $card_labels = $this->label_mapper->getLabelsFromCard($id);
         $entry->labels = $card_labels;
 
@@ -218,7 +218,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
         $id = $request->getAttribute('id');
         try {
-            $this->preSave($id, $data);
+            $this->preSave($id, $data, $request);
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
                 $user = $this->ci->get('helper')->getUser()->id;

@@ -18,7 +18,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this card?
      */
-    protected function preSave($id, $data) {
+    protected function preSave($id, $data, Request $request) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cards = $this->board_mapper->getUserCards($user);
         

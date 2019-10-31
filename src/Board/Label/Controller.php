@@ -17,7 +17,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_boards = $this->board_mapper->getElementsOfUser($user);
         
@@ -34,7 +34,7 @@ class Controller extends \App\Base\Controller {
     }
     
 
-    protected function afterGetAPI($id, $entry) {
+    protected function afterGetAPI($id, $entry, Request $request) {
 
         if ($entry->name) {
             $entry->name = htmlspecialchars_decode($entry->name);

@@ -90,7 +90,7 @@ class Controller extends \App\Base\Controller {
         if (!empty($entry_id)) {
             $entry = $this->mapper->get($entry_id);
         }
-        $this->preEdit($entry_id);
+        $this->preEdit($entry_id, $request);
 
         $users = $this->user_mapper->getAll();
         $group_users = $this->group_mapper->getUsers($group->id);
@@ -119,7 +119,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
 
-        $this->insertOrUpdate($id, $data);
+        $this->insertOrUpdate($id, $data, $request);
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["group" => $hash]), 301);
     }
@@ -127,22 +127,22 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data) {
+    protected function preSave($id, &$data, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
-    protected function preEdit($id) {
+    protected function preEdit($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
-    protected function preDelete($id) {
+    protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
     /**
      * Save balance
      */
-    protected function afterSave($id, $data) {
+    protected function afterSave($id, $data, Request $request) {
 
         $logger = $this->ci->get('logger');
 
