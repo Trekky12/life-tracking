@@ -12,6 +12,9 @@
     <script src="{{base_url()}}/static/js/datefilter.js?ver=20190130"></script>
 {% endblock %}
 
+{% set hasMap_start = not entry.start_lat is null and not entry.start_lng is null %}
+{% set hasMap_end = not entry.end_lat is null and not entry.end_lng is null %}
+
 {% block body %}
 
     <div class="inner-content">
@@ -37,6 +40,9 @@
                     <input type="text" class="form-control" id="inputStartAddress" name="start_address" value="{% if not entry is null %}{{entry.start_address}}{% endif %}">
                     <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
                     <div id="geo-map" class="geo-map"></div>
+                    <div class="form-group map-btn">
+                        <button class="delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                    </div>
                     <input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
                 </div>
@@ -62,6 +68,9 @@
                     <input type="text" class="form-control" id="inputEndAddress" name="end_address" value="{% if not entry is null %}{{entry.end_address}}{% endif %}">
                     <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
                     <div id="geo-map2" class="geo-map"></div>
+                    <div class="form-group map-btn">
+                        <button class="delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                    </div>
                     <input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
                 </div>
