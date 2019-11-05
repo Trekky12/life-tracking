@@ -66,7 +66,8 @@
 
 #splitbill_overview{
     @media screen and (max-width: $size_mobile_navigation) {
-        flex-direction:column;
+        //flex-direction:column;
+        flex-basis: (100%/ 2);
     }
 
     .card{
