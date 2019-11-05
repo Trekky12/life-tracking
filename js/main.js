@@ -130,7 +130,7 @@ function initialize() {
     let closebtn = document.querySelectorAll('span.closebtn');
     closebtn.forEach(function (item, idx) {
         item.addEventListener('click', function (event) {
-            event.target.parentElement.style.display = 'none';
+            event.target.parentElement.classList.add("hidden");
         });
     });
 
@@ -392,6 +392,21 @@ flatpickr('#dateSelectEnd', {
     "altFormat": i18n.dateformatTwig.date,
     "dateFormat": "Y-m-d",
     "locale": i18n.template
+});
+
+
+let dateTimePickers = document.querySelectorAll('input.datetimePicker');
+dateTimePickers.forEach(function (item, idx) {
+    flatpickr(item, {
+        "altInput": true,
+        "altFormat": i18n.dateformatTwig.datetimeShort,
+        "dateFormat": "Y-m-d H:i",
+        "locale": i18n.template,
+        "enableTime": true,
+        "time_24hr": true,
+        //"enableSeconds": true,
+        "minuteIncrement": 1
+    });
 });
 
 

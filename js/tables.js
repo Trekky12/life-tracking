@@ -700,3 +700,50 @@ var mobileFavoritesTable = new JSTable("#mobile_favorites_table", {
         }
     ]
 });
+
+var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1,2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "desc"
+        },
+        {
+            select: [3,4],
+            sortable: false,
+            searchable: false
+        }
+    ],
+    deferLoading: jsObject.datacount,
+    serverSide: true,
+    ajax: jsObject.timesheets_table,
+    ajaxParams: {
+        "from": jsObject.dateFrom,
+        "to": jsObject.dateTo
+    }
+});
+
+timesheetsSheetsTable.on("fetchData", function (data) {
+    this.table.getFooterRow().setCellContent(2, null);
+    this.table.getFooterRow().setCellContent(2, data.sum);
+});

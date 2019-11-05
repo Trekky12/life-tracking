@@ -1,5 +1,7 @@
-#finance_table tfoot th{
-    &.negative{
-        color: $color_red;
+#finance_table, #timesheets_sheets_table{
+    tfoot th{
+        &.negative{
+            color: $color_red;
+        }
     }
 }

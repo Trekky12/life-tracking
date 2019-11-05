@@ -1,0 +1,39 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2> <a href="{{  path_for('timesheets_projects_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-content">
+            <table id="timesheets_projects_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["NAME"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td><a href="{{  path_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a></td> 
+                            <td>
+                                {% if project.user == user.id %}
+                                    <a href="{{  path_for('timesheets_projects_edit', {'id' : project.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if project.user == user.id %}
+                                    <a href="#" data-url="{{  path_for('timesheets_projects_delete', {'id' : project.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

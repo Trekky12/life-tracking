@@ -29,7 +29,7 @@ class Controller extends \App\Base\Controller {
         // always show all events (hide the one not in range)
         $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time");
 
-        list($min, $max) = $this->mapper->getMinMaxDate($trip->id);
+        list($min, $max) = $this->mapper->getMinMaxEventsDate($trip->id);
 
         $dateInterval = [];
         if (!is_null($min) && !is_null($max)) {

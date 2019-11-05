@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     module_crawlers int(1) DEFAULT 0,
     module_splitbills int(1) DEFAULT 0,
     module_trips int(1) DEFAULT 0,
+    module_timesheets int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
     mails_user int(1) DEFAULT 1,
     mails_finances int(1) DEFAULT 1,
@@ -30,6 +31,7 @@ INSERT INTO global_users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY
 
 /**
 ALTER TABLE global_users ADD module_crawlers INT(1) DEFAULT 0 AFTER module_boards; 
+ALTER TABLE global_users ADD module_timesheets INT(1) DEFAULT 0 AFTER module_trips; 
 */
 
 DROP TABLE IF EXISTS global_banlist;
@@ -684,4 +686,52 @@ CREATE TABLE global_users_mobile_favorites (
     icon VARCHAR(100) NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS timesheets_projects;
+CREATE TABLE timesheets_projects (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS timesheets_projects_users;
+CREATE TABLE timesheets_projects_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    project INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(project, user),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS timesheets_sheets;
+CREATE TABLE timesheets_sheets (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    project INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    start DATETIME DEFAULT NULL,
+    end DATETIME DEFAULT NULL,
+    diff INTEGER DEFAULT NULL,
+    notice TEXT DEFAULT NULL,
+    start_lat DECIMAL(17,14) DEFAULT NULL,
+    start_lng DECIMAL(17,14) DEFAULT NULL,
+    start_acc DECIMAL(10,3) DEFAULT NULL,
+    end_lat DECIMAL(17,14) DEFAULT NULL,
+    end_lng DECIMAL(17,14) DEFAULT NULL,
+    end_acc DECIMAL(10,3) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

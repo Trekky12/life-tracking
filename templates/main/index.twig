@@ -5,7 +5,7 @@
 {% block body %}
 
 
-        <div class="grid small">
+        <div class="grid content-small">
             {%if user.module_location == 1 %}
                 <div class="card">
                     <div class="card-content">
@@ -59,6 +59,14 @@
                     <div class="card-content">
                         <h3><a href="{{path_for('trips')}}">{{lang["TRIPS"]}}</a></h3>
                         <a href="{{path_for('trips')}}"><i class="fa fa-map-o" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            {% endif %}
+            {%if user.module_timesheets == 1 %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3><a href="{{path_for('timesheets_projects')}}">{{lang["TIMESHEETS"]}}</a></h3>
+                        <a href="{{path_for('timesheets_projects')}}"><i class="fa fa-clock-o" aria-hidden="true"></i></a>
                     </div>
                 </div>
             {% endif %}

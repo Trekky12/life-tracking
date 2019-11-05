@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Functional;
+namespace Tests\Functional\Home;
+
+use Tests\Functional\Base\BaseTestCase;
 
 class HomeTest extends BaseTestCase {
 
@@ -13,7 +15,7 @@ class HomeTest extends BaseTestCase {
     }
 
 
-    public function testGetHomepageAfterLogin1() {
+    public function testGetHomepageAfterLogin() {
 
         $response = $this->runApp('GET', '/');
 

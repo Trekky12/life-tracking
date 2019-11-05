@@ -243,7 +243,7 @@ abstract class Mapper {
     }
 
     public function addUsers($element, $users = array()) {
-        if ($this->hasUserTable) {
+        if ($this->hasUserTable && !empty($users)) {
             $data_array = array();
             $keys_array = array();
             foreach ($users as $idx => $user) {
@@ -358,5 +358,24 @@ abstract class Mapper {
     
     public function setUser($user_id) {
         $this->userid = $user_id;
+    }
+    
+    
+    public function getMinMaxDate($min = 'date', $max = 'date') {
+        $sql = "SELECT DATE(MIN($min)) as min, DATE(MAX($max)) as max FROM " . $this->getTable() . "";
+
+        $bindings = [];
+        $this->filterByUser($sql, $bindings);
+
+        $sql .= " LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $result = ["min" => date('Y-m-d'), "max" => date('Y-m-d')];
+        if ($stmt->rowCount() === 1){
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+        return $result;
     }
 }

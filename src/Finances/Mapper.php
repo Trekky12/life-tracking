@@ -301,24 +301,6 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-
-    public function getMinMaxDate() {
-        $sql = "SELECT MIN(date) as min, MAX(date) as max FROM " . $this->getTable() . "";
-
-        $bindings = [];
-        $this->filterByUser($sql, $bindings);
-
-        $sql .= " LIMIT 1";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
-
-        $result = ["min" => date('Y-m-d'), "max" => date('Y-m-d')];
-        if ($stmt->rowCount() === 1){
-            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-        return $result;
-    }
     
     
     /**

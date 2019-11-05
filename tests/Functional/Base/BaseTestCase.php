@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Functional;
+namespace Tests\Functional\Base;
 
 use Slim\App;
 use Slim\Http\Request;
@@ -42,20 +42,6 @@ class BaseTestCase extends TestCase {
     public static function setUpBeforeClass(): void {   
     }
 
-    protected static function getDatabase() {
-        $settings = require __DIR__ . '/../../src/settings.php';
-        $db_settings = $settings["settings"]["db"];
-        try {
-            $pdo = new \PDO("mysql:host=" . $db_settings['host'] . ";dbname=" . $db_settings['dbname'], $db_settings['user'], $db_settings['pass']);
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-            $pdo->exec("set names utf8");
-            return $pdo;
-        } catch (\PDOException $e) {
-            die("No access to database");
-        }
-    }
-
     /**
      * Process the application given a request method and URI
      *
@@ -92,17 +78,17 @@ class BaseTestCase extends TestCase {
         // Set up a response object
         $response = new Response();
         // Use the application settings
-        $settings = require __DIR__ . '/../../src/settings.php';
+        $settings = $this->getSettings();
         // Instantiate the application
         $app = new App($settings);
         // Set up dependencies
-        require __DIR__ . '/../../src/dependencies.php';
+        require __DIR__ . '/../../../src/dependencies.php';
         // Register middleware
         if ($this->withMiddleware) {
-            require __DIR__ . '/../../src/middleware.php';
+            require __DIR__ . '/../../../src/middleware.php';
         }
         // Register routes
-        require __DIR__ . '/../../src/routes.php';
+        require __DIR__ . '/../../../src/routes.php';
         // Process the application
         $response = $app->process($request, $response);
 
@@ -116,8 +102,17 @@ class BaseTestCase extends TestCase {
         // Return the response
         return $response;
     }
+    
+    protected function getSettings(){
+        return require __DIR__ . '/../../../src/settings.php';
+    }
+    
+    protected function getAppSettings(){        
+        $settings = $this->getSettings();
+        return $settings['settings']['app'];
+    }
 
-    protected function extractCSRF($response) {
+    protected function extractFormCSRF($response) {
         /**
           <input type="hidden" name="csrf_name" value="csrf5c94b1958ed33">
           <input type="hidden" name="csrf_value" value="1a083321a891731ed2747360f572c934">
@@ -125,6 +120,31 @@ class BaseTestCase extends TestCase {
         $matches = [];
         $body = (string) $response->getBody();
         $re = '/<input type="hidden" name="csrf_name" value="(?<csrf_name>.*)?">(\s)*<input type="hidden" name="csrf_value" value="(?<csrf_value>.*)?">/m';
+        preg_match($re, $body, $matches);
+
+        $csrf_name = $matches["csrf_name"];
+        $csrf_value = $matches["csrf_value"];
+
+        return array("csrf_name" => $csrf_name, "csrf_value" => $csrf_value);
+    }
+    
+    protected function extractJSCSRF($response) {
+        /**
+        <script type='text/javascript' >
+            var allowedReload = false;
+            var jsObject = {
+                ...
+                'csrf_name': 'csrf5db7eed4f0a02',
+                'csrf_value': 'b69fb8a0fe0fefde11cb67818147b9aa',
+                'csrf_tokens_url': '/tokens',               
+                ...
+            };
+            ...
+            </script>
+         */
+        $matches = [];
+        $body = (string) $response->getBody();
+        $re = '/\'csrf_name\': \'(?<csrf_name>[a-z0-9]*)\',\s*\'csrf_value\': \'(?<csrf_value>[a-z0-9]*)\'/s';
         preg_match($re, $body, $matches);
 
         $csrf_name = $matches["csrf_name"];
@@ -151,12 +171,21 @@ class BaseTestCase extends TestCase {
      */
     public function login($user, $password) {
         $response = $this->getLoginPage();
-        $csrf_data = $this->extractCSRF($response);
+        $csrf_data = $this->extractFormCSRF($response);
         $this->postLoginPage($csrf_data, $user, $password);
     }
 
     public function logout() {
         $this->getLogout();
+    }
+    
+    /**
+     * 
+     */
+    protected function getCSRFTokens($csrf_data){
+        $response = $this->runApp('POST', '/tokens', array_merge(array("count" => 10), $csrf_data));
+        $tokens = json_decode((string) $response->getBody(), true);
+        return $tokens;
     }
 
 }

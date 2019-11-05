@@ -31,6 +31,9 @@
         {% if user.module_trips == 1 %}
             <a href="{{ path_for('trips') }}" {% if active == 'trips' %}class="active"{% endif %}><i class="fa fa-map-o"></i></a>
         {% endif %}
+        {% if user.module_timesheets == 1 %}
+            <a href="{{ path_for('timesheets_projects') }}" {% if active == 'timeesheets' %}class="active"{% endif %}><i class="fa fa-clock-o"></i></a>
+        {% endif %}
     {% endif %}
     <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %}" data-badge="0" id="iconBell"><i class="fa fa-bell-o"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
@@ -100,6 +103,11 @@
         {% if user.module_trips == 1 %}
             <li {% if active == 'trips' %}class="active"{% endif %}>
                 <a href="{{ path_for('trips') }}">{{lang["TRIPS"]}}</a>
+            </li> 
+        {% endif %}
+        {% if user.module_timesheets == 1 %}
+            <li {% if active == 'timesheets' %}class="active"{% endif %}>
+                <a href="{{ path_for('timesheets_projects') }}">{{lang["TIMESHEETS"]}}</a>
             </li> 
         {% endif %}
         {% if user.isAdmin() %}

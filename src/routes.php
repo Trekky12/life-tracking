@@ -307,3 +307,29 @@ $app->group('/trips', function() {
         });
     });
 });
+
+$app->group('/timesheets', function() {
+
+    $this->get('/', function (Request $request, Response $response) {
+        return $response->withRedirect($this->get('router')->pathFor('timesheets_projects'), 302);
+    });
+
+    $this->group('/projects', function() {
+        $this->get('/', '\App\Timesheets\Project\Controller:index')->setName('timesheets_projects');
+        $this->get('/edit/[{id:[0-9]+}]', '\App\Timesheets\Project\Controller:edit')->setName('timesheets_projects_edit');
+        $this->post('/save/[{id:[0-9]+}]', '\App\Timesheets\Project\Controller:save')->setName('timesheets_projects_save');
+        $this->delete('/delete/{id}', '\App\Timesheets\Project\Controller:delete')->setName('timesheets_projects_delete');
+    });
+    
+    $this->group('/{project}', function() {
+
+        $this->get('/view/', '\App\Timesheets\Sheet\Controller:index')->setName('timesheets_sheets');
+        $this->get('/table/', '\App\Timesheets\Sheet\Controller:table')->setName('timesheets_sheets_table');
+        
+        $this->group('/sheets', function() {
+            $this->get('/edit/[{id:[0-9]+}]', '\App\Timesheets\Sheet\Controller:edit')->setName('timesheets_sheets_edit');
+            $this->post('/save/[{id:[0-9]+}]', '\App\Timesheets\Sheet\Controller:save')->setName('timesheets_sheets_save');
+            $this->delete('/delete/{id}', '\App\Timesheets\Sheet\Controller:delete')->setName('timesheets_sheets_delete');
+        });
+    });
+});

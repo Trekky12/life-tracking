@@ -412,4 +412,7 @@ $lang["CURRENT_DAY"] = "current day";
 $lang["CURRENT_MONTH"] = "current month";
 $lang["CURRENT_YEAR"] = "current year";
 
+$lang["TIMESHEETS"] = "timesheets";
+$lang["TIMESHEETS_PROJECTS"] = "timesheet projects";
+
 return $lang;

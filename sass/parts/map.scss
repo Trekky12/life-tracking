@@ -49,10 +49,10 @@
     z-index:0;
 }
 
-#update-location{
+.update-location{
     margin-right: 5px;
 }
-#update-location, #delete-location{
+.update-location, .delete-location{
     margin-top:1rem;
     margin-bottom:2rem;  
     @include font-size(1.2);

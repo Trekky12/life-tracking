@@ -7,9 +7,14 @@
 
     margin-right: -.5rem;
     margin-left: -.5rem;
-    
-    &.small{
+
+    &.content-small{
         max-width: $size_content-width-small;
+        margin: 0 auto;
+    }
+
+    &.content-xsmall{
+        max-width: $size_content-width-xsmall;
         margin: 0 auto;
     }
 
@@ -26,6 +31,8 @@
     padding-left: .5rem;
     padding-bottom: 1rem;
     flex-basis: (100%/ 2);
+
+    justify-content: center;
 
     @media screen and (min-width: $size_tablet) {
         flex-basis: (100%/ 4);
@@ -74,6 +81,13 @@
                 @include font-size(10);
             }
         }
+    }
+
+    &.negative h3{
+        background-color: $color_red;
+    }
+    &.positive h3{
+        background-color: $color_green;
     }
 }
 

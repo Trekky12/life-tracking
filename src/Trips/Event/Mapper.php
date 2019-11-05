@@ -35,7 +35,7 @@ class Mapper extends \App\Base\Mapper {
         return $results;
     }
     
-    public function getMinMaxDate($id) {
+    public function getMinMaxEventsDate($id) {
         $sql = "SELECT MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
                 . " FROM " . $this->getTable() . ""
                 . " WHERE trip = :id ";
@@ -58,7 +58,7 @@ class Mapper extends \App\Base\Mapper {
         return array($min, $max);
     }
     
-    public function getMinMaxDates() {
+    public function getMinMaxEventsDates() {
         $bindings = [];
         $sql = "SELECT trip, MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
                 . " FROM " . $this->getTable() . ""

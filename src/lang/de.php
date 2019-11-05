@@ -411,4 +411,7 @@ $lang["CURRENT_DAY"] = "aktueller Tag";
 $lang["CURRENT_MONTH"] = "aktueller Monat";
 $lang["CURRENT_YEAR"] = "aktuelles Jahr";
 
+$lang["TIMESHEETS"] = "Zeiterfassung";
+$lang["TIMESHEETS_PROJECTS"] = "Zeiterfassungsprojekte";
+
 return $lang;

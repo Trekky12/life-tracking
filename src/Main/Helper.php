@@ -314,5 +314,14 @@ class Helper {
         $dateObj = $d = new \DateTime($date);
         return $fmt->format($dateObj);
     }
+    
+    public function splitDateInterval($total_seconds) {
+        $total_minutes = $total_seconds / 60;
+        $hours = intval($total_minutes / 60);
+        $minutes = intval($total_minutes - $hours * 60);
+        $seconds = intval($total_seconds - $total_minutes * 60);
+
+        return !is_null($total_seconds) ? sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds) : '';
+    }
 
 }

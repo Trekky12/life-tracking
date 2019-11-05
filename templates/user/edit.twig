@@ -94,6 +94,12 @@
                         {{lang["TRIPS"]}}
                     </label>
                 </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxTimesheetsModule">
+                        <input name="module_timesheets" type="checkbox" value="1" id="checkboxTimesheetsModule" {% if entry is null or entry.module_timesheets == 1 %}checked{% endif %}>
+                        {{lang["TIMESHEETS"]}}
+                    </label>
+                </div>
                 
                 <h3>{{lang["OTHER_SETTINGS"]}}</h3>
                 <div class="form-group">

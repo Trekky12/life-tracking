@@ -30,7 +30,8 @@ class ModuleMiddleware {
                     !$this->startsWith($route, '/boards') &&
                     !$this->startsWith($route, '/crawlers') &&
                     !$this->startsWith($route, '/splitbills') &&
-                    !$this->startsWith($route, '/trips')
+                    !$this->startsWith($route, '/trips') &&
+                    !$this->startsWith($route, '/timesheets')
                 ){
                 return $next($request, $response);
             }
@@ -43,7 +44,8 @@ class ModuleMiddleware {
                     $this->startsWith($route, '/boards') && $user->module_boards == 1 ||
                     $this->startsWith($route, '/crawlers') && $user->module_crawlers == 1 ||
                     $this->startsWith($route, '/splitbills') && $user->module_splitbills == 1 ||
-                    $this->startsWith($route, '/trips') && $user->module_trips == 1
+                    $this->startsWith($route, '/trips') && $user->module_trips == 1 || 
+                    $this->startsWith($route, '/timesheets') && $user->module_timesheets == 1
                     )) {
                 return $next($request, $response);
             }

@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Functional;
+namespace Tests\Functional\Login;
+
+use Tests\Functional\Base\BaseTestCase;
 
 class LoginTest extends BaseTestCase {
 
@@ -30,7 +32,7 @@ class LoginTest extends BaseTestCase {
 
         $this->assertEquals(200, $response->getStatusCode());
         
-        return $this->extractCSRF($response);
+        return $this->extractFormCSRF($response);
     }
 
     /**
