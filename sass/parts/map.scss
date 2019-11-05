@@ -54,10 +54,13 @@
 }
 .update-location, .delete-location{
     margin-top:1rem;
-    margin-bottom:2rem;  
     @include font-size(1.2);
     padding: 1rem 0.5rem;
     line-height:1;
+    
+    @media screen and (min-width: $size_mobile_navigation){
+        margin-bottom:2rem;  
+    }
 }
 
 
