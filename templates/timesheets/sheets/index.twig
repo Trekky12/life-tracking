@@ -40,8 +40,9 @@
             <table id="timesheets_sheets_table" class="table table-hover small">
                 <thead>
                     <tr>
-                        <th>{{lang["START"]}}</th>
-                        <th>{{lang["END"]}}</th>
+                        <th>{{lang["DATE"]}}</th>
+                        <th>{{lang["TIMESHEETS_COME"]}}</th>
+                        <th>{{lang["TIMESHEETS_LEAVE"]}}</th>
                         <th>{{lang["DIFFERENCE"]}}</th>
                         <th></th>
                         <th></th>
@@ -53,13 +54,15 @@
                             <td>{{ sheet[0] }}</td>
                             <td>{{ sheet[1] }}</td>
                             <td>{{ sheet[2] }}</td>
-                            <td>{{ sheet[3]|raw }}</td>
+                            <td>{{ sheet[3] }}</td>
                             <td>{{ sheet[4]|raw }}</td>
+                            <td>{{ sheet[5]|raw }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th>{{ sum  }}</th>

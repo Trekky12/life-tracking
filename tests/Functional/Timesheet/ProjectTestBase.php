@@ -28,14 +28,24 @@ class ProjectTestBase extends BaseTestCase {
         $language = $this->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt->setPattern($dateFormatPHP['datetimeShort']);
+        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate->setPattern($dateFormatPHP['date']);
+
+        $fmtDateTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDateTime->setPattern($dateFormatPHP['datetimeShort']);
+
+        $fmtTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtTime->setPattern($dateFormatPHP['time']);
 
         $start = new \DateTime($data["start"]);
         $end = new \DateTime($data["end"]);
 
+        $dateTD = !is_null($data["start"]) ? $fmtDate->format($start) : !is_null($data["end"]) ? $fmtDate->format($end) : "";
+        $startTD = !is_null($data["start"]) ? $fmtTime->format($start) : "";
+        $endTD = !is_null($data["end"]) ? $fmtTime->format($end) : "";
+
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($fmt->format($start)) . '<\/td>\s*<td>' . preg_quote($fmt->format($end)) . '<\/td>\s*<td>' . preg_quote($data["diff"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURISheetsEdit($hash)) . '(?<id_edit>.*)"><span class="fa fa-pencil-square-o fa-lg"><\/span><\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURISheetsDelete($hash)) . '(?<id_delete>.*)" class="btn-delete"><span class="fa fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($dateTD) . '<\/td>\s*<td>' . preg_quote($startTD) . '<\/td>\s*<td>' . preg_quote($endTD) . '<\/td>\s*<td>' . preg_quote($data["diff"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURISheetsEdit($hash)) . '(?<id_edit>.*)"><span class="fa fa-pencil-square-o fa-lg"><\/span><\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURISheetsDelete($hash)) . '(?<id_delete>.*)" class="btn-delete"><span class="fa fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

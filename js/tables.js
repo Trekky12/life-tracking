@@ -729,7 +729,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
             sort: "desc"
         },
         {
-            select: [3,4],
+            select: [4,5],
             sortable: false,
             searchable: false
         }

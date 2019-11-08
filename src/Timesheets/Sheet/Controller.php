@@ -30,7 +30,7 @@ class Controller extends \App\Base\Controller {
         $queryData = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($queryData, $defaultFrom);
 
-        $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'DESC', 10);
+        $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'DESC', 20);
         $rendered_data = $this->renderTableRows($project, $data);
         $datacount = $this->mapper->tableCount($project->id, $from, $to);
 
@@ -176,9 +176,13 @@ class Controller extends \App\Base\Controller {
 
         $rendered_data = [];
         foreach ($sheets as $sheet) {
+            
+            list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
+            
             $row = [];
-            $row[] = !is_null($sheet->start) ? $fmt->format($sheet->getStartDateTime()) : '';
-            $row[] = !is_null($sheet->end) ? $fmt->format($sheet->getEndDateTime()) : '';
+            $row[] = $date;
+            $row[] = $start;
+            $row[] = $end;
             $row[] = $this->ci->get('helper')->splitDateInterval($sheet->diff);
 
             $row[] = '<a href="' . $this->ci->get('router')->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->hash]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';

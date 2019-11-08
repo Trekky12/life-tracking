@@ -52,4 +52,37 @@ class Sheet extends \App\Base\Model {
         return !is_null($this->start) && !is_null($this->end) ? $end->getTimestamp() - $start->getTimestamp() : null;
     }
 
+    public function getDateStartEnd($language, $dateFormat, $datetimeShortFormat, $timeFormat) {
+
+        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate->setPattern($dateFormat);
+
+        $fmtDateTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDateTime->setPattern($datetimeShortFormat);
+
+        $fmtTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtTime->setPattern($timeFormat);
+
+        $date = '';
+        $start = '';
+        $end = '';
+
+        // only show time on end date when start date and end date are on the same day
+        if (!is_null($this->start) && !is_null($this->end) && $this->getStartDateTime()->format('Y-m-d') == $this->getEndDateTime()->format('Y-m-d')) {
+            $end = $fmtTime->format($this->getEndDateTime());
+        } else {
+            $end = $fmtDateTime->format($this->getEndDateTime());
+        }
+
+        if (!is_null($this->start)) {
+            $date = $fmtDate->format($this->getStartDateTime());
+            $start = $fmtTime->format($this->getStartDateTime());
+        } elseif (!is_null($this->end)) {
+            $date = $fmtDate->format($this->getEndDateTime());
+            $end = $fmtTime->format($this->getEndDateTime());
+        }
+
+        return array($date, $start, $end);
+    }
+
 }

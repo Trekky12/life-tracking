@@ -93,10 +93,16 @@ class Mapper extends \App\Base\Mapper {
         $sort = "id";
         switch ($sortColumn) {
             case 0:
-                $sort = "start";
+                $sort = "IFNULL(DATE(start),DATE(end))";
                 break;
             case 1:
+                $sort = "start";
+                break;
+            case 2:
                 $sort = "end";
+                break;
+            case 3:
+                $sort = "diff";
                 break;
         }
 
