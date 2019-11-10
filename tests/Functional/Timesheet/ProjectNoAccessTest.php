@@ -153,8 +153,7 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
         $this->logout();
     }
-    
-    
+
     /**
      * Timesheets
      */
@@ -186,11 +185,11 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
         $data = ["start" => date('Y-m-d') . " 12:00", "end" => date('Y-m-d') . " 14:10", "notice" => "Test", "project" => $result["id"]];
         $response = $this->runApp('POST', $this->getURISheetsSave($result["hash"]), array_merge($data, $result["csrf"][2]));
-        
+
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-        
+
         $this->logout();
     }
 
@@ -199,9 +198,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
      * @depends testProjectCreationUser1
      */
     public function testDeleteSheet(array $result_data_project) {
-        
+
         $this->login("user", "user");
-        
+
         // assume there is a sheet with ID 1 
         $data_sheet_id = 1;
 
@@ -213,7 +212,22 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
         $this->logout();
     }
-    
+
+    /**
+     * Test Exporting 
+     * @depends testProjectCreationUser1
+     */
+    public function testTimesheetsSheetsExport(array $result_data_project) {
+        $this->login("user", "user");
+
+        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_project["hash"]));
+
+         $body = (string) $response->getBody();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+
+        $this->logout();
+    }
 
     /**
      * clean

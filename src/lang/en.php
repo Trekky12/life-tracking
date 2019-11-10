@@ -418,5 +418,6 @@ $lang["TIMESHEETS_OVERVIEW"] = "Overview";
 $lang["TIMESHEETS_FAST"] = "Come/Leave";
 $lang["TIMESHEETS_COME"] = "Come";
 $lang["TIMESHEETS_LEAVE"] = "Leave";
+$lang["TIMESHEETS_EXPORT"] = "Export";
 
 return $lang;

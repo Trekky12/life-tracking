@@ -337,5 +337,7 @@ $app->group('/timesheets', function() {
             $this->post('/checkin', '\App\Timesheets\Sheet\Controller:fastCheckIn')->setName('timesheets_fast_checkin');
             $this->post('/checkout', '\App\Timesheets\Sheet\Controller:fastCheckOut')->setName('timesheets_fast_checkout');
         });
+        
+        $this->get('/export', '\App\Timesheets\Sheet\Controller:export')->setName('timesheets_export');
     });
 });

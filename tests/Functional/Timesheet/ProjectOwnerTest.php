@@ -158,7 +158,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testGetAddSheet
      */
     public function testPostAddSheet(array $result, array $csrf_data) {
-        $data = ["start" => date('Y-m-d')." 12:00", "end" => date('Y-m-d')." 14:10", "notice" => "Test", "project" => $result["id"]];
+        $data = ["start" => date('Y-m-d') . " 12:00", "end" => date('Y-m-d') . " 14:10", "notice" => "Test", "project" => $result["id"]];
         $response = $this->runApp('POST', $this->getURISheetsSave($result["hash"]), array_merge($data, $csrf_data));
 
         $this->assertEquals(301, $response->getStatusCode());
@@ -233,7 +233,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testGetSheetEdit
      */
     public function testPostSheetEdit(array $result_data_project, array $result_data_sheet) {
-        $data = ["id" => $result_data_sheet["id"], "project" => $result_data_project["id"], "start" => date('Y-m-d')." 10:02", "end" => date('Y-m-d')." 18:55", "notice" => "Testnotice"];
+        $data = ["id" => $result_data_sheet["id"], "project" => $result_data_project["id"], "start" => date('Y-m-d') . " 10:02", "end" => date('Y-m-d') . " 18:55", "notice" => "Testnotice"];
         $response = $this->runApp('POST', $this->getURISheetsSave($result_data_project["hash"]) . $result_data_sheet["id"], array_merge($data, $result_data_sheet["csrf"]));
 
         $this->assertEquals(301, $response->getStatusCode());
@@ -286,6 +286,20 @@ class ProjectOwnerTest extends ProjectTestBase {
     }
 
     /**
+     * Test Exporting 
+     * @depends testGetCreatedTimesheetsProjects
+     */
+    public function testTimesheetsSheetsExport(array $result_data_project) {
+        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_project["hash"]));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $response->getHeaderLine("Content-Type"));
+        $this->assertEquals("attachment; filename=\"" . date('Y-m-d') . "_Export.xlsx\"", $response->getHeaderLine("Content-Disposition"));
+        $this->assertEquals("max-age=0", $response->getHeaderLine("Cache-Control"));
+    }
+
+    /**
      * Delete / clean
      * @depends testGetCreatedTimesheetsProjects
      */
@@ -326,7 +340,7 @@ class ProjectOwnerTest extends ProjectTestBase {
         $csrf3 = $this->extractFormCSRF($response4);
 
         // Add Sheet
-        $data2 = ["start" => date('Y-m-d')." 10:00", "end" => date('Y-m-d')." 11:00", "notice" => "Test", "project" => $project_id];
+        $data2 = ["start" => date('Y-m-d') . " 10:00", "end" => date('Y-m-d') . " 11:00", "notice" => "Test", "project" => $project_id];
         $response5 = $this->runApp('POST', $this->getURISheetsSave($project_hash), array_merge($data2, $csrf3));
         $this->assertEquals(301, $response5->getStatusCode());
         $this->assertEquals($this->getURIView($project_hash), $response5->getHeaderLine("Location"));

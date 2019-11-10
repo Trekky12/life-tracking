@@ -282,4 +282,123 @@ class Controller extends \App\Base\Controller {
         return $response->withJSON($result);
     }
 
+    /**
+     * 
+     */
+    public function export(Request $request, Response $response) {
+        $hash = $request->getAttribute('project');
+        $project = $this->project_mapper->getFromHash($hash);
+
+        $this->checkAccess($project->id);
+
+        // Date Filter
+        $queryData = $request->getQueryParams();
+        list($from, $to) = $this->ci->get('helper')->getDateRange($queryData);
+
+        // get Data
+        $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'ASC', null);
+        $rendered_data = $this->renderTableRows($project, $data);
+        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
+
+        $language = $this->ci->get('settings')['app']['i18n']['php'];
+        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate->setPattern($dateFormatPHP["date"]);
+
+        $fromDate = new \DateTime($from);
+        $toDate = new \DateTime($to);
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle($fmtDate->format($fromDate) . " " . $this->ci->get('helper')->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
+
+        // Project Name
+        $sheet->setCellValue('A1', $project->name);
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(18);
+        $sheet->mergeCells("A1:F1");
+
+        // Range
+        $sheet->setCellValue('A2', $fmtDate->format($fromDate) . " " . $this->ci->get('helper')->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
+        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(14);
+        $sheet->mergeCells("A2:F2");
+
+        // Table Header
+        $sheet->setCellValue('A4', $this->ci->get('helper')->getTranslatedString("DATE"));
+        $sheet->setCellValue('B4', $this->ci->get('helper')->getTranslatedString("TIMESHEETS_COME"));
+        $sheet->setCellValue('C4', $this->ci->get('helper')->getTranslatedString("TIMESHEETS_LEAVE"));
+        $sheet->setCellValue('D4', $this->ci->get('helper')->getTranslatedString("DIFFERENCE"));
+        $sheet->getStyle('A4:D4')->applyFromArray(
+                ['borders' => [
+                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                    ],
+                ]
+        );
+        $sheet->getStyle('A4:D4')->getFont()->setBold(true);
+
+        // Table Data
+        $offset = 4;
+        $idx = 0;
+        foreach ($data as $timesheet) {
+
+            list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
+            $diff = $this->ci->get('helper')->splitDateInterval($timesheet->diff);
+
+            $sheet->setCellValue('A' . ($idx + 1 + $offset), $date);
+            $sheet->setCellValue('B' . ($idx + 1 + $offset), $start);
+            $sheet->setCellValue('C' . ($idx + 1 + $offset), $end);
+            $sheet->setCellValue('D' . ($idx + 1 + $offset), $diff);
+
+            $idx++;
+        }
+
+        // Table Footer
+        $sumRow = ($idx + 1 + $offset);
+        $sheet->setCellValue('D' . $sumRow, $this->ci->get('helper')->splitDateInterval($totalSeconds));
+
+        $sheet->getStyle('A' . $sumRow . ':D' . $sumRow)->applyFromArray(
+                ['borders' => [
+                        'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
+                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                    ],
+                ]
+        );
+
+        // auto width
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        /**
+         * PSR-7 not supported
+         * @see https://github.com/PHPOffice/PhpSpreadsheet/issues/28
+         * so a temporary file in a specific directory is generated and later deleted 
+         */
+        $path = __DIR__ . '/../../../files/';
+        $excelFileName = tempnam($path, 'phpxltmp');
+        $writer->save($excelFileName);
+
+
+        /**
+         * We should use a Stream Object but then deleting is not possible, so instead use file_get_contents
+         * @see https://gist.github.com/odan/a7a1eb3c876c9c5b2ffd2db55f29fdb8
+         * @see https://odan.github.io/2017/12/16/creating-and-downloading-excel-files-with-slim.html
+         * @see https://stackoverflow.com/a/51675156
+         */
+        /*
+         * $stream = fopen($excelFileName, 'r+');
+         * $response->withBody(new \Slim\Http\Stream($stream))->...
+         */
+        $body = file_get_contents($excelFileName);
+        unlink($excelFileName);
+
+        return $response->write($body)
+                        ->withHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                        ->withHeader('Content-Disposition', 'attachment; filename="' . date('Y-m-d') . '_Export.xlsx"')
+                        ->withHeader('Cache-Control', 'max-age=0');
+    }
+
 }

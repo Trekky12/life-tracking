@@ -417,5 +417,6 @@ $lang["TIMESHEETS_OVERVIEW"] = "Übersicht";
 $lang["TIMESHEETS_FAST"] = "Kommen/Gehen";
 $lang["TIMESHEETS_COME"] = "Kommen";
 $lang["TIMESHEETS_LEAVE"] = "Gehen";
+$lang["TIMESHEETS_EXPORT"] = "Export";
 
 return $lang;

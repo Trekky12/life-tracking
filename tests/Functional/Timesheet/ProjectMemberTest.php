@@ -323,6 +323,24 @@ class ProjectMemberTest extends ProjectTestBase {
     }
 
     /**
+     * Test Exporting 
+     * @depends testProjectCreationUser1
+     */
+    public function testTimesheetsSheetsExport(array $result_data_project) {
+        $this->login("user", "user");
+        
+        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_project["hash"]));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $response->getHeaderLine("Content-Type"));
+        $this->assertEquals("attachment; filename=\"" . date('Y-m-d') . "_Export.xlsx\"", $response->getHeaderLine("Content-Disposition"));
+        $this->assertEquals("max-age=0", $response->getHeaderLine("Cache-Control"));
+        
+        $this->logout();
+    }
+
+    /**
      * clean
      * @depends testProjectCreationUser1
      */

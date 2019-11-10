@@ -12,3 +12,6 @@ composer.phar
 koala-config.json
 
 public/test*
+
+/files/*
+!/files/.gitkeep 

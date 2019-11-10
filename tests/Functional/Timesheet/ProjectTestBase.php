@@ -17,6 +17,7 @@ class ProjectTestBase extends BaseTestCase {
     private $uri_sheets_fast = "/timesheets/HASH/fast/";
     private $uri_sheets_fast_checkin = "/timesheets/HASH/fast/checkin";
     private $uri_sheets_fast_checkout = "/timesheets/HASH/fast/checkout";
+    private $uri_sheets_export = "/timesheets/HASH/export";
 
     protected function getTableRowProjects($body, $name) {
         $matches = [];
@@ -80,6 +81,10 @@ class ProjectTestBase extends BaseTestCase {
 
     protected function getURISheetsFastCheckout($hash) {
         return str_replace("HASH", $hash, $this->uri_sheets_fast_checkout);
+    }
+
+    protected function getURISheetsExport($hash) {
+        return str_replace("HASH", $hash, $this->uri_sheets_export);
     }
 
 }
