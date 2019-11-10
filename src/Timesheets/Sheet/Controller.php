@@ -176,9 +176,9 @@ class Controller extends \App\Base\Controller {
 
         $rendered_data = [];
         foreach ($sheets as $sheet) {
-            
+
             list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
-            
+
             $row = [];
             $row[] = $date;
             $row[] = $start;
@@ -192,6 +192,94 @@ class Controller extends \App\Base\Controller {
         }
 
         return $rendered_data;
+    }
+
+    public function showfastCheckInCheckOut(Request $request, Response $response) {
+        $hash = $request->getAttribute('project');
+        $project = $this->project_mapper->getFromHash($hash);
+
+        $this->checkAccess($project->id);
+
+        // get a existing entry for today with start but without end
+        $entry = $this->mapper->getLastSheetWithStartDateToday($project->id);
+
+        return $this->ci->view->render($response, 'timesheets/sheets/fast.twig', [
+                    "project" => $project,
+                    "entry" => $entry
+        ]);
+    }
+
+    public function fastCheckIn(Request $request, Response $response) {
+        $result = array("status" => "success", "data" => 0);
+        try {
+            $hash = $request->getAttribute('project');
+            $project = $this->project_mapper->getFromHash($hash);
+
+            $this->checkAccess($project->id);
+
+            $data = $request->getParsedBody();
+
+            // always create new entry with current timestamp
+            $data["start"] = date('Y-m-d H:i');
+            $data["project"] = $project->id;
+            $data["user"] = $this->ci->get('helper')->getUser()->id;
+
+            $this->insertOrUpdate(null, $data, $request);
+
+            // get a existing entry for today with start but without end
+            $entry = $this->mapper->getLastSheetWithStartDateToday($project->id);
+            $result["data"] = !is_null($entry) ? 1 : 0;
+        } catch (\Exception $e) {
+            $result["status"] = "error";
+            $result["message"] = $e->getMessage();
+        }
+
+        $this->ci->get('flash')->clearMessages();
+
+        return $response->withJSON($result);
+    }
+
+    public function fastCheckOut(Request $request, Response $response) {
+
+        $result = array("status" => "success", "data" => 0);
+        try {
+            $hash = $request->getAttribute('project');
+            $project = $this->project_mapper->getFromHash($hash);
+
+            $this->checkAccess($project->id);
+
+            $data = $request->getParsedBody();
+
+            // get a existing entry for today with start but without end
+            $entry = $this->mapper->getLastSheetWithStartDateToday($project->id);
+            if (!is_null($entry)) {
+                $entry->end = date('Y-m-d H:i');
+
+                // parse values from post data
+                $dataModell = new $this->model($data);
+                $entry->end_lat = $dataModell->end_lat;
+                $entry->end_lng = $dataModell->end_lng;
+                $entry->end_acc = $dataModell->end_acc;
+
+                $this->insertOrUpdate($entry->id, $entry->get_fields(), $request);
+            } else {
+                // otherwise create new entry
+                $data["end"] = date('Y-m-d H:i');
+                $data["project"] = $project->id;
+                $data["user"] = $this->ci->get('helper')->getUser()->id;
+
+                $this->insertOrUpdate(null, $data, $request);
+            }
+
+            $result["data"] = !is_null($entry) ? 1 : 0;
+        } catch (\Exception $e) {
+            $result["status"] = "error";
+            $result["message"] = $e->getMessage();
+        }
+
+        $this->ci->get('flash')->clearMessages();
+
+        return $response->withJSON($result);
     }
 
 }

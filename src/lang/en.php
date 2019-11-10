@@ -414,5 +414,9 @@ $lang["CURRENT_YEAR"] = "current year";
 
 $lang["TIMESHEETS"] = "timesheets";
 $lang["TIMESHEETS_PROJECTS"] = "timesheet projects";
+$lang["TIMESHEETS_OVERVIEW"] = "Overview";
+$lang["TIMESHEETS_FAST"] = "Come/Leave";
+$lang["TIMESHEETS_COME"] = "Come";
+$lang["TIMESHEETS_LEAVE"] = "Leave";
 
 return $lang;

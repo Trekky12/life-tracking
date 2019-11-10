@@ -331,5 +331,11 @@ $app->group('/timesheets', function() {
             $this->post('/save/[{id:[0-9]+}]', '\App\Timesheets\Sheet\Controller:save')->setName('timesheets_sheets_save');
             $this->delete('/delete/{id}', '\App\Timesheets\Sheet\Controller:delete')->setName('timesheets_sheets_delete');
         });
+        
+        $this->group('/fast', function() {
+            $this->get('/', '\App\Timesheets\Sheet\Controller:showfastCheckInCheckOut')->setName('timesheets_fast');
+            $this->post('/checkin', '\App\Timesheets\Sheet\Controller:fastCheckIn')->setName('timesheets_fast_checkin');
+            $this->post('/checkout', '\App\Timesheets\Sheet\Controller:fastCheckOut')->setName('timesheets_fast_checkout');
+        });
     });
 });

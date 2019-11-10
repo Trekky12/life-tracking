@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block javascript %}
+    <script src="{{base_url()}}/static/js/geolocation.js?ver=20191104"></script>
+    <script src="{{base_url()}}/static/js/timesheets.js?ver=20191104"></script>
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
+            <div class="buttons">
+                <a href="{{  path_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["TIMESHEETS_OVERVIEW"]}}</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid content-xsmall">
+        <div class="card positive {% if entry is not null %}inactive{% endif %}">
+            <div class="card-content">
+                <h3><a href="#" class="timesheet-fast-come-btn" data-url="{{path_for('timesheets_fast_checkin', {'project' : project.hash})}}">{{lang["TIMESHEETS_COME"]}}</a></h3>
+                <a href="#" class="timesheet-fast-come-btn" data-url="{{path_for('timesheets_fast_checkin', {'project' : project.hash})}}"><i class="fa fa-sign-in" aria-hidden="true"></i></a>
+            </div>
+        </div>      
+        <div class="card negative {% if entry is null %}inactive{% endif %}">
+            <div class="card-content">
+                <h3><a href="#" class="timesheet-fast-leave-btn" data-url="{{path_for('timesheets_fast_checkout', {'project' : project.hash})}}">{{lang["TIMESHEETS_LEAVE"]}}</a></h3>
+                <a href="#" class="timesheet-fast-leave-btn" data-url="{{path_for('timesheets_fast_checkout', {'project' : project.hash})}}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+            </div>
+        </div>          
+    </div>
+
+    <div class="mapWrapper">
+        <input type="hidden" id="geoLat" class="geo-lat" name="lat" value="">
+        <input type="hidden" id="geoLng" class="geo-lng" name="lng" value="">
+        <input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="">
+    </div>
+
+    <div id="alertError" class="alert danger hidden">
+        <span class="closebtn" >&times;</span>
+        <span class="alert-message">
+            <p>{{ lang["ENTRY_ERROR"] }}</p>
+            <p id="alertErrorDetail"></p>
+        </span>
+    </div>
+    <div id="alertSuccess" class="alert success hidden">
+        <span class="closebtn" >&times;</span>
+        <span class="alert-message">
+            <p>{{ lang["ENTRY_SUCCESS_ADD"] }}</p>
+        </span>
+    </div>
+
+{% endblock %}        

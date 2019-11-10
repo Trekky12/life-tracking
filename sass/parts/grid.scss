@@ -89,6 +89,9 @@
     &.positive h3{
         background-color: $color_green;
     }
+    &.inactive h3{
+        background-color: $color_blue_light_gray;
+    }
 }
 
 

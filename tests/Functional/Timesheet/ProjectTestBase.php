@@ -14,6 +14,9 @@ class ProjectTestBase extends BaseTestCase {
     private $uri_sheets_edit = "/timesheets/HASH/sheets/edit/";
     private $uri_sheets_save = "/timesheets/HASH/sheets/save/";
     private $uri_sheets_delete = "/timesheets/HASH/sheets/delete/";
+    private $uri_sheets_fast = "/timesheets/HASH/fast/";
+    private $uri_sheets_fast_checkin = "/timesheets/HASH/fast/checkin";
+    private $uri_sheets_fast_checkout = "/timesheets/HASH/fast/checkout";
 
     protected function getTableRowProjects($body, $name) {
         $matches = [];
@@ -65,6 +68,18 @@ class ProjectTestBase extends BaseTestCase {
 
     protected function getURISheetsDelete($hash) {
         return str_replace("HASH", $hash, $this->uri_sheets_delete);
+    }
+
+    protected function getURISheetsFast($hash) {
+        return str_replace("HASH", $hash, $this->uri_sheets_fast);
+    }
+
+    protected function getURISheetsFastCheckin($hash) {
+        return str_replace("HASH", $hash, $this->uri_sheets_fast_checkin);
+    }
+
+    protected function getURISheetsFastCheckout($hash) {
+        return str_replace("HASH", $hash, $this->uri_sheets_fast_checkout);
     }
 
 }

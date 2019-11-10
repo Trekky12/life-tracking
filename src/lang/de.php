@@ -413,5 +413,9 @@ $lang["CURRENT_YEAR"] = "aktuelles Jahr";
 
 $lang["TIMESHEETS"] = "Zeiterfassung";
 $lang["TIMESHEETS_PROJECTS"] = "Zeiterfassungsprojekte";
+$lang["TIMESHEETS_OVERVIEW"] = "Übersicht";
+$lang["TIMESHEETS_FAST"] = "Kommen/Gehen";
+$lang["TIMESHEETS_COME"] = "Kommen";
+$lang["TIMESHEETS_LEAVE"] = "Gehen";
 
 return $lang;
