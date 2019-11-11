@@ -4,15 +4,6 @@
 
 {% block body %}
 
-    {% if message is defined %}
-        <div class="alert hide-offline {{message_type}}">
-            <span class="closebtn" >&times;</span>
-            <span class="alert-message">
-                <p>{{message}}</p>
-            </span>
-        </div>
-    {% endif %}
-
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["CHANGE_PASSWORD"]}}</h2></div>
         <div class="page-content">

@@ -125,7 +125,7 @@
             </li>
         {% endif %}
         <li {% if active == 'profile' %}class="active"{% endif %}>
-            <a href="{{ path_for('notifications') }}" class="profile badge" data-badge="0"> 
+            <a href="{{ path_for('users_profile_edit') }}" class="profile badge" data-badge="0"> 
                 {% if user.get_thumbnail() != '' %}
                     <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
                 {% else %}

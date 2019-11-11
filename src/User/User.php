@@ -31,54 +31,22 @@ class User extends \App\Base\Model {
         if($this->exists('image', $data)){
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
         }
-
-        $set_module_location = $this->exists('set_module_location', $data) ? filter_var($data['set_module_location'], FILTER_SANITIZE_STRING) : 0;
-        $this->module_location = $set_module_location === 'on' ? 1 : 0;
-        $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : $this->module_location;
-
-        $set_module_finance = $this->exists('set_module_finance', $data) ? filter_var($data['set_module_finance'], FILTER_SANITIZE_STRING) : 0;
-        $this->module_finance = $set_module_finance === 'on' ? 1 : 0;
-        $this->module_finance = $this->exists('module_finance', $data) ? filter_var($data['module_finance'], FILTER_SANITIZE_NUMBER_INT) : $this->module_finance;
-
-        $set_module_cars = $this->exists('set_module_cars', $data) ? filter_var($data['set_module_cars'], FILTER_SANITIZE_STRING) : 0;
-        $this->module_cars = $set_module_cars === 'on' ? 1 : 0;
-        $this->module_cars = $this->exists('module_cars', $data) ? filter_var($data['module_cars'], FILTER_SANITIZE_NUMBER_INT) : $this->module_cars;
-
-        $set_module_boards = $this->exists('set_module_boards', $data) ? filter_var($data['set_module_boards'], FILTER_SANITIZE_STRING) : 0;
-        $this->module_boards = $set_module_boards === 'on' ? 1 : 0;
-        $this->module_boards = $this->exists('module_boards', $data) ? filter_var($data['module_boards'], FILTER_SANITIZE_NUMBER_INT) : $this->module_boards;
         
-        $set_module_crawlers = $this->exists('set_module_crawlers', $data) ? filter_var($data['set_module_crawlers'], FILTER_SANITIZE_STRING) : 0;
-        $this->module_crawlers = $set_module_crawlers === 'on' ? 1 : 0;
-        $this->module_crawlers = $this->exists('module_crawlers', $data) ? filter_var($data['module_crawlers'], FILTER_SANITIZE_NUMBER_INT) : $this->module_crawlers;
-        
-        $set_module_splitbills = $this->exists('set_module_splitbills', $data) ? filter_var($data['set_module_splitbills'], FILTER_SANITIZE_STRING) : 0;
-        $this->module_splitbills = $set_module_splitbills === 'on' ? 1 : 0;
-        $this->module_splitbills = $this->exists('module_splitbills', $data) ? filter_var($data['module_splitbills'], FILTER_SANITIZE_NUMBER_INT) : $this->module_splitbills;
-        
+        $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->module_finance = $this->exists('module_finance', $data) ? filter_var($data['module_finance'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->module_cars = $this->exists('module_cars', $data) ? filter_var($data['module_cars'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->module_boards = $this->exists('module_boards', $data) ? filter_var($data['module_boards'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->module_crawlers = $this->exists('module_crawlers', $data) ? filter_var($data['module_crawlers'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->module_splitbills = $this->exists('module_splitbills', $data) ? filter_var($data['module_splitbills'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_trips = $this->exists('module_trips', $data) ? filter_var($data['module_trips'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_timesheets = $this->exists('module_timesheets', $data) ? filter_var($data['module_timesheets'], FILTER_SANITIZE_NUMBER_INT) : 0;
         
-        $set_force_pw_change = $this->exists('set_force_pw_change', $data) ? filter_var($data['set_force_pw_change'], FILTER_SANITIZE_STRING) : 1;
-        $this->force_pw_change = $set_force_pw_change === 'on' ? 1 : 0;
-        $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : $this->force_pw_change;
+        $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : 0;
         
-        $set_mails_user = $this->exists('set_mails_user', $data) ? filter_var($data['set_mails_user'], FILTER_SANITIZE_STRING) : 1;
-        $this->mails_user = $set_mails_user === 'on' ? 1 : 0;
-        $this->mails_user = $this->exists('mails_user', $data) ? filter_var($data['mails_user'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_user;
-        
-        $set_mails_finances = $this->exists('set_mails_finances', $data) ? filter_var($data['set_mails_finances'], FILTER_SANITIZE_STRING) : 1;
-        $this->mails_finances = $set_mails_finances === 'on' ? 1 : 0;
-        $this->mails_finances = $this->exists('mails_finances', $data) ? filter_var($data['mails_finances'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_finances;
-        
-        $set_mails_board = $this->exists('set_mails_board', $data) ? filter_var($data['set_mails_board'], FILTER_SANITIZE_STRING) : 1;
-        $this->mails_board = $set_mails_board === 'on' ? 1 : 0;
-        $this->mails_board = $this->exists('mails_board', $data) ? filter_var($data['mails_board'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_board;
-        
-        $set_mails_board_reminder = $this->exists('set_mails_board_reminder', $data) ? filter_var($data['set_mails_board_reminder'], FILTER_SANITIZE_STRING) : 1;
-        $this->mails_board_reminder = $set_mails_board_reminder === 'on' ? 1 : 0;
-        $this->mails_board_reminder = $this->exists('mails_board_reminder', $data) ? filter_var($data['mails_board_reminder'], FILTER_SANITIZE_NUMBER_INT) : $this->mails_board_reminder;
-        
+        $this->mails_user = $this->exists('mails_user', $data) ? filter_var($data['mails_user'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->mails_finances = $this->exists('mails_finances', $data) ? filter_var($data['mails_finances'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->mails_board = $this->exists('mails_board', $data) ? filter_var($data['mails_board'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->mails_board_reminder = $this->exists('mails_board_reminder', $data) ? filter_var($data['mails_board_reminder'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
     }
 

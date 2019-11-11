@@ -54,37 +54,37 @@
                 <h3>{{lang["MODULES"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxLocationModule">
-                        <input name="set_module_location" type="checkbox" id="checkboxLocationModule" {% if entry is null or entry.module_location == 1 %}checked{% endif %}>
+                        <input name="module_location" type="checkbox" value="1" id="checkboxLocationModule" {% if entry is null or entry.module_location == 1 %}checked{% endif %}>
                         {{lang["MENU_LOCATION"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxFinanceModule">
-                        <input name="set_module_finance" type="checkbox" id="checkboxFinanceModule" {% if entry is null or entry.module_finance == 1 %}checked{% endif %}>
+                        <input name="module_finance" type="checkbox" value="1" id="checkboxFinanceModule" {% if entry is null or entry.module_finance == 1 %}checked{% endif %}>
                         {{lang["MENU_FINANCES"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxCarsModule">
-                        <input name="set_module_cars" type="checkbox" id="checkboxCarsModule" {% if entry is null or entry.module_cars == 1 %}checked{% endif %}>
+                        <input name="module_cars" type="checkbox" value="1" id="checkboxCarsModule" {% if entry is null or entry.module_cars == 1 %}checked{% endif %}>
                         {{lang["CARS"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxBoardsModule">
-                        <input name="set_module_boards" type="checkbox" id="checkboxBoardsModule" {% if entry is null or entry.module_boards == 1 %}checked{% endif %}>
+                        <input name="module_boards" type="checkbox" value="1" id="checkboxBoardsModule" {% if entry is null or entry.module_boards == 1 %}checked{% endif %}>
                         {{lang["BOARDS"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxCrawlersModule">
-                        <input name="set_module_crawlers" type="checkbox" id="checkboxCrawlersModule" {% if entry is null or entry.module_crawlers == 1 %}checked{% endif %}>
+                        <input name="module_crawlers" type="checkbox" value="1" id="checkboxCrawlersModule" {% if entry is null or entry.module_crawlers == 1 %}checked{% endif %}>
                         {{lang["CRAWLERS"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxSplitbillsModule">
-                        <input name="set_module_splitbills" type="checkbox" id="checkboxSplitbillsModule" {% if entry is null or entry.module_splitbills == 1 %}checked{% endif %}>
+                        <input name="module_splitbills" type="checkbox" value="1" id="checkboxSplitbillsModule" {% if entry is null or entry.module_splitbills == 1 %}checked{% endif %}>
                         {{lang["SPLITBILLS"]}}
                     </label>
                 </div>
@@ -104,32 +104,32 @@
                 <h3>{{lang["OTHER_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxForcePWChange">
-                        <input name="set_force_pw_change" type="checkbox" id="checkboxForcePWChange" {% if entry is null or entry.force_pw_change == 1 %}checked{% endif %}>
+                        <input name="force_pw_change" type="checkbox" value="1" id="checkboxForcePWChange" {% if entry is null or entry.force_pw_change == 1 %}checked{% endif %}>
                         {{lang["FORCE_PW_CHANGE"]}}
                     </label>
                 </div>
                 <h3>{{lang["MAIL_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxMailsUser">
-                        <input name="set_mails_user" type="checkbox" id="checkboxMailsUser" {% if entry is null or entry.mails_user == 1 %}checked{% endif %}>
+                        <input name="mails_user" type="checkbox" value="1" id="checkboxMailsUser" {% if entry is null or entry.mails_user == 1 %}checked{% endif %}>
                         {{lang["MAILS_USER"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxMailsFinances">
-                        <input name="set_mails_finances" type="checkbox" id="checkboxMailsFinances" {% if entry is null or entry.mails_finances == 1 %}checked{% endif %}>
+                        <input name="mails_finances" type="checkbox" value="1" id="checkboxMailsFinances" {% if entry is null or entry.mails_finances == 1 %}checked{% endif %}>
                         {{lang["MAILS_FINANCES"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxMailsBoard">
-                        <input name="set_mails_board" type="checkbox" id="checkboxMailsBoard" {% if entry is null or entry.mails_board == 1 %}checked{% endif %}>
+                        <input name="mails_board" type="checkbox" value="1" id="checkboxMailsBoard" {% if entry is null or entry.mails_board == 1 %}checked{% endif %}>
                         {{lang["MAILS_BOARD"]}}
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxMailsBoardReminder">
-                        <input name="set_mails_board_reminder" type="checkbox" id="checkboxMailsBoardReminder" {% if entry is null or entry.mails_board_reminder == 1 %}checked{% endif %}>
+                        <input name="mails_board_reminder" type="checkbox" value="1" id="checkboxMailsBoardReminder" {% if entry is null or entry.mails_board_reminder == 1 %}checked{% endif %}>
                         {{lang["MAILS_BOARD_REMINDER"]}}
                     </label>
                 </div>

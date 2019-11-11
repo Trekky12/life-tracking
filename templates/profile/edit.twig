@@ -1,0 +1,123 @@
+{% extends "base.twig" %}
+
+{% set active = 'profile' %}
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["PROFILE"]}}</h2></div>
+        <div class="page-content">
+
+            <form action="{{  path_for('users_profile_edit') }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" value="{{user.name}}">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputLastName">{{lang["LASTNAME"]}}</label>
+                    <input type="text" class="form-control" id="inputLastName" name="lastname" value="{{user.lastname}}">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputMail">{{lang["MAIL"]}}</label>
+                    <input type="email" class="form-control" id="inputMail" name="mail" value="{{user.mail}}">
+                </div>
+                
+                <div class="form-group hidden">
+                    <a href="{{ path_for('users_change_password') }}"><button type="button">{{lang["CHANGE_PASSWORD"]}}</button></a>
+                    <a href="{{ path_for('users_profile_image') }}"><button type="button">{{lang["PROFILE_IMAGE"]}}</button></a>
+                    <a href="{{ path_for('users_mobile_favorites') }}"><button type="button">{{lang["MOBILE_FAVORITES"]}}</button></a>
+                </div>
+
+                <h3>{{lang["MODULES"]}}</h3>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxLocationModule">
+                        <input name="module_location" type="checkbox" value="1" id="checkboxLocationModule" {% if user.module_location == 1 %}checked{% endif %}>
+                        {{lang["MENU_LOCATION"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxFinanceModule">
+                        <input name="module_finance" type="checkbox" value="1" id="checkboxFinanceModule" {% if user.module_finance == 1 %}checked{% endif %}>
+                        {{lang["MENU_FINANCES"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxCarsModule">
+                        <input name="module_cars" type="checkbox" value="1" id="checkboxCarsModule" {% if user.module_cars == 1 %}checked{% endif %}>
+                        {{lang["CARS"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxBoardsModule">
+                        <input name="module_boards" type="checkbox" value="1" id="checkboxBoardsModule" {% if user.module_boards == 1 %}checked{% endif %}>
+                        {{lang["BOARDS"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxCrawlersModule">
+                        <input name="module_crawlers" type="checkbox" value="1" id="checkboxCrawlersModule" {% if user.module_crawlers == 1 %}checked{% endif %}>
+                        {{lang["CRAWLERS"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxSplitbillsModule">
+                        <input name="module_splitbills" type="checkbox" value="1" id="checkboxSplitbillsModule" {% if user.module_splitbills == 1 %}checked{% endif %}>
+                        {{lang["SPLITBILLS"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxTripsModule">
+                        <input name="module_trips" type="checkbox" value="1" id="checkboxTripsModule" {% if user.module_trips == 1 %}checked{% endif %}>
+                        {{lang["TRIPS"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxTimesheetsModule">
+                        <input name="module_timesheets" type="checkbox" value="1" id="checkboxTimesheetsModule" {% if user.module_timesheets == 1 %}checked{% endif %}>
+                        {{lang["TIMESHEETS"]}}
+                    </label>
+                </div>
+                
+                <h3>{{lang["MAIL_SETTINGS"]}}</h3>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsUser">
+                        <input name="mails_user" type="checkbox" value="1" id="checkboxMailsUser" {% if user.mails_user == 1 %}checked{% endif %}>
+                        {{lang["MAILS_USER"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsFinances">
+                        <input name="mails_finances" type="checkbox" value="1" id="checkboxMailsFinances" {% if user.mails_finances == 1 %}checked{% endif %}>
+                        {{lang["MAILS_FINANCES"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsBoard">
+                        <input name="mails_board" type="checkbox" value="1" id="checkboxMailsBoard" {% if user.mails_board == 1 %}checked{% endif %}>
+                        {{lang["MAILS_BOARD"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsBoardReminder">
+                        <input name="mails_board_reminder" type="checkbox" value="1" id="checkboxMailsBoardReminder" {% if user.mails_board_reminder == 1 %}checked{% endif %}>
+                        {{lang["MAILS_BOARD_REMINDER"]}}
+                    </label>
+                </div>
+                <h3>{{lang["PWA_SETTINGS"]}}</h3>
+                <div class="form-group">
+                    <label for="inputStartURL">{{lang["START_URL"]}}</label>
+                    <input type="text" class="form-control" id="inputStartURL" name="start_url" value="{{user.start_url}}">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{{lang["SAVE"]}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -49,4 +49,26 @@ class Mapper extends \App\Base\Mapper {
         }
     }
 
+    public function update_profile($id, \App\User\User $user) {
+        $data = $user->get_fields();
+
+        $bindings = ["id" => $id];
+        $parts = array();
+        foreach ($data as $key => $value) {
+            if (!is_null($value)) {
+                $parts[] = " " . $key . " = :" . $key . "";
+                $bindings[$key] = $value;
+            }
+        }
+        $sql = "UPDATE " . $this->getTable() . " SET " . implode(", ", $parts) . " WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+        }
+        return $stmt->rowCount();
+    }
+
 }
