@@ -212,14 +212,14 @@ abstract class Controller {
             $this->mapper->setUser($user);
         }
 
-        /**
-         * Custom Hook
-         */
-        $this->preDelete($id, $request);
-
         $data = ['is_deleted' => false, 'error' => ''];
 
         try {
+            /**
+             * Custom Hook
+             */
+            $this->preDelete($id, $request);
+
             $is_deleted = $this->mapper->delete($id);
             $data ['is_deleted'] = $is_deleted;
             if ($is_deleted) {

@@ -5,28 +5,32 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["LOGIN_TOKENS"]}}</h2> <a href="{{  path_for('login_tokens_delete_old') }}"><button class="white"><i class="fa fa-trash" aria-hidden="true"></i> {{lang["LOGIN_TOKENS_CLEAN"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["LOGIN_TOKENS"]}}</h2> {% if users is not empty %}<a href="{{  path_for('login_tokens_delete_old') }}"><button class="white"><i class="fa fa-trash" aria-hidden="true"></i> {{lang["LOGIN_TOKENS_CLEAN"]}}</button></a>{% endif %}</div>
         <div class="page-content">
-            <table id="tokens_table" class="table table-hover small">
+            <table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
                 <thead>
                     <tr>
+                        <th>{{lang["CHANGED_ON"]}}</th>
+                        <th>{{lang["CREATED_ON"]}}</th>
+                        {% if users is not empty %}
                         <th>{{lang["LOGIN"]}}</th>
+                        {% endif %}
                         <th>{{lang["USER_AGENT"]}}</th>
                         <th>{{lang["IP_ADDRESS"]}}</th>
-                        <th>{{lang["CREATED_ON"]}}</th>
-                        <th>{{lang["CHANGED_ON"]}}</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for entry in list %}
                         <tr>
+                            <td data-title="{{lang["CHANGED_ON"]}}">{{entry.changedOn}}</td> 
+                            <td data-title="{{lang["CREATED_ON"]}}">{{entry.createdOn}}</td> 
+                            {% if users is not empty %}
                             <td data-title="{{lang["LOGIN"]}}">{{users[entry.user].login}}</td> 
+                            {% endif %}
                             <td data-title="{{lang["USER_AGENT"]}}">{{entry.agent}}</td> 
                             <td data-title="{{lang["IP_ADDRESS"]}}">{{entry.ip}}</td> 
-                            <td data-title="{{lang["CREATED_ON"]}}">{{entry.createdOn}}</td> 
-                            <td data-title="{{lang["CHANGED_ON"]}}">{{entry.changedOn}}</td> 
-                            <td><a href="#" data-url="{{  path_for('login_tokens_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{% if users is not empty %}{{  path_for('login_tokens_delete', {'id' : entry.id}) }}{% else %}{{  path_for('users_login_tokens_delete', {'id' : entry.id}) }}{% endif %}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

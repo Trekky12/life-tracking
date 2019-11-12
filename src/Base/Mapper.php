@@ -360,6 +360,14 @@ abstract class Mapper {
         $this->userid = $user_id;
     }
     
+    public function setFilterByUser($filter_by_user) {
+        $this->filterByUser = $filter_by_user;
+        if ($this->filterByUser) {
+            $currentUser = $this->ci->get('helper')->getUser();
+            $this->userid = $currentUser ? $currentUser->id : null;
+        }
+    }
+    
     
     public function getMinMaxDate($min = 'date', $max = 'date') {
         $sql = "SELECT DATE(MIN($min)) as min, DATE(MAX($max)) as max FROM " . $this->getTable() . "";

@@ -8,26 +8,24 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     public function init() {
-        $this->index_route = 'login_tokens';
+        $this->index_route = 'users_login_tokens';
         $this->mapper = new Mapper($this->ci);
-        
-        $this->user_mapper =  new \App\User\Mapper($this->ci);
     }
-
 
     public function index(Request $request, Response $response) {
+        // only tokens of current user
+        $this->mapper->setFilterByUser(true);
         $list = $this->mapper->getAll();
-        $users = $this->user_mapper->getAll();
-        return $this->ci->view->render($response, 'user/tokens.twig', ['list' => $list, 'users' => $users]);
+        return $this->ci->view->render($response, 'user/tokens.twig', ['list' => $list]);
     }
-    
-    public function deleteOld(Request $request, Response $response) {
-        $this->mapper->deleteOldTokens();
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
-    }
-    
-    public function deleteOldTokens(){
-        return $this->mapper->deleteOldTokens();
+
+    protected function preDelete($id, Request $request) {
+        $user = $this->ci->get('helper')->getUser();
+        $token = $this->mapper->get($id);
+
+        if (intval($token->user) !== intval($user->id)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString("NO_ACCESS"));
+        }
     }
 
 }

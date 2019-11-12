@@ -418,29 +418,33 @@ var notificationsCategoryTable = new JSTable("#notifications_categories_table", 
     ]
 });
 
-var tokensCategoryTable = new JSTable("#tokens_table", {
-    perPage: 10,
-    labels: tableLabels,
-    columns: [
-        {
-            select: [3, 4],
-            render: function (cell, idx) {
-                let data = cell.innerHTML;
-                return moment(data).format(i18n.dateformatJS.datetime);
+const tokensTableContainer = document.getElementById('tokens_table');
+if (tokensTableContainer) {
+    let lastColumn = tokensTableContainer.dataset.user === "1" ? 5 : 4;
+    var tokensTable = new JSTable(tokensTableContainer, {
+        perPage: 10,
+        labels: tableLabels,
+        columns: [
+            {
+                select: 0,
+                sortable: true,
+                sort: "desc"
+            },
+            {
+                select: [0, 1],
+                render: function (cell, idx) {
+                    let data = cell.innerHTML;
+                    return moment(data).format(i18n.dateformatJS.datetime);
+                }
+            },
+            {
+                select: [lastColumn],
+                sortable: false,
+                searchable: false
             }
-        },
-        {
-            select: 4,
-            sortable: true,
-            sort: "desc"
-        },
-        {
-            select: [5],
-            sortable: false,
-            searchable: false
-        }
-    ]
-});
+        ]
+    });
+}
 
 var crawlersTable = new JSTable("#crawlers_table", {
     perPage: 10,

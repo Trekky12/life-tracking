@@ -135,6 +135,11 @@ $app->group('/profile', function() {
         $this->post('/save/[{id:[0-9]+}]', '\App\User\MobileFavorites\Controller:save')->setName('users_mobile_favorites_save');
         $this->delete('/delete/{id}', '\App\User\MobileFavorites\Controller:delete')->setName('users_mobile_favorites_delete');
     });
+    
+    $this->group('/tokens', function() {
+        $this->get('/', '\App\User\Token\Controller:index')->setName('users_login_tokens');
+        $this->delete('/delete/{id}', '\App\User\Token\Controller:delete')->setName('users_login_tokens_delete');
+    });
 });
 
 $app->group('/users', function() {
@@ -144,9 +149,9 @@ $app->group('/users', function() {
     $this->delete('/delete/{id}', '\App\User\Controller:delete')->setName('users_delete');
 
     $this->group('/tokens', function() {
-        $this->get('/', '\App\User\Token\Controller:index')->setName('login_tokens');
-        $this->delete('/delete/{id}', '\App\User\Token\Controller:delete')->setName('login_tokens_delete');
-        $this->get('/deleteOld', '\App\User\Token\Controller:deleteOld')->setName('login_tokens_delete_old');
+        $this->get('/', '\App\User\Token\ControllerAdmin:index')->setName('login_tokens');
+        $this->delete('/delete/{id}', '\App\User\Token\ControllerAdmin:delete')->setName('login_tokens_delete');
+        $this->get('/deleteOld', '\App\User\Token\ControllerAdmin:deleteOld')->setName('login_tokens_delete_old');
     });
 
     $this->group('/{user:[0-9]+}', function() {
