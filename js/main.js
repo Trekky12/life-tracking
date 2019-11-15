@@ -11,18 +11,22 @@ initialize();
 initCharts();
 
 function getCSRFToken() {
-
-    // get new tokens
-    if (tokens.length <= 2) {
-        var last_token = tokens.pop();
-        return getNewTokens(last_token);
+    
+    // no tokens remaining
+    if (tokens.length < 1) {
+        throw "No CRSF Tokens available";
     }
 
-    if (tokens.length > 1) {
+    // take available token
+    if (tokens.length > 2) {
         return new Promise(function (resolve, reject) {
             resolve(tokens.pop());
         });
     }
+    
+    // get new tokens
+    var last_token = tokens.pop();
+    return getNewTokens(last_token);
 }
 
 

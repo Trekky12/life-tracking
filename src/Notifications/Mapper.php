@@ -9,10 +9,10 @@ class Mapper extends \App\Base\Mapper {
     protected $filterByUser = false;
     protected $insertUser = false;
 
-    public function getNotificationsByClient($client, $limit = 2, $offset = 0) {
-        $sql = "SELECT * FROM " . $this->getTable() . "  WHERE client = :client ORDER BY id DESC LIMIT {$offset},{$limit}";
+    public function getNotificationsByUser($user, $limit = 2, $offset = 0) {
+        $sql = "SELECT * FROM " . $this->getTable() . "  WHERE user = :user ORDER BY id DESC LIMIT {$offset},{$limit}";
 
-        $bindings = array("client" => $client);
+        $bindings = array("user" => $user);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -24,11 +24,11 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
-    public function getNotificationsCountByClient($client) {
-        $sql = "SELECT COUNT(*) FROM " . $this->getTable() . "  WHERE client = :client";
 
-        $bindings = array("client" => $client);
+    public function getNotificationsCountByUser($user) {
+        $sql = "SELECT COUNT(*) FROM " . $this->getTable() . "  WHERE user = :user";
+
+        $bindings = array("user" => $user);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -38,8 +38,8 @@ class Mapper extends \App\Base\Mapper {
         }
         return 0;
     }
-    
-    public function markAsSeen($notifications){
+
+    public function markAsSeen($notifications) {
         $sql = "UPDATE " . $this->getTable() . " SET seen = CURRENT_TIMESTAMP WHERE id in (" . implode(',', $notifications) . ")";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute();
@@ -48,11 +48,11 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
-    public function getUnreadNotificationsCountByClient($client) {
-        $sql = "SELECT COUNT(*) FROM " . $this->getTable() . "  WHERE client = :client AND seen IS NULL";
 
-        $bindings = array("client" => $client);
+    public function getUnreadNotificationsCountByUser($user) {
+        $sql = "SELECT COUNT(*) FROM " . $this->getTable() . "  WHERE user = :user AND seen IS NULL";
+
+        $bindings = array("user" => $user);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

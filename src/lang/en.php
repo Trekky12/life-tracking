@@ -255,6 +255,7 @@ $lang["START_URL"] = "Start URL";
 $lang["SETTINGS"] = "Settings";
 $lang["LOGOUT"] = "Logout";
 $lang["NOTIFICATIONS"] = "Notifications";
+$lang["PUSH_NOTIFICATIONS"] = "Push notifications";
 
 $lang["IP_ADDRESS"] = "IP address";
 $lang["USER_AGENT"] = "User agent";
@@ -267,9 +268,9 @@ $lang["SEND"] = "Send";
 $lang["NOTIFICATION_SEND_SUCCESS"] = "Notification successfully send";
 $lang["NOTIFICATION_SEND_FAILURE"] = "Sending of notification failed";
 
-$lang["DISABLE_NOTIFICATIONS"] = "Disable Notifications";
-$lang["ENABLE_NOTIFICATIONS"] = "Enable Notifications";
-$lang["NO_NOTIFICATIONS_POSSIBLE"] = "Notifications not supported";
+$lang["DISABLE_PUSH_NOTIFICATIONS"] = "Disable Push Notifications";
+$lang["ENABLE_PUSH_NOTIFICATIONS"] = "Enable Push Notifications";
+$lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"] = "Push Notifications not supported";
 
 $lang["REALLY_DELETE_STACK"] = "Do you really want to delete the stack with all cards?";
 $lang["REALLY_DELETE_BOARD"] = "Do you really want to delete the board with all stacks, cards and labels?";

@@ -255,6 +255,7 @@ $lang["START_URL"] = "Start URL";
 $lang["SETTINGS"] = "Einstellungen";
 $lang["LOGOUT"] = "Abmelden";
 $lang["NOTIFICATIONS"] = "Benachrichtigungen";
+$lang["PUSH_NOTIFICATIONS"] = "Push Benachrichtigungen";
 
 $lang["IP_ADDRESS"] = "IP-Adresse";
 $lang["USER_AGENT"] = "User Agent";
@@ -266,9 +267,9 @@ $lang["SEND"] = "Senden";
 $lang["NOTIFICATION_SEND_SUCCESS"] = "Benachrichtigung erfolgreich versendet";
 $lang["NOTIFICATION_SEND_FAILURE"] = "Benachrichtigung konnte nicht versendet werden";
 
-$lang["DISABLE_NOTIFICATIONS"] = "Benachrichtigungen ausschalten";
-$lang["ENABLE_NOTIFICATIONS"] = "Benachrichtigungen einschalten";
-$lang["NO_NOTIFICATIONS_POSSIBLE"] = "Benachrichtigungen werden nicht unterstützt";
+$lang["DISABLE_PUSH_NOTIFICATIONS"] = "Push Benachrichtigungen ausschalten";
+$lang["ENABLE_PUSH_NOTIFICATIONS"] = "Push Benachrichtigungen einschalten";
+$lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"] = "Push Benachrichtigungen werden nicht unterstützt";
 
 $lang["REALLY_DELETE_STACK"] = "Soll der Stapel mit allen Karten wirklich gelöscht werden?";
 $lang["REALLY_DELETE_BOARD"] = "Soll das Board mit allen Stapeln, Karten und Labeln wirklich gelöscht werden?";

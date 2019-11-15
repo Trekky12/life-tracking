@@ -3,24 +3,32 @@
 {% set active = 'profile' %}
 
 {% block body %}
-
-    {% if message is defined %}
-        <div class="alert hide-offline {{message_type}}">
-            <span class="closebtn" >&times;</span>
-            <span class="alert-message">
-                <p>{{message}}</p>
-            </span>
-        </div>
-    {% endif %}
-
+    
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
+        <div class="page-content">
+            <div id="notifications_categories_list_user">
+                <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+                {% for cat in categories %}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
+                            <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                            {{cat.name}}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["PUSH_NOTIFICATIONS"]}}</h2></div>
         <div class="page-content">
             <button id="enable_notifications" class="hidden">
                 {{lang["ENABLE_NOTIFICATIONS"]}}
             </button>
 
-            <div id="loadingIconNotifications" class="centered">
+            <div id="loadingIconManageNotifications" class="centered">
                 <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
             

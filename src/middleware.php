@@ -27,6 +27,11 @@ $app->add('App\Middleware\ModuleMiddleware');
 $app->add('App\Middleware\PWChangeMiddleware');
 
 /**
+ * Get the unread notifications count
+ */
+$app->add('App\Middleware\NotificationsMiddleware');
+
+/**
  * Get the mobile favorites of the user for the UI
  */
 $app->add('App\Middleware\MobileFavoritesMiddleware');

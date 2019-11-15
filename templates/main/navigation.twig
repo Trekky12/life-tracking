@@ -35,7 +35,7 @@
             <a href="{{ path_for('timesheets_projects') }}" {% if active == 'timeesheets' %}class="active"{% endif %}><i class="fa fa-clock-o"></i></a>
         {% endif %}
     {% endif %}
-    <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %}" data-badge="0" id="iconBell"><i class="fa fa-bell-o"></i></a>
+    <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="fa fa-bell-o"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -125,7 +125,7 @@
             </li>
         {% endif %}
         <li {% if active == 'profile' %}class="active"{% endif %}>
-            <a href="{{ path_for('users_profile_edit') }}" class="profile badge" data-badge="0"> 
+            <a href="{{ path_for('users_profile_edit') }}" class="profile badge {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}"> 
                 {% if user.get_thumbnail() != '' %}
                     <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
                 {% else %}

@@ -45,9 +45,11 @@ abstract class Mapper {
         return $this->table_prefix . $table;
     }
 
-    public function insert(Model $data) {
+    public function insert(Model $data, $removeUserParam = null) {
 
-        $data_array = $data->get_fields(!$this->insertUser, true);
+        $removeUser = !is_null($removeUserParam) && is_bool($removeUserParam) ? $removeUserParam : !$this->insertUser;
+        
+        $data_array = $data->get_fields($removeUser, true);
 
         $sql = "INSERT INTO " . $this->getTable() . " "
                 . "        (" . implode(", ", array_keys($data_array)) . ") "

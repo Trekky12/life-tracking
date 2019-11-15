@@ -17,16 +17,27 @@ class Controller extends \App\Base\Controller {
         $this->mapper = new \App\Notifications\Mapper($this->ci);
         $this->category_mapper = new \App\Notifications\Categories\Mapper($this->ci);
         $this->client_mapper = new \App\Notifications\Clients\Mapper($this->ci);
+        $this->user_notifications_mapper = new \App\Notifications\Users\Mapper($this->ci);
     }
 
     public function manage(Request $request, Response $response) {
         $categories = $this->category_mapper->getAll();
-        return $this->ci->view->render($response, 'notifications/manage.twig', ["categories" => $categories]);
+        
+        $user = $this->ci->get('helper')->getUser();
+        $user_categories = $this->user_notifications_mapper->getCategoriesByUser($user->id);
+
+        return $this->ci->view->render($response, 'notifications/manage.twig', ["categories" => $categories, "user_categories" => $user_categories]);
     }
 
     public function overview(Request $request, Response $response) {
         $categories = $this->category_mapper->getAll();
-        return $this->ci->view->render($response, 'notifications/overview.twig', ["categories" => $categories]);
+        
+        $user = $this->ci->get('helper')->getUser();
+        $limit = 10;
+        $offset = 0;
+        $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
+        
+        return $this->ci->view->render($response, 'notifications/overview.twig', ["categories" => $categories, "notifications" => $notifications]);
     }
 
     public function notifyByCategory(Request $request, Response $response) {
@@ -39,21 +50,27 @@ class Controller extends \App\Base\Controller {
         $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_SANITIZE_STRING) : "";
         $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_SANITIZE_STRING) : "";
 
-        $clients = [];
         try {
             $category_id = $this->category_mapper->getCategoryByIdentifier($category);
+            
+            // Push Notifications
             $clients = $this->client_mapper->getClientsByCategory($category_id->id);
-
             foreach ($clients as $client) {
-                $notification = new Notification(["title" => $title, "message" => $message, "client" => $client->id, "category" => $category_id->id]);
-                $id = $this->mapper->insert($notification);
-                $res = $this->sendNotification($client, $title, $message, $id);
+                $res = $this->sendNotification($client, $title, $message);
             }
+            
+            // Save notification for the users (frontend)
+            $users = $this->user_notifications_mapper->getUsersByCategory($category_id->id);
+            foreach ($users as $user) {
+                $notification = new Notification(["title" => $title, "message" => $message, "user" => $user, "category" => $category_id->id]);
+                $id = $this->mapper->insert($notification, false);
+            }
+            
         } catch (\Exception $e) {
             $logger->addError("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
         }
 
-        return $response->withJson(['clients' => $clients]);
+        return $response->withJson(['status' => 'done']);
     }
 
     public function testNotification(Request $request, Response $response) {
@@ -70,10 +87,7 @@ class Controller extends \App\Base\Controller {
             $title = array_key_exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING) : null;
             $message = array_key_exists('message', $data) ? filter_var($data['message'], FILTER_SANITIZE_STRING) : null;
 
-
-            $notification = new Notification(["title" => $title, "message" => $message, "client" => $entry->id]);
-            $id = $this->mapper->insert($notification);
-            $result = $this->sendNotification($entry, $title, $message, $id);
+            $result = $this->sendNotification($entry, $title, $message);
 
             if ($result) {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("NOTIFICATION_SEND_SUCCESS"));
@@ -151,18 +165,19 @@ class Controller extends \App\Base\Controller {
         return $report;
     }
 
-    public function getNotificationsFromEndpoint(Request $request, Response $response) {
+    public function getNotificationsByUser(Request $request, Response $response) {
         $data = $request->getParsedBody();
 
         $result = ["data" => [], "status" => "success"];
-        $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+        //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
         $limit = array_key_exists('count', $data) ? filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT) : 5;
         $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
-        $client = $this->client_mapper->getClientByEndpoint($endpoint);
-        $notifications = $this->mapper->getNotificationsByClient($client->id, $limit, $offset);
+        //$client = $this->client_mapper->getClientByEndpoint($endpoint);
+        $user = $this->ci->get('helper')->getUser();
+        $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
         $result["data"] = $notifications;
-        $result["count"] = $this->mapper->getNotificationsCountByClient($client->id);
+        $result["count"] = $this->mapper->getNotificationsCountByUser($user->id);
         $result["categories"] = $this->category_mapper->getAll();
 
         // mark as seen
@@ -173,19 +188,20 @@ class Controller extends \App\Base\Controller {
             $this->mapper->markAsSeen($notification_ids);
         }
 
-        $result["unseen"] = $this->mapper->getUnreadNotificationsCountByClient($client->id);
+        $result["unseen"] = $this->mapper->getUnreadNotificationsCountByUser($user->id);
 
         return $response->withJson($result);
     }
 
-    public function getUnreadNotificationsFromEndpoint(Request $request, Response $response) {
-        $data = $request->getParsedBody();
+    public function getUnreadNotificationsByUser(Request $request, Response $response) {
+        //$data = $request->getParsedBody();
 
         $result = ["data" => [], "status" => "success"];
-        $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+        //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
 
-        $client = $this->client_mapper->getClientByEndpoint($endpoint);
-        $result["data"] = $this->mapper->getUnreadNotificationsCountByClient($client->id);
+        //$client = $this->client_mapper->getClientByEndpoint($endpoint);
+        $user = $this->ci->get('helper')->getUser();
+        $result["data"] = $this->mapper->getUnreadNotificationsCountByUser($user->id);
 
         return $response->withJson($result);
     }

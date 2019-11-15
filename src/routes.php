@@ -188,11 +188,13 @@ $app->group('/notifications', function() {
     })->add('App\Middleware\AdminMiddleware');
 
     $this->get('/notify', '\App\Notifications\Controller:notifyByCategory');
+    // use post because endpoint param is too complex for a GET param
     $this->post('/getCategories', '\App\Notifications\Clients\Controller:getCategoriesFromEndpoint')->setName('notifications_clients_categories');
     $this->post('/setCategorySubscription', '\App\Notifications\Clients\Controller:setCategoryOfEndpoint')->setName('notifications_clients_set_category');
+    $this->post('/setCategoryUser', '\App\Notifications\Users\Controller:setCategoryforUser')->setName('notifications_clients_set_category_user');
 
-    $this->post('/getNotifications', '\App\Notifications\Controller:getNotificationsFromEndpoint')->setName('notifications_get');
-    $this->post('/getUnreadNotifications', '\App\Notifications\Controller:getUnreadNotificationsFromEndpoint')->setName('notifications_get_unread');
+    $this->post('/getNotifications', '\App\Notifications\Controller:getNotificationsByUser')->setName('notifications_get');
+    $this->post('/getUnreadNotifications', '\App\Notifications\Controller:getUnreadNotificationsByUser')->setName('notifications_get_unread');
 });
 
 
