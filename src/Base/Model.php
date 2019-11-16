@@ -83,8 +83,14 @@ class Model implements \JsonSerializable {
         return count($this->fields) > 0;
     }
 
-    protected function exists($key, $data) {
-        return array_key_exists($key, $data) && !is_null($data[$key]) && $data[$key] !== "" && $data[$key] !== '%' . $key;
+    protected function exists($key, $data, $tasker_variables = []) {
+        
+        // tasker variables are not resolved? then ignore this value
+        if(in_array($data[$key], $tasker_variables)){
+            return false;
+        }
+        
+        return array_key_exists($key, $data) && !is_null($data[$key]) && $data[$key] !== "";
     }
 
     public function log() {

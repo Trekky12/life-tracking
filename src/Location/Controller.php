@@ -19,8 +19,6 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $my_locations = $this->mapper->getAll();
-
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
 
@@ -29,7 +27,6 @@ class Controller extends \App\Base\Controller {
         list($hide_clusters) = $this->getHidden($hide);
 
         return $this->ci->view->render($response, 'location/index.twig', [
-                    "tracks" => $my_locations,
                     "from" => $from,
                     "to" => $to,
                     "hide" => [
