@@ -152,6 +152,7 @@ class Helper {
 
             // add user object to view
             $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
+            $this->ci->get('view')->getEnvironment()->addGlobal("user_token", $token);
 
             $this->tokenmapper->updateTokenData($token, $this->getIP(), $this->getAgent());
 

@@ -10,6 +10,7 @@
             <table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
                 <thead>
                     <tr>
+                        <th>{{lang["THIS_DEVICE"]}}</th>
                         <th>{{lang["CHANGED_ON"]}}</th>
                         <th>{{lang["CREATED_ON"]}}</th>
                         {% if users is not empty %}
@@ -23,13 +24,14 @@
                 <tbody>
                     {% for entry in list %}
                         <tr>
-                            <td data-title="{{lang["CHANGED_ON"]}}">{{entry.changedOn}}</td> 
-                            <td data-title="{{lang["CREATED_ON"]}}">{{entry.createdOn}}</td> 
+                            <td>{% if user_token == entry.token %}x{% endif %}</td> 
+                            <td>{{entry.changedOn}}</td> 
+                            <td>{{entry.createdOn}}</td> 
                             {% if users is not empty %}
-                            <td data-title="{{lang["LOGIN"]}}">{{users[entry.user].login}}</td> 
+                            <td>{{users[entry.user].login}}</td> 
                             {% endif %}
-                            <td data-title="{{lang["USER_AGENT"]}}">{{entry.agent}}</td> 
-                            <td data-title="{{lang["IP_ADDRESS"]}}">{{entry.ip}}</td> 
+                            <td>{{entry.agent}}</td> 
+                            <td>{{entry.ip}}</td> 
                             <td><a href="#" data-url="{% if users is not empty %}{{  path_for('login_tokens_delete', {'id' : entry.id}) }}{% else %}{{  path_for('users_login_tokens_delete', {'id' : entry.id}) }}{% endif %}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}

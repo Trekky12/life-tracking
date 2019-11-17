@@ -421,4 +421,6 @@ $lang["TIMESHEETS_COME"] = "Come";
 $lang["TIMESHEETS_LEAVE"] = "Leave";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 
+$lang["THIS_DEVICE"] = "this device";
+
 return $lang;

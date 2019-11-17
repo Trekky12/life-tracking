@@ -420,4 +420,6 @@ $lang["TIMESHEETS_COME"] = "Kommen";
 $lang["TIMESHEETS_LEAVE"] = "Gehen";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 
+$lang["THIS_DEVICE"] = "dieses Gerät";
+
 return $lang;

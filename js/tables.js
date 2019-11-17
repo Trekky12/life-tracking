@@ -420,18 +420,18 @@ var notificationsCategoryTable = new JSTable("#notifications_categories_table", 
 
 const tokensTableContainer = document.getElementById('tokens_table');
 if (tokensTableContainer) {
-    let lastColumn = tokensTableContainer.dataset.user === "1" ? 5 : 4;
+    let lastColumn = tokensTableContainer.dataset.user === "1" ? 6 : 5;
     var tokensTable = new JSTable(tokensTableContainer, {
         perPage: 10,
         labels: tableLabels,
         columns: [
             {
-                select: 0,
+                select: 1,
                 sortable: true,
                 sort: "desc"
             },
             {
-                select: [0, 1],
+                select: [1, 2],
                 render: function (cell, idx) {
                     let data = cell.innerHTML;
                     return moment(data).format(i18n.dateformatJS.datetime);
