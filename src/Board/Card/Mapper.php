@@ -41,7 +41,7 @@ class Mapper extends \App\Base\Mapper {
         $result = $stmt->execute([
             "position" => $position,
             "id" => $id,
-            "changedOn" => date('Y-m-d G:i:s'),
+            "changedOn" => date('Y-m-d H:i:s'),
             "changedBy" => $user
         ]);
         if (!$result) {
@@ -55,7 +55,7 @@ class Mapper extends \App\Base\Mapper {
         $result = $stmt->execute([
             "stack" => $stack,
             "id" => $id,
-            "changedOn" => date('Y-m-d G:i:s'),
+            "changedOn" => date('Y-m-d H:i:s'),
             "changedBy" => $user
         ]);
         if (!$result) {
@@ -69,7 +69,7 @@ class Mapper extends \App\Base\Mapper {
         $result = $stmt->execute([
             "archive" => $archive,
             "id" => $id,
-            "changedOn" => date('Y-m-d G:i:s'),
+            "changedOn" => date('Y-m-d H:i:s'),
             "changedBy" => $user
         ]);
         if (!$result) {

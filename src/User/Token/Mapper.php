@@ -9,13 +9,14 @@ class Mapper extends \App\Base\Mapper {
     protected $insertUser = false;
 
     public function addToken($user_id, $token, $ip = null, $agent = null) {
-        $sql = "INSERT INTO " . $this->getTable() . "(user, token, ip, agent) VALUES (:user, :token, :ip, :agent)";
+        $sql = "INSERT INTO " . $this->getTable() . "(user, token, ip, agent, changedOn) VALUES (:user, :token, :ip, :agent, :changedOn)";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "user" => $user_id,
             "token" => $token,
             "ip" => $ip,
-            "agent" => $agent
+            "agent" => $agent,
+            "changedOn" => date('Y-m-d H:i:s')
         ]);
         if (!$result) {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
@@ -52,7 +53,7 @@ class Mapper extends \App\Base\Mapper {
         $sql = "UPDATE " . $this->getTable() . " SET changedOn =:changedOn, ip=:ip, agent=:agent WHERE token=:token";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
-            "changedOn" => date('Y-m-d G:i:s'),
+            "changedOn" => date('Y-m-d H:i:s'),
             "ip" => $ip,
             "agent" => $agent,
             "token" => $token

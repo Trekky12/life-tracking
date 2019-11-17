@@ -31,7 +31,7 @@ class Controller extends \App\Base\Controller {
         $entry->ip = $this->ci->get('helper')->getIP();
         $entry->agent = $this->ci->get('helper')->getAgent();
         $entry->user = $this->ci->get('helper')->getUser()->id;
-        $entry->changedOn = date('Y-m-d G:i:s');
+        $entry->changedOn = date('Y-m-d H:i:s');
         
         $result = array('status' => 'error');
 
@@ -41,7 +41,7 @@ class Controller extends \App\Base\Controller {
             $result['status'] = 'success';
         }
         if ($request->isPut()) {
-            $entry->changedOn = date('Y-m-d G:i:s');
+            $entry->changedOn = date('Y-m-d H:i:s');
 
             try {
                 $this->mapper->get($entry->endpoint, true, 'endpoint');
