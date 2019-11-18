@@ -17,10 +17,13 @@ class NotificationsMiddleware {
 
     public function __invoke(Request $request, Response $response, $next) {
         $user = $this->ci->get('helper')->getUser();
-        $unread_notifications = $this->notifications_mapper->getUnreadNotificationsCountByUser($user->id);
-        
-        // add to view
-        $this->ci->get('view')->getEnvironment()->addGlobal("unread_notifications", $unread_notifications);
+
+        if (!is_null($user)) {
+            $unread_notifications = $this->notifications_mapper->getUnreadNotificationsCountByUser($user->id);
+
+            // add to view
+            $this->ci->get('view')->getEnvironment()->addGlobal("unread_notifications", $unread_notifications);
+        }
 
         return $next($request, $response);
     }

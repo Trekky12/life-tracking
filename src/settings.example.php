@@ -79,7 +79,6 @@ return [
             'secret' => 'my_hash_secret',
             // we need to exclude some routes from CSRF protection for remote triggers
             'csrf_exlude' => [
-                'finances_record',
                 'location_record',
                 'crawler_record'
             ],
