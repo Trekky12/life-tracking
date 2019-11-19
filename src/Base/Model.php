@@ -86,7 +86,7 @@ class Model implements \JsonSerializable {
     protected function exists($key, $data, $tasker_variables = []) {
         
         // tasker variables are not resolved? then ignore this value
-        if(in_array($data[$key], $tasker_variables)){
+        if( array_key_exists($key, $data) && in_array($data[$key], $tasker_variables)){
             return false;
         }
         
