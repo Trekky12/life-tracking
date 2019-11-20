@@ -115,7 +115,7 @@ class ProjectNoAccessTest extends ProjectTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+        $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
 
         $this->logout();
     }
@@ -208,7 +208,7 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+        $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
 
         $this->logout();
     }

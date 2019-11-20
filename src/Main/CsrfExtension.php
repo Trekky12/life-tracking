@@ -19,6 +19,12 @@ class CsrfExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
         $csrfValueKey = $this->csrf->getTokenValueKey();
         $csrfName = $this->csrf->getTokenName();
         $csrfValue = $this->csrf->getTokenValue();
+        
+        $jsTokensCount = 2;
+        $jsTokens = [];
+        for ($i = 0; $i < $jsTokensCount; $i++) {
+            $jsTokens[] = $this->csrf->generateToken();
+        }
 
         return [
             'csrf' => [
@@ -29,7 +35,7 @@ class CsrfExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
                 'name' => $csrfName,
                 'value' => $csrfValue
             ],
-            'csrf_js' => $this->csrf->generateToken()
+            'csrf_js' => $jsTokens
         ];
     }
 

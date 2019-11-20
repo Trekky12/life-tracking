@@ -132,19 +132,13 @@ class BaseTestCase extends TestCase {
         /**
         <script type='text/javascript' >
             var allowedReload = false;
-            var jsObject = {
-                ...
-                'csrf_name': 'csrf5db7eed4f0a02',
-                'csrf_value': 'b69fb8a0fe0fefde11cb67818147b9aa',
-                'csrf_tokens_url': '/tokens',               
-                ...
-            };
             ...
+            var tokens = [{"csrf_name":"csrf5dd248a11c3d7","csrf_value":"8cbaf7be48b18d3b60b9a413f7451218"},{"csrf_name":"csrf5dd248a11c5cb","csrf_value":"c5878fa1c43f07b91b6ba36d6c8d8277"}];
             </script>
          */
         $matches = [];
         $body = (string) $response->getBody();
-        $re = '/\'csrf_name\': \'(?<csrf_name>[a-z0-9]*)\',\s*\'csrf_value\': \'(?<csrf_value>[a-z0-9]*)\'/s';
+        $re = '/var tokens = \[\{\"csrf_name\":\"(?<csrf_name>[a-z0-9]*)\",\"csrf_value\":\"(?<csrf_value>[a-z0-9]*)\"\},\{\"csrf_name\":\"(?<csrf2_name>[a-z0-9]*)\",\"csrf_value\":\"(?<csrf2_value>[a-z0-9]*)\"\}\];/s';
         preg_match($re, $body, $matches);
 
         $csrf_name = $matches["csrf_name"];

@@ -1,9 +1,6 @@
 'use strict';
 
 
-// csrf token array
-var tokens = [{'csrf_name': jsObject.csrf_name, 'csrf_value': jsObject.csrf_value}];
-
 moment.locale(i18n.template);
 
 initialize();
@@ -11,19 +8,13 @@ initialize();
 initCharts();
 
 function getCSRFToken() {
-    
-    // no tokens remaining
-    if (tokens.length < 1) {
-        throw "No CRSF Tokens available";
-    }
-
     // take available token
-    if (tokens.length > 2) {
+    if (tokens.length > 1) {
         return new Promise(function (resolve, reject) {
             resolve(tokens.pop());
         });
     }
-    
+
     // get new tokens
     var last_token = tokens.pop();
     return getNewTokens(last_token);
@@ -49,6 +40,8 @@ function getNewTokens(token) {
     }).then(function () {
         return tokens.pop();
     }).catch(function (error) {
+        tokens.push(token);
+        throw "No CRSF Tokens available";
         console.log(error);
     });
 }
