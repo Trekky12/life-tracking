@@ -102,9 +102,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     loadMoreFunctions();
     getNotifications().then(function () {
-        // get unread notifications after get Notifications so that eventually read notifications are already respected
-        return getUnreadNotifications();
-    }).then(function () {
+        // init service worker after notifications are loaded
+        // so that there is no request with the same CSRF tokens
         return initServiceWorker();
     });
 });
