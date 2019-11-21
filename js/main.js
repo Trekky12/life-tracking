@@ -22,7 +22,7 @@ function getCSRFToken() {
 
 
 function getNewTokens(token) {
-    return fetch(jsObject.csrf_tokens_url, {
+    return fetchWithTimeout(jsObject.csrf_tokens_url, {
         method: 'POST',
         credentials: "same-origin",
         headers: {
@@ -491,4 +491,34 @@ if (navigation && header) {
         menuButton.classList.toggle("open");
         body.classList.toggle("mobile-navigation-open");
     });
+}
+
+// https://javascript.info/fetch-abort
+// https://itnext.io/how-you-can-abort-fetch-request-on-a-flight-830a639b9b92
+// https://developers.google.com/web/updates/2017/09/abortable-fetch
+// https://dev.to/stereobooster/fetch-with-a-timeout-3d6
+function fetchWithTimeout(url, options, timeout = 3000) {
+    const abortController = new AbortController();
+    const abortSignal = abortController.signal;
+
+    var timeoutId;
+    var promises = [];
+    var cacheWhenTimedOutPromise = new Promise(function (resolve, reject) {
+        timeoutId = setTimeout(function () {
+            //console.log('timeout');
+            abortController.abort();
+            reject('Timeout');
+        }, timeout);
+    });
+    promises.push(cacheWhenTimedOutPromise);
+
+    var networkPromise = fetch(url, {signal: abortSignal, ...options}).then(function (response) {
+        //console.log('fetch success');
+        clearTimeout(timeoutId);
+        return response;
+    });
+
+    promises.push(networkPromise);
+
+    return Promise.race(promises);
 }
