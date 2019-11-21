@@ -42,7 +42,7 @@ function send(button, type) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
 
-        return fetch(url, {
+        return fetchWithTimeout(url, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
@@ -70,5 +70,7 @@ function send(button, type) {
         }
     }).catch(function (error) {
         console.log(error);
+        alertErrorDetail.innerHTML = lang.request_error;
+        alertError.classList.remove("hidden");
     });
 }

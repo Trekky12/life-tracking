@@ -422,4 +422,6 @@ $lang["TIMESHEETS_EXPORT"] = "Export";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
+$lang["REQUEST_ERROR"] = "Ein Übertragungsfehler ist aufgetreten!";
+
 return $lang;

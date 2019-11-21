@@ -423,4 +423,6 @@ $lang["TIMESHEETS_EXPORT"] = "Export";
 
 $lang["THIS_DEVICE"] = "this device";
 
+$lang["REQUEST_ERROR"] = "A request error occured!";
+
 return $lang;
