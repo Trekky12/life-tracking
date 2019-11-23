@@ -133,6 +133,13 @@
                         {{lang["MAILS_BOARD_REMINDER"]}}
                     </label>
                 </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsSplittedBills">
+                        <input name="mails_splitted_bills" type="checkbox" value="1" id="checkboxMailsSplittedBills" {% if entry is null or entry.mails_splitted_bills == 1 %}checked{% endif %}>
+                        {{lang["MAILS_SPLITTED_BILLS"]}}
+                    </label>
+                </div>    
+                    
                 <h3>{{lang["PWA_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label for="inputStartURL">{{lang["START_URL"]}}</label>

@@ -1,0 +1,27 @@
+{% extends "mail/mail.twig" %}
+
+
+{% block body %}
+
+    {% embed 'mail/modules/content.twig' %}
+        {% block content %}
+            <h1>{{headline}}</h1>
+            <p>{{content|raw}}</p>
+        {% endblock %}
+    {% endembed %}
+    
+    {% embed 'mail/modules/content.twig' %}
+        {% block content %}
+            <h2>{{LANG_SPEND}}</h2>
+        {% endblock %}
+    {% endembed %}
+    {% include 'mail/modules/bill_users.twig' with {'type': 'spend'} %}
+    
+    {% embed 'mail/modules/content.twig' %}
+        {% block content %}
+            <h2>{{LANG_PAID}}</h2>
+        {% endblock %}
+    {% endembed %}
+    {% include 'mail/modules/bill_users.twig' with {'type': 'paid'} %}
+
+{% endblock %}

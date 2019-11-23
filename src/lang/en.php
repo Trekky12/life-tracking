@@ -221,6 +221,7 @@ $lang["MAILS_BOARD"] = "added to board/card";
 $lang["MAILS_BOARD_REMINDER"] = "card reminder";
 $lang["MAILS_USER"] = "creation of user";
 $lang["MAILS_FINANCES"] = "monthly finance stats";
+$lang["MAILS_SPLITTED_BILLS"] = "splitted bills";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Your user account at %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "someone created a user account for you at <a href='%s'>%s</a>";
@@ -233,6 +234,18 @@ $lang["MAIL_ADDED_TO_CARD_DETAIL"] = "you have been added on the board <a href='
 
 $lang["MAIL_ADDED_TO_BOARD"] = "You have been added to a board";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "you have been added to the board <a href='%s'>%s</a>.";
+
+$lang["MAIL_SPLITTED_BILL_ADDED_SUBJECT"] = 'New splitted bill "%s" added';
+$lang["MAIL_SPLITTED_BILL_ADDED_DETAIL"] = '%s shared the bill "%s" (%s %s) in group <a href="%s">%s</a> with you.';
+
+$lang["MAIL_SPLITTED_BILL_UPDATE_SUBJECT"] = 'Splitted bill "%s" updated';
+$lang["MAIL_SPLITTED_BILL_UPDATE_DETAIL"] = '%s updated the shared bill "%s" (%s %s) in group <a href="%s">%s</a>.';
+
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT"] = '%s settled up spendings';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DETAIL"] = '%s settled up spendings (%s %s) in group <a href="%s">%s</a>.';
+
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT"] = '%s updated settled up spendings';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL"] = '%s updated settled up spendings (%s %s) in group <a href="%s">%s</a>.';
 
 $lang["CREATED_BY"] = "Created by";
 $lang["CHANGED_BY"] = "Changed by";

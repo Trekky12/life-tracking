@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     mails_finances int(1) DEFAULT 1,
     mails_board int(1) DEFAULT 1,
     mails_board_reminder int(1) DEFAULT 1,
+    mails_splitted_bills  int(1) DEFAULT 1,
     start_url varchar(255) DEFAULT NULL,
     PRIMARY KEY(id),
     UNIQUE(login)

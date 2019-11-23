@@ -146,83 +146,36 @@ class Controller extends \App\Base\Controller {
 
         $logger = $this->ci->get('logger');
 
+        $bill = $this->mapper->get($id);
+        $sbgroup = $this->group_mapper->get($bill->sbgroup);
+        $existing_balance = $this->mapper->getBalance($bill->id);
+
+        $users = $this->user_mapper->getAll();
+
+        // Save Balance
         if (array_key_exists("balance", $data) && is_array($data["balance"])) {
-            $bill = $this->mapper->get($id);
+
             $splitbill_groups_users = $this->group_mapper->getUsers($bill->sbgroup);
-            $existing_balance = $this->mapper->getBalance($bill->id);
-            $sbgroup = $this->group_mapper->get($bill->sbgroup);
+            $removed_users = array_diff(array_keys($existing_balance), $splitbill_groups_users);
 
-            $totalValue = array_key_exists("balance", $data) ? floatval(filter_var($data["value"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
-
-            $sum_paid = 0;
-            $sum_spend = 0;
-            $balances = [];
-            foreach ($data["balance"] as $user_id => $bdata) {
-                $user = intval(filter_var($user_id, FILTER_SANITIZE_NUMBER_INT));
-
-                if (in_array($user, $splitbill_groups_users)) {
-                    $spend = array_key_exists("spend", $bdata) ? floatval(filter_var($bdata["spend"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
-                    $paid = array_key_exists("paid", $bdata) ? floatval(filter_var($bdata["paid"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
-                    $paymethod = array_key_exists("paymethod", $bdata) && !empty($bdata["paymethod"]) ? intval(filter_var($bdata["paymethod"], FILTER_SANITIZE_NUMBER_INT)) : null;
-
-                    $sum_paid += $paid;
-                    $sum_spend += $spend;
-
-                    // add entry
-                    $balances[] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod" => $paymethod];
-                }
-            }
+            list($balances, $sum_paid, $sum_spend, $totalValue) = $this->filterBalances($data, $splitbill_groups_users);
 
             // floating point comparison
             if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
                 $logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
 
-                $finance_mapper = new \App\Finances\Mapper($this->ci);
-                $finance_ctrl = new \App\Finances\Controller($this->ci);
-                $user_mapper = new \App\User\Mapper($this->ci);
-
-                foreach ($balances as $b) {
-                    $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"], $b["paymethod"]);
-                    
-                    $userObj = $user_mapper->get($b["user"]);
-
-                    if ($sbgroup->add_finances > 0 && $bill->settleup != 1 && $userObj->module_finance == 1) {
-                        if ($b["spend"] > 0) {
-                            $entry = new \App\Finances\FinancesEntry([
-                                "date" => $bill->date,
-                                "time" => $bill->time,
-                                "description" => $bill->name,
-                                "type" => 0,
-                                "value" => $b["spend"],
-                                "user" => $b["user"],
-                                "common" => 1,
-                                "common_value" => $totalValue,
-                                "bill" => $bill->id,
-                                "lng" => $bill->lng,
-                                "lat" => $bill->lat,
-                                "acc" => $bill->acc,
-                                "paymethod" => $b["paymethod"]
-                            ]);
-
-                            $entry->category = $finance_ctrl->getDefaultOrAssignedCategory($b["user"], $entry);
-                            $finance_mapper->addOrUpdateFromBill($entry);
-                        } else {
-                            $finance_mapper->deleteEntrywithBill($bill->id, $b["user"]);
-                        }
-                    }
-                }
+                $this->addBalancesForUsers($bill, $sbgroup, $balances, $totalValue, $users);
 
                 // delete entries for users removed from the group
-                $removed_users = array_diff(array_keys($existing_balance), $splitbill_groups_users);
                 foreach ($removed_users as $ru) {
                     $this->mapper->deleteBalanceofUser($bill->id, $ru);
                 }
-            } else if($totalValue > 0){
+            } else if ($totalValue > 0) {
                 $logger->addError('Balance for bill wrong', array("bill" => $bill, "data" => $data));
 
                 // there was an error with the balance, so delete the bill
                 $has_balance = count($existing_balance) > 0;
-                // delete the bill only when there are no existing balance entries 
+                // delete the bill only when there are no existing balance entries (new bill)
                 if (!$has_balance) {
                     $logger->addWarning('delete bill', array("bill" => $bill, "data" => $data));
                     $this->mapper->delete($bill->id);
@@ -234,6 +187,72 @@ class Controller extends \App\Base\Controller {
                 // add error message
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("SPLITBILLS_BILL_ERROR"));
                 $this->ci->get('flash')->addMessage('message_type', 'danger');
+            }
+        }
+
+        /**
+         * Notify users
+         */
+        $me = $this->ci->get('helper')->getUser();
+        $my_user_id = intval($me->id);
+        $users_afterSave = $this->mapper->getBillUsers($id);
+
+        $new_balances = $this->mapper->getBalance($id);
+        $billValue = $this->mapper->getBillSpend($id);
+
+        $group_url = $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('splitbill_bills', array('group' => $sbgroup->hash));
+
+        $is_new_bill = count($existing_balance) == 0;
+
+        if ($bill->settleup === 0) {
+
+            $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_SUBJECT');
+            $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_DETAIL');
+            if (!$is_new_bill) {
+                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_SUBJECT');
+                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_DETAIL');
+            }
+
+            $subject = sprintf($subject1, $bill->name);
+            $content = sprintf($content1, $me->name, $bill->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
+            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPEND');
+            $lang_paid = $this->ci->get('helper')->getTranslatedString('PAID');
+        } else {
+            $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT');
+            $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DETAIL');
+            if (!$is_new_bill) {
+                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT');
+                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL');
+            }
+            
+            $subject = sprintf($subject1, $me->name);
+            $content = sprintf($content1, $me->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
+            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_SENDER');
+            $lang_paid = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
+        }
+
+        foreach ($users_afterSave as $nu) {
+
+            // except self
+            if ($nu !== $my_user_id) {
+                $user = $this->user_mapper->get($nu);
+
+                if ($user->mail && $user->mails_splitted_bills == 1) {
+
+                    $variables = array(
+                        'header' => '',
+                        'subject' => $subject,
+                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'content' => $content,
+                        'currency' => $sbgroup->currency,
+                        'balances' => $new_balances,
+                        'users' => $users,
+                        'LANG_SPEND' => $lang_spend,
+                        'LANG_PAID' => $lang_paid,
+                    );
+
+                    $this->ci->get('helper')->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
+                }
             }
         }
     }
@@ -350,6 +369,66 @@ class Controller extends \App\Base\Controller {
 
         $my_balance_overview = array_key_exists($me, $balance) ? $balance[$me] : null;
         return array($filtered, $my_balance_overview);
+    }
+
+    private function filterBalances($data, $group_users) {
+        $totalValue = array_key_exists("value", $data) ? floatval(filter_var($data["value"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
+
+        $balances = [];
+        $sum_paid = 0;
+        $sum_spend = 0;
+        foreach ($data["balance"] as $user_id => $bdata) {
+            $user = intval(filter_var($user_id, FILTER_SANITIZE_NUMBER_INT));
+
+            if (in_array($user, $group_users)) {
+                $spend = array_key_exists("spend", $bdata) ? floatval(filter_var($bdata["spend"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
+                $paid = array_key_exists("paid", $bdata) ? floatval(filter_var($bdata["paid"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
+                $paymethod = array_key_exists("paymethod", $bdata) && !empty($bdata["paymethod"]) ? intval(filter_var($bdata["paymethod"], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+                $sum_paid += $paid;
+                $sum_spend += $spend;
+
+                // add entry
+                $balances[] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod" => $paymethod];
+            }
+        }
+        return array($balances, $sum_paid, $sum_spend, $totalValue);
+    }
+
+    private function addBalancesForUsers($bill, $group, $balances, $totalValue, $users) {
+        $finance_mapper = new \App\Finances\Mapper($this->ci);
+        $finance_ctrl = new \App\Finances\Controller($this->ci);
+
+        foreach ($balances as $b) {
+            $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"], $b["paymethod"]);
+
+            $userObj = $users[$b["user"]];
+
+            if ($group->add_finances > 0 && $bill->settleup != 1 && $userObj->module_finance == 1) {
+                if ($b["spend"] > 0) {
+                    $entry = new \App\Finances\FinancesEntry([
+                        "date" => $bill->date,
+                        "time" => $bill->time,
+                        "description" => $bill->name,
+                        "type" => 0,
+                        "value" => $b["spend"],
+                        "user" => $b["user"],
+                        "common" => 1,
+                        "common_value" => $totalValue,
+                        "bill" => $bill->id,
+                        "lng" => $bill->lng,
+                        "lat" => $bill->lat,
+                        "acc" => $bill->acc,
+                        "paymethod" => $b["paymethod"]
+                    ]);
+
+                    $entry->category = $finance_ctrl->getDefaultOrAssignedCategory($b["user"], $entry);
+                    $finance_mapper->addOrUpdateFromBill($entry);
+                } else {
+                    $finance_mapper->deleteEntrywithBill($bill->id, $b["user"]);
+                }
+            }
+        }
     }
 
 }

@@ -163,6 +163,22 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }    
+    
+    
+    public function getBillUsers($id) {
+        $sql = "SELECT user FROM " . $this->getTable($this->bill_balance_table) . " WHERE (spend > 0 OR paid > 0) AND bill = :id ";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($el = $stmt->fetchColumn()) {
+            $results[] = intval($el);
+        }
+        return $results;
+    }
 
     /**
      * Table

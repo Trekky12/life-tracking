@@ -221,6 +221,7 @@ $lang["MAILS_BOARD"] = "Hinzufügen zu Board/Karte";
 $lang["MAILS_BOARD_REMINDER"] = "Karten-Erinnerung";
 $lang["MAILS_USER"] = "Erstellen des Nutzers";
 $lang["MAILS_FINANCES"] = "monatliche Finanzstatistik";
+$lang["MAILS_SPLITTED_BILLS"] = "geteilte Ausgaben";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Dein Benutzeraccount bei %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "für dich wurde ein Benutzeraccount auf <a href='%s'>%s</a> erstellt.";
@@ -233,6 +234,18 @@ $lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</
 
 $lang["MAIL_ADDED_TO_BOARD"] = "Du wurdest zu einem Board hinzugefügt";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%s'>%s</a> hinzugefügt.";
+
+$lang["MAIL_SPLITTED_BILL_ADDED_SUBJECT"] = 'Neue geteilte Ausgabe "%s" hinzugefügt';
+$lang["MAIL_SPLITTED_BILL_ADDED_DETAIL"] = '%s hat die Ausgabe "%s" (%s %s) in der Gruppe <a href="%s">%s</a> mit dir geteilt.';
+
+$lang["MAIL_SPLITTED_BILL_UPDATE_SUBJECT"] = 'Geteilte Ausgabe "%s" aktualisiert';
+$lang["MAIL_SPLITTED_BILL_UPDATE_DETAIL"] = '%s hat die mit dir geteilte Ausgabe "%s" (%s %s) in der Gruppe <a href="%s">%s</a> aktualisiert.';
+
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT"] = '%s hat Schulden beglichen';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DETAIL"] = '%s hat Schulden (%s %s) in der Gruppe <a href="%s">%s</a> beglichen.';
+
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT"] = '%s hat beglichene Schulden aktualisiert.';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL"] = '%s hat beglichende Schulden (%s %s) in der Gruppe <a href="%s">%s</a> aktualisiert.';
 
 $lang["CREATED_BY"] = "Erstellt von";
 $lang["CHANGED_BY"] = "Geändert von";

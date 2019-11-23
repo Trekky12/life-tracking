@@ -47,6 +47,7 @@ class User extends \App\Base\Model {
         $this->mails_finances = $this->exists('mails_finances', $data) ? filter_var($data['mails_finances'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->mails_board = $this->exists('mails_board', $data) ? filter_var($data['mails_board'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->mails_board_reminder = $this->exists('mails_board_reminder', $data) ? filter_var($data['mails_board_reminder'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->mails_splitted_bills = $this->exists('mails_splitted_bills', $data) ? filter_var($data['mails_splitted_bills'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
     }
 
