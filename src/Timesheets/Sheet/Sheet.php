@@ -35,21 +35,21 @@ class Sheet extends \App\Base\Model {
           } */
     }
 
-    public function getStartDateTime() {
+    public function getStartDateTime($fallback = null) {
         $start = new \DateTime($this->start);
-        return !is_null($this->start) ? $start : null;
+        return !is_null($this->start) ? $start : $fallback;
     }
 
-    public function getEndDateTime() {
+    public function getEndDateTime($fallback = null) {
         $end = new \DateTime($this->end);
-        return !is_null($this->end) ? $end : null;
+        return !is_null($this->end) ? $end : $fallback;
     }
 
-    public function getDiff() {
+    public function getDiff($fallback = null) {
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
 
-        return !is_null($this->start) && !is_null($this->end) ? $end->getTimestamp() - $start->getTimestamp() : null;
+        return !is_null($this->start) && !is_null($this->end) ? $end->getTimestamp() - $start->getTimestamp() : $fallback;
     }
 
     public function getDateStartEnd($language, $dateFormat, $datetimeShortFormat, $timeFormat) {

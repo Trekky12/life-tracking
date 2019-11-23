@@ -4,6 +4,11 @@ namespace App\Timesheets\Sheet;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class Controller extends \App\Base\Controller {
 
@@ -168,16 +173,10 @@ class Controller extends \App\Base\Controller {
         $language = $this->ci->get('settings')['app']['i18n']['php'];
         $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt->setPattern($dateFormatPHP['datetimeShort']);
-
-        $fmt2 = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt2->setPattern($dateFormatPHP['time']);
-
         $rendered_data = [];
         foreach ($sheets as $sheet) {
 
-            list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
+            list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
             $row = [];
             $row[] = $date;
@@ -335,25 +334,65 @@ class Controller extends \App\Base\Controller {
         );
         $sheet->getStyle('A4:D4')->getFont()->setBold(true);
 
+
+        $excelTime = "[$-F400]h:mm:ss AM/PM";
+        $excelDate = $dateFormatPHP['date'];
+        $excelDateTime = $dateFormatPHP['datetime'];
+        $excelTimeDiff = "[hh]:mm:ss";
+
         // Table Data
         $offset = 4;
         $idx = 0;
         foreach ($data as $timesheet) {
 
-            list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
-            $diff = $this->ci->get('helper')->splitDateInterval($timesheet->diff);
+            //list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
+            //$diff = $this->ci->get('helper')->splitDateInterval($timesheet->diff);
+            //$sheet->setCellValue('A' . ($idx + 1 + $offset), $date);
+            //$sheet->setCellValue('B' . ($idx + 1 + $offset), $start);
+            //$sheet->setCellValue('C' . ($idx + 1 + $offset), $end);
+            //$sheet->setCellValue('D' . ($idx + 1 + $offset), $diff);
 
-            $sheet->setCellValue('A' . ($idx + 1 + $offset), $date);
-            $sheet->setCellValue('B' . ($idx + 1 + $offset), $start);
-            $sheet->setCellValue('C' . ($idx + 1 + $offset), $end);
-            $sheet->setCellValue('D' . ($idx + 1 + $offset), $diff);
+            $start = $timesheet->getStartDateTime();
+            $end = $timesheet->getEndDateTime();
+
+            $row = ($idx + 1 + $offset);
+
+            // only show time on end date when start date and end date are on the same day
+            if (!is_null($timesheet->start) && !is_null($timesheet->end) && $timesheet->getStartDateTime()->format('Y-m-d') == $timesheet->getEndDateTime()->format('Y-m-d')) {
+                $sheet->setCellValue('C' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end));
+                $sheet->getStyle('C' . $row)->getNumberFormat()->setFormatCode($excelTime);
+            } elseif (!is_null($timesheet->end)) {
+                $sheet->setCellValue('C' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end));
+                $sheet->getStyle('C' . $row)->getNumberFormat()->setFormatCode($excelDateTime);
+            }
+
+            if (!is_null($timesheet->start)) {
+                $sheet->setCellValue('A' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($start));
+
+                $sheet->setCellValue('B' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($start));
+                $sheet->getStyle('B' . $row)->getNumberFormat()->setFormatCode($excelTime);
+            } elseif (!is_null($timesheet->end)) {
+                $sheet->setCellValue('A' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end));
+
+                $sheet->setCellValue('C' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end));
+                $sheet->getStyle('C' . $row)->getNumberFormat()->setFormatCode($excelTime);
+            }
+
+            if (!is_null($timesheet->start) && !is_null($timesheet->end)) {
+                $sheet->setCellValue('D' . $row, "=C" . $row . "-B" . $row);
+                $sheet->getStyle('D' . $row)->getNumberFormat()->setFormatCode($excelTimeDiff);
+            }
+
+            $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
 
             $idx++;
         }
 
         // Table Footer
+        $firstRow = (1 + $offset);
         $sumRow = ($idx + 1 + $offset);
-        $sheet->setCellValue('D' . $sumRow, $this->ci->get('helper')->splitDateInterval($totalSeconds));
+        $sheet->setCellValue('D' . $sumRow, "=SUM(D" . $firstRow . ":D" . ($sumRow - 1) . ")");
+        $sheet->getStyle('D' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDiff);
 
         $sheet->getStyle('A' . $sumRow . ':D' . $sumRow)->applyFromArray(
                 ['borders' => [
@@ -369,6 +408,16 @@ class Controller extends \App\Base\Controller {
         $sheet->getColumnDimension('C')->setAutoSize(true);
         $sheet->getColumnDimension('D')->setAutoSize(true);
 
+        // sheet protection
+        $sheet->getProtection()->setSheet(true);
+        $sheet->getStyle("A" . $firstRow . ":C" . ($sumRow - 1))
+                ->getProtection()->setLocked(
+                \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
+        );
+        $sheet->getStyle("A1:F2")
+                ->getProtection()->setLocked(
+                \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
+        );
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
