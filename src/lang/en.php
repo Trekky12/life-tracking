@@ -247,6 +247,12 @@ $lang["MAIL_SPLITTED_BILL_SETTLEUP_DETAIL"] = '%s settled up spendings (%s %s) i
 $lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT"] = '%s updated settled up spendings';
 $lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL"] = '%s updated settled up spendings (%s %s) in group <a href="%s">%s</a>.';
 
+$lang["MAIL_SPLITTED_BILL_DELETED_SUBJECT"] = 'Splitted bill "%s" deleted';
+$lang["MAIL_SPLITTED_BILL_DELETED_DETAIL"] = '%s deleted the splitted bill "%s" (%s %s) in group <a href="%s">%s</a>.';
+
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT"] = '%s deleted settled up spendings';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL"] = '%s deleted settled up spendings (%s %s) in group <a href="%s">%s</a>.';
+
 $lang["CREATED_BY"] = "Created by";
 $lang["CHANGED_BY"] = "Changed by";
 

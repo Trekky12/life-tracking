@@ -137,6 +137,14 @@ class Controller extends \App\Base\Controller {
 
     protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
+        
+        $bill = $this->mapper->get($id);
+        $sbgroup = $this->group_mapper->get($bill->sbgroup);
+        $existing_balance = $this->mapper->getBalance($bill->id);
+
+        $users = $this->user_mapper->getAll();
+
+        $this->notifyUsers("delete", $bill, $sbgroup, $existing_balance, $users);
     }
 
     /**
@@ -190,71 +198,7 @@ class Controller extends \App\Base\Controller {
             }
         }
 
-        /**
-         * Notify users
-         */
-        $me = $this->ci->get('helper')->getUser();
-        $my_user_id = intval($me->id);
-        $users_afterSave = $this->mapper->getBillUsers($id);
-
-        $new_balances = $this->mapper->getBalance($id);
-        $billValue = $this->mapper->getBillSpend($id);
-
-        $group_url = $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('splitbill_bills', array('group' => $sbgroup->hash));
-
-        $is_new_bill = count($existing_balance) == 0;
-
-        if ($bill->settleup === 0) {
-
-            $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_SUBJECT');
-            $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_DETAIL');
-            if (!$is_new_bill) {
-                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_SUBJECT');
-                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_DETAIL');
-            }
-
-            $subject = sprintf($subject1, $bill->name);
-            $content = sprintf($content1, $me->name, $bill->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
-            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPEND');
-            $lang_paid = $this->ci->get('helper')->getTranslatedString('PAID');
-        } else {
-            $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT');
-            $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DETAIL');
-            if (!$is_new_bill) {
-                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT');
-                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL');
-            }
-            
-            $subject = sprintf($subject1, $me->name);
-            $content = sprintf($content1, $me->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
-            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_SENDER');
-            $lang_paid = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
-        }
-
-        foreach ($users_afterSave as $nu) {
-
-            // except self
-            if ($nu !== $my_user_id) {
-                $user = $this->user_mapper->get($nu);
-
-                if ($user->mail && $user->mails_splitted_bills == 1) {
-
-                    $variables = array(
-                        'header' => '',
-                        'subject' => $subject,
-                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => $content,
-                        'currency' => $sbgroup->currency,
-                        'balances' => $new_balances,
-                        'users' => $users,
-                        'LANG_SPEND' => $lang_spend,
-                        'LANG_PAID' => $lang_paid,
-                    );
-
-                    $this->ci->get('helper')->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
-                }
-            }
-        }
+        $this->notifyUsers("edit", $bill, $sbgroup, $existing_balance, $users);
     }
 
     /**
@@ -426,6 +370,86 @@ class Controller extends \App\Base\Controller {
                     $finance_mapper->addOrUpdateFromBill($entry);
                 } else {
                     $finance_mapper->deleteEntrywithBill($bill->id, $b["user"]);
+                }
+            }
+        }
+    }
+
+    private function notifyUsers($type, $bill, $sbgroup, $existing_balance, $users) {
+        /**
+         * Notify users
+         */
+        $me = $this->ci->get('helper')->getUser();
+        $my_user_id = intval($me->id);
+        $users_afterSave = $this->mapper->getBillUsers($bill->id);
+
+        $new_balances = $this->mapper->getBalance($bill->id);
+        $billValue = $this->mapper->getBillSpend($bill->id);
+
+        $group_path = $this->ci->get('router')->pathFor('splitbill_bills', array('group' => $sbgroup->hash));
+        $group_url = $this->ci->get('helper')->getPath() . $group_path;
+
+        $is_new_bill = count($existing_balance) == 0;
+
+        if ($bill->settleup === 0) {
+
+            if ($type == "edit") {
+                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_SUBJECT');
+                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_DETAIL');
+                if (!$is_new_bill) {
+                    $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_SUBJECT');
+                    $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_DETAIL');
+                }
+            } else {
+                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_SUBJECT');
+                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_DETAIL');
+            }
+
+            $subject = sprintf($subject1, $bill->name);
+            $content = sprintf($content1, $me->name, $bill->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
+            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPEND');
+            $lang_paid = $this->ci->get('helper')->getTranslatedString('PAID');
+        } else {
+            if ($type == "edit") {
+                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT');
+                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DETAIL');
+                if (!$is_new_bill) {
+                    $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT');
+                    $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL');
+                }
+            } else {
+                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT');
+                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL');
+            }
+
+            $subject = sprintf($subject1, $me->name);
+            $content = sprintf($content1, $me->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
+            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_SENDER');
+            $lang_paid = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
+        }
+
+        foreach ($users_afterSave as $nu) {
+
+            // except self
+            if ($nu !== $my_user_id) {
+                $user = $this->user_mapper->get($nu);
+
+                // Mail
+                if ($user->mail && $user->mails_splitted_bills == 1) {
+
+                    $variables = array(
+                        'header' => '',
+                        'subject' => $subject,
+                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'content' => $content,
+                        'currency' => $sbgroup->currency,
+                        'balances' => $new_balances,
+                        'users' => $users,
+                        'LANG_SPEND' => $lang_spend,
+                        'LANG_PAID' => $lang_paid,
+                    );
+
+                    $this->ci->get('helper')->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
                 }
             }
         }

@@ -244,8 +244,14 @@ $lang["MAIL_SPLITTED_BILL_UPDATE_DETAIL"] = '%s hat die mit dir geteilte Ausgabe
 $lang["MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT"] = '%s hat Schulden beglichen';
 $lang["MAIL_SPLITTED_BILL_SETTLEUP_DETAIL"] = '%s hat Schulden (%s %s) in der Gruppe <a href="%s">%s</a> beglichen.';
 
-$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT"] = '%s hat beglichene Schulden aktualisiert.';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT"] = '%s hat beglichene Schulden aktualisiert';
 $lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL"] = '%s hat beglichende Schulden (%s %s) in der Gruppe <a href="%s">%s</a> aktualisiert.';
+
+$lang["MAIL_SPLITTED_BILL_DELETED_SUBJECT"] = 'Geteilte Ausgabe "%s" gelöscht';
+$lang["MAIL_SPLITTED_BILL_DELETED_DETAIL"] = '%s hat die mit dir geteilte Ausgabe "%s" (%s %s) in der Gruppe <a href="%s">%s</a> gelöscht.';
+
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT"] = '%s hat beglichene Schulden gelöscht';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL"] = '%s hat beglichene Schulden (%s %s) in der Gruppe <a href="%s">%s</a> gelöscht.';
 
 $lang["CREATED_BY"] = "Erstellt von";
 $lang["CHANGED_BY"] = "Geändert von";
