@@ -70,7 +70,7 @@ class Sheet extends \App\Base\Model {
         // only show time on end date when start date and end date are on the same day
         if (!is_null($this->start) && !is_null($this->end) && $this->getStartDateTime()->format('Y-m-d') == $this->getEndDateTime()->format('Y-m-d')) {
             $end = $fmtTime->format($this->getEndDateTime());
-        } else {
+        }  elseif (!is_null($this->end)) {
             $end = $fmtDateTime->format($this->getEndDateTime());
         }
 

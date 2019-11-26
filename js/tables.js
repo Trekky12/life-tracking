@@ -748,6 +748,5 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
 });
 
 timesheetsSheetsTable.on("fetchData", function (data) {
-    this.table.getFooterRow().setCellContent(2, null);
-    this.table.getFooterRow().setCellContent(2, data.sum);
+    this.table.getFooterRow().setCellContent(3, data.sum);
 });
