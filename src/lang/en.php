@@ -315,6 +315,8 @@ $lang["REMOVE_LOCATION"] = "Remove location";
 $lang["NOTIFICATIONS_CATEGORIES"] = "Notification categories";
 $lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifier cannot be empty";
 $lang["IDENTIFIER"] = "Identifier";
+$lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "internal notifications";
+$lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Headlines";

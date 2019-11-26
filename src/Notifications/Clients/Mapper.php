@@ -84,5 +84,22 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
+    
+    public function getClientsByCategoryAndUser($category, $user) {
+        $sql = "SELECT c.* FROM " . $this->getTable() . " c, " . $this->getTable($this->client_table) . " cc "
+                . " WHERE c.id = cc.client AND cc.category = :category AND c.user = :user";
+
+        $bindings = array("category" => $category, "user" => $user);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->model($row);
+        }
+        return $results;
+    }
 
 }

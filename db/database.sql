@@ -423,9 +423,15 @@ CREATE TABLE notifications_categories (
     changedOn TIMESTAMP NULL,
     name varchar(255) NOT NULL,
     identifier varchar(255) NOT NULL,
+    internal int(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(identifier),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE notifications_categories ADD internal INT(1) DEFAULT 0 AFTER identifier;
+INSERT INTO notifications_categories (name, identifier, internal) VALUES ('NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
+*/
 
 DROP TABLE IF EXISTS notifications_clients;
 CREATE TABLE notifications_clients (
@@ -473,6 +479,7 @@ CREATE TABLE notifications (
     user INTEGER unsigned DEFAULT NULL,
     title varchar(255) NOT NULL,
     message varchar(255) NOT NULL,
+    link varchar(255) NULL,
     seen TIMESTAMP NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,

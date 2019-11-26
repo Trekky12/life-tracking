@@ -3,17 +3,26 @@
 {% set active = 'profile' %}
 
 {% block body %}
-    
+
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
         <div class="page-content">
             <div id="notifications_categories_list_user">
-                <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                {% for cat in categories %}
+                <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
+                {% for cat in categories if cat.isInternal() %}
                     <div class="form-group">
                         <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
                             <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                            {{cat.name}}
+                                {{lang[cat.name]}}
+                        </label>
+                    </div>
+                {% endfor %}
+                <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+                {% for cat in categories if not cat.isInternal() %}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
+                            <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                                {{cat.name}}
                         </label>
                     </div>
                 {% endfor %}
@@ -31,10 +40,19 @@
             <div id="loadingIconManageNotifications" class="centered">
                 <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
-            
+
             <div id="notifications_categories_list" class="hidden">
+                <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
+                {% for cat in categories if cat.isInternal()%}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxCategory_{{cat.id}}">
+                            <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
+                            {{lang[cat.name]}}
+                        </label>
+                    </div>
+                {% endfor %}
                 <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                {% for cat in categories %}
+                {% for cat in categories if not cat.isInternal() %}
                     <div class="form-group">
                         <label class="checkbox" for="checkboxCategory_{{cat.id}}">
                             <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">

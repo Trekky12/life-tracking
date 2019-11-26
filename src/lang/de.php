@@ -314,6 +314,8 @@ $lang["REMOVE_LOCATION"] = "Standort entfernen";
 $lang["NOTIFICATIONS_CATEGORIES"] = "Benachrichtigungskategorien";
 $lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifikator darf nicht leer sein";
 $lang["IDENTIFIER"] = "Identifikator";
+$lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "interne Benachrichtigungen";
+$lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Überschriften";

@@ -428,6 +428,8 @@ class Controller extends \App\Base\Controller {
             $lang_paid = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
         }
 
+        $notificationCtrl = new \App\Notifications\Controller($this->ci);
+
         foreach ($users_afterSave as $nu) {
 
             // except self
@@ -451,6 +453,9 @@ class Controller extends \App\Base\Controller {
 
                     $this->ci->get('helper')->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
                 }
+
+                // Notification
+                $notificationCtrl->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path);
             }
         }
     }

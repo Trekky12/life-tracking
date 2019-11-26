@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-    
+
     loadMoreFunctions();
     getNotifications().then(function () {
         // init service worker after notifications are loaded
@@ -136,7 +136,7 @@ function initServiceWorker() {
 
         navigator.serviceWorker.register('/sw.js').then(function (registration) {
             console.log('Service worker successfully registered on scope', registration.scope);
-            
+
             // only on notifications pages
             /*if (pushButton === null && notificationsList === null) {
              return;
@@ -527,22 +527,41 @@ function getNotifications() {
                     header.classList = 'notification-header';
 
                     let hTitle = document.createElement("h2");
-                    hTitle.innerHTML = item.title;
+
+                    if (item.link) {
+                        let aTitle = document.createElement("a");
+                        aTitle.href = item.link;
+                        aTitle.innerHTML = item.title;
+
+                        hTitle.appendChild(aTitle);
+                    } else {
+                        hTitle.innerHTML = item.title;
+                    }
 
                     header.appendChild(hTitle);
 
                     if (item.category) {
-                        let spanCategory = document.createElement("span");
-                        spanCategory.innerHTML = lang.category + ": " + data.categories[item.category].name;
+                        if (data.categories[item.category].internal !== 1) {
+                            let spanCategory = document.createElement("span");
+                            spanCategory.innerHTML = lang.category + ": " + data.categories[item.category].name;
 
-                        header.appendChild(spanCategory);
+                            header.appendChild(spanCategory);
+                        }
                     }
 
                     let divMessage = document.createElement("div");
                     divMessage.classList = 'notification-content';
 
                     let pMessage = document.createElement("p");
-                    pMessage.innerHTML = item.message;
+                    if (item.link) {
+                        let aMessage = document.createElement("a");
+                        aMessage.href = item.link;
+                        aMessage.innerHTML = item.message;
+
+                        pMessage.appendChild(aMessage);
+                    } else {
+                        pMessage.innerHTML = item.message;
+                    }
 
                     let divDate = document.createElement("div");
                     divDate.classList = "createdOn";
