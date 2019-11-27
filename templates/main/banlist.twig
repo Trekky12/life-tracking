@@ -1,0 +1,34 @@
+{% extends "base.twig" %}
+
+{% set active = 'settings' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["BANLIST"]}}</h2></div>
+        <div class="page-content">
+            <table id="banlist_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["CREATED_ON"]}}</th>
+                        <th>{{lang["IP_ADDRESS"]}}</th>
+                        <th>{{lang["LOGIN"]}}</th>
+                        
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in list %}
+                        <tr>
+                            <td>{{entry.createdOn}}</td> 
+                            <td>{{entry.ip}}</td> 
+                            <td>{{entry.username}}</td> 
+                            <td><a href="#" data-url="{{  path_for('banlist_delete', {'ip' : entry.ip}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

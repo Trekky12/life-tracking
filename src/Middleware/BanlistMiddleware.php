@@ -21,10 +21,10 @@ class BanlistMiddleware {
         /**
          * Do not allow access for banned ips
          */
-        $banlist = new \App\Main\BanlistMapper($this->ci);
-        $attempts = $banlist->getFailedLoginAttempts($this->ci->get('helper')->getIP());
+        $banlistCtrl = new \App\Banlist\Controller($this->ci);
+        $isBlocked = $banlistCtrl->isBlocked($this->ci->get('helper')->getIP());
 
-        if ($attempts > 2) {
+        if ($isBlocked) {
             $logger->addWarning('BANNED');
             return $this->ci->get('view')->render($response, 'error.twig', ["message" => $this->ci->get('helper')->getTranslatedString("BANNED"), "message_type" => "danger"]);
         }

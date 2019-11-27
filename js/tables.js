@@ -750,3 +750,20 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
 timesheetsSheetsTable.on("fetchData", function (data) {
     this.table.getFooterRow().setCellContent(3, data.sum);
 });
+
+var banlistTable = new JSTable("#banlist_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [3],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

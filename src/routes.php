@@ -13,6 +13,11 @@ $app->group('', function() {
     $this->get('/logfile', '\App\Main\MainController:showLog')->setName('logfile')->add('App\Middleware\AdminMiddleware');
 
     $this->post('/tokens', '\App\Main\MainController:getCSRFTokens')->setName('get_csrf_tokens');
+    
+    $this->group('/banlist', function() {
+        $this->get('/', '\App\Banlist\Controller:index')->setName('banlist');
+        $this->delete('/deleteIP/{ip}', '\App\Banlist\Controller:deleteIP')->setName('banlist_delete');
+    })->add('App\Middleware\AdminMiddleware');
 });
 
 $app->group('/finances', function() {

@@ -212,7 +212,7 @@ class Helper {
     public function checkLogin($username = null, $password = null) {
 
         $logger = $this->ci->get('logger');
-        $banlist = new \App\Main\BanlistMapper($this->ci);
+        $banlistCtrl = new \App\Banlist\Controller($this->ci);
 
         if (!is_null($username) && !is_null($password)) {
 
@@ -221,7 +221,7 @@ class Helper {
 
                 if (password_verify($password, $user->password)) {
                     $this->setUser($user->id);
-                    $banlist->deleteFailedLoginAttempts($this->getIP());
+                    $banlistCtrl->deleteFailedLoginAttempts($this->getIP());
 
                     $logger->addNotice('LOGIN successfully', array("login" => $username));
 
@@ -242,8 +242,7 @@ class Helper {
              * Log failed login to database
              */
             if (!is_null($username) && !is_null($this->getIP())) {
-                $model = new \App\Base\Model(array('ip' => $this->getIP(), 'username' => $username));
-                $banlist->insert($model);
+                $banlistCtrl->addBan($this->getIP(), $username);
             }
         }
         return false;

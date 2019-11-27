@@ -446,4 +446,6 @@ $lang["THIS_DEVICE"] = "this device";
 
 $lang["REQUEST_ERROR"] = "A request error occured!";
 
+$lang["BANLIST"] = "banned IP-addresses";
+
 return $lang;

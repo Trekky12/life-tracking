@@ -445,4 +445,6 @@ $lang["THIS_DEVICE"] = "dieses Gerät";
 
 $lang["REQUEST_ERROR"] = "Ein Übertragungsfehler ist aufgetreten!";
 
+$lang["BANLIST"] = "gesperrte IP-Adressen";
+
 return $lang;
