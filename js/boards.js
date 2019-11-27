@@ -785,12 +785,12 @@ window.addEventListener('beforeunload', function (event) {
  * Stick sidebar to top when scrolling
  */
 const sidebar = document.getElementById('sidebar');
-const header = document.getElementById('masthead');
+const masthead = document.getElementById('masthead');
 const pageBody = document.getElementsByTagName("BODY")[0];
 
 function sidebarAdjustments() {
 
-    let headerHeight = header.offsetHeight;
+    let headerHeight = masthead.offsetHeight;
     let scroll = window.scrollY;
     if (scroll < headerHeight) {
         let value = headerHeight - scroll;
