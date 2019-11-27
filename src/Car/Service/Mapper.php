@@ -212,7 +212,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getTotalMileage($startdate = null) {
-        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTable() . " cs,  " . $this->getTable("cars") . " c " ;
+        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTable() . " cs,  " . $this->getTable("cars") . " c ";
         $sql .= "WHERE c.id = cs.car ";
 
         if (!is_null($startdate)) {
@@ -263,6 +263,10 @@ class Mapper extends \App\Base\Mapper {
 
     public function tableCount($user_cars, $type = 0, $searchQuery = "%") {
 
+        if (empty($user_cars)) {
+            return 0;
+        }
+
         list($sql, $bindings) = $this->getTableSQL("COUNT(cs.id)", $searchQuery, $user_cars, $type);
 
         $stmt = $this->db->prepare($sql);
@@ -275,7 +279,11 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function tableDataFuel($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
-        
+
+        if (empty($user_cars)) {
+            return [];
+        }
+
         $type = 0;
         $sort = "date";
         switch ($sortColumn) {
@@ -307,7 +315,7 @@ class Mapper extends \App\Base\Mapper {
                 $sort = "fuel_location";
                 break;
         }
-        
+
         $partly = $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY");
         $full = $this->ci->get('helper')->getTranslatedString("FUEL_FULL");
 
@@ -334,6 +342,10 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function tableDataService($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+
+        if (empty($user_cars)) {
+            return [];
+        }
 
         $type = 1;
         $sort = "date";
@@ -409,16 +421,15 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
-    
-    
+
     public function getMarkers($from, $to, $user_cars = []) {
-        
+
         if (empty($user_cars)) {
             return [];
         }
-        
+
         $bindings = ["from" => $from, "to" => $to];
-        
+
         $car_bindings = array();
         foreach ($user_cars as $idx => $car) {
             $car_bindings[":car_" . $idx] = $car;
@@ -426,7 +437,7 @@ class Mapper extends \App\Base\Mapper {
 
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
         $sql .= " AND car IN (" . implode(',', array_keys($car_bindings)) . ")";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute(array_merge($bindings, $car_bindings));
 
@@ -437,8 +448,5 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
-    
-       
 
 }
