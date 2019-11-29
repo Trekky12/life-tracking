@@ -94,6 +94,12 @@ $container['view'] = function ($c) {
      */
     $push = $c->get('settings')['app']['push'];
     $view->getEnvironment()->addGlobal('push', $push);
+    
+    /**
+     * Include modules
+     */
+    $modules = $c->get('settings')['app']['modules'];
+    $view->getEnvironment()->addGlobal('modules', $modules);
 
     return $view;
 };

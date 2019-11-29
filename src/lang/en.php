@@ -14,6 +14,7 @@ $lang["MENU_FINANCES"] = 'Finances';
 $lang["MENU_FUEL"] = 'Fuel';
 $lang["MENU_ADMIN"] = 'Administration';
 $lang["MENU_INDEX"] = "Overview";
+$lang["MENU_CAR_REFUEL_SERVICE"] = "Refuel & Service";
 
 $lang["ADD"] = 'Add';
 $lang["FROM"] = 'from';

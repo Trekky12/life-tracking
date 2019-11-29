@@ -277,11 +277,11 @@ $app->group('/crawlers', function() {
 $app->group('/splitbills', function() {
 
     $this->get('/', function (Request $request, Response $response) {
-        return $response->withRedirect($this->get('router')->pathFor('splitbill_groups'), 302);
+        return $response->withRedirect($this->get('router')->pathFor('splitbills'), 302);
     });
 
     $this->group('/groups', function() {
-        $this->get('/', '\App\Splitbill\Group\Controller:index')->setName('splitbill_groups');
+        $this->get('/', '\App\Splitbill\Group\Controller:index')->setName('splitbills');
         $this->get('/edit/[{id:[0-9]+}]', '\App\Splitbill\Group\Controller:edit')->setName('splitbill_groups_edit');
         $this->post('/save/[{id:[0-9]+}]', '\App\Splitbill\Group\Controller:save')->setName('splitbill_groups_save');
         $this->delete('/delete/{id}', '\App\Splitbill\Group\Controller:delete')->setName('splitbill_groups_delete');

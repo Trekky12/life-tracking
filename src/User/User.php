@@ -28,10 +28,10 @@ class User extends \App\Base\Model {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }
 
-        if($this->exists('image', $data)){
+        if ($this->exists('image', $data)) {
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
         }
-        
+
         $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_finance = $this->exists('module_finance', $data) ? filter_var($data['module_finance'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_cars = $this->exists('module_cars', $data) ? filter_var($data['module_cars'], FILTER_SANITIZE_NUMBER_INT) : 0;
@@ -40,15 +40,14 @@ class User extends \App\Base\Model {
         $this->module_splitbills = $this->exists('module_splitbills', $data) ? filter_var($data['module_splitbills'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_trips = $this->exists('module_trips', $data) ? filter_var($data['module_trips'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_timesheets = $this->exists('module_timesheets', $data) ? filter_var($data['module_timesheets'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        
+
         $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        
+
         $this->mails_user = $this->exists('mails_user', $data) ? filter_var($data['mails_user'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->mails_finances = $this->exists('mails_finances', $data) ? filter_var($data['mails_finances'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->mails_board = $this->exists('mails_board', $data) ? filter_var($data['mails_board'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->mails_board_reminder = $this->exists('mails_board_reminder', $data) ? filter_var($data['mails_board_reminder'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->mails_splitted_bills = $this->exists('mails_splitted_bills', $data) ? filter_var($data['mails_splitted_bills'], FILTER_SANITIZE_NUMBER_INT) : 0;
-
     }
 
     public function isAdmin() {
@@ -62,6 +61,29 @@ class User extends \App\Base\Model {
             return $file_wo_extension . '-' . $size . '.' . $file_extension;
         }
         return null;
+    }
+
+    public function hasModule($module) {
+        switch ($module) {
+            case 'finances':
+                return $this->module_finance == 1;
+            case 'location':
+                return $this->module_location == 1;
+            case 'cars':
+                return $this->module_cars == 1;
+            case 'boards':
+                return $this->module_boards == 1;
+            case 'crawlers':
+                return $this->module_crawlers == 1;
+            case 'splitbills':
+                return $this->module_splitbills == 1;
+            case 'trips':
+                return $this->module_trips == 1;
+            case 'timesheets':
+                return $this->module_timesheets == 1;
+        }
+
+        return false;
     }
 
 }

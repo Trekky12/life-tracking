@@ -10,30 +10,9 @@
             <a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %}class="active"{% endif %}><i class="fa {{ favorite.icon }}"></i></a>
         {% endfor %}
     {% else %}
-        {% if user.module_location == 1 %}
-            <a href="{{ path_for('location') }}" {% if active == 'location' %}class="active"{% endif %}><i class="fa fa-map-marker"></i></a>
-        {% endif %}
-        {% if user.module_finance == 1 %}
-            <a href="{{ path_for('finances') }}" {% if active == 'finances' %}class="active"{% endif %}><i class="fa fa-money"></i></a>
-        {% endif %}
-        {% if user.module_cars == 1 %}
-            <a href="{{ path_for('car_service') }}" {% if active == 'car_service' %}class="active"{% endif %}><i class="fa fa-road"></i></a>
-        {% endif %}
-        {% if user.module_boards == 1 %}
-            <a href="{{ path_for('boards') }}" {% if active == 'boards' %}class="active"{% endif %}><i class="fa fa-tasks"></i></a>
-        {% endif %}
-        {% if user.module_crawlers == 1 %}
-            <a href="{{ path_for('crawlers') }}" {% if active == 'crawlers' %}class="active"{% endif %}><i class="fa fa-database"></i></a>
-        {% endif %}
-        {% if user.module_splitbills == 1 %}
-            <a href="{{ path_for('splitbill_groups') }}" {% if active == 'splitbills' %}class="active"{% endif %}><i class="fa fa-handshake-o"></i></a>
-        {% endif %}
-        {% if user.module_trips == 1 %}
-            <a href="{{ path_for('trips') }}" {% if active == 'trips' %}class="active"{% endif %}><i class="fa fa-map-o"></i></a>
-        {% endif %}
-        {% if user.module_timesheets == 1 %}
-            <a href="{{ path_for('timesheets_projects') }}" {% if active == 'timeesheets' %}class="active"{% endif %}><i class="fa fa-clock-o"></i></a>
-        {% endif %}
+        {% for module_name, module in modules if user.hasModule(module_name)%}
+            <a href="{{ path_for(module['rootRoute']) }}" {% if active == module['rootRoute'] %}class="active"{% endif %}><i class="fa {{ module['icon'] }}"></i></a>
+        {% endfor %}
     {% endif %}
     <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="fa fa-bell-o"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
@@ -50,9 +29,9 @@
         <li {% if active == 'index' %}class="active"{% endif %}>
             <a href="{{ path_for('index') }}">{{lang["MENU_INDEX"]}}</a>
         </li> 
-        {% if user.module_location == 1 %}
-            <li {% if active == 'location' %}class="active"{% endif %}>
-                <a href="{{ path_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
+        {% if user.hasModule("location") %}
+            <li {% if active == modules['location']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['location']['rootRoute']) }}">{{lang[modules['location']['title']]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ path_for('location_edit') }}"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{lang["ADD_LOCATION"]}}</a></li>
                     <li role="separator" class="divider"></li>
@@ -60,9 +39,9 @@
                 </ul>
             </li> 
         {% endif %}
-        {% if user.module_finance == 1 %}
-            <li {% if active == 'finances' %}class="active"{% endif %}>
-                <a href="{{ path_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
+        {% if user.hasModule("finances") %}
+            <li {% if active == modules['finances']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['finances']['rootRoute']) }}">{{lang[modules['finances']['title']]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ path_for('finances_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
                     <li><a href="{{ path_for('finances_categories_assignment') }}"><i class="fa fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
@@ -77,37 +56,37 @@
                 </ul>
             </li>
         {% endif %}
-        {% if user.module_cars == 1 %}
-            <li {% if active == 'car_service' %}class="active"{% endif %}>
-                <a href="{{ path_for('car_service') }}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a>
+        {% if user.hasModule("cars") %}
+            <li {% if active == modules['cars']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['cars']['rootRoute']) }}">{{lang[modules['cars']['title']]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ path_for('car_service_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
                 </ul>
             </li>
         {% endif %}
-        {% if user.module_boards == 1 %}
-            <li {% if active == 'boards' %}class="active"{% endif %}>
-                <a href="{{ path_for('boards') }}">{{lang["BOARDS"]}}</a>
+        {% if user.hasModule("boards") %}
+            <li {% if active == modules['boards']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['boards']['rootRoute']) }}">{{lang[modules['boards']['title']]}}</a>
             </li> 
         {% endif %}
-        {% if user.module_crawlers == 1 %}
-            <li {% if active == 'crawlers' %}class="active"{% endif %}>
-                <a href="{{ path_for('crawlers') }}">{{lang["CRAWLERS"]}}</a>
+        {% if user.hasModule("crawlers") %}
+            <li {% if active == modules['crawlers']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['crawlers']['rootRoute']) }}">{{lang[modules['crawlers']['title']]}}</a>
             </li> 
         {% endif %}
-        {% if user.module_splitbills == 1 %}
-            <li {% if active == 'splitbills' %}class="active"{% endif %}>
-                <a href="{{ path_for('splitbill_groups') }}">{{lang["SPLITBILLS"]}}</a>
+        {% if user.hasModule("splitbills") %}
+            <li {% if active == modules['splitbills']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['splitbills']['rootRoute']) }}">{{lang[modules['splitbills']['title']]}}</a>
             </li> 
         {% endif %}
-        {% if user.module_trips == 1 %}
-            <li {% if active == 'trips' %}class="active"{% endif %}>
-                <a href="{{ path_for('trips') }}">{{lang["TRIPS"]}}</a>
+        {% if user.hasModule("trips") %}
+            <li {% if active == modules['trips']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['trips']['rootRoute']) }}">{{lang[modules['trips']['title']]}}</a>
             </li> 
         {% endif %}
-        {% if user.module_timesheets == 1 %}
-            <li {% if active == 'timesheets' %}class="active"{% endif %}>
-                <a href="{{ path_for('timesheets_projects') }}">{{lang["TIMESHEETS"]}}</a>
+        {% if user.hasModule("timesheets") %}
+            <li {% if active == modules['timesheets']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ path_for(modules['timesheets']['rootRoute']) }}">{{lang[modules['timesheets']['title']]}}</a>
             </li> 
         {% endif %}
         {% if user.isAdmin() %}

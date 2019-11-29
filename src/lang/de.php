@@ -14,6 +14,7 @@ $lang["MENU_FINANCES"] = 'Finanzen';
 $lang["MENU_FUEL"] = 'Benzinverbrauch';
 $lang["MENU_ADMIN"] = 'Administration';
 $lang["MENU_INDEX"] = "Übersicht";
+$lang["MENU_CAR_REFUEL_SERVICE"] = "Tanken & Wartung";
 
 $lang["ADD"] = 'Hinzufügen';
 $lang["FROM"] = 'von';

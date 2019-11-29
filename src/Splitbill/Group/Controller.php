@@ -10,7 +10,7 @@ class Controller extends \App\Base\Controller {
 
     public function init() {
         $this->model = '\App\Splitbill\Group\Group';
-        $this->index_route = 'splitbill_groups';
+        $this->index_route = 'splitbills';
         $this->edit_template = 'splitbills/groups/edit.twig';
 
         $this->mapper = new Mapper($this->ci);

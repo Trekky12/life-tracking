@@ -23,30 +23,18 @@ class ModuleMiddleware {
         if (!is_null($baseRoute)) {
             $route = $baseRoute->getPattern();
 
+            $modules = $this->ci->get('settings')['app']['modules'];
+            
+            $current_module = $this->getCurrentModule($modules, $route);
+            
             // Filter only specific routes
-            if (!$this->startsWith($route, '/finances') &&
-                    !$this->startsWith($route, '/location') &&
-                    !$this->startsWith($route, '/cars') &&
-                    !$this->startsWith($route, '/boards') &&
-                    !$this->startsWith($route, '/crawlers') &&
-                    !$this->startsWith($route, '/splitbills') &&
-                    !$this->startsWith($route, '/trips') &&
-                    !$this->startsWith($route, '/timesheets')
-                ){
+            if ($current_module === false) {
                 return $next($request, $response);
             }
-
+            
+            $hasAccess = $user->hasModule($current_module);
             // Has access
-            if (!is_null($user) && (
-                    $this->startsWith($route, '/finances') && $user->module_finance == 1 ||
-                    $this->startsWith($route, '/location') && $user->module_location == 1 ||
-                    $this->startsWith($route, '/cars') && $user->module_cars == 1 ||
-                    $this->startsWith($route, '/boards') && $user->module_boards == 1 ||
-                    $this->startsWith($route, '/crawlers') && $user->module_crawlers == 1 ||
-                    $this->startsWith($route, '/splitbills') && $user->module_splitbills == 1 ||
-                    $this->startsWith($route, '/trips') && $user->module_trips == 1 || 
-                    $this->startsWith($route, '/timesheets') && $user->module_timesheets == 1
-                    )) {
+            if (!is_null($user) && $hasAccess) {
                 return $next($request, $response);
             }
             // No Access
@@ -65,6 +53,15 @@ class ModuleMiddleware {
     private function startsWith($haystack, $needle) {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
+    }
+    
+    private function getCurrentModule($modules, $route){
+        foreach($modules as $name => $mod){
+            if($this->startsWith($route, $mod['url'])){
+                return $name;
+            }
+        }
+        return false;
     }
 
 }

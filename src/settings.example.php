@@ -89,6 +89,57 @@ return [
                 'subject' => '',
                 'TTL' => 3600,
                 'urgency' => 'normal',
+            ],
+            'modules' => [
+                "location" => [
+                    "url" => "/location/",
+                    "rootRoute" => "location",
+                    "icon" => "fa fa-map-marker",
+                    "title" => "MENU_LOCATION"
+                ],
+                "finances" => [
+                    "url" => "/finances/",
+                    "rootRoute" => "finances",
+                    "icon" => "fa fa-money",
+                    "title" => "MENU_FINANCES"
+                ],
+                "cars" => [
+                    "url" => "/cars/",
+                    "rootRoute" => "car_service",
+                    "icon" => "fa fa-road",
+                    "title" => "MENU_CAR_REFUEL_SERVICE"
+                ],
+                "boards" => [
+                    "url" => "/boards/",
+                    "rootRoute" => "boards",
+                    "icon" => "fa fa-tasks",
+                    "title" => "BOARDS"
+                ],
+                "crawlers" => [
+                    "url" => "/crawlers/",
+                    "rootRoute" => "crawlers",
+                    "icon" => "fa fa-database",
+                    "title" => "CRAWLERS"
+                ],
+                "splitbills" => [
+                    "url" => "/splitbills/",
+                    "rootRoute" => "splitbills",
+                    "icon" => "fa fa-handshake-o",
+                    "title" => "SPLITBILLS",
+                    "menu" => "splitbills"
+                ],
+                "trips" => [
+                    "url" => "/trips/",
+                    "rootRoute" => "trips",
+                    "icon" => "fa fa-map-o",
+                    "title" => "TRIPS"
+                ],
+                "timesheets" => [
+                    "url" => "/timesheets/",
+                    "rootRoute" => "timesheets_projects",
+                    "icon" => "fa fa-clock-o",
+                    "title" => "TIMESHEETS"
+                ]
             ]
         ]
     ]

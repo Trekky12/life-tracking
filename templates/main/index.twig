@@ -3,74 +3,14 @@
 {% set active = 'index' %}
 
 {% block body %}
-
-
-        <div class="grid content-small">
-            {%if user.module_location == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('location')}}">{{lang["MENU_LOCATION"]}}</a></h3>
-                        <a href="{{path_for('location')}}"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
-                    </div>
+    <div class="grid content-small">
+        {% for module_name, module in modules if user.hasModule(module_name)%}
+            <div class="card">
+                <div class="card-content">
+                    <h3><a href="{{path_for(module['rootRoute'])}}">{{lang[module['title']]}}</a></h3>
+                    <a href="{{path_for(module['rootRoute'])}}"><i class="fa {{ module['icon'] }}" aria-hidden="true"></i></a>
                 </div>
-            {% endif %}
-            {%if user.module_finance == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('finances')}}">{{lang["MENU_FINANCES"]}}</a></h3>
-                        <a href="{{path_for('finances')}}"><i class="fa fa-money" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            {% endif %}
-            {%if user.module_cars == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('car_service')}}">{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</a></h3>
-                        <a href="{{path_for('car_service')}}"><i class="fa fa-road" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            {% endif %}
-            {%if user.module_boards == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('boards')}}">{{lang["BOARDS"]}}</a></h3>
-                        <a href="{{path_for('boards')}}"><i class="fa fa-tasks" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            {% endif %}
-            {%if user.module_crawlers == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('crawlers')}}">{{lang["CRAWLERS"]}}</a></h3>
-                        <a href="{{path_for('crawlers')}}"><i class="fa fa-database" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            {% endif %}
-            {%if user.module_splitbills == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('splitbill_groups')}}">{{lang["SPLITBILLS"]}}</a></h3>
-                        <a href="{{path_for('splitbill_groups')}}"><i class="fa fa-handshake-o" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            {% endif %}
-            {%if user.module_trips == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('trips')}}">{{lang["TRIPS"]}}</a></h3>
-                        <a href="{{path_for('trips')}}"><i class="fa fa-map-o" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            {% endif %}
-            {%if user.module_timesheets == 1 %}
-                <div class="card">
-                    <div class="card-content">
-                        <h3><a href="{{path_for('timesheets_projects')}}">{{lang["TIMESHEETS"]}}</a></h3>
-                        <a href="{{path_for('timesheets_projects')}}"><i class="fa fa-clock-o" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-
-    
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
