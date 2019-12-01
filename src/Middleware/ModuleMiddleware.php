@@ -9,9 +9,11 @@ use Interop\Container\ContainerInterface;
 class ModuleMiddleware {
 
     protected $ci;
+    protected $logger;
 
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
+        $this->logger = $this->ci->get('logger');
     }
 
     public function __invoke(Request $request, Response $response, $next) {
@@ -24,22 +26,21 @@ class ModuleMiddleware {
             $route = $baseRoute->getPattern();
 
             $modules = $this->ci->get('settings')['app']['modules'];
-            
+
             $current_module = $this->getCurrentModule($modules, $route);
-            
+
             // Filter only specific routes
             if ($current_module === false) {
                 return $next($request, $response);
             }
-            
+
             $hasAccess = $user->hasModule($current_module);
             // Has access
             if (!is_null($user) && $hasAccess) {
                 return $next($request, $response);
             }
             // No Access
-            $logger = $this->ci->get('logger');
-            $logger->addWarning("No Access");
+            $this->logger->addWarning("No Access");
 
             return $this->ci->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
         }
@@ -54,7 +55,7 @@ class ModuleMiddleware {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
     }
-    
+
     private function getCurrentModule($modules, $route){
         foreach($modules as $name => $mod){
             if($this->startsWith($route, $mod['url'])){

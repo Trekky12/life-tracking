@@ -7,16 +7,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-     private $cat_mapper;
+    protected $model = '\App\Finances\Assignment\Assignment';
+    protected $index_route = 'finances_categories_assignment';
     
+    private $cat_mapper;
+
     public function init() {
-        $this->model = '\App\Finances\Assignment\Assignment';
-        $this->index_route = 'finances_categories_assignment';
-        
         $this->mapper = new Mapper($this->ci);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
     }
-    
+
     public function edit(Request $request, Response $response) {
 
         $entry_id = $request->getAttribute('id');

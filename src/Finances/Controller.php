@@ -7,20 +7,22 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    protected $model = '\App\Finances\FinancesEntry';
+    protected $index_route = 'finances';
+    
     private $cat_mapper;
     private $cat_assignments_mapper;
     private $budget_mapper;
+    private $paymethod_mapper;
+    
     static $GROUP_CATEGORIES_BUDGET_CHART = 5;
 
     public function init() {
-        $this->model = '\App\Finances\FinancesEntry';
-        $this->index_route = 'finances';
-
         $this->mapper = new Mapper($this->ci);
-        $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
-        $this->cat_assignments_mapper = new \App\Finances\Assignment\Mapper($this->ci);
-        $this->budget_mapper = new \App\Finances\Budget\Mapper($this->ci);
-        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);
+        $this->cat_mapper = new Category\Mapper($this->ci);
+        $this->cat_assignments_mapper = new Assignment\Mapper($this->ci);
+        $this->budget_mapper = new Budget\Mapper($this->ci);
+        $this->paymethod_mapper = new Paymethod\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -37,7 +39,7 @@ class Controller extends \App\Base\Controller {
 
         $range = $this->mapper->getMinMaxDate();
         $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
-        
+
         $recordSum = round($this->mapper->tableSum($from, $to, 0) - $this->mapper->tableSum($from, $to, 1), 2);
 
         return $this->ci->view->render($response, 'finances/index.twig', [
@@ -81,7 +83,7 @@ class Controller extends \App\Base\Controller {
     public function getDefaultOrAssignedCategory($user_id, FinancesEntry $entry) {
         $default_cat = $this->cat_mapper->getDefaultofUser($user_id);
         $category = $entry->category;
-        
+
         // when there is no category set the default category
         if (is_null($category) && !is_null($default_cat)) {
             $category = $default_cat;
@@ -155,8 +157,6 @@ class Controller extends \App\Base\Controller {
 
     public function record(Request $request, Response $response) {
 
-        $logger = $this->ci->get('logger');
-
         $data = $request->getParsedBody();
 
         $data['user'] = $this->ci->get('helper')->getUser()->id;
@@ -178,10 +178,10 @@ class Controller extends \App\Base\Controller {
                 $id = $this->mapper->insert($entry);
                 $budgets = $this->afterSave($id, $data, $request);
 
-                $logger->addInfo("Record Finances", array("id" => $id));
+                $this->logger->addInfo("Record Finances", array("id" => $id));
             } catch (\Exception $e) {
 
-                $logger->addError("Record Finances", array("error" => $e->getMessage()));
+                $this->logger->addError("Record Finances", array("error" => $e->getMessage()));
 
                 return $response->withJSON(array('status' => 'error', 'data' => $e->getMessage()));
             }

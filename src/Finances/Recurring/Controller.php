@@ -7,17 +7,18 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    protected $model = '\App\Finances\Recurring\FinancesEntryRecurring';
+    protected $index_route = 'finances_recurring';
+    
     private $cat_mapper;
     private $finance_mapper;
+    private $paymethod_mapper;
 
     public function init() {
-        $this->model = '\App\Finances\Recurring\FinancesEntryRecurring';
-        $this->index_route = 'finances_recurring';
-
         $this->mapper = new Mapper($this->ci);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
         $this->finance_mapper = new \App\Finances\Mapper($this->ci);
-        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);        
+        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -46,8 +47,7 @@ class Controller extends \App\Base\Controller {
         $mentries = $this->mapper->getRecurringEntries();
 
         if ($mentries) {
-            $logger = $this->ci->get('logger');
-            $logger->addDebug('Recurring Entries', $mentries);
+            $this->logger->addDebug('Recurring Entries', $mentries);
 
             foreach ($mentries as $mentry) {
                 $entry = new \App\Finances\FinancesEntry([
@@ -80,7 +80,7 @@ class Controller extends \App\Base\Controller {
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
         $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
-        
+
         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
         $fmt->setPattern($dateFormatPHP["month_name"]);
         $dateObj = new \DateTime('first day of last month');
@@ -137,10 +137,10 @@ class Controller extends \App\Base\Controller {
         if (is_null($entry->last_run) && !is_null($entry->start)) {
             $start = new \DateTime($entry->start);
             $now = new \DateTime('now');
-            
+
             $start->setTime(0, 0, 0);
             $now->setTime(0, 0, 0);
-            
+
             if ($now > $start) {
                 $this->mapper->setLastRun($id, $start->format("Y-m-d"));
             }

@@ -8,11 +8,13 @@ use Hashids\Hashids;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Splitbill\Group\Group';
-        $this->index_route = 'splitbills';
-        $this->edit_template = 'splitbills/groups/edit.twig';
+    protected $model = '\App\Splitbill\Group\Group';
+    protected $index_route = 'splitbills';
+    protected $edit_template = 'splitbills/groups/edit.twig';
+    
+    private $bill_mapper;
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->bill_mapper = new \App\Splitbill\Bill\Mapper($this->ci);
     }
@@ -37,7 +39,6 @@ class Controller extends \App\Base\Controller {
     protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
-
 
     protected function afterSave($id, $data, Request $request) {
         $dataset = $this->mapper->get($id);

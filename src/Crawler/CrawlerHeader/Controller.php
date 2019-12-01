@@ -7,11 +7,13 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Crawler\CrawlerHeader\CrawlerHeader';
-        $this->index_route = 'crawlers_headers';
-        $this->edit_template = 'crawlers/headers/edit.twig';
+    protected $model = '\App\Crawler\CrawlerHeader\CrawlerHeader';
+    protected $index_route = 'crawlers_headers';
+    protected $edit_template = 'crawlers/headers/edit.twig';
+    
+    private $crawler_mapper;
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->crawler_mapper = new \App\Crawler\Mapper($this->ci);
     }
@@ -83,8 +85,6 @@ class Controller extends \App\Base\Controller {
         $this->allowCrawlerOwnerOnly($crawler);
         $this->allowCrawlerOwnerOnly($clone_crawler);
 
-        $logger = $this->ci->get('logger');
-
         $clone_elements = $this->mapper->getFromCrawler($clone_id);
         foreach ($clone_elements as &$clone) {
             $fromID = $clone->id;
@@ -92,7 +92,7 @@ class Controller extends \App\Base\Controller {
             $clone->id = null;
             $id = $this->mapper->insert($clone);
 
-            $logger->addNotice("Duplicate crawler headline", array("from" => $clone_crawler->id, "to" => $crawler->id, "fromID" => $fromID, "toID" => $id));
+            $this->logger->addNotice("Duplicate crawler headline", array("from" => $clone_crawler->id, "to" => $crawler->id, "fromID" => $fromID, "toID" => $id));
         }
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
@@ -145,7 +145,7 @@ class Controller extends \App\Base\Controller {
             $this->mapper->unset_sort($id, $header->crawler);
         }
     }
-    
+
     // @see https://dev.mysql.com/doc/refman/8.0/en/cast-functions.html#function_cast
     private function castOptions() {
         return [
@@ -157,7 +157,7 @@ class Controller extends \App\Base\Controller {
             "DECIMAL" => $this->ci->get('helper')->getTranslatedString('CAST_DECIMAL'),
             "SIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_SIGNED'),
             "TIME" => $this->ci->get('helper')->getTranslatedString('CAST_TIME'),
-            "UNSIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_UNSIGNED'),    
+            "UNSIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_UNSIGNED'),
         ];
     }
 

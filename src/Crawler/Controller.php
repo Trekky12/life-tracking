@@ -8,16 +8,19 @@ use Hashids\Hashids;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Crawler\Crawler';
-        $this->index_route = 'crawlers';
-        $this->edit_template = 'crawlers/edit.twig';
+    protected $model = '\App\Crawler\Crawler';
+    protected $index_route = 'crawlers';
+    protected $edit_template = 'crawlers/edit.twig';
+    
+    private $dataset_mapper;
+    private $header_mapper;
+    private $link_mapper;
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
-        $this->user_mapper = new \App\User\Mapper($this->ci);
-        $this->dataset_mapper = new \App\Crawler\CrawlerDataset\Mapper($this->ci);
-        $this->header_mapper = new \App\Crawler\CrawlerHeader\Mapper($this->ci);
-        $this->link_mapper = new \App\Crawler\CrawlerLink\Mapper($this->ci);
+        $this->dataset_mapper = new CrawlerDataset\Mapper($this->ci);
+        $this->header_mapper = new CrawlerHeader\Mapper($this->ci);
+        $this->link_mapper = new CrawlerLink\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -56,7 +59,7 @@ class Controller extends \App\Base\Controller {
 
         $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
         $datasets = $this->dataset_mapper->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 20);
-        $rendered_data = $this->renderTableRows($datasets, $headers, $filter);        
+        $rendered_data = $this->renderTableRows($datasets, $headers, $filter);
 
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
         $links_tree = $this->buildTree($links);
@@ -150,7 +153,7 @@ class Controller extends \App\Base\Controller {
 
     public function setFilter(Request $request, Response $response) {
 
-        $data = $request->getParsedBody();        
+        $data = $request->getParsedBody();
         $hash = $request->getAttribute('crawler');
 
         if (!is_null($hash)) {
@@ -232,14 +235,14 @@ class Controller extends \App\Base\Controller {
 
             foreach ($headers as $header) {
                 $field = [];
-                
-                $content = $dataset->getDataValue($header->field_name);;
+
+                $content = $dataset->getDataValue($header->field_name);
                 if (!empty($header->field_content)) {
                     $content = $header->getHTML();
                 } elseif (intval($header->diff) === 1) {
                     $content = $dataset->getDataValue($header->field_name, "diff");
-                } 
-                
+                }
+
                 if (!empty($header->field_link)) {
 
                     $link = $dataset->getDataValue($header->field_link);

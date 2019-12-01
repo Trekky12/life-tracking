@@ -7,12 +7,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Location\Location';
-        $this->index_route = 'location';
-        $this->edit_template = 'location/edit.twig';
+    protected $model = '\App\Location\Location';
+    protected $index_route = 'location';
+    protected $edit_template = 'location/edit.twig';
+    
+    private $finance_mapper;
+    private $car_mapper;
+    private $carservice_mapper;
 
-        $this->mapper = new \App\Location\Mapper($this->ci);
+    public function init() {
+        $this->mapper = new Mapper($this->ci);
         $this->finance_mapper = new \App\Finances\Mapper($this->ci);
         $this->car_mapper = new \App\Car\Mapper($this->ci);
         $this->carservice_mapper = new \App\Car\Service\Mapper($this->ci);

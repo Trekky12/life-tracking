@@ -32,7 +32,7 @@ $container['csrf'] = function ($c) {
             return $next($request, $response);
         }
 
-        $logger = $c['logger'];
+        $logger = $c->get('logger');
         $logger->addCritical("Failed CSRF check");
 
         $body = new \Slim\Http\Body(fopen('php://temp', 'r+'));
@@ -94,7 +94,7 @@ $container['view'] = function ($c) {
      */
     $push = $c->get('settings')['app']['push'];
     $view->getEnvironment()->addGlobal('push', $push);
-    
+
     /**
      * Include modules
      */
@@ -143,6 +143,7 @@ $container['logger'] = function ($c) {
  */
 $container['db'] = function ($c) {
     $settings = $c->get('settings')['db'];
+    $logger = $c->get('logger');
     try {
         $pdo = new PDO("mysql:host=" . $settings['host'] . ";dbname=" . $settings['dbname'], $settings['user'], $settings['pass']);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -150,7 +151,6 @@ $container['db'] = function ($c) {
         $pdo->exec("set names utf8");
         return $pdo;
     } catch (\PDOException $e) {
-        $logger = $c['logger'];
         $logger->addCritical($e->getMessage());
         die("No access to database");
     }

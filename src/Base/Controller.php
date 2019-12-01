@@ -10,18 +10,21 @@ abstract class Controller {
 
     protected $ci;
     protected $mapper;
-    protected $model;
+    protected $model = '\App\Base\Model';
     protected $user_mapper;
+    
     // Redirect the user to the index after saving
     protected $index_route = '';
     protected $index_params = [];
     protected $edit_template = '';
+    
     // use user id from attribute instead of the current user (save/delete)
     protected $user_from_attribute = false;
+    
     // logger
     protected $logger;
-
-    public function __construct(ContainerInterface $ci) {
+    
+    final public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
         $this->init();
 
@@ -31,13 +34,10 @@ abstract class Controller {
     }
 
     /**
-     * Initialize the main variables
-     * @var $model
-     * @var $index
-     * @var $edit_template;
+     * Initialize the database mappers
      */
     abstract function init();
-
+        
     /**
      * this function is called after successfully saving an entry
      * @param int $id
@@ -99,6 +99,15 @@ abstract class Controller {
      */
     protected function afterGetAPI($id, $entry, Request $request) {
         return $entry;
+    }
+
+    /**
+     * this function is called after successfully deleting an entry
+     * @param int $id
+     * @param Request $request
+     */
+    protected function afterDelete($id, Request $request) {
+        // do nothing
     }
 
     public function save(Request $request, Response $response) {
@@ -215,6 +224,7 @@ abstract class Controller {
         $data = ['is_deleted' => false, 'error' => ''];
 
         try {
+
             /**
              * Custom Hook
              */
@@ -240,6 +250,8 @@ abstract class Controller {
 
             $this->logger->addError("Delete failed " . $this->model, array("id" => $id, "error" => $e->getMessage()));
         }
+
+        $this->afterDelete($id, $request);
 
         $newResponse = $response->withJson($data);
 

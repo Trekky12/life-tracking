@@ -7,16 +7,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Crawler\CrawlerDataset\CrawlerDataset';
+    protected $model = '\App\Crawler\CrawlerDataset\CrawlerDataset';
 
+    private $crawler_mapper;
+
+    public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->crawler_mapper = new \App\Crawler\Mapper($this->ci);
     }
 
     public function saveAPI(Request $request, Response $response) {
-        $logger = $this->ci->get('logger');
-
         $data = $request->getParsedBody();
 
         $crawlerhash = $request->getAttribute('crawler');
@@ -38,7 +38,7 @@ class Controller extends \App\Base\Controller {
                     $new = $data["data"];
                     $old = $dataset->getData();
                     $diff = $this->dataDiff($old, $new);
-                    
+
                     $data["id"] = $dataset_id;
                     $data["diff"] = $diff;
                 }
@@ -46,8 +46,7 @@ class Controller extends \App\Base\Controller {
 
             $this->insertOrUpdate($dataset_id, $data, $request);
         } catch (\Exception $e) {
-
-            $logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
+            $this->logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
 

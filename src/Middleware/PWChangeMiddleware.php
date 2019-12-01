@@ -9,9 +9,11 @@ use Interop\Container\ContainerInterface;
 class PWChangeMiddleware {
 
     protected $ci;
+    protected $logger;
 
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
+        $this->logger = $this->ci->get('logger');
     }
 
     public function __invoke(Request $request, Response $response, $next) {
@@ -30,8 +32,7 @@ class PWChangeMiddleware {
             return $next($request, $response);
         }
 
-        $logger = $this->ci->get('logger');
-        $logger->addWarning("Passwort Change required");
+        $this->logger->addWarning("Passwort Change required");
 
         return $response->withRedirect($this->ci->get('router')->pathFor('users_change_password'), 302);
     }

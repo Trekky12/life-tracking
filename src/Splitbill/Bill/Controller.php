@@ -7,14 +7,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Splitbill\Bill\Bill';
-        $this->index_route = 'splitbill_bills';
-        $this->edit_template = 'splitbills/bills/edit.twig';
+    protected $model = '\App\Splitbill\Bill\Bill';
+    protected $index_route = 'splitbill_bills';
+    protected $edit_template = 'splitbills/bills/edit.twig';
+    
+    private $group_mapper;
+    private $paymethod_mapper;
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->group_mapper = new \App\Splitbill\Group\Mapper($this->ci);
-        $this->user_mapper = new \App\User\Mapper($this->ci);
         $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);
     }
 
@@ -137,7 +139,7 @@ class Controller extends \App\Base\Controller {
 
     protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
-        
+
         $bill = $this->mapper->get($id);
         $sbgroup = $this->group_mapper->get($bill->sbgroup);
         $existing_balance = $this->mapper->getBalance($bill->id);
@@ -151,8 +153,6 @@ class Controller extends \App\Base\Controller {
      * Save balance
      */
     protected function afterSave($id, $data, Request $request) {
-
-        $logger = $this->ci->get('logger');
 
         $bill = $this->mapper->get($id);
         $sbgroup = $this->group_mapper->get($bill->sbgroup);
@@ -170,7 +170,7 @@ class Controller extends \App\Base\Controller {
 
             // floating point comparison
             if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
-                $logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
+                $this->logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
 
                 $this->addBalancesForUsers($bill, $sbgroup, $balances, $totalValue, $users);
 
@@ -179,13 +179,13 @@ class Controller extends \App\Base\Controller {
                     $this->mapper->deleteBalanceofUser($bill->id, $ru);
                 }
             } else if ($totalValue > 0) {
-                $logger->addError('Balance for bill wrong', array("bill" => $bill, "data" => $data));
+                $this->logger->addError('Balance for bill wrong', array("bill" => $bill, "data" => $data));
 
                 // there was an error with the balance, so delete the bill
                 $has_balance = count($existing_balance) > 0;
                 // delete the bill only when there are no existing balance entries (new bill)
                 if (!$has_balance) {
-                    $logger->addWarning('delete bill', array("bill" => $bill, "data" => $data));
+                    $this->logger->addWarning('delete bill', array("bill" => $bill, "data" => $data));
                     $this->mapper->delete($bill->id);
                 }
 

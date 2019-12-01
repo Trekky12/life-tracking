@@ -7,12 +7,12 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    protected $module = "cars";
+    protected $model = '\App\Car\Service\CarServiceEntry';
+    
     private $car_mapper;
 
     public function init() {
-        $this->model = '\App\Car\Service\CarServiceEntry';
-        $this->index_route = 'car_service';
-
         $this->mapper = new Mapper($this->ci);
         $this->car_mapper = new \App\Car\Mapper($this->ci);
     }
@@ -20,7 +20,7 @@ class Controller extends \App\Base\Controller {
     public function index(Request $request, Response $response) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
-        
+
         $fuel_list = $this->mapper->tableDataFuel($user_cars, 'date', 'DESC', 10);
         $fuel_table = $this->renderFuelTableRows($fuel_list);
         $fuel_datacount = $this->mapper->tableCount($user_cars, 0);
@@ -314,7 +314,7 @@ class Controller extends \App\Base\Controller {
                         ]
         );
     }
-    
+
     private function renderFuelTableRows(array $table) {
         foreach ($table as &$row) {
             $row[9] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
@@ -322,7 +322,7 @@ class Controller extends \App\Base\Controller {
         }
         return $table;
     }
-    
+
     private function renderServiceTableRows(array $table) {
         foreach ($table as &$row) {
             $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';

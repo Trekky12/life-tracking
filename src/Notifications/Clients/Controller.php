@@ -7,10 +7,10 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Notifications\Clients\NotificationClient';
-        $this->index_route = 'notifications';
+    protected $model = '\App\Notifications\Clients\NotificationClient';
+    protected $index_route = 'notifications';
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
     }
 
@@ -25,18 +25,16 @@ class Controller extends \App\Base\Controller {
         //$data = json_decode($request->getBody(), true);
         $data = $request->getParsedBody();
 
-        $logger = $this->ci->get('logger');
-
         $entry = new NotificationClient($data);
         $entry->ip = $this->ci->get('helper')->getIP();
         $entry->agent = $this->ci->get('helper')->getAgent();
         $entry->user = $this->ci->get('helper')->getUser()->id;
         $entry->changedOn = date('Y-m-d H:i:s');
-        
+
         $result = array('status' => 'error');
 
         if ($request->isPost()) {
-            $logger->addInfo('Subscription insert', $entry->get_fields());
+            $this->logger->addInfo('Subscription insert', $entry->get_fields());
             $this->mapper->insert($entry);
             $result['status'] = 'success';
         }
@@ -49,12 +47,12 @@ class Controller extends \App\Base\Controller {
                 $result['status'] = 'success';
             } catch (\Exception $e) {
                 // No Entry found so create one
-                //$logger->addWarning('Subscription not on server but on client', $entry->get_fields());
+                //$this->logger->addWarning('Subscription not on server but on client', $entry->get_fields());
                 //$this->mapper->insert($entry);
             }
         }
         if ($request->isDelete()) {
-            $logger->addInfo('Subscription delete', $entry->get_fields());
+            $this->logger->addInfo('Subscription delete', $entry->get_fields());
             $this->mapper->delete($entry->endpoint, "endpoint");
             $result['status'] = 'success';
         }
@@ -79,8 +77,8 @@ class Controller extends \App\Base\Controller {
         $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
         $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
-        
-        $client = $this->mapper->getClientByEndpoint($endpoint);        
+
+        $client = $this->mapper->getClientByEndpoint($endpoint);
         if($type == 1){
             $this->mapper->addCategory($client->id, $category);
         }else{

@@ -8,7 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     public function init() {
-        $this->mapper = new \App\Location\Steps\Mapper($this->ci);
+        $this->mapper = new Mapper($this->ci);
     }
     
     public function editSteps(Request $request, Response $response) {

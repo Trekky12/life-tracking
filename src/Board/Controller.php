@@ -4,26 +4,27 @@ namespace App\Board;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-
 use Hashids\Hashids;
-
 use Dflydev\FigCookies\FigRequestCookies;
 
 class Controller extends \App\Base\Controller {
 
+    protected $model = '\App\Board\Board';
+    protected $index_route = 'boards';
+    protected $edit_template = 'boards/edit.twig';
+    
+    private $stack_mapper;
+    private $card_mapper;
+    private $label_mapper;
+    
     private $users_preSave = array();
     private $users_afterSave = array();
 
     public function init() {
-        $this->model = '\App\Board\Board';
-        $this->index_route = 'boards';
-        $this->edit_template = 'boards/edit.twig';
-
         $this->mapper = new Mapper($this->ci);
-        $this->user_mapper = new \App\User\Mapper($this->ci);
-        $this->stack_mapper = new \App\Board\Stack\Mapper($this->ci);
-        $this->card_mapper = new \App\Board\Card\Mapper($this->ci);
-        $this->label_mapper = new \App\Board\Label\Mapper($this->ci);
+        $this->stack_mapper = new Stack\Mapper($this->ci);
+        $this->card_mapper = new Card\Mapper($this->ci);
+        $this->label_mapper = new Label\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -110,7 +111,7 @@ class Controller extends \App\Base\Controller {
      */
     protected function afterSave($id, $data, Request $request) {
         $board = $this->mapper->get($id);
-        
+
         /**
          * save hash
          */
@@ -149,7 +150,7 @@ class Controller extends \App\Base\Controller {
             }
         }
     }
-    
+
     /**
      * Does the user have access to this dataset?
      */
@@ -160,6 +161,5 @@ class Controller extends \App\Base\Controller {
     protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
-
 
 }

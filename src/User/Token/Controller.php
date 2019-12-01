@@ -7,8 +7,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    protected $index_route = 'users_login_tokens';
+
     public function init() {
-        $this->index_route = 'users_login_tokens';
         $this->mapper = new Mapper($this->ci);
     }
 

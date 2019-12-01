@@ -5,25 +5,25 @@ namespace App\Middleware;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
-
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 
 class UserMiddleware {
 
     protected $ci;
+    protected $logger;
 
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
+        $this->logger = $this->ci->get('logger');
     }
 
     public function __invoke(Request $request, Response $response, $next) {
-        $logger = $this->ci->get('logger');
-    
+
         /**
          * Get and Cache User Object from Token for later use
          */
-        $token = FigRequestCookies::get($request, 'token');        
+        $token = FigRequestCookies::get($request, 'token');
         if(!$this->ci->get('helper')->setUserFromToken($token->getValue())){
             // token not in database -> delete cookie
             $response = FigResponseCookies::expire($response, 'token');
@@ -42,10 +42,10 @@ class UserMiddleware {
          * Check User Object
          */
         $user = $this->ci->get('helper')->getUser();
-        
+
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {
-            $logger->addDebug('Site CALL');
+            $this->logger->addDebug('Site CALL');
             return $next($request, $response);
         }
         // Check for HTTP Authentication
@@ -70,21 +70,20 @@ class UserMiddleware {
             }
 
             if (!is_null($username) && !is_null($password)) {
-                $logger->addDebug('HTTP Auth', array("user" => $username));
+                $this->logger->addDebug('HTTP Auth', array("user" => $username));
                 if ($this->ci->get('helper')->checkLogin($username, $password)) {
                     return $next($request, $response);
                 }
 
-                $logger->addWarning('HTTP Auth failed', array("user" => $username));
+                $this->logger->addWarning('HTTP Auth failed', array("user" => $username));
             }
         }
-        
-        $logger->addDebug('Go to Login');
-        
+
+        $this->logger->addDebug('Go to Login');
+
         /**
          * Save target URI for later redirect
          */
-        
         $uri = $this->ci->get('helper')->getRequestURI($request);
         $this->ci->get('helper')->setSessionVar("redirectURI", $uri);
 

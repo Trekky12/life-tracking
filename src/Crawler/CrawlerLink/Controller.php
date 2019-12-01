@@ -7,11 +7,13 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Crawler\CrawlerLink\CrawlerLink';
-        $this->index_route = 'crawlers_links';
-        $this->edit_template = 'crawlers/links/edit.twig';
+    protected $model = '\App\Crawler\CrawlerLink\CrawlerLink';
+    protected $index_route = 'crawlers_links';
+    protected $edit_template = 'crawlers/links/edit.twig';
 
+    private $crawler_mapper;
+    
+    public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->crawler_mapper = new \App\Crawler\Mapper($this->ci);
     }

@@ -7,11 +7,13 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Trips\Event\Event';
-        $this->index_route = 'trips_view';
-        $this->edit_template = 'trips/events/edit.twig';
+    protected $model = '\App\Trips\Event\Event';
+    protected $index_route = 'trips_view';
+    protected $edit_template = 'trips/events/edit.twig';
+    
+    private $trip_mapper;
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->trip_mapper = new \App\Trips\Mapper($this->ci);
     }
@@ -120,17 +122,17 @@ class Controller extends \App\Base\Controller {
         if (!empty($entry_id)) {
             $entry = $this->mapper->get($entry_id);
         }
-        
+
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data);
-        
+
         $this->preEdit($entry_id, $request);
 
         return $this->ci->view->render($response, $this->edit_template, [
                     'entry' => $entry,
                     'trip' => $trip,
                     'types' => self::eventTypes(),
-                    'from' => $from, 
+                    'from' => $from,
                     'to' => $to
         ]);
     }

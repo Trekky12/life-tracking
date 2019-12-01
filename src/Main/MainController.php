@@ -4,20 +4,15 @@ namespace App\Main;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use Interop\Container\ContainerInterface;
-
 use Dubture\Monolog\Reader\LogReader;
-
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 
-class MainController {
-
-    protected $ci;
-
-    public function __construct(ContainerInterface $ci) {
-        $this->ci = $ci;
+class MainController extends \App\Base\Controller {
+    
+    public function init(){
+        
     }
 
     public function index(Request $request, Response $response) {
@@ -59,7 +54,7 @@ class MainController {
 
                 return $response->withRedirect($this->ci->get('router')->pathFor('index'), 301);
             }
-            
+
             // redirect to logout to delete the POST Data and remove the user from the twig-view
             return $this->logout($request, $response);
             //return $response->withRedirect($this->ci->get('router')->pathFor('login'), 301);
@@ -69,9 +64,7 @@ class MainController {
     }
 
     public function logout(Request $request, Response $response) {
-
-        $logger = $this->ci->get('logger');
-        $logger->addNotice('LOGOUT');
+        $this->logger->addNotice('LOGOUT');
 
         // remove token from database and cookies
         $token = FigRequestCookies::get($request, 'token');
@@ -83,9 +76,7 @@ class MainController {
 
     public function cron(Request $request, Response $response) {
 
-
-        $logger = $this->ci->get('logger');
-        $logger->addInfo('Running CRON');
+        $this->logger->addInfo('Running CRON');
 
         $settings_mapper = new \App\Settings\SettingsMapper($this->ci);
 
@@ -99,7 +90,7 @@ class MainController {
 
         // Update recurring finances @ 06:00
         if ($date->format("H") === "06" && $lastRunRecurring->getDayDiff() > 0) {
-            $logger->addNotice('CRON - Update Finances');
+            $this->logger->addNotice('CRON - Update Finances');
 
             $recurring_ctrl->update();
             $settings_mapper->updateLastRun("lastRunRecurring");
@@ -107,7 +98,7 @@ class MainController {
 
         // Is first of month @ 08:00? Send Finance Summary
         if ($date->format("d") === "01" && $date->format("H") === "08" && $lastRunFinanceSummary->getDayDiff() > 0) {
-            $logger->addNotice('CRON - Send Finance Summary');
+            $this->logger->addNotice('CRON - Send Finance Summary');
 
             $recurring_ctrl->sendSummary();
             $settings_mapper->updateLastRun("lastRunFinanceSummary");
@@ -115,7 +106,7 @@ class MainController {
 
         // card reminder @ 09:00
         if ($date->format("H") === "09" && $lastRunCardReminder->getDayDiff() > 0) {
-            $logger->addNotice('CRON - Send Card Reminder');
+            $this->logger->addNotice('CRON - Send Card Reminder');
 
             $card_ctrl = new \App\Board\Card\Controller($this->ci);
             $card_ctrl->reminder();

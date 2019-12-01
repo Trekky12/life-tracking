@@ -7,15 +7,15 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\User\User';
-        $this->index_route = 'users';
+    protected $model = '\App\User\User';
+    protected $index_route = 'users';
 
-        $this->mapper = new \App\User\Mapper($this->ci);
+    public function init() {
+        
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->mapper->getAll();
+        $list = $this->user_mapper->getAll();
         return $this->ci->view->render($response, 'user/index.twig', ['list' => $list]);
     }
 
@@ -25,7 +25,7 @@ class Controller extends \App\Base\Controller {
 
         $entry = null;
         if (!empty($entry_id)) {
-            $entry = $this->mapper->get($entry_id);
+            $entry = $this->user_mapper->get($entry_id);
         }
 
         return $this->ci->view->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles()]);
@@ -34,7 +34,7 @@ class Controller extends \App\Base\Controller {
     public function testMail(Request $request, Response $response) {
 
         $user_id = $request->getAttribute('user');
-        $entry = $this->mapper->get($user_id);
+        $entry = $this->user_mapper->get($user_id);
 
         if ($entry->mail) {
 
@@ -71,7 +71,7 @@ class Controller extends \App\Base\Controller {
         // notify new user
         // is new user?
         if (!array_key_exists("id", $data)) {
-            $user = $this->mapper->get($id);
+            $user = $this->user_mapper->get($id);
             if ($user->mail && $user->mails_user == 1) {
 
                 $subject = sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->ci->get('helper')->getPath());

@@ -6,11 +6,12 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
-
+    
+    protected $model = '\App\Board\Comment\Comment';
+    
+    private $board_mapper;
     
     public function init() {
-        $this->model = '\App\Board\Comment\Comment';
-        
         $this->mapper = new Mapper($this->ci);
         $this->board_mapper = new \App\Board\Mapper($this->ci);
     }

@@ -9,17 +9,17 @@ use Minishlink\WebPush\Subscription;
 
 class Controller extends \App\Base\Controller {
 
+    protected $index_route = 'notifications_clients';
+    
     private $category_mapper;
     private $client_mapper;
+    private $user_notifications_mapper;
 
     public function init() {
-        $this->index_route = 'notifications_clients';
-        $this->mapper = new \App\Notifications\Mapper($this->ci);
-        $this->category_mapper = new \App\Notifications\Categories\Mapper($this->ci);
-        $this->client_mapper = new \App\Notifications\Clients\Mapper($this->ci);
-        $this->user_notifications_mapper = new \App\Notifications\Users\Mapper($this->ci);
-
-        $this->logger = $this->ci->get('logger');
+        $this->mapper = new Mapper($this->ci);
+        $this->category_mapper = new Categories\Mapper($this->ci);
+        $this->client_mapper = new Clients\Mapper($this->ci);
+        $this->user_notifications_mapper = new Users\Mapper($this->ci);
     }
 
     public function manage(Request $request, Response $response) {

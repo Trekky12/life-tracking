@@ -7,11 +7,11 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\User\MobileFavorites\MobileFavorite';
-        $this->index_route = 'users_mobile_favorites';
-        $this->edit_template = 'profile/mobile_favorites/edit.twig';
+    protected $model = '\App\User\MobileFavorites\MobileFavorite';
+    protected $index_route = 'users_mobile_favorites';
+    protected $edit_template = 'profile/mobile_favorites/edit.twig';
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
     }
 

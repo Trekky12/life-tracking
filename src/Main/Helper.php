@@ -2,19 +2,25 @@
 
 namespace App\Main;
 
+use Interop\Container\ContainerInterface;
+
 class Helper {
 
     private $ci;
-    private $usermapper;
-    private $tokenmapper;
+    private $user_mapper;
+    private $token_mapper;
+    
     // cache the user object
-    private $user_id = null;
     private $user = null;
+    
+    private $logger;
 
-    public function __construct($container) {
-        $this->ci = $container;
-        $this->usermapper = new \App\User\Mapper($this->ci);
-        $this->tokenmapper = new \App\User\Token\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        $this->ci = $ci;
+        $this->user_mapper = new \App\User\Mapper($this->ci);
+        $this->token_mapper = new \App\User\Token\Mapper($this->ci);
+        
+        $this->logger = $this->ci->get('logger');
     }
 
     public function request($URL, $method = 'GET', $data = array(), $secure = true) {
@@ -61,9 +67,7 @@ class Helper {
 
             return array($status_code, $result);
         } catch (Exception $e) {
-
-            $logger = $this->ci->get('logger');
-            $logger->addError("CURL", array("URL" => $URL, "method" => $method, "data" => $data, "error" => $e->getMessage()));
+            $this->logger->addError("CURL", array("URL" => $URL, "method" => $method, "data" => $data, "error" => $e->getMessage()));
 
             print $e->getMessage();
         }
@@ -122,7 +126,7 @@ class Helper {
 
     public function setUser($user_id) {
         // cache the user
-        $this->user = $this->usermapper->get($user_id);
+        $this->user = $this->user_mapper->get($user_id);
         // add user to view
         $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
     }
@@ -139,22 +143,21 @@ class Helper {
         if (!is_null($token) && $token !== FALSE) {
 
             try {
-                $user_id = $this->tokenmapper->getUserFromToken($token);
+                $user_id = $this->token_mapper->getUserFromToken($token);
             } catch (\Exception $e) {
-                $logger = $this->ci->get('logger');
-                $logger->addError("No Token in database");
+                $this->logger->addError("No Token in database");
 
                 return false;
             }
 
             // refresh user for possible changed access rights
-            $this->user = $this->usermapper->get($user_id);
+            $this->user = $this->user_mapper->get($user_id);
 
             // add user object to view
             $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
             $this->ci->get('view')->getEnvironment()->addGlobal("user_token", $token);
 
-            $this->tokenmapper->updateTokenData($token, $this->getIP(), $this->getAgent());
+            $this->token_mapper->updateTokenData($token, $this->getIP(), $this->getAgent());
 
             return true;
         }
@@ -167,7 +170,7 @@ class Helper {
         if (!is_null($user)) {
             $secret = $this->ci->get('settings')['app']['secret'];
             $token = hash('sha512', $secret . time() . $user->id);
-            $this->tokenmapper->addToken($user->id, $token, $this->getIP(), $this->getAgent());
+            $this->token_mapper->addToken($user->id, $token, $this->getIP(), $this->getAgent());
             return $token;
         }
         return null;
@@ -175,7 +178,7 @@ class Helper {
 
     public function removeToken($token) {
         if (!is_null($token) && $token !== FALSE) {
-            $this->tokenmapper->deleteToken($token);
+            $this->token_mapper->deleteToken($token);
         }
     }
 
@@ -210,25 +213,23 @@ class Helper {
     }
 
     public function checkLogin($username = null, $password = null) {
-
-        $logger = $this->ci->get('logger');
         $banlistCtrl = new \App\Banlist\Controller($this->ci);
 
         if (!is_null($username) && !is_null($password)) {
 
             try {
-                $user = $this->usermapper->getUserFromLogin($username);
+                $user = $this->user_mapper->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
                     $this->setUser($user->id);
                     $banlistCtrl->deleteFailedLoginAttempts($this->getIP());
 
-                    $logger->addNotice('LOGIN successfully', array("login" => $username));
+                    $this->logger->addNotice('LOGIN successfully', array("login" => $username));
 
                     return true;
                 }
             } catch (\Exception $e) {
-                $logger->addError('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
+                $this->logger->addError('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
             }
 
 
@@ -236,7 +237,7 @@ class Helper {
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("WRONG_LOGIN"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
 
-            $logger->addWarning('Login WRONG', array("login" => $username));
+            $this->logger->addWarning('Login WRONG', array("login" => $username));
 
             /**
              * Log failed login to database

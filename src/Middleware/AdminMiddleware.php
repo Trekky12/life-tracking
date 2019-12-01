@@ -9,9 +9,11 @@ use Interop\Container\ContainerInterface;
 class AdminMiddleware {
 
     protected $ci;
+    protected $logger;
 
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
+        $this->logger = $this->ci->get('logger');
     }
 
     public function __invoke(Request $request, Response $response, $next) {
@@ -22,8 +24,7 @@ class AdminMiddleware {
             return $next($request, $response);
         }
 
-        $logger = $this->ci->get('logger');
-        $logger->addWarning("No Admin");
+        $this->logger->addWarning("No Admin");
 
         return $this->ci->get('view')->render($response, 'error.twig', ['message' => $this->ci->get('helper')->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
     }

@@ -7,13 +7,13 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    protected $model = '\App\Finances\Budget\Budget';
+    protected $index_route = 'finances_budgets';
+    
     private $cat_mapper;
     private $recurring_mapper;
 
     public function init() {
-        $this->model = '\App\Finances\Budget\Budget';
-        $this->index_route = 'finances_budgets';
-
         $this->mapper = new Mapper($this->ci);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
         $this->recurring_mapper = new \App\Finances\Recurring\Mapper($this->ci);
@@ -104,9 +104,8 @@ class Controller extends \App\Base\Controller {
             $categories = filter_var_array($category, FILTER_SANITIZE_NUMBER_INT);
             $sum = $this->recurring_mapper->getSumOfCategories($categories);
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Get Category Costs", array("data" => $category, "error" => $e->getMessage()));
-            
+            $this->logger->addError("Get Category Costs", array("data" => $category, "error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
 
@@ -144,9 +143,8 @@ class Controller extends \App\Base\Controller {
                 $this->mapper->addCategoriesToBudget($id, $categories);
             }
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Save Categories at Budget", array("data" => $id, "error" => $e->getMessage()));
-            
+            $this->logger->addError("Save Categories at Budget", array("data" => $id, "error" => $e->getMessage()));
+
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR"));
             $this->ci->get('flash')->addMessage('message_type', 'danger');
         }

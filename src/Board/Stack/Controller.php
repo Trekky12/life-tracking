@@ -6,10 +6,12 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
+    
+    protected $model = '\App\Board\Stack\Stack';
+    
+    private $board_mapper;
 
     public function init() {
-        $this->model = '\App\Board\Stack\Stack';
-
         $this->mapper = new Mapper($this->ci);
         $this->board_mapper = new \App\Board\Mapper($this->ci);
     }
@@ -52,9 +54,8 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'success'));
             }
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Update Stack Position", array("data" => $data, "error" => $e->getMessage()));
-            
+            $this->logger->addError("Update Stack Position", array("data" => $data, "error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
         return $response->withJSON(array('status' => 'error'));
@@ -77,13 +78,12 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'error', "error" => "missing data"));
             }
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Archive Stack", array("data" => $data, "id" => $id, "error" => $e->getMessage()));
-            
+            $this->logger->addError("Archive Stack", array("data" => $data, "id" => $id, "error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
     }
-    
+
     protected function afterGetAPI($id, $entry, Request $request) {
 
         if ($entry->name) {

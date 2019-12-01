@@ -4,22 +4,18 @@ namespace App\Timesheets\Sheet;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\Color;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Timesheets\Sheet\Sheet';
-        $this->index_route = 'timesheets_sheets';
-        $this->edit_template = 'timesheets/sheets/edit.twig';
+    protected $model = '\App\Timesheets\Sheet\Sheet';
+    protected $index_route = 'timesheets_sheets';
+    protected $edit_template = 'timesheets/sheets/edit.twig';
+    
+    private $project_mapper;
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->project_mapper = new \App\Timesheets\Project\Mapper($this->ci);
-        $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {

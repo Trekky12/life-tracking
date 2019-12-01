@@ -7,17 +7,20 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
+    protected $model = '\App\Board\Card\Card';
+    
+    private $board_mapper;
+    private $stack_mapper;
+    private $label_mapper;
+    
     private $users_preSave = array();
     private $users_afterSave = array();
 
     public function init() {
-        $this->model = '\App\Board\Card\Card';
-
         $this->mapper = new Mapper($this->ci);
         $this->board_mapper = new \App\Board\Mapper($this->ci);
         $this->stack_mapper = new \App\Board\Stack\Mapper($this->ci);
         $this->label_mapper = new \App\Board\Label\Mapper($this->ci);
-        $this->user_mapper = new \App\User\Mapper($this->ci);
     }
 
     /**
@@ -74,8 +77,7 @@ class Controller extends \App\Base\Controller {
                 $this->label_mapper->addLabelsToCard($id, $filtered_labels);
             }
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("After Card Save", array("data" => $id, "error" => $e->getMessage()));
+            $this->logger->addError("After Card Save", array("data" => $id, "error" => $e->getMessage()));
         }
 
         /**
@@ -119,7 +121,7 @@ class Controller extends \App\Base\Controller {
                     if ($card->date) {
                         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
                         $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
-                        
+
                         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
                         $fmt->setPattern($dateFormatPHP['month_name_full']);
 
@@ -156,7 +158,7 @@ class Controller extends \App\Base\Controller {
         if ($entry->description) {
             $entry->description = html_entity_decode(htmlspecialchars_decode($entry->description));
         }
-        
+
         if ($entry->title) {
             $entry->title = htmlspecialchars_decode($entry->title);
         }
@@ -182,9 +184,8 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'success'));
             }
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Update Card Position", array("data" => $data, "error" => $e->getMessage()));
-            
+            $this->logger->addError("Update Card Position", array("data" => $data, "error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
         return $response->withJSON(array('status' => 'error'));
@@ -206,9 +207,8 @@ class Controller extends \App\Base\Controller {
                 return $response->withJSON(array('status' => 'success'));
             }
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Move Card", array("data" => $data, "error" => $e->getMessage()));
-            
+            $this->logger->addError("Move Card", array("data" => $data, "error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
         return $response->withJSON(array('status' => 'error'));
@@ -231,9 +231,8 @@ class Controller extends \App\Base\Controller {
             $newResponse = $response->withJson(['is_archived' => $is_archived]);
             return $newResponse;
         } catch (\Exception $e) {
-            $logger = $this->ci->get('logger');
-            $logger->addError("Archive Card", array("data" => $data, "id" => $id, "error" => $e->getMessage()));
-            
+            $this->logger->addError("Archive Card", array("data" => $data, "id" => $id, "error" => $e->getMessage()));
+
             return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
         }
     }
@@ -248,7 +247,7 @@ class Controller extends \App\Base\Controller {
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
         $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
-        
+
         $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
         $fmt->setPattern($dateFormatPHP['month_name_full']);
 

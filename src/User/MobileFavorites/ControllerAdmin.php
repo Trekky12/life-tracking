@@ -7,18 +7,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class ControllerAdmin extends \App\Base\Controller {
 
+    protected $model = '\App\User\MobileFavorites\MobileFavorite';
+    protected $index_route = 'users_mobile_favorites_admin';
+    protected $edit_template = 'profile/mobile_favorites/edit.twig';
+    
+    // use user from attribute instead of the current logged in user
+    // when saving new entries
+    protected $user_from_attribute = true;
+
     public function init() {
-        $this->model = '\App\User\MobileFavorites\MobileFavorite';
-        $this->index_route = 'users_mobile_favorites_admin';
-        $this->edit_template = 'profile/mobile_favorites/edit.twig';
-
         $this->mapper = new Mapper($this->ci);
-
-        $this->user_mapper = new \App\User\Mapper($this->ci);
-
-        // use user from attribute instead of the current logged in user
-        // when saving new entries
-        $this->user_from_attribute = true;
     }
 
     public function index(Request $request, Response $response) {

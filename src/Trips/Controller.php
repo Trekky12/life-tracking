@@ -8,14 +8,15 @@ use Hashids\Hashids;
 
 class Controller extends \App\Base\Controller {
 
-    public function init() {
-        $this->model = '\App\Trips\Trip';
-        $this->index_route = 'trips';
-        $this->edit_template = 'trips/edit.twig';
+    protected $model = '\App\Trips\Trip';
+    protected $index_route = 'trips';
+    protected $edit_template = 'trips/edit.twig';
+    
+    private $event_mapper;
 
+    public function init() {
         $this->mapper = new Mapper($this->ci);
-        $this->event_mapper = new \App\Trips\Event\Mapper($this->ci);
-        $this->user_mapper = new \App\User\Mapper($this->ci);
+        $this->event_mapper = new Event\Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -24,7 +25,6 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, 'trips/index.twig', ['trips' => $trips, 'dates' => $dates]);
     }
 
-    
     /**
      * Does the user have access to this dataset?
      */

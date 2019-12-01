@@ -7,11 +7,10 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class ControllerAdmin extends \App\Base\Controller {
 
-    public function init() {
-        $this->index_route = 'login_tokens';
-        $this->mapper = new Mapper($this->ci);
+    protected $index_route = 'login_tokens';
 
-        $this->user_mapper = new \App\User\Mapper($this->ci);
+    public function init() {
+        $this->mapper = new Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {

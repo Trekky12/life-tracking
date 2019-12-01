@@ -12,7 +12,7 @@ class Controller extends \App\Base\Controller {
     public static $MAX_ATTEMPTS = 2;
 
     public function init() {        
-        $this->mapper = new \App\Banlist\Mapper($this->ci);
+        $this->mapper = new Mapper($this->ci);
     }
 
     public function index(Request $request, Response $response) {

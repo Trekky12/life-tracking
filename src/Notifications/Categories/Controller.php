@@ -7,12 +7,11 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
 
-    
+    protected $model = '\App\Notifications\Categories\Category';
+    protected $index_route = 'notifications_categories';
+    protected $edit_template = 'notifications/categories/edit.twig';
+
     public function init() {
-        $this->model = '\App\Notifications\Categories\Category';
-        $this->index_route = 'notifications_categories';
-        $this->edit_template = 'notifications/categories/edit.twig';
-        
         $this->mapper = new Mapper($this->ci);
     }
 
@@ -23,11 +22,11 @@ class Controller extends \App\Base\Controller {
         });
         return $this->ci->view->render($response, 'notifications/categories/index.twig', ['categories' => $categories_filtered]);
     }
-    
+
     protected function preEdit($id, Request $request) {
         $this->checkAccess($id);
     }
-    
+
     protected function preSave($id, array &$data, Request $request) {
         $this->checkAccess($id);
     }
@@ -40,6 +39,5 @@ class Controller extends \App\Base\Controller {
             }
         }
     }
-
 
 }
