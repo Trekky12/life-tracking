@@ -26,11 +26,9 @@ abstract class Controller {
     
     final public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
-        $this->init();
-
         $this->user_mapper = new \App\User\Mapper($this->ci);
-
         $this->logger = $this->ci->get('logger');
+        $this->init();
     }
 
     /**

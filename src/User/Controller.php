@@ -11,7 +11,7 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'users';
 
     public function init() {
-        
+        $this->mapper = $this->user_mapper;
     }
 
     public function index(Request $request, Response $response) {
