@@ -3,7 +3,7 @@
 {% set active = 'profile' %}
 
 {% block javascript %}
-    <script src="{{base_url()}}/static/assets/js/mustache.min.js"></script>
+    <script src="{{base_url()}}/static/js/notifications.js?ver=20191203"></script>
 {% endblock %}
 
 {% block body %}
@@ -23,10 +23,10 @@
     <div class="notifications_overview">
         <div id="notifications">
         </div>
-        <div id="loadingIconNotifications" class="centered">
+        <div id="loadingIconNotifications" class="centered loading-icon">
             <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
         </div>
-        <div id="loadMore" class="centered hidden">
+        <div id="loadMoreNotifications" class="centered hidden">
             <button>Mehr Laden</button>
         </div>
     </div>
