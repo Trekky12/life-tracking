@@ -14,7 +14,7 @@
             <a href="{{ path_for(module['rootRoute']) }}" {% if active == module['rootRoute'] %}class="active"{% endif %}><i class="fa {{ module['icon'] }}"></i></a>
         {% endfor %}
     {% endif %}
-    <a href="{{ path_for('notifications') }}" class="badge {% if active == 'profile' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="fa fa-bell-o"></i></a>
+    <a href="{{ path_for('notifications') }}" class="badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="fa fa-bell-o"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -30,7 +30,7 @@
             <a href="{{ path_for('index') }}">{{lang["MENU_INDEX"]}}</a>
         </li> 
         {% if user.hasModule("location") %}
-            <li {% if active == modules['location']['rootRoute'] %}class="active"{% endif %}>
+            <li {% if active == modules['location']['rootRoute'] or active == 'location_edit' or active == 'steps' %}class="active"{% endif %}>
                 <a href="{{ path_for(modules['location']['rootRoute']) }}">{{lang[modules['location']['title']]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ path_for('location_edit') }}"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{lang["ADD_LOCATION"]}}</a></li>
@@ -105,7 +105,7 @@
                 </ul>
             </li>
         {% endif %}
-        <li {% if active == 'profile' %}class="active"{% endif %}>
+        <li {% if active == 'profile' or active == 'notifications' %}class="active"{% endif %}>
             <a href="{{ path_for('users_profile_edit') }}" class="profile badge {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}"> 
                 {% if user.get_thumbnail() != '' %}
                     <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
