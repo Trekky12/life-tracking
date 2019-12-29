@@ -9,6 +9,7 @@ class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Notifications\Clients\NotificationClient';
     protected $index_route = 'notifications';
+    protected $module = "notifications";
 
     public function init() {
         $this->mapper = new Mapper($this->ci);

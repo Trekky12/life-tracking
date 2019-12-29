@@ -3,6 +3,8 @@
 namespace App\User;
 
 class User extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_USER";
 
     public function parseData(array $data) {
 
@@ -85,5 +87,10 @@ class User extends \App\Base\Model {
 
         return false;
     }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->login;
+    }
+    
 
 }

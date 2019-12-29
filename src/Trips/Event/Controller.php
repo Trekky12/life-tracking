@@ -8,9 +8,11 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Trips\Event\Event';
+    protected $parent_model = '\App\Trips\Trip';
     protected $index_route = 'trips_view';
     protected $edit_template = 'trips/events/edit.twig';
-    
+    protected $element_view_route = 'trips_view';
+    protected $module = "trips";
     private $trip_mapper;
 
     public function init() {
@@ -212,7 +214,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
@@ -256,6 +258,16 @@ class Controller extends \App\Base\Controller {
             "TRAINRIDE",
             "CARRENTAL",
         ];
+    }
+
+    protected function getElementViewRoute($entry) {
+        $trip = $this->getParentObjectMapper()->get($entry->getParentID());
+        $this->element_view_route_params["trip"] = $trip->getHash();
+        return parent::getElementViewRoute($entry);
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->trip_mapper;
     }
 
 }

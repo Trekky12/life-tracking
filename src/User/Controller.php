@@ -8,6 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\User\User';
+    protected $element_view_route = 'users_edit';
     protected $index_route = 'users';
 
     public function init() {
@@ -67,7 +68,7 @@ class Controller extends \App\Base\Controller {
         return ['user', 'admin'];
     }
 
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         // notify new user
         // is new user?
         if (!array_key_exists("id", $data)) {

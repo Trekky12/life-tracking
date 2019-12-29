@@ -3,6 +3,8 @@
 namespace App\Finances\Paymethod;
 
 class Paymethod extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_FINANCES_PAYMETHOD";
 
     public function parseData(array $data) {
 
@@ -12,6 +14,10 @@ class Paymethod extends \App\Base\Model {
         if(empty($this->name)){
             $this->parsing_errors[] ="NAME_CANNOT_BE_EMPTY";
         }
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->name;
     }
 
 }

@@ -3,6 +3,8 @@
 namespace App\Board\Comment;
 
 class Comment extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_BOARDS_COMMENT";
 
     public function parseData(array $data) {
 
@@ -12,6 +14,14 @@ class Comment extends \App\Base\Model {
         if (empty($this->comment)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->comment;
+    }
+
+    public function getParentID() {
+        return $this->card;
     }
 
 }

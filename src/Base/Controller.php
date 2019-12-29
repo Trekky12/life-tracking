@@ -11,19 +11,23 @@ abstract class Controller {
     protected $ci;
     protected $mapper;
     protected $model = '\App\Base\Model';
+    protected $parent_model = null;
     protected $user_mapper;
-    
     // Redirect the user to the index after saving
     protected $index_route = '';
     protected $index_params = [];
     protected $edit_template = '';
-    
+    protected $element_view_route = '';
+    protected $element_view_route_params = [];
     // use user id from attribute instead of the current user (save/delete)
     protected $user_from_attribute = false;
-    
     // logger
     protected $logger;
-    
+    // activities
+    protected $create_activity = true;
+    // module of the current controller
+    protected $module = "general";
+
     final public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
         $this->user_mapper = new \App\User\Mapper($this->ci);
@@ -35,7 +39,7 @@ abstract class Controller {
      * Initialize the database mappers
      */
     abstract function init();
-        
+
     /**
      * this function is called after successfully saving an entry
      * @param int $id
@@ -130,7 +134,7 @@ abstract class Controller {
     }
 
     protected function insertOrUpdate($id, $data, Request $request) {
-
+        
         // Remove CSRF attributes
         if (array_key_exists('csrf_name', $data)) {
             unset($data["csrf_name"]);
@@ -138,6 +142,8 @@ abstract class Controller {
         if (array_key_exists('csrf_value', $data)) {
             unset($data["csrf_value"]);
         }
+
+        $activity_type = null;
 
         /**
          * Custom Hook
@@ -159,8 +165,9 @@ abstract class Controller {
             $id = $this->mapper->insert($entry);
             $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_ADD"));
             $this->ci->get('flash')->addMessage('message_type', 'success');
-
             $this->logger->addNotice("Insert Entry " . $this->model, array("id" => $id));
+
+            $activity_type = "create";
         } else {
             $elements_changed = $this->mapper->update($entry);
             if ($elements_changed > 0) {
@@ -168,6 +175,8 @@ abstract class Controller {
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Entry " . $this->model, array("id" => $id));
+
+                $activity_type = "update";
             } else {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
                 $this->ci->get('flash')->addMessage('message_type', 'info');
@@ -191,6 +200,16 @@ abstract class Controller {
          * Custom Hook
          */
         $this->afterSave($id, $data, $request);
+
+        /**
+         * Add Activity
+         */
+        if (!is_null($activity_type) && $this->create_activity) {
+            $savedEntry = $this->mapper->get($id);
+            $affectedUsers = $this->getAffectedUsers($savedEntry);
+
+            $this->addActivity($activity_type, $id, $savedEntry, $affectedUsers);
+        }
 
         return array($id, $data);
     }
@@ -228,6 +247,15 @@ abstract class Controller {
              */
             $this->preDelete($id, $request);
 
+            /**
+             * get affected users
+             */
+            $savedEntry = $this->mapper->get($id);
+            $affectedUsers = $this->getAffectedUsers($savedEntry);
+
+            /**
+             * Delete
+             */
             $is_deleted = $this->mapper->delete($id);
             $data ['is_deleted'] = $is_deleted;
             if ($is_deleted) {
@@ -235,6 +263,10 @@ abstract class Controller {
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Delete successfully " . $this->model, array("id" => $id));
+
+                if ($this->create_activity) {
+                    $this->addActivity("delete", $id, $savedEntry, $affectedUsers);
+                }
             } else {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
                 $this->ci->get('flash')->addMessage('message_type', 'danger');
@@ -308,6 +340,47 @@ abstract class Controller {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
+    }
+
+    /**
+     * Users with access to a specific dataset
+     */
+    protected function getAffectedUsers($entry) {
+        if ($this->hasParent()) {
+            return $this->getParentObjectMapper()->getUsers($entry->getParentID());
+        }
+        return $this->mapper->getUsers($entry->id);
+    }
+
+    protected function getElementViewRoute($entry) {
+        if(empty($this->element_view_route)){
+            return null;
+        }
+        $this->element_view_route_params["id"] = $entry->id;
+        return $this->ci->get('router')->pathFor($this->element_view_route, $this->element_view_route_params);
+    }
+
+    private function addActivity($type, $id, $entry, $users) {
+        $object = ["object" => $this->model, "id" => $id, "description" => $entry->getDescription($this->ci), "link" => $this->getElementViewRoute($entry)];
+        $parent = ["object" => $this->parent_model, "id" => $entry->getParentID(), "description" => $this->getParentDescription($entry)];
+
+        $this->ci->get('activity')->addEntry($type, $this->module, static::class, $object, $parent, $users);
+    }
+
+    protected function getParentObjectMapper() {
+        return null;
+    }
+
+    private function getParentDescription($entry) {
+        if ($this->hasParent()) {
+            $parent_object = $this->getParentObjectMapper()->get($entry->getParentID());
+            return $parent_object->getDescription($this->ci);
+        }
+        return null;
+    }
+
+    public function hasParent() {
+        return !is_null($this->parent_model) && !is_null($this->getParentObjectMapper());
     }
 
 }

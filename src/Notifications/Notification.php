@@ -3,6 +3,8 @@
 namespace App\Notifications;
 
 class Notification extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_NOTIFICATIONS_NOTIFICATION";
 
     public function parseData(array $data) {
 
@@ -12,7 +14,7 @@ class Notification extends \App\Base\Model {
         $this->message = $this->exists('message', $data) ? filter_var($data['message'], FILTER_SANITIZE_STRING) : null;
         $this->seen = $this->exists('seen', $data) ? filter_var($data['seen'], FILTER_SANITIZE_STRING) : null;
         $this->link = $this->exists('link', $data) ? filter_var($data['link'], FILTER_SANITIZE_STRING) : null;
-        
+
         /**
          * Value from DB
          */

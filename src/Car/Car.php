@@ -3,6 +3,8 @@
 namespace App\Car;
 
 class Car extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_CARS";
 
     public function parseData(array $data) {
 
@@ -19,6 +21,10 @@ class Car extends \App\Base\Model {
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->name;
     }
 
 }

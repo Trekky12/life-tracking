@@ -448,4 +448,44 @@ $lang["REQUEST_ERROR"] = "Ein Übertragungsfehler ist aufgetreten!";
 
 $lang["BANLIST"] = "gesperrte IP-Adressen";
 
+$lang["ACTIVITIES"] = "Aktivitäten";
+$lang["ACTIVITY_CREATE"] = "%s hat \"%s\" erstellt";
+$lang["ACTIVITY_UPDATE"] = "%s hat \"%s\" aktualisiert";
+$lang["ACTIVITY_DELETE"] = "%s hat \"%s\" gelöscht";
+$lang["ACTIVITY_CREATE_ME"] = "Du hast \"%s\" erstellt";
+$lang["ACTIVITY_UPDATE_ME"] = "Du hast \"%s\" aktualisiert";
+$lang["ACTIVITY_DELETE_ME"] = "Du hast \"%s\" gelöscht";
+
+$lang["MODEL_ACITIVY"] = "Aktivität";
+$lang["MODEL_BOARDS_BOARD"] = "Board";
+$lang["MODEL_BOARDS_CARD"] = "Karte";
+$lang["MODEL_BOARDS_COMMENT"] = "Kommentar";
+$lang["MODEL_BOARDS_LABEL"] = "Label";
+$lang["MODEL_BOARDS_STACK"] = "Stapel";
+$lang["MODEL_CARS"] = "Auto";
+$lang["MODEL_CARS_SERVICE_ENTRY"] = "Tanken/Wartung";
+$lang["MODEL_CRAWLERS_DATASET"] = "Crawler Eintrag";
+$lang["MODEL_CRAWLERS_HEADER"] = "Crawler Überschrift";
+$lang["MODEL_CRAWLERS_LINK"] = "Crawler Link";
+$lang["MODEL_FINANCES_ASSIGNMENT_ENTRY"] = "Finanzkategorie-Zuweisung";
+$lang["MODEL_FINANCES_BUDGET_ENTRY"] = "Finanzbudget";
+$lang["MODEL_FINANCES_CATEGORY"] = "Finanzkategorie";
+$lang["MODEL_FINANCES_ENTRY"] = "Finanzeintrag";
+$lang["MODEL_FINANCES_PAYMETHOD"] = "Zahlungsmethode";
+$lang["MODEL_FINANCES_ENTRY_RECURRING"] = "wiederkehrender Finanzeintrag";
+$lang["MODEL_LOCATION_ENTRY"] = "Standort";
+$lang["MODEL_NOTIFICATIONS_CATEGORY"] = "Benachrichtigungskategorie";
+$lang["MODEL_NOTIFICATIONS_CLIENT"] = "Benachrichtigungsclient";
+$lang["MODEL_NOTIFICATIONS_NOTIFICATION"] = "Benachrichtigung";
+$lang["MODEL_SETTING"] = "Einstellung";
+$lang["MODEL_SPLITBILLS_BILL"] = "geteilte Ausgabe";
+$lang["MODEL_SPLITBILLS_GROUP"] = "geteilte Ausgabengruppe";
+$lang["MODEL_TIMESHEETS_PROJECT"] = "Zeiterfasungsprojekt";
+$lang["MODEL_TIMESHEETS_SHEET"] = "Zeiterfasungseintrag";
+$lang["MODEL_TRIPS_EVENT"] = "Reise-Event";
+$lang["MODEL_TRIPS_TRIP"] = "Reise";
+$lang["MODEL_MOBILEFAVORITE"] = "Mobiler Favoriteneintrag";
+$lang["MODEL_USER"] = "Benutzer";
+
+
 return $lang;

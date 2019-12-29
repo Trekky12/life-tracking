@@ -8,9 +8,11 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Splitbill\Bill\Bill';
+    protected $parent_model = '\App\Splitbill\Group\Group';
     protected $index_route = 'splitbill_bills';
     protected $edit_template = 'splitbills/bills/edit.twig';
-    
+    protected $element_view_route = 'splitbill_bills';
+    protected $module = "splitbills";
     private $group_mapper;
     private $paymethod_mapper;
 
@@ -129,7 +131,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
@@ -152,7 +154,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Save balance
      */
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
 
         $bill = $this->mapper->get($id);
         $sbgroup = $this->group_mapper->get($bill->sbgroup);
@@ -234,8 +236,8 @@ class Controller extends \App\Base\Controller {
             }
 
             if ($bill->user == $user) {
-                $row[] = '<a href="' . $this->ci->get('router')->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->hash]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-                $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->hash]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+                $row[] = '<a href="' . $this->ci->get('router')->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+                $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
             }
 
             $rendered_data[] = $row;
@@ -386,7 +388,7 @@ class Controller extends \App\Base\Controller {
         $new_balances = $this->mapper->getBalance($bill->id);
         $billValue = $this->mapper->getBillSpend($bill->id);
 
-        $group_path = $this->ci->get('router')->pathFor('splitbill_bills', array('group' => $sbgroup->hash));
+        $group_path = $this->ci->get('router')->pathFor('splitbill_bills', array('group' => $sbgroup->getHash()));
         $group_url = $this->ci->get('helper')->getPath() . $group_path;
 
         $is_new_bill = count($existing_balance) == 0;
@@ -458,6 +460,16 @@ class Controller extends \App\Base\Controller {
                 $notificationCtrl->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path);
             }
         }
+    }
+
+    protected function getElementViewRoute($entry) {
+        $group = $this->getParentObjectMapper()->get($entry->getParentID());
+        $this->element_view_route_params["group"] = $group->getHash();
+        return parent::getElementViewRoute($entry);
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->group_mapper;
     }
 
 }

@@ -3,23 +3,25 @@
 namespace App\Splitbill\Bill;
 
 class Bill extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_SPLITBILLS_BILL";
 
     public function parseData(array $data) {
 
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
         $this->sbgroup = $this->exists('sbgroup', $data) ? filter_var($data['sbgroup'], FILTER_SANITIZE_NUMBER_INT) : null;
-        
+
         $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : date('Y-m-d');
         $this->time = $this->exists('time', $data) ? filter_var($data['time'], FILTER_SANITIZE_STRING) : date('H:i:s');
-        
+
         $this->lat = $this->exists('lat', $data) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->lng = $this->exists('lng', $data) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        
+
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
-        
+
         $this->settleup = $this->exists('settleup', $data) ? intval(filter_var($data['settleup'], FILTER_SANITIZE_NUMBER_INT)) : 0;
-        
+
         /**
          * Clean date/time
          */
@@ -52,6 +54,14 @@ class Bill extends \App\Base\Model {
         unset($temp["balance"]);
 
         return $temp;
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->name;
+    }
+
+    public function getParentID() {
+        return $this->sbgroup;
     }
 
 }

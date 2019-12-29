@@ -8,7 +8,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Board\Card\Card';
-    
+    protected $parent_model = '\App\Board\Stack\Stack';
+    protected $element_view_route = 'boards_view';
+    protected $module = "boards";
     private $board_mapper;
     private $stack_mapper;
     private $label_mapper;
@@ -26,7 +28,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $user = $this->ci->get('helper')->getUser()->id;
         $this->users_preSave = array();
 
@@ -51,7 +53,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Save labels, notify user
      */
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         // card check is already done in preSave()
         $board_id = $this->mapper->getCardBoard($id);
 
@@ -107,7 +109,7 @@ class Controller extends \App\Base\Controller {
                         'header' => '',
                         'subject' => $subject,
                         'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->hash)), $board->name, $stack->name, $card->title),
+                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->getHash())), $board->name, $stack->name, $card->title),
                         'extra' => ''
                     );
 
@@ -307,6 +309,22 @@ class Controller extends \App\Base\Controller {
         }
 
         return true;
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->stack_mapper;
+    }
+
+    protected function getAffectedUsers($entry) {
+        $board_id = $this->mapper->getCardBoard($entry->id);
+        return $this->board_mapper->getUsers($board_id);
+    }
+
+    protected function getElementViewRoute($entry) {
+        $board_id = $this->mapper->getCardBoard($entry->id);
+        $board = $this->board_mapper->get($board_id);
+        $this->element_view_route_params["hash"] = $board->getHash();
+        return parent::getElementViewRoute($entry);
     }
 
 }

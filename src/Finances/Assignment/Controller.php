@@ -9,6 +9,8 @@ class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Finances\Assignment\Assignment';
     protected $index_route = 'finances_categories_assignment';
+    protected $element_view_route = 'finances_categories_assignment_edit';
+    protected $module = "finances";
     
     private $cat_mapper;
 

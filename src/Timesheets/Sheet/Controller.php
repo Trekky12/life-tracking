@@ -8,9 +8,11 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Timesheets\Sheet\Sheet';
+    protected $parent_model = '\App\Timesheets\Project\Project';
     protected $index_route = 'timesheets_sheets';
     protected $edit_template = 'timesheets/sheets/edit.twig';
-    
+    protected $element_view_route = 'timesheets_sheets';
+    protected $module = "timesheets";
     private $project_mapper;
 
     public function init() {
@@ -118,11 +120,11 @@ class Controller extends \App\Base\Controller {
     }
 
     // redirect to project overview
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         $entry = $this->mapper->get($id);
         $project_id = $entry->project;
         $project = $this->project_mapper->get($project_id);
-        $this->index_params = ["project" => $project->hash];
+        $this->index_params = ["project" => $project->getHash()];
 
         // get and save diff
         $diff = $entry->getDiff();
@@ -135,7 +137,7 @@ class Controller extends \App\Base\Controller {
      * Is the user allowed to save/edit/delete this 
      * (is he a member of the project?)
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $project_hash = $request->getAttribute("project");
         $entry = $this->project_mapper->getFromHash($project_hash);
         $this->checkAccess($entry->id);
@@ -180,8 +182,8 @@ class Controller extends \App\Base\Controller {
             $row[] = $end;
             $row[] = $this->ci->get('helper')->splitDateInterval($sheet->diff);
 
-            $row[] = '<a href="' . $this->ci->get('router')->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->hash]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->hash]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+            $row[] = '<a href="' . $this->ci->get('router')->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
+            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
 
             $rendered_data[] = $row;
         }
@@ -444,6 +446,16 @@ class Controller extends \App\Base\Controller {
                         ->withHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                         ->withHeader('Content-Disposition', 'attachment; filename="' . date('Y-m-d') . '_Export.xlsx"')
                         ->withHeader('Cache-Control', 'max-age=0');
+    }
+
+    protected function getElementViewRoute($entry) {
+        $group = $this->getParentObjectMapper()->get($entry->getParentID());
+        $this->element_view_route_params["project"] = $group->getHash();
+        return parent::getElementViewRoute($entry);
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->project_mapper;
     }
 
 }

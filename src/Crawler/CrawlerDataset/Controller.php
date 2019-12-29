@@ -8,7 +8,10 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Crawler\CrawlerDataset\CrawlerDataset';
-
+    protected $parent_model = '\App\Crawler\Crawler';
+    protected $element_view_route = 'crawlers_view';
+    protected $create_activity = false;
+    protected $module = "crawlers";
     private $crawler_mapper;
 
     public function init() {
@@ -56,7 +59,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Encode data as json
      */
-    public function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         if (array_key_exists("data", $data) && is_array($data["data"])) {
             $data["data"] = json_encode($data["data"]);
         }
@@ -68,17 +71,27 @@ class Controller extends \App\Base\Controller {
     private function dataDiff($old, $new) {
         return array_diff_assoc($old, $new);
         /*
-        $diff = [];
-        foreach ($old as $key => $value) {
-            if (!array_key_exists($key, $new) || $new[$key] != $value) {
-                $diff[$key] = $value;
-            } else {
-                $diff[$key] = NULL;
-            }
-        }
-        return $diff;
+          $diff = [];
+          foreach ($old as $key => $value) {
+          if (!array_key_exists($key, $new) || $new[$key] != $value) {
+          $diff[$key] = $value;
+          } else {
+          $diff[$key] = NULL;
+          }
+          }
+          return $diff;
          *
          */
+    }
+
+    protected function getElementViewRoute($entry) {
+        $crawler = $this->getParentObjectMapper()->get($entry->getParentID());
+        $this->element_view_route_params["crawler"] = $crawler->getHash();
+        return parent::getElementViewRoute($entry);
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->crawler_mapper;
     }
 
 }

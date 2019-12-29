@@ -3,6 +3,8 @@
 namespace App\Car\Service;
 
 class CarServiceEntry extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_CARS_SERVICE_ENTRY";
 
     public function parseData(array $data) {
 
@@ -78,7 +80,7 @@ class CarServiceEntry extends \App\Base\Model {
         $this->lat = $this->exists('lat', $data) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->lng = $this->exists('lng', $data) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        
+
         /**
          * Parsing Errors
          */
@@ -115,17 +117,26 @@ class CarServiceEntry extends \App\Base\Model {
     public function isServiceGarage() {
         return !is_null($this->service_garage) && $this->service_garage != 0;
     }
-    
 
     public function getPosition() {
         return [
-            'id' => $this->id, 
-            'dt' => $this->date, 
-            'lat' => $this->lat, 
-            'lng' => $this->lng, 
-            'acc' => $this->acc, 
+            'id' => $this->id,
+            'dt' => $this->date,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
+            'acc' => $this->acc,
             'description' => $this->type,
             'type' => 2];
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        $refuel = $ci->get('helper')->getTranslatedString("CAR_REFUEL");
+        $service = $ci->get('helper')->getTranslatedString("CAR_SERVICE");
+        return sprintf("%s (%s)", $this->mileage, $this->type == 0 ? $refuel : $service);
+    }
+    
+    public function getParentID() {
+        return $this->car;
     }
 
 }

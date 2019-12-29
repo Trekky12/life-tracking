@@ -10,6 +10,7 @@ use Minishlink\WebPush\Subscription;
 class Controller extends \App\Base\Controller {
 
     protected $index_route = 'notifications_clients';
+    protected $module = "notifications";
     
     private $category_mapper;
     private $client_mapper;

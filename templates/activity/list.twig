@@ -1,0 +1,36 @@
+{% extends "base.twig" %}
+
+{% set active = 'profile' %}
+
+{% block javascript %}
+    <script src="{{base_url()}}/static/js/activities.js?ver=20191209"></script>
+{% endblock %}
+
+{% block body %}
+
+    {% if message is defined %}
+        <div class="alert hide-offline {{message_type}}">
+            <span class="closebtn" >&times;</span>
+            <span class="alert-message">
+                <p>{{message}}</p>
+            </span>
+        </div>
+    {% endif %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["ACTIVITIES"]}}</h2></div>
+    
+    <div class="page-content activities_overview">
+        <div id="activities">
+        </div>
+        <div id="loadingIconActivities" class="centered loading-icon">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+        </div>
+        <div id="loadMoreActivities" class="centered hidden">
+            <button>Mehr Laden</button>
+        </div>
+    </div>
+        </div>
+
+</div>
+{% endblock %}

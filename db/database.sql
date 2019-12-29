@@ -37,6 +37,7 @@ ALTER TABLE global_users ADD module_timesheets INT(1) DEFAULT 0 AFTER module_tri
 
 DROP TABLE IF EXISTS global_banlist;
 CREATE TABLE global_banlist (
+    id INTEGER unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip VARCHAR(255) NOT NULL,
     username varchar(255) DEFAULT NULL,
@@ -479,8 +480,8 @@ CREATE TABLE notifications (
     user INTEGER unsigned DEFAULT NULL,
     title varchar(255) NOT NULL,
     message varchar(255) NOT NULL,
-    link varchar(255) NULL,
     seen TIMESTAMP NULL,
+    link varchar(255) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -756,4 +757,34 @@ CREATE TABLE timesheets_sheets (
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS activities;
+CREATE TABLE activities (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    type varchar(255) NULL,
+    module varchar(255) NULL,
+    controller varchar(255) NULL,
+    object varchar(255) NULL,
+    object_id int(11) NULL,
+    object_description TEXT NULL,
+    parent_object varchar(255) NULL,
+    parent_object_id int(11) NULL,
+    parent_object_description TEXT NULL,
+    link varchar(255) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS activities_users;
+CREATE TABLE activities_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    activity INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(activity, user),
+    FOREIGN KEY(activity) REFERENCES activities(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -3,6 +3,8 @@
 namespace App\Finances\Recurring;
 
 class FinancesEntryRecurring extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_FINANCES_ENTRY_RECURRING";
 
     public function parseData(array $data) {
 
@@ -22,10 +24,10 @@ class FinancesEntryRecurring extends \App\Base\Model {
 
         $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : $this->common;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        
+
         $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : 'month';
         $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
-        
+
         $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         /**
@@ -44,10 +46,14 @@ class FinancesEntryRecurring extends \App\Base\Model {
             $this->parsing_errors[] = "WRONG_UNIT";
         }
     }
-    
+
     public static function getUnits(){
         return array("day" => "DAY", "week" => "WEEK", "month" => "MONTH", "year" => "YEAR");
     }
-            
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        $currency = $ci->get('settings')['app']['i18n']['currency'];
+        return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
+    }
 
 }

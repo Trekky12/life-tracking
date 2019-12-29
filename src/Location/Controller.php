@@ -10,6 +10,9 @@ class Controller extends \App\Base\Controller {
     protected $model = '\App\Location\Location';
     protected $index_route = 'location';
     protected $edit_template = 'location/edit.twig';
+    protected $element_view_route = 'location_edit';
+    protected $create_activity = false;
+    protected $module = "location";
     
     private $finance_mapper;
     private $car_mapper;
@@ -107,7 +110,7 @@ class Controller extends \App\Base\Controller {
         return array($hide_clusters);
     }
 
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         if (!array_key_exists("device", $data)) {
             $data["device"] = $this->ci->get('helper')->getAgent();
         }

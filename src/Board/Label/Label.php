@@ -3,6 +3,8 @@
 namespace App\Board\Label;
 
 class Label extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_BOARDS_LABEL";
 
     public function parseData(array $data) {
 
@@ -31,7 +33,6 @@ class Label extends \App\Base\Model {
         }
         return '#000000';
     }
-    
 
     /**
      * @see https://24ways.org/2010/calculating-color-contrast
@@ -49,10 +50,10 @@ class Label extends \App\Base\Model {
         list($r, $g, $b) = $this->getRGB($this->color);
         list($rb, $gb, $bb) = $this->getRGB('#000000');
         list($rw, $gw, $bw) = $this->getRGB('#FFFFFF');
-        
+
         $diff_black = $this->calcLumDiff($r, $g, $b, $rb, $gb, $bb);
         $diff_white = $this->calcLumDiff($r, $g, $b, $rw, $gw, $bw);
-        
+
         return $diff_black > $diff_white ? '#000000' : '#FFFFFF';
     }
 
@@ -80,6 +81,14 @@ class Label extends \App\Base\Model {
             return array($r, $g, $b);
         }
         return null;
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->name;
+    }
+
+    public function getParentID() {
+        return $this->board;
     }
 
 }

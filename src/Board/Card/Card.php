@@ -3,6 +3,8 @@
 namespace App\Board\Card;
 
 class Card extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_BOARDS_CARD";
 
     public function parseData(array $data) {
 
@@ -40,6 +42,14 @@ class Card extends \App\Base\Model {
         if (empty($this->title)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->title;
+    }
+    
+    public function getParentID() {
+        return $this->stack;
     }
 
 }

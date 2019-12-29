@@ -12,6 +12,8 @@ class Controller extends \App\Base\Controller {
     protected $model = '\App\Board\Board';
     protected $index_route = 'boards';
     protected $edit_template = 'boards/edit.twig';
+    protected $element_view_route = 'boards_edit';
+    protected $module = "boards";
     
     private $stack_mapper;
     private $card_mapper;
@@ -101,7 +103,7 @@ class Controller extends \App\Base\Controller {
     /**
      * save users 
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $this->users_preSave = $this->mapper->getUsers($id);
         $this->allowOwnerOnly($id);
     }
@@ -109,7 +111,7 @@ class Controller extends \App\Base\Controller {
     /**
      * notify user
      */
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         $board = $this->mapper->get($id);
 
         /**
@@ -142,7 +144,7 @@ class Controller extends \App\Base\Controller {
                         'header' => '',
                         'subject' => $subject,
                         'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->hash)), $board->name)
+                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->getHash())), $board->name)
                     );
 
                     $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
@@ -161,5 +163,5 @@ class Controller extends \App\Base\Controller {
     protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
-
+    
 }

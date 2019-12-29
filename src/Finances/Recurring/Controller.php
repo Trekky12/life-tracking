@@ -9,6 +9,8 @@ class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Finances\Recurring\FinancesEntryRecurring';
     protected $index_route = 'finances_recurring';
+    protected $element_view_route = 'finances_recurring_edit';
+    protected $module = "finances";
     
     private $cat_mapper;
     private $finance_mapper;
@@ -128,7 +130,7 @@ class Controller extends \App\Base\Controller {
         }
     }
 
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         $entry = $this->mapper->get($id);
 
         /**

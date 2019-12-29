@@ -3,9 +3,11 @@
 namespace App\Finances;
 
 class FinancesEntry extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_FINANCES_ENTRY";
 
     public function parseData(array $data) {
-        
+
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : date('Y-m-d');
         $this->time = $this->exists('time', $data) ? filter_var($data['time'], FILTER_SANITIZE_STRING) : date('H:i:s');
@@ -28,9 +30,9 @@ class FinancesEntry extends \App\Base\Model {
         $this->lat = $this->exists('lat', $data) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->lng = $this->exists('lng', $data) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        
+
         $this->bill = $this->exists('bill', $data) ? filter_var($data['bill'], FILTER_SANITIZE_NUMBER_INT) : null;
-        
+
         $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
 
 
@@ -63,16 +65,16 @@ class FinancesEntry extends \App\Base\Model {
 
     public function getPosition() {
         return [
-            'id' => $this->id, 
-            'dt' => $this->date . ' ' . $this->time, 
-            'lat' => $this->lat, 
-            'lng' => $this->lng, 
-            'acc' => $this->acc, 
+            'id' => $this->id,
+            'dt' => $this->date . ' ' . $this->time,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
+            'acc' => $this->acc,
             'description' => $this->description,
             'value' => $this->value,
             'type' => 1];
     }
-    
+
     public function get_fields($removeUser = false, $insert = true) {
         if (!is_null($this->bill) && !$insert) {
             /**
@@ -91,8 +93,13 @@ class FinancesEntry extends \App\Base\Model {
             }
             return $temp;
         }
-        
+
         return parent::get_fields($removeUser, $insert);
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        $currency = $ci->get('settings')['app']['i18n']['currency'];
+        return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
 
 }

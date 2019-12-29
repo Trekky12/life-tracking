@@ -3,7 +3,9 @@
 namespace App\Settings;
 
 class Setting extends \App\Base\Model {
-
+    
+    static $MODEL_NAME = "MODEL_SETTING";
+    
     public function parseData(array $data) {
 
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;

@@ -9,6 +9,8 @@ class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Finances\Budget\Budget';
     protected $index_route = 'finances_budgets';
+    protected $element_view_route = 'finances_budgets_edit';
+    protected $module = "finances";
     
     private $cat_mapper;
     private $recurring_mapper;
@@ -132,7 +134,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Save categories in m:n table
      */
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         try {
             // remove old categories
             $this->mapper->deleteCategoriesFromBudget($id);

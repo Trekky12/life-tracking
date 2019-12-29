@@ -3,6 +3,8 @@
 namespace App\Notifications\Categories;
 
 class Category extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_NOTIFICATIONS_CATEGORY";
 
     public function parseData(array $data) {
 
@@ -13,14 +15,18 @@ class Category extends \App\Base\Model {
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
-        
+
         if (empty($this->identifier)) {
             $this->parsing_errors[] = "IDENTIFIER_CANNOT_BE_EMPTY";
         }
     }
-    
+
     public function isInternal(){
         return $this->internal == 1;
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->name;
     }
 
 }

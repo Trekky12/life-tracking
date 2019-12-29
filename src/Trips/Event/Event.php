@@ -3,6 +3,8 @@
 namespace App\Trips\Event;
 
 class Event extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_TRIPS_EVENT";
 
     public function parseData(array $data) {
 
@@ -50,12 +52,12 @@ class Event extends \App\Base\Model {
         if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->end_time)) {
             $this->end_time = null;
         }
-        
+
         // if start date is greater than end date swap both
         if(!empty($this->start_date) && !empty($this->end_date)){
             $start = new \DateTime($this->start_date);
             $end = new \DateTime($this->end_date);
-            
+
             if($start > $end){
                 $this->start_date = $end->format('Y-m-d');
                 $this->end_date = $start->format('Y-m-d');
@@ -152,7 +154,7 @@ class Event extends \App\Base\Model {
         } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
             $start_address = " {$start_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
-        
+
         $end_address = null;
         $end_link = "<a href=\"geo:{$this->end_lat},{$this->end_lng}\" class=\"geo-link end_address\" data-lat=\"{$this->end_lat}\" data-lng=\"{$this->end_lng}\">";
         if (!is_null($this->end_address)) {
@@ -160,15 +162,15 @@ class Event extends \App\Base\Model {
         } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
             $start_address = " {$end_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
-        
+
         // same start and end date? hide end date
         if(strcmp($start, $end) === 0){
             $end = null;
         }
-        
+
         $start_sep = !is_null($start) && !is_null($start_address) ? $loc_prefix : "";
         $start1 = "{$start}{$start_sep}{$start_address}";
-        
+
         $end_sep = !is_null($end) && !is_null($end_address) ? $loc_prefix : "";
         $end1 =  "{$end}{$end_sep}{$end_address}";
 
@@ -190,10 +192,10 @@ class Event extends \App\Base\Model {
      */
     public function getNotice() {
         $regex = "/((https?\:\/\/|(www\.))(\S+))/";
-        
+
         $regexHTTP = "/((https?\:\/\/)(\S+))/";
         $replacementHTTP = '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>';
-        
+
         // only www without http(s)
         $regexWWW = "/[^(https?\:\/\/)]((www\.)(\S+))/";
         $replacementWWW = '<a href="http://$1" target="_blank" rel="noopener noreferrer">$1</a>';
@@ -203,6 +205,14 @@ class Event extends \App\Base\Model {
             return preg_replace([$regexHTTP, $regexWWW], [$replacementHTTP, $replacementWWW], $this->notice);
         }
         return $this->notice;
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->name;
+    }
+    
+    public function getParentID() {
+        return $this->trip;
     }
 
 }

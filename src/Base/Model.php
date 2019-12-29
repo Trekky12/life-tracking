@@ -4,6 +4,7 @@ namespace App\Base;
 
 class Model implements \JsonSerializable {
 
+    static $MODEL_NAME = "";
     protected $fields = array();
 
     /**
@@ -84,12 +85,12 @@ class Model implements \JsonSerializable {
     }
 
     protected function exists($key, $data, $tasker_variables = []) {
-        
+
         // tasker variables are not resolved? then ignore this value
-        if( array_key_exists($key, $data) && in_array($data[$key], $tasker_variables)){
+        if (array_key_exists($key, $data) && in_array($data[$key], $tasker_variables)) {
             return false;
         }
-        
+
         return array_key_exists($key, $data) && !is_null($data[$key]) && $data[$key] !== "";
     }
 
@@ -116,6 +117,18 @@ class Model implements \JsonSerializable {
 
     public function jsonSerialize() {
         return $this->get_fields(true, null);
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return "";
+    }
+
+    public function getParentID() {
+        return null;
+    }
+
+    public function getHash() {
+        return $this->hash;
     }
 
 }

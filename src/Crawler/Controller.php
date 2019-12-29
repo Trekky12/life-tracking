@@ -11,6 +11,8 @@ class Controller extends \App\Base\Controller {
     protected $model = '\App\Crawler\Crawler';
     protected $index_route = 'crawlers';
     protected $edit_template = 'crawlers/edit.twig';
+    protected $element_view_route = 'crawlers_edit';
+    protected $module = "crawlers";
     
     private $dataset_mapper;
     private $header_mapper;
@@ -119,7 +121,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
@@ -142,9 +144,9 @@ class Controller extends \App\Base\Controller {
         }
     }
 
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         $dataset = $this->mapper->get($id);
-        if (empty($dataset->hash)) {
+        if (empty($dataset->getHash())) {
             $hashids = new Hashids('', 10);
             $hash = $hashids->encode($id);
             $this->mapper->setHash($id, $hash);
@@ -171,7 +173,7 @@ class Controller extends \App\Base\Controller {
 
     private function getFilter($crawler) {
         $default = $crawler->filter; //"createdOn";
-        $hash = $crawler->hash;
+        $hash = $crawler->getHash();
         return $this->ci->get('helper')->getSessionVar("crawler_filter_{$hash}", $default);
     }
 

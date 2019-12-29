@@ -11,6 +11,8 @@ class Controller extends \App\Base\Controller {
     protected $model = '\App\Splitbill\Group\Group';
     protected $index_route = 'splitbills';
     protected $edit_template = 'splitbills/groups/edit.twig';
+    protected $element_view_route = 'splitbill_groups_edit';
+    protected $module = "splitbills";
     
     private $bill_mapper;
 
@@ -28,7 +30,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $this->allowOwnerOnly($id);
     }
 
@@ -40,9 +42,9 @@ class Controller extends \App\Base\Controller {
         $this->allowOwnerOnly($id);
     }
 
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         $dataset = $this->mapper->get($id);
-        if (empty($dataset->hash)) {
+        if (empty($dataset->getHash())) {
             $hashids = new Hashids('', 10);
             $hash = $hashids->encode($id);
             $this->mapper->setHash($id, $hash);

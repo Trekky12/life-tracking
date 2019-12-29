@@ -48,7 +48,7 @@ abstract class Mapper {
     public function insert(Model $data, $removeUserParam = null) {
 
         $removeUser = !is_null($removeUserParam) && is_bool($removeUserParam) ? $removeUserParam : !$this->insertUser;
-        
+
         $data_array = $data->get_fields($removeUser, true);
 
         $sql = "INSERT INTO " . $this->getTable() . " "
@@ -57,7 +57,6 @@ abstract class Mapper {
                             return ":" . $row;
                         }, array_keys($data_array)))) .
                 "           )";
-
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -96,10 +95,10 @@ abstract class Mapper {
     }
 
     public function get($id, $filtered = true, $parameter = null) {
-        
+
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
-        
+
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE  {$whereID} = :id";
 
         $bindings = array("id" => $id);
@@ -117,7 +116,7 @@ abstract class Mapper {
     }
 
     public function update(Model $data, $parameter = null) {
-        
+
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
 
@@ -141,12 +140,12 @@ abstract class Mapper {
     }
 
     public function delete($id, $parameter = null) {
-        
+
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
-        
+
         $sql = "DELETE FROM " . $this->getTable() . "  WHERE {$whereID} = :id";
-        
+
         $bindings = array("id" => $id);
         $this->filterByUser($sql, $bindings);
 
@@ -158,7 +157,7 @@ abstract class Mapper {
         }
         return $stmt->rowCount() > 0;
     }
-    
+
     public function deleteAll() {
         $sql = "DELETE FROM " . $this->getTable() . "";
 
@@ -201,7 +200,7 @@ abstract class Mapper {
 
             $sql .= " ({$alias}user = :user OR {$alias}user IS NULL) ";
 
-            $bindings["user"] = $this->userid;            
+            $bindings["user"] = $this->userid;
         }
     }
 
@@ -268,9 +267,25 @@ abstract class Mapper {
         }
     }
 
+    /**
+     * Get Users of dataset
+     * either from user table or the user element of the dataset (owner)
+     * @param type $id
+     * @return type
+     */
     public function getUsers($id) {
+        $table = null;
+        $element = null;
         if ($this->hasUserTable) {
-            $sql = "SELECT user FROM " . $this->getTable($this->user_table) . " WHERE {$this->element_name} = :id";
+            $table = $this->user_table;
+            $element = $this->element_name;
+        } elseif ($this->insertUser) {
+            $table = $this->table;
+            $element = $this->id;
+        }
+
+        if (!is_null($table)) {
+            $sql = "SELECT user FROM " . $this->getTable($table) . " WHERE {$element} = :id";
 
             $bindings = array("id" => $id);
 
@@ -300,14 +315,20 @@ abstract class Mapper {
         return $results;
     }
     
-    public function getUserItems($sorted = false, $limit = false) {
-        $sql = "SELECT t.* FROM " . $this->getTable() . " t LEFT JOIN " . $this->getTable($this->user_table) . " tu ";
+    private function getUserItemsSQL($select = "DISTINCT t.*"){
+        $sql = "SELECT {$select} FROM " . $this->getTable() . " t LEFT JOIN " . $this->getTable($this->user_table) . " tu ";
         $sql .= " ON t.id = tu.{$this->element_name} ";
         $sql .= " WHERE tu.user = :user OR t.user = :user";
+        
+        return $sql;
+    }
 
-        $bindings = array();
-        if (!is_null($this->userid)) {
-            $bindings["user"] = $this->userid;
+    public function getUserItems($sorted = false, $limit = false, $user_id = null) {
+        $sql = $this->getUserItemsSQL();
+
+        $bindings = array("user" => $this->userid);
+        if (!is_null($user_id)) {
+            $bindings["user"] = $user_id;
         }
 
         if ($sorted && !is_null($sorted)) {
@@ -317,19 +338,35 @@ abstract class Mapper {
         if ($limit && !is_null($limit)) {
             $sql .= " LIMIT {$limit}";
         }
-
+        
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[] = new $this->model($row);
         }
         return $results;
-    }    
-    
+    }
+
+    public function getCountElementsOfUser($user_id = null) {
+        $sql = $this->getUserItemsSQL("COUNT(DISTINCT t.id)");
+
+        $bindings = array("user" => $this->userid);
+        if (!is_null($user_id)) {
+            $bindings["user"] = $user_id;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return intval($stmt->fetchColumn());
+        }
+        return 0;
+    }
+
     public function getFromHash($hash) {
         $sql = "SELECT * FROM " . $this->getTable() . " WHERE  hash = :hash";
 
@@ -357,11 +394,11 @@ abstract class Mapper {
             throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
+
     public function setUser($user_id) {
         $this->userid = $user_id;
     }
-    
+
     public function setFilterByUser($filter_by_user) {
         $this->filterByUser = $filter_by_user;
         if ($this->filterByUser) {
@@ -369,8 +406,7 @@ abstract class Mapper {
             $this->userid = $currentUser ? $currentUser->id : null;
         }
     }
-    
-    
+
     public function getMinMaxDate($min = 'date', $max = 'date') {
         $sql = "SELECT DATE(MIN($min)) as min, DATE(MAX($max)) as max FROM " . $this->getTable() . "";
 
@@ -383,9 +419,10 @@ abstract class Mapper {
         $stmt->execute($bindings);
 
         $result = ["min" => date('Y-m-d'), "max" => date('Y-m-d')];
-        if ($stmt->rowCount() === 1){
+        if ($stmt->rowCount() === 1) {
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         }
         return $result;
     }
+
 }

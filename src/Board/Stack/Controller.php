@@ -6,9 +6,11 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
-    
+
     protected $model = '\App\Board\Stack\Stack';
-    
+    protected $parent_model = '\App\Board\Board';
+    protected $element_view_route = 'boards_view';
+    protected $module = "boards";
     private $board_mapper;
 
     public function init() {
@@ -19,7 +21,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $user = $this->ci->get('helper')->getUser()->id;
 
         if (!is_null($id)) {
@@ -90,6 +92,16 @@ class Controller extends \App\Base\Controller {
             $entry->name = htmlspecialchars_decode($entry->name);
         }
         return $entry;
+    }
+
+    protected function getElementViewRoute($entry) {
+        $board = $this->getParentObjectMapper()->get($entry->getParentID());
+        $this->element_view_route_params["hash"] = $board->getHash();
+        return parent::getElementViewRoute($entry);
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->board_mapper;
     }
 
 }

@@ -9,6 +9,8 @@ class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Finances\FinancesEntry';
     protected $index_route = 'finances';
+    protected $element_view_route = 'finances_edit';
+    protected $module = "finances";
     
     private $cat_mapper;
     private $cat_assignments_mapper;
@@ -68,7 +70,7 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods]);
     }
 
-    public function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         $user_id = $this->ci->get('helper')->getUser()->id;
 
         $entry = $this->mapper->get($id);

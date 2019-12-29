@@ -3,6 +3,8 @@
 namespace App\User\MobileFavorites;
 
 class MobileFavorite extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_MOBILEFAVORITE";
 
     public function parseData(array $data) {
 
@@ -21,6 +23,10 @@ class MobileFavorite extends \App\Base\Model {
         $url = str_replace("\$year\$", $current_date->format("Y"), $url);
 
         return $url;
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->url;
     }
 
 }

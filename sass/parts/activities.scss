@@ -1,0 +1,31 @@
+#activities{
+    
+    .activity-date{
+        font-weight:600;
+    }
+
+    .activity{
+        display:flex;
+        align-items:center;
+        margin-bottom:2rem;
+
+
+        i.fa{
+            @include font-size(3);
+            width:40px;
+        }
+
+        .content{
+            margin-left:2rem;
+            .time{
+                @include font-size(1.2);
+            }
+            p{
+
+                margin:0;
+            }
+        }
+
+    }
+
+}

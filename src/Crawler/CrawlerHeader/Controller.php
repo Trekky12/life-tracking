@@ -8,9 +8,11 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Crawler\CrawlerHeader\CrawlerHeader';
+    protected $parent_model = '\App\Crawler\Crawler';
     protected $index_route = 'crawlers_headers';
     protected $edit_template = 'crawlers/headers/edit.twig';
-    
+    protected $element_view_route = 'crawlers_headers_edit';
+    protected $module = "crawlers";
     private $crawler_mapper;
 
     public function init() {
@@ -101,7 +103,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
@@ -136,7 +138,7 @@ class Controller extends \App\Base\Controller {
         return [null => $this->ci->get('helper')->getTranslatedString('NO_INITIAL_SORTING'), "asc" => $this->ci->get('helper')->getTranslatedString('ASC'), "desc" => $this->ci->get('helper')->getTranslatedString('DESC')];
     }
 
-    public function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         $header = $this->mapper->get($id);
 
         // only one header can be initial sorted 
@@ -159,6 +161,16 @@ class Controller extends \App\Base\Controller {
             "TIME" => $this->ci->get('helper')->getTranslatedString('CAST_TIME'),
             "UNSIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_UNSIGNED'),
         ];
+    }
+
+    protected function getElementViewRoute($entry) {
+        $crawler = $this->getParentObjectMapper()->get($entry->getParentID());
+        $this->element_view_route_params["crawler"] = $crawler->getHash();
+        return parent::getElementViewRoute($entry);
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->crawler_mapper;
     }
 
 }

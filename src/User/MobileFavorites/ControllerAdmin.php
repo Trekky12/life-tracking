@@ -8,8 +8,10 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class ControllerAdmin extends \App\Base\Controller {
 
     protected $model = '\App\User\MobileFavorites\MobileFavorite';
+    protected $parent_model = '\App\User\User';
     protected $index_route = 'users_mobile_favorites_admin';
     protected $edit_template = 'profile/mobile_favorites/edit.twig';
+    protected $element_view_route = 'users_mobile_favorites_edit_admin';
     
     // use user from attribute instead of the current logged in user
     // when saving new entries
@@ -53,9 +55,15 @@ class ControllerAdmin extends \App\Base\Controller {
         return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'for_user' => $user]);
     }
 
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
         // redirect to users list
         $this->index_params = ["user" => $data["user"]];
+    }
+    
+    protected function getElementViewRoute($entry) {
+        $user = $this->user_mapper->get($entry->user);
+        $this->element_view_route_params["user"] = $user->id;
+        return parent::getElementViewRoute($entry);
     }
 
 }

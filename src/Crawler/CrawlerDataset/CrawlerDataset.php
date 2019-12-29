@@ -3,6 +3,8 @@
 namespace App\Crawler\CrawlerDataset;
 
 class CrawlerDataset extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_CRAWLERS_DATASET";
 
     public function parseData(array $data) {
 
@@ -17,7 +19,6 @@ class CrawlerDataset extends \App\Base\Model {
 
         $this->data = $this->exists('data', $data) ? $data['data'] : null;
         $this->diff = $this->exists('diff', $data) ? $data['diff'] : null;
-
     }
 
     public function getDataValue($field, $type = "data") {
@@ -30,6 +31,14 @@ class CrawlerDataset extends \App\Base\Model {
             return json_decode($this->diff, true);
         }
         return json_decode($this->data, true);
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        return $this->identifier;
+    }
+    
+    public function getParentID() {
+        return $this->crawler;
     }
 
 }

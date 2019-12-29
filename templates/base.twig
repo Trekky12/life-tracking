@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/style.css?ver=20191203" />
+        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/style.css?ver=20191206" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{base_url()}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{base_url()}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -108,6 +108,7 @@
                 'notifications_clients_manage': '{{path_for('notifications_clients_manage')}}',
                 'notifications_get': '{{path_for('notifications_get')}}',
                 'notifications_get_unread': '{{path_for('notifications_get_unread')}}',
+                'activities_get': '{{path_for('activities_get')}}',
                 
                 {% if not hasCrawlerTable is null %}
                 'crawler_table': '{{path_for('crawlers_table', {'crawler': crawler.hash})}}',
@@ -186,8 +187,8 @@
         <script src="{{base_url()}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
         <script src="{{base_url()}}/static/assets/js/jstable.min.js?ver=20190706" type="text/javascript"></script>  
 
-        <script src="{{base_url()}}/static/js/main.js?ver=20191121" type="text/javascript"></script>
-        <script src="{{base_url()}}/static/js/tables.js?ver=20191121" type="text/javascript"></script>
+        <script src="{{base_url()}}/static/js/main.js?ver=20191206" type="text/javascript"></script>
+        <script src="{{base_url()}}/static/js/tables.js?ver=20191206" type="text/javascript"></script>
 
 
         {% if not user is null %}

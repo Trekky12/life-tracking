@@ -145,6 +145,9 @@ $app->group('/profile', function() {
         $this->get('/', '\App\User\Token\Controller:index')->setName('users_login_tokens');
         $this->delete('/delete/{id}', '\App\User\Token\Controller:delete')->setName('users_login_tokens_delete');
     });
+    
+    $this->get('/activity', '\App\Activity\Controller:index')->setName('users_activities');
+    $this->post('/getActivities', '\App\Activity\Controller:getActivities')->setName('activities_get');
 });
 
 $app->group('/users', function() {

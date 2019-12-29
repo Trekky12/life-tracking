@@ -9,7 +9,9 @@ class Controller extends \App\Base\Controller {
 
     protected $module = "cars";
     protected $model = '\App\Car\Service\CarServiceEntry';
-    
+    protected $parent_model = '\App\Car\Car';
+    protected $index_route = 'car_service';
+    protected $element_view_route = 'car_service_edit';
     private $car_mapper;
 
     public function init() {
@@ -62,7 +64,7 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, 'cars/service/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars, 'type' => $type]);
     }
 
-    protected function afterSave($id, $data, Request $request) {
+    protected function afterSave($id, array $data, Request $request) {
 
         $entry = $this->mapper->get($id);
 
@@ -209,7 +211,7 @@ class Controller extends \App\Base\Controller {
                  */
                 $year_start = new \DateTime($cars[$car]->mileage_start_date);
                 $year_end = clone $year_start;
-                if(!is_null($cars[$car]->mileage_term)){
+                if (!is_null($cars[$car]->mileage_term)) {
                     $year_end->add(new \DateInterval('P' . $cars[$car]->mileage_term . 'Y'));
                 }
                 $max_mileage = $cars[$car]->mileage_per_year * $cars[$car]->mileage_term;
@@ -349,7 +351,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $user = $this->ci->get('helper')->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
@@ -369,6 +371,10 @@ class Controller extends \App\Base\Controller {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->car_mapper;
     }
 
 }

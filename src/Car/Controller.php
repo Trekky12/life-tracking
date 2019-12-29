@@ -10,6 +10,8 @@ class Controller extends \App\Base\Controller {
     protected $model = '\App\Car\Car';
     protected $index_route = 'cars';
     protected $edit_template = 'cars/control/edit.twig';
+    protected $element_view_route = 'cars_edit';
+    protected $module = "cars";
 
     public function init() {
         $this->mapper = new Mapper($this->ci);

@@ -449,4 +449,43 @@ $lang["REQUEST_ERROR"] = "A request error occured!";
 
 $lang["BANLIST"] = "banned IP-addresses";
 
+$lang["ACTIVITIES"] = "Activities";
+$lang["ACTIVITY_CREATE"] = "%s created \"%s\"";
+$lang["ACTIVITY_UPDATE"] = "%s updated \"%s\"";
+$lang["ACTIVITY_DELETE"] = "%s deleted \"%s\"";
+$lang["ACTIVITY_CREATE_ME"] = "You created \"%s\"";
+$lang["ACTIVITY_UPDATE_ME"] = "You updated \"%s\"";
+$lang["ACTIVITY_DELETE_ME"] = "You deleted \"%s\"";
+
+$lang["MODEL_ACITIVY"] = "activity";
+$lang["MODEL_BOARDS_BOARD"] = "board";
+$lang["MODEL_BOARDS_CARD"] = "card";
+$lang["MODEL_BOARDS_COMMENT"] = "comment";
+$lang["MODEL_BOARDS_LABEL"] = "label";
+$lang["MODEL_BOARDS_STACK"] = "stack";
+$lang["MODEL_CARS"] = "car";
+$lang["MODEL_CARS_SERVICE_ENTRY"] = "refill/service";
+$lang["MODEL_CRAWLERS_DATASET"] = "crawler entry";
+$lang["MODEL_CRAWLERS_HEADER"] = "crawler headline";
+$lang["MODEL_CRAWLERS_LINK"] = "crawler link";
+$lang["MODEL_FINANCES_ASSIGNMENT_ENTRY"] = "finance category assignment";
+$lang["MODEL_FINANCES_BUDGET_ENTRY"] = "finance budget";
+$lang["MODEL_FINANCES_CATEGORY"] = "finance category";
+$lang["MODEL_FINANCES_ENTRY"] = "finance entry";
+$lang["MODEL_FINANCES_PAYMETHOD"] = "paymethod";
+$lang["MODEL_FINANCES_ENTRY_RECURRING"] = "recurring finance entry";
+$lang["MODEL_LOCATION_ENTRY"] = "location";
+$lang["MODEL_NOTIFICATIONS_CATEGORY"] = "notification category";
+$lang["MODEL_NOTIFICATIONS_CLIENT"] = "notification client";
+$lang["MODEL_NOTIFICATIONS_NOTIFICATION"] = "notification";
+$lang["MODEL_SETTING"] = "setting";
+$lang["MODEL_SPLITBILLS_BILL"] = "splitted bill";
+$lang["MODEL_SPLITBILLS_GROUP"] = "splitted bills group";
+$lang["MODEL_TIMESHEETS_PROJECT"] = "timesheets project";
+$lang["MODEL_TIMESHEETS_SHEET"] = "timesheets sheet";
+$lang["MODEL_TRIPS_EVENT"] = "trip event";
+$lang["MODEL_TRIPS_TRIP"] = "trip";
+$lang["MODEL_MOBILEFAVORITE"] = "mobile favorite entry";
+$lang["MODEL_USER"] = "User";
+
 return $lang;

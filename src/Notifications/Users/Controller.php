@@ -6,6 +6,8 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \App\Base\Controller {
+    
+    protected $module = "notifications";
 
     public function init() {
         $this->mapper = new Mapper($this->ci);

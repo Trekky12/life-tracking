@@ -3,6 +3,8 @@
 namespace App\Finances\Budget;
 
 class Budget extends \App\Base\Model {
+    
+    static $MODEL_NAME = "MODEL_FINANCES_BUDGET_ENTRY";
 
     public function parseData(array $data) {
 
@@ -13,7 +15,7 @@ class Budget extends \App\Base\Model {
         $this->sum = $this->exists('sum', $data) ? filter_var($data['sum'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->percent = $this->exists('percent', $data) ? filter_var($data['percent'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        
+
         $set_hidden = $this->exists('set_hidden', $data) ? filter_var($data['set_hidden'], FILTER_SANITIZE_STRING) : 0;
         $this->is_hidden = $set_hidden === 'on' ? 1 : 0;
         $this->is_hidden = $this->exists('is_hidden', $data) ? filter_var($data['is_hidden'], FILTER_SANITIZE_NUMBER_INT) : $this->is_hidden;
@@ -21,7 +23,6 @@ class Budget extends \App\Base\Model {
         if (is_null($this->description)) {
             $this->parsing_errors[] = "DESCRIPTION_CANNOT_BE_EMPTY";
         }
-
     }
 
     /**
@@ -35,6 +36,11 @@ class Budget extends \App\Base\Model {
         unset($temp["diff"]);
 
         return $temp;
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        $currency = $ci->get('settings')['app']['i18n']['currency'];
+        return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
 
 }

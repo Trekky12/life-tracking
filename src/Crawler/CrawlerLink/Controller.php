@@ -8,11 +8,13 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Crawler\CrawlerLink\CrawlerLink';
+    protected $parent_model = '\App\Crawler\Crawler';
     protected $index_route = 'crawlers_links';
     protected $edit_template = 'crawlers/links/edit.twig';
-
+    protected $element_view_route = 'crawlers_links_edit';
+    protected $module = "crawlers";
     private $crawler_mapper;
-    
+
     public function init() {
         $this->mapper = new Mapper($this->ci);
         $this->crawler_mapper = new \App\Crawler\Mapper($this->ci);
@@ -57,7 +59,7 @@ class Controller extends \App\Base\Controller {
     /**
      * Does the user have access to this dataset?
      */
-    protected function preSave($id, &$data, Request $request) {
+    protected function preSave($id, array &$data, Request $request) {
         $this->allowParentOwnerOnly($id);
     }
 
@@ -79,6 +81,16 @@ class Controller extends \App\Base\Controller {
                 throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
             }
         }
+    }
+
+    protected function getElementViewRoute($entry) {
+        $crawler = $this->getParentObjectMapper()->get($entry->getParentID());
+        $this->element_view_route_params["crawler"] = $crawler->getHash();
+        return parent::getElementViewRoute($entry);
+    }
+
+    protected function getParentObjectMapper() {
+        return $this->crawler_mapper;
     }
 
 }

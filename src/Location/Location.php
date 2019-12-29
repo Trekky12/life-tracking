@@ -5,6 +5,8 @@ namespace App\Location;
 //class Location implements \JsonSerializable {
 
 class Location extends \App\Base\Model{
+    
+    static $MODEL_NAME = "MODEL_LOCATION_ENTRY";
 
     public function parseData(array $data) {
 
@@ -24,13 +26,13 @@ class Location extends \App\Base\Model{
         $this->gps_lat = $this->exists('gps_lat', $data) ? filter_var($data['gps_lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->gps_lng = $this->exists('gps_lng', $data) ? filter_var($data['gps_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->gps_acc = $this->exists('gps_acc', $data, ["%LOCACC", "%gl_coordinates_accuracy"]) ? filter_var($data['gps_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        
+
         $this->gps_alt = $this->exists('gps_alt', $data, ["%LOCALT", "%gl_altitude"]) ? filter_var($data['gps_alt'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->gps_alt_acc = $this->exists('gps_alt_acc', $data, ["%gl_altitude_accuracy"]) ? filter_var($data['gps_alt_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->gps_spd = $this->exists('gps_spd', $data, ["%LOCSPD", "%gl_speed"]) ? filter_var($data['gps_spd'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->gps_spd_acc = $this->exists('gps_spd_acc', $data, ["%gl_speed_accuracy"]) ? filter_var($data['gps_spd_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        
+
         $this->gps_tms = $this->exists('gps_tms', $data, ["%LOCTMS", "%gl_time_seconds"]) ? filter_var($data['gps_tms'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->gps_bearing = $this->exists('gps_bearing', $data, ["%gl_bearing"]) ? filter_var($data['gps_bearing'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
@@ -44,11 +46,11 @@ class Location extends \App\Base\Model{
         $this->cell_id = $this->exists('cell_id', $data, ["%CELLID"]) ? filter_var($data['cell_id'], FILTER_SANITIZE_STRING) : null;
         $this->cell_sig = $this->exists('cell_sig', $data, ["%CELLSIG"]) ? filter_var($data['cell_sig'], FILTER_SANITIZE_STRING) : null;
         $this->cell_srv = $this->exists('cell_srv', $data, ["%CELLSRV"]) ? filter_var($data['cell_srv'], FILTER_SANITIZE_STRING) : null;
-        
+
         $this->steps = $this->exists('steps', $data, ["%STEPS"]) ? filter_var($data['steps'], FILTER_SANITIZE_NUMBER_INT) : null;
-        
+
         $this->processAdditionalTaskerData($data);
-        
+
         if ($this->exists('createdOn', $data)) {
             $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
         }
@@ -102,10 +104,10 @@ class Location extends \App\Base\Model{
             'dt' => $this->createdOn,
             'steps' => $this->steps
         ];
-        
+
         $diff_gps = $this->times - $this->gps_tms;
         $diff_net = $this->times - $this->net_tms;
-        
+
         if($diff_gps > $diff_net && !is_null($this->net_lat) && !is_null($this->net_lng)){
             $data['lat'] = $this->net_lat;
             $data['lng'] = $this->net_lng;
@@ -117,11 +119,16 @@ class Location extends \App\Base\Model{
             $data['acc'] = $this->gps_acc;
             $data['source'] = 'gps';
         }
-        
+
         $data["type"] = 0;
         //return ['id'=> $this->id, 'dt' => $this->createdOn, 'lat' => $this->net_lat, 'lng' => $this->net_lng, 'acc' => $this->net_acc];
         //return [ 'id'=> $this->id, 'dt' => $this->createdOn, 'lat' => $this->gps_lat, 'lng' => $this->gps_lng, 'acc' => $this->gps_acc];
         return $data;
+    }
+
+    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+        $position = $this->getPosition();
+        return sprintf("%s, %s", $position['lat'], $position['lng']);
     }
 
 }

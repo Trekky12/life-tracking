@@ -10,6 +10,8 @@ class Controller extends \App\Base\Controller {
     protected $model = '\App\Notifications\Categories\Category';
     protected $index_route = 'notifications_categories';
     protected $edit_template = 'notifications/categories/edit.twig';
+    protected $element_view_route = 'notifications_categories_edit';
+    protected $module = "notifications";
 
     public function init() {
         $this->mapper = new Mapper($this->ci);

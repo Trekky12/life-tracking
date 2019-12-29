@@ -9,6 +9,13 @@ $container['helper'] = function($c) {
     return new \App\Main\Helper($c);
 };
 
+/**
+ * Activity Handler
+ */
+$container['activity'] = function($c) {
+    return new \App\Activity\Controller($c);
+};
+
 
 /**
  * Flash Messages
