@@ -8,6 +8,9 @@ if (splitbillsForm) {
     let inputs_paid = splitbillsForm.querySelectorAll('input.balance_paid');
     let inputs_spend = splitbillsForm.querySelectorAll('input.balance_spend');
     let input_total = splitbillsForm.querySelector('#inputValue');
+    
+    let remaining_paid = splitbillsForm.querySelector('#remaining_paid');
+    let remaining_spend = splitbillsForm.querySelector('#remaining_spend');
 
     input_total.addEventListener('change', function (e) {
         inputs_paid.forEach(function (input) {
@@ -16,6 +19,8 @@ if (splitbillsForm) {
         inputs_spend.forEach(function (input) {
             input.value = 0;
         });
+        calculateRemaining(inputs_paid, remaining_paid);
+        calculateRemaining(inputs_spend, remaining_spend);
     });
 
     buttons.forEach(function (item, idx) {
@@ -48,28 +53,18 @@ if (splitbillsForm) {
                         splitbillsForm.querySelector('input[name="balance[' + id + '][spend]"]').value = totalValue;
                         break;
                 }
+                calculateRemaining(inputs_paid, remaining_paid);
+                calculateRemaining(inputs_spend, remaining_spend);
             }
         });
     });
 
     splitbillsForm.addEventListener('submit', function (e) {
-        let sum_paid = 0.0;
-        let sum_spend = 0.0;
-        inputs_paid.forEach(function (input) {
-            let value = Number.parseFloat(input.value);
-            console.log(value);
-            if (value) {
-                sum_paid += value;
-            }
-        });
-        inputs_spend.forEach(function (input) {
-            let value = Number.parseFloat(input.value);
-            if (value) {
-                sum_spend += value;
-            }
-        });
-        let totalValue = parseFloat(input_total.value).toFixed(2);
-        if (totalValue !== sum_paid.toFixed(2) || totalValue !== sum_spend.toFixed(2)) {
+        let sum_paid = getSum(inputs_paid);
+        let sum_spend = getSum(inputs_spend);
+        let totalValue = getTotal();
+
+        if (totalValue !== sum_paid || totalValue !== sum_spend) {
             e.preventDefault();
             console.log(totalValue);
             console.log(sum_paid);
@@ -77,6 +72,39 @@ if (splitbillsForm) {
             alert(lang.splitbills_numbers_wrong);
         }
     });
+
+    function getSum(inputs) {
+        let sum = 0.0;
+        inputs.forEach(function (input) {
+            let value = Number.parseFloat(input.value);
+            if (value) {
+                sum += value;
+            }
+        });
+        return sum.toFixed(2);
+    }
+    
+    function getTotal(){
+        return parseFloat(input_total.value).toFixed(2);
+    }
+
+    // calculate remaining
+    inputs_paid.forEach(function (input) {
+        input.addEventListener('input', function (e) {
+            calculateRemaining(inputs_paid, remaining_paid);
+        });
+    });
+    inputs_spend.forEach(function (input) {
+        input.addEventListener('input', function (e) {
+            calculateRemaining(inputs_spend, remaining_spend);
+        });
+    });
+    
+    function calculateRemaining(inputs, remaining){
+        let sum = getSum(inputs);
+        let totalValue = getTotal();
+        remaining.innerHTML = (totalValue - sum).toFixed(2);
+    }
 }
 
 function equal_splitting(nodeList, total) {

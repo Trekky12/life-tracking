@@ -62,6 +62,16 @@
         margin-bottom:0.5rem;
         margin-right:0.5rem;
     }
+    
+    h3#splitbill_headline{
+        margin-bottom:0;
+        
+        & ~ h4{
+            margin-top:0;
+            margin-bottom: 1rem;
+        }
+    }
+    
 }
 
 #splitbill_overview{

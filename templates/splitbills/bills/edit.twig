@@ -15,7 +15,7 @@
 {% block javascript %}
     <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
     <script src="{{base_url()}}/static/js/geolocation.js?ver=20190130"></script>
-    <script src="{{base_url()}}/static/js/splitbills.js?ver=20190130"></script>
+    <script src="{{base_url()}}/static/js/splitbills.js?ver=20191229"></script>
 {% endblock %}
 
 {% block body %}
@@ -57,7 +57,8 @@
                     <input type="number" step="any" class="form-control" id="inputValue" name="value" value="{{totalValue}}">
                 </div>
 
-                <h3>{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_SENDER"]}}{%else %}{{lang["PAID"]}}{% endif %}</h3>
+                <h3 id="splitbill_headline">{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_SENDER"]}}{%else %}{{lang["PAID"]}}{% endif %} </h3>
+                <h4>{{ lang["REMAINING"] }}: <span id="remaining_paid">{{ 0|number_format(2) }}</span></h4>
                 <div class="form-group">
                     <button class="gray splitbill_btn small" data-type="paid_same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
                     {% for user_id in group_users %}
@@ -94,7 +95,8 @@
                         </div>
                     {% endfor %}
                 </div>
-                <h3>{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_RECEIVER"]}}{%else %}{{lang["SPEND"]}}{% endif %}</h3>
+                <h3 id="splitbill_headline">{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_RECEIVER"]}}{%else %}{{lang["SPEND"]}}{% endif %}</h3>
+                <h4>{{ lang["REMAINING"] }}: <span id="remaining_spend">{{ 0|number_format(2) }}</span></h4>
                 <div class="form-group">
                     <button class="gray splitbill_btn small" data-type="spend_same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
                     {% for user_id in group_users %}
