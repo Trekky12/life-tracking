@@ -12,8 +12,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(mymap);
 
 var greenIcon = new L.Icon({
-    iconUrl: '/static/assets/images/marker-icon-green.png',
-    shadowUrl: '/static/assets/images/marker-shadow.png',
+    iconUrl: '/static/assets/images/leaflet-custom/marker-icon-green.png',
+    shadowUrl: '/static/assets/images/leaflet/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -21,8 +21,8 @@ var greenIcon = new L.Icon({
 });
 
 var yellowIcon = new L.Icon({
-    iconUrl: '/static/assets/images/marker-icon-yellow.png',
-    shadowUrl: '/static/assets/images/marker-shadow.png',
+    iconUrl: '/static/assets/images/leaflet-custom/marker-icon-yellow.png',
+    shadowUrl: '/static/assets/images/leaflet/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],

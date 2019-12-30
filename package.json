@@ -9,24 +9,43 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bourbon-neat": "^3.0.0",
-    "chart.js": "^2.8.0",
-    "flatpickr": "^4.5.2",
+    "chart.js": "^2.9.3",
+    "flatpickr": "^4.6.3",
     "font-awesome": "^4.7.0",
-    "leaflet": "^1.4.0",
+    "leaflet": "^1.6.0",
     "leaflet-curve": "^1.0.0",
     "leaflet-easyprint": "^2.1.9",
     "leaflet-extra-markers": "^1.1.0",
     "leaflet-fullscreen": "^1.0.2",
-    "leaflet.locatecontrol": "^0.67.0",
+    "leaflet-routing-machine": "^3.2.12",
+    "leaflet.locatecontrol": "^0.68.0",
     "leaflet.markercluster": "^1.4.1",
-    "mobius1-selectr": "^2.4.6",
+    "mobius1-selectr": "^2.4.13",
     "moment": "^2.24.0",
-    "mustache": "^2.3.0",
-    "normalize.css": "^7.0.0",
-    "nouislider": "^12.1.0",
-    "randomcolor": "^0.5.3",
+    "mustache": "^3.2.1",
+    "normalize.css": "^8.0.1",
+    "nouislider": "^14.1.1",
+    "randomcolor": "^0.5.4",
     "simplemde": "^1.11.2",
-    "sortablejs": "^1.7.0"
-  }
+    "sortablejs": "^1.10.2"
+  },
+  "devDependencies": {
+    "bourbon": "^6.0.0",
+    "bourbon-neat": "^4.0.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-less": "^4.0.1",
+    "gulp-livereload": "^4.0.2",
+    "gulp-rename": "^2.0.0",
+    "gulp-replace": "^1.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-terser": "^1.2.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "Firefox ESR",
+    "Opera 12.1"
+  ]
 }
