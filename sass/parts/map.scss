@@ -177,8 +177,41 @@
 
 }
 
+
+.leaflet-popup-content{
+    p{
+        margin: 0;
+    }
+}
+
+.leaflet-routing-alternatives-container{
+    h2, table{
+        display:none;
+    }
+}
+
 body.location {
     .alert{
         display:none;
     }
+}
+
+body.trips{
+    .leaflet-control-layers-overlays{
+        display:flex;
+    }
+}
+
+.leaflet-routing-container-hide .leaflet-routing-collapse-btn{
+    left: 2px;
+    top: 0px;
+}
+
+.leaflet-routing-reverse-waypoints, .leaflet-routing-add-waypoint {
+    height: 30px;
+    width: 30px;
+}
+
+.leaflet-routing-collapse-btn, .navigation-btn{
+    cursor: pointer;
 }

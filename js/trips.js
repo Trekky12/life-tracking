@@ -9,6 +9,7 @@ let layerEvents = new L.LayerGroup();
 
 let controlLayer = null;
 let mymap = null;
+let routeControl = null;
 
 const tripDays = document.querySelectorAll('.trip_day');
 const changeDayLinks = document.querySelectorAll('.change_day');
@@ -18,7 +19,7 @@ const currentDayButton = document.querySelector('.change_day[data-date="' + toda
 const newEventButton = document.querySelector('#new-event-btn');
 
 let addEventLink = "";
-if (newEventButton){
+if (newEventButton) {
     addEventLink = newEventButton.href;
 }
 
@@ -26,12 +27,12 @@ if (changeDayLinks !== null) {
     changeDayLinks.forEach(function (changeDayLink, idx) {
         changeDayLink.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // add from/to parameters to add event link
-            if(newEventButton){
+            if (newEventButton) {
                 newEventButton.href = addEventLink + changeDayLink.search;
             }
-            
+
             changeDay(changeDayLink);
         });
     });
@@ -109,12 +110,6 @@ function drawMarkers(markers) {
             continue;
         }
 
-        /**
-         * Popup
-         */
-        let popup = "<h4>" + marker.data.name + "</h4>" + marker.data.popup;
-
-
         let options = {};
         if (marker.isCarrental) {
             options['icon'] = L.ExtraMarkers.icon({
@@ -150,6 +145,37 @@ function drawMarkers(markers) {
          * Start Marker
          */
         let start_marker = L.marker([marker.data.start_lat, marker.data.start_lng], options);
+
+        /**
+         * Popup
+         */
+        //let popup = "<h4>" + marker.data.name + "</h4>" + marker.data.popup;
+        let navigationBtn = document.createElement("a");
+        navigationBtn.classList.add("navigation-btn")
+        navigationBtn.innerHTML = lang.set_navigation;
+
+        navigationBtn.addEventListener("click", function () {
+            let pos = 0;
+            let start = routeControl.getWaypoints()[0].latLng;
+            if (start) {
+                pos = routeControl.getWaypoints().length - 1;
+            }
+            let waypoint =  L.Routing.waypoint(start_marker.getLatLng(),marker.data.name);
+            routeControl.spliceWaypoints(pos, 1, waypoint);
+            routeControl.show();
+        });
+
+        let popup = document.createElement("div");
+        let headline = document.createElement("h4");
+        headline.innerHTML = marker.data.name;
+
+        let pInner = document.createElement("p");
+        pInner.innerHTML = marker.data.popup;
+
+        popup.appendChild(headline);
+        popup.appendChild(pInner);
+        popup.appendChild(navigationBtn);
+
         start_marker.bindPopup(popup);
         my_markers.push(start_marker);
 
@@ -272,9 +298,37 @@ function initMap() {
     // select current day
     if (currentDayButton) {
         changeDay(currentDayButton);
-    }else{
+    } else {
         getMarkers(from, to);
     }
+
+    routeControl = L.Routing.control({
+        waypoints: [],
+        geocoder: L.Control.Geocoder.nominatim(),
+        autoRoute: true,
+        createMarker: function () {
+            return null;
+        },
+        router: new L.Routing.OSRMv1({
+            profile: 'driving',
+            suppressDemoServerWarning: true,
+        }),
+        show: false,
+        collapsible: true,
+        addWaypoints : true,
+        reverseWaypoints: true,
+        language: i18n.routing,
+        showAlternatives: false,
+        routeWhileDragging: false
+    }).addTo(mymap);
+    
+    routeControl.on('routingerror', function(e){
+       if(e.error.target.status === 429){
+           alert(lang.routing_error_too_many_requests);
+       }else{
+           alert(lang.routing_error);
+       }
+    });
 }
 
 

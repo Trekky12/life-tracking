@@ -13,6 +13,7 @@
     "flatpickr": "^4.6.3",
     "font-awesome": "^4.7.0",
     "leaflet": "^1.6.0",
+    "leaflet-control-geocoder": "^1.10.0",
     "leaflet-curve": "^1.0.0",
     "leaflet-easyprint": "^2.1.9",
     "leaflet-extra-markers": "^1.1.0",

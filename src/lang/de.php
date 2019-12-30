@@ -488,6 +488,9 @@ $lang["MODEL_MOBILEFAVORITE"] = "Mobiler Favoriteneintrag";
 $lang["MODEL_USER"] = "Benutzer";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
+$lang["SET_NAVIGATION"] = "setze Navigationspunkt";
+$lang["ROUTING_ERROR"] = "Konnte Route nicht berechnen.";
+$lang["ROUTING_ERROR_TOO_MANY_REQUESTS"] = "Konnte Route nicht berechnen. Bitte probiere es später nochmals";
 
 
 return $lang;

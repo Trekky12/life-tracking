@@ -33,7 +33,8 @@ function uglifyTask(cb) {
         //.pipe( rename( {
         //    suffix: '.min'
         //} ) )
-        .pipe( gulp.dest( 'public/static/js' ) );
+        .pipe( gulp.dest( 'public/static/js' ) )
+        .pipe( livereload() );
 }
 
 /**
@@ -71,6 +72,9 @@ function copyJSTask(cb) {
             './node_modules/mobius1-selectr/dist/selectr.min.js',
             './node_modules/simplemde/dist/simplemde.min.js',
             './node_modules/sortablejs/Sortable.min.js',
+            './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.min.js',
+            './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
+            
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
@@ -192,6 +196,27 @@ function replaceLeafletIconCSS(cb) {
         .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
+
+function copyLeafletRoutingIcons(cb) {
+    return gulp.src( './node_modules/leaflet-routing-machine/dist/*.png', )
+        .pipe( gulp.dest( 'public/static/assets/images/leaflet-routing-machine' ) );
+}
+
+function replaceLeafletRoutingIconCSS(cb) {
+    return gulp
+        .src( [ 
+            './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.css',
+            ] )
+        .pipe( replace("leaflet.routing.icons.png", "../images/leaflet-routing-machine/leaflet.routing.icons.png") )
+        .pipe( replace("routing-icon.png", "../images/leaflet-routing-machine/routing-icon.png") )
+        .pipe( minifyCSS() )
+        .pipe( rename( {
+            suffix: '.min'
+        } ) )
+        .pipe( gulp.dest( 'public/static/assets/css' ) );
+}
+
+
 function printError( error ) {
     console.log( '---- Error ----' );
     console.log( "message", error.cause.message );
@@ -208,6 +233,6 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyFontsTask, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS);
+exports.copy = gulp.series(copyFontsTask, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS);
 
-exports.test = copyCSSTask;
+exports.test = copyLeafletRoutingIcons;

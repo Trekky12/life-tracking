@@ -489,5 +489,8 @@ $lang["MODEL_MOBILEFAVORITE"] = "mobile favorite entry";
 $lang["MODEL_USER"] = "User";
 
 $lang["WITHOUT_DATE"] = "without date";
+$lang["SET_NAVIGATION"] = "set navigation point";
+$lang["ROUTING_ERROR"] = "Could not calculate the route.";
+$lang["ROUTING_ERROR_TOO_MANY_REQUESTS"] = "Could not calculate the route. Please try later again.";
 
 return $lang;
