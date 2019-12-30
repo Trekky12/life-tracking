@@ -39,7 +39,7 @@
                 <div class="two-columns mobile form-group">
                     <div class="left">
                         <label for="dateSelect">{{lang["DATE"]}}</label>
-                        <input type="text" class="form-control" id="dateSelect" placeholder="" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date}}{% else %}{{ from }}{% endif %}">
+                        <input type="text" class="form-control" id="dateSelect" placeholder="" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date}}{% elseif entry is null %}{{ from }}{% endif %}">
                     </div>
                     <div class="right">
                         <label for="timeEnd">{{lang["TIME"]}}</label>

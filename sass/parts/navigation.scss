@@ -31,25 +31,23 @@ body.mobile-navigation-open{
     height: $header_height;
 
     i{
+        color: $color_blue;
+
+        &:hover, &:focus{
+            color: $color_blue_light;
+        }
+        
         @include font-size(2);
         margin-left:1.5rem;
         @media screen and (min-width: $size_mini){
             @include font-size(2.5);
             margin-left:2rem;
         }
-        color: $color_blue;
-
-
-        &:hover, &:focus{
-            color: $color_blue_light;
-        }
     }
 
     a:first-child i{
         margin-left:0;
     }
-
-
 
     a.active i{
         color: $color_blue_light;
@@ -71,12 +69,31 @@ body.mobile-navigation-open{
         -webkit-tap-highlight-color: transparent;
     }
 
-    &.small{
-
+    &.size-8,
+    &.size-9,
+    &.size-10{
         i{
             @include font-size(1.6);
+            margin-left:1.5rem;
             @media screen and (min-width: $size_mini){
                 @include font-size(2);
+                margin-left:1.8rem;
+            }
+            @media screen and (min-width: $size_mobile){
+                margin-left:2rem;
+            }
+        }
+    }
+    
+    &.size-11{
+        i{
+            @include font-size(1.6);
+            margin-left:1.2rem;
+            @media screen and (min-width: $size_mini){
+                @include font-size(2);
+            }
+            @media screen and (min-width: $size_mobile){
+                margin-left:2rem;
             }
         }
     }

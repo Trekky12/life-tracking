@@ -39,21 +39,17 @@ class Mapper extends \App\Base\Mapper {
         $sql = "SELECT MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
                 . " FROM " . $this->getTable() . ""
                 . " WHERE trip = :id ";
-
         $bindings = ["id" => $id];
         $this->filterByUser($sql, $bindings);
-
         $sql .= " LIMIT 1";
-
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
-
         $min = null;
         $max = null;
         if ($stmt->rowCount() === 1){
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-            $min = $row["start_min"] < $row["end_min"] ? $row["start_min"] : $row["end_min"];
-            $max = $row["end_max"] > $row["start_max"] ? $row["end_max"] : $row["start_max"];
+            $min = !is_null($row["start_min"]) ? $row["start_min"] : $row["end_min"];
+            $max = !is_null($row["end_max"]) ? $row["end_max"] : $row["start_max"];
         }
         return array($min, $max);
     }

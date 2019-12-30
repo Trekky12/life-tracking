@@ -181,6 +181,9 @@ class Event extends \App\Base\Model {
         } else if (!empty($start1)) {
             // there is only a start date or start and end date are the same
             $popup .= "{$start1}<br/>";
+        }if (empty($start1) && !empty($end1)) {
+            // end date without start date
+            $popup .= "{$end1}<br/>";
         }
 
         $this->popup = $popup;

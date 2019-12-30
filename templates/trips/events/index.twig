@@ -29,6 +29,11 @@
         <div id="trip-map"></div>
         <div class="page-content" id="trip_overview">
 
+        {% if not trip.notice is empty %}
+            <h3>{{ lang["NOTICE"]}}:</h3>
+            <p>{{trip.notice|raw|nl2br}}</p>
+        {% endif %}
+
             <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
             <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 

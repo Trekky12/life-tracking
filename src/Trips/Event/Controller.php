@@ -84,7 +84,7 @@ class Controller extends \App\Base\Controller {
 
         foreach ($events as $ev) {
             
-            if(empty($ev->start_date)){
+            if(empty($ev->start_date) && empty($ev->end_date)){
                 $dateRange["all"]["events"][] = $ev;
                 continue;
             }
@@ -132,7 +132,7 @@ class Controller extends \App\Base\Controller {
         }
 
         $data = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($data);
+        list($from, $to) = $this->ci->get('helper')->getDateRange($data, 'today', null);
 
         $this->preEdit($entry_id, $request);
 
