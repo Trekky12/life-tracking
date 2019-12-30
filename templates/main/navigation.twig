@@ -1,9 +1,4 @@
-{% set size = "normal" %}
-{% if mobile_favorites|length == 0 or mobile_favorites|length > 5 %}
-    {% set size = "small" %}
-{% endif %}
-
-<div id="mobile-header-icons" class="{{size}}">
+<div id="mobile-header-icons" class="size-{{mobile_favorites|length+2}}">
     <a href="{{ path_for('index') }}" {% if active == 'index' %}class="active"{% endif %}><i class="fa fa-sitemap"></i></a>
     {% if mobile_favorites|length > 0 %}
         {%  for favorite in mobile_favorites %}
