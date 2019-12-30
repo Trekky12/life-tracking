@@ -52,8 +52,8 @@ class Mapper extends \App\Base\Mapper {
         $max = null;
         if ($stmt->rowCount() === 1){
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-            $min = !is_null($row["start_min"]) ? $row["start_min"] : $row["end_min"];
-            $max = !is_null($row["end_max"]) ? $row["end_max"] : $row["start_max"];
+            $min = $row["start_min"] < $row["end_min"] ? $row["start_min"] : $row["end_min"];
+            $max = $row["end_max"] > $row["start_max"] ? $row["end_max"] : $row["start_max"];
         }
         return array($min, $max);
     }

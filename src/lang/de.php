@@ -487,5 +487,7 @@ $lang["MODEL_TRIPS_TRIP"] = "Reise";
 $lang["MODEL_MOBILEFAVORITE"] = "Mobiler Favoriteneintrag";
 $lang["MODEL_USER"] = "Benutzer";
 
+$lang["WITHOUT_DATE"] = "ohne Datum";
+
 
 return $lang;

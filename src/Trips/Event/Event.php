@@ -17,7 +17,7 @@ class Event extends \App\Base\Model {
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
 
-        $this->start_date = $this->exists('start_date', $data) ? filter_var($data['start_date'], FILTER_SANITIZE_STRING) : date('Y-m-d');
+        $this->start_date = $this->exists('start_date', $data) ? filter_var($data['start_date'], FILTER_SANITIZE_STRING) : null;
         $this->start_time = $this->exists('start_time', $data) ? filter_var($data['start_time'], FILTER_SANITIZE_STRING) : null;
         $this->start_address = $this->exists('start_address', $data) ? filter_var($data['start_address'], FILTER_SANITIZE_STRING) : null;
         $this->start_lat = $this->exists('start_lat', $data) ? filter_var($data['start_lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
@@ -41,7 +41,7 @@ class Event extends \App\Base\Model {
          * Clean date/time
          */
         if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->start_date)) {
-            $this->start_date = date('Y-m-d');
+            $this->start_date = null;
         }
         if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->start_time)) {
             $this->start_time = null;

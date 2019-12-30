@@ -83,6 +83,12 @@ class Controller extends \App\Base\Controller {
         $toTranslation = $this->ci->get('helper')->getTranslatedString("TO");
 
         foreach ($events as $ev) {
+            
+            if(empty($ev->start_date)){
+                $dateRange["all"]["events"][] = $ev;
+                continue;
+            }
+            
             $end_date = !empty($ev->end_date) ? $ev->end_date : $ev->start_date;
             $end = new \DateTime($end_date);
             $end->add(new \DateInterval('P1D'));

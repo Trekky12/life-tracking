@@ -29,18 +29,16 @@
             <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
             <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 
-            {% for d in range %}
+            {% for d in range if d["date"] is null or not d["events"] is empty %}
                 <a class="change_day" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
             {% endfor %}
 
-            {% for item in range if not item["date"] is null %}
+            {% for item in range if not item["events"] is empty %}
                 <div id="trip_day_{{ item["date"] }}" class="trip_day {% if not item["active"] and not range["all"]["active"] %}hidden{% endif %}" data-date="{{ item["date"] }}">
-                    <h3>{{ item["full_date"] }}</h3>
-                    {% if not item["events"] is empty %}
-                        {% for event in item["events"] %}
-                            {% include "trips/events/event-list-item.twig" with {'event':event, 'trip':trip, 'date':item["date"]} only %}
-                        {% endfor %}
-                    {% endif %}
+                    <h3>{% if not item["date"] is null %}{{ item["full_date"] }}{% else %}{{ lang["WITHOUT_DATE"] }}{% endif %}</h3>
+                    {% for event in item["events"] %}
+                        {% include "trips/events/event-list-item.twig" with {'event':event, 'trip':trip, 'date':item["date"]} only %}
+                    {% endfor %}
                 </div>
             {% endfor %}
 
