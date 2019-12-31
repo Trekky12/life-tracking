@@ -90,6 +90,7 @@ return [
                 'TTL' => 3600,
                 'urgency' => 'normal',
             ],
+            'mapbox_token' => '',
             'modules' => [
                 "location" => [
                     "url" => "/location/",

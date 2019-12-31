@@ -83,12 +83,12 @@ class Controller extends \App\Base\Controller {
         $toTranslation = $this->ci->get('helper')->getTranslatedString("TO");
 
         foreach ($events as $ev) {
-            
-            if(empty($ev->start_date) && empty($ev->end_date)){
+
+            if (empty($ev->start_date) && empty($ev->end_date)) {
                 $dateRange["all"]["events"][] = $ev;
                 continue;
             }
-            
+
             $end_date = !empty($ev->end_date) ? $ev->end_date : $ev->start_date;
             $end = new \DateTime($end_date);
             $end->add(new \DateInterval('P1D'));
@@ -108,6 +108,8 @@ class Controller extends \App\Base\Controller {
             // create Popup
             $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
         }
+        
+        $mapbox_token = $this->ci->get('settings')['app']['mapbox_token'];
 
         return $this->ci->view->render($response, 'trips/events/index.twig', [
                     "events" => $events,
@@ -116,6 +118,7 @@ class Controller extends \App\Base\Controller {
                     "from" => $from,
                     "to" => $to,
                     "range" => $dateRange,
+                    "mapbox_token" => $mapbox_token
         ]);
     }
 

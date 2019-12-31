@@ -152,15 +152,20 @@ function drawMarkers(markers) {
         //let popup = "<h4>" + marker.data.name + "</h4>" + marker.data.popup;
         let navigationBtn = document.createElement("a");
         navigationBtn.classList.add("navigation-btn")
-        navigationBtn.innerHTML = lang.set_navigation;
+        navigationBtn.innerHTML = lang.routing_add_to_route;
 
         navigationBtn.addEventListener("click", function () {
             let pos = 0;
+            let waypoints = routeControl.getWaypoints().length;
             let start = routeControl.getWaypoints()[0].latLng;
+            let end = routeControl.getWaypoints()[waypoints - 1].latLng;
             if (start) {
                 pos = routeControl.getWaypoints().length - 1;
             }
-            let waypoint =  L.Routing.waypoint(start_marker.getLatLng(),marker.data.name);
+            if (start && end) {
+                pos = routeControl.getWaypoints().length;
+            }
+            let waypoint = L.Routing.waypoint(start_marker.getLatLng(), marker.data.name, {fixed:true});
             routeControl.spliceWaypoints(pos, 1, waypoint);
             routeControl.show();
         });
@@ -302,32 +307,110 @@ function initMap() {
         getMarkers(from, to);
     }
 
+    /**
+     * @see https://github.com/perliedman/leaflet-routing-machine/issues/236
+     * @see http://gis.stackexchange.com/questions/193235/leaflet-routing-machine-how-to-dinamically-change-router-settings
+     */
+    var geoPlan = L.Routing.Plan.extend({
+
+        createGeocoders: function () {
+            var container = L.Routing.Plan.prototype.createGeocoders.call(this);
+
+            let walkButton = createButton(container, "walk");
+            let bikeButton = createButton(container, "bike");
+            let carButton = createButton(container, "car", true);
+
+
+            L.DomEvent.on(walkButton, 'click', function () {
+                routeControl.getRouter().options.profile = 'mapbox/walking';
+                routeControl.route();
+                //routeControl.setWaypoints(routeControl.getWaypoints());
+                walkButton.classList.add('active');
+                bikeButton.classList.remove('active');
+                carButton.classList.remove('active');
+            }, this);
+
+            L.DomEvent.on(bikeButton, 'click', function () {
+                routeControl.getRouter().options.profile = 'mapbox/cycling';
+                routeControl.route();
+                //routeControl.setWaypoints(routeControl.getWaypoints());
+                walkButton.classList.remove('active');
+                bikeButton.classList.add('active');
+                carButton.classList.remove('active');
+            }, this);
+
+            L.DomEvent.on(carButton, 'click', function () {
+                routeControl.getRouter().options.profile = 'mapbox/driving';
+                routeControl.route();
+                //routeControl.setWaypoints(routeControl.getWaypoints());
+                walkButton.classList.remove('active');
+                bikeButton.classList.remove('active');
+                carButton.classList.add('active');
+            }, this);
+
+//            let calcButton = createButton(container, "calc");
+//            L.DomEvent.on(calcButton, 'click', function () {
+//                routeControl.route();
+//            }, this);
+
+            return container;
+        }
+    });
+
+
+    let plan = new geoPlan(
+            [],
+            {
+                //geocoder: new L.Control.Geocoder.Nominatim(),
+                //geocoder: new L.Control.Geocoder.LatLng(),
+                geocoder: new L.Control.Geocoder.Mapbox(mapbox_token, {
+                    reverseQueryParams:{
+                        language: i18n.routing
+                    }
+                }),
+                createMarker: function (i, wp) {
+                    if(wp.options.fixed){
+                        return null;
+                    }
+                    return L.marker(wp.latLng, {});
+                },
+                routeWhileDragging: false,
+                reverseWaypoints: true,
+                addWaypoints: true,
+                language: i18n.routing,
+                draggableWaypoints: false
+            });
+
     routeControl = L.Routing.control({
         waypoints: [],
-        geocoder: L.Control.Geocoder.nominatim(),
         autoRoute: true,
-        createMarker: function () {
-            return null;
-        },
-        router: new L.Routing.OSRMv1({
-            profile: 'driving',
-            suppressDemoServerWarning: true,
+//        router: new L.Routing.OSRMv1({
+//            profile: 'driving',
+//            suppressDemoServerWarning: true,
+//            urlParameters: {
+//            }
+//        }),
+        router: L.Routing.mapbox(mapbox_token, {
+            profile: "mapbox/driving",
+            routingOptions: {
+                alternatives: false,
+                steps: false
+            },
+            language: i18n.routing
         }),
         show: false,
         collapsible: true,
-        addWaypoints : true,
-        reverseWaypoints: true,
-        language: i18n.routing,
         showAlternatives: false,
-        routeWhileDragging: false
+        routeWhileDragging: false,
+        plan: plan
     }).addTo(mymap);
-    
-    routeControl.on('routingerror', function(e){
-       if(e.error.target.status === 429){
-           alert(lang.routing_error_too_many_requests);
-       }else{
-           alert(lang.routing_error);
-       }
+
+    routeControl.on('routingerror', function (e) {
+        if (e.error.target.status == 429) {
+            alert(lang.routing_error_too_many_requests);
+        } else {
+            alert(lang.routing_error);
+        }
     });
 }
 
@@ -356,4 +439,16 @@ function calculateMidPoint(start, end) {
             midpointY = (r2 * Math.sin(theta2)) + latlng1.lat;
 
     return [midpointY, midpointX];
+}
+
+function createButton(container, type, active = false) {
+    var btn = L.DomUtil.create('button', '', container);
+    btn.setAttribute('type', 'button');
+    btn.title = type;
+    btn.classList.add("leaflet-routing-btn");
+    btn.classList.add(type);
+    if (active) {
+        btn.classList.add('active');
+    }
+    return btn;
 }

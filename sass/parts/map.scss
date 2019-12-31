@@ -57,7 +57,7 @@
     @include font-size(1.2);
     padding: 1rem 0.5rem;
     line-height:1;
-    
+
     @media screen and (min-width: $size_mobile_navigation){
         margin-bottom:2rem;  
     }
@@ -155,7 +155,7 @@
     input[type=checkbox] + span span#toggleClustering:before  {
         content: "\f247"; 
     }
-    
+
     input[type=checkbox] + span span#layerPlanes:before  {
         content: "\f072"; 
     }
@@ -203,15 +203,60 @@ body.trips{
 }
 
 .leaflet-routing-container-hide .leaflet-routing-collapse-btn{
-    left: 2px;
+    left: 1px;
     top: 0px;
 }
 
-.leaflet-routing-reverse-waypoints, .leaflet-routing-add-waypoint {
+.leaflet-routing-reverse-waypoints, .leaflet-routing-add-waypoint, .leaflet-routing-btn {
     height: 30px;
     width: 30px;
 }
 
+.leaflet-routing-btn{
+    padding:0;
+    outline: none;
+
+    &::before{
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        position: relative;
+    }
+
+    &.active{
+        color:$color_blue;
+    }
+
+    &.car::before{
+        content: "\f1b9";
+        //left: -5px;
+    }
+    &.bike::before{
+        content: "\f206";
+        //left: -5px;
+    }
+    &.walk::before{
+        content: "\f1b0";
+        //left: -3px;
+    }
+
+    &.calc{
+        float:left!important;
+        &::before{
+            content:"\f277";
+            //left: -3px;
+        }
+    }
+}
+
 .leaflet-routing-collapse-btn, .navigation-btn{
     cursor: pointer;
+}
+
+@media only screen and (max-width: 640px) {
+    .leaflet-routing-container {
+        margin-right: 10px!important;
+        margin-top: 10px!important;
+        padding-top: 4px!important;
+    }
 }
