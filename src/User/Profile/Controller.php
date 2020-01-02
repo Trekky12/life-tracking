@@ -10,7 +10,6 @@ class Controller extends \App\Base\Controller {
 
     protected $model = '\App\User\User';
     protected $index_route = 'users';
-    
     private $token_mapper;
 
     public function init() {
@@ -88,11 +87,10 @@ class Controller extends \App\Base\Controller {
 
             $image = $files['image'];
 
+            $settings = $this->ci->get('settings');
+            $folder = $settings['app']['upload_folder'];
 
             if ($image->getError() === UPLOAD_ERR_OK) {
-
-                $settings = $this->ci->get('settings');
-                $folder = $settings['app']['upload_folder'];
 
                 $uploadFileName = $image->getClientFilename();
                 $file_extension = pathinfo($uploadFileName, PATHINFO_EXTENSION);
@@ -119,13 +117,21 @@ class Controller extends \App\Base\Controller {
 
                 $this->user_mapper->update_image($user->id, $file_name . '.' . $file_extension);
 
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("IMAGE_SET"));
+                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PROFILE_IMAGE_SET"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Profile Image, Image Set", array("user" => $user->id, "image" => $file_name . '.' . $file_extension));
             } else if ($image->getError() === UPLOAD_ERR_NO_FILE) {
+
+                $thumbnail = $user->get_thumbnail('small');
+                $thumbnail2 = $user->get_thumbnail('mini');
+                $image = $user->get_image();
+                unlink($folder . "/". $thumbnail);
+                unlink($folder . "/". $thumbnail2);
+                unlink($folder . "/". $image);
+
                 $this->user_mapper->update_image($user->id, null);
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("IMAGE_DELETED"));
+                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PROFILE_IMAGE_DELETED"));
                 $this->ci->get('flash')->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Profile Image, No File", array("user" => $user->id));

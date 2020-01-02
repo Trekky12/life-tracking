@@ -4,6 +4,7 @@ namespace App\Trips\Event;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Controller extends \App\Base\Controller {
 
@@ -108,7 +109,7 @@ class Controller extends \App\Base\Controller {
             // create Popup
             $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
         }
-        
+
         $mapbox_token = $this->ci->get('settings')['app']['mapbox_token'];
 
         return $this->ci->view->render($response, 'trips/events/index.twig', [
@@ -144,7 +145,8 @@ class Controller extends \App\Base\Controller {
                     'trip' => $trip,
                     'types' => self::eventTypes(),
                     'from' => $from,
-                    'to' => $to
+                    'to' => $to,
+                    "isTripEventEdit" => true
         ]);
     }
 
@@ -277,6 +279,84 @@ class Controller extends \App\Base\Controller {
 
     protected function getParentObjectMapper() {
         return $this->trip_mapper;
+    }
+
+    public function image(Request $request, Response $response) {
+
+        $user = $this->ci->get('helper')->getUser();
+
+        $entry_id = $request->getAttribute('id');
+        $entry = $this->mapper->get($entry_id);
+
+        $newResponse = ["status" => "error"];
+        $files = $request->getUploadedFiles();
+
+        if (!array_key_exists('image', $files) || empty($files['image'])) {
+            $this->logger->addError("Update Event Image, Image Error", array("user" => $user->id, "id" => $entry_id, "files" => $files));
+
+            $newResponse["status"] = "error";
+        }
+
+        $image = $files['image'];
+
+        if ($image->getError() === UPLOAD_ERR_OK) {
+
+            $settings = $this->ci->get('settings');
+            $folder = $settings['app']['upload_folder'];
+
+            $uploadFileName = $image->getClientFilename();
+            $file_extension = pathinfo($uploadFileName, PATHINFO_EXTENSION);
+            $file_wo_extension = pathinfo($uploadFileName, PATHINFO_FILENAME);
+            $file_name = hash('sha256', time() . rand(0, 1000000) . $user->id) . '_' . $file_wo_extension;
+            $complete_file_name = $folder . '/events/' . $file_name;
+
+            $image->moveTo($complete_file_name . '.' . $file_extension);
+            /**
+             * Create Thumbnail
+             */
+            $img = Image::make($complete_file_name . '.' . $file_extension);
+            /**
+             * @link http://image.intervention.io/api/resize
+             */
+            $img->resize(200, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $img->save($complete_file_name . '-small.' . $file_extension);
+
+            $this->mapper->update_image($entry->id, $file_name . '.' . $file_extension);
+
+            $this->logger->addNotice("Update Event Image, Image Set", array("user" => $user->id, "id" => $entry_id, "image" => $file_name . '.' . $file_extension));
+
+            $newResponse["status"] = "success";
+            $newResponse["thumbnail"] = "/" . $folder . "/events/" . $file_name . '-small.' . $file_extension;
+        } else if ($image->getError() === UPLOAD_ERR_NO_FILE) {
+            $newResponse["status"] = "error";
+
+            $this->logger->addNotice("Update Event Image, No File", array("user" => $user->id, "id" => $entry_id));
+        }
+
+        return $response->withJson($newResponse);
+    }
+
+    public function image_delete(Request $request, Response $response) {
+
+        $user = $this->ci->get('helper')->getUser();
+
+        $entry_id = $request->getAttribute('id');
+        $entry = $this->mapper->get($entry_id);
+
+        $settings = $this->ci->get('settings');
+        $folder = $settings['app']['upload_folder'];
+        $thumbnail = $entry->get_thumbnail('small');
+        $image = $entry->get_image();
+        unlink($folder . '/events/' . $thumbnail);
+        unlink($folder . '/events/' . $image);
+
+        $this->mapper->update_image($entry->id, null);
+
+        $this->logger->addNotice("Delete Event Image", array("user" => $user->id, "id" => $entry_id));
+
+        return $response->withJson(["status" => "success"]);
     }
 
 }

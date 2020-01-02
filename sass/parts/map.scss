@@ -253,6 +253,10 @@ body.trips{
     cursor: pointer;
 }
 
+.leaflet-routing-container{
+    transition: none !important
+}
+
 @media only screen and (max-width: 640px) {
     .leaflet-routing-container {
         margin-right: 10px!important;

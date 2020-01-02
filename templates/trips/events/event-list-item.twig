@@ -21,6 +21,10 @@
             {{ event.popup |raw}}
         </div>
 
+        {% if event.get_thumbnail() != ''%}
+            <img class="image_uploaded" src="/{{uploads_folder}}/events/{{event.get_thumbnail()}}"/>
+        {% endif %}
+
         {% if event.notice %}
             <div class="description">
                 <a href="#" class="description_text">Beschreibung</a>

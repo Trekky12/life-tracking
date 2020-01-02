@@ -185,8 +185,8 @@ $lang["FILE_UPLOAD_ERROR"] = "Fehler beim Hochladen";
 $lang["IMAGE"] = "Bild";
 $lang["PROFILE"] = "Profil";
 $lang["PROFILE_IMAGE"] = "Profilbild";
-$lang["IMAGE_SET"] = "Profilbild gesetzt";
-$lang["IMAGE_DELETED"] = "Profilbild gelöscht";
+$lang["PROFILE_IMAGE_SET"] = "Profilbild gesetzt";
+$lang["PROFILE_IMAGE_DELETED"] = "Profilbild gelöscht";
 
 $lang["BOARDS"] = "Boards";
 $lang["BOARD"] = "Board";
@@ -491,6 +491,8 @@ $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
 $lang["ROUTING_ERROR"] = "Konnte Route nicht berechnen.";
 $lang["ROUTING_ERROR_TOO_MANY_REQUESTS"] = "Konnte Route nicht berechnen. Bitte probiere es später nochmals";
+
+$lang["TRIPS_EVENT_IMAGE"] = "Eventbild";
 
 
 return $lang;

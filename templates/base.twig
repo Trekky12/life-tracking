@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/style.css?ver=20191231b" />
+        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/style.css?ver=20200102" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{base_url()}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{base_url()}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -132,7 +132,10 @@
                 {% if not hasTimesheetTable is null %}
                 'timesheets_table': '{{path_for('timesheets_sheets_table', {'project': project.hash})}}',
                 {% endif %}
-                    
+                {% if not isTripEventEdit is null %}
+                    'trip_event_image_upload': '{{  path_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
+                    'trip_event_image_delete': '{{  path_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
+                {% endif %}
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

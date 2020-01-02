@@ -12,10 +12,10 @@
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 
+                <h3>{{lang["IMAGE"]}}</h3>
                 <div class="form-group">
-                    <label for="image" class="col-sm-2 control-label">{{lang["IMAGE"]}}</label>
                     {% if not user is null and user.get_thumbnail() != ''%}
-                        <img src="/{{uploads_folder}}/{{user.get_thumbnail()}}"/>
+                        <img class="image_uploaded" src="/{{uploads_folder}}/{{user.get_thumbnail()}}"/>
                     {%endif%}
                     <input name="image" id="image" class="form-control" type="file">
                 </div>

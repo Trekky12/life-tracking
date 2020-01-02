@@ -185,8 +185,8 @@ $lang["FILE_UPLOAD_ERROR"] = "Error at data upload";
 $lang["IMAGE"] = "Image";
 $lang["PROFILE"] = "Profile";
 $lang["PROFILE_IMAGE"] = "Profile image";
-$lang["IMAGE_SET"] = "Image setted";
-$lang["IMAGE_DELETED"] = "Image deleted";
+$lang["PROFILE_IMAGE_SET"] = "Image setted";
+$lang["PROFILE_IMAGE_DELETED"] = "Image deleted";
 
 $lang["BOARDS"] = "Boards";
 $lang["BOARD"] = "Board";
@@ -492,5 +492,7 @@ $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
 $lang["ROUTING_ERROR"] = "Could not calculate the route.";
 $lang["ROUTING_ERROR_TOO_MANY_REQUESTS"] = "Could not calculate the route. Please try later again.";
+
+$lang["TRIPS_EVENT_IMAGE"] = "Event image";
 
 return $lang;

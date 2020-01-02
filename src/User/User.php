@@ -3,7 +3,7 @@
 namespace App\User;
 
 class User extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_USER";
 
     public function parseData(array $data) {
@@ -65,6 +65,13 @@ class User extends \App\Base\Model {
         return null;
     }
 
+    public function get_image() {
+        if (!empty($this->image)) {
+            return $this->image;
+        }
+        return null;
+    }
+
     public function hasModule($module) {
         switch ($module) {
             case 'finances':
@@ -91,6 +98,5 @@ class User extends \App\Base\Model {
     public function getDescription(\Interop\Container\ContainerInterface $ci) {
         return $this->login;
     }
-    
 
 }

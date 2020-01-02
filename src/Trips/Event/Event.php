@@ -3,7 +3,7 @@
 namespace App\Trips\Event;
 
 class Event extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_TRIPS_EVENT";
 
     public function parseData(array $data) {
@@ -54,16 +54,19 @@ class Event extends \App\Base\Model {
         }
 
         // if start date is greater than end date swap both
-        if(!empty($this->start_date) && !empty($this->end_date)){
+        if (!empty($this->start_date) && !empty($this->end_date)) {
             $start = new \DateTime($this->start_date);
             $end = new \DateTime($this->end_date);
 
-            if($start > $end){
+            if ($start > $end) {
                 $this->start_date = $end->format('Y-m-d');
                 $this->end_date = $start->format('Y-m-d');
             }
         }
-
+        
+        if ($this->exists('image', $data)) {
+            $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
+        }
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
@@ -94,7 +97,7 @@ class Event extends \App\Base\Model {
         return strcmp($this->type, "EVENT") === 0;
     }
 
-    public function isTravel(){
+    public function isTravel() {
         return $this->isFlight() || $this->isTrainride() || $this->isDrive();
     }
 
@@ -164,7 +167,7 @@ class Event extends \App\Base\Model {
         }
 
         // same start and end date? hide end date
-        if(strcmp($start, $end) === 0){
+        if (strcmp($start, $end) === 0) {
             $end = null;
         }
 
@@ -172,7 +175,7 @@ class Event extends \App\Base\Model {
         $start1 = "{$start}{$start_sep}{$start_address}";
 
         $end_sep = !is_null($end) && !is_null($end_address) ? $loc_prefix : "";
-        $end1 =  "{$end}{$end_sep}{$end_address}";
+        $end1 = "{$end}{$end_sep}{$end_address}";
 
         $popup = ""; //"<h4>{$this->name}</h4>";
         if (!empty($start1) && !empty($end1) && strcmp($start1, $end1) !== 0) {
@@ -213,9 +216,25 @@ class Event extends \App\Base\Model {
     public function getDescription(\Interop\Container\ContainerInterface $ci) {
         return $this->name;
     }
-    
+
     public function getParentID() {
         return $this->trip;
+    }
+
+    public function get_thumbnail($size = 'small') {
+        if (!empty($this->image)) {
+            $file_extension = pathinfo($this->image, PATHINFO_EXTENSION);
+            $file_wo_extension = pathinfo($this->image, PATHINFO_FILENAME);
+            return $file_wo_extension . '-' . $size . '.' . $file_extension;
+        }
+        return null;
+    }
+    
+    public function get_image(){
+        if (!empty($this->image)) {
+            return $this->image;
+        }
+        return null;
     }
 
 }

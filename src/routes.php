@@ -320,6 +320,9 @@ $app->group('/trips', function() {
             $this->get('/edit/[{id:[0-9]+}]', '\App\Trips\Event\Controller:edit')->setName('trips_event_edit');
             $this->post('/save/[{id:[0-9]+}]', '\App\Trips\Event\Controller:save')->setName('trips_event_save');
             $this->delete('/delete/{id}', '\App\Trips\Event\Controller:delete')->setName('trips_event_delete');
+            
+            $this->post('/image/{id:[0-9]+}', '\App\Trips\Event\Controller:image')->setName('trips_event_image');
+            $this->delete('/imagedelete/{id:[0-9]+}', '\App\Trips\Event\Controller:image_delete')->setName('trips_event_image_delete');
         });
     });
 });
