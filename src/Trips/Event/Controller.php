@@ -136,7 +136,7 @@ class Controller extends \App\Base\Controller {
         }
 
         $data = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($data, 'today', null);
+        list($from, $to) = $this->ci->get('helper')->getDateRange($data, null, null);
 
         $this->preEdit($entry_id, $request);
 
