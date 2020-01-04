@@ -9,8 +9,7 @@
 {% block javascript %}
     <script src="{{base_url()}}/static/assets/js/leaflet.js" type="text/javascript"></script>
     <script src="{{base_url()}}/static/js/geolocation.js?ver=20190130"></script>
-    <script src="{{base_url()}}/static/js/datefilter.js?ver=20190130"></script>
-    <script src="{{base_url()}}/static/js/trips_edit.js?ver=20200102"></script>
+    <script src="{{base_url()}}/static/js/trips_edit.js?ver=20200104"></script>
 {% endblock %}
 
 {% set hasMap_start = not entry.start_lat is null and not entry.start_lng is null %}
@@ -26,6 +25,7 @@
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 <input name="trip" type="hidden" value="{{trip.id}}">
+                <input name="position" type="hidden" value="{{entry.position}}">
 
                 {% if not entry is null %}
                     <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
@@ -39,8 +39,8 @@
                 <h3>{{lang["START"]}}</h3>
                 <div class="two-columns mobile form-group">
                     <div class="left">
-                        <label for="dateSelect">{{lang["DATE"]}}</label>
-                        <input type="text" class="form-control" id="dateSelect" placeholder="" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date}}{% elseif entry is null %}{{ from }}{% endif %}">
+                        <label for="inputStartEvent">{{lang["DATE"]}}</label>
+                        <input type="text" class="form-control" id="inputStartEvent" placeholder="" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date}}{% elseif entry is null %}{{ from }}{% endif %}">
                     </div>
                     <div class="right">
                         <label for="timeEnd">{{lang["TIME"]}}</label>
@@ -63,8 +63,8 @@
                 <h3>{{lang["END"]}}</h3>
                 <div class="two-columns mobile form-group">
                     <div class="left">
-                        <label for="dateSelectEnd">{{lang["DATE"]}}</label>
-                        <input type="text" class="form-control" id="dateSelectEnd" placeholder="" name="end_date" value="{% if not entry is null and not entry.end_date is null %}{{entry.end_date}}{% else %}{{ to }}{% endif %}">
+                        <label for="inputEndEvent">{{lang["DATE"]}}</label>
+                        <input type="text" class="form-control" id="inputEndEvent" placeholder="" name="end_date" value="{% if not entry is null and not entry.end_date is null %}{{entry.end_date}}{% elseif entry is null %}{{ to }}{% endif %}">
                     </div>
                     <div class="right">
                         <label for="timeEnd">{{lang["TIME"]}}</label>

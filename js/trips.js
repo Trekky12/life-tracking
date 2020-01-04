@@ -28,12 +28,6 @@ if (changeDayLinks !== null) {
     changeDayLinks.forEach(function (changeDayLink, idx) {
         changeDayLink.addEventListener('click', function (e) {
             e.preventDefault();
-
-            // add from/to parameters to add event link
-            if (newEventButton) {
-                newEventButton.href = addEventLink + changeDayLink.search;
-            }
-
             changeDay(changeDayLink);
         });
     });
@@ -44,6 +38,11 @@ function changeDay(item) {
 
     fromInput.value = date;
     toInput.value = date;
+
+    // add from/to parameters to add event link
+    if (newEventButton) {
+        newEventButton.href = addEventLink + item.search;
+    }
 
     getMarkers(date, date).then(function () {
         if (date) {

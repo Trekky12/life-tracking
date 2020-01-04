@@ -54,6 +54,11 @@ class Event extends \App\Base\Model {
         if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->end_time)) {
             $this->end_time = null;
         }
+        
+        // set end date to same date like start if end date is empty
+        if (!empty($this->start_date) && empty($this->end_date)) {
+            $this->end_date = $this->start_date;
+        }
 
         // if start date is greater than end date swap both
         if (!empty($this->start_date) && !empty($this->end_date)) {

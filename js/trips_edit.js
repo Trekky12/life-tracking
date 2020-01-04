@@ -70,3 +70,29 @@ if (deleteImage) {
         });
     });
 }
+
+
+// set end date to same date like start date
+const datepickerStartEvent = document.getElementById('inputStartEvent');
+const datepickerEndEvent = document.getElementById('inputEndEvent');
+
+if (datepickerStartEvent && datepickerEndEvent) {
+    flatpickr(datepickerStartEvent, {
+        "altInput": true,
+        "altFormat": i18n.dateformatTwig.date,
+        "dateFormat": "Y-m-d",
+        "locale": i18n.template, 
+        "onValueUpdate": function (selectedDates) {
+            if(datepickerEndEvent.value.length == 0){
+                datepickerEndEvent._flatpickr.setDate(selectedDates[0]);
+            }
+        }
+    });
+    
+    flatpickr(datepickerEndEvent, {
+        "altInput": true,
+        "altFormat": i18n.dateformatTwig.date,
+        "dateFormat": "Y-m-d",
+        "locale": i18n.template
+    });
+}
