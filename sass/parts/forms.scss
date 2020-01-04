@@ -67,6 +67,17 @@ input[type="submit"],
 
     }
     
+    &.blue{
+        background-color: $color_blue;
+        color: #FFFFFF;
+
+        &:hover{
+            background-color: transparent;
+            border-color: $color_blue;
+            color: $color_blue;
+        }
+    }
+    
     &.small{
         padding: 0.5rem 1rem; 
     }

@@ -1,4 +1,4 @@
-<div class="trip_event  {% if not date is sameas(event.start_date) %}hidden_description_print{% elseif event.notice %}has_notice{%endif %}">
+<div class="trip_event  {% if not date is sameas(event.start_date) %}hidden_description_print{% elseif event.notice %}has_notice{%endif %}" data-event="{{ event.id }}">
     <div class="icon">
         {% if event.isAccommodation() %}
             <i class="fa fa-2x fa-bed"></i>
@@ -8,7 +8,6 @@
             <i class="fa fa-2x fa-road"></i>
         {% elseif event.isFlight() %}
             <i class="fa fa-2x fa-plane"></i>
-
         {% elseif event.isCarrental() %}
             <i class="fa fa-2x fa-car"></i>
         {% elseif event.isEvent() %}

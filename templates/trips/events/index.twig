@@ -19,11 +19,12 @@
     <script src="{{base_url()}}/static/assets/js/leaflet-easyPrint.min.js" type="text/javascript"></script>
     <script src="{{base_url()}}/static/assets/js/leaflet-routing-machine.min.js" type="text/javascript"></script>
     <script src="{{base_url()}}/static/assets/js/Control.Geocoder.min.js" type="text/javascript"></script>
-    
+    <script src="{{base_url()}}/static/assets/js/Sortable.min.js"></script>
+
     <script type='text/javascript' >
         const mapbox_token = '{{ mapbox_token }}';
     </script>
-    <script src="{{base_url()}}/static/js/trips.js?ver=20191231b"></script>
+    <script src="{{base_url()}}/static/js/trips.js?ver=20200104"></script>
 {% endblock %}
 
 {% block body %}
@@ -32,20 +33,25 @@
         <div id="trip-map"></div>
         <div class="page-content" id="trip_overview">
 
-        {% if not trip.notice is empty %}
-            <h3>{{ lang["NOTICE"]}}:</h3>
-            <p>{{trip.notice|raw|nl2br}}</p>
-        {% endif %}
+            {% if not trip.notice is empty %}
+                <h3>{{ lang["NOTICE"]}}:</h3>
+                <p>{{trip.notice|raw|nl2br}}</p>
+            {% endif %}
 
             <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
             <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 
-            {% for d in range if d["date"] is null or not d["events"] is empty %}
-                <a class="change_day" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
-            {% endfor %}
+            <div class="trip_buttonrow">
+                <div class="trip_dates">
+                    {% for d in range if d["date"] is null or not d["events"] is empty %}
+                        <a class="change_day" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
+                        {% endfor %}
+                </div>
+                <a id="createRoute" href="#"><button class="small trips_overview blue">{{ lang["CREATE_ROUTE"] }}</button></a>
+            </div>
 
             {% for item in range if not item["events"] is empty %}
-                <div id="trip_day_{{ item["date"] }}" class="trip_day {% if not item["active"] and not range["all"]["active"] %}hidden{% endif %}" data-date="{{ item["date"] }}">
+                <div id="trip_day_{% if not item["date"] is null %}{{ item["date"] }}{% else %}none{% endif %}" class="trip_day {% if not item["active"] and not range["all"]["active"] %}hidden{% endif %}" data-date="{{ item["date"] }}">
                     <h3>{% if not item["date"] is null %}{{ item["full_date"] }}{% else %}{{ lang["WITHOUT_DATE"] }}{% endif %}</h3>
                     {% for event in item["events"] %}
                         {% include "trips/events/event-list-item.twig" with {'event':event, 'trip':trip, 'date':item["date"]} only %}

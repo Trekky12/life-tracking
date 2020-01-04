@@ -32,7 +32,7 @@ class Controller extends \App\Base\Controller {
         list($from, $to) = $this->ci->get('helper')->getDateRange($data, null, null);
 
         // always show all events (hide the one not in range)
-        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time");
+        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time, position");
 
         list($min, $max) = $this->mapper->getMinMaxEventsDate($trip->id);
 
@@ -160,7 +160,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data, null, null);
 
-        $events = $this->mapper->getFromTrip($trip->id, $from, $to);
+        $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time, position");
 
 
         $langugage = $this->ci->get('settings')['app']['i18n']['php'];
@@ -357,6 +357,31 @@ class Controller extends \App\Base\Controller {
         $this->logger->addNotice("Delete Event Image", array("user" => $user->id, "id" => $entry_id));
 
         return $response->withJson(["status" => "success"]);
+    }
+
+    public function updatePosition(Request $request, Response $response) {
+        $data = $request->getParsedBody();
+
+        try {
+
+            $user = $this->ci->get('helper')->getUser()->id;
+            //$user_cards = $this->board_mapper->getUserCards($user);
+
+            if (array_key_exists("events", $data) && !empty($data["events"])) {
+
+                foreach ($data['events'] as $position => $item) {
+                    //if (in_array($item, $user_cards)) {
+                        $this->mapper->updatePosition($item, $position, $user);
+                    //}
+                }
+                return $response->withJSON(array('status' => 'success'));
+            }
+        } catch (\Exception $e) {
+            $this->logger->addError("Update Event Position", array("data" => $data, "error" => $e->getMessage()));
+
+            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+        }
+        return $response->withJSON(array('status' => 'error'));
     }
 
 }

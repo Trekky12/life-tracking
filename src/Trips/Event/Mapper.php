@@ -86,4 +86,18 @@ class Mapper extends \App\Base\Mapper {
         }
     }
 
+    public function updatePosition($id, $position, $user) {
+        $sql = "UPDATE " . $this->getTable() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "position" => $position,
+            "id" => $id,
+            "changedOn" => date('Y-m-d H:i:s'),
+            "changedBy" => $user
+        ]);
+        if (!$result) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
 }

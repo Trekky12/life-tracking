@@ -323,6 +323,8 @@ $app->group('/trips', function() {
             
             $this->post('/image/{id:[0-9]+}', '\App\Trips\Event\Controller:image')->setName('trips_event_image');
             $this->delete('/imagedelete/{id:[0-9]+}', '\App\Trips\Event\Controller:image_delete')->setName('trips_event_image_delete');
+            
+            $this->post('/updatePosition', '\App\Trips\Event\Controller:updatePosition')->setName('trips_event_position');
         });
     });
 });

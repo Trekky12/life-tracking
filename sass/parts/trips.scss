@@ -52,10 +52,10 @@ body.trips .inner-content .page-header{
         }
 
         .description{
-        
+
             word-break: break-word;
             hyphens: auto;
-            
+
             @include font-size(1.4);
 
             .description_full{
@@ -147,21 +147,21 @@ body.trips .inner-content .page-header{
         break-inside: avoid;
         page-break-inside: avoid;
     }
-    
+
     .trip_event.has_notice{
         break-inside: auto!important;
         page-break-inside: auto!important;
     }
-    
+
     .trip_event.has_notice{
         page-break-before: avoid;
     }
-    
+
     // show event description only on first day
     .trip_event.hidden_description_print .description{
         display:none;
     }
-    
+
     .page-header{
         display:none;
     }
@@ -206,4 +206,30 @@ body.trips .inner-content .page-header{
 
 .image_uploaded{
     margin-bottom:1rem; 
+}
+
+.trip_buttonrow{
+    display: flex;
+    flex-direction: column-reverse;
+
+    @media screen and (min-width: $size_mobile_navigation){
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #createRoute button{
+        margin-bottom:1rem;
+        @media screen and (min-width: $size_mobile_navigation){
+            margin-bottom:0;
+        }
+    }
+}
+
+.trip_event-placeholder{
+    //border: 1px dashed $color_text-main;
+    //background-color:#CCCCCC;
+}
+
+.trip_day .icon i:hover{
+    cursor:pointer;
 }

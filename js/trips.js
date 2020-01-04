@@ -10,6 +10,7 @@ let layerEvents = new L.LayerGroup();
 let controlLayer = null;
 let mymap = null;
 let routeControl = null;
+let my_markers = [];
 
 const tripDays = document.querySelectorAll('.trip_day');
 const changeDayLinks = document.querySelectorAll('.change_day');
@@ -40,6 +41,10 @@ if (changeDayLinks !== null) {
 
 function changeDay(item) {
     let date = item.dataset.date;
+
+    fromInput.value = date;
+    toInput.value = date;
+
     getMarkers(date, date).then(function () {
         if (date) {
             let currentDay = document.getElementById('trip_day_' + date);
@@ -67,8 +72,22 @@ descriptionLinks.forEach(function (item, idx) {
     });
 });
 
-const from = document.getElementById('inputStart').value;
-const to = document.getElementById('inputEnd').value;
+const fromInput = document.getElementById('inputStart');
+const toInput = document.getElementById('inputEnd');
+
+const routeBtn = document.getElementById('createRoute');
+if (routeBtn) {
+    routeBtn.addEventListener('click', function (event) {
+        event.preventDefault();
+        routeControl.setWaypoints([]);
+        my_markers.forEach(function (item, idx) {
+            if (!item.data.isPlane) {
+                addWaypoint(item);
+            }
+        });
+        routeControl.show();
+    });
+}
 
 initMap();
 
@@ -88,7 +107,7 @@ function getMarkers(from, to) {
     });
 }
 
-function drawMarkers(markers) {
+function drawMarkers(data) {
 
     layerTrains.clearLayers();
     layerCars.clearLayers();
@@ -97,13 +116,12 @@ function drawMarkers(markers) {
     layerHotels.clearLayers();
     layerEvents.clearLayers();
 
-
-    let my_markers = [];
+    my_markers = [];
 
     let marker_idx = 0;
-    for (marker_idx in markers) {
+    for (marker_idx in data) {
 
-        let marker = markers[marker_idx];
+        let marker = data[marker_idx];
 
         // ignore markers without start data
         if (marker.data.start_lat === null || marker.data.start_lng === null) {
@@ -145,6 +163,9 @@ function drawMarkers(markers) {
          * Start Marker
          */
         let start_marker = L.marker([marker.data.start_lat, marker.data.start_lng], options);
+        start_marker.data = marker;
+        start_marker.name = marker.data.name;
+        start_marker.address = marker.data.start_address;
 
         /**
          * Popup
@@ -155,18 +176,7 @@ function drawMarkers(markers) {
         navigationBtn.innerHTML = lang.routing_add_to_route;
 
         navigationBtn.addEventListener("click", function () {
-            let pos = 0;
-            let waypoints = routeControl.getWaypoints().length;
-            let start = routeControl.getWaypoints()[0].latLng;
-            let end = routeControl.getWaypoints()[waypoints - 1].latLng;
-            if (start) {
-                pos = routeControl.getWaypoints().length - 1;
-            }
-            if (start && end) {
-                pos = routeControl.getWaypoints().length;
-            }
-            let waypoint = L.Routing.waypoint(start_marker.getLatLng(), marker.data.name, {fixed:true});
-            routeControl.spliceWaypoints(pos, 1, waypoint);
+            addWaypoint(start_marker);
             routeControl.show();
         });
 
@@ -203,6 +213,9 @@ function drawMarkers(markers) {
          */
         if (marker.data.end_lat !== null && marker.data.end_lat !== null) {
             let end_marker = L.marker([marker.data.end_lat, marker.data.end_lng], options);
+            end_marker.data = marker;
+            end_marker.name = marker.data.name;
+            end_marker.address = marker.data.end_address;
             my_markers.push(end_marker);
 
             let tripLine = [[marker.data.start_lat, marker.data.start_lng], [marker.data.end_lat, marker.data.end_lng]];
@@ -255,6 +268,22 @@ function drawMarkers(markers) {
 
 }
 
+function addWaypoint(marker) {
+    let pos = 0;
+    let waypoints = routeControl.getWaypoints().length;
+    let start = routeControl.getWaypoints()[0].latLng;
+    let end = routeControl.getWaypoints()[waypoints - 1].latLng;
+    if (start) {
+        pos = routeControl.getWaypoints().length - 1;
+    }
+    if (start && end) {
+        pos = routeControl.getWaypoints().length;
+    }
+    let name = marker.name + " (" + marker.address + ")";
+    let waypoint = L.Routing.waypoint(marker.getLatLng(), name, {fixed: true});
+    routeControl.spliceWaypoints(pos, 1, waypoint);
+}
+
 function initMap() {
     mymap = L.map('trip-map', {fullscreenControl: true}).setView([default_location.lat, default_location.lng], default_location.zoom);
 
@@ -304,7 +333,7 @@ function initMap() {
     if (currentDayButton) {
         changeDay(currentDayButton);
     } else {
-        getMarkers(from, to);
+        getMarkers(fromInput.value, toInput.value);
     }
 
     /**
@@ -364,12 +393,12 @@ function initMap() {
                 //geocoder: new L.Control.Geocoder.Nominatim(),
                 //geocoder: new L.Control.Geocoder.LatLng(),
                 geocoder: new L.Control.Geocoder.Mapbox(mapbox_token, {
-                    reverseQueryParams:{
+                    reverseQueryParams: {
                         language: i18n.routing
                     }
                 }),
                 createMarker: function (i, wp) {
-                    if(wp.options.fixed){
+                    if (wp.options.fixed) {
                         return null;
                     }
                     return L.marker(wp.latLng, {});
@@ -452,3 +481,38 @@ function createButton(container, type, active = false) {
     }
     return btn;
 }
+
+
+tripDays.forEach(function (day) {
+    new Sortable(day, {
+        draggable: ".trip_event",
+        handle: ".icon",
+        ghostClass: 'trip_event-placeholder',
+        dataIdAttr: 'data-event',
+        onUpdate: function (evt) {
+            var data = {'events': this.toArray()};
+
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
+
+                return fetch(jsObject.trip_event_position_url, {
+                    method: 'POST',
+                    credentials: "same-origin",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+
+                });
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                // fetch markers so that are correct sorted for routing
+                getMarkers(fromInput.value, toInput.value);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    });
+});
