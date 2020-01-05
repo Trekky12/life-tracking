@@ -21,6 +21,14 @@ return [
             'pass' => '',
             'dbname' => 'tracking',
         ],
+        'CSRF' => [
+            'enabled' => true,
+            // we need to exclude some routes from CSRF protection for remote triggers
+            'exclude' => [
+                'location_record',
+                'crawler_record'
+            ]
+        ],
         'app' => [
             // i18n settings
             'i18n' => [
@@ -77,11 +85,6 @@ return [
             ],
             // the secret for the user token cookie
             'secret' => 'my_hash_secret',
-            // we need to exclude some routes from CSRF protection for remote triggers
-            'csrf_exlude' => [
-                'location_record',
-                'crawler_record'
-            ],
             // push notifications settings
             'push' => [
                 'publicKey' => '',

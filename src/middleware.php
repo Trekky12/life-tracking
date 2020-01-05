@@ -8,7 +8,10 @@ $container = $app->getContainer();
 /**
  * CSRF Protection
  */
-$app->add($container->get('csrf'));
+$settings = $container->get('settings');
+if ($settings['CSRF']['enabled']) {
+    $app->add($container->get('csrf'));
+}
 
 
 /**

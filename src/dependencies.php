@@ -32,7 +32,7 @@ $container['csrf'] = function ($c) {
     $guard->setFailureCallable(function ($request, $response, $next) use($c) {
 
         $route = $request->getAttribute('route');
-        $allowed_routes = $c['settings']['app']['csrf_exlude'];
+        $allowed_routes = $c['settings']['CSRF']['exclude'];
 
         // DELETE currently not working since the body is empty
         if (!is_null($route) && in_array($route->getName(), $allowed_routes)) {
