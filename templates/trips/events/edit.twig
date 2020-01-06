@@ -21,7 +21,7 @@
         <div class="page-header"><h2>{{lang["TRIPS_EVENT"]}} </h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="tripsEventForm" action="{{  path_for('trips_event_save', {'id' : entry.id, 'trip' : trip.hash}) }}" method="POST">
+            <form class="form-horizontal" action="{{  path_for('trips_event_save', {'id' : entry.id, 'trip' : trip.hash}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 <input name="trip" type="hidden" value="{{trip.id}}">

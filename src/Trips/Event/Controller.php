@@ -226,27 +226,21 @@ class Controller extends \App\Base\Controller {
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $this->allowParentOwnerOnly($id);
+        $trip_hash = $request->getAttribute("trip");
+        $entry = $this->trip_mapper->getFromHash($trip_hash);
+        $this->checkAccess($entry->id);
     }
 
     protected function preEdit($id, Request $request) {
-        $this->allowParentOwnerOnly($id);
+        $trip_hash = $request->getAttribute("trip");
+        $entry = $this->trip_mapper->getFromHash($trip_hash);
+        $this->checkAccess($entry->id);
     }
 
     protected function preDelete($id, Request $request) {
-        $this->allowParentOwnerOnly($id);
-    }
-
-    private function allowParentOwnerOnly($element_id) {
-        $user = $this->ci->get('helper')->getUser()->id;
-        if (!is_null($element_id)) {
-            $element = $this->mapper->get($element_id);
-            $trip = $this->trip_mapper->get($element->trip);
-
-            if ($trip->user !== $user) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
-            }
-        }
+        $trip_hash = $request->getAttribute("trip");
+        $entry = $this->trip_mapper->getFromHash($trip_hash);
+        $this->checkAccess($entry->id);
     }
 
     /**
