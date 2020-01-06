@@ -19,8 +19,8 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('splitbill_bills', {'group' : group.hash}) }}">{{group.name|raw}}</a></td> 
-                            <td data-title="{{lang["BALANCE"]}}" data-currency="{{group.currency}}">{{balances[group.id].balance}}</td> 
+                            <td><a href="{{  path_for('splitbill_bills', {'group' : group.hash}) }}">{{group.name|raw}}</a></td> 
+                            <td data-currency="{{group.currency}}">{{balances[group.id].balance}}</td> 
                             <td>
                                 {% if group.user == user.id %}
                                     <a href="{{  path_for('splitbill_groups_edit', {'id' : group.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>

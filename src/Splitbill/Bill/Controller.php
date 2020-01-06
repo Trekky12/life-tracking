@@ -132,15 +132,21 @@ class Controller extends \App\Base\Controller {
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $this->allowOwnerOnly($id);
+        $sbgroup_hash = $request->getAttribute("group");
+        $entry = $this->group_mapper->getFromHash($sbgroup_hash);
+        $this->checkAccess($entry->id);
     }
 
     protected function preEdit($id, Request $request) {
-        $this->allowOwnerOnly($id);
+        $sbgroup_hash = $request->getAttribute("group");
+        $entry = $this->group_mapper->getFromHash($sbgroup_hash);
+        $this->checkAccess($entry->id);
     }
 
     protected function preDelete($id, Request $request) {
-        $this->allowOwnerOnly($id);
+        $sbgroup_hash = $request->getAttribute("group");
+        $entry = $this->group_mapper->getFromHash($sbgroup_hash);
+        $this->checkAccess($entry->id);
 
         $bill = $this->mapper->get($id);
         $sbgroup = $this->group_mapper->get($bill->sbgroup);
@@ -169,7 +175,7 @@ class Controller extends \App\Base\Controller {
             $removed_users = array_diff(array_keys($existing_balance), $splitbill_groups_users);
 
             list($balances, $sum_paid, $sum_spend, $totalValue) = $this->filterBalances($data, $splitbill_groups_users);
-
+            
             // floating point comparison
             if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
                 $this->logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
