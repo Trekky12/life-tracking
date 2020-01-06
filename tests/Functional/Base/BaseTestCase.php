@@ -31,6 +31,7 @@ class BaseTestCase extends TestCase {
      * @var bool
      */
     protected $withMiddleware = true;
+    protected $useCRSF = true;
 
     /**
      * save login token
@@ -39,7 +40,20 @@ class BaseTestCase extends TestCase {
     protected static $token = null;
     protected $backupGlobalsBlacklist = array('_SESSION');
 
-    public static function setUpBeforeClass(): void {   
+    /**
+     * Routes
+     */
+    protected $uri_overview = "";
+    protected $uri_edit = "";
+    protected $uri_save = "";
+    protected $uri_delete = "";
+    protected $uri_view = "";
+    protected $uri_childs_edit = "";
+    protected $uri_childs_save = "";
+    protected $uri_childs_delete = "";
+
+    public static function setUpBeforeClass(): void {
+        
     }
 
     /**
@@ -74,11 +88,13 @@ class BaseTestCase extends TestCase {
             $request = $request->withHeader('Authorization', 'Basic ' . base64_encode("${auth['user']}:${auth['pass']}"));
         }
 
-
         // Set up a response object
         $response = new Response();
         // Use the application settings
         $settings = $this->getSettings();
+
+        $settings["settings"]["CSRF"]["enabled"] = $this->useCRSF;
+
         // Instantiate the application
         $app = new App($settings);
         // Set up dependencies
@@ -102,12 +118,12 @@ class BaseTestCase extends TestCase {
         // Return the response
         return $response;
     }
-    
-    protected function getSettings(){
+
+    protected function getSettings() {
         return require __DIR__ . '/../../../src/settings.php';
     }
-    
-    protected function getAppSettings(){        
+
+    protected function getAppSettings() {
         $settings = $this->getSettings();
         return $settings['settings']['app'];
     }
@@ -127,14 +143,14 @@ class BaseTestCase extends TestCase {
 
         return array("csrf_name" => $csrf_name, "csrf_value" => $csrf_value);
     }
-    
+
     protected function extractJSCSRF($response) {
         /**
-        <script type='text/javascript' >
-            var allowedReload = false;
-            ...
-            var tokens = [{"csrf_name":"csrf5dd248a11c3d7","csrf_value":"8cbaf7be48b18d3b60b9a413f7451218"},{"csrf_name":"csrf5dd248a11c5cb","csrf_value":"c5878fa1c43f07b91b6ba36d6c8d8277"}];
-            </script>
+          <script type='text/javascript' >
+          var allowedReload = false;
+          ...
+          var tokens = [{"csrf_name":"csrf5dd248a11c3d7","csrf_value":"8cbaf7be48b18d3b60b9a413f7451218"},{"csrf_name":"csrf5dd248a11c5cb","csrf_value":"c5878fa1c43f07b91b6ba36d6c8d8277"}];
+          </script>
          */
         $matches = [];
         $body = (string) $response->getBody();
@@ -172,14 +188,30 @@ class BaseTestCase extends TestCase {
     public function logout() {
         $this->getLogout();
     }
-    
+
     /**
      * 
      */
-    protected function getCSRFTokens($csrf_data){
+    protected function getCSRFTokens($csrf_data) {
         $response = $this->runApp('POST', '/tokens', array_merge(array("count" => 10), $csrf_data));
         $tokens = json_decode((string) $response->getBody(), true);
         return $tokens;
+    }
+
+    protected function getURIView($hash) {
+        return str_replace("HASH", $hash, $this->uri_view);
+    }
+
+    protected function getURIChildEdit($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_edit);
+    }
+
+    protected function getURIChildSave($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_save);
+    }
+
+    protected function getURIChildDelete($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_delete);
     }
 
 }

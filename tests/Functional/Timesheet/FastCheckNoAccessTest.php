@@ -4,7 +4,7 @@ namespace Tests\Functional\Timesheet;
 
 class FastCheckNoAccessTest extends ProjectTestBase {
 
-    public function testProjectCreation() {
+    public function testCreateParent() {
         $this->login("admin", "admin");
         $response1 = $this->runApp('GET', $this->uri_edit);
         $csrf_data = $this->extractFormCSRF($response1);
@@ -19,7 +19,7 @@ class FastCheckNoAccessTest extends ProjectTestBase {
         $response3 = $this->runApp('GET', $this->uri_overview);
         $body = (string) $response3->getBody();
 
-        $row = $this->getTableRowProjects($body, $data["name"]);
+        $row = $this->getParent($body, $data["name"]);
 
         $this->assertArrayHasKey("hash", $row);
         $this->assertArrayHasKey("id_edit", $row);
@@ -39,7 +39,7 @@ class FastCheckNoAccessTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testGetTimesheetsFastNoAccess($result_data) {
         $this->login("user", "user");
@@ -59,7 +59,7 @@ class FastCheckNoAccessTest extends ProjectTestBase {
     }
     
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckInNoAccess(array $result_data) {
         $this->login("user", "user");
@@ -79,7 +79,7 @@ class FastCheckNoAccessTest extends ProjectTestBase {
     }
     
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckOutNoAccess(array $result_data) {
         $this->login("user", "user");
@@ -101,7 +101,7 @@ class FastCheckNoAccessTest extends ProjectTestBase {
 
     /**
      * clean
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testDeleteProjectOwner(array $result_data) {
         $this->login("admin", "admin");

@@ -4,7 +4,7 @@ namespace Tests\Functional\Timesheet;
 
 class ProjectNoAccessTest extends ProjectTestBase {
 
-    public function testProjectCreationUser1() {
+    public function testCreateParent() {
 
         $this->login("admin", "admin");
 
@@ -21,7 +21,7 @@ class ProjectNoAccessTest extends ProjectTestBase {
         $response3 = $this->runApp('GET', $this->uri_overview);
         $body = (string) $response3->getBody();
 
-        $row = $this->getTableRowProjects($body, $data["name"]);
+        $row = $this->getParent($body, $data["name"]);
 
         $this->assertArrayHasKey("hash", $row);
         $this->assertArrayHasKey("id_edit", $row);
@@ -41,9 +41,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testProjectInListNoAccess($result_data) {
+    public function testGetParentInList($result_data) {
 
         $this->login("user", "user");
 
@@ -69,9 +69,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * Edit project
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testProjectEditViewNoAccess(array $result_data) {
+    public function testGetParentEdit(array $result_data) {
 
         $this->login("user", "user");
 
@@ -87,9 +87,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * 
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testPostEditProjectNoAccess(array $result_data) {
+    public function testPostParentSave(array $result_data) {
 
         $this->login("user", "user");
 
@@ -104,9 +104,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * Delete
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testDeleteProjectNoAccess(array $result_data) {
+    public function testDeleteParent(array $result_data) {
 
         $this->login("user", "user");
 
@@ -122,9 +122,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * View Project (member)
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testViewProjectNoAccess(array $result_data) {
+    public function testGetViewParent(array $result_data) {
         $this->login("user", "user");
 
         $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
@@ -139,9 +139,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * View Project (owner -> has no access to view)
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testViewProjectNoAccessOwner(array $result_data) {
+    public function testGetViewParentOwner(array $result_data) {
         $this->login("admin", "admin");
 
         $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
@@ -160,13 +160,13 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * Add new Sheet
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testGetAddSheet($result) {
+    public function testGetChildEdit($result) {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURISheetsEdit($result["hash"]));
+        $response = $this->runApp('GET', $this->getURIChildEdit($result["hash"]));
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -177,14 +177,14 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * Create the sheet
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testPostAddSheet(array $result) {
+    public function testPostChildSave(array $result) {
 
         $this->login("user", "user");
 
         $data = ["start" => date('Y-m-d') . " 12:00", "end" => date('Y-m-d') . " 14:10", "notice" => "Test", "project" => $result["id"]];
-        $response = $this->runApp('POST', $this->getURISheetsSave($result["hash"]), array_merge($data, $result["csrf"][2]));
+        $response = $this->runApp('POST', $this->getURIChildSave($result["hash"]), array_merge($data, $result["csrf"][2]));
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
@@ -195,16 +195,16 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * Delete sheet
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testDeleteSheet(array $result_data_project) {
+    public function testDeleteChild(array $result_data_parent) {
 
         $this->login("user", "user");
 
         // assume there is a sheet with ID 1 
         $data_sheet_id = 1;
 
-        $response = $this->runApp('DELETE', $this->getURISheetsDelete($result_data_project["hash"]) . $data_sheet_id, $result_data_project["csrf"][4]);
+        $response = $this->runApp('DELETE', $this->getURIChildDelete($result_data_parent["hash"]) . $data_sheet_id, $result_data_parent["csrf"][4]);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
@@ -215,12 +215,12 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * Test Exporting 
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testTimesheetsSheetsExport(array $result_data_project) {
+    public function testTimesheetsSheetsExport(array $result_data_parent) {
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_project["hash"]));
+        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_parent["hash"]));
 
          $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
@@ -231,9 +231,9 @@ class ProjectNoAccessTest extends ProjectTestBase {
 
     /**
      * clean
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testDeleteProjectOwner(array $result_data) {
+    public function testClean(array $result_data) {
 
         $this->login("admin", "admin");
 

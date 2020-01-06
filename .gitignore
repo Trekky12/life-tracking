@@ -15,3 +15,5 @@ public/test*
 
 /files/*
 !/files/.gitkeep 
+
+tests/.phpunit.result.cache

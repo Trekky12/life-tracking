@@ -4,7 +4,7 @@ namespace Tests\Functional\Timesheet;
 
 class ProjectMemberTest extends ProjectTestBase {
 
-    public function testProjectCreationUser1() {
+    public function testCreateParent() {
 
         $this->login("admin", "admin");
 
@@ -21,7 +21,7 @@ class ProjectMemberTest extends ProjectTestBase {
         $response3 = $this->runApp('GET', $this->uri_overview);
         $body = (string) $response3->getBody();
 
-        $row = $this->getTableRowProjects($body, $data["name"]);
+        $row = $this->getParent($body, $data["name"]);
 
         $this->assertArrayHasKey("hash", $row);
         $this->assertArrayHasKey("id_edit", $row);
@@ -41,9 +41,9 @@ class ProjectMemberTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testProjectInListNoAccess($result_data) {
+    public function testGetParentInList($result_data) {
 
         $this->login("user", "user");
 
@@ -69,9 +69,9 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Edit project
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testProjectEditViewNoAccess(array $result_data) {
+    public function testGetParentEdit(array $result_data) {
 
         $this->login("user", "user");
 
@@ -87,9 +87,9 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * 
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testPostEditProjectNoAccess(array $result_data) {
+    public function testPostParentSave(array $result_data) {
 
         $this->login("user", "user");
 
@@ -104,9 +104,9 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Delete
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testDeleteProjectNoAccess(array $result_data) {
+    public function testDeleteParent(array $result_data) {
 
         $this->login("user", "user");
 
@@ -122,9 +122,9 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * View Project (members can access)
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testViewProject(array $result_data) {
+    public function testGetViewParent(array $result_data) {
         $this->login("user", "user");
 
         $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
@@ -143,17 +143,17 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Add new Sheet
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testGetAddSheet($result) {
+    public function testGetChildEdit($result) {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURISheetsEdit($result["hash"]));
+        $response = $this->runApp('GET', $this->getURIChildEdit($result["hash"]));
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->getURISheetsSave($result["hash"]) . "\" method=\"POST\">", $body);
+        $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->getURIChildSave($result["hash"]) . "\" method=\"POST\">", $body);
 
         $this->logout();
 
@@ -162,15 +162,15 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Create the sheet
-     * @depends testProjectCreationUser1
-     * @depends testGetAddSheet
+     * @depends testCreateParent
+     * @depends testGetChildEdit
      */
-    public function testPostAddSheet(array $result, array $csrf_data) {
+    public function testPostChildSave(array $result, array $csrf_data) {
 
         $this->login("user", "user");
 
         $data = ["start" => date('Y-m-d') . " 12:00", "end" => date('Y-m-d') . " 14:10", "notice" => "Test", "project" => $result["id"]];
-        $response = $this->runApp('POST', $this->getURISheetsSave($result["hash"]), array_merge($data, $csrf_data));
+        $response = $this->runApp('POST', $this->getURIChildSave($result["hash"]), array_merge($data, $csrf_data));
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($result["hash"]), $response->getHeaderLine("Location"));
@@ -184,10 +184,10 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Is the created sheet now in the table?
-     * @depends testProjectCreationUser1
-     * @depends testPostAddSheet
+     * @depends testCreateParent
+     * @depends testPostChildSave
      */
-    public function testGetCreatedSheet(array $result_data, array $data) {
+    public function testGetChildCreated(array $result_data, array $data) {
 
         $this->login("user", "user");
 
@@ -197,7 +197,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -217,21 +217,21 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Edit Sheet
-     * @depends testProjectCreationUser1
-     * @depends testGetCreatedSheet
+     * @depends testCreateParent
+     * @depends testGetChildCreated
      */
-    public function testGetSheetEdit(array $result_data_project, array $result_data_sheet) {
+    public function testGetChildCreatedEdit(array $result_data_parent, array $result_data_child) {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURISheetsEdit($result_data_project["hash"]) . $result_data_sheet["id"]);
+        $response = $this->runApp('GET', $this->getURIChildEdit($result_data_parent["hash"]) . $result_data_child["id"]);
 
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $result_data_sheet["id"] . "\">", $body);
-        $this->assertStringContainsString("<input name=\"project\" type=\"hidden\" value=\"" . $result_data_project["id"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $result_data_child["id"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"project\" type=\"hidden\" value=\"" . $result_data_parent["id"] . "\">", $body);
 
         $matches = [];
         $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">/s';
@@ -251,18 +251,18 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * 
-     * @depends testProjectCreationUser1
-     * @depends testGetSheetEdit
+     * @depends testCreateParent
+     * @depends testGetChildCreatedEdit
      */
-    public function testPostSheetEdit(array $result_data_project, array $result_data_sheet) {
+    public function testPostChildCreatedSave(array $result_data_parent, array $result_data_child) {
 
         $this->login("user", "user");
 
-        $data = ["id" => $result_data_sheet["id"], "project" => $result_data_project["id"], "start" => date('Y-m-d') . " 10:02", "end" => date('Y-m-d') . " 18:55", "notice" => "Testnotice"];
-        $response = $this->runApp('POST', $this->getURISheetsSave($result_data_project["hash"]) . $result_data_sheet["id"], array_merge($data, $result_data_sheet["csrf"]));
+        $data = ["id" => $result_data_child["id"], "project" => $result_data_parent["id"], "start" => date('Y-m-d') . " 10:02", "end" => date('Y-m-d') . " 18:55", "notice" => "Testnotice"];
+        $response = $this->runApp('POST', $this->getURIChildSave($result_data_parent["hash"]) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
 
         $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals($this->getURIView($result_data_project["hash"]), $response->getHeaderLine("Location"));
+        $this->assertEquals($this->getURIView($result_data_parent["hash"]), $response->getHeaderLine("Location"));
 
         $data["diff"] = "08:53:00";
 
@@ -273,10 +273,10 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Is the sheet data updated in the table?
-     * @depends testProjectCreationUser1
-     * @depends testPostSheetEdit
+     * @depends testCreateParent
+     * @depends testPostChildCreatedSave
      */
-    public function testGetSheetUpdated(array $result_data, array $data) {
+    public function testGetChildUpdated(array $result_data, array $data) {
 
         $this->login("user", "user");
 
@@ -286,7 +286,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -302,14 +302,14 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Delete sheet
-     * @depends testProjectCreationUser1
-     * @depends testGetSheetUpdated
+     * @depends testCreateParent
+     * @depends testGetChildUpdated
      */
-    public function testDeleteSheet(array $result_data_project, array $result_data_sheet) {
+    public function testDeleteChild(array $result_data_parent, array $result_data_child) {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('DELETE', $this->getURISheetsDelete($result_data_project["hash"]) . $result_data_sheet["id"], $result_data_sheet["csrf"]);
+        $response = $this->runApp('DELETE', $this->getURIChildDelete($result_data_parent["hash"]) . $result_data_child["id"], $result_data_child["csrf"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -324,12 +324,12 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * Test Exporting 
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testTimesheetsSheetsExport(array $result_data_project) {
+    public function testTimesheetsSheetsExport(array $result_data_parent) {
         $this->login("user", "user");
         
-        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_project["hash"]));
+        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_parent["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -342,9 +342,9 @@ class ProjectMemberTest extends ProjectTestBase {
 
     /**
      * clean
-     * @depends testProjectCreationUser1
+     * @depends testCreateParent
      */
-    public function testDeleteProjectOwner(array $result_data) {
+    public function testClean(array $result_data) {
 
         $this->login("admin", "admin");
 

@@ -134,7 +134,7 @@ abstract class Controller {
     }
 
     protected function insertOrUpdate($id, $data, Request $request) {
-        
+
         // Remove CSRF attributes
         if (array_key_exists('csrf_name', $data)) {
             unset($data["csrf_name"]);
@@ -205,10 +205,14 @@ abstract class Controller {
          * Add Activity
          */
         if (!is_null($activity_type) && $this->create_activity) {
-            $savedEntry = $this->mapper->get($id);
-            $affectedUsers = $this->getAffectedUsers($savedEntry);
+            try {
+                $savedEntry = $this->mapper->get($id);
+                $affectedUsers = $this->getAffectedUsers($savedEntry);
 
-            $this->addActivity($activity_type, $id, $savedEntry, $affectedUsers);
+                $this->addActivity($activity_type, $id, $savedEntry, $affectedUsers);
+            } catch (\Exception $e) {
+                $this->logger->addWarning("Could not create activity entry", array("type" => $activity_type, "id" => $id, "error" => $e->getMessage()));
+            }
         }
 
         return array($id, $data);
@@ -353,7 +357,7 @@ abstract class Controller {
     }
 
     protected function getElementViewRoute($entry) {
-        if(empty($this->element_view_route)){
+        if (empty($this->element_view_route)) {
             return null;
         }
         $this->element_view_route_params["id"] = $entry->id;

@@ -12,7 +12,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
         $this->logout();
     }
 
-    public function testProjectCreation() {
+    public function testCreateParent() {
         $response1 = $this->runApp('GET', $this->uri_edit);
         $csrf_data = $this->extractFormCSRF($response1);
 
@@ -26,7 +26,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
         $response3 = $this->runApp('GET', $this->uri_overview);
         $body = (string) $response3->getBody();
 
-        $row = $this->getTableRowProjects($body, $data["name"]);
+        $row = $this->getParent($body, $data["name"]);
 
         $this->assertArrayHasKey("hash", $row);
         $this->assertArrayHasKey("id_edit", $row);
@@ -44,7 +44,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testGetTimesheetsFast($result_data) {
         $response = $this->runApp('GET', $this->getURISheetsFast($result_data["hash"]));
@@ -56,7 +56,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckin(array $result_data) {
         $data = [];
@@ -74,7 +74,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
 
     /**
      * Check in result
-     * @depends testProjectCreation
+     * @depends testCreateParent
      * @depends testPostTimesheetsFastCheckin
      */
     public function testGetTimesheetsFastCheckedIn(array $result_data, array $data) {
@@ -84,14 +84,14 @@ class FastCheckOwnerTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
     }
 
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckoutAfterCheckIn(array $result_data) {
         $data = [];
@@ -109,7 +109,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
 
     /**
      * Check out after Check In result
-     * @depends testProjectCreation
+     * @depends testCreateParent
      * @depends testPostTimesheetsFastCheckoutAfterCheckIn
      */
     public function testGetTimesheetsFastCheckedOutAfterCheckIn(array $result_data, array $data) {
@@ -119,7 +119,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -133,7 +133,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
 
     /**
      * Check out without Check in
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckoutWithoutCheckIn(array $result_data) {
         $data = [];
@@ -151,7 +151,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
     
     /**
      * Check out wihtout Check In result
-     * @depends testProjectCreation
+     * @depends testCreateParent
      * @depends testPostTimesheetsFastCheckoutWithoutCheckIn
      */
     public function testGetTimesheetsFastCheckedOutWithoutCheckIn(array $result_data, array $data) {
@@ -161,7 +161,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -175,7 +175,7 @@ class FastCheckOwnerTest extends ProjectTestBase {
 
     /**
      * clean
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testDeleteProjectOwner(array $result_data) {
         $response = $this->runApp('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"][3]);

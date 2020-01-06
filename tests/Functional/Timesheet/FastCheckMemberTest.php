@@ -4,7 +4,7 @@ namespace Tests\Functional\Timesheet;
 
 class FastCheckMemberTest extends ProjectTestBase {
 
-    public function testProjectCreation() {
+    public function testCreateParent() {
         $this->login("admin", "admin");
         $response1 = $this->runApp('GET', $this->uri_edit);
         $csrf_data = $this->extractFormCSRF($response1);
@@ -19,7 +19,7 @@ class FastCheckMemberTest extends ProjectTestBase {
         $response3 = $this->runApp('GET', $this->uri_overview);
         $body = (string) $response3->getBody();
 
-        $row = $this->getTableRowProjects($body, $data["name"]);
+        $row = $this->getParent($body, $data["name"]);
 
         $this->assertArrayHasKey("hash", $row);
         $this->assertArrayHasKey("id_edit", $row);
@@ -39,7 +39,7 @@ class FastCheckMemberTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testGetTimesheetsFast($result_data) {
         $this->login("user", "user");
@@ -59,7 +59,7 @@ class FastCheckMemberTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckin(array $result_data) {
         $this->login("user", "user");
@@ -81,7 +81,7 @@ class FastCheckMemberTest extends ProjectTestBase {
 
     /**
      * Check in result
-     * @depends testProjectCreation
+     * @depends testCreateParent
      * @depends testPostTimesheetsFastCheckin
      */
     public function testGetTimesheetsFastCheckedIn(array $result_data, array $data) {
@@ -93,7 +93,7 @@ class FastCheckMemberTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -108,7 +108,7 @@ class FastCheckMemberTest extends ProjectTestBase {
     }
 
     /**
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckoutAfterCheckIn(array $result_data) {
         $this->login("user", "user");
@@ -130,7 +130,7 @@ class FastCheckMemberTest extends ProjectTestBase {
 
     /**
      * Check out after Check In result
-     * @depends testProjectCreation
+     * @depends testCreateParent
      * @depends testPostTimesheetsFastCheckoutAfterCheckIn
      */
     public function testGetTimesheetsFastCheckedOutAfterCheckIn(array $result_data, array $data) {
@@ -142,7 +142,7 @@ class FastCheckMemberTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -158,7 +158,7 @@ class FastCheckMemberTest extends ProjectTestBase {
 
     /**
      * Check out without Check in
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testPostTimesheetsFastCheckoutWithoutCheckIn(array $result_data) {
         $this->login("user", "user");
@@ -180,7 +180,7 @@ class FastCheckMemberTest extends ProjectTestBase {
     
     /**
      * Check out wihtout Check In result
-     * @depends testProjectCreation
+     * @depends testCreateParent
      * @depends testPostTimesheetsFastCheckoutWithoutCheckIn
      */
     public function testGetTimesheetsFastCheckedOutWithoutCheckIn(array $result_data, array $data) {
@@ -192,7 +192,7 @@ class FastCheckMemberTest extends ProjectTestBase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getTableRowSheets($body, $data, $result_data["hash"]);
+        $row = $this->getChild($body, $data, $result_data["hash"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -208,7 +208,7 @@ class FastCheckMemberTest extends ProjectTestBase {
 
     /**
      * clean
-     * @depends testProjectCreation
+     * @depends testCreateParent
      */
     public function testDeleteProjectOwner(array $result_data) {
         $this->login("admin", "admin");
