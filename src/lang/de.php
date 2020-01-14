@@ -464,6 +464,7 @@ $lang["MODEL_BOARDS_LABEL"] = "Label";
 $lang["MODEL_BOARDS_STACK"] = "Stapel";
 $lang["MODEL_CARS"] = "Auto";
 $lang["MODEL_CARS_SERVICE_ENTRY"] = "Tanken/Wartung";
+$lang["MODEL_CRAWLERS_CRAWLER"] = "Crawler";
 $lang["MODEL_CRAWLERS_DATASET"] = "Crawler Eintrag";
 $lang["MODEL_CRAWLERS_HEADER"] = "Crawler Überschrift";
 $lang["MODEL_CRAWLERS_LINK"] = "Crawler Link";

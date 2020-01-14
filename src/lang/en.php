@@ -465,6 +465,7 @@ $lang["MODEL_BOARDS_LABEL"] = "label";
 $lang["MODEL_BOARDS_STACK"] = "stack";
 $lang["MODEL_CARS"] = "car";
 $lang["MODEL_CARS_SERVICE_ENTRY"] = "refill/service";
+$lang["MODEL_CRAWLERS_CRAWLER"] = "crawler";
 $lang["MODEL_CRAWLERS_DATASET"] = "crawler entry";
 $lang["MODEL_CRAWLERS_HEADER"] = "crawler headline";
 $lang["MODEL_CRAWLERS_LINK"] = "crawler link";
