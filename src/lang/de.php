@@ -495,5 +495,8 @@ $lang["ROUTING_ERROR_TOO_MANY_REQUESTS"] = "Konnte Route nicht berechnen. Bitte 
 $lang["TRIPS_EVENT_IMAGE"] = "Eventbild";
 $lang["CREATE_ROUTE"] = "Route";
 
+$lang["EXCHANGE_RATE"] = "Umrechnungskurs";
+$lang["EXCHANGE_FEE"] = "Gebühr";
+
 
 return $lang;

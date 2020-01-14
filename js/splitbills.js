@@ -2,15 +2,23 @@
 
 const splitbillsForm = document.getElementById('splitbillsBillsForm');
 const buttons = document.querySelectorAll('.splitbill_btn');
+const calcButton = document.getElementById('calculateExchangeRate');
 
 if (splitbillsForm) {
 
     let inputs_paid = splitbillsForm.querySelectorAll('input.balance_paid');
     let inputs_spend = splitbillsForm.querySelectorAll('input.balance_spend');
     let input_total = splitbillsForm.querySelector('#inputValue');
-    
+
     let remaining_paid = splitbillsForm.querySelector('#remaining_paid');
     let remaining_spend = splitbillsForm.querySelector('#remaining_spend');
+
+    let inputs_paid_foreign = splitbillsForm.querySelectorAll('input.balance_paid_foreign');
+    let inputs_spend_foreign = splitbillsForm.querySelectorAll('input.balance_spend_foreign');
+    let input_total_foreign = splitbillsForm.querySelector('#inputValueForeign');
+
+    let exchange_rate = splitbillsForm.querySelector('#inputRate');
+    let exchange_fee = splitbillsForm.querySelector('#inputFee');
 
     input_total.addEventListener('change', function (e) {
         inputs_paid.forEach(function (input) {
@@ -30,27 +38,62 @@ if (splitbillsForm) {
             let id = item.dataset.id;
 
             let totalValue = parseFloat(input_total.value);
+            let totalValueForeign = input_total_foreign ? parseFloat(input_total_foreign.value) : totalValue;
 
             if (totalValue > 0) {
 
                 switch (type) {
                     case 'paid_same':
                         equal_splitting(inputs_paid, totalValue);
+
+                        inputs_paid.forEach(function (input, idx) {
+                            if (inputs_paid_foreign[idx]) {
+                                inputs_paid_foreign[idx].value = (input.value * getExchangeRateWithFee()).toFixed(2);
+                            }
+                        });
+
+
                         break;
                     case 'paid_person':
                         inputs_paid.forEach(function (input) {
                             input.value = 0;
                         });
-                        splitbillsForm.querySelector('input[name="balance[' + id + '][paid]"]').value = totalValue;
+                        let input_user_paid = splitbillsForm.querySelector('input[name="balance[' + id + '][paid]"]');
+                        input_user_paid.value = totalValue;
+
+                        inputs_paid_foreign.forEach(function (input) {
+                            input.value = 0;
+                        });
+                        let input_user_paid_foreign = splitbillsForm.querySelector('input[name="balance[' + id + '][paid_foreign]"]');
+                        if (input_user_paid_foreign) {
+                            input_user_paid_foreign.value = totalValueForeign;
+                        }
                         break;
                     case 'spend_same':
                         equal_splitting(inputs_spend, totalValue);
+
+                        inputs_spend.forEach(function (input, idx) {
+                            if (inputs_spend_foreign[idx]) {
+                                inputs_spend_foreign[idx].value = (input.value * getExchangeRateWithFee()).toFixed(2);
+                            }
+                        });
+
                         break;
                     case 'spend_person':
                         inputs_spend.forEach(function (input) {
                             input.value = 0;
                         });
-                        splitbillsForm.querySelector('input[name="balance[' + id + '][spend]"]').value = totalValue;
+                        let input_user_spend = splitbillsForm.querySelector('input[name="balance[' + id + '][spend]"]');
+                        input_user_spend.value = totalValue;
+
+
+                        inputs_spend_foreign.forEach(function (input) {
+                            input.value = 0;
+                        });
+                        let input_user_spend_foreign = splitbillsForm.querySelector('input[name="balance[' + id + '][spend_foreign]"]');
+                        if (input_user_spend_foreign) {
+                            input_user_spend_foreign.value = totalValueForeign;
+                        }
                         break;
                 }
                 calculateRemaining(inputs_paid, remaining_paid);
@@ -83,28 +126,97 @@ if (splitbillsForm) {
         });
         return sum.toFixed(2);
     }
-    
-    function getTotal(){
+
+    function getTotal() {
         return parseFloat(input_total.value).toFixed(2);
     }
 
     // calculate remaining
-    inputs_paid.forEach(function (input) {
+    inputs_paid.forEach(function (input, idx) {
         input.addEventListener('input', function (e) {
             calculateRemaining(inputs_paid, remaining_paid);
         });
     });
-    inputs_spend.forEach(function (input) {
+    inputs_spend.forEach(function (input, idx) {
         input.addEventListener('input', function (e) {
             calculateRemaining(inputs_spend, remaining_spend);
         });
     });
-    
-    function calculateRemaining(inputs, remaining){
+
+    function calculateRemaining(inputs, remaining) {
         let sum = getSum(inputs);
         let totalValue = getTotal();
         remaining.innerHTML = (totalValue - sum).toFixed(2);
     }
+
+
+    /**
+     * calculate foreign to local currency
+     */
+    if (exchange_rate) {
+        exchange_rate.addEventListener('input', function (e) {
+            calculateValueInLocalCurrency();
+        });
+    }
+
+    if (exchange_fee) {
+        exchange_fee.addEventListener('input', function (e) {
+            calculateValueInLocalCurrency();
+        });
+    }
+
+    // convert values
+    if (input_total_foreign) {
+        input_total_foreign.addEventListener('input', function (e) {
+            input_total.value = getValueInLocalCurrency();
+            calculateRemaining(inputs_paid, remaining_paid);
+            calculateRemaining(inputs_spend, remaining_spend);
+        });
+        inputs_paid_foreign.forEach(function (input, idx) {
+            input.addEventListener('input', function (e) {
+                inputs_paid[idx].value = (input.value / getExchangeRateWithFee()).toFixed(2);
+                calculateRemaining(inputs_paid, remaining_paid);
+                calculateRemaining(inputs_spend, remaining_spend);
+            });
+        });
+        inputs_spend_foreign.forEach(function (input, idx) {
+            input.addEventListener('input', function (e) {
+                inputs_spend[idx].value = (input.value / getExchangeRateWithFee()).toFixed(2);
+                calculateRemaining(inputs_paid, remaining_paid);
+                calculateRemaining(inputs_spend, remaining_spend);
+            });
+        });
+    }
+
+    function getValueInLocalCurrency() {
+        let value = (input_total_foreign.value / exchange_rate.value);
+        value = value + value * (parseFloat(exchange_fee.value) / 100);
+        return value.toFixed(2)
+    }
+
+    function getExchangeRateWithFee() {
+        return parseFloat(input_total_foreign.value) / parseFloat(input_total.value);
+    }
+
+    function calculateValueInLocalCurrency() {
+        input_total.value = getValueInLocalCurrency();
+
+        inputs_paid_foreign.forEach(function (input, idx) {
+            input.value = 0;
+        });
+        inputs_spend_foreign.forEach(function (input, idx) {
+            input.value = 0;
+        });
+        inputs_paid.forEach(function (input, idx) {
+            input.value = 0;
+        });
+        inputs_spend.forEach(function (input, idx) {
+            input.value = 0;
+        });
+        calculateRemaining(inputs_paid, remaining_paid);
+        calculateRemaining(inputs_spend, remaining_spend);
+    }
+
 }
 
 function equal_splitting(nodeList, total) {

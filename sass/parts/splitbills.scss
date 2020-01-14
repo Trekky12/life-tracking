@@ -40,9 +40,9 @@
         }
         @media screen and (min-width: $size_mobile+1px) {
             @include grid-container();
-            
+
             &.header{
-               display:block; 
+                display:block; 
             }
 
             .user{
@@ -62,16 +62,21 @@
         margin-bottom:0.5rem;
         margin-right:0.5rem;
     }
-    
+
     h3#splitbill_headline{
         margin-bottom:0;
-        
+
         & ~ h4{
             margin-top:0;
             margin-bottom: 1rem;
         }
     }
-    
+
+    input.read-only:read-only{
+        background: #EEE;
+        pointer-events:none;
+    }
+
 }
 
 #splitbill_overview{

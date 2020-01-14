@@ -20,7 +20,7 @@
                     {% for group in groups %}
                         <tr>
                             <td><a href="{{  path_for('splitbill_bills', {'group' : group.hash}) }}">{{group.name|raw}}</a></td> 
-                            <td data-currency="{{group.currency}}">{{balances[group.id].balance}}</td> 
+                            <td data-currency="{{i18n.currency}}">{{balances[group.id].balance}}</td> 
                             <td>
                                 {% if group.user == user.id %}
                                     <a href="{{  path_for('splitbill_groups_edit', {'id' : group.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>

@@ -102,6 +102,7 @@ class Controller extends \App\Base\Controller {
         $balance = $this->mapper->getBalance($entry_id);
 
         $totalValue = $this->mapper->getBillSpend($entry_id);
+        $totalValueForeign = $this->mapper->getBillSpend($entry_id, "spend_foreign");
 
         $paymethods = $this->paymethod_mapper->getAllfromUsers($group_users);
 
@@ -113,7 +114,8 @@ class Controller extends \App\Base\Controller {
                     'balance' => $balance,
                     'totalValue' => $totalValue,
                     'type' => $type,
-                    'paymethods' => $paymethods
+                    'paymethods' => $paymethods,
+                    'totalValueForeign' => $totalValueForeign
         ]);
     }
 
@@ -122,7 +124,7 @@ class Controller extends \App\Base\Controller {
         $hash = $request->getAttribute('group');
         $data = $request->getParsedBody();
         $data['user'] = $this->ci->get('helper')->getUser()->id;
-
+        
         $this->insertOrUpdate($id, $data, $request);
 
         return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["group" => $hash]), 301);
@@ -174,8 +176,8 @@ class Controller extends \App\Base\Controller {
             $splitbill_groups_users = $this->group_mapper->getUsers($bill->sbgroup);
             $removed_users = array_diff(array_keys($existing_balance), $splitbill_groups_users);
 
-            list($balances, $sum_paid, $sum_spend, $totalValue) = $this->filterBalances($data, $splitbill_groups_users);
-            
+            list($balances, $sum_paid, $sum_spend, $totalValue, $totalValueForeign) = $this->filterBalances($data, $splitbill_groups_users);
+
             // floating point comparison
             if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
                 $this->logger->addInfo('Add balance for bill', array("bill" => $id, "balances" => $balances));
@@ -325,6 +327,7 @@ class Controller extends \App\Base\Controller {
 
     private function filterBalances($data, $group_users) {
         $totalValue = array_key_exists("value", $data) ? floatval(filter_var($data["value"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
+        $totalValueForeign = array_key_exists("value_foreign", $data) ? floatval(filter_var($data["value_foreign"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
 
         $balances = [];
         $sum_paid = 0;
@@ -340,11 +343,14 @@ class Controller extends \App\Base\Controller {
                 $sum_paid += $paid;
                 $sum_spend += $spend;
 
+                $spend_foreign = array_key_exists("spend_foreign", $bdata) ? floatval(filter_var($bdata["spend_foreign"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
+                $paid_foreign = array_key_exists("paid_foreign", $bdata) ? floatval(filter_var($bdata["paid_foreign"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
+
                 // add entry
-                $balances[] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod" => $paymethod];
+                $balances[] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod" => $paymethod, "spend_foreign" => $spend_foreign, "paid_foreign" => $paid_foreign];
             }
         }
-        return array($balances, $sum_paid, $sum_spend, $totalValue);
+        return array($balances, $sum_paid, $sum_spend, $totalValue, $totalValueForeign);
     }
 
     private function addBalancesForUsers($bill, $group, $balances, $totalValue, $users) {
@@ -352,7 +358,7 @@ class Controller extends \App\Base\Controller {
         $finance_ctrl = new \App\Finances\Controller($this->ci);
 
         foreach ($balances as $b) {
-            $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"], $b["paymethod"]);
+            $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"], $b["paymethod"], $b["paid_foreign"], $b["spend_foreign"]);
 
             $userObj = $users[$b["user"]];
 

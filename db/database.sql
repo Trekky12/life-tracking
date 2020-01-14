@@ -589,6 +589,8 @@ CREATE TABLE splitbill_groups (
     hash VARCHAR(255) DEFAULT NULL,
     add_finances int(1) DEFAULT 0,
     currency varchar(100) DEFAULT NULL,
+    exchange_rate varchar(100) DEFAULT NULL,
+    exchange_fee varchar(100) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -619,6 +621,8 @@ CREATE TABLE splitbill_bill (
     acc DECIMAL(10,3) DEFAULT NULL,
     notice TEXT DEFAULT NULL,
     settleup INT(1) DEFAULT 0,
+    exchange_rate varchar(100) DEFAULT NULL,
+    exchange_fee varchar(100) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -635,6 +639,8 @@ CREATE TABLE splitbill_bill_users (
     user INTEGER unsigned DEFAULT NULL,
     paid DECIMAL(10,2) DEFAULT NULL,
     spend DECIMAL(10,2) DEFAULT NULL,
+    paid_foreign DECIMAL(10,2) DEFAULT NULL,
+    spend_foreign DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
