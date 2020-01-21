@@ -10,7 +10,7 @@ var tableLabels = {
 var financeTable = new JSTable("#finance_table", {
     sortable: true,
     searchable: true,
-    perPage: 10,
+    perPage: parseInt(getCookie("perPage_financeTable", 10)),
     truncatePager: true,
     pagerDelta: 2,
     //firstLast : true,
@@ -61,6 +61,10 @@ financeTable.on("fetchData", function (data) {
         this.table.getFooterRow().setCellClass(5, "positive");
     }
     //}
+});
+
+financeTable.on("perPageChange", function (old_value, new_value) {
+    setCookie("perPage_financeTable", new_value);
 });
 
 

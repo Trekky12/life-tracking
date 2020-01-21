@@ -556,22 +556,6 @@ function getDisplay(element) {
     return element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
 }
 
-
-function setCookie(name, value, expiryDays, path) {
-    expiryDays = expiryDays || 365;
-
-    var exdate = new Date();
-    exdate.setDate(exdate.getDate() + expiryDays);
-
-    var cookie = [
-        name + '=' + value,
-        'expires=' + exdate.toUTCString(),
-        'path=' + path || '/'
-    ];
-    document.cookie = cookie.join(';');
-}
-
-
 function cleanURL() {
     var uri = window.location.toString();
     if (uri.indexOf("?") > 0) {

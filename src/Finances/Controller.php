@@ -4,6 +4,7 @@ namespace App\Finances;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Dflydev\FigCookies\FigRequestCookies;
 
 class Controller extends \App\Base\Controller {
 
@@ -34,8 +35,12 @@ class Controller extends \App\Base\Controller {
 
         $data = $request->getQueryParams();
         list($from, $to) = $this->ci->get('helper')->getDateRange($data, $defaultFrom); //$range["min"], $max);
+        
+        $table_count = FigRequestCookies::get($request, 'perPage_financeTable', 10);
+        
+        $table_count_val = intval($table_count->getValue());
 
-        $list = $this->mapper->getTableData($from, $to, 0, 'DESC', 10);
+        $list = $this->mapper->getTableData($from, $to, 0, 'DESC', $table_count_val);
         $table = $this->renderTableRows($list);
         $datacount = $this->mapper->tableCount($from, $to);
 

@@ -82,9 +82,40 @@ function deleteObject(url, type) {
     }).catch(function (error) {
         console.log(error);
     });
-
-
 }
+
+function setCookie(name, value, expiryDays, path) {
+    expiryDays = expiryDays || 365;
+
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + expiryDays);
+
+    var cookie = [
+        name + '=' + value,
+        'expires=' + exdate.toUTCString(),
+        'path=' + path || '/'
+    ];
+    document.cookie = cookie.join(';');
+}
+
+
+function getCookie(cname, fallback) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == '') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) >= 0) {
+            return c.substring(c.indexOf(name) + name.length, c.length);
+        }
+    }
+    return fallback || "";
+}
+
+
 
 function initialize() {
     let backbtn = document.querySelector('#go-back-btn');
