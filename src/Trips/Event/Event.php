@@ -162,7 +162,7 @@ class Event extends \App\Base\Model {
         if (!is_null($this->start_address)) {
             $start_address = "{$start_link}{$this->start_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
-            $start_address = " {$start_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
+            $start_address = " {$start_link}<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
 
         $end_address = null;
@@ -170,7 +170,7 @@ class Event extends \App\Base\Model {
         if (!is_null($this->end_address)) {
             $end_address = "{$end_link}{$this->end_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
-            $start_address = " {$end_link}<i class=\"fa fa-map-marker\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
+            $start_address = " {$end_link}<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
         }
 
         // same start and end date? hide end date

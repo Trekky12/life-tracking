@@ -319,16 +319,16 @@ class Controller extends \App\Base\Controller {
 
     private function renderFuelTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[9] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[10] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+            $row[9] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[10] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
         }
         return $table;
     }
 
     private function renderServiceTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[9] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+            $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[9] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
         }
         return $table;
     }

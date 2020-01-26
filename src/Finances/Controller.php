@@ -472,8 +472,8 @@ class Controller extends \App\Base\Controller {
             $row[] = $dataset[3];
             $row[] = $dataset[4];
             $row[] = $dataset[5];
-            $row[] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>' : '';
+            $row[] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>' : '';
 
             $rendered_data[] = $row;
         }

@@ -102,7 +102,7 @@
                     <h3>{{lang["TRIPS_EVENT_IMAGE"]}}</h3>
                     <div class="form-group">
                         <div id="loadingIconImageUpload" class="hidden loading-icon">
-                            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+                            <i class="fas fa-circle-notch fa-spin fa-fw"></i>
                         </div>
                         <img class="image_uploaded {% if entry.get_thumbnail() == ''%}hidden{% endif %}" id="event_image" src="{% if entry.get_thumbnail() != ''%}/{{uploads_folder}}/events/{{entry.get_thumbnail()}}{% endif %}"/>
                         <button type="button" id="delete_image" class="danger {% if entry.get_thumbnail() == ''%}hidden{% endif %}">{{lang["DELETE"]}}</button>

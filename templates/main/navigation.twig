@@ -1,15 +1,15 @@
 <div id="mobile-header-icons" class="size-{{mobile_favorites|length+2}}">
-    <a href="{{ path_for('index') }}" {% if active == 'index' %}class="active"{% endif %}><i class="fa fa-sitemap"></i></a>
+    <a href="{{ path_for('index') }}" {% if active == 'index' %}class="active"{% endif %}><i class="fas fa-sitemap"></i></a>
     {% if mobile_favorites|length > 0 %}
         {%  for favorite in mobile_favorites %}
-            <a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %}class="active"{% endif %}><i class="fa {{ favorite.icon }}"></i></a>
+            <a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %}class="active"{% endif %}><i class="{{ favorite.icon }}"></i></a>
         {% endfor %}
     {% else %}
         {% for module_name, module in modules if user.hasModule(module_name)%}
-            <a href="{{ path_for(module['rootRoute']) }}" {% if active == module['rootRoute'] %}class="active"{% endif %}><i class="fa {{ module['icon'] }}"></i></a>
+            <a href="{{ path_for(module['rootRoute']) }}" {% if active == module['rootRoute'] %}class="active"{% endif %}><i class="{{ module['icon'] }}"></i></a>
         {% endfor %}
     {% endif %}
-    <a href="{{ path_for('notifications') }}" class="badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="fa fa-bell-o"></i></a>
+    <a href="{{ path_for('notifications') }}" class="badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="far fa-bell"></i></a>
     <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -28,9 +28,9 @@
             <li {% if active == modules['location']['rootRoute'] or active == 'location_edit' or active == 'steps' %}class="active"{% endif %}>
                 <a href="{{ path_for(modules['location']['rootRoute']) }}">{{lang[modules['location']['title']]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ path_for('location_edit') }}"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{lang["ADD_LOCATION"]}}</a></li>
+                    <li><a href="{{ path_for('location_edit') }}"><i class="fas fa-location-arrow" aria-hidden="true"></i> {{lang["ADD_LOCATION"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('steps') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i> {{lang["STEPS"]}}</a></li>
+                    <li><a href="{{ path_for('steps') }}"><i class="far fa-chart-bar" aria-hidden="true"></i> {{lang["STEPS"]}}</a></li>
                 </ul>
             </li> 
         {% endif %}
@@ -38,16 +38,16 @@
             <li {% if active == modules['finances']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ path_for(modules['finances']['rootRoute']) }}">{{lang[modules['finances']['title']]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ path_for('finances_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
-                    <li><a href="{{ path_for('finances_categories_assignment') }}"><i class="fa fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
+                    <li><a href="{{ path_for('finances_categories') }}"><i class="fas fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
+                    <li><a href="{{ path_for('finances_categories_assignment') }}"><i class="fas fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('finances_recurring') }}"><i class="fa fa-calendar" aria-hidden="true"></i> {{lang["FINANCES_RECURRING"]}}</a></li>
+                    <li><a href="{{ path_for('finances_recurring') }}"><i class="fas fa-calendar-alt" aria-hidden="true"></i> {{lang["FINANCES_RECURRING"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('finances_paymethod') }}"><i class="fa fa-credit-card" aria-hidden="true"></i> {{lang["FINANCES_PAYMETHODS"]}}</a></li>
+                    <li><a href="{{ path_for('finances_paymethod') }}"><i class="fas fa-credit-card" aria-hidden="true"></i> {{lang["FINANCES_PAYMETHODS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('finances_budgets') }}"><i class="fa fa-money" aria-hidden="true"></i> {{lang["BUDGET"]}}</a></li>
+                    <li><a href="{{ path_for('finances_budgets') }}"><i class="far fa-money-bill-alt" aria-hidden="true"></i> {{lang["BUDGET"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('finances_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+                    <li><a href="{{ path_for('finances_stats') }}"><i class="fas fa-chart-pie" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
                 </ul>
             </li>
         {% endif %}
@@ -55,7 +55,7 @@
             <li {% if active == modules['cars']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ path_for(modules['cars']['rootRoute']) }}">{{lang[modules['cars']['title']]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ path_for('car_service_stats') }}"><i class="fa fa-pie-chart" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+                    <li><a href="{{ path_for('car_service_stats') }}"><i class="fas fa-chart-pie" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
                 </ul>
             </li>
         {% endif %}
@@ -88,15 +88,15 @@
             <li {% if active == 'settings' %}class="active"{% endif %}>
                 <a href="#">{{lang["SETTINGS"]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ path_for('users') }}"><i class="fa fa-user-o" aria-hidden="true"></i> {{lang["USERS"]}}</a></li>
-                    <li><a href="{{ path_for('cars') }}"><i class="fa fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
+                    <li><a href="{{ path_for('users') }}"><i class="fas fa-user" aria-hidden="true"></i> {{lang["USERS"]}}</a></li>
+                    <li><a href="{{ path_for('cars') }}"><i class="fas fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('notifications_clients') }}"><i class="fa fa-bell" aria-hidden="true"></i> {{lang["NOTIFICATIONS"]}}</a></li>
-                    <li><a href="{{ path_for('notifications_categories') }}"><i class="fa fa-tags" aria-hidden="true"></i> {{lang["CATEGORIES"]}}</a></li>
+                    <li><a href="{{ path_for('notifications_clients') }}"><i class="fas fa-bell" aria-hidden="true"></i> {{lang["NOTIFICATIONS"]}}</a></li>
+                    <li><a href="{{ path_for('notifications_categories') }}"><i class="fas fa-tags" aria-hidden="true"></i> {{lang["CATEGORIES"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('login_tokens') }}"><i class="fa fa-key" aria-hidden="true"></i> {{lang["LOGIN_TOKENS"]}}</a></li>
+                    <li><a href="{{ path_for('login_tokens') }}"><i class="fas fa-key" aria-hidden="true"></i> {{lang["LOGIN_TOKENS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ path_for('banlist') }}"><i class="fa fa-key" aria-hidden="true"></i> {{lang["BANLIST"]}}</a></li>
+                    <li><a href="{{ path_for('banlist') }}"><i class="fas fa-key" aria-hidden="true"></i> {{lang["BANLIST"]}}</a></li>
                 </ul>
             </li>
         {% endif %}
@@ -117,11 +117,11 @@
                 <li><a href="{{ path_for('users_mobile_favorites') }}">{{lang["MOBILE_FAVORITES"]}}</a></li>
                 <li><a href="{{ path_for('users_login_tokens') }}">{{lang["LOGIN_TOKENS"]}}</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ path_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<i class="fa fa-bell-o pull-right"></i></a></li>
+                <li><a href="{{ path_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<i class="far fa-bell fa-pull-right"></i></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ path_for('users_activities') }}">{{lang["ACTIVITIES"]}}<i class="fa fa-history pull-right"></i></a></li>
+                <li><a href="{{ path_for('users_activities') }}">{{lang["ACTIVITIES"]}}<i class="fas fa-history fa-pull-right"></i></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ path_for('logout') }}" >{{lang["LOGOUT"]}}<i class="fa fa-sign-out pull-right"></i></a></li>
+                <li><a href="{{ path_for('logout') }}" >{{lang["LOGOUT"]}}<i class="fas fa-sign-out-alt fa-pull-right"></i></a></li>
             </ul>
         </li>
     </ul>                        

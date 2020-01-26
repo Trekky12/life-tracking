@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["BOARDS"]}}</h2> <a href="{{  path_for('boards_edit') }}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["BOARDS"]}}</h2> <a href="{{  path_for('boards_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
         <div class="page-content">
             <table id="boards_table" class="table table-hover small">
                 <thead>
@@ -21,12 +21,12 @@
                             <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('boards_view', {'hash' : board.hash}) }}">{{board.name|raw}}</a></td> 
                             <td>
                                 {% if board.user == user.id %}
-                                    <a href="{{  path_for('boards_edit', {'id' : board.id}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                                    <a href="{{  path_for('boards_edit', {'id' : board.id}) }}"><span class="fas fa-edit fa-lg"></span></a>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if board.user == user.id %}
-                                    <a href="#" data-url="{{  path_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-type="board"><span class="fa fa-trash fa-lg"></span></a>
+                                    <a href="#" data-url="{{  path_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-type="board"><span class="fas fa-trash fa-lg"></span></a>
                                 {% endif %}
                             </td>
                         </tr>

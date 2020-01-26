@@ -6,7 +6,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> <a href="{{path_for('finances_budgets_edit')}}"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["EDIT"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> <a href="{{path_for('finances_budgets_edit')}}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["EDIT"]}}</button></a></div>
         <div class="page-content">
             {% for budget in budgets if budget.is_hidden == 0 %}
                 <div class="budget-entry">

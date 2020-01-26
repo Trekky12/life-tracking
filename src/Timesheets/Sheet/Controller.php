@@ -182,8 +182,8 @@ class Controller extends \App\Base\Controller {
             $row[] = $end;
             $row[] = $this->ci->get('helper')->splitDateInterval($sheet->diff);
 
-            $row[] = '<a href="' . $this->ci->get('router')->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+            $row[] = '<a href="' . $this->ci->get('router')->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
 
             $rendered_data[] = $row;
         }

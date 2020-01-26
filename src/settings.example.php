@@ -98,50 +98,50 @@ return [
                 "location" => [
                     "url" => "/location/",
                     "rootRoute" => "location",
-                    "icon" => "fa fa-map-marker",
+                    "icon" => "fas fa-map-marker-alt",
                     "title" => "MENU_LOCATION"
                 ],
                 "finances" => [
                     "url" => "/finances/",
                     "rootRoute" => "finances",
-                    "icon" => "fa fa-money",
+                    "icon" => "far fa-money-bill-alt",
                     "title" => "MENU_FINANCES"
                 ],
                 "cars" => [
                     "url" => "/cars/",
                     "rootRoute" => "car_service",
-                    "icon" => "fa fa-road",
+                    "icon" => "fas fa-road",
                     "title" => "MENU_CAR_REFUEL_SERVICE"
                 ],
                 "boards" => [
                     "url" => "/boards/",
                     "rootRoute" => "boards",
-                    "icon" => "fa fa-tasks",
+                    "icon" => "fas fa-tasks",
                     "title" => "BOARDS"
                 ],
                 "crawlers" => [
                     "url" => "/crawlers/",
                     "rootRoute" => "crawlers",
-                    "icon" => "fa fa-database",
+                    "icon" => "fas fa-database",
                     "title" => "CRAWLERS"
                 ],
                 "splitbills" => [
                     "url" => "/splitbills/",
                     "rootRoute" => "splitbills",
-                    "icon" => "fa fa-handshake-o",
+                    "icon" => "far fa-handshake",
                     "title" => "SPLITBILLS",
                     "menu" => "splitbills"
                 ],
                 "trips" => [
                     "url" => "/trips/",
                     "rootRoute" => "trips",
-                    "icon" => "fa fa-map-o",
+                    "icon" => "far fa-map",
                     "title" => "TRIPS"
                 ],
                 "timesheets" => [
                     "url" => "/timesheets/",
                     "rootRoute" => "timesheets_projects",
-                    "icon" => "fa fa-clock-o",
+                    "icon" => "far fa-clock",
                     "title" => "TIMESHEETS"
                 ]
             ]

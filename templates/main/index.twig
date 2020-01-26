@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-content">
                     <h3><a href="{{path_for(module['rootRoute'])}}">{{lang[module['title']]}}</a></h3>
-                    <a href="{{path_for(module['rootRoute'])}}"><i class="fa {{ module['icon'] }}" aria-hidden="true"></i></a>
+                    <a href="{{path_for(module['rootRoute'])}}"><i class="{{ module['icon'] }}" aria-hidden="true"></i></a>
                 </div>
             </div>
         {% endfor %}

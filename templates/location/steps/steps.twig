@@ -32,7 +32,7 @@
                             <td data-title="{{lang["STEPS_MAX"]}}">{{ entry[2]|number_format(0, '', '.')}}</td> 
                             <td data-title="{{lang["STEPS_SUM"]}}">{{ entry[3]|number_format(0, '', '.')}}</td> 
                             <td>
-                                <a href="{{  path_for('steps_stats_year', { 'year' : entry[0] }) }}"><i class="fa fa-bar-chart fa-lg"></i></a>
+                                <a href="{{  path_for('steps_stats_year', { 'year' : entry[0] }) }}"><i class="fas fa-chart-bar fa-lg"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

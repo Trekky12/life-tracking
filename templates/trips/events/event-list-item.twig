@@ -1,17 +1,17 @@
 <div class="trip_event  {% if not date is sameas(event.start_date) %}hidden_description_print{% elseif event.notice %}has_notice{%endif %}" data-event="{{ event.id }}">
     <div class="icon">
         {% if event.isAccommodation() %}
-            <i class="fa fa-2x fa-bed"></i>
+            <i class="fas fa-2x fa-bed"></i>
         {% elseif event.isTrainride() %}
-            <i class="fa fa-2x fa-train"></i>
+            <i class="fas fa-2x fa-train"></i>
         {% elseif event.isDrive() %}
-            <i class="fa fa-2x fa-road"></i>
+            <i class="fas fa-2x fa-road"></i>
         {% elseif event.isFlight() %}
-            <i class="fa fa-2x fa-plane"></i>
+            <i class="fas fa-2x fa-plane"></i>
         {% elseif event.isCarrental() %}
-            <i class="fa fa-2x fa-car"></i>
+            <i class="fas fa-2x fa-car"></i>
         {% elseif event.isEvent() %}
-            <i class="fa fa-2x fa-calendar-o"></i>
+            <i class="fas fa-2x fa-calendar-alt"></i>
         {% endif %}
     </div>
     <div class="text">
@@ -35,7 +35,7 @@
 
     </div>
     <div class="buttons">
-        <a href="{{  path_for('trips_event_edit', {'id' : event.id, 'trip' :trip.hash}) }}"><span class="fa fa-pencil-square-o fa-lg"></span></a>
-        <a href="#" data-url="{{  path_for('trips_event_delete', {'id' : event.id, 'trip' : trip.hash}) }}" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>
+        <a href="{{  path_for('trips_event_edit', {'id' : event.id, 'trip' :trip.hash}) }}"><span class="fas fa-edit fa-lg"></span></a>
+        <a href="#" data-url="{{  path_for('trips_event_delete', {'id' : event.id, 'trip' : trip.hash}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
     </div>
 </div>

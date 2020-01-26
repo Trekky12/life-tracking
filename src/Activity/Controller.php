@@ -101,7 +101,7 @@ class Controller extends \App\Base\Controller {
             $row = [];
             $row["date"] = $fmtDate->format(new \Datetime($el->createdOn));
             $row["time"] = $fmtTime->format(new \Datetime($el->createdOn));
-            $row["icon"] = array_key_exists($el->module, $modules) ? $modules[$el->module]['icon'] : "fa fa-cog";
+            $row["icon"] = array_key_exists($el->module, $modules) ? $modules[$el->module]['icon'] : "fas fa-toolbox";
             $row["description"] = $description;
             $row["link"] = $el->type !== 'delete'? $el->link: null;
 

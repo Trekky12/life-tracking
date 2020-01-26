@@ -140,21 +140,21 @@ function drawMarkers(data) {
                 icon: 'fa-bed',
                 markerColor: 'blue',
                 shape: 'circle',
-                prefix: 'fa'
+                prefix: 'fas'
             });
         } else if (marker.isEvent) {
             options['icon'] = L.ExtraMarkers.icon({
-                icon: 'fa-calendar-o',
+                icon: 'fa-calendar-alt',
                 markerColor: 'yellow',
                 shape: 'circle',
-                prefix: 'fa'
+                prefix: 'fas'
             });
         } else if (marker.isPlane) {
             options['icon'] = L.ExtraMarkers.icon({
                 icon: 'fa-plane',
                 markerColor: 'black',
                 shape: 'circle',
-                prefix: 'fa'
+                prefix: 'fas'
             });
         }
 
@@ -318,7 +318,8 @@ function initMap() {
         },
         locateOptions: {
             enableHighAccuracy: true
-        }
+        },
+        icon: 'fas fa-map-marker-alt',
     });
     mymap.addControl(lc);
 

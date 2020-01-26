@@ -84,7 +84,7 @@ function add_selectr(element) {
 function get_recurring_costs(select) {
 
     var category_costs = select.closest('.budget-entry').querySelector('.category_costs');
-    category_costs.innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>';
+    category_costs.innerHTML = '<i class="fas fa-circle-notch fa-spin fa-fw"></i>';
     var colOfSelectedOpt = select.selectedOptions;
     var values = [];
     for (var i = 0; i < colOfSelectedOpt.length; i++) {

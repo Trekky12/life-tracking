@@ -36,7 +36,7 @@ body.mobile-navigation-open{
         &:hover, &:focus{
             color: $color_blue_light;
         }
-        
+
         @include font-size(2);
         margin-left:1.5rem;
         @media screen and (min-width: $size_mini){
@@ -74,17 +74,17 @@ body.mobile-navigation-open{
     &.size-10{
         i{
             @include font-size(1.6);
-            margin-left:1.5rem;
+            margin-left:1.1rem;
             @media screen and (min-width: $size_mini){
                 @include font-size(2);
-                margin-left:1.8rem;
+                margin-left:1.5rem;
             }
             @media screen and (min-width: $size_mobile){
                 margin-left:2rem;
             }
         }
     }
-    
+
     &.size-11{
         i{
             @include font-size(1.6);
@@ -283,10 +283,13 @@ body.mobile-navigation-open{
         justify-content: center;
 
         .avatar-mini.navi{
-            display:inline-block;
-            margin-right: 10px;
-            width: 20px;
-            height:20px;
+            display:none;
+            @media screen and (min-width: $size_desktop){
+                display:inline-block;
+                margin-right: 10px;
+                width: 20px;
+                height:20px;
+            }
         }
 
         &.has-Notification[data-badge]:after {

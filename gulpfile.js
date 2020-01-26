@@ -50,9 +50,23 @@ function watchTask(cb) {
 /**
  * Copy fonts from node_modules to /public/static/assets
  */
-function copyFontsTask(cb) {
+function copyFontsFontAwesome4Task(cb) {
     return gulp.src( './node_modules/font-awesome/fonts/**.*' )
         .pipe( gulp.dest( 'public/static/assets/fonts' ) );
+}
+
+function copyFontsFontAwesome5Task(cb) {
+    return gulp.src( './node_modules/@fortawesome/fontawesome-free/webfonts/**.*' )
+        .pipe( gulp.dest( 'public/static/assets/fonts/font-awesome' ) );
+}
+
+function replaceFontAwesome5Webfonts(cb) {
+    return gulp
+        .src( './node_modules/@fortawesome/fontawesome-free/css/all.css')
+        .pipe( replace("../webfonts/", "../fonts/font-awesome/") )
+        .pipe( minifyCSS() )
+        .pipe( rename("font-awesome5.min.css") )
+        .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
 function copyJSTask(cb) {
@@ -115,7 +129,7 @@ function copyFlatpickrI10n(cb) {
 function copyCSSTask(cb) {
     return gulp
         .src( [ 
-            './node_modules/font-awesome/css/font-awesome.min.css',
+            //'./node_modules/font-awesome/css/font-awesome.min.css',
             './node_modules/flatpickr/dist/flatpickr.min.css',
             './node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css',
             './node_modules/leaflet.markercluster/dist/MarkerCluster.css',
@@ -233,6 +247,6 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyFontsTask, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS);
+exports.copy = gulp.series(copyFontsFontAwesome5Task, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS);
 
-exports.test = copyLeafletRoutingIcons;
+exports.test = replaceFontAwesome5Webfonts;

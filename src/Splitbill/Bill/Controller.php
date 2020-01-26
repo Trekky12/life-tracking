@@ -244,8 +244,8 @@ class Controller extends \App\Base\Controller {
             }
 
             if ($bill->user == $user) {
-                $row[] = '<a href="' . $this->ci->get('router')->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fa fa-pencil-square-o fa-lg"></span></a>';
-                $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fa fa-trash fa-lg"></span></a>';
+                $row[] = '<a href="' . $this->ci->get('router')->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+                $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
             }
 
             $rendered_data[] = $row;

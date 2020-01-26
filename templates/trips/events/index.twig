@@ -29,7 +29,7 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{trip.name|raw}}</h2> <a href="{{  path_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white"><i class="fa fa-plus" aria-hidden="true"></i> {{lang["ADD_EVENT"]}}</button></a></div>
+        <div class="page-header"><h2>{{trip.name|raw}}</h2> <a href="{{  path_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD_EVENT"]}}</button></a></div>
         <div id="trip-map"></div>
         <div class="page-content" id="trip_overview">
 
