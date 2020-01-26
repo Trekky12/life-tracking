@@ -88,7 +88,7 @@ abstract class Controller {
      * @param Request $request
      */
     protected function preGetAPI($id, Request $request) {
-        $data = null;
+        $data = [];
         $this->preSave($id, $data, $request);
     }
 
