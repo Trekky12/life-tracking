@@ -13,15 +13,14 @@ class ProjectOwnerTest extends ProjectTestBase {
     }
 
     public function testRedirect() {
-        $response = $this->runApp('GET', '/timesheets/');
+        $response = $this->request('GET', '/timesheets/');
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertTrue($response->isRedirect());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
     }
 
     public function testGetOverview() {
-        $response = $this->runApp('GET', $this->uri_overview);
+        $response = $this->request('GET', $this->uri_overview);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -30,7 +29,7 @@ class ProjectOwnerTest extends ProjectTestBase {
     }
 
     public function testGetParentEdit() {
-        $response = $this->runApp('GET', $this->uri_edit);
+        $response = $this->request('GET', $this->uri_edit);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -45,7 +44,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      */
     public function testPostParentSave(array $csrf_data) {
         $data = ["name" => "Testproject", "users" => [10]];
-        $response = $this->runApp('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -57,7 +56,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testPostParentSave
      */
     public function testGetParentCreated($data) {
-        $response = $this->runApp('GET', $this->uri_overview);
+        $response = $this->request('GET', $this->uri_overview);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -84,7 +83,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      */
     public function testGetParentCreatedEdit($data, array $result_data) {
 
-        $response = $this->runApp('GET', $this->uri_edit . $result_data["id"]);
+        $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -115,7 +114,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      */
     public function testPostParentCreatedSave(array $result_data) {
         $data = ["id" => $result_data["id"], "hash" => $result_data["hash"], "name" => "Testproject Updated 2", "users" => [1, 10]];
-        $response = $this->runApp('POST', $this->uri_save . $result_data["id"], array_merge($data, $result_data["csrf"]));
+        $response = $this->request('POST', $this->uri_save . $result_data["id"], array_merge($data, $result_data["csrf"]));
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -126,7 +125,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testGetParentCreated
      */
     public function testGetViewParent(array $result_data) {
-        $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
+        $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -143,7 +142,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testGetParentCreated
      */
     public function testGetChildEdit($result) {
-        $response = $this->runApp('GET', $this->getURIChildEdit($result["hash"]));
+        $response = $this->request('GET', $this->getURIChildEdit($result["hash"]));
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -159,7 +158,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      */
     public function testPostChildSave(array $result, array $csrf_data) {
         $data = ["start" => date('Y-m-d') . " 12:00", "end" => date('Y-m-d') . " 14:10", "notice" => "Test", "project" => $result["id"]];
-        $response = $this->runApp('POST', $this->getURIChildSave($result["hash"]), array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->getURIChildSave($result["hash"]), array_merge($data, $csrf_data));
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($result["hash"]), $response->getHeaderLine("Location"));
@@ -175,7 +174,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testPostChildSave
      */
     public function testGetChildCreated(array $result_data, array $data) {
-        $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
+        $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -204,7 +203,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      */
     public function testGetChildCreatedEdit(array $result_data_parent, array $result_data_child) {
 
-        $response = $this->runApp('GET', $this->getURIChildEdit($result_data_parent["hash"]) . $result_data_child["id"]);
+        $response = $this->request('GET', $this->getURIChildEdit($result_data_parent["hash"]) . $result_data_child["id"]);
 
         $body = (string) $response->getBody();
 
@@ -234,7 +233,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      */
     public function testPostChildCreatedSave(array $result_data_parent, array $result_data_child) {
         $data = ["id" => $result_data_child["id"], "project" => $result_data_parent["id"], "start" => date('Y-m-d') . " 10:02", "end" => date('Y-m-d') . " 18:55", "notice" => "Testnotice"];
-        $response = $this->runApp('POST', $this->getURIChildSave($result_data_parent["hash"]) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->getURIChildSave($result_data_parent["hash"]) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($result_data_parent["hash"]), $response->getHeaderLine("Location"));
@@ -250,7 +249,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testPostChildCreatedSave
      */
     public function testGetChildUpdated(array $result_data, array $data) {
-        $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
+        $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -274,7 +273,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testGetChildUpdated
      */
     public function testDeleteChild(array $result_data_parent, array $result_data_child) {
-        $response = $this->runApp('DELETE', $this->getURIChildDelete($result_data_parent["hash"]) . $result_data_child["id"], $result_data_child["csrf"]);
+        $response = $this->request('DELETE', $this->getURIChildDelete($result_data_parent["hash"]) . $result_data_child["id"], $result_data_child["csrf"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -290,7 +289,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testGetParentCreated
      */
     public function testTimesheetsSheetsExport(array $result_data_parent) {
-        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_parent["hash"]));
+        $response = $this->request('GET', $this->getURISheetsExport($result_data_parent["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -304,7 +303,7 @@ class ProjectOwnerTest extends ProjectTestBase {
      * @depends testGetParentCreated
      */
     public function testDeleteParent(array $result_data) {
-        $response = $this->runApp('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"]);
+        $response = $this->request('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -321,36 +320,36 @@ class ProjectOwnerTest extends ProjectTestBase {
     public function testDeleteParentWithChilds() {
 
         // Open Parent Add page
-        $response1 = $this->runApp('GET', $this->uri_edit);
+        $response1 = $this->request('GET', $this->uri_edit);
         $csrf1 = $this->extractFormCSRF($response1);
 
         // Add Parent
         $data1 = ["name" => "Test delete with childs", "users" => [10]];
-        $this->runApp('POST', $this->uri_save, array_merge($data1, $csrf1));
+        $this->request('POST', $this->uri_save, array_merge($data1, $csrf1));
 
         // get Hash/ID from Overview
-        $response3 = $this->runApp('GET', $this->uri_overview);
+        $response3 = $this->request('GET', $this->uri_overview);
         $row = $this->getParent((string) $response3->getBody(), $data1["name"]);
 
         $parent_hash = $row["hash"];
         $parent_id = $row["id_edit"];
 
         // Open Child Add Page
-        $response4 = $this->runApp('GET', $this->getURIChildEdit($parent_hash));
+        $response4 = $this->request('GET', $this->getURIChildEdit($parent_hash));
         $csrf3 = $this->extractFormCSRF($response4);
 
         // Add Child
         $data2 = ["start" => date('Y-m-d') . " 10:00", "end" => date('Y-m-d') . " 11:00", "notice" => "Test", "project" => $parent_id];
-        $response5 = $this->runApp('POST', $this->getURIChildSave($parent_hash), array_merge($data2, $csrf3));
+        $response5 = $this->request('POST', $this->getURIChildSave($parent_hash), array_merge($data2, $csrf3));
         $this->assertEquals(301, $response5->getStatusCode());
         $this->assertEquals($this->getURIView($parent_hash), $response5->getHeaderLine("Location"));
 
         // Get CSRF From Overview
-        $response6 = $this->runApp('GET', $this->uri_overview);
+        $response6 = $this->request('GET', $this->uri_overview);
         $csrf4 = $this->extractJSCSRF($response6);
 
         // Delete Parent
-        $response = $this->runApp('DELETE', $this->uri_delete . $parent_id, $csrf4);
+        $response = $this->request('DELETE', $this->uri_delete . $parent_id, $csrf4);
 
         $this->assertEquals(200, $response->getStatusCode());
 

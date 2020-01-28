@@ -56,6 +56,10 @@ class BaseTestCase extends TestCase {
         
     }
 
+    public function request($requestMethod, $requestUri, $requestData = null, $auth = array()) {
+        return $this->runApp($requestMethod, $requestUri, $requestData, $auth);
+    }
+
     /**
      * Process the application given a request method and URI
      *
@@ -164,16 +168,16 @@ class BaseTestCase extends TestCase {
     }
 
     protected function getLoginPage() {
-        return $this->runApp('GET', '/login');
+        return $this->request('GET', '/login');
     }
 
     protected function postLoginPage(array $csrf_data, $user, $password) {
         $data = ["username" => $user, "password" => $password];
-        return $this->runApp('POST', '/login', array_merge($data, $csrf_data));
+        return $this->request('POST', '/login', array_merge($data, $csrf_data));
     }
 
     protected function getLogout() {
-        return $this->runApp('GET', '/logout');
+        return $this->request('GET', '/logout');
     }
 
     /**
@@ -193,7 +197,7 @@ class BaseTestCase extends TestCase {
      * 
      */
     protected function getCSRFTokens($csrf_data) {
-        $response = $this->runApp('POST', '/tokens', array_merge(array("count" => 10), $csrf_data));
+        $response = $this->request('POST', '/tokens', array_merge(array("count" => 10), $csrf_data));
         $tokens = json_decode((string) $response->getBody(), true);
         return $tokens;
     }

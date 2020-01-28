@@ -8,17 +8,17 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("admin", "admin");
 
-        $response1 = $this->runApp('GET', $this->uri_edit);
+        $response1 = $this->request('GET', $this->uri_edit);
         $csrf_data = $this->extractFormCSRF($response1);
 
         $data = ["name" => "Testproject No Access To user2 (member only)", "users" => [10, 11]];
-        $response2 = $this->runApp('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response2 = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
 
         $this->assertEquals(301, $response2->getStatusCode());
         $this->assertEquals($this->uri_overview, $response2->getHeaderLine("Location"));
 
 
-        $response3 = $this->runApp('GET', $this->uri_overview);
+        $response3 = $this->request('GET', $this->uri_overview);
         $body = (string) $response3->getBody();
 
         $row = $this->getParent($body, $data["name"]);
@@ -47,7 +47,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->uri_overview);
+        $response = $this->request('GET', $this->uri_overview);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -75,7 +75,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->uri_edit . $result_data["id"]);
+        $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -94,7 +94,7 @@ class ProjectMemberTest extends ProjectTestBase {
         $this->login("user", "user");
 
         $data = ["id" => $result_data["id"], "hash" => $result_data["hash"], "name" => "Testproject Update", "users" => [1, 10]];
-        $response = $this->runApp('POST', $this->uri_save . $result_data["id"], array_merge($data, $result_data["csrf"][0]));
+        $response = $this->request('POST', $this->uri_save . $result_data["id"], array_merge($data, $result_data["csrf"][0]));
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
@@ -110,7 +110,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"][1]);
+        $response = $this->request('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"][1]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -127,7 +127,7 @@ class ProjectMemberTest extends ProjectTestBase {
     public function testGetViewParent(array $result_data) {
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
+        $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -149,7 +149,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURIChildEdit($result["hash"]));
+        $response = $this->request('GET', $this->getURIChildEdit($result["hash"]));
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -170,7 +170,7 @@ class ProjectMemberTest extends ProjectTestBase {
         $this->login("user", "user");
 
         $data = ["start" => date('Y-m-d') . " 12:00", "end" => date('Y-m-d') . " 14:10", "notice" => "Test", "project" => $result["id"]];
-        $response = $this->runApp('POST', $this->getURIChildSave($result["hash"]), array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->getURIChildSave($result["hash"]), array_merge($data, $csrf_data));
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($result["hash"]), $response->getHeaderLine("Location"));
@@ -191,7 +191,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
+        $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -224,7 +224,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURIChildEdit($result_data_parent["hash"]) . $result_data_child["id"]);
+        $response = $this->request('GET', $this->getURIChildEdit($result_data_parent["hash"]) . $result_data_child["id"]);
 
         $body = (string) $response->getBody();
 
@@ -259,7 +259,7 @@ class ProjectMemberTest extends ProjectTestBase {
         $this->login("user", "user");
 
         $data = ["id" => $result_data_child["id"], "project" => $result_data_parent["id"], "start" => date('Y-m-d') . " 10:02", "end" => date('Y-m-d') . " 18:55", "notice" => "Testnotice"];
-        $response = $this->runApp('POST', $this->getURIChildSave($result_data_parent["hash"]) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->getURIChildSave($result_data_parent["hash"]) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($result_data_parent["hash"]), $response->getHeaderLine("Location"));
@@ -280,7 +280,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('GET', $this->getURIView($result_data["hash"]));
+        $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -309,7 +309,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("user", "user");
 
-        $response = $this->runApp('DELETE', $this->getURIChildDelete($result_data_parent["hash"]) . $result_data_child["id"], $result_data_child["csrf"]);
+        $response = $this->request('DELETE', $this->getURIChildDelete($result_data_parent["hash"]) . $result_data_child["id"], $result_data_child["csrf"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -329,7 +329,7 @@ class ProjectMemberTest extends ProjectTestBase {
     public function testTimesheetsSheetsExport(array $result_data_parent) {
         $this->login("user", "user");
         
-        $response = $this->runApp('GET', $this->getURISheetsExport($result_data_parent["hash"]));
+        $response = $this->request('GET', $this->getURISheetsExport($result_data_parent["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -348,7 +348,7 @@ class ProjectMemberTest extends ProjectTestBase {
 
         $this->login("admin", "admin");
 
-        $response = $this->runApp('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"][2]);
+        $response = $this->request('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"][2]);
 
         $this->assertEquals(200, $response->getStatusCode());
 

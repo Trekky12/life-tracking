@@ -17,7 +17,7 @@ class HomeTest extends BaseTestCase {
 
     public function testGetHomepageAfterLogin() {
 
-        $response = $this->runApp('GET', '/');
+        $response = $this->request('GET', '/');
 
         $this->assertEquals(200, $response->getStatusCode());
 

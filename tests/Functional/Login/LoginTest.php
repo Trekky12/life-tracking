@@ -10,10 +10,9 @@ class LoginTest extends BaseTestCase {
      * 
      */
     public function testGetHomepageWithoutLogin() {
-        $response = $this->runApp('GET', '/');
+        $response = $this->request('GET', '/');
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertTrue($response->isRedirect());
         $this->assertEquals("/login", $response->getHeaderLine("Location"));
     }
 
@@ -21,7 +20,7 @@ class LoginTest extends BaseTestCase {
      * Test Login
      */
     public function testLoginCSRFFail() {
-        $response = $this->runApp('POST', '/login', array("username" => "admin", "password" => "admin"));
+        $response = $this->request('POST', '/login', array("username" => "admin", "password" => "admin"));
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('Failed CSRF check!', (string) $response->getBody());
     }
@@ -51,7 +50,7 @@ class LoginTest extends BaseTestCase {
      */
     public function testGetHomepageAfterLogin() {
 
-        $response = $this->runApp('GET', '/');
+        $response = $this->request('GET', '/');
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -65,7 +64,6 @@ class LoginTest extends BaseTestCase {
         $response = $this->getLogout();
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertTrue($response->isRedirect());
         $this->assertEquals("/login", $response->getHeaderLine("Location"));
         $this->assertStringContainsString("token=;", $response->getHeaderLine("Set-Cookie"));
     }
