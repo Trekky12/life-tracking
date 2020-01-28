@@ -38,6 +38,7 @@ class BaseTestCase extends TestCase {
      * @var string
      */
     protected static $token = null;
+    protected static $SESSION = null;
     protected $backupGlobalsBlacklist = array('_SESSION');
 
     /**
@@ -57,7 +58,57 @@ class BaseTestCase extends TestCase {
     }
 
     public function request($requestMethod, $requestUri, $requestData = null, $auth = array()) {
-        return $this->runApp($requestMethod, $requestUri, $requestData, $auth);
+        return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth);
+        //return $this->runApp($requestMethod, $requestUri, $requestData, $auth);
+    }
+
+    public function HTTP_request($requestMethod, $requestUri, $requestData = null, $auth = array()) {
+
+        $client = new \GuzzleHttp\Client([
+            'proxy' => '',
+            'allow_redirects' => false,
+            'http_errors' => false,
+            'base_uri' => 'http://tracking.localhost/',
+            'cookies' => true
+        ]);
+
+        // Add request data, if it exists
+        $headers = [];
+        $body = null;
+        if (isset($requestData)) {
+            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            $body = http_build_query($requestData);
+        }
+
+        $request = new \GuzzleHttp\Psr7\Request($requestMethod, $requestUri, $headers, $body);
+
+        if (!empty(self::$token)) {
+            $request = FigRequestCookies::set($request, Cookie::create('token', self::$token));
+        }
+        if (!empty(self::$SESSION)) {
+            $request = FigRequestCookies::set($request, Cookie::create('PHPSESSID', self::$SESSION));
+        }
+
+        if (isset($auth['user'])) {
+            $request = $request->withHeader('Authorization', 'Basic ' . base64_encode("${auth['user']}:${auth['pass']}"));
+        }
+
+        $response = $client->send($request);
+
+        // Save Token 
+        $setCookies = SetCookies::fromResponse($response);
+        $setTokenCookie = $setCookies->get('token');
+        if (!is_null($setTokenCookie)) {
+            self::$token = $setTokenCookie->getValue();
+        }
+        
+        $setSESSIONCookie = $setCookies->get('PHPSESSID');
+        if (!is_null($setSESSIONCookie)) {
+            self::$SESSION = $setSESSIONCookie->getValue();
+        }
+
+        // Return the response
+        return $response;
     }
 
     /**
