@@ -140,7 +140,7 @@ return [
                 ],
                 "timesheets" => [
                     "url" => "/timesheets/",
-                    "rootRoute" => "timesheets_projects",
+                    "rootRoute" => "timesheets",
                     "icon" => "far fa-clock",
                     "title" => "TIMESHEETS"
                 ]

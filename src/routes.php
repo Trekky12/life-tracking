@@ -332,11 +332,11 @@ $app->group('/trips', function() {
 $app->group('/timesheets', function() {
 
     $this->get('/', function (Request $request, Response $response) {
-        return $response->withRedirect($this->get('router')->pathFor('timesheets_projects'), 302);
+        return $response->withRedirect($this->get('router')->pathFor('timesheets'), 302);
     });
 
     $this->group('/projects', function() {
-        $this->get('/', '\App\Timesheets\Project\Controller:index')->setName('timesheets_projects');
+        $this->get('/', '\App\Timesheets\Project\Controller:index')->setName('timesheets');
         $this->get('/edit/[{id:[0-9]+}]', '\App\Timesheets\Project\Controller:edit')->setName('timesheets_projects_edit');
         $this->post('/save/[{id:[0-9]+}]', '\App\Timesheets\Project\Controller:save')->setName('timesheets_projects_save');
         $this->delete('/delete/{id}', '\App\Timesheets\Project\Controller:delete')->setName('timesheets_projects_delete');

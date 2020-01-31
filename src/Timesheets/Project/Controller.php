@@ -9,7 +9,7 @@ use Hashids\Hashids;
 class Controller extends \App\Base\Controller {
 
     protected $model = '\App\Timesheets\Project\Project';
-    protected $index_route = 'timesheets_projects';
+    protected $index_route = 'timesheets';
     protected $edit_template = 'timesheets/projects/edit.twig';
     protected $element_view_route = 'timesheets_projects_edit';
     protected $module = "timesheets";
