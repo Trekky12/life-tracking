@@ -247,6 +247,7 @@ function drawMap(mapContainer, index) {
             map[index].on('click', function (e) {
                 map_marker[index].setLatLng(e.latlng);
                 map_marker[index].off('mouseover');
+                map_marker[index].off('popupopen');
                 map_marker[index].fire('drag');
             });
         }
@@ -263,6 +264,7 @@ function drawMap(mapContainer, index) {
             let circle = null;
 
             map_marker[index].off('mouseover');
+            map_marker[index].off('popupopen');
 
             map_marker[index].on('mouseover', function (event) {
                 circle = L.circle(event.target.getLatLng(), {
@@ -279,6 +281,20 @@ function drawMap(mapContainer, index) {
 
             map_marker[index].on('dragstart', function () {
                 map_marker[index].off('mouseover');
+                map_marker[index].off('popupopen');
+            });
+            
+            map_marker[index].on('popupopen', function (event) {
+                circle = L.circle(event.target.getLatLng(), {
+                    opacity: 0.5,
+                    radius: acc
+                }).addTo(map[index]);
+            });
+            
+            map_marker[index].on('popupclose', function (e) {
+                if(map[index].hasLayer(circle)){
+                    map[index].removeLayer(circle);
+                }
             });
         }
 

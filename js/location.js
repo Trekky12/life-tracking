@@ -129,12 +129,7 @@ function drawMarkers(markers, hideClusters = false) {
         let popup = dateString + accuracyString + stepsString + addressString;
 
         let options = {};
-        let circle_options = {
-            opacity: 0.5,
-            radius: marker.acc,
-            weight: 5,
-            color: '#3388ff'
-        };
+        let circle_color = '#3388ff';
 
         switch (type) {
             case 0:
@@ -142,12 +137,12 @@ function drawMarkers(markers, hideClusters = false) {
                 break;
             case 1:
                 options['icon'] = greenIcon;
-                circle_options['color'] = 'green';
+                circle_color = 'green';
                 popup += '<br/><br/><strong>' + marker.description + ' - ' + marker.value + ' ' + i18n.currency + '</strong>';
                 break;
             case 2:
                 options['icon'] = yellowIcon;
-                circle_options['color'] = 'yellow';
+                circle_color = 'yellow';
 
                 let description = marker.description == 0 ? lang.car_refuel : lang.car_service;
                 popup += '<br/><br/><strong>' + description + '</strong>';
@@ -161,18 +156,18 @@ function drawMarkers(markers, hideClusters = false) {
         // add accuracy circle
         if (marker.acc > 0) {
             my_marker.on('mouseover', function (e) {
-                let circle = L.circle([marker.lat, marker.lng], circle_options);
-                let poly_options = {
-                    weight: 10,
-                    color: circle_options['color']
-                };
-                let poly = L.polygon([[marker.lat, marker.lng]], poly_options);
-                
-                circleLayer.addLayer(circle);
-                circleLayer.addLayer(poly);
+                addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
             });
 
             my_marker.on('mouseout', function (e) {
+                removeCircleLayer();
+            });
+            
+            my_marker.on('popupopen', function (e) {
+                addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
+            });
+            
+            my_marker.on('popupclose', function (e) {
                 removeCircleLayer();
             });
 
@@ -309,6 +304,26 @@ function createClusterIcon(cluster, c) {
     var childCount = cluster.getChildCount();
     return new L.DivIcon({html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster ' + c, iconSize: new L.Point(40, 40)});
 
+}
+
+function addCircleLayer(lat, lng, radius, color) {
+    let circle_options = {
+        opacity: 0.5,
+        radius: radius,
+        weight: 5,
+        color: color
+    };
+    
+    let circle = L.circle([lat, lng], circle_options);
+    
+    let poly_options = {
+        weight: 10,
+        color: color
+    };
+    let poly = L.polygon([[lat, lng]], poly_options);
+    
+    circleLayer.addLayer(circle);
+    circleLayer.addLayer(poly);
 }
 
 function removeCircleLayer() {
