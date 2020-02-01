@@ -28,12 +28,6 @@ CREATE TABLE IF NOT EXISTS global_users (
     PRIMARY KEY(id),
     UNIQUE(login)
 );
-INSERT INTO global_users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
-
-/**
-ALTER TABLE global_users ADD module_crawlers INT(1) DEFAULT 0 AFTER module_boards; 
-ALTER TABLE global_users ADD module_timesheets INT(1) DEFAULT 0 AFTER module_trips; 
-*/
 
 DROP TABLE IF EXISTS global_banlist;
 CREATE TABLE global_banlist (
@@ -41,7 +35,8 @@ CREATE TABLE global_banlist (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip VARCHAR(255) NOT NULL,
     username varchar(255) DEFAULT NULL,
-    changedOn TIMESTAMP NULL
+    changedOn TIMESTAMP NULL,
+    PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS global_tokens;
@@ -108,7 +103,6 @@ CREATE TABLE finances_categories (
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO finances_categories (id, user, name) VALUES (1, 1, 'not categorized');
 
 DROP TABLE IF EXISTS finances_paymethods;
 CREATE TABLE finances_paymethods (
@@ -121,40 +115,6 @@ CREATE TABLE finances_paymethods (
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS finances;
-CREATE TABLE finances (
-    id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changedOn TIMESTAMP NULL,
-    user INTEGER unsigned DEFAULT NULL,
-    type int(1) DEFAULT 1,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
-    category int(11) UNSIGNED DEFAULT NULL ,
-    description varchar(255) NOT NULL,
-    value DECIMAL(10,2) NOT NULL,
-    common int(1) DEFAULT 0,
-    common_value DECIMAL(10,2),
-    notice TEXT DEFAULT NULL,
-    fixed int(1) DEFAULT 0,
-    lat DECIMAL(17,14) DEFAULT NULL,
-    lng DECIMAL(17,14) DEFAULT NULL,
-    acc DECIMAL(10,3) DEFAULT NULL,
-    bill INTEGER unsigned DEFAULT NULL,
-    paymethod int(11) UNSIGNED DEFAULT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE
-    UNIQUE(bill, user)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*
-ALTER TABLE finances add paymethod int(11) UNSIGNED DEFAULT NULL;
-ALTER TABLE finances ADD CONSTRAINT finances_ibfk_4 FOREIGN KEY (paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE;
-*/
 
 DROP TABLE IF EXISTS finances_recurring;
 CREATE TABLE finances_recurring (
@@ -181,11 +141,6 @@ CREATE TABLE finances_recurring (
     FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE finances_recurring add paymethod int(11) UNSIGNED DEFAULT NULL;
-ALTER TABLE finances_recurring ADD CONSTRAINT finances_recurring_ibfk_4 FOREIGN KEY (paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE;
-*/
-
 DROP TABLE IF EXISTS finances_categories_assignment;
 CREATE TABLE finances_categories_assignment (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -210,7 +165,6 @@ CREATE TABLE finances_budgets (
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) DEFAULT NULL,
     is_hidden INT(1) DEFAULT 0,
---    saved DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -289,7 +243,7 @@ CREATE TABLE cars_service (
     PRIMARY KEY (id),
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(car) REFERENCES cars(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(car) REFERENCES cars(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS boards;
@@ -377,7 +331,7 @@ CREATE TABLE boards_labels (
     text_color VARCHAR(255) DEFAULT '#000000',
     PRIMARY KEY (id),
     FOREIGN KEY(board) REFERENCES boards(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS boards_cards_label;
@@ -414,9 +368,6 @@ CREATE TABLE global_settings (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'); 
-
-
 DROP TABLE IF EXISTS notifications_categories;
 CREATE TABLE notifications_categories (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -426,13 +377,8 @@ CREATE TABLE notifications_categories (
     identifier varchar(255) NOT NULL,
     internal int(1) DEFAULT 0,
     PRIMARY KEY (id),
-    UNIQUE(identifier),
+    UNIQUE(identifier)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/**
-ALTER TABLE notifications_categories ADD internal INT(1) DEFAULT 0 AFTER identifier;
-INSERT INTO notifications_categories (name, identifier, internal) VALUES ('NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
-*/
 
 DROP TABLE IF EXISTS notifications_clients;
 CREATE TABLE notifications_clients (
@@ -536,10 +482,6 @@ CREATE TABLE crawlers_headers (
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/**
-ALTER TABLE crawlers_headers ADD sortable INT(1) DEFAULT 0 AFTER field_content;
-*/
-
 DROP TABLE IF EXISTS crawlers_dataset;
 CREATE TABLE crawlers_dataset (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -628,10 +570,6 @@ CREATE TABLE splitbill_bill (
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/**
-ALTER TABLE splitbill_bill ADD settleup INT(1) DEFAULT 0; 
-*/
-
 DROP TABLE IF EXISTS splitbill_bill_users;
 CREATE TABLE splitbill_bill_users (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -639,18 +577,44 @@ CREATE TABLE splitbill_bill_users (
     user INTEGER unsigned DEFAULT NULL,
     paid DECIMAL(10,2) DEFAULT NULL,
     spend DECIMAL(10,2) DEFAULT NULL,
+    paymethod int(11) UNSIGNED DEFAULT NULL,
     paid_foreign DECIMAL(10,2) DEFAULT NULL,
     spend_foreign DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*
-ALTER TABLE splitbill_bill_users add paymethod int(11) UNSIGNED DEFAULT NULL;
-ALTER TABLE splitbill_bill_users ADD CONSTRAINT splitbill_bill_users_ibfk_3 FOREIGN KEY (paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE;
-*/
+DROP TABLE IF EXISTS finances;
+CREATE TABLE finances (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    type int(1) DEFAULT 1,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    category int(11) UNSIGNED DEFAULT NULL,
+    description varchar(255) NOT NULL,
+    value DECIMAL(10,2) NOT NULL,
+    common int(1) DEFAULT 0,
+    common_value DECIMAL(10,2),
+    notice TEXT DEFAULT NULL,
+    fixed int(1) DEFAULT 0,
+    lat DECIMAL(17,14) DEFAULT NULL,
+    lng DECIMAL(17,14) DEFAULT NULL,
+    acc DECIMAL(10,3) DEFAULT NULL,
+    bill INTEGER unsigned DEFAULT NULL,
+    paymethod int(11) UNSIGNED DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    UNIQUE(bill, user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS trips;
 CREATE TABLE trips (
