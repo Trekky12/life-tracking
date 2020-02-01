@@ -19,10 +19,7 @@ class FinancesEntryRecurring extends \App\Base\Model {
 
         $this->last_run = $this->exists('last_run', $data) ? filter_var($data['last_run'], FILTER_SANITIZE_STRING) : null;
 
-        $set_common = $this->exists('set_common', $data) ? filter_var($data['set_common'], FILTER_SANITIZE_STRING) : 0;
-        $this->common = $set_common === 'on' ? 1 : 0;
-
-        $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : $this->common;
+        $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : 'month';

@@ -24,7 +24,7 @@
                 
                 <div class="form-group">
                     <label class="checkbox" for="checkboxDefault">
-                        <input name="set_default" type="checkbox" id="checkboxDefault" {% if entry is not null and entry.is_default == 1 %}checked{% endif %}>
+                        <input name="is_default" type="checkbox" value="1" id="checkboxDefault" {% if entry is not null and entry.is_default == 1 %}checked{% endif %}>
                         {{lang["DEFAULT"]}}
                     </label>
                 </div>

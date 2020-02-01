@@ -16,9 +16,7 @@ class Budget extends \App\Base\Model {
         $this->percent = $this->exists('percent', $data) ? filter_var($data['percent'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-        $set_hidden = $this->exists('set_hidden', $data) ? filter_var($data['set_hidden'], FILTER_SANITIZE_STRING) : 0;
-        $this->is_hidden = $set_hidden === 'on' ? 1 : 0;
-        $this->is_hidden = $this->exists('is_hidden', $data) ? filter_var($data['is_hidden'], FILTER_SANITIZE_NUMBER_INT) : $this->is_hidden;
+        $this->is_hidden = $this->exists('is_hidden', $data) ? filter_var($data['is_hidden'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         if (is_null($this->description)) {
             $this->parsing_errors[] = "DESCRIPTION_CANNOT_BE_EMPTY";

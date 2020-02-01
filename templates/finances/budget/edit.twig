@@ -50,7 +50,7 @@
                 
                 <label class="checkbox" for="checkboxHidden_{% verbatim %}{{index}}{% endverbatim %}">
                     {% verbatim %}
-                    <input name="budget[{{index}}][set_hidden]" type="checkbox" id="checkboxHidden_{{index}}">
+                    <input name="budget[{{index}}][is_hidden]" type="checkbox" value="1" id="checkboxHidden_{{index}}">
                     {% endverbatim %}
                     {{lang["HIDE_ENTRY"]}}
                 </label>
@@ -116,7 +116,7 @@
                         <div class="form-group is_hidden">
                             {%if budget.id in budget_categories|keys%}
                                 <label class="checkbox" for="checkboxHidden_{{loop.index-1}}">
-                                    <input name="budget[{{loop.index-1}}][set_hidden]" type="checkbox" id="checkboxHidden_{{loop.index-1}}" {% if budget.is_hidden == 1 %}checked{% endif %}>
+                                    <input name="budget[{{loop.index-1}}][is_hidden]" type="checkbox" value="1" id="checkboxHidden_{{loop.index-1}}" {% if budget.is_hidden == 1 %}checked{% endif %}>
                                     {{lang["HIDE_ENTRY"]}}
                                 </label>
                             {% endif %}

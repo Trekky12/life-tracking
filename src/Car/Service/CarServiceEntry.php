@@ -28,19 +28,7 @@ class CarServiceEntry extends \App\Base\Model {
         $this->fuel_distance = $this->exists('fuel_distance', $data) ? filter_var($data['fuel_distance'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->fuel_consumption = $this->exists('fuel_consumption', $data) ? filter_var($data['fuel_consumption'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-
-        /**
-         * Set Calc Consumption from request
-         */
-        $set_calc_consumption = $this->exists('set_calc_consumption', $data) ? filter_var($data['set_calc_consumption'], FILTER_SANITIZE_STRING) : 0;
-        $this->fuel_calc_consumption = $set_calc_consumption === 'on' ? 1 : 0;
-
-        /**
-         * Is there a value in the database?
-         */
-        $this->fuel_calc_consumption = $this->exists('fuel_calc_consumption', $data) ? filter_var($data['fuel_calc_consumption'], FILTER_SANITIZE_NUMBER_INT) : $this->fuel_calc_consumption;
-
-
+        $this->fuel_calc_consumption = $this->exists('fuel_calc_consumption', $data) ? filter_var($data['fuel_calc_consumption'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->service_oil_before = $this->exists('service_oil_before', $data) ? filter_var($data['service_oil_before'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->service_oil_after = $this->exists('service_oil_after', $data) ? filter_var($data['service_oil_after'], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -48,14 +36,8 @@ class CarServiceEntry extends \App\Base\Model {
         $this->service_water_wiper_before = $this->exists('service_water_wiper_before', $data) ? filter_var($data['service_water_wiper_before'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->service_water_wiper_after = $this->exists('service_water_wiper_after', $data) ? filter_var($data['service_water_wiper_after'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $set_service_tire_change = $this->exists('set_service_tire_change', $data) ? filter_var($data['set_service_tire_change'], FILTER_SANITIZE_STRING) : 0;
-        $this->service_tire_change = $set_service_tire_change === 'on' ? 1 : 0;
-        $this->service_tire_change = $this->exists('service_tire_change', $data) ? filter_var($data['service_tire_change'], FILTER_SANITIZE_NUMBER_INT) : $this->service_tire_change;
-
-        $set_service_garage = $this->exists('set_service_garage', $data) ? filter_var($data['set_service_garage'], FILTER_SANITIZE_STRING) : 0;
-        $this->service_garage = $set_service_garage === 'on' ? 1 : 0;
-        $this->service_garage = $this->exists('service_garage', $data) ? filter_var($data['service_garage'], FILTER_SANITIZE_NUMBER_INT) : $this->service_garage;
-
+        $this->service_tire_change = $this->exists('service_tire_change', $data) ? filter_var($data['service_tire_change'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->service_garage = $this->exists('service_garage', $data) ? filter_var($data['service_garage'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->service_air_front_left_before = $this->exists('service_air_front_left_before', $data) ? filter_var($data['service_air_front_left_before'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->service_air_front_left_after = $this->exists('service_air_front_left_after', $data) ? filter_var($data['service_air_front_left_after'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;

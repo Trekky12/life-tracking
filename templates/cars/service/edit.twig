@@ -88,7 +88,7 @@
                     </div>
                     <div class="form-group">
                         <label class="checkbox" for="checkboxCalcConsumption">
-                            <input name="set_calc_consumption" type="checkbox" id="checkboxCalcConsumption" {% if entry is null or entry.fuel_calc_consumption == 1 %}checked{% endif %}>
+                            <input name="fuel_calc_consumption" type="checkbox" id="checkboxCalcConsumption" value="1" {% if entry is null or entry.fuel_calc_consumption == 1 %}checked{% endif %}>
                             {{lang["CALC_CONSUMPTION"]}}
                         </label>
                     </div>
@@ -195,13 +195,13 @@
                     </div>
                     <div class="form-group">
                         <label class="checkbox" for="checkboxTireChange">
-                            <input name="set_service_tire_change" type="checkbox" id="checkboxTireChange" {% if not entry is null and entry.service_tire_change == 1 %}checked{% endif %}>
+                            <input name="service_tire_change" type="checkbox" id="checkboxTireChange" value="1" {% if not entry is null and entry.service_tire_change == 1 %}checked{% endif %}>
                             {{lang["CAR_SERVICE_TIRE_CHANGE"]}}
                         </label>
                     </div>
                     <div class="form-group">
                         <label class="checkbox" for="checkboxGarage">
-                            <input name="set_service_garage" type="checkbox" id="checkboxGarage" {% if not entry is null and entry.service_garage == 1 %}checked{% endif %}>
+                            <input name="service_garage" type="checkbox" id="checkboxGarage" value="1" {% if not entry is null and entry.service_garage == 1 %}checked{% endif %}>
                             {{lang["CAR_SERVICE_GARAGE"]}}
                         </label>
                     </div>

@@ -44,14 +44,14 @@
 
                 <div class="form-group">
                     <label class="checkbox" for="checkboxSortable">
-                        <input name="set_sortable" type="checkbox" id="checkboxSortable" {% if entry is not null and entry.sortable == 1 %}checked{% endif %}>
+                        <input name="sortable" type="checkbox" id="checkboxSortable" value="1" {% if entry is not null and entry.sortable == 1 %}checked{% endif %}>
                         {{lang["SORTABLE"]}}
                     </label>
                 </div>
 
                 <div class="form-group">
                     <label class="checkbox" for="checkboxDiff">
-                        <input name="set_diff" type="checkbox" id="checkboxDiff" {% if entry is not null and entry.diff == 1 %}checked{% endif %}>
+                        <input name="diff" type="checkbox" id="checkboxDiff" value="1" {% if entry is not null and entry.diff == 1 %}checked{% endif %}>
                         {{lang["PREVIOUS_VALUE"]}}
                     </label>
                 </div>
