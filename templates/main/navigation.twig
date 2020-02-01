@@ -1,4 +1,15 @@
-<div id="mobile-header-icons" class="size-{{mobile_favorites|length+2}}">
+{% set mobile_elements = 2 %}
+{% if mobile_favorites|length > 0 %}
+    {% set mobile_elements = mobile_elements + mobile_favorites|length %}
+{% else %}
+    {% for module_name, module in modules %}
+        {% if user.hasModule(module_name) %}
+            {% set mobile_elements = mobile_elements + 1 %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<div id="mobile-header-icons" class="size-{{mobile_elements}}">
     <a href="{{ path_for('index') }}" {% if active == 'index' %}class="active"{% endif %}><i class="fas fa-sitemap"></i></a>
     {% if mobile_favorites|length > 0 %}
         {%  for favorite in mobile_favorites %}
