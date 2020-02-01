@@ -12,7 +12,6 @@
             <form class="form-horizontal" id="crawlerLinksForm" action="{{  path_for('crawlers_links_save', {'id' : entry.id, 'crawler' : crawler.hash}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                <input name="crawler" id="crawler_id"  type="hidden" value="{{crawler.id}}">
 
                 {% if not entry is null %}
                     <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">

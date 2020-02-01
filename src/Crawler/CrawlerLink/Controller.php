@@ -45,15 +45,11 @@ class Controller extends \App\Base\Controller {
         return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'crawler' => $crawler, 'links' => $links]);
     }
 
-    public function save(Request $request, Response $response) {
-        $id = $request->getAttribute('id');
-        $crawler_hash = $request->getAttribute('crawler');
-        $data = $request->getParsedBody();
-        $data['user'] = $this->ci->get('helper')->getUser()->id;
-
-        $this->insertOrUpdate($id, $data, $request);
-
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
+    protected function afterSave($id, array $data, Request $request) {
+        $entry = $this->mapper->get($id);
+        $crawler_id = $entry->crawler;
+        $crawler = $this->crawler_mapper->get($crawler_id);
+        $this->index_params = ["crawler" => $crawler->getHash()];
     }
 
     /**
@@ -61,6 +57,10 @@ class Controller extends \App\Base\Controller {
      */
     protected function preSave($id, array &$data, Request $request) {
         $this->allowParentOwnerOnly($id);
+        
+        $crawler_hash = $request->getAttribute("crawler");
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+        $data['crawler'] = $crawler->id;
     }
 
     protected function preEdit($id, Request $request) {

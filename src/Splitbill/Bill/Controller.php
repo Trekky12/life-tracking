@@ -119,17 +119,6 @@ class Controller extends \App\Base\Controller {
         ]);
     }
 
-    public function save(Request $request, Response $response) {
-        $id = $request->getAttribute('id');
-        $hash = $request->getAttribute('group');
-        $data = $request->getParsedBody();
-        $data['user'] = $this->ci->get('helper')->getUser()->id;
-        
-        $this->insertOrUpdate($id, $data, $request);
-
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["group" => $hash]), 301);
-    }
-
     /**
      * Does the user have access to this dataset?
      */
@@ -137,6 +126,8 @@ class Controller extends \App\Base\Controller {
         $sbgroup_hash = $request->getAttribute("group");
         $entry = $this->group_mapper->getFromHash($sbgroup_hash);
         $this->checkAccess($entry->id);
+
+        $data["sbgroup"] = $entry->id;
     }
 
     protected function preEdit($id, Request $request) {
@@ -209,6 +200,8 @@ class Controller extends \App\Base\Controller {
         }
 
         $this->notifyUsers("edit", $bill, $sbgroup, $existing_balance, $users);
+
+        $this->index_params = ["group" => $sbgroup->getHash()];
     }
 
     /**

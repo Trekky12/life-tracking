@@ -186,17 +186,6 @@ class Controller extends \App\Base\Controller {
         return $response->withJSON($markers);
     }
 
-    public function save(Request $request, Response $response) {
-        $id = $request->getAttribute('id');
-        $trip = $request->getAttribute('trip');
-        $data = $request->getParsedBody();
-        $data['user'] = $this->ci->get('helper')->getUser()->id;
-
-        $this->insertOrUpdate($id, $data, $request);
-
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["trip" => $trip]), 301);
-    }
-
     public function getLatLng(Request $request, Response $response) {
 
         $data = $request->getQueryParams();
@@ -222,6 +211,13 @@ class Controller extends \App\Base\Controller {
         return $response->withJson($newResponse);
     }
 
+    protected function afterSave($id, array $data, Request $request) {
+        $entry = $this->mapper->get($id);
+        $trip_id = $entry->trip;
+        $trip = $this->trip_mapper->get($trip_id);
+        $this->index_params = ["trip" => $trip->getHash()];
+    }
+
     /**
      * Does the user have access to this dataset?
      */
@@ -229,6 +225,8 @@ class Controller extends \App\Base\Controller {
         $trip_hash = $request->getAttribute("trip");
         $entry = $this->trip_mapper->getFromHash($trip_hash);
         $this->checkAccess($entry->id);
+
+        $data['trip'] = $entry->id;
     }
 
     protected function preEdit($id, Request $request) {

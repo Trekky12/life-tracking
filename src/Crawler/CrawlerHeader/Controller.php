@@ -51,17 +51,6 @@ class Controller extends \App\Base\Controller {
         ]);
     }
 
-    public function save(Request $request, Response $response) {
-        $id = $request->getAttribute('id');
-        $crawler_hash = $request->getAttribute('crawler');
-        $data = $request->getParsedBody();
-        $data['user'] = $this->ci->get('helper')->getUser()->id;
-
-        $this->insertOrUpdate($id, $data, $request);
-
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
-    }
-
     public function clone(Request $request, Response $response) {
 
         $crawler_hash = $request->getAttribute('crawler');
@@ -105,6 +94,10 @@ class Controller extends \App\Base\Controller {
      */
     protected function preSave($id, array &$data, Request $request) {
         $this->allowParentOwnerOnly($id);
+        
+        $crawler_hash = $request->getAttribute("crawler");
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+        $data['crawler'] = $crawler->id;
     }
 
     protected function preEdit($id, Request $request) {
@@ -146,6 +139,10 @@ class Controller extends \App\Base\Controller {
         if (!is_null($header->sort)) {
             $this->mapper->unset_sort($id, $header->crawler);
         }
+        
+        $crawler_id = $header->crawler;
+        $crawler = $this->crawler_mapper->get($crawler_id);
+        $this->index_params = ["crawler" => $crawler->getHash()];
     }
 
     // @see https://dev.mysql.com/doc/refman/8.0/en/cast-functions.html#function_cast

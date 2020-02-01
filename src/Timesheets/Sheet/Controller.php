@@ -141,6 +141,8 @@ class Controller extends \App\Base\Controller {
         $project_hash = $request->getAttribute("project");
         $entry = $this->project_mapper->getFromHash($project_hash);
         $this->checkAccess($entry->id);
+        
+        $data['project'] = $entry->id;
     }
 
     protected function preEdit($id, Request $request) {
