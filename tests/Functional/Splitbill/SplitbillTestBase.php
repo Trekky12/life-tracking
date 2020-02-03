@@ -31,7 +31,7 @@ class SplitbillTestBase extends BaseTestCase {
         return $matches;
     }
 
-    protected function getChild($body, $data, $hash, $user = 10) {
+    protected function getChild($body, $data, $hash, $user = 1) {
         
         $spend = number_format($data["balance"][$user]["spend"], 2);
         $paid = number_format($data["balance"][$user]["paid"], 2);

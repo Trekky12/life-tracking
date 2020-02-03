@@ -25,7 +25,7 @@ class TripTestBase extends BaseTestCase {
 
     protected function getParents($body) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/trips\/(?<hash>.*)\/view\/">(?<name>.*)<\/a><\/td>\s*(<td>\s*<\/td>\s*)*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/trips\/(?<hash>.*)\/view\/">(?<name>.*)<\/a><\/td>\s*(<td>[\s0-9-]*<\/td>\s*)*<\/tr>/';
         preg_match_all($re, $body, $matches, PREG_SET_ORDER);
 
         return $matches;

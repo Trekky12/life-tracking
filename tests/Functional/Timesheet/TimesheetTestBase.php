@@ -4,7 +4,7 @@ namespace Tests\Functional\Timesheet;
 
 use Tests\Functional\Base\BaseTestCase;
 
-class ProjectTestBase extends BaseTestCase {
+class TimesheetTestBase extends BaseTestCase {
 
     protected $uri_overview = "/timesheets/projects/";
     protected $uri_edit = "/timesheets/projects/edit/";
