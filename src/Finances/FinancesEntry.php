@@ -17,11 +17,7 @@ class FinancesEntry extends \App\Base\Model {
         $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
 
-
-        $set_common = $this->exists('set_common', $data) ? filter_var($data['set_common'], FILTER_SANITIZE_STRING) : 0;
-        $this->common = $set_common === 'on' ? 1 : 0;
-
-        $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : $this->common;
+        $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
 

@@ -94,7 +94,7 @@
 
                     <div class="form-group">
                         <label class="checkbox" for="checkboxCommon">
-                            <input name="set_common" type="checkbox" id="checkboxCommon" class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" {% if entry is not null and entry.common == 1 %}checked{% endif %} {% if not entry is null and not entry.bill is null %}disabled{% endif %}>
+                            <input name="common" type="checkbox" id="checkboxCommon" value="1" class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" {% if entry is not null and entry.common == 1 %}checked{% endif %} {% if not entry is null and not entry.bill is null %}disabled{% endif %}>
                             {{lang["COMMON"]}}
                         </label>
                     </div>
