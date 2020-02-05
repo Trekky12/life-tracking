@@ -13,7 +13,7 @@
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 
                 {% if not entry is null %}
-                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
                     <input name="last_run"  type="hidden" value="{{entry.last_run}}">
                 {% endif %}
 
@@ -41,11 +41,11 @@
                 </div>
                 <div class="form-group">
                     <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
-                    <input type="text" class="form-control" id="inputDescription" required name="description" {% if not entry is null %}value="{{entry.description|raw}}"{% endif %}>
+                    <input type="text" class="form-control" id="inputDescription" required name="description" value="{% if not entry is null %}{{entry.description|raw}}{% endif %}">
                 </div>
                 <div class="form-group">
                     <label for="inputValue">{{lang["VALUE"]}}</label>
-                    <input type="number" class="form-control" id="inputValue" required name="value" step="any" {% if not entry is null %}value="{{entry.value}}{% endif %}">
+                    <input type="number" class="form-control" id="inputValue" required name="value" step="any" value="{% if not entry is null %}{{entry.value}}{% endif %}">
                 </div>
                 
                 <div class="form-group">
@@ -66,12 +66,12 @@
                 </div>
                 <div class="form-group {% if entry is null or (entry is not null and entry.common == 0) %}hidden{% endif %}" id="commonValue">
                     <label for="inputCommonValue">{{lang["COMMON_VALUE"]}}</label>
-                    <input type="number" class="form-control" id="inputCommonValue" name="common_value" step="any" {% if not entry is null %}value="{{entry.common_value}}{% endif %}">
+                    <input type="number" class="form-control" id="inputCommonValue" name="common_value" step="any" value="{% if not entry is null %}{{entry.common_value}}{% endif %}">
                 </div>
 
                 <div class="form-group">
                     <label for="inputNotice">{{lang["NOTICE"]}}</label>
-                    <input type="text" class="form-control" id="inputNotice" name="notice" {% if not entry is null %}value="{{entry.notice|raw}}{% endif %}">
+                    <input type="text" class="form-control" id="inputNotice" name="notice" value="{% if not entry is null %}{{entry.notice|raw}}{% endif %}">
                 </div>
                 <h3>{{lang["INTERVAL"]}}</h3>
                 <div class="form-group">

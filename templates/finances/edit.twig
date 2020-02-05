@@ -35,7 +35,7 @@
 
 
                 {% if not entry is null %}
-                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
                     <input name="fixed" type="hidden" value="{{entry.fixed}}">
                 {% endif %}
 
@@ -77,12 +77,12 @@
                 {% endif %}
                 <div class="form-group">
                     <label for="inputValue">{{lang["VALUE"]}}</label>
-                    <input type="number" class="form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="inputValue" name="value" step="any" {% if not entry is null %}value="{{entry.value}}{% endif %}" {% if not entry is null and not entry.bill is null %}disabled="disabled"{% endif %}/>
+                    <input type="number" class="form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="inputValue" name="value" step="any" value="{% if not entry is null %}{{entry.value}}{% endif %}" {% if not entry is null and not entry.bill is null %}disabled="disabled"{% endif %}/>
                 </div>
 
                 <div class="form-group">
                     <label for="paymethod">{{lang["FINANCES_PAYMETHOD"]}}</label>
-                    <select class="form-control {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}disabled{% endif %}" id="paymethod" name="paymethod" {% if not entry is null %}value="{{entry.value}}{% endif %}" {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}disabled="disabled"{% endif %}>
+                    <select class="form-control {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}disabled{% endif %}" id="paymethod" name="paymethod" value="{% if not entry is null %}{{entry.value}}{% endif %}" {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}disabled="disabled"{% endif %}>
                         <option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
                         {% for method in paymethods %}
                             <option value="{{method.id}}" {% if (not entry is null and method.id == entry.paymethod) or (entry is null and method.is_default == 1) %}selected{% endif %}>{{method.name|raw}}</option>

@@ -354,15 +354,15 @@ class Controller extends \App\Base\Controller {
 
 
         $spendings_data = array_map(function($el) {
-            return $el[0];
+            return array_key_exists(0, $el) ? $el[0]: null;
         }, $data);
 
         $income_data = array_map(function($el) {
-            return $el[1];
+            return array_key_exists(1, $el) ? $el[1]: null;
         }, $data);
 
         $diff_data = array_map(function($el) {
-            return $el[1] - $el[0];
+            return array_key_exists(1, $el) && array_key_exists(0, $el) ? $el[1] - $el[0]: null ;
         }, $data);
 
         $labels = array_keys($data);

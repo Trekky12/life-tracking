@@ -43,3 +43,20 @@ INSERT INTO trips_user (trip, user) VALUES
 (2, 3);
 INSERT INTO trips_event (id, trip, createdBy, changedBy, name, start_date, start_time, start_address, start_lat, start_lng, end_date, end_time, end_address, end_lat, end_lng, type, notice, image, position) VALUES
 (1, 2, 3, 3, 'Test Event', '2020-01-01', NULL, NULL, NULL, NULL, '2020-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 999);
+
+INSERT INTO finances (id, user, type, date, time, category, description, value, common, common_value, notice, fixed, lat, lng, acc, bill, paymethod) VALUES
+(1, 1, 0, '2020-01-01', '14:44:49', 1, 'Test expense', '10.00', 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1),
+(2, 1, 1, '2020-01-01', '14:45:01', 1, 'Test income', '100.00', 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO finances_recurring (id, user, start, end, type, category, description, value, common, common_value, notice, unit, multiplier, paymethod) VALUES
+(1, 1, '2020-01-01', NULL, 0, 1, 'Test monthly entry expense', '10.00', 0, NULL, NULL, 'month', 1, NULL),
+(2, 1, '2020-01-01', NULL, 1, 1, 'Test monthly entry income', '10.00', 0, NULL, NULL, 'month', 1, NULL);
+
+INSERT INTO finances_budgets (id, user, description, value, is_hidden) VALUES
+(1, 1, 'Test Budget Entry', '5.00', 0),
+(2, 1, 'Rest', '5.00', 0);
+
+INSERT INTO finances_budgets_categories (budget, category) VALUES (1,1);
+
+INSERT INTO finances_categories_assignment (id, user, description, category, min_value, max_value) VALUES
+(1, 1, 'Test assignment', 1, NULL, NULL);

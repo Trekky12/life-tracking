@@ -13,7 +13,7 @@
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 
                 {% if not entry is null %}
-                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
                 {% endif %}
 
                 <div class="form-group">
@@ -32,12 +32,12 @@
                     
                     <div class="form-group">
                     <label for="inputMinValue">{{lang["MIN_VALUE"]}}</label>
-                    <input type="number" class="form-control" id="inputMinValue" name="min_value" step="any" {% if not entry is null %}value="{{entry.min_value}}{% endif %}">
+                    <input type="number" class="form-control" id="inputMinValue" name="min_value" step="any" value="{% if not entry is null %}{{entry.min_value}}{% endif %}">
                 </div>
                 
                 <div class="form-group">
                     <label for="inputMaxValue">{{lang["MAX_VALUE"]}}</label>
-                    <input type="number" class="form-control" id="inputMaxValue" name="max_value" step="any" {% if not entry is null %}value="{{entry.max_value}}{% endif %}">
+                    <input type="number" class="form-control" id="inputMaxValue" name="max_value" step="any" value="{% if not entry is null %}{{entry.max_value}}{% endif %}">
                 </div>
                 
                 <div class="form-group">

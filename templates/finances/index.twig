@@ -60,12 +60,12 @@
                 <tbody>
                     {% for entry in list%}
                         <tr>
-                            <td data-title="{{lang["DATE"]}}">{{entry[0]}}</td> 
-                            <td data-title="{{lang["TIME"]}}">{{entry[1]}}</td> 
-                            <td data-title="{{lang["TYPE"]}}">{{ entry[2] }}</td> 
-                            <td data-title="{{lang["CATEGORY"]}}">{{ entry[3] }}</td> 
-                            <td data-title="{{lang["DESCRIPTION"]}}">{{entry[4]|raw}}</td> 
-                            <td data-title="{{lang["VALUE"]}}">{{entry[5]}}</td> 
+                            <td>{{entry[0]}}</td> 
+                            <td>{{entry[1]}}</td> 
+                            <td>{{ entry[2] }}</td> 
+                            <td>{{ entry[3] }}</td> 
+                            <td>{{entry[4]|raw}}</td> 
+                            <td>{{entry[5]}}</td> 
                             <td>{{entry[6]|raw}}</td> 
                             <td>{{entry[7]|raw}}</td> 
                         </tr>
