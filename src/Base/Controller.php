@@ -169,6 +169,9 @@ abstract class Controller {
 
             $activity_type = "create";
         } else {
+            // try to access entry, maybe the user is not authorized, so this throws an exception (not found)
+            $oldEntry = $this->mapper->get($id);
+
             $elements_changed = $this->mapper->update($entry);
             if ($elements_changed > 0) {
                 $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
