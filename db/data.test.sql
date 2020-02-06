@@ -52,9 +52,9 @@ INSERT INTO finances_recurring (id, user, start, end, type, category, descriptio
 (1, 1, '2020-01-01', NULL, 0, 1, 'Test monthly entry expense', '10.00', 0, NULL, NULL, 'month', 1, NULL),
 (2, 1, '2020-01-01', NULL, 1, 1, 'Test monthly entry income', '10.00', 0, NULL, NULL, 'month', 1, NULL);
 
-INSERT INTO finances_budgets (id, user, description, value, is_hidden) VALUES
-(1, 1, 'Test Budget Entry', '5.00', 0),
-(2, 1, 'Rest', '5.00', 0);
+INSERT INTO finances_budgets (id, user, description, value, is_hidden, is_remaining) VALUES
+(1, 1, 'Test Budget Entry', '5.00', 0, 0),
+(2, 1, 'Rest', '5.00', 0, 1);
 
 INSERT INTO finances_budgets_categories (budget, category) VALUES (1,1);
 

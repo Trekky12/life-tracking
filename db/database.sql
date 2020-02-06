@@ -165,6 +165,7 @@ CREATE TABLE finances_budgets (
     description varchar(255) NOT NULL,
     value DECIMAL(10,2) DEFAULT NULL,
     is_hidden INT(1) DEFAULT 0,
+    is_remaining INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

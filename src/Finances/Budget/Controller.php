@@ -11,7 +11,6 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'finances_budgets';
     protected $element_view_route = 'finances_budgets_edit';
     protected $module = "finances";
-    
     private $cat_mapper;
     private $recurring_mapper;
 
@@ -25,15 +24,29 @@ class Controller extends \App\Base\Controller {
 
         $categories = $this->cat_mapper->getAll('name');
 
-        $budgets = $this->mapper->getBudgets('description');
+        $budgets_with_data = $this->mapper->getBudgets('description');
 
         $remains = $this->mapper->getRemainsBudget();
         if ($remains) {
             $remains->sum = $this->mapper->getRemainsExpenses();
             $remains->diff = $remains->value - $remains->sum;
             $remains->percent = round((($remains->sum / $remains->value) * 100), 2);
-            array_push($budgets, $remains);
+            $budgets_with_data[$remains->id] = $remains;
         }
+
+        // add missing budgets (when there are no finance entries)
+        $all_budgets = $this->mapper->getAll('description');
+
+        $budgets = [];
+        foreach ($all_budgets as $budget_id => $ab) {
+            if (array_key_exists($budget_id, $budgets_with_data)) {
+                $budgets[] = $budgets_with_data[$budget_id];
+            } else {
+                $budgets[] = $ab;
+            }
+        }
+
+        $this->sortBudgets($budgets);
 
         $budget_categories = $this->mapper->getBudgetCategories();
 
@@ -63,7 +76,7 @@ class Controller extends \App\Base\Controller {
         $budget_sum = $this->mapper->getSum();
         $has_remains_budget = $this->mapper->hasRemainsBudget();
 
-        $this->sortBudgets($budgets, $budget_categories);
+        $this->sortBudgets($budgets);
 
         return $this->ci->view->render($response, 'finances/budget/edit.twig', [
                     'budgets' => $budgets,
@@ -117,11 +130,11 @@ class Controller extends \App\Base\Controller {
     /**
      * Sort Remaining entry to end of list
      */
-    private function sortBudgets(&$budgets, $budget_categories) {
+    private function sortBudgets(&$budgets) {
 
         $remaining = null;
         foreach ($budgets as $idx => $budget) {
-            if (!array_key_exists($budget->id, $budget_categories)) {
+            if ($budget->is_remaining()) {
                 $remaining = $budget;
                 unset($budgets[$idx]);
             }
@@ -136,12 +149,15 @@ class Controller extends \App\Base\Controller {
      */
     protected function afterSave($id, array $data, Request $request) {
         try {
-            // remove old categories
-            $this->mapper->deleteCategoriesFromBudget($id);
-
-            // add new categories
+            $categories = null;
             if (array_key_exists("category", $data) && is_array($data["category"])) {
                 $categories = filter_var_array($data["category"], FILTER_SANITIZE_NUMBER_INT);
+            }
+
+            if (!is_null($categories)) {
+                // remove old categories
+                $this->mapper->deleteCategoriesFromBudget($id);
+                // add new categories
                 $this->mapper->addCategoriesToBudget($id, $categories);
             }
         } catch (\Exception $e) {
