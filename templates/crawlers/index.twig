@@ -20,7 +20,7 @@
                 <tbody>
                     {% for crawler in crawlers %}
                         <tr>
-                            <td data-title="{{lang["NAME"]}}"><a href="{{  path_for('crawlers_view', {'crawler' : crawler.hash}) }}">{{crawler.name|raw}}</a></td> 
+                            <td><a href="{{  path_for('crawlers_view', {'crawler' : crawler.hash}) }}">{{crawler.name|raw}}</a></td> 
                             <td>
                                 {% if crawler.user == user.id %}
                                     <a href="{{  path_for('crawlers_headers', {'crawler' : crawler.hash}) }}"><span class="fas fa-table fa-lg"></span></a>

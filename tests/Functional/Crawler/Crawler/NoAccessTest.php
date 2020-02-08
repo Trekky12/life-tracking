@@ -1,0 +1,82 @@
+<?php
+
+namespace Tests\Functional\Crawler\Crawler;
+
+use Tests\Functional\Crawler\CrawlerTestBase;
+
+class NoAccessTest extends CrawlerTestBase {
+
+    protected function setUp(): void {
+        $this->login("user2", "user2");
+    }
+
+    protected function tearDown(): void {
+        $this->logout();
+    }
+
+    /**
+     * View 
+     */
+    public function testGetViewParent() {
+        $response = $this->request('GET', $this->getURIView($this->TEST_CRAWLER_HASH));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+    }
+
+    /**
+     * Edit
+     */
+    public function testGetParentCreatedEdit() {
+
+        $response = $this->request('GET', $this->uri_edit . $this->TEST_CRAWLER_ID);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+
+        return $this->extractJSCSRF($response);
+    }
+
+    /**
+     * 
+     * @depends testGetParentCreatedEdit
+     */
+    public function testPostParentCreatedSave($csrf) {
+        $data = [
+            "id" => $this->TEST_CRAWLER_ID,
+            "hash" => $this->TEST_CRAWLER_HASH,
+            "name" => "Test Crawler 2 Updated",
+            "users" => [1, 3]
+        ];
+        $response = $this->request('POST', $this->uri_save . $this->TEST_CRAWLER_ID, array_merge($data, $csrf));
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+    }
+
+    /**
+     * Delete
+     */
+    public function testDeleteParent() {
+
+        $response1 = $this->request('GET', $this->uri_overview);
+        $csrf = $this->extractJSCSRF($response1);
+
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_CRAWLER_ID, $csrf);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $json = json_decode($body, true);
+
+        $this->assertArrayHasKey("is_deleted", $json);
+        $this->assertFalse($json["is_deleted"]);
+        $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
+    }
+
+}

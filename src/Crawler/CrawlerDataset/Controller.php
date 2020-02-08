@@ -22,12 +22,15 @@ class Controller extends \App\Base\Controller {
     public function saveAPI(Request $request, Response $response) {
         $data = $request->getParsedBody();
 
-        $crawlerhash = $request->getAttribute('crawler');
+        $crawler_hash = $request->getAttribute('crawler');
         $identifier = array_key_exists("identifier", $data) ? filter_var($data["identifier"], FILTER_SANITIZE_STRING) : null;
 
         $dataset_id = null;
         try {
-            $crawler = $this->crawler_mapper->getFromHash($crawlerhash);
+            $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+
+            $this->allowCrawlerOwnerOnly($crawler);
+
             $data["crawler"] = $crawler->id;
             $data["user"] = $this->ci->get('helper')->getUser()->id;
 
@@ -65,6 +68,13 @@ class Controller extends \App\Base\Controller {
         }
         if (array_key_exists("diff", $data) && is_array($data["diff"])) {
             $data["diff"] = json_encode($data["diff"]);
+        }
+    }
+
+    private function allowCrawlerOwnerOnly($crawler) {
+        $user = $this->ci->get('helper')->getUser()->id;
+        if ($crawler->user !== $user) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 

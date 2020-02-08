@@ -21,10 +21,10 @@
                 <tbody>
                     {% for link in links %}
                         <tr>
-                            <td data-title="{{lang["NAME"]}}">{{link.name|raw}}</td> 
-                            <td data-title="{{lang["LINK"]}}">{{link.link}}</td> 
-                            <td data-title="{{lang["PARENT_LINK"]}}">{{links[link.parent].name}}</td> 
-                            <td data-title="{{lang["POSITION"]}}">{{link.position}}</td> 
+                            <td>{{link.name|raw}}</td> 
+                            <td>{{link.link}}</td> 
+                            <td>{{links[link.parent].name}}</td> 
+                            <td>{{link.position}}</td> 
                             <td>
                                 {% if crawler.user == user.id %}
                                     <a href="{{  path_for('crawlers_links_edit', {'id' : link.id, 'crawler' : crawler.hash}) }}"><span class="fas fa-edit fa-lg"></span></a>

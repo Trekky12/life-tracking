@@ -23,6 +23,8 @@ class Controller extends \App\Base\Controller {
     public function index(Request $request, Response $response) {
         $crawler_hash = $request->getAttribute('crawler');
         $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+        $this->allowCrawlerOwnerOnly($crawler);
+        
         $links = $this->mapper->getFromCrawler($crawler->id);
         return $this->ci->view->render($response, 'crawlers/links/index.twig', ['links' => $links, "crawler" => $crawler]);
     }
@@ -56,30 +58,29 @@ class Controller extends \App\Base\Controller {
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $this->allowParentOwnerOnly($id);
-        
         $crawler_hash = $request->getAttribute("crawler");
         $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+        $this->allowCrawlerOwnerOnly($crawler);
+
         $data['crawler'] = $crawler->id;
     }
 
     protected function preEdit($id, Request $request) {
-        $this->allowParentOwnerOnly($id);
+        $crawler_hash = $request->getAttribute("crawler");
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+        $this->allowCrawlerOwnerOnly($crawler);
     }
 
     protected function preDelete($id, Request $request) {
-        $this->allowParentOwnerOnly($id);
+        $crawler_hash = $request->getAttribute("crawler");
+        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
+        $this->allowCrawlerOwnerOnly($crawler);
     }
 
-    private function allowParentOwnerOnly($element_id) {
+    private function allowCrawlerOwnerOnly($crawler) {
         $user = $this->ci->get('helper')->getUser()->id;
-        if (!is_null($element_id)) {
-            $element = $this->mapper->get($element_id);
-            $crawler = $this->crawler_mapper->get($element->crawler);
-
-            if ($crawler->user !== $user) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
-            }
+        if ($crawler->user !== $user) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 

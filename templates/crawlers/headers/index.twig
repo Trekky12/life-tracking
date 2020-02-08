@@ -27,11 +27,11 @@
                 <tbody>
                     {% for header in headers %}
                         <tr>
-                            <td data-title="{{lang["HEADLINE"]}}">{{header.headline|raw}}</td> 
-                            <td data-title="{{lang["FIELD_NAME"]}}">{{header.field_name}}</td> 
-                            <td data-title="{{lang["FIELD_LINK"]}}">{{header.field_link}}</td> 
-                            <td data-title="{{lang["FIELD_CONTENT"]}}">{{header.field_content|raw}}</td> 
-                            <td data-title="{{lang["POSITION"]}}">{{header.position}}</td> 
+                            <td>{{header.headline|raw}}</td> 
+                            <td>{{header.field_name}}</td> 
+                            <td>{{header.field_link}}</td> 
+                            <td>{{header.field_content|raw}}</td> 
+                            <td>{{header.position}}</td> 
                             <td>
                                 {% if crawler.user == user.id %}
                                     <a href="{{  path_for('crawlers_headers_edit', {'id' : header.id, 'crawler' : crawler.hash}) }}"><span class="fas fa-edit fa-lg"></span></a>
