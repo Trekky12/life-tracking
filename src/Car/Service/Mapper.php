@@ -15,7 +15,7 @@ class Mapper extends \App\Base\Mapper {
                 . " AND mileage IS NOT NULL "
                 . " AND mileage <= :mileage"
                 . " AND fuel_volume IS NOT NULL "
-                . " AND fuel_total_price IS NOT NULL "
+                //. " AND fuel_total_price IS NOT NULL "
                 . " AND car = :car "
                 . " AND type = :type ";
 
@@ -55,7 +55,7 @@ class Mapper extends \App\Base\Mapper {
                 . " AND mileage IS NOT NULL "
                 . " AND mileage <= :mileage "
                 . " AND fuel_volume IS NOT NULL "
-                . " AND fuel_total_price IS NOT NULL "
+                //. " AND fuel_total_price IS NOT NULL "
                 . " AND fuel_type = 1 "
                 . " AND fuel_type IS NOT NULL"
                 . " AND car = :car "

@@ -74,7 +74,7 @@ class Controller extends \App\Base\Controller {
          */
         if ($entry->mileage) {
             $lastMileage = $this->mapper->getLastMileage($id, $entry->mileage, $entry->car);
-            if ($lastMileage) {
+            if (!is_null($lastMileage)) {
                 $this->mapper->setDistance($id, $lastMileage);
             }
         }
@@ -87,7 +87,7 @@ class Controller extends \App\Base\Controller {
         /**
          * Calculate Consumption when full
          */
-        if ($entry->mileage && $entry->fuel_calc_consumption && $entry->fuel_type == 1 && $lastMileage) {
+        if ($entry->mileage && $entry->fuel_calc_consumption && $entry->fuel_type == 1 && !is_null($lastMileage)) {
 
             $lastFull = $this->mapper->getLastFull($id, $entry->mileage, $entry->car);
             if ($lastFull) {
