@@ -9,7 +9,7 @@
         <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> <a href="{{path_for('finances_budgets_edit')}}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["EDIT"]}}</button></a></div>
         <div class="page-content">
             {% for budget in budgets if budget.is_hidden == 0 %}
-                <div class="budget-entry">
+                <div class="budget-entry" data-budget="{{ budget.value }}">
                     <h3><a href="{{path_for('finances_stats_budget', {'budget' : budget.id})}}">{{budget.description|raw}}</a></h3>
                     {% if budget.id in budget_categories|keys %}
                         <div class="categories-list">
