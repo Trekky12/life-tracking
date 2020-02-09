@@ -8,13 +8,13 @@
         <div class="page-header"><h2>{{lang["BOARDS"]}}</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="financeForm" action="{{  path_for('boards_save', {'id' : entry.id}) }}" method="POST">
+            <form class="form-horizontal" action="{{  path_for('boards_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 
                 {% if not entry is null %}
-                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
-                    <input name="hash"  type="hidden" value="{{entry.hash}}">
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                    <input name="hash" type="hidden" value="{{entry.hash}}">
                 {% endif %}
 
                 

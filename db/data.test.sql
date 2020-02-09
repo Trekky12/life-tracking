@@ -76,3 +76,22 @@ INSERT INTO crawlers_links (id, crawler, createdBy, changedBy, name, link, paren
 INSERT INTO crawlers_headers (id, crawler, createdBy, changedBy, headline, field_name, field_link, field_content, sortable, diff, prefix, suffix, sort, datatype, position) VALUES 
 (1, 1, 1, 1, 'title', 'title', 'link', NULL, 1, 0, NULL, NULL, NULL, NULL, 1),
 (2, 1, 1, 1, 'number', 'value', NULL, NULL, 1, 0, NULL, NULL, 'desc', 'DECIMAL', 2);
+
+INSERT INTO boards (id, user, name, hash, archive) VALUES
+(1, 1, 'Test Board', 'ABCabc123', 0),
+(2, 1, 'Test Board (no access to owner)', 'DEFdef456', 0);
+INSERT INTO boards_user (board, user) VALUES
+(1, 1),
+(1, 2),
+(2, 3);
+INSERT INTO boards_labels (id, board, user, name, background_color, text_color) VALUES
+(1, 1, 1, 'Test Label', '#ffff00', '#000000');
+INSERT INTO boards_stacks (id, board, createdBy, changedBy, `name`, archive, `position`) VALUES
+(1, 1, 1, 1, 'Test Stack', 0, 999);
+INSERT INTO boards_cards (id, stack, createdBy, changedBy, title, date, time, description, archive, position, hash) VALUES
+(1, 1, 1, 1, 'Test Card', '2020-01-01', '12:00:00', 'Test Description', 0, 999, 'ABCabc123');
+INSERT INTO boards_cards_label (card, label) VALUES
+(1, 1);
+INSERT INTO boards_cards_user (card, user) VALUES
+(1, 1),
+(1, 2);

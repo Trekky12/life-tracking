@@ -67,7 +67,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
         $id = $request->getAttribute('id');
         try {
-            $data1 = null;
+            $data1 = [];
             $this->preSave($id, $data1, $request);
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
@@ -92,6 +92,14 @@ class Controller extends \App\Base\Controller {
             $entry->name = htmlspecialchars_decode($entry->name);
         }
         return $entry;
+    }
+
+    protected function preDelete($id, Request $request) {
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_stacks = $this->board_mapper->getUserStacks($user);
+        if (!in_array($id, $user_stacks)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+        }
     }
 
     protected function getElementViewRoute($entry) {

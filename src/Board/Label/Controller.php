@@ -45,6 +45,15 @@ class Controller extends \App\Base\Controller {
         return $entry;
     }
 
+    protected function preDelete($id, Request $request) {
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_boards = $this->board_mapper->getElementsOfUser($user);
+        $label = $this->mapper->get($id);
+        if (!in_array($label->board, $user_boards)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+        }
+    }
+
     protected function getElementViewRoute($entry) {
         $board = $this->getParentObjectMapper()->get($entry->getParentID());
         $this->element_view_route_params["hash"] = $board->getHash();

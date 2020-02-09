@@ -14,7 +14,6 @@ class Controller extends \App\Base\Controller {
     private $board_mapper;
     private $stack_mapper;
     private $label_mapper;
-    
     private $users_preSave = array();
     private $users_afterSave = array();
 
@@ -311,18 +310,27 @@ class Controller extends \App\Base\Controller {
         return true;
     }
 
+    protected function preDelete($id, Request $request) {
+        $user = $this->ci->get('helper')->getUser()->id;
+        $user_cards = $this->board_mapper->getUserCards($user);
+        if (!in_array($id, $user_cards)) {
+            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+        }
+    }
+
     protected function getParentObjectMapper() {
         return $this->stack_mapper;
     }
 
     protected function getAffectedUsers($entry) {
-        $board_id = $this->mapper->getCardBoard($entry->id);
-        return $this->board_mapper->getUsers($board_id);
+        $stack = $this->stack_mapper->get($entry->stack);
+        $board = $this->board_mapper->get($stack->board);
+        return $this->board_mapper->getUsers($board->id);
     }
 
     protected function getElementViewRoute($entry) {
-        $board_id = $this->mapper->getCardBoard($entry->id);
-        $board = $this->board_mapper->get($board_id);
+        $stack = $this->stack_mapper->get($entry->stack);
+        $board = $this->board_mapper->get($stack->board);
         $this->element_view_route_params["hash"] = $board->getHash();
         return parent::getElementViewRoute($entry);
     }

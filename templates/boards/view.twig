@@ -56,7 +56,6 @@
             <div class="modal-header">{{lang["CARD"]}}<span class="edit-bar"></span></div>
             <form>
                 <div class="modal-content">
-                    <form>
                         <input name="stack" type="hidden" value="" class="reset-field"/>
                         <input name="id" type="hidden" value="" class="reset-field"/>
                         <input name="position" type="hidden" value="" class="reset-field"/>
@@ -137,7 +136,7 @@
                 <div class="modal-footer">
                     <div class="buttons">
                         <input id="card-add-btn" type="submit" class="submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
-                        <button id="card-close-btn" class="button gray cancel"type="button">{{lang["CANCEL"]}}</button>
+                        <button id="card-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
                     </div>
                 </div>
             </form>
@@ -149,7 +148,6 @@
             <div class="modal-header">{{lang["LABEL"]}}<span class="edit-bar"></span></div>
             <form>
                 <div class="modal-content">
-                    <form>
                         <input name="board" type="hidden" value="{{board.id}}"/>
                         <input name="id" type="hidden" value="" class="reset-field"/>
                         <div class="form-group">
@@ -227,7 +225,7 @@
                 <div class="stack stack-border{%if stack.archive == 1%} archived{%endif%}" id="stack_{{stack.id}}" data-stack="{{stack.id}}">
 
                     <div class="stack-header" data-stack="{{stack.id}}">
-                        <span class="title">{{stack.name|raw}}</a></span>
+                        <span class="title">{{stack.name|raw}}</span>
                         <span class="edit-bar">
                             <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                         </span>
