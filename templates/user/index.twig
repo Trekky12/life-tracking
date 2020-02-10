@@ -24,15 +24,15 @@
                 <tbody>
                     {% for entry in list %}
                         <tr>
-                            <td data-title="{{lang["LOGIN"]}}">{{entry.login}}</td> 
-                            <td data-title="{{lang["NAME"]}}">{{entry.name}}</td> 
-                            <td data-title="{{lang["LASTNAME"]}}">{{entry.lastname}}</td> 
-                            <td data-title="{{lang["MAIL"]}}">{{entry.mail}}</td>
-                            <td data-title="{{lang["ROLE"]}}">{{entry.role}}</td>
+                            <td>{{entry.login}}</td> 
+                            <td>{{entry.name}}</td> 
+                            <td>{{entry.lastname}}</td> 
+                            <td>{{entry.mail}}</td>
+                            <td>{{entry.role}}</td>
                             <td><a href="{{  path_for('users_edit', {'id' : entry.id}) }}"><span class="fas fa-edit fa-lg"></span></a></td>
                             <td><a href="#" data-url="{{  path_for('users_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
                             <td>{% if entry.mail %}<a href="{{  path_for('users_test_mail', {'user' : entry.id}) }}"><span class="fas fa-envelope fa-lg"></span> {{lang["TESTMAIL"]}}</a>{%endif%}</td>
-                            <td><a href="{{  path_for('users_mobile_favorites_admin', {'user': entry.id}) }}">{{ lang["MOBILE_FAVORITES"] }}</a>
+                            <td><a href="{{  path_for('users_mobile_favorites_admin', {'user': entry.id}) }}">{{ lang["MOBILE_FAVORITES"] }}</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
