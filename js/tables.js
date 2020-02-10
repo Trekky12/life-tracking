@@ -143,6 +143,11 @@ var usersTable = new JSTable("#users_table", {
     labels: tableLabels,
     columns: [
         {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
             select: [5, 6, 7, 8],
             sortable: false,
             searchable: false

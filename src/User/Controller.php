@@ -16,7 +16,7 @@ class Controller extends \App\Base\Controller {
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->user_mapper->getAll();
+        $list = $this->user_mapper->getAll('login');
         return $this->ci->view->render($response, 'user/index.twig', ['list' => $list]);
     }
 
