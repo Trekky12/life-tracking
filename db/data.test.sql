@@ -105,3 +105,6 @@ INSERT INTO boards_cards_label (card, label) VALUES
 INSERT INTO boards_cards_user (card, user) VALUES
 (1, 1),
 (1, 2);
+
+INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
+INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (2, 'Test Notification Category', 'test_notification_cat', 0);

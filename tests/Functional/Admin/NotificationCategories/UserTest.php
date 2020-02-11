@@ -11,7 +11,7 @@ class UserTest extends BaseTestCase {
     protected $uri_save = "/notifications/categories/save/";
     protected $uri_delete = "/notifications/categories/delete/";
     
-    protected $TEST_CATEGORY = 1;
+    protected $TEST_CATEGORY = 2;
 
     protected function setUp(): void {
         $this->login("user", "user");

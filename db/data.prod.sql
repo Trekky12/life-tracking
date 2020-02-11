@@ -5,3 +5,5 @@ INSERT INTO global_users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY
 INSERT INTO finances_categories (id, user, name, is_default) VALUES (1, 1, 'not categorized', 1);
 
 INSERT INTO finances_paymethods (id, user, name, is_default) VALUES (1, 1, 'default paymethod', 1); 
+
+INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
