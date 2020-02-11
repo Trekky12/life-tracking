@@ -45,7 +45,7 @@ class TimesheetTestBase extends BaseTestCase {
         $start = new \DateTime($data["start"]);
         $end = new \DateTime($data["end"]);
 
-        $dateTD = !is_null($data["start"]) ? $fmtDate->format($start) : !is_null($data["end"]) ? $fmtDate->format($end) : "";
+        $dateTD = !is_null($data["start"]) ? $fmtDate->format($start) : (!is_null($data["end"]) ? $fmtDate->format($end) : "");
         $startTD = !is_null($data["start"]) ? $fmtTime->format($start) : "";
         $endTD = !is_null($data["end"]) ? $fmtTime->format($end) : "";
 

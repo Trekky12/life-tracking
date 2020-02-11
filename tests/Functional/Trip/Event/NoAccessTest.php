@@ -26,30 +26,34 @@ class NoAccessTest extends TripTestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+        
+        return $this->extractJSCSRF($response);
     }
 
     /**
      * Create the event
-     * @depends testGetParentInList
+     * @depends testGetChildEdit
      */
-    public function testPostChildSave(array $tokens) {
+    public function testPostChildSave(array $token) {
 
         $data = [
             "name" => "Test",
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH), array_merge($data, $tokens[2]));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH), array_merge($data, $token));
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+        
+        return $this->extractJSCSRF($response);
     }
 
     /**
      * Delete event
-     * @depends testGetParentInList
+     * @depends testPostChildSave
      */
-    public function testDeleteChild(array $tokens) {
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_TRIP_HASH) . $this->TEST_TRIP_EVENT_ID, $tokens[3]);
+    public function testDeleteChild(array $token) {
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_TRIP_HASH) . $this->TEST_TRIP_EVENT_ID, $token);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

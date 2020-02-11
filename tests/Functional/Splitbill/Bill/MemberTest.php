@@ -6,7 +6,6 @@ use Tests\Functional\Splitbill\SplitbillTestBase;
 
 class MemberTest extends SplitbillTestBase {
 
-    protected $TEST_GROUP_ID = 1;
     protected $TEST_GROUP_HASH = "ABCabc123";
     
     protected function setUp(): void {
