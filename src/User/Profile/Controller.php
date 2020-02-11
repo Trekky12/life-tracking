@@ -73,6 +73,32 @@ class Controller extends \App\Base\Controller {
 
         if ($request->isPost()) {
 
+            $settings = $this->ci->get('settings');
+            $folder = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $settings['app']['upload_folder'];
+
+            /**
+             * Delete Image
+             */
+            $body = $request->getParsedBody();
+            $delete = array_key_exists("delete_image", $body) ? intval(filter_var($body["delete_image"], FILTER_SANITIZE_NUMBER_INT)) == 1 : false;
+            if ($delete) {
+                $thumbnail = $user->get_thumbnail('small');
+                $thumbnail2 = $user->get_thumbnail('mini');
+                $image = $user->get_image();
+                unlink($folder . "/" . $thumbnail);
+                unlink($folder . "/" . $thumbnail2);
+                unlink($folder . "/" . $image);
+
+                $this->user_mapper->update_image($user->id, null);
+                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PROFILE_IMAGE_DELETED"));
+                $this->ci->get('flash')->addMessage('message_type', 'success');
+
+                $this->logger->addNotice("Update Profile Image, No File", array("user" => $user->id));
+                return $response->withRedirect($this->ci->get('router')->pathFor('users_profile_image'), 301);
+            }
+
+
+
             /**
              * Handle uploaded file
              * @link https://akrabat.com/psr-7-file-uploads-in-slim-3/
@@ -87,16 +113,13 @@ class Controller extends \App\Base\Controller {
 
             $image = $files['image'];
 
-            $settings = $this->ci->get('settings');
-            $folder = $settings['app']['upload_folder'];
-
             if ($image->getError() === UPLOAD_ERR_OK) {
 
                 $uploadFileName = $image->getClientFilename();
                 $file_extension = pathinfo($uploadFileName, PATHINFO_EXTENSION);
                 $file_wo_extension = pathinfo($uploadFileName, PATHINFO_FILENAME);
                 $file_name = hash('sha256', time() . rand(0, 1000000) . $user->id) . '_' . $file_wo_extension;
-                $complete_file_name = $folder . '/' . $file_name;
+                $complete_file_name = $folder . DIRECTORY_SEPARATOR . $file_name;
 
                 $image->moveTo($complete_file_name . '.' . $file_extension);
                 /**
@@ -122,19 +145,9 @@ class Controller extends \App\Base\Controller {
 
                 $this->logger->addNotice("Update Profile Image, Image Set", array("user" => $user->id, "image" => $file_name . '.' . $file_extension));
             } else if ($image->getError() === UPLOAD_ERR_NO_FILE) {
+                $this->logger->addError("Update Profile Image, Image Error", array("user" => $user->id, "files" => $files, "error" => "No File"));
 
-                $thumbnail = $user->get_thumbnail('small');
-                $thumbnail2 = $user->get_thumbnail('mini');
-                $image = $user->get_image();
-                unlink($folder . "/". $thumbnail);
-                unlink($folder . "/". $thumbnail2);
-                unlink($folder . "/". $image);
-
-                $this->user_mapper->update_image($user->id, null);
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PROFILE_IMAGE_DELETED"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
-
-                $this->logger->addNotice("Update Profile Image, No File", array("user" => $user->id));
+                throw new \Exception($this->ci->get('helper')->getTranslatedString("FILE_UPLOAD_ERROR"));
             }
             return $response->withRedirect($this->ci->get('router')->pathFor('users_profile_image'), 301);
         }

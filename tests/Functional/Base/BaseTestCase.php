@@ -57,12 +57,12 @@ class BaseTestCase extends TestCase {
         
     }
 
-    public function request($requestMethod, $requestUri, $requestData = null, $auth = array()) {
-        return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth);
-        //return $this->runApp($requestMethod, $requestUri, $requestData, $auth);
+    public function request($requestMethod, $requestUri, $requestData = null, $auth = array(), $form_data = null) {
+        return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth, $form_data);
+        //return $this->runApp($requestMethod, $requestUri, $requestData, $auth, $form_data);
     }
 
-    public function HTTP_request($requestMethod, $requestUri, $requestData = null, $auth = array()) {
+    public function HTTP_request($requestMethod, $requestUri, $requestData = null, $auth = array(), $form_data = null) {
 
         $client = new \GuzzleHttp\Client([
             'proxy' => '',
@@ -78,6 +78,26 @@ class BaseTestCase extends TestCase {
         if (isset($requestData)) {
             $headers['Content-Type'] = 'application/x-www-form-urlencoded';
             $body = http_build_query($requestData);
+        }
+
+        // handle form data
+        if (isset($form_data)) {
+            $headers = [];
+            $multipart_data = [];
+            foreach ($form_data as $fData) {
+                $multipart_data[] = [
+                    'name' => $fData['name'],
+                    'contents' => fopen($fData['contents'], 'r'),
+                    'filename' => $fData['filename']
+                ];
+            }
+            foreach ($requestData as $rKey => $rData) {
+                $multipart_data[] = [
+                    'name' => $rKey,
+                    'contents' => $rData,
+                ];
+            }
+            $body = new \GuzzleHttp\Psr7\MultipartStream($multipart_data);
         }
 
         $request = new \GuzzleHttp\Psr7\Request($requestMethod, $requestUri, $headers, $body);
@@ -101,7 +121,7 @@ class BaseTestCase extends TestCase {
         if (!is_null($setTokenCookie)) {
             self::$token = $setTokenCookie->getValue();
         }
-        
+
         $setSESSIONCookie = $setCookies->get('PHPSESSID');
         if (!is_null($setSESSIONCookie)) {
             self::$SESSION = $setSESSIONCookie->getValue();
@@ -119,7 +139,7 @@ class BaseTestCase extends TestCase {
      * @param array|object|null $requestData the request data
      * @return \Slim\Http\Response
      */
-    public function runApp($requestMethod, $requestUri, $requestData = null, $auth = array()) {
+    public function runApp($requestMethod, $requestUri, $requestData = null, $auth = array(), $form_data = null) {
 
         // Create a mock environment for testing with
         $environment = Environment::mock(
@@ -141,6 +161,19 @@ class BaseTestCase extends TestCase {
 
         if (isset($auth['user'])) {
             $request = $request->withHeader('Authorization', 'Basic ' . base64_encode("${auth['user']}:${auth['pass']}"));
+        }
+
+        // handle form data
+        if (isset($form_data)) {
+            $files = [];
+            foreach ($form_data as $f) {
+                // create a copy which could be moved
+                $destinationFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $f['filename'];
+                copy($f['contents'], $destinationFile);
+
+                $files[$f['name']] = new \Slim\Http\UploadedFile($destinationFile, $f['filename'], 'image/png', filesize($f['contents']));
+            }
+            $request = $request->withUploadedFiles($files);
         }
 
         // Set up a response object

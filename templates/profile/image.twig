@@ -11,7 +11,7 @@
             <form action="{{  path_for('users_profile_image') }}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                
+
                 <h3>{{lang["IMAGE"]}}</h3>
                 <div class="form-group">
                     {% if not user is null and user.get_thumbnail() != ''%}
@@ -20,11 +20,16 @@
                     <input name="image" id="image" class="form-control" type="file">
                 </div>
                 <div class="form-group">
+                    <label class="checkbox" for="checkboxDeleteImage">
+                        <input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
+                        {{lang["DELETE"]}}
+                    </label>
+                </div>
+                <div class="form-group">
                     <button type="submit">{{lang["SAVE"]}}</button>
                 </div>
             </form>
         </div>
     </div>
 
-</div>
 {% endblock %}
