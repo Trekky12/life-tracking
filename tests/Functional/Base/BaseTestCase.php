@@ -34,6 +34,12 @@ class BaseTestCase extends TestCase {
     protected $useCRSF = true;
 
     /**
+     * Variables
+     */
+    protected $USE_GUZZLE = true;
+    protected $USER_AGENT = 'PHPUnit Test';
+
+    /**
      * save login token
      * @var string
      */
@@ -63,8 +69,11 @@ class BaseTestCase extends TestCase {
     }
 
     public function request($requestMethod, $requestUri, $requestData = [], $auth = array(), $form_data = null) {
-        return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth, $form_data);
-        //return $this->runApp($requestMethod, $requestUri, $requestData, $auth, $form_data);
+        if ($this->USE_GUZZLE) {
+            return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth, $form_data);
+        } else {
+            return $this->runApp($requestMethod, $requestUri, $requestData, $auth, $form_data);
+        }
     }
 
     public function HTTP_request($requestMethod, $requestUri, $requestData = [], $auth = array(), $form_data = null) {
@@ -83,7 +92,7 @@ class BaseTestCase extends TestCase {
         }
 
         // Add request data, if it exists
-        $headers = [];
+        $headers = ['User-Agent' => $this->USER_AGENT];
         $body = null;
         if (!empty($requestData)) {
             $headers['Content-Type'] = 'application/x-www-form-urlencoded';

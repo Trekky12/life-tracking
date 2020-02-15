@@ -22,11 +22,11 @@
                 <tbody>
                     {% for entry in list %}
                         <tr>
-                            <td data-title="{{lang["LOGIN"]}}">{{users[entry.user].login}}</td> 
-                            <td data-title="{{lang["IP_ADDRESS"]}}">{{entry.ip}}</td> 
-                            <td data-title="{{lang["USER_AGENT"]}}">{{entry.agent}}</td> 
-                            <td data-title="{{lang["CREATED_ON"]}}">{{entry.createdOn}}</td> 
-                            <td data-title="{{lang["CHANGED_ON"]}}">{{entry.changedOn}}</td>
+                            <td>{{users[entry.user].login}}</td> 
+                            <td>{{entry.ip}}</td> 
+                            <td>{{entry.agent}}</td> 
+                            <td>{{entry.createdOn}}</td> 
+                            <td>{{entry.changedOn}}</td>
                             
                             
                             <td><a href="{{  path_for('notifications_clients_test', {'id' : entry.id}) }}"><span class="far fa-bell fa-lg"></span></a></td>

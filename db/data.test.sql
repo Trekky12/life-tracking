@@ -77,7 +77,7 @@ INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, no
 (2, 1, 1, 1, '2020-01-01', 0, 1, 'Test', 0, 100, 0, 100, '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', 1, 1);
 
 INSERT INTO crawlers (id, user, name, hash, filter) VALUES (1, 1, 'Test Crawler', 'ABCabc123', 'createdOn');
-INSERT INTO crawlers_user (crawler, user) VALUES
+INSERT INTO crawlers_user (crawler, user) VALUES 
 (1, 1),
 (1, 2);
 INSERT INTO crawlers_links (id, crawler, createdBy, changedBy, name, link, parent, position) VALUES (1, 1, 2, 2, 'Test Category', 'http://localhost', NULL, 1);
@@ -103,7 +103,8 @@ INSERT INTO boards_cards_user (card, user) VALUES
 (1, 1),
 (1, 2);
 
-INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
-INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (2, 'Test Notification Category', 'test_notification_cat', 0);
+INSERT INTO notifications_categories (id, name, identifier, internal) VALUES 
+(1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1),
+(2, 'Test Notification Category', 'test_notification_cat', 0);
 
-INSERT INTO notifications_clients (id, user, endpoint, auth, p256dh, contentEncoding, ip, agent) VALUES (1, 1, 'endpoint', 'auth', 'p256dh', 'contentEncoding', '127.0.0.1', 'TEST');
+INSERT INTO notifications_clients (id, user, endpoint, authToken, publicKey, contentEncoding, ip, agent) VALUES (1, 1, 'endpoint', 'auth', 'p256dh', 'contentEncoding', '127.0.0.1', 'TEST');
