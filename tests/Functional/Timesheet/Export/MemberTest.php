@@ -20,7 +20,6 @@ class MemberTest extends TimesheetTestBase {
      * Test Exporting 
      */
     public function testTimesheetsSheetsExport() {
-
         $response = $this->request('GET', $this->getURISheetsExport($this->TEST_PROJECT_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());

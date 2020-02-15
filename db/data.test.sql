@@ -105,3 +105,5 @@ INSERT INTO boards_cards_user (card, user) VALUES
 
 INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
 INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (2, 'Test Notification Category', 'test_notification_cat', 0);
+
+INSERT INTO notifications_clients (id, user, endpoint, auth, p256dh, contentEncoding, ip, agent) VALUES (1, 1, 'endpoint', 'auth', 'p256dh', 'contentEncoding', '127.0.0.1', 'TEST');

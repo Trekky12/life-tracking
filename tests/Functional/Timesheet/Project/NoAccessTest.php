@@ -48,17 +48,12 @@ class NoAccessTest extends TimesheetTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        $token = $this->extractJSCSRF($response);
-
-        return $token;
     }
 
     /**
      * 
-     * @depends testGetParentEdit
      */
-    public function testPostParentSave(array $token) {
+    public function testPostParentSave() {
 
         $data = [
             "id" => $this->TEST_PROJECT_ID,
@@ -66,22 +61,17 @@ class NoAccessTest extends TimesheetTestBase {
             "name" => "Testproject Update",
             "users" => [1, 3]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_PROJECT_ID, array_merge($data, $token));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_PROJECT_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        $new_token = $this->extractJSCSRF($response);
-
-        return $new_token;
     }
 
     /**
      * Delete
-     * @depends testPostParentSave
      */
-    public function testDeleteParent(array $token) {
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_PROJECT_ID, $token);
+    public function testDeleteParent() {
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_PROJECT_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

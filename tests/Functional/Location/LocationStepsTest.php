@@ -64,18 +64,15 @@ class LocationStepsTest extends BaseTestCase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('<form class="form-horizontal" id="locationForm" action="/location/steps/' . $steps_data["date"] . '/save/" method="POST">', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
      * 
      * @depends testMonthOverview
-     * @depends testGetStepsEdit
      */
-    public function testPostStepsEdit($steps_data, $csrf) {
+    public function testPostStepsEdit($steps_data) {
         $data = ["steps" => rand(0, 10000)];
-        $response = $this->request('POST', '/location/steps/' . $steps_data["date"] . '/save/', array_merge($data, $csrf));
+        $response = $this->request('POST', '/location/steps/' . $steps_data["date"] . '/save/', $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals("/location/steps/" . $steps_data["year"] . "/" . $steps_data["month"] . "/", $response->getHeaderLine("Location"));
@@ -91,14 +88,14 @@ class LocationStepsTest extends BaseTestCase {
     public function testEditedSteps($steps_data, $edited_steps_data) {
 
         $response = $this->request('GET', "/location/steps/" . $steps_data["year"] . "/" . $steps_data["month"] . "/");
-        
+
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $element = $this->getElement($body, $steps_data["date"]);
         $new_steps = intval(filter_var($element["steps"], FILTER_SANITIZE_NUMBER_INT));
-        
-        if($new_steps != $edited_steps_data["steps"]){
+
+        if ($new_steps != $edited_steps_data["steps"]) {
             $this->fail("Wrong value for steps!");
         }
     }

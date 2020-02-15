@@ -31,18 +31,12 @@ class NoAccessTest extends BoardTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-
-        // get multiple tokens
-        $csrf = $this->extractJSCSRF($response);
-        $tokens = $this->getCSRFTokens($csrf);
-        return $tokens;
     }
 
     /**
      * Create the label
-     * @depends testGetViewBoard
      */
-    public function testPostChildSave(array $tokens) {
+    public function testPostChildSave() {
         $data = [
             "name" => "Test Label 2",
             "board" => $this->TEST_BOARD_ID,
@@ -50,7 +44,7 @@ class NoAccessTest extends BoardTestBase {
             "text_color" => '#000FFF',
             "background_color" => '#CCCCCC',
         ];
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $tokens[0]));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 
@@ -78,9 +72,8 @@ class NoAccessTest extends BoardTestBase {
 
     /**
      * Update / Check Update
-     * @depends testGetViewBoard
      */
-    public function testPostChildUpdate(array $tokens) {
+    public function testPostChildUpdate() {
         $data = [
             "name" => "Test Label 2 Updated",
             "board" => $this->TEST_BOARD_ID,
@@ -88,7 +81,7 @@ class NoAccessTest extends BoardTestBase {
             "text_color" => '#000EEE',
             "background_color" => '#000000',
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_LABEL_ID, array_merge($data, $tokens[1]));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_LABEL_ID, $data);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -103,11 +96,10 @@ class NoAccessTest extends BoardTestBase {
 
     /**
      * Delete label
-     * @depends testGetViewBoard
      */
-    public function testDeleteChild(array $tokens) {
+    public function testDeleteChild() {
 
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_LABEL_ID, $tokens[2]);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_LABEL_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

@@ -35,14 +35,12 @@ class MemberTest extends CrawlerTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testGetAddElement
+     * 
      */
-    public function testPostAddElement($csrf_data) {
+    public function testPostAddElement() {
 
         $data = [
             "headline" => "Test Header",
@@ -58,7 +56,7 @@ class MemberTest extends CrawlerTestBase {
             "datatype" => "CHAR"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH), array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH), $data);
 
         $this->assertEquals(200, $response->getStatusCode());
         
@@ -69,11 +67,7 @@ class MemberTest extends CrawlerTestBase {
 
     /**
      */
-    public function testPostElementCreatedSave() {
-        
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-        
+    public function testPostElementCreatedSave() {       
         $data = [
             "id" => $this->TEST_CRAWLER_HEADER_ID,
             "headline" => "Test Header Updated",
@@ -89,7 +83,7 @@ class MemberTest extends CrawlerTestBase {
             "datatype" => "DECIMAL"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_HEADER_ID, array_merge($data, $csrf));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_HEADER_ID, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
         
@@ -100,11 +94,7 @@ class MemberTest extends CrawlerTestBase {
     /**
      */
     public function testDeleteElement() {
-
-        $response1 = $this->request('GET', $this->getURIChildOverview($this->TEST_CRAWLER_HASH));
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_HEADER_ID, $csrf);
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_HEADER_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

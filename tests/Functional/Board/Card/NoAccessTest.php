@@ -31,18 +31,12 @@ class NoAccessTest extends BoardTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-
-        // get multiple tokens
-        $csrf = $this->extractJSCSRF($response);
-        $tokens = $this->getCSRFTokens($csrf);
-        return $tokens;
     }
 
     /**
      * Create the card
-     * @depends testGetViewBoard
      */
-    public function testPostChildSave(array $tokens) {
+    public function testPostChildSave() {
         $data = [
             "title" => "Test Card 2",
             "stack" => $this->TEST_STACK_ID,
@@ -55,7 +49,7 @@ class NoAccessTest extends BoardTestBase {
             "users" => [1, 2],
             "labels" => [1]
         ];
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $tokens[0]));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 
@@ -81,9 +75,8 @@ class NoAccessTest extends BoardTestBase {
 
     /**
      * Update / Check Update
-     * @depends testGetViewBoard
      */
-    public function testPostChildUpdate(array $tokens) {
+    public function testPostChildUpdate() {
         $data = [
             "title" => "Test Card 2 Updated",
             "stack" => $this->TEST_STACK_ID,
@@ -96,7 +89,7 @@ class NoAccessTest extends BoardTestBase {
             "users" => [1, 2],
             "labels" => [1]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_CARD_ID, array_merge($data, $tokens[1]));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_CARD_ID, $data);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -111,11 +104,10 @@ class NoAccessTest extends BoardTestBase {
 
     /**
      * Delete card
-     * @depends testGetViewBoard
      */
-    public function testDeleteChild(array $tokens) {
+    public function testDeleteChild() {
 
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_CARD_ID, $tokens[2]);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_CARD_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

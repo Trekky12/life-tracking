@@ -24,14 +24,12 @@ class ChangePWWrongNewTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<form action="/profile/changepassword" method="POST">', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testOverview
+     * 
      */
-    public function testChangePasswordWrongNew1($csrf_data) {
+    public function testChangePasswordWrongNew1() {
 
         $data = [
             "oldpassword" => "user",
@@ -39,20 +37,18 @@ class ChangePWWrongNewTest extends BaseTestCase {
             "newpassword2" => "user_new"
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Beide neuen Passwörter müssen übereinstimmen", $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testChangePasswordWrongNew1
+     * 
      */
-    public function testChangePasswordWrongNew2($csrf_data) {
+    public function testChangePasswordWrongNew2() {
 
         $data = [
             "oldpassword" => "user",
@@ -60,7 +56,7 @@ class ChangePWWrongNewTest extends BaseTestCase {
             "newpassword2" => "user_new1"
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 

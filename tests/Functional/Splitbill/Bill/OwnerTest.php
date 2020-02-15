@@ -25,15 +25,12 @@ class OwnerTest extends SplitbillTestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<form class=\"form-horizontal\" id=\"splitbillsBillsForm\" action=\"" . $this->getURIChildSave($this->TEST_GROUP_HASH) . "\" method=\"POST\">", $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
      * Create the Bill
-     * @depends testGetChildEdit
      */
-    public function testPostChildSave(array $csrf_data) {
+    public function testPostChildSave() {
         $data = [
             "name" => "Testbill",
             "date" => date('Y-m-d'),
@@ -53,7 +50,7 @@ class OwnerTest extends SplitbillTestBase {
             "notice" => "Test",
             "sbgroup" => $this->TEST_GROUP_HASH
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH), array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH), $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_GROUP_HASH), $response->getHeaderLine("Location"));
@@ -76,11 +73,7 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id_edit"]);
     }
 
     /**
@@ -91,15 +84,15 @@ class OwnerTest extends SplitbillTestBase {
      * Edit Bill
      * @depends testGetChildCreated
      */
-    public function testGetChildCreatedEdit(array $result_data_child) {
+    public function testGetChildCreatedEdit(int $bill_id) {
 
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $result_data_child["id"]);
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $bill_id);
 
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $result_data_child["id"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $bill_id . "\">", $body);
 
         $matches = [];
         $re = '/<form class="form-horizontal" id=\"splitbillsBillsForm\" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">/s';
@@ -108,20 +101,16 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
-        $result = [];
-        $result["id"] = $matches["id"];
-        $result["csrf"] = $this->extractFormCSRF($response);
-
-        return $result;
+        return intval($matches["id"]);
     }
 
     /**
      * 
      * @depends testGetChildCreatedEdit
      */
-    public function testPostChildCreatedSave(array $result_data_child) {
+    public function testPostChildCreatedSave(int $bill_id) {
         $data = [
-            "id" => $result_data_child["id"],
+            "id" => $bill_id,
             "name" => "Testbill Updated",
             "sbgroup" => $this->TEST_GROUP_HASH,
             "date" => date('Y-m-d'),
@@ -140,7 +129,7 @@ class OwnerTest extends SplitbillTestBase {
             ]
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH) . $bill_id, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_GROUP_HASH), $response->getHeaderLine("Location"));
@@ -164,19 +153,15 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id_edit"]);
     }
 
     /**
      * Delete bill
      * @depends testGetChildUpdated
      */
-    public function testDeleteChild(array $result_data_child) {
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_GROUP_HASH) . $result_data_child["id"], $result_data_child["csrf"]);
+    public function testDeleteChild(int $bill_id) {
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_GROUP_HASH) . $bill_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

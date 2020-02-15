@@ -17,7 +17,7 @@ class NoAccessTest extends SplitbillTestBase {
     protected function tearDown(): void {
         $this->logout();
     }
-    
+
     /**
      * Add new Bill
      */
@@ -28,35 +28,29 @@ class NoAccessTest extends SplitbillTestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * Create the Bill
-     * @depends testGetChildEdit
      */
-    public function testPostChildSave(array $token) {
+    public function testPostChildSave() {
 
         $data = [
             "name" => "Test"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH), array_merge($data, $token));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH), $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * Delete Bill
-     * @depends testPostChildSave
      */
-    public function testDeleteChild(array $token) {
+    public function testDeleteChild() {
 
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_GROUP_HASH) . $this->TEST_BILL_ID, $token);
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_GROUP_HASH) . $this->TEST_BILL_ID);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

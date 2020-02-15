@@ -26,21 +26,18 @@ class MemberTest extends TimesheetTestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->getURIChildSave($this->TEST_PROJECT_HASH) . "\" method=\"POST\">", $body);
-        return $this->extractFormCSRF($response);
     }
 
     /**
      * Create the sheet
-     * @depends testGetChildEdit
      */
-    public function testPostChildSave(array $csrf_data) {
-
+    public function testPostChildSave() {
         $data = [
             "start" => date('Y-m-d') . " 12:00",
             "end" => date('Y-m-d') . " 14:10",
             "notice" => "Test"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_PROJECT_HASH), $response->getHeaderLine("Location"));
@@ -65,12 +62,8 @@ class MemberTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        
+        return intval($row["id_edit"]);
     }
 
     /**
@@ -81,14 +74,14 @@ class MemberTest extends TimesheetTestBase {
      * Edit Sheet
      * @depends testGetChildCreated
      */
-    public function testGetChildCreatedEdit(array $result_data_child) {
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $result_data_child["id"]);
+    public function testGetChildCreatedEdit(int $timesheet_id) {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $timesheet_id);
 
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $result_data_child["id"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $timesheet_id . "\">", $body);
 
         $matches = [];
         $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">/s';
@@ -96,27 +89,22 @@ class MemberTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
-
-        $result = [];
-        $result["id"] = $matches["id"];
-        $result["csrf"] = $this->extractFormCSRF($response);
-
-        return $result;
+        
+        return intval($matches["id"]);
     }
 
     /**
      * 
      * @depends testGetChildCreatedEdit
      */
-    public function testPostChildCreatedSave(array $result_data_child) {
-
+    public function testPostChildCreatedSave(int $timesheet_id) {
         $data = [
-            "id" => $result_data_child["id"],
+            "id" => $timesheet_id,
             "start" => date('Y-m-d') . " 10:02",
             "end" => date('Y-m-d') . " 18:55",
             "notice" => "Testnotice"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $timesheet_id, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_PROJECT_HASH), $response->getHeaderLine("Location"));
@@ -131,7 +119,6 @@ class MemberTest extends TimesheetTestBase {
      * @depends testPostChildCreatedSave
      */
     public function testGetChildUpdated(array $data) {
-
         $response = $this->request('GET', $this->getURIView($this->TEST_PROJECT_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -142,21 +129,17 @@ class MemberTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        
+        return intval($row["id_edit"]);
     }
 
     /**
      * Delete sheet
      * @depends testGetChildUpdated
      */
-    public function testDeleteChild(array $result_data_child) {
+    public function testDeleteChild(int $timesheet_id) {
 
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $result_data_child["id"], $result_data_child["csrf"]);
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $timesheet_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

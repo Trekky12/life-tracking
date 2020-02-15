@@ -30,22 +30,20 @@ class MemberTest extends BoardTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<div class="board-header">', $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * Create the stack
      * @depends testGetViewBoard
      */
-    public function testPostChildSave(array $csrf_data) {
+    public function testPostChildSave() {
         $data = [
             "name" => "Test Stack 2",
             "board" => $this->TEST_BOARD_ID,
             "id" => null,
             "position" => '1'
         ];
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 
@@ -70,11 +68,7 @@ class MemberTest extends BoardTestBase {
 
         $this->assertArrayHasKey("id", $row);
 
-        $result = [];
-        $result["id"] = $row["id"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id"]);
     }
 
     /**
@@ -82,9 +76,9 @@ class MemberTest extends BoardTestBase {
      * @depends testPostChildSave
      * @depends testGetChildCreated
      */
-    public function testGetChildData(array $data, array $result_data_child) {
+    public function testGetChildData(array $data, int $stack_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $result_data_child["id"]);
+        $response = $this->request('GET', $this->uri_edit . $stack_id);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -94,21 +88,21 @@ class MemberTest extends BoardTestBase {
 
         $this->assertSame($data["name"], $json["entry"]["name"]);
         $this->assertSame($data["position"], $json["entry"]["position"]);
-        $this->assertSame($result_data_child["id"], $json["entry"]["id"]);
+        $this->assertSame($stack_id, intval($json["entry"]["id"]));
     }
 
     /**
      * Update / Check Update
      * @depends testGetChildCreated
      */
-    public function testPostChildUpdate(array $result_data_child) {
+    public function testPostChildUpdate(int $stack_id) {
         $data = [
             "name" => "Test Stack 2 Updated",
             "board" => $this->TEST_BOARD_ID,
-            "id" => $result_data_child["id"],
+            "id" => $stack_id,
             "position" => '2'
         ];
-        $response = $this->request('POST', $this->uri_save . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->uri_save . $stack_id, $data);
 
         $body = (string) $response->getBody();
 
@@ -123,9 +117,9 @@ class MemberTest extends BoardTestBase {
      * @depends testPostChildUpdate
      * @depends testGetChildCreated
      */
-    public function testGetChildDataUpdated(array $data, array $result_data_child) {
+    public function testGetChildDataUpdated(array $data, int $stack_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $result_data_child["id"]);
+        $response = $this->request('GET', $this->uri_edit . $stack_id);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -135,19 +129,15 @@ class MemberTest extends BoardTestBase {
 
         $this->assertSame($data["name"], $json["entry"]["name"]);
         $this->assertSame($data["position"], $json["entry"]["position"]);
-        $this->assertSame($result_data_child["id"], $json["entry"]["id"]);
+        $this->assertSame($stack_id, intval($json["entry"]["id"]));
     }
 
     /**
      * Delete stack
      * @depends testGetChildCreated
      */
-    public function testDeleteChild(array $result_data_child) {
-
-        $response1 = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
-        $token = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $result_data_child["id"], $token);
+    public function testDeleteChild(int $stack_id) {
+        $response = $this->request('DELETE', $this->uri_delete . $stack_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

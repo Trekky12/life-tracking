@@ -30,18 +30,16 @@ class LocationSelfTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<form class="form-horizontal" id="locationForm" action="/location/save/" method="POST">', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testGetAddElement
+     * 
      */
-    public function testPostAddElement($csrf_data) {
+    public function testPostAddElement() {
 
         $data = ["gps_lat" => "10", "gps_lng" => "5", "gps_acc" => 30];
 
-        $response = $this->request('POST', '/location/save/', array_merge($data, $csrf_data));
+        $response = $this->request('POST', '/location/save/', $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals("/location/", $response->getHeaderLine("Location"));
@@ -71,7 +69,7 @@ class LocationSelfTest extends BaseTestCase {
         if ($my_marker_id == -1) {
             $this->fail("Marker not found!");
         }
-        
+
         return $my_marker_id;
     }
 
@@ -79,13 +77,8 @@ class LocationSelfTest extends BaseTestCase {
      * @depends testAddedElement
      */
     public function testDeleteElement($marker_id) {
-        
-        $response1 = $this->request('GET', '/location/');
-        $csrf = $this->extractJSCSRF($response1);
-        
-        
-        $response = $this->request('DELETE', '/location/delete/'.$marker_id, $csrf);
-        
+        $response = $this->request('DELETE', '/location/delete/' . $marker_id);
+
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();

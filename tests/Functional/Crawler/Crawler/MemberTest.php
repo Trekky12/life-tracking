@@ -37,22 +37,19 @@ class MemberTest extends CrawlerTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * 
-     * @depends testGetParentCreatedEdit
      */
-    public function testPostParentCreatedSave($csrf) {
+    public function testPostParentCreatedSave() {
         $data = [
             "id" => $this->TEST_CRAWLER_ID,
             "hash" => $this->TEST_CRAWLER_HASH,
             "name" => "Test Crawler 2 Updated",
             "users" => [1, 3]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_CRAWLER_ID, array_merge($data, $csrf));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_CRAWLER_ID, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
         $body = (string) $response->getBody();
@@ -63,11 +60,7 @@ class MemberTest extends CrawlerTestBase {
      * Delete
      */
     public function testDeleteParent() {
-
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_CRAWLER_ID, $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_CRAWLER_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

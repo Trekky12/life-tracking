@@ -24,20 +24,18 @@ class ActivityTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<div id="activities">', $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testList
+     * 
      */
-    public function testLoadMore($csrf) {
+    public function testLoadMore() {
 
         $data = [
             "start" => 0,
             "count" => 20
         ];
-        $response = $this->request('POST', $this->uri_load_more, array_merge($data, $csrf));
+        $response = $this->request('POST', $this->uri_load_more, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
 

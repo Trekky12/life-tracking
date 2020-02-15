@@ -25,19 +25,16 @@ class MemberTest extends TripTestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->getURIChildSave($this->TEST_TRIP_HASH) . "\" method=\"POST\">", $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
      * Create the event
-     * @depends testGetChildEdit
      */
-    public function testPostChildSave(array $token) {
+    public function testPostChildSave() {
         $data = [
             "name" => "Test"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH), array_merge($data, $token));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH), $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_TRIP_HASH), $response->getHeaderLine("Location"));
@@ -60,11 +57,7 @@ class MemberTest extends TripTestBase {
 
         $this->assertArrayHasKey("id", $row);
 
-        $result = [];
-        $result["id"] = $row["id"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id"]);
     }
 
     /**
@@ -75,15 +68,15 @@ class MemberTest extends TripTestBase {
      * Edit Event
      * @depends testGetChildCreated
      */
-    public function testGetChildCreatedEdit(array $result_data_child) {
+    public function testGetChildCreatedEdit(int $child_id) {
 
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH) . $result_data_child["id"]);
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH) . $child_id);
 
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $result_data_child["id"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $child_id . "\">", $body);
 
         $matches = [];
         $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">/s';
@@ -92,23 +85,19 @@ class MemberTest extends TripTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
-        $result = [];
-        $result["id"] = $matches["id"];
-        $result["csrf"] = $this->extractFormCSRF($response);
-
-        return $result;
+        return intval($matches["id"]);
     }
 
     /**
      * 
      * @depends testGetChildCreatedEdit
      */
-    public function testPostChildCreatedSave(array $result_data_child) {
+    public function testPostChildCreatedSave(int $child_id) {
         $data = [
-            "id" => $result_data_child["id"],
+            "id" => $child_id,
             "name" => "Testevent updated"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH) . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH) . $child_id, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_TRIP_HASH), $response->getHeaderLine("Location"));
@@ -132,20 +121,16 @@ class MemberTest extends TripTestBase {
 
         $this->assertArrayHasKey("id", $row);
 
-        $result = [];
-        $result["id"] = $row["id"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id"]);
     }
 
     /**
      * Delete event
      * @depends testGetChildUpdated
      */
-    public function testDeleteChild(array $result_data_child) {
+    public function testDeleteChild(int $child_id) {
 
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_TRIP_HASH) . $result_data_child["id"], $result_data_child["csrf"]);
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_TRIP_HASH) . $child_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

@@ -30,20 +30,18 @@ class OwnerTest extends CrawlerTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<form class="form-horizontal" id="crawlerForm" action="' . $this->uri_save . '" method="POST">', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testGetParentEdit
+     * 
      */
-    public function testPostParentSave(array $csrf_data) {
+    public function testPostParentSave() {
         $data = [
             "name" => "Test Crawler 2",
             "filter" => "changedOn",
             "users" => [1]
         ];
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -70,7 +68,6 @@ class OwnerTest extends CrawlerTestBase {
         $result = [];
         $result["hash"] = $row["hash"];
         $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
 
         return $result;
     }
@@ -102,7 +99,6 @@ class OwnerTest extends CrawlerTestBase {
         $result = [];
         $result["hash"] = $matches["hash"];
         $result["id"] = $matches["id"];
-        $result["csrf"] = $this->extractFormCSRF($response);
 
         return $result;
     }
@@ -118,7 +114,7 @@ class OwnerTest extends CrawlerTestBase {
             "name" => "Test Crawler 2 Updated",
             "users" => [1, 3]
         ];
-        $response = $this->request('POST', $this->uri_save . $result_data["id"], array_merge($data, $result_data["csrf"]));
+        $response = $this->request('POST', $this->uri_save . $result_data["id"], $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -142,7 +138,7 @@ class OwnerTest extends CrawlerTestBase {
      * @depends testGetParentCreated
      */
     public function testDeleteParent(array $result_data) {
-        $response = $this->request('DELETE', $this->uri_delete . $result_data["id"], $result_data["csrf"]);
+        $response = $this->request('DELETE', $this->uri_delete . $result_data["id"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 

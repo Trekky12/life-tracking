@@ -30,15 +30,12 @@ class MemberTest extends BoardTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<div class="board-header">', $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * Create the label
-     * @depends testGetViewBoard
      */
-    public function testPostChildSave(array $csrf_data) {
+    public function testPostChildSave() {
         $data = [
             "name" => "Test Label 2",
             "board" => $this->TEST_BOARD_ID,
@@ -46,7 +43,7 @@ class MemberTest extends BoardTestBase {
             "text_color" => '#000FFF',
             "background_color" => '#CCCCCC',
         ];
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 
@@ -71,11 +68,7 @@ class MemberTest extends BoardTestBase {
 
         $this->assertArrayHasKey("id", $row);
 
-        $result = [];
-        $result["id"] = $row["id"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id"]);
     }
 
     /**
@@ -83,9 +76,9 @@ class MemberTest extends BoardTestBase {
      * @depends testPostChildSave
      * @depends testGetChildCreated
      */
-    public function testGetChildData(array $data, array $result_data_child) {
+    public function testGetChildData(array $data, int $label_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $result_data_child["id"]);
+        $response = $this->request('GET', $this->uri_edit . $label_id);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -96,22 +89,22 @@ class MemberTest extends BoardTestBase {
         $this->assertSame($data["name"], $json["entry"]["name"]);
         $this->assertSame($data["background_color"], $json["entry"]["background_color"]);
         $this->assertSame($data["text_color"], $json["entry"]["text_color"]);
-        $this->assertSame($result_data_child["id"], $json["entry"]["id"]);
+        $this->assertSame($label_id, intval($json["entry"]["id"]));
     }
 
     /**
      * Update / Check Update
      * @depends testGetChildCreated
      */
-    public function testPostChildUpdate(array $result_data_child) {
+    public function testPostChildUpdate(int $label_id) {
         $data = [
             "name" => "Test Label 2 Updated",
             "board" => $this->TEST_BOARD_ID,
-            "id" => $result_data_child["id"],
+            "id" => $label_id,
             "text_color" => '#000EEE',
             "background_color" => '#000000',
         ];
-        $response = $this->request('POST', $this->uri_save . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->uri_save . $label_id, $data);
 
         $body = (string) $response->getBody();
 
@@ -126,9 +119,9 @@ class MemberTest extends BoardTestBase {
      * @depends testPostChildUpdate
      * @depends testGetChildCreated
      */
-    public function testGetChildDataUpdated(array $data, array $result_data_child) {
+    public function testGetChildDataUpdated(array $data, int $label_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $result_data_child["id"]);
+        $response = $this->request('GET', $this->uri_edit . $label_id);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -139,19 +132,15 @@ class MemberTest extends BoardTestBase {
         $this->assertSame($data["name"], $json["entry"]["name"]);
         $this->assertSame($data["background_color"], $json["entry"]["background_color"]);
         $this->assertSame($data["text_color"], $json["entry"]["text_color"]);
-        $this->assertSame($result_data_child["id"], $json["entry"]["id"]);
+        $this->assertSame($label_id, intval($json["entry"]["id"]));
     }
 
     /**
      * Delete label
      * @depends testGetChildCreated
      */
-    public function testDeleteChild(array $result_data_child) {
-
-        $response1 = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
-        $token = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $result_data_child["id"], $token);
+    public function testDeleteChild(int $label_id) {
+        $response = $this->request('DELETE', $this->uri_delete . $label_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

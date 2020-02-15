@@ -25,17 +25,15 @@ class NoAccessTest extends TimesheetTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testGetTimesheetsFastNoAccess
+     * 
      */
-    public function testPostTimesheetsFastCheckInNoAccess(array $token) {
+    public function testPostTimesheetsFastCheckInNoAccess() {
 
         $data = [];
-        $response = $this->request('POST', $this->getURISheetsFastCheckin($this->TEST_PROJECT_HASH), array_merge($data, $token));
+        $response = $this->request('POST', $this->getURISheetsFastCheckin($this->TEST_PROJECT_HASH), $data);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -47,11 +45,8 @@ class NoAccessTest extends TimesheetTestBase {
     }
 
     public function testPostTimesheetsFastCheckOutNoAccess() {
-        $response1 = $this->request('GET', $this->getURISheetsFast($this->TEST_PROJECT_HASH));
-        $token = $this->extractJSCSRF($response1);
-
         $data = [];
-        $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), array_merge($data, $token));
+        $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), $data);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -66,10 +61,7 @@ class NoAccessTest extends TimesheetTestBase {
      * Delete
      */
     public function testDeleteTimesheet() {
-        $response1 = $this->request('GET', $this->getURISheetsFast($this->TEST_PROJECT_HASH));
-        $token = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_PROJECT_SHEET_ID, $token);
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_PROJECT_SHEET_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

@@ -4,7 +4,7 @@ namespace Tests\Functional\Trip\Trip;
 
 use Tests\Functional\Trip\TripTestBase;
 
-class AccessTest extends TripTestBase {
+class NoAccessTest extends TripTestBase {
 
     protected $TEST_TRIP_ID = 1;
     protected $TEST_TRIP_HASH = "ABCabc123";
@@ -33,11 +33,6 @@ class AccessTest extends TripTestBase {
                 $this->fail("Hash found");
             }
         }
-
-        // get multiple tokens
-        $csrf = $this->extractJSCSRF($response);
-        $tokens = $this->getCSRFTokens($csrf);
-        return $tokens;
     }
 
     /**
@@ -56,16 +51,15 @@ class AccessTest extends TripTestBase {
 
     /**
      * 
-     * @depends testGetParentInList
      */
-    public function testPostParentSave(array $tokens) {
+    public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_TRIP_ID,
             "hash" => $this->TEST_TRIP_HASH,
             "name" => "Testtrip Update",
             "users" => [1]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_TRIP_ID, array_merge($data, $tokens[0]));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_TRIP_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
@@ -73,11 +67,10 @@ class AccessTest extends TripTestBase {
 
     /**
      * Delete
-     * @depends testGetParentInList
      */
-    public function testDeleteParent(array $tokens) {
+    public function testDeleteParent() {
 
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_TRIP_ID, $tokens[1]);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_TRIP_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

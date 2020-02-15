@@ -25,14 +25,11 @@ class MemberTest extends BoardTestBase {
      */
     public function testArchive() {
 
-        $response1 = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
-        $token = $this->extractJSCSRF($response1);
-
         $data = [
             "archive" => 1
         ];
 
-        $response = $this->request('POST', $this->uri_archive . $this->TEST_CARD_ID, array_merge($token, $data));
+        $response = $this->request('POST', $this->uri_archive . $this->TEST_CARD_ID, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -60,15 +57,11 @@ class MemberTest extends BoardTestBase {
      * Unarchive
      */
     public function testUnArchive() {
-
-        $response1 = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
-        $token = $this->extractJSCSRF($response1);
-
         $data = [
             "archive" => 0
         ];
 
-        $response = $this->request('POST', $this->uri_archive . $this->TEST_CARD_ID, array_merge($token, $data));
+        $response = $this->request('POST', $this->uri_archive . $this->TEST_CARD_ID, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
 

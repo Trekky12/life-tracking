@@ -33,8 +33,6 @@ class OtherUserTest extends BaseTestCase {
         preg_match($re, $body, $matches);
 
         $this->assertFalse(empty($matches));
-
-        return $this->extractJSCSRF($response);
     }
 
     public function testGetAddElements() {
@@ -49,14 +47,12 @@ class OtherUserTest extends BaseTestCase {
         preg_match($re, $body, $matches);
 
         $this->assertFalse(empty($matches));
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testList
+     * 
      */
-    public function testPostElementCreatedSave($csrf) {
+    public function testPostElementCreatedSave() {
 
         $data = [
             "budget" => [
@@ -77,7 +73,7 @@ class OtherUserTest extends BaseTestCase {
             ]
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 
@@ -86,11 +82,7 @@ class OtherUserTest extends BaseTestCase {
     }
 
     public function testDeleteElement() {
-
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_BUDGET_ENTRY_REGULAR, $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_BUDGET_ENTRY_REGULAR);
 
         $this->assertEquals(200, $response->getStatusCode());
 

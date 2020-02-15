@@ -30,15 +30,12 @@ class OwnerTest extends BoardTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<div class="board-header">', $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * Create the card
-     * @depends testGetViewBoard
      */
-    public function testPostChildSave(array $csrf_data) {
+    public function testPostChildSave() {
         $data = [
             "title" => "Test Card 2",
             "stack" => $this->TEST_STACK_ID,
@@ -48,10 +45,10 @@ class OwnerTest extends BoardTestBase {
             "time" => date('H:i:s'),
             "description" => "Test description",
             "archive" => '0',
-            "users" => [1,2],
+            "users" => [1, 2],
             "labels" => [1]
         ];
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 
@@ -76,11 +73,7 @@ class OwnerTest extends BoardTestBase {
 
         $this->assertArrayHasKey("id", $row);
 
-        $result = [];
-        $result["id"] = $row["id"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id"]);
     }
 
     /**
@@ -88,9 +81,9 @@ class OwnerTest extends BoardTestBase {
      * @depends testPostChildSave
      * @depends testGetChildCreated
      */
-    public function testGetChildData(array $data, array $result_data_child) {
+    public function testGetChildData(array $data, int $card_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $result_data_child["id"]);
+        $response = $this->request('GET', $this->uri_edit . $card_id);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -107,27 +100,27 @@ class OwnerTest extends BoardTestBase {
         $this->assertSame($data["archive"], $json["entry"]["archive"]);
         $this->assertSame($data["users"], $json["entry"]["users"]);
         $this->assertSame($data["labels"], $json["entry"]["labels"]);
-        $this->assertSame($result_data_child["id"], $json["entry"]["id"]);
+        $this->assertSame($card_id, intval($json["entry"]["id"]));
     }
 
     /**
      * Update / Check Update
      * @depends testGetChildCreated
      */
-    public function testPostChildUpdate(array $result_data_child) {
+    public function testPostChildUpdate(int $card_id) {
         $data = [
             "title" => "Test Card 2 Updated",
             "stack" => $this->TEST_STACK_ID,
-            "id" => $result_data_child["id"],
+            "id" => $card_id,
             "position" => '1',
             "date" => date('Y-m-d'),
             "time" => date('H:i:s'),
             "description" => "Test description",
             "archive" => '0',
-            "users" => [1,2],
+            "users" => [1, 2],
             "labels" => [1]
         ];
-        $response = $this->request('POST', $this->uri_save . $result_data_child["id"], array_merge($data, $result_data_child["csrf"]));
+        $response = $this->request('POST', $this->uri_save . $card_id, $data);
 
         $body = (string) $response->getBody();
 
@@ -142,9 +135,9 @@ class OwnerTest extends BoardTestBase {
      * @depends testPostChildUpdate
      * @depends testGetChildCreated
      */
-    public function testGetChildDataUpdated(array $data, array $result_data_child) {
+    public function testGetChildDataUpdated(array $data, int $card_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $result_data_child["id"]);
+        $response = $this->request('GET', $this->uri_edit . $card_id);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -161,19 +154,15 @@ class OwnerTest extends BoardTestBase {
         $this->assertSame($data["archive"], $json["entry"]["archive"]);
         $this->assertSame($data["users"], $json["entry"]["users"]);
         $this->assertSame($data["labels"], $json["entry"]["labels"]);
-        $this->assertSame($result_data_child["id"], $json["entry"]["id"]);
+        $this->assertSame($card_id, intval($json["entry"]["id"]));
     }
 
     /**
      * Delete stack
      * @depends testGetChildCreated
      */
-    public function testDeleteChild(array $result_data_child) {
-
-        $response1 = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
-        $token = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $result_data_child["id"], $token);
+    public function testDeleteChild(int $card_id) {
+        $response = $this->request('DELETE', $this->uri_delete . $card_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -183,6 +172,5 @@ class OwnerTest extends BoardTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 
 }

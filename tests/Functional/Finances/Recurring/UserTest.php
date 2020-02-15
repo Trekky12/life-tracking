@@ -35,14 +35,12 @@ class UserTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<form class="form-horizontal" id="financesRecurringForm" action="' . $this->uri_save . '" method="POST">', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testGetAddElement
+     * 
      */
-    public function testPostAddElement($csrf_data) {
+    public function testPostAddElement() {
 
         $data = [
             "type" => 0,
@@ -59,7 +57,7 @@ class UserTest extends BaseTestCase {
             "multiplier" => 1
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -81,26 +79,22 @@ class UserTest extends BaseTestCase {
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id_edit"]);
     }
 
     /**
      * Edit created element
      * @depends testAddedElement
      */
-    public function testGetElementCreatedEdit(array $result_data) {
+    public function testGetElementCreatedEdit(int $entry_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
+        $response = $this->request('GET', $this->uri_edit . $entry_id);
 
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $result_data["id"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $entry_id . "\">", $body);
 
         $matches = [];
         $re = '/<form class="form-horizontal" id=\"financesRecurringForm\" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
@@ -109,21 +103,17 @@ class UserTest extends BaseTestCase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
-        $result = [];
-        $result["id"] = $matches["id"];
-        $result["csrf"] = $this->extractFormCSRF($response);
-
-        return $result;
+        return intval($matches["id"]);
     }
 
     /**
      * 
      * @depends testGetElementCreatedEdit
      */
-    public function testPostElementCreatedSave(array $result_data) {
+    public function testPostElementCreatedSave(int $entry_id) {
 
         $data = [
-            "id" => $result_data["id"],
+            "id" => $entry_id,
             "type" => 0,
             "category" => null,
             "description" => "Test Updated",
@@ -138,7 +128,7 @@ class UserTest extends BaseTestCase {
             "multiplier" => 3
         ];
 
-        $response = $this->request('POST', $this->uri_save . $result_data["id"], array_merge($data, $result_data["csrf"]));
+        $response = $this->request('POST', $this->uri_save . $entry_id, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -162,23 +152,14 @@ class UserTest extends BaseTestCase {
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id_edit"]);
     }
 
     /**
      * @depends testGetElementUpdated
      */
-    public function testDeleteElement($result_data) {
-
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-
-        $response = $this->request('DELETE', $this->uri_delete . $result_data["id"], $csrf);
+    public function testDeleteElement(int $entry_id) {
+        $response = $this->request('DELETE', $this->uri_delete . $entry_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

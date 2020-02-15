@@ -35,14 +35,12 @@ class OwnerTest extends CrawlerTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<form class="form-horizontal" id="crawlerHeadersForm" action="' . $this->getURIChildSave($this->TEST_CRAWLER_HASH) . '" method="POST">', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testGetAddElement
+     * 
      */
-    public function testPostAddElement($csrf_data) {
+    public function testPostAddElement() {
 
         $data = [
             "headline" => "Test Header",
@@ -58,7 +56,7 @@ class OwnerTest extends CrawlerTestBase {
             "datatype" => "CHAR"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH), array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH), $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIChildOverview($this->TEST_CRAWLER_HASH), $response->getHeaderLine("Location"));
@@ -80,26 +78,22 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id_edit"]);
     }
 
     /**
      * Edit created element
      * @depends testAddedElement
      */
-    public function testGetElementCreatedEdit(array $result_data) {
+    public function testGetElementCreatedEdit(int $entry_id) {
 
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH) . $result_data["id"]);
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH) . $entry_id);
 
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $result_data["id"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $entry_id . "\">", $body);
 
         $matches = [];
         $re = '/<form class="form-horizontal" id=\"crawlerHeadersForm\" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
@@ -108,20 +102,16 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
-        $result = [];
-        $result["id"] = $matches["id"];
-        $result["csrf"] = $this->extractFormCSRF($response);
-
-        return $result;
+        return intval($matches["id"]);
     }
 
     /**
      * 
      * @depends testGetElementCreatedEdit
      */
-    public function testPostElementCreatedSave(array $result_data) {
+    public function testPostElementCreatedSave(int $entry_id) {
         $data = [
-            "id" => $result_data["id"],
+            "id" => $entry_id,
             "headline" => "Test Header Updated",
             "field_name" => "title2",
             "field_link" => "link2",
@@ -135,7 +125,7 @@ class OwnerTest extends CrawlerTestBase {
             "datatype" => "DECIMAL"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH) . $result_data["id"], array_merge($data, $result_data["csrf"]));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH) . $entry_id, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIChildOverview($this->TEST_CRAWLER_HASH), $response->getHeaderLine("Location"));
@@ -159,22 +149,15 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
-        $result = [];
-        $result["id"] = $row["id_edit"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        return intval($row["id_edit"]);
     }
 
     /**
      * @depends testGetElementUpdated
      */
-    public function testDeleteElement($result_data) {
+    public function testDeleteElement(int $entry_id) {
 
-        $response1 = $this->request('GET', $this->getURIChildOverview($this->TEST_CRAWLER_HASH));
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_CRAWLER_HASH) . $result_data["id"], $csrf);
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_CRAWLER_HASH) . $entry_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

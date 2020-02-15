@@ -32,11 +32,6 @@ class NoAccessTest extends BoardTestBase {
                 $this->fail("Hash found");
             }
         }
-
-        // get multiple tokens
-        $csrf = $this->extractJSCSRF($response);
-        $tokens = $this->getCSRFTokens($csrf);
-        return $tokens;
     }
 
     /**
@@ -55,16 +50,15 @@ class NoAccessTest extends BoardTestBase {
 
     /**
      * 
-     * @depends testGetParentInList
      */
-    public function testPostParentSave(array $tokens) {
+    public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_BOARD_ID,
             "hash" => $this->TEST_BOARD_HASH,
             "name" => "Test Board Update",
             "users" => [1]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_BOARD_ID, array_merge($data, $tokens[0]));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_BOARD_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
@@ -72,11 +66,10 @@ class NoAccessTest extends BoardTestBase {
 
     /**
      * Delete
-     * @depends testGetParentInList
      */
-    public function testDeleteParent(array $tokens) {
+    public function testDeleteParent() {
 
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_BOARD_ID, $tokens[1]);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_BOARD_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

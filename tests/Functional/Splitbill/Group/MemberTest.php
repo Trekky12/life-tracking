@@ -43,34 +43,29 @@ class MemberTest extends SplitbillTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testGetParentEdit
+     * 
      */
-    public function testPostParentSave(array $token) {
+    public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_GROUP_ID,
             "hash" => $this->TEST_GROUP_HASH,
             "name" => "Testgroup Update",
             "users" => [1, 3]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_GROUP_ID, array_merge($data, $token));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_GROUP_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * Delete
-     * @depends testPostParentSave
      */
-    public function testDeleteParent(array $token) {
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_GROUP_ID, $token);
+    public function testDeleteParent() {
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_GROUP_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

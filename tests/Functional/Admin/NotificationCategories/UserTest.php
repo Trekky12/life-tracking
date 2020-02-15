@@ -37,21 +37,18 @@ class UserTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testGetAddElement
      */
-    public function testPostAddElement($csrf_data) {
+    public function testPostAddElement() {
 
         $data = [
             "name" => "Test Notification Category 2",
             "identifier" => "test_notification_category2"
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
         
@@ -62,16 +59,13 @@ class UserTest extends BaseTestCase {
     
     public function testPostElementCreatedSave() {
         
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-        
         $data = [
             "id" => $this->TEST_CATEGORY,
             "name" => "Test Notification Category 2",
             "identifier" => "test_notification_category2"
         ];
 
-        $response = $this->request('POST', $this->uri_save . $this->TEST_CATEGORY, array_merge($data, $csrf));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_CATEGORY, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
         
@@ -81,10 +75,7 @@ class UserTest extends BaseTestCase {
 
     public function testDeleteElement() {
 
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_CATEGORY, $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_CATEGORY);
 
         $this->assertEquals(200, $response->getStatusCode());
 

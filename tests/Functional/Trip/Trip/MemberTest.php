@@ -30,13 +30,6 @@ class MemberTest extends TripTestBase {
             return $match["hash"];
         }, $matches);
         $this->assertContains($this->TEST_TRIP_HASH, $hashs);
-
-
-        // get multiple tokens
-        $csrf = $this->extractJSCSRF($response);
-        $tokens = $this->getCSRFTokens($csrf);
-
-        return $tokens;
     }
 
     /**
@@ -52,17 +45,14 @@ class MemberTest extends TripTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * @depends testGetParentInList
-     */
-    public function testPostParentSave(array $tokens) {
+    public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_TRIP_ID,
             "hash" => $this->TEST_TRIP_HASH,
             "name" => "Testtrip Update",
             "users" => [1, 3]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_TRIP_ID, array_merge($data, $tokens[0]));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_TRIP_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
@@ -70,10 +60,9 @@ class MemberTest extends TripTestBase {
 
     /**
      * Delete
-     * @depends testGetParentInList
      */
-    public function testDeleteParent(array $tokens) {
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_TRIP_ID, $tokens[1]);
+    public function testDeleteParent() {
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_TRIP_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

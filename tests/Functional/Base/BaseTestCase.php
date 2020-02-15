@@ -37,7 +37,7 @@ class BaseTestCase extends TestCase {
      * save login token
      * @var string
      */
-    protected static $token = null;
+    protected static $LOGIN_TOKEN = null;
     protected static $SESSION = null;
     protected $backupGlobalsBlacklist = array('_SESSION');
 
@@ -53,16 +53,21 @@ class BaseTestCase extends TestCase {
     protected $uri_childs_save = "";
     protected $uri_childs_delete = "";
 
+    /**
+     * CSRF Tokens
+     */
+    private $tokens = [];
+
     public static function setUpBeforeClass(): void {
         
     }
 
-    public function request($requestMethod, $requestUri, $requestData = null, $auth = array(), $form_data = null) {
+    public function request($requestMethod, $requestUri, $requestData = [], $auth = array(), $form_data = null) {
         return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth, $form_data);
         //return $this->runApp($requestMethod, $requestUri, $requestData, $auth, $form_data);
     }
 
-    public function HTTP_request($requestMethod, $requestUri, $requestData = null, $auth = array(), $form_data = null) {
+    public function HTTP_request($requestMethod, $requestUri, $requestData = [], $auth = array(), $form_data = null) {
 
         $client = new \GuzzleHttp\Client([
             'proxy' => '',
@@ -72,10 +77,15 @@ class BaseTestCase extends TestCase {
             'cookies' => true
         ]);
 
+        // add csrf token
+        if ($requestMethod != 'GET' && count($this->tokens) > 0) {
+            $requestData = $requestData + $this->getToken();
+        }
+
         // Add request data, if it exists
         $headers = [];
         $body = null;
-        if (isset($requestData)) {
+        if (!empty($requestData)) {
             $headers['Content-Type'] = 'application/x-www-form-urlencoded';
             $body = http_build_query($requestData);
         }
@@ -102,8 +112,8 @@ class BaseTestCase extends TestCase {
 
         $request = new \GuzzleHttp\Psr7\Request($requestMethod, $requestUri, $headers, $body);
 
-        if (!empty(self::$token)) {
-            $request = FigRequestCookies::set($request, Cookie::create('token', self::$token));
+        if (!empty(self::$LOGIN_TOKEN)) {
+            $request = FigRequestCookies::set($request, Cookie::create('token', self::$LOGIN_TOKEN));
         }
         if (!empty(self::$SESSION)) {
             $request = FigRequestCookies::set($request, Cookie::create('PHPSESSID', self::$SESSION));
@@ -119,7 +129,7 @@ class BaseTestCase extends TestCase {
         $setCookies = SetCookies::fromResponse($response);
         $setTokenCookie = $setCookies->get('token');
         if (!is_null($setTokenCookie)) {
-            self::$token = $setTokenCookie->getValue();
+            self::$LOGIN_TOKEN = $setTokenCookie->getValue();
         }
 
         $setSESSIONCookie = $setCookies->get('PHPSESSID');
@@ -150,13 +160,19 @@ class BaseTestCase extends TestCase {
         );
         // Set up a request object based on the environment
         $request = Request::createFromEnvironment($environment);
+
+        // add csrf token
+        if ($requestMethod != 'GET' && count($this->tokens) > 0) {
+            $requestData = $requestData + $this->getToken();
+        }
+
         // Add request data, if it exists
         if (isset($requestData)) {
             $request = $request->withParsedBody($requestData);
         }
 
-        if (!empty(self::$token)) {
-            $request = FigRequestCookies::set($request, Cookie::create('token', self::$token));
+        if (!empty(self::$LOGIN_TOKEN)) {
+            $request = FigRequestCookies::set($request, Cookie::create('token', self::$LOGIN_TOKEN));
         }
 
         if (isset($auth['user'])) {
@@ -200,7 +216,7 @@ class BaseTestCase extends TestCase {
         $setCookies = SetCookies::fromResponse($response);
         $setTokenCookie = $setCookies->get('token');
         if (!is_null($setTokenCookie)) {
-            self::$token = $setTokenCookie->getValue();
+            self::$LOGIN_TOKEN = $setTokenCookie->getValue();
         }
 
         // Return the response
@@ -216,6 +232,50 @@ class BaseTestCase extends TestCase {
         return $settings['settings']['app'];
     }
 
+    /**
+     * Helper functions for login/logout on other tests
+     */
+    public function login($user, $password) {
+        $response = $this->request('GET', '/login');
+        $csrf_token = $this->extractFormCSRF($response);
+
+        $data = [
+            "username" => $user,
+            "password" => $password
+        ];
+        $this->request('POST', '/login', array_merge($data, $csrf_token));
+
+        // get initial CSRF token
+        $response_home = $this->request('GET', '/');
+        $this->tokens[] = $this->extractJSCSRF($response_home);
+    }
+
+    public function logout() {
+        $this->request('GET', '/logout');
+    }
+
+    /**
+     * Replace HASH in routes
+     */
+    protected function getURIView($hash) {
+        return str_replace("HASH", $hash, $this->uri_view);
+    }
+
+    protected function getURIChildEdit($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_edit);
+    }
+
+    protected function getURIChildSave($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_save);
+    }
+
+    protected function getURIChildDelete($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_delete);
+    }
+
+    /**
+     * CSRF Tokens
+     */
     protected function extractFormCSRF($response) {
         /**
           <input type="hidden" name="csrf_name" value="csrf5c94b1958ed33">
@@ -251,55 +311,30 @@ class BaseTestCase extends TestCase {
         return array("csrf_name" => $csrf_name, "csrf_value" => $csrf_value);
     }
 
-    protected function getLoginPage() {
-        return $this->request('GET', '/login');
-    }
-
-    protected function postLoginPage(array $csrf_data, $user, $password) {
-        $data = ["username" => $user, "password" => $password];
-        return $this->request('POST', '/login', array_merge($data, $csrf_data));
-    }
-
-    protected function getLogout() {
-        return $this->request('GET', '/logout');
-    }
-
     /**
-     * Helper functions for login/logout on other tests
+     * Get new tokens from endpoint /tokens
      */
-    public function login($user, $password) {
-        $response = $this->getLoginPage();
-        $csrf_data = $this->extractFormCSRF($response);
-        $this->postLoginPage($csrf_data, $user, $password);
-    }
-
-    public function logout() {
-        $this->getLogout();
-    }
-
-    /**
-     * 
-     */
-    protected function getCSRFTokens($csrf_data) {
-        $response = $this->request('POST', '/tokens', array_merge(array("count" => 10), $csrf_data));
+    protected function getCSRFTokens($csrf_token, $count = 10) {
+        $response = $this->request('POST', '/tokens', array_merge(array("count" => $count), $csrf_token));
         $tokens = json_decode((string) $response->getBody(), true);
         return $tokens;
     }
 
-    protected function getURIView($hash) {
-        return str_replace("HASH", $hash, $this->uri_view);
-    }
+    public function getToken() {
 
-    protected function getURIChildEdit($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_edit);
-    }
+        if (!is_array($this->tokens) || count($this->tokens) < 1) {
+            throw new \Exception("No token available");
+        }
 
-    protected function getURIChildSave($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_save);
-    }
+        // take available token
+        if (count($this->tokens) > 1) {
+            return array_pop($this->tokens);
+        }
 
-    protected function getURIChildDelete($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_delete);
+        // get new tokens
+        $token = array_pop($this->tokens);
+        $this->tokens = $this->getCSRFTokens($token);
+        return $this->getToken();
     }
 
 }

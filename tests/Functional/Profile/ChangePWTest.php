@@ -20,14 +20,12 @@ class ChangePWTest extends BaseTestCase {
         $this->assertStringContainsString('<form action="/profile/changepassword" method="POST">', $body);
 
         $this->logout();
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testOverview
+     * 
      */
-    public function testChangePassword($csrf_data) {
+    public function testChangePassword() {
 
         $this->login("user", "user");
 
@@ -37,11 +35,11 @@ class ChangePWTest extends BaseTestCase {
             "newpassword2" => "user_new"
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals("/", $response->getHeaderLine("Location"));
-        
+
         $this->logout();
 
         return $data;
@@ -62,14 +60,12 @@ class ChangePWTest extends BaseTestCase {
         $this->assertStringContainsString('<form action="/profile/changepassword" method="POST">', $body);
 
         $this->logout();
-        
-        return $this->extractFormCSRF($response);
     }
 
     /**
      * @depends testChangedPassword
      */
-    public function testChangePasswordBack($csrf_data) {
+    public function testChangePasswordBack() {
 
         $this->login("user", "user_new");
 
@@ -79,16 +75,16 @@ class ChangePWTest extends BaseTestCase {
             "newpassword2" => "user"
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals("/", $response->getHeaderLine("Location"));
-        
+
         $this->logout();
 
         return $data;
     }
-    
+
     /**
      * @depends testChangePasswordBack
      */

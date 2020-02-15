@@ -26,38 +26,30 @@ class NoAccessTest extends TimesheetTestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        $token = $this->extractJSCSRF($response);
-
-        return $token;
     }
 
     /**
      * Create the sheet
-     * @depends testGetChildEdit
      */
-    public function testPostChildSave(array $token) {
+    public function testPostChildSave() {
 
         $data = [
             "start" => date('Y-m-d') . " 12:00",
             "end" => date('Y-m-d') . " 14:10",
             "notice" => "Test"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), array_merge($data, $token));
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
      * Delete sheet
-     * @depends testPostChildSave
      */
-    public function testDeleteChild(array $token) {
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_SHEET_ID, $token);
+    public function testDeleteChild() {
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_SHEET_ID);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

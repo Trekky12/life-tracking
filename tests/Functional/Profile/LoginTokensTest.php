@@ -38,10 +38,8 @@ class LoginTokensTest extends BaseTestCase {
         $row = $this->getElementInTable($body1);
         $id = $row["id_delete"];
         
-        $csrf = $this->extractJSCSRF($response1);
-        
         // delete the token
-        $response = $this->request('DELETE', $this->uri_delete . $id, $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $id);
         
         $this->assertEquals(200, $response->getStatusCode());
 

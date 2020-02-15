@@ -44,14 +44,12 @@ class OtherUserTest extends BaseTestCase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Element nicht gefunden", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testGetElementCreatedEdit
+     * 
      */
-    public function testPostElementCreatedSave($csrf) {
+    public function testPostElementCreatedSave() {
 
         $data = [
             "id" => $this->TEST_FINANCE_ID,
@@ -63,7 +61,7 @@ class OtherUserTest extends BaseTestCase {
             "paymethod" => 1
         ];
 
-        $response = $this->request('POST', $this->uri_save . $this->TEST_FINANCE_ID, array_merge($data, $csrf));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_FINANCE_ID, $data);
 
         $body = (string) $response->getBody();
 
@@ -72,11 +70,7 @@ class OtherUserTest extends BaseTestCase {
     }
 
     public function testDeleteElement() {
-
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_FINANCE_ID, $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_FINANCE_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

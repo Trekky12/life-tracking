@@ -45,14 +45,12 @@ class NoAccessTest extends BaseTestCase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testGetElementCreatedEdit
+     * 
      */
-    public function testPostElementCreatedSave($csrf) {
+    public function testPostElementCreatedSave() {
 
         $data = [
             "id" => $this->TEST_FUEL_ENTRY,
@@ -72,7 +70,7 @@ class NoAccessTest extends BaseTestCase {
             "acc" => 30
         ];
 
-        $response = $this->request('POST', $this->uri_save . $this->TEST_CAR, array_merge($data, $csrf));
+        $response = $this->request('POST', $this->uri_save . $this->TEST_CAR, $data);
 
         $body = (string) $response->getBody();
 
@@ -81,11 +79,7 @@ class NoAccessTest extends BaseTestCase {
     }
 
     public function testDeleteElement() {
-
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_FUEL_ENTRY, $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_FUEL_ENTRY);
 
         $this->assertEquals(200, $response->getStatusCode());
 

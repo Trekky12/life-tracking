@@ -24,14 +24,11 @@ class ChangePWWrongOldTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<form action="/profile/changepassword" method="POST">', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testOverview
      */
-    public function testChangePasswordWrongOld($csrf_data) {
+    public function testChangePasswordWrongOld() {
 
         $data = [
             "oldpassword" => "user1",
@@ -39,7 +36,7 @@ class ChangePWWrongOldTest extends BaseTestCase {
             "newpassword2" => "user_new"
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $body = (string) $response->getBody();
 

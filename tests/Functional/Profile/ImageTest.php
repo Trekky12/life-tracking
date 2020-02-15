@@ -30,9 +30,6 @@ class ImageTest extends BaseTestCase {
         $filename = 'profile_image';
         $file_extension = 'png';
 
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractFormCSRF($response1);
-
         $data = [
             [
                 'name' => 'image',
@@ -41,7 +38,7 @@ class ImageTest extends BaseTestCase {
             ]
         ];
 
-        $response = $this->request('POST', $this->uri_overview, $csrf, [], $data);
+        $response = $this->request('POST', $this->uri_overview, [], [], $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -62,13 +59,9 @@ class ImageTest extends BaseTestCase {
     }
 
     public function testdeleteImageUpload() {
+        $data = ['delete_image' => 1];
 
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractFormCSRF($response1);
-
-        $data = array_merge(['delete_image' => 1], $csrf);
-
-        $response = $this->request('POST', $this->uri_overview, $data, []);
+        $response = $this->request('POST', $this->uri_overview, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));

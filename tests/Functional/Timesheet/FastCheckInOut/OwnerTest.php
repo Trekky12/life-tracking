@@ -24,16 +24,14 @@ class OwnerTest extends TimesheetTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<div class=\"grid content-xsmall\">", $body);
-
-        return $this->extractJSCSRF($response);
     }
 
     /**
-     * @depends testGetTimesheetsFast
+     * 
      */
-    public function testPostTimesheetsFastCheckin(array $token) {
+    public function testPostTimesheetsFastCheckin() {
         $data = [];
-        $response = $this->request('POST', $this->getURISheetsFastCheckin($this->TEST_PROJECT_HASH), array_merge($data, $token));
+        $response = $this->request('POST', $this->getURISheetsFastCheckin($this->TEST_PROJECT_HASH), $data);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -64,20 +62,16 @@ class OwnerTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-
-        $result = [];
-        $result["id"] = $row["id_delete"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        
+        return intval($row["id_delete"]);
     }
 
     /**
      * @depends testGetTimesheetsFastCheckedIn
      */
-    public function testPostTimesheetsFastCheckoutAfterCheckIn(array $result_data) {
+    public function testPostTimesheetsFastCheckoutAfterCheckIn() {
         $data = [];
-        $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), array_merge($data, $result_data["csrf"]));
+        $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), $data);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -109,21 +103,17 @@ class OwnerTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-
-        $result = [];
-        $result["id"] = $row["id_delete"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        
+        return intval($row["id_delete"]);
     }
 
     /**
      * Check out without Check in
      * @depends testGetTimesheetsFastCheckedOutAfterCheckIn
      */
-    public function testPostTimesheetsFastCheckoutWithoutCheckIn(array $result_data) {
+    public function testPostTimesheetsFastCheckoutWithoutCheckIn() {
         $data = [];
-        $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), array_merge($data, $result_data["csrf"]));
+        $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), $data);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -154,23 +144,16 @@ class OwnerTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-
-        $result = [];
-        $result["id"] = $row["id_delete"];
-        $result["csrf"] = $this->extractJSCSRF($response);
-
-        return $result;
+        
+        return intval($row["id_delete"]);
     }
 
     /**
      * clean
      * @depends testGetTimesheetsFastCheckedOutWithoutCheckIn
      */
-    public function testDeleteTimesheet1(array $data_timesheet) {
-        $response1 = $this->request('GET', $this->getURISheetsFast($this->TEST_PROJECT_HASH));
-        $token = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $data_timesheet["id"], $token);
+    public function testDeleteTimesheet1(int $timesheet_id) {
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $timesheet_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -185,11 +168,8 @@ class OwnerTest extends TimesheetTestBase {
      * 
      * @depends testGetTimesheetsFastCheckedOutAfterCheckIn
      */
-    public function testDeleteTimesheet2(array $data_timesheet) {
-        $response1 = $this->request('GET', $this->getURISheetsFast($this->TEST_PROJECT_HASH));
-        $token = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $data_timesheet["id"], $token);
+    public function testDeleteTimesheet2(int $timesheet_id) {
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $timesheet_id);
 
         $this->assertEquals(200, $response->getStatusCode());
 

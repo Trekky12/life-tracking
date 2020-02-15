@@ -35,14 +35,12 @@ class UserTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<h2>Budget</h2>', $body);
-
-        return $this->extractFormCSRF($response);
     }
 
     /**
-     * @depends testGetAddElements
+     * 
      */
-    public function testPostAddElements($csrf_data) {
+    public function testPostAddElements() {
 
         $data = [
             "budget" => [
@@ -63,7 +61,7 @@ class UserTest extends BaseTestCase {
             ]
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $csrf_data));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -87,7 +85,6 @@ class UserTest extends BaseTestCase {
         $result = [];
         $result["id_regular"] = $rows[0]["id"];
         $result["id_rest"] = $rows[1]["id"];
-        $result["csrf"] = $this->extractJSCSRF($response);
 
         return $result;
     }
@@ -117,7 +114,7 @@ class UserTest extends BaseTestCase {
             ]
         ];
 
-        $response = $this->request('POST', $this->uri_save, array_merge($data, $result_data["csrf"]));
+        $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -140,36 +137,28 @@ class UserTest extends BaseTestCase {
         $result = [];
         $result["id_regular"] = $rows[0]["id"];
         $result["id_rest"] = $rows[1]["id"];
-        $result["csrf"] = $this->extractJSCSRF($response);
 
         return $result;
     }
-    
-     /**
+
+    /**
      * @depends testGetElementsUpdated
      */
     public function testDeleteElement1($result_data) {
-
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $result_data["id_regular"], $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $result_data["id_regular"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('{"is_deleted":true,"error":""}', $body);
     }
+
     /**
      * @depends testGetElementsUpdated
 
      */
     public function testDeleteElement2($result_data) {
-
-        $response1 = $this->request('GET', $this->uri_overview);
-        $csrf = $this->extractJSCSRF($response1);
-
-        $response = $this->request('DELETE', $this->uri_delete . $result_data["id_rest"], $csrf);
+        $response = $this->request('DELETE', $this->uri_delete . $result_data["id_rest"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
