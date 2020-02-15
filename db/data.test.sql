@@ -108,3 +108,15 @@ INSERT INTO notifications_categories (id, name, identifier, internal) VALUES
 (2, 'Test Notification Category', 'test_notification_cat', 0);
 
 INSERT INTO notifications_clients (id, user, endpoint, authToken, publicKey, contentEncoding, ip, agent) VALUES (1, 1, 'endpoint', 'auth', 'p256dh', 'contentEncoding', '127.0.0.1', 'TEST');
+
+INSERT INTO notifications (id, category, user, title, message, seen, link) VALUES 
+(1, 1, 1, 'Test Notification 1', 'Test', NULL, ''),
+(2, 1, 1, 'Test Notification 2', 'Test', NULL, ''),
+(3, 1, 1, 'Test Notification 3', 'Test', NULL, ''),
+(4, 1, 1, 'Test Notification 4', 'Test', NULL, ''),
+(5, 1, 1, 'Test Notification 5', 'Test', NULL, ''),
+(6, 1, 1, 'Test Notification 6', 'Test', NULL, ''),
+(7, 1, 1, 'Test Notification 7', 'Test', NULL, ''),
+(8, 1, 1, 'Test Notification 8', 'Test', NULL, ''),
+(9, 1, 1, 'Test Notification 9', 'Test', NULL, ''),
+(10, 1, 1, 'Test Notification 10', 'Test', NULL, '');
