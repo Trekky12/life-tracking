@@ -202,7 +202,7 @@ $app->group('/notifications', function() {
     $this->post('/setCategoryUser', '\App\Notifications\Users\Controller:setCategoryforUser')->setName('notifications_clients_set_category_user');
 
     $this->post('/getNotifications', '\App\Notifications\Controller:getNotificationsByUser')->setName('notifications_get');
-    $this->post('/getUnreadNotifications', '\App\Notifications\Controller:getUnreadNotificationsByUser')->setName('notifications_get_unread');
+    //$this->post('/getUnreadNotifications', '\App\Notifications\Controller:getUnreadNotificationsByUser')->setName('notifications_get_unread');
 });
 
 

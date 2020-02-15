@@ -184,7 +184,7 @@ class Controller extends \App\Base\Controller {
         return $response->withJson($result);
     }
 
-    public function getUnreadNotificationsByUser(Request $request, Response $response) {
+    /*public function getUnreadNotificationsByUser(Request $request, Response $response) {
         //$data = $request->getParsedBody();
 
         $result = ["data" => [], "status" => "success"];
@@ -194,7 +194,7 @@ class Controller extends \App\Base\Controller {
         $result["data"] = $this->mapper->getUnreadNotificationsCountByUser($user->id);
 
         return $response->withJson($result);
-    }
+    }*/
 
     public function sendNotificationsToUsersWithCategory($identifier, $title, $message) {
         try {
