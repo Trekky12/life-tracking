@@ -120,3 +120,8 @@ INSERT INTO notifications (id, category, user, title, message, seen, link) VALUE
 (8, 1, 1, 'Test Notification 8', 'Test', NULL, ''),
 (9, 1, 1, 'Test Notification 9', 'Test', NULL, ''),
 (10, 1, 1, 'Test Notification 10', 'Test', NULL, '');
+
+INSERT INTO global_banlist (id, ip, username) VALUES 
+(1, '127.0.0.2', 'user2'), 
+(2, '127.0.0.2', 'user2'),
+(3, '127.0.0.2', 'user2');
