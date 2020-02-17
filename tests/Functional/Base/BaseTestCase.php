@@ -346,4 +346,37 @@ class BaseTestCase extends TestCase {
         return $this->getToken();
     }
 
+    /**
+     * Extract input fields from page
+     * @see https://stackoverflow.com/a/1274074
+     */
+    protected function getInputFields($body) {
+        $input_fields = [];
+        $dom = new \DOMDocument();
+        if (@$dom->loadHTML($body)) {
+            $xpath = new \DOMXpath($dom);
+
+            $nodeList = $xpath->query('//input');
+            foreach ($nodeList as $node) {
+                $name = $node->getAttribute('name');
+                $value = $node->getAttribute('value');
+                if ($node->getAttribute('type') == "checkbox" || $node->getAttribute('type') == "radio") {
+                    $value = $node->hasAttribute('checked') ? 1 : 0;
+                }
+
+                $input_fields[$name] = $value;
+            }
+        }
+        return $input_fields;
+    }
+
+    protected function compareInputFields($body, $data) {
+        $input_fields = $this->getInputFields($body);
+
+        foreach ($data as $key => $val) {
+            $this->assertArrayHasKey($key, $input_fields, $key . " missing");
+            $this->assertSame($input_fields[$key], $val, "Field: " . $key . ", Expected: " . $val . ", Actual: " . $input_fields[$key]);
+        }
+    }
+
 }

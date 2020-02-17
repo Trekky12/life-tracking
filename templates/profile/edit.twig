@@ -26,7 +26,7 @@
                     <label for="inputMail">{{lang["MAIL"]}}</label>
                     <input type="email" class="form-control" id="inputMail" name="mail" value="{{user.mail}}">
                 </div>
-                
+
                 <div class="form-group hidden">
                     <a href="{{ path_for('users_change_password') }}"><button type="button">{{lang["CHANGE_PASSWORD"]}}</button></a>
                     <a href="{{ path_for('users_profile_image') }}"><button type="button">{{lang["PROFILE_IMAGE"]}}</button></a>
@@ -82,7 +82,7 @@
                         {{lang["TIMESHEETS"]}}
                     </label>
                 </div>
-                
+
                 <h3>{{lang["MAIL_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxMailsUser">
@@ -108,6 +108,13 @@
                         {{lang["MAILS_BOARD_REMINDER"]}}
                     </label>
                 </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxMailsSplittedBills">
+                        <input name="mails_splitted_bills" type="checkbox" value="1" id="checkboxMailsSplittedBills" {% if user.mails_splitted_bills == 1 %}checked{% endif %}>
+                        {{lang["MAILS_SPLITTED_BILLS"]}}
+                    </label>
+                </div>    
+
                 <h3>{{lang["PWA_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label for="inputStartURL">{{lang["START_URL"]}}</label>
