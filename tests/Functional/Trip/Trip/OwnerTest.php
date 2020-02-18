@@ -36,7 +36,10 @@ class OwnerTest extends TripTestBase {
      * 
      */
     public function testPostParentSave() {
-        $data = ["name" => "Testtrip", "users" => [1]];
+        $data = [
+            "name" => "Testtrip",
+            "users" => [1]
+        ];
         $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
@@ -96,6 +99,8 @@ class OwnerTest extends TripTestBase {
         $result["hash"] = $matches["hash"];
         $result["id"] = $matches["id"];
 
+        $this->compareInputFields($body, $data);
+
         return $result;
     }
 
@@ -109,6 +114,19 @@ class OwnerTest extends TripTestBase {
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
+
+        return $data;
+    }
+
+    /**
+     * @depends testGetParentCreatedEdit
+     * @depends testPostParentCreatedSave
+     */
+    public function testChanges(array $result_data, $data) {
+        $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

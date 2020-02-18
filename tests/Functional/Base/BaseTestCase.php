@@ -356,32 +356,50 @@ class BaseTestCase extends TestCase {
         if (@$dom->loadHTML($body)) {
             $xpath = new \DOMXpath($dom);
 
-            $nodeList = $xpath->query('//input');
-            foreach ($nodeList as $node) {
-                $name = $node->getAttribute('name');
-                $value = $node->getAttribute('value');
-                if ($node->getAttribute('type') == "checkbox" || $node->getAttribute('type') == "radio") {
-                    $value = $node->hasAttribute('checked') ? 1 : 0;
+            $inputs = $xpath->query('//input');
+            foreach ($inputs as $input) {
+                $name = $input->getAttribute('name');
+                $value = $input->getAttribute('value');
+                if ($input->getAttribute('type') == "checkbox" || $input->getAttribute('type') == "radio") {
+                    $value = $input->hasAttribute('checked') ? 1 : 0;
                 }
                 // it's an array
                 if (strpos($name, "[]") !== false) {
                     $name = substr($name, 0, strpos($name, "[]"));
-                    $array_key = $node->getAttribute('value');
+                    $array_key = $input->getAttribute('value');
                     $input_fields[$name][$array_key] = $value;
                 } else {
                     $input_fields[$name] = $value;
                 }
             }
+
+            $selects = $xpath->query('//select');
+            foreach ($selects as $select) {
+                $name = $select->getAttribute('name');
+
+                $options = $xpath->query('option[@selected]/@value', $select);
+                if (strpos($name, "[]") !== false) {
+                    $name = substr($name, 0, strpos($name, "[]"));
+                    foreach ($options as $option) {
+                        $input_fields[$name][] = $option->nodeValue;
+                    }
+                } elseif (count($options) > 0) {
+                    $input_fields[$name] = $options->item(0)->nodeValue;
+                } else {
+                    $input_fields[$name] = null;
+                }
+            }
+
         }
         return $input_fields;
     }
 
     protected function compareInputFields($body, $data) {
         $input_fields = $this->getInputFields($body);
-
+        
         foreach ($data as $key => $val) {
             $this->assertArrayHasKey($key, $input_fields, $key . " missing");
-            $this->assertSame($input_fields[$key], $val, "Field: " . $key . ", Expected: " . $val . ", Actual: " . $input_fields[$key]);
+            $this->assertEquals($input_fields[$key], $val, "Field: " . $key . "");
         }
     }
 
