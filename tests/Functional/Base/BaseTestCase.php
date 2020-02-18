@@ -363,8 +363,14 @@ class BaseTestCase extends TestCase {
                 if ($node->getAttribute('type') == "checkbox" || $node->getAttribute('type') == "radio") {
                     $value = $node->hasAttribute('checked') ? 1 : 0;
                 }
-
-                $input_fields[$name] = $value;
+                // it's an array
+                if (strpos($name, "[]") !== false) {
+                    $name = substr($name, 0, strpos($name, "[]"));
+                    $array_key = $node->getAttribute('value');
+                    $input_fields[$name][$array_key] = $value;
+                } else {
+                    $input_fields[$name] = $value;
+                }
             }
         }
         return $input_fields;
