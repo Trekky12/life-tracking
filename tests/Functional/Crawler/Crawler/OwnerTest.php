@@ -95,6 +95,8 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
         $this->assertArrayHasKey("hash", $matches);
+        
+        $this->compareInputFields($body, $data);
 
         $result = [];
         $result["hash"] = $matches["hash"];
@@ -118,6 +120,8 @@ class OwnerTest extends CrawlerTestBase {
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
+        
+        return $data;
     }
 
     /**
@@ -131,6 +135,17 @@ class OwnerTest extends CrawlerTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<table id="crawlers_data_table"', $body);
+    }
+    
+    /**
+     * @depends testGetParentCreatedEdit
+     * @depends testPostParentCreatedSave
+     */
+    public function testChanges(array $result_data, array $data) {
+        $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

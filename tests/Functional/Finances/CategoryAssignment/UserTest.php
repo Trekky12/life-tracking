@@ -10,6 +10,8 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/finances/categories/assignment/edit/";
     protected $uri_save = "/finances/categories/assignment/save/";
     protected $uri_delete = "/finances/categories/assignment/delete/";
+    
+    protected $TEST_CATEGORY_ID = 1;
 
     protected function setUp(): void {
         $this->login("admin", "admin");
@@ -44,7 +46,7 @@ class UserTest extends BaseTestCase {
 
         $data = [
             "description" => "Test Assignment",
-            "category" => 1,
+            "category" => $this->TEST_CATEGORY_ID,
             "min_value" => null,
             "max_value" => null
         ];
@@ -77,8 +79,9 @@ class UserTest extends BaseTestCase {
     /**
      * Edit created element
      * @depends testAddedElement
+     * @depends testPostAddElement
      */
-    public function testGetElementCreatedEdit(int $entry_id) {
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
@@ -94,6 +97,8 @@ class UserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+        
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -107,7 +112,7 @@ class UserTest extends BaseTestCase {
         $data = [
             "id" => $entry_id,
             "description" => "Test Assignment Updated",
-            "category" => 1,
+            "category" => $this->TEST_CATEGORY_ID,
             "min_value" => 10,
             "max_value" => 50
         ];
@@ -137,6 +142,17 @@ class UserTest extends BaseTestCase {
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+
+    /**
+     * @depends testGetElementCreatedEdit
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $entry_id, $data) {
+        $response = $this->request('GET', $this->uri_edit . $entry_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

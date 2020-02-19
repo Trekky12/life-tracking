@@ -77,8 +77,9 @@ class OwnerTest extends CrawlerTestBase {
     /**
      * Edit created element
      * @depends testAddedElement
+     * @depends testPostAddElement
      */
-    public function testGetElementCreatedEdit(int $entry_id) {
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH) . $entry_id);
 
@@ -94,6 +95,8 @@ class OwnerTest extends CrawlerTestBase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -137,6 +140,17 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+
+    /**
+     * @depends testGetElementUpdated
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $child_id, $data) {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH) . $child_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

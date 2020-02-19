@@ -55,8 +55,8 @@ class OwnerTest extends BaseTestCase {
             "fuel_total_price" => 75,
             "fuel_location" => "Test Location",
             "notice" => "Test",
-            "lat" => "10",
-            "lng" => "5",
+            "lat" => "10.00000000000000",
+            "lng" => "5.00000000000000",
             "acc" => 30
         ];
 
@@ -88,8 +88,9 @@ class OwnerTest extends BaseTestCase {
     /**
      * Edit created element
      * @depends testAddedElement
+     * @depends testPostAddElement
      */
-    public function testGetElementCreatedEdit(int $entry_id) {
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
@@ -105,6 +106,8 @@ class OwnerTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+        
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -128,8 +131,8 @@ class OwnerTest extends BaseTestCase {
             "fuel_total_price" => 75,
             "fuel_location" => "Test Location",
             "notice" => "Test",
-            "lat" => "10",
-            "lng" => "5",
+            "lat" => "10.00000000000000",
+            "lng" => "5.00000000000000",
             "acc" => 30
         ];
 
@@ -158,6 +161,17 @@ class OwnerTest extends BaseTestCase {
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+    
+    /**
+     * @depends testGetElementUpdated
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $child_id, $data) {
+        $response = $this->request('GET', $this->uri_edit . $child_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

@@ -50,8 +50,8 @@ class UserTest extends BaseTestCase {
             "time" => "10:15:52",
             "value" => rand(0, 10000) / 100,
             "paymethod" => 1,
-            "lat" => "10",
-            "lng" => "5",
+            "lat" => "10.00000000000000",
+            "lng" => "5.00000000000000",
             "acc" => 30
         ];
 
@@ -83,8 +83,9 @@ class UserTest extends BaseTestCase {
     /**
      * Edit created element
      * @depends testAddedElement
+     * @depends testPostAddElement
      */
-    public function testGetElementCreatedEdit(int $entry_id) {
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
@@ -100,6 +101,8 @@ class UserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+        
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -146,6 +149,17 @@ class UserTest extends BaseTestCase {
 
         return intval($row["id_edit"]);
     }
+    
+    /**
+     * @depends testGetElementCreatedEdit
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $entry_id, $data) {
+        $response = $this->request('GET', $this->uri_edit . $entry_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
+    }
 
     /**
      * @depends testGetElementUpdated
@@ -158,6 +172,7 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('{"is_deleted":true,"error":""}', $body);
     }
+    
 
     protected function getElementInTable($body, $data, $category_name = "") {
         $value = number_format($data["value"], 2);

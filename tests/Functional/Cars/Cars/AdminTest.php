@@ -78,8 +78,9 @@ class AdminTest extends BaseTestCase {
     /**
      * Edit created element
      * @depends testAddedElement
+     * @depends testPostAddElement
      */
-    public function testGetElementCreatedEdit(int $entry_id) {
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
@@ -95,6 +96,8 @@ class AdminTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+        
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -139,6 +142,17 @@ class AdminTest extends BaseTestCase {
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+    
+    /**
+     * @depends testGetElementUpdated
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $child_id, $data) {
+        $response = $this->request('GET', $this->uri_edit . $child_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

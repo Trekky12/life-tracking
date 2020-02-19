@@ -43,7 +43,10 @@ class OwnerTest extends TimesheetTestBase {
      * 
      */
     public function testPostParentSave() {
-        $data = ["name" => "Testproject", "users" => [1]];
+        $data = [
+            "name" => "Testproject",
+            "users" => [1]
+        ];
         $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
@@ -103,6 +106,8 @@ class OwnerTest extends TimesheetTestBase {
         $result["hash"] = $matches["hash"];
         $result["id"] = $matches["id"];
 
+        $this->compareInputFields($body, $data);
+
         return $result;
     }
 
@@ -111,11 +116,29 @@ class OwnerTest extends TimesheetTestBase {
      * @depends testGetParentCreatedEdit
      */
     public function testPostParentCreatedSave(array $result_data) {
-        $data = ["id" => $result_data["id"], "hash" => $result_data["hash"], "name" => "Testproject Updated 2", "users" => [1, 3]];
+        $data = [
+            "id" => $result_data["id"],
+            "hash" => $result_data["hash"],
+            "name" => "Testproject Updated 2",
+            "users" => [1, 3]
+        ];
         $response = $this->request('POST', $this->uri_save . $result_data["id"], $data);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
+
+        return $data;
+    }
+
+    /**
+     * @depends testGetParentCreatedEdit
+     * @depends testPostParentCreatedSave
+     */
+    public function testChanges(array $result_data, $data) {
+        $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

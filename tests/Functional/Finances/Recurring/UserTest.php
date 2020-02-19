@@ -10,6 +10,10 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/finances/recurring/edit/";
     protected $uri_save = "/finances/recurring/save/";
     protected $uri_delete = "/finances/recurring/delete/";
+    
+    protected $TEST_CATEGORY_ID = 1;
+    protected $TEST_CATEGORY_NAME = "not categorized";
+            
 
     protected function setUp(): void {
         $this->login("admin", "admin");
@@ -44,10 +48,10 @@ class UserTest extends BaseTestCase {
 
         $data = [
             "type" => 0,
-            "category" => null,
+            "category" => $this->TEST_CATEGORY_ID,
             "description" => "Test",
             "value" => rand(0, 10000) / 100,
-            "paymethod" => "",
+            "paymethod" => null,
             "common" => 0,
             "common_value" => "",
             "notice" => "testing",
@@ -74,7 +78,7 @@ class UserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $row = $this->getElementInTable($body, $data);
+        $row = $this->getElementInTable($body, $data, $this->TEST_CATEGORY_NAME);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -85,8 +89,9 @@ class UserTest extends BaseTestCase {
     /**
      * Edit created element
      * @depends testAddedElement
+     * @depends testPostAddElement
      */
-    public function testGetElementCreatedEdit(int $entry_id) {
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
@@ -102,6 +107,8 @@ class UserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+        
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -115,10 +122,10 @@ class UserTest extends BaseTestCase {
         $data = [
             "id" => $entry_id,
             "type" => 0,
-            "category" => null,
+            "category" => $this->TEST_CATEGORY_ID,
             "description" => "Test Updated",
             "value" => 20,
-            "paymethod" => "",
+            "paymethod" => null,
             "common" => 0,
             "common_value" => "",
             "notice" => "testing",
@@ -147,12 +154,23 @@ class UserTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getElementInTable($body, $result_data);
+        $row = $this->getElementInTable($body, $result_data, $this->TEST_CATEGORY_NAME);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+
+    /**
+     * @depends testGetElementCreatedEdit
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $entry_id, $data) {
+        $response = $this->request('GET', $this->uri_edit . $entry_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

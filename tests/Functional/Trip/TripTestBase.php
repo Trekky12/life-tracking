@@ -33,7 +33,7 @@ class TripTestBase extends BaseTestCase {
 
     protected function getChild($body, $name) {
         $matches = [];
-        $re = '/<div class="trip_event\s*(has_notice)?" data-event="(?<id>[0-9]*)">(.*)?<h4>' . $name . '<\/h4>/s';
+        $re = '/<div class="trip_event\s*(has_notice)?" data-event="(?<id>[0-9]*)">\s*<div class="icon">\s*<i class="(.*)?"><\/i>\s*<\/div>\s*<div class="text">\s*<h4>' . $name . '<\/h4>/';
         preg_match($re, $body, $matches);
 
         return $matches;

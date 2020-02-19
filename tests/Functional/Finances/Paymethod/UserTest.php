@@ -75,8 +75,9 @@ class UserTest extends BaseTestCase {
     /**
      * Edit created element
      * @depends testAddedElement
+     * @depends testPostAddElement
      */
-    public function testGetElementCreatedEdit(int $entry_id) {
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
@@ -92,6 +93,8 @@ class UserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -133,6 +136,17 @@ class UserTest extends BaseTestCase {
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+
+    /**
+     * @depends testGetElementCreatedEdit
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $entry_id, $data) {
+        $response = $this->request('GET', $this->uri_edit . $entry_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

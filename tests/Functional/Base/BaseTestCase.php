@@ -390,6 +390,11 @@ class BaseTestCase extends TestCase {
                 }
             }
 
+            $textareas = $xpath->query('//textarea');
+            foreach ($textareas as $textarea) {
+                $name = $textarea->getAttribute('name');
+                $input_fields[$name] = $textarea->textContent;
+            }
         }
         return $input_fields;
     }

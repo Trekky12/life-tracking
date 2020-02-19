@@ -32,8 +32,8 @@ class OwnerTest extends TimesheetTestBase {
      */
     public function testPostChildSave() {
         $data = [
-            "start" => date('Y-m-d') . " 12:00",
-            "end" => date('Y-m-d') . " 14:10",
+            "start" => date('Y-m-d') . " 12:00:00",
+            "end" => date('Y-m-d') . " 14:10:00",
             "notice" => "Test"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
@@ -72,8 +72,9 @@ class OwnerTest extends TimesheetTestBase {
     /**
      * Edit Sheet
      * @depends testGetChildCreated
+     * @depends testPostChildSave
      */
-    public function testGetChildCreatedEdit(int $timesheet_id) {
+    public function testGetChildCreatedEdit(int $timesheet_id, $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $timesheet_id);
 
@@ -89,7 +90,10 @@ class OwnerTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
-        
+
+        unset($data["diff"]);
+        $this->compareInputFields($body, $data);
+
         return intval($matches["id"]);
     }
 
@@ -100,8 +104,8 @@ class OwnerTest extends TimesheetTestBase {
     public function testPostChildCreatedSave(int $timesheet_id) {
         $data = [
             "id" => $timesheet_id,
-            "start" => date('Y-m-d') . " 10:02",
-            "end" => date('Y-m-d') . " 18:55",
+            "start" => date('Y-m-d') . " 10:02:00",
+            "end" => date('Y-m-d') . " 18:55:00",
             "notice" => "Testnotice"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $timesheet_id, $data);
@@ -131,6 +135,18 @@ class OwnerTest extends TimesheetTestBase {
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+
+    /**
+     * @depends testGetChildUpdated
+     * @depends testPostChildCreatedSave
+     */
+    public function testChanges(int $timesheet_id, $data) {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $timesheet_id);
+
+        $body = (string) $response->getBody();
+        unset($data["diff"]);
+        $this->compareInputFields($body, $data);
     }
 
     /**

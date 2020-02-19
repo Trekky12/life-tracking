@@ -32,7 +32,7 @@ class OwnerTest extends TripTestBase {
      */
     public function testPostChildSave() {
         $data = [
-            "name" => "Testevent",
+            "name" => "Testevent 2",
             "start_date" => date('Y-m-d'),
             "start_time" => "12:00:00",
             "start_address" => "Berlin",
@@ -79,8 +79,9 @@ class OwnerTest extends TripTestBase {
     /**
      * Edit event
      * @depends testGetChildCreated
+     * @depends testPostChildSave
      */
-    public function testGetChildCreatedEdit(int $child_id) {
+    public function testGetChildCreatedEdit(int $child_id, $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH) . $child_id);
 
@@ -97,6 +98,8 @@ class OwnerTest extends TripTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
+        $this->compareInputFields($body, $data);
+
         return intval($matches["id"]);
     }
 
@@ -107,13 +110,13 @@ class OwnerTest extends TripTestBase {
     public function testPostChildCreatedSave(int $child_id) {
         $data = [
             "id" => $child_id,
-            "name" => "Testevent Updated",
-            "start_date" => date('Y-m-d'),
+            "name" => "Testevent 2 Updated",
+            "start_date" => "2020-01-01",
             "start_time" => "12:00:00",
             "start_address" => "Berlin",
             "start_lat" => 52.520007,
             "start_lng" => 13.404954,
-            "end_date" => '2020-01-03',
+            "end_date" => date('Y-m-d'),
             "end_time" => "14:10:00",
             "end_address" => null,
             "end_lat" => null,
@@ -146,6 +149,17 @@ class OwnerTest extends TripTestBase {
         $this->assertArrayHasKey("id", $row);
 
         return intval($row["id"]);
+    }
+
+    /**
+     * @depends testGetChildUpdated
+     * @depends testPostChildCreatedSave
+     */
+    public function testChanges(int $child_id, $data) {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH) . $child_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**
