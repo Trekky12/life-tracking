@@ -70,4 +70,18 @@ class LoginTest extends BaseTestCase {
         $this->assertStringContainsString("token=;", $response->getHeaderLine("Set-Cookie"));
     }
 
+    /**
+     * @depends testLoginPage
+     */
+    public function testLoginWithSameCSRFToken(array $csrf_data) {
+        $data = [
+            "username" => "admin",
+            "password" => "admin"
+        ];
+        $response = $this->request('POST', '/login', array_merge($data, $csrf_data));
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('Failed CSRF check!', (string) $response->getBody());
+    }
+
 }

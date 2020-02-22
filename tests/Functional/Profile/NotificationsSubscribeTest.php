@@ -6,16 +6,25 @@ use Tests\Functional\Base\BaseTestCase;
 
 class NotificationsSubscribeTest extends BaseTestCase {
 
-    protected $uri_overview = "/notifications/clients/";
+    protected $uri_overview = "/notifications/";
     protected $uri_subscribe = "/notifications/subscribe/";
     protected $TEST_ENDPOINT = "test_endpoint";
-
+    
     protected function setUp(): void {
         $this->login("user", "user");
     }
 
     protected function tearDown(): void {
         $this->logout();
+    }
+
+    public function testList() {
+        $response = $this->request('GET', $this->uri_overview);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('<h2>Benachrichtigungen</h2>', $body);
     }
 
     public function testSubscribe() {

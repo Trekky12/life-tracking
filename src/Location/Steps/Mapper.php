@@ -79,7 +79,7 @@ class Mapper extends \App\Base\Mapper {
     public function updateSteps($date, $steps_old, $steps_new) {
         $bindings = ["date" => $date, "steps_old" => $steps_old, "steps_new" => $steps_new ];
         
-        $sql = "UPDATE " . $this->getTable() . " SET steps=:steps_new WHERE DATE(createdOn) = :date AND steps >= :steps_old";
+        $sql = "UPDATE " . $this->getTable() . " SET steps=:steps_new WHERE DATE(createdOn) = :date AND (steps >= :steps_old OR steps >= :steps_new)";
 
         $this->filterByUser($sql, $bindings);
         

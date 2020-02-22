@@ -37,7 +37,11 @@ class LocationSelfTest extends BaseTestCase {
      */
     public function testPostAddElement() {
 
-        $data = ["gps_lat" => "10", "gps_lng" => "5", "gps_acc" => 30];
+        $data = [
+            "gps_lat" => rand(0,10),
+            "gps_lng" => rand(0,5),
+            "gps_acc" => rand(0,1000)
+        ];
 
         $response = $this->request('POST', '/location/save/', $data);
 
