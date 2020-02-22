@@ -356,41 +356,17 @@ class BaseTestCase extends TestCase {
         if (@$dom->loadHTML($body)) {
             $xpath = new \DOMXpath($dom);
 
-            $inputs = $xpath->query('//input');
+            $inputs = $xpath->query('//form//input');
             foreach ($inputs as $input) {
-                $name = $input->getAttribute('name');
-                $value = $input->getAttribute('value');
-                if ($input->getAttribute('type') == "checkbox" || $input->getAttribute('type') == "radio") {
-                    $value = $input->hasAttribute('checked') ? 1 : 0;
-                }
-                // it's an array
-                if (strpos($name, "[]") !== false) {
-                    $name = substr($name, 0, strpos($name, "[]"));
-                    $array_key = $input->getAttribute('value');
-                    $input_fields[$name][$array_key] = $value;
-                } else {
-                    $input_fields[$name] = $value;
-                }
+                $this->extractArray($xpath, $input, $input_fields);
             }
 
-            $selects = $xpath->query('//select');
+            $selects = $xpath->query('//form//select');
             foreach ($selects as $select) {
-                $name = $select->getAttribute('name');
-
-                $options = $xpath->query('option[@selected]/@value', $select);
-                if (strpos($name, "[]") !== false) {
-                    $name = substr($name, 0, strpos($name, "[]"));
-                    foreach ($options as $option) {
-                        $input_fields[$name][] = $option->nodeValue;
-                    }
-                } elseif (count($options) > 0) {
-                    $input_fields[$name] = $options->item(0)->nodeValue;
-                } else {
-                    $input_fields[$name] = null;
-                }
+                $this->extractArray($xpath, $select, $input_fields);
             }
 
-            $textareas = $xpath->query('//textarea');
+            $textareas = $xpath->query('//form//textarea');
             foreach ($textareas as $textarea) {
                 $name = $textarea->getAttribute('name');
                 $input_fields[$name] = $textarea->textContent;
@@ -405,6 +381,75 @@ class BaseTestCase extends TestCase {
         foreach ($data as $key => $val) {
             $this->assertArrayHasKey($key, $input_fields, $key . " missing");
             $this->assertEquals($input_fields[$key], $val, "Field: " . $key . "");
+        }
+    }
+
+    private function extractArray($xpath, $node, &$input_fields) {
+        $name = $node->getAttribute('name');
+
+        /**
+         * Get the node value
+         */
+        $value = $node->getAttribute('value');
+
+        $type = $node->nodeName;
+        if ($type == "input" && ($node->getAttribute('type') == "checkbox" || $node->getAttribute('type') == "radio")) {
+            $value = $node->hasAttribute('checked') ? 1 : 0;
+        } elseif ($type == "select") {
+            // get selected options (for selects)
+            $options = $xpath->query('option[@selected]/@value', $node);
+            // multiple values
+            if (strpos($name, "[]") !== false) {
+                $value = [];
+                foreach ($options as $option) {
+                    $value[] = $option->nodeValue;
+                }
+            
+            // has an option
+            } elseif (count($options) > 0) {
+                $value = $options->item(0)->nodeValue;
+            
+            // no value so do not create anything
+            } else {
+                $value = null;
+            }
+        }
+
+        // it's an array 
+        if (strpos($name, "[]") !== false && $type != "select") {
+            $stripped_name = substr($name, 0, strpos($name, "[]"));
+            $array_key = $node->getAttribute('value');
+            $input_fields[$stripped_name][$array_key] = $value;
+
+        // it's an array with named keys
+        } else if (strpos($name, "[") !== false) {
+            $stripped_name = substr($name, 0, strpos($name, "["));
+
+            // find all named keys
+            $matches = [];
+            $re = '/\[(.+?)\]/';
+            preg_match_all($re, $name, $matches, PREG_PATTERN_ORDER);
+
+            // create array key for new array
+            if (!array_key_exists($stripped_name, $input_fields)) {
+                $input_fields[$stripped_name] = [];
+            }
+            // append hierarchically
+            // $result points to $input_fields[$stripped_name]
+            $array_node = &$input_fields[$stripped_name];
+
+            foreach ($matches[1] as $key) {
+                if (!array_key_exists($key, $array_node)) {
+                    $array_node[$key] = [];
+                }
+                // $array_node points to $input_fields[$key] (recursive)
+                $array_node = &$array_node[$key];
+            }
+
+            //$array_node points to $input_fields[key1][key2][..][keyN]
+            $array_node = $value;
+        } else {
+            $input_fields[$name] = $value;
         }
     }
 

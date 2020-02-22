@@ -17,7 +17,7 @@ class OwnerTest extends SplitbillTestBase {
     }
 
     /**
-     * Add new bill
+     * Add new Bill
      */
     public function testGetChildEdit() {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH));
@@ -32,23 +32,23 @@ class OwnerTest extends SplitbillTestBase {
      */
     public function testPostChildSave() {
         $data = [
-            "name" => "Testbill",
+            "name" => "Test",
             "date" => date('Y-m-d'),
             "time" => "12:00:00",
-            "value" => 10,
+            "value" => 50,
             "balance" => [
                 1 => [
-                    "paid" => 5,
-                    "spend" => 0,
+                    "paid" => "50.00",
+                    "spend" => "0.00",
                     "paymethod" => 1
                 ],
                 2 => [
-                    "paid" => 5,
-                    "spend" => 10
+                    "paid" => "0.00",
+                    "spend" => "50.00",
+                    "paymethod" => null
                 ]
             ],
-            "notice" => "Test",
-            "sbgroup" => $this->TEST_GROUP_HASH
+            "notice" => "Test"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH), $data);
 
@@ -59,16 +59,18 @@ class OwnerTest extends SplitbillTestBase {
     }
 
     /**
-     * Is the created bill visible?
+     * Is the created bill available?
      * @depends testPostChildSave
      */
     public function testGetChildCreated(array $data) {
+
         $response = $this->request('GET', $this->getURIView($this->TEST_GROUP_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $row = $this->getChild($body, $data, $this->TEST_GROUP_HASH);
+
+        $row = $this->getChild($body, $data, $this->TEST_GROUP_HASH, 1);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -77,14 +79,15 @@ class OwnerTest extends SplitbillTestBase {
     }
 
     /**
-     * Update Bill
+     * Update Bills
      */
 
     /**
      * Edit Bill
      * @depends testGetChildCreated
+     * @depends testPostChildSave
      */
-    public function testGetChildCreatedEdit(int $bill_id) {
+    public function testGetChildCreatedEdit(int $bill_id, $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $bill_id);
 
@@ -101,6 +104,8 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
+        $this->compareInputFields($body, $data);
+
         return intval($matches["id"]);
     }
 
@@ -109,26 +114,26 @@ class OwnerTest extends SplitbillTestBase {
      * @depends testGetChildCreatedEdit
      */
     public function testPostChildCreatedSave(int $bill_id) {
+
         $data = [
             "id" => $bill_id,
-            "name" => "Testbill Updated",
-            "sbgroup" => $this->TEST_GROUP_HASH,
+            "name" => "Testbill updated",
             "date" => date('Y-m-d'),
             "time" => "12:00:00",
-            "value" => 15,
+            "value" => 50,
             "balance" => [
                 1 => [
-                    "paid" => 5,
-                    "spend" => 5,
+                    "paid" => "20.00",
+                    "spend" => "40.00",
                     "paymethod" => 1
                 ],
                 2 => [
-                    "paid" => 10,
-                    "spend" => 10
+                    "paid" => "30.00",
+                    "spend" => "10.00",
+                    "paymethod" => null
                 ]
-            ]
+            ],
         ];
-
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_GROUP_HASH) . $bill_id, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
@@ -142,13 +147,14 @@ class OwnerTest extends SplitbillTestBase {
      * @depends testPostChildCreatedSave
      */
     public function testGetChildUpdated(array $data) {
+
         $response = $this->request('GET', $this->getURIView($this->TEST_GROUP_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
 
-        $row = $this->getChild($body, $data, $this->TEST_GROUP_HASH);
+        $row = $this->getChild($body, $data, $this->TEST_GROUP_HASH, 1);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -157,10 +163,22 @@ class OwnerTest extends SplitbillTestBase {
     }
 
     /**
-     * Delete bill
+     * @depends testGetChildUpdated
+     * @depends testPostChildCreatedSave
+     */
+    public function testChanges(int $child_id, $data) {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $child_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
+    }
+
+    /**
+     * Delete Bill
      * @depends testGetChildUpdated
      */
     public function testDeleteChild(int $bill_id) {
+
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_GROUP_HASH) . $bill_id);
 
         $this->assertEquals(200, $response->getStatusCode());

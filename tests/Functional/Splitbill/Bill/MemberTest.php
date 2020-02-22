@@ -7,7 +7,7 @@ use Tests\Functional\Splitbill\SplitbillTestBase;
 class MemberTest extends SplitbillTestBase {
 
     protected $TEST_GROUP_HASH = "ABCabc123";
-    
+
     protected function setUp(): void {
         $this->login("user", "user");
     }
@@ -38,13 +38,14 @@ class MemberTest extends SplitbillTestBase {
             "value" => 50,
             "balance" => [
                 1 => [
-                    "paid" => 50,
-                    "spend" => 0,
+                    "paid" => "50.00",
+                    "spend" => "0.00",
                     "paymethod" => 1
                 ],
                 2 => [
-                    "paid" => 0,
-                    "spend" => 50
+                    "paid" => "0.00",
+                    "spend" => "50.00",
+                    "paymethod" => null
                 ]
             ],
             "notice" => "Test"
@@ -84,8 +85,9 @@ class MemberTest extends SplitbillTestBase {
     /**
      * Edit Bill
      * @depends testGetChildCreated
+     * @depends testPostChildSave
      */
-    public function testGetChildCreatedEdit(int $bill_id) {
+    public function testGetChildCreatedEdit(int $bill_id, $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $bill_id);
 
@@ -101,6 +103,8 @@ class MemberTest extends SplitbillTestBase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
+
+        $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
@@ -119,13 +123,14 @@ class MemberTest extends SplitbillTestBase {
             "value" => 50,
             "balance" => [
                 1 => [
-                    "paid" => 20,
-                    "spend" => 40,
+                    "paid" => "20.00",
+                    "spend" => "40.00",
                     "paymethod" => 1
                 ],
                 2 => [
-                    "paid" => 30,
-                    "spend" => 10
+                    "paid" => "30.00",
+                    "spend" => "10.00",
+                    "paymethod" => null
                 ]
             ],
         ];
@@ -155,6 +160,17 @@ class MemberTest extends SplitbillTestBase {
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
+    }
+
+    /**
+     * @depends testGetChildUpdated
+     * @depends testPostChildCreatedSave
+     */
+    public function testChanges(int $child_id, $data) {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $child_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**

@@ -10,6 +10,7 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/finances/budgets/edit/";
     protected $uri_save = "/finances/budgets/saveAll";
     protected $uri_delete = "/finances/budgets/delete/";
+    protected $TEST_CATEGORY_ID = "2";
 
     protected function setUp(): void {
         $this->login("user", "user");
@@ -45,18 +46,18 @@ class UserTest extends BaseTestCase {
         $data = [
             "budget" => [
                 [
-                    "description" => "Rest",
-                    "id" => null,
-                    "value" => 5,
-                    "is_remaining" => 1
-                ],
-                [
                     "description" => "Test Budget",
                     "category" => [
-                        1
+                        $this->TEST_CATEGORY_ID
                     ],
-                    "value" => 5,
+                    "value" => "5.00",
                     "is_hidden" => 0
+                ],
+                [
+                    "description" => "Rest",
+                    "id" => null,
+                    "value" => "5.00",
+                    "is_remaining" => 1
                 ]
             ]
         ];
@@ -97,19 +98,19 @@ class UserTest extends BaseTestCase {
         $data = [
             "budget" => [
                 [
-                    "description" => "Rest",
-                    "id" => $result_data["id_rest"],
-                    "value" => 2,
-                    "is_remaining" => 1
+                    "id" => $result_data["id_regular"],
+                    "description" => "Test Budget Updated",
+                    "value" => "8.00",
+                    "is_hidden" => 0,
+                    "category" => [
+                        $this->TEST_CATEGORY_ID
+                    ]
                 ],
                 [
-                    "description" => "Test Budget Updated",
-                    "category" => [
-                        1
-                    ],
-                    "value" => 8,
-                    "is_hidden" => 0,
-                    "id" => $result_data["id_regular"]
+                    "is_remaining" => "1",
+                    "id" => $result_data["id_rest"],
+                    "description" => "Rest",
+                    "value" => "2.00",
                 ]
             ]
         ];
@@ -120,6 +121,16 @@ class UserTest extends BaseTestCase {
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
 
         return $data;
+    }
+
+    /**
+     * @depends testPostUpdateElements
+     */
+    public function testChanges(array $data) {
+        $response = $this->request('GET', $this->uri_edit);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
     }
 
     /**
@@ -181,22 +192,22 @@ class UserTest extends BaseTestCase {
 
         // check first (regular) entry
         $expected_value1 = number_format($rows[0]["value"], 2);
-        $real_value1 = number_format($data["budget"][1]["value"], 2);
+        $real_value1 = number_format($data["budget"][0]["value"], 2);
         $this->assertEquals($expected_value1, $real_value1);
 
         $expected_name1 = $rows[0]["name"];
-        $real_name1 = $data["budget"][1]["description"];
+        $real_name1 = $data["budget"][0]["description"];
         $this->assertEquals($expected_name1, $real_name1);
 
         $this->assertArrayHasKey("id", $rows[0]);
 
         // check last ("Rest") entry
         $expected_value2 = number_format($rows[1]["value"], 2);
-        $real_value2 = number_format($data["budget"][0]["value"], 2);
+        $real_value2 = number_format($data["budget"][1]["value"], 2);
         $this->assertEquals($expected_value2, $real_value2);
 
         $expected_name2 = $rows[1]["name"];
-        $real_name2 = $data["budget"][0]["description"];
+        $real_name2 = $data["budget"][1]["description"];
         $this->assertEquals($expected_name2, $real_name2);
 
         $this->assertArrayHasKey("id", $rows[1]);
