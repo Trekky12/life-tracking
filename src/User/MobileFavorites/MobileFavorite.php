@@ -25,7 +25,7 @@ class MobileFavorite extends \App\Base\Model {
         return $url;
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return $this->url;
     }
 

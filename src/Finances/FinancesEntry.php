@@ -71,8 +71,8 @@ class FinancesEntry extends \App\Base\Model {
             'type' => 1];
     }
 
-    public function get_fields($removeUser = false, $insert = true) {
-        if (!is_null($this->bill) && !$insert) {
+    public function get_fields($remove_user_element = false, $for_db_insert = true) {
+        if (!is_null($this->bill) && !$for_db_insert) {
             /**
              * When a finance entry from a bill is edited, 
              * only the following fields can be updated
@@ -84,17 +84,17 @@ class FinancesEntry extends \App\Base\Model {
             $temp["changedOn"] = $this->changedOn;
             $temp["paymethod"] = $this->paymethod;
             $temp["notice"] = $this->notice;
-            if (!$removeUser) {
+            if (!$remove_user_element) {
                 $temp["user"] = $this->user;
             }
             return $temp;
         }
 
-        return parent::get_fields($removeUser, $insert);
+        return parent::get_fields($remove_user_element, $for_db_insert);
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
-        $currency = $ci->get('settings')['app']['i18n']['currency'];
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
+        $currency = $settings['app']['i18n']['currency'];
         return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
 

@@ -2,8 +2,9 @@
 
 namespace App\User;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -11,13 +12,14 @@ class Controller extends \App\Base\Controller {
     protected $element_view_route = 'users_edit';
     protected $index_route = 'users';
 
-    public function init() {
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
         $this->mapper = $this->user_mapper;
     }
 
     public function index(Request $request, Response $response) {
         $list = $this->user_mapper->getAll('login');
-        return $this->ci->view->render($response, 'user/index.twig', ['list' => $list]);
+        return $this->twig->render($response, 'user/index.twig', ['list' => $list]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -29,7 +31,7 @@ class Controller extends \App\Base\Controller {
             $entry = $this->user_mapper->get($entry_id);
         }
 
-        return $this->ci->view->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles()]);
+        return $this->twig->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles()]);
     }
 
     public function testMail(Request $request, Response $response) {
@@ -44,24 +46,24 @@ class Controller extends \App\Base\Controller {
             $variables = array(
                 'header' => '',
                 'subject' => $subject,
-                'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $entry->name),
-                'content' => $this->ci->get('helper')->getTranslatedString('THISISATESTEMAIL')
+                'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $entry->name),
+                'content' => $this->translation->getTranslatedString('THISISATESTEMAIL')
             );
 
-            $return = $this->ci->get('helper')->send_mail('mail/general.twig', $entry->mail, $subject, $variables);
+            $return = $this->helper->send_mail('mail/general.twig', $entry->mail, $subject, $variables);
 
             if ($return) {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("USER_EMAIL_SUCCESS"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("USER_EMAIL_SUCCESS"));
+                $this->flash->addMessage('message_type', 'success');
             } else {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("USER_EMAIL_ERROR"));
-                $this->ci->get('flash')->addMessage('message_type', 'danger');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("USER_EMAIL_ERROR"));
+                $this->flash->addMessage('message_type', 'danger');
             }
         } else {
-            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("USER_HAS_NO_EMAIL"));
-            $this->ci->get('flash')->addMessage('message_type', 'danger');
+            $this->flash->addMessage('message', $this->translation->getTranslatedString("USER_HAS_NO_EMAIL"));
+            $this->flash->addMessage('message_type', 'danger');
         }
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+        return $response->withRedirect($this->router->pathFor($this->index_route), 301);
     }
 
     private function roles() {
@@ -75,26 +77,26 @@ class Controller extends \App\Base\Controller {
             $user = $this->user_mapper->get($id);
             if ($user->mail && $user->mails_user == 1) {
 
-                $subject = sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->ci->get('helper')->getPath());
+                $subject = sprintf($this->translation->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->helper->getBaseURL());
 
                 $variables = array(
                     'header' => '',
                     'subject' => $subject,
-                    'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                    'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_USER_ACCOUNT_CREATED'), $this->ci->get('helper')->getPath(), $this->ci->get('helper')->getPath())
+                    'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
+                    'content' => sprintf($this->translation->getTranslatedString('MAIL_USER_ACCOUNT_CREATED'), $this->helper->getBaseURL(), $this->helper->getBaseURL())
                     . '<br/>&nbsp;<br/>&nbsp;'
-                    . sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_USERNAME'), $user->login)
+                    . sprintf($this->translation->getTranslatedString('MAIL_YOUR_USERNAME'), $user->login)
                 );
 
                 if (array_key_exists("set_password", $data)) {
-                    $variables["content"] .= '<br/>&nbsp;' . sprintf($this->ci->get('helper')->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["set_password"]);
+                    $variables["content"] .= '<br/>&nbsp;' . sprintf($this->translation->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["set_password"]);
                 }
 
                 if ($user->force_pw_change == 1) {
-                    $variables["content"] .= '<br/>&nbsp;<br/>&nbsp;' . $this->ci->get('helper')->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
+                    $variables["content"] .= '<br/>&nbsp;<br/>&nbsp;' . $this->translation->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
                 }
 
-                $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
+                $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
             }
         }
     }

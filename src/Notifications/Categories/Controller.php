@@ -2,8 +2,9 @@
 
 namespace App\Notifications\Categories;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -13,8 +14,12 @@ class Controller extends \App\Base\Controller {
     protected $element_view_route = 'notifications_categories_edit';
     protected $module = "notifications";
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
@@ -22,7 +27,7 @@ class Controller extends \App\Base\Controller {
         $categories_filtered = array_filter($categories, function($cat){
             return !$cat->isInternal();
         });
-        return $this->ci->view->render($response, 'notifications/categories/index.twig', ['categories' => $categories_filtered]);
+        return $this->twig->render($response, 'notifications/categories/index.twig', ['categories' => $categories_filtered]);
     }
 
     protected function preEdit($id, Request $request) {
@@ -37,7 +42,7 @@ class Controller extends \App\Base\Controller {
         if (!is_null($id)) {
             $cat = $this->mapper->get($id);
             if ($cat->isInternal()) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
             }
         }
     }

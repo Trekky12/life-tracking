@@ -2,19 +2,21 @@
 
 namespace App\Middleware;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Container\ContainerInterface;
 
 /**
  * Save Base URL for Links in E-Mails
  */
 class BaseURLMiddleware {
 
-    protected $ci;
+    protected $helper;
+    protected $twig;
 
     public function __construct(ContainerInterface $ci) {
-        $this->ci = $ci;
+        $this->helper = $ci->get('helper');
+        $this->twig = $ci->get('view');
     }
 
     public function __invoke(Request $request, Response $response, $next) {
@@ -30,11 +32,11 @@ class BaseURLMiddleware {
 
         $path = ($scheme ? $scheme . ':' : '') . ($host ? '//' . $host : '') . rtrim($basePath, '/');
 
-        $this->ci->get('helper')->setPath($path);
+        $this->helper->setBaseURL($path);
         
         $currentURL = $request->getUri()->getPath();
         // add to view
-        $this->ci->get('view')->getEnvironment()->addGlobal("currentURL", $currentURL);
+        $this->twig->getEnvironment()->addGlobal("currentURL", $currentURL);
 
         return $next($request, $response);
     }

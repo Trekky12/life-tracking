@@ -23,7 +23,7 @@ class Assignment extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return $this->description;
     }
 

@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = 'notifications';
     protected $model = '\App\Notifications\Notification';
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = true;
 
     public function getNotificationsByUser($user, $limit = 2, $offset = 0) {
-        $sql = "SELECT * FROM " . $this->getTable() . "  WHERE user = :user ORDER BY id DESC LIMIT {$offset},{$limit}";
+        $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE user = :user ORDER BY id DESC LIMIT {$offset},{$limit}";
 
         $bindings = array("user" => $user);
 
@@ -26,7 +26,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getNotificationsCountByUser($user) {
-        $sql = "SELECT COUNT(*) FROM " . $this->getTable() . "  WHERE user = :user";
+        $sql = "SELECT COUNT(*) FROM " . $this->getTableName() . "  WHERE user = :user";
 
         $bindings = array("user" => $user);
 
@@ -40,17 +40,17 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function markAsSeen($notifications) {
-        $sql = "UPDATE " . $this->getTable() . " SET seen = CURRENT_TIMESTAMP WHERE id in (" . implode(',', $notifications) . ")";
+        $sql = "UPDATE " . $this->getTableName() . " SET seen = CURRENT_TIMESTAMP WHERE id in (" . implode(',', $notifications) . ")";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute();
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function getUnreadNotificationsCountByUser($user) {
-        $sql = "SELECT COUNT(*) FROM " . $this->getTable() . "  WHERE user = :user AND seen IS NULL";
+        $sql = "SELECT COUNT(*) FROM " . $this->getTableName() . "  WHERE user = :user AND seen IS NULL";
 
         $bindings = array("user" => $user);
 

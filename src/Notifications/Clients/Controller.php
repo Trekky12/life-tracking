@@ -2,8 +2,9 @@
 
 namespace App\Notifications\Clients;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -11,14 +12,18 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'notifications';
     protected $module = "notifications";
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $list = $this->mapper->getAll();
         $users = $this->user_mapper->getAll();
-        return $this->ci->view->render($response, 'notifications/clients/index.twig', ['list' => $list, 'users' => $users]);
+        return $this->twig->render($response, 'notifications/clients/index.twig', ['list' => $list, 'users' => $users]);
     }
 
     public function subscribe(Request $request, Response $response) {
@@ -27,9 +32,9 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
 
         $entry = new NotificationClient($data);
-        $entry->ip = $this->ci->get('helper')->getIP();
-        $entry->agent = $this->ci->get('helper')->getAgent();
-        $entry->user = $this->ci->get('helper')->getUser()->id;
+        $entry->ip = $this->helper->getIP();
+        $entry->agent = $this->helper->getAgent();
+        $entry->user = $this->user_helper->getUser()->id;
         $entry->changedOn = date('Y-m-d H:i:s');
 
         $result = array('status' => 'error');

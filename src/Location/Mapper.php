@@ -9,9 +9,9 @@ class Mapper extends \App\Base\Mapper {
 
     public function getMarkers($from, $to) {
         $bindings = ["from" => $from, "to" => $to];
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE DATE(createdOn) >= :from AND DATE(createdOn) <= :to";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE DATE(createdOn) >= :from AND DATE(createdOn) <= :to";
 
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

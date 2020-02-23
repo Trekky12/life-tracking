@@ -2,8 +2,9 @@
 
 namespace App\User\MobileFavorites;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class ControllerAdmin extends \App\Base\Controller {
 
@@ -17,8 +18,12 @@ class ControllerAdmin extends \App\Base\Controller {
     // when saving new entries
     protected $user_from_attribute = true;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
@@ -31,7 +36,7 @@ class ControllerAdmin extends \App\Base\Controller {
         }
 
         $list = $this->mapper->getAll('position');
-        return $this->ci->view->render($response, 'profile/mobile_favorites/index.twig', ['list' => $list, 'for_user' => $user]);
+        return $this->twig->render($response, 'profile/mobile_favorites/index.twig', ['list' => $list, 'for_user' => $user]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -52,7 +57,7 @@ class ControllerAdmin extends \App\Base\Controller {
         }
         $this->preEdit($entry_id, $request);
 
-        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'for_user' => $user]);
+        return $this->twig->render($response, $this->edit_template, ['entry' => $entry, 'for_user' => $user]);
     }
 
     protected function afterSave($id, array $data, Request $request) {

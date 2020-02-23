@@ -6,13 +6,13 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "trips_event";
     protected $model = "\App\Trips\Event\Event";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     public function getFromTrip($id, $from = null, $to = null, $order = null) {
         $bindings = array("id" => $id);
 
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE trip = :id ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE trip = :id ";
 
         if (!is_null($from) && !is_null($to)) {
             $sql .= " AND ( start_date = :from OR end_date = :from OR (:from BETWEEN start_date AND end_date) OR (:to BETWEEN start_date AND end_date)) ";
@@ -37,10 +37,10 @@ class Mapper extends \App\Base\Mapper {
 
     public function getMinMaxEventsDate($id) {
         $sql = "SELECT MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
-                . " FROM " . $this->getTable() . ""
+                . " FROM " . $this->getTableName() . ""
                 . " WHERE trip = :id ";
         $bindings = ["id" => $id];
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
         $sql .= " LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -57,7 +57,7 @@ class Mapper extends \App\Base\Mapper {
     public function getMinMaxEventsDates() {
         $bindings = [];
         $sql = "SELECT trip, MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
-                . " FROM " . $this->getTable() . ""
+                . " FROM " . $this->getTableName() . ""
                 . " GROUP BY trip";
 
         $stmt = $this->db->prepare($sql);
@@ -75,19 +75,19 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function update_image($id, $image) {
-        $sql = "UPDATE " . $this->getTable() . " SET image=:image WHERE id=:id";
+        $sql = "UPDATE " . $this->getTableName() . " SET image=:image WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "image" => $image,
             "id" => $id
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function updatePosition($id, $position, $user) {
-        $sql = "UPDATE " . $this->getTable() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+        $sql = "UPDATE " . $this->getTableName() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "position" => $position,
@@ -96,7 +96,7 @@ class Mapper extends \App\Base\Mapper {
             "changedBy" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 

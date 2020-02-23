@@ -2,30 +2,35 @@
 
 namespace App\User\Token;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
     protected $index_route = 'users_login_tokens';
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         // only tokens of current user
-        $this->mapper->setFilterByUser(true);
+        $user = $this->user_helper->getUser();
+        $this->mapper->setSelectFilterForUser($user);
         $list = $this->mapper->getAll();
-        return $this->ci->view->render($response, 'user/tokens.twig', ['list' => $list]);
+        return $this->twig->render($response, 'user/tokens.twig', ['list' => $list]);
     }
 
     protected function preDelete($id, Request $request) {
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
         $token = $this->mapper->get($id);
 
         if (intval($token->user) !== intval($user->id)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString("NO_ACCESS"));
+            throw new \Exception($this->translation->getTranslatedString("NO_ACCESS"));
         }
     }
 

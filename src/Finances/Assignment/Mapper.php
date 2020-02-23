@@ -11,7 +11,7 @@ class Mapper extends \App\Base\Mapper {
         
         $bindings = ["description" => trim($description), "value" => floatval($value), "user" => $user_id];
         
-        $sql = "SELECT category FROM " . $this->getTable() . " "
+        $sql = "SELECT category FROM " . $this->getTableName() . " "
                 . " WHERE "
                 // same description
                 . " (LOWER(description) = LOWER(:description) ) "

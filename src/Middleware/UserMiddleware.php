@@ -2,20 +2,26 @@
 
 namespace App\Middleware;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Container\ContainerInterface;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 
 class UserMiddleware {
 
-    protected $ci;
     protected $logger;
+    protected $helper;
+    protected $user_helper;
+    protected $router;
+    protected $settings;
 
     public function __construct(ContainerInterface $ci) {
-        $this->ci = $ci;
-        $this->logger = $this->ci->get('logger');
+        $this->logger = $ci->get('logger');
+        $this->helper = $ci->get('helper');
+        $this->user_helper = $ci->get('user_helper');
+        $this->router = $ci->get('router');
+        $this->settings = $ci->get('settings');
     }
 
     public function __invoke(Request $request, Response $response, $next) {
@@ -24,7 +30,7 @@ class UserMiddleware {
          * Get and Cache User Object from Token for later use
          */
         $token = FigRequestCookies::get($request, 'token');
-        if(!$this->ci->get('helper')->setUserFromToken($token->getValue())){
+        if (!$this->user_helper->setUserFromToken($token->getValue())) {
             // token not in database -> delete cookie
             $response = FigResponseCookies::expire($response, 'token');
         }
@@ -32,7 +38,7 @@ class UserMiddleware {
         /**
          *  Always allow access to guest routes
          */
-        $allowed_routes = $this->ci->get('settings')['app']['guest_access'];
+        $allowed_routes = $this->settings['app']['guest_access'];
         $route = $request->getAttribute('route');
         if (!is_null($route) && in_array($route->getName(), $allowed_routes)) {
             return $next($request, $response);
@@ -41,7 +47,7 @@ class UserMiddleware {
         /**
          * Check User Object
          */
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
 
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {
@@ -71,7 +77,7 @@ class UserMiddleware {
 
             if (!is_null($username) && !is_null($password)) {
                 $this->logger->addDebug('HTTP Auth', array("user" => $username));
-                if ($this->ci->get('helper')->checkLogin($username, $password)) {
+                if ($this->user_helper->checkLogin($username, $password)) {
                     return $next($request, $response);
                 }
 
@@ -84,11 +90,11 @@ class UserMiddleware {
         /**
          * Save target URI for later redirect
          */
-        $uri = $this->ci->get('helper')->getRequestURI($request);
-        $this->ci->get('helper')->setSessionVar("redirectURI", $uri);
+        $uri = $this->helper->getRequestURI($request);
+        $this->helper->setSessionVar("redirectURI", $uri);
 
         // redirect to the login page
-        return $response->withRedirect($this->ci->get('router')->pathFor('login'), 302);
+        return $response->withRedirect($this->router->pathFor('login'), 302);
     }
 
 }

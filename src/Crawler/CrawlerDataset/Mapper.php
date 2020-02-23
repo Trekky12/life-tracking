@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "crawlers_dataset";
     protected $model = "\App\Crawler\CrawlerDataset\CrawlerDataset";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     private function getTableSQL($select, $filter = "changedOn") {
-        $sql = "SELECT {$select} FROM " . $this->getTable() . " "
+        $sql = "SELECT {$select} FROM " . $this->getTableName() . " "
                 . " WHERE crawler = :crawler "
                 . "   AND DATE({$filter}) >= :from "
                 . "   AND DATE({$filter}) <= :to "
@@ -28,7 +28,7 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function getDataFromCrawler($crawler, $from, $to, $filter = "changedOn", $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
@@ -56,7 +56,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getIDFromIdentifier($crawler, $identifier) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE identifier = :identifier AND crawler = :crawler";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE identifier = :identifier AND crawler = :crawler";
 
         $bindings = array("identifier" => $identifier, "crawler" => $crawler);
 

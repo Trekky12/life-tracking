@@ -2,8 +2,9 @@
 
 namespace App\Splitbill\Bill;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -15,11 +16,22 @@ class Controller extends \App\Base\Controller {
     protected $module = "splitbills";
     private $group_mapper;
     private $paymethod_mapper;
+    private $finance_mapper;
+    private $finance_ctrl;
+    private $notification_ctrl;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->group_mapper = new \App\Splitbill\Group\Mapper($this->ci);
-        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->group_mapper = new \App\Splitbill\Group\Mapper($this->db, $this->translation, $user);
+        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->db, $this->translation, $user);
+
+        $this->finance_mapper = new \App\Finances\Mapper($this->db, $this->translation, $user);
+        $this->finance_ctrl = new \App\Finances\Controller($ci);
+        $this->notification_ctrl = new \App\Notifications\Controller($ci);
     }
 
     public function index(Request $request, Response $response) {
@@ -37,14 +49,14 @@ class Controller extends \App\Base\Controller {
 
         list($balance, $my_balance) = $this->calculateBalance($group->id);
 
-        return $this->ci->view->render($response, 'splitbills/bills/index.twig', [
+        return $this->twig->render($response, 'splitbills/bills/index.twig', [
                     "bills" => $table,
                     "group" => $group,
                     "datacount" => $datacount,
                     "balance" => $balance,
                     "my_balance" => $my_balance,
                     "hasSplitbillTable" => true,
-                    "currency" => $this->ci->get('settings')['app']['i18n']['currency'],
+                    "currency" => $this->settings['app']['i18n']['currency'],
                     "users" => $users
         ]);
     }
@@ -73,11 +85,12 @@ class Controller extends \App\Base\Controller {
         $data = $this->mapper->getTableData($group->id, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
         $rendered_data = $this->renderTableRows($group, $data);
 
-        return $response->withJson([
-                    "recordsTotal" => intval($recordsTotal),
-                    "recordsFiltered" => intval($recordsFiltered),
-                    "data" => $rendered_data
-        ]);
+        $response_data = [
+            "recordsTotal" => intval($recordsTotal),
+            "recordsFiltered" => intval($recordsFiltered),
+            "data" => $rendered_data
+        ];
+        return $response->withJson($response_data);
     }
 
     public function edit(Request $request, Response $response) {
@@ -106,7 +119,7 @@ class Controller extends \App\Base\Controller {
 
         $paymethods = $this->paymethod_mapper->getAllfromUsers($group_users);
 
-        return $this->ci->view->render($response, $this->edit_template, [
+        return $this->twig->render($response, $this->edit_template, [
                     'entry' => $entry,
                     'group' => $group,
                     'group_users' => $group_users,
@@ -191,11 +204,11 @@ class Controller extends \App\Base\Controller {
                 }
 
                 // delete success message of bill
-                $this->ci->get('flash')->clearMessage('message');
+                $this->flash->clearMessage('message');
 
                 // add error message
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("SPLITBILLS_BILL_ERROR"));
-                $this->ci->get('flash')->addMessage('message_type', 'danger');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("SPLITBILLS_BILL_ERROR"));
+                $this->flash->addMessage('message_type', 'danger');
             }
         }
 
@@ -209,14 +222,14 @@ class Controller extends \App\Base\Controller {
      */
     private function checkAccess($id) {
         $splitbill_groups_users = $this->group_mapper->getUsers($id);
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         if (!in_array($user, $splitbill_groups_users)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 
     private function renderTableRows($group, array $bills) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
 
         $rendered_data = [];
         foreach ($bills as $bill) {
@@ -237,8 +250,8 @@ class Controller extends \App\Base\Controller {
             }
 
             if ($bill->user == $user) {
-                $row[] = '<a href="' . $this->ci->get('router')->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-                $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+                $row[] = '<a href="' . $this->router->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+                $row[] = '<a href="#" data-url="' . $this->router->pathFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
             }
 
             $rendered_data[] = $row;
@@ -250,7 +263,7 @@ class Controller extends \App\Base\Controller {
         $balance = $this->mapper->getTotalBalance($group);
         $settled = $this->mapper->getSettledUpSpendings($group, 1);
 
-        $me = intval($this->ci->get('helper')->getUser()->id);
+        $me = intval($this->user_helper->getUser()->id);
 
         if (!array_key_exists($me, $balance)) {
             return array($balance, null);
@@ -347,9 +360,6 @@ class Controller extends \App\Base\Controller {
     }
 
     private function addBalancesForUsers($bill, $group, $balances, $totalValue, $users) {
-        $finance_mapper = new \App\Finances\Mapper($this->ci);
-        $finance_ctrl = new \App\Finances\Controller($this->ci);
-
         foreach ($balances as $b) {
             $this->mapper->addOrUpdateBalance($bill->id, $b["user"], $b["paid"], $b["spend"], $b["paymethod"], $b["paid_foreign"], $b["spend_foreign"]);
 
@@ -373,10 +383,10 @@ class Controller extends \App\Base\Controller {
                         "paymethod" => $b["paymethod"]
                     ]);
 
-                    $entry->category = $finance_ctrl->getDefaultOrAssignedCategory($b["user"], $entry);
-                    $finance_mapper->addOrUpdateFromBill($entry);
+                    $entry->category = $this->finance_ctrl->getDefaultOrAssignedCategory($b["user"], $entry);
+                    $this->finance_mapper->addOrUpdateFromBill($entry);
                 } else {
-                    $finance_mapper->deleteEntrywithBill($bill->id, $b["user"]);
+                    $this->finance_mapper->deleteEntrywithBill($bill->id, $b["user"]);
                 }
             }
         }
@@ -386,56 +396,54 @@ class Controller extends \App\Base\Controller {
         /**
          * Notify users
          */
-        $me = $this->ci->get('helper')->getUser();
+        $me = $this->user_helper->getUser();
         $my_user_id = intval($me->id);
         $users_afterSave = $this->mapper->getBillUsers($bill->id);
 
         $new_balances = $this->mapper->getBalance($bill->id);
         $billValue = $this->mapper->getBillSpend($bill->id);
 
-        $group_path = $this->ci->get('router')->pathFor('splitbill_bills', array('group' => $sbgroup->getHash()));
-        $group_url = $this->ci->get('helper')->getPath() . $group_path;
+        $group_path = $this->router->pathFor('splitbill_bills', array('group' => $sbgroup->getHash()));
+        $group_url = $this->helper->getBaseURL() . $group_path;
 
         $is_new_bill = count($existing_balance) == 0;
 
         if ($bill->settleup === 0) {
 
             if ($type == "edit") {
-                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_SUBJECT');
-                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_DETAIL');
+                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_SUBJECT');
+                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_DETAIL');
                 if (!$is_new_bill) {
-                    $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_SUBJECT');
-                    $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_DETAIL');
+                    $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_SUBJECT');
+                    $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_DETAIL');
                 }
             } else {
-                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_SUBJECT');
-                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_DETAIL');
+                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_SUBJECT');
+                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_DETAIL');
             }
 
             $subject = sprintf($subject1, $bill->name);
             $content = sprintf($content1, $me->name, $bill->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
-            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPEND');
-            $lang_paid = $this->ci->get('helper')->getTranslatedString('PAID');
+            $lang_spend = $this->translation->getTranslatedString('SPEND');
+            $lang_paid = $this->translation->getTranslatedString('PAID');
         } else {
             if ($type == "edit") {
-                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT');
-                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DETAIL');
+                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT');
+                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DETAIL');
                 if (!$is_new_bill) {
-                    $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT');
-                    $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL');
+                    $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT');
+                    $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL');
                 }
             } else {
-                $subject1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT');
-                $content1 = $this->ci->get('helper')->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL');
+                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT');
+                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL');
             }
 
             $subject = sprintf($subject1, $me->name);
             $content = sprintf($content1, $me->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
-            $lang_spend = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_SENDER');
-            $lang_paid = $this->ci->get('helper')->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
+            $lang_spend = $this->translation->getTranslatedString('SPLITBILLS_SETTLE_UP_SENDER');
+            $lang_paid = $this->translation->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
         }
-
-        $notificationCtrl = new \App\Notifications\Controller($this->ci);
 
         foreach ($users_afterSave as $nu) {
 
@@ -449,7 +457,7 @@ class Controller extends \App\Base\Controller {
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
-                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
                         'content' => $content,
                         'currency' => $sbgroup->currency,
                         'balances' => $new_balances,
@@ -458,11 +466,11 @@ class Controller extends \App\Base\Controller {
                         'LANG_PAID' => $lang_paid,
                     );
 
-                    $this->ci->get('helper')->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
+                    $this->helper->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
                 }
 
                 // Notification
-                $notificationCtrl->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path);
+                $this->notification_ctrl->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path);
             }
         }
     }

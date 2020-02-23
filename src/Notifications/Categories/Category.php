@@ -25,7 +25,7 @@ class Category extends \App\Base\Model {
         return $this->internal == 1;
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return $this->name;
     }
 

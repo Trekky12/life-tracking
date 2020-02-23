@@ -9,6 +9,17 @@ $container['helper'] = function($c) {
     return new \App\Main\Helper($c);
 };
 
+
+$container['user_helper'] = function ($c) {
+    return new \App\Main\UserHelper($c);
+};
+
+
+$container['translation'] = function ($c) {
+    return new \App\Main\Translator($c);
+};
+
+
 /**
  * Activity Handler
  */
@@ -62,7 +73,7 @@ $container['view'] = function ($c) {
     $view->addExtension(new \Slim\Views\TwigExtension(
             $c['router'], $c['request']->getUri()
     ));
-
+    
     $view->addExtension(new Knlv\Slim\Views\TwigMessages(
             //new \Slim\Flash\Messages()
             $c['flash']
@@ -76,7 +87,7 @@ $container['view'] = function ($c) {
     /**
      * Include Translation
      */
-    $view->getEnvironment()->addGlobal('lang', $c->get('helper')->getLanguage());
+    $view->getEnvironment()->addGlobal('lang', $c->get('translation')->getLanguage());
 
     /**
      * Include Default Location
@@ -122,7 +133,7 @@ $container['logger'] = function ($c) {
     $logger->pushProcessor(new Monolog\Processor\UidProcessor());
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], Monolog\Logger::DEBUG));
     $logger->pushProcessor(function ($record) use ($c) {
-        $user = $c->get('helper')->getUserLogin();
+        $user = $c->get('user_helper')->getUserLogin();
 
         if (!is_null($user)) {
             $record['extra']['user'] = $user;

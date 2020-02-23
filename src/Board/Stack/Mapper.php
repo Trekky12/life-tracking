@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "boards_stacks";
     protected $model = "\App\Board\Stack\Stack";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     public function getStacksFromBoard($board, $archive = 0) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE board = :board ";
 
         $bindings = ["board" => $board];
 
@@ -34,7 +34,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function updatePosition($id, $position, $user) {
-        $sql = "UPDATE " . $this->getTable() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+        $sql = "UPDATE " . $this->getTableName() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "position" => $position,
@@ -43,12 +43,12 @@ class Mapper extends \App\Base\Mapper {
             "changedBy" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function setArchive($id, $archive, $user) {
-        $sql = "UPDATE " . $this->getTable() . " SET archive=:archive, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+        $sql = "UPDATE " . $this->getTableName() . " SET archive=:archive, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "archive" => $archive,
@@ -57,7 +57,7 @@ class Mapper extends \App\Base\Mapper {
             "changedBy" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
         return true;
     }

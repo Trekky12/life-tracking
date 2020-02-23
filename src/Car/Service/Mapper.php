@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = 'cars_service';
     protected $model = '\App\Car\Service\CarServiceEntry';
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     public function getLastMileage($id, $mileage, $car) {
-        $sql = "SELECT mileage FROM " . $this->getTable() . "  "
+        $sql = "SELECT mileage FROM " . $this->getTableName() . "  "
                 . "WHERE id != :id "
                 . " AND mileage IS NOT NULL "
                 . " AND mileage <= :mileage"
@@ -36,7 +36,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function setDistance($id, $lastMileage = 0) {
-        $sql = "UPDATE " . $this->getTable() . " SET fuel_distance  = mileage - :mileage WHERE id = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET fuel_distance  = mileage - :mileage WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -45,12 +45,12 @@ class Mapper extends \App\Base\Mapper {
         ]);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function getLastFull($id, $mileage, $car) {
-        $sql = "SELECT * FROM " . $this->getTable() . "  "
+        $sql = "SELECT * FROM " . $this->getTableName() . "  "
                 . "WHERE id != :id "
                 . " AND mileage IS NOT NULL "
                 . " AND mileage <= :mileage "
@@ -76,7 +76,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getVolume($car, $date, $lastDate) {
-        $sql = "SELECT SUM(fuel_volume) FROM " . $this->getTable() . " "
+        $sql = "SELECT SUM(fuel_volume) FROM " . $this->getTableName() . " "
                 . "WHERE car = :car "
                 . " AND date <= :date "
                 . " AND date > :lastDate "
@@ -90,12 +90,12 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return floatval($stmt->fetchColumn());
         } else {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
+            throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
         }
     }
 
     public function setConsumption($id, $consumption = 0) {
-        $sql = "UPDATE " . $this->getTable() . " SET fuel_consumption  = :consumption WHERE id = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET fuel_consumption  = :consumption WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -104,7 +104,7 @@ class Mapper extends \App\Base\Mapper {
         ]);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
@@ -113,7 +113,7 @@ class Mapper extends \App\Base\Mapper {
         if (empty($user_cars)) {
             return [];
         }
-        $sql = "SELECT * FROM " . $this->getTable();
+        $sql = "SELECT * FROM " . $this->getTableName();
 
         $bindings = array("type" => $type);
         $car_bindings = array();
@@ -147,7 +147,7 @@ class Mapper extends \App\Base\Mapper {
         if (empty($user_cars)) {
             return 0;
         }
-        $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable();
+        $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTableName();
 
         $bindings = array("type" => $type);
         $car_bindings = array();
@@ -164,7 +164,7 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return intval($stmt->fetchColumn());
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function minMileage() {
@@ -172,10 +172,10 @@ class Mapper extends \App\Base\Mapper {
          * @see https://stackoverflow.com/a/15292049
          */
         $sql = "SELECT f1.car, f1.date, f1.mileage "
-                . "FROM " . $this->getTable() . " f1 "
+                . "FROM " . $this->getTableName() . " f1 "
                 . "INNER JOIN "
                 . "(  "
-                . "SELECT car, MIN(date) minDate From " . $this->getTable() . " GROUP BY car "
+                . "SELECT car, MIN(date) minDate From " . $this->getTableName() . " GROUP BY car "
                 . ") f2 "
                 . "ON f1.car=f2.car "
                 . "WHERE f1.date=f2.minDate";
@@ -195,7 +195,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function sumMileageInterval($car, $date) {
         $sql = "SELECT MAX(mileage) as max, :date as start, DATE_ADD(:date, INTERVAL 1 YEAR) as end"
-                . " FROM " . $this->getTable() . " "
+                . " FROM " . $this->getTableName() . " "
                 . " WHERE car = :car "
                 . " AND date <= DATE_ADD(:date, INTERVAL 1 YEAR)"
                 . " LIMIT 1";
@@ -212,7 +212,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getTotalMileage($startdate = null) {
-        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTable() . " cs,  " . $this->getTable("cars") . " c ";
+        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTableName() . " cs,  " . $this->getTableName("cars") . " c ";
         $sql .= "WHERE c.id = cs.car ";
 
         if (!is_null($startdate)) {
@@ -241,7 +241,7 @@ class Mapper extends \App\Base\Mapper {
         }
 
         $sql = "SELECT {$select} "
-                . " FROM " . $this->getTable() . " cs INNER JOIN " . $this->getTable('cars') . " c "
+                . " FROM " . $this->getTableName() . " cs INNER JOIN " . $this->getTableName('cars') . " c "
                 . " ON cs.car = c.id "
                 . " WHERE "
                 . " ("
@@ -275,7 +275,7 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function tableDataFuel($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
@@ -316,8 +316,8 @@ class Mapper extends \App\Base\Mapper {
                 break;
         }
 
-        $partly = $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY");
-        $full = $this->ci->get('helper')->getTranslatedString("FUEL_FULL");
+        $partly = $this->translation->getTranslatedString("FUEL_PARTLY");
+        $full = $this->translation->getTranslatedString("FUEL_FULL");
 
         $select = "cs.date, c.name, cs.mileage, cs.fuel_price, cs.fuel_volume, cs.fuel_total_price, "
                 . "CASE "
@@ -435,7 +435,7 @@ class Mapper extends \App\Base\Mapper {
             $car_bindings[":car_" . $idx] = $car;
         }
 
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
         $sql .= " AND car IN (" . implode(',', array_keys($car_bindings)) . ")";
 
         $stmt = $this->db->prepare($sql);

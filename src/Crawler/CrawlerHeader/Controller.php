@@ -2,8 +2,9 @@
 
 namespace App\Crawler\CrawlerHeader;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -15,9 +16,13 @@ class Controller extends \App\Base\Controller {
     protected $module = "crawlers";
     private $crawler_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->crawler_mapper = new \App\Crawler\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->crawler_mapper = new \App\Crawler\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
@@ -27,7 +32,7 @@ class Controller extends \App\Base\Controller {
         $this->allowCrawlerOwnerOnly($crawler);
 
         $headers = $this->mapper->getFromCrawler($crawler->id);
-        return $this->ci->view->render($response, 'crawlers/headers/index.twig', ['headers' => $headers, "crawler" => $crawler]);
+        return $this->twig->render($response, 'crawlers/headers/index.twig', ['headers' => $headers, "crawler" => $crawler]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -43,7 +48,7 @@ class Controller extends \App\Base\Controller {
 
         $this->preEdit($entry_id, $request);
 
-        return $this->ci->view->render($response, $this->edit_template, [
+        return $this->twig->render($response, $this->edit_template, [
                     'entry' => $entry,
                     'crawler' => $crawler,
                     "sortOptions" => $this->sortOptions(),
@@ -59,7 +64,7 @@ class Controller extends \App\Base\Controller {
 
         $this->allowCrawlerOwnerOnly($crawler);
 
-        return $this->ci->view->render($response, 'crawlers/headers/clone.twig', [
+        return $this->twig->render($response, 'crawlers/headers/clone.twig', [
                     'crawler' => $crawler,
                     'crawlers' => $crawlers
         ]);
@@ -86,7 +91,7 @@ class Controller extends \App\Base\Controller {
             $this->logger->addNotice("Duplicate crawler headline", array("from" => $clone_crawler->id, "to" => $crawler->id, "fromID" => $fromID, "toID" => $id));
         }
 
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
+        return $response->withRedirect($this->router->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
     }
 
     /**
@@ -96,7 +101,7 @@ class Controller extends \App\Base\Controller {
         $crawler_hash = $request->getAttribute("crawler");
         $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
         $this->allowCrawlerOwnerOnly($crawler);
-        
+
         $data['crawler'] = $crawler->id;
     }
 
@@ -113,14 +118,14 @@ class Controller extends \App\Base\Controller {
     }
 
     private function allowCrawlerOwnerOnly($crawler) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         if ($crawler->user !== $user) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 
     private function sortOptions() {
-        return [null => $this->ci->get('helper')->getTranslatedString('NO_INITIAL_SORTING'), "asc" => $this->ci->get('helper')->getTranslatedString('ASC'), "desc" => $this->ci->get('helper')->getTranslatedString('DESC')];
+        return [null => $this->translation->getTranslatedString('NO_INITIAL_SORTING'), "asc" => $this->translation->getTranslatedString('ASC'), "desc" => $this->translation->getTranslatedString('DESC')];
     }
 
     protected function afterSave($id, array $data, Request $request) {
@@ -131,7 +136,7 @@ class Controller extends \App\Base\Controller {
         if (!is_null($header->sort)) {
             $this->mapper->unset_sort($id, $header->crawler);
         }
-        
+
         $crawler_id = $header->crawler;
         $crawler = $this->crawler_mapper->get($crawler_id);
         $this->index_params = ["crawler" => $crawler->getHash()];
@@ -140,15 +145,15 @@ class Controller extends \App\Base\Controller {
     // @see https://dev.mysql.com/doc/refman/8.0/en/cast-functions.html#function_cast
     private function castOptions() {
         return [
-            null => $this->ci->get('helper')->getTranslatedString('CAST_NONE'),
-            "BINARY" => $this->ci->get('helper')->getTranslatedString('CAST_BINARY'),
-            "CHAR" => $this->ci->get('helper')->getTranslatedString('CAST_CHAR'),
-            "DATE" => $this->ci->get('helper')->getTranslatedString('CAST_DATE'),
-            "DATETIME" => $this->ci->get('helper')->getTranslatedString('CAST_DATETIME'),
-            "DECIMAL" => $this->ci->get('helper')->getTranslatedString('CAST_DECIMAL'),
-            "SIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_SIGNED'),
-            "TIME" => $this->ci->get('helper')->getTranslatedString('CAST_TIME'),
-            "UNSIGNED" => $this->ci->get('helper')->getTranslatedString('CAST_UNSIGNED'),
+            null => $this->translation->getTranslatedString('CAST_NONE'),
+            "BINARY" => $this->translation->getTranslatedString('CAST_BINARY'),
+            "CHAR" => $this->translation->getTranslatedString('CAST_CHAR'),
+            "DATE" => $this->translation->getTranslatedString('CAST_DATE'),
+            "DATETIME" => $this->translation->getTranslatedString('CAST_DATETIME'),
+            "DECIMAL" => $this->translation->getTranslatedString('CAST_DECIMAL'),
+            "SIGNED" => $this->translation->getTranslatedString('CAST_SIGNED'),
+            "TIME" => $this->translation->getTranslatedString('CAST_TIME'),
+            "UNSIGNED" => $this->translation->getTranslatedString('CAST_UNSIGNED'),
         ];
     }
 

@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "boards_labels";
     protected $model = "\App\Board\Label\Label";
-    protected $filterByUser = false;
-    protected $insertUser = true;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = true;
 
     public function getLabelsFromBoard($board) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE board = :board ORDER BY changedOn";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE board = :board ORDER BY changedOn";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -26,13 +26,13 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function deleteLabelsFromCard($card) {
-        $sql = "DELETE FROM " . $this->getTable("boards_cards_label") . "  WHERE card = :card";
+        $sql = "DELETE FROM " . $this->getTableName("boards_cards_label") . "  WHERE card = :card";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "card" => $card,
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return true;
     }
@@ -46,21 +46,21 @@ class Mapper extends \App\Base\Mapper {
             $keys_array[] = "(:card" . $idx . " , :label" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTable("boards_cards_label") . " (card, label) "
+        $sql = "INSERT INTO " . $this->getTableName("boards_cards_label") . " (card, label) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         } else {
             return $this->db->lastInsertId();
         }
     }
 
     public function getLabelsFromCard($card) {
-        $sql = "SELECT label FROM " . $this->getTable("boards_cards_label") . " WHERE card = :card";
+        $sql = "SELECT label FROM " . $this->getTableName("boards_cards_label") . " WHERE card = :card";
 
         $bindings = array("card" => $card);
 
@@ -75,7 +75,7 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getCardsLabel() {
-        $sql = "SELECT card, label FROM " . $this->getTable("boards_cards_label") . "";
+        $sql = "SELECT card, label FROM " . $this->getTableName("boards_cards_label") . "";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

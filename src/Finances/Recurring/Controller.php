@@ -2,8 +2,9 @@
 
 namespace App\Finances\Recurring;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -11,22 +12,25 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'finances_recurring';
     protected $element_view_route = 'finances_recurring_edit';
     protected $module = "finances";
-    
     private $cat_mapper;
     private $finance_mapper;
     private $paymethod_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
-        $this->finance_mapper = new \App\Finances\Mapper($this->ci);
-        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->cat_mapper = new \App\Finances\Category\Mapper($this->db, $this->translation, $user);
+        $this->finance_mapper = new \App\Finances\Mapper($this->db, $this->translation, $user);
+        $this->paymethod_mapper = new \App\Finances\Paymethod\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $list = $this->mapper->getAll();
         $categories = $this->cat_mapper->getAll();
-        return $this->ci->view->render($response, 'finances/recurring/index.twig', ['list' => $list, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()]);
+        return $this->twig->render($response, 'finances/recurring/index.twig', ['list' => $list, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -41,7 +45,7 @@ class Controller extends \App\Base\Controller {
         $categories = $this->cat_mapper->getAll('name');
         $paymethods = $this->paymethod_mapper->getAll('name');
 
-        return $this->ci->view->render($response, 'finances/recurring/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'units' => FinancesEntryRecurring::getUnits()]);
+        return $this->twig->render($response, 'finances/recurring/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'units' => FinancesEntryRecurring::getUnits()]);
     }
 
     public function update() {
@@ -80,16 +84,16 @@ class Controller extends \App\Base\Controller {
 
         $users = $this->user_mapper->getAll();
 
-        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
-        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        $language = $this->settings['app']['i18n']['php'];
+        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+        $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt->setPattern($dateFormatPHP["month_name"]);
         $dateObj = new \DateTime('first day of last month');
         $month = $dateObj->format("m");
         $year = $dateObj->format("Y");
 
-        $subject = sprintf('[Life-Tracking] %s %s %s %s', $this->ci->get('helper')->getTranslatedString('STATS'), $this->ci->get('helper')->getTranslatedString('FOR'), $fmt->format($dateObj), $year);
+        $subject = sprintf('[Life-Tracking] %s %s %s %s', $this->translation->getTranslatedString('STATS'), $this->translation->getTranslatedString('FOR'), $fmt->format($dateObj), $year);
 
         foreach ($users as $user) {
             if ($user->mail && $user->mails_finances == 1) {
@@ -112,19 +116,19 @@ class Controller extends \App\Base\Controller {
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
-                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('YOUR_MONTHLY_STATISTIC'), $fmt->format($dateObj)),
-                        'LANG_YOUR_BALANCE' => $this->ci->get('helper')->getTranslatedString('YOUR_BALANCE'),
-                        'LANG_YOUR_BIGGEST_EXPENSES' => $this->ci->get('helper')->getTranslatedString('YOUR_BIGGEST_EXPENSES'),
-                        'LANG_INCOMES' => $this->ci->get('helper')->getTranslatedString('FINANCES_INCOMES'),
-                        'LANG_SPENDINGS' => $this->ci->get('helper')->getTranslatedString('FINANCES_SPENDINGS'),
-                        'LANG_DIFFERENCE' => $this->ci->get('helper')->getTranslatedString('DIFFERENCE'),
+                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'content' => sprintf($this->translation->getTranslatedString('YOUR_MONTHLY_STATISTIC'), $fmt->format($dateObj)),
+                        'LANG_YOUR_BALANCE' => $this->translation->getTranslatedString('YOUR_BALANCE'),
+                        'LANG_YOUR_BIGGEST_EXPENSES' => $this->translation->getTranslatedString('YOUR_BIGGEST_EXPENSES'),
+                        'LANG_INCOMES' => $this->translation->getTranslatedString('FINANCES_INCOMES'),
+                        'LANG_SPENDINGS' => $this->translation->getTranslatedString('FINANCES_SPENDINGS'),
+                        'LANG_DIFFERENCE' => $this->translation->getTranslatedString('DIFFERENCE'),
                         'balance' => $balance,
-                        'currency' => $this->ci->get('settings')['app']['i18n']['currency'],
+                        'currency' => $this->settings['app']['i18n']['currency'],
                         'expenses' => $expenses
                     );
 
-                    $this->ci->get('helper')->send_mail('mail/stats.twig', $user->mail, $subject, $variables);
+                    $this->helper->send_mail('mail/stats.twig', $user->mail, $subject, $variables);
                 }
             }
         }

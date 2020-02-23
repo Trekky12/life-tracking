@@ -2,8 +2,9 @@
 
 namespace App\Finances;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 use Dflydev\FigCookies\FigRequestCookies;
 
 class Controller extends \App\Base\Controller {
@@ -12,20 +13,22 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'finances';
     protected $element_view_route = 'finances_edit';
     protected $module = "finances";
-    
     private $cat_mapper;
     private $cat_assignments_mapper;
     private $budget_mapper;
     private $paymethod_mapper;
-    
     static $GROUP_CATEGORIES_BUDGET_CHART = 5;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->cat_mapper = new Category\Mapper($this->ci);
-        $this->cat_assignments_mapper = new Assignment\Mapper($this->ci);
-        $this->budget_mapper = new Budget\Mapper($this->ci);
-        $this->paymethod_mapper = new Paymethod\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->cat_mapper = new Category\Mapper($this->db, $this->translation, $user);
+        $this->cat_assignments_mapper = new Assignment\Mapper($this->db, $this->translation, $user);
+        $this->budget_mapper = new Budget\Mapper($this->db, $this->translation, $user);
+        $this->paymethod_mapper = new Paymethod\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
@@ -34,10 +37,10 @@ class Controller extends \App\Base\Controller {
         $defaultFrom = $d->format('Y-m-d');
 
         $data = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($data, $defaultFrom); //$range["min"], $max);
-        
+        list($from, $to) = $this->helper->getDateRange($data, $defaultFrom); //$range["min"], $max);
+
         $table_count = FigRequestCookies::get($request, 'perPage_financeTable', 10);
-        
+
         $table_count_val = intval($table_count->getValue());
 
         $list = $this->mapper->getTableData($from, $to, 0, 'DESC', $table_count_val);
@@ -49,7 +52,7 @@ class Controller extends \App\Base\Controller {
 
         $recordSum = round($this->mapper->tableSum($from, $to, 0) - $this->mapper->tableSum($from, $to, 1), 2);
 
-        return $this->ci->view->render($response, 'finances/index.twig', [
+        return $this->twig->render($response, 'finances/index.twig', [
                     "list" => $table,
                     "datacount" => $datacount,
                     "from" => $from,
@@ -72,11 +75,11 @@ class Controller extends \App\Base\Controller {
         $categories = $this->cat_mapper->getAll('name');
         $paymethods = $this->paymethod_mapper->getAll('name');
 
-        return $this->ci->view->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods]);
+        return $this->twig->render($response, 'finances/edit.twig', ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods]);
     }
 
     protected function afterSave($id, array $data, Request $request) {
-        $user_id = $this->ci->get('helper')->getUser()->id;
+        $user_id = $this->user_helper->getUser()->id;
 
         $entry = $this->mapper->get($id);
         $cat = $this->getDefaultOrAssignedCategory($user_id, $entry);
@@ -133,8 +136,8 @@ class Controller extends \App\Base\Controller {
                         $type = 'warning';
                     }
 
-                    //$message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . $remains->description . "): " . $remains->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
-                    $message = $this->ci->get('helper')->getTranslatedString("BUDGET") . " (" . $remains->description . "): " . $remains->percent . "%";
+                    //$message = $this->translation->getTranslatedString("REMAINING_BUDGET") . " (" . $remains->description . "): " . $remains->diff . " " . $this->settings['app']['i18n']['currency'];
+                    $message = $this->translation->getTranslatedString("BUDGET") . " (" . $remains->description . "): " . $remains->percent . "%";
 
                     array_push($results, array('message' => $message, 'type' => $type));
                 }
@@ -147,16 +150,16 @@ class Controller extends \App\Base\Controller {
                     } elseif ($all_budgets[$budget->id]->percent > 50) {
                         $type = 'warning';
                     }
-                    //$message = $this->ci->get('helper')->getTranslatedString("REMAINING_BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->diff . " " . $this->ci->get('settings')['app']['i18n']['currency'];
-                    $message = $this->ci->get('helper')->getTranslatedString("BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->percent . "%";
+                    //$message = $this->translation->getTranslatedString("REMAINING_BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->diff . " " . $this->settings['app']['i18n']['currency'];
+                    $message = $this->translation->getTranslatedString("BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->percent . "%";
 
                     array_push($results, array('message' => $message, 'type' => $type));
                 }
             }
 
             foreach ($results as $result) {
-                $this->ci->get('flash')->addMessage('budget_message_type', $result["type"]);
-                $this->ci->get('flash')->addMessage('budget_message', $result["message"]);
+                $this->flash->addMessage('budget_message_type', $result["type"]);
+                $this->flash->addMessage('budget_message', $result["message"]);
             }
         }
         return $results;
@@ -166,7 +169,7 @@ class Controller extends \App\Base\Controller {
 
         $data = $request->getParsedBody();
 
-        $data['user'] = $this->ci->get('helper')->getUser()->id;
+        $data['user'] = $this->user_helper->getUser()->id;
 
         $data = array_map(function($el) {
             return urldecode($el);
@@ -190,12 +193,13 @@ class Controller extends \App\Base\Controller {
 
                 $this->logger->addError("Record Finances", array("error" => $e->getMessage()));
 
-                return $response->withJSON(array('status' => 'error', 'data' => $e->getMessage()));
+                $response_data = ['status' => 'error', 'data' => $e->getMessage()];
+                return $response->withJSON($response_data);
             }
 
             $message = $entry->date . ' '
                     . '(' . $entry->time . '): '
-                    . '' . $entry->description . ' ' . $entry->value . ' - ' . $this->ci->get('helper')->getTranslatedString('ENTRY_SUCCESS');
+                    . '' . $entry->description . ' ' . $entry->value . ' - ' . $this->translation->getTranslatedString('ENTRY_SUCCESS');
 
             if (!empty($budgets)) {
                 foreach ($budgets as $budget) {
@@ -203,9 +207,12 @@ class Controller extends \App\Base\Controller {
                 }
             }
 
-            return $response->withJSON(array('status' => 'success', 'data' => $message));
+            $response_data = ['status' => 'success', 'data' => $message];
+            return $response->withJSON($response_data);
         }
-        return $response->withJSON(array('status' => 'error', 'data' => 'error'));
+
+        $response_data = ['status' => 'error', 'data' => 'error'];
+        return $response->withJSON($response_data);
     }
 
     public function stats(Request $request, Response $response) {
@@ -214,7 +221,7 @@ class Controller extends \App\Base\Controller {
         list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats);
 
 
-        return $this->ci->view->render($response, 'finances/stats/index.twig', ['stats' => $data, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
+        return $this->twig->render($response, 'finances/stats/index.twig', ['stats' => $data, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
     }
 
     public function statsYear(Request $request, Response $response) {
@@ -223,7 +230,7 @@ class Controller extends \App\Base\Controller {
 
         list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats, "month");
 
-        return $this->ci->view->render($response, 'finances/stats/year.twig', ['stats' => $data, "year" => $year, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
+        return $this->twig->render($response, 'finances/stats/year.twig', ['stats' => $data, "year" => $year, "data1" => $spendings, "data2" => $income, "labels" => $labels]);
     }
 
     public function statsCategory(Request $request, Response $response) {
@@ -233,7 +240,7 @@ class Controller extends \App\Base\Controller {
         $stats = $this->mapper->statsCategory($year, $type);
         list($labels, $data) = $this->preparePieChart($stats);
 
-        return $this->ci->view->render($response, 'finances/stats/year_cat.twig', [
+        return $this->twig->render($response, 'finances/stats/year_cat.twig', [
                     "stats" => $stats,
                     "type" => $type,
                     "year" => $year,
@@ -250,7 +257,7 @@ class Controller extends \App\Base\Controller {
         list($labels, $data) = $this->preparePieChart($stats);
 
 
-        return $this->ci->view->render($response, 'finances/stats/month.twig', [
+        return $this->twig->render($response, 'finances/stats/month.twig', [
                     "stats" => $stats,
                     "month" => $month,
                     "year" => $year,
@@ -274,7 +281,7 @@ class Controller extends \App\Base\Controller {
         list($labels, $data, $count) = $this->preparePieChartGrouped($stats);
 
 
-        return $this->ci->view->render($response, 'finances/stats/month_cat.twig', [
+        return $this->twig->render($response, 'finances/stats/month_cat.twig', [
                     "stats" => $stats,
                     "month" => $month,
                     "year" => $year,
@@ -296,7 +303,7 @@ class Controller extends \App\Base\Controller {
 
         list($labels, $data, $count) = $this->preparePieChartGrouped($stats);
 
-        return $this->ci->view->render($response, 'finances/stats/year_cat_detail.twig', [
+        return $this->twig->render($response, 'finances/stats/year_cat_detail.twig', [
                     "stats" => $stats,
                     "year" => $year,
                     "type" => $type,
@@ -310,7 +317,7 @@ class Controller extends \App\Base\Controller {
     public function table(Request $request, Response $response) {
         $requestData = $request->getQueryParams();
 
-        list($from, $to) = $this->ci->get('helper')->getDateRange($requestData);
+        list($from, $to) = $this->helper->getDateRange($requestData);
 
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -332,12 +339,13 @@ class Controller extends \App\Base\Controller {
         $data = $this->mapper->getTableData($from, $to, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderTableRows($data);
 
-        return $response->withJson([
-                    "recordsTotal" => intval($recordsTotal),
-                    "recordsFiltered" => intval($recordsFiltered),
-                    "sum" => $recordSum,
-                    "data" => $table
-        ]);
+        $response_data = [
+            "recordsTotal" => intval($recordsTotal),
+            "recordsFiltered" => intval($recordsFiltered),
+            "sum" => $recordSum,
+            "data" => $table
+        ];
+        return $response->withJson($response_data);
     }
 
     private function createChartData($stats, $key = "year") {
@@ -354,22 +362,22 @@ class Controller extends \App\Base\Controller {
 
 
         $spendings_data = array_map(function($el) {
-            return array_key_exists(0, $el) ? $el[0]: null;
+            return array_key_exists(0, $el) ? $el[0] : null;
         }, $data);
 
         $income_data = array_map(function($el) {
-            return array_key_exists(1, $el) ? $el[1]: null;
+            return array_key_exists(1, $el) ? $el[1] : null;
         }, $data);
 
         $diff_data = array_map(function($el) {
-            return array_key_exists(1, $el) && array_key_exists(0, $el) ? $el[1] - $el[0]: null ;
+            return array_key_exists(1, $el) && array_key_exists(0, $el) ? $el[1] - $el[0] : null;
         }, $data);
 
         $labels = array_keys($data);
 
         if ($key === "month") {
             $labels = array_map(function($l) {
-                return $this->ci->get('helper')->getMonthName($l);
+                return $this->helper->getMonthName($l);
             }, $labels);
         }
 
@@ -454,7 +462,7 @@ class Controller extends \App\Base\Controller {
         $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
 
 
-        return $this->ci->view->render($response, 'finances/stats/budget.twig', [
+        return $this->twig->render($response, 'finances/stats/budget.twig', [
                     "stats" => $stats,
                     "budget" => $budget_name->description,
                     "data" => $data,
@@ -468,12 +476,12 @@ class Controller extends \App\Base\Controller {
             $row = [];
             $row[] = $dataset[0];
             $row[] = $dataset[1];
-            $row[] = $dataset[2] == 0 ? $this->ci->get('helper')->getTranslatedString("FINANCES_SPENDING") : $this->ci->get('helper')->getTranslatedString("FINANCES_INCOME");
+            $row[] = $dataset[2] == 0 ? $this->translation->getTranslatedString("FINANCES_SPENDING") : $this->translation->getTranslatedString("FINANCES_INCOME");
             $row[] = $dataset[3];
             $row[] = $dataset[4];
             $row[] = $dataset[5];
-            $row[] = '<a href="' . $this->ci->get('router')->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->ci->get('router')->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>' : '';
+            $row[] = '<a href="' . $this->router->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>' : '';
 
             $rendered_data[] = $row;
         }
@@ -486,7 +494,7 @@ class Controller extends \App\Base\Controller {
     protected function preDelete($id, Request $request) {
         $entry = $this->mapper->get($id);
         if (!is_null($entry->bill)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 

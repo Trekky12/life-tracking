@@ -32,8 +32,8 @@ class Budget extends \App\Base\Model {
     /**
      * Remove fields which are not in the db table
      */
-    public function get_fields($removeUser = false, $insert = true) {
-        $temp = parent::get_fields($removeUser, $insert);
+    public function get_fields($remove_user_element = false, $for_db_insert = true) {
+        $temp = parent::get_fields($remove_user_element, $for_db_insert);
 
         unset($temp["sum"]);
         unset($temp["percent"]);
@@ -42,8 +42,8 @@ class Budget extends \App\Base\Model {
         return $temp;
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
-        $currency = $ci->get('settings')['app']['i18n']['currency'];
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
+        $currency = $settings['app']['i18n']['currency'];
         return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
 

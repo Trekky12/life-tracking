@@ -8,10 +8,10 @@ class Mapper extends \App\Base\Mapper {
     protected $model = '\App\Finances\Budget\Budget';
 
     public function getSum() {
-        $sql = "SELECT SUM(value) as sum FROM " . $this->getTable() . " ";
+        $sql = "SELECT SUM(value) as sum FROM " . $this->getTableName() . " ";
 
         $bindings = array();
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -21,7 +21,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function getBudgets($sorted = false, $limit = false) {
         $sql = "SELECT fb.*, SUM(f.value) as sum, ROUND(((SUM(f.value)/fb.value)*100),2) as percent, fb.value-SUM(f.value) as diff 
-            FROM " . $this->getTable() . " as fb, " . $this->getTable("finances") . " f, " . $this->getTable("finances_budgets_categories") . " fc
+            FROM " . $this->getTableName() . " as fb, " . $this->getTableName("finances") . " f, " . $this->getTableName("finances_budgets_categories") . " fc
             WHERE f.category = fc.category AND fc.budget = fb.id 
             AND MONTH(date) = MONTH(CURRENT_DATE())
             AND YEAR(date) = YEAR(CURRENT_DATE()) 
@@ -37,7 +37,7 @@ class Mapper extends \App\Base\Mapper {
             $sql .= " LIMIT {$limit}";
         }
         
-        $bindings = array("user" => $this->userid, "type" => 0);
+        $bindings = array("user" => $this->user_id, "type" => 0);
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
         
@@ -50,10 +50,10 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function hasRemainsBudget() {
-        $sql = "SELECT b.id FROM " . $this->getTable() . " b LEFT JOIN " . $this->getTable("finances_budgets_categories") . " bc ON b.id = bc.budget WHERE category IS NULL";
+        $sql = "SELECT b.id FROM " . $this->getTableName() . " b LEFT JOIN " . $this->getTableName("finances_budgets_categories") . " bc ON b.id = bc.budget WHERE category IS NULL";
         
         $bindings = array();
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -65,10 +65,10 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getRemainsBudget(){
-        $sql = "SELECT b.* FROM " . $this->getTable() . " b LEFT JOIN " . $this->getTable("finances_budgets_categories") . " bc ON b.id = bc.budget WHERE category IS NULL";
+        $sql = "SELECT b.* FROM " . $this->getTableName() . " b LEFT JOIN " . $this->getTableName("finances_budgets_categories") . " bc ON b.id = bc.budget WHERE category IS NULL";
 
         $bindings = array();
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -80,13 +80,13 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getRemainsExpenses(){
-        $sql = "SELECT SUM(f.value) as sum FROM " . $this->getTable("finances") . " as f 
-                WHERE f.category NOT IN (SELECT category FROM ". $this->getTable("finances_budgets_categories") . " )
+        $sql = "SELECT SUM(f.value) as sum FROM " . $this->getTableName("finances") . " as f 
+                WHERE f.category NOT IN (SELECT category FROM ". $this->getTableName("finances_budgets_categories") . " )
                 AND MONTH(date) = MONTH(CURRENT_DATE())
                 AND YEAR(date) = YEAR(CURRENT_DATE())
                 AND f.type = :type";
         $bindings = array("type" => 0);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -99,13 +99,13 @@ class Mapper extends \App\Base\Mapper {
     
     
     public function deleteCategoriesFromBudget($budget) {
-        $sql = "DELETE FROM " . $this->getTable("finances_budgets_categories") . "  WHERE budget = :budget";
+        $sql = "DELETE FROM " . $this->getTableName("finances_budgets_categories") . "  WHERE budget = :budget";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "budget" => $budget,
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return true;
     }
@@ -119,21 +119,21 @@ class Mapper extends \App\Base\Mapper {
             $keys_array[] = "(:budget" . $idx . " , :category" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTable("finances_budgets_categories") . " (budget, category) "
+        $sql = "INSERT INTO " . $this->getTableName("finances_budgets_categories") . " (budget, category) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         } else {
             return $this->db->lastInsertId();
         }
     }
 
     public function getCategoriesFromBudget($budget) {
-        $sql = "SELECT category FROM " . $this->getTable("finances_budgets_categories") . " WHERE budget = :budget";
+        $sql = "SELECT category FROM " . $this->getTableName("finances_budgets_categories") . " WHERE budget = :budget";
 
         $bindings = array("budget" => $budget);
 
@@ -149,7 +149,7 @@ class Mapper extends \App\Base\Mapper {
     
     
     public function getBudgetCategories() {
-        $sql = "SELECT budget, category FROM " . $this->getTable("finances_budgets_categories") . "";
+        $sql = "SELECT budget, category FROM " . $this->getTableName("finances_budgets_categories") . "";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -166,11 +166,11 @@ class Mapper extends \App\Base\Mapper {
     }
     
      public function getBudgetsFromCategory($category){
-        $sql = "SELECT b.* FROM " . $this->getTable() . " b, " . $this->getTable("finances_budgets_categories") . " bc "
+        $sql = "SELECT b.* FROM " . $this->getTableName() . " b, " . $this->getTableName("finances_budgets_categories") . " bc "
                 . "WHERE b.id = bc.budget AND category = :category ORDER BY b.description ";
 
         $bindings = array("category" => $category);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -184,12 +184,12 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function isRemainsBudget($budget){
-        $sql = "SELECT b.id FROM " . $this->getTable() . " b LEFT JOIN " . $this->getTable("finances_budgets_categories") . " bc ON b.id = bc.budget "
+        $sql = "SELECT b.id FROM " . $this->getTableName() . " b LEFT JOIN " . $this->getTableName("finances_budgets_categories") . " bc ON b.id = bc.budget "
                 . "WHERE category IS NULL "
                 . "AND b.id = :budget";
 
         $bindings = array("budget" => $budget);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

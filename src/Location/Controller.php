@@ -2,8 +2,9 @@
 
 namespace App\Location;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -13,27 +14,30 @@ class Controller extends \App\Base\Controller {
     protected $element_view_route = 'location_edit';
     protected $create_activity = false;
     protected $module = "location";
-    
     private $finance_mapper;
     private $car_mapper;
     private $carservice_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->finance_mapper = new \App\Finances\Mapper($this->ci);
-        $this->car_mapper = new \App\Car\Mapper($this->ci);
-        $this->carservice_mapper = new \App\Car\Service\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->finance_mapper = new \App\Finances\Mapper($this->db, $this->translation, $user);
+        $this->car_mapper = new \App\Car\Mapper($this->db, $this->translation, $user);
+        $this->carservice_mapper = new \App\Car\Service\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $data = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($data);
+        list($from, $to) = $this->helper->getDateRange($data);
 
         // Filtered markers
         $hide = $request->getQueryParam('hide');
         list($hide_clusters) = $this->getHidden($hide);
 
-        return $this->ci->view->render($response, 'location/index.twig', [
+        return $this->twig->render($response, 'location/index.twig', [
                     "from" => $from,
                     "to" => $to,
                     "hide" => [
@@ -45,7 +49,7 @@ class Controller extends \App\Base\Controller {
     public function getMarkers(Request $request, Response $response) {
 
         $data = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($data);
+        list($from, $to) = $this->helper->getDateRange($data);
 
         $locations = $this->mapper->getMarkers($from, $to);
         $location_markers = array_map(function($loc) {
@@ -57,14 +61,15 @@ class Controller extends \App\Base\Controller {
             return $loc->getPosition();
         }, $finance_locations);
 
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         $carservice_locations = $this->carservice_mapper->getMarkers($from, $to, $user_cars);
         $carservice_markers = array_map(function($loc) {
             return $loc->getPosition();
         }, $carservice_locations);
 
-        return $response->withJSON(array_merge($location_markers, $finance_markers, $carservice_markers));
+        $response_data = array_merge($location_markers, $finance_markers, $carservice_markers);
+        return $response->withJSON($response_data);
     }
 
     public function getAddress(Request $request, Response $response) {
@@ -76,25 +81,25 @@ class Controller extends \App\Base\Controller {
         $lat = array_key_exists('lat', $data) && !empty($data['lat']) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $lng = array_key_exists('lng', $data) && !empty($data['lng']) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-        $newResponse = ['status' => 'error', 'data' => []];
+        $response_data = ['status' => 'error', 'data' => []];
 
         if (!is_null($lat) && !is_null($lng)) {
 
             $query = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' . $lat . '&lon=' . $lng;
 
-            list($status, $result) = $this->ci->get('helper')->request($query);
+            list($status, $result) = $this->helper->request($query);
 
 
             if ($status == 200) {
-                $newResponse['status'] = 'success';
+                $response_data['status'] = 'success';
                 $array = json_decode($result, true);
                 if (is_array($array) && array_key_exists("address", $array)) {
-                    $newResponse['data'] = $array["address"];
+                    $response_data['data'] = $array["address"];
                 }
             }
         }
 
-        return $response->withJson($newResponse);
+        return $response->withJson($response_data);
     }
 
     private function getHidden($hide) {
@@ -112,21 +117,21 @@ class Controller extends \App\Base\Controller {
 
     protected function preSave($id, array &$data, Request $request) {
         if (!array_key_exists("device", $data)) {
-            $data["device"] = $this->ci->get('helper')->getAgent();
+            $data["device"] = $this->helper->getAgent();
         }
     }
 
     public function steps(Request $request, Response $response) {
         $steps = $this->mapper->getStepsPerYear();
         list($chart_data, $labels) = $this->createChartData($steps);
-        return $this->ci->view->render($response, 'location/steps/steps.twig', ['stats' => $steps, "data" => $chart_data, "labels" => $labels]);
+        return $this->twig->render($response, 'location/steps/steps.twig', ['stats' => $steps, "data" => $chart_data, "labels" => $labels]);
     }
 
     public function stepsYear(Request $request, Response $response) {
         $year = $request->getAttribute('year');
         $steps = $this->mapper->getStepsOfYear($year);
         list($chart_data, $labels) = $this->createChartData($steps, "month");
-        return $this->ci->view->render($response, 'location/steps/steps_year.twig', ['stats' => $steps, "year" => $year, "data" => $chart_data, "labels" => $labels]);
+        return $this->twig->render($response, 'location/steps/steps_year.twig', ['stats' => $steps, "year" => $year, "data" => $chart_data, "labels" => $labels]);
     }
 
     public function stepsMonth(Request $request, Response $response) {
@@ -134,7 +139,7 @@ class Controller extends \App\Base\Controller {
         $month = $request->getAttribute('month');
         $steps = $this->mapper->getStepsOfYearMonth($year, $month);
         list($chart_data, $labels) = $this->createChartData($steps, "date");
-        return $this->ci->view->render($response, 'location/steps/steps_month.twig', ['stats' => $steps, "year" => $year, "month" => $month, "data" => $chart_data, "labels" => $labels]);
+        return $this->twig->render($response, 'location/steps/steps_month.twig', ['stats' => $steps, "year" => $year, "month" => $month, "data" => $chart_data, "labels" => $labels]);
     }
 
     private function createChartData($stats, $key = "year") {
@@ -151,12 +156,12 @@ class Controller extends \App\Base\Controller {
         $labels = array_keys($data);
         if ($key === "month") {
             $labels = array_map(function($l) {
-                return $this->ci->get('helper')->getMonthName($l);
+                return $this->helper->getMonthName($l);
             }, $labels);
         }
         if ($key === "date") {
             $labels = array_map(function($l) {
-                return $this->ci->get('helper')->getDay($l);
+                return $this->helper->getDay($l);
             }, $labels);
         }
 

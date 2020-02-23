@@ -2,8 +2,9 @@
 
 namespace App\Timesheets\Sheet;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -15,9 +16,13 @@ class Controller extends \App\Base\Controller {
     protected $module = "timesheets";
     private $project_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->project_mapper = new \App\Timesheets\Project\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->project_mapper = new \App\Timesheets\Project\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
@@ -31,7 +36,7 @@ class Controller extends \App\Base\Controller {
         $d = new \DateTime('first day of this month');
         $defaultFrom = $d->format('Y-m-d');
         $queryData = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($queryData, $defaultFrom);
+        list($from, $to) = $this->helper->getDateRange($queryData, $defaultFrom);
 
         $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'DESC', 20);
         $rendered_data = $this->renderTableRows($project, $data);
@@ -44,13 +49,13 @@ class Controller extends \App\Base\Controller {
         $range = $this->mapper->getMinMaxDate("start", "end");
         $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
-        return $this->ci->view->render($response, 'timesheets/sheets/index.twig', [
+        return $this->twig->render($response, 'timesheets/sheets/index.twig', [
                     "sheets" => $rendered_data,
                     "project" => $project,
                     "datacount" => $datacount,
                     "hasTimesheetTable" => true,
                     "users" => $users,
-                    "sum" => $this->ci->get('helper')->splitDateInterval($totalSeconds),
+                    "sum" => $this->helper->splitDateInterval($totalSeconds),
                     "from" => $from,
                     "to" => $to,
                     "min" => $range["min"],
@@ -62,7 +67,7 @@ class Controller extends \App\Base\Controller {
 
         $requestData = $request->getQueryParams();
 
-        list($from, $to) = $this->ci->get('helper')->getDateRange($requestData);
+        list($from, $to) = $this->helper->getDateRange($requestData);
 
         $hash = $request->getAttribute('project');
         $project = $this->project_mapper->getFromHash($hash);
@@ -86,12 +91,13 @@ class Controller extends \App\Base\Controller {
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $searchQuery);
 
-        return $response->withJson([
-                    "recordsTotal" => intval($recordsTotal),
-                    "recordsFiltered" => intval($recordsFiltered),
-                    "data" => $rendered_data,
-                    "sum" => $this->ci->get('helper')->splitDateInterval($totalSeconds)
-        ]);
+        $response_data = [
+            "recordsTotal" => intval($recordsTotal),
+            "recordsFiltered" => intval($recordsFiltered),
+            "data" => $rendered_data,
+            "sum" => $this->helper->splitDateInterval($totalSeconds)
+        ];
+        return $response->withJson($response_data);
     }
 
     public function edit(Request $request, Response $response) {
@@ -111,7 +117,7 @@ class Controller extends \App\Base\Controller {
         $project_users = $this->project_mapper->getUsers($project->id);
 
 
-        return $this->ci->view->render($response, $this->edit_template, [
+        return $this->twig->render($response, $this->edit_template, [
                     'entry' => $entry,
                     'project' => $project,
                     'project_users' => $project_users,
@@ -141,7 +147,7 @@ class Controller extends \App\Base\Controller {
         $project_hash = $request->getAttribute("project");
         $entry = $this->project_mapper->getFromHash($project_hash);
         $this->checkAccess($entry->id);
-        
+
         $data['project'] = $entry->id;
     }
 
@@ -162,16 +168,16 @@ class Controller extends \App\Base\Controller {
      */
     private function checkAccess($id) {
         $timesheets_project_users = $this->project_mapper->getUsers($id);
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
 
         if (!in_array($user, $timesheets_project_users)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 
     private function renderTableRows($project, array $sheets) {
-        $language = $this->ci->get('settings')['app']['i18n']['php'];
-        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        $language = $this->settings['app']['i18n']['php'];
+        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
 
         $rendered_data = [];
         foreach ($sheets as $sheet) {
@@ -182,10 +188,10 @@ class Controller extends \App\Base\Controller {
             $row[] = $date;
             $row[] = $start;
             $row[] = $end;
-            $row[] = $this->ci->get('helper')->splitDateInterval($sheet->diff);
+            $row[] = $this->helper->splitDateInterval($sheet->diff);
 
-            $row[] = '<a href="' . $this->ci->get('router')->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[] = '<a href="' . $this->router->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[] = '<a href="#" data-url="' . $this->router->pathFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
 
             $rendered_data[] = $row;
         }
@@ -202,7 +208,7 @@ class Controller extends \App\Base\Controller {
         // get a existing entry for today with start but without end
         $entry = $this->mapper->getLastSheetWithStartDateToday($project->id);
 
-        return $this->ci->view->render($response, 'timesheets/sheets/fast.twig', [
+        return $this->twig->render($response, 'timesheets/sheets/fast.twig', [
                     "project" => $project,
                     "entry" => $entry
         ]);
@@ -221,7 +227,7 @@ class Controller extends \App\Base\Controller {
             // always create new entry with current timestamp
             $data["start"] = date('Y-m-d H:i');
             $data["project"] = $project->id;
-            $data["user"] = $this->ci->get('helper')->getUser()->id;
+            $data["user"] = $this->user_helper->getUser()->id;
 
             $this->insertOrUpdate(null, $data, $request);
 
@@ -233,7 +239,7 @@ class Controller extends \App\Base\Controller {
             $result["message"] = $e->getMessage();
         }
 
-        $this->ci->get('flash')->clearMessages();
+        $this->flash->clearMessages();
 
         return $response->withJSON($result);
     }
@@ -265,7 +271,7 @@ class Controller extends \App\Base\Controller {
                 // otherwise create new entry
                 $data["end"] = date('Y-m-d H:i');
                 $data["project"] = $project->id;
-                $data["user"] = $this->ci->get('helper')->getUser()->id;
+                $data["user"] = $this->user_helper->getUser()->id;
 
                 $this->insertOrUpdate(null, $data, $request);
             }
@@ -276,7 +282,7 @@ class Controller extends \App\Base\Controller {
             $result["message"] = $e->getMessage();
         }
 
-        $this->ci->get('flash')->clearMessages();
+        $this->flash->clearMessages();
 
         return $response->withJSON($result);
     }
@@ -292,15 +298,15 @@ class Controller extends \App\Base\Controller {
 
         // Date Filter
         $queryData = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($queryData);
+        list($from, $to) = $this->helper->getDateRange($queryData);
 
         // get Data
         $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'ASC', null);
         $rendered_data = $this->renderTableRows($project, $data);
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
-        $language = $this->ci->get('settings')['app']['i18n']['php'];
-        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
+        $language = $this->settings['app']['i18n']['php'];
+        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
         $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
@@ -309,7 +315,7 @@ class Controller extends \App\Base\Controller {
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle($fmtDate->format($fromDate) . " " . $this->ci->get('helper')->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
+        $sheet->setTitle($fmtDate->format($fromDate) . " " . $this->translation->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
 
         // Project Name
         $sheet->setCellValue('A1', $project->name);
@@ -317,15 +323,15 @@ class Controller extends \App\Base\Controller {
         $sheet->mergeCells("A1:F1");
 
         // Range
-        $sheet->setCellValue('A2', $fmtDate->format($fromDate) . " " . $this->ci->get('helper')->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
+        $sheet->setCellValue('A2', $fmtDate->format($fromDate) . " " . $this->translation->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
         $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(14);
         $sheet->mergeCells("A2:F2");
 
         // Table Header
-        $sheet->setCellValue('A4', $this->ci->get('helper')->getTranslatedString("DATE"));
-        $sheet->setCellValue('B4', $this->ci->get('helper')->getTranslatedString("TIMESHEETS_COME"));
-        $sheet->setCellValue('C4', $this->ci->get('helper')->getTranslatedString("TIMESHEETS_LEAVE"));
-        $sheet->setCellValue('D4', $this->ci->get('helper')->getTranslatedString("DIFFERENCE"));
+        $sheet->setCellValue('A4', $this->translation->getTranslatedString("DATE"));
+        $sheet->setCellValue('B4', $this->translation->getTranslatedString("TIMESHEETS_COME"));
+        $sheet->setCellValue('C4', $this->translation->getTranslatedString("TIMESHEETS_LEAVE"));
+        $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
         $sheet->getStyle('A4:D4')->applyFromArray(
                 ['borders' => [
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
@@ -346,7 +352,7 @@ class Controller extends \App\Base\Controller {
         foreach ($data as $timesheet) {
 
             //list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
-            //$diff = $this->ci->get('helper')->splitDateInterval($timesheet->diff);
+            //$diff = $this->helper->splitDateInterval($timesheet->diff);
             //$sheet->setCellValue('A' . ($idx + 1 + $offset), $date);
             //$sheet->setCellValue('B' . ($idx + 1 + $offset), $start);
             //$sheet->setCellValue('C' . ($idx + 1 + $offset), $end);

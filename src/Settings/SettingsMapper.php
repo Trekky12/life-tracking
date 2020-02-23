@@ -6,11 +6,11 @@ class SettingsMapper extends \App\Base\Mapper {
 
     protected $table = "global_settings";
     protected $model = "\App\Settings\Setting";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     public function getSetting($name) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE name = :name";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE name = :name";
 
         $bindings = array("name" => $name);
 
@@ -25,7 +25,7 @@ class SettingsMapper extends \App\Base\Mapper {
     
      public function updateLastRun($name) {
 
-        $sql = "UPDATE " . $this->getTable() . " SET value = UNIX_TIMESTAMP(), changedOn = CURRENT_TIMESTAMP WHERE name = :name";
+        $sql = "UPDATE " . $this->getTableName() . " SET value = UNIX_TIMESTAMP(), changedOn = CURRENT_TIMESTAMP WHERE name = :name";
         
         $bindings = array("name" => $name);
         
@@ -33,7 +33,7 @@ class SettingsMapper extends \App\Base\Mapper {
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
     

@@ -6,14 +6,14 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "boards_cards";
     protected $model = "\App\Board\Card\Card";
-    protected $filterByUser = false;
-    protected $insertUser = false;
-    protected $hasUserTable = true;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
+    protected $has_user_table = true;
     protected $user_table = "boards_cards_user";
     protected $element_name = "card";
 
     public function getCardsFromStack($stack, $archive = 0) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE stack = :stack ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE stack = :stack ";
 
         $bindings = ["stack" => $stack];
 
@@ -36,7 +36,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function updatePosition($id, $position, $user) {
-        $sql = "UPDATE " . $this->getTable() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+        $sql = "UPDATE " . $this->getTableName() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "position" => $position,
@@ -45,12 +45,12 @@ class Mapper extends \App\Base\Mapper {
             "changedBy" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function moveCard($id, $stack, $user) {
-        $sql = "UPDATE " . $this->getTable() . " SET stack=:stack, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+        $sql = "UPDATE " . $this->getTableName() . " SET stack=:stack, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "stack" => $stack,
@@ -59,12 +59,12 @@ class Mapper extends \App\Base\Mapper {
             "changedBy" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function setArchive($id, $archive, $user) {
-        $sql = "UPDATE " . $this->getTable() . " SET archive=:archive, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+        $sql = "UPDATE " . $this->getTableName() . " SET archive=:archive, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "archive" => $archive,
@@ -73,13 +73,13 @@ class Mapper extends \App\Base\Mapper {
             "changedBy" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
         return true;
     }
 
     public function getCardsUser() {
-        $sql = "SELECT card, user FROM " . $this->getTable($this->user_table) . "";
+        $sql = "SELECT card, user FROM " . $this->getTableName($this->user_table) . "";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -96,7 +96,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getCardBoard($id) {
-        $sql = "SELECT st.board FROM " . $this->getTable() . " ca, " . $this->getTable("boards_stacks") . " st WHERE ca.id = :id AND ca.stack = st.id";
+        $sql = "SELECT st.board FROM " . $this->getTableName() . " ca, " . $this->getTableName("boards_stacks") . " st WHERE ca.id = :id AND ca.stack = st.id";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -106,15 +106,15 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return intval($stmt->fetchColumn());
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function getCardReminder() {
         $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board, b.hash, s.name as stack "
-                . "FROM " . $this->getTable() . " c, "
-                . "     " . $this->getTable("boards_stacks") . " s,  "
-                . "     " . $this->getTable("boards") . " b, "
-                . "     " . $this->getTable($this->user_table) . " cu "
+                . "FROM " . $this->getTableName() . " c, "
+                . "     " . $this->getTableName("boards_stacks") . " s,  "
+                . "     " . $this->getTableName("boards") . " b, "
+                . "     " . $this->getTableName($this->user_table) . " cu "
                 . " WHERE c.stack = s.id AND s.board = b.id "
                 . " AND cu.card = c.id "
                 . " AND c.archive = :archive "                

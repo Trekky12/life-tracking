@@ -9,7 +9,7 @@ class Mapper extends \App\Base\Mapper {
 
     private function getTableSQL($select) {
         $sql = "SELECT {$select} "
-                . " FROM " . $this->getTable() . " f LEFT JOIN " . $this->getTable('finances_categories') . " fc "
+                . " FROM " . $this->getTableName() . " f LEFT JOIN " . $this->getTableName('finances_categories') . " fc "
                 . " ON f.category = fc.id "
                 . " WHERE (DATE(f.date) >= :from "
                 . "   AND DATE(f.date) <= :to ) "
@@ -29,7 +29,7 @@ class Mapper extends \App\Base\Mapper {
 
         $sql = $this->getTableSQL("COUNT(f.id)");
 
-        $this->filterByUser($sql, $bindings, "f.");
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
 
         $stmt = $this->db->prepare($sql);
 
@@ -37,7 +37,7 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function getTableData($from, $to, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
@@ -71,7 +71,7 @@ class Mapper extends \App\Base\Mapper {
                 . "fc.name as category, f.description, f.value, f.id, f.bill";
         $sql = $this->getTableSQL($select);
 
-        $this->filterByUser($sql, $bindings, "f.");
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
 
         $sql .= " ORDER BY {$sort} {$sortDirection}, f.time {$sortDirection}, f.id {$sortDirection}";
 
@@ -91,7 +91,7 @@ class Mapper extends \App\Base\Mapper {
 
         $sql = $this->getTableSQL("SUM(f.value)");
 
-        $this->filterByUser($sql, $bindings, "f.");
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
 
         $sql .= " AND type = :type";
 
@@ -101,14 +101,14 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function statsTotal() {
-        $sql = "SELECT YEAR(date) as year, type,  SUM(value) as sum, COUNT(value) as count FROM " . $this->getTable();
+        $sql = "SELECT YEAR(date) as year, type,  SUM(value) as sum, COUNT(value) as count FROM " . $this->getTableName();
 
         $bindings = array();
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " GROUP BY YEAR(date), type"
                 . " ORDER BY YEAR(date) DESC";
@@ -121,11 +121,11 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsYear($year) {
         $sql = "SELECT YEAR(date) as year, MONTH(date) as month, type, SUM(value) as sum, COUNT(value) as count "
-                . "FROM " . $this->getTable() . " "
+                . "FROM " . $this->getTableName() . " "
                 . "WHERE YEAR(date) = :year ";
 
         $bindings = array("year" => $year);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " GROUP BY YEAR(date), MONTH(date), type";
         $sql .= " ORDER BY YEAR(date) DESC, MONTH(date) DESC";
@@ -138,13 +138,13 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsCategory($year, $type) {
         $sql = "SELECT YEAR(date) as year, type, fc.name as category, fc.id as category_id, SUM(value) as sum, COUNT(value) as count "
-                . "FROM " . $this->getTable() . " f, " . $this->getTable("finances_categories") . " fc "
+                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
                 . "WHERE f.category = fc.id "
                 . " AND YEAR(date) = :year "
                 . "AND f.type = :type ";
 
         $bindings = array("year" => $year, "type" => $type);
-        $this->filterByUser($sql, $bindings, "f.");
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
 
         $sql .= " GROUP BY YEAR(date), type, category";
         $sql .= " ORDER BY YEAR(date) DESC, sum DESC, category ASC";
@@ -158,13 +158,13 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsCategoryDetail($year, $type, $category) {
 
-        $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTable() . " "
+        $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTableName() . " "
                 . "WHERE category = :category "
                 . "AND YEAR(date) = :year "
                 . "AND type = :type ";
 
         $bindings = array("year" => $year, "type" => $type, "category" => $category);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -174,14 +174,14 @@ class Mapper extends \App\Base\Mapper {
     public function statsMonthType($year, $month, $type) {
 
         $sql = "SELECT YEAR(date) as year, MONTH(date) as month, type, fc.name as category, SUM(value) as sum, COUNT(value) as count, f.category as category_id "
-                . "FROM " . $this->getTable() . " f, " . $this->getTable("finances_categories") . " fc "
+                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
                 . "WHERE f.category = fc.id "
                 . "AND MONTH(date) = :month "
                 . "AND YEAR(date) = :year "
                 . "AND type = :type ";
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type);
-        $this->filterByUser($sql, $bindings, "f.");
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
 
         $sql .= " GROUP BY YEAR(date), MONTH(date), type, category";
 
@@ -192,14 +192,14 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsMonthCategory($year, $month, $type, $category) {
 
-        $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTable() . " "
+        $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTableName() . " "
                 . "WHERE category = :category "
                 . "AND MONTH(date) = :month "
                 . "AND YEAR(date) = :year "
                 . "AND type = :type ";
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type, "category" => $category);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -207,7 +207,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function statsMailBalance($user, $month, $year, $type) {
-        $sql = "SELECT SUM(value) FROM " . $this->getTable() . " "
+        $sql = "SELECT SUM(value) FROM " . $this->getTableName() . " "
                 . "WHERE MONTH(date) = :month "
                 . "AND YEAR(date) = :year "
                 . "AND type = :type "
@@ -224,7 +224,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsMailExpenses($user, $month, $year, $limit = 5) {
         $sql = "SELECT f.date, f.description, fc.name as category, f.value "
-                . "FROM " . $this->getTable() . " f, " . $this->getTable("finances_categories") . " fc "
+                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
                 . "WHERE f.category = fc.id "
                 . "AND MONTH(f.date) = :month "
                 . "AND YEAR(f.date) = :year "
@@ -240,19 +240,19 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function set_category($id, $category) {
-        $sql = "UPDATE " . $this->getTable() . " SET category = :category WHERE id  = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET category = :category WHERE id  = :id";
         $bindings = array("id" => $id, "category" => $category);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function statsBudget($budget) {
 
-        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc,  " . $this->getTable("finances_budgets_categories") . " fbc "
+        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTableName() . " f,   " . $this->getTableName("finances_categories") . " fc,  " . $this->getTableName("finances_budgets_categories") . " fbc "
                 . "WHERE f.category = fbc.category "
                 . "AND fc.id = f.category "
                 . "AND fbc.budget = :budget "
@@ -261,7 +261,7 @@ class Mapper extends \App\Base\Mapper {
                 . "AND f.type = :type ";
 
         $bindings = array("budget" => $budget, "type" => 0);
-        $this->filterByUser($sql, $bindings, "f.");
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -270,15 +270,15 @@ class Mapper extends \App\Base\Mapper {
 
     public function statsBudgetRemains() {
 
-        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTable() . " f,   " . $this->getTable("finances_categories") . " fc  "
-                . "WHERE f.category NOT IN (SELECT category FROM " . $this->getTable("finances_budgets_categories") . " ) "
+        $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTableName() . " f,   " . $this->getTableName("finances_categories") . " fc  "
+                . "WHERE f.category NOT IN (SELECT category FROM " . $this->getTableName("finances_budgets_categories") . " ) "
                 . "AND fc.id = f.category "
                 . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
                 . "AND YEAR(date) = YEAR(CURRENT_DATE()) "
                 . "AND f.type = :type ";
 
         $bindings = array("type" => 0);
-        $this->filterByUser($sql, $bindings, "f.");
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -287,9 +287,9 @@ class Mapper extends \App\Base\Mapper {
 
     public function getMarkers($from, $to) {
         $bindings = ["from" => $from, "to" => $to];
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
 
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -311,7 +311,7 @@ class Mapper extends \App\Base\Mapper {
 
         $bindings = ["user" => $entry->user, "bill" => $entry->bill];
 
-        $sql = "SELECT id FROM " . $this->getTable() . "  WHERE bill = :bill AND user =:user ";
+        $sql = "SELECT id FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
@@ -324,7 +324,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     private function updateFromBill(FinancesEntry $entry) {
-        $sql = "UPDATE " . $this->getTable() . " "
+        $sql = "UPDATE " . $this->getTableName() . " "
                 . " SET value = :value, "
                 . "     common_value = :common_value, "
                 . "     date = :date, "
@@ -356,20 +356,20 @@ class Mapper extends \App\Base\Mapper {
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
         return true;
     }
 
     public function deleteEntrywithBill($bill, $user) {
-        $sql = "DELETE FROM " . $this->getTable() . "  WHERE bill = :bill AND user =:user ";
+        $sql = "DELETE FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "bill" => $bill,
             "user" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return true;
     }

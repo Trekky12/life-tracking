@@ -48,8 +48,8 @@ class FinancesEntryRecurring extends \App\Base\Model {
         return array("day" => "DAY", "week" => "WEEK", "month" => "MONTH", "year" => "YEAR");
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
-        $currency = $ci->get('settings')['app']['i18n']['currency'];
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
+        $currency = $settings['app']['i18n']['currency'];
         return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
 

@@ -2,8 +2,9 @@
 
 namespace App\Board\Stack;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -13,26 +14,30 @@ class Controller extends \App\Base\Controller {
     protected $module = "boards";
     private $board_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->board_mapper = new \App\Board\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->board_mapper = new \App\Board\Mapper($this->db, $this->translation, $user);
     }
 
     /**
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
 
         if (!is_null($id)) {
             $user_stacks = $this->board_mapper->getUserStacks($user);
             if (!in_array($id, $user_stacks)) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
             }
         } elseif (is_array($data)) {
             $user_boards = $this->board_mapper->getElementsOfUser($user);
             if (!array_key_exists("board", $data) || !in_array($data["board"], $user_boards)) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
             }
         }
     }
@@ -41,7 +46,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
 
         try {
-            $user = $this->ci->get('helper')->getUser()->id;
+            $user = $this->user_helper->getUser()->id;
             $user_stacks = $this->board_mapper->getUserStacks($user);
             /**
              * Save new order
@@ -53,14 +58,17 @@ class Controller extends \App\Base\Controller {
                         $this->mapper->updatePosition($item, $position, $user);
                     }
                 }
-                return $response->withJSON(array('status' => 'success'));
+                $response_data = ['status' => 'success'];
+                return $response->withJSON($response_data);
             }
         } catch (\Exception $e) {
             $this->logger->addError("Update Stack Position", array("data" => $data, "error" => $e->getMessage()));
 
-            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+            $response_data = ['status' => 'error', "error" => $e->getMessage()];
+            return $response->withJSON($response_data);
         }
-        return $response->withJSON(array('status' => 'error'));
+        $response_data = ['status' => 'error'];
+        return $response->withJSON($response_data);
     }
 
     public function archive(Request $request, Response $response) {
@@ -72,17 +80,20 @@ class Controller extends \App\Base\Controller {
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
 
-                $user = $this->ci->get('helper')->getUser()->id;
+                $user = $this->user_helper->getUser()->id;
                 $is_archived = $this->mapper->setArchive($id, $data["archive"], $user);
-                $newResponse = $response->withJson(['is_archived' => $is_archived]);
-                return $newResponse;
+
+                $response_data = ['is_archived' => $is_archived];
+                return $response->withJson($response_data);
             } else {
-                return $response->withJSON(array('status' => 'error', "error" => "missing data"));
+                $response_data = ['status' => 'error', "error" => "missing data"];
+                return $response->withJSON($response_data);
             }
         } catch (\Exception $e) {
             $this->logger->addError("Archive Stack", array("data" => $data, "id" => $id, "error" => $e->getMessage()));
 
-            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+            $response_data = ['status' => 'error', "error" => $e->getMessage()];
+            return $response->withJSON($response_data);
         }
     }
 
@@ -95,10 +106,10 @@ class Controller extends \App\Base\Controller {
     }
 
     protected function preDelete($id, Request $request) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_stacks = $this->board_mapper->getUserStacks($user);
         if (!in_array($id, $user_stacks)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 

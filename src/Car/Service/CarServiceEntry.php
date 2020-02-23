@@ -111,9 +111,9 @@ class CarServiceEntry extends \App\Base\Model {
             'type' => 2];
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
-        $refuel = $ci->get('helper')->getTranslatedString("CAR_REFUEL");
-        $service = $ci->get('helper')->getTranslatedString("CAR_SERVICE");
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
+        $refuel = $translator->getTranslatedString("CAR_REFUEL");
+        $service = $translator->getTranslatedString("CAR_SERVICE");
         return sprintf("%s (%s)", $this->mileage, $this->type == 0 ? $refuel : $service);
     }
     

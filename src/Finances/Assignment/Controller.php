@@ -2,8 +2,9 @@
 
 namespace App\Finances\Assignment;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -11,12 +12,15 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'finances_categories_assignment';
     protected $element_view_route = 'finances_categories_assignment_edit';
     protected $module = "finances";
-    
     private $cat_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->cat_mapper = new \App\Finances\Category\Mapper($this->db, $this->translation, $user);
     }
 
     public function edit(Request $request, Response $response) {
@@ -30,13 +34,13 @@ class Controller extends \App\Base\Controller {
 
         $categories = $this->cat_mapper->getAll('name');
 
-        return $this->ci->view->render($response, 'finances/assignment/edit.twig', ['entry' => $entry, 'categories' => $categories]);
+        return $this->twig->render($response, 'finances/assignment/edit.twig', ['entry' => $entry, 'categories' => $categories]);
     }
 
     public function index(Request $request, Response $response) {
         $assignments = $this->mapper->getAll('description');
         $categories = $this->cat_mapper->getAll();
-        return $this->ci->view->render($response, 'finances/assignment/index.twig', ['assignments' => $assignments, 'categories' => $categories]);
+        return $this->twig->render($response, 'finances/assignment/index.twig', ['assignments' => $assignments, 'categories' => $categories]);
     }
 
 }

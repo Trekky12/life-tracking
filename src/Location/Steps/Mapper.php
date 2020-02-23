@@ -8,9 +8,9 @@ class Mapper extends \App\Base\Mapper {
     protected $model = '\App\Location\Location';
 
     private function getStepsOfDaySQL(&$bindings) {
-        $sql = "SELECT DATE(createdOn) as date, MAX(steps) as steps FROM " . $this->getTable();
+        $sql = "SELECT DATE(createdOn) as date, MAX(steps) as steps FROM " . $this->getTableName();
 
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " GROUP BY DATE(createdOn)";
         $sql .= " ORDER BY DATE(createdOn) DESC";
@@ -79,29 +79,29 @@ class Mapper extends \App\Base\Mapper {
     public function updateSteps($date, $steps_old, $steps_new) {
         $bindings = ["date" => $date, "steps_old" => $steps_old, "steps_new" => $steps_new ];
         
-        $sql = "UPDATE " . $this->getTable() . " SET steps=:steps_new WHERE DATE(createdOn) = :date AND (steps >= :steps_old OR steps >= :steps_new)";
-
-        $this->filterByUser($sql, $bindings);
+        $sql = "UPDATE " . $this->getTableName() . " SET steps=:steps_new WHERE DATE(createdOn) = :date AND (steps >= :steps_old OR steps >= :steps_new)";
+        
+        $this->addSelectFilterForUser($sql, $bindings);
         
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
         return $stmt->rowCount();
     }
     
     public function insertSteps($date, $steps_new) {
-        $bindings = ["date" => $date, "steps_new" => $steps_new, "user" => $this->userid ];
+        $bindings = ["date" => $date, "steps_new" => $steps_new, "user" => $this->user_id ];
         
-        $sql = "INSERT INTO " . $this->getTable() . "(createdOn, user, steps) VALUES(:date, :user, :steps_new)";
+        $sql = "INSERT INTO " . $this->getTableName() . "(createdOn, user, steps) VALUES(:date, :user, :steps_new)";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         } else {
             return $this->db->lastInsertId();
         }

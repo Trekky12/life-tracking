@@ -2,8 +2,9 @@
 
 namespace App\Crawler\CrawlerDataset;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -14,9 +15,13 @@ class Controller extends \App\Base\Controller {
     protected $module = "crawlers";
     private $crawler_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->crawler_mapper = new \App\Crawler\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->crawler_mapper = new \App\Crawler\Mapper($this->db, $this->translation, $user);
     }
 
     public function saveAPI(Request $request, Response $response) {
@@ -32,7 +37,7 @@ class Controller extends \App\Base\Controller {
             $this->allowCrawlerOwnerOnly($crawler);
 
             $data["crawler"] = $crawler->id;
-            $data["user"] = $this->ci->get('helper')->getUser()->id;
+            $data["user"] = $this->user_helper->getUser()->id;
 
             if (!is_null($identifier)) {
                 $dataset = $this->mapper->getIDFromIdentifier($crawler->id, $identifier);
@@ -53,10 +58,13 @@ class Controller extends \App\Base\Controller {
             $this->insertOrUpdate($dataset_id, $data, $request);
         } catch (\Exception $e) {
             $this->logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
-            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+
+            $response_data = ['status' => 'error', "error" => $e->getMessage()];
+            return $response->withJSON($response_data);
         }
 
-        return $response->withJSON(array('status' => 'success'));
+        $response_data = ['status' => 'success'];
+        return $response->withJSON($response_data);
     }
 
     /**
@@ -72,9 +80,9 @@ class Controller extends \App\Base\Controller {
     }
 
     private function allowCrawlerOwnerOnly($crawler) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         if ($crawler->user !== $user) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 

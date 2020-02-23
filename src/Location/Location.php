@@ -126,7 +126,7 @@ class Location extends \App\Base\Model{
         return $data;
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         $position = $this->getPosition();
         return sprintf("%s, %s", $position['lat'], $position['lng']);
     }

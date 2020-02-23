@@ -2,8 +2,9 @@
 
 namespace App\Crawler\CrawlerLink;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -15,18 +16,22 @@ class Controller extends \App\Base\Controller {
     protected $module = "crawlers";
     private $crawler_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->crawler_mapper = new \App\Crawler\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->crawler_mapper = new \App\Crawler\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $crawler_hash = $request->getAttribute('crawler');
         $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
         $this->allowCrawlerOwnerOnly($crawler);
-        
+
         $links = $this->mapper->getFromCrawler($crawler->id);
-        return $this->ci->view->render($response, 'crawlers/links/index.twig', ['links' => $links, "crawler" => $crawler]);
+        return $this->twig->render($response, 'crawlers/links/index.twig', ['links' => $links, "crawler" => $crawler]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -44,7 +49,7 @@ class Controller extends \App\Base\Controller {
 
         $this->preEdit($entry_id, $request);
 
-        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'crawler' => $crawler, 'links' => $links]);
+        return $this->twig->render($response, $this->edit_template, ['entry' => $entry, 'crawler' => $crawler, 'links' => $links]);
     }
 
     protected function afterSave($id, array $data, Request $request) {
@@ -78,9 +83,9 @@ class Controller extends \App\Base\Controller {
     }
 
     private function allowCrawlerOwnerOnly($crawler) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         if ($crawler->user !== $user) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 

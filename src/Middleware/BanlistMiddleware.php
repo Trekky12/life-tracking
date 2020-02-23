@@ -2,18 +2,27 @@
 
 namespace App\Middleware;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Container\ContainerInterface;
+
+use App\Banlist\Controller as BanListController;
 
 class BanlistMiddleware {
 
-    protected $ci;
     protected $logger;
+    protected $twig;
+    protected $helper;
+    protected $translation;
+    protected $banlistCtrl;
 
     public function __construct(ContainerInterface $ci) {
-        $this->ci = $ci;
-        $this->logger = $this->ci->get('logger');
+        $this->logger = $ci->get('logger');
+        $this->helper = $ci->get('helper');
+        $this->twig = $ci->get('view');
+        $this->translation = $ci->get('translation');
+        
+        $this->banlistCtrl = new BanListController($ci);
     }
 
     public function __invoke(Request $request, Response $response, $next) {
@@ -21,12 +30,12 @@ class BanlistMiddleware {
         /**
          * Do not allow access for banned ips
          */
-        $banlistCtrl = new \App\Banlist\Controller($this->ci);
-        $isBlocked = $banlistCtrl->isBlocked($this->ci->get('helper')->getIP());
+        
+        $isBlocked = $this->banlistCtrl->isBlocked($this->helper->getIP());
 
         if ($isBlocked) {
             $this->logger->addWarning('BANNED');
-            return $this->ci->get('view')->render($response, 'error.twig', ["message" => $this->ci->get('helper')->getTranslatedString("BANNED"), "message_type" => "danger"]);
+            return $this->twig->render($response, 'error.twig', ["message" => $this->translation->getTranslatedString("BANNED"), "message_type" => "danger"]);
         }
         
         return $next($request, $response);

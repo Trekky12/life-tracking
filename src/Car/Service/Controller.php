@@ -2,8 +2,9 @@
 
 namespace App\Car\Service;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -14,13 +15,17 @@ class Controller extends \App\Base\Controller {
     protected $element_view_route = 'car_service_edit';
     private $car_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->car_mapper = new \App\Car\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->car_mapper = new \App\Car\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $fuel_list = $this->mapper->tableDataFuel($user_cars, 'date', 'DESC', 10);
@@ -33,7 +38,7 @@ class Controller extends \App\Base\Controller {
 
         $cars = $this->car_mapper->getAll();
 
-        return $this->ci->view->render($response, 'cars/service/index.twig', [
+        return $this->twig->render($response, 'cars/service/index.twig', [
                     'fuel_table' => $fuel_table,
                     'datacount' => $fuel_datacount,
                     'cars' => $cars,
@@ -55,13 +60,13 @@ class Controller extends \App\Base\Controller {
             $entry = $this->mapper->get($entry_id);
         }
 
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         $cars = $this->car_mapper->getAll('name');
 
         $this->preEdit($entry_id, $request);
 
-        return $this->ci->view->render($response, 'cars/service/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars, 'type' => $type]);
+        return $this->twig->render($response, 'cars/service/edit.twig', ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars, 'type' => $type]);
     }
 
     protected function afterSave($id, array $data, Request $request) {
@@ -104,7 +109,7 @@ class Controller extends \App\Base\Controller {
     public function stats(Request $request, Response $response) {
         //$list = $this->mapper->getAll('date ASC');
 
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         $list = $this->mapper->getAllofCars('date ASC, mileage ASC', false, $user_cars);
 
@@ -148,7 +153,7 @@ class Controller extends \App\Base\Controller {
         $table = [];
 
         // Get Calculation type
-        $calculation_type = $this->ci->get('helper')->getSessionVar('mileage_type', 0);
+        $calculation_type = $this->helper->getSessionVar('mileage_type', 0);
 
         $mileage_year = [];
 
@@ -232,7 +237,7 @@ class Controller extends \App\Base\Controller {
             }
         }
 
-        return $this->ci->view->render($response, 'cars/stats.twig', [
+        return $this->twig->render($response, 'cars/stats.twig', [
                     'data' => $data,
                     "labels" => json_encode($labels),
                     "table" => $table,
@@ -247,10 +252,11 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
 
         if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1, 2))) {
-            $this->ci->get('helper')->setSessionVar('mileage_type', $data["state"]);
+            $this->helper->setSessionVar('mileage_type', $data["state"]);
         }
 
-        return $response->withJSON(array('status' => 'success'));
+        $response_data = ['status' => 'success'];
+        return $response->withJSON($response_data);
     }
 
     public function tableFuel(Request $request, Response $response) {
@@ -267,23 +273,23 @@ class Controller extends \App\Base\Controller {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $recordsTotal = $this->mapper->countwithCars($user_cars);
         $recordsFiltered = $this->mapper->tableCount($user_cars, 0, $searchQuery);
 
-        $lang = [0 => $this->ci->get('helper')->getTranslatedString("FUEL_PARTLY"), 1 => $this->ci->get('helper')->getTranslatedString("FUEL_FULL")];
+        $lang = [0 => $this->translation->getTranslatedString("FUEL_PARTLY"), 1 => $this->translation->getTranslatedString("FUEL_FULL")];
 
         $data = $this->mapper->tableDataFuel($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderFuelTableRows($data);
 
-        return $response->withJson([
-                    "recordsTotal" => intval($recordsTotal),
-                    "recordsFiltered" => intval($recordsFiltered),
-                    "data" => $table
-                        ]
-        );
+        $response_data = [
+            "recordsTotal" => intval($recordsTotal),
+            "recordsFiltered" => intval($recordsFiltered),
+            "data" => $table
+        ];
+        return $response->withJson($response_data);
     }
 
     public function tableService(Request $request, Response $response) {
@@ -300,7 +306,7 @@ class Controller extends \App\Base\Controller {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $recordsTotal = $this->mapper->countwithCars($user_cars, 1);
@@ -309,26 +315,26 @@ class Controller extends \App\Base\Controller {
         $data = $this->mapper->tableDataService($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderServiceTableRows($data);
 
-        return $response->withJson([
-                    "recordsTotal" => intval($recordsTotal),
-                    "recordsFiltered" => intval($recordsFiltered),
-                    "data" => $table
-                        ]
-        );
+        $response_data = [
+            "recordsTotal" => intval($recordsTotal),
+            "recordsFiltered" => intval($recordsFiltered),
+            "data" => $table
+        ];
+        return $response->withJson($response_data);
     }
 
     private function renderFuelTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[9] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[10] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[9] = '<a href="' . $this->router->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[10] = '<a href="#" data-url="' . $this->router->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
         }
         return $table;
     }
 
     private function renderServiceTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[8] = '<a href="' . $this->ci->get('router')->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[9] = '<a href="#" data-url="' . $this->ci->get('router')->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[8] = '<a href="' . $this->router->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[9] = '<a href="#" data-url="' . $this->router->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
         }
         return $table;
     }
@@ -340,10 +346,10 @@ class Controller extends \App\Base\Controller {
 
         if (!is_null($id)) {
             $entry = $this->mapper->get($id);
-            $user = $this->ci->get('helper')->getUser()->id;
+            $user = $this->user_helper->getUser()->id;
             $user_cars = $this->car_mapper->getElementsOfUser($user);
             if (!in_array($entry->car, $user_cars)) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
             }
         }
     }
@@ -352,10 +358,10 @@ class Controller extends \App\Base\Controller {
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 
@@ -365,10 +371,10 @@ class Controller extends \App\Base\Controller {
     protected function preDelete($id, Request $request) {
         if (!is_null($id)) {
             $entry = $this->mapper->get($id);
-            $user = $this->ci->get('helper')->getUser()->id;
+            $user = $this->user_helper->getUser()->id;
             $user_cars = $this->car_mapper->getElementsOfUser($user);
             if (!in_array($entry->car, $user_cars)) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
             }
         }
     }

@@ -2,8 +2,9 @@
 
 namespace App\Board;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 use Hashids\Hashids;
 use Dflydev\FigCookies\FigRequestCookies;
 
@@ -14,24 +15,26 @@ class Controller extends \App\Base\Controller {
     protected $edit_template = 'boards/edit.twig';
     protected $element_view_route = 'boards_edit';
     protected $module = "boards";
-    
     private $stack_mapper;
     private $card_mapper;
     private $label_mapper;
-    
     private $users_preSave = array();
     private $users_afterSave = array();
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->stack_mapper = new Stack\Mapper($this->ci);
-        $this->card_mapper = new Card\Mapper($this->ci);
-        $this->label_mapper = new Label\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->stack_mapper = new Stack\Mapper($this->db, $this->translation, $user);
+        $this->card_mapper = new Card\Mapper($this->db, $this->translation, $user);
+        $this->label_mapper = new Label\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $boards = $this->mapper->getUserItems('name');
-        return $this->ci->view->render($response, 'boards/index.twig', ['boards' => $boards]);
+        return $this->twig->render($response, 'boards/index.twig', ['boards' => $boards]);
     }
 
     public function view(Request $request, Response $response) {
@@ -43,12 +46,12 @@ class Controller extends \App\Base\Controller {
          * Is the user allowed to view this board?
          */
         $board_user = $this->mapper->getUsers($board->id);
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         if (!in_array($user, $board_user)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
 
-        $show_archive = $this->ci->get('helper')->getSessionVar('show_archive', 0);
+        $show_archive = $this->helper->getSessionVar('show_archive', 0);
 
 
         /**
@@ -74,7 +77,7 @@ class Controller extends \App\Base\Controller {
         $sidebar_mobilevisible = FigRequestCookies::get($request, 'sidebar_mobilevisible');
         $sidebar_desktophidden = FigRequestCookies::get($request, 'sidebar_desktophidden');
 
-        return $this->ci->view->render($response, 'boards/view.twig', [
+        return $this->twig->render($response, 'boards/view.twig', [
                     'board' => $board,
                     'stacks' => $stacks,
                     "users" => $users,
@@ -94,10 +97,11 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
 
         if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1))) {
-            $this->ci->get('helper')->setSessionVar('show_archive', $data["state"]);
+            $this->helper->setSessionVar('show_archive', $data["state"]);
         }
 
-        return $response->withJSON(array('status' => 'success'));
+        $response_data = ['status' => 'success'];
+        return $response->withJSON($response_data);
     }
 
     /**
@@ -126,11 +130,11 @@ class Controller extends \App\Base\Controller {
         /**
          * Notify new users
          */
-        $my_user_id = intval($this->ci->get('helper')->getUser()->id);
+        $my_user_id = intval($this->user_helper->getUser()->id);
         $this->users_afterSave = $this->mapper->getUsers($id);
         $new_users = array_diff($this->users_afterSave, $this->users_preSave);
 
-        $subject = $this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_BOARD');
+        $subject = $this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD');
 
         foreach ($new_users as $nu) {
 
@@ -143,11 +147,11 @@ class Controller extends \App\Base\Controller {
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
-                        'headline' => sprintf($this->ci->get('helper')->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->ci->get('helper')->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->ci->get('helper')->getPath() . $this->ci->get('router')->pathFor('boards_view', array('hash' => $board->getHash())), $board->name)
+                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->pathFor('boards_view', array('hash' => $board->getHash())), $board->name)
                     );
 
-                    $this->ci->get('helper')->send_mail('mail/general.twig', $user->mail, $subject, $variables);
+                    $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
                 }
             }
         }
@@ -163,5 +167,5 @@ class Controller extends \App\Base\Controller {
     protected function preDelete($id, Request $request) {
         $this->allowOwnerOnly($id);
     }
-    
+
 }

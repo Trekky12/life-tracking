@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "crawlers_links";
     protected $model = "\App\Crawler\CrawlerLink\CrawlerLink";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     public function getFromCrawler($id, $order = null) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE crawler = :id ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE crawler = :id ";
         
         if(!is_null($order)){
             $sql .= " ORDER BY {$order}";

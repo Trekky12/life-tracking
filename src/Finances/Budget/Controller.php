@@ -2,8 +2,9 @@
 
 namespace App\Finances\Budget;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -14,10 +15,14 @@ class Controller extends \App\Base\Controller {
     private $cat_mapper;
     private $recurring_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->cat_mapper = new \App\Finances\Category\Mapper($this->ci);
-        $this->recurring_mapper = new \App\Finances\Recurring\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->cat_mapper = new \App\Finances\Category\Mapper($this->db, $this->translation, $user);
+        $this->recurring_mapper = new \App\Finances\Recurring\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
@@ -56,10 +61,10 @@ class Controller extends \App\Base\Controller {
         $date_status = round($date->format('j') / $date->format('t') * 100, 2);
 
 
-        return $this->ci->view->render($response, 'finances/budget/index.twig', [
+        return $this->twig->render($response, 'finances/budget/index.twig', [
                     'budgets' => $budgets,
                     'categories' => $categories,
-                    'currency' => $this->ci->get('settings')['app']['i18n']['currency'],
+                    'currency' => $this->settings['app']['i18n']['currency'],
                     'budget_categories' => $budget_categories,
                     'date_status' => $date_status
         ]);
@@ -78,12 +83,12 @@ class Controller extends \App\Base\Controller {
 
         $this->sortBudgets($budgets);
 
-        return $this->ci->view->render($response, 'finances/budget/edit.twig', [
+        return $this->twig->render($response, 'finances/budget/edit.twig', [
                     'budgets' => $budgets,
                     'categories' => $categories,
                     'income' => $income,
                     'recurring' => $recurring,
-                    'currency' => $this->ci->get('settings')['app']['i18n']['currency'],
+                    'currency' => $this->settings['app']['i18n']['currency'],
                     'hasRemainsBudget' => $has_remains_budget,
                     'budget_sum' => $budget_sum,
                     'budget_categories' => $budget_categories,
@@ -93,7 +98,7 @@ class Controller extends \App\Base\Controller {
     public function saveAll(Request $request, Response $response) {
 
         $data = $request->getParsedBody();
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
 
         if (array_key_exists("budget", $data) && is_array($data["budget"])) {
 
@@ -104,7 +109,7 @@ class Controller extends \App\Base\Controller {
             }
         }
 
-        return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+        return $response->withRedirect($this->router->pathFor($this->index_route), 301);
     }
 
     public function getCategoryCosts(Request $request, Response $response) {
@@ -112,7 +117,8 @@ class Controller extends \App\Base\Controller {
         $category = $request->getQueryParam('category');
 
         if (is_null($category)) {
-            return $response->withJSON(array('status' => 'error', "error" => "empty"));
+            $response_data = ['status' => 'error', "error" => "empty"];
+            return $response->withJSON($response_data);
         }
 
         try {
@@ -121,10 +127,12 @@ class Controller extends \App\Base\Controller {
         } catch (\Exception $e) {
             $this->logger->addError("Get Category Costs", array("data" => $category, "error" => $e->getMessage()));
 
-            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+            $response_data = ['status' => 'error', "error" => $e->getMessage()];
+            return $response->withJSON($response_data);
         }
 
-        return $response->withJSON(array('status' => 'success', 'value' => $sum));
+        $response_data = ['status' => 'success', 'value' => $sum];
+        return $response->withJSON($response_data);
     }
 
     /**
@@ -163,8 +171,8 @@ class Controller extends \App\Base\Controller {
         } catch (\Exception $e) {
             $this->logger->addError("Save Categories at Budget", array("data" => $id, "error" => $e->getMessage()));
 
-            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR"));
-            $this->ci->get('flash')->addMessage('message_type', 'danger');
+            $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR"));
+            $this->flash->addMessage('message_type', 'danger');
         }
     }
 

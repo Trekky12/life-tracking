@@ -2,8 +2,9 @@
 
 namespace App\Notifications;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 
@@ -11,36 +12,39 @@ class Controller extends \App\Base\Controller {
 
     protected $index_route = 'notifications_clients';
     protected $module = "notifications";
-    
     private $category_mapper;
     private $client_mapper;
     private $user_notifications_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->category_mapper = new Categories\Mapper($this->ci);
-        $this->client_mapper = new Clients\Mapper($this->ci);
-        $this->user_notifications_mapper = new Users\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->category_mapper = new Categories\Mapper($this->db, $this->translation, $user);
+        $this->client_mapper = new Clients\Mapper($this->db, $this->translation, $user);
+        $this->user_notifications_mapper = new Users\Mapper($this->db, $this->translation, $user);
     }
 
     public function manage(Request $request, Response $response) {
         $categories = $this->category_mapper->getAll();
 
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
         $user_categories = $this->user_notifications_mapper->getCategoriesByUser($user->id);
 
-        return $this->ci->view->render($response, 'notifications/manage.twig', ["categories" => $categories, "user_categories" => $user_categories]);
+        return $this->twig->render($response, 'notifications/manage.twig', ["categories" => $categories, "user_categories" => $user_categories]);
     }
 
     public function overview(Request $request, Response $response) {
         $categories = $this->category_mapper->getAll();
 
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
         $limit = 10;
         $offset = 0;
         $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
 
-        return $this->ci->view->render($response, 'notifications/overview.twig', ["categories" => $categories, "notifications" => $notifications]);
+        return $this->twig->render($response, 'notifications/overview.twig', ["categories" => $categories, "notifications" => $notifications]);
     }
 
     public function notifyByCategory(Request $request, Response $response) {
@@ -53,7 +57,8 @@ class Controller extends \App\Base\Controller {
 
         $this->sendNotificationsToUsersWithCategory($category, $title, $message);
 
-        return $response->withJson(['status' => 'done']);
+        $response_data = ['status' => 'done'];
+        return $response->withJson($response_data);
     }
 
     public function testNotification(Request $request, Response $response) {
@@ -73,21 +78,21 @@ class Controller extends \App\Base\Controller {
             $result = $this->sendNotification($entry, $title, $message);
 
             if ($result) {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("NOTIFICATION_SEND_SUCCESS"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("NOTIFICATION_SEND_SUCCESS"));
+                $this->flash->addMessage('message_type', 'success');
             } else {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("NOTIFICATION_SEND_FAILURE"));
-                $this->ci->get('flash')->addMessage('message_type', 'danger');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("NOTIFICATION_SEND_FAILURE"));
+                $this->flash->addMessage('message_type', 'danger');
             }
-            return $response->withRedirect($this->ci->get('router')->pathFor($this->index_route), 301);
+            return $response->withRedirect($this->router->pathFor($this->index_route), 301);
         }
 
-        return $this->ci->view->render($response, 'notifications/clients/test.twig', ['entry' => $entry]);
+        return $this->twig->render($response, 'notifications/clients/test.twig', ['entry' => $entry]);
     }
 
     private function sendNotification(\App\Notifications\Clients\NotificationClient $entry, $title, $content, $path = null, $id = null) {
 
-        $settings = $this->ci->get('settings')['app']['push'];
+        $settings = $this->settings['app']['push'];
 
         $subscription = Subscription::create([
                     'endpoint' => $entry->endpoint,
@@ -104,7 +109,7 @@ class Controller extends \App\Base\Controller {
         ];
 
         $data = [
-            "url" => $this->ci->get('helper')->getPath(),
+            "url" => $this->helper->getBaseURL(),
             "path" => !is_null($path) ? $path : "/notifications/",
             "id" => !is_null($id) ? $id : -1
         ];
@@ -156,13 +161,13 @@ class Controller extends \App\Base\Controller {
         $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         //$client = $this->client_mapper->getClientByEndpoint($endpoint);
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
         $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
 
         $categories = $this->category_mapper->getAll();
         array_map(function($cat) {
             if ($cat->isInternal()) {
-                $cat->name = $this->ci->get('helper')->getTranslatedString($cat->name);
+                $cat->name = $this->translation->getTranslatedString($cat->name);
             }
             return $cat;
         }, $categories);
@@ -184,17 +189,17 @@ class Controller extends \App\Base\Controller {
         return $response->withJson($result);
     }
 
-    /*public function getUnreadNotificationsByUser(Request $request, Response $response) {
-        //$data = $request->getParsedBody();
+    /* public function getUnreadNotificationsByUser(Request $request, Response $response) {
+      //$data = $request->getParsedBody();
 
-        $result = ["data" => [], "status" => "success"];
-        //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
-        //$client = $this->client_mapper->getClientByEndpoint($endpoint);
-        $user = $this->ci->get('helper')->getUser();
-        $result["data"] = $this->mapper->getUnreadNotificationsCountByUser($user->id);
+      $result = ["data" => [], "status" => "success"];
+      //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+      //$client = $this->client_mapper->getClientByEndpoint($endpoint);
+      $user = $this->user_helper->getUser();
+      $result["data"] = $this->mapper->getUnreadNotificationsCountByUser($user->id);
 
-        return $response->withJson($result);
-    }*/
+      return $response->withJson($result);
+      } */
 
     public function sendNotificationsToUsersWithCategory($identifier, $title, $message) {
         try {
@@ -210,7 +215,7 @@ class Controller extends \App\Base\Controller {
             $users = $this->user_notifications_mapper->getUsersByCategory($category_id->id);
             foreach ($users as $user) {
                 $notification = new Notification(["title" => $title, "message" => $message, "user" => $user, "category" => $category_id->id]);
-                $id = $this->mapper->insert($notification, false);
+                $id = $this->mapper->insert($notification);
             }
         } catch (\Exception $e) {
             $this->logger->addError("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
@@ -220,7 +225,7 @@ class Controller extends \App\Base\Controller {
     public function sendNotificationsToUserWithCategory($user_id, $identifier, $title, $message, $path = null) {
         try {
             $category = $this->category_mapper->getCategoryByIdentifier($identifier);
-            
+
             $title = filter_var($title, FILTER_SANITIZE_STRING);
             $message = filter_var($message, FILTER_SANITIZE_STRING);
 
@@ -234,7 +239,7 @@ class Controller extends \App\Base\Controller {
             $user_categories = $this->user_notifications_mapper->getCategoriesByUser($user_id);
             if (in_array($category->id, $user_categories)) {
                 $notification = new Notification(["title" => $title, "message" => $message, "user" => $user_id, "category" => $category->id, "link" => $path]);
-                $id = $this->mapper->insert($notification, false);
+                $id = $this->mapper->insert($notification);
             }
         } catch (\Exception $e) {
             $this->logger->addError("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));

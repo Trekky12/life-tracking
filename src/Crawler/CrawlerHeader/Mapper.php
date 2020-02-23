@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "crawlers_headers";
     protected $model = "\App\Crawler\CrawlerHeader\CrawlerHeader";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     public function getFromCrawler($id, $order = 'position', $hide_diff = false) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE crawler = :id ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE crawler = :id ";
 
         $bindings = array("id" => $id);
 
@@ -35,18 +35,18 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function unset_sort($header, $crawler) {
-        $sql = "UPDATE " . $this->getTable() . " SET sort = :sort WHERE id != :id and crawler = :crawler";
+        $sql = "UPDATE " . $this->getTableName() . " SET sort = :sort WHERE id != :id and crawler = :crawler";
         $bindings = array("id" => $header, "sort" => null, "crawler" => $crawler);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function getInitialSortColumn($crawler) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE crawler = :crawler AND sort IS NOT NULL AND sortable = :sortable LIMIT 1";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE crawler = :crawler AND sort IS NOT NULL AND sortable = :sortable LIMIT 1";
 
         $bindings = array("crawler" => $crawler, "sortable" => 1);
 

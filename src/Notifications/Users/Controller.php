@@ -2,19 +2,24 @@
 
 namespace App\Notifications\Users;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
     
     protected $module = "notifications";
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
     public function getCategoriesByUser() {
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
         return $this->mapper->getCategoriesByUser($user->id);
     }
 
@@ -25,7 +30,7 @@ class Controller extends \App\Base\Controller {
         $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
 
         if ($type == 1) {
             $this->mapper->addCategory($user->id, $category);

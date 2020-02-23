@@ -6,15 +6,15 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "splitbill_bill";
     protected $model = "\App\Splitbill\Bill\Bill";
-    protected $filterByUser = false;
-    protected $insertUser = true;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = true;
     private $bill_balance_table = "splitbill_bill_users";
 
     public function addOrUpdateBalance($bill, $user, $paid, $spend, $paymethod = null, $paid_foreign = null, $spend_foreign = null) {
 
         $bindings = ["user" => $user, "bill" => $bill];
 
-        $sql = "SELECT id FROM " . $this->getTable($this->bill_balance_table) . "  WHERE bill = :bill AND user =:user ";
+        $sql = "SELECT id FROM " . $this->getTableName($this->bill_balance_table) . "  WHERE bill = :bill AND user =:user ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
@@ -29,13 +29,13 @@ class Mapper extends \App\Base\Mapper {
     private function addBalance($bill, $user, $paid, $spend, $paymethod = null, $paid_foreign = null, $spend_foreign = null) {
         $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod" => $paymethod, "paid_foreign" => $paid_foreign, "spend_foreign" => $spend_foreign];
 
-        $sql = "INSERT INTO " . $this->getTable($this->bill_balance_table) . " (user, paid, spend, bill, paymethod, paid_foreign, spend_foreign) VALUES (:user, :paid, :spend, :bill, :paymethod, :paid_foreign, :spend_foreign)";
+        $sql = "INSERT INTO " . $this->getTableName($this->bill_balance_table) . " (user, paid, spend, bill, paymethod, paid_foreign, spend_foreign) VALUES (:user, :paid, :spend, :bill, :paymethod, :paid_foreign, :spend_foreign)";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         }
         return true;
     }
@@ -43,32 +43,32 @@ class Mapper extends \App\Base\Mapper {
     private function updateBalance($bill, $user, $paid, $spend, $paymethod = null, $paid_foreign = null, $spend_foreign = null) {
         $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod" => $paymethod, "paid_foreign" => $paid_foreign, "spend_foreign" => $spend_foreign];
 
-        $sql = "UPDATE " . $this->getTable($this->bill_balance_table) . " SET paid = :paid, spend = :spend, paymethod = :paymethod, paid_foreign = :paid_foreign, spend_foreign = :spend_foreign WHERE user = :user AND bill = :bill";
+        $sql = "UPDATE " . $this->getTableName($this->bill_balance_table) . " SET paid = :paid, spend = :spend, paymethod = :paymethod, paid_foreign = :paid_foreign, spend_foreign = :spend_foreign WHERE user = :user AND bill = :bill";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_NOT_POSSIBLE'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_NOT_POSSIBLE'));
         }
         return true;
     }
 
     public function deleteBalanceofUser($bill, $user) {
-        $sql = "DELETE FROM " . $this->getTable($this->bill_balance_table) . "  WHERE bill = :bill AND user =:user ";
+        $sql = "DELETE FROM " . $this->getTableName($this->bill_balance_table) . "  WHERE bill = :bill AND user =:user ";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "bill" => $bill,
             "user" => $user
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return true;
     }
 
     public function getBalance($id) {
-        $sql = "SELECT user, spend, paid, paid-spend as balance, paymethod, paid_foreign, spend_foreign FROM " . $this->getTable($this->bill_balance_table) . " WHERE bill = :id";
+        $sql = "SELECT user, spend, paid, paid-spend as balance, paymethod, paid_foreign, spend_foreign FROM " . $this->getTableName($this->bill_balance_table) . " WHERE bill = :id";
 
         $bindings = array("id" => $id);
 
@@ -83,7 +83,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getBillSpend($id, $field = "spend") {
-        $sql = "SELECT SUM({$field}) FROM " . $this->getTable($this->bill_balance_table) . " WHERE bill = :id";
+        $sql = "SELECT SUM({$field}) FROM " . $this->getTableName($this->bill_balance_table) . " WHERE bill = :id";
 
         $bindings = array("id" => $id);
 
@@ -97,8 +97,8 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getTotalBalance($group) {
-        $sql = "SELECT bb.user, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTable() . " b "
-                . " LEFT JOIN " . $this->getTable($this->bill_balance_table) . " bb "
+        $sql = "SELECT bb.user, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTableName() . " b "
+                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
                 . " ON b.id = bb.bill "
                 . " WHERE b.sbgroup = :group "
                 . " GROUP BY bb.user"
@@ -123,8 +123,8 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getSettledUpSpendings($group, $settleup = 1) {
-        $sql = "SELECT bb.user, SUM(bb.spend) as spend FROM " . $this->getTable() . " b "
-                . " LEFT JOIN " . $this->getTable($this->bill_balance_table) . " bb "
+        $sql = "SELECT bb.user, SUM(bb.spend) as spend FROM " . $this->getTableName() . " b "
+                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
                 . " ON b.id = bb.bill "
                 . " WHERE b.sbgroup = :group AND b.settleup = :settleup "
                 . " GROUP BY bb.user";
@@ -142,13 +142,13 @@ class Mapper extends \App\Base\Mapper {
     }
     
     public function getBalances() {
-        $sql = "SELECT b.sbgroup, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTable() . " b "
-                . " LEFT JOIN " . $this->getTable($this->bill_balance_table) . " bb "
+        $sql = "SELECT b.sbgroup, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTableName() . " b "
+                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
                 . " ON b.id = bb.bill "
                 . " WHERE bb.user = :user "
                 . " GROUP BY b.sbgroup";
 
-        $bindings = array("user" => $this->userid);
+        $bindings = array("user" => $this->user_id);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -166,7 +166,7 @@ class Mapper extends \App\Base\Mapper {
     
     
     public function getBillUsers($id) {
-        $sql = "SELECT user FROM " . $this->getTable($this->bill_balance_table) . " WHERE (spend > 0 OR paid > 0) AND bill = :id ";
+        $sql = "SELECT user FROM " . $this->getTableName($this->bill_balance_table) . " WHERE (spend > 0 OR paid > 0) AND bill = :id ";
 
         $bindings = array("id" => $id);
 
@@ -184,8 +184,8 @@ class Mapper extends \App\Base\Mapper {
      * Table
      */
     private function getTableSQL($select) {
-        $sql = "SELECT {$select} FROM " . $this->getTable() . " b "
-                . " LEFT JOIN " . $this->getTable($this->bill_balance_table) . " bb "
+        $sql = "SELECT {$select} FROM " . $this->getTableName() . " b "
+                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
                 . " ON b.id = bb.bill AND bb.user = :user "
                 . " WHERE b.sbgroup = :group "
                 . " AND "
@@ -197,7 +197,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function tableCount($group, $searchQuery = "%") {
 
-        $bindings = array("searchQuery" => $searchQuery, "user" => $this->userid, "group" => $group);
+        $bindings = array("searchQuery" => $searchQuery, "user" => $this->user_id, "group" => $group);
 
         $sql = $this->getTableSQL("COUNT(b.id)");
 
@@ -207,12 +207,12 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function getTableData($group, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
-        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "user" => $this->userid, "group" => $group);
+        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "user" => $this->user_id, "group" => $group);
 
         $sort = "id";
         switch ($sortColumn) {

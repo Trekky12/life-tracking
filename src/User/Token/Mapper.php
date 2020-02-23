@@ -5,11 +5,11 @@ namespace App\User\Token;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'global_tokens';
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
 
     public function addToken($user_id, $token, $ip = null, $agent = null) {
-        $sql = "INSERT INTO " . $this->getTable() . "(user, token, ip, agent, changedOn) VALUES (:user, :token, :ip, :agent, :changedOn)";
+        $sql = "INSERT INTO " . $this->getTableName() . "(user, token, ip, agent, changedOn) VALUES (:user, :token, :ip, :agent, :changedOn)";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "user" => $user_id,
@@ -19,12 +19,12 @@ class Mapper extends \App\Base\Mapper {
             "changedOn" => date('Y-m-d H:i:s')
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         }
     }
     
     public function deleteToken($token) {
-        $sql = "DELETE FROM " . $this->getTable() . " WHERE token = :token";
+        $sql = "DELETE FROM " . $this->getTableName() . " WHERE token = :token";
 
         $bindings = array("token" => $token);
 
@@ -32,25 +32,25 @@ class Mapper extends \App\Base\Mapper {
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return $stmt->rowCount() > 0;
     }
     
     public function getUserFromToken($token) {
-        $sql = "SELECT user FROM " . $this->getTable() . " WHERE token = :token LIMIT 1";
+        $sql = "SELECT user FROM " . $this->getTableName() . " WHERE token = :token LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(["token" => $token]);
 
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         } else {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('TOKEN_INVALID'), 404);
+            throw new \Exception($this->translation->getTranslatedString('TOKEN_INVALID'), 404);
         }
     }
     
     public function updateTokenData($token, $ip = null, $agent = null) {
-        $sql = "UPDATE " . $this->getTable() . " SET changedOn =:changedOn, ip=:ip, agent=:agent WHERE token=:token";
+        $sql = "UPDATE " . $this->getTableName() . " SET changedOn =:changedOn, ip=:ip, agent=:agent WHERE token=:token";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "changedOn" => date('Y-m-d H:i:s'),
@@ -59,12 +59,12 @@ class Mapper extends \App\Base\Mapper {
             "token" => $token
         ]);
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
     
     public function deleteOldTokens($month = 6){
-        $sql = "DELETE FROM " . $this->getTable() . " WHERE DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0";
+        $sql = "DELETE FROM " . $this->getTableName() . " WHERE DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0";
 
         $bindings = ["month" => $month];
         
@@ -72,7 +72,7 @@ class Mapper extends \App\Base\Mapper {
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return $stmt->rowCount();
     }

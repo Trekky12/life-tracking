@@ -95,7 +95,7 @@ class User extends \App\Base\Model {
         return false;
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return $this->login;
     }
 

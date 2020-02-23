@@ -2,56 +2,53 @@
 
 namespace App\Base;
 
-use Interop\Container\ContainerInterface;
-
 abstract class Mapper {
 
     protected $db;
+    protected $translation;
     
     // filter by specific user
-    protected $filterByUser = true;
-    protected $insertUser = true;
-    protected $userid;
+    protected $select_results_of_user_only = true;
+    protected $insert_user = true;
+    protected $user_id;
     
     // Table prefix and name
     protected $table_prefix = '';
     protected $table = '';
     // Primary Key Name
-    protected $id = "id";
+    protected $id = 'id';
     
-    // Modell
+    // Model
     protected $model = '\App\Base\Model';
     
     // m:n relationship with an usertable
-    protected $hasUserTable = false;
+    protected $has_user_table = false;
     protected $user_table = "";
     protected $element_name = "";
 
-    public function __construct(ContainerInterface $ci) {
-        $this->ci = $ci;
-        $this->db = $this->ci->get('db');
+    public function __construct(\PDO $db, \App\Main\Translator $translation, \App\User\User $user = null) {
+        $this->db = $db;
+        $this->translation = $translation;
 
         // set ID of current user
-        if ($this->filterByUser || $this->insertUser) {
-            $currentUser = $this->ci->get('helper')->getUser();
-            $this->userid = $currentUser ? $currentUser->id : null;
-        }
+        $this->user_id = $user ? $user->id : null;
     }
 
-    protected function getTable($table = null) {
+    protected function getTableName($table = null) {
         if (is_null($table)) {
             $table = $this->table;
         }
         return $this->table_prefix . $table;
     }
 
-    public function insert(Model $data, $removeUserParam = null) {
+    public function insert(Model $data) {
 
-        $removeUser = !is_null($removeUserParam) && is_bool($removeUserParam) ? $removeUserParam : !$this->insertUser;
+        // remove the user field from the model, if the user should not be inserted
+        $remove_user = !$this->insert_user;
 
-        $data_array = $data->get_fields($removeUser, true);
+        $data_array = $data->get_fields($remove_user, true);
 
-        $sql = "INSERT INTO " . $this->getTable() . " "
+        $sql = "INSERT INTO " . $this->getTableName() . " "
                 . "        (" . implode(", ", array_keys($data_array)) . ") "
                 . "VALUES  (" . implode(", ", ( array_map(function($row) {
                             return ":" . $row;
@@ -62,17 +59,17 @@ abstract class Mapper {
         $result = $stmt->execute($data_array);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         } else {
             return $this->db->lastInsertId();
         }
     }
 
     public function getAll($sorted = false, $limit = false) {
-        $sql = "SELECT * FROM " . $this->getTable();
+        $sql = "SELECT * FROM " . $this->getTableName();
 
         $bindings = array();
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         if ($sorted && !is_null($sorted)) {
             $sql .= " ORDER BY {$sorted}";
@@ -99,11 +96,11 @@ abstract class Mapper {
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
 
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE  {$whereID} = :id";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE  {$whereID} = :id";
 
         $bindings = array("id" => $id);
         if ($filtered) {
-            $this->filterByUser($sql, $bindings);
+            $this->addSelectFilterForUser($sql, $bindings);
         }
 
         $stmt = $this->db->prepare($sql);
@@ -112,7 +109,7 @@ abstract class Mapper {
         if ($stmt->rowCount() > 0) {
             return new $this->model($stmt->fetch());
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
+        throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
 
     public function update(Model $data, $parameter = null) {
@@ -120,21 +117,21 @@ abstract class Mapper {
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
 
-        $bindings = $data->get_fields(!$this->insertUser, false);
+        $bindings = $data->get_fields(!$this->insert_user, false);
 
         $parts = array();
         foreach (array_keys($bindings) as $row) {
             array_push($parts, " " . $row . " = :" . $row . "");
         }
-        $sql = "UPDATE " . $this->getTable() . " SET " . implode(", ", $parts) . " WHERE {$whereID} = :{$whereID}";
+        $sql = "UPDATE " . $this->getTableName() . " SET " . implode(", ", $parts) . " WHERE {$whereID} = :{$whereID}";
 
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
         return $stmt->rowCount();
     }
@@ -144,40 +141,40 @@ abstract class Mapper {
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
 
-        $sql = "DELETE FROM " . $this->getTable() . "  WHERE {$whereID} = :id";
+        $sql = "DELETE FROM " . $this->getTableName() . "  WHERE {$whereID} = :id";
 
         $bindings = array("id" => $id);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return $stmt->rowCount() > 0;
     }
 
     public function deleteAll() {
-        $sql = "DELETE FROM " . $this->getTable() . "";
+        $sql = "DELETE FROM " . $this->getTableName() . "";
 
         $bindings = array();
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return $stmt->rowCount() > 0;
     }
 
     public function count() {
-        $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTable();
+        $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTableName();
 
         $bindings = array();
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -185,12 +182,12 @@ abstract class Mapper {
         if ($stmt->rowCount() > 0) {
             return intval($stmt->fetchColumn());
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    protected function filterByUser(&$sql, &$bindings, $alias = "") {
+    protected function addSelectFilterForUser(&$sql, &$bindings, $alias = "") {
 
-        if ($this->filterByUser && !is_null($this->userid)) {
+        if ($this->select_results_of_user_only && !is_null($this->user_id)) {
 
             if (strpos(strtolower($sql), strtolower('WHERE')) !== false) {
                 $sql .= " AND ";
@@ -200,13 +197,13 @@ abstract class Mapper {
 
             $sql .= " ({$alias}user = :user OR {$alias}user IS NULL) ";
 
-            $bindings["user"] = $this->userid;
+            $bindings["user"] = $this->user_id;
         }
     }
 
     protected function isUsersDataset($data, $key = "user") {
-        if ($this->filterByUser && !is_null($this->userid)) {
-            if ($data[$key] == $this->userid) {
+        if ($this->select_results_of_user_only && !is_null($this->user_id)) {
+            if ($data[$key] == $this->user_id) {
                 return true;
             }
             return false;
@@ -220,31 +217,31 @@ abstract class Mapper {
      * ===========================================================================
      */
     public function setUserTable($table, $element_name) {
-        $this->hasUserTable = true;
+        $this->has_user_table = true;
         $this->user_table = $table;
         $this->element_name = $element_name;
     }
 
     public function hasUserTable() {
-        return $this->hasUserTable;
+        return $this->has_user_table;
     }
 
     public function deleteUsers($element) {
-        if ($this->hasUserTable) {
-            $sql = "DELETE FROM " . $this->getTable($this->user_table) . "  WHERE {$this->element_name} = :element";
+        if ($this->has_user_table) {
+            $sql = "DELETE FROM " . $this->getTableName($this->user_table) . "  WHERE {$this->element_name} = :element";
             $stmt = $this->db->prepare($sql);
             $result = $stmt->execute([
                 "element" => $element,
             ]);
             if (!$result) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+                throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
             }
             return true;
         }
     }
 
     public function addUsers($element, $users = array()) {
-        if ($this->hasUserTable && !empty($users)) {
+        if ($this->has_user_table && !empty($users)) {
             $data_array = array();
             $keys_array = array();
             foreach ($users as $idx => $user) {
@@ -253,14 +250,14 @@ abstract class Mapper {
                 $keys_array[] = "(:element" . $idx . " , :user" . $idx . ")";
             }
 
-            $sql = "INSERT INTO " . $this->getTable($this->user_table) . " ({$this->element_name}, user) "
+            $sql = "INSERT INTO " . $this->getTableName($this->user_table) . " ({$this->element_name}, user) "
                     . "VALUES " . implode(", ", $keys_array) . "";
 
             $stmt = $this->db->prepare($sql);
             $result = $stmt->execute($data_array);
 
             if (!$result) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('SAVE_NOT_POSSIBLE'));
+                throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
             } else {
                 return $this->db->lastInsertId();
             }
@@ -276,16 +273,16 @@ abstract class Mapper {
     public function getUsers($id) {
         $table = null;
         $element = null;
-        if ($this->hasUserTable) {
+        if ($this->has_user_table) {
             $table = $this->user_table;
             $element = $this->element_name;
-        } elseif ($this->insertUser) {
+        } elseif ($this->insert_user) {
             $table = $this->table;
             $element = $this->id;
         }
 
         if (!is_null($table)) {
-            $sql = "SELECT user FROM " . $this->getTable($table) . " WHERE {$element} = :id";
+            $sql = "SELECT user FROM " . $this->getTableName($table) . " WHERE {$element} = :id";
 
             $bindings = array("id" => $id);
 
@@ -301,7 +298,7 @@ abstract class Mapper {
     }
 
     public function getElementsOfUser($id) {
-        $sql = "SELECT {$this->element_name} FROM " . $this->getTable($this->user_table) . " WHERE user = :id";
+        $sql = "SELECT {$this->element_name} FROM " . $this->getTableName($this->user_table) . " WHERE user = :id";
 
         $bindings = array("id" => $id);
 
@@ -316,7 +313,7 @@ abstract class Mapper {
     }
     
     private function getUserItemsSQL($select = "DISTINCT t.*"){
-        $sql = "SELECT {$select} FROM " . $this->getTable() . " t LEFT JOIN " . $this->getTable($this->user_table) . " tu ";
+        $sql = "SELECT {$select} FROM " . $this->getTableName() . " t LEFT JOIN " . $this->getTableName($this->user_table) . " tu ";
         $sql .= " ON t.id = tu.{$this->element_name} ";
         $sql .= " WHERE tu.user = :user OR t.user = :user";
         
@@ -326,7 +323,7 @@ abstract class Mapper {
     public function getUserItems($sorted = false, $limit = false, $user_id = null) {
         $sql = $this->getUserItemsSQL();
 
-        $bindings = array("user" => $this->userid);
+        $bindings = array("user" => $this->user_id);
         if (!is_null($user_id)) {
             $bindings["user"] = $user_id;
         }
@@ -353,7 +350,7 @@ abstract class Mapper {
     public function getCountElementsOfUser($user_id = null) {
         $sql = $this->getUserItemsSQL("COUNT(DISTINCT t.id)");
 
-        $bindings = array("user" => $this->userid);
+        $bindings = array("user" => $this->user_id);
         if (!is_null($user_id)) {
             $bindings["user"] = $user_id;
         }
@@ -368,7 +365,7 @@ abstract class Mapper {
     }
 
     public function getFromHash($hash) {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE  hash = :hash";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE  hash = :hash";
 
         $bindings = array("hash" => $hash);
 
@@ -378,11 +375,11 @@ abstract class Mapper {
         if ($stmt->rowCount() > 0) {
             return new $this->model($stmt->fetch());
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
+        throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
 
     public function setHash($id, $hash) {
-        $sql = "UPDATE " . $this->getTable() . " SET hash  = :hash WHERE id = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET hash  = :hash WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -391,27 +388,29 @@ abstract class Mapper {
         ]);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function setUser($user_id) {
-        $this->userid = $user_id;
+        $this->user_id = $user_id;
     }
 
-    public function setFilterByUser($filter_by_user) {
-        $this->filterByUser = $filter_by_user;
-        if ($this->filterByUser) {
-            $currentUser = $this->ci->get('helper')->getUser();
-            $this->userid = $currentUser ? $currentUser->id : null;
+    public function setSelectFilterForUser(\App\User\User $user = null) {
+        if (!is_null($user)) {
+            $this->select_results_of_user_only = true;
+            $this->user_id = $user->id;
+        }else{
+            $this->select_results_of_user_only = false;
+            $this->user_id = null;
         }
     }
 
     public function getMinMaxDate($min = 'date', $max = 'date') {
-        $sql = "SELECT DATE(MIN($min)) as min, DATE(MAX($max)) as max FROM " . $this->getTable() . "";
+        $sql = "SELECT DATE(MIN($min)) as min, DATE(MAX($max)) as max FROM " . $this->getTableName() . "";
 
         $bindings = [];
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " LIMIT 1";
 

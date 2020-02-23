@@ -2,8 +2,9 @@
 
 namespace App\Car;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 class Controller extends \App\Base\Controller {
 
@@ -13,13 +14,17 @@ class Controller extends \App\Base\Controller {
     protected $element_view_route = 'cars_edit';
     protected $module = "cars";
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $cars = $this->mapper->getAll('name');
-        return $this->ci->view->render($response, 'cars/control/index.twig', ['cars' => $cars]);
+        return $this->twig->render($response, 'cars/control/index.twig', ['cars' => $cars]);
     }
 
 }

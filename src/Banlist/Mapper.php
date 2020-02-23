@@ -6,11 +6,11 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "global_banlist";
     protected $model = "\App\Base\Model";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
     
     public function getBlockedIPAdresses($attempts = 2) {
-        $sql = "SELECT COUNT(ip) as attempts, createdOn, ip, username, changedOn FROM " . $this->getTable() . " GROUP BY ip HAVING COUNT(ip) > :attempts ";
+        $sql = "SELECT COUNT(ip) as attempts, createdOn, ip, username, changedOn FROM " . $this->getTableName() . " GROUP BY ip HAVING COUNT(ip) > :attempts ";
 
         $bindings = array("attempts" => $attempts);
 
@@ -25,7 +25,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getFailedLoginAttempts($ip) {
-        $sql = "SELECT COUNT(ip) FROM " . $this->getTable() . " WHERE ip = :ip";
+        $sql = "SELECT COUNT(ip) FROM " . $this->getTableName() . " WHERE ip = :ip";
 
         $bindings = array("ip" => $ip);
 
@@ -39,7 +39,7 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function deleteFailedLoginAttempts($ip) {
-        $sql = "DELETE FROM " . $this->getTable() . " WHERE ip = :ip";
+        $sql = "DELETE FROM " . $this->getTableName() . " WHERE ip = :ip";
 
         $bindings = array("ip" => $ip);
 
@@ -47,7 +47,7 @@ class Mapper extends \App\Base\Mapper {
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('DELETE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return $stmt->rowCount() > 0;
     }

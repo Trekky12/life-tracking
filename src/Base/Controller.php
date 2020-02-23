@@ -2,13 +2,12 @@
 
 namespace App\Base;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use Interop\Container\ContainerInterface;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 
 abstract class Controller {
 
-    protected $ci;
     protected $mapper;
     protected $model = '\App\Base\Model';
     protected $parent_model = null;
@@ -23,22 +22,35 @@ abstract class Controller {
     protected $user_from_attribute = false;
     // logger
     protected $logger;
+    protected $twig;
+    protected $helper;
+    protected $user_helper;
+    protected $flash;
+    protected $router;
+    protected $activity;
+    protected $settings;
+    protected $translation;
     // activities
     protected $create_activity = true;
     // module of the current controller
     protected $module = "general";
 
-    final public function __construct(ContainerInterface $ci) {
-        $this->ci = $ci;
-        $this->user_mapper = new \App\User\Mapper($this->ci);
-        $this->logger = $this->ci->get('logger');
-        $this->init();
-    }
+    public function __construct(ContainerInterface $ci) {
+        $this->logger = $ci->get('logger');
+        $this->twig = $ci->get('view');
+        $this->helper = $ci->get('helper');
+        $this->user_helper = $ci->get('user_helper');
+        $this->flash = $ci->get('flash');
+        $this->router = $ci->get('router');
+        $this->settings = $ci->get('settings');
 
-    /**
-     * Initialize the database mappers
-     */
-    abstract function init();
+        $this->translation = $ci->get('translation');
+
+        $this->db = $ci->get('db');
+        $this->user_mapper = new \App\User\Mapper($this->db, $this->translation);
+
+        $this->activity = $ci->get('activity');
+    }
 
     /**
      * this function is called after successfully saving an entry
@@ -115,7 +127,7 @@ abstract class Controller {
     public function save(Request $request, Response $response) {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        $data['user'] = $this->ci->get('helper')->getUser()->id;
+        $data['user'] = $this->user_helper->getUser()->id;
 
         // get user from attribute
         if ($this->user_from_attribute) {
@@ -128,7 +140,7 @@ abstract class Controller {
 
         $this->insertOrUpdate($id, $data, $request);
 
-        $redirect_url = $this->ci->get('router')->pathFor($this->index_route, $this->index_params);
+        $redirect_url = $this->router->pathFor($this->index_route, $this->index_params);
 
         return $response->withRedirect($redirect_url, 301);
     }
@@ -153,18 +165,18 @@ abstract class Controller {
         $entry = new $this->model($data);
 
         if ($entry->hasParsingErrors()) {
-            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0]));
-            $this->ci->get('flash')->addMessage('message_type', 'danger');
+            $this->flash->addMessage('message', $this->translation->getTranslatedString($entry->getParsingErrors()[0]));
+            $this->flash->addMessage('message_type', 'danger');
 
-            $this->logger->addError("Insert failed " . $this->model, array("message" => $this->ci->get('helper')->getTranslatedString($entry->getParsingErrors()[0])));
+            $this->logger->addError("Insert failed " . $this->model, array("message" => $this->translation->getTranslatedString($entry->getParsingErrors()[0])));
 
             return array(false, $entry);
         }
 
         if ($id == null) {
             $id = $this->mapper->insert($entry);
-            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_ADD"));
-            $this->ci->get('flash')->addMessage('message_type', 'success');
+            $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_SUCCESS_ADD"));
+            $this->flash->addMessage('message_type', 'success');
             $this->logger->addNotice("Insert Entry " . $this->model, array("id" => $id));
 
             $activity_type = "create";
@@ -174,15 +186,15 @@ abstract class Controller {
 
             $elements_changed = $this->mapper->update($entry);
             if ($elements_changed > 0) {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
+                $this->flash->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Entry " . $this->model, array("id" => $id));
 
                 $activity_type = "update";
             } else {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
-                $this->ci->get('flash')->addMessage('message_type', 'info');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_NOT_CHANGED"));
+                $this->flash->addMessage('message_type', 'info');
 
                 $this->logger->addNotice("No Update of Entry " . $this->model, array("id" => $id));
             }
@@ -227,10 +239,12 @@ abstract class Controller {
         } catch (\Exception $e) {
             $this->logger->addError("Save API " . $this->model, array("error" => $e->getMessage()));
 
-            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+            $response_data = array('status' => 'error', "error" => $e->getMessage());
+            return $response->withJSON($response_data);
         }
 
-        return $response->withJSON(array('status' => 'success'));
+        $response_data = array('status' => 'success');
+        return $response->withJSON($response_data);
     }
 
     public function delete(Request $request, Response $response) {
@@ -245,7 +259,7 @@ abstract class Controller {
             $this->mapper->setUser($user);
         }
 
-        $data = ['is_deleted' => false, 'error' => ''];
+        $response_data = ['is_deleted' => false, 'error' => ''];
 
         try {
 
@@ -264,10 +278,10 @@ abstract class Controller {
              * Delete
              */
             $is_deleted = $this->mapper->delete($id);
-            $data ['is_deleted'] = $is_deleted;
+            $response_data['is_deleted'] = $is_deleted;
             if ($is_deleted) {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_DELETE"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_SUCCESS_DELETE"));
+                $this->flash->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Delete successfully " . $this->model, array("id" => $id));
 
@@ -275,24 +289,22 @@ abstract class Controller {
                     $this->addActivity("delete", $id, $savedEntry, $affectedUsers);
                 }
             } else {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
-                $this->ci->get('flash')->addMessage('message_type', 'danger');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR_DELETE"));
+                $this->flash->addMessage('message_type', 'danger');
 
                 $this->logger->addError("Delete failed " . $this->model, array("id" => $id));
             }
         } catch (\Exception $e) {
-            $data['error'] = $e->getMessage();
-            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_ERROR_DELETE"));
-            $this->ci->get('flash')->addMessage('message_type', 'danger');
+            $response_data['error'] = $e->getMessage();
+            $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR_DELETE"));
+            $this->flash->addMessage('message_type', 'danger');
 
             $this->logger->addError("Delete failed " . $this->model, array("id" => $id, "error" => $e->getMessage()));
         }
 
         $this->afterDelete($id, $request);
 
-        $newResponse = $response->withJson($data);
-
-        return $newResponse;
+        return $response->withJson($response_data);
     }
 
     public function edit(Request $request, Response $response) {
@@ -313,7 +325,7 @@ abstract class Controller {
 
         $this->preEdit($entry_id, $request);
 
-        return $this->ci->view->render($response, $this->edit_template, ['entry' => $entry, 'users' => $users]);
+        return $this->twig->render($response, $this->edit_template, ['entry' => $entry, 'users' => $users]);
     }
 
     public function getAPI(Request $request, Response $response) {
@@ -332,19 +344,21 @@ abstract class Controller {
         } catch (\Exception $e) {
             $this->logger->addError("Get API " . $this->model, array("id" => $entry_id, "error" => $e->getMessage()));
 
-            return $response->withJSON(array('status' => 'error', "error" => $e->getMessage()));
+            $response_data = array('status' => 'error', "error" => $e->getMessage());
+            return $response->withJSON($response_data);
         }
 
-        return $response->withJson(['entry' => $rentry]);
+        $response_data = ['entry' => $rentry];
+        return $response->withJson($response_data);
     }
 
     protected function allowOwnerOnly($element_id) {
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         if (!is_null($element_id)) {
             $element = $this->mapper->get($element_id);
 
             if ($element->user !== $user) {
-                throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
             }
         }
     }
@@ -364,14 +378,14 @@ abstract class Controller {
             return null;
         }
         $this->element_view_route_params["id"] = $entry->id;
-        return $this->ci->get('router')->pathFor($this->element_view_route, $this->element_view_route_params);
+        return $this->router->pathFor($this->element_view_route, $this->element_view_route_params);
     }
 
     private function addActivity($type, $id, $entry, $users) {
-        $object = ["object" => $this->model, "id" => $id, "description" => $entry->getDescription($this->ci), "link" => $this->getElementViewRoute($entry)];
+        $object = ["object" => $this->model, "id" => $id, "description" => $entry->getDescription($this->translation, $this->settings->all()), "link" => $this->getElementViewRoute($entry)];
         $parent = ["object" => $this->parent_model, "id" => $entry->getParentID(), "description" => $this->getParentDescription($entry)];
 
-        $this->ci->get('activity')->addEntry($type, $this->module, static::class, $object, $parent, $users);
+        $this->activity->addEntry($type, $this->module, static::class, $object, $parent, $users);
     }
 
     protected function getParentObjectMapper() {
@@ -381,7 +395,7 @@ abstract class Controller {
     private function getParentDescription($entry) {
         if ($this->hasParent()) {
             $parent_object = $this->getParentObjectMapper()->get($entry->getParentID());
-            return $parent_object->getDescription($this->ci);
+            return $parent_object->getDescription($this->translation, $this->settings->all());
         }
         return null;
     }

@@ -1,7 +1,7 @@
 <?php
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
 
 $app->group('', function() {
     $this->get('/', '\App\Main\MainController:index')->setName('index');

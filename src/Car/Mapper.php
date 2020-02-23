@@ -6,9 +6,9 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "cars";
     protected $model = "\App\Car\Car";
-    protected $filterByUser = false;
-    protected $insertUser = true;
-    protected $hasUserTable = true;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = true;
+    protected $has_user_table = true;
     protected $user_table = "cars_user";
     protected $element_name = "car";
 

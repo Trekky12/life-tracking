@@ -6,22 +6,22 @@ class Mapper extends \App\Base\Mapper {
 
     protected $table = "timesheets_sheets";
     protected $model = "\App\Timesheets\Sheet\Sheet";
-    protected $filterByUser = false;
-    protected $insertUser = false;
+    protected $select_results_of_user_only = false;
+    protected $insert_user = false;
     
     public function set_diff($id, $diff) {
-        $sql = "UPDATE " . $this->getTable() . " SET diff = :diff WHERE id  = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET diff = :diff WHERE id  = :id";
         $bindings = array("id" => $id, "diff" => $diff);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
     
     public function getLastSheetWithStartDateToday($project) {
-        $sql = "SELECT * FROM " . $this->getTable() . "  "
+        $sql = "SELECT * FROM " . $this->getTableName() . "  "
                 . "WHERE project = :project "
                 . " AND end IS NULL "
                 . "AND DATE(start) = CURDATE()";
@@ -43,7 +43,7 @@ class Mapper extends \App\Base\Mapper {
      * Table
      */
     private function getTableSQL($select) {
-        $sql = "SELECT {$select} FROM " . $this->getTable() . " t "
+        $sql = "SELECT {$select} FROM " . $this->getTableName() . " t "
                 . " WHERE t.project = :project "
                 . " AND ("
                 . "     (DATE(t.start) >= :from AND DATE(t.end) <= :to ) OR"
@@ -68,7 +68,7 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
     
     public function tableSum($project, $from, $to, $searchQuery = "%") {
@@ -83,7 +83,7 @@ class Mapper extends \App\Base\Mapper {
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
-        throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_DATA'));
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function getTableData($project, $from, $to, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {

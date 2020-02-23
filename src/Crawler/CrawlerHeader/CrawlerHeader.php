@@ -55,7 +55,7 @@ class CrawlerHeader extends \App\Base\Model {
         return htmlspecialchars_decode($field);
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return $this->headline;
     }
     

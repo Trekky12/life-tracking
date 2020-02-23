@@ -87,16 +87,16 @@ class Sheet extends \App\Base\Model {
         return array($date, $start, $end);
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
-        $language = $ci->get('settings')['app']['i18n']['php'];
-        $dateFormatPHP = $ci->get('settings')['app']['i18n']['dateformatPHP'];
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
+        $language = $settings['app']['i18n']['php'];
+        $dateFormatPHP = $settings['app']['i18n']['dateformatPHP'];
         
         $fmtDateTime = new \IntlDateFormatter($language, NULL, NULL);
         $fmtDateTime->setPattern($dateFormatPHP['datetime']);
         
         
         if(!is_null($this->start) && !is_null($this->end)){
-            $type = $ci->get('helper')->getTranslatedString('TIMESHEETS_FAST');
+            $type = $translator->getTranslatedString('TIMESHEETS_FAST');
             
             $start = $fmtDateTime->format($this->getStartDateTime());
             $end = $fmtDateTime->format($this->getEndDateTime());
@@ -104,10 +104,10 @@ class Sheet extends \App\Base\Model {
             $date = sprintf("%s - %s", $start, $end);
         }elseif (!is_null($this->start)) {
             $date = $fmtDateTime->format($this->getStartDateTime());
-            $type = $ci->get('helper')->getTranslatedString('TIMESHEETS_COME');
+            $type = $translator->getTranslatedString('TIMESHEETS_COME');
         } elseif (!is_null($this->end)) {
             $date = $fmtDateTime->format($this->getEndDateTime());
-            $type = $ci->get('helper')->getTranslatedString('TIMESHEETS_LEAVE');
+            $type = $translator->getTranslatedString('TIMESHEETS_LEAVE');
         }
         
         return sprintf("%s (%s)", $date, $type);

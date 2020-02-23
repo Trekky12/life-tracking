@@ -2,8 +2,9 @@
 
 namespace App\User\Profile;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class Controller extends \App\Base\Controller {
@@ -12,13 +13,17 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'users';
     private $token_mapper;
 
-    public function init() {
-        $this->token_mapper = new \App\User\Token\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->token_mapper = new \App\User\Token\Mapper($this->db, $this->translation, $user);
     }
 
     public function changePassword(Request $request, Response $response) {
 
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
 
         if ($request->isPost()) {
 
@@ -28,12 +33,12 @@ class Controller extends \App\Base\Controller {
             $new_password2 = array_key_exists('newpassword2', $data) ? filter_var($data['newpassword2'], FILTER_SANITIZE_STRING) : null;
 
             if (empty($old_password) || empty($new_password1) || empty($new_password2) || $new_password1 !== $new_password2) {
-                $this->ci->get('flash')->addMessageNow('message', $this->ci->get('helper')->getTranslatedString("PASSWORD1AND2MUSTMATCH"));
-                $this->ci->get('flash')->addMessageNow('message_type', 'danger');
+                $this->flash->addMessageNow('message', $this->translation->getTranslatedString("PASSWORD1AND2MUSTMATCH"));
+                $this->flash->addMessageNow('message_type', 'danger');
 
                 $this->logger->addWarning("Update Passord Success, Passwords missmatch");
 
-                return $this->ci->view->render($response, 'profile/changepw.twig', array("user" => $user));
+                return $this->twig->render($response, 'profile/changepw.twig', array("user" => $user));
             }
 
 
@@ -41,12 +46,12 @@ class Controller extends \App\Base\Controller {
              * Verify old password
              */
             if (!password_verify($old_password, $user->password)) {
-                $this->ci->get('flash')->addMessageNow('message', $this->ci->get('helper')->getTranslatedString("PASSWORD_WRONG_OLD"));
-                $this->ci->get('flash')->addMessageNow('message_type', 'danger');
+                $this->flash->addMessageNow('message', $this->translation->getTranslatedString("PASSWORD_WRONG_OLD"));
+                $this->flash->addMessageNow('message_type', 'danger');
 
                 $this->logger->addWarning("Update Passord Success, Old Password Wrong");
 
-                return $this->ci->view->render($response, 'profile/changepw.twig', array("user" => $user));
+                return $this->twig->render($response, 'profile/changepw.twig', array("user" => $user));
             }
 
             /**
@@ -55,26 +60,25 @@ class Controller extends \App\Base\Controller {
             $new_password_hash = password_hash($new_password1, PASSWORD_DEFAULT);
             $this->user_mapper->update_password($user->id, $new_password_hash);
 
-            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PASSWORD_CHANGE_SUCCESS"));
-            $this->ci->get('flash')->addMessage('message_type', 'success');
+            $this->flash->addMessage('message', $this->translation->getTranslatedString("PASSWORD_CHANGE_SUCCESS"));
+            $this->flash->addMessage('message_type', 'success');
 
             $this->logger->addInfo("Update Passord Success");
 
-            return $response->withRedirect($this->ci->get('router')->pathFor('index'), 301);
+            return $response->withRedirect($this->router->pathFor('index'), 301);
         }
-        return $this->ci->view->render($response, 'profile/changepw.twig', ["user" => $user]);
+        return $this->twig->render($response, 'profile/changepw.twig', ["user" => $user]);
     }
 
     public function setProfileImage(Request $request, Response $response) {
 
 
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
 
 
         if ($request->isPost()) {
 
-            $settings = $this->ci->get('settings');
-            $folder = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $settings['app']['upload_folder'];
+            $folder = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $this->settings['app']['upload_folder'];
 
             /**
              * Delete Image
@@ -90,11 +94,11 @@ class Controller extends \App\Base\Controller {
                 unlink($folder . "/" . $image);
 
                 $this->user_mapper->update_image($user->id, null);
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PROFILE_IMAGE_DELETED"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("PROFILE_IMAGE_DELETED"));
+                $this->flash->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Profile Image, No File", array("user" => $user->id));
-                return $response->withRedirect($this->ci->get('router')->pathFor('users_profile_image'), 301);
+                return $response->withRedirect($this->router->pathFor('users_profile_image'), 301);
             }
 
 
@@ -108,7 +112,7 @@ class Controller extends \App\Base\Controller {
             if (!array_key_exists('image', $files) || empty($files['image'])) {
                 $this->logger->addError("Update Profile Image, Image Error", array("user" => $user->id, "files" => $files));
 
-                throw new \Exception($this->ci->get('helper')->getTranslatedString("FILE_UPLOAD_ERROR"));
+                throw new \Exception($this->translation->getTranslatedString("FILE_UPLOAD_ERROR"));
             }
 
             $image = $files['image'];
@@ -140,22 +144,22 @@ class Controller extends \App\Base\Controller {
 
                 $this->user_mapper->update_image($user->id, $file_name . '.' . $file_extension);
 
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("PROFILE_IMAGE_SET"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("PROFILE_IMAGE_SET"));
+                $this->flash->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Profile Image, Image Set", array("user" => $user->id, "image" => $file_name . '.' . $file_extension));
             } else if ($image->getError() === UPLOAD_ERR_NO_FILE) {
                 $this->logger->addError("Update Profile Image, Image Error", array("user" => $user->id, "files" => $files, "error" => "No File"));
 
-                throw new \Exception($this->ci->get('helper')->getTranslatedString("FILE_UPLOAD_ERROR"));
+                throw new \Exception($this->translation->getTranslatedString("FILE_UPLOAD_ERROR"));
             }
-            return $response->withRedirect($this->ci->get('router')->pathFor('users_profile_image'), 301);
+            return $response->withRedirect($this->router->pathFor('users_profile_image'), 301);
         }
-        return $this->ci->view->render($response, 'profile/image.twig', ["user" => $user]);
+        return $this->twig->render($response, 'profile/image.twig', ["user" => $user]);
     }
 
     public function editProfile(Request $request, Response $response) {
-        $user = $this->ci->get('helper')->getUser();
+        $user = $this->user_helper->getUser();
 
         if ($request->isPost()) {
             $data = $request->getParsedBody();
@@ -163,19 +167,19 @@ class Controller extends \App\Base\Controller {
             $new_user = new \App\User\User($data);
             $elements_changed = $this->user_mapper->update_profile($user->id, $new_user);
             if ($elements_changed > 0) {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
-                $this->ci->get('flash')->addMessage('message_type', 'success');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
+                $this->flash->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Profile", array("id" => $user->id));
             } else {
-                $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("ENTRY_NOT_CHANGED"));
-                $this->ci->get('flash')->addMessage('message_type', 'info');
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_NOT_CHANGED"));
+                $this->flash->addMessage('message_type', 'info');
 
                 $this->logger->addNotice("No Update of Profile", array("id" => $user->id));
             }
-            return $response->withRedirect($this->ci->get('router')->pathFor('users_profile_edit'), 301);
+            return $response->withRedirect($this->router->pathFor('users_profile_edit'), 301);
         }
-        return $this->ci->view->render($response, 'profile/edit.twig');
+        return $this->twig->render($response, 'profile/edit.twig');
     }
 
 }

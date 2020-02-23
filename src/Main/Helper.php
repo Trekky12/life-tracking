@@ -2,25 +2,21 @@
 
 namespace App\Main;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class Helper {
 
-    private $ci;
-    private $user_mapper;
-    private $token_mapper;
-    
-    // cache the user object
-    private $user = null;
-    
     private $logger;
+    protected $twig;
+    protected $settings;
+    
+    private $baseURL;
 
     public function __construct(ContainerInterface $ci) {
-        $this->ci = $ci;
-        $this->user_mapper = new \App\User\Mapper($this->ci);
-        $this->token_mapper = new \App\User\Token\Mapper($this->ci);
-        
-        $this->logger = $this->ci->get('logger');
+        $this->logger = $ci->get('logger');
+        $this->twig = $ci->get('view');
+
+        $this->settings = $ci->get('settings');
     }
 
     public function request($URL, $method = 'GET', $data = array(), $secure = true) {
@@ -74,14 +70,14 @@ class Helper {
     }
 
     public function send_mail($template, $to, $subject = '', $body = array()) {
-        
-        $mailSettings = $this->ci->get('settings')['app']['mail'];
+
+        $mailSettings = $this->settings['app']['mail'];
 
         $fromName = $mailSettings["fromName"];
         $fromAddress = $mailSettings["fromAddress"];
 
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
-        
+
         if ($mailSettings["smtp"]) {
             $mail->IsSMTP(); // enable SMTP
             //$mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
@@ -92,7 +88,7 @@ class Helper {
             $mail->Username = $mailSettings["username"];
             $mail->Password = $mailSettings["password"];
         }
-        
+
         $mail->setFrom($fromAddress, $fromName, false);
         if (is_array($to)) {
             foreach ($to as $address) {
@@ -101,92 +97,16 @@ class Helper {
         } else {
             $mail->addAddress($to);
         }
-        
+
         $mail->addReplyTo($fromAddress, $fromName);
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
 
         $mail->Subject = $subject;
 
-        $mail->Body = $this->ci->get('view')->fetch($template, $body);
+        $mail->Body = $this->twig->fetch($template, $body);
 
         return $mail->send();
-    }
-
-    public function getLanguage() {
-        $selected_language = $this->ci->get('settings')['app']['i18n']['template'];
-        $lang = require __DIR__ . '/../lang/' . $selected_language . '.php';
-        return $lang;
-    }
-
-    public function getTranslatedString($key) {
-        $lang = $this->getLanguage();
-        return array_key_exists($key, $lang) ? $lang[$key] : $key;
-    }
-
-    public function setUser($user_id) {
-        // cache the user
-        $this->user = $this->user_mapper->get($user_id);
-        // add user to view
-        $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
-    }
-
-    public function getUser() {
-        // get cached user object
-        if (!is_null($this->user)) {
-            return $this->user;
-        }
-        return null;
-    }
-
-    public function setUserFromToken($token) {
-        if (!is_null($token) && $token !== FALSE) {
-
-            try {
-                $user_id = $this->token_mapper->getUserFromToken($token);
-            } catch (\Exception $e) {
-                $this->logger->addError("No Token in database");
-
-                return false;
-            }
-
-            // refresh user for possible changed access rights
-            $this->user = $this->user_mapper->get($user_id);
-
-            // add user object to view
-            $this->ci->get('view')->getEnvironment()->addGlobal("user", $this->user);
-            $this->ci->get('view')->getEnvironment()->addGlobal("user_token", $token);
-
-            $this->token_mapper->updateTokenData($token, $this->getIP(), $this->getAgent());
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function saveToken() {
-        $user = $this->getUser();
-        if (!is_null($user)) {
-            $secret = $this->ci->get('settings')['app']['secret'];
-            $token = hash('sha512', $secret . time() . $user->id);
-            $this->token_mapper->addToken($user->id, $token, $this->getIP(), $this->getAgent());
-            return $token;
-        }
-        return null;
-    }
-
-    public function removeToken($token) {
-        if (!is_null($token) && $token !== FALSE) {
-            $this->token_mapper->deleteToken($token);
-        }
-    }
-
-    public function getUserLogin() {
-        if (!is_null($this->user)) {
-            return $this->user->login;
-        }
-        return null;
     }
 
     public function setSessionVar($key, $var) {
@@ -202,51 +122,14 @@ class Helper {
         unset($_SESSION[$key]);
     }
 
-    public function setPath($path) {
-        $this->path = $path;
-        // add path to view
-        $this->ci->get('view')->getEnvironment()->addGlobal("baseURL", $path);
+    public function setBaseURL($baseURL) {
+        $this->baseURL = $baseURL;
+        // add base URL to view
+        $this->twig->getEnvironment()->addGlobal("baseURL", $baseURL);
     }
 
-    public function getPath() {
-        return $this->path;
-    }
-
-    public function checkLogin($username = null, $password = null) {
-        $banlistCtrl = new \App\Banlist\Controller($this->ci);
-
-        if (!is_null($username) && !is_null($password)) {
-
-            try {
-                $user = $this->user_mapper->getUserFromLogin($username);
-
-                if (password_verify($password, $user->password)) {
-                    $this->setUser($user->id);
-                    $banlistCtrl->deleteFailedLoginAttempts($this->getIP());
-
-                    $this->logger->addNotice('LOGIN successfully', array("login" => $username));
-
-                    return true;
-                }
-            } catch (\Exception $e) {
-                $this->logger->addError('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
-            }
-
-
-            // wrong login!
-            $this->ci->get('flash')->addMessage('message', $this->ci->get('helper')->getTranslatedString("WRONG_LOGIN"));
-            $this->ci->get('flash')->addMessage('message_type', 'danger');
-
-            $this->logger->addWarning('Login WRONG', array("login" => $username));
-
-            /**
-             * Log failed login to database
-             */
-            if (!is_null($username) && !is_null($this->getIP())) {
-                $banlistCtrl->addBan($this->getIP(), $username);
-            }
-        }
-        return false;
+    public function getBaseURL() {
+        return $this->baseURL;
     }
 
     public function getIP() {
@@ -263,7 +146,7 @@ class Helper {
 
     public function getDateRange($data, $defaultFrom = 'today', $defaultTo = 'today') {
 
-        if (strcmp($defaultFrom, 'today') === 0 ) {
+        if (strcmp($defaultFrom, 'today') === 0) {
             $defaultFrom = date('Y-m-d');
         }
         if (strcmp($defaultTo, 'today') === 0) {
@@ -293,29 +176,29 @@ class Helper {
         $uri = strlen($params) > 0 ? $path . '?' . $params : $path;
         return $uri;
     }
-    
-    public function getMonthName($month) {
-        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
-        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+    public function getMonthName($month) {
+        $language = $this->settings['app']['i18n']['php'];
+        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+
+        $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt->setPattern($dateFormatPHP['month_name']);
 
         $dateObj = \DateTime::createFromFormat('!m', $month);
         return $fmt->format($dateObj);
     }
-    
-    public function getDay($date) {
-        $langugage = $this->ci->get('settings')['app']['i18n']['php'];
-        $dateFormatPHP = $this->ci->get('settings')['app']['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($langugage, NULL, NULL);
+    public function getDay($date) {
+        $language = $this->settings['app']['i18n']['php'];
+        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+
+        $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt->setPattern($dateFormatPHP['date']);
 
         $dateObj = $d = new \DateTime($date);
         return $fmt->format($dateObj);
     }
-    
+
     public function splitDateInterval($total_seconds) {
         $total_minutes = $total_seconds / 60;
         $hours = intval($total_minutes / 60);

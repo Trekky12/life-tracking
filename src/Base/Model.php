@@ -63,7 +63,7 @@ class Model implements \JsonSerializable {
         return array_key_exists($key, $this->fields);
     }
 
-    public function get_fields($removeUser = false, $insert = true) {
+    public function get_fields($remove_user_element = false, $for_db_insert = true) {
         $temp = array();
         foreach ($this->fields as $k => $v) {
             $temp[$k] = $v;
@@ -72,7 +72,7 @@ class Model implements \JsonSerializable {
         /**
          * No User
          */
-        if ($removeUser) {
+        if ($remove_user_element) {
             if (array_key_exists("user", $temp)) {
                 unset($temp["user"]);
             }
@@ -119,7 +119,7 @@ class Model implements \JsonSerializable {
         return $this->get_fields(true, null);
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return "";
     }
 

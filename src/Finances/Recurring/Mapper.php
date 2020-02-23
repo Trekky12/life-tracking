@@ -8,7 +8,7 @@ class Mapper extends \App\Base\Mapper {
     protected $model = '\App\Finances\Recurring\FinancesEntryRecurring';
 
     public function getRecurringEntries() {
-        $sql = "SELECT * FROM " . $this->getTable() . " "
+        $sql = "SELECT * FROM " . $this->getTableName() . " "
                 . " WHERE "
                 // in date range
                 . " (start <= CURDATE() OR start IS NULL) AND ( end >= CURDATE() OR end IS NULL) "
@@ -43,32 +43,32 @@ class Mapper extends \App\Base\Mapper {
 
     public function updateLastRun(array $ids) {
 
-        $sql = "UPDATE " . $this->getTable() . " SET last_run = CURRENT_TIMESTAMP WHERE id in (" . implode(',', $ids) . ")";
+        $sql = "UPDATE " . $this->getTableName() . " SET last_run = CURRENT_TIMESTAMP WHERE id in (" . implode(',', $ids) . ")";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute();
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
     
     public function setLastRun($id, $timestamp){
-        $sql = "UPDATE " . $this->getTable() . " SET last_run = :timestamp WHERE id = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET last_run = :timestamp WHERE id = :id";
         $bindings = array("timestamp" => $timestamp, "id" => $id);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
         if (!$result) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('UPDATE_FAILED'));
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
 
     public function getSumOfAllCategories($type = 0) {
-        $sql = "SELECT category, SUM(value) as sum FROM " . $this->getTable() . " WHERE type = :type "
+        $sql = "SELECT category, SUM(value) as sum FROM " . $this->getTableName() . " WHERE type = :type "
                 . "AND (start <= CURDATE() OR start IS NULL) AND ( end >= CURDATE() OR end IS NULL) ";
 
         $bindings = array("type" => $type);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " GROUP BY category";
 
@@ -79,11 +79,11 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function getSum($type = 0) {
-        $sql = "SELECT SUM(value) as sum FROM " . $this->getTable() . " WHERE type = :type "
+        $sql = "SELECT SUM(value) as sum FROM " . $this->getTableName() . " WHERE type = :type "
                 . "AND (start <= CURDATE() OR start IS NULL) AND ( end >= CURDATE() OR end IS NULL) ";
 
         $bindings = array("type" => $type);
-        $this->filterByUser($sql, $bindings);
+        $this->addSelectFilterForUser($sql, $bindings);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -93,7 +93,7 @@ class Mapper extends \App\Base\Mapper {
 
     public function getSumOfCategories($categories = array(), $type = 0) {
 
-        $bindings = array("type" => $type, "user" => $this->userid);
+        $bindings = array("type" => $type, "user" => $this->user_id);
         $cat_bindings = array();
         foreach ($categories as $idx => $category) {
             $cat_bindings[":category_" . $idx] = $category;
@@ -104,12 +104,12 @@ class Mapper extends \App\Base\Mapper {
         /*
          * Since there is now support for different intervals of recurring finances we need to estimate the value for one month
          */
-        /* $sql = "SELECT SUM(value) as sum FROM " . $this->getTable() . " "
+        /* $sql = "SELECT SUM(value) as sum FROM " . $this->getTableName() . " "
           . "WHERE type = :type "
           . "AND (start <= CURDATE() OR start IS NULL) AND ( end >= CURDATE() OR end IS NULL) "
           . "AND category IN (" . implode(", ", $keys_array) . ") ";
 
-          $this->filterByUser($sql, $bindings);
+          $this->addSelectFilterForUser($sql, $bindings);
          */
 
         $where = " WHERE type = :type "
@@ -119,13 +119,13 @@ class Mapper extends \App\Base\Mapper {
 
 
         $sql = "SELECT SUM(sum) FROM ( ";
-        $sql .= "   SELECT value/multiplier as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'month' ";
+        $sql .= "   SELECT value/multiplier as sum FROM " . $this->getTableName() . " " . $where . " AND unit = 'month' ";
         $sql .= "   UNION ALL ";
-        $sql .= "   SELECT value*(4/multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'week' ";
+        $sql .= "   SELECT value*(4/multiplier) as sum FROM " . $this->getTableName() . " " . $where . " AND unit = 'week' ";
         $sql .= "   UNION ALL ";
-        $sql .= "   SELECT value*(30/multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'day' ";
+        $sql .= "   SELECT value*(30/multiplier) as sum FROM " . $this->getTableName() . " " . $where . " AND unit = 'day' ";
         $sql .= "   UNION ALL ";
-        $sql .= "   SELECT value/(12*multiplier) as sum FROM " . $this->getTable() . " " . $where . " AND unit = 'year' ";
+        $sql .= "   SELECT value/(12*multiplier) as sum FROM " . $this->getTableName() . " " . $where . " AND unit = 'year' ";
         $sql .= ") f";
 
 

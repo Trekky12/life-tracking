@@ -2,8 +2,9 @@
 
 namespace App\Crawler;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 use Hashids\Hashids;
 
 class Controller extends \App\Base\Controller {
@@ -13,27 +14,30 @@ class Controller extends \App\Base\Controller {
     protected $edit_template = 'crawlers/edit.twig';
     protected $element_view_route = 'crawlers_edit';
     protected $module = "crawlers";
-    
     private $dataset_mapper;
     private $header_mapper;
     private $link_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->dataset_mapper = new CrawlerDataset\Mapper($this->ci);
-        $this->header_mapper = new CrawlerHeader\Mapper($this->ci);
-        $this->link_mapper = new CrawlerLink\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->dataset_mapper = new CrawlerDataset\Mapper($this->db, $this->translation, $user);
+        $this->header_mapper = new CrawlerHeader\Mapper($this->db, $this->translation, $user);
+        $this->link_mapper = new CrawlerLink\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $crawlers = $this->mapper->getUserItems('name');
-        return $this->ci->view->render($response, 'crawlers/index.twig', ['crawlers' => $crawlers]);
+        return $this->twig->render($response, 'crawlers/index.twig', ['crawlers' => $crawlers]);
     }
 
     public function view(Request $request, Response $response) {
 
         $data = $request->getQueryParams();
-        list($from, $to) = $this->ci->get('helper')->getDateRange($data);
+        list($from, $to) = $this->helper->getDateRange($data);
 
         $hash = $request->getAttribute('crawler');
         $crawler = $this->mapper->getFromHash($hash);
@@ -66,7 +70,7 @@ class Controller extends \App\Base\Controller {
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
         $links_tree = $this->buildTree($links);
 
-        return $this->ci->view->render($response, 'crawlers/view.twig', [
+        return $this->twig->render($response, 'crawlers/view.twig', [
                     "crawler" => $crawler,
                     "from" => $from,
                     "to" => $to,
@@ -83,7 +87,7 @@ class Controller extends \App\Base\Controller {
 
         $requestData = $request->getQueryParams();
 
-        list($from, $to) = $this->ci->get('helper')->getDateRange($requestData);
+        list($from, $to) = $this->helper->getDateRange($requestData);
 
         $hash = $request->getAttribute('crawler');
         $crawler = $this->mapper->getFromHash($hash);
@@ -111,11 +115,12 @@ class Controller extends \App\Base\Controller {
         $data = $this->dataset_mapper->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $rendered_data = $this->renderTableRows($data, $headers, $filter);
 
-        return $response->withJson([
-                    "recordsTotal" => intval($recordsTotal),
-                    "recordsFiltered" => intval($recordsFiltered),
-                    "data" => $rendered_data
-        ]);
+        $response_data = [
+            "recordsTotal" => intval($recordsTotal),
+            "recordsFiltered" => intval($recordsFiltered),
+            "data" => $rendered_data
+        ];
+        return $response->withJson($response_data);
     }
 
     /**
@@ -138,9 +143,9 @@ class Controller extends \App\Base\Controller {
      */
     private function checkAccess($id) {
         $crawler_users = $this->mapper->getUsers($id);
-        $user = $this->ci->get('helper')->getUser()->id;
+        $user = $this->user_helper->getUser()->id;
         if (!in_array($user, $crawler_users)) {
-            throw new \Exception($this->ci->get('helper')->getTranslatedString('NO_ACCESS'), 404);
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
     }
 
@@ -164,17 +169,20 @@ class Controller extends \App\Base\Controller {
             $this->checkAccess($crawler->id);
 
             if (array_key_exists("state", $data) && in_array($data["state"], array("createdOn", "changedOn"))) {
-                $this->ci->get('helper')->setSessionVar("crawler_filter_{$hash}", $data["state"]);
-                return $response->withJSON(array('status' => 'success'));
+                $this->helper->setSessionVar("crawler_filter_{$hash}", $data["state"]);
+
+                $response_data = ['status' => 'success'];
+                return $response->withJSON($response_data);
             }
         }
-        return $response->withJSON(array('status' => 'error'));
+        $response_data = ['status' => 'error'];
+        return $response->withJSON($response_data);
     }
 
     private function getFilter($crawler) {
         $default = $crawler->filter; //"createdOn";
         $hash = $crawler->getHash();
-        return $this->ci->get('helper')->getSessionVar("crawler_filter_{$hash}", $default);
+        return $this->helper->getSessionVar("crawler_filter_{$hash}", $default);
     }
 
     private function buildTree(array $elements, $parentId = null) {
@@ -217,7 +225,7 @@ class Controller extends \App\Base\Controller {
             $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
         }
 
-        if(!is_null($column->datatype)){
+        if (!is_null($column->datatype)) {
             $sortColumn = "CAST({$sortColumn} AS {$column->datatype})";
         }
 

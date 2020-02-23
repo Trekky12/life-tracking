@@ -33,7 +33,7 @@ class CrawlerDataset extends \App\Base\Model {
         return json_decode($this->data, true);
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return $this->identifier;
     }
     

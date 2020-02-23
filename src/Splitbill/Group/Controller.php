@@ -2,8 +2,9 @@
 
 namespace App\Splitbill\Group;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+use Psr\Container\ContainerInterface;
 use Hashids\Hashids;
 
 class Controller extends \App\Base\Controller {
@@ -13,18 +14,21 @@ class Controller extends \App\Base\Controller {
     protected $edit_template = 'splitbills/groups/edit.twig';
     protected $element_view_route = 'splitbill_groups_edit';
     protected $module = "splitbills";
-    
     private $bill_mapper;
 
-    public function init() {
-        $this->mapper = new Mapper($this->ci);
-        $this->bill_mapper = new \App\Splitbill\Bill\Mapper($this->ci);
+    public function __construct(ContainerInterface $ci) {
+        parent::__construct($ci);
+        
+        $user = $this->user_helper->getUser();
+        
+        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->bill_mapper = new \App\Splitbill\Bill\Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $groups = $this->mapper->getUserItems('t.createdOn DESC, name');
         $balances = $this->bill_mapper->getBalances();
-        return $this->ci->view->render($response, 'splitbills/groups/index.twig', ['groups' => $groups, 'balances' => $balances]);
+        return $this->twig->render($response, 'splitbills/groups/index.twig', ['groups' => $groups, 'balances' => $balances]);
     }
 
     /**

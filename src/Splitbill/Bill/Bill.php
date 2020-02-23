@@ -52,8 +52,8 @@ class Bill extends \App\Base\Model {
     /**
      * Remove fields which are not in the db table
      */
-    public function get_fields($removeUser = false, $insert = true) {
-        $temp = parent::get_fields($removeUser, $insert);
+    public function get_fields($remove_user_element = false, $for_db_insert = true) {
+        $temp = parent::get_fields($$remove_user_element, $for_db_insert);
 
         unset($temp["spend"]);
         unset($temp["paid"]);
@@ -65,7 +65,7 @@ class Bill extends \App\Base\Model {
         return $temp;
     }
 
-    public function getDescription(\Interop\Container\ContainerInterface $ci) {
+    public function getDescription(\App\Main\Translator $translator, array $settings) {
         return $this->name;
     }
 
