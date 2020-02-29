@@ -4,7 +4,15 @@ namespace App\Notifications\Clients;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 
 class Controller extends \App\Base\Controller {
 
@@ -12,11 +20,11 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'notifications';
     protected $module = "notifications";
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
@@ -85,9 +93,9 @@ class Controller extends \App\Base\Controller {
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
         $client = $this->mapper->getClientByEndpoint($endpoint);
-        if($type == 1){
+        if ($type == 1) {
             $this->mapper->addCategory($client->id, $category);
-        }else{
+        } else {
             $this->mapper->deleteCategory($client->id, $category);
         }
 

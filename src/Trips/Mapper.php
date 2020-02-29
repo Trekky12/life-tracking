@@ -12,6 +12,4 @@ class Mapper extends \App\Base\Mapper {
     protected $user_table = "trips_user";
     protected $element_name = "trip";
 
-    
-
 }

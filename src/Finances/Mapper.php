@@ -301,12 +301,10 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
-    
+
     /**
      * Bills
      */
-    
     public function addOrUpdateFromBill(FinancesEntry $entry) {
 
         $bindings = ["user" => $entry->user, "bill" => $entry->bill];
@@ -345,7 +343,7 @@ class Mapper extends \App\Base\Mapper {
             "date" => $entry->date,
             "time" => $entry->time,
             "lat" => $entry->lat,
-            "lng" => $entry->lng, 
+            "lng" => $entry->lng,
             "acc" => $entry->acc,
             "paymethod" => $entry->paymethod,
             //"description" => $entry->description,

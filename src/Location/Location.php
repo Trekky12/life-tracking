@@ -4,8 +4,8 @@ namespace App\Location;
 
 //class Location implements \JsonSerializable {
 
-class Location extends \App\Base\Model{
-    
+class Location extends \App\Base\Model {
+
     static $MODEL_NAME = "MODEL_LOCATION_ENTRY";
 
     public function parseData(array $data) {
@@ -100,7 +100,7 @@ class Location extends \App\Base\Model{
 
     public function getPosition() {
         $data = [
-            'id'=> $this->id, 
+            'id' => $this->id,
             'dt' => $this->createdOn,
             'steps' => $this->steps
         ];
@@ -108,12 +108,12 @@ class Location extends \App\Base\Model{
         $diff_gps = $this->times - $this->gps_tms;
         $diff_net = $this->times - $this->net_tms;
 
-        if($diff_gps > $diff_net && !is_null($this->net_lat) && !is_null($this->net_lng)){
+        if ($diff_gps > $diff_net && !is_null($this->net_lat) && !is_null($this->net_lng)) {
             $data['lat'] = $this->net_lat;
             $data['lng'] = $this->net_lng;
             $data['acc'] = $this->net_acc;
             $data['source'] = 'net';
-        }else{
+        } else {
             $data['lat'] = $this->gps_lat;
             $data['lng'] = $this->gps_lng;
             $data['acc'] = $this->gps_acc;
@@ -126,7 +126,7 @@ class Location extends \App\Base\Model{
         return $data;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         $position = $this->getPosition();
         return sprintf("%s, %s", $position['lat'], $position['lng']);
     }

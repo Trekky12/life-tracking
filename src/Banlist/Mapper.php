@@ -8,7 +8,7 @@ class Mapper extends \App\Base\Mapper {
     protected $model = "\App\Base\Model";
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
-    
+
     public function getBlockedIPAdresses($attempts = 2) {
         $sql = "SELECT COUNT(ip) as attempts, createdOn, ip, username, changedOn FROM " . $this->getTableName() . " GROUP BY ip HAVING COUNT(ip) > :attempts ";
 

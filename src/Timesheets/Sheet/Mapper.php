@@ -8,7 +8,7 @@ class Mapper extends \App\Base\Mapper {
     protected $model = "\App\Timesheets\Sheet\Sheet";
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
-    
+
     public function set_diff($id, $diff) {
         $sql = "UPDATE " . $this->getTableName() . " SET diff = :diff WHERE id  = :id";
         $bindings = array("id" => $id, "diff" => $diff);
@@ -19,7 +19,7 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
+
     public function getLastSheetWithStartDateToday($project) {
         $sql = "SELECT * FROM " . $this->getTableName() . "  "
                 . "WHERE project = :project "
@@ -70,7 +70,7 @@ class Mapper extends \App\Base\Mapper {
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
-    
+
     public function tableSum($project, $from, $to, $searchQuery = "%") {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);

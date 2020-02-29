@@ -2,18 +2,18 @@
 
 namespace App\Main;
 
-use Psr\Container\ContainerInterface;
+use App\Base\Settings;
 
 class Translator {
 
     protected $settings;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->settings = $ci->get('settings');
+    public function __construct(Settings $settings) {
+        $this->settings = $settings;
     }
 
     public function getLanguage() {
-        $selected_language = $this->settings['app']['i18n']['template'];
+        $selected_language = $this->settings->getAppSettings()['i18n']['template'];
         $lang = require __DIR__ . '/../lang/' . $selected_language . '.php';
         return $lang;
     }

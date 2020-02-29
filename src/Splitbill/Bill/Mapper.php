@@ -121,7 +121,7 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
+
     public function getSettledUpSpendings($group, $settleup = 1) {
         $sql = "SELECT bb.user, SUM(bb.spend) as spend FROM " . $this->getTableName() . " b "
                 . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
@@ -140,7 +140,7 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
+
     public function getBalances() {
         $sql = "SELECT b.sbgroup, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTableName() . " b "
                 . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
@@ -162,9 +162,8 @@ class Mapper extends \App\Base\Mapper {
             ];
         }
         return $results;
-    }    
-    
-    
+    }
+
     public function getBillUsers($id) {
         $sql = "SELECT user FROM " . $this->getTableName($this->bill_balance_table) . " WHERE (spend > 0 OR paid > 0) AND bill = :id ";
 

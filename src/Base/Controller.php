@@ -4,7 +4,15 @@ namespace App\Base;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 
 abstract class Controller {
 
@@ -35,21 +43,21 @@ abstract class Controller {
     // module of the current controller
     protected $module = "general";
 
-    public function __construct(ContainerInterface $ci) {
-        $this->logger = $ci->get('logger');
-        $this->twig = $ci->get('view');
-        $this->helper = $ci->get('helper');
-        $this->user_helper = $ci->get('user_helper');
-        $this->flash = $ci->get('flash');
-        $this->router = $ci->get('router');
-        $this->settings = $ci->get('settings');
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        $this->logger = $logger;
+        $this->twig = $twig;
+        $this->helper = $helper;
+        $this->user_helper = $user_helper;
+        $this->flash = $flash;
+        $this->router = $router;
+        $this->settings = $settings;
 
-        $this->translation = $ci->get('translation');
+        $this->translation = $translation;
 
-        $this->db = $ci->get('db');
+        $this->db = $db;
         $this->user_mapper = new \App\User\Mapper($this->db, $this->translation);
 
-        $this->activity = $ci->get('activity');
+        $this->activity = $activity;
     }
 
     /**
@@ -140,7 +148,7 @@ abstract class Controller {
 
         $this->insertOrUpdate($id, $data, $request);
 
-        $redirect_url = !empty($this->index_route) ? $this->router->urlFor($this->index_route, $this->index_params): '/';
+        $redirect_url = !empty($this->index_route) ? $this->router->urlFor($this->index_route, $this->index_params) : '/';
 
         return $response->withRedirect($redirect_url, 301);
     }

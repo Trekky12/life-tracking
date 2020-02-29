@@ -3,7 +3,7 @@
 namespace App\Timesheets\Sheet;
 
 class Sheet extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_TIMESHEETS_SHEET";
 
     public function parseData(array $data) {
@@ -72,7 +72,7 @@ class Sheet extends \App\Base\Model {
         // only show time on end date when start date and end date are on the same day
         if (!is_null($this->start) && !is_null($this->end) && $this->getStartDateTime()->format('Y-m-d') == $this->getEndDateTime()->format('Y-m-d')) {
             $end = $fmtTime->format($this->getEndDateTime());
-        }  elseif (!is_null($this->end)) {
+        } elseif (!is_null($this->end)) {
             $end = $fmtDateTime->format($this->getEndDateTime());
         }
 
@@ -87,32 +87,32 @@ class Sheet extends \App\Base\Model {
         return array($date, $start, $end);
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
-        $language = $settings['app']['i18n']['php'];
-        $dateFormatPHP = $settings['app']['i18n']['dateformatPHP'];
-        
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
+        $language = $settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $settings->getAppSettings()['i18n']['dateformatPHP'];
+
         $fmtDateTime = new \IntlDateFormatter($language, NULL, NULL);
         $fmtDateTime->setPattern($dateFormatPHP['datetime']);
-        
-        
-        if(!is_null($this->start) && !is_null($this->end)){
+
+
+        if (!is_null($this->start) && !is_null($this->end)) {
             $type = $translator->getTranslatedString('TIMESHEETS_FAST');
-            
+
             $start = $fmtDateTime->format($this->getStartDateTime());
             $end = $fmtDateTime->format($this->getEndDateTime());
-            
+
             $date = sprintf("%s - %s", $start, $end);
-        }elseif (!is_null($this->start)) {
+        } elseif (!is_null($this->start)) {
             $date = $fmtDateTime->format($this->getStartDateTime());
             $type = $translator->getTranslatedString('TIMESHEETS_COME');
         } elseif (!is_null($this->end)) {
             $date = $fmtDateTime->format($this->getEndDateTime());
             $type = $translator->getTranslatedString('TIMESHEETS_LEAVE');
         }
-        
+
         return sprintf("%s (%s)", $date, $type);
     }
-    
+
     public function getParentID() {
         return $this->project;
     }

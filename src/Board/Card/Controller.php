@@ -4,7 +4,15 @@ namespace App\Board\Card;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 
 class Controller extends \App\Base\Controller {
 
@@ -18,11 +26,11 @@ class Controller extends \App\Base\Controller {
     private $users_preSave = array();
     private $users_afterSave = array();
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->mapper = new Mapper($this->db, $this->translation, $user);
         $this->board_mapper = new \App\Board\Mapper($this->db, $this->translation, $user);
         $this->stack_mapper = new \App\Board\Stack\Mapper($this->db, $this->translation, $user);
@@ -125,8 +133,8 @@ class Controller extends \App\Base\Controller {
                         $variables["extra"] .= '<h2>' . $this->translation->getTranslatedString('DESCRIPTION') . ':</h2><div id="description">' . $description . '</div>';
                     }
                     if ($card->date) {
-                        $language = $this->settings['app']['i18n']['php'];
-                        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+                        $language = $this->settings->getAppSettings()['i18n']['php'];
+                        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
                         $fmt = new \IntlDateFormatter($language, NULL, NULL);
                         $fmt->setPattern($dateFormatPHP['month_name_full']);
@@ -263,8 +271,8 @@ class Controller extends \App\Base\Controller {
 
         $subject = $this->translation->getTranslatedString('MAIL_CARD_REMINDER');
 
-        $language = $this->settings['app']['i18n']['php'];
-        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
         $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt->setPattern($dateFormatPHP['month_name_full']);

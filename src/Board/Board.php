@@ -3,7 +3,7 @@
 namespace App\Board;
 
 class Board extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_BOARDS_BOARD";
 
     public function parseData(array $data) {
@@ -12,12 +12,12 @@ class Board extends \App\Base\Model {
 
         $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
-        if(empty($this->name)){
-            $this->parsing_errors[] ="NAME_CANNOT_BE_EMPTY";
+        if (empty($this->name)) {
+            $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

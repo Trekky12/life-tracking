@@ -3,7 +3,7 @@
 namespace App\Finances\Assignment;
 
 class Assignment extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_FINANCES_ASSIGNMENT_ENTRY";
 
     public function parseData(array $data) {
@@ -23,7 +23,7 @@ class Assignment extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->description;
     }
 

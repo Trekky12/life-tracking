@@ -117,7 +117,7 @@ class Mapper extends \App\Base\Mapper {
                 . "     " . $this->getTableName($this->user_table) . " cu "
                 . " WHERE c.stack = s.id AND s.board = b.id "
                 . " AND cu.card = c.id "
-                . " AND c.archive = :archive "                
+                . " AND c.archive = :archive "
                 . " AND date <= CURDATE() ";
 
         $bindings = ["archive" => 0];
@@ -133,21 +133,21 @@ class Mapper extends \App\Base\Mapper {
             $today = intval($row["today"]);
             $board = $row["board"];
             $stack = $row["stack"];
-            
+
             /**
              * First array dimension is the user
              */
             if (!array_key_exists($user, $results)) {
                 $results[$user] = array();
             }
-            
+
             /**
              * Second array dimension is the date (today/not today)
              */
             if (!array_key_exists($today, $results[$user])) {
                 $results[$user][$today] = array();
             }
-            
+
             /**
              * Third array dimension is the board with stacks
              */
@@ -155,15 +155,15 @@ class Mapper extends \App\Base\Mapper {
                 $results[$user][$today][$board]["hash"] = $row["hash"];
                 $results[$user][$today][$board]["stacks"] = array();
             }
-            
+
             /**
              * Fourth array dimension is the stack with cards
              */
             if (!array_key_exists($stack, $results[$user][$today][$board]["stacks"])) {
                 $results[$user][$today][$board]["stacks"][$stack] = array();
             }
-            
-            
+
+
             $results[$user][$today][$board]["stacks"][$stack][] = $row;
         }
         return $results;

@@ -7,7 +7,11 @@ use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\UserHelper;
+use App\Main\Translator;
+use App\Base\Settings;
 
 class ModuleMiddleware {
 
@@ -17,12 +21,12 @@ class ModuleMiddleware {
     protected $settings;
     protected $translation;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->logger = $ci->get('logger');
-        $this->user_helper = $ci->get('user_helper');
-        $this->twig = $ci->get('view');
-        $this->settings = $ci->get('settings');
-        $this->translation = $ci->get('translation');
+    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, Settings $settings, \PDO $db, Translator $translation) {
+        $this->logger = $logger;
+        $this->user_helper = $user_helper;
+        $this->twig = $twig;
+        $this->settings = $settings;
+        $this->translation = $translation;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
@@ -35,7 +39,7 @@ class ModuleMiddleware {
         if (!is_null($baseRoute)) {
             $route = $baseRoute->getPattern();
 
-            $modules = $this->settings['app']['modules'];
+            $modules = $this->settings->getAppSettings()['modules'];
 
             $current_module = $this->getCurrentModule($modules, $route);
 
@@ -66,9 +70,9 @@ class ModuleMiddleware {
         return (substr($haystack, 0, $length) === $needle);
     }
 
-    private function getCurrentModule($modules, $route){
-        foreach($modules as $name => $mod){
-            if($this->startsWith($route, $mod['url'])){
+    private function getCurrentModule($modules, $route) {
+        foreach ($modules as $name => $mod) {
+            if ($this->startsWith($route, $mod['url'])) {
                 return $name;
             }
         }

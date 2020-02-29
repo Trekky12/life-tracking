@@ -3,7 +3,7 @@
 namespace App\Crawler\CrawlerHeader;
 
 class CrawlerHeader extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_CRAWLERS_HEADER";
 
     public function parseData(array $data) {
@@ -20,7 +20,7 @@ class CrawlerHeader extends \App\Base\Model {
         $this->field_name = $this->exists('field_name', $data) ? filter_var($data['field_name'], FILTER_SANITIZE_STRING) : null;
         $this->field_link = $this->exists('field_link', $data) ? filter_var($data['field_link'], FILTER_SANITIZE_STRING) : null;
         $this->field_content = $this->exists('field_content', $data) ? filter_var($data['field_content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
-        
+
         $this->sortable = $this->exists('sortable', $data) ? filter_var($data['sortable'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
@@ -33,7 +33,7 @@ class CrawlerHeader extends \App\Base\Model {
         $this->datatype = $this->exists('datatype', $data) ? filter_var($data['datatype'], FILTER_SANITIZE_STRING) : null;
 
 
-        if(!in_array($this->datatype, array(null, "BINARY","CHAR","DATE","DATETIME","DECIMAL","SIGNED","TIME","UNSIGNED"))){
+        if (!in_array($this->datatype, array(null, "BINARY", "CHAR", "DATE", "DATETIME", "DECIMAL", "SIGNED", "TIME", "UNSIGNED"))) {
             $this->datatype = null;
         }
 
@@ -44,7 +44,7 @@ class CrawlerHeader extends \App\Base\Model {
 
     public function getHTML($element = "field") {
         $field = $this->field_content;
-        switch($element){
+        switch ($element) {
             case "prefix":
                 $field = $this->prefix;
                 break;
@@ -55,10 +55,10 @@ class CrawlerHeader extends \App\Base\Model {
         return htmlspecialchars_decode($field);
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->headline;
     }
-    
+
     public function getParentID() {
         return $this->crawler;
     }

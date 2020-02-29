@@ -22,13 +22,13 @@ class SettingsMapper extends \App\Base\Mapper {
         }
         return null;
     }
-    
-     public function updateLastRun($name) {
+
+    public function updateLastRun($name) {
 
         $sql = "UPDATE " . $this->getTableName() . " SET value = UNIX_TIMESTAMP(), changedOn = CURRENT_TIMESTAMP WHERE name = :name";
-        
+
         $bindings = array("name" => $name);
-        
+
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -36,7 +36,5 @@ class SettingsMapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
-  
 
 }

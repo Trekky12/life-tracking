@@ -3,7 +3,7 @@
 namespace App\Notifications\Clients;
 
 class NotificationClient extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_NOTIFICATIONS_CLIENT";
 
     public function parseData(array $data) {

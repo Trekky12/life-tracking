@@ -61,7 +61,7 @@ class Mapper extends \App\Base\Mapper {
             }
         }
         $sql = "UPDATE " . $this->getTableName() . " SET " . implode(", ", $parts) . " WHERE id = :id";
-               
+
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 

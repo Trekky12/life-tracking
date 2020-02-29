@@ -22,7 +22,7 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         }
     }
-    
+
     public function deleteToken($token) {
         $sql = "DELETE FROM " . $this->getTableName() . " WHERE token = :token";
 
@@ -36,7 +36,7 @@ class Mapper extends \App\Base\Mapper {
         }
         return $stmt->rowCount() > 0;
     }
-    
+
     public function getUserFromToken($token) {
         $sql = "SELECT user FROM " . $this->getTableName() . " WHERE token = :token LIMIT 1";
         $stmt = $this->db->prepare($sql);
@@ -48,7 +48,7 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('TOKEN_INVALID'), 404);
         }
     }
-    
+
     public function updateTokenData($token, $ip = null, $agent = null) {
         $sql = "UPDATE " . $this->getTableName() . " SET changedOn =:changedOn, ip=:ip, agent=:agent WHERE token=:token";
         $stmt = $this->db->prepare($sql);
@@ -62,12 +62,12 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
-    public function deleteOldTokens($month = 6){
+
+    public function deleteOldTokens($month = 6) {
         $sql = "DELETE FROM " . $this->getTableName() . " WHERE DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0";
 
         $bindings = ["month" => $month];
-        
+
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 

@@ -3,7 +3,7 @@
 namespace App\Car\Service;
 
 class CarServiceEntry extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_CARS_SERVICE_ENTRY";
 
     public function parseData(array $data) {
@@ -111,12 +111,12 @@ class CarServiceEntry extends \App\Base\Model {
             'type' => 2];
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         $refuel = $translator->getTranslatedString("CAR_REFUEL");
         $service = $translator->getTranslatedString("CAR_SERVICE");
         return sprintf("%s (%s)", $this->mileage, $this->type == 0 ? $refuel : $service);
     }
-    
+
     public function getParentID() {
         return $this->car;
     }

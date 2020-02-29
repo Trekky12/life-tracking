@@ -3,7 +3,7 @@
 namespace App\Board\Stack;
 
 class Stack extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_BOARDS_STACK";
 
     public function parseData(array $data) {
@@ -29,7 +29,7 @@ class Stack extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

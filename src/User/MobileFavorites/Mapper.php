@@ -8,4 +8,5 @@ class Mapper extends \App\Base\Mapper {
     protected $model = '\App\User\MobileFavorites\MobileFavorite';
     protected $select_results_of_user_only = true;
     protected $insert_user = true;
+
 }

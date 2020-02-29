@@ -84,7 +84,7 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
+
     public function getClientsByCategoryAndUser($category, $user) {
         $sql = "SELECT c.* FROM " . $this->getTableName() . " c, " . $this->getTableName($this->client_table) . " cc "
                 . " WHERE c.id = cc.client AND cc.category = :category AND c.user = :user";

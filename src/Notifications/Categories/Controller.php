@@ -4,7 +4,15 @@ namespace App\Notifications\Categories;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 
 class Controller extends \App\Base\Controller {
 
@@ -14,17 +22,17 @@ class Controller extends \App\Base\Controller {
     protected $element_view_route = 'notifications_categories_edit';
     protected $module = "notifications";
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->mapper = new Mapper($this->db, $this->translation, $user);
     }
 
     public function index(Request $request, Response $response) {
         $categories = $this->mapper->getAll('name');
-        $categories_filtered = array_filter($categories, function($cat){
+        $categories_filtered = array_filter($categories, function($cat) {
             return !$cat->isInternal();
         });
         return $this->twig->render($response, 'notifications/categories/index.twig', ['categories' => $categories_filtered]);
@@ -38,7 +46,7 @@ class Controller extends \App\Base\Controller {
         $this->checkAccess($id);
     }
 
-    private function checkAccess($id){
+    private function checkAccess($id) {
         if (!is_null($id)) {
             $cat = $this->mapper->get($id);
             if ($cat->isInternal()) {

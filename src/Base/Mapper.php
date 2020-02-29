@@ -6,21 +6,17 @@ abstract class Mapper {
 
     protected $db;
     protected $translation;
-    
     // filter by specific user
     protected $select_results_of_user_only = true;
     protected $insert_user = true;
     protected $user_id;
-    
     // Table prefix and name
     protected $table_prefix = '';
     protected $table = '';
     // Primary Key Name
     protected $id = 'id';
-    
     // Model
     protected $model = '\App\Base\Model';
-    
     // m:n relationship with an usertable
     protected $has_user_table = false;
     protected $user_table = "";
@@ -311,12 +307,12 @@ abstract class Mapper {
         }
         return $results;
     }
-    
-    private function getUserItemsSQL($select = "DISTINCT t.*"){
+
+    private function getUserItemsSQL($select = "DISTINCT t.*") {
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t LEFT JOIN " . $this->getTableName($this->user_table) . " tu ";
         $sql .= " ON t.id = tu.{$this->element_name} ";
         $sql .= " WHERE tu.user = :user OR t.user = :user";
-        
+
         return $sql;
     }
 
@@ -335,7 +331,7 @@ abstract class Mapper {
         if ($limit && !is_null($limit)) {
             $sql .= " LIMIT {$limit}";
         }
-        
+
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -400,7 +396,7 @@ abstract class Mapper {
         if (!is_null($user)) {
             $this->select_results_of_user_only = true;
             $this->user_id = $user->id;
-        }else{
+        } else {
             $this->select_results_of_user_only = false;
             $this->user_id = null;
         }

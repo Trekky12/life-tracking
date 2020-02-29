@@ -3,10 +3,10 @@
 namespace App\Finances\Category;
 
 class Mapper extends \App\Base\Mapper {
-    
+
     protected $table = 'finances_categories';
     protected $model = '\App\Finances\Category\Category';
-    
+
     public function set_default($default) {
         $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id = :id";
         $bindings = array("id" => $default, "is_default" => 1);
@@ -17,7 +17,7 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
+
     public function unset_default($default) {
         $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id != :id";
         $bindings = array("id" => $default, "is_default" => 0);
@@ -28,15 +28,15 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
+
     public function get_default() {
         $sql = "SELECT id FROM " . $this->getTableName() . " WHERE is_default = :is_default";
-                
+
         $bindings = array("is_default" => 1);
         $this->addSelectFilterForUser($sql, $bindings);
-        
+
         $sql .= " LIMIT 1";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
@@ -45,12 +45,12 @@ class Mapper extends \App\Base\Mapper {
         }
         return null;
     }
-    
+
     public function getDefaultofUser($user) {
         $bindings = ["is_default" => 1, "user" => $user];
-        
+
         $sql = "SELECT id FROM " . $this->getTableName() . " WHERE is_default = :is_default AND user =:user LIMIT 1";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
@@ -59,4 +59,5 @@ class Mapper extends \App\Base\Mapper {
         }
         return null;
     }
+
 }

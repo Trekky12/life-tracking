@@ -1,6 +1,8 @@
 <?php
 
 use Slim\App;
+use App\Base\Settings;
+use Slim\Csrf\Guard as CSRF;
 
 return function (App $app) {
     $container = $app->getContainer();
@@ -11,9 +13,9 @@ return function (App $app) {
     /**
      * CSRF Protection
      */
-    $settings = $container->get('settings');
-    if ($settings['CSRF']['enabled']) {
-        $app->add($container->get('csrf'));
+    $settings = $container->get(Settings::class);
+    if ($settings->all()['CSRF']['enabled']) {
+        $app->add($container->get(CSRF::class));
     }
 
     /**
@@ -49,7 +51,7 @@ return function (App $app) {
     /**
      * Check if IP is banned
      */
-   $app->add('App\Middleware\BanlistMiddleware');
+    $app->add('App\Middleware\BanlistMiddleware');
 
     /**
      * Save Base URL for Links in E-Mail

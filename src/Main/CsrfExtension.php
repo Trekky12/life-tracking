@@ -2,7 +2,7 @@
 
 namespace App\Main;
 
-class CsrfExtension extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface{
+class CsrfExtension extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface {
 
     /**
      * @var \Slim\Csrf\Guard
@@ -19,7 +19,7 @@ class CsrfExtension extends \Twig\Extension\AbstractExtension implements \Twig\E
         $csrfValueKey = $this->csrf->getTokenValueKey();
         $csrfName = $this->csrf->getTokenName();
         $csrfValue = $this->csrf->getTokenValue();
-        
+
         $jsTokensCount = 2;
         $jsTokens = [];
         for ($i = 0; $i < $jsTokensCount; $i++) {

@@ -4,7 +4,15 @@ namespace App\User\Profile;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class Controller extends \App\Base\Controller {
@@ -13,11 +21,11 @@ class Controller extends \App\Base\Controller {
     protected $index_route = 'users';
     private $token_mapper;
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->token_mapper = new \App\User\Token\Mapper($this->db, $this->translation, $user);
     }
 
@@ -78,7 +86,7 @@ class Controller extends \App\Base\Controller {
 
         if ($request->isPost()) {
 
-            $folder = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $this->settings['app']['upload_folder'];
+            $folder = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $this->settings->getAppSettings()['upload_folder'];
 
             /**
              * Delete Image

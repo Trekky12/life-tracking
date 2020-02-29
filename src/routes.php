@@ -181,7 +181,7 @@ return function (App $app) {
 
 
     $app->group('/notifications', function(RouteCollectorProxy $group) {
-        
+
         // https://github.com/slimphp/Slim/pull/2776
         $group->group('/clients', function(RouteCollectorProxy $group_clients) {
             $group_clients->get('/', '\App\Notifications\Clients\Controller:index')->setName('notifications_clients');
@@ -208,8 +208,6 @@ return function (App $app) {
 
         $group->post('/getNotifications', '\App\Notifications\Controller:getNotificationsByUser')->setName('notifications_get');
         $group->post('/getUnreadNotifications', '\App\Notifications\Controller:getUnreadNotificationsByUser')->setName('notifications_get_unread');
-
-        
     });
 
 

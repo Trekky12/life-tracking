@@ -4,7 +4,16 @@ namespace App\Main;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use Slim\Csrf\Guard as CSRF;
+use App\Base\Settings;
 use Dubture\Monolog\Reader\LogReader;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
@@ -18,14 +27,14 @@ class MainController extends \App\Base\Controller {
     protected $card_ctrl;
     protected $token_ctrl;
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        $this->csrf = $ci->get('csrf');
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CSRF $csrf) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+        $this->csrf = $csrf;
 
         $this->settings_mapper = new \App\Settings\SettingsMapper($this->db, $this->translation);
-        $this->recurring_ctrl = new \App\Finances\Recurring\Controller($ci);
-        $this->card_ctrl = new \App\Board\Card\Controller($ci);
-        $this->token_ctrl = new \App\User\Token\Controller($ci);
+        $this->recurring_ctrl = new \App\Finances\Recurring\Controller($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+        $this->card_ctrl = new \App\Board\Card\Controller($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+        $this->token_ctrl = new \App\User\Token\Controller($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
     }
 
     public function index(Request $request, Response $response) {
@@ -132,7 +141,7 @@ class MainController extends \App\Base\Controller {
         // GET Param 'days'
         $days = intval(filter_var($request->getQueryParam('days', 1), FILTER_SANITIZE_NUMBER_INT));
 
-        $reader = new LogReader($this->settings['logger']['path'], $days);
+        $reader = new LogReader($this->settings->all()['logger']['path'], $days);
 
         /**
          * We have a minus in the logger-name so we need a custom pattern

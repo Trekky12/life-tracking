@@ -11,7 +11,7 @@ class MyErrorRenderer implements \Slim\Interfaces\ErrorRendererInterface {
     private $twig;
     private $logger;
     private $translation;
-    
+
     public function __construct(Twig $twig, LoggerInterface $logger, Translator $translation) {
         $this->twig = $twig;
         $this->logger = $logger;

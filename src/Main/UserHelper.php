@@ -2,8 +2,13 @@
 
 namespace App\Main;
 
-use Psr\Container\ContainerInterface;
 use App\Banlist\Controller as BanListController;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use App\Base\Settings;
 
 class UserHelper {
 
@@ -19,21 +24,29 @@ class UserHelper {
     protected $settings;
     protected $banlistCtrl;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->logger = $ci->get('logger');
-        $this->twig = $ci->get('view');
-        $this->flash = $ci->get('flash');
-        $this->helper = $ci->get('helper');
-        $this->translation = $ci->get('translation');
-        $this->settings = $ci->get('settings');
-        
-        $db = $ci->get('db');
-        $translation = $ci->get('translation');
-        
-        $this->user_mapper = new \App\User\Mapper($db, $translation);
-        $this->token_mapper = new \App\User\Token\Mapper($db, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, Settings $settings, \PDO $db, Translator $translation) {
+        $this->logger = $logger;
+        $this->twig = $twig;
+        $this->flash = $flash;
+        $this->helper = $helper;
+        $this->translation = $translation;
+        $this->settings = $settings;
 
-        $this->banlistCtrl = new BanListController($ci);
+        $this->user_mapper = new \App\User\Mapper($db, $this->translation);
+        $this->token_mapper = new \App\User\Token\Mapper($db, $this->translation);
+
+        $this->banlistCtrl = new BanListController($logger, $twig, $flash, $db, $translation);
+
+        // Add User Entry to Logger
+        $logger->pushProcessor(function ($record) {
+            $user = $this->getUserLogin();
+
+            if (!is_null($user)) {
+                $record['extra']['user'] = $user;
+            }
+
+            return $record;
+        });
     }
 
     public function setUser($user_id) {
@@ -80,7 +93,7 @@ class UserHelper {
     public function saveToken() {
         $user = $this->getUser();
         if (!is_null($user)) {
-            $secret = $this->settings['app']['secret'];
+            $secret = $this->settings->getAppSettings()['secret'];
             $token = hash('sha512', $secret . time() . $user->id);
             $this->token_mapper->addToken($user->id, $token, $this->helper->getIP(), $this->helper->getAgent());
             return $token;

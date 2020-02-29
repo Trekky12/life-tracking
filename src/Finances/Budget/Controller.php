@@ -4,7 +4,15 @@ namespace App\Finances\Budget;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 
 class Controller extends \App\Base\Controller {
 
@@ -15,11 +23,11 @@ class Controller extends \App\Base\Controller {
     private $cat_mapper;
     private $recurring_mapper;
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->mapper = new Mapper($this->db, $this->translation, $user);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->db, $this->translation, $user);
         $this->recurring_mapper = new \App\Finances\Recurring\Mapper($this->db, $this->translation, $user);
@@ -64,7 +72,7 @@ class Controller extends \App\Base\Controller {
         return $this->twig->render($response, 'finances/budget/index.twig', [
                     'budgets' => $budgets,
                     'categories' => $categories,
-                    'currency' => $this->settings['app']['i18n']['currency'],
+                    'currency' => $this->settings->getAppSettings()['i18n']['currency'],
                     'budget_categories' => $budget_categories,
                     'date_status' => $date_status
         ]);
@@ -88,7 +96,7 @@ class Controller extends \App\Base\Controller {
                     'categories' => $categories,
                     'income' => $income,
                     'recurring' => $recurring,
-                    'currency' => $this->settings['app']['i18n']['currency'],
+                    'currency' => $this->settings->getAppSettings()['i18n']['currency'],
                     'hasRemainsBudget' => $has_remains_budget,
                     'budget_sum' => $budget_sum,
                     'budget_categories' => $budget_categories,

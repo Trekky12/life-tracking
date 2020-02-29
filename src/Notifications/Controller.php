@@ -4,7 +4,15 @@ namespace App\Notifications;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 
@@ -16,11 +24,11 @@ class Controller extends \App\Base\Controller {
     private $client_mapper;
     private $user_notifications_mapper;
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->mapper = new Mapper($this->db, $this->translation, $user);
         $this->category_mapper = new Categories\Mapper($this->db, $this->translation, $user);
         $this->client_mapper = new Clients\Mapper($this->db, $this->translation, $user);
@@ -92,7 +100,7 @@ class Controller extends \App\Base\Controller {
 
     private function sendNotification(\App\Notifications\Clients\NotificationClient $entry, $title, $content, $path = null, $id = null) {
 
-        $settings = $this->settings['app']['push'];
+        $settings = $this->settings->getAppSettings()['push'];
 
         $subscription = Subscription::create([
                     'endpoint' => $entry->endpoint,

@@ -3,7 +3,7 @@
 namespace App\Crawler\CrawlerDataset;
 
 class CrawlerDataset extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_CRAWLERS_DATASET";
 
     public function parseData(array $data) {
@@ -33,10 +33,10 @@ class CrawlerDataset extends \App\Base\Model {
         return json_decode($this->data, true);
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->identifier;
     }
-    
+
     public function getParentID() {
         return $this->crawler;
     }

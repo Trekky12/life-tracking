@@ -11,5 +11,5 @@ class Mapper extends \App\Base\Mapper {
     protected $has_user_table = true;
     protected $user_table = "timesheets_projects_users";
     protected $element_name = "project";
-    
+
 }

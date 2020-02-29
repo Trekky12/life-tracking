@@ -4,7 +4,15 @@ namespace App\Finances\Recurring;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 
 class Controller extends \App\Base\Controller {
 
@@ -16,11 +24,11 @@ class Controller extends \App\Base\Controller {
     private $finance_mapper;
     private $paymethod_mapper;
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->mapper = new Mapper($this->db, $this->translation, $user);
         $this->cat_mapper = new \App\Finances\Category\Mapper($this->db, $this->translation, $user);
         $this->finance_mapper = new \App\Finances\Mapper($this->db, $this->translation, $user);
@@ -84,8 +92,8 @@ class Controller extends \App\Base\Controller {
 
         $users = $this->user_mapper->getAll();
 
-        $language = $this->settings['app']['i18n']['php'];
-        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
         $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt->setPattern($dateFormatPHP["month_name"]);
@@ -124,7 +132,7 @@ class Controller extends \App\Base\Controller {
                         'LANG_SPENDINGS' => $this->translation->getTranslatedString('FINANCES_SPENDINGS'),
                         'LANG_DIFFERENCE' => $this->translation->getTranslatedString('DIFFERENCE'),
                         'balance' => $balance,
-                        'currency' => $this->settings['app']['i18n']['currency'],
+                        'currency' => $this->settings->getAppSettings()['i18n']['currency'],
                         'expenses' => $expenses
                     );
 

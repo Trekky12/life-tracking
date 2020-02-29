@@ -11,5 +11,5 @@ class Mapper extends \App\Base\Mapper {
     protected $has_user_table = true;
     protected $user_table = "splitbill_groups_user";
     protected $element_name = "sbgroup";
-    
+
 }

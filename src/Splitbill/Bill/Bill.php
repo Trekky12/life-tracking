@@ -3,7 +3,7 @@
 namespace App\Splitbill\Bill;
 
 class Bill extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_SPLITBILLS_BILL";
 
     public function parseData(array $data) {
@@ -21,7 +21,7 @@ class Bill extends \App\Base\Model {
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
 
         $this->settleup = $this->exists('settleup', $data) ? intval(filter_var($data['settleup'], FILTER_SANITIZE_NUMBER_INT)) : 0;
-        
+
         $this->exchange_rate = $this->exists('exchange_rate', $data) ? filter_var($data['exchange_rate'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 1;
         $this->exchange_fee = $this->exists('exchange_fee', $data) ? filter_var($data['exchange_fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
 
@@ -44,7 +44,7 @@ class Bill extends \App\Base\Model {
         $this->spend = $this->exists('spend', $data) ? filter_var($data['spend'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
         $this->paid = $this->exists('paid', $data) ? filter_var($data['paid'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
         $this->balance = $this->exists('balance', $data) ? filter_var($data['balance'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
-        
+
         $this->spend_foreign = $this->exists('spend_foreign', $data) ? filter_var($data['spend_foreign'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->paid_foreign = $this->exists('paid_foreign', $data) ? filter_var($data['paid_foreign'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
     }
@@ -58,14 +58,14 @@ class Bill extends \App\Base\Model {
         unset($temp["spend"]);
         unset($temp["paid"]);
         unset($temp["balance"]);
-        
+
         unset($temp["spend_foreign"]);
         unset($temp["paid_foreign"]);
 
         return $temp;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

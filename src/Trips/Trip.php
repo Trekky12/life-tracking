@@ -3,7 +3,7 @@
 namespace App\Trips;
 
 class Trip extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_TRIPS_TRIP";
 
     public function parseData(array $data) {
@@ -18,7 +18,7 @@ class Trip extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

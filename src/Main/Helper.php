@@ -2,21 +2,22 @@
 
 namespace App\Main;
 
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Base\Settings;
 
 class Helper {
 
     private $logger;
     protected $twig;
     protected $settings;
-    
     private $baseURL;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->logger = $ci->get('logger');
-        $this->twig = $ci->get('view');
+    public function __construct(LoggerInterface $logger, Twig $twig, Settings $settings) {
+        $this->logger = $logger;
+        $this->twig = $twig;
 
-        $this->settings = $ci->get('settings');
+        $this->settings = $settings;
     }
 
     public function request($URL, $method = 'GET', $data = array(), $secure = true) {
@@ -71,7 +72,7 @@ class Helper {
 
     public function send_mail($template, $to, $subject = '', $body = array()) {
 
-        $mailSettings = $this->settings['app']['mail'];
+        $mailSettings = $this->settings->getAppSettings()['mail'];
 
         $fromName = $mailSettings["fromName"];
         $fromAddress = $mailSettings["fromAddress"];
@@ -178,8 +179,8 @@ class Helper {
     }
 
     public function getMonthName($month) {
-        $language = $this->settings['app']['i18n']['php'];
-        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
         $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt->setPattern($dateFormatPHP['month_name']);
@@ -189,8 +190,8 @@ class Helper {
     }
 
     public function getDay($date) {
-        $language = $this->settings['app']['i18n']['php'];
-        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
         $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt->setPattern($dateFormatPHP['date']);

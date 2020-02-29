@@ -22,7 +22,7 @@ class Mapper extends \App\Base\Mapper {
         }
         throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
-    
+
     public function getCategoryByIdentifier($name) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE identifier = :name";
 

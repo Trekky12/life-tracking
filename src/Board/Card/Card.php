@@ -3,7 +3,7 @@
 namespace App\Board\Card;
 
 class Card extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_BOARDS_CARD";
 
     public function parseData(array $data) {
@@ -44,10 +44,10 @@ class Card extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->title;
     }
-    
+
     public function getParentID() {
         return $this->stack;
     }

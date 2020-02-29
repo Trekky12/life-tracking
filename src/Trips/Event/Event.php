@@ -30,7 +30,7 @@ class Event extends \App\Base\Model {
         $this->end_lng = $this->exists('end_lng', $data) ? filter_var($data['end_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
-        
+
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : null;
@@ -54,7 +54,7 @@ class Event extends \App\Base\Model {
         if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->end_time)) {
             $this->end_time = null;
         }
-        
+
         // set end date to same date like start if end date is empty
         if (!empty($this->start_date) && empty($this->end_date)) {
             $this->end_date = $this->start_date;
@@ -70,7 +70,7 @@ class Event extends \App\Base\Model {
                 $this->end_date = $start->format('Y-m-d');
             }
         }
-        
+
         if ($this->exists('image', $data)) {
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
         }
@@ -220,7 +220,7 @@ class Event extends \App\Base\Model {
         return $this->notice;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 
@@ -236,8 +236,8 @@ class Event extends \App\Base\Model {
         }
         return null;
     }
-    
-    public function get_image(){
+
+    public function get_image() {
         if (!empty($this->image)) {
             return $this->image;
         }

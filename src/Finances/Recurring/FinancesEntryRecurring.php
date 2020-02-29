@@ -3,7 +3,7 @@
 namespace App\Finances\Recurring;
 
 class FinancesEntryRecurring extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_FINANCES_ENTRY_RECURRING";
 
     public function parseData(array $data) {
@@ -44,12 +44,12 @@ class FinancesEntryRecurring extends \App\Base\Model {
         }
     }
 
-    public static function getUnits(){
+    public static function getUnits() {
         return array("day" => "DAY", "week" => "WEEK", "month" => "MONTH", "year" => "YEAR");
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
-        $currency = $settings['app']['i18n']['currency'];
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
+        $currency = $settings->getAppSettings()['i18n']['currency'];
         return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
 

@@ -8,9 +8,9 @@ class Mapper extends \App\Base\Mapper {
     protected $model = '\App\Finances\Assignment\Assignment';
 
     public function findMatchingCategory($user_id, $description, $value) {
-        
+
         $bindings = ["description" => trim($description), "value" => floatval($value), "user" => $user_id];
-        
+
         $sql = "SELECT category FROM " . $this->getTableName() . " "
                 . " WHERE "
                 // same description

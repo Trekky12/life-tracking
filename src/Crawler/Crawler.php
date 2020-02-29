@@ -3,7 +3,7 @@
 namespace App\Crawler;
 
 class Crawler extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_CRAWLERS_CRAWLER";
 
     public function parseData(array $data) {
@@ -21,7 +21,7 @@ class Crawler extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

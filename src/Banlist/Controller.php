@@ -4,7 +4,10 @@ namespace App\Banlist;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
 
 class Controller {
 
@@ -14,13 +17,13 @@ class Controller {
     protected $flash;
     protected $translation;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->logger = $ci->get('logger');
-        $this->twig = $ci->get('view');
-        $this->flash = $ci->get('flash');
-        $this->translation = $ci->get('translation');
+    public function __construct(LoggerInterface $logger, Twig $twig, Flash $flash, \PDO $db, Translator $translation) {
+        $this->logger = $logger;
+        $this->twig = $twig;
+        $this->flash = $flash;
+        $this->translation = $translation;
 
-        $this->db = $ci->get('db');
+        $this->db = $db;
 
         $this->mapper = new Mapper($this->db, $this->translation);
     }

@@ -4,21 +4,27 @@ namespace App\Activity;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\UserHelper;
+use App\Main\Translator;
+use App\Base\Settings;
 
 class Controller {
 
+    protected $logger;
     protected $twig;
     protected $user_helper;
     protected $settings;
     protected $translation;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->twig = $ci->get('view');
-        $this->user_helper = $ci->get('user_helper');
-        $this->settings = $ci->get('settings');
-        $this->translation = $ci->get('translation');
-        $this->db = $ci->get('db');
+    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, Settings $settings, \PDO $db, Translator $translation) {
+        $this->logger = $logger;
+        $this->twig = $twig;
+        $this->user_helper = $user_helper;
+        $this->settings = $settings;
+        $this->translation = $translation;
+        $this->db = $db;
 
         $user = $this->user_helper->getUser();
         $this->user_mapper = new \App\User\Mapper($this->db, $this->translation);
@@ -38,7 +44,7 @@ class Controller {
         $data["parent_object_id"] = array_key_exists("id", $parent) ? $parent["id"] : null;
         $data["parent_object_description"] = array_key_exists("description", $parent) ? $parent["description"] : null;
         $data["link"] = array_key_exists("link", $object) ? $object["link"] : null;
-        
+
         $model = new Activity($data);
         $id = $this->mapper->insert($model);
 
@@ -67,8 +73,8 @@ class Controller {
 
     private function renderTableRows($list) {
 
-        $language = $this->settings['app']['i18n']['php'];
-        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
         $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
         $fmtDate->setPattern($dateFormatPHP["date"]);
@@ -76,7 +82,7 @@ class Controller {
         $fmtTime = new \IntlDateFormatter($language, NULL, NULL);
         $fmtTime->setPattern($dateFormatPHP["time"]);
 
-        $modules = $this->settings['app']['modules'];
+        $modules = $this->settings->getAppSettings()['modules'];
 
         $users = $this->user_mapper->getAll();
         $me = $this->user_helper->getUser()->id;

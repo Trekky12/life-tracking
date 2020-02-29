@@ -3,7 +3,7 @@
 namespace App\Notifications\Categories;
 
 class Category extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_NOTIFICATIONS_CATEGORY";
 
     public function parseData(array $data) {
@@ -21,11 +21,11 @@ class Category extends \App\Base\Model {
         }
     }
 
-    public function isInternal(){
+    public function isInternal() {
         return $this->internal == 1;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

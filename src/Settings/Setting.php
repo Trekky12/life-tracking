@@ -3,9 +3,9 @@
 namespace App\Settings;
 
 class Setting extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_SETTING";
-    
+
     public function parseData(array $data) {
 
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
@@ -47,7 +47,7 @@ class Setting extends \App\Base\Model {
         }
         $current_time = new \DateTime();
         $value = $this->getValue();
-        
+
         // don't calculate 24 hour difference but absolute days 
         // so the time is not interesing
         $current_time->setTime(0, 0, 0);

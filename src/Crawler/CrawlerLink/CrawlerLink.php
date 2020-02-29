@@ -3,7 +3,7 @@
 namespace App\Crawler\CrawlerLink;
 
 class CrawlerLink extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_CRAWLERS_LINK";
 
     public function parseData(array $data) {
@@ -28,10 +28,10 @@ class CrawlerLink extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
-    
+
     public function getParentID() {
         return $this->crawler;
     }

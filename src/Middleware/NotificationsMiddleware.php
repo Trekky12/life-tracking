@@ -6,21 +6,24 @@ use Slim\Psr7\Response as Response;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\UserHelper;
+use App\Main\Translator;
 
 class NotificationsMiddleware {
 
+    protected $logger;
     protected $user_helper;
     protected $twig;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->user_helper = $ci->get('user_helper');
-        $this->twig = $ci->get('view');
-        
-        $db = $ci->get('db');
-        $translation = $ci->get('translation');
-        $user = $ci->get('user_helper')->getUser();
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, \PDO $db, Translator $translation) {
+        $this->logger = $logger;
+        $this->user_helper = $user_helper;
+        $this->twig = $twig;
+
+        $user = $this->user_helper->getUser();
+
         $this->notifications_mapper = new \App\Notifications\Mapper($db, $translation, $user);
     }
 

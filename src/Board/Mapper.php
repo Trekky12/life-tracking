@@ -12,7 +12,7 @@ class Mapper extends \App\Base\Mapper {
     protected $user_table = "boards_user";
     protected $element_name = "board";
 
-    public function getUserStacks($id){
+    public function getUserStacks($id) {
         $sql = "SELECT st.id FROM " . $this->getTableName($this->user_table) . " ub, " . $this->getTableName("boards_stacks") . " st "
                 . " WHERE ub.user = :id "
                 . " AND st.board = ub.board";
@@ -28,8 +28,8 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
-    public function getUserCards($id){
+
+    public function getUserCards($id) {
         $sql = "SELECT ca.id FROM " . $this->getTableName($this->user_table) . " ub, " . $this->getTableName("boards_stacks") . " st, " . $this->getTableName("boards_cards") . " ca "
                 . " WHERE ub.user = :id "
                 . " AND st.board = ub.board "

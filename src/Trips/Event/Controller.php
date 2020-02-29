@@ -4,7 +4,15 @@ namespace App\Trips\Event;
 
 use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
+use App\Activity\Controller as Activity;
+use Slim\Flash\Messages as Flash;
+use App\Main\Translator;
+use Slim\Routing\RouteParser;
+use App\Base\Settings;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class Controller extends \App\Base\Controller {
@@ -17,11 +25,11 @@ class Controller extends \App\Base\Controller {
     protected $module = "trips";
     private $trip_mapper;
 
-    public function __construct(ContainerInterface $ci) {
-        parent::__construct($ci);
-        
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+
         $user = $this->user_helper->getUser();
-        
+
         $this->mapper = new Mapper($this->db, $this->translation, $user);
         $this->trip_mapper = new \App\Trips\Mapper($this->db, $this->translation, $user);
     }
@@ -54,8 +62,8 @@ class Controller extends \App\Base\Controller {
             );
         }
 
-        $language = $this->settings['app']['i18n']['php'];
-        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
         $fmt = new \IntlDateFormatter($language, NULL, NULL);
         $fmt2 = new \IntlDateFormatter($language, NULL, NULL);
@@ -115,7 +123,7 @@ class Controller extends \App\Base\Controller {
             $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
         }
 
-        $mapbox_token = $this->settings['app']['mapbox_token'];
+        $mapbox_token = $this->settings->getAppSettings()['mapbox_token'];
 
         return $this->twig->render($response, 'trips/events/index.twig', [
                     "events" => $events,
@@ -168,8 +176,8 @@ class Controller extends \App\Base\Controller {
         $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time, position");
 
 
-        $language = $this->settings['app']['i18n']['php'];
-        $dateFormatPHP = $this->settings['app']['i18n']['dateformatPHP'];
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
         $dateFormatter = new \IntlDateFormatter($language, NULL, NULL);
         $timeFormatter = new \IntlDateFormatter($language, NULL, NULL);
@@ -298,7 +306,7 @@ class Controller extends \App\Base\Controller {
 
         if ($image->getError() === UPLOAD_ERR_OK) {
 
-            $folder = $this->settings['app']['upload_folder'];
+            $folder = $this->settings->getAppSettings()['upload_folder'];
 
             $uploadFileName = $image->getClientFilename();
             $file_extension = pathinfo($uploadFileName, PATHINFO_EXTENSION);
@@ -341,7 +349,7 @@ class Controller extends \App\Base\Controller {
         $entry_id = $request->getAttribute('id');
         $entry = $this->mapper->get($entry_id);
 
-        $folder = $this->settings['app']['upload_folder'];
+        $folder = $this->settings->getAppSettings()['upload_folder'];
         $thumbnail = $entry->get_thumbnail('small');
         $image = $entry->get_image();
         unlink($folder . '/events/' . $thumbnail);

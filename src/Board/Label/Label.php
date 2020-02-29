@@ -3,7 +3,7 @@
 namespace App\Board\Label;
 
 class Label extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_BOARDS_LABEL";
 
     public function parseData(array $data) {
@@ -83,7 +83,7 @@ class Label extends \App\Base\Model {
         return null;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

@@ -77,12 +77,12 @@ class Mapper extends \App\Base\Mapper {
     }
 
     public function updateSteps($date, $steps_old, $steps_new) {
-        $bindings = ["date" => $date, "steps_old" => $steps_old, "steps_new" => $steps_new ];
-        
+        $bindings = ["date" => $date, "steps_old" => $steps_old, "steps_new" => $steps_new];
+
         $sql = "UPDATE " . $this->getTableName() . " SET steps=:steps_new WHERE DATE(createdOn) = :date AND (steps >= :steps_old OR steps >= :steps_new)";
-        
+
         $this->addSelectFilterForUser($sql, $bindings);
-        
+
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -91,10 +91,10 @@ class Mapper extends \App\Base\Mapper {
         }
         return $stmt->rowCount();
     }
-    
+
     public function insertSteps($date, $steps_new) {
-        $bindings = ["date" => $date, "steps_new" => $steps_new, "user" => $this->user_id ];
-        
+        $bindings = ["date" => $date, "steps_new" => $steps_new, "user" => $this->user_id];
+
         $sql = "INSERT INTO " . $this->getTableName() . "(createdOn, user, steps) VALUES(:date, :user, :steps_new)";
 
         $stmt = $this->db->prepare($sql);

@@ -51,8 +51,8 @@ class Mapper extends \App\Base\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
-    public function setLastRun($id, $timestamp){
+
+    public function setLastRun($id, $timestamp) {
         $sql = "UPDATE " . $this->getTableName() . " SET last_run = :timestamp WHERE id = :id";
         $bindings = array("timestamp" => $timestamp, "id" => $id);
         $stmt = $this->db->prepare($sql);
@@ -100,7 +100,7 @@ class Mapper extends \App\Base\Mapper {
         }
 
 
-        
+
         /*
          * Since there is now support for different intervals of recurring finances we need to estimate the value for one month
          */

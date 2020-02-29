@@ -119,7 +119,7 @@ class Model implements \JsonSerializable {
         return $this->get_fields(true, null);
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return "";
     }
 

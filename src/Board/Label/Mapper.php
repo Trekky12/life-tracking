@@ -73,7 +73,7 @@ class Mapper extends \App\Base\Mapper {
         }
         return $results;
     }
-    
+
     public function getCardsLabel() {
         $sql = "SELECT card, label FROM " . $this->getTableName("boards_cards_label") . "";
 

@@ -6,7 +6,10 @@ use Slim\Psr7\Response as Response;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Psr\Log\LoggerInterface;
+use App\Main\UserHelper;
+use App\Main\Translator;
 
 class AdminMiddleware {
 
@@ -15,11 +18,11 @@ class AdminMiddleware {
     protected $user_helper;
     protected $translation;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->logger = $ci->get('logger');
-        $this->user_helper = $ci->get('user_helper');
-        $this->twig = $ci->get('view');
-        $this->translation = $ci->get('translation');
+    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, Translator $translation) {
+        $this->logger = $logger;
+        $this->user_helper = $user_helper;
+        $this->twig = $twig;
+        $this->translation = $translation;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {

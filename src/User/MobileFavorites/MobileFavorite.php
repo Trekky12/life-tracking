@@ -3,7 +3,7 @@
 namespace App\User\MobileFavorites;
 
 class MobileFavorite extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_MOBILEFAVORITE";
 
     public function parseData(array $data) {
@@ -13,7 +13,7 @@ class MobileFavorite extends \App\Base\Model {
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
     }
 
-    public function getURL(){
+    public function getURL() {
 
         $current_date = new \DateTime('now');
 
@@ -25,7 +25,7 @@ class MobileFavorite extends \App\Base\Model {
         return $url;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->url;
     }
 

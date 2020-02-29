@@ -7,16 +7,17 @@ use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
-use Psr\Container\ContainerInterface;
+use App\Main\Helper;
+use App\Main\UserHelper;
 
 class RedirectMiddleware {
 
     protected $helper;
     protected $user_helper;
 
-    public function __construct(ContainerInterface $ci) {
-        $this->helper = $ci->get('helper');
-        $this->user_helper = $ci->get('user_helper');
+    public function __construct(Helper $helper, UserHelper $user_helper) {
+        $this->helper = $helper;
+        $this->user_helper = $user_helper;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {

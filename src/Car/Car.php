@@ -3,7 +3,7 @@
 namespace App\Car;
 
 class Car extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_CARS";
 
     public function parseData(array $data) {
@@ -14,7 +14,7 @@ class Car extends \App\Base\Model {
         $this->mileage_term = $this->exists('mileage_term', $data) ? filter_var($data['mileage_term'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->mileage_start_date = $this->exists('mileage_start_date', $data) ? filter_var($data['mileage_start_date'], FILTER_SANITIZE_STRING) : null;
 
-        if (!is_null($this->mileage_start_date ) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->mileage_start_date)) {
+        if (!is_null($this->mileage_start_date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->mileage_start_date)) {
             $this->mileage_start_date = date('Y-m-d');
         }
 
@@ -23,7 +23,7 @@ class Car extends \App\Base\Model {
         }
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->name;
     }
 

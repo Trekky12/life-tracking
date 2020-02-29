@@ -95,7 +95,7 @@ class User extends \App\Base\Model {
         return false;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->login;
     }
 

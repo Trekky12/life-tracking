@@ -3,7 +3,7 @@
 namespace App\Finances\Budget;
 
 class Budget extends \App\Base\Model {
-    
+
     static $MODEL_NAME = "MODEL_FINANCES_BUDGET_ENTRY";
 
     public function parseData(array $data) {
@@ -17,15 +17,15 @@ class Budget extends \App\Base\Model {
         $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
 
         $this->is_hidden = $this->exists('is_hidden', $data) ? filter_var($data['is_hidden'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        
+
         $this->is_remaining = $this->exists('is_remaining', $data) ? filter_var($data['is_remaining'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         if (is_null($this->description)) {
             $this->parsing_errors[] = "DESCRIPTION_CANNOT_BE_EMPTY";
         }
     }
-    
-    public function is_remaining(){
+
+    public function is_remaining() {
         return intval($this->is_remaining) == 0 ? false : true;
     }
 
@@ -42,8 +42,8 @@ class Budget extends \App\Base\Model {
         return $temp;
     }
 
-    public function getDescription(\App\Main\Translator $translator, array $settings) {
-        $currency = $settings['app']['i18n']['currency'];
+    public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
+        $currency = $settings->getAppSettings()['i18n']['currency'];
         return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
 

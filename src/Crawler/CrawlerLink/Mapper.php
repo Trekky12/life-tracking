@@ -11,8 +11,8 @@ class Mapper extends \App\Base\Mapper {
 
     public function getFromCrawler($id, $order = null) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE crawler = :id ";
-        
-        if(!is_null($order)){
+
+        if (!is_null($order)) {
             $sql .= " ORDER BY {$order}";
         }
 
