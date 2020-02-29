@@ -3,16 +3,16 @@
 {% set active = 'timesheets' %}
 
 {% block javascript %}
-    <script src="{{base_url()}}/static/js/datefilter.js?ver=20191031"></script>
+    <script src="{{baseURL}}/static/js/datefilter.js?ver=20191031"></script>
 {% endblock %}
 
 {% block body %}
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  path_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["TIMESHEETS_EXPORT"]}}</button></a>
-                <a href="{{  path_for('timesheets_fast', {'project':project.hash}) }}"><button class="white"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> {{lang["TIMESHEETS_FAST"]}} <i class="fas fa-sign-out-alt" aria-hidden="true"></i></button></a>
-                <a href="{{  path_for('timesheets_sheets_edit', {'project':project.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+                <a href="{{  url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["TIMESHEETS_EXPORT"]}}</button></a>
+                <a href="{{  url_for('timesheets_fast', {'project':project.hash}) }}"><button class="white"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> {{lang["TIMESHEETS_FAST"]}} <i class="fas fa-sign-out-alt" aria-hidden="true"></i></button></a>
+                <a href="{{  url_for('timesheets_sheets_edit', {'project':project.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -30,10 +30,10 @@
                             <input type="submit" value="{{lang["SHOW"]}}"/>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ path_for('timesheets_sheets', {'project' : project.hash}) }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
+                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ path_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
+                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
                         </div>
                     </div>
                 </div>

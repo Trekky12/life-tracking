@@ -2,7 +2,7 @@
 
 namespace App\Crawler\CrawlerHeader;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -91,7 +91,7 @@ class Controller extends \App\Base\Controller {
             $this->logger->addNotice("Duplicate crawler headline", array("from" => $clone_crawler->id, "to" => $crawler->id, "fromID" => $fromID, "toID" => $id));
         }
 
-        return $response->withRedirect($this->router->pathFor($this->index_route, ["crawler" => $crawler_hash]), 301);
+        return $response->withRedirect($this->router->urlFor($this->index_route, ["crawler" => $crawler_hash]), 301);
     }
 
     /**

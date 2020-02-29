@@ -2,9 +2,13 @@
 
 namespace App\Middleware;
 
+use Slim\Psr7\Response as Response;
+use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Container\ContainerInterface;
+use Slim\Routing\RouteContext;
+
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 
@@ -24,8 +28,10 @@ class UserMiddleware {
         $this->settings = $ci->get('settings');
     }
 
-    public function __invoke(Request $request, Response $response, $next) {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
+        $response = new Response();
+        
         /**
          * Get and Cache User Object from Token for later use
          */
@@ -39,9 +45,10 @@ class UserMiddleware {
          *  Always allow access to guest routes
          */
         $allowed_routes = $this->settings['app']['guest_access'];
-        $route = $request->getAttribute('route');
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
         if (!is_null($route) && in_array($route->getName(), $allowed_routes)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         /**
@@ -52,7 +59,7 @@ class UserMiddleware {
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {
             $this->logger->addDebug('Site CALL');
-            return $next($request, $response);
+            return $handler->handle($request);
         }
         // Check for HTTP Authentication
         else {
@@ -78,7 +85,7 @@ class UserMiddleware {
             if (!is_null($username) && !is_null($password)) {
                 $this->logger->addDebug('HTTP Auth', array("user" => $username));
                 if ($this->user_helper->checkLogin($username, $password)) {
-                    return $next($request, $response);
+                    return $handler->handle($request);
                 }
 
                 $this->logger->addWarning('HTTP Auth failed', array("user" => $username));
@@ -94,7 +101,7 @@ class UserMiddleware {
         $this->helper->setSessionVar("redirectURI", $uri);
 
         // redirect to the login page
-        return $response->withRedirect($this->router->pathFor('login'), 302);
+        return $response->withHeader('Location', $this->router->urlFor('login'))->withStatus(302);
     }
 
 }

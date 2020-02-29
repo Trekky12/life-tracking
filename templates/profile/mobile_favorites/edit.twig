@@ -7,7 +7,7 @@
         <div class="page-header"><h2>{{lang["MOBILE_FAVORITES"]}} {% if not for_user is null %} ({{ for_user.login }}){% endif %}</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="mobileFavoritesForm" action="{% if for_user is null %}{{ path_for('users_mobile_favorites_save', {'id' : entry.id}) }}{% else %}{{ path_for('users_mobile_favorites_save_admin', {'id' : entry.id, 'user': for_user.id}) }}{% endif %}" method="POST">
+            <form class="form-horizontal" id="mobileFavoritesForm" action="{% if for_user is null %}{{ url_for('users_mobile_favorites_save', {'id' : entry.id}) }}{% else %}{{ url_for('users_mobile_favorites_save_admin', {'id' : entry.id, 'user': for_user.id}) }}{% endif %}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 

@@ -2,7 +2,7 @@
 
 namespace App\User\Profile;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -65,7 +65,7 @@ class Controller extends \App\Base\Controller {
 
             $this->logger->addInfo("Update Passord Success");
 
-            return $response->withRedirect($this->router->pathFor('index'), 301);
+            return $response->withRedirect($this->router->urlFor('index'), 301);
         }
         return $this->twig->render($response, 'profile/changepw.twig', ["user" => $user]);
     }
@@ -98,7 +98,7 @@ class Controller extends \App\Base\Controller {
                 $this->flash->addMessage('message_type', 'success');
 
                 $this->logger->addNotice("Update Profile Image, No File", array("user" => $user->id));
-                return $response->withRedirect($this->router->pathFor('users_profile_image'), 301);
+                return $response->withRedirect($this->router->urlFor('users_profile_image'), 301);
             }
 
 
@@ -153,7 +153,7 @@ class Controller extends \App\Base\Controller {
 
                 throw new \Exception($this->translation->getTranslatedString("FILE_UPLOAD_ERROR"));
             }
-            return $response->withRedirect($this->router->pathFor('users_profile_image'), 301);
+            return $response->withRedirect($this->router->urlFor('users_profile_image'), 301);
         }
         return $this->twig->render($response, 'profile/image.twig', ["user" => $user]);
     }
@@ -177,7 +177,7 @@ class Controller extends \App\Base\Controller {
 
                 $this->logger->addNotice("No Update of Profile", array("id" => $user->id));
             }
-            return $response->withRedirect($this->router->pathFor('users_profile_edit'), 301);
+            return $response->withRedirect($this->router->urlFor('users_profile_edit'), 301);
         }
         return $this->twig->render($response, 'profile/edit.twig');
     }

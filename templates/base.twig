@@ -11,23 +11,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <meta name="theme-color" content="#1565c0"/>
 
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/open-sans.css" />
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/font-awesome5.min.css" />
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/normalize.min.css" />
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/flatpickr.min.css" />
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/jstable.css" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/open-sans.css" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/font-awesome5.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/normalize.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/flatpickr.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/style.css?ver=20200119" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20200119" />
 
-        <link rel="apple-touch-icon" sizes="180x180" href="{{base_url()}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{base_url()}}/static/assets/favicon/favicon-32x32.png?v=20180727">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{base_url()}}/static/assets/favicon/favicon-16x16.png?v=20180727">
-        <link rel="manifest" href="{{base_url()}}/static/assets/favicon/site.webmanifest?v=20181102">
-        <link rel="mask-icon" href="{{base_url()}}/static/assets/favicon/safari-pinned-tab.svg?v=20180727" color="#5bbad5">
-        <link rel="shortcut icon" href="{{base_url()}}/favicon.ico?v=20180727">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{baseURL}}/static/assets/favicon/favicon-16x16.png?v=20180727">
+        <link rel="manifest" href="{{baseURL}}/static/assets/favicon/site.webmanifest?v=20181102">
+        <link rel="mask-icon" href="{{baseURL}}/static/assets/favicon/safari-pinned-tab.svg?v=20180727" color="#5bbad5">
+        <link rel="shortcut icon" href="{{baseURL}}/favicon.ico?v=20180727">
         <meta name="msapplication-TileColor" content="#da532c">
-        <meta name="msapplication-config" content="{{base_url()}}/static/assets/favicon/browserconfig.xml?v=20180727">
+        <meta name="msapplication-config" content="{{baseURL}}/static/assets/favicon/browserconfig.xml?v=20180727">
         <meta name="theme-color" content="#ffffff">
         <meta name="timestamp" content="{{ 'now'|date('U') }}">
     </head>
@@ -73,45 +73,45 @@
         <script type='text/javascript' >
             var allowedReload = false;
             var jsObject = {
-                'marker_url': '{{ path_for("getMarkers") }}',
-                'delete_marker_url': '{{ path_for("delete_marker") }}',
-                'get_address_url': '{{ path_for("get_address") }}',
-                'finances_table': "{{path_for("finances_table")}}",
-                'fuel_table': "{{path_for("car_service_fuel_table")}}",
-                'service_table': "{{path_for("car_service_service_table")}}",
+                'marker_url': '{{ url_for("getMarkers") }}',
+                'delete_marker_url': '{{ url_for("delete_marker") }}',
+                'get_address_url': '{{ url_for("get_address") }}',
+                'finances_table': "{{url_for("finances_table")}}",
+                'fuel_table': "{{url_for("car_service_fuel_table")}}",
+                'service_table': "{{url_for("car_service_service_table")}}",
                 'datacount': '{{datacount}}',
                 'datacount2': '{{datacount2}}',
-                'set_mileage_type': '{{path_for("set_mileage_type")}}',
-                'stack_save': '{{path_for("stack_save")}}',
-                'stack_position_url': '{{path_for("stack_update_position")}}',
-                'card_save': '{{path_for("card_save")}}',
-                'card_position_url': '{{path_for("card_update_position")}}',
-                'card_movestack_url': '{{path_for("card_move_stack")}}',
-                'stack_get_url': '{{path_for("stack_get")}}',
-                'stack_delete': '{{path_for("stack_delete")}}',
-                'stack_archive': '{{path_for("stack_archive")}}',
-                'card_get_url': '{{path_for("card_get")}}',
-                'card_delete': '{{path_for("card_delete")}}',
-                'card_archive': '{{path_for("card_archive")}}',
-                'label_save': '{{path_for("label_save")}}',
-                'label_get_url': '{{path_for("label_get")}}',
-                'label_delete': '{{path_for("label_delete")}}',
-                'set_archive': '{{path_for("set_archive")}}',
-                'comment_save': '{{path_for("comment_save")}}',
-                'get_category_costs': '{{path_for("finances_budgets_category_costs")}}',
-                'notifications_subscribe': '{{path_for("notifications_clients_subscribe")}}',
+                'set_mileage_type': '{{url_for("set_mileage_type")}}',
+                'stack_save': '{{url_for("stack_save")}}',
+                'stack_position_url': '{{url_for("stack_update_position")}}',
+                'card_save': '{{url_for("card_save")}}',
+                'card_position_url': '{{url_for("card_update_position")}}',
+                'card_movestack_url': '{{url_for("card_move_stack")}}',
+                'stack_get_url': '{{url_for("stack_get")}}',
+                'stack_delete': '{{url_for("stack_delete")}}',
+                'stack_archive': '{{url_for("stack_archive")}}',
+                'card_get_url': '{{url_for("card_get")}}',
+                'card_delete': '{{url_for("card_delete")}}',
+                'card_archive': '{{url_for("card_archive")}}',
+                'label_save': '{{url_for("label_save")}}',
+                'label_get_url': '{{url_for("label_get")}}',
+                'label_delete': '{{url_for("label_delete")}}',
+                'set_archive': '{{url_for("set_archive")}}',
+                'comment_save': '{{url_for("comment_save")}}',
+                'get_category_costs': '{{url_for("finances_budgets_category_costs")}}',
+                'notifications_subscribe': '{{url_for("notifications_clients_subscribe")}}',
                 'applicationServerPublicKey': '{{push.publicKey}}',
-                'csrf_tokens_url': '{{path_for('get_csrf_tokens')}}',
-                'notifications_clients_categories': '{{path_for('notifications_clients_categories')}}',
-                'notifications_clients_set_category': '{{path_for('notifications_clients_set_category')}}',
-                'notifications_clients_set_category_user': '{{path_for('notifications_clients_set_category_user')}}',
-                'notifications_clients_manage': '{{path_for('notifications_clients_manage')}}',
-                'notifications_get': '{{path_for('notifications_get')}}',
-                'activities_get': '{{path_for('activities_get')}}',
+                'csrf_tokens_url': '{{url_for('get_csrf_tokens')}}',
+                'notifications_clients_categories': '{{url_for('notifications_clients_categories')}}',
+                'notifications_clients_set_category': '{{url_for('notifications_clients_set_category')}}',
+                'notifications_clients_set_category_user': '{{url_for('notifications_clients_set_category_user')}}',
+                'notifications_clients_manage': '{{url_for('notifications_clients_manage')}}',
+                'notifications_get': '{{url_for('notifications_get')}}',
+                'activities_get': '{{url_for('activities_get')}}',
                 
                 {% if not hasCrawlerTable is null %}
-                'crawler_table': '{{path_for('crawlers_table', {'crawler': crawler.hash})}}',
-                'crawler_filter': '{{path_for('set_crawler_filter', {'crawler': crawler.hash})}}',
+                'crawler_table': '{{url_for('crawlers_table', {'crawler': crawler.hash})}}',
+                'crawler_filter': '{{url_for('set_crawler_filter', {'crawler': crawler.hash})}}',
                 {% endif %}
                     
                 {% if not from is null %}    
@@ -122,19 +122,19 @@
                 {% endif %}
                     
                 {% if not hasSplitbillTable is null %}
-                'splitbill_table': '{{path_for('splitbill_bills_table', {'group': group.hash})}}',
+                'splitbill_table': '{{url_for('splitbill_bills_table', {'group': group.hash})}}',
                 {% endif %}
-                'get_location_of_address': '{{ path_for("get_location_of_address") }}',    
+                'get_location_of_address': '{{ url_for("get_location_of_address") }}',    
                 {% if not isTrips is null %}
-                'trip_markers_url': '{{path_for('trips_markers', {'trip': trip.hash})}}',
-                'trip_event_position_url': '{{  path_for('trips_event_position', {'trip' : trip.hash})}}',
+                'trip_markers_url': '{{url_for('trips_markers', {'trip': trip.hash})}}',
+                'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
                 {% endif %}
                 {% if not hasTimesheetTable is null %}
-                'timesheets_table': '{{path_for('timesheets_sheets_table', {'project': project.hash})}}',
+                'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
                 {% endif %}
                 {% if not isTripEventEdit is null %}
-                'trip_event_image_upload': '{{  path_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
-                'trip_event_image_delete': '{{  path_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
+                'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
+                'trip_event_image_delete': '{{  url_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
                 {% endif %}
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
@@ -186,19 +186,19 @@
             var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
 
-        <script src="{{base_url()}}/static/assets/js/flatpickr.min.js" type="text/javascript"></script>
-        <script src="{{base_url()}}/static/assets/js/i18n/{{i18n.template}}.js" type="text/javascript"></script>
-        <script src="{{base_url()}}/static/assets/js/moment-with-locales.min.js" type="text/javascript"></script>  
-        <script src="{{base_url()}}/static/assets/js/Chart.min.js" type="text/javascript"></script>  
-        <script src="{{base_url()}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
-        <script src="{{base_url()}}/static/assets/js/jstable.min.js?ver=20200118" type="text/javascript"></script>  
+        <script src="{{baseURL}}/static/assets/js/flatpickr.min.js" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/assets/js/i18n/{{i18n.template}}.js" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/assets/js/moment-with-locales.min.js" type="text/javascript"></script>  
+        <script src="{{baseURL}}/static/assets/js/Chart.min.js" type="text/javascript"></script>  
+        <script src="{{baseURL}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
+        <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20200118" type="text/javascript"></script>  
 
-        <script src="{{base_url()}}/static/js/main.js?ver=20200118" type="text/javascript"></script>
-        <script src="{{base_url()}}/static/js/tables.js?ver=20200118" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/main.js?ver=20200118" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/tables.js?ver=20200118" type="text/javascript"></script>
 
 
         {% if not user is null %}
-        <script src="{{base_url()}}/static/js/app.js?ver=20191203" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/app.js?ver=20191203" type="text/javascript"></script>
         {% endif %}
 
         {% block javascript %}

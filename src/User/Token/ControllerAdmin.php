@@ -2,7 +2,7 @@
 
 namespace App\User\Token;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -26,7 +26,7 @@ class ControllerAdmin extends \App\Base\Controller {
 
     public function deleteOld(Request $request, Response $response) {
         $this->mapper->deleteOldTokens();
-        return $response->withRedirect($this->router->pathFor($this->index_route), 301);
+        return $response->withRedirect($this->router->urlFor($this->index_route), 301);
     }
 
     public function deleteOldTokens() {

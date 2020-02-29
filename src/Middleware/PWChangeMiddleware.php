@@ -2,8 +2,11 @@
 
 namespace App\Middleware;
 
+use Slim\Psr7\Response as Response;
+use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Routing\RouteContext;
 use Psr\Container\ContainerInterface;
 
 class PWChangeMiddleware {
@@ -20,11 +23,12 @@ class PWChangeMiddleware {
         $this->settings = $ci->get('settings');
     }
 
-    public function __invoke(Request $request, Response $response, $next) {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
         $user = $this->user_helper->getUser();
 
-        $route = $request->getAttribute('route');
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
 
         $allowed_routes = $this->settings['app']['guest_access'];
         array_push($allowed_routes, 'users_change_password');
@@ -33,12 +37,13 @@ class PWChangeMiddleware {
          * Redirect to change password page 
          */
         if ((!is_null($user) && ($user->force_pw_change != 1)) || (!is_null($route) && in_array($route->getName(), $allowed_routes))) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         $this->logger->addWarning("Passwort Change required");
-
-        return $response->withRedirect($this->router->pathFor('users_change_password'), 302);
+        
+        $response = new Response();
+        return $response->withHeader('Location', $this->router->urlFor('users_change_password'))->withStatus(302);
     }
 
 }

@@ -1,24 +1,24 @@
 <?php
 
+use DI\ContainerBuilder;
+use Slim\App;
+
 // Autoload
 require __DIR__ . '/../vendor/autoload.php';
 
-
 date_default_timezone_set('Europe/Berlin');
 
-// Instantiate the app
-$settings = require __DIR__ . '/settings.php';
+$containerBuilder = new ContainerBuilder();
 
-$app = new \Slim\App($settings);
+$containerBuilder->addDefinitions(__DIR__ . '/container.php');
+$container = $containerBuilder->build();
 
-// Set up dependencies
-require __DIR__ . '/dependencies.php';
+$app = $container->get(App::class);
 
 // Register middleware
-require __DIR__ . '/middleware.php';
+(require __DIR__ . '/middleware.php')($app);
 
 // Register routes
-require __DIR__ . '/routes.php';
-
+(require __DIR__ . '/routes.php')($app);
 
 return $app;

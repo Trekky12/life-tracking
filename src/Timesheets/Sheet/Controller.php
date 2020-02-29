@@ -2,7 +2,7 @@
 
 namespace App\Timesheets\Sheet;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -190,8 +190,8 @@ class Controller extends \App\Base\Controller {
             $row[] = $end;
             $row[] = $this->helper->splitDateInterval($sheet->diff);
 
-            $row[] = '<a href="' . $this->router->pathFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[] = '<a href="#" data-url="' . $this->router->pathFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
 
             $rendered_data[] = $row;
         }

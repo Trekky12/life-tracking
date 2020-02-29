@@ -2,7 +2,7 @@
 
 namespace App\Main;
 
-class CsrfExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface {
+class CsrfExtension extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface{
 
     /**
      * @var \Slim\Csrf\Guard
@@ -13,7 +13,7 @@ class CsrfExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
         $this->csrf = $csrf;
     }
 
-    public function getGlobals() {
+    public function getGlobals(): array {
         // CSRF token name and value
         $csrfNameKey = $this->csrf->getTokenNameKey();
         $csrfValueKey = $this->csrf->getTokenValueKey();

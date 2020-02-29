@@ -23,7 +23,7 @@
                             <td>{{entry.createdOn}}</td> 
                             <td>{{entry.ip}}</td> 
                             <td>{{entry.username}}</td> 
-                            <td><a href="#" data-url="{{  path_for('banlist_delete', {'ip' : entry.ip}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{  url_for('banlist_delete', {'ip' : entry.ip}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -2,7 +2,7 @@
 
 namespace App\Board;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 use Hashids\Hashids;
@@ -148,7 +148,7 @@ class Controller extends \App\Base\Controller {
                         'header' => '',
                         'subject' => $subject,
                         'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->pathFor('boards_view', array('hash' => $board->getHash())), $board->name)
+                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), $board->name)
                     );
 
                     $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);

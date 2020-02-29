@@ -2,7 +2,7 @@
 
 namespace App\Car\Service;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -325,16 +325,16 @@ class Controller extends \App\Base\Controller {
 
     private function renderFuelTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[9] = '<a href="' . $this->router->pathFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[10] = '<a href="#" data-url="' . $this->router->pathFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[9] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[10] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
         }
         return $table;
     }
 
     private function renderServiceTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[8] = '<a href="' . $this->router->pathFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[9] = '<a href="#" data-url="' . $this->router->pathFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[8] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
         }
         return $table;
     }

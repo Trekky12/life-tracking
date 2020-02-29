@@ -9,7 +9,7 @@
         <div class="page-header">
             <h2>{{lang["FINANCES_SPENDINGS"]}}/{{lang["FINANCES_INCOMES"]}} {{lang["IN"]}} {{year}}
             </h2>
-            <a href="{{ path_for('finances_stats') }}"><button class="white">{{lang["BACK"]}}</button></a>
+            <a href="{{ url_for('finances_stats') }}"><button class="white">{{lang["BACK"]}}</button></a>
         </div>
         <div class="page-content">
 
@@ -29,10 +29,10 @@
                         <tr>
                             <td data-title="{{lang["MONTH"]}}">{{month}}</td> 
                             <td data-title="{{lang["FINANCES_INCOMES"]}}">
-                                <a href="{{  path_for('finances_stats_month_type', {'type' : 1, 'year' : year, 'month' : month }) }}">{{entry[1]}}</a>
+                                <a href="{{  url_for('finances_stats_month_type', {'type' : 1, 'year' : year, 'month' : month }) }}">{{entry[1]}}</a>
                             </td> 
                             <td data-title="{{lang["FINANCES_SPENDINGS"]}}">
-                                <a href="{{  path_for('finances_stats_month_type', {'type' : 0, 'year' : year, 'month' : month }) }}">{{entry[0]}}</a>
+                                <a href="{{  url_for('finances_stats_month_type', {'type' : 0, 'year' : year, 'month' : month }) }}">{{entry[0]}}</a>
                             </td> 
                             <td data-title="{{lang["DIFFERENCE"]}}">{{entry[1] - entry[0]}}</td> 
                         </tr>

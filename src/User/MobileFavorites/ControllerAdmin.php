@@ -2,7 +2,7 @@
 
 namespace App\User\MobileFavorites;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 

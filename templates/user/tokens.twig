@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["LOGIN_TOKENS"]}}</h2> {% if users is not empty %}<a href="{{  path_for('login_tokens_delete_old') }}"><button class="white"><i class="fas fa-trash" aria-hidden="true"></i> {{lang["LOGIN_TOKENS_CLEAN"]}}</button></a>{% endif %}</div>
+        <div class="page-header"><h2>{{lang["LOGIN_TOKENS"]}}</h2> {% if users is not empty %}<a href="{{  url_for('login_tokens_delete_old') }}"><button class="white"><i class="fas fa-trash" aria-hidden="true"></i> {{lang["LOGIN_TOKENS_CLEAN"]}}</button></a>{% endif %}</div>
         <div class="page-content">
             <table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
                 <thead>
@@ -32,7 +32,7 @@
                             {% endif %}
                             <td>{{entry.agent}}</td> 
                             <td>{{entry.ip}}</td> 
-                            <td><a href="#" data-url="{% if users is not empty %}{{  path_for('login_tokens_delete', {'id' : entry.id}) }}{% else %}{{  path_for('users_login_tokens_delete', {'id' : entry.id}) }}{% endif %}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{% if users is not empty %}{{  url_for('login_tokens_delete', {'id' : entry.id}) }}{% else %}{{  url_for('users_login_tokens_delete', {'id' : entry.id}) }}{% endif %}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

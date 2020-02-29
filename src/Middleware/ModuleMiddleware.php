@@ -2,8 +2,11 @@
 
 namespace App\Middleware;
 
+use Slim\Psr7\Response as Response;
+use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Routing\RouteContext;
 use Psr\Container\ContainerInterface;
 
 class ModuleMiddleware {
@@ -22,11 +25,12 @@ class ModuleMiddleware {
         $this->translation = $ci->get('translation');
     }
 
-    public function __invoke(Request $request, Response $response, $next) {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
         $user = $this->user_helper->getUser();
 
-        $baseRoute = $request->getAttribute('route');
+        $routeContext = RouteContext::fromRequest($request);
+        $baseRoute = $routeContext->getRoute();
 
         if (!is_null($baseRoute)) {
             $route = $baseRoute->getPattern();
@@ -37,21 +41,21 @@ class ModuleMiddleware {
 
             // Filter only specific routes
             if ($current_module === false) {
-                return $next($request, $response);
+                return $handler->handle($request);
             }
 
             $hasAccess = $user->hasModule($current_module);
             // Has access
             if (!is_null($user) && $hasAccess) {
-                return $next($request, $response);
+                return $handler->handle($request);
             }
             // No Access
             $this->logger->addWarning("No Access");
-
+            $response = new Response();
             return $this->twig->render($response, 'error.twig', ['message' => $this->translation->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
         }
         // Route not found
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**

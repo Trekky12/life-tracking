@@ -2,7 +2,7 @@
 
 namespace App\Splitbill\Bill;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -250,8 +250,8 @@ class Controller extends \App\Base\Controller {
             }
 
             if ($bill->user == $user) {
-                $row[] = '<a href="' . $this->router->pathFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-                $row[] = '<a href="#" data-url="' . $this->router->pathFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+                $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+                $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
             }
 
             $rendered_data[] = $row;
@@ -403,7 +403,7 @@ class Controller extends \App\Base\Controller {
         $new_balances = $this->mapper->getBalance($bill->id);
         $billValue = $this->mapper->getBillSpend($bill->id);
 
-        $group_path = $this->router->pathFor('splitbill_bills', array('group' => $sbgroup->getHash()));
+        $group_path = $this->router->urlFor('splitbill_bills', array('group' => $sbgroup->getHash()));
         $group_url = $this->helper->getBaseURL() . $group_path;
 
         $is_new_bill = count($existing_balance) == 0;

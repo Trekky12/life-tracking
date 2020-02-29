@@ -3,7 +3,7 @@
 {% set active = 'notifications' %}
 
 {% block javascript %}
-    <script src="{{base_url()}}/static/js/notifications.js?ver=20191203"></script>
+    <script src="{{baseURL}}/static/js/notifications.js?ver=20191203"></script>
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@
     {% endif %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>  <a href="{{  path_for('notifications_clients_manage') }}"><button class="white"><i class="fas fa-cogs" aria-hidden="true"></i> {{lang["SETTINGS"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>  <a href="{{  url_for('notifications_clients_manage') }}"><button class="white"><i class="fas fa-cogs" aria-hidden="true"></i> {{lang["SETTINGS"]}}</button></a></div>
     </div>
     <div class="notifications_overview">
         <div id="notifications">

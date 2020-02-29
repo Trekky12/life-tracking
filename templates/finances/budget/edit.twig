@@ -3,13 +3,13 @@
 {% set active = 'finances' %}
 
 {% block javascript %}
-    <script src="{{base_url()}}/static/assets/js/mustache.min.js"></script>
-    <script src="{{base_url()}}/static/assets/js/selectr.min.js"></script>
-    <script src="{{base_url()}}/static/js/budget.js?ver=20181122"></script>
+    <script src="{{baseURL}}/static/assets/js/mustache.min.js"></script>
+    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
+    <script src="{{baseURL}}/static/js/budget.js?ver=20181122"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{base_url()}}/static/assets/css/selectr.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
 {% endblock %}
 
 {% block body %}
@@ -72,7 +72,7 @@
                 <h3>{{lang["BUDGET"]}}: <span id="income" data-value="{{income}}">{{income}}</span> {{currency}} ({{lang["REMAINING"]}}: <span id="remaining_budget" data-income="{{income}}">{{income-budget_sum}}</span> {{currency}})</h3>
             </div>
 
-            <form class="form-horizontal" id="budgetForm" action="{{  path_for('finances_budgets_save_all') }}" method="POST">
+            <form class="form-horizontal" id="budgetForm" action="{{  url_for('finances_budgets_save_all') }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 
@@ -127,7 +127,7 @@
                         </div>
                         
                         {% if not budget.is_remaining() %}
-                            <a href="#" data-url="{{  path_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
+                            <a href="#" data-url="{{  url_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
                         {% endif %}
                     </div>
                 {% endfor %}

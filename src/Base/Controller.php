@@ -2,7 +2,7 @@
 
 namespace App\Base;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -140,7 +140,7 @@ abstract class Controller {
 
         $this->insertOrUpdate($id, $data, $request);
 
-        $redirect_url = $this->router->pathFor($this->index_route, $this->index_params);
+        $redirect_url = !empty($this->index_route) ? $this->router->urlFor($this->index_route, $this->index_params): '/';
 
         return $response->withRedirect($redirect_url, 301);
     }
@@ -378,11 +378,11 @@ abstract class Controller {
             return null;
         }
         $this->element_view_route_params["id"] = $entry->id;
-        return $this->router->pathFor($this->element_view_route, $this->element_view_route_params);
+        return $this->router->urlFor($this->element_view_route, $this->element_view_route_params);
     }
 
     private function addActivity($type, $id, $entry, $users) {
-        $object = ["object" => $this->model, "id" => $id, "description" => $entry->getDescription($this->translation, $this->settings->all()), "link" => $this->getElementViewRoute($entry)];
+        $object = ["object" => $this->model, "id" => $id, "description" => $entry->getDescription($this->translation, $this->settings), "link" => $this->getElementViewRoute($entry)];
         $parent = ["object" => $this->parent_model, "id" => $entry->getParentID(), "description" => $this->getParentDescription($entry)];
 
         $this->activity->addEntry($type, $this->module, static::class, $object, $parent, $users);
@@ -395,7 +395,7 @@ abstract class Controller {
     private function getParentDescription($entry) {
         if ($this->hasParent()) {
             $parent_object = $this->getParentObjectMapper()->get($entry->getParentID());
-            return $parent_object->getDescription($this->translation, $this->settings->all());
+            return $parent_object->getDescription($this->translation, $this->settings);
         }
         return null;
     }

@@ -238,7 +238,7 @@ class BaseTestCase extends TestCase {
 
     protected function getAppSettings() {
         $settings = $this->getSettings();
-        return $settings['settings']['app'];
+        return $settings['app'];
     }
 
     /**

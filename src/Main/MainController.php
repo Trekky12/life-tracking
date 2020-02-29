@@ -2,7 +2,7 @@
 
 namespace App\Main;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 use Dubture\Monolog\Reader\LogReader;
@@ -21,7 +21,7 @@ class MainController extends \App\Base\Controller {
     public function __construct(ContainerInterface $ci) {
         parent::__construct($ci);
         $this->csrf = $ci->get('csrf');
-        
+
         $this->settings_mapper = new \App\Settings\SettingsMapper($this->db, $this->translation);
         $this->recurring_ctrl = new \App\Finances\Recurring\Controller($ci);
         $this->card_ctrl = new \App\Board\Card\Controller($ci);
@@ -46,7 +46,7 @@ class MainController extends \App\Base\Controller {
         $user = $this->user_helper->getUser();
         // user is logged in, redirect to frontpage
         if (!is_null($user)) {
-            return $response->withRedirect($this->router->pathFor('index'), 301);
+            return $response->withRedirect($this->router->urlFor('index'), 301);
         }
 
         if ($request->isPost()) {
@@ -65,12 +65,12 @@ class MainController extends \App\Base\Controller {
 
                 $response = FigResponseCookies::set($response, $cookie);
 
-                return $response->withRedirect($this->router->pathFor('index'), 301);
+                return $response->withRedirect($this->router->urlFor('index'), 301);
             }
 
             // redirect to logout to delete the POST Data and remove the user from the twig-view
             return $this->logout($request, $response);
-            //return $response->withRedirect($this->router->pathFor('login'), 301);
+            //return $response->withRedirect($this->router->urlFor('login'), 301);
         }
 
         return $this->twig->render($response, 'main/login.twig', array());
@@ -84,7 +84,7 @@ class MainController extends \App\Base\Controller {
         $this->user_helper->removeToken($token->getValue());
         $response = FigResponseCookies::expire($response, 'token');
 
-        return $response->withRedirect($this->router->pathFor('login'), 302);
+        return $response->withRedirect($this->router->urlFor('login'), 302);
     }
 
     public function cron(Request $request, Response $response) {

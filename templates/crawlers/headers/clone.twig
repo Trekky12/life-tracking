@@ -9,7 +9,7 @@
         <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINE"]}} ({{ crawler.name }})</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="crawlerHeadersForm" action="{{  path_for('crawlers_headers_cloning', {'crawler' : crawler.hash}) }}" method="POST">
+            <form class="form-horizontal" id="crawlerHeadersForm" action="{{  url_for('crawlers_headers_cloning', {'crawler' : crawler.hash}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 

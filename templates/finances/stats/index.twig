@@ -27,11 +27,11 @@
                     {% for year, entry in stats %}
                         <tr>
                             <td data-title="{{lang["YEAR"]}}">{{year}}</td> 
-                            <td data-title="{{lang["FINANCES_INCOMES"]}}"><a href="{{  path_for('finances_stats_category', { 'year' : year, 'type' :1 }) }}">{{entry[1]}}</a></td> 
-                            <td data-title="{{lang["FINANCES_SPENDINGS"]}}"><a href="{{  path_for('finances_stats_category', { 'year' : year, 'type' :0 }) }}">{{entry[0]}}</a></td> 
+                            <td data-title="{{lang["FINANCES_INCOMES"]}}"><a href="{{  url_for('finances_stats_category', { 'year' : year, 'type' :1 }) }}">{{entry[1]}}</a></td> 
+                            <td data-title="{{lang["FINANCES_SPENDINGS"]}}"><a href="{{  url_for('finances_stats_category', { 'year' : year, 'type' :0 }) }}">{{entry[0]}}</a></td> 
                             <td data-title="{{lang["DIFFERENCE"]}}">{{ (entry[1] - entry[0])|number_format(2, '.', '')}}</td> 
                             <td>
-                                <a href="{{  path_for('finances_stats_year', { 'year' : year }) }}"><i class="fas fa-chart-bar fa-lg"></i></a>
+                                <a href="{{  url_for('finances_stats_year', { 'year' : year }) }}"><i class="fas fa-chart-bar fa-lg"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

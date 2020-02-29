@@ -7,7 +7,7 @@
         <div class="page-header">
             <h2>{{lang["FINANCES_SPENDINGS"]}} {{lang["FOR"]}} {{lang["BUDGET"]}} {{budget|raw}}
             </h2>
-            <a href="{{ path_for('finances_budgets') }}"><button class="white">{{lang["BACK"]}}</button></a>
+            <a href="{{ url_for('finances_budgets') }}"><button class="white">{{lang["BACK"]}}</button></a>
         </div>
         <div class="page-content">
 
@@ -33,8 +33,8 @@
                             <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td> 
                             <td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td> 
                             <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
-                            <td><a href="{{  path_for('finances_edit', {'id' : entry.id}) }}"><span class="fas fa-edit fa-lg"></span></a></td>
-                            <td>{% if entry.bill is empty %}<a href="#" data-url="{{  path_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>{% endif %}</td>
+                            <td><a href="{{  url_for('finances_edit', {'id' : entry.id}) }}"><span class="fas fa-edit fa-lg"></span></a></td>
+                            <td>{% if entry.bill is empty %}<a href="#" data-url="{{  url_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

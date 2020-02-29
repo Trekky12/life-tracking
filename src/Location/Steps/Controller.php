@@ -2,7 +2,7 @@
 
 namespace App\Location\Steps;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -43,7 +43,7 @@ class Controller extends \App\Base\Controller {
         }
 
         $dateObj = new \DateTime($date);
-        $redirect_url = $this->router->pathFor('steps_stats_month', ['year' => $dateObj->format('Y'), 'month' => $dateObj->format('m')]);
+        $redirect_url = $this->router->urlFor('steps_stats_month', ['year' => $dateObj->format('Y'), 'month' => $dateObj->format('m')]);
         return $response->withRedirect($redirect_url, 301);
     }
 

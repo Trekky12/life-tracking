@@ -7,7 +7,7 @@
         <div class="page-header"><h2>{{lang["STEPS"]}} ({{ date|date(i18n.dateformatTwig.date) }})</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="locationForm" action="{{  path_for('steps_save', {'date' : date}) }}" method="POST">
+            <form class="form-horizontal" id="locationForm" action="{{  url_for('steps_save', {'date' : date}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 

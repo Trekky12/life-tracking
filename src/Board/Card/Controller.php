@@ -2,7 +2,7 @@
 
 namespace App\Board\Card;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -113,7 +113,7 @@ class Controller extends \App\Base\Controller {
                         'header' => '',
                         'subject' => $subject,
                         'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->helper->getBaseURL() . $this->router->pathFor('boards_view', array('hash' => $board->getHash())), $board->name, $stack->name, $card->title),
+                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), $board->name, $stack->name, $card->title),
                         'extra' => ''
                     );
 
@@ -293,7 +293,7 @@ class Controller extends \App\Base\Controller {
                         $mail_content .= '<h2>' . $this->translation->getTranslatedString('OVERDUE') . ':</h2>';
                     }
                     foreach ($stacks as $board_name => $board) {
-                        $url = $this->helper->getBaseURL() . $this->router->pathFor('boards_view', array('hash' => $board["hash"]));
+                        $url = $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board["hash"]));
                         $mail_content .= '<h3><a href="' . $url . '">Board: ' . $board_name . '</a></h3>';
                         $mail_content .= '<ul>';
 

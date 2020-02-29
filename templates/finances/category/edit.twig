@@ -8,7 +8,7 @@
         <div class="page-header"><h2>{{lang["FINANCES_CATEGORIES"]}}</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="financeForm" action="{{  path_for('finances_categories_save', {'id' : entry.id}) }}" method="POST">
+            <form class="form-horizontal" id="financeForm" action="{{  url_for('finances_categories_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 

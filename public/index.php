@@ -8,10 +8,9 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
+session_start();
 
 $app = require __DIR__ . '/../src/app.php';
-
-session_start();
 
 // Run app
 $app->run();

@@ -8,7 +8,7 @@
         <div class="page-header"><h2>{{lang["USERS"]}}</h2></div>
         <div class="page-content">
 
-            <form action="{{  path_for('users_save', {'id' : entry.id}) }}" method="POST">
+            <form action="{{  url_for('users_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 

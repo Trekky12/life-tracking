@@ -3,7 +3,7 @@
 {% set active = 'finances' %}
 
 {% block javascript %}
-    <script src="{{base_url()}}/static/js/datefilter.js?ver=20190306"></script>
+    <script src="{{baseURL}}/static/js/datefilter.js?ver=20190306"></script>
 {% endblock %}
 
 {% block body %}
@@ -19,7 +19,7 @@
     {% endif %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2> <a href="{{  path_for('finances_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2> <a href="{{  url_for('finances_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
         <div class="page-content">
 
             <form method="GET" id="search-filter" class="hidden1">
@@ -35,10 +35,10 @@
                             <input type="submit" value="{{lang["SHOW"]}}"/>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ path_for('finances') }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
+                            <a href="{{ url_for('finances') }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ path_for('finances') }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
+                            <a href="{{ url_for('finances') }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
                         </div>
                     </div>
                 </div>

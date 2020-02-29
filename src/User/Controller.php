@@ -2,7 +2,7 @@
 
 namespace App\User;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 
@@ -63,7 +63,7 @@ class Controller extends \App\Base\Controller {
             $this->flash->addMessage('message', $this->translation->getTranslatedString("USER_HAS_NO_EMAIL"));
             $this->flash->addMessage('message_type', 'danger');
         }
-        return $response->withRedirect($this->router->pathFor($this->index_route), 301);
+        return $response->withRedirect($this->router->urlFor($this->index_route), 301);
     }
 
     private function roles() {

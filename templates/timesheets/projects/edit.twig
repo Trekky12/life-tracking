@@ -8,7 +8,7 @@
         <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" action="{{  path_for('timesheets_projects_save', {'id' : entry.id}) }}" method="POST">
+            <form class="form-horizontal" action="{{  url_for('timesheets_projects_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
@@ -26,8 +26,10 @@
                 <div class="form-group">
                     <label for="users">{{lang["USERS"]}}</label>
                     <select class="form-control" id="users" name="users[]" multiple="true">
-                        {% for user in users if user.module_timesheets == 1 %}
-                            <option value="{{user.id}}" {% if (not entry is null and user.id in entry.getUsers()) %}selected{% endif %}>{{user.login}}</option>
+                        {% for user in users %}
+                            {% if user.module_timesheets == 1 %}
+                                <option value="{{user.id}}" {% if (not entry is null and user.id in entry.getUsers()) %}selected{% endif %}>{{user.login}}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>

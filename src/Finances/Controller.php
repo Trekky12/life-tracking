@@ -2,7 +2,7 @@
 
 namespace App\Finances;
 
-use Slim\Http\Request as Request;
+use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Psr\Container\ContainerInterface;
 use Dflydev\FigCookies\FigRequestCookies;
@@ -480,8 +480,8 @@ class Controller extends \App\Base\Controller {
             $row[] = $dataset[3];
             $row[] = $dataset[4];
             $row[] = $dataset[5];
-            $row[] = '<a href="' . $this->router->pathFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->pathFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>' : '';
+            $row[] = '<a href="' . $this->router->urlFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
+            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>' : '';
 
             $rendered_data[] = $row;
         }
