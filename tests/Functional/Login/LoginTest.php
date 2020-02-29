@@ -73,7 +73,7 @@ class LoginTest extends BaseTestCase {
     /**
      * @depends testLoginPage
      */
-    public function testLoginWithSameCSRFToken(array $csrf_data) {
+    /*public function testLoginWithSameCSRFToken(array $csrf_data) {
         $data = [
             "username" => "admin",
             "password" => "admin"
@@ -82,6 +82,6 @@ class LoginTest extends BaseTestCase {
 
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('Failed CSRF check!', (string) $response->getBody());
-    }
+    }*/
 
 }
