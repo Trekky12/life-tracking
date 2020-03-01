@@ -6,34 +6,33 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\UserHelper;
 use App\Main\Translator;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class Controller {
 
     protected $logger;
     protected $twig;
-    protected $user_helper;
     protected $settings;
     protected $translation;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, Settings $settings, \PDO $db, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
         $this->logger = $logger;
         $this->twig = $twig;
-        $this->user_helper = $user_helper;
         $this->settings = $settings;
         $this->translation = $translation;
         $this->db = $db;
+        $this->current_user = $current_user;
 
-        $user = $this->user_helper->getUser();
         $this->user_mapper = new \App\User\Mapper($this->db, $this->translation);
-        $this->mapper = new Mapper($this->db, $this->translation, $user);
+        $this->mapper = new Mapper($this->db, $this->translation, $this->current_user);
     }
 
     public function addEntry($type, $module, $controller, $object = [], $parent = [], $users = []) {
         $data = [];
-        $data["user"] = $this->user_helper->getUser()->id;
+        $data["user"] = $this->current_user->getUser()->id;
         $data["type"] = $type;
         $data["module"] = $module;
         $data["controller"] = $controller;
@@ -85,7 +84,7 @@ class Controller {
         $modules = $this->settings->getAppSettings()['modules'];
 
         $users = $this->user_mapper->getAll();
-        $me = $this->user_helper->getUser()->id;
+        $me = $this->current_user->getUser()->id;
 
         $rendered_data = [];
         foreach ($list as $el) {

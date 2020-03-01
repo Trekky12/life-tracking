@@ -7,12 +7,12 @@ use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Main\Helper;
-use App\Main\UserHelper;
 use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
@@ -23,17 +23,15 @@ class Controller extends \App\Base\Controller {
     protected $element_view_route = 'car_service_edit';
     private $car_mapper;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
-        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
+        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
 
-        $user = $this->user_helper->getUser();
-
-        $this->mapper = new Mapper($this->db, $this->translation, $user);
-        $this->car_mapper = new \App\Car\Mapper($this->db, $this->translation, $user);
+        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+        $this->car_mapper = new \App\Car\Mapper($this->db, $this->translation, $current_user);
     }
 
     public function index(Request $request, Response $response) {
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $fuel_list = $this->mapper->tableDataFuel($user_cars, 'date', 'DESC', 10);
@@ -68,7 +66,7 @@ class Controller extends \App\Base\Controller {
             $entry = $this->mapper->get($entry_id);
         }
 
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         $cars = $this->car_mapper->getAll('name');
 
@@ -117,7 +115,7 @@ class Controller extends \App\Base\Controller {
     public function stats(Request $request, Response $response) {
         //$list = $this->mapper->getAll('date ASC');
 
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         $list = $this->mapper->getAllofCars('date ASC, mileage ASC', false, $user_cars);
 
@@ -281,7 +279,7 @@ class Controller extends \App\Base\Controller {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $recordsTotal = $this->mapper->countwithCars($user_cars);
@@ -314,7 +312,7 @@ class Controller extends \App\Base\Controller {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
 
         $recordsTotal = $this->mapper->countwithCars($user_cars, 1);
@@ -354,7 +352,7 @@ class Controller extends \App\Base\Controller {
 
         if (!is_null($id)) {
             $entry = $this->mapper->get($id);
-            $user = $this->user_helper->getUser()->id;
+            $user = $this->current_user->getUser()->id;
             $user_cars = $this->car_mapper->getElementsOfUser($user);
             if (!in_array($entry->car, $user_cars)) {
                 throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
@@ -366,7 +364,7 @@ class Controller extends \App\Base\Controller {
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_cars = $this->car_mapper->getElementsOfUser($user);
         if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
@@ -379,7 +377,7 @@ class Controller extends \App\Base\Controller {
     protected function preDelete($id, Request $request) {
         if (!is_null($id)) {
             $entry = $this->mapper->get($id);
-            $user = $this->user_helper->getUser()->id;
+            $user = $this->current_user->getUser()->id;
             $user_cars = $this->car_mapper->getElementsOfUser($user);
             if (!in_array($entry->car, $user_cars)) {
                 throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);

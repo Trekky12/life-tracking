@@ -8,26 +8,26 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\UserHelper;
 use App\Main\Translator;
+use App\Base\CurrentUser;
 
 class AdminMiddleware {
 
     protected $logger;
     protected $twig;
-    protected $user_helper;
     protected $translation;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Translator $translation, CurrentUser $current_user) {
         $this->logger = $logger;
-        $this->user_helper = $user_helper;
         $this->twig = $twig;
         $this->translation = $translation;
+        $this->current_user = $current_user;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
 
         if (!is_null($user) && $user->isAdmin()) {
             return $handler->handle($request);

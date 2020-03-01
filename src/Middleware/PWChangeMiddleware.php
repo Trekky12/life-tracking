@@ -8,27 +8,27 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 use Psr\Log\LoggerInterface;
-use App\Main\UserHelper;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class PWChangeMiddleware {
 
     protected $logger;
-    protected $user_helper;
     protected $router;
     protected $settings;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, UserHelper $user_helper, RouteParser $router, Settings $settings) {
+    public function __construct(LoggerInterface $logger, RouteParser $router, Settings $settings, CurrentUser $current_user) {
         $this->logger = $logger;
-        $this->user_helper = $user_helper;
         $this->router = $router;
         $this->settings = $settings;
+        $this->current_user = $current_user;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
 
         $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();

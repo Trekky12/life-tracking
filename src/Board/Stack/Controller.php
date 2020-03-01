@@ -7,12 +7,12 @@ use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Main\Helper;
-use App\Main\UserHelper;
 use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
@@ -22,20 +22,18 @@ class Controller extends \App\Base\Controller {
     protected $module = "boards";
     private $board_mapper;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
-        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
+        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
 
-        $user = $this->user_helper->getUser();
-
-        $this->mapper = new Mapper($this->db, $this->translation, $user);
-        $this->board_mapper = new \App\Board\Mapper($this->db, $this->translation, $user);
+        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+        $this->board_mapper = new \App\Board\Mapper($this->db, $this->translation, $current_user);
     }
 
     /**
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
 
         if (!is_null($id)) {
             $user_stacks = $this->board_mapper->getUserStacks($user);
@@ -54,7 +52,7 @@ class Controller extends \App\Base\Controller {
         $data = $request->getParsedBody();
 
         try {
-            $user = $this->user_helper->getUser()->id;
+            $user = $this->current_user->getUser()->id;
             $user_stacks = $this->board_mapper->getUserStacks($user);
             /**
              * Save new order
@@ -88,7 +86,7 @@ class Controller extends \App\Base\Controller {
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
 
-                $user = $this->user_helper->getUser()->id;
+                $user = $this->current_user->getUser()->id;
                 $is_archived = $this->mapper->setArchive($id, $data["archive"], $user);
 
                 $response_data = ['is_archived' => $is_archived];
@@ -114,7 +112,7 @@ class Controller extends \App\Base\Controller {
     }
 
     protected function preDelete($id, Request $request) {
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_stacks = $this->board_mapper->getUserStacks($user);
         if (!in_array($id, $user_stacks)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);

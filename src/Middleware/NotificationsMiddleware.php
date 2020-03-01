@@ -8,27 +8,25 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\UserHelper;
 use App\Main\Translator;
+use App\Base\CurrentUser;
 
 class NotificationsMiddleware {
 
     protected $logger;
-    protected $user_helper;
     protected $twig;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, \PDO $db, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, \PDO $db, Translator $translation, CurrentUser $current_user) {
         $this->logger = $logger;
-        $this->user_helper = $user_helper;
         $this->twig = $twig;
+        $this->current_user = $current_user;
 
-        $user = $this->user_helper->getUser();
-
-        $this->notifications_mapper = new \App\Notifications\Mapper($db, $translation, $user);
+        $this->notifications_mapper = new \App\Notifications\Mapper($db, $translation, $current_user);
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
 
         if (!is_null($user)) {
             $unread_notifications = $this->notifications_mapper->getUnreadNotificationsCountByUser($user->id);

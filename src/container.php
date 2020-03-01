@@ -13,6 +13,7 @@ use App\Main\Translator;
 use App\Main\UserHelper;
 use Slim\Csrf\Guard as CSRF;
 use Slim\Routing\RouteParser;
+use App\Base\CurrentUser;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Response as Response;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
@@ -89,11 +90,20 @@ return [
     /**
      * Logger
      */
-    LoggerInterface::class => function (Settings $settings) {
+    LoggerInterface::class => function (Settings $settings, CurrentUser $current_user) {
         $logger_settings = $settings->all()['logger'];
         $logger = new Monolog\Logger($logger_settings['name']);
         $logger->pushProcessor(new Monolog\Processor\UidProcessor());
         $logger->pushHandler(new Monolog\Handler\StreamHandler($logger_settings['path'], Monolog\Logger::DEBUG));
+
+        // Add User Entry to Logger
+        $logger->pushProcessor(function ($record) use($current_user) {
+                    if (!is_null($current_user->getUser())) {
+                        $record['extra']['user'] = $current_user->getUser()->login;
+                    }
+
+                    return $record;
+                });
 
         $extraFields = [
             'url' => 'REQUEST_URI',
@@ -133,14 +143,14 @@ return [
     /**
      * User Helper
      */
-    UserHelper::class => function (LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, Settings $settings, \PDO $db, Translator $translation) {
-        return new \App\Main\UserHelper($logger, $twig, $helper, $flash, $settings, $db, $translation);
+    UserHelper::class => function (LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
+        return new \App\Main\UserHelper($logger, $twig, $helper, $flash, $settings, $db, $translation, $current_user);
     },
     /**
      * Activity Handler
      */
-    Activity::class => function (LoggerInterface $logger, Twig $twig, UserHelper $user_helper, Settings $settings, \PDO $db, Translator $translation) {
-        return new \App\Activity\Controller($logger, $twig, $user_helper, $settings, $db, $translation);
+    Activity::class => function (LoggerInterface $logger, Twig $twig, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
+        return new \App\Activity\Controller($logger, $twig, $settings, $db, $translation, $current_user);
     },
     /**
      * Flash Messages

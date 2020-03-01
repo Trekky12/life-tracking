@@ -7,12 +7,12 @@ use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Main\Helper;
-use App\Main\UserHelper;
 use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 
@@ -24,21 +24,20 @@ class Controller extends \App\Base\Controller {
     private $client_mapper;
     private $user_notifications_mapper;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
-        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
+        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
 
-        $user = $this->user_helper->getUser();
 
-        $this->mapper = new Mapper($this->db, $this->translation, $user);
-        $this->category_mapper = new Categories\Mapper($this->db, $this->translation, $user);
-        $this->client_mapper = new Clients\Mapper($this->db, $this->translation, $user);
-        $this->user_notifications_mapper = new Users\Mapper($this->db, $this->translation, $user);
+        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+        $this->category_mapper = new Categories\Mapper($this->db, $this->translation, $current_user);
+        $this->client_mapper = new Clients\Mapper($this->db, $this->translation, $current_user);
+        $this->user_notifications_mapper = new Users\Mapper($this->db, $this->translation, $current_user);
     }
 
     public function manage(Request $request, Response $response) {
         $categories = $this->category_mapper->getAll();
 
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
         $user_categories = $this->user_notifications_mapper->getCategoriesByUser($user->id);
 
         return $this->twig->render($response, 'notifications/manage.twig', ["categories" => $categories, "user_categories" => $user_categories]);
@@ -47,7 +46,7 @@ class Controller extends \App\Base\Controller {
     public function overview(Request $request, Response $response) {
         $categories = $this->category_mapper->getAll();
 
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
         $limit = 10;
         $offset = 0;
         $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
@@ -169,7 +168,7 @@ class Controller extends \App\Base\Controller {
         $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         //$client = $this->client_mapper->getClientByEndpoint($endpoint);
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
         $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
 
         $categories = $this->category_mapper->getAll();
@@ -203,7 +202,7 @@ class Controller extends \App\Base\Controller {
       $result = ["data" => [], "status" => "success"];
       //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
       //$client = $this->client_mapper->getClientByEndpoint($endpoint);
-      $user = $this->user_helper->getUser();
+      $user = $this->current_user->getUser();
       $result["data"] = $this->mapper->getUnreadNotificationsCountByUser($user->id);
 
       return $response->withJson($result);

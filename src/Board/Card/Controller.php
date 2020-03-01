@@ -7,12 +7,12 @@ use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Main\Helper;
-use App\Main\UserHelper;
 use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
@@ -26,22 +26,20 @@ class Controller extends \App\Base\Controller {
     private $users_preSave = array();
     private $users_afterSave = array();
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
-        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
+        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
 
-        $user = $this->user_helper->getUser();
-
-        $this->mapper = new Mapper($this->db, $this->translation, $user);
-        $this->board_mapper = new \App\Board\Mapper($this->db, $this->translation, $user);
-        $this->stack_mapper = new \App\Board\Stack\Mapper($this->db, $this->translation, $user);
-        $this->label_mapper = new \App\Board\Label\Mapper($this->db, $this->translation, $user);
+        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+        $this->board_mapper = new \App\Board\Mapper($this->db, $this->translation, $current_user);
+        $this->stack_mapper = new \App\Board\Stack\Mapper($this->db, $this->translation, $current_user);
+        $this->label_mapper = new \App\Board\Label\Mapper($this->db, $this->translation, $current_user);
     }
 
     /**
      * Does the user have access to this dataset?
      */
     protected function preSave($id, array &$data, Request $request) {
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $this->users_preSave = array();
 
         if (!is_null($id)) {
@@ -97,7 +95,7 @@ class Controller extends \App\Base\Controller {
         /**
          * Notify changed users
          */
-        $my_user_id = intval($this->user_helper->getUser()->id);
+        $my_user_id = intval($this->current_user->getUser()->id);
         $this->users_afterSave = $this->mapper->getUsers($id);
         $new_users = array_diff($this->users_afterSave, $this->users_preSave);
         $users = $this->user_mapper->getAll();
@@ -185,7 +183,7 @@ class Controller extends \App\Base\Controller {
 
         try {
 
-            $user = $this->user_helper->getUser()->id;
+            $user = $this->current_user->getUser()->id;
             $user_cards = $this->board_mapper->getUserCards($user);
 
             if (array_key_exists("card", $data) && !empty($data["card"])) {
@@ -216,7 +214,7 @@ class Controller extends \App\Base\Controller {
         $card = array_key_exists("card", $data) && !empty($data["card"]) ? filter_var($data['card'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         try {
-            $user = $this->user_helper->getUser()->id;
+            $user = $this->current_user->getUser()->id;
             $user_cards = $this->board_mapper->getUserCards($user);
             $user_stacks = $this->board_mapper->getUserStacks($user);
 
@@ -244,7 +242,7 @@ class Controller extends \App\Base\Controller {
             $this->preSave($id, $data, $request);
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
-                $user = $this->user_helper->getUser()->id;
+                $user = $this->current_user->getUser()->id;
                 $is_archived = $this->mapper->setArchive($id, $data["archive"], $user);
 
                 $response_data = ['is_archived' => $is_archived];
@@ -336,7 +334,7 @@ class Controller extends \App\Base\Controller {
     }
 
     protected function preDelete($id, Request $request) {
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         $user_cards = $this->board_mapper->getUserCards($user);
         if (!in_array($id, $user_cards)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);

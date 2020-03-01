@@ -7,12 +7,12 @@ use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Main\Helper;
-use App\Main\UserHelper;
 use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 abstract class Controller {
 
@@ -32,22 +32,21 @@ abstract class Controller {
     protected $logger;
     protected $twig;
     protected $helper;
-    protected $user_helper;
     protected $flash;
     protected $router;
     protected $activity;
     protected $settings;
     protected $translation;
+    protected $current_user;
     // activities
     protected $create_activity = true;
     // module of the current controller
     protected $module = "general";
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->helper = $helper;
-        $this->user_helper = $user_helper;
         $this->flash = $flash;
         $this->router = $router;
         $this->settings = $settings;
@@ -58,6 +57,8 @@ abstract class Controller {
         $this->user_mapper = new \App\User\Mapper($this->db, $this->translation);
 
         $this->activity = $activity;
+
+        $this->current_user = $current_user;
     }
 
     /**
@@ -135,7 +136,7 @@ abstract class Controller {
     public function save(Request $request, Response $response) {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        $data['user'] = $this->user_helper->getUser()->id;
+        $data['user'] = $this->current_user->getUser()->id;
 
         // get user from attribute
         if ($this->user_from_attribute) {
@@ -361,7 +362,7 @@ abstract class Controller {
     }
 
     protected function allowOwnerOnly($element_id) {
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
         if (!is_null($element_id)) {
             $element = $this->mapper->get($element_id);
 

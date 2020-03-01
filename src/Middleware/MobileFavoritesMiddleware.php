@@ -8,21 +8,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\UserHelper;
 use App\Main\Translator;
+use App\Base\CurrentUser;
 
 class MobileFavoritesMiddleware {
 
     protected $logger;
     protected $twig;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, \PDO $db, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, \PDO $db, Translator $translation, CurrentUser $current_user) {
         $this->logger = $logger;
         $this->twig = $twig;
 
-        $user = $user_helper->getUser();
-
-        $this->mobile_favorites_mapper = new \App\User\MobileFavorites\Mapper($db, $translation, $user);
+        $this->mobile_favorites_mapper = new \App\User\MobileFavorites\Mapper($db, $translation, $current_user);
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {

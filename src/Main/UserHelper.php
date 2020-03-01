@@ -9,6 +9,7 @@ use App\Main\Helper;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class UserHelper {
 
@@ -23,8 +24,9 @@ class UserHelper {
     protected $translation;
     protected $settings;
     protected $banlistCtrl;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, Settings $settings, \PDO $db, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->flash = $flash;
@@ -32,37 +34,28 @@ class UserHelper {
         $this->translation = $translation;
         $this->settings = $settings;
 
+        $this->current_user = $current_user;
+
         $this->user_mapper = new \App\User\Mapper($db, $this->translation);
         $this->token_mapper = new \App\User\Token\Mapper($db, $this->translation);
 
         $this->banlistCtrl = new BanListController($logger, $twig, $flash, $db, $translation);
-
-        // Add User Entry to Logger
-        $logger->pushProcessor(function ($record) {
-            $user = $this->getUserLogin();
-
-            if (!is_null($user)) {
-                $record['extra']['user'] = $user;
-            }
-
-            return $record;
-        });
     }
 
-    public function setUser($user_id) {
-        // cache the user
-        $this->user = $this->user_mapper->get($user_id);
-        // add user to view
-        $this->twig->getEnvironment()->addGlobal("user", $this->user);
-    }
+    /* public function setUser($user_id) {
+      // cache the user
+      $this->user = $this->user_mapper->get($user_id);
+      // add user to view
+      $this->twig->getEnvironment()->addGlobal("user", $this->user);
+      }
 
-    public function getUser() {
-        // get cached user object
-        if (!is_null($this->user)) {
-            return $this->user;
-        }
-        return null;
-    }
+      public function getUser() {
+      // get cached user object
+      if (!is_null($this->user)) {
+      return $this->user;
+      }
+      return null;
+      } */
 
     public function setUserFromToken($token) {
         if (!is_null($token) && $token !== FALSE) {
@@ -76,10 +69,11 @@ class UserHelper {
             }
 
             // refresh user for possible changed access rights
-            $this->user = $this->user_mapper->get($user_id);
+            $user = $this->user_mapper->get($user_id);
+            $this->current_user->setUser($user);
 
             // add user object to view
-            $this->twig->getEnvironment()->addGlobal("user", $this->user);
+            $this->twig->getEnvironment()->addGlobal("user", $user);
             $this->twig->getEnvironment()->addGlobal("user_token", $token);
 
             $this->token_mapper->updateTokenData($token, $this->helper->getIP(), $this->helper->getAgent());
@@ -91,7 +85,7 @@ class UserHelper {
     }
 
     public function saveToken() {
-        $user = $this->getUser();
+        $user = $this->current_user->getUser();
         if (!is_null($user)) {
             $secret = $this->settings->getAppSettings()['secret'];
             $token = hash('sha512', $secret . time() . $user->id);
@@ -121,7 +115,10 @@ class UserHelper {
                 $user = $this->user_mapper->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
-                    $this->setUser($user->id);
+                    // save current user
+                    $this->current_user->setUser($user);
+                    // add user to view
+                    $this->twig->getEnvironment()->addGlobal("user", $user);
                     $this->banlistCtrl->deleteFailedLoginAttempts($this->helper->getIP());
 
                     $this->logger->addNotice('LOGIN successfully', array("login" => $username));

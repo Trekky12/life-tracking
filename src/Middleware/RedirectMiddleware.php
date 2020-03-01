@@ -8,21 +8,21 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 use App\Main\Helper;
-use App\Main\UserHelper;
+use App\Base\CurrentUser;
 
 class RedirectMiddleware {
 
     protected $helper;
-    protected $user_helper;
+    protected $current_user;
 
-    public function __construct(Helper $helper, UserHelper $user_helper) {
+    public function __construct(Helper $helper, CurrentUser $current_user) {
         $this->helper = $helper;
-        $this->user_helper = $user_helper;
+        $this->current_user = $current_user;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
 
         $redirectURI = $this->helper->getSessionVar("redirectURI");
         $uri = $this->helper->getRequestURI($request);

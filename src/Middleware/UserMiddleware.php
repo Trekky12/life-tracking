@@ -12,6 +12,7 @@ use App\Main\Helper;
 use App\Main\UserHelper;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 
@@ -22,13 +23,15 @@ class UserMiddleware {
     protected $user_helper;
     protected $router;
     protected $settings;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Helper $helper, UserHelper $user_helper, RouteParser $router, Settings $settings) {
+    public function __construct(LoggerInterface $logger, Helper $helper, UserHelper $user_helper, RouteParser $router, Settings $settings, CurrentUser $current_user) {
         $this->logger = $logger;
         $this->helper = $helper;
         $this->user_helper = $user_helper;
         $this->router = $router;
         $this->settings = $settings;
+        $this->current_user = $current_user;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
@@ -57,7 +60,7 @@ class UserMiddleware {
         /**
          * Check User Object
          */
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
 
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {

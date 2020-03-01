@@ -7,12 +7,12 @@ use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Main\Helper;
-use App\Main\UserHelper;
 use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 use Dflydev\FigCookies\FigRequestCookies;
 
 class Controller extends \App\Base\Controller {
@@ -27,16 +27,15 @@ class Controller extends \App\Base\Controller {
     private $paymethod_mapper;
     static $GROUP_CATEGORIES_BUDGET_CHART = 5;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
-        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
+        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
 
-        $user = $this->user_helper->getUser();
 
-        $this->mapper = new Mapper($this->db, $this->translation, $user);
-        $this->cat_mapper = new Category\Mapper($this->db, $this->translation, $user);
-        $this->cat_assignments_mapper = new Assignment\Mapper($this->db, $this->translation, $user);
-        $this->budget_mapper = new Budget\Mapper($this->db, $this->translation, $user);
-        $this->paymethod_mapper = new Paymethod\Mapper($this->db, $this->translation, $user);
+        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+        $this->cat_mapper = new Category\Mapper($this->db, $this->translation, $current_user);
+        $this->cat_assignments_mapper = new Assignment\Mapper($this->db, $this->translation, $current_user);
+        $this->budget_mapper = new Budget\Mapper($this->db, $this->translation, $current_user);
+        $this->paymethod_mapper = new Paymethod\Mapper($this->db, $this->translation, $current_user);
     }
 
     public function index(Request $request, Response $response) {
@@ -87,7 +86,7 @@ class Controller extends \App\Base\Controller {
     }
 
     protected function afterSave($id, array $data, Request $request) {
-        $user_id = $this->user_helper->getUser()->id;
+        $user_id = $this->current_user->getUser()->id;
 
         $entry = $this->mapper->get($id);
         $cat = $this->getDefaultOrAssignedCategory($user_id, $entry);
@@ -177,7 +176,7 @@ class Controller extends \App\Base\Controller {
 
         $data = $request->getParsedBody();
 
-        $data['user'] = $this->user_helper->getUser()->id;
+        $data['user'] = $this->current_user->getUser()->id;
 
         $data = array_map(function($el) {
             return urldecode($el);

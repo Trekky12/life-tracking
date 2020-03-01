@@ -9,29 +9,29 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\UserHelper;
 use App\Main\Translator;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class ModuleMiddleware {
 
     protected $logger;
     protected $twig;
-    protected $user_helper;
     protected $settings;
     protected $translation;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, UserHelper $user_helper, Settings $settings, \PDO $db, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
         $this->logger = $logger;
-        $this->user_helper = $user_helper;
         $this->twig = $twig;
         $this->settings = $settings;
         $this->translation = $translation;
+        $this->current_user = $current_user;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
 
         $routeContext = RouteContext::fromRequest($request);
         $baseRoute = $routeContext->getRoute();

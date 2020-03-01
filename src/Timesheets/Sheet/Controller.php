@@ -7,12 +7,12 @@ use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Main\Helper;
-use App\Main\UserHelper;
 use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
@@ -24,13 +24,12 @@ class Controller extends \App\Base\Controller {
     protected $module = "timesheets";
     private $project_mapper;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation) {
-        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
+        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
 
-        $user = $this->user_helper->getUser();
 
-        $this->mapper = new Mapper($this->db, $this->translation, $user);
-        $this->project_mapper = new \App\Timesheets\Project\Mapper($this->db, $this->translation, $user);
+        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+        $this->project_mapper = new \App\Timesheets\Project\Mapper($this->db, $this->translation, $current_user);
     }
 
     public function index(Request $request, Response $response) {
@@ -176,7 +175,7 @@ class Controller extends \App\Base\Controller {
      */
     private function checkAccess($id) {
         $timesheets_project_users = $this->project_mapper->getUsers($id);
-        $user = $this->user_helper->getUser()->id;
+        $user = $this->current_user->getUser()->id;
 
         if (!in_array($user, $timesheets_project_users)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
@@ -235,7 +234,7 @@ class Controller extends \App\Base\Controller {
             // always create new entry with current timestamp
             $data["start"] = date('Y-m-d H:i');
             $data["project"] = $project->id;
-            $data["user"] = $this->user_helper->getUser()->id;
+            $data["user"] = $this->current_user->getUser()->id;
 
             $this->insertOrUpdate(null, $data, $request);
 
@@ -279,7 +278,7 @@ class Controller extends \App\Base\Controller {
                 // otherwise create new entry
                 $data["end"] = date('Y-m-d H:i');
                 $data["project"] = $project->id;
-                $data["user"] = $this->user_helper->getUser()->id;
+                $data["user"] = $this->current_user->getUser()->id;
 
                 $this->insertOrUpdate(null, $data, $request);
             }

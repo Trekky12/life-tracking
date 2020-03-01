@@ -14,6 +14,7 @@ use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use Slim\Csrf\Guard as CSRF;
 use App\Base\Settings;
+use App\Base\CurrentUser;
 use Dubture\Monolog\Reader\LogReader;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
@@ -26,22 +27,26 @@ class MainController extends \App\Base\Controller {
     protected $recurring_ctrl;
     protected $card_ctrl;
     protected $token_ctrl;
+    protected $user_helper;
+    protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, UserHelper $user_helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CSRF $csrf) {
-        parent::__construct($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, UserHelper $user_helper, CurrentUser $current_user, CSRF $csrf) {
+        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
         $this->csrf = $csrf;
+        $this->user_helper = $user_helper;
+        $this->current_user = $current_user;
 
         $this->settings_mapper = new \App\Settings\SettingsMapper($this->db, $this->translation);
-        $this->recurring_ctrl = new \App\Finances\Recurring\Controller($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
-        $this->card_ctrl = new \App\Board\Card\Controller($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
-        $this->token_ctrl = new \App\User\Token\Controller($logger, $twig, $helper, $user_helper, $flash, $router, $settings, $db, $activity, $translation);
+        $this->recurring_ctrl = new \App\Finances\Recurring\Controller($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
+        $this->card_ctrl = new \App\Board\Card\Controller($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
+        $this->token_ctrl = new \App\User\Token\Controller($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
     }
 
     public function index(Request $request, Response $response) {
         $pwa = $request->getQueryParam('pwa', null);
         // is PWA? redirect to start page
         if (!is_null($pwa)) {
-            $user = $this->user_helper->getUser();
+            $user = $this->current_user->getUser();
             if (!is_null($user) && !empty($user->start_url)) {
                 return $response->withRedirect($user->start_url, 301);
             }
@@ -52,7 +57,7 @@ class MainController extends \App\Base\Controller {
 
     public function login(Request $request, Response $response) {
 
-        $user = $this->user_helper->getUser();
+        $user = $this->current_user->getUser();
         // user is logged in, redirect to frontpage
         if (!is_null($user)) {
             return $response->withRedirect($this->router->urlFor('index'), 301);

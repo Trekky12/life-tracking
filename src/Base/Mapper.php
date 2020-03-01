@@ -22,12 +22,12 @@ abstract class Mapper {
     protected $user_table = "";
     protected $element_name = "";
 
-    public function __construct(\PDO $db, \App\Main\Translator $translation, \App\User\User $user = null) {
+    public function __construct(\PDO $db, \App\Main\Translator $translation, \App\Base\CurrentUser $user = null) {
         $this->db = $db;
         $this->translation = $translation;
 
         // set ID of current user
-        $this->user_id = $user ? $user->id : null;
+        $this->user_id = $user && $user->getUser() ? $user->getUser()->id : null;
     }
 
     protected function getTableName($table = null) {
