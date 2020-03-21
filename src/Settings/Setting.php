@@ -2,9 +2,9 @@
 
 namespace App\Settings;
 
-class Setting extends \App\Base\Model {
+class Setting extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_SETTING";
+    static $NAME = "DATAOBJECT_SETTING";
 
     public function parseData(array $data) {
 

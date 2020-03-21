@@ -5,7 +5,7 @@ namespace App\Banlist;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = "global_banlist";
-    protected $model = "\App\Base\Model";
+    protected $dataobject = \App\Base\DataObject::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
@@ -19,7 +19,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

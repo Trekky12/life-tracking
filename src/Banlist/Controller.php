@@ -11,25 +11,22 @@ use App\Main\Translator;
 
 class Controller {
 
-    public static $MAX_ATTEMPTS = 2;
     protected $logger;
     protected $twig;
     protected $flash;
     protected $translation;
+    private $service;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Flash $flash, \PDO $db, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Flash $flash, Translator $translation, BanlistService $service) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->flash = $flash;
         $this->translation = $translation;
-
-        $this->db = $db;
-
-        $this->mapper = new Mapper($this->db, $this->translation);
+        $this->service = $service;
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->mapper->getBlockedIPAdresses(self::$MAX_ATTEMPTS);
+        $list = $this->service->getBlockedIPAdresses();
         return $this->twig->render($response, 'main/banlist.twig', ["list" => $list]);
     }
 
@@ -39,49 +36,30 @@ class Controller {
         $response_data = ['is_deleted' => false, 'error' => ''];
 
         try {
-            $this->preDelete($id, $request);
 
-            $is_deleted = $this->deleteFailedLoginAttempts($ip);
+            $is_deleted = $this->service->deleteFailedLoginAttempts($ip);
+
             $response_data['is_deleted'] = $is_deleted;
             if ($is_deleted) {
                 $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_SUCCESS_DELETE"));
                 $this->flash->addMessage('message_type', 'success');
 
-                $this->logger->addNotice("Delete successfully " . $this->model, array("id" => $id));
+                $this->logger->addNotice("Delete successfully " . $this->dataobject, array("id" => $id));
             } else {
                 $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR_DELETE"));
                 $this->flash->addMessage('message_type', 'danger');
 
-                $this->logger->addError("Delete failed " . $this->model, array("id" => $id));
+                $this->logger->addError("Delete failed " . $this->dataobject, array("id" => $id));
             }
         } catch (\Exception $e) {
             $response_data['error'] = $e->getMessage();
             $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR_DELETE"));
             $this->flash->addMessage('message_type', 'danger');
 
-            $this->logger->addError("Delete failed " . $this->model, array("id" => $id, "error" => $e->getMessage()));
+            $this->logger->addError("Delete failed " . $this->dataobject, array("id" => $id, "error" => $e->getMessage()));
         }
 
-        $this->afterDelete($id, $request);
-
         return $response->withJson($response_data);
-    }
-
-    public function getFailedLoginAttempts($ip) {
-        return $this->mapper->getFailedLoginAttempts($ip);
-    }
-
-    public function deleteFailedLoginAttempts($ip) {
-        return $this->mapper->deleteFailedLoginAttempts($ip);
-    }
-
-    public function addBan($ip, $username) {
-        $model = new \App\Base\Model(array('ip' => $ip, 'username' => $username));
-        $this->mapper->insert($model);
-    }
-
-    public function isBlocked($ip) {
-        return $this->getFailedLoginAttempts($ip) > self::$MAX_ATTEMPTS;
     }
 
 }

@@ -28,6 +28,7 @@ class BaseURLMiddleware {
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
 
+        //var_dump(get_class($request));
         $host = $request->getUri()->getHost();
         $scheme = $request->getUri()->getScheme();
         $basePath = $request->getUri()->getPath();
@@ -37,7 +38,7 @@ class BaseURLMiddleware {
             $basePath = $basePath . '/' . $basePath;
         }
 
-        $path = ($scheme ? $scheme . ':' : '') . ($host ? '//' . $host : '');
+        $path = ($scheme ? $scheme . ':' : '') . ($host ? '//' . $host : ''); # . rtrim($basePath, '/');
 
         $this->helper->setBaseURL($path);
 

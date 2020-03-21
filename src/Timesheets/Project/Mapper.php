@@ -5,7 +5,7 @@ namespace App\Timesheets\Project;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = "timesheets_projects";
-    protected $model = "\App\Timesheets\Project\Project";
+    protected $dataobject = \App\Timesheets\Project\Project::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = true;
     protected $has_user_table = true;

@@ -2,9 +2,9 @@
 
 namespace App\Notifications;
 
-class Notification extends \App\Base\Model {
+class Notification extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_NOTIFICATIONS_NOTIFICATION";
+    static $NAME = "DATAOBJECT_NOTIFICATIONS_NOTIFICATION";
 
     public function parseData(array $data) {
 

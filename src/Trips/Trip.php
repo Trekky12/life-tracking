@@ -2,9 +2,9 @@
 
 namespace App\Trips;
 
-class Trip extends \App\Base\Model {
+class Trip extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_TRIPS_TRIP";
+    static $NAME = "DATAOBJECT_TRIPS_TRIP";
 
     public function parseData(array $data) {
 

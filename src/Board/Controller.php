@@ -6,172 +6,109 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
-use Hashids\Hashids;
+use App\User\UserService;
 use Dflydev\FigCookies\FigRequestCookies;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Board\Board';
-    protected $index_route = 'boards';
-    protected $edit_template = 'boards/edit.twig';
-    protected $element_view_route = 'boards_edit';
-    protected $module = "boards";
-    private $stack_mapper;
-    private $card_mapper;
-    private $label_mapper;
-    private $users_preSave = array();
-    private $users_afterSave = array();
+    private $user_service;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
-        $this->stack_mapper = new Stack\Mapper($this->db, $this->translation, $current_user);
-        $this->card_mapper = new Card\Mapper($this->db, $this->translation, $current_user);
-        $this->label_mapper = new Label\Mapper($this->db, $this->translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            BoardService $service,
+            UserService $user_service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
+        $this->user_service = $user_service;
     }
 
     public function index(Request $request, Response $response) {
-        $boards = $this->mapper->getUserItems('name');
+        $boards = $this->service->getAllOrderedByName();
         return $this->twig->render($response, 'boards/index.twig', ['boards' => $boards]);
+    }
+
+    public function edit(Request $request, Response $response) {
+        $entry_id = $request->getAttribute('id');
+
+        if ($this->service->isOwner($entry_id) === false) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
+
+        $entry = $this->service->getEntry($entry_id);
+        $users = $this->user_service->getAll();
+
+        return $this->twig->render($response, 'boards/edit.twig', ['entry' => $entry, 'users' => $users]);
     }
 
     public function view(Request $request, Response $response) {
         $hash = $request->getAttribute('hash');
 
-        $board = $this->mapper->getFromHash($hash);
+        $board = $this->service->getFromHash($hash);
 
-        /**
-         * Is the user allowed to view this board?
-         */
-        $board_user = $this->mapper->getUsers($board->id);
-        $user = $this->current_user->getUser()->id;
-        if (!in_array($user, $board_user)) {
+        if (!$this->service->isMember($board->id)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
 
-        $show_archive = $this->helper->getSessionVar('show_archive', 0);
-
-
-        /**
-         * Get stacks with cards
-         */
-        $stacks = $this->stack_mapper->getStacksFromBoard($board->id, $show_archive);
-
-        foreach ($stacks as &$stack) {
-            $stack->cards = $this->card_mapper->getCardsFromStack($stack->id, $show_archive);
-        }
-
-        $users = $this->user_mapper->getAll('name');
-
-
-        $card_user = $this->card_mapper->getCardsUser();
-
-        $labels = $this->label_mapper->getLabelsFromBoard($board->id);
-
-        $card_label = $this->label_mapper->getCardsLabel();
+        $data = $this->service->view($board);
 
         //$sidebar_mobilevisible = filter_input(INPUT_COOKIE, 'sidebar_mobilevisible', FILTER_SANITIZE_NUMBER_INT);
         //$sidebar_desktophidden = filter_input(INPUT_COOKIE, 'sidebar_desktophidden', FILTER_SANITIZE_NUMBER_INT);
         $sidebar_mobilevisible = FigRequestCookies::get($request, 'sidebar_mobilevisible');
         $sidebar_desktophidden = FigRequestCookies::get($request, 'sidebar_desktophidden');
 
-        return $this->twig->render($response, 'boards/view.twig', [
-                    'board' => $board,
-                    'stacks' => $stacks,
-                    "users" => $users,
-                    "card_user" => $card_user,
-                    "labels" => $labels,
-                    "card_label" => $card_label,
-                    "show_archive" => $show_archive,
-                    "board_user" => $board_user,
-                    "sidebar" => [
-                        "mobilevisible" => $sidebar_mobilevisible->getValue(),
-                        "desktophidden" => $sidebar_desktophidden->getValue(),
-                    ]
-        ]);
+        $data["sidebar"] = [
+            "mobilevisible" => $sidebar_mobilevisible->getValue(),
+            "desktophidden" => $sidebar_desktophidden->getValue(),
+        ];
+
+        return $this->twig->render($response, 'boards/view.twig', $data);
     }
 
     public function setArchive(Request $request, Response $response) {
         $data = $request->getParsedBody();
 
-        if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1))) {
-            $this->helper->setSessionVar('show_archive', $data["state"]);
-        }
+        $this->service->setArchive($data);
 
         $response_data = ['status' => 'success'];
         return $response->withJSON($response_data);
     }
 
-    /**
-     * save users 
-     */
-    protected function preSave($id, array &$data, Request $request) {
-        $this->users_preSave = $this->mapper->getUsers($id);
-        $this->allowOwnerOnly($id);
-    }
+    public function save(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
 
-    /**
-     * notify user
-     */
-    protected function afterSave($id, array $data, Request $request) {
-        $board = $this->mapper->get($id);
-
-        /**
-         * save hash
-         */
-        if (empty($board->hash)) {
-            $hashids = new Hashids('', 10);
-            $hash = $hashids->encode($id);
-            $this->mapper->setHash($id, $hash);
+        $this->users_preSave = $this->service->getUsers($id);
+        if ($this->service->isOwner($id) === false) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
 
-        /**
-         * Notify new users
-         */
-        $my_user_id = intval($this->current_user->getUser()->id);
-        $this->users_afterSave = $this->mapper->getUsers($id);
-        $new_users = array_diff($this->users_afterSave, $this->users_preSave);
+        $new_id = $this->doSave($id, $data, null);
 
-        $subject = $this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD');
+        $this->service->setHash($new_id);
+        $this->service->notifyUsers($new_id);
 
-        foreach ($new_users as $nu) {
+        $redirect_url = $this->router->urlFor('boards');
+        return $response->withRedirect($redirect_url, 301);
+    }
 
-            // except self
-            if ($nu !== $my_user_id) {
-                $user = $this->user_mapper->get($nu);
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
 
-                if ($user->mail && $user->mails_board == 1) {
-
-                    $variables = array(
-                        'header' => '',
-                        'subject' => $subject,
-                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), $board->name)
-                    );
-
-                    $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                }
-            }
+        if ($this->service->isOwner($id) === false) {
+            $response_data = ['is_deleted' => false, 'error' => $this->translation->getTranslatedString('NO_ACCESS')];
+        } else {
+            $response_data = $this->doDelete($id);
         }
-    }
 
-    /**
-     * Does the user have access to this dataset?
-     */
-    protected function preEdit($id, Request $request) {
-        $this->allowOwnerOnly($id);
-    }
-
-    protected function preDelete($id, Request $request) {
-        $this->allowOwnerOnly($id);
+        return $response->withJson($response_data);
     }
 
 }

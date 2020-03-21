@@ -6,60 +6,77 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
-use Hashids\Hashids;
+use App\Trips\Event\TripEventService;
+use App\User\UserService;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Trips\Trip';
-    protected $index_route = 'trips';
-    protected $edit_template = 'trips/edit.twig';
-    protected $element_view_route = 'trips_edit';
-    protected $module = "trips";
-    private $event_mapper;
+    private $event_service;
+    private $user_service;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
-        $this->event_mapper = new Event\Mapper($this->db, $this->translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            TripService $service,
+            TripEventService $event_service,
+            UserService $user_service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
+        $this->event_service = $event_service;
+        $this->user_service = $user_service;
     }
 
     public function index(Request $request, Response $response) {
-        $trips = $this->mapper->getUserItems('t.createdOn DESC, name');
-        $dates = $this->event_mapper->getMinMaxEventsDates();
+        $trips = $this->service->getUserTrips();
+        $dates = $this->event_service->getMinMaxEventsDates();
         return $this->twig->render($response, 'trips/index.twig', ['trips' => $trips, 'dates' => $dates]);
     }
 
-    /**
-     * Does the user have access to this dataset?
-     */
-    protected function preSave($id, array &$data, Request $request) {
-        $this->allowOwnerOnly($id);
-    }
+    public function edit(Request $request, Response $response) {
+        $entry_id = $request->getAttribute('id');
 
-    protected function preEdit($id, Request $request) {
-        $this->allowOwnerOnly($id);
-    }
-
-    protected function preDelete($id, Request $request) {
-        $this->allowOwnerOnly($id);
-    }
-
-    protected function afterSave($id, array $data, Request $request) {
-        $dataset = $this->mapper->get($id);
-        if (empty($dataset->getHash())) {
-            $hashids = new Hashids('', 10);
-            $hash = $hashids->encode($id);
-            $this->mapper->setHash($id, $hash);
+        if ($this->service->isOwner($entry_id) === false) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
+
+        $entry = $this->service->getEntry($entry_id);
+        $users = $this->user_service->getAll();
+
+        return $this->twig->render($response, 'trips/edit.twig', ['entry' => $entry, 'users' => $users]);
+    }
+    
+    public function save(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
+        
+        if ($this->service->isOwner($id) === false) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
+
+        $new_id = $this->doSave($id, $data, null);
+        
+        $this->service->setHash($new_id);
+
+        $redirect_url = $this->router->urlFor('trips');
+        return $response->withRedirect($redirect_url, 301);
+    }
+    
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+
+        if ($this->service->isOwner($id) === false) {
+            $response_data = ['is_deleted' => false, 'error' => $this->translation->getTranslatedString('NO_ACCESS')];
+        } else {
+            $response_data = $this->doDelete($id);
+        }
+        return $response->withJson($response_data);
     }
 
 }

@@ -6,48 +6,56 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
+use App\Finances\Category\CategoryService;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Finances\Assignment\Assignment';
-    protected $index_route = 'finances_categories_assignment';
-    protected $element_view_route = 'finances_categories_assignment_edit';
-    protected $module = "finances";
-    private $cat_mapper;
+    private $cat_service;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
-        $this->cat_mapper = new \App\Finances\Category\Mapper($this->db, $this->translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            AssignmentService $service,
+            CategoryService $cat_service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
+        $this->cat_service = $cat_service;
     }
 
     public function edit(Request $request, Response $response) {
-
         $entry_id = $request->getAttribute('id');
-
-        $entry = null;
-        if (!empty($entry_id)) {
-            $entry = $this->mapper->get($entry_id);
-        }
-
-        $categories = $this->cat_mapper->getAll('name');
-
+        $entry = $this->service->getEntry($entry_id);
+        $categories = $this->cat_service->getAllCategoriesOrderedByName();
         return $this->twig->render($response, 'finances/assignment/edit.twig', ['entry' => $entry, 'categories' => $categories]);
     }
 
     public function index(Request $request, Response $response) {
-        $assignments = $this->mapper->getAll('description');
-        $categories = $this->cat_mapper->getAll();
+        $assignments = $this->service->getAllAssignmentsOrderedByDescription();
+        $categories = $this->cat_service->getAllCategoriesOrderedByName();
         return $this->twig->render($response, 'finances/assignment/index.twig', ['assignments' => $assignments, 'categories' => $categories]);
+    }
+
+    public function save(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
+
+        $new_id = $this->doSave($id, $data, null);
+
+        $redirect_url = $this->router->urlFor('finances_categories_assignment');
+        return $response->withRedirect($redirect_url, 301);
+    }
+    
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $response_data = $this->doDelete($id);
+        return $response->withJson($response_data);
     }
 
 }

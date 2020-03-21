@@ -5,7 +5,7 @@ namespace App\Finances\Paymethod;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'finances_paymethods';
-    protected $model = '\App\Finances\Paymethod\Paymethod';
+    protected $dataobject = \App\Finances\Paymethod\Paymethod::class;
 
     public function set_default($default) {
         $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id = :id";
@@ -78,7 +78,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = $row["user"];
-            $results[$key][] = new $this->model($row);
+            $results[$key][] = new $this->dataobject($row);
         }
         return $results;
     }

@@ -2,9 +2,9 @@
 
 namespace App\Timesheets\Sheet;
 
-class Sheet extends \App\Base\Model {
+class Sheet extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_TIMESHEETS_SHEET";
+    static $NAME = "DATAOBJECT_TIMESHEETS_SHEET";
 
     public function parseData(array $data) {
 

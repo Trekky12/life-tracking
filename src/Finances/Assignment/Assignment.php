@@ -2,9 +2,9 @@
 
 namespace App\Finances\Assignment;
 
-class Assignment extends \App\Base\Model {
+class Assignment extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_FINANCES_ASSIGNMENT_ENTRY";
+    static $NAME = "DATAOBJECT_FINANCES_ASSIGNMENT_ENTRY";
 
     public function parseData(array $data) {
 

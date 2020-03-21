@@ -62,7 +62,6 @@ return function (App $app) {
         $group->group('/budgets', function(RouteCollectorProxy $group_budgets) {
             $group_budgets->get('/', '\App\Finances\Budget\Controller:index')->setName('finances_budgets');
             $group_budgets->get('/edit/', '\App\Finances\Budget\Controller:edit')->setName('finances_budgets_edit');
-            //$group_budgets->post('/save/[{id:[0-9]+}]', '\App\Finances\Budget\Controller:save')->setName('finances_budgets_save');
             $group_budgets->post('/saveAll', '\App\Finances\Budget\Controller:saveAll')->setName('finances_budgets_save_all');
             $group_budgets->delete('/delete/{id}', '\App\Finances\Budget\Controller:delete')->setName('finances_budgets_delete');
 
@@ -86,7 +85,7 @@ return function (App $app) {
 
     $app->group('/location', function(RouteCollectorProxy $group) {
         $group->get('/', '\App\Location\Controller:index')->setName('location');
-        $group->post('/record', '\App\Location\Controller:saveAPI')->setName('location_record');
+        $group->post('/record', '\App\Location\Controller:record')->setName('location_record');
         $group->get('/markers', '\App\Location\Controller:getMarkers')->setName('getMarkers');
         $group->delete('/delete/[{id}]', '\App\Location\Controller:delete')->setName('delete_marker');
         $group->get('/address/[{id}]', '\App\Location\Controller:getAddress')->setName('get_address');
@@ -235,8 +234,6 @@ return function (App $app) {
             $group_cards->get('/data/[{id:[0-9]+}]', '\App\Board\Card\Controller:getAPI')->setName('card_get');
             $group_cards->delete('/delete/[{id:[0-9]+}]', '\App\Board\Card\Controller:delete')->setName('card_delete');
             $group_cards->post('/archive/[{id:[0-9]+}]', '\App\Board\Card\Controller:archive')->setName('card_archive');
-
-            $group_cards->post('/saveComment/[{id:[0-9]+}]', '\App\Board\Comment\Controller:saveAPI')->setName('comment_save');
         });
 
         $group->group('/labels', function(RouteCollectorProxy $group_labels) {
@@ -261,7 +258,7 @@ return function (App $app) {
             $group_crawler->get('/table/', '\App\Crawler\Controller:table')->setName('crawlers_table');
             $group_crawler->post('/setFilter/', '\App\Crawler\Controller:setFilter')->setName('set_crawler_filter');
 
-            $group_crawler->post('/record/', '\App\Crawler\CrawlerDataset\Controller:saveAPI')->setName('crawler_record');
+            $group_crawler->post('/record/', '\App\Crawler\CrawlerDataset\Controller:record')->setName('crawler_record');
 
             $group_crawler->group('/headers', function(RouteCollectorProxy $group_header) {
                 $group_header->get('/', '\App\Crawler\CrawlerHeader\Controller:index')->setName('crawlers_headers');

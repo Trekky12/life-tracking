@@ -2,9 +2,9 @@
 
 namespace App\Finances\Paymethod;
 
-class Paymethod extends \App\Base\Model {
+class Paymethod extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_FINANCES_PAYMETHOD";
+    static $NAME = "DATAOBJECT_FINANCES_PAYMETHOD";
 
     public function parseData(array $data) {
 

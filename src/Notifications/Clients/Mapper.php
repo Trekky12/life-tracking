@@ -5,7 +5,7 @@ namespace App\Notifications\Clients;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'notifications_clients';
-    protected $model = '\App\Notifications\Clients\NotificationClient';
+    protected $dataobject = \App\Notifications\Clients\NotificationClient::class;
     protected $id = "id";
     protected $select_results_of_user_only = false;
     protected $insert_user = true;
@@ -20,7 +20,7 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
+            return new $this->dataobject($stmt->fetch());
         }
         throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
@@ -53,7 +53,7 @@ class Mapper extends \App\Base\Mapper {
         return true;
     }
 
-    public function getCategoriesByEndpoint($endpoint) {
+    public function getCategoriesFromEndpoint($endpoint) {
         $sql = "SELECT cc.category FROM " . $this->getTableName($this->client_table) . " cc, " . $this->getTableName() . " c  WHERE c.id = cc.client AND c.endpoint = :endpoint";
 
         $bindings = array("endpoint" => $endpoint);
@@ -80,7 +80,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }
@@ -97,7 +97,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

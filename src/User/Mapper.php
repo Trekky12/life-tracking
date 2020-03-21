@@ -5,7 +5,7 @@ namespace App\User;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'global_users';
-    protected $model = '\App\User\User';
+    protected $dataobject = \App\User\User::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 

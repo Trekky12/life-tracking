@@ -2,9 +2,9 @@
 
 namespace App\Timesheets\Project;
 
-class Project extends \App\Base\Model {
+class Project extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_TIMESHEETS_PROJECT";
+    static $NAME = "DATAOBJECT_TIMESHEETS_PROJECT";
 
     public function parseData(array $data) {
 

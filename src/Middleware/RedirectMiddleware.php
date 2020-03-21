@@ -7,16 +7,15 @@ use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
-use App\Main\Helper;
 use App\Base\CurrentUser;
+use App\Main\Utility\SessionUtility;
+use App\Main\Utility\Utility;
 
 class RedirectMiddleware {
 
-    protected $helper;
     protected $current_user;
 
-    public function __construct(Helper $helper, CurrentUser $current_user) {
-        $this->helper = $helper;
+    public function __construct(CurrentUser $current_user) {
         $this->current_user = $current_user;
     }
 
@@ -24,14 +23,14 @@ class RedirectMiddleware {
 
         $user = $this->current_user->getUser();
 
-        $redirectURI = $this->helper->getSessionVar("redirectURI");
-        $uri = $this->helper->getRequestURI($request);
+        $redirectURI = SessionUtility::getSessionVar("redirectURI");
+        $uri = Utility::getRequestURI($request);
 
         // do not delete redirectURI when we are on forced pages
         $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
         if (!is_null($route) && !in_array($route->getName(), array("login", "users_change_password"))) {
-            $this->helper->deleteSessionVar("redirectURI");
+            SessionUtility::deleteSessionVar("redirectURI");
 
             if (!is_null($user) && !is_null($redirectURI) && $redirectURI !== $uri) {
                 $response = new Response();

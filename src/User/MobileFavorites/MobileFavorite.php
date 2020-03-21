@@ -2,9 +2,9 @@
 
 namespace App\User\MobileFavorites;
 
-class MobileFavorite extends \App\Base\Model {
+class MobileFavorite extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_MOBILEFAVORITE";
+    static $NAME = "DATAOBJECT_MOBILEFAVORITE";
 
     public function parseData(array $data) {
 
@@ -27,6 +27,10 @@ class MobileFavorite extends \App\Base\Model {
 
     public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {
         return $this->url;
+    }
+
+    public function getParentID() {
+        return $this->user;
     }
 
 }

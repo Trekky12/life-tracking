@@ -6,64 +6,78 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Board\Stack\Stack';
-    protected $parent_model = '\App\Board\Board';
-    protected $element_view_route = 'boards_view';
-    protected $module = "boards";
-    private $board_mapper;
-
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
-        $this->board_mapper = new \App\Board\Mapper($this->db, $this->translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            StackService $service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
     }
 
-    /**
-     * Does the user have access to this dataset?
-     */
-    protected function preSave($id, array &$data, Request $request) {
-        $user = $this->current_user->getUser()->id;
+    public function getAPI(Request $request, Response $response) {
+        $entry_id = $request->getAttribute('id');
 
-        if (!is_null($id)) {
-            $user_stacks = $this->board_mapper->getUserStacks($user);
-            if (!in_array($id, $user_stacks)) {
+        try {
+            if (!$this->service->hasAccess($entry_id, [])) {
                 throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
             }
-        } elseif (is_array($data)) {
-            $user_boards = $this->board_mapper->getElementsOfUser($user);
-            if (!array_key_exists("board", $data) || !in_array($data["board"], $user_boards)) {
-                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+
+            $entry = $this->service->getEntry($entry_id);
+
+            if ($entry->name) {
+                $entry->name = htmlspecialchars_decode($entry->name);
             }
+        } catch (\Exception $e) {
+            $this->logger->addError("Get API " . $this->service->getDataObject(), array("id" => $entry_id, "error" => $e->getMessage()));
+
+            $response_data = array('status' => 'error', "error" => $e->getMessage());
+            return $response->withJSON($response_data);
         }
+
+        $response_data = ['entry' => $entry];
+        return $response->withJson($response_data);
+    }
+
+    public function saveAPI(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
+
+        try {
+            if (!$this->service->hasAccess($id, $data)) {
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+            }
+
+            $new_id = $this->doSave($id, $data, null);
+        } catch (\Exception $e) {
+            $this->logger->addError("Save API " . $this->service->getDataObject(), array("error" => $e->getMessage()));
+
+            $response_data = array('status' => 'error', "error" => $e->getMessage());
+            return $response->withJSON($response_data);
+        }
+
+        $response_data = array('status' => 'success');
+        return $response->withJSON($response_data);
     }
 
     public function updatePosition(Request $request, Response $response) {
         $data = $request->getParsedBody();
 
         try {
-            $user = $this->current_user->getUser()->id;
-            $user_stacks = $this->board_mapper->getUserStacks($user);
-            /**
-             * Save new order
-             * @see https://stackoverflow.com/a/15635201
-             */
+
             if (array_key_exists("stack", $data) && !empty($data["stack"])) {
-                foreach ($data['stack'] as $position => $item) {
-                    if (in_array($item, $user_stacks)) {
-                        $this->mapper->updatePosition($item, $position, $user);
-                    }
-                }
+                $stacks = filter_var_array($data["stack"], FILTER_SANITIZE_NUMBER_INT);
+                $this->service->move($stacks);
+
                 $response_data = ['status' => 'success'];
                 return $response->withJSON($response_data);
             }
@@ -82,12 +96,13 @@ class Controller extends \App\Base\Controller {
         $id = $request->getAttribute('id');
         try {
             $data1 = [];
-            $this->preSave($id, $data1, $request);
+            if (!$this->service->hasAccess($id, $data)) {
+                throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+            }
 
             if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
 
-                $user = $this->current_user->getUser()->id;
-                $is_archived = $this->mapper->setArchive($id, $data["archive"], $user);
+                $is_archived = $this->service->archive($id, $data["archive"]);
 
                 $response_data = ['is_archived' => $is_archived];
                 return $response->withJson($response_data);
@@ -103,30 +118,15 @@ class Controller extends \App\Base\Controller {
         }
     }
 
-    protected function afterGetAPI($id, $entry, Request $request) {
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
 
-        if ($entry->name) {
-            $entry->name = htmlspecialchars_decode($entry->name);
+        if (!$this->service->hasAccess($id)) {
+            $response_data = ['is_deleted' => false, 'error' => $this->translation->getTranslatedString('NO_ACCESS')];
+        } else {
+            $response_data = $this->doDelete($id);
         }
-        return $entry;
-    }
-
-    protected function preDelete($id, Request $request) {
-        $user = $this->current_user->getUser()->id;
-        $user_stacks = $this->board_mapper->getUserStacks($user);
-        if (!in_array($id, $user_stacks)) {
-            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
-        }
-    }
-
-    protected function getElementViewRoute($entry) {
-        $board = $this->getParentObjectMapper()->get($entry->getParentID());
-        $this->element_view_route_params["hash"] = $board->getHash();
-        return parent::getElementViewRoute($entry);
-    }
-
-    protected function getParentObjectMapper() {
-        return $this->board_mapper;
+        return $response->withJson($response_data);
     }
 
 }

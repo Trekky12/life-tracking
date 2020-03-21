@@ -2,9 +2,9 @@
 
 namespace App\Splitbill\Group;
 
-class Group extends \App\Base\Model {
+class Group extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_SPLITBILLS_GROUP";
+    static $NAME = "DATAOBJECT_SPLITBILLS_GROUP";
 
     public function parseData(array $data) {
 

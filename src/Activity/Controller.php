@@ -17,17 +17,24 @@ class Controller {
     protected $settings;
     protected $translation;
     protected $current_user;
+    private $mapper;
+    private $user_mapper;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Settings $settings,
+            Translator $translation,
+            CurrentUser $current_user,
+            Mapper $mapper,
+            \App\User\Mapper $user_mapper) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->settings = $settings;
         $this->translation = $translation;
-        $this->db = $db;
         $this->current_user = $current_user;
 
-        $this->user_mapper = new \App\User\Mapper($this->db, $this->translation);
-        $this->mapper = new Mapper($this->db, $this->translation, $this->current_user);
+        $this->user_mapper = $user_mapper;
+        $this->mapper = $mapper;
     }
 
     public function addEntry($type, $module, $controller, $object = [], $parent = [], $users = []) {
@@ -44,8 +51,8 @@ class Controller {
         $data["parent_object_description"] = array_key_exists("description", $parent) ? $parent["description"] : null;
         $data["link"] = array_key_exists("link", $object) ? $object["link"] : null;
 
-        $model = new Activity($data);
-        $id = $this->mapper->insert($model);
+        $activity = new Activity($data);
+        $id = $this->mapper->insert($activity);
 
         $this->mapper->addUsers($id, $users);
     }
@@ -62,10 +69,12 @@ class Controller {
         $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $limit = sprintf("%s,%s", $offset, $count);
 
-        $activities = $this->mapper->getUserItems("createdOn DESC", $limit);
+        $user_id = $this->current_user->getUser()->id;
+                
+        $activities = $this->mapper->getUserItems("createdOn DESC", $limit, $user_id);
 
         $response_data["data"] = $this->renderTableRows($activities);
-        $response_data["count"] = $this->mapper->getCountElementsOfUser();
+        $response_data["count"] = $this->mapper->getCountElementsOfUser($user_id);
 
         return $response->withJson($response_data);
     }
@@ -113,7 +122,7 @@ class Controller {
 
 
             if ($el->parent_object && $el->parent_object_description) {
-                $parent_object = $this->translation->getTranslatedString($el->parent_object::$MODEL_NAME);
+                $parent_object = $this->translation->getTranslatedString($el->parent_object::$NAME);
                 $description .= sprintf(" (%s: %s)", $parent_object, trim($el->parent_object_description));
             }
 

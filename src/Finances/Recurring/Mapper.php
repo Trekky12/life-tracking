@@ -5,7 +5,7 @@ namespace App\Finances\Recurring;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'finances_recurring';
-    protected $model = '\App\Finances\Recurring\FinancesEntryRecurring';
+    protected $dataobject = \App\Finances\Recurring\FinancesEntryRecurring::class;
 
     public function getRecurringEntries() {
         $sql = "SELECT * FROM " . $this->getTableName() . " "
@@ -36,7 +36,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

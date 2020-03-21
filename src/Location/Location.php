@@ -4,9 +4,9 @@ namespace App\Location;
 
 //class Location implements \JsonSerializable {
 
-class Location extends \App\Base\Model {
+class Location extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_LOCATION_ENTRY";
+    static $NAME = "DATAOBJECT_LOCATION_ENTRY";
 
     public function parseData(array $data) {
 

@@ -5,7 +5,7 @@ namespace App\Car\Service;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'cars_service';
-    protected $model = '\App\Car\Service\CarServiceEntry';
+    protected $dataobject = \App\Car\Service\CarServiceEntry::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
@@ -70,7 +70,7 @@ class Mapper extends \App\Base\Mapper {
 
 
         if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
+            return new $this->dataobject($stmt->fetch());
         }
         return null;
     }
@@ -138,7 +138,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }
@@ -444,7 +444,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

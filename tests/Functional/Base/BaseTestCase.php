@@ -314,10 +314,12 @@ class BaseTestCase extends TestCase {
         $re = '/var tokens = \[\{\"csrf_name\":\"(?<csrf_name>[a-z0-9]*)\",\"csrf_value\":\"(?<csrf_value>[a-z0-9]*)\"\},\{\"csrf_name\":\"(?<csrf2_name>[a-z0-9]*)\",\"csrf_value\":\"(?<csrf2_value>[a-z0-9]*)\"\}\];/s';
         preg_match($re, $body, $matches);
 
-        $csrf_name = $matches["csrf_name"];
-        $csrf_value = $matches["csrf_value"];
-
-        return array("csrf_name" => $csrf_name, "csrf_value" => $csrf_value);
+        if (array_key_exists("csrf_name", $matches) && array_key_exists("csrf_value", $matches)) {
+            $csrf_name = $matches["csrf_name"];
+            $csrf_value = $matches["csrf_value"];
+            return array("csrf_name" => $csrf_name, "csrf_value" => $csrf_value);
+        }
+        return [];
     }
 
     /**

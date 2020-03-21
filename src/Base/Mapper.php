@@ -15,14 +15,14 @@ abstract class Mapper {
     protected $table = '';
     // Primary Key Name
     protected $id = 'id';
-    // Model
-    protected $model = '\App\Base\Model';
+    // Data Object
+    protected $dataobject = \App\Base\DataObject::class;
     // m:n relationship with an usertable
     protected $has_user_table = false;
     protected $user_table = "";
     protected $element_name = "";
 
-    public function __construct(\PDO $db, \App\Main\Translator $translation, \App\Base\CurrentUser $user = null) {
+    public function __construct(\PDO $db, \App\Main\Translator $translation, \App\Base\CurrentUser $user) {
         $this->db = $db;
         $this->translation = $translation;
 
@@ -37,12 +37,12 @@ abstract class Mapper {
         return $this->table_prefix . $table;
     }
 
-    public function insert(Model $data) {
+    public function insert(DataObject $data) {
 
-        // remove the user field from the model, if the user should not be inserted
+        // remove the user field from the dataobject, if the user should not be inserted
         $remove_user = !$this->insert_user;
 
-        $data_array = $data->get_fields($remove_user, true);
+        $data_array = $data->get_fields($remove_user, true, false);
 
         $sql = "INSERT INTO " . $this->getTableName() . " "
                 . "        (" . implode(", ", array_keys($data_array)) . ") "
@@ -82,7 +82,7 @@ abstract class Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }
@@ -103,17 +103,17 @@ abstract class Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
+            return new $this->dataobject($stmt->fetch());
         }
         throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
 
-    public function update(Model $data, $parameter = null) {
+    public function update(DataObject $data, $parameter = null) {
 
         // possibilty do define another parameter
         $whereID = !is_null($parameter) ? $parameter : $this->id;
 
-        $bindings = $data->get_fields(!$this->insert_user, false);
+        $bindings = $data->get_fields(!$this->insert_user, false, true);
 
         $parts = array();
         foreach (array_keys($bindings) as $row) {
@@ -331,14 +331,14 @@ abstract class Mapper {
         if ($limit && !is_null($limit)) {
             $sql .= " LIMIT {$limit}";
         }
-
+        
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[] = new $this->model($row);
+            $results[] = new $this->dataobject($row);
         }
         return $results;
     }
@@ -369,7 +369,7 @@ abstract class Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
+            return new $this->dataobject($stmt->fetch());
         }
         throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }

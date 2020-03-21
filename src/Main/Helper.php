@@ -110,19 +110,6 @@ class Helper {
         return $mail->send();
     }
 
-    public function setSessionVar($key, $var) {
-        $_SESSION[$key] = $var;
-    }
-
-    public function getSessionVar($key, $fallback = null) {
-        return array_key_exists($key, $_SESSION) ? filter_var($_SESSION[$key]) : $fallback;
-    }
-
-    public function deleteSessionVar($key) {
-        $_SESSION[$key] = null;
-        unset($_SESSION[$key]);
-    }
-
     public function setBaseURL($baseURL) {
         $this->baseURL = $baseURL;
         // add base URL to view
@@ -131,82 +118,6 @@ class Helper {
 
     public function getBaseURL() {
         return $this->baseURL;
-    }
-
-    public function getIP() {
-        return filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
-    }
-
-    public function getURI() {
-        return filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING);
-    }
-
-    public function getAgent() {
-        return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING);
-    }
-
-    public function getDateRange($data, $defaultFrom = 'today', $defaultTo = 'today') {
-
-        if (strcmp($defaultFrom, 'today') === 0) {
-            $defaultFrom = date('Y-m-d');
-        }
-        if (strcmp($defaultTo, 'today') === 0) {
-            $defaultTo = date('Y-m-d');
-        }
-
-        $from = array_key_exists('from', $data) && !empty($data['from']) ? filter_var($data['from'], FILTER_SANITIZE_STRING) : $defaultFrom;
-        $to = array_key_exists('to', $data) && !empty($data['to']) ? filter_var($data['to'], FILTER_SANITIZE_STRING) : $defaultTo;
-
-        /**
-         * Clean dates
-         */
-        $dateRegex = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/";
-        if (!preg_match($dateRegex, $from) || !preg_match($dateRegex, $to)) {
-
-            $from = preg_match($dateRegex, $from) ? $from : $defaultFrom;
-            $to = preg_match($dateRegex, $to) ? $to : $defaultTo;
-        }
-
-        return array($from, $to);
-    }
-
-    public function getRequestURI(\Psr\Http\Message\RequestInterface $request) {
-        $requestURI = $request->getUri();
-        $path = $requestURI->getPath();
-        $params = $requestURI->getQuery();
-        $uri = strlen($params) > 0 ? $path . '?' . $params : $path;
-        return $uri;
-    }
-
-    public function getMonthName($month) {
-        $language = $this->settings->getAppSettings()['i18n']['php'];
-        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt->setPattern($dateFormatPHP['month_name']);
-
-        $dateObj = \DateTime::createFromFormat('!m', $month);
-        return $fmt->format($dateObj);
-    }
-
-    public function getDay($date) {
-        $language = $this->settings->getAppSettings()['i18n']['php'];
-        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt->setPattern($dateFormatPHP['date']);
-
-        $dateObj = $d = new \DateTime($date);
-        return $fmt->format($dateObj);
-    }
-
-    public function splitDateInterval($total_seconds) {
-        $total_minutes = $total_seconds / 60;
-        $hours = intval($total_minutes / 60);
-        $minutes = intval($total_minutes - $hours * 60);
-        $seconds = intval($total_seconds - $total_minutes * 60);
-
-        return !is_null($total_seconds) ? sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds) : '';
     }
 
 }

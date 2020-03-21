@@ -2,9 +2,9 @@
 
 namespace App\Board\Label;
 
-class Label extends \App\Base\Model {
+class Label extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_BOARDS_LABEL";
+    static $NAME = "DATAOBJECT_BOARDS_LABEL";
 
     public function parseData(array $data) {
 

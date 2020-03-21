@@ -2,9 +2,9 @@
 
 namespace App\Crawler\CrawlerHeader;
 
-class CrawlerHeader extends \App\Base\Model {
+class CrawlerHeader extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_CRAWLERS_HEADER";
+    static $NAME = "DATAOBJECT_CRAWLERS_HEADER";
 
     public function parseData(array $data) {
 

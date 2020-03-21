@@ -2,9 +2,9 @@
 
 namespace App\User;
 
-class User extends \App\Base\Model {
+class User extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_USER";
+    static $NAME = "DATAOBJECT_USER";
 
     public function parseData(array $data) {
 

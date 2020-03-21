@@ -5,7 +5,7 @@ namespace App\Crawler\CrawlerLink;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = "crawlers_links";
-    protected $model = "\App\Crawler\CrawlerLink\CrawlerLink";
+    protected $dataobject = \App\Crawler\CrawlerLink\CrawlerLink::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
@@ -24,7 +24,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

@@ -6,8 +6,11 @@
 composer.phar
 /src/settings.php
 
-/public/uploads/*
-!/public/uploads/.gitkeep 
+/public/uploads/profile/*
+!/public/uploads/profile/.gitkeep 
+
+/public/uploads/events/*
+!/public/uploads/events/.gitkeep 
 
 koala-config.json
 

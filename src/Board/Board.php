@@ -2,9 +2,9 @@
 
 namespace App\Board;
 
-class Board extends \App\Base\Model {
+class Board extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_BOARDS_BOARD";
+    static $NAME = "DATAOBJECT_BOARDS_BOARD";
 
     public function parseData(array $data) {
 

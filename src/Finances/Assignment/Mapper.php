@@ -5,7 +5,7 @@ namespace App\Finances\Assignment;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'finances_categories_assignment';
-    protected $model = '\App\Finances\Assignment\Assignment';
+    protected $dataobject = \App\Finances\Assignment\Assignment::class;
 
     public function findMatchingCategory($user_id, $description, $value) {
 

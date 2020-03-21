@@ -5,12 +5,9 @@ use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
-use App\Main\Helper;
 use App\Base\Settings;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
-use App\Main\UserHelper;
 use Slim\Csrf\Guard as CSRF;
 use Slim\Routing\RouteParser;
 use App\Base\CurrentUser;
@@ -38,7 +35,7 @@ return [
         $twig_settings = $settings->all()['view'];
 
         $twig = Twig::create($twig_settings['template_path'], [
-//'cache' => $settings[ 'cache_path' ]
+                    //'cache' => $settings[ 'cache_path' ]
                     'cache' => false
         ]);
 
@@ -135,34 +132,10 @@ return [
         }
     },
     /**
-     * Set Settings for global Helper Class
-     */
-    Helper::class => function (LoggerInterface $logger, Twig $twig, Settings $settings) {
-        return new \App\Main\Helper($logger, $twig, $settings);
-    },
-    /**
-     * User Helper
-     */
-    UserHelper::class => function (LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
-        return new \App\Main\UserHelper($logger, $twig, $helper, $flash, $settings, $db, $translation, $current_user);
-    },
-    /**
-     * Activity Handler
-     */
-    Activity::class => function (LoggerInterface $logger, Twig $twig, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
-        return new \App\Activity\Controller($logger, $twig, $settings, $db, $translation, $current_user);
-    },
-    /**
      * Flash Messages
      */
     Flash::class => function () {
         return new \Slim\Flash\Messages();
-    },
-    /**
-     * Translations
-     */
-    Translator::class => function (Settings $settings) {
-        return new \App\Main\Translator($settings);
     },
     /**
      * CSRF Guard

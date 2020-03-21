@@ -5,7 +5,7 @@ namespace App\Finances;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'finances';
-    protected $model = '\App\Finances\FinancesEntry';
+    protected $dataobject = \App\Finances\FinancesEntry::class;
 
     private function getTableSQL($select) {
         $sql = "SELECT {$select} "
@@ -297,7 +297,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

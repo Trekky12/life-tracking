@@ -5,7 +5,7 @@ namespace App\Location\Steps;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'locations';
-    protected $model = '\App\Location\Location';
+    protected $dataobject = \App\Location\Location::class;
 
     private function getStepsOfDaySQL(&$bindings) {
         $sql = "SELECT DATE(createdOn) as date, MAX(steps) as steps FROM " . $this->getTableName();

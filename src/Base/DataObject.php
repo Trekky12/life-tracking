@@ -2,9 +2,9 @@
 
 namespace App\Base;
 
-class Model implements \JsonSerializable {
+class DataObject implements \JsonSerializable {
 
-    static $MODEL_NAME = "";
+    static $NAME = "";
     protected $fields = array();
 
     /**
@@ -28,6 +28,14 @@ class Model implements \JsonSerializable {
         }
 
         $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d H:i:s');
+
+        /**
+         * Add users (for m:n)
+         */
+        if ($this->exists("users", $data) && is_array($data["users"])) {
+            $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
+            $this->setUsers($users);
+        }
 
         /**
          * Values from DB
@@ -63,7 +71,7 @@ class Model implements \JsonSerializable {
         return array_key_exists($key, $this->fields);
     }
 
-    public function get_fields($remove_user_element = false, $for_db_insert = true) {
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
         $temp = array();
         foreach ($this->fields as $k => $v) {
             $temp[$k] = $v;
@@ -77,11 +85,15 @@ class Model implements \JsonSerializable {
                 unset($temp["user"]);
             }
         }
-        return $temp;
-    }
 
-    public function hasElements() {
-        return count($this->fields) > 0;
+        /**
+         * Do not output m:n users 
+         */
+        if ($insert || $update) {
+            unset($temp["users"]);
+        }
+
+        return $temp;
     }
 
     protected function exists($key, $data, $tasker_variables = []) {
@@ -92,11 +104,6 @@ class Model implements \JsonSerializable {
         }
 
         return array_key_exists($key, $data) && !is_null($data[$key]) && $data[$key] !== "";
-    }
-
-    public function log() {
-        $object = get_object_vars($this);
-        return array('IP' => $_SERVER["REMOTE_ADDR"], 'object' => $object);
     }
 
     public function hasParsingErrors() {
@@ -116,7 +123,7 @@ class Model implements \JsonSerializable {
     }
 
     public function jsonSerialize() {
-        return $this->get_fields(true, null);
+        return $this->get_fields(true, false, false);
     }
 
     public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {

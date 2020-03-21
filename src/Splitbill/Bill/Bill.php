@@ -2,9 +2,9 @@
 
 namespace App\Splitbill\Bill;
 
-class Bill extends \App\Base\Model {
+class Bill extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_SPLITBILLS_BILL";
+    static $NAME = "DATAOBJECT_SPLITBILLS_BILL";
 
     public function parseData(array $data) {
 
@@ -52,8 +52,8 @@ class Bill extends \App\Base\Model {
     /**
      * Remove fields which are not in the db table
      */
-    public function get_fields($remove_user_element = false, $for_db_insert = true) {
-        $temp = parent::get_fields($$remove_user_element, $for_db_insert);
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
 
         unset($temp["spend"]);
         unset($temp["paid"]);

@@ -2,66 +2,59 @@
 
 namespace App\Main;
 
-use App\Banlist\Controller as BanListController;
+use App\Banlist\BanlistService;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use App\Base\Settings;
 use App\Base\CurrentUser;
+use App\Main\Utility\Utility;
+use App\User\UserService;
+use App\User\Token\TokenService;
 
-class UserHelper {
+class LoginService {
 
-    private $user_mapper;
-    private $token_mapper;
+    private $user_service;
+    private $token_service;
     // cache the user object
     private $user = null;
     private $logger;
     protected $twig;
     protected $flash;
-    protected $helper;
     protected $translation;
     protected $settings;
-    protected $banlistCtrl;
+    protected $banlist_service;
     protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, Settings $settings, \PDO $db, Translator $translation, CurrentUser $current_user) {
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            Settings $settings,
+            Translator $translation,
+            CurrentUser $current_user,
+            UserService $user_service,
+            TokenService $token_service,
+            BanlistService $banlist_service) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->flash = $flash;
-        $this->helper = $helper;
         $this->translation = $translation;
         $this->settings = $settings;
 
         $this->current_user = $current_user;
 
-        $this->user_mapper = new \App\User\Mapper($db, $this->translation);
-        $this->token_mapper = new \App\User\Token\Mapper($db, $this->translation);
+        $this->user_service = $user_service;
+        $this->token_service = $token_service;
 
-        $this->banlistCtrl = new BanListController($logger, $twig, $flash, $db, $translation);
+        $this->banlist_service = $banlist_service;
     }
-
-    /* public function setUser($user_id) {
-      // cache the user
-      $this->user = $this->user_mapper->get($user_id);
-      // add user to view
-      $this->twig->getEnvironment()->addGlobal("user", $this->user);
-      }
-
-      public function getUser() {
-      // get cached user object
-      if (!is_null($this->user)) {
-      return $this->user;
-      }
-      return null;
-      } */
 
     public function setUserFromToken($token) {
         if (!is_null($token) && $token !== FALSE) {
 
             try {
-                $user_id = $this->token_mapper->getUserFromToken($token);
+                $user_id = $this->token_service->getUserFromToken($token);
             } catch (\Exception $e) {
                 $this->logger->addError("No Token in database");
 
@@ -69,14 +62,14 @@ class UserHelper {
             }
 
             // refresh user for possible changed access rights
-            $user = $this->user_mapper->get($user_id);
+            $user = $this->user_service->getEntry($user_id);
             $this->current_user->setUser($user);
 
             // add user object to view
             $this->twig->getEnvironment()->addGlobal("user", $user);
             $this->twig->getEnvironment()->addGlobal("user_token", $token);
 
-            $this->token_mapper->updateTokenData($token, $this->helper->getIP(), $this->helper->getAgent());
+            $this->token_service->updateToken($token);
 
             return true;
         }
@@ -85,20 +78,11 @@ class UserHelper {
     }
 
     public function saveToken() {
-        $user = $this->current_user->getUser();
-        if (!is_null($user)) {
-            $secret = $this->settings->getAppSettings()['secret'];
-            $token = hash('sha512', $secret . time() . $user->id);
-            $this->token_mapper->addToken($user->id, $token, $this->helper->getIP(), $this->helper->getAgent());
-            return $token;
-        }
-        return null;
+        return $this->token_service->saveToken();
     }
 
     public function removeToken($token) {
-        if (!is_null($token) && $token !== FALSE) {
-            $this->token_mapper->deleteToken($token);
-        }
+        return $this->token_service->removeToken($token);
     }
 
     public function getUserLogin() {
@@ -112,14 +96,14 @@ class UserHelper {
         if (!is_null($username) && !is_null($password)) {
 
             try {
-                $user = $this->user_mapper->getUserFromLogin($username);
+                $user = $this->user_service->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
                     // save current user
                     $this->current_user->setUser($user);
                     // add user to view
                     $this->twig->getEnvironment()->addGlobal("user", $user);
-                    $this->banlistCtrl->deleteFailedLoginAttempts($this->helper->getIP());
+                    $this->banlist_service->deleteFailedLoginAttempts(Utility::getIP());
 
                     $this->logger->addNotice('LOGIN successfully', array("login" => $username));
 
@@ -139,8 +123,8 @@ class UserHelper {
             /**
              * Log failed login to database
              */
-            if (!is_null($username) && !is_null($this->helper->getIP())) {
-                $this->banlistCtrl->addBan($this->helper->getIP(), $username);
+            if (!is_null($username) && !is_null(Utility::getIP())) {
+                $this->banlist_service->addBan(Utility::getIP(), $username);
             }
         }
         return false;

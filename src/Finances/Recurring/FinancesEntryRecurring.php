@@ -2,9 +2,9 @@
 
 namespace App\Finances\Recurring;
 
-class FinancesEntryRecurring extends \App\Base\Model {
+class FinancesEntryRecurring extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_FINANCES_ENTRY_RECURRING";
+    static $NAME = "DATAOBJECT_FINANCES_ENTRY_RECURRING";
 
     public function parseData(array $data) {
 

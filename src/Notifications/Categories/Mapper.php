@@ -5,7 +5,7 @@ namespace App\Notifications\Categories;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'notifications_categories';
-    protected $model = '\App\Notifications\Categories\Category';
+    protected $dataobject = \App\Notifications\Categories\Category::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
@@ -18,7 +18,7 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
+            return new $this->dataobject($stmt->fetch());
         }
         throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }
@@ -32,7 +32,7 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
+            return new $this->dataobject($stmt->fetch());
         }
         throw new \Exception($this->translation->getTranslatedString('ELEMENT_NOT_FOUND'), 404);
     }

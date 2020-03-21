@@ -2,9 +2,9 @@
 
 namespace App\Car\Service;
 
-class CarServiceEntry extends \App\Base\Model {
+class CarServiceEntry extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_CARS_SERVICE_ENTRY";
+    static $NAME = "DATAOBJECT_CARS_SERVICE_ENTRY";
 
     public function parseData(array $data) {
 

@@ -6,27 +6,26 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\User\User';
-    protected $element_view_route = 'users_edit';
-    protected $index_route = 'users';
-
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-        $this->mapper = $this->user_mapper;
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            UserService $service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->user_mapper->getAll('login');
+        $list = $this->service->getAllUsersOrderedByLogin();
         return $this->twig->render($response, 'user/index.twig', ['list' => $list]);
     }
 
@@ -34,33 +33,37 @@ class Controller extends \App\Base\Controller {
 
         $entry_id = $request->getAttribute('id');
 
-        $entry = null;
-        if (!empty($entry_id)) {
-            $entry = $this->user_mapper->get($entry_id);
-        }
+        $entry = $this->service->getEntry($entry_id);
 
-        return $this->twig->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $this->roles()]);
+        $roles = $this->service->getRoles();
+
+        return $this->twig->render($response, 'user/edit.twig', ['entry' => $entry, "roles" => $roles]);
+    }
+    
+    public function save(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
+
+        $new_id = $this->doSave($id, $data, null);
+
+        // notify new user
+        // is new user?
+        if (!array_key_exists("id", $data)) {
+            $this->service->sendNewUserNotificationMail($new_id, $data);
+        }
+        
+        $redirect_url = $this->router->urlFor('users');
+        return $response->withRedirect($redirect_url, 301);
     }
 
     public function testMail(Request $request, Response $response) {
 
         $user_id = $request->getAttribute('user');
-        $entry = $this->user_mapper->get($user_id);
 
-        if ($entry->mail) {
+        list($has_mail, $result) = $this->service->sendTestNoficiationMail($user_id);
 
-            $subject = '[Life-Tracking] Test-Email';
-
-            $variables = array(
-                'header' => '',
-                'subject' => $subject,
-                'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $entry->name),
-                'content' => $this->translation->getTranslatedString('THISISATESTEMAIL')
-            );
-
-            $return = $this->helper->send_mail('mail/general.twig', $entry->mail, $subject, $variables);
-
-            if ($return) {
+        if ($has_mail) {
+            if ($result) {
                 $this->flash->addMessage('message', $this->translation->getTranslatedString("USER_EMAIL_SUCCESS"));
                 $this->flash->addMessage('message_type', 'success');
             } else {
@@ -71,42 +74,14 @@ class Controller extends \App\Base\Controller {
             $this->flash->addMessage('message', $this->translation->getTranslatedString("USER_HAS_NO_EMAIL"));
             $this->flash->addMessage('message_type', 'danger');
         }
-        return $response->withRedirect($this->router->urlFor($this->index_route), 301);
+
+        return $response->withRedirect($this->router->urlFor('users'), 301);
     }
-
-    private function roles() {
-        return ['user', 'admin'];
-    }
-
-    protected function afterSave($id, array $data, Request $request) {
-        // notify new user
-        // is new user?
-        if (!array_key_exists("id", $data)) {
-            $user = $this->user_mapper->get($id);
-            if ($user->mail && $user->mails_user == 1) {
-
-                $subject = sprintf($this->translation->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->helper->getBaseURL());
-
-                $variables = array(
-                    'header' => '',
-                    'subject' => $subject,
-                    'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                    'content' => sprintf($this->translation->getTranslatedString('MAIL_USER_ACCOUNT_CREATED'), $this->helper->getBaseURL(), $this->helper->getBaseURL())
-                    . '<br/>&nbsp;<br/>&nbsp;'
-                    . sprintf($this->translation->getTranslatedString('MAIL_YOUR_USERNAME'), $user->login)
-                );
-
-                if (array_key_exists("set_password", $data)) {
-                    $variables["content"] .= '<br/>&nbsp;' . sprintf($this->translation->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["set_password"]);
-                }
-
-                if ($user->force_pw_change == 1) {
-                    $variables["content"] .= '<br/>&nbsp;<br/>&nbsp;' . $this->translation->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
-                }
-
-                $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-            }
-        }
+    
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $response_data = $this->doDelete($id);
+        return $response->withJson($response_data);
     }
 
 }

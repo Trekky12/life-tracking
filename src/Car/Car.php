@@ -2,9 +2,9 @@
 
 namespace App\Car;
 
-class Car extends \App\Base\Model {
+class Car extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_CARS";
+    static $NAME = "DATAOBJECT_CARS";
 
     public function parseData(array $data) {
 

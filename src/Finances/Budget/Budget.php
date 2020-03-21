@@ -2,9 +2,9 @@
 
 namespace App\Finances\Budget;
 
-class Budget extends \App\Base\Model {
+class Budget extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_FINANCES_BUDGET_ENTRY";
+    static $NAME = "DATAOBJECT_FINANCES_BUDGET_ENTRY";
 
     public function parseData(array $data) {
 
@@ -32,8 +32,8 @@ class Budget extends \App\Base\Model {
     /**
      * Remove fields which are not in the db table
      */
-    public function get_fields($remove_user_element = false, $for_db_insert = true) {
-        $temp = parent::get_fields($remove_user_element, $for_db_insert);
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
 
         unset($temp["sum"]);
         unset($temp["percent"]);

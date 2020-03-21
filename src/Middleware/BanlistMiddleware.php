@@ -8,26 +8,22 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
-use App\Banlist\Controller as BanListController;
+use App\Banlist\BanlistService;
+use App\Main\Utility\Utility;
 
 class BanlistMiddleware {
 
     protected $logger;
     protected $twig;
-    protected $helper;
     protected $translation;
-    protected $banlistCtrl;
+    protected $banlist_service;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, \PDO $db, Translator $translation) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Translator $translation, BanlistService $banlist_service) {
         $this->logger = $logger;
-        $this->helper = $helper;
         $this->twig = $twig;
         $this->translation = $translation;
-
-        $this->banlistCtrl = new BanListController($logger, $twig, $flash, $db, $translation);
+        $this->banlist_service = $banlist_service;
     }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
@@ -35,7 +31,7 @@ class BanlistMiddleware {
         /**
          * Do not allow access for banned ips
          */
-        $isBlocked = $this->banlistCtrl->isBlocked($this->helper->getIP());
+        $isBlocked = $this->banlist_service->isBlocked(Utility::getIP());
 
         if ($isBlocked) {
             $this->logger->addWarning('BANNED');

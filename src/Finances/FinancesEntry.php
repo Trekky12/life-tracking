@@ -2,9 +2,9 @@
 
 namespace App\Finances;
 
-class FinancesEntry extends \App\Base\Model {
+class FinancesEntry extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_FINANCES_ENTRY";
+    static $NAME = "DATAOBJECT_FINANCES_ENTRY";
 
     public function parseData(array $data) {
 
@@ -71,8 +71,9 @@ class FinancesEntry extends \App\Base\Model {
             'type' => 1];
     }
 
-    public function get_fields($remove_user_element = false, $for_db_insert = true) {
-        if (!is_null($this->bill) && !$for_db_insert) {
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+
+        if (!is_null($this->bill) && !$insert) {
             /**
              * When a finance entry from a bill is edited, 
              * only the following fields can be updated
@@ -90,7 +91,7 @@ class FinancesEntry extends \App\Base\Model {
             return $temp;
         }
 
-        return parent::get_fields($remove_user_element, $for_db_insert);
+        return parent::get_fields($remove_user_element, $insert, $update);
     }
 
     public function getDescription(\App\Main\Translator $translator, \App\Base\Settings $settings) {

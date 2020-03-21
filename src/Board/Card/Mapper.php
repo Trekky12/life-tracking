@@ -5,13 +5,32 @@ namespace App\Board\Card;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = "boards_cards";
-    protected $model = "\App\Board\Card\Card";
+    protected $dataobject = \App\Board\Card\Card::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
     protected $has_user_table = true;
     protected $user_table = "boards_cards_user";
     protected $element_name = "card";
+    
+    public function getUserCards($id) {
+        $sql = "SELECT ca.id FROM " . $this->getTableName("boards_user") . " ub, " . $this->getTableName("boards_stacks") . " st, " . $this->getTableName("boards_cards") . " ca "
+                . " WHERE ub.user = :id "
+                . " AND st.board = ub.board "
+                . " AND st.id = ca.stack";
 
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($el = $stmt->fetchColumn()) {
+            $results[] = intval($el);
+        }
+        return $results;
+    }
+
+    
     public function getCardsFromStack($stack, $archive = 0) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE stack = :stack ";
 
@@ -30,7 +49,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

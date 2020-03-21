@@ -2,9 +2,9 @@
 
 namespace App\Trips\Event;
 
-class Event extends \App\Base\Model {
+class Event extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_TRIPS_EVENT";
+    static $NAME = "DATAOBJECT_TRIPS_EVENT";
 
     public function parseData(array $data) {
 
@@ -35,7 +35,7 @@ class Event extends \App\Base\Model {
 
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : null;
 
-        if (!in_array($this->type, array_keys(\App\Trips\Event\Controller::eventTypes()))) {
+        if (!in_array($this->type, array_keys(\App\Trips\Event\TripEventService::getEventTypes()))) {
             $this->type = null;
         }
 

@@ -116,7 +116,7 @@
         <li {% if active == 'profile' or active == 'notifications' %}class="active"{% endif %}>
             <a href="{{ url_for('users_profile_edit') }}" class="profile badge {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}"> 
                 {% if user.get_thumbnail() != '' %}
-                    <img src="/{{uploads_folder}}/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
+                    <img src="/{{uploads_folder}}/profile/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
                 {% else %}
                     <svg class="avatar-mini navi avatar-initials" viewBox="0 0 24 15">
                     <text x="50%" y="14" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>

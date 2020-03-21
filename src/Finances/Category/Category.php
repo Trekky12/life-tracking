@@ -2,9 +2,9 @@
 
 namespace App\Finances\Category;
 
-class Category extends \App\Base\Model {
+class Category extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_FINANCES_CATEGORY";
+    static $NAME = "DATAOBJECT_FINANCES_CATEGORY";
 
     public function parseData(array $data) {
 

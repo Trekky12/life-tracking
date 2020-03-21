@@ -83,7 +83,7 @@
                                     {% for user in users %}
                                         {% if user.id in board_user %}
                                             {% if user.get_thumbnail() != '' %}
-                                                <img alt="{{user.login}}" src="/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
+                                                <img alt="{{user.login}}" src="/profile/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
                                             {% else %}
                                                 <svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}">
                                                 <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
@@ -191,7 +191,7 @@
                         {% if user.id in board_user %}
                             <div class="avatar-wrapper">
                                 {% if user.get_thumbnail() != '' %}
-                                    <img alt="{{user.login}}" src="/{{uploads_folder}}/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
+                                    <img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
                                 {% else %}
                                     <svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
                                     <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
@@ -259,7 +259,7 @@
                                         {% for user in card_user[card.id] %}
                                             {% if user in board_user %}
                                                 {% if users[user].get_thumbnail() != '' %}
-                                                    <img src="/{{uploads_folder}}/{{users[user].get_thumbnail('mini')}}" class="avatar-mini">
+                                                    <img src="/{{uploads_folder}}/profile/{{users[user].get_thumbnail('mini')}}" class="avatar-mini">
                                                 {% else %}
                                                     <svg class="avatar-mini avatar-initials" viewBox="0 0 24 15">
                                                     <text x="50%" y="13" text-anchor="middle">{{users[user].name|first|upper}}{{users[user].lastname|first|upper}}</text>

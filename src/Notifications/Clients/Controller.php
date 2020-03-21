@@ -6,30 +6,30 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
+use App\User\UserService;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Notifications\Clients\NotificationClient';
-    protected $index_route = 'notifications';
-    protected $module = "notifications";
-
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            NotificationClientsService $service,
+            UserService $user_service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
+        $this->user_service = $user_service;
     }
 
     public function index(Request $request, Response $response) {
-        $list = $this->mapper->getAll();
-        $users = $this->user_mapper->getAll();
+        $list = $this->service->getClients();
+        $users = $this->user_service->getAll();
         return $this->twig->render($response, 'notifications/clients/index.twig', ['list' => $list, 'users' => $users]);
     }
 
@@ -38,35 +38,25 @@ class Controller extends \App\Base\Controller {
         //$data = json_decode($request->getBody(), true);
         $data = $request->getParsedBody();
 
-        $entry = new NotificationClient($data);
-        $entry->ip = $this->helper->getIP();
-        $entry->agent = $this->helper->getAgent();
-        $entry->user = $this->current_user->getUser()->id;
-        $entry->changedOn = date('Y-m-d H:i:s');
-
         $result = array('status' => 'error');
 
         if ($request->isPost()) {
+
+            $entry = $this->service->createSubscription($data);
             $this->logger->addInfo('Subscription insert', $entry->get_fields());
-            $this->mapper->insert($entry);
+
             $result['status'] = 'success';
         }
         if ($request->isPut()) {
-            $entry->changedOn = date('Y-m-d H:i:s');
+            $client = $this->service->updateSubscription($data);
 
-            try {
-                $this->mapper->get($entry->endpoint, true, 'endpoint');
-                $this->mapper->update($entry, "endpoint");
+            if ($client) {
                 $result['status'] = 'success';
-            } catch (\Exception $e) {
-                // No Entry found so create one
-                //$this->logger->addWarning('Subscription not on server but on client', $entry->get_fields());
-                //$this->mapper->insert($entry);
             }
         }
         if ($request->isDelete()) {
+            $entry = $this->service->deleteSubscription($data);
             $this->logger->addInfo('Subscription delete', $entry->get_fields());
-            $this->mapper->delete($entry->endpoint, "endpoint");
             $result['status'] = 'success';
         }
 
@@ -78,7 +68,7 @@ class Controller extends \App\Base\Controller {
 
         $result = ["data" => [], "status" => "success"];
         $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
-        $result["data"] = $this->mapper->getCategoriesByEndpoint($endpoint);
+        $result["data"] = $this->service->getCategoriesFromEndpoint($endpoint);
 
         return $response->withJson($result);
     }
@@ -91,14 +81,15 @@ class Controller extends \App\Base\Controller {
         $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
-        $client = $this->mapper->getClientByEndpoint($endpoint);
-        if ($type == 1) {
-            $this->mapper->addCategory($client->id, $category);
-        } else {
-            $this->mapper->deleteCategory($client->id, $category);
-        }
+        $this->service->setCategoryOfEndpoint($endpoint, $category, $type);
 
         return $response->withJson($result);
+    }
+    
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $response_data = $this->doDelete($id);
+        return $response->withJson($response_data);
     }
 
 }

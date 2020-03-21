@@ -5,7 +5,7 @@ namespace App\Crawler\CrawlerHeader;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = "crawlers_headers";
-    protected $model = "\App\Crawler\CrawlerHeader\CrawlerHeader";
+    protected $dataobject = \App\Crawler\CrawlerHeader\CrawlerHeader::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
@@ -29,7 +29,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }
@@ -54,7 +54,7 @@ class Mapper extends \App\Base\Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() > 0) {
-            return new $this->model($stmt->fetch());
+            return new $this->dataobject($stmt->fetch());
         }
         return null;
     }

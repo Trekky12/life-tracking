@@ -5,7 +5,7 @@ namespace App\Board\Label;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = "boards_labels";
-    protected $model = "\App\Board\Label\Label";
+    protected $dataobject = \App\Board\Label\Label::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = true;
 
@@ -20,7 +20,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

@@ -5,7 +5,7 @@ namespace App\Location;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'locations';
-    protected $model = '\App\Location\Location';
+    protected $dataobject = \App\Location\Location::class;
 
     public function getMarkers($from, $to) {
         $bindings = ["from" => $from, "to" => $to];
@@ -19,7 +19,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

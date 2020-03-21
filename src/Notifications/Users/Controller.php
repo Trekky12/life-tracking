@@ -16,18 +16,16 @@ use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
-    protected $module = "notifications";
-
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
-    }
-
-    public function getCategoriesByUser() {
-        $user = $this->current_user->getUser();
-        return $this->mapper->getCategoriesByUser($user->id);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            NotificationUsersService $service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
     }
 
     public function setCategoryforUser(Request $request, Response $response) {
@@ -37,13 +35,7 @@ class Controller extends \App\Base\Controller {
         $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
-        $user = $this->current_user->getUser();
-
-        if ($type == 1) {
-            $this->mapper->addCategory($user->id, $category);
-        } else {
-            $this->mapper->deleteCategory($user->id, $category);
-        }
+        $this->service->setCategoryForUser($category, $type);
 
         return $response->withJson($result);
     }

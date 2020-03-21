@@ -6,50 +6,48 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Main\UserHelper;
-use App\Activity\Controller as Activity;
+use App\Main\LoginService;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
 use Slim\Csrf\Guard as CSRF;
-use App\Base\Settings;
-use App\Base\CurrentUser;
-use Dubture\Monolog\Reader\LogReader;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
+use App\Base\CurrentUser;
 
 class MainController extends \App\Base\Controller {
 
     protected $csrf;
-    protected $settings_mapper;
-    protected $recurring_ctrl;
-    protected $card_ctrl;
-    protected $token_ctrl;
-    protected $user_helper;
-    protected $current_user;
+    protected $login_service;
+    private $current_user;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, UserHelper $user_helper, CurrentUser $current_user, CSRF $csrf) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            MainService $service,
+            LoginService $login_service,
+            CurrentUser $current_user,
+            CSRF $csrf) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+
+        $this->service = $service;
+        $this->login_service = $login_service;
         $this->csrf = $csrf;
-        $this->user_helper = $user_helper;
         $this->current_user = $current_user;
-
-        $this->settings_mapper = new \App\Settings\SettingsMapper($this->db, $this->translation);
-        $this->recurring_ctrl = new \App\Finances\Recurring\Controller($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-        $this->card_ctrl = new \App\Board\Card\Controller($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-        $this->token_ctrl = new \App\User\Token\Controller($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
     }
 
     public function index(Request $request, Response $response) {
         $pwa = $request->getQueryParam('pwa', null);
+
+        $user_start_page = $this->service->getUserStartPage();
         // is PWA? redirect to start page
-        if (!is_null($pwa)) {
-            $user = $this->current_user->getUser();
-            if (!is_null($user) && !empty($user->start_url)) {
-                return $response->withRedirect($user->start_url, 301);
-            }
+        if (!is_null($pwa) && !is_null($user_start_page)) {
+            return $response->withRedirect($user_start_page, 301);
         }
 
         return $this->twig->render($response, 'main/index.twig', []);
@@ -69,8 +67,8 @@ class MainController extends \App\Base\Controller {
             $username = array_key_exists('username', $data) ? filter_var($data['username'], FILTER_SANITIZE_STRING) : null;
             $password = array_key_exists('password', $data) ? filter_var($data['password'], FILTER_SANITIZE_STRING) : null;
 
-            if ($this->user_helper->checkLogin($username, $password)) {
-                $token = $this->user_helper->saveToken();
+            if ($this->login_service->checkLogin($username, $password)) {
+                $token = $this->login_service->saveToken();
 
                 // add token to cookie
                 $cookie = SetCookie::create('token')
@@ -95,7 +93,7 @@ class MainController extends \App\Base\Controller {
 
         // remove token from database and cookies
         $token = FigRequestCookies::get($request, 'token');
-        $this->user_helper->removeToken($token->getValue());
+        $this->login_service->removeToken($token->getValue());
         $response = FigResponseCookies::expire($response, 'token');
 
         return $response->withRedirect($this->router->urlFor('login'), 302);
@@ -103,41 +101,8 @@ class MainController extends \App\Base\Controller {
 
     public function cron(Request $request, Response $response) {
 
-        $this->logger->addInfo('Running CRON');
+        $response_data = $this->service->cron();
 
-        $lastRunRecurring = $this->settings_mapper->getSetting("lastRunRecurring");
-        $lastRunFinanceSummary = $this->settings_mapper->getSetting("lastRunFinanceSummary");
-        $lastRunCardReminder = $this->settings_mapper->getSetting("lastRunCardReminder");
-
-        $date = new \DateTime('now');
-
-        // Update recurring finances @ 06:00
-        if ($date->format("H") === "06" && $lastRunRecurring->getDayDiff() > 0) {
-            $this->logger->addNotice('CRON - Update Finances');
-
-            $this->recurring_ctrl->update();
-            $this->settings_mapper->updateLastRun("lastRunRecurring");
-        }
-
-        // Is first of month @ 08:00? Send Finance Summary
-        if ($date->format("d") === "01" && $date->format("H") === "08" && $lastRunFinanceSummary->getDayDiff() > 0) {
-            $this->logger->addNotice('CRON - Send Finance Summary');
-
-            $this->recurring_ctrl->sendSummary();
-            $this->settings_mapper->updateLastRun("lastRunFinanceSummary");
-        }
-
-        // card reminder @ 09:00
-        if ($date->format("H") === "09" && $lastRunCardReminder->getDayDiff() > 0) {
-            $this->logger->addNotice('CRON - Send Card Reminder');
-
-            $this->card_ctrl->reminder();
-            $this->settings_mapper->updateLastRun("lastRunCardReminder");
-
-//            $this->token_ctrl->deleteOldTokens();
-        }
-
-        $response_data = ['result' => 'success'];
         return $response->withJSON($response_data);
     }
 
@@ -146,56 +111,7 @@ class MainController extends \App\Base\Controller {
         // GET Param 'days'
         $days = intval(filter_var($request->getQueryParam('days', 1), FILTER_SANITIZE_NUMBER_INT));
 
-        $reader = new LogReader($this->settings->all()['logger']['path'], $days);
-
-        /**
-         * We have a minus in the logger-name so we need a custom pattern
-         */
-        //$pattern = '/\[(?P<date>.*)\] (?P<logger>[\w\-]+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
-        $pattern = '/\[(?P<date>.*)\] (?P<logger>[\w\-]+).(?P<level>\w+): (?P<message>[^\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
-        $reader->getParser()->registerPattern('life-tracking', $pattern);
-        $reader->setPattern('life-tracking');
-
-        $logfile = array();
-
-        foreach ($reader as $log) {
-
-            // do not show datatable queries
-            if (!empty($log)) {
-
-                $line = array();
-
-                /**
-                 * Get Username
-                 */
-                $user = "";
-                if (array_key_exists("user", $log["extra"]) && !is_null($log["extra"]["user"])) {
-                    $user = $log["extra"]["user"];
-                } elseif (array_key_exists("login", $log["context"])) {
-                    $user = $log["context"]["login"];
-                }
-
-                // Remove surrounding "Array ( ... )'
-                $regex = '/^Array\s*\((.*)?\)\s*$/s';
-
-                $line["user"] = $user;
-                $line["date"] = $log['date']->format('Y-m-d H:i:s');
-                $line["level"] = $log['level'];
-                $line["message"] = $log['message'];
-                $line["extra"] = preg_replace($regex, '$1', print_r($log['extra'], true));
-                $line["context"] = !empty($log["context"]) ? preg_replace($regex, '$1', print_r($log['context'], true)) : null;
-                $line["url"] = array_key_exists("url", $log['extra']) ? $log['extra']["url"] : null;
-                $line["hide"] = strpos($line["url"], "datatable=1") == 0 ? false : true;
-
-                if (strlen($line["url"]) > 100 && array_key_exists("query", $log['extra'])) {
-                    $line["url"] = str_replace($log['extra']["query"], "...", $line["url"]);
-                }
-
-                $line["query"] = array_key_exists("query", $log['extra']) ? $log['extra']["query"] : null;
-
-                array_push($logfile, $line);
-            }
-        }
+        $logfile = $this->service->getLogfile($days);
 
         return $this->twig->render($response, 'main/logfile.twig', array("logfile" => $logfile));
     }

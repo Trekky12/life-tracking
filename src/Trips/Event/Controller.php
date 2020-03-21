@@ -6,133 +6,48 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
-use Intervention\Image\ImageManagerStatic as Image;
+use App\Trips\TripService;
+use App\Main\Utility\DateUtility;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Trips\Event\Event';
-    protected $parent_model = '\App\Trips\Trip';
-    protected $index_route = 'trips_view';
-    protected $edit_template = 'trips/events/edit.twig';
-    protected $element_view_route = 'trips_view';
-    protected $module = "trips";
-    private $trip_mapper;
+    private $trip_service;
+    private $trip_event_image_service;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
-        $this->trip_mapper = new \App\Trips\Mapper($this->db, $this->translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            TripEventService $service,
+            TripService $trip_service,
+            TripEventImageService $trip_event_image_service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
+        $this->trip_service = $trip_service;
+        $this->trip_event_image_service = $trip_event_image_service;
     }
 
     public function index(Request $request, Response $response) {
 
         $hash = $request->getAttribute('trip');
-        $trip = $this->trip_mapper->getFromHash($hash);
+        $trip = $this->trip_service->getFromHash($hash);
 
-        $this->checkAccess($trip->id);
+        if (!$this->trip_service->isMember($trip->id)) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
 
         $data = $request->getQueryParams();
-        list($from, $to) = $this->helper->getDateRange($data, null, null);
+        list($from, $to) = DateUtility::getDateRange($data, null, null);
 
-        // always show all events (hide the one not in range)
-        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time, position");
+        $response_data = $this->service->getTripEvents($trip, $from, $to);
 
-        list($min, $max) = $this->mapper->getMinMaxEventsDate($trip->id);
-
-        $dateInterval = [];
-        if (!is_null($min) && !is_null($max)) {
-            // add last day
-            $dateMax = new \DateTime($max);
-            $dateMax->add(new \DateInterval('P1D'));
-
-            $dateInterval = new \DatePeriod(
-                    new \DateTime($min),
-                    new \DateInterval('P1D'),
-                    $dateMax
-            );
-        }
-
-        $language = $this->settings->getAppSettings()['i18n']['php'];
-        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt2 = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt->setPattern($dateFormatPHP["trips_buttons"]);
-        $fmt2->setPattern($dateFormatPHP["trips_list"]);
-
-        $dateRange = [];
-        $dateRange['all'] = ["date" => null, "display_date" => $this->translation->getTranslatedString("TRIPS_OVERVIEW"), "events" => []];
-        foreach ($dateInterval as $d) {
-            $date = $d->format('Y-m-d');
-            $dateRange[$date] = ["date" => $date, "display_date" => $fmt->format($d), "full_date" => $fmt2->format($d), "events" => [], "active" => false];
-        }
-
-        if (!empty($from)) {
-            $dateRange[$from]["active"] = true;
-        } elseif (array_key_exists(date('Y-m-d'), $dateRange)) {
-            $dateRange[date('Y-m-d')]["active"] = true;
-        } else {
-            $dateRange["all"]["active"] = true;
-        }
-
-
-        $dateFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $timeFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $datetimeFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $dateFormatter->setPattern($dateFormatPHP['date']);
-        $timeFormatter->setPattern($dateFormatPHP['time']);
-        $datetimeFormatter->setPattern($dateFormatPHP['datetime']);
-
-        $fromTranslation = $this->translation->getTranslatedString("FROM");
-        $toTranslation = $this->translation->getTranslatedString("TO");
-
-        foreach ($events as $ev) {
-
-            if (empty($ev->start_date) && empty($ev->end_date)) {
-                $dateRange["all"]["events"][] = $ev;
-                continue;
-            }
-
-            $end_date = !empty($ev->end_date) ? $ev->end_date : $ev->start_date;
-            $end = new \DateTime($end_date);
-            $end->add(new \DateInterval('P1D'));
-
-            $interval = new \DatePeriod(
-                    new \DateTime($ev->start_date),
-                    new \DateInterval('P1D'),
-                    $end
-            );
-
-            foreach ($interval as $event_date) {
-                $datekey = $event_date->format('Y-m-d');
-
-                $dateRange[$datekey]["events"][] = $ev;
-            }
-
-            // create Popup
-            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
-        }
-
-        $mapbox_token = $this->settings->getAppSettings()['mapbox_token'];
-
-        return $this->twig->render($response, 'trips/events/index.twig', [
-                    "events" => $events,
-                    "trip" => $trip,
-                    "isTrips" => true,
-                    "from" => $from,
-                    "to" => $to,
-                    "range" => $dateRange,
-                    "mapbox_token" => $mapbox_token
-        ]);
+        return $this->twig->render($response, 'trips/events/index.twig', $response_data);
     }
 
     public function edit(Request $request, Response $response) {
@@ -140,22 +55,21 @@ class Controller extends \App\Base\Controller {
         $entry_id = $request->getAttribute('id');
 
         $hash = $request->getAttribute('trip');
-        $trip = $this->trip_mapper->getFromHash($hash);
+        $trip = $this->trip_service->getFromHash($hash);
 
-        $entry = null;
-        if (!empty($entry_id)) {
-            $entry = $this->mapper->get($entry_id);
+        if (!$this->trip_service->isMember($trip->id)) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
 
+        $entry = $this->service->getEntry($entry_id);
+
         $data = $request->getQueryParams();
-        list($from, $to) = $this->helper->getDateRange($data, null, null);
+        list($from, $to) = DateUtility::getDateRange($data, null, null);
 
-        $this->preEdit($entry_id, $request);
-
-        return $this->twig->render($response, $this->edit_template, [
+        return $this->twig->render($response, 'trips/events/edit.twig', [
                     'entry' => $entry,
                     'trip' => $trip,
-                    'types' => self::eventTypes(),
+                    'types' => $this->service->getEventTypes(),
                     'from' => $from,
                     'to' => $to,
                     "isTripEventEdit" => true
@@ -165,35 +79,16 @@ class Controller extends \App\Base\Controller {
     public function getMarkers(Request $request, Response $response) {
 
         $hash = $request->getAttribute('trip');
-        $trip = $this->trip_mapper->getFromHash($hash);
+        $trip = $this->trip_service->getFromHash($hash);
 
-        $this->checkAccess($trip->id);
+        if (!$this->trip_service->isMember($trip->id)) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
 
         $data = $request->getQueryParams();
-        list($from, $to) = $this->helper->getDateRange($data, null, null);
+        list($from, $to) = DateUtility::getDateRange($data, null, null);
 
-        $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time, position");
-
-
-        $language = $this->settings->getAppSettings()['i18n']['php'];
-        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-
-        $dateFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $timeFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $datetimeFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $dateFormatter->setPattern($dateFormatPHP['date']);
-        $timeFormatter->setPattern($dateFormatPHP['time']);
-        $datetimeFormatter->setPattern($dateFormatPHP['datetime']);
-
-        $fromTranslation = $this->translation->getTranslatedString("FROM");
-        $toTranslation = $this->translation->getTranslatedString("TO");
-
-        $markers = [];
-        foreach ($events as $ev) {
-            // create Popup
-            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>');
-            $markers[] = $ev->getPosition();
-        }
+        $markers = $this->service->getMarkers($trip, $from, $to);
 
         return $response->withJSON($markers);
     }
@@ -207,135 +102,76 @@ class Controller extends \App\Base\Controller {
 
         if (!is_null($address)) {
 
-            $query = 'https://nominatim.openstreetmap.org/search?format=json&q=' . urlencode($address);
-
-            list($status, $result) = $this->helper->request($query);
-
-            if ($status == 200) {
+            $result = $this->service->getLocation($address);
+            if ($result !== false) {
                 $response_data['status'] = 'success';
-                $result = json_decode($result, true);
-                if (is_array($result)) {
-                    $response_data['data'] = $result;
-                }
+                $response_data['data'] = $result;
             }
         }
 
         return $response->withJson($response_data);
     }
 
-    protected function afterSave($id, array $data, Request $request) {
-        $entry = $this->mapper->get($id);
-        $trip_id = $entry->trip;
-        $trip = $this->trip_mapper->get($trip_id);
-        $this->index_params = ["trip" => $trip->getHash()];
-    }
+    public function save(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
 
-    /**
-     * Does the user have access to this dataset?
-     */
-    protected function preSave($id, array &$data, Request $request) {
         $trip_hash = $request->getAttribute("trip");
-        $entry = $this->trip_mapper->getFromHash($trip_hash);
-        $this->checkAccess($entry->id);
+        $trip = $this->trip_service->getFromHash($trip_hash);
 
-        $data['trip'] = $entry->id;
-    }
-
-    protected function preEdit($id, Request $request) {
-        $trip_hash = $request->getAttribute("trip");
-        $entry = $this->trip_mapper->getFromHash($trip_hash);
-        $this->checkAccess($entry->id);
-    }
-
-    protected function preDelete($id, Request $request) {
-        $trip_hash = $request->getAttribute("trip");
-        $entry = $this->trip_mapper->getFromHash($trip_hash);
-        $this->checkAccess($entry->id);
-    }
-
-    /**
-     * Is the user allowed to view event overview
-     */
-    private function checkAccess($id) {
-        $trip_users = $this->trip_mapper->getUsers($id);
-        $user = $this->current_user->getUser()->id;
-        if (!in_array($user, $trip_users)) {
+        if (!$this->trip_service->isMember($trip->id)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
-    }
 
-    public static function eventTypes() {
-        return [
-            "EVENT",
-            "HOTEL",
-            "FLIGHT",
-            "DRIVE",
-            "TRAINRIDE",
-            "CARRENTAL",
-        ];
-    }
+        $data['trip'] = $trip->id;
 
-    protected function getElementViewRoute($entry) {
-        $trip = $this->getParentObjectMapper()->get($entry->getParentID());
-        $this->element_view_route_params["trip"] = $trip->getHash();
-        return parent::getElementViewRoute($entry);
-    }
+        $new_id = $this->doSave($id, $data, null);
 
-    protected function getParentObjectMapper() {
-        return $this->trip_mapper;
+        $redirect_url = $this->router->urlFor('trips_view', ["trip" => $trip_hash]);
+        return $response->withRedirect($redirect_url, 301);
+    }
+    
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+
+        $trip_hash = $request->getAttribute("trip");
+        $trip = $this->trip_service->getFromHash($trip_hash);
+
+        if (!$this->trip_service->isMember($trip->id)) {
+            $response_data = ['is_deleted' => false, 'error' => $this->translation->getTranslatedString('NO_ACCESS')];
+        } else {
+            $response_data = $this->doDelete($id);
+        }
+        return $response->withJson($response_data);
     }
 
     public function image(Request $request, Response $response) {
 
-        $user = $this->current_user->getUser();
-
-        $entry_id = $request->getAttribute('id');
-        $entry = $this->mapper->get($entry_id);
+        $event_id = $request->getAttribute('id');
 
         $response_data = ["status" => "error"];
         $files = $request->getUploadedFiles();
 
         if (!array_key_exists('image', $files) || empty($files['image'])) {
-            $this->logger->addError("Update Event Image, Image Error", array("user" => $user->id, "id" => $entry_id, "files" => $files));
+            $this->logger->addError("Update Event Image, Image Error", array("id" => $event_id, "files" => $files));
 
             $response_data["status"] = "error";
         }
 
         $image = $files['image'];
 
-        if ($image->getError() === UPLOAD_ERR_OK) {
+        $thumbnail = $this->trip_event_image_service->saveImage($event_id, $image);
 
-            $folder = $this->settings->getAppSettings()['upload_folder'];
+        if ($thumbnail !== false) {
 
-            $uploadFileName = $image->getClientFilename();
-            $file_extension = pathinfo($uploadFileName, PATHINFO_EXTENSION);
-            $file_wo_extension = pathinfo($uploadFileName, PATHINFO_FILENAME);
-            $file_name = hash('sha256', time() . rand(0, 1000000) . $user->id) . '_' . $file_wo_extension;
-            $complete_file_name = $folder . '/events/' . $file_name;
-
-            $image->moveTo($complete_file_name . '.' . $file_extension);
-            /**
-             * Create Thumbnail
-             */
-            $img = Image::make($complete_file_name . '.' . $file_extension);
-            /**
-             * @link http://image.intervention.io/api/resize
-             */
-            $img->resize(200, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-            $img->save($complete_file_name . '-small.' . $file_extension);
-
-            $this->mapper->update_image($entry->id, $file_name . '.' . $file_extension);
-
-            $this->logger->addNotice("Update Event Image, Image Set", array("user" => $user->id, "id" => $entry_id, "image" => $file_name . '.' . $file_extension));
+            $this->logger->addNotice("Update Event Image, Image Set", array("id" => $event_id, "image" => $image->getClientFilename()));
 
             $response_data["status"] = "success";
-            $response_data["thumbnail"] = "/" . $folder . "/events/" . $file_name . '-small.' . $file_extension;
-        } else if ($image->getError() === UPLOAD_ERR_NO_FILE) {
+            $response_data["thumbnail"] = $thumbnail;
+        } else {
             $response_data["status"] = "error";
 
-            $this->logger->addNotice("Update Event Image, No File", array("user" => $user->id, "id" => $entry_id));
+            $this->logger->addNotice("Update Event Image, No File", array("id" => $event_id));
         }
 
         return $response->withJson($response_data);
@@ -343,20 +179,10 @@ class Controller extends \App\Base\Controller {
 
     public function image_delete(Request $request, Response $response) {
 
-        $user = $this->current_user->getUser();
+        $event_id = $request->getAttribute('id');
+        $this->trip_event_image_service->deleteImage($event_id);
 
-        $entry_id = $request->getAttribute('id');
-        $entry = $this->mapper->get($entry_id);
-
-        $folder = $this->settings->getAppSettings()['upload_folder'];
-        $thumbnail = $entry->get_thumbnail('small');
-        $image = $entry->get_image();
-        unlink($folder . '/events/' . $thumbnail);
-        unlink($folder . '/events/' . $image);
-
-        $this->mapper->update_image($entry->id, null);
-
-        $this->logger->addNotice("Delete Event Image", array("user" => $user->id, "id" => $entry_id));
+        $this->logger->addNotice("Delete Event Image", array("id" => $event_id));
 
         $response_data = ["status" => "success"];
         return $response->withJson($response_data);
@@ -367,16 +193,11 @@ class Controller extends \App\Base\Controller {
 
         try {
 
-            $user = $this->current_user->getUser()->id;
-            //$user_cards = $this->board_mapper->getUserCards($user);
-
             if (array_key_exists("events", $data) && !empty($data["events"])) {
 
-                foreach ($data['events'] as $position => $item) {
-                    //if (in_array($item, $user_cards)) {
-                    $this->mapper->updatePosition($item, $position, $user);
-                    //}
-                }
+                $events = filter_var_array($data["events"], FILTER_SANITIZE_NUMBER_INT);
+                $this->service->changePosition($events);
+
                 $response_data = ["status" => "success"];
                 return $response->withJSON($response_data);
             }

@@ -6,38 +6,41 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
+use App\Crawler\CrawlerService;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Crawler\CrawlerLink\CrawlerLink';
-    protected $parent_model = '\App\Crawler\Crawler';
-    protected $index_route = 'crawlers_links';
-    protected $edit_template = 'crawlers/links/edit.twig';
-    protected $element_view_route = 'crawlers_links_edit';
-    protected $module = "crawlers";
-    private $crawler_mapper;
+    private $crawler_service;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            CrawlerLinkService $service,
+            CrawlerService $crawler_service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
+        $this->crawler_service = $crawler_service;
 
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
-        $this->crawler_mapper = new \App\Crawler\Mapper($this->db, $this->translation, $current_user);
+        $this->service->setParentObjectService($crawler_service);
     }
 
     public function index(Request $request, Response $response) {
         $crawler_hash = $request->getAttribute('crawler');
-        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
-        $this->allowCrawlerOwnerOnly($crawler);
 
-        $links = $this->mapper->getFromCrawler($crawler->id);
+        $crawler = $this->crawler_service->getFromHash($crawler_hash);
+
+        if (!$this->crawler_service->isOwner($crawler->id)) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
+
+        $links = $this->service->getFromCrawler($crawler->id);
         return $this->twig->render($response, 'crawlers/links/index.twig', ['links' => $links, "crawler" => $crawler]);
     }
 
@@ -45,65 +48,51 @@ class Controller extends \App\Base\Controller {
 
         $entry_id = $request->getAttribute('id');
         $crawler_hash = $request->getAttribute('crawler');
-        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
 
-        $entry = null;
-        if (!empty($entry_id)) {
-            $entry = $this->mapper->get($entry_id);
-        }
+        $crawler = $this->crawler_service->getFromHash($crawler_hash);
 
-        $links = $this->mapper->getFromCrawler($crawler->id, 'position');
-
-        $this->preEdit($entry_id, $request);
-
-        return $this->twig->render($response, $this->edit_template, ['entry' => $entry, 'crawler' => $crawler, 'links' => $links]);
-    }
-
-    protected function afterSave($id, array $data, Request $request) {
-        $entry = $this->mapper->get($id);
-        $crawler_id = $entry->crawler;
-        $crawler = $this->crawler_mapper->get($crawler_id);
-        $this->index_params = ["crawler" => $crawler->getHash()];
-    }
-
-    /**
-     * Does the user have access to this dataset?
-     */
-    protected function preSave($id, array &$data, Request $request) {
-        $crawler_hash = $request->getAttribute("crawler");
-        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
-        $this->allowCrawlerOwnerOnly($crawler);
-
-        $data['crawler'] = $crawler->id;
-    }
-
-    protected function preEdit($id, Request $request) {
-        $crawler_hash = $request->getAttribute("crawler");
-        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
-        $this->allowCrawlerOwnerOnly($crawler);
-    }
-
-    protected function preDelete($id, Request $request) {
-        $crawler_hash = $request->getAttribute("crawler");
-        $crawler = $this->crawler_mapper->getFromHash($crawler_hash);
-        $this->allowCrawlerOwnerOnly($crawler);
-    }
-
-    private function allowCrawlerOwnerOnly($crawler) {
-        $user = $this->current_user->getUser()->id;
-        if ($crawler->user !== $user) {
+        if (!$this->crawler_service->isOwner($crawler->id)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
+
+        $entry = $this->service->getEntry($entry_id);
+
+        $links = $this->service->getFromCrawler($crawler->id, 'position');
+
+        return $this->twig->render($response, 'crawlers/links/edit.twig', ['entry' => $entry, 'crawler' => $crawler, 'links' => $links]);
+    }
+    
+    public function save(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
+        
+        $crawler_hash = $request->getAttribute("crawler");
+        $crawler = $this->crawler_service->getFromHash($crawler_hash);
+
+        if (!$this->crawler_service->isOwner($crawler->id)) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
+
+        $data['crawler'] = $crawler->id;
+
+        $new_id = $this->doSave($id, $data, null);
+
+        $redirect_url = $this->router->urlFor('crawlers_links', ["crawler" => $crawler_hash]);
+        return $response->withRedirect($redirect_url, 301);
     }
 
-    protected function getElementViewRoute($entry) {
-        $crawler = $this->getParentObjectMapper()->get($entry->getParentID());
-        $this->element_view_route_params["crawler"] = $crawler->getHash();
-        return parent::getElementViewRoute($entry);
-    }
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
 
-    protected function getParentObjectMapper() {
-        return $this->crawler_mapper;
+        $crawler_hash = $request->getAttribute("crawler");
+        $crawler = $this->crawler_service->getFromHash($crawler_hash);
+
+        if (!$this->crawler_service->isOwner($crawler->id)) {
+            $response_data = ['is_deleted' => false, 'error' => $this->translation->getTranslatedString('NO_ACCESS')];
+        } else {
+            $response_data = $this->doDelete($id);
+        }
+        return $response->withJson($response_data);
     }
 
 }

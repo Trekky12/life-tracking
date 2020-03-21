@@ -5,7 +5,7 @@ namespace App\Finances\Category;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'finances_categories';
-    protected $model = '\App\Finances\Category\Category';
+    protected $dataobject = \App\Finances\Category\Category::class;
 
     public function set_default($default) {
         $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id = :id";

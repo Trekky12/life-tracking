@@ -5,9 +5,27 @@ namespace App\Board\Stack;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = "boards_stacks";
-    protected $model = "\App\Board\Stack\Stack";
+    protected $dataobject = \App\Board\Stack\Stack::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
+    protected $user_table = "boards_user";
+
+    public function getUserStacks($id) {
+        $sql = "SELECT st.id FROM " . $this->getTableName($this->user_table) . " ub, " . $this->getTableName() . " st "
+                . " WHERE ub.user = :id "
+                . " AND st.board = ub.board";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($el = $stmt->fetchColumn()) {
+            $results[] = intval($el);
+        }
+        return $results;
+    }
 
     public function getStacksFromBoard($board, $archive = 0) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE board = :board ";
@@ -28,7 +46,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[$key] = new $this->model($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

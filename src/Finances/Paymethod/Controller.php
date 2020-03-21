@@ -6,47 +6,51 @@ use Slim\Http\ServerRequest as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Activity\Controller as Activity;
 use Slim\Flash\Messages as Flash;
 use App\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Base\Settings;
-use App\Base\CurrentUser;
 
 class Controller extends \App\Base\Controller {
 
-    protected $model = '\App\Finances\Paymethod\Paymethod';
-    protected $index_route = 'finances_paymethod';
-    protected $edit_template = 'finances/paymethod/edit.twig';
-    protected $element_view_route = 'finances_paymethod_edit';
-    protected $module = "finances";
-
-    public function __construct(LoggerInterface $logger, Twig $twig, Helper $helper, Flash $flash, RouteParser $router, Settings $settings, \PDO $db, Activity $activity, Translator $translation, CurrentUser $current_user) {
-        parent::__construct($logger, $twig, $helper, $flash, $router, $settings, $db, $activity, $translation, $current_user);
-
-
-        $this->mapper = new Mapper($this->db, $this->translation, $current_user);
+    public function __construct(LoggerInterface $logger,
+            Twig $twig,
+            Flash $flash,
+            RouteParser $router,
+            Translator $translation,
+            PaymethodService $service) {
+        parent::__construct($logger, $flash, $translation);
+        $this->twig = $twig;
+        $this->router = $router;
+        $this->service = $service;
     }
 
     public function index(Request $request, Response $response) {
-        $paymethods = $this->mapper->getAll('name');
+        $paymethods = $this->service->getAllPaymethodsOrderedByName();
         return $this->twig->render($response, 'finances/paymethod/index.twig', ['paymethods' => $paymethods]);
     }
 
-    protected function afterSave($id, array $data, Request $request) {
-        $method = $this->mapper->get($id);
+    public function edit(Request $request, Response $response) {
+        $entry_id = $request->getAttribute('id');
+        $entry = $this->service->getEntry($entry_id);
+        return $this->twig->render($response, 'finances/paymethod/edit.twig', ['entry' => $entry]);
+    }
 
-        // Set all other non-default, since there can only be one default category
-        if ($method->is_default == 1) {
-            $this->mapper->unset_default($id);
-        }
+    public function save(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $data = $request->getParsedBody();
 
-        // when there is no default make this the default
-        $default = $this->mapper->get_default();
-        if (is_null($default)) {
-            $this->mapper->set_default($id);
-        }
+        $new_id = $this->doSave($id, $data, null);
+
+        $this->service->setDefaultPaymethodWhenNotSet($new_id);
+
+        $redirect_url = $this->router->urlFor('finances_paymethod');
+        return $response->withRedirect($redirect_url, 301);
+    }
+
+    public function delete(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $response_data = $this->doDelete($id);
+        return $response->withJson($response_data);
     }
 
 }

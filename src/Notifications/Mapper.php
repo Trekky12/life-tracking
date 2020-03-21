@@ -5,7 +5,7 @@ namespace App\Notifications;
 class Mapper extends \App\Base\Mapper {
 
     protected $table = 'notifications';
-    protected $model = '\App\Notifications\Notification';
+    protected $dataobject = \App\Notifications\Notification::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = true;
 
@@ -20,7 +20,7 @@ class Mapper extends \App\Base\Mapper {
         $results = [];
         while ($row = $stmt->fetch()) {
             $key = reset($row);
-            $results[] = new $this->model($row);
+            $results[] = new $this->dataobject($row);
         }
         return $results;
     }

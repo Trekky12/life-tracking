@@ -8,27 +8,26 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 use Psr\Log\LoggerInterface;
-use App\Main\Helper;
-use App\Main\UserHelper;
+use App\Main\LoginService;
 use Slim\Routing\RouteParser;
 use App\Base\Settings;
 use App\Base\CurrentUser;
+use App\Main\Utility\SessionUtility;
+use App\Main\Utility\Utility;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 
 class UserMiddleware {
 
     protected $logger;
-    protected $helper;
-    protected $user_helper;
+    protected $login_service;
     protected $router;
     protected $settings;
     protected $current_user;
 
-    public function __construct(LoggerInterface $logger, Helper $helper, UserHelper $user_helper, RouteParser $router, Settings $settings, CurrentUser $current_user) {
+    public function __construct(LoggerInterface $logger, LoginService $login_service, RouteParser $router, Settings $settings, CurrentUser $current_user) {
         $this->logger = $logger;
-        $this->helper = $helper;
-        $this->user_helper = $user_helper;
+        $this->login_service = $login_service;
         $this->router = $router;
         $this->settings = $settings;
         $this->current_user = $current_user;
@@ -42,7 +41,7 @@ class UserMiddleware {
          * Get and Cache User Object from Token for later use
          */
         $token = FigRequestCookies::get($request, 'token');
-        if (!$this->user_helper->setUserFromToken($token->getValue())) {
+        if (!$this->login_service->setUserFromToken($token->getValue())) {
             // token not in database -> delete cookie
             $response = FigResponseCookies::expire($response, 'token');
         }
@@ -90,7 +89,7 @@ class UserMiddleware {
 
             if (!is_null($username) && !is_null($password)) {
                 $this->logger->addDebug('HTTP Auth', array("user" => $username));
-                if ($this->user_helper->checkLogin($username, $password)) {
+                if ($this->login_service->checkLogin($username, $password)) {
                     return $handler->handle($request);
                 }
 
@@ -103,8 +102,8 @@ class UserMiddleware {
         /**
          * Save target URI for later redirect
          */
-        $uri = $this->helper->getRequestURI($request);
-        $this->helper->setSessionVar("redirectURI", $uri);
+        $uri = Utility::getRequestURI($request);
+        SessionUtility::setSessionVar("redirectURI", $uri);
 
         // redirect to the login page
         return $response->withHeader('Location', $this->router->urlFor('login'))->withStatus(302);

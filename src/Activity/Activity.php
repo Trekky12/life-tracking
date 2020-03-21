@@ -2,9 +2,9 @@
 
 namespace App\Activity;
 
-class Activity extends \App\Base\Model {
+class Activity extends \App\Base\DataObject {
 
-    static $MODEL_NAME = "MODEL_ACTIVITY";
+    static $NAME = "DATAOBJECT_ACTIVITY";
 
     public function parseData(array $data) {
 
