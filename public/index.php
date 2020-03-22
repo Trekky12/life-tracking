@@ -10,7 +10,7 @@ if (PHP_SAPI == 'cli-server') {
 
 session_start();
 
-$app = require __DIR__ . '/../src/app.php';
+$app = require __DIR__ . '/../config/app.php';
 
 // Run app
 $app->run();

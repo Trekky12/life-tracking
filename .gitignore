@@ -4,7 +4,7 @@
 /node_modules/
 /bower_components/
 composer.phar
-/src/settings.php
+/config/settings.php
 
 /public/uploads/profile/*
 !/public/uploads/profile/.gitkeep 

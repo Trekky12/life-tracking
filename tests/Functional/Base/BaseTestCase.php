@@ -233,7 +233,7 @@ class BaseTestCase extends TestCase {
     }
 
     protected function getSettings() {
-        return require __DIR__ . '/../../../src/settings.php';
+        return require __DIR__ . '/../../../config/settings.php';
     }
 
     protected function getAppSettings() {

@@ -16,8 +16,10 @@
                 <div class="form-group">
                     <label for="clone">{{lang["CLONE_CRAWLER_HEADLINES_FROM"]}}</label>
                     <select class="form-control" id="clone" name="clone">
-                        {% for key, cr in crawlers if cr.user == user.id and key != crawler.id  %}
-                            <option value="{{key}}">{{cr.name}}</option>
+                        {% for cr in crawlers %}
+                            {% if cr.user == user.id and cr.id != crawler.id  %}
+                                <option value="{{cr.id}}">{{cr.name}}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
