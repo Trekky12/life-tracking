@@ -2,48 +2,53 @@
 
 namespace App\Domain\Finances;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
 use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Assignment\AssignmentService;
+use App\Domain\Finances\Paymethod\PaymethodService;
 
-class FinancesService extends \App\Domain\Service {
+class FinancesService extends GeneralService {
 
-    protected $module = "finances";
-    protected $dataobject = \App\Domain\Finances\FinancesEntry::class;
+    private $translation;
+    private $router;
+    protected $mapper;
     private $cat_service;
     private $cat_assignments_service;
+    private $paymethod_service;
 
     public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
             CurrentUser $user,
-            Mapper $finance_mapper,
+            Translator $translation,
+            RouteParser $router,
+            FinancesMapper $finance_mapper,
             CategoryService $cat_service,
-            AssignmentService $cat_assignments_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
+            AssignmentService $cat_assignments_service,
+            PaymethodService $paymethod_service) {
+        parent::__construct($logger, $user);
 
+        $this->translation = $translation;
+        $this->router = $router;
         $this->mapper = $finance_mapper;
         $this->cat_service = $cat_service;
         $this->cat_assignments_service = $cat_assignments_service;
+        $this->paymethod_service = $paymethod_service;
     }
 
     public function financeTableIndex($from, $to, $count = 10) {
 
-        $list = $this->mapper->getTableData($from, $to, 0, 'DESC', $count);
+        $list = $this->getMapper()->getTableData($from, $to, 0, 'DESC', $count);
         $table = $this->renderTableRows($list);
-        $datacount = $this->mapper->tableCount($from, $to);
+        $datacount = $this->getMapper()->tableCount($from, $to);
 
-        $range = $this->mapper->getMinMaxDate();
+        $range = $this->getMapper()->getMinMaxDate();
         $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
-        $recordSum = round($this->mapper->tableSum($from, $to, 0) - $this->mapper->tableSum($from, $to, 1), 2);
+        $recordSum = round($this->getMapper()->tableSum($from, $to, 0) - $this->getMapper()->tableSum($from, $to, 1), 2);
 
         return [
             "list" => $table,
@@ -56,7 +61,7 @@ class FinancesService extends \App\Domain\Service {
         ];
     }
 
-    public function table($from, $to, $requestData) {
+    public function table($from, $to, $requestData): Payload {
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -68,13 +73,13 @@ class FinancesService extends \App\Domain\Service {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $recordsTotal = $this->mapper->tableCount($from, $to);
-        $recordsFiltered = $this->mapper->tableCount($from, $to, $searchQuery);
+        $recordsTotal = $this->getMapper()->tableCount($from, $to);
+        $recordsFiltered = $this->getMapper()->tableCount($from, $to, $searchQuery);
 
         // subtract expenses from income
-        $recordSum = round($this->mapper->tableSum($from, $to, 0, $searchQuery) - $this->mapper->tableSum($from, $to, 1, $searchQuery), 2);
+        $recordSum = round($this->getMapper()->tableSum($from, $to, 0, $searchQuery) - $this->getMapper()->tableSum($from, $to, 1, $searchQuery), 2);
 
-        $data = $this->mapper->getTableData($from, $to, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->getMapper()->getTableData($from, $to, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderTableRows($data);
 
         $response_data = [
@@ -84,7 +89,7 @@ class FinancesService extends \App\Domain\Service {
             "data" => $table
         ];
 
-        return $response_data;
+        return new Payload(null, $response_data);
     }
 
     private function renderTableRows(array $table) {
@@ -105,14 +110,21 @@ class FinancesService extends \App\Domain\Service {
         return $rendered_data;
     }
 
-    public function setDefaultOrAssignedCategory($id) {
-        $user_id = $this->current_user->getUser()->id;
+    public function edit($entry_id) {
+        $entry = $this->getEntry($entry_id);
 
-        $entry = $this->mapper->get($id);
-        $cat = $this->getDefaultOrAssignedCategory($user_id, $entry);
-        if (!is_null($cat)) {
-            $this->mapper->set_category($id, $cat);
+        $categories = $this->cat_service->getAllCategoriesOrderedByName();
+        $paymethods = $this->paymethod_service->getAllPaymethodsOrderedByName();
+
+        return ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods];
+    }
+
+    public function isSplittedBillEntry($id) {
+        $entry = $this->getMapper()->get($id);
+        if (!is_null($entry->bill)) {
+            return true;
         }
+        return false;
     }
 
     public function getDefaultOrAssignedCategory($user_id, FinancesEntry $entry) {
@@ -134,24 +146,16 @@ class FinancesService extends \App\Domain\Service {
         return $category;
     }
 
-    public function isSplittedBillEntry($id) {
-        $entry = $this->mapper->get($id);
-        if (!is_null($entry->bill)) {
-            return true;
-        }
-        return false;
-    }
-
     public function addOrUpdateFromBill(FinancesEntry $entry) {
-        return $this->mapper->addOrUpdateFromBill($entry);
+        return $this->getMapper()->addOrUpdateFromBill($entry);
     }
 
     public function deleteEntrywithBill($bill, $user) {
-        return $this->mapper->deleteEntrywithBill($bill, $user);
+        return $this->getMapper()->deleteEntrywithBill($bill, $user);
     }
 
     public function getMarkers($from, $to) {
-        return $this->mapper->getMarkers($from, $to);
+        return $this->getMapper()->getMarkers($from, $to);
     }
 
 }

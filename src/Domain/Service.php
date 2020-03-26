@@ -9,6 +9,7 @@ use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use Hashids\Hashids;
+use App\Application\Payload\Payload;
 
 abstract class Service {
 
@@ -223,10 +224,6 @@ abstract class Service {
 
     public function hasParent() {
         return !is_null($this->dataobject_parent) && !is_null($this->getParentObjectService());
-    }
-
-    public function getCurrentUser() {
-        return $this->current_user->getUser();
     }
 
     public function getDataObject() {

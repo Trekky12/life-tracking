@@ -2,36 +2,32 @@
 
 namespace App\Domain\Finances;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Budget\BudgetService;
 
-class FinancesStatsService extends \App\Domain\Service {
+class FinancesStatsService extends GeneralService {
 
-    private $mapper;
+    protected $mapper;
     private $cat_service;
     private $budget_service;
     private $date_utility;
     static $GROUP_CATEGORIES_BUDGET_CHART = 5;
 
     public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
             CurrentUser $user,
-            Mapper $mapper,
+            Settings $settings,
+            FinancesMapper $mapper,
             CategoryService $cat_service,
             BudgetService $budget_service,
             DateUtility $date_utility) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
+        parent::__construct($logger, $user);
 
+        $this->settings = $settings;
         $this->mapper = $mapper;
         $this->cat_service = $cat_service;
         $this->budget_service = $budget_service;
@@ -39,7 +35,7 @@ class FinancesStatsService extends \App\Domain\Service {
     }
 
     public function statsTotal() {
-        $stats = $this->mapper->statsTotal();
+        $stats = $this->getMapper()->statsTotal();
 
         list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats);
 
@@ -52,7 +48,7 @@ class FinancesStatsService extends \App\Domain\Service {
     }
 
     public function statsYear($year) {
-        $stats = $this->mapper->statsYear($year);
+        $stats = $this->getMapper()->statsYear($year);
 
         list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats, "month");
 
@@ -66,7 +62,7 @@ class FinancesStatsService extends \App\Domain\Service {
     }
 
     public function statsYearMonthType($year, $month, $type) {
-        $stats = $this->mapper->statsMonthType($year, $month, $type);
+        $stats = $this->getMapper()->statsMonthType($year, $month, $type);
         list($labels, $data) = $this->preparePieChart($stats);
 
         return [
@@ -80,7 +76,7 @@ class FinancesStatsService extends \App\Domain\Service {
     }
 
     public function statsYearMonthTypeCategory($year, $month, $type, $category) {
-        $stats = $this->mapper->statsMonthCategory($year, $month, $type, $category);
+        $stats = $this->getMapper()->statsMonthCategory($year, $month, $type, $category);
 
         $category_name = $this->cat_service->getCategoryName($category);
 
@@ -98,7 +94,7 @@ class FinancesStatsService extends \App\Domain\Service {
     }
 
     public function statsYearType($year, $type) {
-        $stats = $this->mapper->statsCategory($year, $type);
+        $stats = $this->getMapper()->statsCategory($year, $type);
         list($labels, $data) = $this->preparePieChart($stats);
 
         return [
@@ -111,7 +107,7 @@ class FinancesStatsService extends \App\Domain\Service {
     }
 
     public function statsYearTypeCategory($year, $type, $category) {
-        $stats = $this->mapper->statsCategoryDetail($year, $type, $category);
+        $stats = $this->getMapper()->statsCategoryDetail($year, $type, $category);
 
         $category_name = $this->cat_service->getCategoryName($category);
 
@@ -134,9 +130,9 @@ class FinancesStatsService extends \App\Domain\Service {
         $is_remains = $this->budget_service->isRemainsBudget($budget);
 
         if ($is_remains) {
-            $stats = $this->mapper->statsBudgetRemains();
+            $stats = $this->getMapper()->statsBudgetRemains();
         } else {
-            $stats = $this->mapper->statsBudget($budget);
+            $stats = $this->getMapper()->statsBudget($budget);
         }
 
         $categories = $this->budget_service->getCategoriesFromBudget($budget);
@@ -171,11 +167,11 @@ class FinancesStatsService extends \App\Domain\Service {
     }
 
     public function statsMailBalance($user_id, $month, $year, $type) {
-        return $this->mapper->statsMailBalance($user_id, $month, $year, $type);
+        return $this->getMapper()->statsMailBalance($user_id, $month, $year, $type);
     }
 
     public function statsMailExpenses($user_id, $month, $year, $limit = 10) {
-        return $this->mapper->statsMailBalance($user_id, $month, $year, $limit);
+        return $this->getMapper()->statsMailBalance($user_id, $month, $year, $limit);
     }
 
     private function createChartData($stats, $key = "year") {

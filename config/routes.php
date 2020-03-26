@@ -26,23 +26,21 @@ return function (App $app) {
     });
 
     $app->group('/finances', function(RouteCollectorProxy $group) {
-        $group->get('/', '\App\Domain\Finances\Controller:index')->setName('finances');
-        $group->get('/edit/[{id:[0-9]+}]', '\App\Domain\Finances\Controller:edit')->setName('finances_edit');
-        $group->post('/save/[{id:[0-9]+}]', '\App\Domain\Finances\Controller:save')->setName('finances_save');
-        $group->delete('/delete/{id}', '\App\Domain\Finances\Controller:delete')->setName('finances_delete');
+        $group->get('/', \App\Application\Action\Finances\FinancesListAction::class)->setName('finances');
+        $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\FinancesEditAction::class)->setName('finances_edit');
+        $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\FinancesSaveAction::class)->setName('finances_save');
+        $group->delete('/delete/{id}', \App\Application\Action\Finances\FinancesDeleteAction::class)->setName('finances_delete');
 
-        $group->post('/record/', '\App\Domain\Finances\Controller:record')->setName('finances_record');
-
-        $group->get('/table/', '\App\Domain\Finances\Controller:table')->setName('finances_table');
+        $group->get('/table/', \App\Application\Action\Finances\FinancesTableAction::class)->setName('finances_table');
 
         $group->group('/stats', function(RouteCollectorProxy $group_stats) {
-            $group_stats->get('/', '\App\Domain\Finances\Controller:stats')->setName('finances_stats');
-            $group_stats->get('/{year:[0-9]{4}}/categories/{type:[0-1]}', '\App\Domain\Finances\Controller:statsCategory')->setName('finances_stats_category');
-            $group_stats->get('/{year:[0-9]{4}}/categories/{type:[0-1]}/{category:[0-9]+}', '\App\Domain\Finances\Controller:statsCategoryDetail')->setName('finances_stats_category_detail');
-            $group_stats->get('/{year:[0-9]{4}}/', '\App\Domain\Finances\Controller:statsYear')->setName('finances_stats_year');
-            $group_stats->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/', '\App\Domain\Finances\Controller:statsMonthType')->setName('finances_stats_month_type');
-            $group_stats->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/{category:[0-9]+}', '\App\Domain\Finances\Controller:statsMonthCategory')->setName('finances_stats_month_category');
-            $group_stats->get('/budget/{budget:[0-9]+}', '\App\Domain\Finances\Controller:statsBudget')->setName('finances_stats_budget');
+            $group_stats->get('/', \App\Application\Action\Finances\Stats\FinancesStatsAction::class)->setName('finances_stats');
+            $group_stats->get('/{year:[0-9]{4}}/categories/{type:[0-1]}', \App\Application\Action\Finances\Stats\FinancesYearCategoryAction::class)->setName('finances_stats_category');
+            $group_stats->get('/{year:[0-9]{4}}/categories/{type:[0-1]}/{category:[0-9]+}', \App\Application\Action\Finances\Stats\FinancesYearCategoryDetailAction::class)->setName('finances_stats_category_detail');
+            $group_stats->get('/{year:[0-9]{4}}/', \App\Application\Action\Finances\Stats\FinancesYearAction::class)->setName('finances_stats_year');
+            $group_stats->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/', \App\Application\Action\Finances\Stats\FinancesMonthTypeAction::class)->setName('finances_stats_month_type');
+            $group_stats->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/{type:[0-1]}/{category:[0-9]+}', \App\Application\Action\Finances\Stats\FinancesMonthTypeCategoryAction::class)->setName('finances_stats_month_category');
+            $group_stats->get('/budget/{budget:[0-9]+}', \App\Application\Action\Finances\Stats\FinancesBudgetAction::class)->setName('finances_stats_budget');
         });
 
 

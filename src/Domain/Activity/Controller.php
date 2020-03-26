@@ -37,6 +37,9 @@ class Controller {
         $this->mapper = $mapper;
     }
 
+    /**
+     * @deprecated since general service
+     */
     public function addEntry($type, $module, $controller, $object = [], $parent = [], $users = []) {
         $data = [];
         $data["user"] = $this->current_user->getUser()->id;
