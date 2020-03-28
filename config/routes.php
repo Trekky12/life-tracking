@@ -75,10 +75,10 @@ return function (App $app) {
         });
 
         $group->group('/methods', function(RouteCollectorProxy $group_methods) {
-            $group_methods->get('/', '\App\Domain\Finances\Paymethod\Controller:index')->setName('finances_paymethod');
-            $group_methods->get('/edit/[{id:[0-9]+}]', '\App\Domain\Finances\Paymethod\Controller:edit')->setName('finances_paymethod_edit');
-            $group_methods->post('/save/[{id:[0-9]+}]', '\App\Domain\Finances\Paymethod\Controller:save')->setName('finances_paymethod_save');
-            $group_methods->delete('/delete/{id}', '\App\Domain\Finances\Paymethod\Controller:delete')->setName('finances_paymethod_delete');
+            $group_methods->get('/', \App\Application\Action\Finances\Paymethod\PaymethodListAction::class)->setName('finances_paymethod');
+            $group_methods->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Paymethod\PaymethodEditAction::class)->setName('finances_paymethod_edit');
+            $group_methods->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Paymethod\PaymethodSaveAction::class)->setName('finances_paymethod_save');
+            $group_methods->delete('/delete/{id}', \App\Application\Action\Finances\Paymethod\PaymethodDeleteAction::class)->setName('finances_paymethod_delete');
         });
     });
 

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances\Paymethod;
 
-class Mapper extends \App\Domain\Mapper {
+class PaymethodMapper extends \App\Domain\Mapper {
 
     protected $table = 'finances_paymethods';
     protected $dataobject = \App\Domain\Finances\Paymethod\Paymethod::class;
