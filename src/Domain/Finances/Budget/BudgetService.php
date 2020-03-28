@@ -9,12 +9,13 @@ use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Finances\FinancesEntry;
+use App\Domain\Finances\Category\CategoryService;
+use App\Domain\Finances\Recurring\RecurringMapper;
 
 class BudgetService extends \App\Domain\Service {
 
-    protected $dataobject = \App\Domain\Finances\Budget\Budget::class;
-    protected $element_view_route = 'finances_budgets_edit';
-    protected $module = "finances";
+    private $cat_service;
+    private $recurring_mapper;
 
     public function __construct(LoggerInterface $logger,
             Translator $translation,
@@ -22,10 +23,14 @@ class BudgetService extends \App\Domain\Service {
             Activity $activity,
             RouteParser $router,
             CurrentUser $user,
-            Mapper $mapper) {
+            BudgetMapper $mapper,
+            CategoryService $cat_service,
+            RecurringMapper $recurring_mapper) {
         parent::__construct($logger, $translation, $settings, $activity, $router, $user);
 
         $this->mapper = $mapper;
+        $this->cat_service = $cat_service;
+        $this->recurring_mapper = $recurring_mapper;
     }
 
     public function getAllBudgetsOrderedByDescription() {
@@ -89,26 +94,6 @@ class BudgetService extends \App\Domain\Service {
         }
     }
 
-    public function edit() {
-        $budgets = $this->mapper->getAll('description');
-        $budget_categories = $this->mapper->getBudgetCategories();
-        $budget_sum = $this->mapper->getSum();
-        $has_remains_budget = $this->mapper->hasRemainsBudget();
-
-        $this->sortBudgets($budgets);
-
-        $currency = $this->settings->getAppSettings()['i18n']['currency'];
-
-        return [$budgets, $budget_categories, $budget_sum, $has_remains_budget, $currency];
-    }
-
-    public function addCategories($id, $categories) {
-        // remove old categories
-        $this->mapper->deleteCategoriesFromBudget($id);
-        // add new categories
-        $this->mapper->addCategoriesToBudget($id, $categories);
-    }
-
     public function get($budget) {
         return $this->mapper->get($budget);
     }
@@ -169,6 +154,40 @@ class BudgetService extends \App\Domain\Service {
             }
         }
         return $results;
+    }
+
+    public function index() {
+        $budgets = $this->budgets();
+        $budgets['categories'] = $this->cat_service->getAllCategoriesOrderedByName();
+
+        return $budgets;
+    }
+
+    public function edit() {
+        $categories = $this->cat_service->getAllCategoriesOrderedByName();
+
+        $recurring = $this->recurring_mapper->getSumOfAllCategories();
+        $income = $this->recurring_mapper->getSum(1);
+
+        $budgets = $this->mapper->getAll('description');
+        $budget_categories = $this->mapper->getBudgetCategories();
+        $budget_sum = $this->mapper->getSum();
+        $has_remains_budget = $this->mapper->hasRemainsBudget();
+
+        $this->sortBudgets($budgets);
+
+        $currency = $this->settings->getAppSettings()['i18n']['currency'];
+
+        return [
+            'budgets' => $budgets,
+            'categories' => $categories,
+            'income' => $income,
+            'recurring' => $recurring,
+            'currency' => $currency,
+            'hasRemainsBudget' => $has_remains_budget,
+            'budget_sum' => $budget_sum,
+            'budget_categories' => $budget_categories,
+        ];
     }
 
 }

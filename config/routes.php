@@ -59,12 +59,12 @@ return function (App $app) {
         });
 
         $group->group('/budgets', function(RouteCollectorProxy $group_budgets) {
-            $group_budgets->get('/', '\App\Domain\Finances\Budget\Controller:index')->setName('finances_budgets');
-            $group_budgets->get('/edit/', '\App\Domain\Finances\Budget\Controller:edit')->setName('finances_budgets_edit');
-            $group_budgets->post('/saveAll', '\App\Domain\Finances\Budget\Controller:saveAll')->setName('finances_budgets_save_all');
-            $group_budgets->delete('/delete/{id}', '\App\Domain\Finances\Budget\Controller:delete')->setName('finances_budgets_delete');
+            $group_budgets->get('/', \App\Application\Action\Finances\Budget\BudgetListAction::class)->setName('finances_budgets');
+            $group_budgets->get('/edit/', \App\Application\Action\Finances\Budget\BudgetEditAction::class)->setName('finances_budgets_edit');
+            $group_budgets->post('/saveAll', \App\Application\Action\Finances\Budget\BudgetSaveAction::class)->setName('finances_budgets_save_all');
+            $group_budgets->delete('/delete/{id}', \App\Application\Action\Finances\Budget\BudgetDeleteAction::class)->setName('finances_budgets_delete');
 
-            $group_budgets->get('/costs/', '\App\Domain\Finances\Budget\Controller:getCategoryCosts')->setName('finances_budgets_category_costs');
+            $group_budgets->get('/costs/', \App\Application\Action\Finances\Budget\BudgetCategoryCostsAction::class)->setName('finances_budgets_category_costs');
         });
 
         $group->group('/recurring', function(RouteCollectorProxy $group_recurring) {

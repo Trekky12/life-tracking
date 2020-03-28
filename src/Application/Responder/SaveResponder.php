@@ -45,6 +45,21 @@ class SaveResponder {
                 break;
             case Payload::$STATUS_ERROR:
                 break;
+
+            case Payload::$RESULT_ARRAY:
+                foreach ($entry as $e) {
+                    if ($e->getStatus() == Payload::$STATUS_UPDATE) {
+                        $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_SUCCESS_UPDATE"));
+                        $this->flash->addMessage('message_type', 'success');
+                    } else if ($e->getStatus() == Payload::$STATUS_NEW) {
+                        $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_SUCCESS_ADD"));
+                        $this->flash->addMessage('message_type', 'success');
+                    } else {
+                        $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR"));
+                        $this->flash->addMessage('message_type', 'danger');
+                    }
+                }
+                break;
         }
 
         /**
