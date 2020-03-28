@@ -51,10 +51,10 @@ return function (App $app) {
             $group_cats->delete('/delete/{id}', \App\Application\Action\Finances\Category\CategoryDeleteAction::class)->setName('finances_categories_delete');
 
             $group_cats->group('/assignment', function(RouteCollectorProxy $group_assignments) {
-                $group_assignments->get('/', '\App\Domain\Finances\Assignment\Controller:index')->setName('finances_categories_assignment');
-                $group_assignments->get('/edit/[{id:[0-9]+}]', '\App\Domain\Finances\Assignment\Controller:edit')->setName('finances_categories_assignment_edit');
-                $group_assignments->post('/save/[{id:[0-9]+}]', '\App\Domain\Finances\Assignment\Controller:save')->setName('finances_categories_assignment_save');
-                $group_assignments->delete('/delete/{id}', '\App\Domain\Finances\Assignment\Controller:delete')->setName('finances_categories_assignment_delete');
+                $group_assignments->get('/', \App\Application\Action\Finances\Assignment\AssignmentListAction::class)->setName('finances_categories_assignment');
+                $group_assignments->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Assignment\AssignmentEditAction::class)->setName('finances_categories_assignment_edit');
+                $group_assignments->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Assignment\AssignmentSaveAction::class)->setName('finances_categories_assignment_save');
+                $group_assignments->delete('/delete/{id}', \App\Application\Action\Finances\Assignment\AssignmentDeleteAction::class)->setName('finances_categories_assignment_delete');
             });
         });
 

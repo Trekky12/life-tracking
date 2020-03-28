@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances\Assignment;
 
-class Mapper extends \App\Domain\Mapper {
+class AssignmentMapper extends \App\Domain\Mapper {
 
     protected $table = 'finances_categories_assignment';
     protected $dataobject = \App\Domain\Finances\Assignment\Assignment::class;
