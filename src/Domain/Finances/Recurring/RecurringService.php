@@ -13,14 +13,15 @@ use App\Domain\User\UserService;
 use App\Domain\Finances\FinancesEntry;
 use App\Domain\Finances\FinancesService;
 use App\Domain\Finances\FinancesStatsService;
+use App\Domain\Finances\Category\CategoryService;
+use App\Domain\Finances\Paymethod\PaymethodService;
 
 class RecurringService extends \App\Domain\Service {
 
-    protected $dataobject = \App\Domain\Finances\Recurring\FinancesEntryRecurring::class;
-    protected $element_view_route = 'finances_recurring_edit';
-    protected $module = "finances";
     private $finance_service;
     private $finances_stats_service;
+    private $paymethod_service;
+    private $cat_service;
     private $user_service;
 
     public function __construct(LoggerInterface $logger,
@@ -29,9 +30,11 @@ class RecurringService extends \App\Domain\Service {
             Activity $activity,
             RouteParser $router,
             CurrentUser $user,
-            Mapper $mapper,
+            RecurringMapper $mapper,
             FinancesService $finances_service,
             FinancesStatsService $finances_stats_service,
+            CategoryService $cat_service,
+            PaymethodService $paymethod_service,
             Helper $helper,
             UserService $user_service) {
         parent::__construct($logger, $translation, $settings, $activity, $router, $user);
@@ -39,6 +42,8 @@ class RecurringService extends \App\Domain\Service {
         $this->mapper = $mapper;
         $this->finance_service = $finances_service;
         $this->finances_stats_service = $finances_stats_service;
+        $this->cat_service = $cat_service;
+        $this->paymethod_service = $paymethod_service;
         $this->helper = $helper;
         $this->user_service = $user_service;
     }
@@ -59,24 +64,6 @@ class RecurringService extends \App\Domain\Service {
         return $this->mapper->getSum(1);
     }
 
-    public function setLastRun($id) {
-        $entry = $this->mapper->get($id);
-
-        /**
-         * When the entry is new but has an past start date set the last run to this date
-         */
-        if (is_null($entry->last_run) && !is_null($entry->start)) {
-            $start = new \DateTime($entry->start);
-            $now = new \DateTime('now');
-
-            $start->setTime(0, 0, 0);
-            $now->setTime(0, 0, 0);
-
-            if ($now > $start) {
-                $this->mapper->setLastRun($id, $start->format("Y-m-d"));
-            }
-        }
-    }
 
     /**
      * Cron
@@ -165,6 +152,21 @@ class RecurringService extends \App\Domain\Service {
                 }
             }
         }
+    }
+
+    public function index() {
+        $list = $this->getAllRecurring();
+        $categories = $this->cat_service->getAllCategoriesOrderedByName();
+        return ['list' => $list, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()];
+    }
+
+    public function edit($entry_id) {
+        $entry = $this->getEntry($entry_id);
+
+        $categories = $this->cat_service->getAllCategoriesOrderedByName();
+        $paymethods = $this->paymethod_service->getAllPaymethodsOrderedByName();
+
+        return ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'units' => FinancesEntryRecurring::getUnits()];
     }
 
 }

@@ -68,10 +68,10 @@ return function (App $app) {
         });
 
         $group->group('/recurring', function(RouteCollectorProxy $group_recurring) {
-            $group_recurring->get('/', '\App\Domain\Finances\Recurring\Controller:index')->setName('finances_recurring');
-            $group_recurring->get('/edit/[{id:[0-9]+}]', '\App\Domain\Finances\Recurring\Controller:edit')->setName('finances_recurring_edit');
-            $group_recurring->post('/save/[{id:[0-9]+}]', '\App\Domain\Finances\Recurring\Controller:save')->setName('finances_recurring_save');
-            $group_recurring->delete('/delete/{id}', '\App\Domain\Finances\Recurring\Controller:delete')->setName('finances_recurring_delete');
+            $group_recurring->get('/', \App\Application\Action\Finances\Recurring\RecurringListAction::class)->setName('finances_recurring');
+            $group_recurring->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Recurring\RecurringEditAction::class)->setName('finances_recurring_edit');
+            $group_recurring->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Recurring\RecurringSaveAction::class)->setName('finances_recurring_save');
+            $group_recurring->delete('/delete/{id}', \App\Application\Action\Finances\Recurring\RecurringDeleteAction::class)->setName('finances_recurring_delete');
         });
 
         $group->group('/methods', function(RouteCollectorProxy $group_methods) {

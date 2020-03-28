@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances\Recurring;
 
-class Mapper extends \App\Domain\Mapper {
+class RecurringMapper extends \App\Domain\Mapper {
 
     protected $table = 'finances_recurring';
     protected $dataobject = \App\Domain\Finances\Recurring\FinancesEntryRecurring::class;
