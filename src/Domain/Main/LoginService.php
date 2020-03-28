@@ -2,7 +2,7 @@
 
 namespace App\Domain\Main;
 
-use App\Domain\Banlist\BanlistService;
+use App\Domain\Admin\Banlist\BanlistService;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use Slim\Flash\Messages as Flash;
@@ -82,6 +82,7 @@ class LoginService {
     }
 
     public function removeToken($token) {
+        $this->logger->addNotice('LOGOUT');
         return $this->token_service->removeToken($token);
     }
 
@@ -113,11 +114,7 @@ class LoginService {
                 $this->logger->addError('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
             }
 
-
             // wrong login!
-            $this->flash->addMessage('message', $this->translation->getTranslatedString("WRONG_LOGIN"));
-            $this->flash->addMessage('message_type', 'danger');
-
             $this->logger->addWarning('Login WRONG', array("login" => $username));
 
             /**
@@ -127,6 +124,29 @@ class LoginService {
                 $this->banlist_service->addBan(Utility::getIP(), $username);
             }
         }
+        return false;
+    }
+
+    public function loginPage() {
+        $user = $this->current_user->getUser();
+        // user is logged in, redirect to frontpage
+        if (!is_null($user)) {
+            return $response->withRedirect($this->router->urlFor('index'), 301);
+        }
+
+        return $this->twig->render($response, 'main/login.twig', array());
+    }
+
+    public function login($data) {
+        $username = array_key_exists('username', $data) ? filter_var($data['username'], FILTER_SANITIZE_STRING) : null;
+        $password = array_key_exists('password', $data) ? filter_var($data['password'], FILTER_SANITIZE_STRING) : null;
+
+        if ($this->checkLogin($username, $password)) {
+            $token = $this->saveToken();
+
+            return $token;
+        }
+
         return false;
     }
 

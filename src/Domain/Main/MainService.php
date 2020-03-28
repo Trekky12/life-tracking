@@ -2,41 +2,55 @@
 
 namespace App\Domain\Main;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use Dubture\Monolog\Reader\LogReader;
-use \App\Domain\Finances\Recurring\RecurringService;
-use \App\Domain\Board\Card\CardService;
-use \App\Domain\User\Token\TokenService;
+use App\Domain\Finances\Recurring\RecurringService;
+use App\Domain\Board\Card\CardService;
+use App\Domain\User\Token\TokenService;
+use App\Application\Payload\Payload;
+use App\Domain\Settings\SettingsMapper;
+use Slim\Csrf\Guard as CSRF;
 
-class MainService extends \App\Domain\Service {
+class MainService extends GeneralService {
 
+    private $settings;
     protected $settings_mapper;
     protected $recurring_service;
     protected $card_service;
     protected $token_service;
+    private $csrf;
 
     public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
             CurrentUser $user,
-            \App\Domain\Settings\SettingsMapper $settings_mapper,
+            Settings $settings,
+            SettingsMapper $settings_mapper,
             RecurringService $recurring_service,
             CardService $card_service,
-            TokenService $token_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
+            TokenService $token_service,
+            CSRF $csrf) {
+        parent::__construct($logger, $user);
 
+        $this->settings = $settings;
         $this->settings_mapper = $settings_mapper;
         $this->recurring_service = $recurring_service;
         $this->card_service = $card_service;
         $this->token_service = $token_service;
+        $this->csrf = $csrf;
     }
+
+    /* public function __construct(LoggerInterface $logger,
+      Translator $translation,
+      Settings $settings,
+      Activity $activity,
+      RouteParser $router,
+      CurrentUser $user) {
+      parent::__construct($logger, $translation, $settings, $activity, $router, $user);
+
+
+      } */
 
     public function getUserStartPage() {
         $user = $this->current_user->getUser();
@@ -46,7 +60,7 @@ class MainService extends \App\Domain\Service {
         return null;
     }
 
-    public function cron() {
+    public function cron(): Payload {
         $this->logger->addInfo('Running CRON');
 
         $lastRunRecurring = $this->settings_mapper->getSetting("lastRunRecurring");
@@ -83,7 +97,7 @@ class MainService extends \App\Domain\Service {
 
         $response_data = ['result' => 'success'];
 
-        return $response_data;
+        return new Payload(null, $response_data);
     }
 
     public function getLogfile($days) {
@@ -138,7 +152,16 @@ class MainService extends \App\Domain\Service {
             }
         }
 
-        return $logfile;
+        return ["logfile" => $logfile];
+    }
+
+    public function getCSRFTokens($count) {
+        $tokens = [];
+        for ($i = 0; $i < $count; $i++) {
+            $tokens[] = $this->csrf->generateToken();
+        }
+
+        return new Payload(null, $tokens);
     }
 
 }

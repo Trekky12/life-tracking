@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Banlist;
+namespace App\Domain\Admin\Banlist;
 
-class Mapper extends \App\Domain\Mapper {
+class BanMapper extends \App\Domain\Mapper {
 
     protected $table = "global_banlist";
     protected $dataobject = \App\Domain\DataObject::class;

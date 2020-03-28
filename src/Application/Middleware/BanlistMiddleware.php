@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
-use App\Domain\Banlist\BanlistService;
+use App\Domain\Admin\Banlist\BanlistService;
 use App\Domain\Main\Utility\Utility;
 
 class BanlistMiddleware {

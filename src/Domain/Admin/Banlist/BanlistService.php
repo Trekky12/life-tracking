@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Banlist;
+namespace App\Domain\Admin\Banlist;
 
 use Psr\Log\LoggerInterface;
 
@@ -10,7 +10,7 @@ class BanlistService {
     private $logger;
     private $mapper;
 
-    public function __construct(LoggerInterface $logger, Mapper $mapper) {
+    public function __construct(LoggerInterface $logger, BanMapper $mapper) {
         $this->logger = $logger;
         $this->mapper = $mapper;
     }
@@ -34,6 +34,11 @@ class BanlistService {
 
     public function isBlocked($ip) {
         return $this->getFailedLoginAttempts($ip) > self::$MAX_ATTEMPTS;
+    }
+
+    public function index() {
+        $list = $this->getBlockedIPAdresses();
+        return ["list" => $list];
     }
 
 }

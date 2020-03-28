@@ -9,20 +9,21 @@ use Slim\Routing\RouteParser;
 return function (App $app) {
 
     $app->group('', function(RouteCollectorProxy $group) {
-        $group->get('/', '\App\Domain\Main\MainController:index')->setName('index');
-        $group->map(['GET', 'POST'], '/login', '\App\Domain\Main\MainController:login')->setName('login');
-        $group->get('/logout', '\App\Domain\Main\MainController:logout')->setName('logout');
+        $group->get('/', \App\Application\Action\Main\FrontpageAction::class)->setName('index');
+        $group->get('/login', \App\Application\Action\Main\LoginpageAction::class)->setName('login');
+        $group->post('/login', \App\Application\Action\Main\LoginAction::class)->setName('login');
+        $group->get('/logout', \App\Application\Action\Main\LogoutAction::class)->setName('logout');
 
-        $group->get('/cron', '\App\Domain\Main\MainController:cron')->setName('cron');
+        $group->get('/cron', \App\Application\Action\Main\CronAction::class)->setName('cron');
 
-        $group->get('/logfile', '\App\Domain\Main\MainController:showLog')->setName('logfile')->add('App\Application\Middleware\AdminMiddleware');
+        $group->get('/logfile', \App\Application\Action\Main\LogfileAction::class)->setName('logfile')->add('App\Application\Middleware\AdminMiddleware');
 
-        $group->post('/tokens', '\App\Domain\Main\MainController:getCSRFTokens')->setName('get_csrf_tokens');
+        $group->post('/tokens', \App\Application\Action\Main\CSRFTokensAction::class)->setName('get_csrf_tokens');
 
         $group->group('/banlist', function(RouteCollectorProxy $group_banlist) {
-            $group_banlist->get('/', '\App\Domain\Banlist\Controller:index')->setName('banlist');
-            $group_banlist->delete('/deleteIP/{ip}', '\App\Domain\Banlist\Controller:deleteIP')->setName('banlist_delete');
-        })->add('App\Application\Middleware\AdminMiddleware');
+            $group_banlist->get('/', \App\Application\Action\Admin\BanlistAction::class)->setName('banlist');
+            $group_banlist->delete('/deleteIP/{ip}', \App\Application\Action\Admin\BanlistDeleteAction::class)->setName('banlist_delete');
+        })->add(\App\Application\Middleware\AdminMiddleware::class);
     });
 
     $app->group('/finances', function(RouteCollectorProxy $group) {
