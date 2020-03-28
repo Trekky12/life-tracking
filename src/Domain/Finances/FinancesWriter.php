@@ -22,21 +22,6 @@ class FinancesWriter extends ObjectActivityWriter {
         $this->budget_service = $budget_service;
     }
 
-    public function delete($id, $user = null): Payload {
-
-        try {
-            $is_splitted = $this->finances_service->isSplittedBillEntry($id);
-            if ($is_splitted) {
-                return new Payload(Payload::$STATUS_ERROR, 'NO_ACCESS');
-            } else {
-                return parent::delete($id, null);
-            }
-        } catch (\Exception $ex) {
-            
-        }
-        return new Payload(Payload::$STATUS_ERROR, 'ELEMENT_NOT_FOUND');
-    }
-
     public function save($id, $data, $user = null): Payload {
         $payload = parent::save($id, $data, $user);
         $entry = $payload->getResult();

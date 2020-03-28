@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances\Category;
 
-class Mapper extends \App\Domain\Mapper {
+class CategoryMapper extends \App\Domain\Mapper {
 
     protected $table = 'finances_categories';
     protected $dataobject = \App\Domain\Finances\Category\Category::class;

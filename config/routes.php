@@ -45,10 +45,10 @@ return function (App $app) {
 
 
         $group->group('/categories', function(RouteCollectorProxy $group_cats) {
-            $group_cats->get('/', '\App\Domain\Finances\Category\Controller:index')->setName('finances_categories');
-            $group_cats->get('/edit/[{id:[0-9]+}]', '\App\Domain\Finances\Category\Controller:edit')->setName('finances_categories_edit');
-            $group_cats->post('/save/[{id:[0-9]+}]', '\App\Domain\Finances\Category\Controller:save')->setName('finances_categories_save');
-            $group_cats->delete('/delete/{id}', '\App\Domain\Finances\Category\Controller:delete')->setName('finances_categories_delete');
+            $group_cats->get('/', \App\Application\Action\Finances\Category\CategoryListAction::class)->setName('finances_categories');
+            $group_cats->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Category\CategoryEditAction::class)->setName('finances_categories_edit');
+            $group_cats->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Category\CategorySaveAction::class)->setName('finances_categories_save');
+            $group_cats->delete('/delete/{id}', \App\Application\Action\Finances\Category\CategoryDeleteAction::class)->setName('finances_categories_delete');
 
             $group_cats->group('/assignment', function(RouteCollectorProxy $group_assignments) {
                 $group_assignments->get('/', '\App\Domain\Finances\Assignment\Controller:index')->setName('finances_categories_assignment');
