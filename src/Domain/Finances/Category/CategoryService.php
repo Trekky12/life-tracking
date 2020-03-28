@@ -2,24 +2,14 @@
 
 namespace App\Domain\Finances\Category;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 
-class CategoryService extends \App\Domain\Service {
+class CategoryService extends GeneralService {
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            CategoryMapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CategoryMapper $mapper) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
     }
 

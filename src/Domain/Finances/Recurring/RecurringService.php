@@ -2,10 +2,9 @@
 
 namespace App\Domain\Finances\Recurring;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
@@ -17,8 +16,10 @@ use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Application\Payload\Payload;
 
-class RecurringService extends \App\Domain\Service {
+class RecurringService extends GeneralService {
 
+    private $settings;
+    private $translation;
     private $finance_service;
     private $finances_stats_service;
     private $paymethod_service;
@@ -26,11 +27,9 @@ class RecurringService extends \App\Domain\Service {
     private $user_service;
 
     public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
             CurrentUser $user,
+            Settings $settings,
+            Translator $translation,
             RecurringMapper $mapper,
             FinancesService $finances_service,
             FinancesStatsService $finances_stats_service,
@@ -38,8 +37,9 @@ class RecurringService extends \App\Domain\Service {
             PaymethodService $paymethod_service,
             Helper $helper,
             UserService $user_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+        parent::__construct($logger, $user);
+        $this->settings = $settings;
+        $this->translation = $translation;
         $this->mapper = $mapper;
         $this->finance_service = $finances_service;
         $this->finances_stats_service = $finances_stats_service;

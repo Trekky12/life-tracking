@@ -2,6 +2,7 @@
 
 namespace App\Domain\Finances\Budget;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
 use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
@@ -12,22 +13,17 @@ use App\Domain\Finances\FinancesEntry;
 use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Recurring\RecurringMapper;
 
-class BudgetService extends \App\Domain\Service {
+class BudgetService extends GeneralService {
 
+    private $translation;
+    private $settings;
     private $cat_service;
     private $recurring_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            BudgetMapper $mapper,
-            CategoryService $cat_service,
-            RecurringMapper $recurring_mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, Translator $translation, Settings $settings, BudgetMapper $mapper, CategoryService $cat_service, RecurringMapper $recurring_mapper) {
+        parent::__construct($logger, $user);
+        $this->translation = $translation;
+        $this->settings = $settings;
         $this->mapper = $mapper;
         $this->cat_service = $cat_service;
         $this->recurring_mapper = $recurring_mapper;

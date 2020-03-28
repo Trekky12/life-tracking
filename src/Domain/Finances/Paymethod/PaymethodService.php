@@ -2,24 +2,14 @@
 
 namespace App\Domain\Finances\Paymethod;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 
-class PaymethodService extends \App\Domain\Service {
+class PaymethodService extends GeneralService {
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            PaymethodMapper $cat_mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, PaymethodMapper $cat_mapper) {
+        parent::__construct($logger, $user);
         $this->mapper = $cat_mapper;
     }
 
