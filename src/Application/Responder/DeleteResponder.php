@@ -45,7 +45,7 @@ class DeleteResponder extends JSONResponder {
                 break;
         }
         
-        return parent::respond(new Payload(null, $response_data));
+        return parent::respond(new Payload(Payload::$RESULT_JSON, $response_data));
     }
 
 }

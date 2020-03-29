@@ -16,8 +16,8 @@ class RedirectResponder {
         $this->router = $router;
     }
 
-    public function respond($routeName, $status = 301, $resolve = true): ResponseInterface {
-        $url = $resolve ? $this->router->urlFor($routeName) : $routeName;
+    public function respond($routeName, $status = 301, $resolve = true, $params = []): ResponseInterface {
+        $url = $resolve ? $this->router->urlFor($routeName, $params) : $routeName;
 
         $response = $this->responseFactory->createResponse();
         return $response->withHeader('Location', $url)->withStatus($status);

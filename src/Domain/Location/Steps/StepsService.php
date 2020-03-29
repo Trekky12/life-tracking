@@ -2,30 +2,21 @@
 
 namespace App\Domain\Location\Steps;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\DateUtility;
+use App\Application\Payload\Payload;
 
-class StepsService extends \App\Domain\Service {
+class StepsService extends GeneralService {
 
-    protected $module = "location";
-    protected $create_activity = false;
+    private $settings;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, Settings $settings, StepsMapper $mapper) {
+        parent::__construct($logger, $user);
+        $this->settings = $settings;
         $this->mapper = $mapper;
-        ;
     }
 
     public function getStepsPerYear() {
@@ -49,7 +40,8 @@ class StepsService extends \App\Domain\Service {
     }
 
     public function getStepsOfDate($date) {
-        return $this->mapper->getStepsOfDate($date);
+        $steps = $this->mapper->getStepsOfDate($date);
+        return ['date' => $date, 'steps' => $steps > 0 ? $steps : 0];
     }
 
     private function createChartData($stats, $key = "year") {
@@ -81,7 +73,7 @@ class StepsService extends \App\Domain\Service {
         return array($data, $labels);
     }
 
-    public function updateSteps($date, $steps_new) {
+    private function updateSteps($date, $steps_new) {
         $steps_old = $this->mapper->getStepsOfDate($date);
 
         // update
@@ -92,6 +84,16 @@ class StepsService extends \App\Domain\Service {
         else {
             $this->mapper->insertSteps($date, $steps_new);
         }
+    }
+
+    public function saveSteps($date, $data) {
+        $steps_new = array_key_exists("steps", $data) ? filter_var($data["steps"], FILTER_SANITIZE_NUMBER_INT) : 0;
+
+        $this->updateSteps($date, $steps_new);
+
+        $dateObj = new \DateTime($date);
+        $data = ['year' => $dateObj->format('Y'), 'month' => $dateObj->format('m')];
+        return $data;
     }
 
 }

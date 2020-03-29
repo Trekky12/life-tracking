@@ -2,7 +2,7 @@
 
 namespace App\Domain\Location\Steps;
 
-class Mapper extends \App\Domain\Mapper {
+class StepsMapper extends \App\Domain\Mapper {
 
     protected $table = 'locations';
     protected $dataobject = \App\Domain\Location\Location::class;

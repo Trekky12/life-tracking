@@ -89,7 +89,7 @@ class FinancesService extends GeneralService {
             "data" => $table
         ];
 
-        return new Payload(null, $response_data);
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     private function renderTableRows(array $table) {

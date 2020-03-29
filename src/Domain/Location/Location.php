@@ -128,7 +128,7 @@ class Location extends \App\Domain\DataObject {
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
         $position = $this->getPosition();
-        return sprintf("%s, %s", $position['lat'], $position['lng']);
+        return sprintf("%s, %s (%s)", $position['lat'], $position['lng'], $this->createdOn);
     }
 
 }

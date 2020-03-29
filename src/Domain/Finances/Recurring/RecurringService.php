@@ -164,7 +164,7 @@ class RecurringService extends GeneralService {
     public function getCategoryCosts($category) {
         if (is_null($category)) {
             $response_data = ['status' => 'error', "error" => "empty"];
-            return new Payload(null, $response_data);
+            return new Payload(Payload::$RESULT_JSON, $response_data);
         }
 
         try {
@@ -174,11 +174,11 @@ class RecurringService extends GeneralService {
             $this->logger->addError("Get Category Costs", array("data" => $category, "error" => $e->getMessage()));
 
             $response_data = ['status' => 'error', "error" => $e->getMessage()];
-            return new Payload(null, $response_data);
+            return new Payload(Payload::$RESULT_JSON, $response_data);
         }
 
         $response_data = ['status' => 'success', 'value' => $sum];
-        return new Payload(null, $response_data);
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
 }

@@ -84,23 +84,23 @@ return function (App $app) {
     });
 
     $app->group('/location', function(RouteCollectorProxy $group) {
-        $group->get('/', '\App\Domain\Location\Controller:index')->setName('location');
-        $group->post('/record', '\App\Domain\Location\Controller:record')->setName('location_record');
-        $group->get('/markers', '\App\Domain\Location\Controller:getMarkers')->setName('getMarkers');
-        $group->delete('/delete/[{id}]', '\App\Domain\Location\Controller:delete')->setName('delete_marker');
-        $group->get('/address/[{id}]', '\App\Domain\Location\Controller:getAddress')->setName('get_address');
+        $group->get('/', \App\Application\Action\Location\LocationMapAction::class)->setName('location');
+        $group->post('/record', \App\Application\Action\Location\LocationRecordAction::class)->setName('location_record');
+        $group->get('/markers', \App\Application\Action\Location\LocationMarkersAction::class)->setName('getMarkers');
+        $group->delete('/delete/[{id}]', \App\Application\Action\Location\LocationDeleteAction::class)->setName('delete_marker');
+        $group->get('/address/[{id}]', \App\Application\Action\Location\LocationAddressAction::class)->setName('get_address');
 
-        $group->get('/edit/[{id:[0-9]+}]', '\App\Domain\Location\Controller:edit')->setName('location_edit');
-        $group->post('/save/[{id:[0-9]+}]', '\App\Domain\Location\Controller:save')->setName('location_save');
+        $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Location\LocationEditAction::class)->setName('location_edit');
+        $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Location\LocationSaveAction::class)->setName('location_save');
 
         $group->group('/steps', function(RouteCollectorProxy $group_steps) {
-            $group_steps->get('/', '\App\Domain\Location\Steps\Controller:steps')->setName('steps');
-            $group_steps->get('/{year:[0-9]{4}}/', '\App\Domain\Location\Steps\Controller:stepsYear')->setName('steps_stats_year');
-            $group_steps->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/', '\App\Domain\Location\Steps\Controller:stepsMonth')->setName('steps_stats_month');
+            $group_steps->get('/', \App\Application\Action\Location\Steps\StepsAction::class)->setName('steps');
+            $group_steps->get('/{year:[0-9]{4}}/', \App\Application\Action\Location\Steps\StepsYearAction::class)->setName('steps_stats_year');
+            $group_steps->get('/{year:[0-9]{4}}/{month:[0-9]{1,2}}/', \App\Application\Action\Location\Steps\StepsYearMonthAction::class)->setName('steps_stats_month');
 
             $group_steps->group('/{date:[0-9]{4}-[0-9]{2}-[0-9]{2}}', function(RouteCollectorProxy $group_steps_date) {
-                $group_steps_date->get('/edit/', '\App\Domain\Location\Steps\Controller:editSteps')->setName('steps_day_edit');
-                $group_steps_date->post('/save/', '\App\Domain\Location\Steps\Controller:saveSteps')->setName('steps_save');
+                $group_steps_date->get('/edit/', \App\Application\Action\Location\Steps\StepsEditAction::class)->setName('steps_day_edit');
+                $group_steps_date->post('/save/', \App\Application\Action\Location\Steps\StepsSaveAction::class)->setName('steps_save');
             });
         });
     });

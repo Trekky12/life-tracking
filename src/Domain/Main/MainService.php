@@ -97,7 +97,7 @@ class MainService extends GeneralService {
 
         $response_data = ['result' => 'success'];
 
-        return new Payload(null, $response_data);
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     public function getLogfile($days) {
@@ -161,7 +161,7 @@ class MainService extends GeneralService {
             $tokens[] = $this->csrf->generateToken();
         }
 
-        return new Payload(null, $tokens);
+        return new Payload(Payload::$RESULT_JSON, $tokens);
     }
 
 }

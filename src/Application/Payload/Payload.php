@@ -15,6 +15,7 @@ class Payload {
     public static $STATUS_DELETE_SUCCESS = "DELETE_SUCCESS";
     public static $STATUS_DELETE_ERROR = "DELETE_ERROR";
     public static $RESULT_ARRAY = "RESULT_ARRAY";
+    public static $RESULT_JSON = "RESULT_JSON";
 
     public function __construct($status, $result, $flash_messages = []) {
         $this->status = $status;

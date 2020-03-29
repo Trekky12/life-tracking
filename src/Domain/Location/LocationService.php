@@ -2,6 +2,7 @@
 
 namespace App\Domain\Location;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
 use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
@@ -12,31 +13,23 @@ use App\Domain\Main\Helper;
 use App\Domain\Finances\FinancesService;
 use App\Domain\Car\CarService;
 use App\Domain\Car\Service\CarServiceService;
+use App\Application\Payload\Payload;
 
-class LocationService extends \App\Domain\Service {
+class LocationService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Location\Location::class;
-    protected $element_view_route = 'location_edit';
-    protected $create_activity = false;
-    protected $module = "location";
     private $helper;
     private $finances_service;
     private $car_service;
     private $car_service_service;
 
     public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
             CurrentUser $user,
             Helper $helper,
-            Mapper $mapper,
+            LocationMapper $mapper,
             FinancesService $finances_service,
             CarService $car_service,
             CarServiceService $car_service_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+        parent::__construct($logger, $user);
         $this->helper = $helper;
         $this->mapper = $mapper;
         $this->finances_service = $finances_service;
@@ -92,10 +85,14 @@ class LocationService extends \App\Domain\Service {
 
         $response_data = array_merge($location_markers, $finance_markers, $carservice_markers);
 
-        return $response_data;
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function getAddress($lat, $lng) {
+    public function getAddress($data) {
+        
+        $lat = array_key_exists('lat', $data) && !empty($data['lat']) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $lng = array_key_exists('lng', $data) && !empty($data['lng']) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+
         $response_data = ['status' => 'error', 'data' => []];
 
         if (!is_null($lat) && !is_null($lng)) {
@@ -113,7 +110,13 @@ class LocationService extends \App\Domain\Service {
                 }
             }
         }
-        return $response_data;
+        
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    public function edit($entry_id) {
+        $entry = $this->getEntry($entry_id);
+        return ['entry' => $entry];
     }
 
 }
