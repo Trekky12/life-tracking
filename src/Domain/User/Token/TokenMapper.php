@@ -2,7 +2,7 @@
 
 namespace App\Domain\User\Token;
 
-class Mapper extends \App\Domain\Mapper {
+class TokenMapper extends \App\Domain\Mapper {
 
     protected $table = 'global_tokens';
     protected $select_results_of_user_only = false;

@@ -9,7 +9,6 @@ class Payload {
     private $flash_messages = [];
     private $routeName = null;
     private $template = null;
-    
     public static $STATUS_NEW = "NEW";
     public static $STATUS_UPDATE = "UPDATED";
     public static $STATUS_NO_UPDATE = "NOT_UPDATED";
@@ -17,12 +16,16 @@ class Payload {
     public static $STATUS_ERROR = "UNDEFINED_ERROR";
     public static $STATUS_DELETE_SUCCESS = "DELETE_SUCCESS";
     public static $STATUS_DELETE_ERROR = "DELETE_ERROR";
-    
     public static $RESULT_ARRAY = "RESULT_ARRAY";
     public static $RESULT_JSON = "RESULT_JSON";
     public static $RESULT_HTML = "RESULT_HTML";
-    
     public static $NO_ACCESS = "NO_ACCESS";
+    public static $STATUS_PASSWORD_MISSMATCH = "PASSWORD_MISSMATCH";
+    public static $STATUS_PASSWORD_WRONG = "PASSWORD_WRONG";
+    public static $STATUS_PASSWORD_SUCCESS = "PASSWORD_SUCCESS";
+    public static $STATUS_PROFILE_IMAGE_DELETED = "PROFILE_IMAGE_DELETED";
+    public static $STATUS_PROFILE_IMAGE_ERROR = "PROFILE_IMAGE_ERROR";
+    public static $STATUS_PROFILE_IMAGE_SET = "PROFILE_IMAGE_SET";
 
     public function __construct($status, $result = null, $flash_messages = []) {
         $this->status = $status;

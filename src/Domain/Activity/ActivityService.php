@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Domain\Activity;
+
+use App\Domain\GeneralService;
+use Psr\Log\LoggerInterface;
+use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
+use App\Domain\Base\Settings;
+use App\Domain\User\Mapper as UserMapper;
+use App\Domain\Main\Translator;
+
+class ActivityService extends GeneralService {
+
+    private $settings;
+    private $user_mapper;
+    private $translation;
+
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityMapper $mapper, Settings $settings, UserMapper $user_mapper, Translator $translation) {
+        parent::__construct($logger, $user);
+        $this->mapper = $mapper;
+        $this->settings = $settings;
+        $this->user_mapper = $user_mapper;
+        $this->translation = $translation;
+    }
+
+    public function show() {
+        return new Payload(Payload::$RESULT_HTML);
+    }
+
+    public function getActivities($data) {
+
+        $response_data = ["data" => [], "status" => "success"];
+        $count = array_key_exists('count', $data) ? filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT) : 20;
+        $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $limit = sprintf("%s,%s", $offset, $count);
+
+        $user_id = $this->current_user->getUser()->id;
+
+        $activities = $this->mapper->getUserItems("createdOn DESC", $limit, $user_id);
+
+        $response_data["data"] = $this->renderTableRows($activities);
+        $response_data["count"] = $this->mapper->getCountElementsOfUser($user_id);
+
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    private function renderTableRows($list) {
+
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+
+        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate->setPattern($dateFormatPHP["date"]);
+
+        $fmtTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtTime->setPattern($dateFormatPHP["time"]);
+
+        $modules = $this->settings->getAppSettings()['modules'];
+
+        $users = $this->user_mapper->getAll();
+        $me = $this->current_user->getUser()->id;
+
+        $rendered_data = [];
+        foreach ($list as $el) {
+
+            $action = "";
+            switch ($el->type) {
+                case 'create':
+                    $action = "ACTIVITY_CREATE";
+                    break;
+                case 'update':
+                    $action = "ACTIVITY_UPDATE";
+                    break;
+                case 'delete':
+                    $action = "ACTIVITY_DELETE";
+                    break;
+            }
+
+
+            if ($el->user !== $me) {
+                $user = $users[$el->user]->name;
+                $description = sprintf($this->translation->getTranslatedString($action), $user, $el->object_description);
+            } else {
+                $action = $action . "_ME";
+                $description = sprintf($this->translation->getTranslatedString($action), $el->object_description);
+            }
+
+
+            if ($el->parent_object && $el->parent_object_description) {
+                $parent_object = $this->translation->getTranslatedString($el->parent_object::$NAME);
+                $description .= sprintf(" (%s: %s)", $parent_object, trim($el->parent_object_description));
+            }
+
+            $row = [];
+            $row["date"] = $fmtDate->format(new \Datetime($el->createdOn));
+            $row["time"] = $fmtTime->format(new \Datetime($el->createdOn));
+            $row["icon"] = array_key_exists($el->module, $modules) ? $modules[$el->module]['icon'] : "fas fa-toolbox";
+            $row["description"] = $description;
+            $row["link"] = $el->type !== 'delete' ? $el->link : null;
+
+            $rendered_data[] = $row;
+        }
+
+        return $rendered_data;
+    }
+
+}

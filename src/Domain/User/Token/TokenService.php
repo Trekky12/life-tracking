@@ -2,26 +2,21 @@
 
 namespace App\Domain\User\Token;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\Utility;
+use App\Application\Payload\Payload;
 
-class TokenService extends \App\Domain\Service {
+class TokenService extends GeneralService {
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
+    private $settings;
 
+    public function __construct(LoggerInterface $logger, CurrentUser $user, TokenMapper $mapper, Settings $settings) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->settings = $settings;
     }
 
     public function getLoginTokens() {
@@ -40,16 +35,6 @@ class TokenService extends \App\Domain\Service {
         return $this->mapper->getAll();
     }
 
-    public function isTokenOfCurrentUser($id) {
-        $user = $this->current_user->getUser();
-        $token = $this->mapper->get($id);
-
-        if (intval($token->user) !== intval($user->id)) {
-            return false;
-        }
-
-        return true;
-    }
 
     public function getUserFromToken($token) {
         return $this->mapper->getUserFromToken($token);
@@ -74,6 +59,11 @@ class TokenService extends \App\Domain\Service {
         if (!is_null($token) && $token !== FALSE) {
             $this->mapper->deleteToken($token);
         }
+    }
+    
+    public function index() {
+        $list = $this->getTokensOfCurrentUser();
+        return new Payload(Payload::$RESULT_HTML, ['list' => $list]);
     }
 
 }

@@ -133,24 +133,28 @@ return function (App $app) {
 
 
     $app->group('/profile', function(RouteCollectorProxy $group) {
-        $group->map(['GET', 'POST'], '/changepassword', '\App\Domain\User\Profile\Controller:changePassword')->setName('users_change_password');
-        $group->map(['GET', 'POST'], '/image', '\App\Domain\User\Profile\Controller:setProfileImage')->setName('users_profile_image');
-        $group->map(['GET', 'POST'], '/edit', '\App\Domain\User\Profile\Controller:editProfile')->setName('users_profile_edit');
+        $group->get('/changepassword', \App\Application\Action\Profile\ChangePasswordpageAction::class)->setName('users_change_password');
+        $group->post('/changepassword', \App\Application\Action\Profile\ChangePasswordAction::class)->setName('users_change_password');
+        $group->get('/image', \App\Application\Action\Profile\ProfileImageAction::class)->setName('users_profile_image');
+        $group->post('/image', \App\Application\Action\Profile\ProfileImageSaveAction::class)->setName('users_profile_image');
+        
+        $group->get('/edit', \App\Application\Action\Profile\ProfileEditAction::class)->setName('users_profile_edit');
+        $group->post('/edit', \App\Application\Action\Profile\ProfileSaveAction::class)->setName('users_profile_edit');
 
         $group->group('/favorites', function(RouteCollectorProxy $group_favorites) {
-            $group_favorites->get('/', '\App\Domain\User\MobileFavorites\Controller:index')->setName('users_mobile_favorites');
-            $group_favorites->get('/edit/[{id:[0-9]+}]', '\App\Domain\User\MobileFavorites\Controller:edit')->setName('users_mobile_favorites_edit');
-            $group_favorites->post('/save/[{id:[0-9]+}]', '\App\Domain\User\MobileFavorites\Controller:save')->setName('users_mobile_favorites_save');
-            $group_favorites->delete('/delete/{id}', '\App\Domain\User\MobileFavorites\Controller:delete')->setName('users_mobile_favorites_delete');
+            $group_favorites->get('/', \App\Application\Action\Profile\MobileFavorites\MobileFavoritesListAction::class)->setName('users_mobile_favorites');
+            $group_favorites->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Profile\MobileFavorites\MobileFavoritesEditAction::class)->setName('users_mobile_favorites_edit');
+            $group_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\Profile\MobileFavorites\MobileFavoritesSaveAction::class)->setName('users_mobile_favorites_save');
+            $group_favorites->delete('/delete/{id}', \App\Application\Action\Profile\MobileFavorites\MobileFavoritesDeleteAction::class)->setName('users_mobile_favorites_delete');
         });
 
         $group->group('/tokens', function(RouteCollectorProxy $group_tokens) {
-            $group_tokens->get('/', '\App\Domain\User\Token\Controller:index')->setName('users_login_tokens');
-            $group_tokens->delete('/delete/{id}', '\App\Domain\User\Token\Controller:delete')->setName('users_login_tokens_delete');
+            $group_tokens->get('/', \App\Application\Action\Profile\LoginTokensListAction::class)->setName('users_login_tokens');
+            $group_tokens->delete('/delete/{id}', \App\Application\Action\Profile\LoginTokensDeleteAction::class)->setName('users_login_tokens_delete');
         });
 
-        $group->get('/activity', '\App\Domain\Activity\Controller:index')->setName('users_activities');
-        $group->post('/getActivities', '\App\Domain\Activity\Controller:getActivities')->setName('activities_get');
+        $group->get('/activity', \App\Application\Action\Activity\ActivityAction::class)->setName('users_activities');
+        $group->post('/getActivities', \App\Application\Action\Activity\ActivityListAction::class)->setName('activities_get');
     });
 
     $app->group('/users', function(RouteCollectorProxy $group) {

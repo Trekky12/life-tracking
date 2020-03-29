@@ -2,7 +2,7 @@
 
 namespace App\Domain\Activity;
 
-class Mapper extends \App\Domain\Mapper {
+class ActivityMapper extends \App\Domain\Mapper {
 
     protected $table = "activities";
     protected $dataobject = \App\Domain\Activity\Activity::class;

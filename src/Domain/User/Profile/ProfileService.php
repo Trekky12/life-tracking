@@ -2,29 +2,25 @@
 
 namespace App\Domain\User\Profile;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Application\Payload\Payload;
 
-class ProfileService {
+class ProfileService extends GeneralService {
 
-    private $logger;
     private $settings;
-    private $current_user;
     private $user_service;
 
-    public function __construct(LoggerInterface $logger,
-            Settings $settings,
-            CurrentUser $user,
-            UserService $user_service) {
-        $this->logger = $logger;
+    public function __construct(LoggerInterface $logger, CurrentUser $user, Settings $settings, UserService $user_service) {
+        parent::__construct($logger, $user);
         $this->settings = $settings;
-        $this->current_user = $user;
         $this->user_service = $user_service;
     }
-    
+
     private function getFullImagePath() {
         return dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $this->getProfileImagePath();
     }
@@ -82,6 +78,87 @@ class ProfileService {
         }
 
         return false;
+    }
+
+    public function changePasswordPage(): Payload {
+        return new Payload(Payload::$RESULT_HTML);
+    }
+
+    public function changePassword($data): Payload {
+        $old_password = array_key_exists('oldpassword', $data) ? filter_var($data['oldpassword'], FILTER_SANITIZE_STRING) : null;
+        $new_password1 = array_key_exists('newpassword1', $data) ? filter_var($data['newpassword1'], FILTER_SANITIZE_STRING) : null;
+        $new_password2 = array_key_exists('newpassword2', $data) ? filter_var($data['newpassword2'], FILTER_SANITIZE_STRING) : null;
+
+        if (!$this->user_service->comparePasswords($old_password, $new_password1, $new_password2)) {
+            $this->logger->addWarning("Update Password Failed, Passwords missmatch");
+            return new Payload(Payload::$STATUS_PASSWORD_MISSMATCH);
+        }
+
+
+        /**
+         * Verify old password
+         */
+        if (!$this->user_service->verifyPassword($old_password)) {
+            $this->logger->addWarning("Update Password Failed, Old Password Wrong");
+            return new Payload(Payload::$STATUS_PASSWORD_WRONG);
+        }
+
+        /**
+         * Update Password
+         */
+        $this->user_service->updatePassword($new_password1);
+        $this->logger->addInfo("Update Password Success");
+        return new Payload(Payload::$STATUS_PASSWORD_SUCCESS);
+    }
+
+    public function editProfilePage(): Payload {
+        return new Payload(Payload::$RESULT_HTML);
+    }
+
+    public function updateUser($data) {
+        if ($this->user_service->updateUser($data)) {
+            $this->logger->addNotice("Update Profile");
+            return new Payload(Payload::$STATUS_UPDATE);
+        } else {
+            $this->logger->addNotice("No Update of Profile", array("id" => $user->id));
+            return new Payload(Payload::$STATUS_NO_UPDATE);
+        }
+    }
+
+    public function editProfileImagePage(): Payload {
+        return new Payload(Payload::$RESULT_HTML);
+    }
+
+    public function updateProfileImage($data, $files): Payload {
+        /**
+         * Delete Image
+         */
+        $delete = array_key_exists("delete_image", $data) ? intval(filter_var($data["delete_image"], FILTER_SANITIZE_NUMBER_INT)) == 1 : false;
+        if ($delete) {
+            $this->deleteImage();
+            $this->logger->addNotice("Remove profile image");
+            return new Payload(Payload::$STATUS_PROFILE_IMAGE_DELETED);
+        }
+
+        /**
+         * Update Image
+         */
+        if (!array_key_exists('image', $files) || empty($files['image'])) {
+            $this->logger->addError("Update Profile Image, Image Error", array("files" => $files));
+            return new Payload(Payload::$STATUS_PROFILE_IMAGE_ERROR);
+        }
+
+        $image = $files['image'];
+
+        $upload = $this->saveImage($image);
+
+        if ($upload) {
+            $this->logger->addNotice("Update Profile Image, Image Set", array("image" => $image->getClientFilename()));
+            return new Payload(Payload::$STATUS_PROFILE_IMAGE_SET);
+        } else {
+            $this->logger->addError("Update Profile Image, Image Error", array("files" => $files));
+            return new Payload(Payload::$STATUS_PROFILE_IMAGE_ERROR);
+        }
     }
 
 }

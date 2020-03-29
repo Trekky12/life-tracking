@@ -16,7 +16,7 @@ class ActivityCreator {
     private $settings;
     private $router;
 
-    public function __construct(CurrentUser $current_user, Translator $translation, Settings $settings, RouteParser $router, Mapper $mapper) {
+    public function __construct(CurrentUser $current_user, Translator $translation, Settings $settings, RouteParser $router, ActivityMapper $mapper) {
         $this->current_user = $current_user;
         $this->translation = $translation;
         $this->settings = $settings;
