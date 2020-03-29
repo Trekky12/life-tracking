@@ -18,8 +18,8 @@ class CategoryListAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $categories = $this->service->getAllCategoriesOrderedByName();
-        return $this->responder->respond('finances/category/index.twig', ["categories" => $categories]);
+        $categories = $this->service->index();
+        return $this->responder->respond($categories->withTemplate('finances/category/index.twig'));
     }
 
 }

@@ -23,25 +23,25 @@ class StepsService extends GeneralService {
         $steps = $this->mapper->getStepsPerYear();
         list($chart_data, $labels) = $this->createChartData($steps);
 
-        return ['stats' => $steps, "data" => $chart_data, "labels" => $labels];
+        return new Payload(Payload::$RESULT_HTML, ['stats' => $steps, "data" => $chart_data, "labels" => $labels]);
     }
 
     public function getStepsOfYear($year) {
         $steps = $this->mapper->getStepsOfYear($year);
         list($chart_data, $labels) = $this->createChartData($steps, "month");
 
-        return ['stats' => $steps, "year" => $year, "data" => $chart_data, "labels" => $labels];
+        return new Payload(Payload::$RESULT_HTML, ['stats' => $steps, "year" => $year, "data" => $chart_data, "labels" => $labels]);
     }
 
     public function getStepsOfYearMonth($year, $month) {
         $steps = $this->mapper->getStepsOfYearMonth($year, $month);
         list($chart_data, $labels) = $this->createChartData($steps, "date");
-        return ['stats' => $steps, "year" => $year, "month" => $month, "data" => $chart_data, "labels" => $labels];
+        return new Payload(Payload::$RESULT_HTML, ['stats' => $steps, "year" => $year, "month" => $month, "data" => $chart_data, "labels" => $labels]);
     }
 
     public function getStepsOfDate($date) {
         $steps = $this->mapper->getStepsOfDate($date);
-        return ['date' => $date, 'steps' => $steps > 0 ? $steps : 0];
+        return new Payload(Payload::$RESULT_HTML, ['date' => $date, 'steps' => $steps > 0 ? $steps : 0]);
     }
 
     private function createChartData($stats, $key = "year") {

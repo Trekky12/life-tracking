@@ -3,6 +3,7 @@
 namespace App\Domain\Admin\Banlist;
 
 use Psr\Log\LoggerInterface;
+use App\Application\Payload\Payload;
 
 class BanlistService {
 
@@ -38,7 +39,7 @@ class BanlistService {
 
     public function index() {
         $list = $this->getBlockedIPAdresses();
-        return ["list" => $list];
+        return new Payload(Payload::$RESULT_HTML, ["list" => $list]);
     }
 
 }

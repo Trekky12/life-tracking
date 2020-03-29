@@ -4,14 +4,13 @@ namespace App\Domain\Finances\Budget;
 
 use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Finances\FinancesEntry;
 use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Recurring\RecurringMapper;
+use App\Application\Payload\Payload;
 
 class BudgetService extends GeneralService {
 
@@ -156,7 +155,7 @@ class BudgetService extends GeneralService {
         $budgets = $this->budgets();
         $budgets['categories'] = $this->cat_service->getAllCategoriesOrderedByName();
 
-        return $budgets;
+        return new Payload(Payload::$RESULT_HTML, $budgets);
     }
 
     public function edit() {
@@ -174,7 +173,7 @@ class BudgetService extends GeneralService {
 
         $currency = $this->settings->getAppSettings()['i18n']['currency'];
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             'budgets' => $budgets,
             'categories' => $categories,
             'income' => $income,
@@ -183,7 +182,7 @@ class BudgetService extends GeneralService {
             'hasRemainsBudget' => $has_remains_budget,
             'budget_sum' => $budget_sum,
             'budget_categories' => $budget_categories,
-        ];
+        ]);
     }
 
 }

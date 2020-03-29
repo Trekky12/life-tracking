@@ -2,29 +2,18 @@
 
 namespace App\Domain\Car;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Domain\User\UserService;
+use App\Application\Payload\Payload;
 
-class CarService extends \App\Domain\Service {
+class CarService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Car\Car::class;
-    protected $element_view_route = 'cars_edit';
-    protected $module = "cars";
-
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CarMapper $mapper, UserService $user_service) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->user_service = $user_service;
     }
 
     public function getUserCars() {
@@ -34,6 +23,18 @@ class CarService extends \App\Domain\Service {
 
     public function getAllCarsOrderedByName() {
         return $this->mapper->getAll('name');
+    }
+
+    public function index() {
+        $cars = $this->mapper->getAll('name');
+        return new Payload(Payload::$RESULT_HTML, ["cars" => $cars]);
+    }
+
+    public function edit($entry_id) {
+        $entry = $this->getEntry($entry_id);
+        $users = $this->user_service->getAll();
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
 
 }

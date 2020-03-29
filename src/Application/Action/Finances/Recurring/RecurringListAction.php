@@ -19,7 +19,7 @@ class RecurringListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $index = $this->service->index();
-        return $this->responder->respond('finances/recurring/index.twig', $index);
+        return $this->responder->respond($index->withTemplate('finances/recurring/index.twig'));
     }
 
 }

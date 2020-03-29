@@ -24,7 +24,7 @@ class FinancesYearCategoryDetailAction {
 
         $stats = $this->service->statsYearTypeCategory($year, $type, $category);
 
-        return $this->responder->respond('finances/stats/year_cat_detail.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('finances/stats/year_cat_detail.twig'));
     }
 
 }

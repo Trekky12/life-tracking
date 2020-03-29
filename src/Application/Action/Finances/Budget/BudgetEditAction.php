@@ -19,7 +19,7 @@ class BudgetEditAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $data = $this->service->edit();
-        return $this->responder->respond('finances/budget/edit.twig', $data);
+        return $this->responder->respond($data->withTemplate('finances/budget/edit.twig'));
     }
 
 }

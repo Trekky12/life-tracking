@@ -5,6 +5,7 @@ namespace App\Domain\Finances\Category;
 use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
 
 class CategoryService extends GeneralService {
 
@@ -24,10 +25,15 @@ class CategoryService extends GeneralService {
     public function getDefaultCategoryOfUser($user_id) {
         return $this->mapper->getDefaultofUser($user_id);
     }
+    
+    public function index(){
+        $categories = $this->getAllCategoriesOrderedByName();
+        return new Payload(Payload::$RESULT_HTML, ["categories" => $categories]);
+    }
 
     public function edit($entry_id) {
         $entry = $this->getEntry($entry_id);
-        return ['entry' => $entry];
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
 
 }

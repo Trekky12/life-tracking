@@ -149,7 +149,7 @@ class RecurringService extends GeneralService {
     public function index() {
         $list = $this->getAllRecurring();
         $categories = $this->cat_service->getAllCategoriesOrderedByName();
-        return ['list' => $list, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()];
+        return new Payload(Payload::$RESULT_HTML, ['list' => $list, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()]);
     }
 
     public function edit($entry_id) {
@@ -158,7 +158,7 @@ class RecurringService extends GeneralService {
         $categories = $this->cat_service->getAllCategoriesOrderedByName();
         $paymethods = $this->paymethod_service->getAllPaymethodsOrderedByName();
 
-        return ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'units' => FinancesEntryRecurring::getUnits()];
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'units' => FinancesEntryRecurring::getUnits()]);
     }
 
     public function getCategoryCosts($category) {

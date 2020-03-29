@@ -5,16 +5,16 @@ namespace App\Application\Responder;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Translator;
 
-class SaveJSONResponder {
+class SaveJSONResponder extends Responder {
 
-    private $responseFactory;
-
-    public function __construct(ResponseFactoryInterface $responseFactory) {
-        $this->responseFactory = $responseFactory;
+    public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation) {
+        parent::__construct($responseFactory, $translation);
     }
 
     public function respond(Payload $payload): ResponseInterface {
+        parent::respond($payload);
 
         $data = ["status" => "success"];
 

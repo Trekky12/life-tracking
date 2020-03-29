@@ -19,7 +19,7 @@ class FinancesStatsAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $stats = $this->service->statsTotal();
-        return $this->responder->respond('finances/stats/index.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('finances/stats/index.twig'));
     }
 
 }

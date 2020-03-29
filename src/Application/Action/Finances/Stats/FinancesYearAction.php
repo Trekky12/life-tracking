@@ -22,7 +22,7 @@ class FinancesYearAction {
 
         $stats = $this->service->statsYear($year);
 
-        return $this->responder->respond('finances/stats/year.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('finances/stats/year.twig'));
     }
 
 }

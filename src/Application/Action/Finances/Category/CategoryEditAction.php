@@ -20,7 +20,7 @@ class CategoryEditAction {
     public function __invoke(Request $request, Response $response): Response {
         $entry_id = $request->getAttribute('id');
         $data = $this->service->edit($entry_id);
-        return $this->responder->respond('finances/category/edit.twig', $data);
+        return $this->responder->respond($data->withTemplate('finances/category/edit.twig'));
     }
 
 }

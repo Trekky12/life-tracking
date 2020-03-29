@@ -5,16 +5,17 @@ namespace App\Application\Responder;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Translator;
 
-class JSONResponder {
+class JSONResponder extends Responder {
 
-    private $responseFactory;
-
-    public function __construct(ResponseFactoryInterface $responseFactory) {
-        $this->responseFactory = $responseFactory;
+    public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation) {
+        parent::__construct($responseFactory, $translation);
     }
 
     public function respond(Payload $payload): ResponseInterface {
+        parent::respond($payload);
+
         $data = $payload->getResult();
         $json = json_encode($data);
         if ($json === false) {

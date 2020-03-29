@@ -19,7 +19,7 @@ class BudgetListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $index = $this->service->index();
-        return $this->responder->respond('finances/budget/index.twig', $index);
+        return $this->responder->respond($index->withTemplate('finances/budget/index.twig'));
     }
 
 }

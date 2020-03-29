@@ -2,7 +2,7 @@
 
 namespace App\Domain\Car;
 
-class Mapper extends \App\Domain\Mapper {
+class CarMapper extends \App\Domain\Mapper {
 
     protected $table = "cars";
     protected $dataobject = \App\Domain\Car\Car::class;

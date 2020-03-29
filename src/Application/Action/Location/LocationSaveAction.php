@@ -23,7 +23,7 @@ class LocationSaveAction {
         
         $payload = $this->service->save($id, $data);
 
-        return $this->responder->respond('location', $payload);
+        return $this->responder->respond($payload->withRouteName('location'));
     }
 
 }

@@ -152,7 +152,7 @@ class MainService extends GeneralService {
             }
         }
 
-        return ["logfile" => $logfile];
+        return new Payload(Payload::$RESULT_HTML, ["logfile" => $logfile]);
     }
 
     public function getCSRFTokens($count) {

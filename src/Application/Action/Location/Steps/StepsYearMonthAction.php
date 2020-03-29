@@ -21,7 +21,7 @@ class StepsYearMonthAction {
         $year = $request->getAttribute('year');
         $month = $request->getAttribute('month');
         $stats = $this->service->getStepsOfYearMonth($year, $month);
-        return $this->responder->respond('location/steps/steps_month.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('location/steps/steps_month.twig'));
     }
 
 }

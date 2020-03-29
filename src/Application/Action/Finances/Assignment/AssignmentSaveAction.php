@@ -21,7 +21,7 @@ class AssignmentSaveAction {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
         $entry = $this->service->save($id, $data);
-        return $this->responder->respond('finances_categories_assignment', $entry);
+        return $this->responder->respond($entry->withRouteName('finances_categories_assignment'));
     }
 
 }

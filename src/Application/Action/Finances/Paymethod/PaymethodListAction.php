@@ -19,7 +19,7 @@ class PaymethodListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $index = $this->service->index();
-        return $this->responder->respond('finances/paymethod/index.twig', $index);
+        return $this->responder->respond($index->withTemplate('finances/paymethod/index.twig'));
     }
 
 }

@@ -20,7 +20,7 @@ class FinancesEditAction {
     public function __invoke(Request $request, Response $response): Response {
         $entry_id = $request->getAttribute('id');
         $data = $this->service->edit($entry_id);
-        return $this->responder->respond('finances/edit.twig', $data);
+        return $this->responder->respond($data->withTemplate('finances/edit.twig'));
     }
 
 }

@@ -11,15 +11,14 @@ use \Slim\Flash\Messages as Flash;
 class DeleteResponder extends JSONResponder {
 
     private $flash;
-    private $translation;
 
-    public function __construct(ResponseFactoryInterface $responseFactory, Flash $flash, Translator $translation) {
-        parent::__construct($responseFactory);
+    public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation, Flash $flash) {
+        parent::__construct($responseFactory, $translation);
         $this->flash = $flash;
-        $this->translation = $translation;
     }
 
     public function respond(Payload $payload): ResponseInterface {
+        //parent::respond($payload);
 
         $error = $payload->getResult();
 
@@ -39,12 +38,13 @@ class DeleteResponder extends JSONResponder {
                 break;
 
             case Payload::$STATUS_ERROR:
+            case Payload::$NO_ACCESS:
                 $response_data['error'] = $this->translation->getTranslatedString($error);
                 $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR_DELETE"));
                 $this->flash->addMessage('message_type', 'danger');
                 break;
         }
-        
+
         return parent::respond(new Payload(Payload::$RESULT_JSON, $response_data));
     }
 

@@ -21,7 +21,7 @@ class CategorySaveAction {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
         $entry = $this->service->save($id, $data);
-        return $this->responder->respond('finances_categories', $entry);
+        return $this->responder->respond($entry->withRouteName('finances_categories'));
     }
 
 }

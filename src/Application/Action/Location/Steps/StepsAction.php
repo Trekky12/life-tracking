@@ -19,7 +19,7 @@ class StepsAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $stats = $this->service->getStepsPerYear();
-        return $this->responder->respond('location/steps/steps.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('location/steps/steps.twig'));
     }
 
 }

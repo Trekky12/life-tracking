@@ -19,7 +19,7 @@ class BanlistAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $index = $this->service->index();
-        return $this->responder->respond('main/banlist.twig', $index);
+        return $this->responder->respond($index->withTemplate('main/banlist.twig'));
     }
 
 }

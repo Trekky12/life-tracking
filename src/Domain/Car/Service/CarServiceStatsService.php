@@ -10,6 +10,7 @@ use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
 use App\Domain\Car\CarService;
+use App\Application\Payload\Payload;
 
 class CarServiceStatsService extends \App\Domain\Service {
 
@@ -22,7 +23,7 @@ class CarServiceStatsService extends \App\Domain\Service {
             Activity $activity,
             RouteParser $router,
             CurrentUser $user,
-            Mapper $mapper,
+            CarServiceMapper $mapper,
             CarService $car_service) {
         parent::__construct($logger, $translation, $settings, $activity, $router, $user);
 
@@ -158,7 +159,7 @@ class CarServiceStatsService extends \App\Domain\Service {
             }
         }
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             'data' => $data,
             "labels" => json_encode($labels),
             "table" => $table,
@@ -166,7 +167,7 @@ class CarServiceStatsService extends \App\Domain\Service {
             "totalMileages" => $totalMileages,
             "mileage_calc_type" => $calculation_type,
             "mileage_year" => $mileage_year
-        ];
+        ]);
     }
 
 }

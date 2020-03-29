@@ -50,7 +50,7 @@ class FinancesService extends GeneralService {
 
         $recordSum = round($this->getMapper()->tableSum($from, $to, 0) - $this->getMapper()->tableSum($from, $to, 1), 2);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             "list" => $table,
             "datacount" => $datacount,
             "from" => $from,
@@ -58,7 +58,7 @@ class FinancesService extends GeneralService {
             "min" => $range["min"],
             "max" => $max,
             "sum" => $recordSum
-        ];
+        ]);
     }
 
     public function table($from, $to, $requestData): Payload {
@@ -116,7 +116,7 @@ class FinancesService extends GeneralService {
         $categories = $this->cat_service->getAllCategoriesOrderedByName();
         $paymethods = $this->paymethod_service->getAllPaymethodsOrderedByName();
 
-        return ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods];
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods]);
     }
 
     public function isSplittedBillEntry($id) {

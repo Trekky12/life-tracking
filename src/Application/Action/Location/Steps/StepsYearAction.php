@@ -20,7 +20,7 @@ class StepsYearAction {
     public function __invoke(Request $request, Response $response): Response {
         $year = $request->getAttribute('year');
         $stats = $this->service->getStepsOfYear($year);
-        return $this->responder->respond('location/steps/steps_year.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('location/steps/steps_year.twig'));
     }
 
 }

@@ -19,7 +19,7 @@ class AssignmentListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $index = $this->service->index();
-        return $this->responder->respond('finances/assignment/index.twig', $index);
+        return $this->responder->respond($index->withTemplate('finances/assignment/index.twig'));
     }
 
 }

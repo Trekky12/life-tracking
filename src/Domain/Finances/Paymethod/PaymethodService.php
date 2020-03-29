@@ -5,6 +5,7 @@ namespace App\Domain\Finances\Paymethod;
 use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
 
 class PaymethodService extends GeneralService {
 
@@ -23,12 +24,12 @@ class PaymethodService extends GeneralService {
 
     public function index() {
         $paymethods = $this->getAllPaymethodsOrderedByName();
-        return ['paymethods' => $paymethods];
+        return new Payload(Payload::$RESULT_HTML, ['paymethods' => $paymethods]);
     }
 
     public function edit($entry_id) {
         $entry = $this->getEntry($entry_id);
-        return ['entry' => $entry];
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
 
 }

@@ -22,7 +22,7 @@ class LogfileAction {
         $days = intval(filter_var($request->getQueryParam('days', 1), FILTER_SANITIZE_NUMBER_INT));
 
         $logfile = $this->service->getLogfile($days);
-        return $this->responder->respond('main/logfile.twig', $logfile);
+        return $this->responder->respond($logfile->withTemplate('main/logfile.twig'));
     }
 
 }

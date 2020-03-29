@@ -25,7 +25,7 @@ class FinancesMonthTypeCategoryAction {
 
         $stats = $this->service->statsYearMonthTypeCategory($year, $month, $type, $category);
 
-        return $this->responder->respond('finances/stats/month_cat.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('finances/stats/month_cat.twig'));
     }
 
 }

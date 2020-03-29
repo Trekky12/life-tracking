@@ -4,10 +4,6 @@ namespace App\Domain\Location;
 
 use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
 use App\Domain\Finances\FinancesService;
@@ -42,13 +38,13 @@ class LocationService extends GeneralService {
 
         list($hide_clusters) = $this->getHidden($hide);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             "from" => $from,
             "to" => $to,
             "hide" => [
                 "clusters" => $hide_clusters
             ]
-        ];
+        ]);
     }
 
     private function getHidden($hide) {
@@ -89,7 +85,7 @@ class LocationService extends GeneralService {
     }
 
     public function getAddress($data) {
-        
+
         $lat = array_key_exists('lat', $data) && !empty($data['lat']) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $lng = array_key_exists('lng', $data) && !empty($data['lng']) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
@@ -110,13 +106,13 @@ class LocationService extends GeneralService {
                 }
             }
         }
-        
+
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     public function edit($entry_id) {
         $entry = $this->getEntry($entry_id);
-        return ['entry' => $entry];
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
 
 }

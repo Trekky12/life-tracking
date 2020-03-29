@@ -21,7 +21,7 @@ class FinancesYearCategoryAction {
         $year = $request->getAttribute('year');
         $type = $request->getAttribute('type');
         $stats = $this->service->statsYearType($year, $type);
-        return $this->responder->respond('finances/stats/year_cat.twig', $stats);
+        return $this->responder->respond($stats->withTemplate('finances/stats/year_cat.twig'));
     }
 
 }

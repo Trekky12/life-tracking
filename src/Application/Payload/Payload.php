@@ -7,6 +7,9 @@ class Payload {
     private $status;
     private $result;
     private $flash_messages = [];
+    private $routeName = null;
+    private $template = null;
+    
     public static $STATUS_NEW = "NEW";
     public static $STATUS_UPDATE = "UPDATED";
     public static $STATUS_NO_UPDATE = "NOT_UPDATED";
@@ -14,10 +17,14 @@ class Payload {
     public static $STATUS_ERROR = "UNDEFINED_ERROR";
     public static $STATUS_DELETE_SUCCESS = "DELETE_SUCCESS";
     public static $STATUS_DELETE_ERROR = "DELETE_ERROR";
+    
     public static $RESULT_ARRAY = "RESULT_ARRAY";
     public static $RESULT_JSON = "RESULT_JSON";
+    public static $RESULT_HTML = "RESULT_HTML";
+    
+    public static $NO_ACCESS = "NO_ACCESS";
 
-    public function __construct($status, $result, $flash_messages = []) {
+    public function __construct($status, $result = null, $flash_messages = []) {
         $this->status = $status;
         $this->result = $result;
         $this->flash_messages = $flash_messages;
@@ -41,6 +48,28 @@ class Payload {
 
     public function __toString() {
         return $this->status;
+    }
+
+    public function withRouteName($routeName) {
+        $clone = clone $this;
+        $clone->routeName = $routeName;
+
+        return $clone;
+    }
+
+    public function getRouteName() {
+        return $this->routeName;
+    }
+
+    public function withTemplate($templateName) {
+        $clone = clone $this;
+        $clone->template = $templateName;
+
+        return $clone;
+    }
+
+    public function getTemplate() {
+        return $this->template;
     }
 
 }

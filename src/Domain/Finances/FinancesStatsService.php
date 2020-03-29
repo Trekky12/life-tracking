@@ -9,6 +9,7 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Budget\BudgetService;
+use App\Application\Payload\Payload;
 
 class FinancesStatsService extends GeneralService {
 
@@ -39,12 +40,12 @@ class FinancesStatsService extends GeneralService {
 
         list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             'stats' => $data,
             "data1" => $spendings,
             "data2" => $income,
             "labels" => $labels
-        ];
+        ]);
     }
 
     public function statsYear($year) {
@@ -52,27 +53,27 @@ class FinancesStatsService extends GeneralService {
 
         list($data, $spendings, $income, $labels, $diff) = $this->createChartData($stats, "month");
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             'stats' => $data,
             "year" => $year,
             "data1" => $spendings,
             "data2" => $income,
             "labels" => $labels
-        ];
+        ]);
     }
 
     public function statsYearMonthType($year, $month, $type) {
         $stats = $this->getMapper()->statsMonthType($year, $month, $type);
         list($labels, $data) = $this->preparePieChart($stats);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             "stats" => $stats,
             "month" => $month,
             "year" => $year,
             "type" => $type,
             "data" => $data,
             "labels" => $labels
-        ];
+        ]);
     }
 
     public function statsYearMonthTypeCategory($year, $month, $type, $category) {
@@ -82,7 +83,7 @@ class FinancesStatsService extends GeneralService {
 
         list($labels, $data, $count) = $this->preparePieChartGrouped($stats);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             "stats" => $stats,
             "month" => $month,
             "year" => $year,
@@ -90,20 +91,20 @@ class FinancesStatsService extends GeneralService {
             "category" => $category_name,
             "data" => $data,
             "labels" => $labels
-        ];
+        ]);
     }
 
     public function statsYearType($year, $type) {
         $stats = $this->getMapper()->statsCategory($year, $type);
         list($labels, $data) = $this->preparePieChart($stats);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             "stats" => $stats,
             "type" => $type,
             "year" => $year,
             "data" => $data,
             "labels" => $labels
-        ];
+        ]);
     }
 
     public function statsYearTypeCategory($year, $type, $category) {
@@ -113,7 +114,7 @@ class FinancesStatsService extends GeneralService {
 
         list($labels, $data, $count) = $this->preparePieChartGrouped($stats);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             "stats" => $stats,
             "year" => $year,
             "type" => $type,
@@ -121,7 +122,7 @@ class FinancesStatsService extends GeneralService {
             "data" => $data,
             "labels" => $labels,
             "count" => $count
-        ];
+        ]);
     }
 
     public function budget($budget) {
@@ -158,12 +159,12 @@ class FinancesStatsService extends GeneralService {
         $labels = json_encode(array_keys($data), JSON_NUMERIC_CHECK);
         $data = json_encode(array_values($data), JSON_NUMERIC_CHECK);
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             "stats" => $stats,
             "budget" => $budget_name->description,
             "data" => $data,
             "labels" => $labels
-        ];
+        ]);
     }
 
     public function statsMailBalance($user_id, $month, $year, $type) {

@@ -112,23 +112,23 @@ return function (App $app) {
         });
 
         $group->group('/service', function(RouteCollectorProxy $group_service) {
-            $group_service->get('/', '\App\Domain\Car\Service\Controller:index')->setName('car_service');
-            $group_service->get('/edit/[{id:[0-9]+}]', '\App\Domain\Car\Service\Controller:edit')->setName('car_service_edit');
-            $group_service->post('/save/[{id:[0-9]+}]', '\App\Domain\Car\Service\Controller:save')->setName('car_service_save');
-            $group_service->delete('/delete/{id}', '\App\Domain\Car\Service\Controller:delete')->setName('car_service_delete');
+            $group_service->get('/', \App\Application\Action\Car\Service\ServiceListAction::class)->setName('car_service');
+            $group_service->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Service\ServiceEditAction::class)->setName('car_service_edit');
+            $group_service->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Service\ServiceSaveAction::class)->setName('car_service_save');
+            $group_service->delete('/delete/{id}', \App\Application\Action\Car\Service\ServiceDeleteAction::class)->setName('car_service_delete');
 
-            $group_service->get('/table/fuel/', '\App\Domain\Car\Service\Controller:tableFuel')->setName('car_service_fuel_table');
-            $group_service->get('/table/service/', '\App\Domain\Car\Service\Controller:tableService')->setName('car_service_service_table');
-            $group_service->get('/stats/', '\App\Domain\Car\Service\Controller:stats')->setName('car_service_stats');
-            $group_service->post('/setYearlyMileageCalcTyp', '\App\Domain\Car\Service\Controller:setYearlyMileageCalcTyp')->setName('set_mileage_type');
+            $group_service->get('/table/fuel/', \App\Application\Action\Car\Service\FuelTableAction::class)->setName('car_service_fuel_table');
+            $group_service->get('/table/service/', \App\Application\Action\Car\Service\ServiceTableAction::class)->setName('car_service_service_table');
+            $group_service->get('/stats/', \App\Application\Action\Car\Stats\CarServiceStatsAction::class)->setName('car_service_stats');
+            $group_service->post('/setYearlyMileageCalcTyp', \App\Application\Action\Car\Stats\CalculationTypeAction::class)->setName('set_mileage_type');
         });
 
         $group->group('/control', function(RouteCollectorProxy $group_control) {
-            $group_control->get('/', '\App\Domain\Car\Controller:index')->setName('cars');
-            $group_control->get('/edit/[{id:[0-9]+}]', '\App\Domain\Car\Controller:edit')->setName('cars_edit');
-            $group_control->post('/save/[{id:[0-9]+}]', '\App\Domain\Car\Controller:save')->setName('cars_save');
-            $group_control->delete('/delete/{id}', '\App\Domain\Car\Controller:delete')->setName('cars_delete');
-        })->add('App\Application\Middleware\AdminMiddleware');
+            $group_control->get('/', \App\Application\Action\Car\Car\CarListAction::class)->setName('cars');
+            $group_control->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarEditAction::class)->setName('cars_edit');
+            $group_control->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarSaveAction::class)->setName('cars_save');
+            $group_control->delete('/delete/{id}', \App\Application\Action\Car\Car\CarDeleteAction::class)->setName('cars_delete');
+        })->add(\App\Application\Middleware\AdminMiddleware::class);
     });
 
 

@@ -28,7 +28,7 @@ class LocationMapAction {
 
         $index = $this->service->index($from, $to, $hide);
 
-        return $this->responder->respond('location/index.twig', $index);
+        return $this->responder->respond($index->withTemplate('location/index.twig'));
     }
 
 }

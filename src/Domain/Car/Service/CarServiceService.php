@@ -10,13 +10,10 @@ use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
 use App\Domain\Car\CarService;
+use App\Application\Payload\Payload;
 
 class CarServiceService extends \App\Domain\Service {
 
-    protected $module = "cars";
-    protected $dataobject = \App\Domain\Car\Service\CarServiceEntry::class;
-    protected $dataobject_parent = \App\Domain\Car\Car::class;
-    protected $element_view_route = 'car_service_edit';
     private $car_service;
 
     public function __construct(LoggerInterface $logger,
@@ -25,7 +22,7 @@ class CarServiceService extends \App\Domain\Service {
             Activity $activity,
             RouteParser $router,
             CurrentUser $user,
-            Mapper $mapper,
+            CarServiceMapper $mapper,
             CarService $car_service) {
         parent::__construct($logger, $translation, $settings, $activity, $router, $user);
 
@@ -46,13 +43,13 @@ class CarServiceService extends \App\Domain\Service {
 
         $cars = $this->car_service->getAllCarsOrderedByName();
 
-        return [
+        return new Payload(Payload::$RESULT_HTML, [
             'fuel_table' => $fuel_table,
             'datacount' => $fuel_datacount,
             'cars' => $cars,
             'service_table' => $service_table,
             'datacount2' => $service_datacount
-        ];
+        ]);
     }
 
     private function renderFuelTableRows(array $table) {
@@ -69,42 +66,6 @@ class CarServiceService extends \App\Domain\Service {
             $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
         }
         return $table;
-    }
-
-    public function calculateFuelConsumption($id) {
-        $entry = $this->mapper->get($id);
-
-
-        /**
-         * Set Distance
-         */
-        if ($entry->mileage) {
-            $lastMileage = $this->mapper->getLastMileage($id, $entry->mileage, $entry->car);
-            if (!is_null($lastMileage)) {
-                $this->mapper->setDistance($id, $lastMileage);
-            }
-        }
-
-        /**
-         * Reset if set
-         */
-        $this->mapper->setConsumption($id, null);
-
-        /**
-         * Calculate Consumption when full
-         */
-        if ($entry->mileage && $entry->fuel_calc_consumption && $entry->fuel_type == 1 && !is_null($lastMileage)) {
-
-            $lastFull = $this->mapper->getLastFull($id, $entry->mileage, $entry->car);
-            if ($lastFull) {
-
-                $distance = $entry->mileage - $lastFull->mileage;
-                $volume = $this->mapper->getVolume($entry->car, $entry->date, $lastFull->date);
-                $consumption = ($volume / $distance) * 100;
-
-                $this->mapper->setConsumption($id, $consumption);
-            }
-        }
     }
 
     public function fuelTable($requestData) {
@@ -134,7 +95,7 @@ class CarServiceService extends \App\Domain\Service {
             "recordsFiltered" => intval($recordsFiltered),
             "data" => $table
         ];
-        return $response_data;
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     public function serviceTable($requestData) {
@@ -162,7 +123,7 @@ class CarServiceService extends \App\Domain\Service {
             "recordsFiltered" => intval($recordsFiltered),
             "data" => $table
         ];
-        return $response_data;
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     protected function getParentObjectService() {
@@ -182,10 +143,25 @@ class CarServiceService extends \App\Domain\Service {
         if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1, 2))) {
             SessionUtility::setSessionVar('mileage_type', $data["state"]);
         }
+
+        return new Payload(Payload::$STATUS_UPDATE, null);
     }
 
     public function getMarkers($from, $to) {
         return $this->mapper->getMarkers($from, $to);
+    }
+
+    public function edit($entry_id, $type) {
+        if (!is_null($entry_id) && !$this->hasAccessToCarOfEntry($entry_id)) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
+
+        $entry = $this->getEntry($entry_id);
+
+        $user_cars = $this->car_service->getUserCars();
+        $cars = $this->car_service->getAllCarsOrderedByName();
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars, 'type' => $type]);
     }
 
 }

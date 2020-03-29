@@ -22,7 +22,7 @@ class FinancesBudgetAction {
 
         $data = $this->service->budget($budget);
 
-        return $this->responder->respond('finances/stats/budget.twig', $data);
+        return $this->responder->respond($data->withTemplate('finances/stats/budget.twig'));
     }
 
 }

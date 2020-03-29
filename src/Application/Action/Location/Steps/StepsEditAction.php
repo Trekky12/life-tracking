@@ -23,7 +23,7 @@ class StepsEditAction {
 
         $data = $this->service->getStepsOfDate($date);
 
-        return $this->responder->respond('location/steps/edit.twig', $data);
+        return $this->responder->respond($data->withTemplate('location/steps/edit.twig'));
     }
 
 }

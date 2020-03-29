@@ -9,21 +9,20 @@ use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use \Slim\Flash\Messages as Flash;
 
-class SaveResponder {
+class SaveResponder extends Responder {
 
-    private $responseFactory;
     private $router;
     private $flash;
-    private $translation;
 
-    public function __construct(ResponseFactoryInterface $responseFactory, RouteParser $router, Flash $flash, Translator $translation) {
-        $this->responseFactory = $responseFactory;
+    public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation, RouteParser $router, Flash $flash) {
+        parent::__construct($responseFactory, $translation);
         $this->router = $router;
         $this->flash = $flash;
-        $this->translation = $translation;
     }
 
-    public function respond($routeName, Payload $payload): ResponseInterface {
+    public function respond(Payload $payload): ResponseInterface {
+        parent::respond($payload);
+        
         $entry = $payload->getResult();
 
         switch ($payload->getStatus()) {
@@ -71,7 +70,7 @@ class SaveResponder {
         }
 
         $response = $this->responseFactory->createResponse();
-        return $response->withHeader('Location', $this->router->urlFor($routeName))->withStatus(301);
+        return $response->withHeader('Location', $this->router->urlFor($payload->getRouteName()))->withStatus(301);
     }
 
 }

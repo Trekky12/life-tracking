@@ -33,7 +33,7 @@ class FinancesListAction {
 
         $index = $this->service->financeTableIndex($from, $to, $table_count_val);
 
-        return $this->responder->respond('finances/index.twig', $index);
+        return $this->responder->respond($index->withTemplate('finances/index.twig'));
     }
 
 }

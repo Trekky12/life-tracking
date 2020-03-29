@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Base\CurrentUser;
 use App\Application\Responder\HTMLResponder;
 use App\Application\Responder\RedirectResponder;
+use App\Application\Payload\Payload;
 
 class LoginpageAction {
 
@@ -26,7 +27,8 @@ class LoginpageAction {
         if (!is_null($user)) {
             return $this->responder2->respond('index');
         }
-        return $this->responder->respond('main/login.twig');
+        $payload = new Payload(Payload::$RESULT_HTML);
+        return $this->responder->respond($payload->withTemplate('main/login.twig'));
     }
 
 }
