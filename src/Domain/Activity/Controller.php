@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Domain\User\UserMapper;
 
 class Controller {
 
@@ -26,7 +27,7 @@ class Controller {
             Translator $translation,
             CurrentUser $current_user,
             ActivityMapper $mapper,
-            \App\Domain\User\Mapper $user_mapper) {
+            UserMapper $user_mapper) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->settings = $settings;

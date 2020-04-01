@@ -10,7 +10,7 @@ interface ObjectActivityData {
 
     public function getObjectViewRoute(): string;
 
-    public function getObjectViewRouteParams(int $id): array;
+    public function getObjectViewRouteParams($entry): array;
 
-    public function getObjectLink(int $id);
+    public function getObjectLink($entry);
 }

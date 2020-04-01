@@ -104,7 +104,8 @@ abstract class ObjectWriter {
             $entry = $this->getMapper()->get($id);
 
             $this->logger->addNotice("Insert Entry " . get_class($entry), array("id" => $entry->id));
-            return new Payload(Payload::$STATUS_NEW, $entry);
+            
+            return new Payload(Payload::$STATUS_NEW, $entry, $data);
         }
         // update
         $update = $this->updateEntry($entry);

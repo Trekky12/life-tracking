@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Domain\User\MobileFavorites;
+namespace App\Domain\User;
 
-use App\Domain\ObjectActivityWriter;
+use App\Domain\ObjectActivityRemover;
 use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 
-class MobileFavoritesWriter extends ObjectActivityWriter {
+class UserRemover extends ObjectActivityRemover {
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, MobileFavoritesMapper $mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, UserMapper $mapper) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
     }
 
-    public function save($id, $data, $user = null): Payload {
-        return parent::save($id, $data, $user);
+    public function delete($id, $user = null): Payload {
+        return parent::delete($id, null);
     }
 
     public function getObjectViewRoute(): string {
-        return 'users_mobile_favorites_edit';
+        return 'users_edit';
     }
 
     public function getObjectViewRouteParams($entry): array {

@@ -17,7 +17,8 @@ abstract class ObjectActivityRemover extends ObjectRemover implements ObjectActi
     }
 
     protected function deleteEntry($id) {
-        $activity = $this->activity_creator->createActivity("delete", $this->getModule(), $id, $this->getMapper(), $this->getObjectLink($id), $this->getParentMapper());
+        $entry = $this->getMapper()->get($id);
+        $activity = $this->activity_creator->createActivity("delete", $this->getModule(), $entry->id, $this->getMapper(), $this->getObjectLink($entry), $this->getParentMapper());
         $is_deleted = parent::deleteEntry($id);
         $this->activity_creator->saveActivity($activity);
 
@@ -32,10 +33,10 @@ abstract class ObjectActivityRemover extends ObjectRemover implements ObjectActi
 
     abstract function getObjectViewRoute(): string;
 
-    abstract function getObjectViewRouteParams(int $id): array;
+    abstract function getObjectViewRouteParams($entry): array;
 
-    public function getObjectLink(int $id) {
-        return ["route" => $this->getObjectViewRoute(), "params" => $this->getObjectViewRouteParams($id)];
+    public function getObjectLink($entry) {
+        return ["route" => $this->getObjectViewRoute(), "params" => $this->getObjectViewRouteParams($entry)];
     }
 
 }

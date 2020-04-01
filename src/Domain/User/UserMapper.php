@@ -2,7 +2,7 @@
 
 namespace App\Domain\User;
 
-class Mapper extends \App\Domain\Mapper {
+class UserMapper extends \App\Domain\Mapper {
 
     protected $table = 'global_users';
     protected $dataobject = \App\Domain\User\User::class;

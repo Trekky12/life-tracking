@@ -8,7 +8,9 @@ class Payload {
     private $result;
     private $flash_messages = [];
     private $routeName = null;
+    private $routeParams = [];
     private $template = null;
+    private $additionalData = [];
     public static $STATUS_NEW = "NEW";
     public static $STATUS_UPDATE = "UPDATED";
     public static $STATUS_NO_UPDATE = "NOT_UPDATED";
@@ -26,10 +28,14 @@ class Payload {
     public static $STATUS_PROFILE_IMAGE_DELETED = "PROFILE_IMAGE_DELETED";
     public static $STATUS_PROFILE_IMAGE_ERROR = "PROFILE_IMAGE_ERROR";
     public static $STATUS_PROFILE_IMAGE_SET = "PROFILE_IMAGE_SET";
+    public static $STATUS_MAIL_SUCCESS = "MAIL_SUCCESS";
+    public static $STATUS_MAIL_ERROR = "MAIL_ERROR";
+    public static $STATUS_NO_MAIL = "MAIL_NO_MAIL";
 
-    public function __construct($status, $result = null, $flash_messages = []) {
+    public function __construct($status, $result = null, $additionalData = [], $flash_messages = []) {
         $this->status = $status;
         $this->result = $result;
+        $this->additionalData = $additionalData;
         $this->flash_messages = $flash_messages;
     }
 
@@ -73,6 +79,28 @@ class Payload {
 
     public function getTemplate() {
         return $this->template;
+    }
+
+    public function withAdditonalData($data) {
+        $clone = clone $this;
+        $clone->additionalData = $data;
+
+        return $clone;
+    }
+
+    public function getAdditonalData() {
+        return $this->additionalData;
+    }
+    
+    public function withRouteParams($data) {
+        $clone = clone $this;
+        $clone->routeParams = $data;
+
+        return $clone;
+    }
+    
+    public function getRouteParams(){
+        return $this->routeParams;
     }
 
 }

@@ -23,8 +23,8 @@ class CategoryRemover extends ObjectActivityRemover {
         return 'finances_categories_edit';
     }
 
-    public function getObjectViewRouteParams(int $id): array {
-        return ["id" => $id];
+    public function getObjectViewRouteParams($entry): array {
+        return ["id" => $entry->id];
     }
 
     public function getModule(): string {

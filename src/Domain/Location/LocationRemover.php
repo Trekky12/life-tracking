@@ -23,8 +23,8 @@ class LocationRemover extends ObjectActivityRemover {
         return 'location_edit';
     }
 
-    public function getObjectViewRouteParams(int $id): array {
-        return ["id" => $id];
+    public function getObjectViewRouteParams($entry): array {
+        return ["id" => $entry->id];
     }
 
     public function getModule(): string {

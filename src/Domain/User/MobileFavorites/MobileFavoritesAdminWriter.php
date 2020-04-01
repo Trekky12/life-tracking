@@ -8,7 +8,7 @@ use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 
-class MobileFavoritesWriter extends ObjectActivityWriter {
+class MobileFavoritesAdminWriter extends ObjectActivityWriter {
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, MobileFavoritesMapper $mapper) {
         parent::__construct($logger, $user, $activity);
@@ -20,11 +20,11 @@ class MobileFavoritesWriter extends ObjectActivityWriter {
     }
 
     public function getObjectViewRoute(): string {
-        return 'users_mobile_favorites_edit';
+        return 'users_mobile_favorites_edit_admin';
     }
 
     public function getObjectViewRouteParams($entry): array {
-        return ["id" => $entry->id];
+        return ["id" => $entry->id, "user" => $entry->user];
     }
 
     public function getModule(): string {

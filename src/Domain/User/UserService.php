@@ -2,32 +2,23 @@
 
 namespace App\Domain\User;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
+use App\Domain\Main\Translator;
+use App\Application\Payload\Payload;
 
-class UserService extends \App\Domain\Service {
+class UserService extends GeneralService {
 
-    protected $dataobject = \App\Domain\User\User::class;
-    protected $element_view_route = 'users_edit';
     private $helper;
+    private $translation;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper,
-            Helper $helper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, UserMapper $mapper, Helper $helper, Translator $translation) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->helper = $helper;
+        $this->translation = $translation;
     }
 
     public function getAllUsersOrderedByLogin() {
@@ -80,7 +71,20 @@ class UserService extends \App\Domain\Service {
         return ['user', 'admin'];
     }
 
-    public function sendTestNoficiationMail($id) {
+    public function testMail($user_id) {
+        list($has_mail, $result) = $this->sendTestNotificationMail($user_id);
+        if ($has_mail) {
+            if ($result) {
+                return new Payload(Payload::$STATUS_MAIL_SUCCESS);
+            } else {
+                return new Payload(Payload::$STATUS_MAIL_ERROR);
+            }
+        }
+        return new Payload(Payload::$STATUS_NO_MAIL);
+    }
+
+    private function sendTestNotificationMail($id) {
+
         $entry = $this->mapper->get($id);
 
         if ($entry->mail) {
@@ -94,6 +98,9 @@ class UserService extends \App\Domain\Service {
                 'content' => $this->translation->getTranslatedString('THISISATESTEMAIL')
             );
 
+
+            $this->logger->addInfo("Send test mail");
+
             $return = $this->helper->send_mail('mail/general.twig', $entry->mail, $subject, $variables);
 
             return array(true, $return);
@@ -101,31 +108,15 @@ class UserService extends \App\Domain\Service {
         return array(false, false);
     }
 
-    public function sendNewUserNotificationMail($id, $data) {
-        $user = $this->mapper->get($id);
-        if ($user->mail && $user->mails_user == 1) {
+    public function index() {
+        $list = $this->getAllUsersOrderedByLogin();
+        return new Payload(Payload::$RESULT_HTML, ['list' => $list]);
+    }
 
-            $subject = sprintf($this->translation->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->helper->getBaseURL());
-
-            $variables = array(
-                'header' => '',
-                'subject' => $subject,
-                'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                'content' => sprintf($this->translation->getTranslatedString('MAIL_USER_ACCOUNT_CREATED'), $this->helper->getBaseURL(), $this->helper->getBaseURL())
-                . '<br/>&nbsp;<br/>&nbsp;'
-                . sprintf($this->translation->getTranslatedString('MAIL_YOUR_USERNAME'), $user->login)
-            );
-
-            if (array_key_exists("password", $data)) {
-                $variables["content"] .= '<br/>&nbsp;' . sprintf($this->translation->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["password"]);
-            }
-
-            if ($user->force_pw_change == 1) {
-                $variables["content"] .= '<br/>&nbsp;<br/>&nbsp;' . $this->translation->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
-            }
-
-            $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-        }
+    public function edit($entry_id) {
+        $entry = $this->getEntry($entry_id);
+        $roles = $this->getRoles();
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, "roles" => $roles]);
     }
 
 }

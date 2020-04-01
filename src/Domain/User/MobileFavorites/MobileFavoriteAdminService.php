@@ -2,28 +2,19 @@
 
 namespace App\Domain\User\MobileFavorites;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
+use App\Application\Payload\Payload;
 
-class MobileFavoriteAdminService extends MobileFavoriteService {
+class MobileFavoriteAdminService extends GeneralService {
 
-    protected $dataobject_parent = \App\Domain\User\User::class;
-    protected $element_view_route = 'users_mobile_favorites_edit_admin';
+    private $user_service;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper,
-            UserService $user_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user, $mapper);
+    public function __construct(LoggerInterface $logger, CurrentUser $user, MobileFavoritesMapper $mapper, UserService $user_service) {
+        parent::__construct($logger, $user);
+        $this->mapper = $mapper;
         $this->user_service = $user_service;
     }
 
@@ -37,13 +28,16 @@ class MobileFavoriteAdminService extends MobileFavoriteService {
         return $user;
     }
 
-    protected function getElementViewRoute($entry) {
-        $this->element_view_route_params["user"] = $entry->user;
-        return parent::getElementViewRoute($entry);
+    public function index($user_id) {
+        $user = $this->setUserForMapper($user_id);
+        $favorites = $this->mapper->getAll('position');
+        return new Payload(Payload::$RESULT_HTML, ['list' => $favorites, 'for_user' => $user]);
     }
 
-    protected function getParentObjectService() {
-        return $this->user_service;
+    public function edit($user_id, $entry_id) {
+        $user = $this->setUserForMapper($user_id);
+        $entry = $this->getEntry($entry_id);
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'for_user' => $user]);
     }
 
 }

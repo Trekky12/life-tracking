@@ -137,7 +137,7 @@ return function (App $app) {
         $group->post('/changepassword', \App\Application\Action\Profile\ChangePasswordAction::class)->setName('users_change_password');
         $group->get('/image', \App\Application\Action\Profile\ProfileImageAction::class)->setName('users_profile_image');
         $group->post('/image', \App\Application\Action\Profile\ProfileImageSaveAction::class)->setName('users_profile_image');
-        
+
         $group->get('/edit', \App\Application\Action\Profile\ProfileEditAction::class)->setName('users_profile_edit');
         $group->post('/edit', \App\Application\Action\Profile\ProfileSaveAction::class)->setName('users_profile_edit');
 
@@ -158,29 +158,29 @@ return function (App $app) {
     });
 
     $app->group('/users', function(RouteCollectorProxy $group) {
-        $group->get('/', '\App\Domain\User\Controller:index')->setName('users');
-        $group->get('/edit/[{id:[0-9]+}]', '\App\Domain\User\Controller:edit')->setName('users_edit');
-        $group->post('/save/[{id:[0-9]+}]', '\App\Domain\User\Controller:save')->setName('users_save');
-        $group->delete('/delete/{id}', '\App\Domain\User\Controller:delete')->setName('users_delete');
+        $group->get('/', \App\Application\Action\User\UserListAction::class)->setName('users');
+        $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\User\UserEditAction::class)->setName('users_edit');
+        $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\UserSaveAction::class)->setName('users_save');
+        $group->delete('/delete/{id}', \App\Application\Action\User\UserDeleteAction::class)->setName('users_delete');
 
         $group->group('/tokens', function(RouteCollectorProxy $group_tokens) {
-            $group_tokens->get('/', '\App\Domain\User\Token\ControllerAdmin:index')->setName('login_tokens');
-            $group_tokens->delete('/delete/{id}', '\App\Domain\User\Token\ControllerAdmin:delete')->setName('login_tokens_delete');
-            $group_tokens->get('/deleteOld', '\App\Domain\User\Token\ControllerAdmin:deleteOld')->setName('login_tokens_delete_old');
+            $group_tokens->get('/', \App\Application\Action\User\LoginTokens\LoginTokensListAction::class)->setName('login_tokens');
+            $group_tokens->delete('/delete/{id}', \App\Application\Action\User\LoginTokens\LoginTokensDeleteAction::class)->setName('login_tokens_delete');
+            $group_tokens->get('/deleteOld',  \App\Application\Action\User\LoginTokens\LoginTokensDeleteOldAction::class)->setName('login_tokens_delete_old');
         });
 
         $group->group('/{user:[0-9]+}', function(RouteCollectorProxy $group_user) {
 
-            $group_user->get('/testmail', '\App\Domain\User\Controller:testMail')->setName('users_test_mail');
+            $group_user->get('/testmail', \App\Application\Action\User\TestMailAction::class)->setName('users_test_mail');
 
             $group_user->group('/favorites', function(RouteCollectorProxy $group_user_favorites) {
-                $group_user_favorites->get('/', '\App\Domain\User\MobileFavorites\ControllerAdmin:index')->setName('users_mobile_favorites_admin');
-                $group_user_favorites->get('/edit/[{id:[0-9]+}]', '\App\Domain\User\MobileFavorites\ControllerAdmin:edit')->setName('users_mobile_favorites_edit_admin');
-                $group_user_favorites->post('/save/[{id:[0-9]+}]', '\App\Domain\User\MobileFavorites\ControllerAdmin:save')->setName('users_mobile_favorites_save_admin');
-                $group_user_favorites->delete('/delete/{id}', '\App\Domain\User\MobileFavorites\ControllerAdmin:delete')->setName('users_mobile_favorites_delete_admin');
+                $group_user_favorites->get('/', \App\Application\Action\User\MobileFavorites\MobileFavoritesListAction::class)->setName('users_mobile_favorites_admin');
+                $group_user_favorites->get('/edit/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesEditAction::class)->setName('users_mobile_favorites_edit_admin');
+                $group_user_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesSaveAction::class)->setName('users_mobile_favorites_save_admin');
+                $group_user_favorites->delete('/delete/{id}', \App\Application\Action\User\MobileFavorites\MobileFavoritesDeleteAction::class)->setName('users_mobile_favorites_delete_admin');
             });
         });
-    })->add('App\Application\Middleware\AdminMiddleware');
+    })->add(\App\Application\Middleware\AdminMiddleware::class);
 
 
     $app->group('/notifications', function(RouteCollectorProxy $group) {

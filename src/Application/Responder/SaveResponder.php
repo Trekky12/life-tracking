@@ -70,7 +70,7 @@ class SaveResponder extends Responder {
         }
 
         $response = $this->responseFactory->createResponse();
-        return $response->withHeader('Location', $this->router->urlFor($payload->getRouteName()))->withStatus(301);
+        return $response->withHeader('Location', $this->router->urlFor($payload->getRouteName(), $payload->getRouteParams()))->withStatus(301);
     }
 
 }

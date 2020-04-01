@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Base\Settings;
-use App\Domain\User\Mapper as UserMapper;
+use App\Domain\User\UserMapper;
 use App\Domain\Main\Translator;
 
 class ActivityService extends GeneralService {

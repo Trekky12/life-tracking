@@ -22,7 +22,8 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
 
     protected function insertEntry($entry) {
         $id = parent::insertEntry($entry);
-        $activity = $this->activity_creator->createActivity("create", $this->getModule(), $id, $this->getMapper(), $this->getObjectLink($id), $this->getParentMapper());
+        $entry_new = $this->getMapper()->get($id);
+        $activity = $this->activity_creator->createActivity("create", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper());
         $this->activity_creator->saveActivity($activity);
 
         return $id;
@@ -30,8 +31,8 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
 
     protected function updateEntry($entry) {
         $updated = parent::updateEntry($entry);
-        $id = $entry->id;
-        $activity = $this->activity_creator->createActivity("update", $this->getModule(), $id, $this->getMapper(), $this->getObjectLink($id), $this->getParentMapper());
+        $entry_new = $this->getMapper()->get($entry->id);
+        $activity = $this->activity_creator->createActivity("update", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper());
         $this->activity_creator->saveActivity($activity);
 
         return $updated;
@@ -41,10 +42,10 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
 
     abstract function getObjectViewRoute(): string;
 
-    abstract function getObjectViewRouteParams(int $id): array;
+    abstract function getObjectViewRouteParams($entry): array;
 
-    public function getObjectLink(int $id) {
-        return ["route" => $this->getObjectViewRoute(), "params" => $this->getObjectViewRouteParams($id)];
+    public function getObjectLink($entry) {
+        return ["route" => $this->getObjectViewRoute(), "params" => $this->getObjectViewRouteParams($entry)];
     }
 
 }
