@@ -2,28 +2,15 @@
 
 namespace App\Domain\Notifications\Categories;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
 
-class NotificationCategoryService extends \App\Domain\Service {
+class NotificationCategoryService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Notifications\Categories\Category::class;
-    protected $element_view_route = 'notifications_categories_edit';
-    protected $module = "notifications";
-
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, NotificationCategoryMapper $mapper) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
     }
 
@@ -31,7 +18,7 @@ class NotificationCategoryService extends \App\Domain\Service {
         return $this->mapper->getAll('name');
     }
 
-    public function getCustomCategories() {
+    private function getCustomCategories() {
         $categories = $this->mapper->getAll('name');
         $categories_filtered = array_filter($categories, function($cat) {
             return !$cat->isInternal();
@@ -50,6 +37,20 @@ class NotificationCategoryService extends \App\Domain\Service {
 
     public function getCategoryByIdentifier($identifier) {
         return $this->mapper->getCategoryByIdentifier($identifier);
+    }
+
+    public function index() {
+        $categories = $this->getCustomCategories();
+        return new Payload(Payload::$RESULT_HTML, ['categories' => $categories]);
+    }
+
+    public function edit($entry_id) {
+        if (!is_null($entry_id) && $this->isInternalCategory($entry_id)) {
+            return new Payload(Payload::$NO_ACCESS);
+        }
+
+        $entry = $this->getEntry($entry_id);
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
 
 }

@@ -2,26 +2,15 @@
 
 namespace App\Domain\Notifications\Users;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
 
-class NotificationUsersService extends \App\Domain\Service {
+class NotificationUsersService extends GeneralService {
 
-    protected $module = "notifications";
-
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, NotificationUsersMapper $mapper) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
     }
 
@@ -33,7 +22,12 @@ class NotificationUsersService extends \App\Domain\Service {
         return $this->mapper->getUsersByCategory($category);
     }
 
-    public function setCategoryForUser($category, $type) {
+    public function setCategoryForUser($data) {
+
+        $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+
+
         $user = $this->current_user->getUser();
 
         if ($type == 1) {
@@ -41,6 +35,8 @@ class NotificationUsersService extends \App\Domain\Service {
         } else {
             $this->mapper->deleteCategory($user->id, $category);
         }
+        $result = ["status" => "success"];
+        return new Payload(Payload::$RESULT_JSON, $result);
     }
 
 }

@@ -38,9 +38,14 @@ class DeleteResponder extends JSONResponder {
                 break;
 
             case Payload::$STATUS_ERROR:
-            case Payload::$NO_ACCESS:
                 $response_data['error'] = $this->translation->getTranslatedString($error);
                 $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR_DELETE"));
+                $this->flash->addMessage('message_type', 'danger');
+                break;
+
+            case Payload::$NO_ACCESS:
+                $response_data['error'] = $this->translation->getTranslatedString("NO_ACCESS");
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("NO_ACCESS"));
                 $this->flash->addMessage('message_type', 'danger');
                 break;
         }

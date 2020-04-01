@@ -2,29 +2,21 @@
 
 namespace App\Domain\Notifications\Clients;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\Utility;
+use App\Application\Payload\Payload;
+use App\Domain\User\UserService;
 
-class NotificationClientsService extends \App\Domain\Service {
+class NotificationClientsService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Notifications\Clients\NotificationClient::class;
-    protected $module = "notifications";
+    private $user_service;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, NotificationClientsMapper $mapper, UserService $user_service) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->user_service = $user_service;
     }
 
     public function getClients() {
@@ -49,14 +41,14 @@ class NotificationClientsService extends \App\Domain\Service {
         return $entry;
     }
 
-    public function createSubscription($data) {
+    private function createSubscription($data) {
         $client = $this->createNotificationClient($data);
         $this->mapper->insert($client);
 
         return $client;
     }
 
-    public function updateSubscription($data) {
+    private function updateSubscription($data) {
         $client = $this->createNotificationClient($data);
         $client->changedOn = date('Y-m-d H:i:s');
 
@@ -72,7 +64,7 @@ class NotificationClientsService extends \App\Domain\Service {
         return null;
     }
 
-    public function deleteSubscription($data) {
+    private function deleteSubscription($data) {
         $client = $this->createNotificationClient($data);
         $this->mapper->delete($client->endpoint, "endpoint");
 
@@ -83,17 +75,66 @@ class NotificationClientsService extends \App\Domain\Service {
         return $this->mapper->delete($id);
     }
 
-    public function getCategoriesFromEndpoint($endpoint) {
-        return $this->mapper->getCategoriesFromEndpoint($endpoint);
+    public function getCategoriesFromEndpoint($data) {
+        $result = ["data" => [], "status" => "success"];
+        $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+        $result["data"] = $this->mapper->getCategoriesFromEndpoint($endpoint);
+
+        return new Payload(Payload::$RESULT_JSON, $result);
     }
 
-    public function setCategoryOfEndpoint($endpoint, $category, $type) {
+    public function setCategoryOfEndpoint($data) {
+        $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+        $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+
         $client = $this->mapper->getClientByEndpoint($endpoint);
         if ($type == 1) {
             $this->mapper->addCategory($client->id, $category);
         } else {
             $this->mapper->deleteCategory($client->id, $category);
         }
+        $result = ["status" => "success"];
+        return new Payload(Payload::$RESULT_JSON, $result);
+    }
+
+    public function create($data) {
+        $result = ['status' => 'error'];
+        $entry = $this->createSubscription($data);
+        $this->logger->addInfo('Subscription insert', $entry->get_fields());
+
+        $result['status'] = 'success';
+        return new Payload(Payload::$RESULT_JSON, $result);
+    }
+
+    public function update($data) {
+        $result = ['status' => 'error'];
+        $client = $this->updateSubscription($data);
+
+        if ($client) {
+            $result['status'] = 'success';
+        }
+        return new Payload(Payload::$RESULT_JSON, $result);
+    }
+
+    public function delete($data) {
+        $result = ['status' => 'error'];
+        $entry = $this->deleteSubscription($data);
+        $this->logger->addInfo('Subscription delete', $entry->get_fields());
+
+        $result['status'] = 'success';
+        return new Payload(Payload::$RESULT_JSON, $result);
+    }
+
+    public function index() {
+        $list = $this->getClients();
+        $users = $this->user_service->getAll();
+        return new Payload(Payload::$RESULT_HTML, ['list' => $list, 'users' => $users]);
+    }
+
+    public function showTest($entry_id) {
+        $entry = $this->getEntry($entry_id);
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Notifications\Users;
 
-class Mapper extends \App\Domain\Mapper {
+class NotificationUsersMapper extends \App\Domain\Mapper {
 
     protected $table = "notifications_categories_users";
 

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Notifications\Clients;
 
-class Mapper extends \App\Domain\Mapper {
+class NotificationClientsMapper extends \App\Domain\Mapper {
 
     protected $table = 'notifications_clients';
     protected $dataobject = \App\Domain\Notifications\Clients\NotificationClient::class;

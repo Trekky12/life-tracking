@@ -428,7 +428,7 @@ CREATE TABLE notifications (
     title varchar(255) NOT NULL,
     message varchar(255) NOT NULL,
     seen TIMESTAMP NULL,
-    link varchar(255) NOT NULL,
+    link varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE

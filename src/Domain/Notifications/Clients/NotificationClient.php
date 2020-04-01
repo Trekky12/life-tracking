@@ -20,5 +20,9 @@ class NotificationClient extends \App\Domain\DataObject {
             $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
         }
     }
+    
+    public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings): string {
+        return sprintf("%s (%s)", $this->agent, $this->createdOn);
+    }
 
 }

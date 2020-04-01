@@ -18,7 +18,9 @@ class HTMLResponder extends Responder {
     }
 
     public function respond(Payload $payload): ResponseInterface {
-        $response = $this->responseFactory->createResponse()->withHeader('Content-Type', 'text/html; charset=utf-8');
+        $response = parent::respond($payload);
+        
+        $response = $response->withHeader('Content-Type', 'text/html; charset=utf-8');
         
         $result = $payload->getResult();
         $data = !is_null($result) ? $result : [];

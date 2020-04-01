@@ -2,37 +2,37 @@
 
 namespace App\Domain\Notifications;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
+use App\Application\Payload\Payload;
 
-class NotificationsService extends \App\Domain\Service {
+class NotificationsService extends GeneralService {
 
-    protected $module = "notifications";
+    private $translation;
+    private $settings;
     private $user_notifications_service;
     private $cat_service;
     private $client_service;
     private $helper;
 
     public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
             Translator $translation,
             Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper,
+            NotificationsMapper $mapper,
             Users\NotificationUsersService $user_notifications_service,
             Categories\NotificationCategoryService $cat_service,
             Clients\NotificationClientsService $client_service,
             Helper $helper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+        parent::__construct($logger, $user);
+        $this->translation = $translation;
+        $this->settings = $settings;
         $this->mapper = $mapper;
         $this->user_notifications_service = $user_notifications_service;
         $this->cat_service = $cat_service;
@@ -53,7 +53,12 @@ class NotificationsService extends \App\Domain\Service {
         return 0;
     }
 
-    public function getNotifications($limit = 10, $offset = 0) {
+    public function getNotifications($data) {
+
+        //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+        $limit = array_key_exists('count', $data) ? filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT) : 5;
+        $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
         $user = $this->current_user->getUser();
         $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
 
@@ -81,10 +86,10 @@ class NotificationsService extends \App\Domain\Service {
 
         $result["unseen"] = $this->mapper->getUnreadNotificationsCountByUser($user->id);
 
-        return $result;
+        return new Payload(Payload::$RESULT_JSON, $result);
     }
 
-    public function sendNotificationsToUsersWithCategory($identifier, $title, $message) {
+    private function sendNotificationsToUsersWithCategory($identifier, $title, $message) {
         try {
             $category_id = $this->cat_service->getCategoryByIdentifier($identifier);
 
@@ -129,7 +134,7 @@ class NotificationsService extends \App\Domain\Service {
         }
     }
 
-    public function sendNotification(\App\Domain\Notifications\Clients\NotificationClient $entry, $title, $content, $path = null, $id = null) {
+    private function sendNotification(\App\Domain\Notifications\Clients\NotificationClient $entry, $title, $content, $path = null, $id = null) {
 
         $settings = $this->settings->getAppSettings()['push'];
 
@@ -189,6 +194,43 @@ class NotificationsService extends \App\Domain\Service {
         //$this->logger->addError('[PUSH] Result', ["data" => $report]);
 
         return $report;
+    }
+
+    public function index() {
+        return new Payload(Payload::$RESULT_HTML);
+    }
+
+    public function notifyByCategory($requestData) {
+        $category = array_key_exists("type", $requestData) ? filter_var($requestData["type"], FILTER_SANITIZE_STRING) : "";
+        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_SANITIZE_STRING) : "";
+        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_SANITIZE_STRING) : "";
+
+        $this->sendNotificationsToUsersWithCategory($category, $title, $message);
+
+        $response_data = ['status' => 'done'];
+
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    public function manage() {
+        $categories = $this->cat_service->getAllCategories();
+        $user_categories = $this->getCategoriesOfCurrentUser();
+
+        return new Payload(Payload::$RESULT_HTML, ["categories" => $categories, "user_categories" => $user_categories]);
+    }
+
+    public function sendTestNotification($entry_id, $data) {
+        $title = array_key_exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING) : null;
+        $message = array_key_exists('message', $data) ? filter_var($data['message'], FILTER_SANITIZE_STRING) : null;
+
+        $entry = $this->client_service->getEntry($entry_id);
+
+        $result = $this->sendNotification($entry, $title, $message);
+
+        if ($result) {
+            return new Payload(Payload::$STATUS_NOTIFICATION_SUCCESS);
+        }
+        return new Payload(Payload::$STATUS_NOTIFICATION_FAILURE);
     }
 
 }

@@ -166,7 +166,7 @@ return function (App $app) {
         $group->group('/tokens', function(RouteCollectorProxy $group_tokens) {
             $group_tokens->get('/', \App\Application\Action\User\LoginTokens\LoginTokensListAction::class)->setName('login_tokens');
             $group_tokens->delete('/delete/{id}', \App\Application\Action\User\LoginTokens\LoginTokensDeleteAction::class)->setName('login_tokens_delete');
-            $group_tokens->get('/deleteOld',  \App\Application\Action\User\LoginTokens\LoginTokensDeleteOldAction::class)->setName('login_tokens_delete_old');
+            $group_tokens->get('/deleteOld', \App\Application\Action\User\LoginTokens\LoginTokensDeleteOldAction::class)->setName('login_tokens_delete_old');
         });
 
         $group->group('/{user:[0-9]+}', function(RouteCollectorProxy $group_user) {
@@ -185,32 +185,35 @@ return function (App $app) {
 
     $app->group('/notifications', function(RouteCollectorProxy $group) {
 
-        // https://github.com/slimphp/Slim/pull/2776
         $group->group('/clients', function(RouteCollectorProxy $group_clients) {
-            $group_clients->get('/', '\App\Domain\Notifications\Clients\Controller:index')->setName('notifications_clients');
-            $group_clients->delete('/delete/{id}', '\App\Domain\Notifications\Clients\Controller:delete')->setName('notifications_clients_delete');
-            $group_clients->map(['GET', 'POST'], '/test/{id:[0-9]+}', '\App\Domain\Notifications\Controller:testNotification')->setName('notifications_clients_test');
-        })->add('App\Application\Middleware\AdminMiddleware');
+            $group_clients->get('/', \App\Application\Action\Notifications\Clients\NotificationClientsListAction::class)->setName('notifications_clients');
+            $group_clients->delete('/delete/{id}', \App\Application\Action\Notifications\Clients\NotificationClientsDeleteAction::class)->setName('notifications_clients_delete');
+            $group_clients->get('/test/{id:[0-9]+}', \App\Application\Action\Notifications\Clients\NotificationClientsTestAction::class)->setName('notifications_clients_test');
+            $group_clients->post('/test/{id:[0-9]+}', \App\Application\Action\Notifications\Clients\NotificationClientsTestSendAction::class)->setName('notifications_clients_test');
+        })->add(\App\Application\Middleware\AdminMiddleware::class);
 
         $group->group('/categories', function(RouteCollectorProxy $group_categories) {
-            $group_categories->get('/', '\App\Domain\Notifications\Categories\Controller:index')->setName('notifications_categories');
-            $group_categories->get('/edit/[{id:[0-9]+}]', '\App\Domain\Notifications\Categories\Controller:edit')->setName('notifications_categories_edit');
-            $group_categories->post('/save/[{id:[0-9]+}]', '\App\Domain\Notifications\Categories\Controller:save')->setName('notifications_categories_save');
-            $group_categories->delete('/delete/{id}', '\App\Domain\Notifications\Categories\Controller:delete')->setName('notifications_categories_delete');
-        })->add('App\Application\Middleware\AdminMiddleware');
+            $group_categories->get('/', \App\Application\Action\Notifications\Categories\NotificationCategoryListAction::class)->setName('notifications_categories');
+            $group_categories->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Notifications\Categories\NotificationCategoryEditAction::class)->setName('notifications_categories_edit');
+            $group_categories->post('/save/[{id:[0-9]+}]', \App\Application\Action\Notifications\Categories\NotificationCategorySaveAction::class)->setName('notifications_categories_save');
+            $group_categories->delete('/delete/{id}', \App\Application\Action\Notifications\Categories\NotificationCategoryDeleteAction::class)->setName('notifications_categories_delete');
+        })->add(\App\Application\Middleware\AdminMiddleware::class);
 
-        $group->get('/', '\App\Domain\Notifications\Controller:overview')->setName('notifications');
-        $group->get('/manage/', '\App\Domain\Notifications\Controller:manage')->setName('notifications_clients_manage');
-        $group->map(['POST', 'PUT', 'DELETE'], '/subscribe/', '\App\Domain\Notifications\Clients\Controller:subscribe')->setName('notifications_clients_subscribe');
+        $group->get('/', \App\Application\Action\Notifications\NotificationsAction::class)->setName('notifications');
+        $group->get('/manage/', \App\Application\Action\Notifications\NotificationsManageAction::class)->setName('notifications_clients_manage');
 
-        $group->get('/notify', '\App\Domain\Notifications\Controller:notifyByCategory');
+        $group->post('/subscribe/', \App\Application\Action\Notifications\Clients\NotificationClientsCreateAPIAction::class)->setName('notifications_clients_subscribe');
+        $group->put('/subscribe/', \App\Application\Action\Notifications\Clients\NotificationClientsUpdateAPIAction::class)->setName('notifications_clients_subscribe');
+        $group->delete('/subscribe/', \App\Application\Action\Notifications\Clients\NotificationClientsDeleteAPIAction::class)->setName('notifications_clients_subscribe');
+
+
+        $group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         // use post because endpoint param is too complex for a GET param
-        $group->post('/getCategories', '\App\Domain\Notifications\Clients\Controller:getCategoriesFromEndpoint')->setName('notifications_clients_categories');
-        $group->post('/setCategorySubscription', '\App\Domain\Notifications\Clients\Controller:setCategoryOfEndpoint')->setName('notifications_clients_set_category');
-        $group->post('/setCategoryUser', '\App\Domain\Notifications\Users\Controller:setCategoryforUser')->setName('notifications_clients_set_category_user');
+        $group->post('/getCategories', \App\Application\Action\Notifications\Clients\NotificationClientsCategoriesAction::class)->setName('notifications_clients_categories');
+        $group->post('/setCategorySubscription', \App\Application\Action\Notifications\Clients\NotificationClientsSetCategoryAction::class)->setName('notifications_clients_set_category');
+        $group->post('/setCategoryUser', \App\Application\Action\Notifications\Users\NotificationClientsSetCategoryAction::class)->setName('notifications_clients_set_category_user');
 
-        $group->post('/getNotifications', '\App\Domain\Notifications\Controller:getNotificationsByUser')->setName('notifications_get');
-        $group->post('/getUnreadNotifications', '\App\Domain\Notifications\Controller:getUnreadNotificationsByUser')->setName('notifications_get_unread');
+        $group->post('/getNotifications', \App\Application\Action\Notifications\NotificationsListAction::class)->setName('notifications_get');
     });
 
 
