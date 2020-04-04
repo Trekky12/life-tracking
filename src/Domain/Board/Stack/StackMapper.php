@@ -2,7 +2,7 @@
 
 namespace App\Domain\Board\Stack;
 
-class Mapper extends \App\Domain\Mapper {
+class StackMapper extends \App\Domain\Mapper {
 
     protected $table = "boards_stacks";
     protected $dataobject = \App\Domain\Board\Stack\Stack::class;

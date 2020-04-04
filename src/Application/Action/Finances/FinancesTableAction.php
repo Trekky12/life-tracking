@@ -5,7 +5,7 @@ namespace App\Application\Action\Finances;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Finances\FinancesService;
-use App\Application\Responder\JSONResponder;
+use App\Application\Responder\JSONResultResponder;
 use App\Domain\Main\Utility\DateUtility;
 
 class FinancesTableAction {
@@ -13,7 +13,7 @@ class FinancesTableAction {
     private $responder;
     private $service;
 
-    public function __construct(JSONResponder $responder, FinancesService $service) {
+    public function __construct(JSONResultResponder $responder, FinancesService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

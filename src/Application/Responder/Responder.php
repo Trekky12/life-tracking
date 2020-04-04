@@ -18,10 +18,6 @@ abstract class Responder {
     }
 
     protected function respond(Payload $payload): ResponseInterface {
-        if ($payload->getStatus() == Payload::$NO_ACCESS) {
-            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
-        }
-        
         return $this->responseFactory->createResponse();
     }
 

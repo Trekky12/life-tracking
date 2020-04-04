@@ -5,14 +5,14 @@ namespace App\Application\Action\User\MobileFavorites;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\User\MobileFavorites\MobileFavoriteAdminService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class MobileFavoritesEditAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, MobileFavoriteAdminService $service) {
+    public function __construct(HTMLTemplateResponder $responder, MobileFavoriteAdminService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

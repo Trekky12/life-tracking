@@ -5,7 +5,7 @@ namespace App\Application\Action\Location;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Location\LocationService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 use App\Domain\Main\Utility\DateUtility;
 
 class LocationMapAction {
@@ -13,7 +13,7 @@ class LocationMapAction {
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, LocationService $service) {
+    public function __construct(HTMLTemplateResponder $responder, LocationService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

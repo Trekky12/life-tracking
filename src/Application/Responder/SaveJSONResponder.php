@@ -7,17 +7,16 @@ use Psr\Http\Message\ResponseInterface;
 use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 
-class SaveJSONResponder extends Responder {
+class SaveJSONResponder extends JSONResponder {
 
     public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation) {
         parent::__construct($responseFactory, $translation);
     }
 
     public function respond(Payload $payload): ResponseInterface {
-        parent::respond($payload);
+        $response = parent::respond($payload);
 
         $data = ["status" => "success"];
-
         switch ($payload->getStatus()) {
             case Payload::$STATUS_PARSING_ERRORS:
                 $data = ["status" => "error"];
@@ -28,12 +27,6 @@ class SaveJSONResponder extends Responder {
         }
 
         $json = json_encode($data);
-        if ($json === false) {
-            throw new RuntimeException('Malformed UTF-8 characters, possibly incorrectly encoded.');
-        }
-
-        $response = $this->responseFactory->createResponse()->withHeader('Content-Type', 'application/json');
-
         $response->getBody()->write($json);
 
         return $response;

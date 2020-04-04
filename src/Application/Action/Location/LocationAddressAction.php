@@ -5,14 +5,14 @@ namespace App\Application\Action\Location;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Location\LocationService;
-use App\Application\Responder\JSONResponder;
+use App\Application\Responder\JSONResultResponder;
 
 class LocationAddressAction {
 
     private $responder;
     private $service;
 
-    public function __construct(JSONResponder $responder, LocationService $service) {
+    public function __construct(JSONResultResponder $responder, LocationService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

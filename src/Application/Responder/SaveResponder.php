@@ -9,7 +9,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use \Slim\Flash\Messages as Flash;
 
-class SaveResponder extends Responder {
+class SaveResponder extends HTMLResponder {
 
     private $router;
     private $flash;

@@ -20,10 +20,14 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
         return $this->parent_mapper;
     }
 
+    public function getParentID($entry): ?int {
+        return $entry->getParentID();
+    }
+
     protected function insertEntry($entry) {
         $id = parent::insertEntry($entry);
         $entry_new = $this->getMapper()->get($id);
-        $activity = $this->activity_creator->createActivity("create", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper());
+        $activity = $this->activity_creator->createActivity("create", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new));
         $this->activity_creator->saveActivity($activity);
 
         return $id;
@@ -32,7 +36,7 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
     protected function updateEntry($entry) {
         $updated = parent::updateEntry($entry);
         $entry_new = $this->getMapper()->get($entry->id);
-        $activity = $this->activity_creator->createActivity("update", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper());
+        $activity = $this->activity_creator->createActivity("update", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new));
         $this->activity_creator->saveActivity($activity);
 
         return $updated;

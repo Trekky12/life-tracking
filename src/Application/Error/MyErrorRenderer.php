@@ -28,6 +28,11 @@ class MyErrorRenderer implements \Slim\Interfaces\ErrorRendererInterface {
 
             return $this->twig->fetch('error.twig', ['message' => $this->translation->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
         }
+
+        if ($exception instanceof JSONException) {
+            return json_encode(["status" => "error", "error" => $exception->getMessage()]);
+        }
+
         $this->logger->addCritical($exception->getMessage());
 
         return $this->twig->fetch('error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);

@@ -5,14 +5,14 @@ namespace App\Application\Action\Car\Service;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Car\Service\CarServiceService;
-use App\Application\Responder\JSONResponder;
+use App\Application\Responder\JSONResultResponder;
 
 class FuelTableAction {
 
     private $responder;
     private $service;
 
-    public function __construct(JSONResponder $responder, CarServiceService $service) {
+    public function __construct(JSONResultResponder $responder, CarServiceService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

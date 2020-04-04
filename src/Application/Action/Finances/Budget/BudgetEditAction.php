@@ -5,14 +5,14 @@ namespace App\Application\Action\Finances\Budget;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Finances\Budget\BudgetService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class BudgetEditAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, BudgetService $service) {
+    public function __construct(HTMLTemplateResponder $responder, BudgetService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

@@ -5,14 +5,14 @@ namespace App\Application\Action\Profile;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\User\Profile\ProfileService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class ProfileImageAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, ProfileService $service) {
+    public function __construct(HTMLTemplateResponder $responder, ProfileService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

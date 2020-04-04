@@ -5,14 +5,14 @@ namespace App\Application\Action\Main;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Main\MainService;
-use App\Application\Responder\JSONResponder;
+use App\Application\Responder\JSONResultResponder;
 
 class CSRFTokensAction {
 
     private $responder;
     private $service;
 
-    public function __construct(JSONResponder $responder, MainService $service) {
+    public function __construct(JSONResultResponder $responder, MainService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

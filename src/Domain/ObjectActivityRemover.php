@@ -18,7 +18,7 @@ abstract class ObjectActivityRemover extends ObjectRemover implements ObjectActi
 
     protected function deleteEntry($id) {
         $entry = $this->getMapper()->get($id);
-        $activity = $this->activity_creator->createActivity("delete", $this->getModule(), $entry->id, $this->getMapper(), $this->getObjectLink($entry), $this->getParentMapper());
+        $activity = $this->activity_creator->createActivity("delete", $this->getModule(), $entry->id, $this->getMapper(), $this->getObjectLink($entry), $this->getParentMapper(), $this->getParentID($entry));
         $is_deleted = parent::deleteEntry($id);
         $this->activity_creator->saveActivity($activity);
 
@@ -27,6 +27,10 @@ abstract class ObjectActivityRemover extends ObjectRemover implements ObjectActi
 
     public function getParentMapper() {
         return $this->parent_mapper;
+    }
+    
+    public function getParentID($entry): ?int {
+        return $entry->getParentID();
     }
 
     abstract function getModule(): string;

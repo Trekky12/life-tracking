@@ -5,14 +5,14 @@ namespace App\Application\Action\Location\Steps;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Location\Steps\StepsService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class StepsYearAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, StepsService $service) {
+    public function __construct(HTMLTemplateResponder $responder, StepsService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

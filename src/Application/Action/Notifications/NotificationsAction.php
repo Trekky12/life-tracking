@@ -5,14 +5,14 @@ namespace App\Application\Action\Notifications;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Notifications\NotificationsService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class NotificationsAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, NotificationsService $service) {
+    public function __construct(HTMLTemplateResponder $responder, NotificationsService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

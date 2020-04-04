@@ -2,7 +2,7 @@
 
 namespace App\Domain\Board;
 
-class Mapper extends \App\Domain\Mapper {
+class BoardMapper extends \App\Domain\Mapper {
 
     protected $table = "boards";
     protected $dataobject = \App\Domain\Board\Board::class;
@@ -12,6 +12,4 @@ class Mapper extends \App\Domain\Mapper {
     protected $user_table = "boards_user";
     protected $element_name = "board";
 
-
-    
 }

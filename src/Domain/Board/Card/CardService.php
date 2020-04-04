@@ -2,6 +2,7 @@
 
 namespace App\Domain\Board\Card;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
 use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
@@ -9,76 +10,37 @@ use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
-use App\Domain\Board\Mapper as BoardMapper;
+use App\Domain\Board\BoardMapper;
 use App\Domain\Board\Stack\StackService;
 use App\Domain\Board\Label\LabelService;
 use App\Domain\User\UserService;
+use App\Application\Payload\Payload;
 
-class CardService extends \App\Domain\Service {
+class CardService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Board\Card\Card::class;
-    protected $dataobject_parent = \App\Domain\Board\Stack\Stack::class;
-    protected $element_view_route = 'boards_view';
-    protected $module = "boards";
     private $board_mapper;
     private $stack_service;
     private $label_service;
     private $user_service;
-    private $users_preSave = [];
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Helper $helper,
-            Mapper $mapper,
-            BoardMapper $board_mapper,
-            StackService $stack_service,
-            LabelService $label_service,
-            UserService $user_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CardMapper $mapper, BoardMapper $board_mapper, StackService $stack_service, LabelService $label_service, UserService $user_service) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
-        $this->helper = $helper;
+        //$this->helper = $helper;
         $this->board_mapper = $board_mapper;
         $this->stack_service = $stack_service;
         $this->label_service = $label_service;
         $this->user_service = $user_service;
     }
 
-    protected function getParentObjectService() {
-        return $this->stack_service;
-    }
-
-    protected function getAffectedUsers($entry) {
-        $stack = $this->stack_service->getEntry($entry->stack);
-        $board = $this->board_mapper->get($stack->board);
-        return $this->getUsers($board->id);
-    }
-
-    protected function getElementViewRoute($entry) {
-        $stack = $this->stack_service->getEntry($entry->stack);
-        $board = $this->board_mapper->get($stack->board);
-        $this->element_view_route_params["hash"] = $board->getHash();
-        return parent::getElementViewRoute($entry);
-    }
-
     public function hasAccess($id, $data = []) {
         $user = $this->current_user->getUser()->id;
-        $this->users_preSave = array();
 
         if (!is_null($id)) {
             $user_cards = $this->mapper->getUserCards($user);
             if (!in_array($id, $user_cards)) {
                 return false;
             }
-
-            /**
-             * Get users pre change
-             */
-            $this->users_preSave = $this->getUsers($id);
         } elseif (is_array($data)) {
             $user_stacks = $this->stack_service->getUserStacks($user);
             if (!array_key_exists("stack", $data) || !in_array($data["stack"], $user_stacks)) {
@@ -88,8 +50,82 @@ class CardService extends \App\Domain\Service {
         return true;
     }
 
-    public function prepareCard($id, $entry) {
-        $card_labels = $this->label_service->getLabelsFromCard($id);
+    public function archive($entry_id, $data) {
+
+        if (!$this->hasAccess($entry_id, [])) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        if (array_key_exists("archive", $data) && in_array($data["archive"], array(0, 1))) {
+
+            $user = $this->current_user->getUser()->id;
+            $is_archived = $this->mapper->setArchive($entry_id, $data["archive"], $user);
+
+            $response_data = ['is_archived' => $is_archived];
+            return new Payload(Payload::$RESULT_JSON, $response_data);
+        } else {
+            $response_data = ['status' => 'error', "error" => "missing data"];
+            return new Payload(Payload::$RESULT_JSON, $response_data);
+        }
+    }
+
+    public function moveCard($data) {
+
+        $stack = array_key_exists("stack", $data) && !empty($data["stack"]) ? filter_var($data['stack'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $card = array_key_exists("card", $data) && !empty($data["card"]) ? filter_var($data['card'], FILTER_SANITIZE_NUMBER_INT) : null;
+
+        $user = $this->current_user->getUser()->id;
+        $user_cards = $this->mapper->getUserCards($user);
+        $user_stacks = $this->stack_service->getUserStacks($user);
+
+        $response_data = ['status' => 'error'];
+        if (!is_null($stack) && !is_null($card) && in_array($stack, $user_stacks) && in_array($card, $user_cards)) {
+            $this->mapper->moveCard($card, $stack, $user);
+
+            $response_data = ['status' => 'success'];
+        }
+
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    public function updatePosition($data) {
+
+        if (array_key_exists("card", $data) && !empty($data["card"])) {
+
+            $cards = filter_var_array($data["card"], FILTER_SANITIZE_NUMBER_INT);
+
+            $user = $this->current_user->getUser()->id;
+            $user_cards = $this->mapper->getUserCards($user);
+
+            foreach ($cards as $position => $item) {
+                if (in_array($item, $user_cards)) {
+                    $this->mapper->updatePosition($item, $position, $user);
+                }
+            }
+
+            $response_data = ['status' => 'success'];
+            return new Payload(Payload::$RESULT_JSON, $response_data);
+        }
+        $response_data = ['status' => 'error'];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    public function getCardsFromStack($stack_id, $show_archive) {
+        return $this->mapper->getCardsFromStack($stack_id, $show_archive);
+    }
+
+    public function getCardsUser() {
+        return $this->mapper->getCardsUser();
+    }
+
+    public function getData($entry_id) {
+        if (!$this->hasAccess($entry_id, [])) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        $entry = $this->getEntry($entry_id);
+
+        // append card labels and usernames to output
+        $card_labels = $this->label_service->getLabelsFromCard($entry_id);
         $entry->labels = $card_labels;
 
         $users = $this->user_service->getAll();
@@ -103,135 +139,12 @@ class CardService extends \App\Domain\Service {
         if ($entry->description) {
             $entry->description = html_entity_decode(htmlspecialchars_decode($entry->description));
         }
-
         if ($entry->title) {
             $entry->title = htmlspecialchars_decode($entry->title);
         }
 
-        return $entry;
-    }
-
-    public function archive($id, $archive) {
-        $user = $this->current_user->getUser()->id;
-        return $this->mapper->setArchive($id, $archive, $user);
-    }
-
-    public function changePosition($cards) {
-        $user = $this->current_user->getUser()->id;
-        $user_stacks = $this->stack_service->getUserStacks($user);
-
-        foreach ($cards as $position => $item) {
-            if (in_array($item, $user_stacks)) {
-                $this->mapper->updatePosition($item, $position, $user);
-            }
-        }
-    }
-
-    public function moveCard($stack, $card) {
-        $user = $this->current_user->getUser()->id;
-        $user_cards = $this->mapper->getUserCards($user);
-        $user_stacks = $this->stack_service->getUserStacks($user);
-
-        if (!is_null($stack) && !is_null($card) && in_array($stack, $user_stacks) && in_array($card, $user_cards)) {
-            $this->mapper->moveCard($card, $stack, $user);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function deleteLabelsFromCard($id) {
-        $this->label_service->deleteLabelsFromCard($id);
-    }
-
-    public function addLabelsToCard($id, $labels) {
-
-        $board_id = $this->mapper->getCardBoard($id);
-
-        try {
-            // check if label is on this board
-            $board_labels = $this->label_service->getLabelsFromBoard($board_id);
-            $board_labels_ids = array_map(function($label) {
-                return $label->id;
-            }, $board_labels);
-
-            // Only add labels of this board
-            $filtered_labels = array_filter($labels, function($label) use($board_labels_ids) {
-                return in_array($label, $board_labels_ids);
-            });
-
-            $this->label_service->addLabelsToCard($id, $filtered_labels);
-        } catch (\Exception $e) {
-            $this->logger->addError("After Card Save", array("data" => $id, "error" => $e->getMessage()));
-        }
-    }
-
-    public function getCardsFromStack($stack_id, $show_archive) {
-        return $this->mapper->getCardsFromStack($stack_id, $show_archive);
-    }
-
-    public function getCardsUser() {
-        return $this->mapper->getCardsUser();
-    }
-
-    public function notifyUsers($id) {
-
-        $board_id = $this->mapper->getCardBoard($id);
-
-        $my_user_id = intval($this->current_user->getUser()->id);
-        $users_afterSave = $this->getUsers($id);
-        $new_users = array_diff($users_afterSave, $this->users_preSave);
-        $users = $this->user_service->getAll();
-
-        $board = $this->board_mapper->get($board_id, false);
-        $card = $this->mapper->get($id);
-
-        $stack = $this->stack_service->getEntry($card->stack);
-
-        $subject = $this->translation->getTranslatedString('MAIL_ADDED_TO_CARD');
-
-        foreach ($new_users as $nu) {
-
-            // except self
-            if ($nu !== $my_user_id) {
-                $user = $users[$nu];
-
-                if ($user->mail && $user->mails_board == 1) {
-
-                    $variables = array(
-                        'header' => '',
-                        'subject' => $subject,
-                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), $board->name, $stack->name, $card->title),
-                        'extra' => ''
-                    );
-
-                    if ($card->description) {
-                        //$description = nl2br($card->description);
-                        $parser = new \Michelf\Markdown();
-                        //$parser->hard_wrap  = true;
-                        $description = $parser->transform(str_replace("\n", "\n\n", $card->description));
-                        $variables["extra"] .= '<h2>' . $this->translation->getTranslatedString('DESCRIPTION') . ':</h2><div id="description">' . $description . '</div>';
-                    }
-                    if ($card->date) {
-                        $language = $this->settings->getAppSettings()['i18n']['php'];
-                        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-
-                        $fmt = new \IntlDateFormatter($language, NULL, NULL);
-                        $fmt->setPattern($dateFormatPHP['month_name_full']);
-
-                        $dateObj = new \DateTime($card->date);
-                        $variables["extra"] .= '<h2>' . $this->translation->getTranslatedString('DATE') . ':</h2>' . $fmt->format($dateObj) . '';
-                    }
-                    if ($card->time) {
-                        $variables["extra"] .= '<h2>' . $this->translation->getTranslatedString('TIME') . ':</h2>' . $card->time . '';
-                    }
-
-                    $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                }
-            }
-        }
+        $response_data = ['entry' => $entry];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     public function sendReminder() {

@@ -5,14 +5,14 @@ namespace App\Application\Action\Car\Car;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Car\CarService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class CarEditAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, CarService $service) {
+    public function __construct(HTMLTemplateResponder $responder, CarService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

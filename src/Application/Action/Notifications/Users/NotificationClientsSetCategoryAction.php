@@ -5,14 +5,14 @@ namespace App\Application\Action\Notifications\Users;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Notifications\Users\NotificationUsersService;
-use App\Application\Responder\JSONResponder;
+use App\Application\Responder\JSONResultResponder;
 
 class NotificationClientsSetCategoryAction {
 
     private $responder;
     private $service;
 
-    public function __construct(JSONResponder $responder, NotificationUsersService $service) {
+    public function __construct(JSONResultResponder $responder, NotificationUsersService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

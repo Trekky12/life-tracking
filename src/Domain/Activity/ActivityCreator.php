@@ -3,7 +3,6 @@
 namespace App\Domain\Activity;
 
 use App\Domain\Base\CurrentUser;
-use App\Domain\Activity\Mapper;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
 use Slim\Routing\RouteParser;
@@ -29,7 +28,7 @@ class ActivityCreator {
         $this->mapper->addUsers($id, $activity->getUsers());
     }
 
-    public function createActivity($activity_type, $module, $id, $mapper, $link, $parent_mapper = null): Activity {
+    public function createActivity($activity_type, $module, $id, $mapper, $link, $parent_mapper = null, $parent_id = null): Activity {
         $entry = $mapper->get($id);
         $users = $mapper->getUsers($id);
 
@@ -38,10 +37,10 @@ class ActivityCreator {
         $object = ["object" => $mapper->getDataObject(), "id" => $id, "description" => $entry->getDescription($this->translation, $this->settings), "link" => $entry_link];
         $parent = [];
 
-        if (isset($parent_mapper)) {
-            $parent_entry = $parent_mapper->get($entry->getParentID());
-            $users = $parent_mapper->getUsers($entry->getParentID());
-            $parent = ["object" => $parent_mapper->getDataObject(), "id" => $entry->getParentID(), "description" => $parent_entry->getDescription($this->translation, $this->settings)];
+        if (isset($parent_mapper) && isset($parent_id)) {
+            $parent_entry = $parent_mapper->get($parent_id);
+            $users = $parent_mapper->getUsers($parent_id);
+            $parent = ["object" => $parent_mapper->getDataObject(), "id" => $parent_id, "description" => $parent_entry->getDescription($this->translation, $this->settings)];
         }
 
         return $this->createActivityEntry($activity_type, $module, $object, $parent, $users);

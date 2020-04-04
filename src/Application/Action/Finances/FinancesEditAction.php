@@ -5,14 +5,14 @@ namespace App\Application\Action\Finances;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Finances\FinancesService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class FinancesEditAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, FinancesService $service) {
+    public function __construct(HTMLTemplateResponder $responder, FinancesService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

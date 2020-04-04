@@ -5,14 +5,14 @@ namespace App\Application\Action\Notifications\Clients;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Notifications\Clients\NotificationClientsService;
-use App\Application\Responder\JSONResponder;
+use App\Application\Responder\JSONResultResponder;
 
 class NotificationClientsDeleteAPIAction {
 
     private $responder;
     private $service;
 
-    public function __construct(JSONResponder $responder, NotificationClientsService $service) {
+    public function __construct(JSONResultResponder $responder, NotificationClientsService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

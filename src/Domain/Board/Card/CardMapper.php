@@ -2,7 +2,7 @@
 
 namespace App\Domain\Board\Card;
 
-class Mapper extends \App\Domain\Mapper {
+class CardMapper extends \App\Domain\Mapper {
 
     protected $table = "boards_cards";
     protected $dataobject = \App\Domain\Board\Card\Card::class;

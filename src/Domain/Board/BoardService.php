@@ -2,59 +2,43 @@
 
 namespace App\Domain\Board;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
-use App\Domain\Main\Helper;
 use App\Domain\Main\Utility\SessionUtility;
 use App\Domain\User\UserService;
-use App\Domain\Board\Stack\Mapper as StackMapper;
-use App\Domain\Board\Card\Mapper as CardMapper;
-use App\Domain\Board\Label\Mapper as LabelMapper;
+use App\Domain\Board\Stack\StackMapper;
+use App\Domain\Board\Card\CardMapper;
+use App\Domain\Board\Label\LabelMapper;
+use App\Application\Payload\Payload;
 
-class BoardService extends \App\Domain\Service {
+class BoardService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Board\Board::class;
-    protected $element_view_route = 'boards_edit';
-    protected $module = "boards";
-    private $helper;
+    private $user_service;
     private $stack_mapper;
     private $card_mapper;
     private $label_mapper;
-    private $user_service;
-    private $users_preSave = [];
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Helper $helper,
-            Mapper $mapper,
-            StackMapper $stack_mapper,
-            CardMapper $card_mapper,
-            LabelMapper $label_mapper,
-            UserService $user_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
-        $this->helper = $helper;
+    public function __construct(LoggerInterface $logger, CurrentUser $user, BoardMapper $mapper, UserService $user_service, StackMapper $stack_mapper, CardMapper $card_mapper, LabelMapper $label_mapper) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
-
+        $this->user_service = $user_service;
         $this->stack_mapper = $stack_mapper;
         $this->card_mapper = $card_mapper;
         $this->label_mapper = $label_mapper;
-        $this->user_service = $user_service;
     }
 
     public function getAllOrderedByName() {
         return $this->mapper->getUserItems('name');
     }
 
-    public function view($board) {
+    public function view($hash, $sidebar) {
+
+        $board = $this->getFromHash($hash);
+
+        if (!$this->isMember($board->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $board_users = $this->getUsers($board->id);
 
@@ -77,7 +61,7 @@ class BoardService extends \App\Domain\Service {
 
         $card_label = $this->label_mapper->getCardsLabel();
 
-        return [
+        $data = [
             "board" => $board,
             "stacks" => $stacks,
             "users" => $users,
@@ -86,53 +70,38 @@ class BoardService extends \App\Domain\Service {
             "card_label" => $card_label,
             "show_archive" => $show_archive,
             "board_user" => $board_users,
+            "sidebar" => $sidebar
         ];
+
+        return new Payload(Payload::$RESULT_HTML, $data);
     }
 
     public function setArchive($data) {
         if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1))) {
             SessionUtility::setSessionVar('show_archive', $data["state"]);
         }
+        $response_data = ['status' => 'success'];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     public function getBoardsOfUser($user) {
         return $this->mapper->getElementsOfUser($user);
     }
 
-    public function saveUsersBefore($users) {
-        $this->users_preSave = $users;
+    public function index() {
+        $boards = $this->getAllOrderedByName();
+        return new Payload(Payload::$RESULT_HTML, ['boards' => $boards]);
     }
 
-    public function notifyUsers($id) {
-        $board = $this->mapper->get($id);
-        /**
-         * Notify new users
-         */
-        $my_user_id = intval($this->current_user->getUser()->id);
-        $users_afterSave = $this->getUsers($id);
-        $new_users = array_diff($users_afterSave, $this->users_preSave);
-
-        $subject = $this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD');
-
-        foreach ($new_users as $nu) {
-
-            // except self
-            if ($nu !== $my_user_id) {
-                $user = $this->user_service->getEntry($nu);
-
-                if ($user->mail && $user->mails_board == 1) {
-
-                    $variables = array(
-                        'header' => '',
-                        'subject' => $subject,
-                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), $board->name)
-                    );
-
-                    $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                }
-            }
+    public function edit($entry_id) {
+        if ($this->isOwner($entry_id) === false) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+
+        $entry = $this->getEntry($entry_id);
+        $users = $this->user_service->getAll();
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
 
 }

@@ -104,7 +104,7 @@ abstract class ObjectWriter {
             $entry = $this->getMapper()->get($id);
 
             $this->logger->addNotice("Insert Entry " . get_class($entry), array("id" => $entry->id));
-            
+
             return new Payload(Payload::$STATUS_NEW, $entry, $data);
         }
         // update
@@ -119,6 +119,14 @@ abstract class ObjectWriter {
         $this->logger->addError("Error while inserting entry " . get_class($entry), array("entry" => $entry));
 
         return new Payload(Payload::$STATUS_ERROR, $entry);
+    }
+
+    public function setHash($entry) {
+        if (empty($entry->getHash())) {
+            $hashids = new Hashids('', 10);
+            $hash = $hashids->encode($entry->id);
+            $this->getMapper()->setHash($entry->id, $hash);
+        }
     }
 
 }

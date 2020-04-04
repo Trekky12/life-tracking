@@ -6,27 +6,19 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
+use App\Application\Error\JSONException;
 
-class JSONResponder extends Responder {
+abstract class JSONResponder extends Responder {
 
     public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation) {
         parent::__construct($responseFactory, $translation);
     }
 
     public function respond(Payload $payload): ResponseInterface {
-        parent::respond($payload);
-
-        $data = $payload->getResult();
-        $json = json_encode($data);
-        if ($json === false) {
-            throw new RuntimeException('Malformed UTF-8 characters, possibly incorrectly encoded.');
+        if ($payload->getStatus() == Payload::$NO_ACCESS) {
+            throw new JSONException($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
-
-        $response = $this->responseFactory->createResponse()->withHeader('Content-Type', 'application/json');
-
-        $response->getBody()->write($json);
-
-        return $response;
+        return parent::respond($payload)->withHeader('Content-Type', 'application/json');
     }
 
 }

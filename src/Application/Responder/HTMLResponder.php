@@ -4,28 +4,20 @@ namespace App\Application\Responder;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use App\Domain\Main\Translator;
-use Slim\Views\Twig;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Translator;
 
-class HTMLResponder extends Responder {
+abstract class HTMLResponder extends Responder {
 
-    private $twig;
-
-    public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation, Twig $twig) {
+    public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation) {
         parent::__construct($responseFactory, $translation);
-        $this->twig = $twig;
     }
 
-    public function respond(Payload $payload): ResponseInterface {
-        $response = parent::respond($payload);
-        
-        $response = $response->withHeader('Content-Type', 'text/html; charset=utf-8');
-        
-        $result = $payload->getResult();
-        $data = !is_null($result) ? $result : [];
-        
-        return $this->twig->render($response, $payload->getTemplate(), $data);
+    protected function respond(Payload $payload): ResponseInterface {
+        if ($payload->getStatus() == Payload::$NO_ACCESS) {
+            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+        }
+        return parent::respond($payload);
     }
 
 }

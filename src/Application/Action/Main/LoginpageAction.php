@@ -5,7 +5,7 @@ namespace App\Application\Action\Main;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Base\CurrentUser;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 use App\Application\Responder\RedirectResponder;
 use App\Application\Payload\Payload;
 
@@ -15,7 +15,7 @@ class LoginpageAction {
     private $responder2;
     private $current_user;
 
-    public function __construct(HTMLResponder $responder, RedirectResponder $responder2, CurrentUser $current_user) {
+    public function __construct(HTMLTemplateResponder $responder, RedirectResponder $responder2, CurrentUser $current_user) {
         $this->responder = $responder;
         $this->responder2 = $responder2;
         $this->current_user = $current_user;

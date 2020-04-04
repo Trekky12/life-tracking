@@ -218,38 +218,38 @@ return function (App $app) {
 
 
     $app->group('/boards', function(RouteCollectorProxy $group) {
-        $group->get('/', '\App\Domain\Board\Controller:index')->setName('boards');
-        $group->get('/edit/[{id:[0-9]+}]', '\App\Domain\Board\Controller:edit')->setName('boards_edit');
-        $group->post('/save/[{id:[0-9]+}]', '\App\Domain\Board\Controller:save')->setName('boards_save');
-        $group->delete('/delete/{id}', '\App\Domain\Board\Controller:delete')->setName('boards_delete');
+        $group->get('/', \App\Application\Action\Board\Board\BoardListAction::class)->setName('boards');
+        $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Board\Board\BoardEditAction::class)->setName('boards_edit');
+        $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Board\BoardSaveAction::class)->setName('boards_save');
+        $group->delete('/delete/{id}', \App\Application\Action\Board\Board\BoardDeleteAction::class)->setName('boards_delete');
 
         $group->group('/view', function(RouteCollectorProxy $group_view) {
-            $group_view->get('/{hash}', '\App\Domain\Board\Controller:view')->setName('boards_view');
+            $group_view->get('/{hash}', \App\Application\Action\Board\Board\BoardViewAction::class)->setName('boards_view');
         });
 
         $group->group('/stacks', function(RouteCollectorProxy $group_stacks) {
-            $group_stacks->post('/save/[{id:[0-9]+}]', '\App\Domain\Board\Stack\Controller:saveAPI')->setName('stack_save');
-            $group_stacks->post('/updatePosition', '\App\Domain\Board\Stack\Controller:updatePosition')->setName('stack_update_position');
-            $group_stacks->delete('/delete/[{id:[0-9]+}]', '\App\Domain\Board\Stack\Controller:delete')->setName('stack_delete');
-            $group_stacks->post('/archive/[{id:[0-9]+}]', '\App\Domain\Board\Stack\Controller:archive')->setName('stack_archive');
-            $group_stacks->get('/data/[{id:[0-9]+}]', '\App\Domain\Board\Stack\Controller:getAPI')->setName('stack_get');
+            $group_stacks->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackSaveAction::class)->setName('stack_save');
+            $group_stacks->post('/updatePosition', \App\Application\Action\Board\Stack\StackUpdatePositionAction::class)->setName('stack_update_position');
+            $group_stacks->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDeleteAction::class)->setName('stack_delete');
+            $group_stacks->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackArchiveAction::class)->setName('stack_archive');
+            $group_stacks->get('/data/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDataAction::class)->setName('stack_get');
         });
         $group->group('/card', function(RouteCollectorProxy $group_cards) {
-            $group_cards->post('/save/[{id:[0-9]+}]', '\App\Domain\Board\Card\Controller:saveAPI')->setName('card_save');
-            $group_cards->post('/updatePosition', '\App\Domain\Board\Card\Controller:updatePosition')->setName('card_update_position');
-            $group_cards->post('/moveCard', '\App\Domain\Board\Card\Controller:moveCard')->setName('card_move_stack');
-            $group_cards->get('/data/[{id:[0-9]+}]', '\App\Domain\Board\Card\Controller:getAPI')->setName('card_get');
-            $group_cards->delete('/delete/[{id:[0-9]+}]', '\App\Domain\Board\Card\Controller:delete')->setName('card_delete');
-            $group_cards->post('/archive/[{id:[0-9]+}]', '\App\Domain\Board\Card\Controller:archive')->setName('card_archive');
+            $group_cards->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardSaveAction::class)->setName('card_save');
+            $group_cards->post('/updatePosition', \App\Application\Action\Board\Card\CardUpdatePositionAction::class)->setName('card_update_position');
+            $group_cards->post('/moveCard', \App\Application\Action\Board\Card\CardMoveStackAction::class)->setName('card_move_stack');
+            $group_cards->get('/data/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardDataAction::class)->setName('card_get');
+            $group_cards->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardDeleteAction::class)->setName('card_delete');
+            $group_cards->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardArchiveAction::class)->setName('card_archive');
         });
 
         $group->group('/labels', function(RouteCollectorProxy $group_labels) {
-            $group_labels->post('/save/[{id:[0-9]+}]', '\App\Domain\Board\Label\Controller:saveAPI')->setName('label_save');
-            $group_labels->delete('/delete/[{id:[0-9]+}]', '\App\Domain\Board\Label\Controller:delete')->setName('label_delete');
-            $group_labels->get('/data/[{id:[0-9]+}]', '\App\Domain\Board\Label\Controller:getAPI')->setName('label_get');
+            $group_labels->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Label\LabelSaveAction::class)->setName('label_save');
+            $group_labels->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Label\LabelDeleteAction::class)->setName('label_delete');
+            $group_labels->get('/data/[{id:[0-9]+}]', \App\Application\Action\Board\Label\LabelDataAction::class)->setName('label_get');
         });
 
-        $group->post('/setArchive', '\App\Domain\Board\Controller:setArchive')->setName('set_archive');
+        $group->post('/setArchive', \App\Application\Action\Board\Board\BoardChangeViewArchivedAction::class)->setName('set_archive');
     });
 
     $app->group('/crawlers', function(RouteCollectorProxy $group) {

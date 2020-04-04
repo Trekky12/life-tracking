@@ -5,14 +5,14 @@ namespace App\Application\Action\User;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\User\UserService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 
 class UserEditAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLResponder $responder, UserService $service) {
+    public function __construct(HTMLTemplateResponder $responder, UserService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

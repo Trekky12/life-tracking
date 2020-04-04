@@ -5,6 +5,8 @@ namespace App\Domain;
 interface ObjectActivityData {
 
     public function getParentMapper();
+    
+    public function getParentID($entry): ?int;
 
     public function getModule(): string;
 

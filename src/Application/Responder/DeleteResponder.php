@@ -8,7 +8,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use \Slim\Flash\Messages as Flash;
 
-class DeleteResponder extends JSONResponder {
+class DeleteResponder extends JSONResultResponder{
 
     private $flash;
 
@@ -18,8 +18,6 @@ class DeleteResponder extends JSONResponder {
     }
 
     public function respond(Payload $payload): ResponseInterface {
-        //parent::respond($payload);
-
         $error = $payload->getResult();
 
         $response_data = ['is_deleted' => false, 'error' => ''];

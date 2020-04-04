@@ -2,7 +2,7 @@
 
 namespace App\Domain\Board\Label;
 
-class Mapper extends \App\Domain\Mapper {
+class LabelMapper extends \App\Domain\Mapper {
 
     protected $table = "boards_labels";
     protected $dataobject = \App\Domain\Board\Label\Label::class;

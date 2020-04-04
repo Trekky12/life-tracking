@@ -5,14 +5,14 @@ namespace App\Application\Action\Activity;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Activity\ActivityService;
-use App\Application\Responder\JSONResponder;
+use App\Application\Responder\JSONResultResponder;
 
 class ActivityListAction {
 
     private $responder;
     private $service;
 
-    public function __construct(JSONResponder $responder, ActivityService $service) {
+    public function __construct(JSONResultResponder $responder, ActivityService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

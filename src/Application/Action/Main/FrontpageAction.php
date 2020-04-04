@@ -5,7 +5,7 @@ namespace App\Application\Action\Main;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Main\MainService;
-use App\Application\Responder\HTMLResponder;
+use App\Application\Responder\HTMLTemplateResponder;
 use App\Application\Responder\RedirectResponder;
 use App\Application\Payload\Payload;
 
@@ -15,7 +15,7 @@ class FrontpageAction {
     private $responder2;
     private $service;
 
-    public function __construct(HTMLResponder $responder, RedirectResponder $responder2, MainService $service) {
+    public function __construct(HTMLTemplateResponder $responder, RedirectResponder $responder2, MainService $service) {
         $this->responder = $responder;
         $this->responder2 = $responder2;
         $this->service = $service;
