@@ -2,56 +2,48 @@
 
 namespace App\Domain\Crawler\CrawlerLink;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
+use App\Domain\Crawler\CrawlerService;
 
-class CrawlerLinkService extends \App\Domain\Service {
+class CrawlerLinkService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Crawler\CrawlerLink\CrawlerLink::class;
-    protected $dataobject_parent = \App\Domain\Crawler\Crawler::class;
-    protected $element_view_route = 'crawlers_links_edit';
-    protected $module = "crawlers";
+    private $crawler_service;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CrawlerLinkMapper $mapper, CrawlerService $crawler_service) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->crawler_service = $crawler_service;
     }
 
-    public function getFromCrawler($crawler_id) {
-        return $this->mapper->getFromCrawler($crawler_id);
-    }
+    public function index($hash) {
 
-    public function buildTree(array $elements, $parentId = null) {
-        $branch = array();
+        $crawler = $this->crawler_service->getFromHash($hash);
 
-        foreach ($elements as $element) {
-            if ($element->parent == $parentId) {
-                $children = $this->buildTree($elements, $element->id);
-                if ($children) {
-                    $element->children = $children;
-                }
-                $branch[] = $element;
-            }
+        if (!$this->crawler_service->isOwner($crawler->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        return $branch;
+        $links = $this->mapper->getFromCrawler($crawler->id);
+
+        return new Payload(Payload::$RESULT_HTML, ['links' => $links, "crawler" => $crawler]);
     }
 
-    protected function getElementViewRoute($entry) {
-        $crawler = $this->getParentObjectService()->getEntry($entry->getParentID());
-        $this->element_view_route_params["crawler"] = $crawler->getHash();
-        return parent::getElementViewRoute($entry);
+    public function edit($hash, $entry_id) {
+
+        $crawler = $this->crawler_service->getFromHash($hash);
+
+        if (!$this->crawler_service->isOwner($crawler->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $entry = $this->getEntry($entry_id);
+
+        $links = $this->mapper->getFromCrawler($crawler->id, 'position');
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'crawler' => $crawler, 'links' => $links]);
     }
 
 }

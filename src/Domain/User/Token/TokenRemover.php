@@ -14,11 +14,11 @@ class TokenRemover extends ObjectRemover {
         $this->mapper = $mapper;
     }
 
-    public function delete($id, $user = null): Payload {
+    public function delete($id, $additionalData = null): Payload {
         if (!$this->isTokenOfCurrentUser($id)) {
             return new Payload(Payload::$STATUS_ERROR, 'NO_ACCESS');
         }
-        return parent::delete($id, null);
+        return parent::delete($id, $additionalData);
     }
 
     public function isTokenOfCurrentUser($id) {

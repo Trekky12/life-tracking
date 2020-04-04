@@ -14,8 +14,8 @@ class BanRemover extends ObjectRemover {
         $this->mapper = $mapper;
     }
 
-    public function delete($id, $user = null): Payload {
-        return parent::delete($id, $user);
+    public function delete($id, $additionalData = null): Payload {
+        return parent::delete($id, $additionalData);
     }
 
     /**

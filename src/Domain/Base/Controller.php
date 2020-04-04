@@ -57,7 +57,7 @@ abstract class Controller {
         return $id;
     }
 
-    protected function doDelete($id, $user = null) {
+    protected function dodelete($id, $user = null) {
         $response_data = ['is_deleted' => false, 'error' => ''];
 
         try {

@@ -15,8 +15,8 @@ class BudgetRemover extends ObjectActivityRemover {
         $this->mapper = $mapper;
     }
 
-    public function delete($id, $user = null): Payload {
-        return parent::delete($id, null);
+    public function delete($id, $additionalData = null): Payload {
+        return parent::delete($id, $additionalData);
     }
 
     public function getObjectViewRoute(): string {

@@ -18,12 +18,12 @@ class NotificationCategoryWriter extends ObjectActivityWriter {
         $this->service = $service;
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
         if (!is_null($id) && $this->service->isInternalCategory($id)) {
             return new Payload(Payload::$NO_ACCESS);
         }
 
-        return parent::save($id, $data, $user);
+        return parent::save($id, $data, $additionalData);
     }
 
     public function getObjectViewRoute(): string {

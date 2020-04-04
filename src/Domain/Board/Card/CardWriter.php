@@ -50,14 +50,14 @@ class CardWriter extends ObjectActivityWriter {
         $this->settings = $settings;
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
         if (!$this->card_service->hasAccess($id, $data)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
         
         $users_preSave = $this->mapper->getUsers($id);
         
-        $payload = parent::save($id, $data, $user);
+        $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
         // remove old labels

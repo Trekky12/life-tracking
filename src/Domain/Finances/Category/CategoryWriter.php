@@ -15,8 +15,8 @@ class CategoryWriter extends ObjectActivityWriter {
         $this->mapper = $mapper;
     }
 
-    public function save($id, $data, $user = null): Payload {
-        $payload = parent::save($id, $data, $user);
+    public function save($id, $data, $additionalData = null): Payload {
+        $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
         // set default category

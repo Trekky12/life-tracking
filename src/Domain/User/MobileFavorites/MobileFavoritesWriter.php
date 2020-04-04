@@ -15,8 +15,8 @@ class MobileFavoritesWriter extends ObjectActivityWriter {
         $this->mapper = $mapper;
     }
 
-    public function save($id, $data, $user = null): Payload {
-        return parent::save($id, $data, $user);
+    public function save($id, $data, $additionalData = null): Payload {
+        return parent::save($id, $data, $additionalData);
     }
 
     public function getObjectViewRoute(): string {

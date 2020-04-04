@@ -22,8 +22,8 @@ class FinancesWriter extends ObjectActivityWriter {
         $this->budget_service = $budget_service;
     }
 
-    public function save($id, $data, $user = null): Payload {
-        $payload = parent::save($id, $data, $user);
+    public function save($id, $data, $additionalData = null): Payload {
+        $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
         // set default or assigned category

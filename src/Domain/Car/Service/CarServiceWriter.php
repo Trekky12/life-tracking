@@ -22,14 +22,14 @@ class CarServiceWriter extends ObjectActivityWriter {
         $this->translation = $translation;
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
 
         $user_cars = $this->car_service->getUserCars();
         if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $payload = parent::save($id, $data, $user);
+        $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
         $this->calculateFuelConsumption($entry->id);

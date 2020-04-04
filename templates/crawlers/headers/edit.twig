@@ -70,7 +70,7 @@
                     <label for="sort">{{lang["SORT"]}}</label>
                     <select class="form-control" id="sort" name="sort">
                         {% for key, sort in sortOptions %}
-                            <option value="{{key}}" {% if not entry is null and key == entry.sort %}selected{% endif %}>{{sort}}</option>
+                            <option value="{{key}}" {% if not entry is null and key == entry.sort %}selected{% endif %}>{{lang[sort]}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -79,7 +79,7 @@
                     <label for="datatype">{{lang["DATA_TYPE"]}}</label>
                     <select class="form-control" id="datatype" name="datatype">
                         {% for key, cast in castOptions %}
-                            <option value="{{key}}" {% if not entry is null and key == entry.datatype %}selected{% endif %}>{{cast}}</option>
+                            <option value="{{key}}" {% if not entry is null and key == entry.datatype %}selected{% endif %}>{{lang[cast]}}</option>
                         {% endfor %}
                     </select>
                 </div>

@@ -21,15 +21,21 @@ abstract class ObjectRemover {
         return $this->mapper;
     }
 
-    public function delete($id, $user = null) {
+    public function delete($id, $additionalData = null) {
 
         $error = null;
         try {
-            // use this user for filtering
-            if (isset($user)) {
-                $this->mapper->setUser($user);
+
+            $for_user = null;
+            if (isset($additionalData) && is_array($additionalData) && array_key_exists("user", $additionalData)) {
+                $for_user = $additionalData["user"];
             }
-            $is_deleted = $this->deleteEntry($id, $user);
+
+            // use this user for filtering
+            if (isset($for_user)) {
+                $this->mapper->setUser($for_user);
+            }
+            $is_deleted = $this->deleteEntry($id, $for_user);
 
             if ($is_deleted) {
                 $this->logger->addNotice("Delete successfully " . $this->getMapper()->getDataObject(), array("id" => $id));

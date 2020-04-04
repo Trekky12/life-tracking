@@ -21,11 +21,11 @@ class CardRemover extends ObjectActivityRemover {
         $this->board_mapper = $board_mapper;
     }
 
-    public function delete($id, $user = null): Payload {
+    public function delete($id, $additionalData = null): Payload {
         if (!$this->card_service->hasAccess($id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        return parent::delete($id, null);
+        return parent::delete($id, $additionalData);
     }
 
     public function getParentMapper() {

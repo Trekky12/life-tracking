@@ -19,14 +19,14 @@ class FinancesRemover extends ObjectActivityRemover {
         $this->finances_service = $finances_service;
     }
 
-    public function delete($id, $user = null): Payload {
+    public function delete($id, $additionalData = null): Payload {
 
         try {
             $is_splitted = $this->finances_service->isSplittedBillEntry($id);
             if ($is_splitted) {
                 return new Payload(Payload::$STATUS_ERROR, 'NO_ACCESS');
             } else {
-                return parent::delete($id, null);
+                return parent::delete($id, $additionalData);
             }
         } catch (\Exception $ex) {
             

@@ -22,8 +22,8 @@ class UserWriter extends ObjectActivityWriter {
         $this->translation = $translation;
     }
 
-    public function save($id, $data, $user = null): Payload {
-        $payload = parent::save($id, $data, $user);
+    public function save($id, $data, $additionalData = null): Payload {
+        $payload = parent::save($id, $data, $additionalData);
 
         // notify new user
         // is new user?

@@ -15,13 +15,13 @@ class LocationWriter extends ObjectWriter {
         $this->mapper = $mapper;
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
 
         if (!array_key_exists("device", $data)) {
             $data["device"] = Utility::getAgent();
         }
 
-        return parent::save($id, $data, $user);
+        return parent::save($id, $data, $additionalData);
     }
 
 }

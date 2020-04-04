@@ -2,7 +2,7 @@
 
 namespace App\Domain\Crawler\CrawlerDataset;
 
-class Mapper extends \App\Domain\Mapper {
+class CrawlerDatasetMapper extends \App\Domain\Mapper {
 
     protected $table = "crawlers_dataset";
     protected $dataobject = \App\Domain\Crawler\CrawlerDataset\CrawlerDataset::class;

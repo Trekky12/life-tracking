@@ -2,59 +2,65 @@
 
 namespace App\Domain\Crawler;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
-use App\Domain\Crawler\CrawlerHeader\CrawlerHeaderService;
+use App\Domain\Crawler\CrawlerHeader\CrawlerHeaderMapper;
 use App\Domain\Crawler\CrawlerDataset\CrawlerDatasetService;
+use App\Domain\User\UserService;
+use App\Domain\Crawler\CrawlerLink\CrawlerLinkMapper;
+use App\Application\Payload\Payload;
 
-class CrawlerService extends \App\Domain\Service {
+class CrawlerService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Crawler\Crawler::class;
-    protected $element_view_route = 'crawlers_edit';
-    protected $module = "crawlers";
-    private $header_service;
+    private $header_mapper;
     private $dataset_service;
+    private $user_service;
+    private $link_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper,
-            CrawlerHeaderService $header_service,
-            CrawlerDatasetService $dataset_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CrawlerMapper $mapper, CrawlerHeaderMapper $header_mapper, CrawlerDatasetService $dataset_service, UserService $user_service, CrawlerLinkMapper $link_mapper) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
-        $this->header_service = $header_service;
+        $this->header_mapper = $header_mapper;
         $this->dataset_service = $dataset_service;
+        $this->user_service = $user_service;
+        $this->link_mapper = $link_mapper;
     }
 
     public function getCrawlersOfUser() {
         return $this->mapper->getUserItems('name');
     }
 
-    public function setFilter($crawler, $data) {
+    public function setFilter($hash, $data) {
+        $crawler = $this->getFromHash($hash);
+
+        if (!$this->isMember($crawler->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $response_data = ['status' => 'error'];
+
         if (array_key_exists("state", $data) && in_array($data["state"], array("createdOn", "changedOn"))) {
             SessionUtility::setSessionVar("crawler_filter_{$crawler->getHash()}", $data["state"]);
 
-            return true;
+            $response_data = ['status' => 'success'];
         }
-        return false;
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function view(Crawler $crawler, $from, $to) {
+    public function view($hash, $from, $to) {
+
+        $crawler = $this->getFromHash($hash);
+
+        if (!$this->isMember($crawler->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $filter = $this->getFilter($crawler);
         $hide_diff = $filter == "createdOn";
 
-        $headers = $this->header_service->getFromCrawler($crawler->id, $hide_diff);
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, $hide_diff);
 
         /**
          * Sorting
@@ -63,7 +69,7 @@ class CrawlerService extends \App\Domain\Service {
         $sortColumn = $filter;
         $sortDirection = "DESC";
 
-        $initialSortColumn = $this->header_service->getInitialSortColumn($crawler->id);
+        $initialSortColumn = $this->header_mapper->getInitialSortColumn($crawler->id);
         if (!is_null($initialSortColumn)) {
             $sortColumn = $this->getSortFromColumn($initialSortColumn);
             $sortDirection = $initialSortColumn->sort;
@@ -73,7 +79,8 @@ class CrawlerService extends \App\Domain\Service {
         $datasets = $this->dataset_service->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 20);
         $rendered_data = $this->renderTableRows($datasets, $headers, $filter);
 
-        return [
+
+        $response_data = [
             "crawler" => $crawler,
             "from" => $from,
             "to" => $to,
@@ -83,13 +90,26 @@ class CrawlerService extends \App\Domain\Service {
             "hasCrawlerTable" => true,
             "filter" => $filter
         ];
+
+        $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
+        $response_data["links"] = $this->buildTree($links);
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    public function table(Crawler $crawler, $from, $to, $requestData) {
+    public function table($hash, $from, $to, $requestData): Payload {
+
+        $crawler = $this->getFromHash($hash);
+
+        if (!$this->isMember($crawler->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+
         $filter = $this->getFilter($crawler);
         $hide_diff = $filter == "createdOn";
 
-        $headers = $this->header_service->getFromCrawler($crawler->id, 'position', $hide_diff);
+        $headers = $this->header_mapper->getFromCrawler($crawler->id, 'position', $hide_diff);
 
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -112,7 +132,7 @@ class CrawlerService extends \App\Domain\Service {
             "recordsFiltered" => intval($recordsFiltered),
             "data" => $rendered_data
         ];
-        return $response_data;
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
     private function getSortColumnFromColumnIndex($headers, $sortColumnIndex, $sortColumn) {
@@ -201,6 +221,38 @@ class CrawlerService extends \App\Domain\Service {
         $default = $crawler->filter; //"createdOn";
         $hash = $crawler->getHash();
         return SessionUtility::getSessionVar("crawler_filter_{$hash}", $default);
+    }
+
+    public function index() {
+        $crawlers = $this->mapper->getUserItems('name');
+        return new Payload(Payload::$RESULT_HTML, ['crawlers' => $crawlers]);
+    }
+
+    public function edit($entry_id) {
+        if ($this->isOwner($entry_id) === false) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $entry = $this->getEntry($entry_id);
+        $users = $this->user_service->getAll();
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
+    }
+    
+    public function buildTree(array $elements, $parentId = null) {
+        $branch = array();
+
+        foreach ($elements as $element) {
+            if ($element->parent == $parentId) {
+                $children = $this->buildTree($elements, $element->id);
+                if ($children) {
+                    $element->children = $children;
+                }
+                $branch[] = $element;
+            }
+        }
+
+        return $branch;
     }
 
 }

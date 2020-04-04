@@ -18,11 +18,11 @@ class BoardRemover extends ObjectActivityRemover {
         $this->board_service = $board_service;
     }
 
-    public function delete($id, $user = null): Payload {
+    public function delete($id, $additionalData = null): Payload {
         if ($this->board_service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        return parent::delete($id, null);
+        return parent::delete($id, $additionalData);
     }
 
     public function getObjectViewRoute(): string {

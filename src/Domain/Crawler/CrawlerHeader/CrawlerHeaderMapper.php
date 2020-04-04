@@ -2,7 +2,7 @@
 
 namespace App\Domain\Crawler\CrawlerHeader;
 
-class Mapper extends \App\Domain\Mapper {
+class CrawlerHeaderMapper extends \App\Domain\Mapper {
 
     protected $table = "crawlers_headers";
     protected $dataobject = \App\Domain\Crawler\CrawlerHeader\CrawlerHeader::class;

@@ -15,7 +15,7 @@ class BudgetWriter extends ObjectActivityWriter {
         $this->mapper = $mapper;
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
         $payloads = [];
         if (array_key_exists("budget", $data) && is_array($data["budget"])) {
 

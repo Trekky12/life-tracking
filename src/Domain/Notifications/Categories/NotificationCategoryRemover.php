@@ -18,11 +18,11 @@ class NotificationCategoryRemover extends ObjectActivityRemover {
         $this->service = $service;
     }
 
-    public function delete($id, $user = null): Payload {
+    public function delete($id, $additionalData = null): Payload {
         if (!is_null($id) && $this->service->isInternalCategory($id)) {
             return new Payload(Payload::$NO_ACCESS);
         }
-        return parent::delete($id, null);
+        return parent::delete($id, $additionalData);
     }
 
     public function getObjectViewRoute(): string {

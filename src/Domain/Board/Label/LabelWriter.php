@@ -21,11 +21,11 @@ class LabelWriter extends ObjectActivityWriter {
         $this->board_mapper = $board_mapper;
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
         if (!$this->label_service->hasAccess($id, $data)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        return parent::save($id, $data, $user);
+        return parent::save($id, $data, $additionalData);
     }
 
     public function getParentMapper() {

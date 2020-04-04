@@ -27,14 +27,14 @@ class BoardWriter extends ObjectActivityWriter {
         $this->user_service = $user_service;
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
         
         $users_preSave = $this->board_service->getUsers($id);
         if ($this->board_service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
         
-        $payload = parent::save($id, $data, $user);
+        $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
         $this->setHash($entry);

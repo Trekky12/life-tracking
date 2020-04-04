@@ -21,13 +21,13 @@ class CarServiceRemover extends ObjectActivityRemover {
         $this->car_service = $car_service;
     }
 
-    public function delete($id, $user = null): Payload {
+    public function delete($id, $additionalData = null): Payload {
 
         if (!is_null($id) && !$this->car_service_service->hasAccessToCarOfEntry($id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        return parent::delete($id, null);
+        return parent::delete($id, $additionalData);
     }
 
     public function getParentMapper() {

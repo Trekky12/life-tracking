@@ -88,9 +88,14 @@ abstract class ObjectWriter {
         }
     }
 
-    public function save($id, $data, $user = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload {
 
-        $entry = $this->createEntry($data, $user);
+        $for_user = null;
+        if (isset($additionalData) && is_array($additionalData) && array_key_exists("user", $additionalData)) {
+            $for_user = $additionalData["user"];
+        }
+
+        $entry = $this->createEntry($data, $for_user);
 
         if ($entry->hasParsingErrors()) {
             $this->logger->addError("Insert failed " . get_class($entry), array("message" => $this->translation->getTranslatedString($entry->getParsingErrors()[0])));

@@ -24,7 +24,7 @@ class MobileFavoritesSaveAction {
         $user_id = $request->getAttribute('user');
         $user = filter_var($user_id, FILTER_SANITIZE_NUMBER_INT);
 
-        $entry = $this->service->save($id, $data, $user);
+        $entry = $this->service->save($id, $data, ["user" => $user]);
         return $this->responder->respond($entry->withRouteName('users_mobile_favorites_admin')->withRouteParams(["user" => $user_id]));
     }
 

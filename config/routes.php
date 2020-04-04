@@ -253,35 +253,35 @@ return function (App $app) {
     });
 
     $app->group('/crawlers', function(RouteCollectorProxy $group) {
-        $group->get('/', '\App\Domain\Crawler\Controller:index')->setName('crawlers');
-        $group->get('/edit/[{id:[0-9]+}]', '\App\Domain\Crawler\Controller:edit')->setName('crawlers_edit');
-        $group->post('/save/[{id:[0-9]+}]', '\App\Domain\Crawler\Controller:save')->setName('crawlers_save');
-        $group->delete('/delete/{id}', '\App\Domain\Crawler\Controller:delete')->setName('crawlers_delete');
+        $group->get('/', \App\Application\Action\Crawler\Crawler\CrawlerListAction::class)->setName('crawlers');
+        $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Crawler\Crawler\CrawlerEditAction::class)->setName('crawlers_edit');
+        $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Crawler\Crawler\CrawlerSaveAction::class)->setName('crawlers_save');
+        $group->delete('/delete/{id}', \App\Application\Action\Crawler\Crawler\CrawlerDeleteAction::class)->setName('crawlers_delete');
 
 
         $group->group('/{crawler}', function(RouteCollectorProxy $group_crawler) {
 
-            $group_crawler->get('/view/', '\App\Domain\Crawler\Controller:view')->setName('crawlers_view');
-            $group_crawler->get('/table/', '\App\Domain\Crawler\Controller:table')->setName('crawlers_table');
-            $group_crawler->post('/setFilter/', '\App\Domain\Crawler\Controller:setFilter')->setName('set_crawler_filter');
+            $group_crawler->get('/view/', \App\Application\Action\Crawler\Crawler\CrawlerViewAction::class)->setName('crawlers_view');
+            $group_crawler->get('/table/', \App\Application\Action\Crawler\Crawler\CrawlerTableAction::class)->setName('crawlers_table');
+            $group_crawler->post('/setFilter/', \App\Application\Action\Crawler\Crawler\CrawlerSetFilterAction::class)->setName('set_crawler_filter');
 
-            $group_crawler->post('/record/', '\App\Domain\Crawler\CrawlerDataset\Controller:record')->setName('crawler_record');
+            $group_crawler->post('/record/', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
 
             $group_crawler->group('/headers', function(RouteCollectorProxy $group_header) {
-                $group_header->get('/', '\App\Domain\Crawler\CrawlerHeader\Controller:index')->setName('crawlers_headers');
-                $group_header->get('/edit/[{id:[0-9]+}]', '\App\Domain\Crawler\CrawlerHeader\Controller:edit')->setName('crawlers_headers_edit');
-                $group_header->post('/save/[{id:[0-9]+}]', '\App\Domain\Crawler\CrawlerHeader\Controller:save')->setName('crawlers_headers_save');
-                $group_header->delete('/delete/{id}', '\App\Domain\Crawler\CrawlerHeader\Controller:delete')->setName('crawlers_headers_delete');
+                $group_header->get('/', \App\Application\Action\Crawler\Header\HeaderListAction::class)->setName('crawlers_headers');
+                $group_header->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Crawler\Header\HeaderEditAction::class)->setName('crawlers_headers_edit');
+                $group_header->post('/save/[{id:[0-9]+}]', \App\Application\Action\Crawler\Header\HeaderSaveAction::class)->setName('crawlers_headers_save');
+                $group_header->delete('/delete/{id}', \App\Application\Action\Crawler\Header\HeaderDeleteAction::class)->setName('crawlers_headers_delete');
 
-                $group_header->get('/clone/', '\App\Domain\Crawler\CrawlerHeader\Controller:clone')->setName('crawlers_headers_clone');
-                $group_header->post('/cloning/', '\App\Domain\Crawler\CrawlerHeader\Controller:cloning')->setName('crawlers_headers_cloning');
+                $group_header->get('/clone/', \App\Application\Action\Crawler\Header\HeaderCloneAction::class)->setName('crawlers_headers_clone');
+                $group_header->post('/cloning/', \App\Application\Action\Crawler\Header\HeaderCloningAction::class)->setName('crawlers_headers_cloning');
             });
 
             $group_crawler->group('/links', function(RouteCollectorProxy $group_links) {
-                $group_links->get('/', '\App\Domain\Crawler\CrawlerLink\Controller:index')->setName('crawlers_links');
-                $group_links->get('/edit/[{id:[0-9]+}]', '\App\Domain\Crawler\CrawlerLink\Controller:edit')->setName('crawlers_links_edit');
-                $group_links->post('/save/[{id:[0-9]+}]', '\App\Domain\Crawler\CrawlerLink\Controller:save')->setName('crawlers_links_save');
-                $group_links->delete('/delete/{id}', '\App\Domain\Crawler\CrawlerLink\Controller:delete')->setName('crawlers_links_delete');
+                $group_links->get('/', \App\Application\Action\Crawler\Link\LinkListAction::class)->setName('crawlers_links');
+                $group_links->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Crawler\Link\LinkEditAction::class)->setName('crawlers_links_edit');
+                $group_links->post('/save/[{id:[0-9]+}]', \App\Application\Action\Crawler\Link\LinkSaveAction::class)->setName('crawlers_links_save');
+                $group_links->delete('/delete/{id}', \App\Application\Action\Crawler\Link\LinkDeleteAction::class)->setName('crawlers_links_delete');
             });
         });
     });
