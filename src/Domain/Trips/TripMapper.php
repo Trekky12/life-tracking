@@ -2,7 +2,7 @@
 
 namespace App\Domain\Trips;
 
-class Mapper extends \App\Domain\Mapper {
+class TripMapper extends \App\Domain\Mapper {
 
     protected $table = "trips";
     protected $dataobject = \App\Domain\Trips\Trip::class;

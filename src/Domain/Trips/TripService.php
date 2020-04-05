@@ -2,33 +2,47 @@
 
 namespace App\Domain\Trips;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Domain\Trips\Event\EventMapper;
+use App\Domain\User\UserService;
+use App\Application\Payload\Payload;
 
-class TripService extends \App\Domain\Service {
+class TripService extends GeneralService {
+    /* protected $dataobject = \App\Domain\Trips\Trip::class;
+      protected $element_view_route = 'trips_edit';
+      protected $module = "trips"; */
+    
+    private $event_mapper;
 
-    protected $dataobject = \App\Domain\Trips\Trip::class;
-    protected $element_view_route = 'trips_edit';
-    protected $module = "trips";
-
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, TripMapper $mapper, EventMapper $event_mapper, UserService $user_service) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->event_mapper = $event_mapper;
+        $this->user_service = $user_service;
     }
 
     public function getUserTrips() {
         return $this->mapper->getUserItems('t.createdOn DESC, name');
+    }
+    
+    public function index() {
+        $trips = $this->mapper->getUserItems('t.createdOn DESC, name');
+        $dates = $this->event_mapper->getMinMaxEventsDates();
+
+        return new Payload(Payload::$RESULT_HTML, ['trips' => $trips, 'dates' => $dates]);
+    }
+
+    public function edit($entry_id) {
+        if ($this->isOwner($entry_id) === false) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $entry = $this->getEntry($entry_id);
+        $users = $this->user_service->getAll();
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
 
 }

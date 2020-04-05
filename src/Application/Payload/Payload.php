@@ -58,6 +58,11 @@ class Payload {
         $this->flash_messages[$key] = $value;
     }
 
+    public function clearFlashMessage($key) {
+        $this->flash_messages[$key] = null;
+        unset($this->flash_messages[$key]);
+    }
+
     public function __toString() {
         return $this->status;
     }
@@ -94,15 +99,15 @@ class Payload {
     public function getAdditonalData() {
         return $this->additionalData;
     }
-    
+
     public function withRouteParams($data) {
         $clone = clone $this;
         $clone->routeParams = $data;
 
         return $clone;
     }
-    
-    public function getRouteParams(){
+
+    public function getRouteParams() {
         return $this->routeParams;
     }
 

@@ -313,27 +313,27 @@ return function (App $app) {
     });
 
     $app->group('/trips', function(RouteCollectorProxy $group) {
-        $group->get('/', '\App\Domain\Trips\Controller:index')->setName('trips');
-        $group->get('/edit/[{id:[0-9]+}]', '\App\Domain\Trips\Controller:edit')->setName('trips_edit');
-        $group->post('/save/[{id:[0-9]+}]', '\App\Domain\Trips\Controller:save')->setName('trips_save');
-        $group->delete('/delete/{id}', '\App\Domain\Trips\Controller:delete')->setName('trips_delete');
+        $group->get('/', \App\Application\Action\Trips\Trip\TripListAction::class)->setName('trips');
+        $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Trips\Trip\TripEditAction::class)->setName('trips_edit');
+        $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Trips\Trip\TripSaveAction::class)->setName('trips_save');
+        $group->delete('/delete/{id}', \App\Application\Action\Trips\Trip\TripDeleteAction::class)->setName('trips_delete');
 
-        $group->get('/search/', '\App\Domain\Trips\Event\Controller:getLatLng')->setName('get_location_of_address');
+        $group->get('/search/', \App\Application\Action\Trips\Event\GeoSearchAction::class)->setName('get_location_of_address');
 
         $group->group('/{trip}', function(RouteCollectorProxy $group_trip) {
 
-            $group_trip->get('/view/', '\App\Domain\Trips\Event\Controller:index')->setName('trips_view');
-            $group_trip->get('/markers/', '\App\Domain\Trips\Event\Controller:getMarkers')->setName('trips_markers');
+            $group_trip->get('/view/', \App\Application\Action\Trips\Event\EventViewAction::class)->setName('trips_view');
+            $group_trip->get('/markers/', \App\Application\Action\Trips\Event\EventMarkersAction::class)->setName('trips_markers');
 
             $group_trip->group('/event', function(RouteCollectorProxy $group_event) {
-                $group_event->get('/edit/[{id:[0-9]+}]', '\App\Domain\Trips\Event\Controller:edit')->setName('trips_event_edit');
-                $group_event->post('/save/[{id:[0-9]+}]', '\App\Domain\Trips\Event\Controller:save')->setName('trips_event_save');
-                $group_event->delete('/delete/{id}', '\App\Domain\Trips\Event\Controller:delete')->setName('trips_event_delete');
+                $group_event->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Trips\Event\EventEditAction::class)->setName('trips_event_edit');
+                $group_event->post('/save/[{id:[0-9]+}]', \App\Application\Action\Trips\Event\EventSaveAction::class)->setName('trips_event_save');
+                $group_event->delete('/delete/{id}', \App\Application\Action\Trips\Event\EventDeleteAction::class)->setName('trips_event_delete');
 
-                $group_event->post('/image/{id:[0-9]+}', '\App\Domain\Trips\Event\Controller:image')->setName('trips_event_image');
-                $group_event->delete('/imagedelete/{id:[0-9]+}', '\App\Domain\Trips\Event\Controller:image_delete')->setName('trips_event_image_delete');
+                $group_event->post('/image/{id:[0-9]+}', \App\Application\Action\Trips\Event\EventImageSaveAction::class)->setName('trips_event_image');
+                $group_event->delete('/imagedelete/{id:[0-9]+}', \App\Application\Action\Trips\Event\EventImageDeleteAction::class)->setName('trips_event_image_delete');
 
-                $group_event->post('/updatePosition', '\App\Domain\Trips\Event\Controller:updatePosition')->setName('trips_event_position');
+                $group_event->post('/updatePosition', \App\Application\Action\Trips\Event\EventUpdatePositionAction::class)->setName('trips_event_position');
             });
         });
     });

@@ -2,45 +2,45 @@
 
 namespace App\Domain\Trips\Event;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Trips\TripService;
 use App\Domain\Main\Helper;
+use App\Application\Payload\Payload;
 
-class TripEventService extends \App\Domain\Service {
+class TripEventService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Trips\Event\Event::class;
-    protected $dataobject_parent = \App\Domain\Trips\Trip::class;
-    protected $element_view_route = 'trips_view';
-    protected $module = "trips";
     private $trip_service;
+    private $settings;
+    private $translation;
     private $helper;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper,
-            TripService $trip_service,
-            Helper $helper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, EventMapper $mapper, TripService $trip_service, Settings $settings, Translator $translation, Helper $helper) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->trip_service = $trip_service;
+        $this->settings = $settings;
+        $this->translation = $translation;
         $this->helper = $helper;
     }
 
-    public function getMinMaxEventsDates() {
-        return $this->mapper->getMinMaxEventsDates();
+    public function view($hash, $from, $to): Payload {
+
+        $trip = $this->trip_service->getFromHash($hash);
+
+        if (!$this->trip_service->isMember($trip->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $response_data = $this->getTripEvents($trip, $from, $to);
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    public function getTripEvents($trip, $from, $to) {
+    private function getTripEvents($trip, $from, $to) {
 
         // always show all events (hide the one not in range)
         $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time, position");
@@ -134,7 +134,14 @@ class TripEventService extends \App\Domain\Service {
         ];
     }
 
-    public function getMarkers($trip, $from, $to) {
+    public function getMarkers($hash, $from, $to) {
+
+        $trip = $this->trip_service->getFromHash($hash);
+
+        if (!$this->trip_service->isMember($trip->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
         $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time, position");
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
@@ -156,10 +163,29 @@ class TripEventService extends \App\Domain\Service {
             $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>');
             $markers[] = $ev->getPosition();
         }
-        return $markers;
+
+        return new Payload(Payload::$RESULT_JSON, $markers);
     }
 
-    public function getLocation($address) {
+    public function getLatLng($data) {
+
+        $address = array_key_exists('address', $data) && !empty($data['address']) ? filter_var($data['address'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+
+        $response_data = ['status' => 'error', 'data' => []];
+
+        if (!is_null($address)) {
+
+            $result = $this->getLocation($address);
+            if ($result !== false) {
+                $response_data['status'] = 'success';
+                $response_data['data'] = $result;
+            }
+        }
+
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    private function getLocation($address) {
         $query = 'https://nominatim.openstreetmap.org/search?format=json&q=' . urlencode($address);
 
         list($status, $result) = $this->helper->request($query);
@@ -173,14 +199,6 @@ class TripEventService extends \App\Domain\Service {
         return false;
     }
 
-    public function changePosition($events) {
-        $user = $this->current_user->getUser()->id;
-
-        foreach ($events as $position => $item) {
-            $this->mapper->updatePosition($item, $position, $user);
-        }
-    }
-
     public static function getEventTypes() {
         return [
             "EVENT",
@@ -192,14 +210,44 @@ class TripEventService extends \App\Domain\Service {
         ];
     }
 
-    protected function getElementViewRoute($entry) {
-        $trip = $this->getParentObjectService()->getEntry($entry->getParentID());
-        $this->element_view_route_params["trip"] = $trip->getHash();
-        return parent::getElementViewRoute($entry);
+    public function edit($hash, $entry_id, $from, $to) {
+
+        $trip = $this->trip_service->getFromHash($hash);
+
+        if (!$this->trip_service->isMember($trip->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $entry = $this->getEntry($entry_id);
+
+        $response_data = [
+            'entry' => $entry,
+            'trip' => $trip,
+            'types' => $this->getEventTypes(),
+            'from' => $from,
+            'to' => $to,
+            "isTripEventEdit" => true
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    protected function getParentObjectService() {
-        return $this->trip_service;
+    public function updatePosition($data) {
+
+        if (array_key_exists("events", $data) && !empty($data["events"])) {
+            $events = filter_var_array($data["events"], FILTER_SANITIZE_NUMBER_INT);
+            $user = $this->current_user->getUser()->id;
+
+            foreach ($events as $position => $item) {
+                $this->mapper->updatePosition($item, $position, $user);
+            }
+
+
+            $response_data = ['status' => 'success'];
+            return new Payload(Payload::$RESULT_JSON, $response_data);
+        }
+        $response_data = ['status' => 'error'];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Domain\Trips\Event;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Application\Payload\Payload;
 
 class TripEventImageService {
 
@@ -12,9 +13,7 @@ class TripEventImageService {
     private $settings;
     private $mapper;
 
-    public function __construct(LoggerInterface $logger,
-            Settings $settings,
-            Mapper $mapper) {
+    public function __construct(LoggerInterface $logger, Settings $settings, EventMapper $mapper) {
         $this->logger = $logger;
         $this->settings = $settings;
         $this->mapper = $mapper;
@@ -39,10 +38,21 @@ class TripEventImageService {
         unlink($folder . "/" . $image);
 
         $this->mapper->update_image($event->id, null);
+        
+        $this->logger->addNotice("Delete Event Image", array("id" => $event_id));
+        
+        return new Payload(Payload::$STATUS_DELETE_SUCCESS);
     }
 
-    public function saveImage($event_id, $image) {
+    public function saveImage($event_id, $files) {
         $event = $this->mapper->get($event_id);
+
+        if (!array_key_exists('image', $files) || empty($files['image'])) {
+            $this->logger->addError("Update Event Image, Image Error", array("id" => $event_id, "files" => $files));
+            return new Payload(Payload::$STATUS_ERROR, "No File");
+        }
+
+        $image = $files['image'];
 
         $folder = $this->getFullImagePath();
 
@@ -69,10 +79,16 @@ class TripEventImageService {
 
             $this->mapper->update_image($event->id, $file_name . '.' . $file_extension);
 
-            return "/" . $this->getEventImagePath() . $file_name . '-small.' . $file_extension;
+            $thumbnail = "/" . $this->getEventImagePath() . $file_name . '-small.' . $file_extension;
+
+            $this->logger->addNotice("Update Event Image, Image Set", array("id" => $event_id, "image" => $image->getClientFilename()));
+
+            $payload = new Payload(Payload::$STATUS_UPDATE);
+            return $payload->withAdditonalData(["thumbnail" => $thumbnail]);
         }
 
-        return false;
+        $this->logger->addNotice("Update Event Image, No File", array("id" => $event_id));
+        return new Payload(Payload::$STATUS_ERROR, "No File");
     }
 
 }
