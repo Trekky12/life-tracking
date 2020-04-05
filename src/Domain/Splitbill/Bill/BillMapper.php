@@ -2,7 +2,7 @@
 
 namespace App\Domain\Splitbill\Bill;
 
-class Mapper extends \App\Domain\Mapper {
+class BillMapper extends \App\Domain\Mapper {
 
     protected $table = "splitbill_bill";
     protected $dataobject = \App\Domain\Splitbill\Bill\Bill::class;

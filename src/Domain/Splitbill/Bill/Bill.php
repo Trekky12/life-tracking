@@ -72,5 +72,9 @@ class Bill extends \App\Domain\DataObject {
     public function getParentID() {
         return $this->sbgroup;
     }
+    
+    public function addParsingError($error) {
+        return $this->parsing_errors[] = $error;
+    }
 
 }

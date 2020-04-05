@@ -2,33 +2,46 @@
 
 namespace App\Domain\Splitbill\Group;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
+use App\Domain\Splitbill\Bill\BillMapper;
+use App\Domain\User\UserService;
 
-class SplitbillGroupService extends \App\Domain\Service {
+class SplitbillGroupService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Splitbill\Group\Group::class;
-    protected $element_view_route = 'splitbill_groups_edit';
-    protected $module = "splitbills";
+    private $bill_mapper;
+    private $user_service;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    public function __construct(LoggerInterface $logger, CurrentUser $user, GroupMapper $mapper, BillMapper $bill_mapper, UserService $user_service) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->bill_mapper = $bill_mapper;
+        $this->user_service = $user_service;
     }
 
     public function getUserGroups() {
         return $this->mapper->getUserItems('t.createdOn DESC, name');
+    }
+
+    public function index() {
+        $groups = $this->mapper->getUserItems('t.createdOn DESC, name');
+
+        $balances = $this->bill_mapper->getBalances();
+
+        return new Payload(Payload::$RESULT_HTML, ['groups' => $groups, 'balances' => $balances]);
+    }
+
+    public function edit($entry_id) {
+        if ($this->isOwner($entry_id) === false) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $entry = $this->getEntry($entry_id);
+        $users = $this->user_service->getAll();
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
 
 }

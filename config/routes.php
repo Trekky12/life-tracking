@@ -293,21 +293,21 @@ return function (App $app) {
         });
 
         $group->group('/groups', function(RouteCollectorProxy $group_groups) {
-            $group_groups->get('/', '\App\Domain\Splitbill\Group\Controller:index')->setName('splitbills');
-            $group_groups->get('/edit/[{id:[0-9]+}]', '\App\Domain\Splitbill\Group\Controller:edit')->setName('splitbill_groups_edit');
-            $group_groups->post('/save/[{id:[0-9]+}]', '\App\Domain\Splitbill\Group\Controller:save')->setName('splitbill_groups_save');
-            $group_groups->delete('/delete/{id}', '\App\Domain\Splitbill\Group\Controller:delete')->setName('splitbill_groups_delete');
+            $group_groups->get('/', \App\Application\Action\Splitbill\Group\GroupListAction::class)->setName('splitbills');
+            $group_groups->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Splitbill\Group\GroupEditAction::class)->setName('splitbill_groups_edit');
+            $group_groups->post('/save/[{id:[0-9]+}]', \App\Application\Action\Splitbill\Group\GroupSaveAction::class)->setName('splitbill_groups_save');
+            $group_groups->delete('/delete/{id}', \App\Application\Action\Splitbill\Group\GroupDeleteAction::class)->setName('splitbill_groups_delete');
         });
 
         $group->group('/{group}', function(RouteCollectorProxy $group_group) {
 
-            $group_group->get('/view/', '\App\Domain\Splitbill\Bill\Controller:index')->setName('splitbill_bills');
-            $group_group->get('/table/', '\App\Domain\Splitbill\Bill\Controller:table')->setName('splitbill_bills_table');
+            $group_group->get('/view/', \App\Application\Action\Splitbill\Bill\BillViewAction::class)->setName('splitbill_bills');
+            $group_group->get('/table/', \App\Application\Action\Splitbill\Bill\BillTableAction::class)->setName('splitbill_bills_table');
 
             $group_group->group('/bills', function(RouteCollectorProxy $group_bill) {
-                $group_bill->get('/edit/[{id:[0-9]+}]', '\App\Domain\Splitbill\Bill\Controller:edit')->setName('splitbill_bills_edit');
-                $group_bill->post('/save/[{id:[0-9]+}]', '\App\Domain\Splitbill\Bill\Controller:save')->setName('splitbill_bills_save');
-                $group_bill->delete('/delete/{id}', '\App\Domain\Splitbill\Bill\Controller:delete')->setName('splitbill_bills_delete');
+                $group_bill->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Splitbill\Bill\BillEditAction::class)->setName('splitbill_bills_edit');
+                $group_bill->post('/save/[{id:[0-9]+}]', \App\Application\Action\Splitbill\Bill\BillSaveAction::class)->setName('splitbill_bills_save');
+                $group_bill->delete('/delete/{id}', \App\Application\Action\Splitbill\Bill\BillDeleteAction::class)->setName('splitbill_bills_delete');
             });
         });
     });

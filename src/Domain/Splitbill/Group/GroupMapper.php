@@ -2,7 +2,7 @@
 
 namespace App\Domain\Splitbill\Group;
 
-class Mapper extends \App\Domain\Mapper {
+class GroupMapper extends \App\Domain\Mapper {
 
     protected $table = "splitbill_groups";
     protected $dataobject = \App\Domain\Splitbill\Group\Group::class;
