@@ -42,6 +42,7 @@ class OwnerTest extends BoardTestBase {
 
     /**
      * Look for archived item
+     * @depends testArchive
      */
     public function testArchivedItem() {
 
@@ -74,6 +75,7 @@ class OwnerTest extends BoardTestBase {
 
     /**
      * Look for unarchived item
+     * @depends testUnArchive
      */
     public function testUnArchivedItem() {
 

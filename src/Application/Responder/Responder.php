@@ -17,7 +17,7 @@ abstract class Responder {
         $this->translation = $translation;
     }
 
-    protected function respond(Payload $payload): ResponseInterface {
+    public function respond(Payload $payload): ResponseInterface {
         return $this->responseFactory->createResponse();
     }
 

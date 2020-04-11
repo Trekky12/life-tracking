@@ -21,6 +21,7 @@ class Payload {
     public static $RESULT_ARRAY = "RESULT_ARRAY";
     public static $RESULT_JSON = "RESULT_JSON";
     public static $RESULT_HTML = "RESULT_HTML";
+    public static $RESULT_RAW = "RESULT_RAW";
     public static $NO_ACCESS = "NO_ACCESS";
     public static $JSON_NO_ACCESS = "JSON_NO_ACCESS";
     public static $STATUS_PASSWORD_MISSMATCH = "PASSWORD_MISSMATCH";

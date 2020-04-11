@@ -2,34 +2,49 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
+use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
 use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Domain\User\UserService;
+use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Main\Utility\DateUtility;
+use App\Application\Payload\Payload;
 
-class SheetService extends \App\Domain\Service {
+class SheetService extends GeneralService {
 
-    protected $dataobject = \App\Domain\Timesheets\Sheet\Sheet::class;
-    protected $dataobject_parent = \App\Domain\Timesheets\Project\Project::class;
-    protected $element_view_route = 'timesheets_sheets';
-    protected $module = "timesheets";
+    protected $project_service;
+    protected $user_service;
+    protected $settings;
+    protected $router;
 
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            Mapper $mapper) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
+    public function __construct(LoggerInterface $logger, CurrentUser $user, SheetMapper $mapper, ProjectService $project_service, UserService $user_service, Settings $settings, RouteParser $router) {
+        parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
+        $this->project_service = $project_service;
+        $this->user_service = $user_service;
+        $this->settings = $settings;
+        $this->router = $router;
     }
 
-    public function getTableDataIndex($project, $from, $to, $count = 20) {
+    public function view($hash, $from, $to): Payload {
+
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $response_data = $this->getTableDataIndex($project, $from, $to);
+
+        $response_data["users"] = $this->user_service->getAll();
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    private function getTableDataIndex($project, $from, $to, $count = 20) {
 
         $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data);
@@ -53,7 +68,20 @@ class SheetService extends \App\Domain\Service {
         ];
     }
 
-    public function table($project, $from, $to, $requestData) {
+    public function table($hash, $from, $to, $requestData): Payload {
+
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $table = $this->getTableData($project, $from, $to, $requestData);
+
+        return new Payload(Payload::$RESULT_JSON, $table);
+    }
+
+    private function getTableData($project, $from, $to, $requestData) {
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -114,47 +142,44 @@ class SheetService extends \App\Domain\Service {
         }
     }
 
+    public function edit($hash, $entry_id) {
+
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $entry = $this->getEntry($entry_id);
+
+        $users = $this->user_service->getAll();
+        $project_users = $this->project_service->getUsers($project->id);
+
+        $response_data = [
+            'entry' => $entry,
+            'project' => $project,
+            'project_users' => $project_users,
+            'users' => $users
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function showfastCheckInCheckOut($hash) {
+
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        // get a existing entry for today with start but without end
+        $entry = $this->getLastSheetWithStartDateToday($project->id);
+
+        return new Payload(Payload::$RESULT_HTML, ["project" => $project, "entry" => $entry]);
+    }
+
     public function getLastSheetWithStartDateToday($project_id) {
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
-    }
-
-    public function createCheckInEntry($project, $data) {
-        // always create new entry with current timestamp
-        $data["start"] = date('Y-m-d H:i');
-        $data["project"] = $project->id;
-        $data["user"] = $this->current_user->getUser()->id;
-
-        $entry = $this->createEntry($data);
-        $this->insertEntry($entry);
-    }
-
-    public function createCheckOutEntry($project, $data) {
-        // always create new entry with current timestamp
-        $data["end"] = date('Y-m-d H:i');
-        $data["project"] = $project->id;
-        $data["user"] = $this->current_user->getUser()->id;
-
-        $entry = $this->createEntry($data);
-        $this->insertEntry($entry);
-    }
-
-    public function updateEntryForCheckOut($entry, $data) {
-        $entry->end = date('Y-m-d H:i');
-
-        // parse lat/lng/acc values from post data
-        $dataObject = new $this->dataobject($data);
-
-        $entry->end_lat = $dataObject->end_lat;
-        $entry->end_lng = $dataObject->end_lng;
-        $entry->end_acc = $dataObject->end_acc;
-
-        $this->updateEntry($entry);
-    }
-
-    protected function getElementViewRoute($entry) {
-        $group = $this->getParentObjectService()->getEntry($entry->getParentID());
-        $this->element_view_route_params["project"] = $group->getHash();
-        return parent::getElementViewRoute($entry);
     }
 
 }

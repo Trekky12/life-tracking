@@ -37,11 +37,11 @@ class NoAccessTest extends TimesheetTestBase {
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-
+        
         $this->assertArrayHasKey("status", $json);
         $this->assertSame($json["status"], "error");
-        $this->assertArrayHasKey("message", $json);
-        $this->assertSame($json["message"], "Kein Zugriff erlaubt");
+        $this->assertArrayHasKey("error", $json);
+        $this->assertSame($json["error"], "Kein Zugriff erlaubt");
     }
 
     public function testPostTimesheetsFastCheckOutNoAccess() {
@@ -53,8 +53,8 @@ class NoAccessTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("status", $json);
         $this->assertSame($json["status"], "error");
-        $this->assertArrayHasKey("message", $json);
-        $this->assertSame($json["message"], "Kein Zugriff erlaubt");
+        $this->assertArrayHasKey("error", $json);
+        $this->assertSame($json["error"], "Kein Zugriff erlaubt");
     }
 
     /**

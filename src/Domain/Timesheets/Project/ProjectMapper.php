@@ -2,7 +2,7 @@
 
 namespace App\Domain\Timesheets\Project;
 
-class Mapper extends \App\Domain\Mapper {
+class ProjectMapper extends \App\Domain\Mapper {
 
     protected $table = "timesheets_projects";
     protected $dataobject = \App\Domain\Timesheets\Project\Project::class;

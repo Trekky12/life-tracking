@@ -2,9 +2,31 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
+use Psr\Log\LoggerInterface;
+use Slim\Routing\RouteParser;
+use App\Domain\Base\Settings;
+use App\Domain\Base\CurrentUser;
+use App\Domain\User\UserService;
+use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Main\Translator;
+use App\Application\Payload\Payload;
+
 class SheetExportService extends SheetService {
 
-    public function export($project, $from, $to) {
+    private $translation;
+
+    public function __construct(LoggerInterface $logger, CurrentUser $user, SheetMapper $mapper, ProjectService $project_service, UserService $user_service, Settings $settings, RouteParser $router, Translator $translation) {
+        parent::__construct($logger, $user, $mapper, $project_service, $user_service, $settings, $router);
+        $this->translation = $translation;
+    }
+
+    public function export($hash, $from, $to) {
+
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         // get Data
         $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'ASC', null);
@@ -139,7 +161,7 @@ class SheetExportService extends SheetService {
          * so a temporary file in a specific directory is generated and later deleted 
          */
         $path = __DIR__ . '/../../../files/';
-        $excelFileName = tempnam($path, 'phpxltmp');
+        $excelFileName = @tempnam($path, 'phpxltmp');
         $writer->save($excelFileName);
 
 
@@ -156,7 +178,7 @@ class SheetExportService extends SheetService {
         $body = file_get_contents($excelFileName);
         unlink($excelFileName);
 
-        return $body;
+        return new Payload(Payload::$RESULT_RAW, $body);
     }
 
 }

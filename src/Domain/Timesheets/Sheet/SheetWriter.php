@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Domain\Timesheets\Sheet;
+
+use App\Domain\ObjectActivityWriter;
+use Psr\Log\LoggerInterface;
+use App\Domain\Activity\ActivityCreator;
+use App\Domain\Base\CurrentUser;
+use App\Application\Payload\Payload;
+use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\Project\ProjectMapper;
+
+class SheetWriter extends ObjectActivityWriter {
+
+    private $service;
+    private $project_service;
+    private $project_mapper;
+
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SheetMapper $mapper, SheetService $service, ProjectService $project_service, ProjectMapper $project_mapper) {
+        parent::__construct($logger, $user, $activity);
+        $this->mapper = $mapper;
+        $this->service = $service;
+        $this->project_service = $project_service;
+        $this->project_mapper = $project_mapper;
+    }
+
+    public function save($id, $data, $additionalData = null): Payload {
+
+        $project = $this->project_service->getFromHash($additionalData["project"]);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $data['project'] = $project->id;
+
+        $payload = parent::save($id, $data, $additionalData);
+        $entry = $payload->getResult();
+
+        $this->service->setDiff($entry->id);
+
+        return $payload;
+    }
+
+    public function getParentMapper() {
+        return $this->project_mapper;
+    }
+
+    public function getObjectViewRoute(): string {
+        return 'timesheets_sheets';
+    }
+
+    public function getObjectViewRouteParams($entry): array {
+        $project = $this->getParentMapper()->get($entry->getParentID());
+        return [
+            "project" => $project->getHash(),
+            "id" => $entry->id
+        ];
+    }
+
+    public function getModule(): string {
+        return "timesheets";
+    }
+
+}

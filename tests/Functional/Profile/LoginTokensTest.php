@@ -29,7 +29,7 @@ class LoginTokensTest extends BaseTestCase {
     }
     
     
-    public function deleteTokenTest(){
+    public function testDeleteToken(){
         $this->login("admin", "admin");
         
         // login and get current token id

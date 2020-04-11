@@ -47,7 +47,7 @@ class UserTest extends BaseTestCase {
             "category" => 1,
             "description" => "Test",
             "date" => date('Y-m-d'),
-            "time" => "10:15:52",
+            "time" => date("H:i:s"),
             "value" => rand(0, 10000) / 100,
             "paymethod" => 1,
             "lat" => "10.00000000000000",

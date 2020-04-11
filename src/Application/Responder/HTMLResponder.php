@@ -13,7 +13,7 @@ abstract class HTMLResponder extends Responder {
         parent::__construct($responseFactory, $translation);
     }
 
-    protected function respond(Payload $payload): ResponseInterface {
+    public function respond(Payload $payload): ResponseInterface {
         if ($payload->getStatus() == Payload::$NO_ACCESS) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }

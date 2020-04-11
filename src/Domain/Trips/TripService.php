@@ -10,9 +10,6 @@ use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
 class TripService extends GeneralService {
-    /* protected $dataobject = \App\Domain\Trips\Trip::class;
-      protected $element_view_route = 'trips_edit';
-      protected $module = "trips"; */
     
     private $event_mapper;
 
@@ -23,10 +20,6 @@ class TripService extends GeneralService {
         $this->user_service = $user_service;
     }
 
-    public function getUserTrips() {
-        return $this->mapper->getUserItems('t.createdOn DESC, name');
-    }
-    
     public function index() {
         $trips = $this->mapper->getUserItems('t.createdOn DESC, name');
         $dates = $this->event_mapper->getMinMaxEventsDates();

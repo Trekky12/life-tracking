@@ -345,30 +345,30 @@ return function (App $app) {
         });
 
         $group->group('/projects', function(RouteCollectorProxy $group_projects) {
-            $group_projects->get('/', '\App\Domain\Timesheets\Project\Controller:index')->setName('timesheets');
-            $group_projects->get('/edit/[{id:[0-9]+}]', '\App\Domain\Timesheets\Project\Controller:edit')->setName('timesheets_projects_edit');
-            $group_projects->post('/save/[{id:[0-9]+}]', '\App\Domain\Timesheets\Project\Controller:save')->setName('timesheets_projects_save');
-            $group_projects->delete('/delete/{id}', '\App\Domain\Timesheets\Project\Controller:delete')->setName('timesheets_projects_delete');
+            $group_projects->get('/', \App\Application\Action\Timesheets\Project\ProjectListAction::class)->setName('timesheets');
+            $group_projects->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Project\ProjectEditAction::class)->setName('timesheets_projects_edit');
+            $group_projects->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Project\ProjectSaveAction::class)->setName('timesheets_projects_save');
+            $group_projects->delete('/delete/{id}', \App\Application\Action\Timesheets\Project\ProjectDeleteAction::class)->setName('timesheets_projects_delete');
         });
 
         $group->group('/{project}', function(RouteCollectorProxy $group_project) {
 
-            $group_project->get('/view/', '\App\Domain\Timesheets\Sheet\Controller:index')->setName('timesheets_sheets');
-            $group_project->get('/table/', '\App\Domain\Timesheets\Sheet\Controller:table')->setName('timesheets_sheets_table');
+            $group_project->get('/view/', \App\Application\Action\Timesheets\Sheet\SheetViewAction::class)->setName('timesheets_sheets');
+            $group_project->get('/table/', \App\Application\Action\Timesheets\Sheet\SheetTableAction::class)->setName('timesheets_sheets_table');
 
             $group_project->group('/sheets', function(RouteCollectorProxy $group_sheets) {
-                $group_sheets->get('/edit/[{id:[0-9]+}]', '\App\Domain\Timesheets\Sheet\Controller:edit')->setName('timesheets_sheets_edit');
-                $group_sheets->post('/save/[{id:[0-9]+}]', '\App\Domain\Timesheets\Sheet\Controller:save')->setName('timesheets_sheets_save');
-                $group_sheets->delete('/delete/{id}', '\App\Domain\Timesheets\Sheet\Controller:delete')->setName('timesheets_sheets_delete');
+                $group_sheets->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetEditAction::class)->setName('timesheets_sheets_edit');
+                $group_sheets->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetSaveAction::class)->setName('timesheets_sheets_save');
+                $group_sheets->delete('/delete/{id}', \App\Application\Action\Timesheets\Sheet\SheetDeleteAction::class)->setName('timesheets_sheets_delete');
             });
 
             $group_project->group('/fast', function(RouteCollectorProxy $group_fast) {
-                $group_fast->get('/', '\App\Domain\Timesheets\Sheet\Controller:showfastCheckInCheckOut')->setName('timesheets_fast');
-                $group_fast->post('/checkin', '\App\Domain\Timesheets\Sheet\Controller:fastCheckIn')->setName('timesheets_fast_checkin');
-                $group_fast->post('/checkout', '\App\Domain\Timesheets\Sheet\Controller:fastCheckOut')->setName('timesheets_fast_checkout');
+                $group_fast->get('/', \App\Application\Action\Timesheets\Sheet\SheetFastAction::class)->setName('timesheets_fast');
+                $group_fast->post('/checkin', \App\Application\Action\Timesheets\Sheet\SheetFastCheckInAction::class)->setName('timesheets_fast_checkin');
+                $group_fast->post('/checkout', \App\Application\Action\Timesheets\Sheet\SheetFastCheckOutAction::class)->setName('timesheets_fast_checkout');
             });
 
-            $group_project->get('/export', '\App\Domain\Timesheets\Sheet\Controller:export')->setName('timesheets_export');
+            $group_project->get('/export', \App\Application\Action\Timesheets\Sheet\SheetExportAction::class)->setName('timesheets_export');
         });
     });
 };
