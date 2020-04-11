@@ -2,7 +2,7 @@
 
 namespace App\Domain\Board;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
@@ -12,7 +12,7 @@ use App\Domain\Board\Card\CardMapper;
 use App\Domain\Board\Label\LabelMapper;
 use App\Application\Payload\Payload;
 
-class BoardService extends GeneralService {
+class BoardService extends Service {
 
     private $user_service;
     private $stack_mapper;

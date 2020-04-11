@@ -2,13 +2,13 @@
 
 namespace App\Domain\User\MobileFavorites;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
-class MobileFavoriteAdminService extends GeneralService {
+class MobileFavoriteAdminService extends Service {
 
     private $user_service;
 

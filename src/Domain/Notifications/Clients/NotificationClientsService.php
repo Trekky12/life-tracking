@@ -2,14 +2,14 @@
 
 namespace App\Domain\Notifications\Clients;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\Utility;
 use App\Application\Payload\Payload;
 use App\Domain\User\UserService;
 
-class NotificationClientsService extends GeneralService {
+class NotificationClientsService extends Service {
 
     private $user_service;
 

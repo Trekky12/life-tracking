@@ -2,13 +2,13 @@
 
 namespace App\Domain\Timesheets\Project;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
-class ProjectService extends GeneralService {
+class ProjectService extends Service {
 
     private $user_service;
 

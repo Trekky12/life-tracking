@@ -2,7 +2,7 @@
 
 namespace App\Domain\Location;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
@@ -11,7 +11,7 @@ use App\Domain\Car\CarService;
 use App\Domain\Car\Service\CarServiceService;
 use App\Application\Payload\Payload;
 
-class LocationService extends GeneralService {
+class LocationService extends Service {
 
     private $helper;
     private $finances_service;

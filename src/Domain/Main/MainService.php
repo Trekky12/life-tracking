@@ -2,7 +2,7 @@
 
 namespace App\Domain\Main;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
@@ -14,7 +14,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Settings\SettingsMapper;
 use Slim\Csrf\Guard as CSRF;
 
-class MainService extends GeneralService {
+class MainService extends Service {
 
     private $settings;
     protected $settings_mapper;

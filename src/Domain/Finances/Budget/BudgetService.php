@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances\Budget;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
@@ -12,7 +12,7 @@ use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Recurring\RecurringMapper;
 use App\Application\Payload\Payload;
 
-class BudgetService extends GeneralService {
+class BudgetService extends Service {
 
     private $translation;
     private $settings;

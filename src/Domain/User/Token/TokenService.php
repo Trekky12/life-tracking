@@ -2,14 +2,14 @@
 
 namespace App\Domain\User\Token;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\Utility;
 use App\Application\Payload\Payload;
 
-class TokenService extends GeneralService {
+class TokenService extends Service {
 
     private $settings;
 

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Trips\Event;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
@@ -11,7 +11,7 @@ use App\Domain\Trips\TripService;
 use App\Domain\Main\Helper;
 use App\Application\Payload\Payload;
 
-class TripEventService extends GeneralService {
+class TripEventService extends Service {
 
     private $trip_service;
     private $settings;

@@ -2,21 +2,30 @@
 
 namespace App\Domain\Car\Service;
 
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
 use App\Domain\Car\CarService;
 use App\Application\Payload\Payload;
 
-class CarServiceService extends \App\Domain\Service {
+class CarServiceService extends Service {
 
     private $car_service;
+    private $router;
+    private $translation;
+    
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CarServiceMapper $mapper, CarService $car_service, RouteParser $router, Translator $translation) {
+        parent::__construct($logger, $user);
+        $this->mapper = $mapper;
+        $this->car_service = $car_service;
+        $this->router = $router;
+        $this->translation = $translation;
+    }
 
-    public function __construct(LoggerInterface $logger,
+    /*public function __construct(LoggerInterface $logger,
             Translator $translation,
             Settings $settings,
             Activity $activity,
@@ -28,7 +37,7 @@ class CarServiceService extends \App\Domain\Service {
 
         $this->mapper = $mapper;
         $this->car_service = $car_service;
-    }
+    }*/
 
     public function index() {
         $user_cars = $this->car_service->getUserCars();
@@ -124,10 +133,6 @@ class CarServiceService extends \App\Domain\Service {
             "data" => $table
         ];
         return new Payload(Payload::$RESULT_JSON, $response_data);
-    }
-
-    protected function getParentObjectService() {
-        return $this->car_service;
     }
 
     public function hasAccessToCarOfEntry($id) {

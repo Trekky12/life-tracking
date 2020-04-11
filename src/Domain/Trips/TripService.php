@@ -2,14 +2,14 @@
 
 namespace App\Domain\Trips;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Trips\Event\EventMapper;
 use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
-class TripService extends GeneralService {
+class TripService extends Service {
     
     private $event_mapper;
 

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances\Recurring;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
@@ -16,7 +16,7 @@ use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Application\Payload\Payload;
 
-class RecurringService extends GeneralService {
+class RecurringService extends Service {
 
     private $settings;
     private $translation;

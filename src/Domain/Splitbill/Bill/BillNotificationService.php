@@ -2,21 +2,13 @@
 
 namespace App\Domain\Splitbill\Bill;
 
-use App\Domain\GeneralService;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
 use App\Domain\Main\Translator;
 use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
 use App\Domain\Notifications\NotificationsService;
-use App\Domain\Finances\FinancesEntry;
-use App\Domain\Finances\FinancesService;
 use App\Domain\User\UserService;
-use App\Domain\Splitbill\Group\SplitbillGroupService;
-use App\Domain\Finances\Paymethod\PaymethodService;
-use App\Application\Payload\Payload;
 
 class BillNotificationService {
 

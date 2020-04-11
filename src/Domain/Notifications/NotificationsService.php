@@ -2,7 +2,7 @@
 
 namespace App\Domain\Notifications;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
@@ -12,7 +12,7 @@ use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 use App\Application\Payload\Payload;
 
-class NotificationsService extends GeneralService {
+class NotificationsService extends Service {
 
     private $translation;
     private $settings;

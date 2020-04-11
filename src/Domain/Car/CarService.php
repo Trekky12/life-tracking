@@ -2,13 +2,13 @@
 
 namespace App\Domain\Car;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
-class CarService extends GeneralService {
+class CarService extends Service {
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, CarMapper $mapper, UserService $user_service) {
         parent::__construct($logger, $user);

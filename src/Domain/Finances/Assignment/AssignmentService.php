@@ -2,14 +2,14 @@
 
 namespace App\Domain\Finances\Assignment;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Finances\FinancesEntry;
 use App\Domain\Finances\Category\CategoryService;
 use App\Application\Payload\Payload;
 
-class AssignmentService extends GeneralService {
+class AssignmentService extends Service {
 
     private $cat_service;
 

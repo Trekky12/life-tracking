@@ -2,7 +2,7 @@
 
 namespace App\Domain\User\Profile;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
@@ -10,7 +10,7 @@ use App\Domain\User\UserService;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Application\Payload\Payload;
 
-class ProfileService extends GeneralService {
+class ProfileService extends Service {
 
     private $settings;
     private $user_service;

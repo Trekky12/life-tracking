@@ -2,31 +2,19 @@
 
 namespace App\Domain\Car\Service;
 
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
 use App\Domain\Car\CarService;
 use App\Application\Payload\Payload;
 
-class CarServiceStatsService extends \App\Domain\Service {
+class CarServiceStatsService extends Service {
 
-    protected $module = "cars";
     private $car_service;
-
-    public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            CarServiceMapper $mapper,
-            CarService $car_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
+    
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CarServiceMapper $mapper, CarService $car_service) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->car_service = $car_service;
     }

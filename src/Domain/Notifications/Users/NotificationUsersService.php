@@ -2,12 +2,12 @@
 
 namespace App\Domain\Notifications\Users;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 
-class NotificationUsersService extends GeneralService {
+class NotificationUsersService extends Service {
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, NotificationUsersMapper $mapper) {
         parent::__construct($logger, $user);

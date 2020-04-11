@@ -2,14 +2,14 @@
 
 namespace App\Domain\User;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
-class UserService extends GeneralService {
+class UserService extends Service {
 
     private $helper;
     private $translation;

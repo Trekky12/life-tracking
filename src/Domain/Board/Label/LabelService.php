@@ -2,13 +2,13 @@
 
 namespace App\Domain\Board\Label;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Board\BoardService;
 use App\Application\Payload\Payload;
 
-class LabelService extends GeneralService {
+class LabelService extends Service {
 
     private $board_service;
 

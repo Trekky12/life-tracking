@@ -2,14 +2,14 @@
 
 namespace App\Domain\Location\Steps;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\DateUtility;
 use App\Application\Payload\Payload;
 
-class StepsService extends GeneralService {
+class StepsService extends Service {
 
     private $settings;
 

@@ -2,14 +2,14 @@
 
 namespace App\Domain\Splitbill\Group;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Splitbill\Bill\BillMapper;
 use App\Domain\User\UserService;
 
-class SplitbillGroupService extends GeneralService {
+class SplitbillGroupService extends Service {
 
     private $bill_mapper;
     private $user_service;

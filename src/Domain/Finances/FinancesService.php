@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use Slim\Routing\RouteParser;
@@ -12,7 +12,7 @@ use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Assignment\AssignmentService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 
-class FinancesService extends GeneralService {
+class FinancesService extends Service {
 
     private $translation;
     private $router;

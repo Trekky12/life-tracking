@@ -2,11 +2,11 @@
 
 namespace App\Domain\Crawler\CrawlerDataset;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 
-class CrawlerDatasetService extends GeneralService {
+class CrawlerDatasetService extends Service {
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, CrawlerDatasetMapper $mapper) {
         parent::__construct($logger, $user);

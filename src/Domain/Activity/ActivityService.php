@@ -2,7 +2,7 @@
 
 namespace App\Domain\Activity;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
@@ -10,7 +10,7 @@ use App\Domain\Base\Settings;
 use App\Domain\User\UserMapper;
 use App\Domain\Main\Translator;
 
-class ActivityService extends GeneralService {
+class ActivityService extends Service {
 
     private $settings;
     private $user_mapper;

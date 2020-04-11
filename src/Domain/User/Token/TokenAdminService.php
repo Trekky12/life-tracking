@@ -2,13 +2,13 @@
 
 namespace App\Domain\User\Token;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
-class TokenAdminService extends GeneralService {
+class TokenAdminService extends Service {
 
     private $user_service;
 

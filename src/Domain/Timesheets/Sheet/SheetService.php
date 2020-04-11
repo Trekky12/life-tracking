@@ -2,7 +2,7 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
@@ -12,7 +12,7 @@ use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Main\Utility\DateUtility;
 use App\Application\Payload\Payload;
 
-class SheetService extends GeneralService {
+class SheetService extends Service {
 
     protected $project_service;
     protected $user_service;

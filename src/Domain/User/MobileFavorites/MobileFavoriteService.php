@@ -2,12 +2,12 @@
 
 namespace App\Domain\User\MobileFavorites;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 
-class MobileFavoriteService extends GeneralService {
+class MobileFavoriteService extends Service {
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, MobileFavoritesMapper $mapper) {
         parent::__construct($logger, $user);

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Splitbill\Bill;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use Slim\Routing\RouteParser;
 use App\Domain\Base\Settings;
@@ -12,7 +12,7 @@ use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Application\Payload\Payload;
 
-class SplitbillBillService extends GeneralService {
+class SplitbillBillService extends Service {
 
     private $settings;
     private $user_service;

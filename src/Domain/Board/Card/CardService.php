@@ -2,21 +2,16 @@
 
 namespace App\Domain\Board\Card;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\Controller as Activity;
-use App\Domain\Main\Translator;
-use Slim\Routing\RouteParser;
-use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
-use App\Domain\Main\Helper;
 use App\Domain\Board\BoardMapper;
 use App\Domain\Board\Stack\StackService;
 use App\Domain\Board\Label\LabelService;
 use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
-class CardService extends GeneralService {
+class CardService extends Service {
 
     private $board_mapper;
     private $stack_service;

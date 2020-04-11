@@ -2,7 +2,7 @@
 
 namespace App\Domain\Crawler;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
@@ -12,7 +12,7 @@ use App\Domain\User\UserService;
 use App\Domain\Crawler\CrawlerLink\CrawlerLinkMapper;
 use App\Application\Payload\Payload;
 
-class CrawlerService extends GeneralService {
+class CrawlerService extends Service {
 
     private $header_mapper;
     private $dataset_service;

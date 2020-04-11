@@ -2,12 +2,12 @@
 
 namespace App\Domain\Finances\Paymethod;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 
-class PaymethodService extends GeneralService {
+class PaymethodService extends Service {
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, PaymethodMapper $cat_mapper) {
         parent::__construct($logger, $user);

@@ -2,14 +2,14 @@
 
 namespace App\Domain\Crawler\CrawlerHeader;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Crawler\CrawlerService;
 use App\Domain\Crawler\Crawler;
 
-class CrawlerHeaderService extends GeneralService {
+class CrawlerHeaderService extends Service {
 
     private $crawler_service;
 

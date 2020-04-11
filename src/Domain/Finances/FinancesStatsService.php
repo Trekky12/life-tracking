@@ -2,7 +2,7 @@
 
 namespace App\Domain\Finances;
 
-use App\Domain\GeneralService;
+use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
@@ -11,7 +11,7 @@ use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Budget\BudgetService;
 use App\Application\Payload\Payload;
 
-class FinancesStatsService extends GeneralService {
+class FinancesStatsService extends Service {
 
     protected $mapper;
     private $cat_service;
