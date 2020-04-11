@@ -7,8 +7,9 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use Dubture\Monolog\Reader\LogReader;
-use App\Domain\Finances\Recurring\RecurringService;
-use App\Domain\Board\Card\CardService;
+use App\Domain\Finances\Recurring\RecurringFinanceEntryCreator;
+use App\Domain\Finances\FinanceStatsMonthlyMailService;
+use App\Domain\Board\Card\CardMailService;
 use App\Domain\User\Token\TokenService;
 use App\Application\Payload\Payload;
 use App\Domain\Settings\SettingsMapper;
@@ -18,8 +19,9 @@ class MainService extends Service {
 
     private $settings;
     protected $settings_mapper;
-    protected $recurring_service;
-    protected $card_service;
+    protected $finances_entry_creator;
+    protected $finance_stats_monthly_mail_service;
+    protected $card_mail_service;
     protected $token_service;
     private $csrf;
 
@@ -27,30 +29,21 @@ class MainService extends Service {
             CurrentUser $user,
             Settings $settings,
             SettingsMapper $settings_mapper,
-            RecurringService $recurring_service,
-            CardService $card_service,
+            RecurringFinanceEntryCreator $finances_entry_creator,
+            FinanceStatsMonthlyMailService $finance_stats_monthly_mail_service,
+            CardMailService $card_mail_service,
             TokenService $token_service,
             CSRF $csrf) {
         parent::__construct($logger, $user);
 
         $this->settings = $settings;
         $this->settings_mapper = $settings_mapper;
-        $this->recurring_service = $recurring_service;
-        $this->card_service = $card_service;
+        $this->finances_entry_creator = $finances_entry_creator;
+        $this->finance_stats_monthly_mail_service = $finance_stats_monthly_mail_service;
+        $this->card_mail_service = $card_mail_service;
         $this->token_service = $token_service;
         $this->csrf = $csrf;
     }
-
-    /* public function __construct(LoggerInterface $logger,
-      Translator $translation,
-      Settings $settings,
-      Activity $activity,
-      RouteParser $router,
-      CurrentUser $user) {
-      parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
-
-      } */
 
     public function getUserStartPage() {
         $user = $this->current_user->getUser();
@@ -73,7 +66,7 @@ class MainService extends Service {
         if ($date->format("H") === "06" && $lastRunRecurring->getDayDiff() > 0) {
             $this->logger->addNotice('CRON - Update Finances');
 
-            $this->recurring_service->update();
+            $this->finances_entry_creator->update();
             $this->settings_mapper->updateLastRun("lastRunRecurring");
         }
 
@@ -81,7 +74,7 @@ class MainService extends Service {
         if ($date->format("d") === "01" && $date->format("H") === "08" && $lastRunFinanceSummary->getDayDiff() > 0) {
             $this->logger->addNotice('CRON - Send Finance Summary');
 
-            $this->recurring_service->sendSummary();
+            $this->finance_stats_monthly_mail_service->sendSummary();
             $this->settings_mapper->updateLastRun("lastRunFinanceSummary");
         }
 
@@ -89,7 +82,7 @@ class MainService extends Service {
         if ($date->format("H") === "09" && $lastRunCardReminder->getDayDiff() > 0) {
             $this->logger->addNotice('CRON - Send Card Reminder');
 
-            $this->card_service->sendReminder();
+            $this->card_mail_service->sendReminder();
             $this->settings_mapper->updateLastRun("lastRunCardReminder");
 
 //            $this->token_service->deleteOldTokens();

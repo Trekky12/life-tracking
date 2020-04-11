@@ -13,6 +13,7 @@ use App\Domain\User\UserService;
 use App\Domain\Main\Helper;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
+use Slim\Routing\RouteParser;
 use App\Application\Payload\Payload;
 
 class CardWriter extends ObjectActivityWriter {
@@ -25,6 +26,7 @@ class CardWriter extends ObjectActivityWriter {
     private $helper;
     private $translation;
     private $settings;
+    private $router;
 
     public function __construct(LoggerInterface $logger, 
             CurrentUser $user, 
@@ -37,7 +39,8 @@ class CardWriter extends ObjectActivityWriter {
             UserService $user_service,
             Helper $helper,
             Translator $translation,
-            Settings $settings) {
+            Settings $settings,
+            RouteParser $router) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->card_service = $card_service;
@@ -48,6 +51,7 @@ class CardWriter extends ObjectActivityWriter {
         $this->helper = $helper;
         $this->translation = $translation;
         $this->settings = $settings;
+        $this->router = $router;
     }
 
     public function save($id, $data, $additionalData = null): Payload {

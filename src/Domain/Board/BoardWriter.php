@@ -9,6 +9,7 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
 use App\Domain\Main\Translator;
 use App\Domain\User\UserService;
+use Slim\Routing\RouteParser;
 use App\Application\Payload\Payload;
 
 class BoardWriter extends ObjectActivityWriter {
@@ -17,14 +18,16 @@ class BoardWriter extends ObjectActivityWriter {
     private $translation;
     private $helper;
     private $user_service;
+    private $router;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, BoardMapper $mapper, BoardService $board_service, Translator $translation, Helper $helper, UserService $user_service) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, BoardMapper $mapper, BoardService $board_service, Translator $translation, Helper $helper, UserService $user_service, RouteParser $router) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->board_service = $board_service;
         $this->translation = $translation;
         $this->helper = $helper;
         $this->user_service = $user_service;
+        $this->router = $router;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -65,7 +68,7 @@ class BoardWriter extends ObjectActivityWriter {
                         'header' => '',
                         'subject' => $subject,
                         'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), $board->name)
+                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $entry->getHash())), $entry->name)
                     );
 
                     $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);

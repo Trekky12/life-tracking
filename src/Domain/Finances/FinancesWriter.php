@@ -27,7 +27,12 @@ class FinancesWriter extends ObjectActivityWriter {
         $entry = $payload->getResult();
 
         // set default or assigned category
-        $this->setDefaultOrAssignedCategory($entry->id);
+        $category = $this->setDefaultOrAssignedCategory($entry->id);
+        
+        if(!is_null($category)){
+            $entry->category = $category;
+        }
+        
         // Check Budget
         $budget_result = $this->budget_service->checkBudget($entry);
         foreach ($budget_result as $result) {
@@ -44,7 +49,11 @@ class FinancesWriter extends ObjectActivityWriter {
         $cat = $this->finances_service->getDefaultOrAssignedCategory($user_id, $entry);
         if (!is_null($cat)) {
             $this->getMapper()->set_category($id, $cat);
+            
+            return $cat;
         }
+        
+        return null;
     }
 
     public function getObjectViewRoute(): string {

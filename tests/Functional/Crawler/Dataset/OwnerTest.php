@@ -63,6 +63,7 @@ class OwnerTest extends CrawlerTestBase {
     /**
      * 
      * @depends testPostAddElement
+     * @depends testAddedElement
      */
     public function testPostElementUpdate(array $initial_data) {
 

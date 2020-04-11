@@ -167,14 +167,6 @@ class FinancesStatsService extends Service {
         ]);
     }
 
-    public function statsMailBalance($user_id, $month, $year, $type) {
-        return $this->getMapper()->statsMailBalance($user_id, $month, $year, $type);
-    }
-
-    public function statsMailExpenses($user_id, $month, $year, $limit = 10) {
-        return $this->getMapper()->statsMailBalance($user_id, $month, $year, $limit);
-    }
-
     private function createChartData($stats, $key = "year") {
         $data = [];
 

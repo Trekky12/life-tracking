@@ -114,8 +114,8 @@ class NotificationsService extends Service {
         try {
             $category = $this->cat_service->getCategoryByIdentifier($identifier);
 
-            $title = filter_var($title, FILTER_SANITIZE_STRING);
-            $message = filter_var($message, FILTER_SANITIZE_STRING);
+            $title = filter_var($title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $message = filter_var($message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // Push Notifications
             $clients = $this->client_service->getClientsByCategoryAndUser($category->id, $user_id);
@@ -202,8 +202,8 @@ class NotificationsService extends Service {
 
     public function notifyByCategory($requestData) {
         $category = array_key_exists("type", $requestData) ? filter_var($requestData["type"], FILTER_SANITIZE_STRING) : "";
-        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_SANITIZE_STRING) : "";
-        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_SANITIZE_STRING) : "";
+        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
+        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
 
         $this->sendNotificationsToUsersWithCategory($category, $title, $message);
 
@@ -220,8 +220,8 @@ class NotificationsService extends Service {
     }
 
     public function sendTestNotification($entry_id, $data) {
-        $title = array_key_exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING) : null;
-        $message = array_key_exists('message', $data) ? filter_var($data['message'], FILTER_SANITIZE_STRING) : null;
+        $title = array_key_exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $message = array_key_exists('message', $data) ? filter_var($data['message'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
 
         $entry = $this->client_service->getEntry($entry_id);
 
