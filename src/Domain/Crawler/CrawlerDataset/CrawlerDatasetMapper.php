@@ -31,7 +31,7 @@ class CrawlerDatasetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getDataFromCrawler($crawler, $from, $to, $filter = "changedOn", $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getDataFromCrawler($crawler, $from, $to, $filter = "changedOn", $sortColumn = "changedOn", $sortDirection = "DESC", $limit = 20, $start = 0, $searchQuery = '%') {
 
         $bindings = ["crawler" => $crawler, "from" => $from, "to" => $to, "searchQuery" => $searchQuery];
 
@@ -67,6 +67,23 @@ class CrawlerDatasetMapper extends \App\Domain\Mapper {
             return new $this->dataobject($stmt->fetch());
         }
         return null;
+    }
+
+    public function deleteOldEntries($crawler_id, $month = 6) {
+        $sql = "DELETE FROM " . $this->getTableName() . " WHERE crawler = :crawler AND DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0";
+
+        $bindings = [
+            "crawler" => $crawler_id,
+            "month" => $month
+        ];
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
+        }
+        return $stmt->rowCount();
     }
 
 }

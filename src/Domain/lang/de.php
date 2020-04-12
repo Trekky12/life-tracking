@@ -268,7 +268,7 @@ $lang["REALLY_CLOSE_PAGE"] = "Soll die Seite wirklich geschlossen werden?";
 
 $lang["TOKEN_INVALID"] = "Token falsch";
 $lang["LOGIN_TOKENS"] = "Login Tokens";
-$lang["LOGIN_TOKENS_CLEAN"] = "Bereingen";
+$lang["LOGIN_TOKENS_CLEAN"] = "Bereinigen";
 
 $lang["PWA_SETTINGS"] = "App Einstellungen";
 $lang["START_URL"] = "Start URL";
@@ -499,5 +499,7 @@ $lang["CREATE_ROUTE"] = "Route";
 $lang["EXCHANGE_RATE"] = "Umrechnungskurs";
 $lang["EXCHANGE_FEE"] = "Gebühr";
 
-
+$lang["CRAWLER_DATASETS_DELETED"] = "%s Datensätze gelöscht";
+$lang["CRAWLER_DATASETS_CLEAN"] = "Bereinigen";
+        
 return $lang;

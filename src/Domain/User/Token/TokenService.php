@@ -23,10 +23,6 @@ class TokenService extends Service {
         return $this->mapper->getAll();
     }
 
-    public function deleteOldTokens() {
-        return $this->mapper->deleteOldTokens();
-    }
-
     public function getTokensOfCurrentUser() {
         // only tokens of current user
         $user = $this->current_user->getUser();
@@ -34,7 +30,6 @@ class TokenService extends Service {
 
         return $this->mapper->getAll();
     }
-
 
     public function getUserFromToken($token) {
         return $this->mapper->getUserFromToken($token);
@@ -60,10 +55,17 @@ class TokenService extends Service {
             $this->mapper->deleteToken($token);
         }
     }
-    
+
     public function index() {
         $list = $this->getTokensOfCurrentUser();
         return new Payload(Payload::$RESULT_HTML, ['list' => $list]);
+    }
+
+    public function deleteOldTokens() {
+        $this->mapper->deleteOldTokens();
+
+        $response_data = ['status' => 'success'];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
 }

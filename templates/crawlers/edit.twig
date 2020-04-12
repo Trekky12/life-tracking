@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["CRAWLERS"]}}</h2> <a href="{{  url_for('crawlers_dataset_delete_old', {'id' : entry.id}) }}"><button class="white"><i class="fas fa-trash" aria-hidden="true"></i> {{lang["CRAWLER_DATASETS_CLEAN"]}}</button></a></div>
         <div class="page-content">
 
             <form class="form-horizontal" id="crawlerForm" action="{{  url_for('crawlers_save', {'id' : entry.id}) }}" method="POST">

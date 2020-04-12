@@ -500,4 +500,7 @@ $lang["CREATE_ROUTE"] = "Route";
 $lang["EXCHANGE_RATE"] = "exchange rate";
 $lang["EXCHANGE_FEE"] = "exchange fee";
 
+$lang["CRAWLER_DATASETS_DELETED"] = "%s datasets deleted";
+$lang["CRAWLER_DATASETS_CLEAN"] = "Clean";
+
 return $lang;

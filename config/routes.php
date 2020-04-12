@@ -257,6 +257,7 @@ return function (App $app) {
         $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Crawler\Crawler\CrawlerEditAction::class)->setName('crawlers_edit');
         $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Crawler\Crawler\CrawlerSaveAction::class)->setName('crawlers_save');
         $group->delete('/delete/{id}', \App\Application\Action\Crawler\Crawler\CrawlerDeleteAction::class)->setName('crawlers_delete');
+        $group->get('/deleteOld/{id}', \App\Application\Action\Crawler\Dataset\DatasetDeleteOldAction::class)->setName('crawlers_dataset_delete_old');
 
 
         $group->group('/{crawler}', function(RouteCollectorProxy $group_crawler) {

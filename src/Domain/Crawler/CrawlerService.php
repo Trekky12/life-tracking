@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
 use App\Domain\Crawler\CrawlerHeader\CrawlerHeaderMapper;
-use App\Domain\Crawler\CrawlerDataset\CrawlerDatasetService;
+use App\Domain\Crawler\CrawlerDataset\CrawlerDatasetMapper;
 use App\Domain\User\UserService;
 use App\Domain\Crawler\CrawlerLink\CrawlerLinkMapper;
 use App\Application\Payload\Payload;
@@ -15,15 +15,15 @@ use App\Application\Payload\Payload;
 class CrawlerService extends Service {
 
     private $header_mapper;
-    private $dataset_service;
+    private $dataset_mapper;
     private $user_service;
     private $link_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, CrawlerMapper $mapper, CrawlerHeaderMapper $header_mapper, CrawlerDatasetService $dataset_service, UserService $user_service, CrawlerLinkMapper $link_mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CrawlerMapper $mapper, CrawlerHeaderMapper $header_mapper, CrawlerDatasetMapper $dataset_mapper, UserService $user_service, CrawlerLinkMapper $link_mapper) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->header_mapper = $header_mapper;
-        $this->dataset_service = $dataset_service;
+        $this->dataset_mapper = $dataset_mapper;
         $this->user_service = $user_service;
         $this->link_mapper = $link_mapper;
     }
@@ -75,8 +75,8 @@ class CrawlerService extends Service {
             $sortDirection = $initialSortColumn->sort;
         }
 
-        $datacount = $this->dataset_service->getCountFromCrawler($crawler->id, $from, $to, $filter);
-        $datasets = $this->dataset_service->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 20);
+        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
+        $datasets = $this->dataset_mapper->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 20);
         $rendered_data = $this->renderTableRows($datasets, $headers, $filter);
 
 
@@ -121,10 +121,10 @@ class CrawlerService extends Service {
         $sortColumn = $this->getSortColumnFromColumnIndex($headers, $sortColumnIndex, $filter);
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $recordsTotal = $this->dataset_service->getCountFromCrawler($crawler->id, $from, $to, $filter);
-        $recordsFiltered = $this->dataset_service->getCountFromCrawler($crawler->id, $from, $to, $filter, $searchQuery);
+        $recordsTotal = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
+        $recordsFiltered = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter, $searchQuery);
 
-        $data = $this->dataset_service->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->dataset_mapper->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $rendered_data = $this->renderTableRows($data, $headers, $filter);
 
         $response_data = [
