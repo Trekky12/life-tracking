@@ -31,6 +31,10 @@ INSERT INTO splitbill_bill (id, sbgroup, user, name, date, time, lat, lng, acc, 
 (1, 1, 1,'Test bill', '2020-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0');
 INSERT INTO splitbill_bill_users (id, bill, user, paid, spend, paymethod, paid_foreign, spend_foreign) VALUES
 (1, 1, 1, '10.00', '10.00', NULL, NULL, NULL);
+INSERT INTO splitbill_bill_recurring (id, sbgroup, user, name, notice, settleup, exchange_rate, exchange_fee) VALUES
+(1, 1, 1,'Test bill', NULL, 0, '1', '0');
+INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paymethod, paid_foreign, spend_foreign) VALUES
+(1, 1, 1, '10.00', '10.00', NULL, NULL, NULL);
 
 INSERT INTO timesheets_projects (id, user, name, hash) VALUES 
 (1, 1, 'Test timesheets project', 'ABCabc123'),

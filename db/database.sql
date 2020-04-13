@@ -589,6 +589,45 @@ CREATE TABLE splitbill_bill_users (
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS splitbill_bill_recurring;
+CREATE TABLE splitbill_bill_recurring (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    sbgroup INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    notice TEXT DEFAULT NULL,
+    settleup INT(1) DEFAULT 0,
+    exchange_rate varchar(100) DEFAULT NULL,
+    exchange_fee varchar(100) DEFAULT NULL,
+    start DATE DEFAULT NULL,
+    end DATE DEFAULT NULL,
+    last_run TIMESTAMP NULL DEFAULT NULL,
+    unit varchar(255) DEFAULT 'month',
+    multiplier int(5) DEFAULT 1,
+    PRIMARY KEY (id),
+    FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS splitbill_bill_recurring_users;
+CREATE TABLE splitbill_bill_recurring_users (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    bill INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    paid DECIMAL(10,2) DEFAULT NULL,
+    spend DECIMAL(10,2) DEFAULT NULL,
+    paymethod int(11) UNSIGNED DEFAULT NULL,
+    paid_foreign DECIMAL(10,2) DEFAULT NULL,
+    spend_foreign DECIMAL(10,2) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(bill) REFERENCES splitbill_bill_recurring(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    UNIQUE(bill, user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS finances;
 CREATE TABLE finances (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

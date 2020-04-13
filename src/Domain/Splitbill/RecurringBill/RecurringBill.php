@@ -1,22 +1,15 @@
 <?php
 
-namespace App\Domain\Splitbill\Bill;
+namespace App\Domain\Splitbill\RecurringBill;
 
-class Bill extends \App\Domain\DataObject {
+class RecurringBill extends \App\Domain\DataObject {
 
-    static $NAME = "DATAOBJECT_SPLITBILLS_BILL";
+    static $NAME = "DATAOBJECT_SPLITBILLS_BILL_RECURRING";
 
     public function parseData(array $data) {
 
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
         $this->sbgroup = $this->exists('sbgroup', $data) ? filter_var($data['sbgroup'], FILTER_SANITIZE_NUMBER_INT) : null;
-
-        $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : date('Y-m-d');
-        $this->time = $this->exists('time', $data) ? filter_var($data['time'], FILTER_SANITIZE_STRING) : date('H:i:s');
-
-        $this->lat = $this->exists('lat', $data) ? filter_var($data['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->lng = $this->exists('lng', $data) ? filter_var($data['lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
 
@@ -25,18 +18,16 @@ class Bill extends \App\Domain\DataObject {
         $this->exchange_rate = $this->exists('exchange_rate', $data) ? filter_var($data['exchange_rate'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 1;
         $this->exchange_fee = $this->exists('exchange_fee', $data) ? filter_var($data['exchange_fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
 
-        /**
-         * Clean date/time
-         */
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
-            $this->date = date('Y-m-d');
-        }
+        $this->start = $this->exists('start', $data) ? $data['start'] : null;
+        $this->end = $this->exists('end', $data) ? $data['end'] : null;
+        $this->last_run = $this->exists('last_run', $data) ? filter_var($data['last_run'], FILTER_SANITIZE_STRING) : null;
+        $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : 'month';
+        $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
 
-        if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->time)) {
-            $this->time = date('H:i:s');
+        if (!in_array($this->unit, array_keys(self::getUnits()))) {
+            $this->parsing_errors[] = "WRONG_UNIT";
         }
-
-        if (empty($this->name) && $this->settleup == 0) {
+        if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
 
@@ -71,6 +62,10 @@ class Bill extends \App\Domain\DataObject {
 
     public function getParentID() {
         return $this->sbgroup;
+    }
+
+    public static function getUnits() {
+        return array("day" => "DAY", "week" => "WEEK", "month" => "MONTH", "year" => "YEAR");
     }
 
 }

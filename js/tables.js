@@ -563,7 +563,7 @@ var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
             }
         },
         {
-            select: [2, 3],
+            select: [2, 3, 4],
             sortable: false,
             searchable: false
         }
@@ -618,6 +618,58 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
     deferLoading: jsObject.datacount,
     serverSide: true,
     ajax: jsObject.splitbill_table
+});
+
+const splitbillsBillsRecurringTableContainer = document.getElementById('splitbills_bills_recurring_table');
+var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableContainer, {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: [5,6],
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data ? moment(data).format(i18n.dateformatJS.date) : "";
+            }
+        },
+        {
+            select: [1, 2, 3],
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                if (data === "") {
+                    return "";
+                }
+                return data + " " + splitbillsBillsRecurringTableContainer.dataset.currency;
+            }
+        },
+        {
+            select: [4],
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                if (data === "") {
+                    return "";
+                }
+
+                let dataClass = "negative";
+                if (data >= 0) {
+                    dataClass = "positive";
+                }
+                return "<span class='" + dataClass + "'>" + data + " " + splitbillsBillsRecurringTableContainer.dataset.currency + "</span>";
+            }
+        },
+        {
+            select: 8,
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
+            }
+        },
+        {
+            select: [9, 10],
+            sortable: false,
+            searchable: false
+        }
+    ]
 });
 
 var tripsTable = new JSTable("#trips_table", {

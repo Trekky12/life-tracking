@@ -33,7 +33,7 @@ class BillNotificationService {
         $this->notification_service = $notification_service;
     }
 
-    public function notifyUsers($type, $bill, $sbgroup, $existing_balance) {
+    public function notifyUsers($type, $bill, $sbgroup, $is_new_bill) {
         /**
          * Notify users
          */
@@ -48,8 +48,6 @@ class BillNotificationService {
 
         $group_path = $this->router->urlFor('splitbill_bills', array('group' => $sbgroup->getHash()));
         $group_url = $this->helper->getBaseURL() . $group_path;
-
-        $is_new_bill = count($existing_balance) == 0;
 
         if ($bill->settleup === 0) {
 

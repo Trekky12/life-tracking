@@ -137,4 +137,8 @@ class DataObject implements \JsonSerializable {
         return $this->hash;
     }
 
+    public function addParsingError($error) {
+        return $this->parsing_errors[] = $error;
+    }
+
 }

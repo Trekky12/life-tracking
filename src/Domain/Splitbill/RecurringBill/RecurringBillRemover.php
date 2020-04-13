@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Splitbill\Bill;
+namespace App\Domain\Splitbill\RecurringBill;
 
 use App\Domain\ObjectActivityRemover;
 use Psr\Log\LoggerInterface;
@@ -10,27 +10,24 @@ use App\Application\Payload\Payload;
 use App\Domain\Splitbill\Group\GroupMapper;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 
-class BillRemover extends ObjectActivityRemover {
+class RecurringBillRemover extends ObjectActivityRemover {
 
-    private $service;
     private $group_service;
     private $group_mapper;
-    private $bill_notification_service;
+    private $service;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             ActivityCreator $activity,
-            BillMapper $mapper,
-            SplitbillBillService $service,
+            RecurringBillMapper $mapper,
             SplitbillGroupService $group_service,
             GroupMapper $group_mapper,
-            BillNotificationService $bill_notification_service) {
+            RecurringBillService $service) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
-        $this->service = $service;
         $this->group_service = $group_service;
         $this->group_mapper = $group_mapper;
-        $this->bill_notification_service = $bill_notification_service;
+        $this->service = $service;
     }
 
     public function delete($id, $additionalData = null): Payload {
@@ -40,10 +37,6 @@ class BillRemover extends ObjectActivityRemover {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $bill = $this->service->getEntry($id);
-
-        $this->bill_notification_service->notifyUsers("delete", $bill, $group, false);
-
         return parent::delete($id, $additionalData);
     }
 
@@ -52,7 +45,7 @@ class BillRemover extends ObjectActivityRemover {
     }
 
     public function getObjectViewRoute(): string {
-        return 'splitbill_bills';
+        return 'splitbill_bills_recurring';
     }
 
     public function getObjectViewRouteParams($entry): array {

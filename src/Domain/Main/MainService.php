@@ -14,6 +14,7 @@ use App\Domain\User\Token\TokenService;
 use App\Application\Payload\Payload;
 use App\Domain\Settings\SettingsMapper;
 use Slim\Csrf\Guard as CSRF;
+use App\Domain\Splitbill\RecurringBill\RecurringBillEntryCreator;
 
 class MainService extends Service {
 
@@ -24,6 +25,7 @@ class MainService extends Service {
     protected $card_mail_service;
     protected $token_service;
     private $csrf;
+    private $bill_entry_creator;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -33,7 +35,8 @@ class MainService extends Service {
             FinanceStatsMonthlyMailService $finance_stats_monthly_mail_service,
             CardMailService $card_mail_service,
             TokenService $token_service,
-            CSRF $csrf) {
+            CSRF $csrf,
+            RecurringBillEntryCreator $bill_entry_creator) {
         parent::__construct($logger, $user);
 
         $this->settings = $settings;
@@ -43,6 +46,7 @@ class MainService extends Service {
         $this->card_mail_service = $card_mail_service;
         $this->token_service = $token_service;
         $this->csrf = $csrf;
+        $this->bill_entry_creator = $bill_entry_creator;
     }
 
     public function getUserStartPage() {
@@ -59,6 +63,7 @@ class MainService extends Service {
         $lastRunRecurring = $this->settings_mapper->getSetting("lastRunRecurring");
         $lastRunFinanceSummary = $this->settings_mapper->getSetting("lastRunFinanceSummary");
         $lastRunCardReminder = $this->settings_mapper->getSetting("lastRunCardReminder");
+        $lastRunRecurringSplitbills = $this->settings_mapper->getSetting("lastRunRecurringSplitbills");
 
         $date = new \DateTime('now');
 
@@ -86,6 +91,14 @@ class MainService extends Service {
             $this->settings_mapper->updateLastRun("lastRunCardReminder");
 
 //            $this->token_service->deleteOldTokens();
+        }
+        
+        // Update recurring splitted bills @ 06:00
+        if ($date->format("H") === "06" && $lastRunRecurringSplitbills->getDayDiff() > 0) {
+            $this->logger->addNotice('CRON - Update Splitted Bills');
+
+            $this->bill_entry_creator->update();
+            $this->settings_mapper->updateLastRun("lastRunRecurringSplitbills");
         }
 
         $response_data = ['result' => 'success'];

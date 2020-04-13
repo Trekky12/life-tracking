@@ -1,0 +1,67 @@
+{% extends "base.twig" %}
+
+{% set active = 'splitbills' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["RECURRING"]}} {{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD_BILL"]}}</button></a>
+                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup"><button class="white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+            <table id="splitbills_bills_recurring_table" class="table table-hover small" data-currency="{{i18n.currency}}">
+                <thead>
+                    <tr>
+                        <th>{{lang["NAME"]}}</th>
+                        <th>{{ lang["RECEIVED"] }}</th>
+                        <th>{{ lang["SPEND"] }}</th>
+                        <th>{{ lang["PAID"] }}</th>
+                        <th>{{ lang["BALANCE"] }}</th>
+                        <th>{{lang["START"]}}</th>
+                        <th>{{lang["END"]}}</th>
+                        <th>{{lang["INTERVAL"]}}</th>
+                        <th>{{lang["LAST_RUN"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bill in bills %}
+                        <tr>
+                            <td>{{ bill.name|raw }}</td>
+                            {% if bill.settleup == 1 %}
+                                <td>{{ bill.spend }}</td> {# received #}
+                                <td></td>
+                                <td>{{ bill.paid }}</td>
+                                <td></td>
+                            {% else %}
+                                <td></td>
+                                <td>{{ bill.spend }}</td>
+                                <td>{{ bill.paid }}</td>
+                                <td>{{ bill.balance }}</td>
+                            {% endif %}
+                            <td>{{bill.start}}</td> 
+                            <td>{{bill.end}}</td> 
+                            <td>{{bill.multiplier}} x {{lang[units[bill.unit]]}}</td> 
+                            <td>{{bill.last_run}}</td> 
+                            <td>
+                                {% if bill.user == user.id %}
+                                    <a href="{{  url_for('splitbill_bill_recurring_edit', {'id' : bill.id, 'group': group.getHash()}) }}"><span class="fas fa-edit fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if bill.user == user.id %}
+                                    <a href="#" data-url="{{  url_for('splitbill_bills_recurring_delete', {'id' : bill.id, 'group': group.getHash()}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

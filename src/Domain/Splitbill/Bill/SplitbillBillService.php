@@ -60,7 +60,7 @@ class SplitbillBillService extends Service {
 
         $group = $this->group_service->getFromHash($hash);
 
-        if (!$this->group_service->isMember($group->id)) {
+        if (!$this->group_service->isMember($group->id) || $this->isOwner($entry_id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

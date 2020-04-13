@@ -14,6 +14,7 @@
                         <th>{{lang["BALANCE"]}}</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,6 +22,7 @@
                         <tr>
                             <td><a href="{{  url_for('splitbill_bills', {'group' : group.hash}) }}">{{group.name|raw}}</a></td> 
                             <td data-currency="{{i18n.currency}}">{{balances[group.id].balance}}</td> 
+                            <td><a href="{{  url_for('splitbill_bills_recurring', {'group' : group.hash}) }}"><span class="fas fa-calendar-alt fa-lg"></span></a></td>
                             <td>
                                 {% if group.user == user.id %}
                                     <a href="{{  url_for('splitbill_groups_edit', {'id' : group.id}) }}"><span class="fas fa-edit fa-lg"></span></a>
