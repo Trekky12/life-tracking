@@ -86,4 +86,35 @@ class CrawlerDatasetMapper extends \App\Domain\Mapper {
         return $stmt->rowCount();
     }
 
+    public function set_saved($id, $saved) {
+        $sql = "UPDATE " . $this->getTableName() . " SET saved=:saved WHERE id=:id";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "saved" => $saved,
+            "id" => $id
+        ]);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
+    public function get_saved($crawler) {
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE crawler = :crawler AND saved = :saved ORDER BY changedOn";
+        $stmt = $this->db->prepare($sql);
+        $bindings = [
+            "crawler" => $crawler,
+            "saved" => 1
+        ];
+
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
 }

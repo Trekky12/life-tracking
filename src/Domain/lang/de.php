@@ -501,5 +501,8 @@ $lang["EXCHANGE_FEE"] = "Gebühr";
 
 $lang["CRAWLER_DATASETS_DELETED"] = "%s Datensätze gelöscht";
 $lang["CRAWLER_DATASETS_CLEAN"] = "Bereinigen";
+
+$lang["CRAWLER_DATASET_SAVE_LIST"] = "Merkliste";
+$lang["CRAWLER_DATASET_UNSAVE"] = "Soll der Datensatz wirklich von der Merkliste entfernt werden?";
         
 return $lang;

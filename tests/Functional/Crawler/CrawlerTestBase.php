@@ -11,6 +11,7 @@ class CrawlerTestBase extends BaseTestCase {
     protected $uri_save = "/crawlers/save/";
     protected $uri_delete = "/crawlers/delete/";
     protected $uri_view = "/crawlers/HASH/view/";
+    protected $uri_dataset_save = "/crawlers/HASH/save/";
     protected $TEST_CRAWLER_ID = 1;
     protected $TEST_CRAWLER_HASH = "ABCabc123";
     protected $TEST_CRAWLER_LINK_ID = 1;
@@ -38,6 +39,10 @@ class CrawlerTestBase extends BaseTestCase {
         preg_match($re, $body, $matches);
 
         return $matches;
+    }
+    
+    protected function getURIDatasetSave($hash) {
+        return str_replace("HASH", $hash, $this->uri_dataset_save);
     }
 
 }

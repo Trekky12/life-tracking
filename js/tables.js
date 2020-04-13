@@ -57,7 +57,7 @@ financeTable.on("fetchData", function (data) {
     this.table.getFooterRow().setCellContent(5, Math.abs(data.sum) + " " + i18n.currency);
     if (data.sum > 0) {
         this.table.getFooterRow().setCellClass(5, "negative");
-    }else{
+    } else {
         this.table.getFooterRow().setCellClass(5, "positive");
     }
     //}
@@ -496,7 +496,7 @@ var crawlersDataTable = new JSTable("#crawlers_data_table", {
     sortable: false,
     columns: [
         {
-            select: [0],
+            select: [1],
             sort: "desc",
             sortable: true,
             render: function (cell, idx) {
@@ -531,6 +531,23 @@ var crawlersLinksTable = new JSTable("#crawlers_links_table", {
     ]
 });
 
+var crawlersDataSavedTable = new JSTable("#crawlers_data_saved_table", {
+    perPage: 20,
+    labels: tableLabels,
+    columns: [
+        {
+            select: [1],
+            sort: "desc",
+            sortable: true,
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return moment(data).format(i18n.dateformatJS.datetime);
+            }
+        }
+    ],
+    sortable: false
+});
+
 var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
     perPage: 10,
     labels: tableLabels,
@@ -539,7 +556,7 @@ var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
             select: [1],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
-                if(data === ""){
+                if (data === "") {
                     return "";
                 }
                 return data + " " + cell.dataset.currency;
@@ -571,7 +588,7 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
             select: [3, 4, 5],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
-                if(data === ""){
+                if (data === "") {
                     return "";
                 }
                 return data + " " + splitbillsBillsTableContainer.dataset.currency;
@@ -581,10 +598,10 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
             select: [6],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
-                if(data === ""){
+                if (data === "") {
                     return "";
                 }
-                
+
                 let dataClass = "negative";
                 if (data >= 0) {
                     dataClass = "positive";
@@ -613,7 +630,7 @@ var tripsTable = new JSTable("#trips_table", {
             sortable: true,
             render: function (cell, idx) {
                 let data = cell.innerHTML;
-                if(data === ""){
+                if (data === "") {
                     return "";
                 }
                 return moment(data).format(i18n.dateformatJS.date);
@@ -623,7 +640,7 @@ var tripsTable = new JSTable("#trips_table", {
             select: [2],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
-                if(data === ""){
+                if (data === "") {
                     return "";
                 }
                 return moment(data).format(i18n.dateformatJS.date);
@@ -724,7 +741,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
             sort: "asc"
         },
         {
-            select: [1,2],
+            select: [1, 2],
             sortable: false,
             searchable: false
         }
@@ -742,7 +759,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
             sort: "desc"
         },
         {
-            select: [4,5],
+            select: [4, 5],
             sortable: false,
             searchable: false
         }

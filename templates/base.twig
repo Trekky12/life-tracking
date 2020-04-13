@@ -111,6 +111,7 @@
                 {% if not hasCrawlerTable is null %}
                 'crawler_table': '{{url_for('crawlers_table', {'crawler': crawler.hash})}}',
                 'crawler_filter': '{{url_for('set_crawler_filter', {'crawler': crawler.hash})}}',
+                'crawler_dataset_save': '{{url_for('crawler_dataset_save', {'crawler': crawler.hash})}}',
                 {% endif %}
                     
                 {% if not from is null %}    
@@ -180,7 +181,8 @@
                 "request_error": '{{lang["REQUEST_ERROR"]}}',
                 "routing_add_to_route": '{{lang["ADD_TO_ROUTE"]}}',
                 "routing_error": '{{lang["ROUTING_ERROR"]}}',
-                "routing_error_too_many_requests": '{{lang["ROUTING_ERROR_TOO_MANY_REQUESTS"]}}'
+                "routing_error_too_many_requests": '{{lang["ROUTING_ERROR_TOO_MANY_REQUESTS"]}}',
+                "really_unsave_dataset": '{{lang["CRAWLER_DATASET_UNSAVE"]}}'
             };
             var tokens = {{ csrf_js|json_encode()|raw }};
         </script>

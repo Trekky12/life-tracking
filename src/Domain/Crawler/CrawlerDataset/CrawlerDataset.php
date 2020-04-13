@@ -19,6 +19,8 @@ class CrawlerDataset extends \App\Domain\DataObject {
 
         $this->data = $this->exists('data', $data) ? $data['data'] : null;
         $this->diff = $this->exists('diff', $data) ? $data['diff'] : null;
+
+        $this->saved = $this->exists('saved', $data) ? filter_var($data['saved'], FILTER_SANITIZE_NUMBER_INT) : 0;
     }
 
     public function getDataValue($field, $type = "data") {
@@ -39,6 +41,10 @@ class CrawlerDataset extends \App\Domain\DataObject {
 
     public function getParentID() {
         return $this->crawler;
+    }
+
+    public function isSaved() {
+        return intval($this->saved) == 1;
     }
 
 }

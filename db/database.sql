@@ -492,6 +492,7 @@ CREATE TABLE crawlers_dataset (
     createdBy INTEGER unsigned DEFAULT NULL,
     changedBy INTEGER unsigned DEFAULT NULL,
     identifier varchar(255) DEFAULT NULL,
+    saved INT(1) DEFAULT 0,
     data JSON,
     diff JSON NULL DEFAULT NULL,
     PRIMARY KEY (id),

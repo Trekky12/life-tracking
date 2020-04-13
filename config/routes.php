@@ -268,6 +268,9 @@ return function (App $app) {
 
             $group_crawler->post('/record/', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
 
+            $group_crawler->post('/save/', \App\Application\Action\Crawler\Dataset\CrawlerSaveDatasetAction::class)->setName('crawler_dataset_save');
+            $group_crawler->get('/saved/', \App\Application\Action\Crawler\Dataset\DatasetSavedListAction::class)->setName('crawler_dataset_saved_list');
+
             $group_crawler->group('/headers', function(RouteCollectorProxy $group_header) {
                 $group_header->get('/', \App\Application\Action\Crawler\Header\HeaderListAction::class)->setName('crawlers_headers');
                 $group_header->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Crawler\Header\HeaderEditAction::class)->setName('crawlers_headers_edit');

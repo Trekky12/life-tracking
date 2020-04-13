@@ -13,7 +13,7 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{crawler.name|raw}}</h2></div>
+        <div class="page-header"><h2>{{crawler.name|raw}}</h2> <a href="{{  url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}"><button class="white">{{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button></a></div>
         <div class="page-content">
             <form method="GET" id="search-filter" class="">
                 <div class="filter-content">
@@ -40,6 +40,7 @@
             <table id="crawlers_data_table" class="table table-hover small">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>{{lang["DATE_CRAWL"]}}</th>
                             {% for header in headers %}
                             <th {% if header.sortable == 1 %}data-sortable="true"{% else %}data-sortable="false"{% endif %} {% if not header.sort is null %}data-sort="{{ header.sort }}"{% endif %}>{{header.headline}}</th>
@@ -62,7 +63,7 @@
 
     {% if links  %}
         <div class="inner-content">
-            <div class="page-header"><h2>{{lang["LINKLIST"]}}</div>
+            <div class="page-header"><h2>{{lang["LINKLIST"]}}</h2></div>
             <div class="page-content">
                 <ul id="crawler_links">
                     {% include "crawlers/links/menu-links.twig" with {'links':links} only %}

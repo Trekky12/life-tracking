@@ -84,6 +84,8 @@ INSERT INTO crawlers_links (id, crawler, createdBy, changedBy, name, link, paren
 INSERT INTO crawlers_headers (id, crawler, createdBy, changedBy, headline, field_name, field_link, field_content, sortable, diff, prefix, suffix, sort, datatype, position) VALUES 
 (1, 1, 1, 1, 'title', 'title', 'link', NULL, 1, 0, NULL, NULL, NULL, NULL, 1),
 (2, 1, 1, 1, 'number', 'value', NULL, NULL, 1, 0, NULL, NULL, 'desc', 'DECIMAL', 2);
+INSERT INTO crawlers_dataset (id, crawler, createdOn, changedOn, createdBy, changedBy, identifier, saved, data) VALUES
+(1, 1, '2020-03-11 12:00:00', '2020-03-11 12:00:00', 1, 1, 'test', 0, '{\"title\":\"Dataset Test\",\"link\":\"http:\\/\\/localhost\",\"value\":\"1\"}');
 
 INSERT INTO boards (id, user, name, hash, archive) VALUES
 (1, 1, 'Test Board', 'ABCabc123', 0),

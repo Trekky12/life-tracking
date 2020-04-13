@@ -60,26 +60,10 @@ class CrawlerService extends Service {
         $filter = $this->getFilter($crawler);
         $hide_diff = $filter == "createdOn";
 
-        $headers = $this->header_mapper->getFromCrawler($crawler->id, $hide_diff);
-
-        /**
-         * Sorting
-         */
-        // defaults
-        $sortColumn = $filter;
-        $sortDirection = "DESC";
-
-        $initialSortColumn = $this->header_mapper->getInitialSortColumn($crawler->id);
-        if (!is_null($initialSortColumn)) {
-            $sortColumn = $this->getSortFromColumn($initialSortColumn);
-            $sortDirection = $initialSortColumn->sort;
-        }
-
-        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler->id, $from, $to, $filter);
-        $datasets = $this->dataset_mapper->getDataFromCrawler($crawler->id, $from, $to, $filter, $sortColumn, $sortDirection, 20);
-        $rendered_data = $this->renderTableRows($datasets, $headers, $filter);
-
-
+        list($datacount, $rendered_data, $headers) = $this->getDatasets($crawler->id, $filter, $hide_diff, $from, $to);
+        
+        $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
+        
         $response_data = [
             "crawler" => $crawler,
             "from" => $from,
@@ -88,13 +72,34 @@ class CrawlerService extends Service {
             "datasets" => $rendered_data,
             "datacount" => $datacount,
             "hasCrawlerTable" => true,
-            "filter" => $filter
+            "filter" => $filter,
+            "links" => $this->buildTree($links)
         ];
 
-        $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
-        $response_data["links"] = $this->buildTree($links);
-
         return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+    
+    public function getDatasets($crawler_id, $filter, $hide_diff, $from, $to){
+        
+        $headers = $this->header_mapper->getFromCrawler($crawler_id, $hide_diff);
+        /**
+         * Sorting
+         */
+        // defaults
+        $sortColumn = $filter;
+        $sortDirection = "DESC";
+
+        $initialSortColumn = $this->header_mapper->getInitialSortColumn($crawler_id);
+        if (!is_null($initialSortColumn)) {
+            $sortColumn = $this->getSortFromColumn($initialSortColumn);
+            $sortDirection = $initialSortColumn->sort;
+        }
+
+        $datacount = $this->dataset_mapper->getCountFromCrawler($crawler_id, $from, $to, $filter);
+        $datasets = $this->dataset_mapper->getDataFromCrawler($crawler_id, $from, $to, $filter, $sortColumn, $sortDirection, 20);
+        $rendered_data = $this->renderTableRows($datasets, $headers, $filter);
+
+        return [$datacount, $rendered_data, $headers];
     }
 
     public function table($hash, $from, $to, $requestData): Payload {
@@ -166,10 +171,12 @@ class CrawlerService extends Service {
         return $sortColumn;
     }
 
-    private function renderTableRows(array $table, $headers, $filter) {
+    public function renderTableRows(array $table, $headers, $filter) {
         $rendered_data = [];
         foreach ($table as $dataset) {
             $row = [];
+
+            $row[] = '<span class="save_crawler_dataset ' . ($dataset->isSaved() ? 'is_saved' : '') . '" data-id="' . $dataset->id . '"></span>';
 
             if ($filter === "changedOn") {
                 $row[] = $dataset->changedOn;
@@ -238,7 +245,7 @@ class CrawlerService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
-    
+
     public function buildTree(array $elements, $parentId = null) {
         $branch = array();
 
