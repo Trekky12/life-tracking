@@ -19,7 +19,7 @@ class SheetFastCheckOutAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $hash = $request->getAttribute('project');
-        $requestData = $request->getQueryParams();
+        $requestData = $request->getParsedBody();
         $payload = $this->service->fastCheckOut($hash, $requestData);
         return $this->responder->respond($payload);
         

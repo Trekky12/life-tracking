@@ -81,7 +81,7 @@ class CrawlerService extends Service {
     
     public function getDatasets($crawler_id, $filter, $hide_diff, $from, $to){
         
-        $headers = $this->header_mapper->getFromCrawler($crawler_id, $hide_diff);
+        $headers = $this->header_mapper->getFromCrawler($crawler_id, 'position', $hide_diff);
         /**
          * Sorting
          */
