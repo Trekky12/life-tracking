@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20190602';
+const cacheName = 'pwa-life-tracking-v20200416';
 const staticAssets = [
     '/',
     '/static/style.css',
@@ -29,7 +29,7 @@ const staticAssets = [
     '/static/assets/js/Chart.min.js',
     '/static/assets/js/Sortable.min.js',
     '/static/assets/js/jstable.min.js',
-    '/static/assets/js/flatpickr.js',
+    '/static/assets/js/flatpickr.min.js',
     '/static/assets/js/leaflet.js',
     '/static/assets/js/moment-with-locales.min.js',
     '/static/assets/js/mustache.min.js',
@@ -41,10 +41,12 @@ const staticAssets = [
     '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff2',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
-    '/static/assets/fonts/fontawesome-webfont.woff2',
+    '/static/assets/fonts/font-awesome/fa-brands-400.woff2',
+    '/static/assets/fonts/font-awesome/fa-regular-400.woff2',
+    '/static/assets/fonts/font-awesome/fa-solid-900.woff2',
     '/static/assets/favicon/android-chrome-192x192.png',
     '/static/assets/css/flatpickr.min.css',
-    '/static/assets/css/font-awesome.min.css',
+    '/static/assets/css/font-awesome5.min.css',
     '/static/assets/css/leaflet.min.css',
     '/static/assets/css/normalize.min.css',
     '/static/assets/css/nouislider.min.css',
@@ -55,7 +57,7 @@ const staticAssets = [
     '/static/assets/js/i18n/de.js',
 ];
 
-const NETWORK_TIMEOUT = 3000;
+const NETWORK_TIMEOUT = 5000;
 
 
 self.addEventListener('install', event => {
@@ -91,6 +93,11 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
     const req = event.request;
+    
+    if (!req.url.includes(self.location.hostname)) {
+        //console.log('WORKER: fetch event ignored.', event.request.url);
+        return;
+    }
 
     if (event.request.method !== 'GET') {
         //console.log('WORKER: fetch event ignored.', event.request.method, event.request.url);
