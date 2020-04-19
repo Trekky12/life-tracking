@@ -61,9 +61,9 @@ class CrawlerService extends Service {
         $hide_diff = $filter == "createdOn";
 
         list($datacount, $rendered_data, $headers) = $this->getDatasets($crawler->id, $filter, $hide_diff, $from, $to);
-        
+
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
-        
+
         $response_data = [
             "crawler" => $crawler,
             "from" => $from,
@@ -78,9 +78,9 @@ class CrawlerService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
-    
-    public function getDatasets($crawler_id, $filter, $hide_diff, $from, $to){
-        
+
+    public function getDatasets($crawler_id, $filter, $hide_diff, $from, $to) {
+
         $headers = $this->header_mapper->getFromCrawler($crawler_id, 'position', $hide_diff);
         /**
          * Sorting
@@ -143,9 +143,10 @@ class CrawlerService extends Service {
     private function getSortColumnFromColumnIndex($headers, $sortColumnIndex, $sortColumn) {
         $headers_numeric = array_values($headers);
 
+        // first two columns are static, so the correct index is $sortColumnIndex - 2
         // get sort column of array
-        if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && count($headers) >= $sortColumnIndex) {
-            $column = $headers_numeric[$sortColumnIndex - 1];
+        if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && count($headers) >= $sortColumnIndex - 2) {
+            $column = $headers_numeric[$sortColumnIndex - 2];
             // is this column really sortable?
             if (intval($column->sortable) === 1) {
                 $sortColumn = $this->getSortFromColumn($column);
@@ -159,9 +160,9 @@ class CrawlerService extends Service {
 
         // JSON_EXTRACT
         if (intval($column->diff) === 1) {
-            $sortColumn = "JSON_EXTRACT(diff, '$.{$columnName}')";
+            $sortColumn = "JSON_VALUE(diff, '$.{$columnName}')";
         } else {
-            $sortColumn = "JSON_EXTRACT(data, '$.{$columnName}')";
+            $sortColumn = "JSON_VALUE(data, '$.{$columnName}')";
         }
 
         if (!is_null($column->datatype)) {
