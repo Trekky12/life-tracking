@@ -1,107 +1,292 @@
+'use strict';
+
 /**
- * File navigation.js.
- *
- * Handles toggling the navigation menu for small screens and enables TAB key
- * navigation support for dropdown menus.
+ * mobile navigation
  */
-(function () {
-    var container, button, menu, links, i, len;
+const body = document.getElementsByTagName("BODY")[0];
+const header = document.getElementById('masthead');
+const menuButton = document.getElementById('menu-toggle');
+const navigation = document.getElementById('site-navigation');
+const navigationOverlay = document.getElementById('navigation-overlay');
 
-    container = document.getElementById('site-navigation');
-    if (!container) {
-        return;
-    }
+if (/^(iPhone|iPad|iPod)/.test(navigator.platform)) {
+    body.classList.add("ios");
+}
+if (navigation && header && navigationOverlay) {
+    let menuList = navigation.getElementsByTagName('ul')[0];
 
-    button = container.getElementsByTagName('button')[0];
-    if ('undefined' === typeof button) {
-        return;
-    }
+    let max_opacity = 0.8;
+    let navi_width = 200;
 
-    menu = container.getElementsByTagName('ul')[0];
+    let bar1 = document.querySelector('#menu-toggle .bar:nth-child(1)');
+    let bar2 = document.querySelector('#menu-toggle .bar:nth-child(2)');
+    let bar3 = document.querySelector('#menu-toggle .bar:nth-child(3)');
+    let bar4 = document.querySelector('#menu-toggle .bar:nth-child(4)');
 
-    // Hide menu toggle button if menu is empty and return early.
-    if ('undefined' === typeof menu) {
-        button.style.display = 'none';
-        return;
-    }
-
-    menu.setAttribute('aria-expanded', 'false');
-    if (-1 === menu.className.indexOf('nav-menu')) {
-        menu.className += ' nav-menu';
-    }
-
-    button.onclick = function () {
-
-        if (-1 !== container.className.indexOf('toggled')) {
-            container.className = container.className.replace(' toggled', '');
-            button.setAttribute('aria-expanded', 'false');
-            menu.setAttribute('aria-expanded', 'false');
+    menuButton.addEventListener('click', function (evt) {
+//        console.log("click!");
+        if (navigation.classList.contains('toggled')) {
+//            console.log("close now");
+            closeMenu();
         } else {
-            container.className += ' toggled';
-            button.setAttribute('aria-expanded', 'true');
-            menu.setAttribute('aria-expanded', 'true');
+//            console.log("open now");
+            openMenu();
         }
-    };
+    });
 
-    // Get all the link elements within the menu.
-    links = menu.getElementsByTagName('a');
+    /*navigationOverlay.addEventListener('click', function (evt) {
+     menuButton.click();
+     });*/
 
-    // Each time a menu link is focused or blurred, toggle focus.
-    for (i = 0, len = links.length; i < len; i++) {
-        links[i].addEventListener('focus', toggleFocus, true);
-        links[i].addEventListener('blur', toggleFocus, true);
+    function openMenu() {
+        resetCross();
+
+        menuButton.setAttribute('aria-expanded', 'true');
+        menuList.setAttribute('aria-expanded', 'true');
+        menuButton.classList.add("open");
+        body.classList.add("mobile-navigation-open");
+
+        navigationOverlay.classList.add("visible");
+        navigationOverlay.style.removeProperty('transition-duration');
+        navigationOverlay.style.opacity = max_opacity;
+
+        navigation.style.removeProperty('transition-duration');
+        navigation.style.transform = 'translateX(0px)';
+        navigation.classList.add("toggled");
+
+        currentPos = navi_width;
     }
 
-    /**
-     * Sets or removes .focus class on an element.
-     */
-    function toggleFocus() {
-        var self = this;
 
-        // Move up through the ancestors of the current link until we hit .nav-menu.
-        while (-1 === self.className.indexOf('nav-menu')) {
+    function closeMenu() {
+        resetCross();
 
-            // On li elements toggle the class .focus.
-            if ('li' === self.tagName.toLowerCase()) {
-                if (-1 !== self.className.indexOf('focus')) {
-                    self.className = self.className.replace(' focus', '');
-                } else {
-                    self.className += ' focus';
-                }
-            }
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuList.setAttribute('aria-expanded', 'false');
 
-            self = self.parentElement;
-        }
+        menuButton.classList.remove("open");
+        body.classList.remove("mobile-navigation-open");
+
+        navigationOverlay.style.removeProperty("transition-duration");
+        navigationOverlay.style.opacity = 0;
+
+        // set hidden after opacity animation
+        setTimeout(function (e) {
+            navigationOverlay.classList.remove("visible");
+        }, 200);
+
+
+        navigation.style.removeProperty("transition-duration");
+        navigation.style.removeProperty("transform");
+        navigation.classList.remove("toggled");
+
+        currentPos = 0;
     }
 
-    /**
-     * Toggles `focus` class to allow submenu access on tablets.
-     */
-    (function (container) {
-        var touchStartFn, i,
-                parentLink = container.querySelectorAll('.menu-item-has-children > a, .page_item_has_children > a');
+    // reset manually triggered X animation
+    function resetCross() {
+        bar1.style.removeProperty("transition-duration");
+        bar1.style.removeProperty("top");
+        bar1.style.removeProperty("width");
+        bar1.style.removeProperty("left");
 
-        if ('ontouchstart' in window) {
-            touchStartFn = function (e) {
-                var menuItem = this.parentNode, i;
+        bar2.style.removeProperty("transition-duration");
+        bar2.style.removeProperty("transform");
 
-                if (!menuItem.classList.contains('focus')) {
-                    e.preventDefault();
-                    for (i = 0; i < menuItem.parentNode.children.length; ++i) {
-                        if (menuItem === menuItem.parentNode.children[i]) {
-                            continue;
-                        }
-                        menuItem.parentNode.children[i].classList.remove('focus');
-                    }
-                    menuItem.classList.add('focus');
-                } else {
-                    menuItem.classList.remove('focus');
-                }
-            };
+        bar3.style.removeProperty("transition-duration");
+        bar3.style.removeProperty("transform");
 
-            for (i = 0; i < parentLink.length; ++i) {
-                parentLink[i].addEventListener('touchstart', touchStartFn, false);
+        bar4.style.removeProperty("transition-duration");
+        bar4.style.removeProperty("top");
+        bar4.style.removeProperty("width");
+        bar4.style.removeProperty("left");
+    }
+
+    // https://stackoverflow.com/a/23230280
+    // https://github.com/freetitelu/touch-sidewipe
+    document.addEventListener('touchstart', handleTouchStart, false);
+    document.addEventListener('touchmove', handleTouchMove, false);
+    document.addEventListener('touchend', handleTouchEnd, false);
+
+    let xStartPosition = null;
+    let xMovePosition = null;
+    let yStartPosition = null;
+    let yMovePosition = null;
+    let isOpenAllowed = null;
+    let isCloseAllowed = null;
+    let threshold_edge = 50;
+    let xMinDistance = 50;
+    let yMinDistance = 50;
+    let currentPos = null;
+    let skip = false;
+
+    function handleTouchStart(evt) {
+        const firstTouch = evt.touches[0];
+        xStartPosition = firstTouch.clientX;
+        yStartPosition = firstTouch.clientY;
+
+        isOpenAllowed = (window.innerWidth - xStartPosition) < threshold_edge && !navigation.classList.contains('toggled');
+        isCloseAllowed = navigation.classList.contains('toggled'); // && (window.innerWidth - xStartPosition) > navi_width
+
+        skip = false;
+//        console.log("start");
+    }
+
+    function handleTouchMove(evt) {
+        if (!xStartPosition) {
+            return;
+        }
+
+//        console.log("move");
+
+        // Save previous xMovePosition
+        let xMovePositionPrevious = xMovePosition;
+
+        xMovePosition = evt.touches[0].clientX;
+        yMovePosition = evt.touches[0].clientY;
+
+        let isOpen = navigation.classList.contains('toggled');
+
+        // is open and min distance not reached
+        let xDistance = Math.abs(xStartPosition - xMovePosition);
+        let yDistance = Math.abs(yStartPosition - yMovePosition);
+
+        skip = false;
+        if (isOpen && xDistance < xMinDistance) {
+//            console.log("skip");
+            skip = true;
+            return;
+        }
+
+        /*if(isOpen && yDistance > yMinDistance){
+         xMovePosition = null;
+         return;
+         }*/
+
+        let posUp = window.innerWidth - xMovePosition;
+
+        let swipe_rtl = xStartPosition > xMovePosition;
+
+        // swipe open
+        if (swipe_rtl && isOpenAllowed) {
+            moveNavigationToPosition(posUp);
+
+            // swipe from right to left (open) and then go back to right
+            if (xMovePositionPrevious && xMovePositionPrevious < xMovePosition) {
+//                console.log("zu lassen?");
+//                console.log(xStartPosition);
+//                console.log(xMovePositionPrevious);
+//                console.log(xMovePosition);
+                xStartPosition = xMovePositionPrevious;
+                // force close
+                isCloseAllowed = true;
             }
         }
-    }(container));
-})();
+
+        // swipe close
+        if (!swipe_rtl && isCloseAllowed) {
+            moveNavigationToPosition(posUp);
+
+            // swipe from left to right (close) and then go back to left
+            if (xMovePositionPrevious && xMovePositionPrevious > xMovePosition) {
+//                console.log("offen lassen?");
+//                console.log(xStartPosition);
+//                console.log(xMovePositionPrevious);
+//                console.log(xMovePosition);
+                xStartPosition = xMovePositionPrevious;
+                // force open
+                isOpenAllowed = true;
+            }
+        }
+
+        //}
+    }
+
+    function moveNavigationToPosition(pos) {
+
+        if (pos > navi_width) {
+            pos = navi_width;
+        }
+        if (pos < 0) {
+            pos = 0;
+        }
+
+        navigation.style.transitionDuration = 0 + 's';
+        navigation.style.transform = 'translateX(' + (navi_width - pos) + 'px)';
+
+        currentPos = pos;
+
+        let percent_open = pos / navi_width;
+        if (percent_open <= 0) {
+            percent_open = 0;
+        }
+        if (percent_open >= 1) {
+            percent_open = 1;
+        }
+
+        navigationOverlay.classList.add("visible");
+        navigationOverlay.style.transitionDuration = 0 + 's';
+        navigationOverlay.style.opacity = percent_open * max_opacity;
+
+
+        // Manually trigger X animation
+        bar1.style.transitionDuration = 0 + 's';
+        bar1.style.top = 4 + (percent_open * 4) + 'px';
+        bar1.style.width = (1 - percent_open) * 100 + '%';
+        bar1.style.left = (percent_open * 50) + '%';
+
+        bar2.style.transitionDuration = 0 + 's';
+        bar2.style.transform = 'rotate(' + (percent_open * 45) + 'deg)';
+
+        bar3.style.transitionDuration = 0 + 's';
+        bar3.style.transform = 'rotate(-' + (percent_open * 45) + 'deg)';
+
+        bar4.style.transitionDuration = 0 + 's';
+        bar4.style.top = 20 - (percent_open * 4) + 'px';
+        bar4.style.width = (1 - percent_open) * 100 + '%';
+        bar4.style.left = (percent_open * 50) + '%';
+
+    }
+
+    function handleTouchEnd(evt) {
+
+        if (!xStartPosition || !xMovePosition) {
+            return;
+        }
+
+        let isOpen = navigation.classList.contains('toggled');
+
+        // close/open menu when distance travelled is too small (min distance not reached)
+        // and menu is already faded out/in
+        if (skip) {
+            if (currentPos > 0) {
+//                console.log("close because distance to small");
+                if (isOpen) {
+                    openMenu();
+                } else {
+                    closeMenu();
+                }
+            }
+        } else {
+            if (!isOpen) {
+                if (xStartPosition > xMovePosition && isOpenAllowed) {
+                    openMenu();
+                } else {
+//                    console.log("close1");
+                    closeMenu();
+                }
+            } else {
+                if (xStartPosition < xMovePosition && isCloseAllowed) {
+//                    console.log("close2");
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            }
+        }
+        xStartPosition = null;
+        isOpenAllowed = null;
+        isCloseAllowed = null;
+        xMovePosition = null;
+    }
+}

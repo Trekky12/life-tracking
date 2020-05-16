@@ -1,3 +1,15 @@
+@media screen and (max-width: $size_mobile){
+    body.location {
+        .site-header{
+            box-shadow: none;
+
+        }
+        #content{
+            margin-top: $header_height;
+        }
+    }
+}
+
 #mapid{
     position:absolute;
     top:96px;

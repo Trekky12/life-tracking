@@ -30,7 +30,7 @@
         <span class="bar"></span>
     </button>
 </div>
-
+<div id="navigation-overlay"></div>
 <nav id="site-navigation" class="main-navigation" role="navigation">
 
     <ul id="menu-primary" class="menu nav-menu">
@@ -119,7 +119,7 @@
                     <img src="/{{uploads_folder}}/profile/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
                 {% else %}
                     <svg class="avatar-mini navi avatar-initials" viewBox="0 0 24 15">
-                    <text x="50%" y="14" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+                    <text x="50%" y="14" text-anchor="middle" fill="#F1F1F1">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
                     </svg>
                 {% endif %}
                 {{user.login}}
