@@ -26,8 +26,10 @@ class FinancesEntryRecurring extends \App\Domain\DataObject {
         $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
 
         $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
-        
+
         $this->is_active = $this->exists('is_active', $data) ? filter_var($data['is_active'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
+        $this->next_run = $this->exists('next_run', $data) ? filter_var($data['next_run'], FILTER_SANITIZE_STRING) : null;
 
         /**
          * Parsing Errors
@@ -53,6 +55,14 @@ class FinancesEntryRecurring extends \App\Domain\DataObject {
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
         $currency = $settings->getAppSettings()['i18n']['currency'];
         return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
+    }
+    
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+
+        unset($temp["next_run"]);
+
+        return $temp;
     }
 
 }

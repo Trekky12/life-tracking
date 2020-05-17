@@ -13,7 +13,15 @@ class RecurringBillMapper extends BaseBillMapper {
     public function getRecurringBills($group) {
 
         $bindings = array("user" => $this->user_id, "group" => $group);
-        $sql = "SELECT b.*, bb.spend, bb.paid, bb.paid-bb.spend as balance FROM " . $this->getTableName() . " b "
+        $sql = "SELECT b.*, bb.spend, bb.paid, bb.paid-bb.spend as balance, "
+                . "CASE "
+                . " WHEN unit = 'year' THEN DATE_ADD(last_run, INTERVAL multiplier YEAR) "
+                . " WHEN unit = 'month' THEN DATE_ADD(last_run, INTERVAL multiplier MONTH) "
+                . " WHEN unit = 'week' THEN DATE_ADD(last_run, INTERVAL multiplier WEEK) "
+                . " WHEN unit = 'day' THEN DATE_ADD(last_run, INTERVAL multiplier DAY) "
+                . " ELSE '' "
+                . "END as next_run "
+                . " FROM " . $this->getTableName() . " b "
                 . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
                 . " ON b.id = bb.bill AND bb.user = :user "
                 . " WHERE b.sbgroup = :group "
@@ -41,7 +49,7 @@ class RecurringBillMapper extends BaseBillMapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-    
+
     public function getRecurringEntries() {
         $sql = "SELECT * FROM " . $this->getTableName() . " "
                 . " WHERE "

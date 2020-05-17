@@ -7,6 +7,31 @@ class RecurringMapper extends \App\Domain\Mapper {
     protected $table = 'finances_recurring';
     protected $dataobject = \App\Domain\Finances\Recurring\FinancesEntryRecurring::class;
 
+    public function getAllWithNext() {
+        $sql = "SELECT *, "
+                . "CASE "
+                . " WHEN unit = 'year' THEN DATE_ADD(last_run, INTERVAL multiplier YEAR) "
+                . " WHEN unit = 'month' THEN DATE_ADD(last_run, INTERVAL multiplier MONTH) "
+                . " WHEN unit = 'week' THEN DATE_ADD(last_run, INTERVAL multiplier WEEK) "
+                . " WHEN unit = 'day' THEN DATE_ADD(last_run, INTERVAL multiplier DAY) "
+                . " ELSE '' "
+                . "END as next_run "
+                . "FROM " . $this->getTableName() . " ";
+
+        $bindings = array();
+        $this->addSelectFilterForUser($sql, $bindings);
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
     public function getRecurringEntries() {
         $sql = "SELECT * FROM " . $this->getTableName() . " "
                 . " WHERE "

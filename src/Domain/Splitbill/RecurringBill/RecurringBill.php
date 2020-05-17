@@ -25,6 +25,8 @@ class RecurringBill extends \App\Domain\DataObject {
         $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
         
         $this->is_active = $this->exists('is_active', $data) ? filter_var($data['is_active'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        
+        $this->next_run = $this->exists('next_run', $data) ? filter_var($data['next_run'], FILTER_SANITIZE_STRING) : null;
 
         if (!in_array($this->unit, array_keys(self::getUnits()))) {
             $this->parsing_errors[] = "WRONG_UNIT";
@@ -54,6 +56,8 @@ class RecurringBill extends \App\Domain\DataObject {
 
         unset($temp["spend_foreign"]);
         unset($temp["paid_foreign"]);
+        
+        unset($temp["next_run"]);
 
         return $temp;
     }

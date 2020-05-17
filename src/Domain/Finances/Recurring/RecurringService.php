@@ -30,7 +30,7 @@ class RecurringService extends Service {
     }
 
     public function index() {
-        $list = $this->getAllRecurring();
+        $list = $this->mapper->getAllWithNext();
         $categories = $this->cat_service->getAllCategoriesOrderedByName();
         return new Payload(Payload::$RESULT_HTML, ['list' => $list, 'categories' => $categories, 'units' => FinancesEntryRecurring::getUnits()]);
     }

@@ -191,9 +191,9 @@ class UserTest extends BaseTestCase {
         $value = number_format($data["value"], 2);
 
         $matches = [];
-        $re = '/<tr>\s*<td>Ausgabe<\/td>\s*<td>' . preg_quote($category_name) . '<\/td>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . preg_quote($value) . '<\/td>\s*<td>' . preg_quote($data["start"]) . '<\/td>\s*<td>' . preg_quote($data["end"]) . '<\/td>\s*<td>' . $data['multiplier'] . ' x Tag' . '<\/td>\s*<td><\/td>\s*<td>x<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>Ausgabe<\/td>\s*<td>' . preg_quote($category_name) . '<\/td>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . preg_quote($value) . '<\/td>\s*<td>' . preg_quote($data["start"]) . '<\/td>\s*<td>' . preg_quote($data["end"]) . '<\/td>\s*<td>' . $data['multiplier'] . ' x Tag' . '<\/td>\s*<td><\/td>\s*<td><\/td>\s*<td>x<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-        
+
         return $matches;
     }
 

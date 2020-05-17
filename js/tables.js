@@ -124,14 +124,14 @@ var financesRecurringTable = new JSTable("#recurring_table", {
             }
         },
         {
-            select: 7,
+            select: [7, 8],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
                 return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
             }
         },
         {
-            select: [9, 10],
+            select: [10, 11],
             sortable: false,
             searchable: false
         }
@@ -658,14 +658,14 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
             }
         },
         {
-            select: 8,
+            select: [8, 9],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
                 return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
             }
         },
         {
-            select: [10, 11],
+            select: [11, 12],
             sortable: false,
             searchable: false
         }

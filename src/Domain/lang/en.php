@@ -112,6 +112,7 @@ $lang["DESCRIPTION_CANNOT_BE_EMPTY"] = "Description cannot be empty";
 $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Category cannot be empty";
 $lang["WRONG_UNIT"] = "Wrong unit";
 $lang["LAST_RUN"] = "Last Run";
+$lang["NEXT_RUN"] = "Next Run";
 
 $lang["USERS"] = "Users";
 $lang["LOGIN"] = "Login";
