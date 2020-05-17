@@ -16,7 +16,10 @@ return function (App $app) {
 
         $group->get('/cron', \App\Application\Action\Main\CronAction::class)->setName('cron');
 
-        $group->get('/logfile', \App\Application\Action\Main\LogfileAction::class)->setName('logfile')->add('App\Application\Middleware\AdminMiddleware');
+        $group->group('/logfile', function(RouteCollectorProxy $group_logfile) {
+            $group_logfile->get('', \App\Application\Action\Main\LogfileAction::class)->setName('logfile');
+            $group_logfile->get('/data', \App\Application\Action\Main\LogfileDataAction::class)->setName('logfile_get');
+        })->add('App\Application\Middleware\AdminMiddleware');
 
         $group->post('/tokens', \App\Application\Action\Main\CSRFTokensAction::class)->setName('get_csrf_tokens');
 

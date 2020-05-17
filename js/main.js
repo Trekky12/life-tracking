@@ -244,23 +244,7 @@ function initialize() {
         });
     });
 
-    /**
-     * Logviewer autoscroll to bottom
-     */
-    let logViewer = document.querySelector('#logviewer');
-    if (logViewer) {
-        logViewer.scrollTop = logViewer.scrollHeight;
-        let logviewer_checkboxes = document.querySelectorAll('.log-filter input[type="checkbox"]');
-        logviewer_checkboxes.forEach(function (item, idx) {
-            item.addEventListener('change', function (event) {
-                let type = item.dataset.type;
-                document.querySelectorAll('#logviewer .log-entry.' + type).forEach(function (entry, idx) {
-                    entry.classList.toggle('hidden');
-                });
-                logViewer.scrollTop = logViewer.scrollHeight;
-            });
-        });
-    }
+
 }
 
 /**

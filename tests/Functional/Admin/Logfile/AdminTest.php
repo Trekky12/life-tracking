@@ -23,7 +23,7 @@ class AdminTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<div id="logviewer-filter">', $body);
-        $this->assertStringContainsString('<div id="logviewer">', $body);
+        $this->assertStringContainsString('<div id="logviewer"', $body);
     }
 
 }

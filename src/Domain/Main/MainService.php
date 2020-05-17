@@ -105,6 +105,10 @@ class MainService extends Service {
 
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
+    
+    public function getLogfileOverview($days) {
+        return new Payload(Payload::$RESULT_HTML, ["days" => $days]);
+    }
 
     public function getLogfile($days) {
         $reader = new LogReader($this->settings->all()['logger']['path'], $days);

@@ -1,0 +1,24 @@
+{% for log in logfile %}
+    {% if not log["hide"] %}
+        <div class="log-entry {{log["level"]}}">
+            [{{log["date"]}}] {{log["level"]}}
+
+            {%if log["user"] %}
+                // {{log["user"]}}
+            {% endif %} 
+
+            // {{log["message"]}}   
+
+            // URL: {{log["url"]}}
+
+            {%if log["context"] %}
+                // {{log["context"]}}
+            {%endif %}
+
+            <span class="log-extra {%if log["level"] in ["INFO", "NOTICE", "DEBUG"] or (log["message"] in ["Site CALL", "HTTP Auth"]) %}hidden{%endif %}">
+                // {{log["extra"]}}
+            </span>
+
+        </div>
+    {% endif %}
+{% endfor %}

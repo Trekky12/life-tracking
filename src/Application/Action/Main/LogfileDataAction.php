@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Main\MainService;
 use App\Application\Responder\HTMLTemplateResponder;
 
-class LogfileAction {
+class LogfileDataAction {
 
     private $responder;
     private $service;
@@ -21,8 +21,8 @@ class LogfileAction {
         // GET Param 'days'
         $days = intval(filter_var($request->getQueryParam('days', 1), FILTER_SANITIZE_NUMBER_INT));
 
-        $logfileOverview = $this->service->getLogfileOverview($days);
-        return $this->responder->respond($logfileOverview->withTemplate('main/logfile.twig'));
+        $logfile = $this->service->getLogfile($days);
+        return $this->responder->respond($logfile->withTemplate('main/logfile_data.twig'));
     }
 
 }

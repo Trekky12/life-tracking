@@ -2,6 +2,10 @@
 
 {% set active = 'index' %}
 
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/logfile.js?ver=20191203"></script>
+{% endblock %}
+
 {% block body %}
     <div id="logviewer-filter">
         <span class="log-filter">
@@ -37,31 +41,14 @@
             <label for="show-emergency">EMERGENCY</label>
         </span>
     </div>
-    <div id="logviewer">
-        {% for log in logfile %}
-            {% if not log["hide"] %}
-                <div class="log-entry {{log["level"]}}">
-                    [{{log["date"]}}] {{log["level"]}}
 
-                    {%if log["user"] %}
-                        // {{log["user"]}}
-                    {% endif %} 
-
-                    // {{log["message"]}}   
-
-                    // URL: {{log["url"]}}
-
-                    {%if log["context"] %}
-                        // {{log["context"]}}
-                    {%endif %}
-
-                    <span class="log-extra {%if log["level"] in ["INFO", "NOTICE", "DEBUG"] or (log["message"] in ["Site CALL", "HTTP Auth"]) %}hidden{%endif %}">
-                        // {{log["extra"]}}
-                    </span>
-
-                </div>
-            {% endif %}
-        {% endfor %}
+    <div id="logviewer" data-days="{{ days }}">
+        <div id="loadingIconLogfile" class="centered loading-icon">
+            <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+        </div>
+        <div id="log-content">
+            
+        </div>
     </div>
 
 {% endblock %}
