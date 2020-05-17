@@ -506,4 +506,6 @@ $lang["CRAWLER_DATASETS_CLEAN"] = "Clean";
 $lang["CRAWLER_DATASET_SAVE_LIST"] = "Watchlist";
 $lang["CRAWLER_DATASET_UNSAVE"] = "Do you really want to remove the dataset from the watchlist?";
 
+$lang["ACTIVE"] = "active";
+
 return $lang;

@@ -94,6 +94,13 @@
                     <label for="inputMultiplier">{{lang["MULTIPLIER"]}}</label>
                     <input type="number" class="form-control" id="inputMultiplier" name="multiplier" step="1" value="{% if not entry is null %}{{entry.multiplier}}{% else %}1{% endif %}">
                 </div>
+                
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxActive">
+                        <input name="is_active" type="checkbox" value="1" id="checkboxActive" {% if entry is not null and entry.is_active == 1 %}checked{% endif %}>
+                        {{lang["ACTIVE"]}}
+                    </label>
+                </div>
 
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

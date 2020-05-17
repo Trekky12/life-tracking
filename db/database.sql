@@ -135,6 +135,7 @@ CREATE TABLE finances_recurring (
     unit varchar(255) DEFAULT 'month',
     multiplier int(5) DEFAULT 1,
     paymethod int(11) UNSIGNED DEFAULT NULL,
+    is_active int(1) DEFAULT 1,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -606,6 +607,7 @@ CREATE TABLE splitbill_bill_recurring (
     last_run TIMESTAMP NULL DEFAULT NULL,
     unit varchar(255) DEFAULT 'month',
     multiplier int(5) DEFAULT 1,
+    is_active int(1) DEFAULT 1,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE

@@ -117,11 +117,6 @@ var financesRecurringTable = new JSTable("#recurring_table", {
             }
         },
         {
-            select: [8, 9],
-            sortable: false,
-            searchable: false
-        },
-        {
             select: [4, 5],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
@@ -134,6 +129,11 @@ var financesRecurringTable = new JSTable("#recurring_table", {
                 let data = cell.innerHTML;
                 return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
             }
+        },
+        {
+            select: [9, 10],
+            sortable: false,
+            searchable: false
         }
     ]
 });
@@ -626,13 +626,6 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
     labels: tableLabels,
     columns: [
         {
-            select: [5,6],
-            render: function (cell, idx) {
-                let data = cell.innerHTML;
-                return data ? moment(data).format(i18n.dateformatJS.date) : "";
-            }
-        },
-        {
             select: [1, 2, 3],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
@@ -658,6 +651,13 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
             }
         },
         {
+            select: [5,6],
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data ? moment(data).format(i18n.dateformatJS.date) : "";
+            }
+        },
+        {
             select: 8,
             render: function (cell, idx) {
                 let data = cell.innerHTML;
@@ -665,7 +665,7 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
             }
         },
         {
-            select: [9, 10],
+            select: [10, 11],
             sortable: false,
             searchable: false
         }

@@ -63,7 +63,9 @@ class RecurringBillMapper extends BaseBillMapper {
                 . "     ( DATEDIFF(NOW(), DATE_ADD(last_run, INTERVAL multiplier DAY)) >= 0 AND unit = 'day' ) "
                 // not runned
                 . "  ) OR last_run IS NULL"
-                . ")";
+                . ")"
+                . " AND "
+                . "is_active > 0";
 
 
         $stmt = $this->db->query($sql);

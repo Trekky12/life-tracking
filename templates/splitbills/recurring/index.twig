@@ -24,6 +24,7 @@
                         <th>{{lang["END"]}}</th>
                         <th>{{lang["INTERVAL"]}}</th>
                         <th>{{lang["LAST_RUN"]}}</th>
+                        <th>{{lang["ACTIVE"]}}</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -47,6 +48,7 @@
                             <td>{{bill.end}}</td> 
                             <td>{{bill.multiplier}} x {{lang[units[bill.unit]]}}</td> 
                             <td>{{bill.last_run}}</td> 
+                            <td>{% if bill.is_active > 0 %}x{% endif %}</td> 
                             <td>
                                 {% if bill.user == user.id %}
                                     <a href="{{  url_for('splitbill_bill_recurring_edit', {'id' : bill.id, 'group': group.getHash()}) }}"><span class="fas fa-edit fa-lg"></span></a>

@@ -20,3 +20,4 @@ public/test*
 !/files/.gitkeep 
 
 tests/.phpunit.result.cache
+composer.bat

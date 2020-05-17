@@ -59,7 +59,8 @@ class OwnerTest extends SplitbillTestBase {
             "start" => date('Y-m-d'),
             "end" => null,
             "unit" => "day",
-            "multiplier" => 1
+            "multiplier" => 1,
+            "is_active" => 1
         ];
         $response = $this->request('POST', $this->getURIRecurringSave($this->TEST_GROUP_HASH), $data);
 
@@ -145,7 +146,8 @@ class OwnerTest extends SplitbillTestBase {
             "start" => date('Y-m-d'),
             "end" => null,
             "unit" => "day",
-            "multiplier" => 2
+            "multiplier" => 2,
+            "is_active" => 1
         ];
         $response = $this->request('POST', $this->getURIRecurringSave($this->TEST_GROUP_HASH) . $bill_id, $data);
 

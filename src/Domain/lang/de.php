@@ -504,5 +504,7 @@ $lang["CRAWLER_DATASETS_CLEAN"] = "Bereinigen";
 
 $lang["CRAWLER_DATASET_SAVE_LIST"] = "Merkliste";
 $lang["CRAWLER_DATASET_UNSAVE"] = "Soll der Datensatz wirklich von der Merkliste entfernt werden?";
+
+$lang["ACTIVE"] = "aktiv";
         
 return $lang;

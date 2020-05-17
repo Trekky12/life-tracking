@@ -23,6 +23,8 @@ class RecurringBill extends \App\Domain\DataObject {
         $this->last_run = $this->exists('last_run', $data) ? filter_var($data['last_run'], FILTER_SANITIZE_STRING) : null;
         $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : 'month';
         $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
+        
+        $this->is_active = $this->exists('is_active', $data) ? filter_var($data['is_active'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         if (!in_array($this->unit, array_keys(self::getUnits()))) {
             $this->parsing_errors[] = "WRONG_UNIT";
