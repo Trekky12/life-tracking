@@ -10,6 +10,7 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/finances/recurring/edit/";
     protected $uri_save = "/finances/recurring/save/";
     protected $uri_delete = "/finances/recurring/delete/";
+    protected $uri_trigger = "/finances/recurring/trigger/";
     
     protected $TEST_CATEGORY_ID = 1;
     protected $TEST_CATEGORY_NAME = "not categorized";
@@ -191,7 +192,7 @@ class UserTest extends BaseTestCase {
         $value = number_format($data["value"], 2);
 
         $matches = [];
-        $re = '/<tr>\s*<td>Ausgabe<\/td>\s*<td>' . preg_quote($category_name) . '<\/td>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . preg_quote($value) . '<\/td>\s*<td>' . preg_quote($data["start"]) . '<\/td>\s*<td>' . preg_quote($data["end"]) . '<\/td>\s*<td>' . $data['multiplier'] . ' x Tag' . '<\/td>\s*<td><\/td>\s*<td><\/td>\s*<td>x<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>Ausgabe<\/td>\s*<td>' . preg_quote($category_name) . '<\/td>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . preg_quote($value) . '<\/td>\s*<td>' . preg_quote($data["start"]) . '<\/td>\s*<td>' . preg_quote($data["end"]) . '<\/td>\s*<td>' . $data['multiplier'] . ' x Tag' . '<\/td>\s*<td><\/td>\s*<td><\/td>\s*<td>x<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_trigger) . '(?<id_trigger>.*)"><span class="fas fa-play fa-lg"><\/span><\/a><\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

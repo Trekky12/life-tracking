@@ -76,6 +76,7 @@ return function (App $app) {
             $group_recurring->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Recurring\RecurringEditAction::class)->setName('finances_recurring_edit');
             $group_recurring->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Recurring\RecurringSaveAction::class)->setName('finances_recurring_save');
             $group_recurring->delete('/delete/{id}', \App\Application\Action\Finances\Recurring\RecurringDeleteAction::class)->setName('finances_recurring_delete');
+            $group_recurring->get('/trigger/{id}', \App\Application\Action\Finances\Recurring\RecurringTriggerAction::class)->setName('finances_recurring_trigger');
         });
 
         $group->group('/methods', function(RouteCollectorProxy $group_methods) {
@@ -316,12 +317,13 @@ return function (App $app) {
                 $group_bill->post('/save/[{id:[0-9]+}]', \App\Application\Action\Splitbill\Bill\BillSaveAction::class)->setName('splitbill_bills_save');
                 $group_bill->delete('/delete/{id}', \App\Application\Action\Splitbill\Bill\BillDeleteAction::class)->setName('splitbill_bills_delete');
             });
-            
+
             $group_group->group('/recurring', function(RouteCollectorProxy $group_recurring) {
                 $group_recurring->get('/', \App\Application\Action\Splitbill\RecurringBill\RecurringBillListAction::class)->setName('splitbill_bills_recurring');
                 $group_recurring->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Splitbill\RecurringBill\RecurringBillEditAction::class)->setName('splitbill_bill_recurring_edit');
                 $group_recurring->post('/save/[{id:[0-9]+}]', \App\Application\Action\Splitbill\RecurringBill\RecurringBillSaveAction::class)->setName('splitbill_bills_recurring_save');
                 $group_recurring->delete('/delete/{id}', \App\Application\Action\Splitbill\RecurringBill\RecurringBillDeleteAction::class)->setName('splitbill_bills_recurring_delete');
+                $group_recurring->get('/trigger/{id}', \App\Application\Action\Splitbill\RecurringBill\RecurringBillTriggerAction::class)->setName('splitbill_bill_recurring_trigger');
             });
         });
     });

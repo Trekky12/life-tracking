@@ -131,7 +131,7 @@ var financesRecurringTable = new JSTable("#recurring_table", {
             }
         },
         {
-            select: [10, 11],
+            select: [10, 11, 12],
             sortable: false,
             searchable: false
         }
@@ -665,7 +665,7 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
             }
         },
         {
-            select: [11, 12],
+            select: [11, 12, 13],
             sortable: false,
             searchable: false
         }
