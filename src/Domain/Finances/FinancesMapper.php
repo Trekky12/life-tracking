@@ -216,7 +216,6 @@ class FinancesMapper extends \App\Domain\Mapper {
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type, "user" => $user);
 
-
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
         return floatval($stmt->fetchColumn());
@@ -370,6 +369,22 @@ class FinancesMapper extends \App\Domain\Mapper {
             throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return true;
+    }
+
+    public function statsLastExpenses($limit = 5) {
+        $sql = "SELECT f.date, f.time, f.description, fc.name as category, f.value "
+                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
+                . "WHERE f.category = fc.id "
+                . "AND f.type = :type ";
+
+        $bindings = array("type" => 0);
+        $this->addSelectFilterForUser($sql, $bindings, "f.");
+
+        $sql .= "ORDER BY f.date desc, f.time desc LIMIT {$limit}";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 }

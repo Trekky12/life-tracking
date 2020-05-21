@@ -35,5 +35,14 @@ class ProjectService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
+    
+    public function getUserProjects() {
+        $user = $this->current_user->getUser()->id;
+        return $this->mapper->getElementsOfUser($user);
+    }
+
+    public function getProjects() {
+        return $this->mapper->getAll();
+    }
 
 }

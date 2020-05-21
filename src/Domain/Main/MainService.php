@@ -49,14 +49,6 @@ class MainService extends Service {
         $this->bill_entry_creator = $bill_entry_creator;
     }
 
-    public function getUserStartPage() {
-        $user = $this->current_user->getUser();
-        if (!is_null($user) && !empty($user->start_url)) {
-            return $user->start_url;
-        }
-        return null;
-    }
-
     public function cron(): Payload {
         $this->logger->addInfo('Running CRON');
 

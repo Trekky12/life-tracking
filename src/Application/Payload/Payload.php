@@ -35,6 +35,7 @@ class Payload {
     public static $STATUS_NO_MAIL = "MAIL_NO_MAIL";
     public static $STATUS_NOTIFICATION_SUCCESS = "NOTIFICATION_SUCCESS";
     public static $STATUS_NOTIFICATION_FAILURE = "NOTIFICATION_FAILURE";
+    public static $STATUS_HAS_START_URL = "HAS_START_URL";
 
     public function __construct($status, $result = null, $additionalData = [], $flash_messages = []) {
         $this->status = $status;

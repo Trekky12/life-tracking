@@ -75,7 +75,7 @@
             {% for car, entries in table %}
                 <h2>{{cars[car].name|raw}} ({% if totalMileages[car]["max"] > totalMileages[car]["min"] %}{{totalMileages[car]["diff"]}} {{lang["KM"]}}{% endif %})</h2>
 
-                {% if car in mileage_year|keys and cars[car].mileage_per_year > 0 and cars[car].mileage_term > 0 %}
+                {% if car in mileage_year|keys and mileage_year[car] is not null and cars[car].mileage_per_year > 0 and cars[car].mileage_term > 0 %}
 
                     <p class="no-margin-bottom"><strong>{{lang["MILEAGE_TRAVELLED"]}}: {{mileage_year[car]["current"]}} {{lang["KM"]}}, {{lang["STATE_TODAY_MAX"]}}: {{mileage_year[car]["possible"]}} {{lang["KM"]}} ({{mileage_year[car]["remaining"]}} {{lang["KM"]}} {{lang["REMAINING"]}})</strong></p>
                     <p class="small"><em>{{lang["START"]}}: {{cars[car].mileage_start_date|date(i18n.dateformatTwig.date)}}, {{lang["MILEAGE_PER_YEAR"]}}: {{cars[car].mileage_per_year}}, {{lang["MILEAGE_TERM"]}}: {{cars[car].mileage_term}}</em></p>

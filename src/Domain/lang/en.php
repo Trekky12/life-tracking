@@ -509,4 +509,10 @@ $lang["CRAWLER_DATASET_UNSAVE"] = "Do you really want to remove the dataset from
 
 $lang["ACTIVE"] = "active";
 
+$lang["EXPENSES_THIS_MONTH"] = "This month expenses";
+$lang["INCOME_THIS_MONTH"] = "This month income";
+$lang["REMAINING_KM"] = "remaining km";
+$lang["STEPS_TODAY"] = "today steps";
+$lang["LAST_5_EXPENSES"] = "last 5 expenses";
+
 return $lang;

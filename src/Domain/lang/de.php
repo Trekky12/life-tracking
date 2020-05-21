@@ -507,5 +507,11 @@ $lang["CRAWLER_DATASET_SAVE_LIST"] = "Merkliste";
 $lang["CRAWLER_DATASET_UNSAVE"] = "Soll der Datensatz wirklich von der Merkliste entfernt werden?";
 
 $lang["ACTIVE"] = "aktiv";
+
+$lang["EXPENSES_THIS_MONTH"] = "Ausgaben dieses Monats";
+$lang["INCOME_THIS_MONTH"] = "Einnahmen dieses Monats";
+$lang["REMAINING_KM"] = "verbleibende km";
+$lang["STEPS_TODAY"] = "Heutige Schritte";
+$lang["LAST_5_EXPENSES"] = "Letzte 5 Ausgaben";
         
 return $lang;

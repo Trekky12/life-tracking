@@ -81,6 +81,17 @@
                 @include font-size(10);
             }
         }
+
+        table{
+            @include font-size(1.2);
+            text-align: left;
+            padding: .5rem;
+        }
+
+        p.big{
+            @include font-size(2.5);
+            margin: 2rem;            
+        }
     }
 
     &.negative h3{

@@ -25,20 +25,6 @@ class CarServiceService extends Service {
         $this->translation = $translation;
     }
 
-    /*public function __construct(LoggerInterface $logger,
-            Translator $translation,
-            Settings $settings,
-            Activity $activity,
-            RouteParser $router,
-            CurrentUser $user,
-            CarServiceMapper $mapper,
-            CarService $car_service) {
-        parent::__construct($logger, $translation, $settings, $activity, $router, $user);
-
-        $this->mapper = $mapper;
-        $this->car_service = $car_service;
-    }*/
-
     public function index() {
         $user_cars = $this->car_service->getUserCars();
 
