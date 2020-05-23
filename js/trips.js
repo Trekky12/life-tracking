@@ -267,7 +267,7 @@ function drawMarkers(data) {
 
 }
 
-function addWaypoint(marker) {
+function getNextWaypointPos() {
     let pos = 0;
     let waypoints = routeControl.getWaypoints().length;
     let start = routeControl.getWaypoints()[0].latLng;
@@ -278,6 +278,11 @@ function addWaypoint(marker) {
     if (start && end) {
         pos = routeControl.getWaypoints().length;
     }
+
+    return pos;
+}
+function addWaypoint(marker) {
+    let pos = getNextWaypointPos();
     let name = marker.name + " (" + marker.address + ")";
     let waypoint = L.Routing.waypoint(marker.getLatLng(), name, {fixed: true});
     routeControl.spliceWaypoints(pos, 1, waypoint);
@@ -440,6 +445,11 @@ function initMap() {
         } else {
             alert(lang.routing_error);
         }
+    });
+
+    mymap.on('contextmenu', function (e) {
+        let pos = getNextWaypointPos();
+        routeControl.spliceWaypoints(pos, 1, e.latlng);
     });
 }
 
