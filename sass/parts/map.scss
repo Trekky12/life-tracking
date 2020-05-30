@@ -227,8 +227,25 @@ body.trips{
 }
 
 .leaflet-routing-container-hide .leaflet-routing-collapse-btn{
-    left: 1px;
-    top: 0px;
+    left: 4px;
+    top: -8px;
+    
+    background-image:none;
+    
+    &::before{
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        display:inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        font-size: inherit;
+        position: relative;
+        color: $color_blue;
+        content: "\f4d7";
+        @include font-size(2);
+    }
 }
 
 .leaflet-routing-reverse-waypoints, .leaflet-routing-add-waypoint, .leaflet-routing-btn {
