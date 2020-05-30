@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20200523" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20200530" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -56,6 +56,11 @@
                     <p>{{ lang["YOU_ARE_OFFLINE"] }}</p>
                 </span>
             </div>
+            <div id="offline-entries-alert" class="alert warning hidden">
+                <span class="alert-message">
+                    <p>{{ lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] }}</p>
+                </span>
+            </div>
             {% block body %}
             {% endblock %}
         </div>
@@ -67,6 +72,7 @@
                 	
             </div>
         </footer>
+        <div id="toastmessage"></div>
 
         <script type='text/javascript' >
             var allowedReload = false;
@@ -181,7 +187,12 @@
                 "routing_add_to_route": '{{lang["ADD_TO_ROUTE"]}}',
                 "routing_error": '{{lang["ROUTING_ERROR"]}}',
                 "routing_error_too_many_requests": '{{lang["ROUTING_ERROR_TOO_MANY_REQUESTS"]}}',
-                "really_unsave_dataset": '{{lang["CRAWLER_DATASET_UNSAVE"]}}'
+                "really_unsave_dataset": '{{lang["CRAWLER_DATASET_UNSAVE"]}}',
+                "entry_saved_locally": '{{lang["ENTRY_SAVED_LOCALLY"]}}',
+                "entry_saved_locally_error": '{{lang["ENTRY_SAVED_LOCALLY_ERROR"]}}',
+                "locally_saved_entries_submitted": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"]}}',
+                "locally_saved_entries_submitted_success": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"]}}',
+                "locally_saved_entries_submitted_error": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"]}}'
             };
             var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
@@ -193,13 +204,13 @@
         <script src="{{baseURL}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20200118" type="text/javascript"></script>  
 
-        <script src="{{baseURL}}/static/js/main.js?ver=20200416" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/main.js?ver=20200530" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20200416" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/tables.js?ver=20200118" type="text/javascript"></script>
 
 
         {% if not user is null %}
-        <script src="{{baseURL}}/static/js/app.js?ver=20191203" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/app.js?ver=20200530" type="text/javascript"></script>
         {% endif %}
 
         {% block javascript %}

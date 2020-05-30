@@ -513,5 +513,12 @@ $lang["INCOME_THIS_MONTH"] = "Einnahmen dieses Monats";
 $lang["REMAINING_KM"] = "verbleibende km";
 $lang["STEPS_TODAY"] = "Heutige Schritte";
 $lang["LAST_5_EXPENSES"] = "Letzte 5 Ausgaben";
+
+$lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] = "Es sind lokal gespeicherte Einträge vorhanden.";
+$lang["ENTRY_SAVED_LOCALLY"] = "Eintrag lokal gespeichert.";
+$lang["ENTRY_SAVED_LOCALLY_ERROR"] = "Eintrag konnte nicht lokal gespeichert werden!";
+$lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"] = "Lokal gespeicherte Einträge wurden übermittelt.";
+$lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"] = "Erfolgreich übermittelt";
+$lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"] = "Nicht übermittelt";
         
 return $lang;

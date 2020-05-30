@@ -1,0 +1,43 @@
+#toastmessage {
+    visibility: hidden;
+    min-width: 250px;
+    //margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    z-index: 1;
+    left: 50%; 
+    bottom: 30px; 
+    transform: translate(-50%, 0px);
+    @include font-size(1.2);
+
+    &.show {
+        visibility: visible;
+        animation: toastfadein 0.5s, toastfadeout 0.5s 2.5s;
+    }
+
+    &.red{
+        background-color: $color_red;
+        color: $color_background-body;
+    }
+    &.green{
+        background-color: $color_green;
+        color: $color_background-body;
+    }
+    &.orange{
+        background-color: $color_orange;
+        color: $color_background-body;
+    }
+}
+
+@keyframes toastfadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes toastfadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+} 

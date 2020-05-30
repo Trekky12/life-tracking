@@ -397,13 +397,33 @@ flatpickr('#dateSelect', {
     "altInput": true,
     "altFormat": i18n.dateformatTwig.date,
     "dateFormat": "Y-m-d",
-    "locale": i18n.template
+    "locale": i18n.template,
+    // reset to default value
+    // @see https://github.com/flatpickr/flatpickr/issues/816#issuecomment-338687240
+    onReady: function (dateObj, dateStr, instance) {
+        if (!instance.altInput)
+            return;
+        instance.__defaultValue = instance.input.defaultValue;
+        instance.altInput.defaultValue = instance.altInput.value;
+        instance.input.form.addEventListener('reset', function (e) {
+            instance.setDate(instance.__defaultValue);
+        });
+    }
 });
 flatpickr('#dateSelectEnd', {
     "altInput": true,
     "altFormat": i18n.dateformatTwig.date,
     "dateFormat": "Y-m-d",
-    "locale": i18n.template
+    "locale": i18n.template,
+    onReady: function (dateObj, dateStr, instance) {
+        if (!instance.altInput)
+            return;
+        instance.__defaultValue = instance.input.defaultValue;
+        instance.altInput.defaultValue = instance.altInput.value;
+        instance.input.form.addEventListener('reset', function (e) {
+            instance.setDate(instance.__defaultValue);
+        });
+    }
 });
 
 

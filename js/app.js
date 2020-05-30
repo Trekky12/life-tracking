@@ -12,6 +12,10 @@ const loadingIconManage = document.querySelector('#loadingIconManageNotification
 const badges = document.querySelectorAll('.header-inner .badge');
 //const bell = document.querySelector('#iconBell');
 
+const offlineAlert = document.getElementById("offline-alert");
+const toast = document.getElementById('toastmessage');
+const offlineElementsAlert = document.getElementById("offline-entries-alert");
+
 let isSubscribed = false;
 var isCached = false;
 
@@ -26,7 +30,7 @@ function handleNetworkChange(event) {
 function setOffline(offline) {
     if (offline) {
         document.body.classList.add("offline");
-        document.getElementById("offline-alert").classList.remove("hidden");
+        offlineAlert.classList.remove("hidden");
         setFormFieldsDisabled(true);
 
         let alerts = document.querySelectorAll('.alert.hide-offline');
@@ -39,7 +43,7 @@ function setOffline(offline) {
 
     } else {
         document.body.classList.remove("offline");
-        document.getElementById("offline-alert").classList.add("hidden");
+        offlineAlert.classList.add("hidden");
         setFormFieldsDisabled(false);
 
         // the page is from cache but now we are online, so reload
@@ -54,16 +58,68 @@ function setOffline(offline) {
 }
 
 function setFormFieldsDisabled(value) {
-    let fields = document.querySelectorAll('form input, form select, form button[type="submit"]');
-    fields.forEach(function (item, idx) {
-        if (!item.classList.contains("disabled")) {
-            if (value) {
-                item.setAttribute("disabled", true);
-            } else {
-                item.removeAttribute("disabled");
+
+    //check for support
+    if (!('indexedDB' in window)) {
+        console.log('This browser doesn\'t support IndexedDB');
+
+        let fields = document.querySelectorAll('form input, form select, form button[type="submit"]');
+        fields.forEach(function (item, idx) {
+            if (!item.classList.contains("disabled")) {
+                if (value) {
+                    item.setAttribute("disabled", true);
+                } else {
+                    item.removeAttribute("disabled");
+                }
             }
+        });
+        return;
+    }
+
+
+    let openRequest = getIndexedDB();
+    openRequest.onsuccess = function () {
+        let db = openRequest.result;
+
+        let forms = document.querySelectorAll('form');
+        forms.forEach(function (item, idx) {
+            item.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                //@see https://stackoverflow.com/a/48950600
+                let formData = new URLSearchParams(new FormData(item)).toString();
+
+                let transaction = db.transaction('forms', 'readwrite');
+                let forms = transaction.objectStore('forms');
+                let request = forms.add({'action': item.action, 'data': formData});
+
+                request.onsuccess = function () {
+                    showToast(lang.entry_saved_locally, "green");
+                    offlineElementsAlert.classList.remove("hidden");
+                    item.reset();
+                }
+                request.onerror = function () {
+                    console.log("Error", request.error);
+                    showToast(lang.entry_saved_locally_error, "red");
+                }
+            });
+        });
+    }
+
+
+}
+
+function getIndexedDB() {
+    let openRequest = indexedDB.open('lifeTrackingData', 1);
+
+    openRequest.onupgradeneeded = function () {
+        let db = openRequest.result;
+        if (!db.objectStoreNames.contains('forms')) {
+            db.createObjectStore('forms', {keyPath: 'id', autoIncrement: true});
         }
-    });
+    }
+
+    return openRequest;
 }
 
 initServiceWorker();
@@ -75,14 +131,99 @@ document.addEventListener("DOMContentLoaded", function () {
     let timestamp = Math.round(document.querySelector("meta[name='timestamp']").getAttribute("content"));
     let currentTime = Math.round(Date.now() / 1000);
     let offset = 10;
-
     if (localStorage.getItem('isCached') || (timestamp + offset <= currentTime)) {
         localStorage.removeItem('isCached');
         console.log('this is cached!');
         setOffline(true);
         isCached = true;
     }
+
+    // check for offline entries
+    if (!('indexedDB' in window)) {
+        return;
+    }
+
+    let openRequest = getIndexedDB();
+    openRequest.onsuccess = function () {
+        let db = openRequest.result;
+        let transaction = db.transaction('forms', 'readwrite');
+        let forms = transaction.objectStore('forms');
+        let request = forms.getAll();
+
+        request.onsuccess = function () {
+            if (request.result.length <= 0) {
+                return;
+            }
+            offlineElementsAlert.classList.remove("hidden");
+
+            // submit offline entries if we are online!
+            if (!isCached) {
+                let promises = [];
+                let success = 0;
+                let failed = 0;
+
+                request.result.forEach(function (form, idx) {
+                    //@see https://stackoverflow.com/a/38362312
+                    promises.push(
+                        getCSRFToken().then(function (token) {
+                            let data = new URLSearchParams(form.data);
+                            data.set("csrf_name", token.csrf_name);
+                            data.set("csrf_value", token.csrf_value);
+
+                            return fetch(form.action, {
+                                method: 'POST',
+                                credentials: "same-origin",
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: data
+                            });
+                        }).then(function (response) {
+                            return new Promise(function (resolve, reject) {
+                                if (!response.ok) {
+                                    reject("error, wrong response");
+                                } else {
+                                    let deleteRequest = db.transaction('forms', 'readwrite').objectStore('forms').delete(form.id);
+                                    deleteRequest.onsuccess = function (event) {
+                                        success++;
+                                        resolve();
+                                    };
+                                    deleteRequest.onerror = function (err) {
+                                        failed++;
+                                        reject(err);
+                                    };
+                                }
+                            });
+                        })
+                    );
+                });
+
+                Promise.all(promises).then(function (response) {
+                    let color = "orange";
+                    if (success > 0 && failed <= 0) {
+                        offlineElementsAlert.classList.add("hidden");
+                        color = "green";
+                    }
+                    if (success <= 0 && failed > 0) {
+                        color = "red";
+                    }
+                    showToast(lang.locally_saved_entries_submitted + " " + lang.locally_saved_entries_submitted_success+": " + success + ", "+ lang.locally_saved_entries_submitted_error + ": " + failed, color);
+                });
+            }
+        };
+    };
 });
+
+function showToast(message, color) {
+    toast.classList.add("show");
+    toast.innerHTML = message;
+    toast.classList.add(color);
+
+    setTimeout(function () {
+        toast.classList.remove("show");
+        toast.classList.remove(color);
+    }, 3000);
+}
 
 function initServiceWorker() {
     if ('serviceWorker' in navigator) {
@@ -109,10 +250,8 @@ function initServiceWorker() {
                 alert(event.data.type);
             }
         });
-
         navigator.serviceWorker.register('/sw.js').then(function (registration) {
             console.log('Service worker successfully registered on scope', registration.scope);
-
             // only on notifications pages
             /*if (pushButton === null && notificationsList === null) {
              return;
@@ -151,7 +290,6 @@ function initServiceWorker() {
             console.error('Service Worker Error', error);
             notificationsDisabled('incompatible');
         });
-
     } else {
         notificationsDisabled('incompatible');
     }
@@ -159,23 +297,21 @@ function initServiceWorker() {
 }
 
 function syncSubscription() {
-    // Keep server in sync of subscription
+// Keep server in sync of subscription
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
 
-        // close existing notifications
+// close existing notifications
         serviceWorkerRegistration.getNotifications().then(notifications => {
             notifications.forEach(notification => {
                 notification.close();
             });
         });
-
         return serviceWorkerRegistration;
-
     }).then(function (serviceWorkerRegistration) {
-        // get subscription
+// get subscription
         return serviceWorkerRegistration.pushManager.getSubscription();
     }).then(function (subscription) {
-        //updateButton('disabled');
+//updateButton('disabled');
 
         if (!subscription) {
             notificationsDisabled('disabled');
@@ -187,7 +323,6 @@ function syncSubscription() {
             notificationsDisabled('disabled');
             throw "No Push Subscription on server";
         });
-
     }).then(function (subscription) {
         updateButton('enabled');
         //bell.classList.remove('disabled');
@@ -205,9 +340,7 @@ function syncSubscription() {
 
 function subscribeUser() {
     const applicationServerKey = urlB64ToUint8Array(jsObject.applicationServerPublicKey);
-
     updateButton('computing');
-
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
         console.log('Subscribing..');
         return serviceWorkerRegistration.pushManager.subscribe({
@@ -257,7 +390,6 @@ function unsubscribeUser() {
         console.error('Error unsubscribing', error);
         updateButton('disabled');
     });
-
 }
 
 function updateSubscriptionOnServer(subscription, method = 'POST') {
@@ -265,18 +397,15 @@ function updateSubscriptionOnServer(subscription, method = 'POST') {
     const key = subscription.getKey('p256dh');
     const token = subscription.getKey('auth');
     const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
-
     let data = {
         endpoint: subscription.endpoint,
         publicKey: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
         authToken: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null,
         contentEncoding: contentEncoding
     };
-
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
-
         return fetch(jsObject.notifications_subscribe, {
             method,
             credentials: "same-origin",
@@ -295,7 +424,6 @@ function updateSubscriptionOnServer(subscription, method = 'POST') {
     }).catch(function (error) {
         console.error('Error unsubscribing', error);
     });
-
 }
 
 function urlB64ToUint8Array(base64String) {
@@ -303,10 +431,8 @@ function urlB64ToUint8Array(base64String) {
     const base64 = (base64String + padding)
             .replace(/\-/g, '+')
             .replace(/_/g, '/');
-
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
-
     for (let i = 0; i < rawData.length; ++i) {
         outputArray[i] = rawData.charCodeAt(i);
     }
@@ -350,13 +476,10 @@ function getCategorySubscriptions(subscription) {
     if (categoriesList !== null) {
         let endpoint = subscription.endpoint;
         let data = {"endpoint": endpoint};
-
         loadingIconManage.classList.remove("hidden");
-
         return getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
             data['csrf_value'] = token.csrf_value;
-
             return fetch(jsObject.notifications_clients_categories, {
                 method: 'POST',
                 credentials: "same-origin",
@@ -371,10 +494,8 @@ function getCategorySubscriptions(subscription) {
             if (data.status !== 'error') {
 
                 loadingIconManage.classList.add("hidden");
-
                 categoriesElements.forEach(function (item, idx) {
                     let val = parseInt(item.value);
-
                     if (data.data.indexOf(val) !== -1) {
                         item.setAttribute("checked", true);
                     } else {
@@ -405,11 +526,9 @@ function getCategorySubscriptions(subscription) {
 
 function setCategorySubscriptions(endpoint, type, category) {
     let data = {"endpoint": endpoint, "category": category, "type": type};
-
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
-
         return fetch(jsObject.notifications_clients_set_category, {
             method: 'POST',
             credentials: "same-origin",

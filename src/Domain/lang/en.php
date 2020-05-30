@@ -515,4 +515,11 @@ $lang["REMAINING_KM"] = "remaining km";
 $lang["STEPS_TODAY"] = "today steps";
 $lang["LAST_5_EXPENSES"] = "last 5 expenses";
 
+$lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] = "There are locally saved entries.";
+$lang["ENTRY_SAVED_LOCALLY"] = "Entry saved locally.";
+$lang["ENTRY_SAVED_LOCALLY_ERROR"] = "Entry could not be saved locally!";
+$lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"] = "Locally saved entries submitted.";
+$lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"] = "Succesfully submitted";
+$lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"] = "Not submitted";
+
 return $lang;
