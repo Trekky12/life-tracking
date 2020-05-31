@@ -9,10 +9,14 @@ class EventMapper extends \App\Domain\Mapper {
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
-    public function getFromTrip($id, $from = null, $to = null, $order = null) {
+    public function getFromTrip($id, $from = null, $to = null, $order = null, $show_waypoints = false) {
         $bindings = array("id" => $id);
 
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE trip = :id ";
+        
+        if(!$show_waypoints){
+            $sql .= " AND type != 'WAYPOINT' ";
+        }
 
         if (!is_null($from) && !is_null($to)) {
             $sql .= " AND ( start_date = :from OR end_date = :from OR (:from BETWEEN start_date AND end_date) OR (:to BETWEEN start_date AND end_date)) ";

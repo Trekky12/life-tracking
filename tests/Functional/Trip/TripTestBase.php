@@ -14,6 +14,8 @@ class TripTestBase extends BaseTestCase {
     protected $uri_child_edit = "/trips/HASH/event/edit/";
     protected $uri_child_save = "/trips/HASH/event/save/";
     protected $uri_child_delete = "/trips/HASH/event/delete/";
+    protected $uri_waypoint_add = "/trips/HASH/waypoint/add";
+    protected $uri_waypoint_delete = "/trips/HASH/waypoint/delete";
 
     protected function getParent($body, $name) {
         $matches = [];
@@ -37,6 +39,14 @@ class TripTestBase extends BaseTestCase {
         preg_match($re, $body, $matches);
 
         return $matches;
+    }
+
+    protected function getURIWaypointAdd($hash) {
+        return str_replace("HASH", $hash, $this->uri_waypoint_add);
+    }
+
+    protected function getURIWaypointDelete($hash) {
+        return str_replace("HASH", $hash, $this->uri_waypoint_delete);
     }
 
 }

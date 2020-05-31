@@ -75,9 +75,9 @@ class Event extends \App\Domain\DataObject {
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
         }
 
-        if (empty($this->name)) {
+        /*if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
-        }
+        }*/
     }
 
     public function isFlight() {
@@ -107,6 +107,10 @@ class Event extends \App\Domain\DataObject {
     public function isTravel() {
         return $this->isFlight() || $this->isTrainride() || $this->isDrive();
     }
+    
+    public function isWaypoint() {
+        return strcmp($this->type, "WAYPOINT") === 0;
+    }
 
     public function getPosition() {
         $data['isTravel'] = $this->isTravel();
@@ -116,6 +120,7 @@ class Event extends \App\Domain\DataObject {
         $data['isHotel'] = $this->isAccommodation();
         $data['isCarrental'] = $this->isCarrental();
         $data['isEvent'] = $this->isEvent();
+        $data['isWaypoint'] = $this->isWaypoint();
 
         $data['data'] = $this->get_fields();
 

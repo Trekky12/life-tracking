@@ -351,6 +351,11 @@ return function (App $app) {
 
                 $group_event->post('/updatePosition', \App\Application\Action\Trips\Event\EventUpdatePositionAction::class)->setName('trips_event_position');
             });
+
+            $group_trip->group('/waypoint', function(RouteCollectorProxy $group_waypoint) {
+                $group_waypoint->post('/add', \App\Application\Action\Trips\Waypoint\WaypointSaveAction::class)->setName('trips_add_waypoint');
+                $group_waypoint->delete('/delete', \App\Application\Action\Trips\Waypoint\WaypointDeleteAction::class)->setName('trips_delete_waypoint');
+            });
         });
     });
 

@@ -8,7 +8,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use App\Application\Responder\JSONResponder;
 
-class EventImageResponder extends JSONResponder {
+class SaveWaypointResponder extends JSONResponder {
 
     public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation) {
         parent::__construct($responseFactory, $translation);
@@ -27,10 +27,8 @@ class EventImageResponder extends JSONResponder {
                 break;
         }
 
-        $additional_data = $payload->getAdditionalData();
-        if (!empty($additional_data)) {
-            $data = $data + $additional_data;
-        }
+        $id = $payload->getResult()->id;
+        $data["id"] = $id;
 
         $json = json_encode($data);
         $response->getBody()->write($json);

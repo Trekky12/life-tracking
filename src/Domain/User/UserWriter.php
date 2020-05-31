@@ -29,7 +29,7 @@ class UserWriter extends ObjectActivityWriter {
         // is new user?
         if ($payload->getStatus() == Payload::$STATUS_NEW) {
             $user = $payload->getResult();
-            $data = $payload->getAdditonalData();
+            $data = $payload->getAdditionalData();
             $this->sendNewUserNotificationMail($user, $data);
         }
         return $payload;

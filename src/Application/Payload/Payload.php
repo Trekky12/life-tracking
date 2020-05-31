@@ -91,14 +91,14 @@ class Payload {
         return $this->template;
     }
 
-    public function withAdditonalData($data) {
+    public function withAdditionalData($data) {
         $clone = clone $this;
         $clone->additionalData = $data;
 
         return $clone;
     }
 
-    public function getAdditonalData() {
+    public function getAdditionalData() {
         return $this->additionalData;
     }
 

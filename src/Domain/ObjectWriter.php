@@ -98,7 +98,7 @@ abstract class ObjectWriter {
         $entry = $this->createEntry($data, $for_user);
 
         if ($entry->hasParsingErrors()) {
-            $this->logger->addError("Insert failed " . get_class($entry), array("message" => $this->translation->getTranslatedString($entry->getParsingErrors()[0])));
+            $this->logger->addError("Insert failed " . get_class($entry), array("message" => $entry->getParsingErrors()[0]));
             return new Payload(Payload::$STATUS_PARSING_ERRORS, $entry);
         }
 

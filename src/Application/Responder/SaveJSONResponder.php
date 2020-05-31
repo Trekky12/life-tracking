@@ -22,7 +22,7 @@ class SaveJSONResponder extends JSONResponder {
                 $data = ["status" => "error"];
                 break;
             case Payload::$STATUS_ERROR:
-                $response = ["status" => "error", "error" => $payload->getResult()];
+                $data = ["status" => "error", "error" => $payload->getResult()];
                 break;
         }
 

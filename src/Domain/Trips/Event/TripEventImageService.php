@@ -84,7 +84,7 @@ class TripEventImageService {
             $this->logger->addNotice("Update Event Image, Image Set", array("id" => $event_id, "image" => $image->getClientFilename()));
 
             $payload = new Payload(Payload::$STATUS_UPDATE);
-            return $payload->withAdditonalData(["thumbnail" => $thumbnail]);
+            return $payload->withAdditionalData(["thumbnail" => $thumbnail]);
         }
 
         $this->logger->addNotice("Update Event Image, No File", array("id" => $event_id));

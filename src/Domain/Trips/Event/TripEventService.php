@@ -142,7 +142,7 @@ class TripEventService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time, position");
+        $events = $this->mapper->getFromTrip($trip->id, $from, $to, "start_date, start_time, end_date, end_time, position", true);
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -207,6 +207,7 @@ class TripEventService extends Service {
             "DRIVE",
             "TRAINRIDE",
             "CARRENTAL",
+            "WAYPOINT"
         ];
     }
 

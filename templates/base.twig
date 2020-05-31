@@ -133,6 +133,8 @@
                 {% if not isTrips is null %}
                 'trip_markers_url': '{{url_for('trips_markers', {'trip': trip.hash})}}',
                 'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
+                'trip_add_waypoint': '{{  url_for('trips_add_waypoint', {'trip' : trip.hash})}}',
+                'trip_delete_waypoint': '{{  url_for('trips_delete_waypoint', {'trip' : trip.hash})}}',
                 {% endif %}
                 {% if not hasTimesheetTable is null %}
                 'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',

@@ -6,6 +6,7 @@ let layerPlanes = new L.LayerGroup();
 let layerCarRentals = new L.LayerGroup();
 let layerHotels = new L.LayerGroup();
 let layerEvents = new L.LayerGroup();
+let layerWaypoints = new L.LayerGroup();
 
 let controlLayer = null;
 let mymap = null;
@@ -114,6 +115,7 @@ function drawMarkers(data) {
     layerCarRentals.clearLayers();
     layerHotels.clearLayers();
     layerEvents.clearLayers();
+    layerWaypoints.clearLayers();
 
     my_markers = [];
 
@@ -170,25 +172,26 @@ function drawMarkers(data) {
          * Popup
          */
         //let popup = "<h4>" + marker.data.name + "</h4>" + marker.data.popup;
-        let navigationBtn = document.createElement("a");
-        navigationBtn.classList.add("navigation-btn")
-        navigationBtn.innerHTML = lang.routing_add_to_route;
-
-        navigationBtn.addEventListener("click", function () {
-            addWaypoint(start_marker);
-            routeControl.show();
-        });
+        let navigationBtn = getAddToRouteLink(start_marker);
 
         let popup = document.createElement("div");
-        let headline = document.createElement("h4");
-        headline.innerHTML = marker.data.name;
+        if (!marker.isWaypoint) {
+            let headline = document.createElement("h4");
+            headline.innerHTML = marker.data.name;
 
-        let pInner = document.createElement("p");
-        pInner.innerHTML = marker.data.popup;
+            let pInner = document.createElement("p");
+            pInner.innerHTML = marker.data.popup;
 
-        popup.appendChild(headline);
-        popup.appendChild(pInner);
+            popup.appendChild(headline);
+            popup.appendChild(pInner);
+        }
         popup.appendChild(navigationBtn);
+
+        if (marker.isWaypoint) {
+            let deleteBtn = getDeleteWaypointLink(marker.data.id, start_marker, start_marker.waypoint);
+            popup.appendChild(document.createElement("br"));
+            popup.appendChild(deleteBtn);
+        }
 
         start_marker.bindPopup(popup);
         my_markers.push(start_marker);
@@ -205,6 +208,8 @@ function drawMarkers(data) {
             layerPlanes.addLayer(start_marker);
         } else if (marker.isCar) {
             layerCars.addLayer(start_marker);
+        } else if (marker.isWaypoint) {
+            layerWaypoints.addLayer(start_marker);
         }
 
         /**
@@ -283,8 +288,9 @@ function getNextWaypointPos() {
 }
 function addWaypoint(marker) {
     let pos = getNextWaypointPos();
-    let name = marker.name + " (" + marker.address + ")";
+    let name = marker.name ? marker.name + " (" + marker.address + ")" : null;
     let waypoint = L.Routing.waypoint(marker.getLatLng(), name, {fixed: true});
+    marker.waypoint = pos;
     routeControl.spliceWaypoints(pos, 1, waypoint);
 }
 
@@ -302,6 +308,7 @@ function initMap() {
     mymap.addLayer(layerCarRentals);
     mymap.addLayer(layerHotels);
     mymap.addLayer(layerEvents);
+    mymap.addLayer(layerWaypoints);
 
     // layer control
     controlLayer = L.control.layers(null, null, {
@@ -448,8 +455,45 @@ function initMap() {
     });
 
     mymap.on('contextmenu', function (e) {
-        let pos = getNextWaypointPos();
-        routeControl.spliceWaypoints(pos, 1, e.latlng);
+        // Create new Waypoint marker
+        getCSRFToken().then(function (token) {
+            let data = {'start_lat': e.latlng.lat, 'start_lng': e.latlng.lng, 'type': 'WAYPOINT', 'start_date': fromInput.value, 'end_date': toInput.value};
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
+
+            return fetch(jsObject.trip_add_waypoint, {
+                method: 'POST',
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            // add new marker to route
+            let pos = getNextWaypointPos();
+            let waypoint = L.Routing.waypoint(e.latlng, null, {fixed: true});
+            routeControl.spliceWaypoints(pos, 1, waypoint);
+            routeControl.show();
+
+            // manually create new marker
+            let marker = L.marker(waypoint.latLng, {});
+            let popup = document.createElement("div");
+            let navigationBtn = getAddToRouteLink(marker);
+            let deleteBtn = getDeleteWaypointLink(data['id'], marker, pos);
+            popup.appendChild(navigationBtn);
+            popup.appendChild(document.createElement("br"));
+            popup.appendChild(deleteBtn);
+            marker.bindPopup(popup);
+            layerWaypoints.addLayer(marker);
+
+        }).catch(function (error) {
+            console.log(error);
+        });
+
     });
 }
 
@@ -526,3 +570,51 @@ tripDays.forEach(function (day) {
         }
     });
 });
+
+function getAddToRouteLink(marker) {
+    let navigationBtn = document.createElement("a");
+    navigationBtn.classList.add("navigation-btn")
+    navigationBtn.innerHTML = lang.routing_add_to_route;
+
+    navigationBtn.addEventListener("click", function () {
+        addWaypoint(marker);
+        routeControl.show();
+    });
+
+    return navigationBtn;
+}
+
+function getDeleteWaypointLink(id, marker, waypoint) {
+    let deleteBtn = document.createElement("a");
+    deleteBtn.classList.add("navigation-btn");
+    deleteBtn.innerHTML = lang.delete_text;
+    deleteBtn.addEventListener("click", function () {
+        // Create new Waypoint marker
+        getCSRFToken().then(function (token) {
+            let data = {};
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
+
+            return fetch(jsObject.trip_delete_waypoint + '?id=' + id, {
+                method: 'DELETE',
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            mymap.removeLayer(marker);
+            my_markers.splice(my_markers.indexOf(marker), 1);
+            // remove from routing
+            routeControl.spliceWaypoints(waypoint, 1);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    });
+
+    return deleteBtn;
+}
