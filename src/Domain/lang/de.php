@@ -526,5 +526,7 @@ $lang["TRIPS_ROUTE_NAME_PROMPT"] = "Bitte einen Namen eingeben:";
 $lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"] = "Route wurde erfolgreich gespeichert.";
 $lang["TRIPS_ROUTE_SAVED_ERROR"] = "Route konnte nicht gespeichert werden.";
 $lang["TRIPS_ROUTES"] = "Routen";
+
+$lang["TRIPS_WAYPOINT_SAVE"] = "Speichern";
         
 return $lang;

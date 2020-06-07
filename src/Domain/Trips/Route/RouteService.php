@@ -54,6 +54,7 @@ class RouteService extends Service {
             $response_data["waypoints"] = $route->getWaypoints();
             $response_data["start_date"] = $route->start_date;
             $response_data["end_date"] = $route->end_date;
+            $response_data["profile"] = $route->profile;
         } catch (\Exception $e) {
             // element not found?
         }

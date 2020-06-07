@@ -12,7 +12,7 @@ class RouteMapper extends \App\Domain\Mapper {
     public function getFromTrip($id, $from = null, $to = null, $order = null) {
         $bindings = array("id" => $id);
 
-        $sql = "SELECT id, name, start_date, end_date FROM " . $this->getTableName() . " WHERE trip = :id ";
+        $sql = "SELECT id, name, start_date, end_date, profile FROM " . $this->getTableName() . " WHERE trip = :id ";
 
         if (!is_null($from) && !is_null($to)) {
             $sql .= " AND ( start_date = :from OR end_date = :from OR (:from BETWEEN start_date AND end_date) OR (:to BETWEEN start_date AND end_date)) ";

@@ -528,4 +528,6 @@ $lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"] = "Route was saved successfully.";
 $lang["TRIPS_ROUTE_SAVED_ERROR"] = "Route could not be saved.";
 $lang["TRIPS_ROUTES"] = "Routes";
 
+$lang["TRIPS_WAYPOINT_SAVE"] = "Save";
+
 return $lang;

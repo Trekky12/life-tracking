@@ -226,6 +226,9 @@ class Event extends \App\Domain\DataObject {
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
+        if($this->isWaypoint()){
+            return sprintf("%s, %s", $this->start_lat, $this->start_lng);
+        }
         return $this->name;
     }
 

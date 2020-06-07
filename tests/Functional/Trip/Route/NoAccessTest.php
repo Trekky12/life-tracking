@@ -39,7 +39,8 @@ class NoAccessTest extends TripTestBase {
                     ],
                     "name" => "Waypoint 2"
                 ]
-            ]
+            ],
+            "profile" => "driving"
         ];
         $response = $this->request('POST', $this->getURIRouteAdd($this->TEST_TRIP_HASH), $data);
 

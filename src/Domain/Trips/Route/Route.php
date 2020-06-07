@@ -21,6 +21,8 @@ class Route extends \App\Domain\DataObject {
         $this->end_date = $this->exists('end_date', $data) ? filter_var($data['end_date'], FILTER_SANITIZE_STRING) : null;
 
         $this->waypoints = $this->exists('waypoints', $data) ? $data['waypoints'] : null;
+        
+        $this->profile = $this->exists('profile', $data) ? filter_var($data['profile'], FILTER_SANITIZE_STRING) : null;
 
         /**
          * Clean date/time

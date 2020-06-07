@@ -38,7 +38,8 @@ class MemberTest extends TripTestBase {
                     ],
                     "name" => "Waypoint 2"
                 ]
-            ]
+            ],
+            "profile" => "driving"
         ];
         $response = $this->request('POST', $this->getURIRouteAdd($this->TEST_TRIP_HASH), $data);
 
@@ -70,7 +71,7 @@ class MemberTest extends TripTestBase {
         $this->assertIsArray($json);
 
         foreach ($json as $route) {
-            if ($route["name"] == $data["name"] && $route["start_date"] == $data["start_date"] && $route["end_date"] == $data["end_date"]) {
+            if ($route["name"] == $data["name"] && $route["start_date"] == $data["start_date"] && $route["end_date"] == $data["end_date"] && $route["profile"] == $data["profile"]) {
                 return intval($route["id"]);
             }
         }
