@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20200530" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20200606" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -135,6 +135,9 @@
                 'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
                 'trip_add_waypoint': '{{  url_for('trips_add_waypoint', {'trip' : trip.hash})}}',
                 'trip_delete_waypoint': '{{  url_for('trips_delete_waypoint', {'trip' : trip.hash})}}',
+                'trip_add_route': '{{  url_for('trips_add_route', {'trip' : trip.hash})}}',
+                'trip_list_routes': '{{  url_for('trips_list_route', {'trip' : trip.hash})}}',
+                'trip_route_waypoints': '{{  url_for('trips_route_waypoints', {'trip' : trip.hash})}}',
                 {% endif %}
                 {% if not hasTimesheetTable is null %}
                 'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
@@ -194,7 +197,10 @@
                 "entry_saved_locally_error": '{{lang["ENTRY_SAVED_LOCALLY_ERROR"]}}',
                 "locally_saved_entries_submitted": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"]}}',
                 "locally_saved_entries_submitted_success": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"]}}',
-                "locally_saved_entries_submitted_error": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"]}}'
+                "locally_saved_entries_submitted_error": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"]}}',
+                "trips_route_name_prompt": '{{lang["TRIPS_ROUTE_NAME_PROMPT"]}}',
+                "trips_route_saved_successfully": '{{lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"]}}',
+                "trips_route_saved_error": '{{lang["TRIPS_ROUTE_SAVED_ERROR"]}}'
             };
             var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
@@ -206,7 +212,7 @@
         <script src="{{baseURL}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20200118" type="text/javascript"></script>  
 
-        <script src="{{baseURL}}/static/js/main.js?ver=20200530" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/main.js?ver=20200606" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20200416" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/tables.js?ver=20200118" type="text/javascript"></script>
 

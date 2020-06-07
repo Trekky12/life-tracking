@@ -525,3 +525,31 @@ function fetchWithTimeout(url, options, timeout = 3000) {
 
     return Promise.race(promises);
 }
+
+// https://stackoverflow.com/a/29188066
+function freeze() {
+    var top = window.scrollY;
+
+    document.body.style.overflow = 'hidden';
+
+    window.onscroll = function () {
+        window.scroll(0, top);
+    }
+}
+
+function unfreeze() {
+    document.body.style.overflow = '';
+    window.onscroll = null;
+}
+
+function isMobile() {
+    return isVisible(document.getElementById('mobile-header-icons'));
+}
+
+function isVisible(element) {
+    return getDisplay(element) !== 'none';
+}
+
+function getDisplay(element) {
+    return element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
+}

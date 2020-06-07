@@ -24,10 +24,14 @@
     <script type='text/javascript' >
         const mapbox_token = '{{ mapbox_token }}';
     </script>
-    <script src="{{baseURL}}/static/js/trips.js?ver=20200530"></script>
+    <script src="{{baseURL}}/static/js/trips.js?ver=20200606"></script>
 {% endblock %}
 
 {% block body %}
+    <div id="loading-overlay" class="hidden">
+        <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+        <span class="sr-only">Loading...</span>
+    </div>
     <div class="inner-content">
         <div class="page-header"><h2>{{trip.name|raw}}</h2> <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD_EVENT"]}}</button></a></div>
         <div id="trip-map"></div>
@@ -67,3 +71,25 @@
     </div>
 
 {% endblock %}        
+
+{% block bottom %}
+    <div id="route-modal" class="modal">
+        <div class="modal-inner">
+            <div class="modal-header">{{lang["TRIPS_ROUTES"]}}<span class="modal-close" id="modal-close-btn">&times;</span></div>
+            <div class="modal-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>{{ lang["NAME"] }}</th>
+                        <th>{{ lang["DATE"] }}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

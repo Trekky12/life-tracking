@@ -1,5 +1,8 @@
 'use strict';
 
+const routeModal = document.getElementById("route-modal");
+const loadingOverlay = document.getElementById('loading-overlay');
+
 let layerTrains = new L.LayerGroup();
 let layerCars = new L.LayerGroup();
 let layerPlanes = new L.LayerGroup();
@@ -389,10 +392,156 @@ function initMap() {
                 carButton.classList.add('active');
             }, this);
 
-//            let calcButton = createButton(container, "calc");
-//            L.DomEvent.on(calcButton, 'click', function () {
-//                routeControl.route();
-//            }, this);
+            let saveButton = createButton(container, "save");
+            L.DomEvent.on(saveButton, 'click', function () {
+                let name = prompt(lang.trips_route_name_prompt);
+                if (name !== null) {
+                    getCSRFToken().then(function (token) {
+                        let data = {'name': name, 'start_date': fromInput.value, 'end_date': toInput.value, 'waypoints': routeControl.getWaypoints()};
+                        data['csrf_name'] = token.csrf_name;
+                        data['csrf_value'] = token.csrf_value;
+
+                        return fetch(jsObject.trip_add_route, {
+                            method: 'POST',
+                            credentials: "same-origin",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+
+                        });
+                    }).then(function (response) {
+                        return response.json();
+                    }).then(function (data) {
+                        if (data['status'] === 'success') {
+                            alert(lang.trips_route_saved_successfully);
+                        } else {
+                            alert(lang.trips_route_saved_error);
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                        alert(lang.trips_route_saved_error);
+                    });
+                }
+            }, this);
+
+            let loadButton = createButton(container, "load");
+            L.DomEvent.on(loadButton, 'click', function () {
+
+                freeze();
+                loadingOverlay.classList.remove('hidden');
+
+                fetch(jsObject.trip_list_routes, {
+                    method: 'GET',
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    let table = routeModal.querySelector("table");
+                    let tbody = table.querySelector("tbody");
+                    tbody.innerHTML = "";
+                    data.forEach(function (val) {
+
+                        let tr = document.createElement("tr");
+
+                        let td_name = document.createElement("td");
+                        td_name.innerHTML = val['name'];
+                        tr.appendChild(td_name);
+
+                        let td_start_date = document.createElement("td");
+                        td_start_date.innerHTML = val['start_date'];
+                        tr.appendChild(td_start_date);
+
+                        let td_route = document.createElement("td");
+                        let a_route = document.createElement("a");
+                        a_route["href"] = "#";
+                        a_route.dataset.route = val['id'];
+                        a_route.classList.add("btn-route");
+                        let span_route = document.createElement("span");
+                        span_route.classList = "fas fa-route fa-lg";
+                        a_route.appendChild(span_route);
+                        td_route.appendChild(a_route);
+                        tr.appendChild(td_route);
+
+                        table.addEventListener('click', function (event) {
+                            let closest = event.target.closest('.btn-route');
+                            if (closest) {
+                                event.preventDefault();
+                                let route = closest.dataset.route;
+                                // get waypoints!
+                                return fetch(jsObject.trip_route_waypoints + "?route=" + route, {
+                                    method: 'GET',
+                                    credentials: "same-origin"
+                                }).then(function (response) {
+                                    return response.json();
+                                }).then(function (data) {
+                                    routeControl.setWaypoints(data["waypoints"]);
+                                    routeModal.classList.remove('visible');
+
+                                    // select the day
+                                    if (data["start_date"]) {
+                                        let dayButton = document.querySelector('.change_day[data-date="' + data["start_date"] + '"]');
+                                        changeDay(dayButton);
+                                    }
+
+                                }).catch(function (error) {
+                                    console.log(error);
+                                });
+                            }
+                        });
+
+                        let td_delete = document.createElement("td");
+                        let a_delete = document.createElement("a");
+                        a_delete["href"] = "#";
+                        a_delete.dataset.url = val['delete'];
+                        a_delete.classList.add("btn-delete");
+                        let span_delete = document.createElement("span");
+                        span_delete.classList = "fas fa-trash fa-lg";
+                        a_delete.appendChild(span_delete);
+                        td_delete.appendChild(a_delete);
+                        tr.appendChild(td_delete);
+
+                        tbody.appendChild(tr);
+                    });
+
+                    var routesTables = new JSTable(table, {
+                        perPage: 10,
+                        labels: tableLabels,
+                        layout: {
+                            top: null,
+                            bottom: "{pager}"
+                        },
+                        columns: [
+                            {
+                                select: 0,
+                                sortable: true,
+                            },
+                            {
+                                select: [1],
+                                render: function (cell, idx) {
+                                    let data = cell.innerHTML;
+                                    return data ? moment(data).format(i18n.dateformatJS.date) : "";
+                                }
+                            },
+                            {
+                                select: [2, 3],
+                                sortable: false,
+                                searchable: false
+                            }
+                        ]
+                    });
+
+                }).catch(function (error) {
+                    console.log(error);
+                }).finally(function () {
+                    routeModal.classList.add('visible');
+                    loadingOverlay.classList.add('hidden');
+                    unfreeze();
+                });
+            }, this);
 
             return container;
         }
@@ -618,3 +767,7 @@ function getDeleteWaypointLink(id, marker, waypoint) {
 
     return deleteBtn;
 }
+
+document.getElementById("modal-close-btn").addEventListener('click', function (e) {
+    routeModal.classList.remove('visible');
+});

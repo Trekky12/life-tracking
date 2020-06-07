@@ -293,6 +293,21 @@ body.trips{
             //left: -3px;
         }
     }
+
+    &.save{
+        float:left!important;
+        &::before{
+            font-weight: 400;
+            content:"\f0c7";
+        }
+    }
+    
+    &.load{
+        float:left!important;
+        &::before{
+            content:"\f277";
+        }
+    }
 }
 
 .leaflet-routing-collapse-btn, .navigation-btn{

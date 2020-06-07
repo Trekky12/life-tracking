@@ -356,6 +356,13 @@ return function (App $app) {
                 $group_waypoint->post('/add', \App\Application\Action\Trips\Waypoint\WaypointSaveAction::class)->setName('trips_add_waypoint');
                 $group_waypoint->delete('/delete', \App\Application\Action\Trips\Waypoint\WaypointDeleteAction::class)->setName('trips_delete_waypoint');
             });
+            
+            $group_trip->group('/route', function(RouteCollectorProxy $group_route) {
+                $group_route->post('/add', \App\Application\Action\Trips\Route\RouteSaveAction::class)->setName('trips_add_route');
+                $group_route->get('/list', \App\Application\Action\Trips\Route\RouteListAction::class)->setName('trips_list_route');
+                $group_route->get('/getWaypoints', \App\Application\Action\Trips\Route\RouteWaypointsAction::class)->setName('trips_route_waypoints');
+                $group_route->delete('/delete/{id}', \App\Application\Action\Trips\Route\RouteDeleteAction::class)->setName('trips_delete_route');
+            });
         });
     });
 

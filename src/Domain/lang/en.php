@@ -487,6 +487,7 @@ $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "timesheets project";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "timesheets sheet";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "trip event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "trip";
+$lang["DATAOBJECT_TRIPS_ROUTE"] = "route";
 $lang["DATAOBJECT_MOBILEFAVORITE"] = "mobile favorite entry";
 $lang["DATAOBJECT_USER"] = "User";
 
@@ -521,5 +522,10 @@ $lang["ENTRY_SAVED_LOCALLY_ERROR"] = "Entry could not be saved locally!";
 $lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"] = "Locally saved entries submitted.";
 $lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"] = "Succesfully submitted";
 $lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"] = "Not submitted";
+
+$lang["TRIPS_ROUTE_NAME_PROMPT"] = "Please enter a name:";
+$lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"] = "Route was saved successfully.";
+$lang["TRIPS_ROUTE_SAVED_ERROR"] = "Route could not be saved.";
+$lang["TRIPS_ROUTES"] = "Routes";
 
 return $lang;

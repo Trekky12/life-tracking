@@ -486,6 +486,7 @@ $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfasungsprojekt";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfasungseintrag";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "Reise-Event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "Reise";
+$lang["DATAOBJECT_TRIPS_ROUTE"] = "Route";
 $lang["DATAOBJECT_MOBILEFAVORITE"] = "Mobiler Favoriteneintrag";
 $lang["DATAOBJECT_USER"] = "Benutzer";
 
@@ -520,5 +521,10 @@ $lang["ENTRY_SAVED_LOCALLY_ERROR"] = "Eintrag konnte nicht lokal gespeichert wer
 $lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"] = "Lokal gespeicherte Einträge wurden übermittelt.";
 $lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"] = "Erfolgreich übermittelt";
 $lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"] = "Nicht übermittelt";
+
+$lang["TRIPS_ROUTE_NAME_PROMPT"] = "Bitte einen Namen eingeben:";
+$lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"] = "Route wurde erfolgreich gespeichert.";
+$lang["TRIPS_ROUTE_SAVED_ERROR"] = "Route konnte nicht gespeichert werden.";
+$lang["TRIPS_ROUTES"] = "Routen";
         
 return $lang;
