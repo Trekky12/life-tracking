@@ -58,7 +58,7 @@ class NotificationClientsService extends Service {
             return $client;
         } catch (\Exception $e) {
             // No Entry found so create one
-            $this->logger->addWarning('Subscription not on server but on client', $client->endpoint);
+            $this->logger->warning('Subscription not on server but on client', $client->endpoint);
             //$this->mapper->insert($client);
         }
         return null;
@@ -101,7 +101,7 @@ class NotificationClientsService extends Service {
     public function create($data) {
         $result = ['status' => 'error'];
         $entry = $this->createSubscription($data);
-        $this->logger->addInfo('Subscription insert', $entry->get_fields());
+        $this->logger->info('Subscription insert', $entry->get_fields());
 
         $result['status'] = 'success';
         return new Payload(Payload::$RESULT_JSON, $result);
@@ -120,7 +120,7 @@ class NotificationClientsService extends Service {
     public function delete($data) {
         $result = ['status' => 'error'];
         $entry = $this->deleteSubscription($data);
-        $this->logger->addInfo('Subscription delete', $entry->get_fields());
+        $this->logger->info('Subscription delete', $entry->get_fields());
 
         $result['status'] = 'success';
         return new Payload(Payload::$RESULT_JSON, $result);

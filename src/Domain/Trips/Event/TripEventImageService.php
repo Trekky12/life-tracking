@@ -39,7 +39,7 @@ class TripEventImageService {
 
         $this->mapper->update_image($event->id, null);
         
-        $this->logger->addNotice("Delete Event Image", array("id" => $event_id));
+        $this->logger->notice("Delete Event Image", array("id" => $event_id));
         
         return new Payload(Payload::$STATUS_DELETE_SUCCESS);
     }
@@ -48,7 +48,7 @@ class TripEventImageService {
         $event = $this->mapper->get($event_id);
 
         if (!array_key_exists('image', $files) || empty($files['image'])) {
-            $this->logger->addError("Update Event Image, Image Error", array("id" => $event_id, "files" => $files));
+            $this->logger->error("Update Event Image, Image Error", array("id" => $event_id, "files" => $files));
             return new Payload(Payload::$STATUS_ERROR, "No File");
         }
 
@@ -81,13 +81,13 @@ class TripEventImageService {
 
             $thumbnail = "/" . $this->getEventImagePath() . $file_name . '-small.' . $file_extension;
 
-            $this->logger->addNotice("Update Event Image, Image Set", array("id" => $event_id, "image" => $image->getClientFilename()));
+            $this->logger->notice("Update Event Image, Image Set", array("id" => $event_id, "image" => $image->getClientFilename()));
 
             $payload = new Payload(Payload::$STATUS_UPDATE);
             return $payload->withAdditionalData(["thumbnail" => $thumbnail]);
         }
 
-        $this->logger->addNotice("Update Event Image, No File", array("id" => $event_id));
+        $this->logger->notice("Update Event Image, No File", array("id" => $event_id));
         return new Payload(Payload::$STATUS_ERROR, "No File");
     }
 

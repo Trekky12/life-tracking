@@ -56,7 +56,7 @@ class UserWriter extends ObjectActivityWriter {
             if ($user->force_pw_change == 1) {
                 $variables["content"] .= '<br/>&nbsp;<br/>&nbsp;' . $this->translation->getTranslatedString('MAIL_FORCE_CHANGE_PASSWORD');
             }
-            $this->logger->addInfo("Notify new user via mail", ["subject" => $subject, "var" => $variables]);
+            $this->logger->info("Notify new user via mail", ["subject" => $subject, "var" => $variables]);
 
             $this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
         }

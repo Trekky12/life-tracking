@@ -79,7 +79,7 @@ class CrawlerDatasetWriter extends ObjectWriter {
 
             return true;
         } catch (\Exception $e) {
-            $this->logger->addError("Record Crawler Dataset Error", array("error" => $e->getMessage()));
+            $this->logger->error("Record Crawler Dataset Error", array("error" => $e->getMessage()));
             return $e->getMessage();
         }
     }

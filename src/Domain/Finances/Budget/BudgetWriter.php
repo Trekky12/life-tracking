@@ -46,7 +46,7 @@ class BudgetWriter extends ObjectActivityWriter {
                 $this->mapper->addCategoriesToBudget($id, $categories);
             }
         } catch (\Exception $e) {
-            $this->logger->addError("Error while saving categories at budget", array("data" => $id, "error" => $e->getMessage()));
+            $this->logger->error("Error while saving categories at budget", array("data" => $id, "error" => $e->getMessage()));
         }
     }
 

@@ -27,7 +27,7 @@ class CrawlerHeaderService extends Service {
             $clone->id = null;
             $id = $this->mapper->insert($clone);
 
-            $this->logger->addNotice("Duplicate crawler headline", array("from" => $target->id, "to" => $destination->id, "fromID" => $fromID, "toID" => $id));
+            $this->logger->notice("Duplicate crawler headline", array("from" => $target->id, "to" => $destination->id, "fromID" => $fromID, "toID" => $id));
         }
     }
 

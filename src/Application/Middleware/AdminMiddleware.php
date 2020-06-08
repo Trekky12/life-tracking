@@ -33,7 +33,7 @@ class AdminMiddleware {
             return $handler->handle($request);
         }
 
-        $this->logger->addWarning("No Admin");
+        $this->logger->warning("No Admin");
 
         $response = new Response();
         return $this->twig->render($response, 'error.twig', ['message' => $this->translation->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);

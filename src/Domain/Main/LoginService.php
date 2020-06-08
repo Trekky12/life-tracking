@@ -56,7 +56,7 @@ class LoginService {
             try {
                 $user_id = $this->token_service->getUserFromToken($token);
             } catch (\Exception $e) {
-                $this->logger->addError("No Token in database");
+                $this->logger->error("No Token in database");
 
                 return false;
             }
@@ -82,7 +82,7 @@ class LoginService {
     }
 
     public function removeToken($token) {
-        $this->logger->addNotice('LOGOUT');
+        $this->logger->notice('LOGOUT');
         return $this->token_service->removeToken($token);
     }
 
@@ -106,16 +106,16 @@ class LoginService {
                     $this->twig->getEnvironment()->addGlobal("user", $user);
                     $this->banlist_service->deleteFailedLoginAttempts(Utility::getIP());
 
-                    $this->logger->addNotice('LOGIN successfully', array("login" => $username));
+                    $this->logger->notice('LOGIN successfully', array("login" => $username));
 
                     return true;
                 }
             } catch (\Exception $e) {
-                $this->logger->addError('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
+                $this->logger->error('Login FAILED / User not found', array('user' => $username, 'error' => $e->getMessage()));
             }
 
             // wrong login!
-            $this->logger->addWarning('Login WRONG', array("login" => $username));
+            $this->logger->warning('Login WRONG', array("login" => $username));
 
             /**
              * Log failed login to database

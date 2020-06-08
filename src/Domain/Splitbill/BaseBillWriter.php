@@ -67,7 +67,7 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
 
         // floating point comparison
         if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
-            $this->logger->addInfo('Add balance for bill', array("bill" => $bill->id, "balances" => $balances));
+            $this->logger->info('Add balance for bill', array("bill" => $bill->id, "balances" => $balances));
 
             foreach ($balances as $balance) {
                 $this->getMapper()->addOrUpdateBalance($bill->id, $balance["user"], $balance["paid"], $balance["spend"], $balance["paymethod"], $balance["paid_foreign"], $balance["spend_foreign"]);
@@ -78,13 +78,13 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
                 $this->getMapper()->deleteBalanceofUser($bill->id, $ru);
             }
         } else if ($totalValue > 0) {
-            $this->logger->addError('Balance for bill wrong', array("bill" => $bill, "data" => $data));
+            $this->logger->error('Balance for bill wrong', array("bill" => $bill, "data" => $data));
 
             // there was an error with the balance, so delete the bill
             $has_balance = count($existing_balance) > 0;
             // delete the bill only when there are no existing balance entries (new bill)
             if (!$has_balance) {
-                $this->logger->addWarning('delete bill', array("bill" => $bill, "data" => $data));
+                $this->logger->warning('delete bill', array("bill" => $bill, "data" => $data));
                 $this->getMapper()->delete($bill->id);
             }
 

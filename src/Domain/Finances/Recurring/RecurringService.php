@@ -54,7 +54,7 @@ class RecurringService extends Service {
             $categories = filter_var_array($category, FILTER_SANITIZE_NUMBER_INT);
             $sum = $this->getSumOfCategories($categories);
         } catch (\Exception $e) {
-            $this->logger->addError("Get Category Costs", array("data" => $category, "error" => $e->getMessage()));
+            $this->logger->error("Get Category Costs", array("data" => $category, "error" => $e->getMessage()));
 
             $response_data = ['status' => 'error', "error" => $e->getMessage()];
             return new Payload(Payload::$RESULT_JSON, $response_data);

@@ -12,21 +12,20 @@
     "require": {
         "php": ">=7.1",
         "slim/slim": "4.*",
-        "slim/psr7": "^0.6.0",
+        "slim/psr7": "^1.1.0",
         "slim/http": "^1.0",
-        "slim/twig-view": "3.0.0",
+        "slim/twig-view": "^3.0.0",
         "slim/csrf": "^1.0",
         "slim/flash": "^0.4.0",
         "php-di/php-di": "^6.0",
-        "dflydev/fig-cookies": "^1.0",
+        "dflydev/fig-cookies": "^2.0",
         "twig/twig": "^3.0",
-        "monolog/monolog": "^1.25",
-        "ddtraceweb/monolog-parser": "^1.2",
+        "monolog/monolog": "^2.1",
         "phpmailer/phpmailer": "^6.1",
         "intervention/image": "^2.5",
         "michelf/php-markdown": "^1.8",
         "minishlink/web-push": "^5.2",
-        "hashids/hashids": "^3.0",
+        "hashids/hashids": "^4.0",
         "phpoffice/phpspreadsheet": "^1.9"
     },
     "autoload": {
@@ -35,7 +34,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "8",
+        "phpunit/phpunit": "^9",
         "guzzlehttp/guzzle": "^6.5"
     },
     "autoload-dev": {

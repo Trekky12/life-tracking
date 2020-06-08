@@ -64,7 +64,7 @@ class Helper {
 
             return array($status_code, $result);
         } catch (Exception $e) {
-            $this->logger->addError("CURL", array("URL" => $URL, "method" => $method, "data" => $data, "error" => $e->getMessage()));
+            $this->logger->error("CURL", array("URL" => $URL, "method" => $method, "data" => $data, "error" => $e->getMessage()));
 
             print $e->getMessage();
         }

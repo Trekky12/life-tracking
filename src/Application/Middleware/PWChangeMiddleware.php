@@ -43,7 +43,7 @@ class PWChangeMiddleware {
             return $handler->handle($request);
         }
 
-        $this->logger->addWarning("Passwort Change required");
+        $this->logger->warning("Passwort Change required");
 
         $response = new Response();
         return $response->withHeader('Location', $this->router->urlFor('users_change_password'))->withStatus(302);

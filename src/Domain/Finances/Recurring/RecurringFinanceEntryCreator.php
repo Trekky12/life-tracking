@@ -23,7 +23,7 @@ class RecurringFinanceEntryCreator {
         $mentries = $this->mapper->getRecurringEntries();
 
         if ($mentries) {
-            $this->logger->addDebug('Recurring Entries', $mentries);
+            $this->logger->debug('Recurring Entries', $mentries);
 
             foreach ($mentries as $mentry) {
                 $this->createElement($mentry);

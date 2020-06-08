@@ -37,7 +37,7 @@ class RecurringBillEntryCreator {
         $bills = $this->mapper->getRecurringEntries();
 
         if ($bills) {
-            $this->logger->addDebug('Recurring Bills', $bills);
+            $this->logger->debug('Recurring Bills', $bills);
 
             $groups = $this->group_mapper->getAll();
 
@@ -89,7 +89,7 @@ class RecurringBillEntryCreator {
             'balance' => $balances
         ];
 
-        $this->logger->addDebug('Recurring Bills Bill Data', array("bill" => $bill->id, "data" => $data));
+        $this->logger->debug('Recurring Bills Bill Data', array("bill" => $bill->id, "data" => $data));
 
         $this->bill_writer->save(null, $data, ["group" => $group->getHash()]);
         

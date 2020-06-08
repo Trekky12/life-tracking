@@ -98,7 +98,7 @@ abstract class ObjectWriter {
         $entry = $this->createEntry($data, $for_user);
 
         if ($entry->hasParsingErrors()) {
-            $this->logger->addError("Insert failed " . get_class($entry), array("message" => $entry->getParsingErrors()[0]));
+            $this->logger->error("Insert failed " . get_class($entry), array("message" => $entry->getParsingErrors()[0]));
             return new Payload(Payload::$STATUS_PARSING_ERRORS, $entry);
         }
 
@@ -108,20 +108,20 @@ abstract class ObjectWriter {
             // get the created entry
             $entry = $this->getMapper()->get($id);
 
-            $this->logger->addNotice("Insert Entry " . get_class($entry), array("id" => $entry->id));
+            $this->logger->notice("Insert Entry " . get_class($entry), array("id" => $entry->id));
 
             return new Payload(Payload::$STATUS_NEW, $entry, $data);
         }
         // update
         $update = $this->updateEntry($entry);
         if ($update) {
-            $this->logger->addNotice("Update Entry " . get_class($entry), array("id" => $entry->id));
+            $this->logger->notice("Update Entry " . get_class($entry), array("id" => $entry->id));
             return new Payload(Payload::$STATUS_UPDATE, $entry);
         } else {
-            $this->logger->addNotice("No Update of Entry " . get_class($entry), array("id" => $entry->id));
+            $this->logger->notice("No Update of Entry " . get_class($entry), array("id" => $entry->id));
             return new Payload(Payload::$STATUS_NO_UPDATE, $entry);
         }
-        $this->logger->addError("Error while inserting entry " . get_class($entry), array("entry" => $entry));
+        $this->logger->error("Error while inserting entry " . get_class($entry), array("entry" => $entry));
 
         return new Payload(Payload::$STATUS_ERROR, $entry);
     }

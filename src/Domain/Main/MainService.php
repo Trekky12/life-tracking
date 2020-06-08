@@ -50,7 +50,7 @@ class MainService extends Service {
     }
 
     public function cron(): Payload {
-        $this->logger->addInfo('Running CRON');
+        $this->logger->info('Running CRON');
 
         $lastRunRecurring = $this->settings_mapper->getSetting("lastRunRecurring");
         $lastRunFinanceSummary = $this->settings_mapper->getSetting("lastRunFinanceSummary");
@@ -61,7 +61,7 @@ class MainService extends Service {
 
         // Update recurring finances @ 06:00
         if ($date->format("H") === "06" && $lastRunRecurring->getDayDiff() > 0) {
-            $this->logger->addNotice('CRON - Update Finances');
+            $this->logger->notice('CRON - Update Finances');
 
             $this->finances_entry_creator->update();
             $this->settings_mapper->updateLastRun("lastRunRecurring");
@@ -69,7 +69,7 @@ class MainService extends Service {
 
         // Is first of month @ 08:00? Send Finance Summary
         if ($date->format("d") === "01" && $date->format("H") === "08" && $lastRunFinanceSummary->getDayDiff() > 0) {
-            $this->logger->addNotice('CRON - Send Finance Summary');
+            $this->logger->notice('CRON - Send Finance Summary');
 
             $this->finance_stats_monthly_mail_service->sendSummary();
             $this->settings_mapper->updateLastRun("lastRunFinanceSummary");
@@ -77,17 +77,17 @@ class MainService extends Service {
 
         // card reminder @ 09:00
         if ($date->format("H") === "09" && $lastRunCardReminder->getDayDiff() > 0) {
-            $this->logger->addNotice('CRON - Send Card Reminder');
+            $this->logger->notice('CRON - Send Card Reminder');
 
             $this->card_mail_service->sendReminder();
             $this->settings_mapper->updateLastRun("lastRunCardReminder");
 
 //            $this->token_service->deleteOldTokens();
         }
-        
+
         // Update recurring splitted bills @ 06:00
         if ($date->format("H") === "06" && $lastRunRecurringSplitbills->getDayDiff() > 0) {
-            $this->logger->addNotice('CRON - Update Splitted Bills');
+            $this->logger->notice('CRON - Update Splitted Bills');
 
             $this->bill_entry_creator->update();
             $this->settings_mapper->updateLastRun("lastRunRecurringSplitbills");
@@ -97,25 +97,22 @@ class MainService extends Service {
 
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
-    
+
     public function getLogfileOverview($days) {
         return new Payload(Payload::$RESULT_HTML, ["days" => $days]);
     }
 
     public function getLogfile($days) {
-        $reader = new LogReader($this->settings->all()['logger']['path'], $days);
+        $file = new \SplFileObject($this->settings->all()['logger']['path'], 'r');
 
-        /**
-         * We have a minus in the logger-name so we need a custom pattern
-         */
-        //$pattern = '/\[(?P<date>.*)\] (?P<logger>[\w\-]+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
         $pattern = '/\[(?P<date>.*)\] (?P<logger>[\w\-]+).(?P<level>\w+): (?P<message>[^\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
-        $reader->getParser()->registerPattern('life-tracking', $pattern);
-        $reader->setPattern('life-tracking');
 
         $logfile = array();
 
-        foreach ($reader as $log) {
+        while (!$file->eof()) {
+
+            $logline = $file->current();
+            $log = $this->parseLogLine($logline, $days, $pattern);
 
             // do not show datatable queries
             if (!empty($log)) {
@@ -152,9 +149,52 @@ class MainService extends Service {
 
                 array_push($logfile, $line);
             }
+            $file->next();
         }
 
         return new Payload(Payload::$RESULT_HTML, ["logfile" => $logfile]);
+    }
+
+    private function parseLogLine($log, $days, $pattern) {
+        if (!is_string($log) || strlen($log) === 0) {
+            return array();
+        }
+
+        $data = [];
+        preg_match($pattern, $log, $data);
+
+        if (!isset($data['date'])) {
+            return array();
+        }
+
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $data['date']);
+        // try monolog 2 date format
+        if (!$date) {
+            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $data['date']);
+        }
+
+        $array = array(
+            'date' => $date,
+            'logger' => $data['logger'],
+            'level' => $data['level'],
+            'message' => $data['message'],
+            'context' => json_decode($data['context'], true),
+            'extra' => json_decode($data['extra'], true)
+        );
+
+        if (0 === $days) {
+            return $array;
+        }
+
+        if (isset($date) && $date instanceof \DateTime) {
+            $d2 = new \DateTime('now');
+
+            if ($date->diff($d2)->days < $days) {
+                return $array;
+            } else {
+                return array();
+            }
+        }
     }
 
     public function getCSRFTokens($count) {

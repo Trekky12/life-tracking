@@ -90,7 +90,7 @@ class ProfileService extends Service {
         $new_password2 = array_key_exists('newpassword2', $data) ? filter_var($data['newpassword2'], FILTER_SANITIZE_STRING) : null;
 
         if (!$this->user_service->comparePasswords($old_password, $new_password1, $new_password2)) {
-            $this->logger->addWarning("Update Password Failed, Passwords missmatch");
+            $this->logger->warning("Update Password Failed, Passwords missmatch");
             return new Payload(Payload::$STATUS_PASSWORD_MISSMATCH);
         }
 
@@ -99,7 +99,7 @@ class ProfileService extends Service {
          * Verify old password
          */
         if (!$this->user_service->verifyPassword($old_password)) {
-            $this->logger->addWarning("Update Password Failed, Old Password Wrong");
+            $this->logger->warning("Update Password Failed, Old Password Wrong");
             return new Payload(Payload::$STATUS_PASSWORD_WRONG);
         }
 
@@ -107,7 +107,7 @@ class ProfileService extends Service {
          * Update Password
          */
         $this->user_service->updatePassword($new_password1);
-        $this->logger->addInfo("Update Password Success");
+        $this->logger->info("Update Password Success");
         return new Payload(Payload::$STATUS_PASSWORD_SUCCESS);
     }
 
@@ -117,10 +117,10 @@ class ProfileService extends Service {
 
     public function updateUser($data) {
         if ($this->user_service->updateUser($data)) {
-            $this->logger->addNotice("Update Profile");
+            $this->logger->notice("Update Profile");
             return new Payload(Payload::$STATUS_UPDATE);
         } else {
-            $this->logger->addNotice("No Update of Profile", array("id" => $user->id));
+            $this->logger->notice("No Update of Profile", array("id" => $user->id));
             return new Payload(Payload::$STATUS_NO_UPDATE);
         }
     }
@@ -136,7 +136,7 @@ class ProfileService extends Service {
         $delete = array_key_exists("delete_image", $data) ? intval(filter_var($data["delete_image"], FILTER_SANITIZE_NUMBER_INT)) == 1 : false;
         if ($delete) {
             $this->deleteImage();
-            $this->logger->addNotice("Remove profile image");
+            $this->logger->notice("Remove profile image");
             return new Payload(Payload::$STATUS_PROFILE_IMAGE_DELETED);
         }
 
@@ -144,7 +144,7 @@ class ProfileService extends Service {
          * Update Image
          */
         if (!array_key_exists('image', $files) || empty($files['image'])) {
-            $this->logger->addError("Update Profile Image, Image Error", array("files" => $files));
+            $this->logger->error("Update Profile Image, Image Error", array("files" => $files));
             return new Payload(Payload::$STATUS_PROFILE_IMAGE_ERROR);
         }
 
@@ -153,10 +153,10 @@ class ProfileService extends Service {
         $upload = $this->saveImage($image);
 
         if ($upload) {
-            $this->logger->addNotice("Update Profile Image, Image Set", array("image" => $image->getClientFilename()));
+            $this->logger->notice("Update Profile Image, Image Set", array("image" => $image->getClientFilename()));
             return new Payload(Payload::$STATUS_PROFILE_IMAGE_SET);
         } else {
-            $this->logger->addError("Update Profile Image, Image Error", array("files" => $files));
+            $this->logger->error("Update Profile Image, Image Error", array("files" => $files));
             return new Payload(Payload::$STATUS_PROFILE_IMAGE_ERROR);
         }
     }

@@ -34,7 +34,7 @@ class BanlistMiddleware {
         $isBlocked = $this->banlist_service->isBlocked(Utility::getIP());
 
         if ($isBlocked) {
-            $this->logger->addWarning('BANNED');
+            $this->logger->warning('BANNED');
             $response = new Response();
             return $this->twig->render($response, 'error.twig', ["message" => $this->translation->getTranslatedString("BANNED"), "message_type" => "danger"]);
         }

@@ -99,7 +99,7 @@ class CardWriter extends ObjectActivityWriter {
 
             $this->label_service->addLabelsToCard($id, $filtered_labels);
         } catch (\Exception $e) {
-            $this->logger->addError("After Card Save", array("data" => $id, "error" => $e->getMessage()));
+            $this->logger->error("After Card Save", array("data" => $id, "error" => $e->getMessage()));
         }
     }
     

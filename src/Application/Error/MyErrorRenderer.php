@@ -20,11 +20,11 @@ class MyErrorRenderer implements \Slim\Interfaces\ErrorRendererInterface {
 
     public function __invoke(\Throwable $exception, bool $displayErrorDetails): string {
         if ($exception instanceof \Slim\Exception\HttpNotFoundException) {
-            $this->logger->addWarning("Page not found");
+            $this->logger->warning("Page not found");
 
             return $this->twig->fetch('error.twig', ['message' => $this->translation->getTranslatedString("NOTFOUND"), 'message_type' => 'danger']);
         } elseif ($exception instanceof \Slim\Exception\HttpNotAllowedException) {
-            $this->logger->addWarning("Page not allowed");
+            $this->logger->warning("Page not allowed");
 
             return $this->twig->fetch('error.twig', ['message' => $this->translation->getTranslatedString("NO_ACCESS"), 'message_type' => 'danger']);
         }
@@ -33,7 +33,7 @@ class MyErrorRenderer implements \Slim\Interfaces\ErrorRendererInterface {
             return json_encode(["status" => "error", "error" => $exception->getMessage()]);
         }
 
-        $this->logger->addCritical($exception->getMessage());
+        $this->logger->critical($exception->getMessage());
 
         return $this->twig->fetch('error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);
     }

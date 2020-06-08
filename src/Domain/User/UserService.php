@@ -99,7 +99,7 @@ class UserService extends Service {
             );
 
 
-            $this->logger->addInfo("Send test mail");
+            $this->logger->info("Send test mail");
 
             $return = $this->helper->send_mail('mail/general.twig', $entry->mail, $subject, $variables);
 

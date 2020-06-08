@@ -106,7 +106,7 @@ class NotificationsService extends Service {
                 $id = $this->mapper->insert($notification);
             }
         } catch (\Exception $e) {
-            $this->logger->addError("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
+            $this->logger->error("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
         }
     }
 
@@ -130,7 +130,7 @@ class NotificationsService extends Service {
                 $id = $this->mapper->insert($notification);
             }
         } catch (\Exception $e) {
-            $this->logger->addError("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
+            $this->logger->error("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
         }
     }
 
@@ -164,7 +164,7 @@ class NotificationsService extends Service {
             "data" => $data
         ];
 
-        $this->logger->addInfo('PUSH', array("notification" => $notification));
+        $this->logger->info('PUSH', array("notification" => $notification));
 
         $webPush = new WebPush($auth);
         $options = [
@@ -175,7 +175,7 @@ class NotificationsService extends Service {
 
         foreach ($res as $report) {
             if ($report->isSuccess()) {
-                $this->logger->addInfo('[PUSH] Message sent successfully', array("endpoint" => $report->getEndpoint()));
+                $this->logger->info('[PUSH] Message sent successfully', array("endpoint" => $report->getEndpoint()));
             } else {
                 $data = [
                     "reason" => $report->getReason(),
@@ -183,15 +183,15 @@ class NotificationsService extends Service {
                     "response" => $report->getResponse(),
                     "expired" => $report->isSubscriptionExpired()
                 ];
-                $this->logger->addError('[PUSH] Message failed to sent', $data);
+                $this->logger->error('[PUSH] Message failed to sent', $data);
 
                 if ($report->isSubscriptionExpired()) {
                     $this->client_service->deleteClient($entry->id);
-                    $this->logger->addError('[PUSH] Remove expired endpoint', array("id" => $entry->id, "endpoint" => $report->getEndpoint()));
+                    $this->logger->error('[PUSH] Remove expired endpoint', array("id" => $entry->id, "endpoint" => $report->getEndpoint()));
                 }
             }
         }
-        //$this->logger->addError('[PUSH] Result', ["data" => $report]);
+        //$this->logger->error('[PUSH] Result', ["data" => $report]);
 
         return $report;
     }

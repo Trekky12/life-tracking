@@ -63,7 +63,7 @@ class UserMiddleware {
 
         // user is logged in, redirect to next middleware
         if (!is_null($user)) {
-            $this->logger->addDebug('Site CALL');
+            $this->logger->debug('Site CALL');
             return $handler->handle($request);
         }
         // Check for HTTP Authentication
@@ -88,16 +88,16 @@ class UserMiddleware {
             }
 
             if (!is_null($username) && !is_null($password)) {
-                $this->logger->addDebug('HTTP Auth', array("user" => $username));
+                $this->logger->debug('HTTP Auth', array("user" => $username));
                 if ($this->login_service->checkLogin($username, $password)) {
                     return $handler->handle($request);
                 }
 
-                $this->logger->addWarning('HTTP Auth failed', array("user" => $username));
+                $this->logger->warning('HTTP Auth failed', array("user" => $username));
             }
         }
 
-        $this->logger->addDebug('Go to Login');
+        $this->logger->debug('Go to Login');
 
         /**
          * Save target URI for later redirect

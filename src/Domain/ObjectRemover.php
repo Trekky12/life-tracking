@@ -38,15 +38,15 @@ abstract class ObjectRemover {
             $is_deleted = $this->deleteEntry($id, $for_user);
 
             if ($is_deleted) {
-                $this->logger->addNotice("Delete successfully " . $this->getMapper()->getDataObject(), array("id" => $id));
+                $this->logger->notice("Delete successfully " . $this->getMapper()->getDataObject(), array("id" => $id));
                 return new Payload(Payload::$STATUS_DELETE_SUCCESS, $error);
             } else {
-                $this->logger->addError("Delete failed " . $this->getMapper()->getDataObject(), array("id" => $id));
+                $this->logger->error("Delete failed " . $this->getMapper()->getDataObject(), array("id" => $id));
                 return new Payload(Payload::$STATUS_DELETE_ERROR, $error);
             }
         } catch (\Exception $e) {
             $error = $e->getMessage();
-            $this->logger->addError("Delete failed " . $this->getMapper()->getDataObject(), array("id" => $id, "error" => $e->getMessage()));
+            $this->logger->error("Delete failed " . $this->getMapper()->getDataObject(), array("id" => $id, "error" => $e->getMessage()));
         }
         return new Payload(Payload::$STATUS_ERROR, $error);
     }

@@ -131,7 +131,7 @@ return [
             $pdo->exec("set names utf8");
             return $pdo;
         } catch (\PDOException $e) {
-            $logger->addCritical($e->getMessage());
+            $logger->critical($e->getMessage());
             die("No access to database");
         }
     },
@@ -159,7 +159,7 @@ return [
                     }
 
                     $logger = $container->get(LoggerInterface::class);
-                    $logger->addCritical("Failed CSRF check");
+                    $logger->critical("Failed CSRF check");
 
                     $response = new Response();
                     $response->getBody()->write('Failed CSRF check!');
