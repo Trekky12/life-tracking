@@ -32,7 +32,7 @@
 
                 <div class="form-group">
                     <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" required class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
 
                 <h3>{{lang["START"]}}</h3>

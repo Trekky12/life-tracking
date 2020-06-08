@@ -400,6 +400,7 @@ $lang["EVENT_TYPE_FLIGHT"] = "flight";
 $lang["EVENT_TYPE_DRIVE"] = "car drive";
 $lang["EVENT_TYPE_TRAINRIDE"] = "train ride";
 $lang["EVENT_TYPE_CARRENTAL"] = "car rental";
+$lang["EVENT_TYPE_WAYPOINT"] = "waypoint";
 
 $lang["START_ADDRESS"] = "start address";
 $lang["END_ADDRESS"] = "destination address";
