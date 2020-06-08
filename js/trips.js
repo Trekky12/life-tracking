@@ -557,7 +557,7 @@ function initMap() {
                     let marker = L.marker(wp.latLng, options);
                     let popup = document.createElement("div");
                     let navigationBtn = getAddToRouteLink(marker);
-                    let saveBtn = saveWaypointLink(marker);
+                    let saveBtn = saveWaypointLink(marker, wp);
                     let deleteBtn = getDeleteWaypointLink(null, marker, false);
                     popup.appendChild(navigationBtn);
                     popup.appendChild(document.createElement("br"));
@@ -701,15 +701,21 @@ function getAddToRouteLink(marker) {
     return navigationBtn;
 }
 
-function saveWaypointLink(marker) {
+function saveWaypointLink(marker, waypoint) {
     let saveBtn = document.createElement("a");
     saveBtn.classList.add("navigation-btn");
     saveBtn.innerHTML = lang.trips_waypoint_save;
 
     saveBtn.addEventListener("click", function () {
+
         // Create new Waypoint
         getCSRFToken().then(function (token) {
             let data = {'start_lat': marker.getLatLng().lat, 'start_lng': marker.getLatLng().lng, 'type': 'WAYPOINT', 'start_date': fromInput.value, 'end_date': toInput.value};
+
+            if (waypoint.name) {
+                data['start_address'] = waypoint.name;
+            }
+
             data['csrf_name'] = token.csrf_name;
             data['csrf_value'] = token.csrf_value;
 
@@ -783,7 +789,7 @@ function getDeleteWaypointLink(id, marker, isSaved = false) {
         let waypoint_pos = null;
         let waypoint_idx = 0;
         routeControl.getWaypoints().forEach(function (wp) {
-            if (wp.latLng.lat === marker.getLatLng().lat && wp.latLng.lng === marker.getLatLng().lng) {
+            if (wp.latLng && wp.latLng.lat === marker.getLatLng().lat && wp.latLng.lng === marker.getLatLng().lng) {
                 waypoint_pos = waypoint_idx;
             }
             waypoint_idx++;

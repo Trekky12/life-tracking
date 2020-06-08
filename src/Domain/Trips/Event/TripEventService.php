@@ -43,7 +43,7 @@ class TripEventService extends Service {
     private function getTripEvents($trip, $from, $to) {
 
         // always show all events (hide the one not in range)
-        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time, position");
+        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time, position", true);
 
         list($min, $max) = $this->mapper->getMinMaxEventsDate($trip->id);
 
@@ -95,6 +95,9 @@ class TripEventService extends Service {
         $toTranslation = $this->translation->getTranslatedString("TO");
 
         foreach ($events as $ev) {
+            
+            // create Popup
+            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
 
             if (empty($ev->start_date) && empty($ev->end_date)) {
                 $dateRange["all"]["events"][] = $ev;
@@ -116,9 +119,6 @@ class TripEventService extends Service {
 
                 $dateRange[$datekey]["events"][] = $ev;
             }
-
-            // create Popup
-            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
         }
 
         $mapbox_token = $this->settings->getAppSettings()['mapbox_token'];

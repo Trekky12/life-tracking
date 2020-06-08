@@ -12,6 +12,8 @@
             <i class="fas fa-2x fa-car"></i>
         {% elseif event.isEvent() %}
             <i class="fas fa-2x fa-calendar-alt"></i>
+        {% elseif event.isWaypoint() %}
+            <i class="fas fa-2x fa-map-marker-alt"></i>
         {% endif %}
     </div>
     <div class="text">
