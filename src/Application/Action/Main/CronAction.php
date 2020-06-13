@@ -4,7 +4,7 @@ namespace App\Application\Action\Main;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Domain\Main\MainService;
+use App\Domain\Main\CronService;
 use App\Application\Responder\JSONResultResponder;
 
 class CronAction {
@@ -12,7 +12,7 @@ class CronAction {
     private $responder;
     private $service;
 
-    public function __construct(JSONResultResponder $responder, MainService $service) {
+    public function __construct(JSONResultResponder $responder, CronService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

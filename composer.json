@@ -26,7 +26,8 @@
         "michelf/php-markdown": "^1.8",
         "minishlink/web-push": "^5.2",
         "hashids/hashids": "^4.0",
-        "phpoffice/phpspreadsheet": "^1.9"
+        "phpoffice/phpspreadsheet": "^1.9",
+        "symfony/console": "^5.1"
     },
     "autoload": {
         "psr-4": {

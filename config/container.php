@@ -139,6 +139,10 @@ return [
      * Flash Messages
      */
     Flash::class => function () {
+        if (PHP_SAPI === 'cli') {
+            $storage = [];
+            return new \Slim\Flash\Messages($storage);
+        }
         return new \Slim\Flash\Messages();
     },
     /**
@@ -146,7 +150,12 @@ return [
      */
     CSRF::class => function (ContainerInterface $container) {
         $responseFactory = $container->get(App::class)->getResponseFactory();
-        $guard = new \Slim\Csrf\Guard($responseFactory);
+        if (PHP_SAPI === 'cli') {
+            $storage = [];
+            $guard = new \Slim\Csrf\Guard($responseFactory, 'csrf', $storage);
+        } else {
+            $guard = new \Slim\Csrf\Guard($responseFactory);
+        }
         $guard->setStorageLimit(10);
         $guard->setFailureHandler(function (Request $request, RequestHandler $handler) use($container): ResponseInterface {
 
