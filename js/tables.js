@@ -52,15 +52,13 @@ var financeTable = new JSTable("#finance_table", {
  });*/
 
 financeTable.on("fetchData", function (data) {
-    this.table.getFooterRow().setCellContent(5, null);
-    //if (data.recordsFiltered < data.recordsTotal) {
-    this.table.getFooterRow().setCellContent(5, Math.abs(data.sum) + " " + i18n.currency);
+    let footer = document.querySelector("#finance_table tfoot tr th:nth-child(6)");
+    footer.innerHTML = Math.abs(data.sum) + " " + i18n.currency;
     if (data.sum > 0) {
-        this.table.getFooterRow().setCellClass(5, "negative");
+        footer.className = "negative";
     } else {
-        this.table.getFooterRow().setCellClass(5, "positive");
+        footer.className = "positive";
     }
-    //}
 });
 
 financeTable.on("perPageChange", function (old_value, new_value) {
@@ -651,7 +649,7 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
             }
         },
         {
-            select: [5,6],
+            select: [5, 6],
             render: function (cell, idx) {
                 let data = cell.innerHTML;
                 return data ? moment(data).format(i18n.dateformatJS.date) : "";
