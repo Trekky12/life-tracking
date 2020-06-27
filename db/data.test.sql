@@ -131,3 +131,8 @@ INSERT INTO global_banlist (id, ip, username) VALUES
 (1, '127.0.0.2', 'user2'), 
 (2, '127.0.0.2', 'user2'),
 (3, '127.0.0.2', 'user2');
+
+INSERT INTO global_users_application_passwords (id, user, name, password) VALUES
+(1, 1, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S'),
+(2, 2, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S'),
+(3, 3, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S');

@@ -8,14 +8,6 @@ class MemberTest extends CrawlerTestBase {
 
     protected $uri_child_record = "/api/crawlers/record";
 
-    protected function setUp(): void {
-        $this->login("user", "user");
-    }
-
-    protected function tearDown(): void {
-        $this->logout();
-    }
-
     public function testPostAddElement() {
 
         $data = [
@@ -28,7 +20,7 @@ class MemberTest extends CrawlerTestBase {
             'crawler' => $this->TEST_CRAWLER_HASH
         ];
 
-        $response = $this->request('POST', $this->uri_child_record, $data);
+        $response = $this->request('POST', $this->uri_child_record, $data, ['user' => 'user', 'pass' => 'application']);
 
         $body = (string) $response->getBody();
         

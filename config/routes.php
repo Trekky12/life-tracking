@@ -158,6 +158,13 @@ return function (App $app) {
 
         $group->get('/activity', \App\Application\Action\Activity\ActivityAction::class)->setName('users_activities');
         $group->post('/getActivities', \App\Application\Action\Activity\ActivityListAction::class)->setName('activities_get');
+        
+         $group->group('/applicationpasswords', function(RouteCollectorProxy $group_applicationpasswords) {
+            $group_applicationpasswords->get('/', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsListAction::class)->setName('users_application_passwords');
+            $group_applicationpasswords->get('/edit/', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsEditAction::class)->setName('users_application_passwords_edit');
+            $group_applicationpasswords->post('/save/[{id:[0-9]+}]', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsSaveAction::class)->setName('users_application_passwords_save');
+            $group_applicationpasswords->delete('/delete/{id}', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsDeleteAction::class)->setName('users_application_passwords_delete');
+        });
     });
 
     $app->group('/users', function(RouteCollectorProxy $group) {
@@ -181,6 +188,13 @@ return function (App $app) {
                 $group_user_favorites->get('/edit/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesEditAction::class)->setName('users_mobile_favorites_edit_admin');
                 $group_user_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesSaveAction::class)->setName('users_mobile_favorites_save_admin');
                 $group_user_favorites->delete('/delete/{id}', \App\Application\Action\User\MobileFavorites\MobileFavoritesDeleteAction::class)->setName('users_mobile_favorites_delete_admin');
+            });
+            
+            $group_user->group('/applicationpasswords', function(RouteCollectorProxy $group_user_favorites) {
+                $group_user_favorites->get('/', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsListAction::class)->setName('users_application_passwords_admin');
+                $group_user_favorites->get('/edit', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsEditAction::class)->setName('users_application_passwords_edit_admin');
+                $group_user_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsSaveAction::class)->setName('users_application_passwords_save_admin');
+                $group_user_favorites->delete('/delete/{id}', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsDeleteAction::class)->setName('users_application_passwords_delete_admin');
             });
         });
     })->add(\App\Application\Middleware\AdminMiddleware::class);

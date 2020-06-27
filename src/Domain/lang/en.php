@@ -437,6 +437,8 @@ $lang["CURRENT_DAY"] = "current day";
 $lang["CURRENT_MONTH"] = "current month";
 $lang["CURRENT_YEAR"] = "current year";
 
+$lang["APPLICATION_PASSWORDS"] = "application passwords";
+
 $lang["TIMESHEETS"] = "timesheets";
 $lang["TIMESHEETS_PROJECTS"] = "timesheet projects";
 $lang["TIMESHEETS_OVERVIEW"] = "Overview";
@@ -491,6 +493,7 @@ $lang["DATAOBJECT_TRIPS_TRIP"] = "trip";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "route";
 $lang["DATAOBJECT_MOBILEFAVORITE"] = "mobile favorite entry";
 $lang["DATAOBJECT_USER"] = "User";
+$lang["DATAOBJECT_APPLICATIONPASSWORD"] = "application password";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";

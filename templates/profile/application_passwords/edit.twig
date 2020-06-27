@@ -1,0 +1,37 @@
+{% extends "base.twig" %}
+
+{% set active = 'profile' %}
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}} {% if not for_user is null %} ({{ for_user.login }}){% endif %}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" id="applicationPasswordsForm" action="{% if for_user is null %}{{ url_for('users_application_passwords_save', {'id' : entry.id}) }}{% else %}{{ url_for('users_application_passwords_save_admin', {'id' : entry.id, 'user': for_user.id}) }}{% endif %}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPassword">{{lang["PASSWORD"]}}</label>
+                    <input type="text" class="form-control read-only" id="inputPassword" name="set_password" value="{{ password }}" readonly="readonly" >
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

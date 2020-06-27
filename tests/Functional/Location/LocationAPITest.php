@@ -6,15 +6,15 @@ use Tests\Functional\Base\BaseTestCase;
 
 class LocationAPITest extends BaseTestCase {
 
-    public function testAPIWrongUser() {
-        $response = $this->request('POST', '/api/location/record', [], ['user' => 'admin', 'pass' => '']);
+    public function testAPIWrongPassword() {
+        $response = $this->request('POST', '/api/location/record', [], ['user' => 'admin', 'pass' => 'test']);
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals("/login", $response->getHeaderLine("Location"));
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString("HTTP Auth failed!", (string) $response->getBody());
     }
 
     public function testAPI() {
-        
+
         $location_data = [
             "identifier" => "my_device",
             "device" => "",
@@ -39,70 +39,70 @@ class LocationAPITest extends BaseTestCase {
             "cell_id" => "",
             "cell_sig" => "",
             "cell_srv" => "",
-            "steps" => rand(0,10000)
+            "steps" => rand(0, 10000)
         ];
-        $response = $this->request('POST', '/api/location/record', $location_data, ['user' => 'admin', 'pass' => 'admin']);
+        $response = $this->request('POST', '/api/location/record', $location_data, ['user' => 'admin', 'pass' => 'application']);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('{"status":"success"}', $body);
-        
+
         return $location_data;
     }
-    
+
     /**
      * @depends testAPI
      */
     public function testgetMarkers($location_data) {
         $this->login("admin", "admin");
-        
+
         $response = $this->request('GET', '/location/markers');
-        
+
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertIsArray($json);
-        
+
         $found = false;
-        foreach($json as $marker){
-            if($marker["lat"] == 52.520007 && $marker["lng"] == 13.404954 && $marker["acc"] == $location_data["gps_acc"] && $marker["steps"] == $location_data["steps"]){
+        foreach ($json as $marker) {
+            if ($marker["lat"] == 52.520007 && $marker["lng"] == 13.404954 && $marker["acc"] == $location_data["gps_acc"] && $marker["steps"] == $location_data["steps"]) {
                 $found = true;
             }
         }
-        
-        if(!$found){
+
+        if (!$found) {
             $this->fail("Marker not found!");
         }
-        
+
         $this->logout();
     }
-    
+
     /**
      * @depends testAPI
      */
-    public function testNoAccessToMarkersOfAnotherUser($location_data){
+    public function testNoAccessToMarkersOfAnotherUser($location_data) {
         $this->login("user", "user");
-        
+
         $response = $this->request('GET', '/location/markers');
-        
+
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertIsArray($json);
-        
+
         $found = false;
-        foreach($json as $marker){
-            if($marker["lat"] == 52.520007 && $marker["lng"] == 13.404954 && $marker["acc"] == $location_data["gps_acc"] && $marker["steps"] == $location_data["steps"]){
+        foreach ($json as $marker) {
+            if ($marker["lat"] == 52.520007 && $marker["lng"] == 13.404954 && $marker["acc"] == $location_data["gps_acc"] && $marker["steps"] == $location_data["steps"]) {
                 $found = true;
             }
         }
-        
-        if($found){
+
+        if ($found) {
             $this->fail("Marker of admin found!");
         }
-        
+
         $this->logout();
     }
 

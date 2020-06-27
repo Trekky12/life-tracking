@@ -745,6 +745,18 @@ CREATE TABLE global_users_mobile_favorites (
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS global_users_application_passwords;
+CREATE TABLE global_users_application_passwords (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned NOT NULL,
+    name VARCHAR(255) NULL,
+    password VARCHAR(255) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS timesheets_projects;
 CREATE TABLE timesheets_projects (

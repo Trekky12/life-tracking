@@ -146,7 +146,7 @@ var usersTable = new JSTable("#users_table", {
             sort: "asc"
         },
         {
-            select: [5, 6, 7, 8],
+            select: [5, 6, 7, 8, 9],
             sortable: false,
             searchable: false
         }
@@ -775,6 +775,23 @@ var mobileFavoritesTable = new JSTable("#mobile_favorites_table", {
         },
         {
             select: [2, 3],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var applicationPasswords = new JSTable("#application_passwords_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1],
             sortable: false,
             searchable: false
         }
