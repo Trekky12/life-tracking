@@ -66,9 +66,8 @@ class UserMiddleware {
             $this->logger->debug('Site CALL');
             return $handler->handle($request);
         }
-        // Check for HTTP Authentication
-        else {
-
+        // Check for HTTP Authentication 
+        if (Utility::startsWith($route->getPattern(), "/api")) {
             $server_params = $request->getServerParams();
 
             $username = null;
@@ -92,10 +91,10 @@ class UserMiddleware {
                 if ($this->login_service->checkLogin($username, $password)) {
                     return $handler->handle($request);
                 }
-
                 $this->logger->warning('HTTP Auth failed', array("user" => $username));
             }
         }
+
 
         $this->logger->debug('Go to Login');
 

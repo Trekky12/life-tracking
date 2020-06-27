@@ -6,7 +6,7 @@ use Tests\Functional\Crawler\CrawlerTestBase;
 
 class NoAccessTest extends CrawlerTestBase {
 
-    protected $uri_child_record = "/crawlers/HASH/record/";
+    protected $uri_child_record = "/api/crawlers/record";
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -24,19 +24,16 @@ class NoAccessTest extends CrawlerTestBase {
                 'link' => 'http://localhost',
                 'value' => 1
             ],
-            'identifier' => 'dataset' . rand(0, 1000)
+            'identifier' => 'dataset' . rand(0, 1000),
+            'crawler' => $this->TEST_CRAWLER_HASH
         ];
 
-        $response = $this->request('POST', $this->getURIRecord($this->TEST_CRAWLER_HASH), $data);
+        $response = $this->request('POST', $this->uri_child_record, $data);
 
         $body = (string) $response->getBody();
         
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-    }
-
-    protected function getURIRecord($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_record);
     }
 
 }

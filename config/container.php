@@ -21,6 +21,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use App\Application\TwigExtensions\FlashExtension;
 use App\Application\TwigExtensions\CsrfExtension;
+use App\Domain\Main\Utility\Utility;
 
 return [
     Settings::class => function () {
@@ -163,7 +164,7 @@ return [
                     $route = $routeContext->getRoute();
                     $allowed_routes = $container->get(Settings::class)->all()['CSRF']['exclude'];
 
-                    if ((!is_null($route) && in_array($route->getName(), $allowed_routes))) {
+                    if ((!is_null($route) && (in_array($route->getName(), $allowed_routes) || (Utility::startsWith($route->getPattern(), "/api"))))) {
                         return $handler->handle($request);
                     }
 

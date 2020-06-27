@@ -6,7 +6,7 @@ use Tests\Functional\Crawler\CrawlerTestBase;
 
 class OwnerTest extends CrawlerTestBase {
 
-    protected $uri_child_record = "/crawlers/HASH/record/";
+    protected $uri_child_record = "/api/crawlers/record";
 
     protected function setUp(): void {
         $this->login("admin", "admin");
@@ -33,10 +33,11 @@ class OwnerTest extends CrawlerTestBase {
                 'link' => 'http://localhost',
                 'value' => 1
             ],
-            'identifier' => 'dataset' . rand(0, 1000)
+            'identifier' => 'dataset' . rand(0, 1000),
+            'crawler' => $this->TEST_CRAWLER_HASH
         ];
 
-        $response = $this->request('POST', $this->getURIRecord($this->TEST_CRAWLER_HASH), $data);
+        $response = $this->request('POST', $this->uri_child_record, $data);
 
         $body = (string) $response->getBody();
 
@@ -73,10 +74,11 @@ class OwnerTest extends CrawlerTestBase {
                 'link' => 'http://localhost/2',
                 'value' => 2
             ],
-            'identifier' => $initial_data['identifier']
+            'identifier' => $initial_data['identifier'],
+            'crawler' => $this->TEST_CRAWLER_HASH
         ];
 
-        $response = $this->request('POST', $this->getURIRecord($this->TEST_CRAWLER_HASH), $data);
+        $response = $this->request('POST', $this->uri_child_record, $data);
 
         $body = (string) $response->getBody();
 
@@ -108,10 +110,6 @@ class OwnerTest extends CrawlerTestBase {
         preg_match($re, $body, $matches);
 
         return $matches;
-    }
-
-    protected function getURIRecord($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_record);
     }
 
 }

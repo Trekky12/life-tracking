@@ -18,7 +18,8 @@ class DatasetRecordAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $crawler_hash = $request->getAttribute('crawler');
+        //$crawler_hash = $request->getAttribute('crawler');
+        $crawler_hash = $request->getParam('crawler');
         $data = $request->getParsedBody();
         
         $payload = $this->service->save(null, $data, ["crawler" => $crawler_hash]);

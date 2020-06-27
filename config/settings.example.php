@@ -23,10 +23,7 @@ return [
     'CSRF' => [
         'enabled' => true,
         // we need to exclude some routes from CSRF protection for remote triggers
-        'exclude' => [
-            'location_record',
-            'crawler_record'
-        ]
+        'exclude' => []
     ],
     'app' => [
         // i18n settings

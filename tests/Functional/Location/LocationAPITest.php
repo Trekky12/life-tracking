@@ -7,7 +7,7 @@ use Tests\Functional\Base\BaseTestCase;
 class LocationAPITest extends BaseTestCase {
 
     public function testAPIWrongUser() {
-        $response = $this->request('POST', '/location/record', [], ['user' => 'admin', 'pass' => '']);
+        $response = $this->request('POST', '/api/location/record', [], ['user' => 'admin', 'pass' => '']);
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals("/login", $response->getHeaderLine("Location"));
@@ -41,7 +41,7 @@ class LocationAPITest extends BaseTestCase {
             "cell_srv" => "",
             "steps" => rand(0,10000)
         ];
-        $response = $this->request('POST', '/location/record', $location_data, ['user' => 'admin', 'pass' => 'admin']);
+        $response = $this->request('POST', '/api/location/record', $location_data, ['user' => 'admin', 'pass' => 'admin']);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

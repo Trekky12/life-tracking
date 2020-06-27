@@ -89,7 +89,6 @@ return function (App $app) {
 
     $app->group('/location', function(RouteCollectorProxy $group) {
         $group->get('/', \App\Application\Action\Location\LocationMapAction::class)->setName('location');
-        $group->post('/record', \App\Application\Action\Location\LocationRecordAction::class)->setName('location_record');
         $group->get('/markers', \App\Application\Action\Location\LocationMarkersAction::class)->setName('getMarkers');
         $group->delete('/delete/[{id}]', \App\Application\Action\Location\LocationDeleteAction::class)->setName('delete_marker');
         $group->get('/address/[{id}]', \App\Application\Action\Location\LocationAddressAction::class)->setName('get_address');
@@ -270,8 +269,6 @@ return function (App $app) {
             $group_crawler->get('/table/', \App\Application\Action\Crawler\Crawler\CrawlerTableAction::class)->setName('crawlers_table');
             $group_crawler->post('/setFilter/', \App\Application\Action\Crawler\Crawler\CrawlerSetFilterAction::class)->setName('set_crawler_filter');
 
-            $group_crawler->post('/record/', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
-
             $group_crawler->post('/save/', \App\Application\Action\Crawler\Dataset\CrawlerSaveDatasetAction::class)->setName('crawler_dataset_save');
             $group_crawler->get('/saved/', \App\Application\Action\Crawler\Dataset\DatasetSavedListAction::class)->setName('crawler_dataset_saved_list');
 
@@ -356,7 +353,7 @@ return function (App $app) {
                 $group_waypoint->post('/add', \App\Application\Action\Trips\Waypoint\WaypointSaveAction::class)->setName('trips_add_waypoint');
                 $group_waypoint->delete('/delete', \App\Application\Action\Trips\Waypoint\WaypointDeleteAction::class)->setName('trips_delete_waypoint');
             });
-            
+
             $group_trip->group('/route', function(RouteCollectorProxy $group_route) {
                 $group_route->post('/add', \App\Application\Action\Trips\Route\RouteSaveAction::class)->setName('trips_add_route');
                 $group_route->get('/list', \App\Application\Action\Trips\Route\RouteListAction::class)->setName('trips_list_route');
@@ -397,6 +394,16 @@ return function (App $app) {
             });
 
             $group_project->get('/export', \App\Application\Action\Timesheets\Sheet\SheetExportAction::class)->setName('timesheets_export');
+        });
+    });
+
+
+    $app->group('/api', function(RouteCollectorProxy $group) {
+        $group->group('/location', function(RouteCollectorProxy $location_group) {
+            $location_group->post('/record', \App\Application\Action\Location\LocationRecordAction::class)->setName('location_record');
+        });
+        $group->group('/crawlers', function(RouteCollectorProxy $crawler_group) {
+            $crawler_group->post('/record', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
         });
     });
 };
