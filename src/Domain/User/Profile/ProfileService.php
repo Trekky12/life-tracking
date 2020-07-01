@@ -9,6 +9,8 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Application\Payload\Payload;
+use RobThree\Auth\TwoFactorAuth;
+use App\Domain\Main\Utility\SessionUtility;
 
 class ProfileService extends Service {
 
@@ -120,7 +122,7 @@ class ProfileService extends Service {
             $this->logger->notice("Update Profile");
             return new Payload(Payload::$STATUS_UPDATE);
         } else {
-            $this->logger->notice("No Update of Profile", array("id" => $user->id));
+            $this->logger->notice("No Update of Profile", array("id" => $data));
             return new Payload(Payload::$STATUS_NO_UPDATE);
         }
     }
@@ -159,6 +161,59 @@ class ProfileService extends Service {
             $this->logger->error("Update Profile Image, Image Error", array("files" => $files));
             return new Payload(Payload::$STATUS_PROFILE_IMAGE_ERROR);
         }
+    }
+
+    public function twoFactorAuthPage(): Payload {
+
+        $hasSecret = $this->current_user->getUser()->secret;
+
+        $response_data = [
+            'error' => false,
+            'hasSecret' => $hasSecret
+        ];
+
+        if (!$hasSecret) {
+            $mp = new QRCodeProvider();
+            $tfa = new TwoFactorAuth(null, 6, 30, 'sha1', $mp);
+            $secret = $tfa->createSecret(160);
+
+            $response_data['secret'] = chunk_split($secret, 4, " ");
+            $response_data['qr'] = $tfa->getQRCodeImageAsDataUri($this->current_user->getUser()->login . "@life-tracking", $secret);
+
+            /* try {
+              $tfa->ensureCorrectTime();
+              } catch (RobThree\Auth\TwoFactorAuthException $ex) {
+              $this->logger->error("2FA not working, host time is off", []);
+              $response_data['error'] = true;
+              } */
+
+            SessionUtility::setSessionVar("secret", $secret);
+        }
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function saveTwoFactorAuth($data) {
+        $code = array_key_exists("code", $data) ? filter_var($data["code"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $secret = SessionUtility::getSessionVar("secret");
+        SessionUtility::deleteSessionVar("secret");
+
+        $tfa = new TwoFactorAuth(null, 6, 30, 'sha1');
+        $result = $tfa->verifyCode($secret, $code);
+
+        if ($result) {
+            $this->logger->notice("Save 2FA secret", []);
+            $this->user_service->setTwoFactorAuthSecret($secret);
+            return new Payload(Payload::$STATUS_TWOFACTOR_SUCCESS);
+        }
+        $this->logger->error("2FA secret was wrong!", []);
+        return new Payload(Payload::$STATUS_TWOFACTOR_ERROR);
+    }
+
+    public function disableTwoFactorAuth() {
+        $this->logger->notice("Disable 2FA", []);
+        $this->user_service->setTwoFactorAuthSecret(null);
+        return new Payload(Payload::$STATUS_TWOFACTOR_DELETE_SUCCESS);
     }
 
 }

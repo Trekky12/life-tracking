@@ -11,6 +11,7 @@ use Dflydev\FigCookies\SetCookies;
 use Dflydev\FigCookies\Cookie;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
+use RobThree\Auth\TwoFactorAuth;
 
 /**
  * This is an example class that shows how you could set up a method that
@@ -244,7 +245,7 @@ class BaseTestCase extends TestCase {
     /**
      * Helper functions for login/logout on other tests
      */
-    public function login($user, $password) {
+    public function login($user, $password, $secret = null) {
         $response = $this->request('GET', '/login');
         $csrf_token = $this->extractFormCSRF($response);
 
@@ -252,6 +253,10 @@ class BaseTestCase extends TestCase {
             "username" => $user,
             "password" => $password
         ];
+        if (!is_null($secret)) {
+            $tfa = new TwoFactorAuth();
+            $data["code"] = $tfa->getCode($secret);
+        }
         $this->request('POST', '/login', array_merge($data, $csrf_token));
 
         // get initial CSRF token
@@ -379,7 +384,7 @@ class BaseTestCase extends TestCase {
 
     protected function compareInputFields($body, $data) {
         $input_fields = $this->getInputFields($body);
-        
+
         foreach ($data as $key => $val) {
             $this->assertArrayHasKey($key, $input_fields, $key . " missing");
             $this->assertEquals($input_fields[$key], $val, "Field: " . $key . "");
@@ -406,12 +411,12 @@ class BaseTestCase extends TestCase {
                 foreach ($options as $option) {
                     $value[] = $option->nodeValue;
                 }
-            
-            // has an option
+
+                // has an option
             } elseif (count($options) > 0) {
                 $value = $options->item(0)->nodeValue;
-            
-            // no value so do not create anything
+
+                // no value so do not create anything
             } else {
                 $value = null;
             }
@@ -423,7 +428,7 @@ class BaseTestCase extends TestCase {
             $array_key = $node->getAttribute('value');
             $input_fields[$stripped_name][$array_key] = $value;
 
-        // it's an array with named keys
+            // it's an array with named keys
         } else if (strpos($name, "[") !== false) {
             $stripped_name = substr($name, 0, strpos($name, "["));
 

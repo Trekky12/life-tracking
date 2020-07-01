@@ -13,6 +13,7 @@ use App\Domain\Main\Utility\Utility;
 use App\Domain\User\UserService;
 use App\Domain\User\Token\TokenService;
 use App\Domain\User\ApplicationPasswords\ApplicationPasswordMapper;
+use RobThree\Auth\TwoFactorAuth;
 
 class LoginService {
 
@@ -122,22 +123,24 @@ class LoginService {
             // wrong login!
             $this->logger->warning('HTTP Application login WRONG', array("login" => $username));
 
-            /**
-             * Log failed login to database
-             */
-            if (!is_null($username) && !is_null(Utility::getIP())) {
-                $this->banlist_service->addBan(Utility::getIP(), $username);
-            }
+            $this->addBan($username);
         }
     }
 
-    public function checkLogin($username = null, $password = null) {
+    public function checkLogin($username = null, $password = null, $code = null) {
         if (!is_null($username) && !is_null($password)) {
 
             try {
                 $user = $this->user_service->getUserFromLogin($username);
 
                 if (password_verify($password, $user->password)) {
+
+                    if (!$this->verifySecret($user, $code)) {
+                        // wrong Code
+                        $this->logger->warning('2FA WRONG', array("login" => $username));
+                        return false;
+                    }
+
                     // save current user
                     $this->current_user->setUser($user);
                     // add user to view
@@ -154,38 +157,46 @@ class LoginService {
 
             // wrong login!
             $this->logger->warning('Login WRONG', array("login" => $username));
-
-            /**
-             * Log failed login to database
-             */
-            if (!is_null($username) && !is_null(Utility::getIP())) {
-                $this->banlist_service->addBan(Utility::getIP(), $username);
-            }
         }
         return false;
-    }
-
-    public function loginPage() {
-        $user = $this->current_user->getUser();
-        // user is logged in, redirect to frontpage
-        if (!is_null($user)) {
-            return $response->withRedirect($this->router->urlFor('index'), 301);
-        }
-
-        return $this->twig->render($response, 'main/login.twig', array());
     }
 
     public function login($data) {
         $username = array_key_exists('username', $data) ? filter_var($data['username'], FILTER_SANITIZE_STRING) : null;
         $password = array_key_exists('password', $data) ? filter_var($data['password'], FILTER_SANITIZE_STRING) : null;
+        $code = array_key_exists('code', $data) ? filter_var($data['code'], FILTER_SANITIZE_STRING) : null;
 
-        if ($this->checkLogin($username, $password)) {
+        if ($this->checkLogin($username, $password, $code)) {
             $token = $this->saveToken();
 
             return $token;
         }
 
+        $this->addBan($username);
+
         return false;
+    }
+
+    public function addBan($username) {
+        /**
+         * Log failed login to database
+         */
+        if (!is_null(Utility::getIP())) {
+            $this->banlist_service->addBan(Utility::getIP(), $username);
+        }
+    }
+
+    private function verifySecret($user, $code) {
+        if (!is_null($user->secret)) {
+            
+            if(empty($code)){
+                return false;
+            }
+            
+            $tfa = new TwoFactorAuth();
+            return $tfa->verifyCode($user->secret, $code);
+        }
+        return true;
     }
 
 }

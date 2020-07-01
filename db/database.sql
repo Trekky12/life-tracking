@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     mails_board_reminder int(1) DEFAULT 1,
     mails_splitted_bills  int(1) DEFAULT 1,
     start_url varchar(255) DEFAULT NULL,
+    secret VARCHAR(255) NULL,
     PRIMARY KEY(id),
     UNIQUE(login)
 );

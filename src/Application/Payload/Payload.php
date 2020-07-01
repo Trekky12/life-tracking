@@ -36,6 +36,9 @@ class Payload {
     public static $STATUS_NOTIFICATION_SUCCESS = "NOTIFICATION_SUCCESS";
     public static $STATUS_NOTIFICATION_FAILURE = "NOTIFICATION_FAILURE";
     public static $STATUS_HAS_START_URL = "HAS_START_URL";
+    public static $STATUS_TWOFACTOR_SUCCESS = "STATUS_TWOFACTOR_SUCCESS";
+    public static $STATUS_TWOFACTOR_ERROR = "STATUS_TWOFACTOR_ERROR";
+    public static $STATUS_TWOFACTOR_DELETE_SUCCESS = "STATUS_TWOFACTOR_DELETE_SUCCESS";
 
     public function __construct($status, $result = null, $additionalData = [], $flash_messages = []) {
         $this->status = $status;

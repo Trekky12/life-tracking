@@ -33,6 +33,10 @@ class User extends \App\Domain\DataObject {
         if ($this->exists('image', $data)) {
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
         }
+        
+        if ($this->exists('secret', $data)) {
+            $this->secret = filter_var($data['secret'], FILTER_SANITIZE_STRING);
+        }
 
         $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_finance = $this->exists('module_finance', $data) ? filter_var($data['module_finance'], FILTER_SANITIZE_NUMBER_INT) : 0;

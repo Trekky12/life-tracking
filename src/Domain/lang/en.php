@@ -534,4 +534,12 @@ $lang["TRIPS_ROUTES"] = "Routes";
 
 $lang["TRIPS_WAYPOINT_SAVE"] = "Save";
 
+$lang["TWOFACTOR_ERROR"]= "Two Factor Authentication could not be enabled!";
+$lang["TWOFACTOR_SUCCESS"]= "Two Factor Authentication was successfully enabled.";
+$lang["TWOFACTOR_SUCCESS_DELETE"]= "Two Factor Authentication was successfully disabled.";
+$lang["TWOFACTOR_DISABLE"]= "disable";
+$lang["TWOFACTOR_TEXT"] = "Please scan the QR-Code or insert the secret in the Two Factor Authentication App.";
+$lang["TWOFACTOR_CODE"]= "Code";
+$lang["TWOFACTOR_AUTHENTICATION"]= "Two Factor Authentication";
+
 return $lang;

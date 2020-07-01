@@ -532,5 +532,13 @@ $lang["TRIPS_ROUTE_SAVED_ERROR"] = "Route konnte nicht gespeichert werden.";
 $lang["TRIPS_ROUTES"] = "Routen";
 
 $lang["TRIPS_WAYPOINT_SAVE"] = "Speichern";
+
+$lang["TWOFACTOR_ERROR"]= "Zweifaktorauthentifizierung konnte nicht aktiviert werden!";
+$lang["TWOFACTOR_SUCCESS"]= "Zweifaktorauthentifizierung wurde erfolgreich aktiviert.";
+$lang["TWOFACTOR_SUCCESS_DELETE"]= "Zweifaktorauthentifizierung wurde erfolgreich deaktiviert.";
+$lang["TWOFACTOR_DISABLE"]= "Deativieren";
+$lang["TWOFACTOR_TEXT"] = "Bitte den QR-Code einscannen oder das Geheimnis in die Zweifaktorauthentifizierungs-App eingeben.";
+$lang["TWOFACTOR_CODE"]= "Code";
+$lang["TWOFACTOR_AUTHENTICATION"]= "Zweifaktorauthentifizierung";
         
 return $lang;

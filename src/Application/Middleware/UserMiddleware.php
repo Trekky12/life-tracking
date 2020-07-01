@@ -93,6 +93,8 @@ class UserMiddleware {
                 }
                 $this->logger->warning('HTTP Auth failed', array("user" => $username));
                 
+                
+                
                 $response->getBody()->write('HTTP Auth failed!');
                 return $response->withStatus(400)->withHeader('Content-type', 'text/plain');
             }

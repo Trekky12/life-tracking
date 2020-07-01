@@ -118,5 +118,10 @@ class UserService extends Service {
         $roles = $this->getRoles();
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, "roles" => $roles]);
     }
+    
+    public function setTwoFactorAuthSecret($secret) {
+        $user = $this->current_user->getUser();
+        $this->mapper->update_secret($user->id, $secret);
+    }
 
 }
