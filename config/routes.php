@@ -230,7 +230,6 @@ return function (App $app) {
         $group->delete('/subscribe/', \App\Application\Action\Notifications\Clients\NotificationClientsDeleteAPIAction::class)->setName('notifications_clients_subscribe');
 
 
-        $group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         // use post because endpoint param is too complex for a GET param
         $group->post('/getCategories', \App\Application\Action\Notifications\Clients\NotificationClientsCategoriesAction::class)->setName('notifications_clients_categories');
         $group->post('/setCategorySubscription', \App\Application\Action\Notifications\Clients\NotificationClientsSetCategoryAction::class)->setName('notifications_clients_set_category');
@@ -424,6 +423,9 @@ return function (App $app) {
         });
         $group->group('/crawlers', function(RouteCollectorProxy $crawler_group) {
             $crawler_group->post('/record', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
+        });
+        $group->group('/notifications', function(RouteCollectorProxy $notifications_group) {
+            $notifications_group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         });
     });
 };
