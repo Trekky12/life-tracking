@@ -494,6 +494,7 @@ $lang["DATAOBJECT_TRIPS_ROUTE"] = "route";
 $lang["DATAOBJECT_MOBILEFAVORITE"] = "mobile favorite entry";
 $lang["DATAOBJECT_USER"] = "User";
 $lang["DATAOBJECT_APPLICATIONPASSWORD"] = "application password";
+$lang["DATAOBJECT_WIDGET_ENTRY"] = "widget";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -541,5 +542,9 @@ $lang["TWOFACTOR_DISABLE"]= "disable";
 $lang["TWOFACTOR_TEXT"] = "Please scan the QR-Code or insert the secret in the Two Factor Authentication App.";
 $lang["TWOFACTOR_CODE"]= "Code";
 $lang["TWOFACTOR_AUTHENTICATION"]= "Two Factor Authentication";
+
+$lang["WIDGETS"] = "widgets";
+$lang["WIDGET_OPTIONS"] = "widget options";
+$lang["FRONTPAGE"] = "Frontpage";
 
 return $lang;

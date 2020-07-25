@@ -4,120 +4,15 @@
 
 {% block body %}
     <div class="grid">
-        {% for module_name, module in modules %} 
-            {% if user.hasModule(module_name)%}
-                {% if module_name == "location" and steps_today_entries > 0%}
-                    <div class="card">
-                        <div class="card-content">
-                            <h3><a href="{{url_for(module['rootRoute'])}}">{{ lang["STEPS_TODAY"] }}</a></h3>
-                            <p class="big">{{ steps_today_entries }}</p>
-                        </div>
+        {% for widget in list %}
+            <div class="card" data-widget="{{ widget["id"] }}">
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3><a href="{{ widget["url"] }}">{{ widget["title"] | raw }}</a></h3>
                     </div>
-                {% elseif module_name == "finances" %}
-                    <div class="card">
-                        <div class="card-content">
-                            <h3><a href="{{url_for(module['rootRoute'])}}">{{ lang["LAST_5_EXPENSES"] }}</a></h3>
-                            <table>    
-                                <thead>
-                                    <tr>
-                                        <th>{{lang["DATE"]}}</th>
-                                        <th>{{lang["TIME"]}}</th>
-                                        <th>{{lang["DESCRIPTION"]}}</th>
-                                        <th>{{lang["VALUE"]}}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for finance_entry in last_finance_entries %}
-                                        <tr>
-                                            <td>{{ finance_entry["date"]|date(i18n.dateformatTwig.date) }}</td>
-                                            <td>{{ finance_entry["time"] }}</td>
-                                            <td>{{ finance_entry["description"] }}</td>
-                                            <td>{{ finance_entry["value"] }} {{ i18n.currency }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-content">
-                            <h3><a href="{{url_for(module['rootRoute'])}}">{{ lang["EXPENSES_THIS_MONTH"] }}</a></h3>
-                            <p class="big">{{ finances_month_expenses }} {{ i18n.currency }}</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-content">
-                            <h3><a href="{{url_for(module['rootRoute'])}}">{{ lang["INCOME_THIS_MONTH"] }}</a></h3>
-                            <p class="big"> {{ finances_month_income }} {{ i18n.currency }}</p>
-                        </div>
-                    </div>
-                {% elseif module_name == "cars" %}
-                    {% for mileage_entry in max_mileage %}
-                        <div class="card">
-                            <div class="card-content">
-                                <h3><a href="{{url_for(module['rootRoute'])}}">{{ lang["REMAINING_KM"] }} | {{ mileage_entry["name"]|raw }}</a></h3>
-                                <p class="big">{{ mileage_entry["remaining"] }} {{ lang["KM"] }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    {% for refuel_entry in last_refuel %}
-                        <div class="card">
-                            <div class="card-content">
-                                <h3><a href="{{url_for(module['rootRoute'])}}">{{ lang["CAR_REFUEL"] }} | {{ refuel_entry["name"]|raw }}</a></h3>
-                                <table>    
-                                    <thead>
-                                        <tr>
-                                            <th>{{lang["DATE"]}}</th>
-                                            <th>{{lang["MILEAGE"]}}</th>
-                                            <th>{{lang["CONSUMPTION"]}}</th>
-                                            <th>{{lang["LOCATION"]}}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for list_entry in refuel_entry["list"] %}
-                                            <tr>
-                                                <td>{{ list_entry[0]|date(i18n.dateformatTwig.date) }}</td>
-                                                <td>{{ list_entry[2] }}</td>
-                                                <td>{{ list_entry[7] }}</td>
-                                                <td>{{ list_entry[8] }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% elseif module_name == "splitbills" %}
-                    {% for balance_entry in splitted_bills_balances %}
-                        {% if balance_entry["balance"]["balance"] > 0 %}
-                            <div class="card">
-                                <div class="card-content">
-                                    <h3><a href="{{url_for(module['rootRoute'])}}">{{lang["SPLITBILLS"]}} | {{ balance_entry["name"]|raw }}</a></h3>
-                                    <p class="big">{{ balance_entry["balance"]["balance"] }} {{ i18n.currency }}</p>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% elseif module_name == "timesheets" %}
-                    {% for sheet_entry in timesheets_sum %}
-                        <div class="card">
-                            <div class="card-content">
-                                <h3><a href="{{url_for(module['rootRoute'])}}">{{ lang["TIMESHEETS"] }} | {{ sheet_entry["name"]|raw }}</a></h3>
-                                <p class="big">{{ sheet_entry["sum"] }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="card hidden">
-                        <div class="card-content">
-                            <h3><a href="{{url_for(module['rootRoute'])}}">{{lang[module['title']]}}</a></h3>
-                            <a href="{{url_for(module['rootRoute'])}}"><i class="{{ module['icon'] }}" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-                {% endif %}
-
-
-            {% endif %}
-        {% endfor %}
+                    {% include 'home/widgets/' ~ widget["name"] ~'.twig' with {'widget': widget} %}   
+                </div>
+            </div>
+        {%  endfor %}
     </div>
 {% endblock %}

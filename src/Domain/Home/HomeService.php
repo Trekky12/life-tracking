@@ -14,9 +14,14 @@ use App\Domain\Home\Widget\CarMaxMileageTodayWidget;
 use App\Domain\Home\Widget\CarLastRefuelWidget;
 use App\Domain\Home\Widget\SplittedBillsBalanceWidget;
 use App\Domain\Home\Widget\TimesheetsSumWidget;
+use App\Domain\Home\Widget\WidgetMapper;
+use App\Domain\Base\Settings;
+use App\Domain\Main\Translator;
 
 class HomeService extends Service {
 
+    private $translation;
+    private $settings;
     private $last_finance_entries_widget;
     private $steps_today_widget;
     private $finance_month_expenses_widget;
@@ -24,9 +29,12 @@ class HomeService extends Service {
     private $car_max_mileage_today_widget;
     private $splitted_bills_balance_widget;
     private $timesheets_sum_widget;
+    private $widget_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
+            Translator $translation,
+            Settings $settings,
             LastFinanceEntriesWidget $last_finance_entries_widget,
             StepsTodayWidget $steps_today_widget,
             FinanceMonthExpensesWidget $finance_month_expenses_widget,
@@ -34,8 +42,12 @@ class HomeService extends Service {
             CarMaxMileageTodayWidget $car_max_mileage_today_widget,
             CarLastRefuelWidget $car_last_refuel_widget,
             SplittedBillsBalanceWidget $splitted_bills_balance_widget,
-            TimesheetsSumWidget $timesheets_sum_widget) {
+            TimesheetsSumWidget $timesheets_sum_widget,
+            WidgetMapper $widget_mapper) {
         parent::__construct($logger, $user);
+        $this->translation = $translation;
+        $this->settings = $settings;
+
         $this->last_finance_entries_widget = $last_finance_entries_widget;
         $this->steps_today_widget = $steps_today_widget;
         $this->finance_month_expenses_widget = $finance_month_expenses_widget;
@@ -44,6 +56,8 @@ class HomeService extends Service {
         $this->car_last_refuel_widget = $car_last_refuel_widget;
         $this->splitted_bills_balance_widget = $splitted_bills_balance_widget;
         $this->timesheets_sum_widget = $timesheets_sum_widget;
+
+        $this->widget_mapper = $widget_mapper;
     }
 
     public function getUserStartPage($pwa) {
@@ -53,25 +67,154 @@ class HomeService extends Service {
             return new Payload(Payload::$STATUS_HAS_START_URL, $user->start_url);
         }
 
-        $last_finance_entries = $this->last_finance_entries_widget->getContent();
-        $steps_today_entries = $this->steps_today_widget->getContent();
-        $finances_month_expenses = $this->finance_month_expenses_widget->getContent();
-        $finances_month_income = $this->finance_month_income_widget->getContent();
-        $max_mileage = $this->car_max_mileage_today_widget->getContent();
-        $last_refuel = $this->car_last_refuel_widget->getContent();
-        $splitted_bills_balances = $this->splitted_bills_balance_widget->getContent();
-        $timesheets_sum = $this->timesheets_sum_widget->getContent();
+        $widgets = $this->widget_mapper->getAll('position');
+        $list = [];
+        if (count($widgets) > 0) {
+            foreach ($widgets as $widget) {
+                $list[] = $this->getWidgetForFrontend($widget);
+            }
+        } else {
+            $modules = $this->settings->getAppSettings()['modules'];
+            foreach ($modules as $module_name => $module) {
+                if ($this->current_user->getUser()->hasModule($module_name)) {
+                    if ($module_name == "location" && $this->steps_today_widget->getContent() > 0) {
+                        $w = new Widget\WidgetObject(["name" => "steps_today_entries"]);
+                        $list[] = $this->getWidgetForFrontend($w);
+                    } elseif ($module_name == "finances") {
+                        $w1 = new Widget\WidgetObject(["name" => "last_finance_entries"]);
+                        $w2 = new Widget\WidgetObject(["name" => "finances_month_expenses"]);
+                        $w3 = new Widget\WidgetObject(["name" => "finances_month_income"]);
+                        $list[] = $this->getWidgetForFrontend($w1);
+                        $list[] = $this->getWidgetForFrontend($w2);
+                        $list[] = $this->getWidgetForFrontend($w3);
+                    } elseif ($module_name == "cars") {
+                        foreach ($this->car_max_mileage_today_widget->getListItems() as $max_mileage) {
+                            $w = new Widget\WidgetObject(["name" => "max_mileage", "options" => json_encode(["car" => $max_mileage])]);
+                            $list[] = $this->getWidgetForFrontend($w);
+                        }
+                        foreach ($this->car_last_refuel_widget->getListItems() as $last_refuel) {
+                            $w = new Widget\WidgetObject(["name" => "last_refuel", "options" => json_encode(["car" => $last_refuel])]);
+                            $list[] = $this->getWidgetForFrontend($w);
+                        }
+                    } elseif ($module_name == "splitbills") {
+                        foreach ($this->splitted_bills_balance_widget->getListItems() as $splitted_bills_balances) {
+                            $w = new Widget\WidgetObject(["name" => "splitted_bills_balances", "options" => json_encode(["group" => $splitted_bills_balances])]);
+                            $list[] = $this->getWidgetForFrontend($w);
+                        }
+                    } elseif ($module_name == "timesheets") {
+                        foreach ($this->timesheets_sum_widget->getListItems() as $timesheets_sum) {
+                            $w = new Widget\WidgetObject(["name" => "timesheets_sum", "options" => json_encode(["project" => $timesheets_sum])]);
+                            $list[] = $this->getWidgetForFrontend($w);
+                        }
+                    }
+                }
+            }
+        }
+        return new Payload(Payload::$RESULT_HTML, ["list" => $list]);
+    }
+
+    public function getUserFrontpageEdit() {
+
+        $widgets = $this->widget_mapper->getAll('position');
+        $list = [];
+        foreach ($widgets as $widget) {
+            $list[] = $this->getWidgetForFrontend($widget);
+        }
 
         return new Payload(Payload::$RESULT_HTML, [
-            "last_finance_entries" => $last_finance_entries,
-            "steps_today_entries" => $steps_today_entries,
-            "finances_month_expenses" => $finances_month_expenses,
-            "finances_month_income" => $finances_month_income,
-            "max_mileage" => $max_mileage,
-            "last_refuel" => $last_refuel,
-            "splitted_bills_balances" => $splitted_bills_balances,
-            "timesheets_sum" => $timesheets_sum
+            "widgets" => [
+                "last_finance_entries" => ["name" => $this->translation->getTranslatedString("LAST_5_EXPENSES")],
+                "steps_today_entries" => ["name" => $this->translation->getTranslatedString("STEPS_TODAY")],
+                "finances_month_expenses" => ["name" => $this->translation->getTranslatedString("EXPENSES_THIS_MONTH")],
+                "finances_month_income" => ["name" => $this->translation->getTranslatedString("INCOME_THIS_MONTH")],
+                "max_mileage" => ["name" => $this->translation->getTranslatedString("REMAINING_KM")],
+                "last_refuel" => ["name" => $this->translation->getTranslatedString("CAR_REFUEL")],
+                "splitted_bills_balances" => ["name" => $this->translation->getTranslatedString("SPLITBILLS")],
+                "timesheets_sum" => ["name" => $this->translation->getTranslatedString("TIMESHEETS")],
+            ],
+            "list" => $list
         ]);
+    }
+
+    public function getWidgetOptions($widget) {
+        $result = null;
+        switch ($widget) {
+            case "max_mileage":
+                $result = $this->car_max_mileage_today_widget->getOptions();
+                break;
+            case "last_refuel":
+                $result = $this->car_last_refuel_widget->getOptions();
+                break;
+            case "splitted_bills_balances":
+                $result = $this->splitted_bills_balance_widget->getOptions();
+                break;
+            case "timesheets_sum":
+                $result = $this->timesheets_sum_widget->getOptions();
+                break;
+            default:
+                $result = null;
+                break;
+        }
+
+        $response_data = ['entry' => $result];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    private function getWidgetForFrontend($widget) {
+
+        $list = [
+            "id" => $widget->id,
+            "name" => $widget->name
+        ];
+        switch ($widget->name) {
+            case "last_finance_entries":
+                $list["title"] = $this->last_finance_entries_widget->getTitle();
+                $list["content"] = $this->last_finance_entries_widget->getContent();
+                break;
+            case "steps_today_entries":
+                $list["title"] = $this->steps_today_widget->getTitle();
+                $list["content"] = $this->steps_today_widget->getContent();
+                break;
+            case "finances_month_expenses":
+                $list["title"] = $this->finance_month_expenses_widget->getTitle();
+                $list["content"] = $this->finance_month_expenses_widget->getContent();
+                break;
+            case "finances_month_income":
+                $list["title"] = $this->finance_month_income_widget->getTitle();
+                $list["content"] = $this->finance_month_income_widget->getContent();
+                break;
+            case "last_refuel":
+                $list["title"] = $this->car_last_refuel_widget->getTitle($widget);
+                $list["content"] = $this->car_last_refuel_widget->getContent($widget);
+                break;
+            case "max_mileage":
+                $list["title"] = $this->car_max_mileage_today_widget->getTitle($widget);
+                $list["content"] = $this->car_max_mileage_today_widget->getContent($widget);
+                break;
+            case "splitted_bills_balances":
+                $list["title"] = $this->splitted_bills_balance_widget->getTitle($widget);
+                $list["content"] = $this->splitted_bills_balance_widget->getContent($widget);
+                break;
+            case "timesheets_sum":
+                $list["title"] = $this->timesheets_sum_widget->getTitle($widget);
+                $list["content"] = $this->timesheets_sum_widget->getContent($widget);
+                break;
+        }
+        return $list;
+    }
+
+    public function updatePosition($data) {
+
+        if (array_key_exists("widgets", $data) && !empty($data["widgets"])) {
+            $widgets = filter_var_array($data["widgets"], FILTER_SANITIZE_NUMBER_INT);
+            foreach ($widgets as $position => $item) {
+                $this->widget_mapper->updatePosition($item, $position);
+            }
+            $response_data = ['status' => 'success'];
+            return new Payload(Payload::$RESULT_JSON, $response_data);
+        }
+        $response_data = ['status' => 'error'];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
 }

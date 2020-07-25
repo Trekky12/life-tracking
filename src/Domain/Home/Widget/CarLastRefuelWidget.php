@@ -3,28 +3,34 @@
 namespace App\Domain\Home\Widget;
 
 use Psr\Log\LoggerInterface;
+use App\Domain\Main\Translator;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Car\CarService;
 use App\Domain\Car\Service\CarServiceStatsService;
 use App\Domain\Car\Service\CarServiceMapper;
 
-class CarLastRefuelWidget {
+class CarLastRefuelWidget implements Widget {
 
     private $logger;
+    private $translation;
     private $current_user;
     private $car_service;
     private $service;
     private $carservice_mapper;
+    private $cars = [];
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, CarService $car_service, CarServiceStatsService $service, CarServiceMapper $carservice_mapper) {
+    public function __construct(LoggerInterface $logger, Translator $translation, CurrentUser $user, CarService $car_service, CarServiceStatsService $service, CarServiceMapper $carservice_mapper) {
         $this->logger = $logger;
+        $this->translation = $translation;
         $this->current_user = $user;
         $this->car_service = $car_service;
         $this->service = $service;
         $this->carservice_mapper = $carservice_mapper;
+
+        $this->cars = $this->createList();
     }
 
-    public function getContent() {
+    private function createList() {
         $user_cars = $this->car_service->getUserCars();
 
         $cars = $this->car_service->getAllCarsOrderedByName();
@@ -36,6 +42,30 @@ class CarLastRefuelWidget {
         }
 
         return $result;
+    }
+
+    public function getListItems() {
+        return array_keys($this->cars);
+    }
+
+    public function getContent($widget = null) {
+        $id = $widget->getOptions()["car"];
+        return $this->cars[$id]["list"];
+    }
+
+    public function getTitle($widget = null) {
+        $id = $widget->getOptions()["car"];
+        return sprintf("%s | %s", $this->translation->getTranslatedString("CAR_REFUEL"), $this->cars[$id]["name"]);
+    }
+
+    public function getOptions() {
+        return [
+            [
+                "label" => $this->translation->getTranslatedString("CAR"),
+                "data" => $this->createList(),
+                "name" => "car"
+            ]
+        ];
     }
 
 }

@@ -21,13 +21,17 @@
     <div class="grid content-xsmall">
         <div class="card positive {% if entry is not null %}inactive{% endif %}">
             <div class="card-content">
-                <h3><a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">{{lang["TIMESHEETS_COME"]}}</a></h3>
+                <div class="card-header">
+                    <h3><a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">{{lang["TIMESHEETS_COME"]}}</a></h3>
+                </div>
                 <a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}"><i class="fas fa-sign-in-alt" aria-hidden="true"></i></a>
             </div>
         </div>      
         <div class="card negative {% if entry is null %}inactive{% endif %}">
             <div class="card-content">
-                <h3><a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">{{lang["TIMESHEETS_LEAVE"]}}</a></h3>
+                <div class="card-header">
+                    <h3><a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">{{lang["TIMESHEETS_LEAVE"]}}</a></h3>
+                </div>
                 <a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
             </div>
         </div>          

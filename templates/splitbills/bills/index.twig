@@ -17,25 +17,33 @@
         <div class="grid" id="splitbill_overview">
             <div class="card negative">
                 <div class="card-content">
-                    <h3>{{ lang["SPEND"] }}</h3>
+                    <div class="card-header">
+                        <h3>{{ lang["SPEND"] }}</h3>
+                    </div>
                     <p>{{ my_balance["spend"] - my_balance["settled"] }} {{i18n.currency}}</p>
                 </div>
             </div>      
             <div class="card positive">
                 <div class="card-content">
-                    <h3>{{ lang["PAID"] }}</h3>
+                    <div class="card-header">
+                        <h3>{{ lang["PAID"] }}</h3>
+                    </div>
                     <p>{{ my_balance["paid"] }} {{i18n.currency}}</p>
                 </div>
             </div>          
             <div class="card positive">
                 <div class="card-content">
-                    <h3>{{ lang["RECEIVED"] }}</h3>
+                    <div class="card-header">
+                        <h3>{{ lang["RECEIVED"] }}</h3>
+                    </div>
                     <p>{{ my_balance["settled"] }} {{i18n.currency}}</p>
                 </div>
             </div>
             <div class="card {% if my_balance["balance"] >= 0 %}positive{% else %}negative{% endif %}">
                 <div class="card-content">
-                    <h3>{{ lang["BALANCE"] }}</h3>
+                    <div class="card-header">
+                        <h3>{{ lang["BALANCE"] }}</h3>
+                    </div>
                     <p>{{ my_balance["balance"] }} {{i18n.currency}}</p>
                 </div>
             </div>

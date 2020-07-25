@@ -47,23 +47,37 @@
 
         position: relative;
 
+        .card-header{
+            display:flex;
+            justify-content: center;
 
-        h3{
+            &.has-buttons{
+                justify-content:space-between;
+            }
+
             background-color: $color_blue;
-            margin:0;
-            font-weight: 300;
-            padding: 0.2rem .5rem;
             color: $color_background-body;
 
-            &.has-image{
-                position:absolute;
-                top:0.5rem;
-                left:0.5rem;    
-                margin-right: 0.5rem;
+            h3{
+                margin:0;
+                font-weight: 300;
+                padding: 0.2rem .5rem;
             }
 
             a{
                 color: $color_background-body;
+            }
+
+            .buttons{
+                display:flex;
+                align-items:center;
+                a{
+                    padding: 0.2rem .5rem;
+                    
+                    &:hover{
+                         color: $color_background-screen;
+                    }
+                }
             }
         }
 
@@ -94,13 +108,13 @@
         }
     }
 
-    &.negative h3{
+    &.negative .card-header{
         background-color: $color_red;
     }
-    &.positive h3{
+    &.positive .card-header{
         background-color: $color_green;
     }
-    &.inactive h3{
+    &.inactive .card-header{
         background-color: $color_blue_light_gray;
     }
 }

@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20200627" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20200725" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -146,6 +146,9 @@
                 'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
                 'trip_event_image_delete': '{{  url_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
                 {% endif %}
+                'frontpage_widget_option': '{{url_for('users_profile_frontpage_widget_option')}}',
+                'frontpage_widget_option_save': '{{url_for('users_profile_frontpage_widget_option_save')}}',
+                'frontpage_widget_position': '{{url_for('users_profile_frontpage_widget_position')}}',
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

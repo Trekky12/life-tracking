@@ -371,6 +371,19 @@ CREATE TABLE global_settings (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS global_widgets;
+CREATE TABLE global_widgets (
+  id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  user INTEGER unsigned DEFAULT NULL,
+  createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  changedOn TIMESTAMP NULL,
+  name varchar(255) NOT NULL,
+  options text,
+  position INT(10) NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS notifications_categories;
 CREATE TABLE notifications_categories (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

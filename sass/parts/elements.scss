@@ -129,6 +129,10 @@ table {
     @include font-size(4);
 }
 
+select.button-height{
+    height:44px;
+}
+
 .filter-content{
 
     .filter-element{
