@@ -2,8 +2,12 @@
 
 {% set active = 'index' %}
 
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css" />
+{% endblock %}
+
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/widgets.js?ver=20200805"></script>
+    <script src="{{baseURL}}/static/js/widgets.js?ver=20200805a"></script>
 {% endblock %}
 
 {% block body %}

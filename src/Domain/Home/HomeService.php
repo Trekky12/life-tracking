@@ -19,6 +19,8 @@ use App\Domain\Base\Settings;
 use App\Domain\Main\Translator;
 use App\Domain\Main\Helper;
 use App\Domain\Home\Widget\EFAWidget;
+use App\Domain\Home\Widget\CurrentWeatherWidget;
+use App\Domain\Home\Widget\WeatherForecastWidget;
 
 class HomeService extends Service {
 
@@ -33,6 +35,8 @@ class HomeService extends Service {
     private $splitted_bills_balance_widget;
     private $timesheets_sum_widget;
     private $efa_widget;
+    private $currentweather_widget;
+    private $weatherforecast_widget;
     private $widget_mapper;
 
     public function __construct(LoggerInterface $logger,
@@ -49,6 +53,8 @@ class HomeService extends Service {
             SplittedBillsBalanceWidget $splitted_bills_balance_widget,
             TimesheetsSumWidget $timesheets_sum_widget,
             EFAWidget $efa_widget,
+            CurrentWeatherWidget $currentweather_widget,
+            WeatherForecastWidget $weatherforecast_widget,
             WidgetMapper $widget_mapper) {
         parent::__construct($logger, $user);
         $this->translation = $translation;
@@ -64,6 +70,8 @@ class HomeService extends Service {
         $this->splitted_bills_balance_widget = $splitted_bills_balance_widget;
         $this->timesheets_sum_widget = $timesheets_sum_widget;
         $this->efa_widget = $efa_widget;
+        $this->currentweather_widget = $currentweather_widget;
+        $this->weatherforecast_widget = $weatherforecast_widget;
 
         $this->widget_mapper = $widget_mapper;
     }
@@ -139,7 +147,9 @@ class HomeService extends Service {
                 "last_refuel" => ["name" => $this->translation->getTranslatedString("CAR_REFUEL")],
                 "splitted_bills_balances" => ["name" => $this->translation->getTranslatedString("SPLITBILLS")],
                 "timesheets_sum" => ["name" => $this->translation->getTranslatedString("TIMESHEETS")],
-                "efa" => ["name" => $this->translation->getTranslatedString("EFA")]
+                "efa" => ["name" => $this->translation->getTranslatedString("EFA")],
+                "currentweather" => ["name" => $this->translation->getTranslatedString("WIDGET_CURRENTWEATHER")],
+                "weatherforecast" => ["name" => $this->translation->getTranslatedString("WIDGET_WEATHERFORECAST")]
             ],
             "list" => $list
         ]);
@@ -162,6 +172,12 @@ class HomeService extends Service {
                 break;
             case "efa":
                 $result = $this->efa_widget->getOptions();
+                break;
+            case "currentweather":
+                $result = $this->currentweather_widget->getOptions();
+                break;
+            case "weatherforecast":
+                $result = $this->weatherforecast_widget->getOptions();
                 break;
             default:
                 $result = null;
@@ -215,6 +231,14 @@ class HomeService extends Service {
                 $list["title"] = $this->efa_widget->getTitle($widget);
                 $list["content"] = $this->efa_widget->getContent($widget);
                 break;
+            case "currentweather":
+                $list["title"] = $this->currentweather_widget->getTitle($widget);
+                $list["content"] = $this->currentweather_widget->getContent($widget);
+                break;
+            case "weatherforecast":
+                $list["title"] = $this->weatherforecast_widget->getTitle($widget);
+                $list["content"] = $this->weatherforecast_widget->getContent($widget);
+                break;
         }
         return $list;
     }
@@ -236,7 +260,7 @@ class HomeService extends Service {
     public function getWidgetRequestData($id) {
 
         $widget = $this->widget_mapper->get($id);
-        
+
         $url = $widget->getOptions()["url"];
         $type = $widget->name;
 

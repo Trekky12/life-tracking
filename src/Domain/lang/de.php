@@ -549,5 +549,7 @@ $lang["FRONTPAGE"] = "Startseite";
 $lang["EFA"] = "Elektronische Fahrplanauskunft";
 $lang["WIDGET_URL"] = "URL";
 $lang["WIDGET_TITLE"] = "Titel";
+$lang["WIDGET_CURRENTWEATHER"] = "aktuelles Wetter";
+$lang["WIDGET_WEATHERFORECAST"] = "Wettervorhersage";
         
 return $lang;

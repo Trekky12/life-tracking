@@ -2,10 +2,14 @@
 
 {% set active = 'profile' %}
 
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css" />
+{% endblock %}
+
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
     <script src="{{baseURL}}/static/js/frontpage_edit.js"></script>
-    <script src="{{baseURL}}/static/js/widgets.js?ver=20200805"></script>
+    <script src="{{baseURL}}/static/js/widgets.js?ver=20200805a"></script>
 {% endblock %}
 
 {% block body %}

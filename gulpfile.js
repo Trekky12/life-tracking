@@ -126,6 +126,13 @@ function copyFlatpickrI10n(cb) {
         .pipe( gulp.dest( 'public/static/assets/js/i18n' ) );
 }
 
+function copyFlatpickrI10nEN(cb) {
+    return gulp
+        .src('./node_modules/flatpickr/dist/l10n/default.js')
+        .pipe( rename("en.js") )
+        .pipe( gulp.dest( 'public/static/assets/js/i18n' ) );
+}
+
 function copyCSSTask(cb) {
     return gulp
         .src( [ 
@@ -230,6 +237,19 @@ function replaceLeafletRoutingIconCSS(cb) {
         .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
+function copyFontsWeatherIconsTask(cb) {
+    return gulp.src( './node_modules/weather-icons/font/**.*' )
+        .pipe( gulp.dest( 'public/static/assets/fonts/weather-icons' ) );
+}
+
+function replaceFontWeatherIcons(cb){
+    return gulp
+        .src( './node_modules/weather-icons/css/weather-icons.css')
+        .pipe( replace("../font/", "../fonts/weather-icons/") )
+        .pipe( minifyCSS() )
+        .pipe( rename("weather-icons.min.css") )
+        .pipe( gulp.dest( 'public/static/assets/css' ) );
+}
 
 function printError( error ) {
     console.log( '---- Error ----' );
@@ -247,6 +267,7 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyFontsFontAwesome5Task, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS);
+exports.copy = gulp.series(copyFontsFontAwesome5Task, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask);
 
 exports.test = replaceFontAwesome5Webfonts;
+exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);

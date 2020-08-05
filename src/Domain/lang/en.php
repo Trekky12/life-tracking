@@ -550,5 +550,7 @@ $lang["FRONTPAGE"] = "Frontpage";
 $lang["EFA"] = "electronic timetable (EFA)";
 $lang["WIDGET_URL"] = "URL";
 $lang["WIDGET_TITLE"] = "title";
+$lang["WIDGET_CURRENTWEATHER"] = "current weather";
+$lang["WIDGET_WEATHERFORECAST"] = "weather forecast";
 
 return $lang;
