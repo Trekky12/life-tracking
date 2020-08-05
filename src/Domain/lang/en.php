@@ -547,4 +547,8 @@ $lang["WIDGETS"] = "widgets";
 $lang["WIDGET_OPTIONS"] = "widget options";
 $lang["FRONTPAGE"] = "Frontpage";
 
+$lang["EFA"] = "electronic timetable (EFA)";
+$lang["WIDGET_URL"] = "URL";
+$lang["WIDGET_TITLE"] = "title";
+
 return $lang;

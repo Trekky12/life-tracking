@@ -18,14 +18,14 @@ class StepsTodayWidget implements Widget {
         $this->mapper = $mapper;
     }
 
-    public function getContent($id = null) {
+    public function getContent(WidgetObject $widget = null) {
         $dateObj = new \DateTime('today');
         $date = $dateObj->format("Y-m-d");
 
         return $this->mapper->getStepsOfDate($date);
     }
 
-    public function getTitle($id = null) {
+    public function getTitle(WidgetObject $widget = null) {
         return $this->translation->getTranslatedString("STEPS_TODAY");
     }
     

@@ -39,7 +39,7 @@ class SplittedBillsBalanceWidget implements Widget {
             $group = $groups[$group_id];
             $balance = array_key_exists($group_id, $balances) ? $balances[$group_id] : null;
 
-            if ($balance["balance"] > 0) {
+            if (!is_null($balance) && $balance["balance"] > 0) {
                 $result[$group_id] = ["name" => $group->name, "balance" => $balance["balance"]];
             }
         }
@@ -51,12 +51,12 @@ class SplittedBillsBalanceWidget implements Widget {
         return array_keys($this->groups);
     }
 
-    public function getContent($widget = null) {
+    public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["group"];
         return $this->groups[$id]["balance"];
     }
 
-    public function getTitle($widget = null) {
+    public function getTitle(WidgetObject $widget = null) {
         $id = $widget->getOptions()["group"];
         return sprintf("%s | %s", $this->translation->getTranslatedString("SPLITBILLS"), $this->groups[$id]["name"]);
     }
@@ -66,7 +66,8 @@ class SplittedBillsBalanceWidget implements Widget {
             [
                 "label" => $this->translation->getTranslatedString("SPLITBILL_GROUPS"),
                 "data" => $this->createList(),
-                "name" => "group"
+                "name" => "group",
+                "type" => "select"
             ]
         ];
     }

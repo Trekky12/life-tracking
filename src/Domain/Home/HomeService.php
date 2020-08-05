@@ -17,11 +17,14 @@ use App\Domain\Home\Widget\TimesheetsSumWidget;
 use App\Domain\Home\Widget\WidgetMapper;
 use App\Domain\Base\Settings;
 use App\Domain\Main\Translator;
+use App\Domain\Main\Helper;
+use App\Domain\Home\Widget\EFAWidget;
 
 class HomeService extends Service {
 
     private $translation;
     private $settings;
+    private $helper;
     private $last_finance_entries_widget;
     private $steps_today_widget;
     private $finance_month_expenses_widget;
@@ -29,12 +32,14 @@ class HomeService extends Service {
     private $car_max_mileage_today_widget;
     private $splitted_bills_balance_widget;
     private $timesheets_sum_widget;
+    private $efa_widget;
     private $widget_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             Translator $translation,
             Settings $settings,
+            Helper $helper,
             LastFinanceEntriesWidget $last_finance_entries_widget,
             StepsTodayWidget $steps_today_widget,
             FinanceMonthExpensesWidget $finance_month_expenses_widget,
@@ -43,10 +48,12 @@ class HomeService extends Service {
             CarLastRefuelWidget $car_last_refuel_widget,
             SplittedBillsBalanceWidget $splitted_bills_balance_widget,
             TimesheetsSumWidget $timesheets_sum_widget,
+            EFAWidget $efa_widget,
             WidgetMapper $widget_mapper) {
         parent::__construct($logger, $user);
         $this->translation = $translation;
         $this->settings = $settings;
+        $this->helper = $helper;
 
         $this->last_finance_entries_widget = $last_finance_entries_widget;
         $this->steps_today_widget = $steps_today_widget;
@@ -56,6 +63,7 @@ class HomeService extends Service {
         $this->car_last_refuel_widget = $car_last_refuel_widget;
         $this->splitted_bills_balance_widget = $splitted_bills_balance_widget;
         $this->timesheets_sum_widget = $timesheets_sum_widget;
+        $this->efa_widget = $efa_widget;
 
         $this->widget_mapper = $widget_mapper;
     }
@@ -131,6 +139,7 @@ class HomeService extends Service {
                 "last_refuel" => ["name" => $this->translation->getTranslatedString("CAR_REFUEL")],
                 "splitted_bills_balances" => ["name" => $this->translation->getTranslatedString("SPLITBILLS")],
                 "timesheets_sum" => ["name" => $this->translation->getTranslatedString("TIMESHEETS")],
+                "efa" => ["name" => $this->translation->getTranslatedString("EFA")]
             ],
             "list" => $list
         ]);
@@ -150,6 +159,9 @@ class HomeService extends Service {
                 break;
             case "timesheets_sum":
                 $result = $this->timesheets_sum_widget->getOptions();
+                break;
+            case "efa":
+                $result = $this->efa_widget->getOptions();
                 break;
             default:
                 $result = null;
@@ -199,6 +211,10 @@ class HomeService extends Service {
                 $list["title"] = $this->timesheets_sum_widget->getTitle($widget);
                 $list["content"] = $this->timesheets_sum_widget->getContent($widget);
                 break;
+            case "efa":
+                $list["title"] = $this->efa_widget->getTitle($widget);
+                $list["content"] = $this->efa_widget->getContent($widget);
+                break;
         }
         return $list;
     }
@@ -214,6 +230,63 @@ class HomeService extends Service {
             return new Payload(Payload::$RESULT_JSON, $response_data);
         }
         $response_data = ['status' => 'error'];
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    public function getWidgetRequestData($id) {
+
+        $widget = $this->widget_mapper->get($id);
+        
+        $url = $widget->getOptions()["url"];
+        $type = $widget->name;
+
+        list($status, $result) = $this->helper->request($url);
+
+        $response_data = ['status' => $status, "result" => $result, "type" => $type];
+
+        if ($status == 200) {
+
+            if ($type == "efa") {
+                libxml_use_internal_errors(true);
+                $xml_result = [];
+                $xml = simplexml_load_string($result);
+
+                if ($xml !== false) {
+                    foreach ($xml->itdDepartureMonitorRequest[0]->itdDepartureList[0]->itdDeparture as $departure) {
+                        $dep = [];
+
+                        $dep["servingLine"]["number"] = (string) $departure->itdServingLine->attributes()->number;
+                        $dep["servingLine"]["direction"] = (string) $departure->itdServingLine->attributes()->direction;
+                        $dep["servingLine"]["delay"] = (int) $departure->itdServingLine->itdNoTrain->attributes()->delay;
+
+                        $dep["dateTime"]["year"] = (string) $departure->itdDateTime->itdDate->attributes()->year;
+                        $dep["dateTime"]["month"] = (string) $departure->itdDateTime->itdDate->attributes()->month;
+                        $dep["dateTime"]["day"] = (string) $departure->itdDateTime->itdDate->attributes()->day;
+                        $dep["dateTime"]["hour"] = (string) $departure->itdDateTime->itdTime->attributes()->hour;
+                        $dep["dateTime"]["minute"] = (string) $departure->itdDateTime->itdTime->attributes()->minute;
+
+                        if (isset($departure->itdRTDateTime)) {
+                            $dep["realDateTime"]["year"] = (string) $departure->itdRTDateTime->itdDate->attributes()->year;
+                            $dep["realDateTime"]["month"] = (string) $departure->itdRTDateTime->itdDate->attributes()->month;
+                            $dep["realDateTime"]["day"] = (string) $departure->itdRTDateTime->itdDate->attributes()->day;
+                            $dep["realDateTime"]["hour"] = (string) $departure->itdRTDateTime->itdTime->attributes()->hour;
+                            $dep["realDateTime"]["minute"] = (string) $departure->itdRTDateTime->itdTime->attributes()->minute;
+                        }
+
+                        $xml_result["departureList"][] = $dep;
+                    }
+                }
+
+                $result = json_encode($xml_result);
+            }
+
+            // Convert unicode 
+            // @see https://stackoverflow.com/a/2577882
+            $result = mb_convert_encoding($result, 'HTML-ENTITIES');
+
+            $response_data["result"] = json_decode($result, true);
+        }
+
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 

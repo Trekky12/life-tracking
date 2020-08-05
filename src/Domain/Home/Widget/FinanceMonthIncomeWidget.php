@@ -21,7 +21,7 @@ class FinanceMonthIncomeWidget implements Widget {
         $this->mapper = $mapper;
     }
 
-    public function getContent($id = null) {
+    public function getContent(WidgetObject $widget = null) {
         $dateObj = new \DateTime('today');
         $year = $dateObj->format("Y");
         $month = $dateObj->format("m");
@@ -29,7 +29,7 @@ class FinanceMonthIncomeWidget implements Widget {
         return $this->mapper->statsMailBalance($this->current_user->getUser()->id, $month, $year, 1);
     }
 
-    public function getTitle($id = null) {
+    public function getTitle(WidgetObject $widget = null) {
         return $this->translation->getTranslatedString("INCOME_THIS_MONTH");
     }
 

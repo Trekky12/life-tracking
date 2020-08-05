@@ -56,12 +56,12 @@ class CarMaxMileageTodayWidget implements Widget {
         return array_keys($this->cars);
     }
 
-    public function getContent($widget = null) {
+    public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
         return sprintf("%s %s", $this->cars[$id]["remaining"], $this->translation->getTranslatedString("KM"));
     }
 
-    public function getTitle($widget = null) {
+    public function getTitle(WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
         return sprintf("%s | %s", $this->translation->getTranslatedString("REMAINING_KM"), $this->cars[$id]["name"]);
     }
@@ -71,7 +71,8 @@ class CarMaxMileageTodayWidget implements Widget {
             [
                 "label" => $this->translation->getTranslatedString("CAR"),
                 "data" => $this->createList(),
-                "name" => "car"
+                "name" => "car",
+                "type" => "select"
             ]
         ];
     }

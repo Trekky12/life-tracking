@@ -94,6 +94,10 @@
             @media screen and (min-width: $size_tablet) {
                 @include font-size(10);
             }
+            
+            &.fa-spin{
+                @include font-size(4);
+            }
         }
 
         table{

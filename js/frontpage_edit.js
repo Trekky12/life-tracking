@@ -27,8 +27,7 @@ new Sortable(document.querySelector('.grid'), {
         }).then(function (response) {
             return response.json();
         }).then(function (data) {
-            // fetch markers so that are correct sorted for routing
-            getMarkers(fromInput.value, toInput.value);
+
         }).catch(function (error) {
             console.log(error);
         });
@@ -91,19 +90,32 @@ addWidgetBtn.addEventListener("click", function (event) {
                     let label = document.createElement("label");
                     label.innerHTML = element.label;
 
-                    let select = document.createElement("select");
-                    select.classList.add("form-control");
-                    select.name = element.name;
-
-                    Object.keys(element.data).forEach(function (k) {
-                        let option = document.createElement("option");
-                        option.value = k;
-                        option.innerHTML = element.data[k]["name"];
-                        select.appendChild(option);
-                    });
-
                     group.appendChild(label);
-                    group.appendChild(select);
+
+                    if (element.type == "select") {
+
+                        let select = document.createElement("select");
+                        select.classList.add("form-control");
+                        select.name = element.name;
+
+                        Object.keys(element.data).forEach(function (k) {
+                            let option = document.createElement("option");
+                            option.value = k;
+                            option.innerHTML = element.data[k]["name"];
+                            select.appendChild(option);
+                        });
+                        group.appendChild(select);
+                    }else if (element.type == "input") {
+
+                        let input = document.createElement("input");
+                        input.classList.add("form-control");
+                        input.name = element.name;
+                        input.value = element.data;
+
+                        group.appendChild(input);
+                    }
+                    
+
                     widgetModalContent.appendChild(group);
 
                 });

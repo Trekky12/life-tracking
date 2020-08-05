@@ -545,5 +545,9 @@ $lang["TWOFACTOR_AUTHENTICATION"]= "Zweifaktorauthentifizierung";
 $lang["WIDGETS"] = "Widgets";
 $lang["WIDGET_OPTIONS"] = "Widget Einstellungen";
 $lang["FRONTPAGE"] = "Startseite";
+
+$lang["EFA"] = "Elektronische Fahrplanauskunft";
+$lang["WIDGET_URL"] = "URL";
+$lang["WIDGET_TITLE"] = "Titel";
         
 return $lang;
