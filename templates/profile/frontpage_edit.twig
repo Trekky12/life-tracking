@@ -42,7 +42,7 @@
             <div class="card" data-widget="{{ widget["id"] }}">
                 <div class="card-content">
                     <div class="card-header has-buttons">
-                        <h3><a href="{{ widget["url"] }}">{{ widget["title"]|raw }}</a></h3>
+                        <h3>{% if widget["url"] is not null %}<a href="{{ widget["url"] }}">{{ widget["title"] | raw }}</a>{% else %}{{ widget["title"] | raw }}{% endif %}</h3>
                         <div class="buttons">
                             <a href="#" data-url="{{ url_for('users_profile_frontpage_widget_delete', {'id' : widget["id"]}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
                         </div>

@@ -8,19 +8,22 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Domain\Main\Utility\DateUtility;
+use Slim\Routing\RouteParser;
 
 class TimesheetsSumWidget implements Widget {
 
     private $logger;
     private $translation;
+    private $router;
     private $current_user;
     private $project_service;
     private $sheet_mapper;
     private $projects = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, CurrentUser $user, ProjectService $project_service, SheetMapper $sheet_mapper) {
+    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, ProjectService $project_service, SheetMapper $sheet_mapper) {
         $this->logger = $logger;
         $this->translation = $translation;
+        $this->router = $router;
         $this->current_user = $user;
         $this->project_service = $project_service;
         $this->sheet_mapper = $sheet_mapper;
@@ -40,7 +43,7 @@ class TimesheetsSumWidget implements Widget {
             $range = $this->sheet_mapper->getMinMaxDate("start", "end");
             $totalSeconds = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"]);
 
-            $result[$project_id] = ["name" => $project->name, "sum" => DateUtility::splitDateInterval($totalSeconds)];
+            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "sum" => DateUtility::splitDateInterval($totalSeconds)];
         }
 
         return $result;
@@ -69,6 +72,11 @@ class TimesheetsSumWidget implements Widget {
                 "type" => "select"
             ]
         ];
+    }
+
+    public function getLink(WidgetObject $widget = null) {
+        $id = $widget->getOptions()["project"];
+        return $this->router->urlFor('timesheets_sheets', ["project" => $this->projects[$id]["hash"]]);
     }
 
 }

@@ -43,4 +43,8 @@ class EFAWidget implements Widget {
         ];
     }
 
+    public function getLink(WidgetObject $widget = null) {
+        return null;
+    }
+
 }

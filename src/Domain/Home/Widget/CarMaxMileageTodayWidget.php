@@ -8,20 +8,23 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\Car\CarService;
 use App\Domain\Car\Service\CarServiceStatsService;
 use App\Domain\Car\Service\CarServiceMapper;
+use Slim\Routing\RouteParser;
 
 class CarMaxMileageTodayWidget implements Widget {
 
     private $logger;
     private $translation;
+    private $router;
     private $current_user;
     private $car_service;
     private $service;
     private $carservice_mapper;
     private $cars = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, CurrentUser $user, CarService $car_service, CarServiceStatsService $service, CarServiceMapper $carservice_mapper) {
+    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, CarService $car_service, CarServiceStatsService $service, CarServiceMapper $carservice_mapper) {
         $this->logger = $logger;
         $this->translation = $translation;
+        $this->router = $router;
         $this->current_user = $user;
         $this->car_service = $car_service;
         $this->service = $service;
@@ -75,6 +78,10 @@ class CarMaxMileageTodayWidget implements Widget {
                 "type" => "select"
             ]
         ];
+    }
+
+    public function getLink(WidgetObject $widget = null) {
+        return $this->router->urlFor('car_service');
     }
 
 }

@@ -198,46 +198,57 @@ class HomeService extends Service {
             case "last_finance_entries":
                 $list["title"] = $this->last_finance_entries_widget->getTitle();
                 $list["content"] = $this->last_finance_entries_widget->getContent();
+                $list["url"] = $this->last_finance_entries_widget->getLink();
                 break;
             case "steps_today_entries":
                 $list["title"] = $this->steps_today_widget->getTitle();
                 $list["content"] = $this->steps_today_widget->getContent();
+                $list["url"] = $this->steps_today_widget->getLink();
                 break;
             case "finances_month_expenses":
                 $list["title"] = $this->finance_month_expenses_widget->getTitle();
                 $list["content"] = $this->finance_month_expenses_widget->getContent();
+                $list["url"] = $this->finance_month_expenses_widget->getLink();
                 break;
             case "finances_month_income":
                 $list["title"] = $this->finance_month_income_widget->getTitle();
                 $list["content"] = $this->finance_month_income_widget->getContent();
+                $list["url"] = $this->finance_month_income_widget->getLink();
                 break;
             case "last_refuel":
                 $list["title"] = $this->car_last_refuel_widget->getTitle($widget);
                 $list["content"] = $this->car_last_refuel_widget->getContent($widget);
+                $list["url"] = $this->car_last_refuel_widget->getLink($widget);
                 break;
             case "max_mileage":
                 $list["title"] = $this->car_max_mileage_today_widget->getTitle($widget);
                 $list["content"] = $this->car_max_mileage_today_widget->getContent($widget);
+                $list["url"] = $this->car_max_mileage_today_widget->getLink($widget);
                 break;
             case "splitted_bills_balances":
                 $list["title"] = $this->splitted_bills_balance_widget->getTitle($widget);
                 $list["content"] = $this->splitted_bills_balance_widget->getContent($widget);
+                $list["url"] = $this->splitted_bills_balance_widget->getLink($widget);
                 break;
             case "timesheets_sum":
                 $list["title"] = $this->timesheets_sum_widget->getTitle($widget);
                 $list["content"] = $this->timesheets_sum_widget->getContent($widget);
+                $list["url"] = $this->timesheets_sum_widget->getLink($widget);
                 break;
             case "efa":
                 $list["title"] = $this->efa_widget->getTitle($widget);
                 $list["content"] = $this->efa_widget->getContent($widget);
+                $list["url"] = $this->efa_widget->getLink($widget);
                 break;
             case "currentweather":
                 $list["title"] = $this->currentweather_widget->getTitle($widget);
                 $list["content"] = $this->currentweather_widget->getContent($widget);
+                $list["url"] = $this->currentweather_widget->getLink($widget);
                 break;
             case "weatherforecast":
                 $list["title"] = $this->weatherforecast_widget->getTitle($widget);
                 $list["content"] = $this->weatherforecast_widget->getContent($widget);
+                $list["url"] = $this->weatherforecast_widget->getLink($widget);
                 break;
         }
         return $list;

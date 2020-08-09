@@ -9,4 +9,6 @@ interface Widget {
     public function getTitle(WidgetObject $widget = null);
     
     public function getOptions();
+    
+    public function getLink(WidgetObject $widget = null);
 }

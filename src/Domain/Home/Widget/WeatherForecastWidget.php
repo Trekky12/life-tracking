@@ -30,17 +30,21 @@ class WeatherForecastWidget implements Widget {
         return [
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_TITLE"),
-                "data" => null,
+                "value" => null,
                 "name" => "title",
                 "type" => "input"
             ],
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_URL"),
-                "data" => null,
+                "value" => null,
                 "name" => "url",
                 "type" => "input"
             ]
         ];
+    }
+
+    public function getLink(WidgetObject $widget = null) {
+        null;
     }
 
 }

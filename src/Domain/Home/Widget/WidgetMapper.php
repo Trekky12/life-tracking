@@ -19,5 +19,5 @@ class WidgetMapper extends \App\Domain\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-
+    
 }

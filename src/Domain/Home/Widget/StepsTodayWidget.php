@@ -5,16 +5,19 @@ namespace App\Domain\Home\Widget;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Location\Steps\StepsMapper;
+use Slim\Routing\RouteParser;
 
 class StepsTodayWidget implements Widget {
 
     private $logger;
     private $translation;
+    private $router;
     private $mapper;
 
-    public function __construct(LoggerInterface $logger, Translator $translation, StepsMapper $mapper) {
+    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, StepsMapper $mapper) {
         $this->logger = $logger;
         $this->translation = $translation;
+        $this->router = $router;
         $this->mapper = $mapper;
     }
 
@@ -31,6 +34,10 @@ class StepsTodayWidget implements Widget {
     
     public function getOptions() {
         return [];
+    }
+
+    public function getLink(WidgetObject $widget = null) {
+        return $this->router->urlFor('steps');
     }
 
 }
