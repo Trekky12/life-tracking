@@ -26,17 +26,17 @@ class EFAWidget implements Widget {
         return $widget->getOptions()["title"];
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_TITLE"),
-                "data" => null,
+                "value" => !is_null($widget) ? $widget->getOptions()["title"] : null,
                 "name" => "title",
                 "type" => "input"
             ],
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_URL"),
-                "data" => null,
+                "value" => !is_null($widget) ? $widget->getOptions()["url"] : null,
                 "name" => "url",
                 "type" => "input"
             ]

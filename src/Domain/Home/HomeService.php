@@ -155,29 +155,35 @@ class HomeService extends Service {
         ]);
     }
 
-    public function getWidgetOptions($widget) {
+    public function getWidgetOptions($widget_type, $id) {
+        
+        $widget = $this->widget_mapper->getWidget($id);
+        if(is_null($widget_type) && !is_null($widget)){
+            $widget_type = $widget->name;
+        }
+        
         $result = null;
-        switch ($widget) {
+        switch ($widget_type) {
             case "max_mileage":
-                $result = $this->car_max_mileage_today_widget->getOptions();
+                $result = $this->car_max_mileage_today_widget->getOptions($widget);
                 break;
             case "last_refuel":
-                $result = $this->car_last_refuel_widget->getOptions();
+                $result = $this->car_last_refuel_widget->getOptions($widget);
                 break;
             case "splitted_bills_balances":
-                $result = $this->splitted_bills_balance_widget->getOptions();
+                $result = $this->splitted_bills_balance_widget->getOptions($widget);
                 break;
             case "timesheets_sum":
-                $result = $this->timesheets_sum_widget->getOptions();
+                $result = $this->timesheets_sum_widget->getOptions($widget);
                 break;
             case "efa":
-                $result = $this->efa_widget->getOptions();
+                $result = $this->efa_widget->getOptions($widget);
                 break;
             case "currentweather":
-                $result = $this->currentweather_widget->getOptions();
+                $result = $this->currentweather_widget->getOptions($widget);
                 break;
             case "weatherforecast":
-                $result = $this->weatherforecast_widget->getOptions();
+                $result = $this->weatherforecast_widget->getOptions($widget);
                 break;
             default:
                 $result = null;
@@ -188,11 +194,12 @@ class HomeService extends Service {
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    private function getWidgetForFrontend($widget) {
+    private function getWidgetForFrontend(Widget\WidgetObject $widget) {
 
         $list = [
             "id" => $widget->id,
-            "name" => $widget->name
+            "name" => $widget->name,
+            "hasOptions" => count($widget->getOptions())
         ];
         switch ($widget->name) {
             case "last_finance_entries":

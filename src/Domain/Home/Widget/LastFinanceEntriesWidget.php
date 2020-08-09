@@ -29,7 +29,7 @@ class LastFinanceEntriesWidget implements Widget {
         return $this->translation->getTranslatedString("LAST_5_EXPENSES");
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [];
     }
 

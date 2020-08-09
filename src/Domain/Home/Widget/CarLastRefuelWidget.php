@@ -61,11 +61,12 @@ class CarLastRefuelWidget implements Widget {
         return sprintf("%s | %s", $this->translation->getTranslatedString("CAR_REFUEL"), $this->cars[$id]["name"]);
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("CAR"),
                 "data" => $this->createList(),
+                "value" => !is_null($widget) ? $widget->getOptions()["car"] : null,
                 "name" => "car",
                 "type" => "select"
             ]

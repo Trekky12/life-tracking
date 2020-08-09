@@ -36,7 +36,7 @@ class FinanceMonthExpensesWidget implements Widget {
         return $this->translation->getTranslatedString("EXPENSES_THIS_MONTH");
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [];
     }
 

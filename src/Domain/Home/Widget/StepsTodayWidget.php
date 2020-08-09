@@ -32,7 +32,7 @@ class StepsTodayWidget implements Widget {
         return $this->translation->getTranslatedString("STEPS_TODAY");
     }
     
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [];
     }
 

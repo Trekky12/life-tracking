@@ -36,6 +36,7 @@ new Sortable(document.querySelector('.grid'), {
 
 
 const widgetModal = document.getElementById("widget-modal");
+const widgetModalContent = widgetModal.querySelector('.modal-content');
 const modalCloseBtn = document.getElementById("modal-close-btn");
 
 modalCloseBtn.addEventListener('click', function (e) {
@@ -67,12 +68,11 @@ addWidgetBtn.addEventListener("click", function (event) {
     event.preventDefault();
     document.getElementById('loading-overlay').classList.remove('hidden');
 
-    let widget = addWidgetBtn.parentElement.querySelector('select').value;
-    let widgetModalContent = widgetModal.querySelector('.modal-content');
+    let widget_type = addWidgetBtn.parentElement.querySelector('select').value;
 
     widgetModalContent.innerHTML = '';
 
-    fetch(jsObject.frontpage_widget_option + '?widget=' + widget, {
+    fetch(jsObject.frontpage_widget_option + '?widget=' + widget_type, {
         method: 'GET',
         credentials: "same-origin"
     }).then(function (response) {
@@ -82,47 +82,11 @@ addWidgetBtn.addEventListener("click", function (event) {
             // show modal
             if (data.entry) {
 
-                data.entry.forEach(function (element) {
+                setModalContent(data.entry);
 
-                    let group = document.createElement("div");
-                    group.classList.add("form-group");
-
-                    let label = document.createElement("label");
-                    label.innerHTML = element.label;
-
-                    group.appendChild(label);
-
-                    if (element.type == "select") {
-
-                        let select = document.createElement("select");
-                        select.classList.add("form-control");
-                        select.name = element.name;
-
-                        Object.keys(element.data).forEach(function (k) {
-                            let option = document.createElement("option");
-                            option.value = k;
-                            option.innerHTML = element.data[k]["name"];
-                            select.appendChild(option);
-                        });
-                        group.appendChild(select);
-                    }else if (element.type == "input") {
-
-                        let input = document.createElement("input");
-                        input.classList.add("form-control");
-                        input.name = element.name;
-                        input.value = element.data;
-
-                        group.appendChild(input);
-                    }
-                    
-
-                    widgetModalContent.appendChild(group);
-
-                });
-                widgetModal.style.display = 'block';
             } else {
                 // create new widget
-                return saveWidget(widget);
+                return saveWidget(widget_type);
             }
         }
     }).then(function (response) {
@@ -136,6 +100,64 @@ addWidgetBtn.addEventListener("click", function (event) {
         console.log(error);
     });
 });
+
+function setModalContent(data, id = null) {
+    data.forEach(function (element) {
+
+        let group = document.createElement("div");
+        group.classList.add("form-group");
+
+        let label = document.createElement("label");
+        label.innerHTML = element.label;
+
+        group.appendChild(label);
+
+        if (element.type == "select") {
+
+            let select = document.createElement("select");
+            select.classList.add("form-control");
+            select.name = element.name;
+
+            Object.keys(element.data).forEach(function (k) {
+                let option = document.createElement("option");
+                option.value = k;
+                option.innerHTML = element.data[k]["name"];
+
+                if (k == element.value) {
+                    option.selected = true;
+                }
+
+                select.appendChild(option);
+            });
+            group.appendChild(select);
+        } else if (element.type == "input") {
+
+            let input = document.createElement("input");
+            input.classList.add("form-control");
+            input.name = element.name;
+            input.value = element.value;
+
+            group.appendChild(input);
+        }
+
+
+        widgetModalContent.appendChild(group);
+
+    });
+
+    document.getElementById('add-widget-modal').value = lang.add;
+    
+    if (id !== null) {
+        let inputID = document.createElement("input");
+        inputID.type = "hidden";
+        inputID.name = "id";
+        inputID.value = id;
+        widgetModalContent.appendChild(inputID);
+
+        document.getElementById('add-widget-modal').value = lang.update;
+    }
+    widgetModal.style.display = 'block';
+}
 
 function saveWidget(type, options = {}){
     document.getElementById('loading-overlay').classList.remove('hidden');
@@ -160,3 +182,37 @@ function saveWidget(type, options = {}){
     });
 
 }
+
+let widgets = document.querySelectorAll('a.btn-edit');
+widgets.forEach(function (item, idx) {
+    item.addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('loading-overlay').classList.remove('hidden');
+        widgetModalContent.innerHTML = '';
+
+        let widget_id = item.dataset.id;
+
+        fetch(jsObject.frontpage_widget_option + widget_id, {
+            method: 'GET',
+            credentials: "same-origin"
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            if (data.status !== 'error') {
+                // show modal
+                if (data.entry) {
+                    setModalContent(data.entry, widget_id);
+                }
+            }
+        }).then(function (response) {
+            if (response !== undefined) {
+                allowedReload = true;
+                window.location.reload();
+            } else {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+    });
+});

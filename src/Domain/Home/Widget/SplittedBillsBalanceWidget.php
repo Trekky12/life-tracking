@@ -64,11 +64,12 @@ class SplittedBillsBalanceWidget implements Widget {
         return sprintf("%s | %s", $this->translation->getTranslatedString("SPLITBILLS"), $this->groups[$id]["name"]);
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("SPLITBILL_GROUPS"),
                 "data" => $this->createList(),
+                "value" => !is_null($widget) ? $widget->getOptions()["group"] : null,
                 "name" => "group",
                 "type" => "select"
             ]

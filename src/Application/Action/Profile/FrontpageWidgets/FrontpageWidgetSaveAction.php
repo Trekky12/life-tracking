@@ -18,9 +18,8 @@ class FrontpageWidgetSaveAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        $payload = $this->service->save($id, $data);
+        $payload = $this->service->save(null, $data);
         return $this->responder->respond($payload);
     }
 

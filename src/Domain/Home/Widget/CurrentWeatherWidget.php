@@ -26,17 +26,17 @@ class CurrentWeatherWidget implements Widget {
         return $widget->getOptions()["title"];
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_TITLE"),
-                "value" => null,
+                "value" => !is_null($widget) ? $widget->getOptions()["title"] : null,
                 "name" => "title",
                 "type" => "input"
             ],
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_URL"),
-                "value" => null,
+                "value" => !is_null($widget) ? $widget->getOptions()["url"] : null,
                 "name" => "url",
                 "type" => "input"
             ]

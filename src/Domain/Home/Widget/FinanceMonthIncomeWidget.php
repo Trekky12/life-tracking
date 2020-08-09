@@ -36,7 +36,7 @@ class FinanceMonthIncomeWidget implements Widget {
         return $this->translation->getTranslatedString("INCOME_THIS_MONTH");
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [];
     }
 

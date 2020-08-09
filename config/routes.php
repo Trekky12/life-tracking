@@ -174,8 +174,8 @@ return function (App $app) {
 
         $group->group('/frontpage', function(RouteCollectorProxy $group_frontpage) {
             $group_frontpage->get('/', \App\Application\Action\Profile\FrontpageWidgets\FrontpageEditAction::class)->setName('users_profile_frontpage');
-            $group_frontpage->get('/options', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetOptionsAction::class)->setName('users_profile_frontpage_widget_option');
-            $group_frontpage->post('/save/', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetSaveAction::class)->setName('users_profile_frontpage_widget_option_save');
+            $group_frontpage->get('/options/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetOptionsAction::class)->setName('users_profile_frontpage_widget_option');
+            $group_frontpage->post('/save/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetSaveAction::class)->setName('users_profile_frontpage_widget_option_save');
             $group_frontpage->post('/updatePosition', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetUpdatePositionAction::class)->setName('users_profile_frontpage_widget_position');
             $group_frontpage->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDeleteAction::class)->setName('users_profile_frontpage_widget_delete');
             

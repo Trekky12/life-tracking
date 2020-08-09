@@ -18,8 +18,9 @@ class FrontpageWidgetOptionsAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
+        $id = $request->getAttribute('id');
         $widget = $request->getParam('widget');
-        $payload = $this->service->getWidgetOptions($widget);
+        $payload = $this->service->getWidgetOptions($widget, $id);
         return $this->responder->respond($payload);
     }
 

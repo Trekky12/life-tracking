@@ -16,6 +16,12 @@ class WidgetWriter extends ObjectActivityWriter {
     }
 
     public function save($id, $data, $additionalData = null): Payload {
+        // get ID from input field 
+        if(is_array($data) && array_key_exists("options", $data) && is_array($data["options"]) && array_key_exists("id", $data["options"])){
+            $id = filter_var($data["options"]["id"], FILTER_SANITIZE_NUMBER_INT);
+            $data["id"] = $id;
+        }
+        
         return parent::save($id, $data, $additionalData);
     }
     

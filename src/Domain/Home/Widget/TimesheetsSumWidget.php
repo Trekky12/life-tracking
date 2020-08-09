@@ -63,11 +63,12 @@ class TimesheetsSumWidget implements Widget {
         return sprintf("%s | %s", $this->translation->getTranslatedString("TIMESHEETS"), $this->projects[$id]["name"]);
     }
 
-    public function getOptions() {
+    public function getOptions(WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("TIMESHEETS_PROJECTS"),
                 "data" => $this->createList(),
+                "value" => !is_null($widget) ? $widget->getOptions()["project"] : null,
                 "name" => "project",
                 "type" => "select"
             ]
