@@ -24,6 +24,8 @@ use RobThree\Auth\TwoFactorAuth;
 if (!isset($_SESSION))
     $_SESSION = array();
 
+date_default_timezone_set('Europe/Berlin');
+
 class BaseTestCase extends TestCase {
 
     /**
@@ -38,6 +40,7 @@ class BaseTestCase extends TestCase {
      * Variables
      */
     protected $USE_GUZZLE = true;
+    protected $LOCAL_IP = '::1';
     protected $USER_AGENT = 'PHPUnit Test';
 
     /**
