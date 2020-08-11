@@ -137,31 +137,44 @@ class HomeService extends Service {
             $list[] = $this->getWidgetForFrontend($widget);
         }
 
+        $available_widgets = [];
+
+        if ($this->current_user->getUser()->hasModule('finances')) {
+            $available_widgets["last_finance_entries"] = ["name" => $this->translation->getTranslatedString("LAST_5_EXPENSES")];
+            $available_widgets["finances_month_expenses"] = ["name" => $this->translation->getTranslatedString("EXPENSES_THIS_MONTH")];
+            $available_widgets["finances_month_income"] = ["name" => $this->translation->getTranslatedString("INCOME_THIS_MONTH")];
+        }
+        if ($this->current_user->getUser()->hasModule('location')) {
+            $available_widgets["steps_today_entries"] = ["name" => $this->translation->getTranslatedString("STEPS_TODAY")];
+        }
+        if ($this->current_user->getUser()->hasModule('cars')) {
+            $available_widgets["max_mileage"] = ["name" => $this->translation->getTranslatedString("REMAINING_KM")];
+            $available_widgets["last_refuel"] = ["name" => $this->translation->getTranslatedString("CAR_REFUEL")];
+        }
+        if ($this->current_user->getUser()->hasModule('splitbills')) {
+            $available_widgets["splitted_bills_balances"] = ["name" => $this->translation->getTranslatedString("SPLITBILLS")];
+        }
+        if ($this->current_user->getUser()->hasModule('timesheets')) {
+            $available_widgets["timesheets_sum"] = ["name" => $this->translation->getTranslatedString("TIMESHEETS")];
+        }
+
+        $available_widgets["efa"] = ["name" => $this->translation->getTranslatedString("EFA")];
+        $available_widgets["currentweather"] = ["name" => $this->translation->getTranslatedString("WIDGET_CURRENTWEATHER")];
+        $available_widgets["weatherforecast"] = ["name" => $this->translation->getTranslatedString("WIDGET_WEATHERFORECAST")];
+
         return new Payload(Payload::$RESULT_HTML, [
-            "widgets" => [
-                "last_finance_entries" => ["name" => $this->translation->getTranslatedString("LAST_5_EXPENSES")],
-                "steps_today_entries" => ["name" => $this->translation->getTranslatedString("STEPS_TODAY")],
-                "finances_month_expenses" => ["name" => $this->translation->getTranslatedString("EXPENSES_THIS_MONTH")],
-                "finances_month_income" => ["name" => $this->translation->getTranslatedString("INCOME_THIS_MONTH")],
-                "max_mileage" => ["name" => $this->translation->getTranslatedString("REMAINING_KM")],
-                "last_refuel" => ["name" => $this->translation->getTranslatedString("CAR_REFUEL")],
-                "splitted_bills_balances" => ["name" => $this->translation->getTranslatedString("SPLITBILLS")],
-                "timesheets_sum" => ["name" => $this->translation->getTranslatedString("TIMESHEETS")],
-                "efa" => ["name" => $this->translation->getTranslatedString("EFA")],
-                "currentweather" => ["name" => $this->translation->getTranslatedString("WIDGET_CURRENTWEATHER")],
-                "weatherforecast" => ["name" => $this->translation->getTranslatedString("WIDGET_WEATHERFORECAST")]
-            ],
+            "widgets" => $available_widgets,
             "list" => $list
         ]);
     }
 
     public function getWidgetOptions($widget_type, $id) {
-        
+
         $widget = $this->widget_mapper->getWidget($id);
-        if(is_null($widget_type) && !is_null($widget)){
+        if (is_null($widget_type) && !is_null($widget)) {
             $widget_type = $widget->name;
         }
-        
+
         $result = null;
         switch ($widget_type) {
             case "max_mileage":
@@ -196,10 +209,12 @@ class HomeService extends Service {
 
     private function getWidgetForFrontend(Widget\WidgetObject $widget) {
 
+        $options = $widget->getOptions();
+
         $list = [
             "id" => $widget->id,
             "name" => $widget->name,
-            "hasOptions" => count($widget->getOptions())
+            "hasOptions" => $options ? count($options) : false
         ];
         switch ($widget->name) {
             case "last_finance_entries":
