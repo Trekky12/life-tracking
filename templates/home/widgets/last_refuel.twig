@@ -1,0 +1,20 @@
+<table>    
+    <thead>
+        <tr>
+            <th>{{lang["DATE"]}}</th>
+            <th>{{lang["MILEAGE"]}}</th>
+            <th>{{lang["CONSUMPTION"]}}</th>
+            <th>{{lang["LOCATION"]}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for list_entry in widget["content"] %}
+            <tr>
+                <td>{{ list_entry[0]|date(i18n.dateformatTwig.date) }}</td>
+                <td>{{ list_entry[2] }}</td>
+                <td>{{ list_entry[7] }}</td>
+                <td>{{ list_entry[8] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

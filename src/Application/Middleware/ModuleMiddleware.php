@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
+use App\Domain\Main\Utility\Utility;
 
 class ModuleMiddleware {
 
@@ -62,17 +63,15 @@ class ModuleMiddleware {
         return $handler->handle($request);
     }
 
-    /**
-     * @see https://stackoverflow.com/a/834355
-     */
-    private function startsWith($haystack, $needle) {
-        $length = strlen($needle);
-        return (substr($haystack, 0, $length) === $needle);
-    }
-
     private function getCurrentModule($modules, $route) {
+        // remove /api prefix 
+        //@see https://stackoverflow.com/a/4517270
+        if (Utility::startsWith($route, "/api")) {
+            $route = substr($route, strlen("/api"));
+        }
+
         foreach ($modules as $name => $mod) {
-            if ($this->startsWith($route, $mod['url'])) {
+            if (Utility::startsWith($route, $mod['url'])) {
                 return $name;
             }
         }

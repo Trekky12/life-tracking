@@ -70,5 +70,20 @@ class UserMapper extends \App\Domain\Mapper {
         }
         return $stmt->rowCount();
     }
+    
+    public function update_secret($id, $secret) {
+        $sql = "UPDATE " . $this->getTableName() . " SET secret=:secret WHERE id=:id";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "secret" => $secret,
+            "id" => $id
+        ]);
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+        if ($stmt->rowCount() === 0) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'), 404);
+        }
+    }
 
 }

@@ -1,0 +1,20 @@
+<table>    
+    <thead>
+        <tr>
+            <th>{{lang["DATE"]}}</th>
+            <th>{{lang["TIME"]}}</th>
+            <th>{{lang["DESCRIPTION"]}}</th>
+            <th>{{lang["VALUE"]}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for finance_entry in widget["content"] %}
+            <tr>
+                <td>{{ finance_entry["date"]|date(i18n.dateformatTwig.date) }}</td>
+                <td>{{ finance_entry["time"] }}</td>
+                <td>{{ finance_entry["description"] }}</td>
+                <td>{{ finance_entry["value"] }} {{ i18n.currency }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

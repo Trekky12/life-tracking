@@ -436,6 +436,8 @@ $lang["CURRENT_DAY"] = "aktueller Tag";
 $lang["CURRENT_MONTH"] = "aktueller Monat";
 $lang["CURRENT_YEAR"] = "aktuelles Jahr";
 
+$lang["APPLICATION_PASSWORDS"] = "Anwendungspasswörter";
+
 $lang["TIMESHEETS"] = "Zeiterfassung";
 $lang["TIMESHEETS_PROJECTS"] = "Zeiterfassungsprojekte";
 $lang["TIMESHEETS_OVERVIEW"] = "Übersicht";
@@ -490,6 +492,8 @@ $lang["DATAOBJECT_TRIPS_TRIP"] = "Reise";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "Route";
 $lang["DATAOBJECT_MOBILEFAVORITE"] = "Mobiler Favoriteneintrag";
 $lang["DATAOBJECT_USER"] = "Benutzer";
+$lang["DATAOBJECT_APPLICATIONPASSWORD"] = "Anwendungspasswort";
+$lang["DATAOBJECT_WIDGET_ENTRY"] = "Widget";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -529,5 +533,23 @@ $lang["TRIPS_ROUTE_SAVED_ERROR"] = "Route konnte nicht gespeichert werden.";
 $lang["TRIPS_ROUTES"] = "Routen";
 
 $lang["TRIPS_WAYPOINT_SAVE"] = "Speichern";
+
+$lang["TWOFACTOR_ERROR"]= "Zweifaktorauthentifizierung konnte nicht aktiviert werden!";
+$lang["TWOFACTOR_SUCCESS"]= "Zweifaktorauthentifizierung wurde erfolgreich aktiviert.";
+$lang["TWOFACTOR_SUCCESS_DELETE"]= "Zweifaktorauthentifizierung wurde erfolgreich deaktiviert.";
+$lang["TWOFACTOR_DISABLE"]= "Deativieren";
+$lang["TWOFACTOR_TEXT"] = "Bitte den QR-Code einscannen oder das Geheimnis in die Zweifaktorauthentifizierungs-App eingeben.";
+$lang["TWOFACTOR_CODE"]= "Code";
+$lang["TWOFACTOR_AUTHENTICATION"]= "Zweifaktorauthentifizierung";
+
+$lang["WIDGETS"] = "Widgets";
+$lang["WIDGET_OPTIONS"] = "Widget Einstellungen";
+$lang["FRONTPAGE"] = "Startseite";
+
+$lang["EFA"] = "Elektronische Fahrplanauskunft";
+$lang["WIDGET_URL"] = "URL";
+$lang["WIDGET_TITLE"] = "Titel";
+$lang["WIDGET_CURRENTWEATHER"] = "aktuelles Wetter";
+$lang["WIDGET_WEATHERFORECAST"] = "Wettervorhersage";
         
 return $lang;

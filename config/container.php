@@ -21,6 +21,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use App\Application\TwigExtensions\FlashExtension;
 use App\Application\TwigExtensions\CsrfExtension;
+use App\Domain\Main\Utility\Utility;
 
 return [
     Settings::class => function () {
@@ -139,6 +140,10 @@ return [
      * Flash Messages
      */
     Flash::class => function () {
+        if (PHP_SAPI === 'cli') {
+            $storage = [];
+            return new \Slim\Flash\Messages($storage);
+        }
         return new \Slim\Flash\Messages();
     },
     /**
@@ -146,7 +151,12 @@ return [
      */
     CSRF::class => function (ContainerInterface $container) {
         $responseFactory = $container->get(App::class)->getResponseFactory();
-        $guard = new \Slim\Csrf\Guard($responseFactory);
+        if (PHP_SAPI === 'cli') {
+            $storage = [];
+            $guard = new \Slim\Csrf\Guard($responseFactory, 'csrf', $storage);
+        } else {
+            $guard = new \Slim\Csrf\Guard($responseFactory);
+        }
         $guard->setStorageLimit(10);
         $guard->setFailureHandler(function (Request $request, RequestHandler $handler) use($container): ResponseInterface {
 
@@ -154,7 +164,7 @@ return [
                     $route = $routeContext->getRoute();
                     $allowed_routes = $container->get(Settings::class)->all()['CSRF']['exclude'];
 
-                    if ((!is_null($route) && in_array($route->getName(), $allowed_routes))) {
+                    if ((!is_null($route) && (in_array($route->getName(), $allowed_routes) || (Utility::startsWith($route->getPattern(), "/api"))))) {
                         return $handler->handle($request);
                     }
 

@@ -4,7 +4,7 @@ namespace App\Application\Action\Main;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Domain\Main\MainService;
+use App\Domain\Main\LogService;
 use App\Application\Responder\HTMLTemplateResponder;
 
 class LogfileDataAction {
@@ -12,7 +12,7 @@ class LogfileDataAction {
     private $responder;
     private $service;
 
-    public function __construct(HTMLTemplateResponder $responder, MainService $service) {
+    public function __construct(HTMLTemplateResponder $responder, LogService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

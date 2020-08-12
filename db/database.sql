@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     mails_board_reminder int(1) DEFAULT 1,
     mails_splitted_bills  int(1) DEFAULT 1,
     start_url varchar(255) DEFAULT NULL,
+    secret VARCHAR(255) NULL,
     PRIMARY KEY(id),
     UNIQUE(login)
 );
@@ -368,6 +369,19 @@ CREATE TABLE global_settings (
   value text,
   type varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS global_widgets;
+CREATE TABLE global_widgets (
+  id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  user INTEGER unsigned DEFAULT NULL,
+  createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  changedOn TIMESTAMP NULL,
+  name varchar(255) NOT NULL,
+  options text,
+  position INT(10) NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS notifications_categories;
@@ -741,6 +755,18 @@ CREATE TABLE global_users_mobile_favorites (
     position INT(10) NULL,
     url VARCHAR(255) NULL,
     icon VARCHAR(100) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS global_users_application_passwords;
+CREATE TABLE global_users_application_passwords (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned NOT NULL,
+    name VARCHAR(255) NULL,
+    password VARCHAR(255) NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

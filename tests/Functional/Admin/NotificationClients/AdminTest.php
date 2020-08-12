@@ -31,7 +31,7 @@ class AdminTest extends BaseTestCase {
         $data = [
             "user" => "admin",
             "user_agent" => $this->USE_GUZZLE ? $this->USER_AGENT : "",
-            "ip" => $this->USE_GUZZLE ? "127.0.0.1" : ""
+            "ip" => $this->USE_GUZZLE ? $this->LOCAL_IP : ""
         ];
 
         $rows = $this->getElementsInTable($body, $data);
@@ -57,7 +57,7 @@ class AdminTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-
+        
         $this->assertIsArray($json);
 
         $this->assertArrayHasKey("status", $json);
@@ -77,9 +77,9 @@ class AdminTest extends BaseTestCase {
         $data = [
             "user" => "admin",
             "user_agent" => $this->USE_GUZZLE ? $this->USER_AGENT : "",
-            "ip" => $this->USE_GUZZLE ? "127.0.0.1" : ""
+            "ip" => $this->USE_GUZZLE ? $this->LOCAL_IP : ""
         ];
-
+        
         $rows = $this->getElementsInTable($body, $data);
 
         $this->assertFalse(empty($rows));
@@ -91,9 +91,9 @@ class AdminTest extends BaseTestCase {
     /**
      * @depends testSubscribed
      */
-    public function testTestNotification(int $client_id) {
+    public function testTestNotification(int $client_id) {        
         $response = $this->request('POST', $this->uri_test . $client_id);
-
+        
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
     }
@@ -103,7 +103,7 @@ class AdminTest extends BaseTestCase {
      */
     public function testDelete(int $client_id) {
         $response = $this->request('DELETE', $this->uri_delete . $client_id);
-
+    
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();

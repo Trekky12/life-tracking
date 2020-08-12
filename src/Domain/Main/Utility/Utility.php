@@ -24,4 +24,11 @@ class Utility {
         return $uri;
     }
 
+    /**
+     * @see https://stackoverflow.com/a/834355
+     */
+    public static function startsWith($haystack, $needle) {
+        return (substr($haystack, 0, strlen($needle)) === $needle);
+    }
+
 }

@@ -437,6 +437,8 @@ $lang["CURRENT_DAY"] = "current day";
 $lang["CURRENT_MONTH"] = "current month";
 $lang["CURRENT_YEAR"] = "current year";
 
+$lang["APPLICATION_PASSWORDS"] = "application passwords";
+
 $lang["TIMESHEETS"] = "timesheets";
 $lang["TIMESHEETS_PROJECTS"] = "timesheet projects";
 $lang["TIMESHEETS_OVERVIEW"] = "Overview";
@@ -491,6 +493,8 @@ $lang["DATAOBJECT_TRIPS_TRIP"] = "trip";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "route";
 $lang["DATAOBJECT_MOBILEFAVORITE"] = "mobile favorite entry";
 $lang["DATAOBJECT_USER"] = "User";
+$lang["DATAOBJECT_APPLICATIONPASSWORD"] = "application password";
+$lang["DATAOBJECT_WIDGET_ENTRY"] = "widget";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -530,5 +534,23 @@ $lang["TRIPS_ROUTE_SAVED_ERROR"] = "Route could not be saved.";
 $lang["TRIPS_ROUTES"] = "Routes";
 
 $lang["TRIPS_WAYPOINT_SAVE"] = "Save";
+
+$lang["TWOFACTOR_ERROR"]= "Two Factor Authentication could not be enabled!";
+$lang["TWOFACTOR_SUCCESS"]= "Two Factor Authentication was successfully enabled.";
+$lang["TWOFACTOR_SUCCESS_DELETE"]= "Two Factor Authentication was successfully disabled.";
+$lang["TWOFACTOR_DISABLE"]= "disable";
+$lang["TWOFACTOR_TEXT"] = "Please scan the QR-Code or insert the secret in the Two Factor Authentication App.";
+$lang["TWOFACTOR_CODE"]= "Code";
+$lang["TWOFACTOR_AUTHENTICATION"]= "Two Factor Authentication";
+
+$lang["WIDGETS"] = "widgets";
+$lang["WIDGET_OPTIONS"] = "widget options";
+$lang["FRONTPAGE"] = "Frontpage";
+
+$lang["EFA"] = "electronic timetable (EFA)";
+$lang["WIDGET_URL"] = "URL";
+$lang["WIDGET_TITLE"] = "title";
+$lang["WIDGET_CURRENTWEATHER"] = "current weather";
+$lang["WIDGET_WEATHERFORECAST"] = "weather forecast";
 
 return $lang;

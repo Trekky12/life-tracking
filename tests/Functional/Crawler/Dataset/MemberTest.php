@@ -6,15 +6,7 @@ use Tests\Functional\Crawler\CrawlerTestBase;
 
 class MemberTest extends CrawlerTestBase {
 
-    protected $uri_child_record = "/crawlers/HASH/record/";
-
-    protected function setUp(): void {
-        $this->login("user", "user");
-    }
-
-    protected function tearDown(): void {
-        $this->logout();
-    }
+    protected $uri_child_record = "/api/crawlers/record";
 
     public function testPostAddElement() {
 
@@ -24,19 +16,16 @@ class MemberTest extends CrawlerTestBase {
                 'link' => 'http://localhost',
                 'value' => 1
             ],
-            'identifier' => 'dataset' . rand(0, 1000)
+            'identifier' => 'dataset' . rand(0, 1000),
+            'crawler' => $this->TEST_CRAWLER_HASH
         ];
 
-        $response = $this->request('POST', $this->getURIRecord($this->TEST_CRAWLER_HASH), $data);
+        $response = $this->request('POST', $this->uri_child_record, $data, ['user' => 'user', 'pass' => 'application']);
 
         $body = (string) $response->getBody();
         
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-    }
-
-    protected function getURIRecord($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_record);
     }
 
 }

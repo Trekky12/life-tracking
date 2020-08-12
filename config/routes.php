@@ -89,7 +89,6 @@ return function (App $app) {
 
     $app->group('/location', function(RouteCollectorProxy $group) {
         $group->get('/', \App\Application\Action\Location\LocationMapAction::class)->setName('location');
-        $group->post('/record', \App\Application\Action\Location\LocationRecordAction::class)->setName('location_record');
         $group->get('/markers', \App\Application\Action\Location\LocationMarkersAction::class)->setName('getMarkers');
         $group->delete('/delete/[{id}]', \App\Application\Action\Location\LocationDeleteAction::class)->setName('delete_marker');
         $group->get('/address/[{id}]', \App\Application\Action\Location\LocationAddressAction::class)->setName('get_address');
@@ -159,6 +158,29 @@ return function (App $app) {
 
         $group->get('/activity', \App\Application\Action\Activity\ActivityAction::class)->setName('users_activities');
         $group->post('/getActivities', \App\Application\Action\Activity\ActivityListAction::class)->setName('activities_get');
+
+        $group->group('/applicationpasswords', function(RouteCollectorProxy $group_applicationpasswords) {
+            $group_applicationpasswords->get('/', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsListAction::class)->setName('users_application_passwords');
+            $group_applicationpasswords->get('/edit/', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsEditAction::class)->setName('users_application_passwords_edit');
+            $group_applicationpasswords->post('/save/[{id:[0-9]+}]', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsSaveAction::class)->setName('users_application_passwords_save');
+            $group_applicationpasswords->delete('/delete/{id}', \App\Application\Action\Profile\ApplicationPasswords\ApplicationPasswordsDeleteAction::class)->setName('users_application_passwords_delete');
+        });
+
+        $group->group('/twofactorauth', function(RouteCollectorProxy $group_twofactorauth) {
+            $group_twofactorauth->get('/', \App\Application\Action\Profile\TwoFactorAuthPageAction::class)->setName('users_twofactorauth');
+            $group_twofactorauth->post('/enable', \App\Application\Action\Profile\TwoFactorAuthEnableAction::class)->setName('users_twofactorauth_enable');
+            $group_twofactorauth->post('/disable', \App\Application\Action\Profile\TwoFactorAuthDisableAction::class)->setName('users_twofactorauth_disable');
+        });
+
+        $group->group('/frontpage', function(RouteCollectorProxy $group_frontpage) {
+            $group_frontpage->get('/', \App\Application\Action\Profile\FrontpageWidgets\FrontpageEditAction::class)->setName('users_profile_frontpage');
+            $group_frontpage->get('/options/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetOptionsAction::class)->setName('users_profile_frontpage_widget_option');
+            $group_frontpage->post('/save/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetSaveAction::class)->setName('users_profile_frontpage_widget_option_save');
+            $group_frontpage->post('/updatePosition', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetUpdatePositionAction::class)->setName('users_profile_frontpage_widget_position');
+            $group_frontpage->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDeleteAction::class)->setName('users_profile_frontpage_widget_delete');
+            
+            $group_frontpage->get('/request/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetRequestAction::class)->setName('frontpage_widget_request');
+        });
     });
 
     $app->group('/users', function(RouteCollectorProxy $group) {
@@ -182,6 +204,13 @@ return function (App $app) {
                 $group_user_favorites->get('/edit/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesEditAction::class)->setName('users_mobile_favorites_edit_admin');
                 $group_user_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesSaveAction::class)->setName('users_mobile_favorites_save_admin');
                 $group_user_favorites->delete('/delete/{id}', \App\Application\Action\User\MobileFavorites\MobileFavoritesDeleteAction::class)->setName('users_mobile_favorites_delete_admin');
+            });
+
+            $group_user->group('/applicationpasswords', function(RouteCollectorProxy $group_user_favorites) {
+                $group_user_favorites->get('/', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsListAction::class)->setName('users_application_passwords_admin');
+                $group_user_favorites->get('/edit', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsEditAction::class)->setName('users_application_passwords_edit_admin');
+                $group_user_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsSaveAction::class)->setName('users_application_passwords_save_admin');
+                $group_user_favorites->delete('/delete/{id}', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsDeleteAction::class)->setName('users_application_passwords_delete_admin');
             });
         });
     })->add(\App\Application\Middleware\AdminMiddleware::class);
@@ -211,7 +240,6 @@ return function (App $app) {
         $group->delete('/subscribe/', \App\Application\Action\Notifications\Clients\NotificationClientsDeleteAPIAction::class)->setName('notifications_clients_subscribe');
 
 
-        $group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         // use post because endpoint param is too complex for a GET param
         $group->post('/getCategories', \App\Application\Action\Notifications\Clients\NotificationClientsCategoriesAction::class)->setName('notifications_clients_categories');
         $group->post('/setCategorySubscription', \App\Application\Action\Notifications\Clients\NotificationClientsSetCategoryAction::class)->setName('notifications_clients_set_category');
@@ -269,8 +297,6 @@ return function (App $app) {
             $group_crawler->get('/view/', \App\Application\Action\Crawler\Crawler\CrawlerViewAction::class)->setName('crawlers_view');
             $group_crawler->get('/table/', \App\Application\Action\Crawler\Crawler\CrawlerTableAction::class)->setName('crawlers_table');
             $group_crawler->post('/setFilter/', \App\Application\Action\Crawler\Crawler\CrawlerSetFilterAction::class)->setName('set_crawler_filter');
-
-            $group_crawler->post('/record/', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
 
             $group_crawler->post('/save/', \App\Application\Action\Crawler\Dataset\CrawlerSaveDatasetAction::class)->setName('crawler_dataset_save');
             $group_crawler->get('/saved/', \App\Application\Action\Crawler\Dataset\DatasetSavedListAction::class)->setName('crawler_dataset_saved_list');
@@ -356,7 +382,7 @@ return function (App $app) {
                 $group_waypoint->post('/add', \App\Application\Action\Trips\Waypoint\WaypointSaveAction::class)->setName('trips_add_waypoint');
                 $group_waypoint->delete('/delete', \App\Application\Action\Trips\Waypoint\WaypointDeleteAction::class)->setName('trips_delete_waypoint');
             });
-            
+
             $group_trip->group('/route', function(RouteCollectorProxy $group_route) {
                 $group_route->post('/add', \App\Application\Action\Trips\Route\RouteSaveAction::class)->setName('trips_add_route');
                 $group_route->get('/list', \App\Application\Action\Trips\Route\RouteListAction::class)->setName('trips_list_route');
@@ -397,6 +423,19 @@ return function (App $app) {
             });
 
             $group_project->get('/export', \App\Application\Action\Timesheets\Sheet\SheetExportAction::class)->setName('timesheets_export');
+        });
+    });
+
+
+    $app->group('/api', function(RouteCollectorProxy $group) {
+        $group->group('/location', function(RouteCollectorProxy $location_group) {
+            $location_group->post('/record', \App\Application\Action\Location\LocationRecordAction::class)->setName('location_record');
+        });
+        $group->group('/crawlers', function(RouteCollectorProxy $crawler_group) {
+            $crawler_group->post('/record', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
+        });
+        $group->group('/notifications', function(RouteCollectorProxy $notifications_group) {
+            $notifications_group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         });
     });
 };

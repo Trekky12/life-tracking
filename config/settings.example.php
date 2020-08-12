@@ -23,10 +23,7 @@ return [
     'CSRF' => [
         'enabled' => true,
         // we need to exclude some routes from CSRF protection for remote triggers
-        'exclude' => [
-            'location_record',
-            'crawler_record'
-        ]
+        'exclude' => []
     ],
     'app' => [
         // i18n settings
@@ -37,25 +34,39 @@ return [
             'dateformatJS' => [
                 'date' => 'DD.MM.YYYY',
                 'time' => 'HH:mm:ss',
-                'datetime' => 'DD.MM.YYYY HH:mm:ss'
+                'datetime' => 'DD.MM.YYYY HH:mm:ss',
+                'datetimeShort' => 'DD.MM.YYYY HH:mm'
             ],
             // https://www.php.net/manual/de/function.date.php
             'dateformatTwig' => [
                 'date' => 'd.m.Y',
                 'time' => 'H:i:s',
-                'datetime' => 'd.m.Y H:i:s'
+                'datetime' => 'd.m.Y H:i:s',
+                'datetimeShort' => 'd.m.Y H:i'
             ],
             // http://userguide.icu-project.org/formatparse/datetime
             'dateformatPHP' => [
                 'date' => 'dd.MM.yyyy',
                 'time' => 'HH:mm:ss',
                 'datetime' => 'dd.MM.yyyy HH:mm:ss',
+                'datetimeShort' => 'dd.MM.yyyy HH:mm',
                 'trips_buttons' => 'EEE dd. MMM',
                 'trips_list' => 'EEEE dd. MMMM yyyy',
                 'month_name' => 'MMMM',
                 'month_name_full' => 'dd. MMMM y',
             ],
-            'currency' => '€'
+            'dateformatExcel' => [
+                'date' => 'dd.mm.yyyy',
+                'time' => 'HH:mm:ss',
+                'datetime' => 'dd.MM.yyyy HH:mm:ss',
+                'datetimeShort' => 'dd.MM.yyyy HH:mm',
+                'trips_buttons' => 'EEE dd. MMM',
+                'trips_list' => 'EEEE dd. MMMM yyyy',
+                'month_name' => 'MMMM',
+                'month_name_full' => 'dd. MMMM y',
+            ],
+            'currency' => '€',
+            'routing' => 'de'
         ],
         // default location
         'location' => [

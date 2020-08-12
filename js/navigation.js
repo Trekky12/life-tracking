@@ -114,8 +114,9 @@ if (navigation && header && navigationOverlay) {
     let yMovePosition = null;
     let isOpenAllowed = null;
     let isCloseAllowed = null;
-    let threshold_edge = 50;
-    let xMinDistance = 50;
+    let threshold_edge = 20;
+    let xMinDistanceClose = 50;
+    let xMinDistanceOpen = 20;
     let yMinDistance = 50;
     let currentPos = null;
     let skip = false;
@@ -137,8 +138,6 @@ if (navigation && header && navigationOverlay) {
             return;
         }
 
-//        console.log("move");
-
         // Save previous xMovePosition
         let xMovePositionPrevious = xMovePosition;
 
@@ -152,8 +151,13 @@ if (navigation && header && navigationOverlay) {
         let yDistance = Math.abs(yStartPosition - yMovePosition);
 
         skip = false;
-        if (isOpen && xDistance < xMinDistance) {
+        if (isOpen && xDistance < xMinDistanceClose) {
 //            console.log("skip");
+            skip = true;
+            return;
+        }
+
+        if (!isOpen && xDistance < xMinDistanceOpen) {
             skip = true;
             return;
         }
@@ -258,16 +262,15 @@ if (navigation && header && navigationOverlay) {
 
         // close/open menu when distance travelled is too small (min distance not reached)
         // and menu is already faded out/in
-        if (skip) {
-            if (currentPos > 0) {
+        if (skip && currentPos > 0) {
 //                console.log("close because distance to small");
-                if (isOpen) {
-                    openMenu();
-                } else {
-                    closeMenu();
-                }
+            if (isOpen) {
+                openMenu();
+            } else {
+                closeMenu();
             }
-        } else {
+        }
+        if (!skip) {
             if (!isOpen) {
                 if (xStartPosition > xMovePosition && isOpenAllowed) {
                     openMenu();

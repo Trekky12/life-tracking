@@ -53,7 +53,7 @@
 * insert the default location and i18n settings in ``settings.php``
 * install the required composer dependencies with ``composer install``
 * you can login at ``http://<your-domain>`` with the default user ``admin`` and password ``admin``
-* create a cronjob which calls ``http://<your-domain>/cron`` every hour
+* create a cronjob which calls ``http://<your-domain>/cron`` every hour or run the console command ``cron`` with ``php bin/console.php cron``
 
 
 ## Notes

@@ -13,6 +13,7 @@ INSERT INTO global_users (id, login, password, name, role, module_location, modu
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, force_pw_change, mails_user, mails_finances, mails_board, mails_board_reminder, mails_splitted_bills) VALUES (11, 'user_module_splitbills', '$2y$10$X6zxyJQnNarAHS6eaEKFJuIq7zW0krIIWbNOIhHauj0U0Ot/mmyOO', 'User (Module Splitbills)', 'user', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, force_pw_change, mails_user, mails_finances, mails_board, mails_board_reminder, mails_splitted_bills) VALUES (12, 'user_module_trips', '$2y$10$MWy6UOXVwkLJAdz9VxCwoOrnhy8SaDmesYoJbriHGIiptzDXc.7re', 'User (Module Trips)', 'user', 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, force_pw_change, mails_user, mails_finances, mails_board, mails_board_reminder, mails_splitted_bills) VALUES (13, 'user_module_timesheets', '$2y$10$gujLijuoSEZ3xOUdjo10Xuw7b6t0aG.3uSYSAobgnSx5I/WwYIfXy', 'User (Module Timesheets)', 'user', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, force_pw_change, mails_user, mails_finances, mails_board, mails_board_reminder, mails_splitted_bills, secret) VALUES (14, 'user2fa', '$2y$10$zzEUi14yhm3l57c/CLmKj.P3DpvFyuU6gNdk7xcnLrhgnBd5AawSm', 'user2fa', 'user2fa', 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 'ZONTUSYMICAFZZBMDZQXGSCXWSEPTKGW'); 
 
 INSERT INTO finances_categories (id, user, name, is_default) VALUES 
 (1, 1, 'not categorized', 1),
@@ -131,3 +132,8 @@ INSERT INTO global_banlist (id, ip, username) VALUES
 (1, '127.0.0.2', 'user2'), 
 (2, '127.0.0.2', 'user2'),
 (3, '127.0.0.2', 'user2');
+
+INSERT INTO global_users_application_passwords (id, user, name, password) VALUES
+(1, 1, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S'),
+(2, 2, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S'),
+(3, 3, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S');

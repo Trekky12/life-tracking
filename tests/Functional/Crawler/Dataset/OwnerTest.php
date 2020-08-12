@@ -6,23 +6,27 @@ use Tests\Functional\Crawler\CrawlerTestBase;
 
 class OwnerTest extends CrawlerTestBase {
 
-    protected $uri_child_record = "/crawlers/HASH/record/";
+    protected $uri_child_record = "/api/crawlers/record";
 
     protected function setUp(): void {
-        $this->login("admin", "admin");
+        
     }
 
     protected function tearDown(): void {
-        $this->logout();
+        
     }
 
     public function testList() {
+        $this->login("admin", "admin");
+        
         $response = $this->request('GET', $this->getURIView($this->TEST_CRAWLER_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<table id="crawlers_data_table"', $body);
+        
+        $this->logout();
     }
 
     public function testPostAddElement() {
@@ -33,10 +37,11 @@ class OwnerTest extends CrawlerTestBase {
                 'link' => 'http://localhost',
                 'value' => 1
             ],
-            'identifier' => 'dataset' . rand(0, 1000)
+            'identifier' => 'dataset' . rand(0, 1000),
+            'crawler' => $this->TEST_CRAWLER_HASH
         ];
 
-        $response = $this->request('POST', $this->getURIRecord($this->TEST_CRAWLER_HASH), $data);
+        $response = $this->request('POST', $this->uri_child_record, $data, ['user' => 'admin', 'pass' => 'application']);
 
         $body = (string) $response->getBody();
 
@@ -50,6 +55,8 @@ class OwnerTest extends CrawlerTestBase {
      * @depends testPostAddElement
      */
     public function testAddedElement($data) {
+        $this->login("admin", "admin");
+        
         $response = $this->request('GET', $this->getURIView($this->TEST_CRAWLER_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -58,6 +65,8 @@ class OwnerTest extends CrawlerTestBase {
         $row = $this->getElementInTable($body, $data);
 
         $this->assertArrayHasKey("date", $row);
+        
+        $this->logout();
     }
 
     /**
@@ -73,10 +82,11 @@ class OwnerTest extends CrawlerTestBase {
                 'link' => 'http://localhost/2',
                 'value' => 2
             ],
-            'identifier' => $initial_data['identifier']
+            'identifier' => $initial_data['identifier'],
+            'crawler' => $this->TEST_CRAWLER_HASH
         ];
 
-        $response = $this->request('POST', $this->getURIRecord($this->TEST_CRAWLER_HASH), $data);
+        $response = $this->request('POST', $this->uri_child_record, $data, ['user' => 'admin', 'pass' => 'application']);
 
         $body = (string) $response->getBody();
 
@@ -91,6 +101,8 @@ class OwnerTest extends CrawlerTestBase {
      * @depends testPostElementUpdate
      */
     public function testGetElementUpdated(array $result_data) {
+        $this->login("admin", "admin");
+        
         $response = $this->request('GET', $this->getURIView($this->TEST_CRAWLER_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -100,6 +112,8 @@ class OwnerTest extends CrawlerTestBase {
         $row = $this->getElementInTable($body, $result_data);
 
         $this->assertArrayHasKey("date", $row);
+        
+        $this->logout();
     }
 
     protected function getElementInTable($body, $data) {
@@ -108,10 +122,6 @@ class OwnerTest extends CrawlerTestBase {
         preg_match($re, $body, $matches);
 
         return $matches;
-    }
-
-    protected function getURIRecord($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_record);
     }
 
 }

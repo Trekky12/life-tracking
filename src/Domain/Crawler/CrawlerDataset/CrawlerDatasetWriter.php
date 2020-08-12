@@ -56,6 +56,7 @@ class CrawlerDatasetWriter extends ObjectWriter {
 
                     $data["id"] = $dataset_id;
                     $data["diff"] = $diff;
+                    $data["saved"] = $dataset->saved;
                 }
             }
 
