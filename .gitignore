@@ -12,6 +12,9 @@ composer.phar
 /public/uploads/events/*
 !/public/uploads/events/.gitkeep 
 
+/public/uploads/exercises/*
+!/public/uploads/exercises/.gitkeep 
+
 koala-config.json
 
 public/test*

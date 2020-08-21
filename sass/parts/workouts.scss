@@ -1,0 +1,66 @@
+.workout{
+
+
+    .row{
+        display:flex;
+    }
+    .col{
+        width: 50%;
+    }
+
+    .exercise{
+        display:flex;
+        cursor:pointer;
+
+        padding: 1rem;
+        border: 1px solid $color_blue_light_gray;
+        border-radius: 5px;
+        margin: 0.5rem;
+        
+        user-select: none;
+
+        .thumbnail{
+            flex-basis: 20%;
+
+            img{
+                margin-left: 10px;
+            }
+        }
+        .exercise-content{
+            flex-basis: 80%;
+            margin-bottom: 1rem;
+
+            .bodypart{
+                @include font-size(1.2);
+            }
+            .title{
+                @include font-size(1.6);
+                margin: 0;
+            }
+
+            .instructions{
+                @include font-size(1.4);
+                margin:0;
+            }
+
+
+        }
+
+        &.remove {
+            flex-direction: row-reverse;
+            .thumbnail{
+                flex-basis: 10%;
+                img{
+                    margin-right: 10px;
+                    margin-left: 0;
+                }
+            }
+            .exercise-content{
+                flex-basis: 90%;
+            }
+            .instructions{
+                display:none;
+            }
+        }
+    }
+}

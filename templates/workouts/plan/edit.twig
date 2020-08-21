@@ -1,0 +1,72 @@
+{% extends "base.twig" %}
+
+{% set active = 'workouts' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
+    <script src="{{baseURL}}/static/js/workouts.js?ver=20200804"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["WORKOUTS_PLAN"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" action="{{  url_for('workouts_plans_save', {'id' : entry.id}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                </div>
+
+                <div class="workout">
+                    <div class="row">
+                        <div class="col">
+                            <h2>Gewählte Übungen</h2>
+                        </div>
+                        <div class="col">
+                            <h2>Verfügbare Übungen</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col" id="exercises_selected">
+
+                        </div>
+                        <div class="col">
+                            {% for exercise in exercises %}
+                                <div class="exercise" data-id="{{ exercise.id }}">
+                                    <div class="exercise-content">
+                                        <small class="bodypart">{{ bodyparts[exercise.mainBodyPart].name }} / {{ muscles[exercise.mainMuscle].name }}</small>
+                                        <h3 class="title">{{ exercise.name }}</h3>
+                                        <p class="instructions">{{ exercise.instructions }}</p>
+                                    </div>                                   
+                                    {% if exercise.get_thumbnail() != ''%}
+                                        <div class="thumbnail">
+                                            <img src="/{{uploads_folder}}/exercises/{{exercise.get_thumbnail()}}"/>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

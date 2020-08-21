@@ -494,6 +494,10 @@ $lang["DATAOBJECT_MOBILEFAVORITE"] = "Mobiler Favoriteneintrag";
 $lang["DATAOBJECT_USER"] = "Benutzer";
 $lang["DATAOBJECT_APPLICATIONPASSWORD"] = "Anwendungspasswort";
 $lang["DATAOBJECT_WIDGET_ENTRY"] = "Widget";
+$lang["DATAOBJECT_WORKOUTS_EXERCISE"] = "Übung";
+$lang["DATAOBJECT_WORKOUTS_MUSCLE"] = "Muskelgruppe";
+$lang["DATAOBJECT_WORKOUTS_BODYPART"] = "Körperbereich";
+$lang["DATAOBJECT_WORKOUTS_PLAN"] = "Trainingsplan";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -551,5 +555,29 @@ $lang["WIDGET_URL"] = "URL";
 $lang["WIDGET_TITLE"] = "Titel";
 $lang["WIDGET_CURRENTWEATHER"] = "aktuelles Wetter";
 $lang["WIDGET_WEATHERFORECAST"] = "Wettervorhersage";
+
+$lang["WORKOUTS"] = "Workouts";
+$lang["WORKOUTS_EXERCISES"] = "Übungen";
+$lang["WORKOUTS_EXERCISE"] = "Übung";
+$lang["WORKOUTS_MUSCLES"] = "Muskelgruppen";
+$lang["WORKOUTS_MUSCLE"] = "Muskelgruppe";
+$lang["WORKOUTS_BODYPARTS"] = "Körperbereiche";
+$lang["WORKOUTS_BODYPART"] = "Körperbereiche";
+$lang["WORKOUTS_PLANS"] = "Trainingspläne";
+$lang["WORKOUTS_PLAN"] = "Trainingsplan";
+
+$lang["WORKOUTS_INSTRUCTIONS"] = "Instruktionen";
+$lang["WORKOUTS_LEVEL"] = "Schwierigkeit";
+$lang["WORKOUTS_RATING"] = "Bewertung";
+$lang["WORKOUTS_CATEGORY"] = "Kategorie";
+$lang["WORKOUTS_CATEGORY_REPS"] = "Wiederholungen";
+$lang["WORKOUTS_CATEGORY_REPS_WEIGHT"] = "Wiederholungen und Gewicht";
+$lang["WORKOUTS_CATEGORY_TIME"] = "Zeit";
+$lang["WORKOUTS_CATEGORY_DISTANCE_TIME"] = "Distanz und Zeit";
+$lang["WORKOUTS_MAIN_MUSCLE"] = "Hauptmuskelgruppe";
+$lang["WORKOUTS_MUSCLES_PRIMARY"] = "primäre Muskeln";
+$lang["WORKOUTS_MUSCLES_SECONDARY"] = "sekundäre Muskeln";
+$lang["WORKOUTS_MAIN_BODYPART"] = "Hauptkörperbereich";
+$lang["THUMBNAIL"] = "Vorschaubild";
         
 return $lang;

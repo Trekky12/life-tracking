@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS global_users (
     module_splitbills int(1) DEFAULT 0,
     module_trips int(1) DEFAULT 0,
     module_timesheets int(1) DEFAULT 0,
+    module_workouts int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
     mails_user int(1) DEFAULT 1,
     mails_finances int(1) DEFAULT 1,
@@ -848,3 +849,81 @@ CREATE TABLE activities_users (
     FOREIGN KEY(activity) REFERENCES activities(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS workouts_bodyparts;
+CREATE TABLE workouts_bodyparts (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS workouts_muscles;
+CREATE TABLE workouts_muscles (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS workouts_exercises;
+CREATE TABLE workouts_exercises (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) NOT NULL,
+    instructions TEXT,
+    category INT(10) NULL,
+    level INT(10) NULL,
+    rating INT(10) NULL,
+    mainBodyPart INTEGER unsigned DEFAULT NULL,
+    mainMuscle INTEGER unsigned DEFAULT NULL,
+    image VARCHAR(255) NULL,
+    thumbnail VARCHAR(255) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(mainBodyPart) REFERENCES workouts_bodyparts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(mainMuscle) REFERENCES workouts_muscles(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS workouts_plans;
+CREATE TABLE workouts_plans (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS workouts_exercises_muscles;
+CREATE TABLE workouts_exercises_muscles (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    exercise INTEGER unsigned DEFAULT NULL,
+    muscle INTEGER unsigned DEFAULT NULL,
+    is_primary INT(1) DEFAULT 0,
+    UNIQUE(exercise, muscle),
+    FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(muscle) REFERENCES workouts_muscles(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
+ALTER TABLE `global_users` ADD `module_workouts` INT(1) NULL AFTER `module_timesheets`; 
+*/

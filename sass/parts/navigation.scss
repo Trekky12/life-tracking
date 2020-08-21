@@ -266,12 +266,15 @@ body.mobile-navigation-open{
         //display:none;
 
         li{
-            @include font-size(1.3);
+            @include font-size(1.2);
             @media screen and (min-width: $size_mobile_navigation){
                 @include font-size(1.1);
             }
+            @media screen and (min-width: $size_big){
+                @include font-size(1.2);
+            }
             @media screen and (min-width: $size_desktop){
-                @include font-size(1.4);
+                @include font-size(1.3);
             }
 
             a{

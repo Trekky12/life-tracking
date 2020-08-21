@@ -72,15 +72,15 @@ class BaseTestCase extends TestCase {
         
     }
 
-    public function request($requestMethod, $requestUri, $requestData = [], $auth = array(), $form_data = null) {
+    public function request($requestMethod, $requestUri, $requestData = [], $auth = array(), $files = null) {
         if ($this->USE_GUZZLE) {
-            return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth, $form_data);
+            return $this->HTTP_request($requestMethod, $requestUri, $requestData, $auth, $files);
         } else {
-            return $this->runApp($requestMethod, $requestUri, $requestData, $auth, $form_data);
+            return $this->runApp($requestMethod, $requestUri, $requestData, $auth, $files);
         }
     }
 
-    public function HTTP_request($requestMethod, $requestUri, $requestData = [], $auth = array(), $form_data = null) {
+    public function HTTP_request($requestMethod, $requestUri, $requestData = [], $auth = array(), $files = null) {
 
         $client = new \GuzzleHttp\Client([
             'proxy' => '',
@@ -104,10 +104,10 @@ class BaseTestCase extends TestCase {
         }
 
         // handle form data
-        if (isset($form_data)) {
+        if (isset($files)) {
             $headers = [];
             $multipart_data = [];
-            foreach ($form_data as $fData) {
+            foreach ($files as $fData) {
                 $multipart_data[] = [
                     'name' => $fData['name'],
                     'contents' => fopen($fData['contents'], 'r'),
@@ -115,10 +115,20 @@ class BaseTestCase extends TestCase {
                 ];
             }
             foreach ($requestData as $rKey => $rData) {
-                $multipart_data[] = [
-                    'name' => $rKey,
-                    'contents' => $rData,
-                ];
+
+                if (is_array($rData)) {
+                    foreach ($rData as $rk => $rd) {
+                        $multipart_data[] = [
+                            'name' => $rKey . '[' . $rk . ']',
+                            'contents' => $rd,
+                        ];
+                    }
+                } else {
+                    $multipart_data[] = [
+                        'name' => $rKey,
+                        'contents' => $rData,
+                    ];
+                }
             }
             $body = new \GuzzleHttp\Psr7\MultipartStream($multipart_data);
         }

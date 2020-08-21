@@ -1,0 +1,32 @@
+{% extends "base.twig" %}
+
+{% set active = 'workouts' %}
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["WORKOUTS_MUSCLE"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" action="{{  url_for('workouts_muscles_save', {'id' : entry.id}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

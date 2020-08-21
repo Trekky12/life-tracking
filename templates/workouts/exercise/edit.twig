@@ -1,0 +1,124 @@
+{% extends "base.twig" %}
+
+{% set active = 'workouts' %}
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["WORKOUTS_EXERCISE"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" action="{{  url_for('workouts_exercises_save', {'id' : entry.id}) }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputInstructions">{{lang["WORKOUTS_INSTRUCTIONS"]}}</label>
+                    <textarea class="form-control" id="inputInstructions" name="instructions" rows="10">{% if not entry is null %}{{entry.instructions|raw}}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputLevel">{{lang["WORKOUTS_LEVEL"]}}</label>
+                    <input type="number" class="form-control" id="inputLevel" name="level" step="1" placeholder="" {% if not entry is null %}value="{{entry.level}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputRating">{{lang["WORKOUTS_RATING"]}}</label>
+                    <input type="number" class="form-control" id="inputRating" name="rating" step="1" placeholder="" {% if not entry is null %}value="{{entry.rating}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">{{lang["WORKOUTS_CATEGORY"]}}</label>
+                    <select class="form-control" id="category" name="category">
+                        {% for cat in categories %}
+                            <option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.category) %}selected{% endif %}>{{lang[cat.name]}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mainMuscle">{{lang["WORKOUTS_MAIN_MUSCLE"]}}</label>
+                    <select class="form-control" id="mainMuscle" name="mainMuscle">
+                        {% for muscle in muscles %}
+                            <option value="{{muscle.id}}" {% if (not entry is null and muscle.id == entry.mainMuscle) %}selected{% endif %}>{{muscle.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="muscle_groups_primary">{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</label>
+                    <select class="form-control" id="muscle_groups_primary" name="muscle_groups_primary[]" multiple="true">
+                        {% for muscle in muscles %}
+                            <option value="{{muscle.id}}" {% if (not entry is null and muscle.id in muscle_groups_primary) %}selected{% endif %}>{{muscle.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="muscle_groups_secondary">{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</label>
+                    <select class="form-control" id="muscle_groups_secondary" name="muscle_groups_secondary[]" multiple="true">
+                        {% for muscle in muscles %}
+                            <option value="{{muscle.id}}" {% if (not entry is null and muscle.id in muscle_groups_secondary) %}selected{% endif %}>{{muscle.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mainBodyPart">{{lang["WORKOUTS_MAIN_BODYPART"]}}</label>
+                    <select class="form-control" id="mainBodyPart" name="mainBodyPart">
+                        {% for bodypart in bodyparts %}
+                            <option value="{{bodypart.id}}" {% if (not entry is null and bodypart.id == entry.mainBodyPart) %}selected{% endif %}>{{bodypart.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <h3>{{lang["IMAGE"]}}</h3>
+                <div class="form-group">
+                    {% if not entry is null and entry.get_image() != ''%}
+                        <img class="image_uploaded" src="/{{uploads_folder}}/exercises/{{entry.get_image()}}"/>
+                    {% endif %}
+                    <input name="image" id="image" class="form-control" type="file">
+                </div>
+                {% if not entry is null and entry.get_image() != ''%}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxDeleteImage">
+                            <input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
+                            {{lang["DELETE"]}}
+                        </label>
+                    </div>
+                {% endif %}
+
+                <h3>{{lang["THUMBNAIL"]}}</h3>
+                <div class="form-group">
+                    {% if not entry is null and entry.get_thumbnail() != ''%}
+                        <img class="image_uploaded" src="/{{uploads_folder}}/exercises/{{entry.get_thumbnail()}}"/>
+                    {% endif %}
+                    <input name="thumbnail" id="thumbnail" class="form-control" type="file">
+                </div>
+                {% if not entry is null and entry.get_thumbnail() != ''%}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxDeleteThumbnail">
+                            <input name="delete_thumbnail" type="checkbox" value="1" id="checkboxDeleteThumbnail">
+                            {{lang["DELETE"]}}
+                        </label>
+                    </div>
+                {% endif %}
+
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

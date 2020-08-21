@@ -153,6 +153,12 @@ return [
                 "rootRoute" => "timesheets",
                 "icon" => "far fa-clock",
                 "title" => "TIMESHEETS"
+            ],
+            "workouts" => [
+                "url" => "/workouts/",
+                "rootRoute" => "workouts_plans",
+                "icon" => "fas fa-dumbbell",
+                "title" => "WORKOUTS"
             ]
         ]
     ]

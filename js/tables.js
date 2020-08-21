@@ -860,3 +860,71 @@ var banlistTable = new JSTable("#banlist_table", {
         }
     ]
 });
+
+var workoutMusclesTable = new JSTable("#workouts_muscles_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "asc",
+            sortable: true
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var workoutBodypartsTable = new JSTable("#workouts_bodyparts_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "asc",
+            sortable: true
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var workoutExercisesTable = new JSTable("#workouts_exercises_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "asc",
+            sortable: true
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var workoutPlansTable = new JSTable("#workouts_plans_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "asc",
+            sortable: true
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
