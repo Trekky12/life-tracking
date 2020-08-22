@@ -20,8 +20,6 @@ class PlanSaveAction {
     public function __invoke(Request $request, Response $response): Response {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();        
-        var_dump($data);
-        die();
         $entry = $this->service->save($id, $data);
         return $this->responder->respond($entry->withRouteName('workouts_plans'));
     }

@@ -21,6 +21,22 @@ class PlanWriter extends ObjectActivityWriter {
 
         $this->setHash($entry);
 
+        /**
+         * Save exercises
+         */
+        $this->mapper->deleteExercises($id);
+        if (array_key_exists("exercises", $data) && is_array($data["exercises"])) {
+            $exercises = [];
+            foreach ($data["exercises"] as $idx => $exercise) {
+
+                $exercise_id = array_key_exists("id", $exercise) && !empty($exercise["id"]) ? intval(filter_var($exercise["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+                $exercises[] = ["id" => $exercise_id, "position" => $idx];
+            }
+
+            $this->mapper->addExercises($entry->id, $exercises);
+        }
+
         return $payload;
     }
 

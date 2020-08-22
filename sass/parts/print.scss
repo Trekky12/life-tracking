@@ -1,0 +1,85 @@
+@media print {
+    @page {
+        size: A4;
+        margin:10mm;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact  !important;
+        printer-colors: exact  !important;
+        color-adjust: exact  !important;
+    }
+
+    .trip_day h3{
+        page-break-after: avoid!important;
+        break-after: avoid!important;
+    }
+
+    .trip_day, .trip_event{
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .trip_event.has_notice{
+        break-inside: auto!important;
+        page-break-inside: auto!important;
+    }
+
+    .trip_event.has_notice{
+        page-break-before: avoid;
+    }
+
+    // show event description only on first day
+    .trip_event.hidden_description_print .description{
+        display:none;
+    }
+
+    .page-header{
+        display:none;
+    }
+
+    #content{
+        top:0;
+        max-width:100%;
+        margin-top:0;
+    }
+    .inner-content{
+        box-shadow: none;
+    }
+
+    body{
+        overflow: visible;
+    }
+
+    body, .page-header{
+        background-color: $color_background-body;
+        color: #000000;
+    }
+
+    .site-header,
+    a.change_day, 
+    .trip_event .buttons,
+    .description_text{
+        display:none!important;
+    }
+
+    .description_full{
+        display:block!important;
+    }
+
+    #trip-map{
+        display:none;
+
+        .leaflet-control-container{
+            display:none;
+        }
+    }
+
+    .exercise{
+        break-inside: avoid;
+        page-break-inside: avoid;
+        
+        display:flex!important;
+    }
+
+}

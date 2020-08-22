@@ -397,7 +397,7 @@ class BaseTestCase extends TestCase {
 
     protected function compareInputFields($body, $data) {
         $input_fields = $this->getInputFields($body);
-
+        
         foreach ($data as $key => $val) {
             $this->assertArrayHasKey($key, $input_fields, $key . " missing");
             $this->assertEquals($input_fields[$key], $val, "Field: " . $key . "");

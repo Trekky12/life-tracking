@@ -25,35 +25,24 @@
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
 
-                <div class="workout">
+                <div class="workout-selection">
                     <div class="row">
-                        <div class="col">
-                            <h2>Gewählte Übungen</h2>
-                        </div>
-                        <div class="col">
-                            <h2>Verfügbare Übungen</h2>
-                        </div>
-                    </div>
-                    <div class="row">
-
                         <div class="col" id="exercises_selected">
-
+                            <h2>{{ lang["WORKOUTS_EXERCISES_SELECTED"] }}</h2>
+                            <div class="content">
+                                {% for select in selected_exercises %}
+                                    {% set exercise = exercises[select] %}
+                                    {% include "workouts/plan/exercise.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'is_selected': true, 'idx': loop.index} only %}
+                                {% endfor %}
+                            </div>
                         </div>
                         <div class="col">
-                            {% for exercise in exercises %}
-                                <div class="exercise" data-id="{{ exercise.id }}">
-                                    <div class="exercise-content">
-                                        <small class="bodypart">{{ bodyparts[exercise.mainBodyPart].name }} / {{ muscles[exercise.mainMuscle].name }}</small>
-                                        <h3 class="title">{{ exercise.name }}</h3>
-                                        <p class="instructions">{{ exercise.instructions }}</p>
-                                    </div>                                   
-                                    {% if exercise.get_thumbnail() != ''%}
-                                        <div class="thumbnail">
-                                            <img src="/{{uploads_folder}}/exercises/{{exercise.get_thumbnail()}}"/>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
+                            <h2>{{ lang["WORKOUTS_EXERCISES_AVAILABLE"] }}</h2>
+                            <div class="content">
+                                {% for exercise in exercises %}
+                                    {% include "workouts/plan/exercise.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'is_selected': false, 'idx': loop.index} only %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

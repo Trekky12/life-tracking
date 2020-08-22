@@ -432,6 +432,10 @@ return function (App $app) {
             return $response->withHeader('Location', $this->get(RouteParser::class)->urlFor('workouts_plans'))->withStatus(302);
         });
 
+        $group->group('/{plan}', function(RouteCollectorProxy $group_plan) {
+            $group_plan->get('/view/', \App\Application\Action\Workouts\Plan\PlanViewAction::class)->setName('workouts_plan_view');
+        });
+
         $group->group('/plans', function(RouteCollectorProxy $group_plans) {
             $group_plans->get('/', \App\Application\Action\Workouts\Plan\PlanListAction::class)->setName('workouts_plans');
             $group_plans->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Plan\PlanEditAction::class)->setName('workouts_plans_edit');

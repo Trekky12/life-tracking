@@ -150,3 +150,8 @@ INSERT INTO workouts_bodyparts (id, name) VALUES
 
 INSERT INTO workouts_plans (id, user, name) VALUES
 (1, 1, 'Test workout plan');
+
+INSERT INTO workouts_exercises (id, name) VALUES
+(1, 'Exercise 1'),
+(2, 'Exercise 2'),
+(3, 'Exercise 3');

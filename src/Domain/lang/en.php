@@ -581,4 +581,7 @@ $lang["WORKOUTS_MUSCLES_SECONDARY"] = "secondary muscles";
 $lang["WORKOUTS_MAIN_BODYPART"] = "main body part";
 $lang["THUMBNAIL"] = "thumbnail";
 
+$lang["WORKOUTS_EXERCISES_SELECTED"] = "selected exercises";
+$lang["WORKOUTS_EXERCISES_AVAILABLE"] = "available exercises";
+
 return $lang;

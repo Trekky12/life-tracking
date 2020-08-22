@@ -1,74 +1,69 @@
 'use strict';
 
-const exercisesSelected = document.getElementById('exercises_selected');
+const exercisesSelected = document.querySelector('#exercises_selected .content');
 
 document.addEventListener('click', function (event) {
-    let closest = event.target.closest('.exercise');
-    if (closest) {
+    let plus = event.target.closest('.exercise .plus');
+    let minus = event.target.closest('.exercise .minus');
+    
+    let instruction = event.target.closest('.exercise .instructions .headline');
+    
+    let exercise = event.target.closest('.exercise');
+
+    if (minus) {
         event.preventDefault();
-        var exercise_id = closest.dataset.id;
+        exercise.remove();
+    }
+    
+    if (plus) {
+        event.preventDefault();
+        //console.log(exercisesSelected.childElementCount);
 
-        if (closest.classList.contains("remove")) {
-            closest.remove();
-        } else {
+        let id = exercisesSelected.childElementCount;
 
-            //console.log(exercisesSelected.childElementCount);
+        let new_exercise = exercise.cloneNode(true);
+        new_exercise.classList.add("selected");
 
-            let exercise = closest.cloneNode(true);
-            exercise.classList.add("remove");
+        new_exercise.querySelector('.plus').classList.add('hidden');
+        new_exercise.querySelector('.minus').classList.remove('hidden');
+        new_exercise.querySelector('.handle').classList.remove('hidden');
 
-            let input_id = document.createElement("input");
-            input_id.type = 'hidden';
-            input_id.name = 'exercises[' + exercise_id + '][id]';
-            input_id.value = exercise_id;
+        let input_id = document.createElement("input");
+        input_id.type = 'hidden';
+        input_id.name = 'exercises[' + id + '][id]';
+        input_id.value = exercise.dataset.id;
 
-            exercise.appendChild(input_id);
+        new_exercise.appendChild(input_id);
 
-            let input_pos = document.createElement("input");
-            input_pos.type = 'hidden';
-            input_pos.name = 'exercises[' + exercise_id + '][position]';
-            input_pos.value = exercisesSelected.childElementCount;
-
-            exercise.appendChild(input_pos);
-
-            exercisesSelected.appendChild(exercise);
-        }
+        exercisesSelected.appendChild(new_exercise);
+    }
+    
+    if(instruction){
+        event.preventDefault();
+        event.target.parentElement.classList.toggle('active');
     }
 });
 
 
-new Sortable(document.getElementById('exercises_selected'), {
+new Sortable(exercisesSelected, {
     group: {
         name: "exercise"
     },
-    draggable: ".exercise.remove",
-    //handle: "h3",
+    draggable: ".exercise.selected",
+    handle: ".handle",
     dataIdAttr: 'data-id',
     onUpdate: function (evt) {
         var data = {'widgets': this.toArray()};
 
-        /*getCSRFToken().then(function (token) {
-         data['csrf_name'] = token.csrf_name;
-         data['csrf_value'] = token.csrf_value;
-         
-         return fetch(jsObject.frontpage_widget_position, {
-         method: 'POST',
-         credentials: "same-origin",
-         headers: {
-         'Content-Type': 'application/json'
-         },
-         body: JSON.stringify(data)
-         
-         });
-         }).then(function (response) {
-         return response.json();
-         }).then(function (data) {
-         
-         }).catch(function (error) {
-         console.log(error);
-         });
-         * 
-         */
+        // change input field array key
+        // @see https://stackoverflow.com/a/47948276
+
+        let exercises = exercisesSelected.querySelectorAll('.exercise');
+        exercises.forEach(function (item, idx) {
+            let fields = item.querySelectorAll('input[type="hidden"]');
+            fields.forEach(function (field) {
+                field.setAttribute('name', field.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + idx + ']'));
+            });
+        });
     }
 });
-

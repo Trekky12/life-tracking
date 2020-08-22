@@ -37,8 +37,37 @@ class PlanService extends Service {
         $exercises = $this->exercise_mapper->getAll();
         $bodyparts = $this->bodypart_mapper->getAll();
         $muscles = $this->muscle_mapper->getAll();
+        $selected_exercises = $this->mapper->getExercises($entry_id);
 
-        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'exercises' => $exercises, 'bodyparts' => $bodyparts, 'muscles' => $muscles]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'entry' => $entry,
+            'exercises' => $exercises,
+            'bodyparts' => $bodyparts,
+            'muscles' => $muscles,
+            'selected_exercises' => $selected_exercises
+        ]);
+    }
+
+    public function view($hash): Payload {
+
+        $plan = $this->getFromHash($hash);
+
+        if (!$this->isOwner($plan->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $exercises = $this->exercise_mapper->getAll();
+        $bodyparts = $this->bodypart_mapper->getAll();
+        $muscles = $this->muscle_mapper->getAll();
+        $selected_exercises = $this->mapper->getExercises($plan->id);
+
+        return new Payload(Payload::$RESULT_HTML, [
+            "plan" => $plan,
+            'exercises' => $exercises,
+            'bodyparts' => $bodyparts,
+            'muscles' => $muscles,
+            'selected_exercises' => $selected_exercises
+        ]);
     }
 
 }

@@ -10,6 +10,7 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/workouts/plans/edit/";
     protected $uri_save = "/workouts/plans/save/";
     protected $uri_delete = "/workouts/plans/delete/";
+    protected $uri_view = "/workouts/HASH/view/";
 
     protected function setUp(): void {
         $this->login("admin", "admin");
@@ -43,7 +44,18 @@ class UserTest extends BaseTestCase {
     public function testPostAddElement() {
 
         $data = [
-            "name" => "Test Workout Plan 1"
+            "name" => "Test Workout Plan 1",
+            "exercises" => [
+                0 => [
+                    "id" => 3
+                ],
+                1 => [
+                    "id" => 2
+                ],
+                2 => [
+                    "id" => 1
+                ]
+            ]
         ];
 
         $response = $this->request('POST', $this->uri_save, $data);
@@ -92,7 +104,7 @@ class UserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
-        
+
         $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
@@ -106,7 +118,15 @@ class UserTest extends BaseTestCase {
 
         $data = [
             "id" => $entry_id,
-            "name" => "Test Workout Plan 1 Updated"
+            "name" => "Test Workout Plan 1 Updated",
+            "exercises" => [
+                0 => [
+                    "id" => 2
+                ],
+                1 => [
+                    "id" => 1
+                ]
+            ]
         ];
 
         $response = $this->request('POST', $this->uri_save . $entry_id, $data);
@@ -132,11 +152,16 @@ class UserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
+        $this->assertArrayHasKey("hash", $row);
 
-        return intval($row["id_edit"]);
+        $result = [];
+        $result["hash"] = $row["hash"];
+        $result["id"] = intval($row["id_edit"]);
+        
+        return $result;
     }
-
-    /**
+    
+        /**
      * @depends testGetElementCreatedEdit
      * @depends testPostElementCreatedSave
      */
@@ -146,12 +171,25 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->compareInputFields($body, $data);
     }
+    
+    /**
+     * View Plan
+     * @depends testGetElementUpdated
+     */
+    public function testGetView(array $result_data) {
+        $response = $this->request('GET', $this->getURIView($result_data["hash"]));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString("<div class=\"workout-selection view\">", $body);
+    }
 
     /**
      * @depends testGetElementUpdated
      */
-    public function testDeleteElement(int $entry_id) {
-        $response = $this->request('DELETE', $this->uri_delete . $entry_id);
+    public function testDeleteElement(array $result_data) {
+        $response = $this->request('DELETE', $this->uri_delete . $result_data["id"]);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -161,7 +199,7 @@ class UserTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/workouts\/(?<hash>.*)\/view\/">' . preg_quote($data["name"]) . '<\/a><\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
