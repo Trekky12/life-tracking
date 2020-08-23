@@ -92,6 +92,14 @@
                     padding-top: 0.5rem;
                     padding-bottom: 0.5rem;
                     margin:0;
+
+                    .set{
+                        margin-bottom: 0.2rem;
+                        input{
+                            padding: 0.2rem;
+                            @include font-size(1.2);
+                        }
+                    }
                 }
 
                 .headline{
@@ -101,6 +109,16 @@
 
             .sets{
                 display:none;
+            }
+
+            .buttons{
+                display:flex;
+                justify-content: flex-end;
+                margin: 0.5rem 0;
+
+                button{
+                    margin-left:0.5rem;
+                }
             }
 
         }

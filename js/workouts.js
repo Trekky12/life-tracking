@@ -10,6 +10,9 @@ document.addEventListener('click', function (event) {
 
     let exercise = event.target.closest('.exercise');
 
+    let add_set = event.target.closest('.add_set');
+    let remove_set = event.target.closest('.remove_set');
+
     if (minus) {
         event.preventDefault();
         exercise.remove();
@@ -39,8 +42,10 @@ document.addEventListener('click', function (event) {
 
         let inputs = new_exercise.querySelectorAll('.sets input');
         inputs.forEach(function (input, idx) {
-            input.setAttribute('name', input.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + id + ']'));
-            input.removeAttribute('disabled');
+            if(!input.name.includes("dummy")){
+                input.setAttribute('name', input.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + id + ']'));
+                input.removeAttribute('disabled');
+            }
         });
 
         exercisesSelected.appendChild(new_exercise);
@@ -49,6 +54,38 @@ document.addEventListener('click', function (event) {
     if (headline) {
         event.preventDefault();
         event.target.parentElement.classList.toggle('active');
+    }
+
+    if (add_set) {
+        console.log("add set");
+        let setsList = exercise.querySelector('.sets .set-list');
+        let set_dummy = exercise.querySelector('.sets .set-dummy');
+        let sets = exercise.querySelectorAll('.sets .set');
+
+        let set_id = sets.length;
+
+        let new_set = set_dummy.cloneNode(true);
+        new_set.classList.remove("hidden");
+        new_set.classList.remove("set-dummy");
+
+        let set_nr = new_set.querySelector('.set-nr');
+        set_nr.innerHTML = set_id;
+
+        let inputs = new_set.querySelectorAll('input');
+        inputs.forEach(function (input, idx) {
+            input.setAttribute('name', input.name.replace("dummy", set_id - 1));
+            input.removeAttribute('disabled');
+        });
+
+        setsList.appendChild(new_set);
+    }
+
+    if (remove_set) {
+        let sets = exercise.querySelectorAll('.sets .set:not(.set-dummy)');
+        if (sets.length > 0) {
+            let last_set = sets[sets.length - 1];
+            last_set.remove();
+        }
     }
 });
 

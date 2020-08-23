@@ -589,5 +589,10 @@ $lang["WORKOUTS_SETS"] = "Sets";
 $lang["WORKOUTS_REPEATS"] = "Repeats";
 $lang["WORKOUTS_REPEATS_SHORT"] = "rps";
 $lang["WORKOUTS_KG"] = "kg";
+$lang["WORKOUTS_MINUTES"] = "minutes";
+$lang["WORKOUTS_KM"] = "km";
+
+$lang["WORKOUTS_SET_ADD"] = "add set";
+$lang["WORKOUTS_SET_REMOVE"] = "remove set";
 
 return $lang;

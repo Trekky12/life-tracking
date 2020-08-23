@@ -32,7 +32,7 @@
                             <div class="content">
                                 {% for select in selected_exercises %}
                                     {% set exercise = exercises[select["exercise"]] %}
-                                    {% include "workouts/plan/edit-exercise-selected.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'exercise_idx': loop.index, 'sets': select["sets"]} only %}
+                                    {% include "workouts/plan/edit-exercise-selected.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'exercise_idx': loop.index-1, 'sets': select["sets"]} only %}
                                 {% endfor %}
                             </div>
                         </div>
