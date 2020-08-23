@@ -2,6 +2,8 @@
 
 namespace App\Domain\Trips;
 
+use App\Domain\Main\Utility\Utility;
+
 class Trip extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_TRIPS_TRIP";
@@ -16,6 +18,10 @@ class Trip extends \App\Domain\DataObject {
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
+    }
+
+    public function getNotice() {
+        return Utility::replaceLinks($this->notice);
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

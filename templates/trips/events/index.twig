@@ -39,7 +39,7 @@
 
             {% if not trip.notice is empty %}
                 <h3>{{ lang["NOTICE"]}}:</h3>
-                <p>{{trip.notice|raw|nl2br}}</p>
+                <p>{{trip.getNotice()|raw|nl2br}}</p>
             {% endif %}
 
             <input type="hidden" id="inputStart" name="from" value="{{from}}"/>

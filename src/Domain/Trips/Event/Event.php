@@ -2,6 +2,8 @@
 
 namespace App\Domain\Trips\Event;
 
+use App\Domain\Main\Utility\Utility;
+
 class Event extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_TRIPS_EVENT";
@@ -204,25 +206,9 @@ class Event extends \App\Domain\DataObject {
         $this->popup = $popup;
     }
 
-    /**
-     * Replace texttual links with real links
-     * @see https://css-tricks.com/snippets/php/find-urls-in-text-make-links/
-     */
+    
     public function getNotice() {
-        $regex = "/((https?\:\/\/|(www\.))(\S+))/";
-
-        $regexHTTP = "/((https?\:\/\/)(\S+))/";
-        $replacementHTTP = '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>';
-
-        // only www without http(s)
-        $regexWWW = "/[^(https?\:\/\/)]((www\.)(\S+))/";
-        $replacementWWW = '<a href="http://$1" target="_blank" rel="noopener noreferrer">$1</a>';
-
-        $urls = [];
-        if (preg_match_all($regex, $this->notice, $urls)) {
-            return preg_replace([$regexHTTP, $regexWWW], [$replacementHTTP, $replacementWWW], $this->notice);
-        }
-        return $this->notice;
+        return Utility::replaceLinks($this->notice);
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
