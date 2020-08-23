@@ -42,7 +42,7 @@ class RecurringWriter extends ObjectActivityWriter {
     }
 
     public function getObjectViewRoute(): string {
-        return 'finances_categories_edit';
+        return 'finances_recurring_edit';
     }
 
     public function getObjectViewRouteParams($entry): array {
