@@ -516,6 +516,7 @@ $lang["ACTIVE"] = "aktiv";
 
 $lang["EXPENSES_THIS_MONTH"] = "Ausgaben dieses Monats";
 $lang["INCOME_THIS_MONTH"] = "Einnahmen dieses Monats";
+$lang["BALANCE_THIS_MONTH"] = "Budget dieses Monats";
 $lang["REMAINING_KM"] = "verbleibende km";
 $lang["STEPS_TODAY"] = "Heutige Schritte";
 $lang["LAST_5_EXPENSES"] = "Letzte 5 Ausgaben";

@@ -24,8 +24,10 @@ class StepsTodayWidget implements Widget {
     public function getContent(WidgetObject $widget = null) {
         $dateObj = new \DateTime('today');
         $date = $dateObj->format("Y-m-d");
+        
+        $steps_of_day = $this->mapper->getStepsOfDate($date);
 
-        return $this->mapper->getStepsOfDate($date);
+        return $steps_of_day ? $steps_of_day : 0 ;
     }
 
     public function getTitle(WidgetObject $widget = null) {

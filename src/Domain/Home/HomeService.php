@@ -10,6 +10,7 @@ use App\Domain\Home\Widget\LastFinanceEntriesWidget;
 use App\Domain\Home\Widget\StepsTodayWidget;
 use App\Domain\Home\Widget\FinanceMonthExpensesWidget;
 use App\Domain\Home\Widget\FinanceMonthIncomeWidget;
+use App\Domain\Home\Widget\FinanceMonthBalanceWidget;
 use App\Domain\Home\Widget\CarMaxMileageTodayWidget;
 use App\Domain\Home\Widget\CarLastRefuelWidget;
 use App\Domain\Home\Widget\SplittedBillsBalanceWidget;
@@ -31,6 +32,7 @@ class HomeService extends Service {
     private $steps_today_widget;
     private $finance_month_expenses_widget;
     private $finance_month_income_widget;
+    private $finance_month_balance_widget;
     private $car_max_mileage_today_widget;
     private $splitted_bills_balance_widget;
     private $timesheets_sum_widget;
@@ -48,6 +50,7 @@ class HomeService extends Service {
             StepsTodayWidget $steps_today_widget,
             FinanceMonthExpensesWidget $finance_month_expenses_widget,
             FinanceMonthIncomeWidget $finance_month_income_widget,
+            FinanceMonthBalanceWidget $finance_month_balance_widget,
             CarMaxMileageTodayWidget $car_max_mileage_today_widget,
             CarLastRefuelWidget $car_last_refuel_widget,
             SplittedBillsBalanceWidget $splitted_bills_balance_widget,
@@ -65,6 +68,7 @@ class HomeService extends Service {
         $this->steps_today_widget = $steps_today_widget;
         $this->finance_month_expenses_widget = $finance_month_expenses_widget;
         $this->finance_month_income_widget = $finance_month_income_widget;
+        $this->finance_month_balance_widget = $finance_month_balance_widget;
         $this->car_max_mileage_today_widget = $car_max_mileage_today_widget;
         $this->car_last_refuel_widget = $car_last_refuel_widget;
         $this->splitted_bills_balance_widget = $splitted_bills_balance_widget;
@@ -100,9 +104,11 @@ class HomeService extends Service {
                         $w1 = new Widget\WidgetObject(["name" => "last_finance_entries"]);
                         $w2 = new Widget\WidgetObject(["name" => "finances_month_expenses"]);
                         $w3 = new Widget\WidgetObject(["name" => "finances_month_income"]);
+                        $w4 = new Widget\WidgetObject(["name" => "finances_month_balance"]);
                         $list[] = $this->getWidgetForFrontend($w1);
                         $list[] = $this->getWidgetForFrontend($w2);
                         $list[] = $this->getWidgetForFrontend($w3);
+                        $list[] = $this->getWidgetForFrontend($w4);
                     } elseif ($module_name == "cars") {
                         foreach ($this->car_max_mileage_today_widget->getListItems() as $max_mileage) {
                             $w = new Widget\WidgetObject(["name" => "max_mileage", "options" => json_encode(["car" => $max_mileage])]);
@@ -143,6 +149,7 @@ class HomeService extends Service {
             $available_widgets["last_finance_entries"] = ["name" => $this->translation->getTranslatedString("LAST_5_EXPENSES")];
             $available_widgets["finances_month_expenses"] = ["name" => $this->translation->getTranslatedString("EXPENSES_THIS_MONTH")];
             $available_widgets["finances_month_income"] = ["name" => $this->translation->getTranslatedString("INCOME_THIS_MONTH")];
+            $available_widgets["finances_month_balance"] = ["name" => $this->translation->getTranslatedString("BALANCE_THIS_MONTH")];
         }
         if ($this->current_user->getUser()->hasModule('location')) {
             $available_widgets["steps_today_entries"] = ["name" => $this->translation->getTranslatedString("STEPS_TODAY")];
@@ -236,6 +243,11 @@ class HomeService extends Service {
                 $list["title"] = $this->finance_month_income_widget->getTitle();
                 $list["content"] = $this->finance_month_income_widget->getContent();
                 $list["url"] = $this->finance_month_income_widget->getLink();
+                break;
+            case "finances_month_balance":
+                $list["title"] = $this->finance_month_balance_widget->getTitle();
+                $list["content"] = $this->finance_month_balance_widget->getContent();
+                $list["url"] = $this->finance_month_balance_widget->getLink();
                 break;
             case "last_refuel":
                 $list["title"] = $this->car_last_refuel_widget->getTitle($widget);
