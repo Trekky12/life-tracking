@@ -82,7 +82,7 @@
             }
 
 
-            .instructions{
+            .instructions, .sets{
                 @include font-size(1.4);
 
                 word-break: break-word;
@@ -97,8 +97,10 @@
                 .headline{
                     display:none;
                 }
+            }
 
-
+            .sets{
+                display:none;
             }
 
         }
@@ -121,7 +123,8 @@
             .exercise-content{
                 flex-basis: 90%;
             }
-            .instructions{
+            .instructions, .sets{
+                display:block;
                 .content{
                     display:none;
                 }
@@ -165,7 +168,20 @@
             @media screen and (min-width: $size_mobile) {
                 display:flex;
             }
+
+            .exercise-content{
+                .sets{
+                    display:block;
+                }
+                .headline{
+                    display:none;
+                }
+                .content{
+                    display:block;
+                }
+            }
         }
+
         .icons{
             display:none;
         }

@@ -926,10 +926,13 @@ CREATE TABLE workouts_exercises_muscles (
 
 DROP TABLE IF EXISTS workouts_plans_exercises;
 CREATE TABLE workouts_plans_exercises (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     plan INTEGER unsigned DEFAULT NULL,
     exercise INTEGER unsigned DEFAULT NULL,
     position INT(10) NULL,
+    sets JSON NULL DEFAULT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY(plan) REFERENCES workouts_plans(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

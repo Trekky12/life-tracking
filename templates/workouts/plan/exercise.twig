@@ -11,7 +11,17 @@
             <a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
             <p class="content">{{ exercise.instructions }}</p>
         </div>
-    </div>
+        <div class="sets">
+            <a href="#" class="headline">{{ lang["WORKOUTS_SETS"] }}</a>
+            <div class="content">
+                {% block sets %}
+                    {% for i in range(0,2) %}
+                        {% include "workouts/plan/exercise-set.twig" with {'is_selected': false, 'idx': loop.index, 'repeats': null, 'weight': null, 'exercise_nr': null} only %}
+                    {% endfor %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>                                   
     {% if exercise.get_thumbnail() != ''%}
         <div class="thumbnail">
             <img src="/{{uploads_folder}}/exercises/{{exercise.get_thumbnail()}}"/>

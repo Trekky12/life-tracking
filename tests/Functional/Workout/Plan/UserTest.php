@@ -47,7 +47,17 @@ class UserTest extends BaseTestCase {
             "name" => "Test Workout Plan 1",
             "exercises" => [
                 0 => [
-                    "id" => 3
+                    "id" => 3,
+                    "sets" => [
+                        0 => [
+                            "repeats" => 1,
+                            "weight" => 2
+                        ],
+                        1 => [
+                            "repeats" => 3,
+                            "weight" => 4
+                        ]
+                    ]
                 ],
                 1 => [
                     "id" => 2
@@ -124,7 +134,17 @@ class UserTest extends BaseTestCase {
                     "id" => 2
                 ],
                 1 => [
-                    "id" => 1
+                    "id" => 1,
+                    "sets" => [
+                        0 => [
+                            "repeats" => 1,
+                            "weight" => 2
+                        ],
+                        1 => [
+                            "repeats" => 3,
+                            "weight" => 4
+                        ]
+                    ]
                 ]
             ]
         ];
@@ -157,11 +177,11 @@ class UserTest extends BaseTestCase {
         $result = [];
         $result["hash"] = $row["hash"];
         $result["id"] = intval($row["id_edit"]);
-        
+
         return $result;
     }
-    
-        /**
+
+    /**
      * @depends testGetElementCreatedEdit
      * @depends testPostElementCreatedSave
      */
@@ -171,7 +191,7 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->compareInputFields($body, $data);
     }
-    
+
     /**
      * View Plan
      * @depends testGetElementUpdated

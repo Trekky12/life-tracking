@@ -1,0 +1,9 @@
+{% embed 'workouts/plan/exercise.twig' %}
+    {% block sets %}
+        {% for set in sets %}
+            <div class="set">
+                {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}: {{ set["repeats"] }} {{ lang["WORKOUTS_REPEATS"] }}, {{ set["weight"] }} {{ lang["WORKOUTS_KG"] }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+{% endembed %}

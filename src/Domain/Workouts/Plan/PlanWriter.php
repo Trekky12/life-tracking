@@ -31,7 +31,17 @@ class PlanWriter extends ObjectActivityWriter {
 
                 $exercise_id = array_key_exists("id", $exercise) && !empty($exercise["id"]) ? intval(filter_var($exercise["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
 
-                $exercises[] = ["id" => $exercise_id, "position" => $idx];
+                $sets = [];
+                if (array_key_exists("sets", $exercise) && is_array($exercise["sets"])) {
+                    foreach ($exercise["sets"] as $set) {
+                        $repeats = array_key_exists("repeats", $set) && !empty($set["repeats"]) ? intval(filter_var($set["repeats"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                        $weight = array_key_exists("weight", $set) && !empty($set["weight"]) ? floatval(filter_var($set["weight"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
+
+                        $sets[] = ["repeats" => $repeats, "weight" => $weight];
+                    }
+                }
+
+                $exercises[] = ["id" => $exercise_id, "position" => $idx, "sets" => $sets];
             }
 
             $this->mapper->addExercises($entry->id, $exercises);

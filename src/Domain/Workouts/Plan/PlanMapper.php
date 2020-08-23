@@ -8,10 +8,11 @@ class PlanMapper extends \App\Domain\Mapper {
     protected $dataobject = \App\Domain\Workouts\Plan\Plan::class;
     protected $select_results_of_user_only = true;
     protected $insert_user = true;
+
     //protected $has_user_table = false;
     //protected $user_table = "timesheets_projects_users";
     //protected $element_name = "project";
-    
+
     public function deleteExercises($plan_id) {
         $sql = "DELETE FROM " . $this->getTableName("workouts_plans_exercises") . "  WHERE plan = :plan";
         $stmt = $this->db->prepare($sql);
@@ -32,10 +33,11 @@ class PlanMapper extends \App\Domain\Mapper {
             $data_array["plan" . $idx] = $plan_id;
             $data_array["exercise" . $idx] = $exercise["id"];
             $data_array["position" . $idx] = $exercise["position"];
-            $keys_array[] = "(:plan" . $idx . " , :exercise" . $idx . ", :position" . $idx . ")";
+            $data_array["sets" . $idx] = json_encode($exercise["sets"]);
+            $keys_array[] = "(:plan" . $idx . " , :exercise" . $idx . ", :position" . $idx . ", :sets" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTableName("workouts_plans_exercises") . " (plan, exercise, position) "
+        $sql = "INSERT INTO " . $this->getTableName("workouts_plans_exercises") . " (plan, exercise, position, sets) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -49,7 +51,7 @@ class PlanMapper extends \App\Domain\Mapper {
     }
 
     public function getExercises($plan_id) {
-        $sql = "SELECT exercise FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
+        $sql = "SELECT exercise, sets FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
 
         $bindings = [
             "plan" => $plan_id
@@ -59,8 +61,8 @@ class PlanMapper extends \App\Domain\Mapper {
         $stmt->execute($bindings);
 
         $results = [];
-        while ($el = $stmt->fetchColumn()) {
-            $results[] = intval($el);
+        while ($row = $stmt->fetch()) {
+            $results[] = ["exercise" => intval($row["exercise"]), "sets" => json_decode($row["sets"], true)];
         }
         return $results;
     }

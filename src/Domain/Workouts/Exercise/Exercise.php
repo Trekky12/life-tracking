@@ -5,6 +5,10 @@ namespace App\Domain\Workouts\Exercise;
 class Exercise extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_WORKOUTS_EXERCISE";
+    public static $WORKOUTS_CATEGORY_REPS = 0;
+    public static $WORKOUTS_CATEGORY_REPS_WEIGHT = 1;
+    public static $WORKOUTS_CATEGORY_DISTANCE_TIME = 2;
+    public static $WORKOUTS_CATEGORY_TIME = 3;
 
     public function parseData(array $data) {
 
@@ -84,10 +88,10 @@ class Exercise extends \App\Domain\DataObject {
 
     public static function getCategories() {
         return [
-            ["id" => 0, "name" => "WORKOUTS_CATEGORY_REPS"],
-            ["id" => 1, "name" => "WORKOUTS_CATEGORY_REPS_WEIGHT"],
-            ["id" => 2, "name" => "WORKOUTS_CATEGORY_DISTANCE_TIME"],
-            ["id" => 3, "name" => "WORKOUTS_CATEGORY_TIME"]
+            ["id" => self::$WORKOUTS_CATEGORY_REPS, "name" => "WORKOUTS_CATEGORY_REPS"],
+            ["id" => self::$WORKOUTS_CATEGORY_REPS_WEIGHT, "name" => "WORKOUTS_CATEGORY_REPS_WEIGHT"],
+            ["id" => self::$WORKOUTS_CATEGORY_DISTANCE_TIME, "name" => "WORKOUTS_CATEGORY_DISTANCE_TIME"],
+            ["id" => self::$WORKOUTS_CATEGORY_TIME, "name" => "WORKOUTS_CATEGORY_TIME"]
         ];
     }
 

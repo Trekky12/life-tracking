@@ -582,5 +582,11 @@ $lang["THUMBNAIL"] = "Vorschaubild";
 
 $lang["WORKOUTS_EXERCISES_SELECTED"] = "gewählte Übungen";
 $lang["WORKOUTS_EXERCISES_AVAILABLE"] = "verfügbare Übungen";
+
+$lang["WORKOUTS_SET"] = "Satz";
+$lang["WORKOUTS_SETS"] = "Sätze";
+$lang["WORKOUTS_REPEATS"] = "Wiederholungen";
+$lang["WORKOUTS_REPEATS_SHORT"] = "Wdh.";
+$lang["WORKOUTS_KG"] = "kg";
         
 return $lang;

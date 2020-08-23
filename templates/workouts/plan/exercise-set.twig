@@ -1,0 +1,7 @@
+<div class="set">
+    {{ idx }}. {{ lang["WORKOUTS_SET"] }}:
+    <input id="repeats_{{ idx-1 }}" type="number" min="0" max="999" step="1" size="3" name="exercises[{{ exercise_nr }}][sets][{{ idx-1 }}][repeats]" {% if not is_selected %}disabled="disabled"{% endif %} {% if is_selected %}value="{{ repeats }}"{% endif %}/>
+    <label for="repeats_{{ idx-1 }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
+    <input id="weights_{{ idx-1 }}" type="text" maxlength="3" size="3" name="exercises[{{ exercise_nr }}][sets][{{ idx-1 }}][weight]" {% if not is_selected %}disabled="disabled"{% endif %} {% if is_selected %}value="{{ weight }}"{% endif %}/>
+    <label for="weights_{{ idx-1 }}">{{ lang["WORKOUTS_KG"] }}</label>
+</div>

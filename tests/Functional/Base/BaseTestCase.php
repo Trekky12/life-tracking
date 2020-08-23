@@ -376,7 +376,7 @@ class BaseTestCase extends TestCase {
         if (@$dom->loadHTML($body)) {
             $xpath = new \DOMXpath($dom);
 
-            $inputs = $xpath->query('//form//input');
+            $inputs = $xpath->query('//form//input[not(@disabled) or @disabled != "disabled"]');
             foreach ($inputs as $input) {
                 $this->extractArray($xpath, $input, $input_fields);
             }
