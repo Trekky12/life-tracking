@@ -47,7 +47,10 @@ class UserTest extends BaseTestCase {
             "name" => "Test Workout Plan 1",
             "exercises" => [
                 0 => [
-                    "id" => 3,
+                    "id" => 3
+                ],
+                1 => [
+                    "id" => 2,
                     "sets" => [
                         0 => [
                             "repeats" => 1,
@@ -58,9 +61,6 @@ class UserTest extends BaseTestCase {
                             "weight" => 4
                         ]
                     ]
-                ],
-                1 => [
-                    "id" => 2
                 ],
                 2 => [
                     "id" => 1
@@ -131,10 +131,10 @@ class UserTest extends BaseTestCase {
             "name" => "Test Workout Plan 1 Updated",
             "exercises" => [
                 0 => [
-                    "id" => 2
+                    "id" => 1
                 ],
                 1 => [
-                    "id" => 1,
+                    "id" => 2,
                     "sets" => [
                         0 => [
                             "repeats" => 1,

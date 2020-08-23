@@ -32,7 +32,7 @@
                             <div class="content">
                                 {% for select in selected_exercises %}
                                     {% set exercise = exercises[select["exercise"]] %}
-                                    {% include "workouts/plan/exercise-selected.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'is_selected': true, 'idx': loop.index, 'sets': select["sets"]} only %}
+                                    {% include "workouts/plan/edit-exercise-selected.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'exercise_idx': loop.index, 'sets': select["sets"]} only %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                             <h2>{{ lang["WORKOUTS_EXERCISES_AVAILABLE"] }}</h2>
                             <div class="content">
                                 {% for exercise in exercises %}
-                                    {% include "workouts/plan/exercise.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'is_selected': false, 'idx': loop.index, 'sets': null} only %}
+                                    {% include "workouts/plan/edit-exercise-choose.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'exercise_idx': loop.index} only %}
                                 {% endfor %}
                             </div>
                         </div>

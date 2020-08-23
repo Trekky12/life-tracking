@@ -94,5 +94,18 @@ class Exercise extends \App\Domain\DataObject {
             ["id" => self::$WORKOUTS_CATEGORY_TIME, "name" => "WORKOUTS_CATEGORY_TIME"]
         ];
     }
+    
+    public function isCategoryReps(){
+        return $this->category == self::$WORKOUTS_CATEGORY_REPS;
+    }
+    public function isCategoryRepsWeight(){
+        return $this->category == self::$WORKOUTS_CATEGORY_REPS_WEIGHT;
+    }
+    public function isCategoryDistanceTime(){
+        return $this->category == self::$WORKOUTS_CATEGORY_DISTANCE_TIME;
+    }
+    public function isCategoryTime(){
+        return $this->category == self::$WORKOUTS_CATEGORY_TIME;
+    }
 
 }

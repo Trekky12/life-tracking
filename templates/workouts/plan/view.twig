@@ -15,9 +15,8 @@
         <div class="page-header"><h2>{{plan.name|raw}}</h2> </div>
         <div class="page-content">
             <div class="workout-selection view">
-                {% for select in selected_exercises %}
-                    {% set exercise = exercises[select["exercise"]] %}
-                    {% include "workouts/plan/exercise-view.twig" with {'exercise':exercise, 'muscles': muscles, 'bodyparts': bodyparts, 'is_selected': false, 'idx': loop.index, 'sets': select["sets"]} only %}
+                {% for exercise in exercises %}
+                    {% include "workouts/plan/view-exercise.twig" with {'exercise':exercise} only %}
                 {% endfor %}
             </div>
         </div>

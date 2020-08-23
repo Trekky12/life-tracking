@@ -1,7 +1,0 @@
-{% embed 'workouts/plan/exercise.twig' %}
-    {% block sets %}
-        {% for set in sets %}
-            {% include "workouts/plan/exercise-set.twig" with {'is_selected': true, 'idx': loop.index, 'repeats': set["repeats"], 'weight': set["weight"], 'exercise_nr': (idx - 1)} only %}
-        {% endfor %}
-    {% endblock %}
-{% endembed %}
