@@ -64,4 +64,53 @@ class ExerciseMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function getExercisesWithBodyPart($sorted, $limit, $bodypart = -1) {
+        $sql = "SELECT * FROM " . $this->getTableName();
+
+        $bindings = array();
+
+        if ($bodypart != -1) {
+            $sql .= " WHERE mainBodyPart = :bodypart";
+            $bindings["bodypart"] = $bodypart;
+        }
+
+        $this->addSelectFilterForUser($sql, $bindings);
+
+        $sql .= " ORDER BY {$sorted}";
+        $sql .= " LIMIT {$limit}";
+
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
+    public function getExercisesWithBodyPartCount($bodypart = -1) {
+
+        $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTableName();
+
+        $bindings = array();
+
+        if ($bodypart != -1) {
+            $sql .= " WHERE mainBodyPart = :bodypart";
+            $bindings["bodypart"] = $bodypart;
+        }
+
+        $this->addSelectFilterForUser($sql, $bindings);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return intval($stmt->fetchColumn());
+        }
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
+    }
+
 }

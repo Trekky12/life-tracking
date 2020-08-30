@@ -593,5 +593,9 @@ $lang["WORKOUTS_KM"] = "km";
 
 $lang["WORKOUTS_SET_ADD"] = "Set hinzufügen";
 $lang["WORKOUTS_SET_REMOVE"] = "Set entfernen";
+
+$lang["LOAD_MORE"] = "Mehr laden";
+
+$lang["ALL"] = "alle";
         
 return $lang;

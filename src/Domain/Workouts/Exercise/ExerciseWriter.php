@@ -92,7 +92,7 @@ class ExerciseWriter extends ObjectActivityWriter {
              * Primary muscles groups
              */
             $this->mapper->deleteMusclesGroups($id, true);
-            if (array_key_exists("muscle_groups_primary", $data) && is_array($data["muscle_groups_primary"])) {
+            if (array_key_exists("muscle_groups_primary", $data) && is_array($data["muscle_groups_primary"]) && !empty($data["muscle_groups_primary"])) {
                 $muscle_groups_primary = filter_var_array($data["muscle_groups_primary"], FILTER_SANITIZE_NUMBER_INT);
 
                 $this->mapper->addMuscleGroups($entry->id, $muscle_groups_primary, true);
@@ -101,7 +101,7 @@ class ExerciseWriter extends ObjectActivityWriter {
              * Secondary muscles groups
              */
             $this->mapper->deleteMusclesGroups($id, false);
-            if (array_key_exists("muscle_groups_secondary", $data) && is_array($data["muscle_groups_secondary"])) {
+            if (array_key_exists("muscle_groups_secondary", $data) && is_array($data["muscle_groups_secondary"]) && !empty($data["muscle_groups_secondary"])) {
                 $muscle_groups_secondary = filter_var_array($data["muscle_groups_secondary"], FILTER_SANITIZE_NUMBER_INT);
 
                 $this->mapper->addMuscleGroups($entry->id, $muscle_groups_secondary, false);

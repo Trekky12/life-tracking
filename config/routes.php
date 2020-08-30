@@ -449,6 +449,8 @@ return function (App $app) {
             $group_exercises->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Exercise\ExerciseSaveAction::class)->setName('workouts_exercises_save');
             $group_exercises->delete('/delete/{id}', \App\Application\Action\Workouts\Exercise\ExerciseDeleteAction::class)->setName('workouts_exercises_delete');
         })->add(\App\Application\Middleware\AdminMiddleware::class);
+        
+        $group->get('/getExercises', \App\Application\Action\Workouts\Exercise\ExercisesListAction::class)->setName('workouts_exercises_get');
 
         $group->group('/muscles', function(RouteCollectorProxy $group_muscles) {
             $group_muscles->get('/', \App\Application\Action\Workouts\Muscle\MuscleListAction::class)->setName('workouts_muscles');
