@@ -599,4 +599,6 @@ $lang["LOAD_MORE"] = "load more";
 
 $lang["ALL"] = "all";
 
+$lang["WORKOUTS_EXPORT"] = "Export";
+
 return $lang;

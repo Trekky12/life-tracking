@@ -13,10 +13,10 @@ use App\Domain\Main\Translator;
 
 class PlanService extends Service {
 
-    private $exercise_mapper;
-    private $bodypart_mapper;
-    private $muscle_mapper;
-    private $translation;
+    protected $exercise_mapper;
+    protected $bodypart_mapper;
+    protected $muscle_mapper;
+    protected $translation;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,

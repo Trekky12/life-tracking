@@ -597,5 +597,7 @@ $lang["WORKOUTS_SET_REMOVE"] = "Set entfernen";
 $lang["LOAD_MORE"] = "Mehr laden";
 
 $lang["ALL"] = "alle";
+
+$lang["WORKOUTS_EXPORT"] = "Export";
         
 return $lang;

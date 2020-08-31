@@ -434,6 +434,8 @@ return function (App $app) {
 
         $group->group('/{plan}', function(RouteCollectorProxy $group_plan) {
             $group_plan->get('/view/', \App\Application\Action\Workouts\Plan\PlanViewAction::class)->setName('workouts_plan_view');
+            
+            $group_plan->get('/export', \App\Application\Action\Workouts\Plan\PlanExportAction::class)->setName('workouts_plan_export');
         });
 
         $group->group('/plans', function(RouteCollectorProxy $group_plans) {

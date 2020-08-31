@@ -12,7 +12,7 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{plan.name|raw}}</h2> </div>
+        <div class="page-header"><h2>{{plan.name|raw}}</h2> <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a></div>
         <div class="page-content">
             <div class="workout-selection view">
                 {% for exercise in exercises %}
