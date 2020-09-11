@@ -287,6 +287,10 @@ class BaseTestCase extends TestCase {
     protected function getURIView($hash) {
         return str_replace("HASH", $hash, $this->uri_view);
     }
+    
+    protected function getURIChildOverview($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_overview);
+    }
 
     protected function getURIChildEdit($hash) {
         return str_replace("HASH", $hash, $this->uri_child_edit);

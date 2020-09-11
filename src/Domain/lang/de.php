@@ -498,6 +498,7 @@ $lang["DATAOBJECT_WORKOUTS_EXERCISE"] = "Übung";
 $lang["DATAOBJECT_WORKOUTS_MUSCLE"] = "Muskelgruppe";
 $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "Körperbereich";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "Trainingsplan";
+$lang["DATAOBJECT_WORKOUTS_SESSION"] = "Trainingseinheit";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -599,5 +600,8 @@ $lang["LOAD_MORE"] = "Mehr laden";
 $lang["ALL"] = "alle";
 
 $lang["WORKOUTS_EXPORT"] = "Export";
+$lang["WORKOUTS_SESSION"] = "Trainingseinheit";
+$lang["WORKOUTS_SESSIONS"] = "Trainingseinheiten";
+$lang["WORKOUTS_SESSION_ADD"] = "Trainingseinheit erfassen";
         
 return $lang;

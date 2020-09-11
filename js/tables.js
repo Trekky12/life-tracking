@@ -928,3 +928,24 @@ var workoutPlansTable = new JSTable("#workouts_plans_table", {
         }
     ]
 });
+
+var workoutSessionsTable = new JSTable("#workouts_sessions_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "desc",
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return moment(data).format(i18n.dateformatJS.date);
+            }
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

@@ -12,7 +12,13 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{plan.name|raw}}</h2> <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a></div>
+        <div class="page-header"><h2>{{plan.name|raw}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["WORKOUTS_SESSION_ADD"]}}</button></a>
+                <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="white">{{lang["WORKOUTS_SESSIONS"]}}</button></a>
+                <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a></div>
+            </div>
+            
         <div class="page-content">
             <div class="workout-selection view">
                 {% for exercise in exercises %}

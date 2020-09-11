@@ -92,14 +92,6 @@
                     padding-top: 0.5rem;
                     padding-bottom: 0.5rem;
                     margin:0;
-
-                    .set{
-                        margin-bottom: 0.2rem;
-                        input{
-                            padding: 0.2rem;
-                            @include font-size(1.2);
-                        }
-                    }
                 }
 
                 .headline{
@@ -111,9 +103,16 @@
                 display:none;
             }
 
+            .set{
+                margin-bottom: 0.2rem;
+                input{
+                    padding: 0.2rem;
+                    @include font-size(1.2);
+                }
+            }
+
             .buttons{
                 display:flex;
-                justify-content: flex-end;
                 margin: 0.5rem 0;
 
                 button{
@@ -177,6 +176,10 @@
                     }
                 }
             }
+            
+            .buttons{
+                justify-content: flex-end;
+            }
         }
     }
 
@@ -204,7 +207,7 @@
             display:none;
         }
     }
-    
+
     #filterBodyParts{
         margin: 0.5rem;
     }

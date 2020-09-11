@@ -148,10 +148,13 @@ INSERT INTO workouts_muscles (id, name, category) VALUES
 INSERT INTO workouts_bodyparts (id, name) VALUES
 (1, 'Test bodypart');
 
-INSERT INTO workouts_plans (id, user, name) VALUES
-(1, 1, 'Test workout plan');
+INSERT INTO workouts_plans (id, user, name, hash) VALUES
+(1, 1, 'Test workout plan', 'ABCabc123');
 
 INSERT INTO workouts_exercises (id, name) VALUES
 (1, 'Exercise 1'),
 (2, 'Exercise 2'),
 (3, 'Exercise 3');
+
+INSERT INTO workouts_sessions (id, user, date) VALUES
+(1, 1, '2020-08-29');

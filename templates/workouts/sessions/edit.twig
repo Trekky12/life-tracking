@@ -1,0 +1,118 @@
+{% extends "base.twig" %}
+
+{% set active = 'workouts' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/workouts_session.js?ver=20200825"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["WORKOUTS_SESSION"]}} </h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" action="{{  url_for('workouts_sessions_save', {'id' : entry.id, 'plan' : plan.hash}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="dateSelect">{{lang["DATE"]}}</label>
+                    <input type="text" class="form-control" id="dateSelect" placeholder="" name="date" value="{% if not entry is null and not entry.date is null %}{{entry.date}}{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="timeEnd">{{ lang["START"] }} {{lang["TIME"]}}</label>
+                    <input type="time" step="1" class="form-control" id="timeStart" name="start_time" value="{% if not entry is null %}{{entry.start_time}}{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="timeEnd">{{ lang["END"] }} {{lang["TIME"]}}</label>
+                    <input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputNotice">{{lang["NOTICE"]}}</label>
+                    <textarea class="form-control" id="inputNotice" name="notice" rows="2">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
+                </div>
+
+                <div class="workout-selection">
+                    {% for exercise in exercises %}
+                        {% set exercise_idx = loop.index - 1 %}
+                        <div class="exercise">
+                            <div class="exercise-content">
+                                <h3 class="title">{{ exercise["exercise"].name }}</h3>
+                                <div class="set-list">
+                                    <div class="set set-dummy hidden">
+                                        <span class="set-nr"></span>. {{ lang["WORKOUTS_SET"] }}:
+                                        {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
+                                            <input type="number" min="0" max="999" step="1" size="3" name="exercises[{{ exercise_idx }}][sets][dummy][repeats]" disabled="disabled"/>
+                                            <label>{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
+                                        {% endif %}
+                                        {% if exercise["exercise"].isCategoryRepsWeight() %}
+                                            <input type="text" maxlength="3" size="3" name="exercises[{{ exercise_idx }}][sets][dummy][weight]" disabled="disabled"/>
+                                            <label>{{ lang["WORKOUTS_KG"] }}</label>
+                                        {% endif %}
+
+                                        {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
+                                            <input type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
+                                            <label>{{ lang["WORKOUTS_MINUTES"] }}</label>
+                                        {% endif %}
+                                        {% if exercise["exercise"].isCategoryDistanceTime() %}
+                                            <input type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
+                                            <label>{{ lang["WORKOUTS_KM"] }}</label>
+                                        {% endif %}
+                                    </div>
+                                    {% for set in exercise["sets"] %}
+                                        <div class="set">
+                                            {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}:
+
+                                            {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
+                                                <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="3" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}"/>
+                                                <label for="repeats_{{ loop.index-1 }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
+                                            {% endif %}
+                                            {% if exercise["exercise"].isCategoryRepsWeight() %}
+                                                <input id="weights_{{ loop.index-1 }}" type="text" maxlength="3" size="3" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}"/>
+                                                <label for="weights_{{ loop.index-1 }}">{{ lang["WORKOUTS_KG"] }}</label>
+                                            {% endif %}
+
+                                            {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
+                                                <input id="time_{{ loop.index-1 }}" type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}"/>
+                                                <label for="time_{{ loop.index-1 }}">{{ lang["WORKOUTS_MINUTES"] }}</label>
+                                            {% endif %}
+                                            {% if exercise["exercise"].isCategoryDistanceTime() %}
+                                                <input id="distance_{{ loop.index-1 }}" type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}"/>
+                                                <label for="distance_{{ loop.index-1 }}">{{ lang["WORKOUTS_KM"] }}</label>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="buttons">
+                                    <button type="button" class="add_set gray small">{{ lang["WORKOUTS_SET_ADD"] }}</button>
+                                    <button type="button" class="remove_set gray small">{{ lang["WORKOUTS_SET_REMOVE"] }}</button>
+                                </div>
+                                <input type="hidden" name="exercises[{{ exercise_idx }}][id]" value="{{ exercise["exercise"].id }}"/>
+                            </div>    
+                            {% if exercise["exercise"].get_thumbnail() != ''%}
+                                <div class="thumbnail">
+                                    <img src="/{{uploads_folder}}/exercises/{{exercise["exercise"].get_thumbnail()}}"/>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group btn">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

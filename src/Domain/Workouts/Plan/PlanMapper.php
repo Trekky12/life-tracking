@@ -51,7 +51,7 @@ class PlanMapper extends \App\Domain\Mapper {
     }
 
     public function getExercises($plan_id) {
-        $sql = "SELECT exercise, sets FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
+        $sql = "SELECT id, exercise, sets FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
 
         $bindings = [
             "plan" => $plan_id
@@ -62,7 +62,7 @@ class PlanMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[] = ["exercise" => intval($row["exercise"]), "sets" => json_decode($row["sets"], true)];
+            $results[$row["id"]] = ["exercise" => intval($row["exercise"]), "sets" => json_decode($row["sets"], true)];
         }
         return $results;
     }

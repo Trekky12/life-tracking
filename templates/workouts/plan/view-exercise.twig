@@ -9,7 +9,7 @@
         <div class="sets">
             <a href="#" class="headline">{{ lang["WORKOUTS_SETS"] }}</a>
             <div class="content">
-                {% for set in exercise["sets"] %}
+                {% for set in exercise["set_description"] %}
                     <div class="set">
                         {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}: {{ set }}
                     </div>

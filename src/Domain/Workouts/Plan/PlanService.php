@@ -44,27 +44,13 @@ class PlanService extends Service {
     public function edit($entry_id) {
         $entry = $this->getEntry($entry_id);
 
-        $exercises = $this->exercise_mapper->getAll();
         $bodyparts = $this->bodypart_mapper->getAll();
-        $muscles = $this->muscle_mapper->getAll();
-        $selected_exercises = $this->mapper->getExercises($entry_id);
-
-        $exercises_print = [];
-        foreach ($selected_exercises as $se) {
-            $exercise = $exercises[$se["exercise"]];
-
-            $exercises_print[] = [
-                "exercise" => $exercise,
-                "mainBodyPart" => array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
-                "mainMuscle" => array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
-                "sets" => $se["sets"]
-            ];
-        }
+        $exercises = $this->getPlanExercises($entry_id);
 
         return new Payload(Payload::$RESULT_HTML, [
             'entry' => $entry,
             'bodyparts' => $bodyparts,
-            'selected_exercises' => $exercises_print
+            'selected_exercises' => $exercises
         ]);
     }
 
@@ -76,38 +62,30 @@ class PlanService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $exercises = $this->exercise_mapper->getAll();
-        $bodyparts = $this->bodypart_mapper->getAll();
-        $muscles = $this->muscle_mapper->getAll();
-        $selected_exercises = $this->mapper->getExercises($plan->id);
+        $exercises = $this->getPlanExercises($plan->id);
 
-        $exercises_print = [];
-        foreach ($selected_exercises as $se) {
-            $exercise = $exercises[$se["exercise"]];
+        $exercises_print = array_map(function($exercise) {
 
-            $sets = array_map(function($set) use ($exercise) {
+            $set_description = array_map(function($set) use ($exercise) {
                 $description = [];
-                if ($exercise->isCategoryReps() || $exercise->isCategoryRepsWeight()) {
+                if ($exercise["exercise"]->isCategoryReps() || $exercise["exercise"]->isCategoryRepsWeight()) {
                     $description[] = sprintf("%s %s", $set["repeats"], $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
                 }
-                if ($exercise->isCategoryRepsWeight()) {
+                if ($exercise["exercise"]->isCategoryRepsWeight()) {
                     $description[] = sprintf("%s %s", $set["weight"], $this->translation->getTranslatedString("WORKOUTS_KG"));
                 }
-                if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
+                if ($exercise["exercise"]->isCategoryTime() || $exercise["exercise"]->isCategoryDistanceTime()) {
                     $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_MINUTES"));
                 }
-                if ($exercise->isCategoryDistanceTime()) {
+                if ($exercise["exercise"]->isCategoryDistanceTime()) {
                     $description[] = sprintf("%s %s", $set["distance"], $this->translation->getTranslatedString("WORKOUTS_KM"));
                 }
                 return implode(', ', $description);
-            }, $se["sets"]);
+            }, $exercise["sets"]);
+            $exercise["set_description"] = $set_description;
 
-            $exercises_print[] = ["exercise" => $exercise,
-                "mainBodyPart" => array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
-                "mainMuscle" => array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
-                "sets" => $sets
-            ];
-        }
+            return $exercise;
+        }, $exercises);
 
         return new Payload(Payload::$RESULT_HTML, [
             "plan" => $plan,
@@ -140,6 +118,31 @@ class PlanService extends Service {
         $response_data["count"] = $this->exercise_mapper->getExercisesWithBodyPartCount($bodypart);
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function getPlanExercises($plan_id, $selected_exercises = null) {
+
+        $exercises = $this->exercise_mapper->getAll();
+        $bodyparts = $this->bodypart_mapper->getAll();
+        $muscles = $this->muscle_mapper->getAll();
+        if (is_null($selected_exercises)) {
+            $selected_exercises = $this->mapper->getExercises($plan_id);
+        }
+
+        $exercises_print = [];
+        foreach ($selected_exercises as $idx => $se) {
+            $exercise = $exercises[$se["exercise"]];
+
+            $exercises_print[] = [
+                "exercise" => $exercise,
+                "mainBodyPart" => array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
+                "mainMuscle" => array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
+                "sets" => $se["sets"],
+                "id" => $idx
+            ];
+        }
+
+        return $exercises_print;
     }
 
 }

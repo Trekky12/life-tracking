@@ -937,6 +937,34 @@ CREATE TABLE workouts_plans_exercises (
     FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS workouts_sessions;
+CREATE TABLE workouts_sessions (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    plan INTEGER unsigned DEFAULT NULL,
+    date DATE DEFAULT NULL,
+    start_time TIME DEFAULT NULL,
+    end_time TIME DEFAULT NULL,
+    notice TEXT DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(plan) REFERENCES workouts_plans(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS workouts_sessions_exercises;
+CREATE TABLE workouts_sessions_exercises (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    session INTEGER unsigned DEFAULT NULL,
+    exercise INTEGER unsigned DEFAULT NULL,
+    sets JSON NULL DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(session) REFERENCES workouts_sessions(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*
 ALTER TABLE `global_users` ADD `module_workouts` INT(1) NULL AFTER `module_timesheets`; 
 */
