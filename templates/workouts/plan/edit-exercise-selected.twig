@@ -18,20 +18,20 @@
                     <div class="set set-dummy hidden">
                         <span class="set-nr"></span>. {{ lang["WORKOUTS_SET"] }}:
                         {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
-                            <input type="number" min="0" max="999" step="1" size="3" name="exercises[{{ exercise_idx }}][sets][dummy][repeats]" disabled="disabled"/>
+                            <input type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][repeats]" disabled="disabled"/>
                             <label>{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
                         {% endif %}
                         {% if exercise["exercise"].isCategoryRepsWeight() %}
-                            <input type="text" maxlength="3" size="3" name="exercises[{{ exercise_idx }}][sets][dummy][weight]" disabled="disabled"/>
+                            <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][weight]" disabled="disabled"/>
                             <label>{{ lang["WORKOUTS_KG"] }}</label>
                         {% endif %}
 
                         {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
-                            <input type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
+                            <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
                             <label>{{ lang["WORKOUTS_MINUTES"] }}</label>
                         {% endif %}
                         {% if exercise["exercise"].isCategoryDistanceTime() %}
-                            <input type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
+                            <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
                             <label>{{ lang["WORKOUTS_KM"] }}</label>
                         {% endif %}
                     </div>
@@ -40,20 +40,20 @@
                             {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}:
 
                             {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
-                                <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="3" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}"/>
+                                <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}"/>
                                 <label for="repeats_{{ loop.index-1 }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
                             {% endif %}
                             {% if exercise["exercise"].isCategoryRepsWeight() %}
-                                <input id="weights_{{ loop.index-1 }}" type="text" maxlength="3" size="3" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}"/>
+                                <input id="weights_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}"/>
                                 <label for="weights_{{ loop.index-1 }}">{{ lang["WORKOUTS_KG"] }}</label>
                             {% endif %}
 
                             {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
-                                <input id="time_{{ loop.index-1 }}" type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}"/>
+                                <input id="time_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}"/>
                                 <label for="time_{{ loop.index-1 }}">{{ lang["WORKOUTS_MINUTES"] }}</label>
                             {% endif %}
                             {% if exercise["exercise"].isCategoryDistanceTime() %}
-                                <input id="distance_{{ loop.index-1 }}" type="text" maxlength="10" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}"/>
+                                <input id="distance_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}"/>
                                 <label for="distance_{{ loop.index-1 }}">{{ lang["WORKOUTS_KM"] }}</label>
                             {% endif %}
                         </div>
