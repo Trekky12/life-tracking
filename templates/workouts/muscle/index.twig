@@ -5,7 +5,12 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["WORKOUTS_MUSCLES"]}}</h2> <a href="{{  url_for('workouts_muscles_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["WORKOUTS_MUSCLES"]}}</h2> 
+            <div class="buttons">
+            <a href="{{  url_for('workouts_muscles_image') }}"><button class="white">{{lang["IMAGE"]}}</button></a>
+            <a href="{{  url_for('workouts_muscles_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="workouts_muscles_table" class="table table-hover small">
                 <thead>

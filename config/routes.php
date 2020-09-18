@@ -466,6 +466,10 @@ return function (App $app) {
             $group_muscles->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Muscle\MuscleEditAction::class)->setName('workouts_muscles_edit');
             $group_muscles->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Muscle\MuscleSaveAction::class)->setName('workouts_muscles_save');
             $group_muscles->delete('/delete/{id}', \App\Application\Action\Workouts\Muscle\MuscleDeleteAction::class)->setName('workouts_muscles_delete');
+            
+            $group_muscles->get('/image', \App\Application\Action\Workouts\Muscle\MuscleBaseImageAction::class)->setName('workouts_muscles_image');
+            $group_muscles->post('/image', \App\Application\Action\Workouts\Muscle\MuscleBaseImageSaveAction::class)->setName('workouts_muscles_image');
+        
         })->add(\App\Application\Middleware\AdminMiddleware::class);
 
         $group->group('/bodyparts', function(RouteCollectorProxy $group_bodyparts) {

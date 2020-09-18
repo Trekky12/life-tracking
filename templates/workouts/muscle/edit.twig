@@ -7,7 +7,7 @@
         <div class="page-header"><h2>{{lang["WORKOUTS_MUSCLE"]}}</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" action="{{  url_for('workouts_muscles_save', {'id' : entry.id}) }}" method="POST">
+            <form class="form-horizontal" action="{{  url_for('workouts_muscles_save', {'id' : entry.id}) }}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
@@ -19,6 +19,38 @@
                     <label for="inputName">{{lang["NAME"]}}</label>
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
+                
+                <h3>{{lang["IMAGE"]}}</h3>
+                <div class="form-group">
+                    {% if not entry is null and entry.get_image_primary() != ''%}
+                        <img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_primary()}}"/>
+                    {% endif %}
+                    <input name="image_primary" id="image_primary" class="form-control" type="file">
+                </div>
+                {% if not entry is null and entry.get_image_primary() != ''%}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxDeleteImagePrimary">
+                            <input name="delete_image_primary" type="checkbox" value="1" id="checkboxDeleteImagePrimary">
+                            {{lang["DELETE"]}}
+                        </label>
+                    </div>
+                {% endif %}
+                
+                <h3>{{lang["IMAGE"]}}</h3>
+                <div class="form-group">
+                    {% if not entry is null and entry.get_image_secondary() != ''%}
+                        <img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_secondary()}}"/>
+                    {% endif %}
+                    <input name="image_secondary" id="image_secondary" class="form-control" type="file">
+                </div>
+                {% if not entry is null and entry.get_image_secondary() != ''%}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxDeleteImageSecondary">
+                            <input name="delete_image_secondary" type="checkbox" value="1" id="checkboxDeleteImageSecondary">
+                            {{lang["DELETE"]}}
+                        </label>
+                    </div>
+                {% endif %}
 
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

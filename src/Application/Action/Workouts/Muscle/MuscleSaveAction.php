@@ -20,7 +20,10 @@ class MuscleSaveAction {
     public function __invoke(Request $request, Response $response): Response {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        $entry = $this->service->save($id, $data);
+        
+        $files = $request->getUploadedFiles();
+        
+        $entry = $this->service->save($id, $data, ["files" => $files]);
         return $this->responder->respond($entry->withRouteName('workouts_muscles'));
     }
 

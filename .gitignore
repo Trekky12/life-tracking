@@ -15,6 +15,9 @@ composer.phar
 /public/uploads/exercises/*
 !/public/uploads/exercises/.gitkeep 
 
+/public/uploads/muscles/*
+!/public/uploads/muscles/.gitkeep 
+
 koala-config.json
 
 public/test*

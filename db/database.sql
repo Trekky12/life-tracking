@@ -872,6 +872,8 @@ CREATE TABLE workouts_muscles (
     createdBy INTEGER unsigned DEFAULT NULL,
     changedBy INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
+    image_primary VARCHAR(255) NULL,
+    image_secondary VARCHAR(255) NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
