@@ -176,7 +176,7 @@
                     }
                 }
             }
-            
+
             .buttons{
                 justify-content: flex-end;
             }
@@ -210,5 +210,21 @@
 
     #filterBodyParts{
         margin: 0.5rem;
+    }
+}
+
+#exercise-images{
+    position:relative;
+
+    .image-base{
+        position:relative;
+        top:0;
+        left:0;
+    }
+
+    .image-overlay{
+        position:absolute;
+        top:0;
+        left:0;
     }
 }

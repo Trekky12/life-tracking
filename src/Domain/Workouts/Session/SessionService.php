@@ -47,7 +47,7 @@ class SessionService extends Service {
         $entry = $this->getEntry($entry_id);
         
         $selected_exercises = $this->mapper->getExercises($entry_id);
-        $exercises = $this->plan_service->getPlanExercises($plan->id, !empty($selected_exercises)? $selected_exercises : null);
+        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, !empty($selected_exercises)? $selected_exercises : null);
 
         $response_data = [
             'entry' => $entry,

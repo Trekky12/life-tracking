@@ -10,6 +10,7 @@ use App\Domain\Workouts\Exercise\ExerciseMapper;
 use App\Domain\Workouts\Bodypart\BodypartMapper;
 use App\Domain\Workouts\Muscle\MuscleMapper;
 use App\Domain\Main\Translator;
+use App\Domain\Settings\SettingsMapper;
 
 class PlanService extends Service {
 
@@ -17,6 +18,7 @@ class PlanService extends Service {
     protected $bodypart_mapper;
     protected $muscle_mapper;
     protected $translation;
+    protected $settings_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -24,7 +26,8 @@ class PlanService extends Service {
             ExerciseMapper $exercise_mapper,
             BodypartMapper $bodypart_mapper,
             MuscleMapper $muscle_mapper,
-            Translator $translation) {
+            Translator $translation,
+            SettingsMapper $settings_mapper) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
 
@@ -33,6 +36,7 @@ class PlanService extends Service {
         $this->muscle_mapper = $muscle_mapper;
 
         $this->translation = $translation;
+        $this->settings_mapper = $settings_mapper;
     }
 
     public function index() {
@@ -45,7 +49,7 @@ class PlanService extends Service {
         $entry = $this->getEntry($entry_id);
 
         $bodyparts = $this->bodypart_mapper->getAll();
-        $exercises = $this->getPlanExercises($entry_id);
+        list($exercises, $muscles) = $this->getPlanExercises($entry_id);
 
         return new Payload(Payload::$RESULT_HTML, [
             'entry' => $entry,
@@ -62,7 +66,7 @@ class PlanService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $exercises = $this->getPlanExercises($plan->id);
+        list($exercises, $muscles) = $this->getPlanExercises($plan->id);
 
         $exercises_print = array_map(function($exercise) {
 
@@ -87,9 +91,21 @@ class PlanService extends Service {
             return $exercise;
         }, $exercises);
 
+        // Get Muscle Image
+        $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
+        if ($baseMuscleImage->getValue()) {
+            $size = "small";
+            $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
+            $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
+            $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
+        }
+
         return new Payload(Payload::$RESULT_HTML, [
             "plan" => $plan,
-            'exercises' => $exercises_print
+            'exercises' => $exercises_print,
+            'muscles' => $muscles,
+            'baseMuscleImage' => $baseMuscleImage,
+            'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail
         ]);
     }
 
@@ -142,7 +158,23 @@ class PlanService extends Service {
             ];
         }
 
-        return $exercises_print;
+        $exercise_ids = array_map(function($exercise) {
+            return $exercise["exercise"];
+        }, $selected_exercises);
+
+        $exercise_muscles = $this->exercise_mapper->getMusclesOfExercises($exercise_ids);
+
+        $primary = array_map(function($muscle)use($muscles) {
+            return $muscles[$muscle];
+        }, array_unique($exercise_muscles["primary"]));
+
+        $secondary = array_map(function($muscle)use($muscles) {
+            return $muscles[$muscle];
+        }, array_unique($exercise_muscles["secondary"]));
+
+        $selected_muscles = ["primary" => $primary, "secondary" => $secondary];
+
+        return [$exercises_print, $selected_muscles];
     }
 
 }

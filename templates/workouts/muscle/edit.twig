@@ -20,10 +20,10 @@
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
                 
-                <h3>{{lang["IMAGE"]}}</h3>
+                <h3>{{lang["WORKOUTS_MUSCLES_PRIMARY_IMAGE"]}}</h3>
                 <div class="form-group">
                     {% if not entry is null and entry.get_image_primary() != ''%}
-                        <img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_primary()}}"/>
+                        <img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_primary(true)}}"/>
                     {% endif %}
                     <input name="image_primary" id="image_primary" class="form-control" type="file">
                 </div>
@@ -36,10 +36,10 @@
                     </div>
                 {% endif %}
                 
-                <h3>{{lang["IMAGE"]}}</h3>
+                <h3>{{lang["WORKOUTS_MUSCLES_SECONDARY_IMAGE"]}}</h3>
                 <div class="form-group">
                     {% if not entry is null and entry.get_image_secondary() != ''%}
-                        <img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_secondary()}}"/>
+                        <img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_secondary(true)}}"/>
                     {% endif %}
                     <input name="image_secondary" id="image_secondary" class="form-control" type="file">
                 </div>

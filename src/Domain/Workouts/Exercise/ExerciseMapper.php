@@ -64,6 +64,36 @@ class ExerciseMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function getMusclesOfExercises($exercises = []) {
+        $sql = "SELECT muscle, is_primary FROM " . $this->getTableName("workouts_exercises_muscles") . "";
+
+        $bindings = [];
+        if (!empty($exercises)) {
+            $exercise_bindings = array();
+            foreach ($exercises as $idx => $exercise) {
+                $exercise_bindings[":exercise_" . $idx] = $exercise;
+            }
+
+            $sql .= " WHERE exercise IN (" . implode(',', array_keys($exercise_bindings)) . ")";
+
+            $bindings = array_merge($bindings, $exercise_bindings);
+        }
+
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = ["primary" => [], "secondary" => []];
+        while ($row = $stmt->fetch()) {
+            if ($row["is_primary"] > 0) {
+                $results["primary"][] = $row["muscle"];
+            } else {
+                $results["secondary"][] = $row["muscle"];
+            }
+        }
+        return $results;
+    }
+
     public function getExercisesWithBodyPart($sorted, $limit, $bodypart = -1) {
         $sql = "SELECT * FROM " . $this->getTableName();
 

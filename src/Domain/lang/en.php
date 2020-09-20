@@ -605,4 +605,8 @@ $lang["WORKOUTS_SESSION"] = "training session";
 $lang["WORKOUTS_SESSIONS"] = "training sessions";
 $lang["WORKOUTS_SESSION_ADD"] = "add training session";
 
+$lang["WORKOUTS_MUSCLES_PRIMARY_IMAGE"] = "Image for primary muscle";
+$lang["WORKOUTS_MUSCLES_SECONDARY_IMAGE"] = "Image for secondary muscle";
+$lang["WORKOUTS_MUSCLES_USED"] = "muscles used";
+
 return $lang;

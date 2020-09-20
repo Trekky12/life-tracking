@@ -16,15 +16,33 @@
             <div class="buttons">
                 <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["WORKOUTS_SESSION_ADD"]}}</button></a>
                 <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="white">{{lang["WORKOUTS_SESSIONS"]}}</button></a>
-                <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a></div>
+                <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a>
             </div>
-            
+        </div>
+
         <div class="page-content">
             <div class="workout-selection view">
                 {% for exercise in exercises %}
                     {% include "workouts/plan/view-exercise.twig" with {'exercise':exercise} only %}
                 {% endfor %}
             </div>
+
+            <h2>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h2>
+            {% if baseMuscleImageThumbnail != '' %}
+                <div id="exercise-images">
+                    <img class="image-base" src="/{{uploads_folder}}/muscles/{{baseMuscleImageThumbnail}}"/>
+                    {% for muscle in muscles["secondary"] %}
+                        {% if muscle.get_image_secondary() != '' %}
+                            <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_secondary(true)}}"/>
+                        {% endif %}
+                    {% endfor %}
+                    {% for muscle in muscles["primary"] %}
+                        {% if muscle.get_image_primary() != '' %}
+                            <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_primary(true)}}"/>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}        
