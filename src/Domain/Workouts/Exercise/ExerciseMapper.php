@@ -65,6 +65,11 @@ class ExerciseMapper extends \App\Domain\Mapper {
     }
 
     public function getMusclesOfExercises($exercises = []) {
+        
+        if (empty($exercises)) {
+            return [];
+        }
+        
         $sql = "SELECT muscle, is_primary FROM " . $this->getTableName("workouts_exercises_muscles") . "";
 
         $bindings = [];

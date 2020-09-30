@@ -26,11 +26,11 @@ class SessionService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
         
-        $sessions = $this->mapper->getAll();
+        $plan_sessions = $this->mapper->getFromPlan($plan->id, "date, start_time, end_time");
 
         $response_data = [
             'plan' => $plan,
-            'sessions' => $sessions
+            'sessions' => $plan_sessions
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);

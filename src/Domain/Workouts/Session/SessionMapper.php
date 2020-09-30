@@ -8,6 +8,26 @@ class SessionMapper extends \App\Domain\Mapper {
     protected $dataobject = \App\Domain\Workouts\Session\Session::class;
     protected $select_results_of_user_only = true;
     protected $insert_user = true;
+    
+    public function getFromPlan($id, $order = null) {
+        $bindings = array("id" => $id);
+
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE plan = :id ";
+
+        if (!is_null($order)) {
+            $sql .= " ORDER BY {$order}";
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
 
     public function deleteExercises($session_id) {
         $sql = "DELETE FROM " . $this->getTableName("workouts_sessions_exercises") . "  WHERE session = :session";

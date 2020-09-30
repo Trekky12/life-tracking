@@ -99,7 +99,7 @@ class PlanService extends Service {
             $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
             $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
         }
-
+        
         return new Payload(Payload::$RESULT_HTML, [
             "plan" => $plan,
             'exercises' => $exercises_print,
