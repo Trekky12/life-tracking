@@ -34,7 +34,7 @@ class AdminTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<form class="form-horizontal" action="' . $this->uri_save . '" method="POST">', $body);
+        $this->assertStringContainsString('<form class="form-horizontal" action="' . $this->uri_save . '" method="POST" enctype="multipart/form-data">', $body);
     }
 
     /**
@@ -87,7 +87,7 @@ class AdminTest extends BaseTestCase {
         $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $entry_id . "\">", $body);
 
         $matches = [];
-        $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
+        $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST" enctype="multipart\/form-data">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
         preg_match($re, $body, $matches);
 
         $this->assertArrayHasKey("save", $matches);

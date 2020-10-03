@@ -1,0 +1,35 @@
+{% extends "base.twig" %}
+
+{% set active = 'workouts' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/exercises.js?ver=20201002"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["WORKOUTS_EXERCISES"]}}</h2></div>
+        <div class="page-content">
+
+            <select id="filterBodyParts">
+                <option value="-1">{{ lang["ALL"] }}</option>
+                {% for bodypart in bodyparts %}
+                    <option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
+                {% endfor %}
+            </select>
+            <div class="content" id="exercises_available" data-edit="0">
+                <div id="exercises_available_list" class="workout-selection view">
+                </div>
+                <div id="loadingIconExercises" class="centered loading-icon">
+                    <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                </div>
+                <div id="loadMoreExercises" class="centered hidden">
+                    <button type="button">{{ lang["LOAD_MORE"] }}</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

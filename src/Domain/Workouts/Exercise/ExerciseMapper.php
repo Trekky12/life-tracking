@@ -65,12 +65,12 @@ class ExerciseMapper extends \App\Domain\Mapper {
     }
 
     public function getMusclesOfExercises($exercises = []) {
-        
+
         if (empty($exercises)) {
             return [];
         }
         
-        $sql = "SELECT muscle, is_primary FROM " . $this->getTableName("workouts_exercises_muscles") . "";
+        $sql = "SELECT DISTINCT muscle, is_primary FROM " . $this->getTableName("workouts_exercises_muscles") . "";
 
         $bindings = [];
         if (!empty($exercises)) {
@@ -88,13 +88,9 @@ class ExerciseMapper extends \App\Domain\Mapper {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
-        $results = ["primary" => [], "secondary" => []];
+        $results = [];
         while ($row = $stmt->fetch()) {
-            if ($row["is_primary"] > 0) {
-                $results["primary"][] = $row["muscle"];
-            } else {
-                $results["secondary"][] = $row["muscle"];
-            }
+            $results[] = $row;
         }
         return $results;
     }
@@ -146,6 +142,38 @@ class ExerciseMapper extends \App\Domain\Mapper {
             return intval($stmt->fetchColumn());
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
+    }
+    
+    public function getMusclesOfExercisesFull($exercises = []) {
+
+        if (empty($exercises)) {
+            return [];
+        }
+        
+        $sql = "SELECT exercise, muscle, is_primary FROM " . $this->getTableName("workouts_exercises_muscles") . "";
+
+        $bindings = [];
+        if (!empty($exercises)) {
+            $exercise_bindings = array();
+            foreach ($exercises as $idx => $exercise) {
+                $exercise_bindings[":exercise_" . $idx] = $exercise;
+            }
+
+            $sql .= " WHERE exercise IN (" . implode(',', array_keys($exercise_bindings)) . ")";
+
+            $bindings = array_merge($bindings, $exercise_bindings);
+        }
+
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key][] = $row;
+        }
+        return $results;
     }
 
 }

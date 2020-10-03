@@ -100,13 +100,17 @@
         {% if user.hasModule("workouts") %}
             <li {% if active == modules['workouts']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ url_for(modules['workouts']['rootRoute']) }}">{{lang[modules['workouts']['title']]}}</a>
-                {% if user.isAdmin() %}
-                    <ul class="dropdown-content">
-                        <li><a href="{{ url_for('workouts_exercises') }}"><i class="fas fa-dumbbell" aria-hidden="true"></i> {{lang["WORKOUTS_EXERCISES"]}}</a></li>
+
+                <ul class="dropdown-content">
+                    <li><a href="{{ url_for('workouts_exercises_view') }}"><i class="fas fa-dumbbell" aria-hidden="true"></i> {{lang["WORKOUTS_EXERCISES"]}}</a></li>
+                    {% if user.isAdmin() %}
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ url_for('workouts_exercises') }}">{{lang["WORKOUTS_EXERCISES_MANAGE"]}}</a></li>
                         <li><a href="{{ url_for('workouts_muscles') }}">{{lang["WORKOUTS_MUSCLES"]}}</a></li>
                         <li><a href="{{ url_for('workouts_bodyparts') }}">{{lang["WORKOUTS_BODYPARTS"]}}</a></li>
-                    </ul>
-                {% endif %}
+                    {% endif %}
+                </ul>
+
             </li> 
         {% endif %}
         {% if user.isAdmin() %}

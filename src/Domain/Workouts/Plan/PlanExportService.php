@@ -10,13 +10,22 @@ use App\Domain\Workouts\Muscle\MuscleMapper;
 use App\Domain\Main\Translator;
 use App\Domain\Workouts\Exercise\ExerciseService;
 use App\Application\Payload\Payload;
+use App\Domain\Settings\SettingsMapper;
 
 class PlanExportService extends PlanService {
 
     private $exercise_service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, PlanMapper $mapper, ExerciseMapper $exercise_mapper, BodypartMapper $bodypart_mapper, MuscleMapper $muscle_mapper, Translator $translation, ExerciseService $exercise_service) {
-        parent::__construct($logger, $user, $mapper, $exercise_mapper, $bodypart_mapper, $muscle_mapper, $translation);
+    public function __construct(LoggerInterface $logger, 
+            CurrentUser $user, 
+            PlanMapper $mapper, 
+            ExerciseMapper $exercise_mapper, 
+            BodypartMapper $bodypart_mapper, 
+            MuscleMapper $muscle_mapper, 
+            Translator $translation, 
+            SettingsMapper $settings_mapper,
+            ExerciseService $exercise_service) {
+        parent::__construct($logger, $user, $mapper, $exercise_mapper, $bodypart_mapper, $muscle_mapper, $translation, $settings_mapper);
         $this->exercise_service = $exercise_service;
     }
 

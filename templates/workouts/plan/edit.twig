@@ -4,7 +4,8 @@
 
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-    <script src="{{baseURL}}/static/js/workouts.js?ver=20200804"></script>
+    <script src="{{baseURL}}/static/js/workouts.js?ver=20201002"></script>
+    <script src="{{baseURL}}/static/js/exercises.js?ver=20201002"></script>
 {% endblock %}
 
 {% block body %}
@@ -43,7 +44,7 @@
                                     <option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
                                 {% endfor %}
                             </select>
-                            <div class="content" id="exercises_available">
+                            <div class="content" id="exercises_available" data-edit="1">
                                 <div id="exercises_available_list">
                                 </div>
                                 <div id="loadingIconExercises" class="centered loading-icon">

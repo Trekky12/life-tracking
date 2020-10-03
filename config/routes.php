@@ -453,23 +453,26 @@ return function (App $app) {
         });
 
         $group->group('/exercises', function(RouteCollectorProxy $group_exercises) {
-            $group_exercises->get('/', \App\Application\Action\Workouts\Exercise\ExerciseListAction::class)->setName('workouts_exercises');
-            $group_exercises->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Exercise\ExerciseEditAction::class)->setName('workouts_exercises_edit');
-            $group_exercises->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Exercise\ExerciseSaveAction::class)->setName('workouts_exercises_save');
-            $group_exercises->delete('/delete/{id}', \App\Application\Action\Workouts\Exercise\ExerciseDeleteAction::class)->setName('workouts_exercises_delete');
-        })->add(\App\Application\Middleware\AdminMiddleware::class);
 
-        $group->get('/getExercises', \App\Application\Action\Workouts\Exercise\ExercisesListAction::class)->setName('workouts_exercises_get');
+            $group_exercises->get('/view', \App\Application\Action\Workouts\Exercise\ExerciseViewAction::class)->setName('workouts_exercises_view');
+            $group_exercises->get('/data', \App\Application\Action\Workouts\Exercise\ExercisesListAction::class)->setName('workouts_exercises_get');
+            
+            $group_exercises->group('/manage', function(RouteCollectorProxy $group_exercises_admin) {
+                $group_exercises_admin->get('/', \App\Application\Action\Workouts\Exercise\ExerciseListAction::class)->setName('workouts_exercises');
+                $group_exercises_admin->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Exercise\ExerciseEditAction::class)->setName('workouts_exercises_edit');
+                $group_exercises_admin->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Exercise\ExerciseSaveAction::class)->setName('workouts_exercises_save');
+                $group_exercises_admin->delete('/delete/{id}', \App\Application\Action\Workouts\Exercise\ExerciseDeleteAction::class)->setName('workouts_exercises_delete');
+            })->add(\App\Application\Middleware\AdminMiddleware::class);
+        });
 
         $group->group('/muscles', function(RouteCollectorProxy $group_muscles) {
             $group_muscles->get('/', \App\Application\Action\Workouts\Muscle\MuscleListAction::class)->setName('workouts_muscles');
             $group_muscles->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Muscle\MuscleEditAction::class)->setName('workouts_muscles_edit');
             $group_muscles->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Muscle\MuscleSaveAction::class)->setName('workouts_muscles_save');
             $group_muscles->delete('/delete/{id}', \App\Application\Action\Workouts\Muscle\MuscleDeleteAction::class)->setName('workouts_muscles_delete');
-            
+
             $group_muscles->get('/image', \App\Application\Action\Workouts\Muscle\MuscleBaseImageAction::class)->setName('workouts_muscles_image');
             $group_muscles->post('/image', \App\Application\Action\Workouts\Muscle\MuscleBaseImageSaveAction::class)->setName('workouts_muscles_image');
-        
         })->add(\App\Application\Middleware\AdminMiddleware::class);
 
         $group->group('/bodyparts', function(RouteCollectorProxy $group_bodyparts) {

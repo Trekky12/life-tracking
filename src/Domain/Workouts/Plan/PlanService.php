@@ -93,13 +93,13 @@ class PlanService extends Service {
 
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
-        if ($baseMuscleImage->getValue()) {
+        if ($baseMuscleImage && $baseMuscleImage->getValue()) {
             $size = "small";
             $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
             $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
             $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
         }
-        
+
         return new Payload(Payload::$RESULT_HTML, [
             "plan" => $plan,
             'exercises' => $exercises_print,
@@ -107,33 +107,6 @@ class PlanService extends Service {
             'baseMuscleImage' => $baseMuscleImage,
             'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail
         ]);
-    }
-
-    public function getExercises($data) {
-
-        $response_data = ["data" => [], "status" => "success"];
-        $count = array_key_exists('count', $data) ? filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT) : 20;
-        $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        $limit = sprintf("%s,%s", $offset, $count);
-
-        $bodypart = array_key_exists('bodypart', $data) ? intval(filter_var($data['bodypart'], FILTER_SANITIZE_NUMBER_INT)) : -1;
-
-        $exercises = $this->exercise_mapper->getExercisesWithBodyPart("name ASC", $limit, $bodypart);
-        $bodyparts = $this->bodypart_mapper->getAll();
-        $muscles = $this->muscle_mapper->getAll();
-
-        $exercises_print = [];
-        foreach ($exercises as $exercise) {
-            $exercises_print[] = ["exercise" => $exercise,
-                "mainBodyPart" => $bodyparts[$exercise->mainBodyPart]->name,
-                "mainMuscle" => $muscles[$exercise->mainMuscle]->name
-            ];
-        }
-
-        $response_data["data"] = $exercises_print;
-        $response_data["count"] = $this->exercise_mapper->getExercisesWithBodyPartCount($bodypart);
-
-        return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
     public function getPlanExercises($plan_id, $selected_exercises = null) {
@@ -164,16 +137,14 @@ class PlanService extends Service {
 
         $exercise_muscles = $this->exercise_mapper->getMusclesOfExercises($exercise_ids);
 
-        $primary = array_map(function($muscle)use($muscles) {
-            return $muscles[$muscle];
-        }, array_unique($exercise_muscles["primary"]));
-
-        $secondary = array_map(function($muscle)use($muscles) {
-            return $muscles[$muscle];
-        }, array_unique($exercise_muscles["secondary"]));
-
-        $selected_muscles = ["primary" => $primary, "secondary" => $secondary];
-
+        $selected_muscles = ["primary" => [], "secondary" => []];
+        foreach ($exercise_muscles as $em) {
+            if ($em["is_primary"] > 0) {
+                $selected_muscles["primary"][] = $muscles[$em["muscle"]];
+            } else {
+                $selected_muscles["secondary"][] = $muscles[$em["muscle"]];
+            }
+        }
         return [$exercises_print, $selected_muscles];
     }
 

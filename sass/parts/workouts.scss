@@ -82,7 +82,7 @@
             }
 
 
-            .instructions, .sets{
+            .instructions, .sets, .sets-description{
                 @include font-size(1.4);
 
                 word-break: break-word;
@@ -181,6 +181,15 @@
                 justify-content: flex-end;
             }
         }
+        
+        h4{
+            font-weight: bold;
+        }
+        p{
+            margin-top:0;
+            margin-bottom:0.5rem;
+            @include font-size(1.4);
+        }
     }
 
     &.view {
@@ -192,7 +201,7 @@
 
             .exercise-content{
                 .sets{
-                    display:block;
+                    display:none;
                 }
                 .headline{
                     display:none;

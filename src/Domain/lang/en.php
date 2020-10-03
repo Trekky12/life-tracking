@@ -560,6 +560,7 @@ $lang["WIDGET_WEATHERFORECAST"] = "weather forecast";
 
 $lang["WORKOUTS"] = "workouts";
 $lang["WORKOUTS_EXERCISES"] = "exercises";
+$lang["WORKOUTS_EXERCISES_MANAGE"] = "manage exercises";
 $lang["WORKOUTS_EXERCISE"] = "exercise";
 $lang["WORKOUTS_MUSCLES"] = "muscle groups";
 $lang["WORKOUTS_MUSCLE"] = "muscle group";

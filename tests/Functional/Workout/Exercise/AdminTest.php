@@ -6,10 +6,10 @@ use Tests\Functional\Base\BaseTestCase;
 
 class AdminTest extends BaseTestCase {
 
-    protected $uri_overview = "/workouts/exercises/";
-    protected $uri_edit = "/workouts/exercises/edit/";
-    protected $uri_save = "/workouts/exercises/save/";
-    protected $uri_delete = "/workouts/exercises/delete/";
+    protected $uri_overview = "/workouts/exercises/manage/";
+    protected $uri_edit = "/workouts/exercises/manage/edit/";
+    protected $uri_save = "/workouts/exercises/manage/save/";
+    protected $uri_delete = "/workouts/exercises/manage/delete/";
     protected $TEST_MAIN_MUSCLE = 1;
     protected $TEST_MAIN_BODYPART = 1;
 

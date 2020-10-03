@@ -23,7 +23,7 @@ class ExercisesListResponder extends JSONResultResponder {
         $result = $payload->getResult();
         $data = !is_null($result) ? $result : [];
 
-        $html = $this->twig->fetch('workouts/plan/exercises-list.twig', $data);
+        $html = $this->twig->fetch($payload->getTemplate(), $data);
         $result["data"] = $html;
 
         $payload_json = new Payload(Payload::$RESULT_JSON, $result);

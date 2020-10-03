@@ -23,7 +23,7 @@
         <div class="page-content">
             <div class="workout-selection view">
                 {% for exercise in exercises %}
-                    {% include "workouts/plan/view-exercise.twig" with {'exercise':exercise} only %}
+                    {% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise} only %}
                 {% endfor %}
             </div>
 
