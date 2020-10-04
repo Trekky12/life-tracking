@@ -455,8 +455,9 @@ return function (App $app) {
         $group->group('/exercises', function(RouteCollectorProxy $group_exercises) {
 
             $group_exercises->get('/view', \App\Application\Action\Workouts\Exercise\ExerciseViewAction::class)->setName('workouts_exercises_view');
-            $group_exercises->get('/data', \App\Application\Action\Workouts\Exercise\ExercisesListAction::class)->setName('workouts_exercises_get');
+            $group_exercises->get('/list', \App\Application\Action\Workouts\Exercise\ExercisesListAction::class)->setName('workouts_exercises_get');
             $group_exercises->post('/muscles', \App\Application\Action\Workouts\Exercise\ExercisesSelectedMusclesAction::class)->setName('workouts_exercises_selected_muscles');
+            $group_exercises->get('/data', \App\Application\Action\Workouts\Exercise\ExercisesDataAction::class)->setName('workouts_exercises_data');
             
             $group_exercises->group('/manage', function(RouteCollectorProxy $group_exercises_admin) {
                 $group_exercises_admin->get('/', \App\Application\Action\Workouts\Exercise\ExerciseListAction::class)->setName('workouts_exercises');

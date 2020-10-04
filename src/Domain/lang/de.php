@@ -608,5 +608,7 @@ $lang["WORKOUTS_SESSION_ADD"] = "Trainingseinheit erfassen";
 $lang["WORKOUTS_MUSCLES_PRIMARY_IMAGE"] = "Bild für primärer Muskel";
 $lang["WORKOUTS_MUSCLES_SECONDARY_IMAGE"] = "Bild für sekundärer Muskel";
 $lang["WORKOUTS_MUSCLES_USED"] = "beanspruchte Muskeln";
+
+$lang["WORKOUTS_ADD_EXERCISE"] = "Übung hinzufügen";
         
 return $lang;

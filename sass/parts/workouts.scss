@@ -181,7 +181,7 @@
                 justify-content: flex-end;
             }
         }
-        
+
         h4{
             font-weight: bold;
         }
@@ -236,8 +236,13 @@
         top:0;
         left:0;
     }
-    
+
     &.small{
         max-width: 250px;
     }
+}
+
+#setCount{
+    padding: 0.2rem;
+    @include font-size(1.6);
 }

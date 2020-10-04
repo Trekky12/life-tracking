@@ -4,8 +4,8 @@
 
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-    <script src="{{baseURL}}/static/js/workouts.js?ver=20201002"></script>
-    <script src="{{baseURL}}/static/js/exercises.js?ver=20201002"></script>
+    <script src="{{baseURL}}/static/js/workouts.js?ver=20201004"></script>
+    <script src="{{baseURL}}/static/js/exercises.js?ver=20201004"></script>
 {% endblock %}
 
 {% block body %}
@@ -26,13 +26,9 @@
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
 
-                <h3>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h3>
-
                 <div>
                     <div id="usedMusclesWrapper">
-                    </div>
-                    <div id="loadingIconMuscles" class="centered loading-icon">
-                        <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                        {% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': selected_muscles["primary"], 'secondary': selected_muscles["secondary"], 'small': false}} only %}
                     </div>
                 </div>
 

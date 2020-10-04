@@ -173,22 +173,38 @@ class ExerciseService extends Service {
                 }
             }
 
-            // Get Muscle Image
-            $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
-            if ($baseMuscleImage && $baseMuscleImage->getValue()) {
-                $size = "small";
-                $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
-                $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
-                $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
-            }
-
-            $response_data["data"] = [
-                "primary" => $primary,
-                "secondary" => $secondary,
-                "baseMuscleImageThumbnail" => $baseMuscleImageThumbnail,
-                "small" => false
-            ];
+            $response_data["data"]["primary"] = $primary;
+            $response_data["data"]["secondary"] = $secondary;
+            $response_data["data"]["small"] = false;
         }
+
+        // Get Muscle Image
+        $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
+        if ($baseMuscleImage && $baseMuscleImage->getValue()) {
+            $size = "small";
+            $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
+            $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
+            $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
+        }
+        $response_data["data"]["baseMuscleImageThumbnail"] = $baseMuscleImageThumbnail;
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function getExercise($data) {
+
+        $response_data = ["data" => [], "status" => "success"];
+        $sets = array_key_exists('sets', $data) ? filter_var($data['sets'], FILTER_SANITIZE_NUMBER_INT) : 3;
+        $exercise_id = array_key_exists('exercise', $data) ? filter_var($data['exercise'], FILTER_SANITIZE_NUMBER_INT) : -1;
+        $exercise_idx = array_key_exists('count', $data) ? filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT) : -1;
+
+        try {
+            $exercise = $this->mapper->get($exercise_id);
+            $response_data["data"] = ["exercise" => $exercise, "exercise_idx" => $exercise_idx, "sets" => range(0,$sets-1)];
+        } catch (\Exception $e) {
+            $response_data["status"] = "error";
+        }
+
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 

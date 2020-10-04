@@ -89,6 +89,7 @@ function loadMoreExercisesFunctions() {
 
 
 filterBodyparts.addEventListener('change', function (event) {
+    event.preventDefault();
     exercisesList.innerHTML = '';
     getExercises();
 });

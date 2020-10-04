@@ -120,7 +120,7 @@ const usedMusclesWrapper = document.querySelector('#usedMusclesWrapper');
 const loadingIconMuscles = document.querySelector('#loadingIconMuscles');
 
 
-loadSelectedMuscles();
+//loadSelectedMuscles();
 
 function loadSelectedMuscles() {
 
@@ -132,7 +132,7 @@ function loadSelectedMuscles() {
 
     let data = {'exercises': exercise_ids};
 
-    loadingIconMuscles.classList.remove("hidden");
+    //loadingIconMuscles.classList.remove("hidden");
 
     getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
@@ -151,7 +151,7 @@ function loadSelectedMuscles() {
     }).then(function (data) {
         if (data.status !== 'error') {
             usedMusclesWrapper.innerHTML = data['data'];
-            loadingIconMuscles.classList.add("hidden");
+            //loadingIconMuscles.classList.add("hidden");
         }
     }).catch(function (error) {
         console.log(error);

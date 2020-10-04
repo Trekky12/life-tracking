@@ -610,4 +610,6 @@ $lang["WORKOUTS_MUSCLES_PRIMARY_IMAGE"] = "Image for primary muscle";
 $lang["WORKOUTS_MUSCLES_SECONDARY_IMAGE"] = "Image for secondary muscle";
 $lang["WORKOUTS_MUSCLES_USED"] = "muscles used";
 
+$lang["WORKOUTS_ADD_EXERCISE"] = "add exercise";
+
 return $lang;
