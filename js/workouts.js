@@ -16,6 +16,7 @@ document.addEventListener('click', function (event) {
     if (minus) {
         event.preventDefault();
         exercise.remove();
+        loadSelectedMuscles();
     }
 
     if (plus) {
@@ -42,13 +43,14 @@ document.addEventListener('click', function (event) {
 
         let inputs = new_exercise.querySelectorAll('.sets input');
         inputs.forEach(function (input, idx) {
-            if(!input.name.includes("dummy")){
+            if (!input.name.includes("dummy")) {
                 input.setAttribute('name', input.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + id + ']'));
                 input.removeAttribute('disabled');
             }
         });
 
         exercisesSelected.appendChild(new_exercise);
+        loadSelectedMuscles();
     }
 
     if (headline) {
@@ -112,3 +114,46 @@ new Sortable(exercisesSelected, {
         });
     }
 });
+
+
+const usedMusclesWrapper = document.querySelector('#usedMusclesWrapper');
+const loadingIconMuscles = document.querySelector('#loadingIconMuscles');
+
+
+loadSelectedMuscles();
+
+function loadSelectedMuscles() {
+
+    let exercise_ids = [];
+    let exercises = exercisesSelected.querySelectorAll('.exercise');
+    exercises.forEach(function (item, idx) {
+        exercise_ids.push(item.dataset.id);
+    });
+
+    let data = {'exercises': exercise_ids};
+
+    loadingIconMuscles.classList.remove("hidden");
+
+    getCSRFToken().then(function (token) {
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
+        return fetch(jsObject.workouts_exercises_selected_muscles, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        if (data.status !== 'error') {
+            usedMusclesWrapper.innerHTML = data['data'];
+            loadingIconMuscles.classList.add("hidden");
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
+}

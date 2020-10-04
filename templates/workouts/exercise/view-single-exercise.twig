@@ -24,21 +24,7 @@
             </p>
         {% endif %}
 
-        {% if baseMuscleImageThumbnail != '' %}
-            <div id="exercise-images">
-                <img class="image-base" src="/{{uploads_folder}}/muscles/{{baseMuscleImageThumbnail}}"/>
-                {% for muscle in exercise["secondary_muscles"] %}
-                    {% if muscle.get_image_secondary() != '' %}
-                        <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_secondary(true)}}"/>
-                    {% endif %}
-                {% endfor %}
-                {% for muscle in exercise["primary_muscles"] %}
-                    {% if muscle.get_image_primary() != '' %}
-                        <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_primary(true)}}"/>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% endif %}
+        {% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': exercise["primary_muscles"], 'secondary': exercise["secondary_muscles"], 'small': true}} only %}
     </div>                                   
     {% if exercise["exercise"].get_thumbnail() != ''%}
         <div class="thumbnail">

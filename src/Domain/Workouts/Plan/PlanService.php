@@ -50,11 +50,33 @@ class PlanService extends Service {
 
         $bodyparts = $this->bodypart_mapper->getAll();
         list($exercises, $muscles) = $this->getPlanExercises($entry_id);
+        
+        $selected_muscles = ["primary" => [], "secondary" => []];
+        foreach($muscles["primary"] as $sm){
+            $selected_muscles["primary"][] = $sm->id;
+        }
+        foreach($muscles["secondary"] as $sm){
+            $selected_muscles["secondary"][] = $sm->id;
+        }
+        
+        $allMuscles = $this->muscle_mapper->getAll();
+        
+        // Get Muscle Image
+        $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
+        if ($baseMuscleImage && $baseMuscleImage->getValue()) {
+            $size = "small";
+            $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
+            $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
+            $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
+        }
 
         return new Payload(Payload::$RESULT_HTML, [
             'entry' => $entry,
             'bodyparts' => $bodyparts,
-            'selected_exercises' => $exercises
+            'selected_exercises' => $exercises,
+            'selected_muscles' => $selected_muscles,
+            'muscles' => $allMuscles,
+            'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail
         ]);
     }
 

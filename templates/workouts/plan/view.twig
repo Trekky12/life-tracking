@@ -28,21 +28,7 @@
             </div>
 
             <h2>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h2>
-            {% if baseMuscleImageThumbnail != '' %}
-                <div id="exercise-images">
-                    <img class="image-base" src="/{{uploads_folder}}/muscles/{{baseMuscleImageThumbnail}}"/>
-                    {% for muscle in muscles["secondary"] %}
-                        {% if muscle.get_image_secondary() != '' %}
-                            <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_secondary(true)}}"/>
-                        {% endif %}
-                    {% endfor %}
-                    {% for muscle in muscles["primary"] %}
-                        {% if muscle.get_image_primary() != '' %}
-                            <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_primary(true)}}"/>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endif %}
+            {% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': muscles["primary"], 'secondary': muscles["secondary"], 'small': false}} only %}
         </div>
     </div>
 {% endblock %}        

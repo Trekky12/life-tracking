@@ -18,11 +18,11 @@ class ExerciseService extends Service {
     private $bodypart_mapper;
     protected $settings_mapper;
 
-    public function __construct(LoggerInterface $logger, 
-            CurrentUser $user, 
-            ExerciseMapper $mapper, 
-            Settings $settings, 
-            MuscleMapper $muscle_mapper, 
+    public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
+            ExerciseMapper $mapper,
+            Settings $settings,
+            MuscleMapper $muscle_mapper,
             BodypartMapper $bodypart_mapper,
             SettingsMapper $settings_mapper) {
         parent::__construct($logger, $user);
@@ -31,7 +31,7 @@ class ExerciseService extends Service {
         $this->settings = $settings;
         $this->muscle_mapper = $muscle_mapper;
         $this->bodypart_mapper = $bodypart_mapper;
-        
+
         $this->settings_mapper = $settings_mapper;
     }
 
@@ -139,7 +139,7 @@ class ExerciseService extends Service {
 
         $response_data["data"] = $exercises_print;
         $response_data["count"] = $this->mapper->getExercisesWithBodyPartCount($bodypart);
-        
+
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
         if ($baseMuscleImage && $baseMuscleImage->getValue()) {
@@ -151,6 +151,44 @@ class ExerciseService extends Service {
 
         $response_data["baseMuscleImageThumbnail"] = $baseMuscleImageThumbnail;
 
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function getSelectedMuscles($data) {
+        $response_data = ["data" => [], "status" => "success"];
+
+        if (array_key_exists("exercises", $data) && is_array($data["exercises"]) && !empty($data["exercises"])) {
+            $exercise_ids = filter_var_array($data["exercises"], FILTER_SANITIZE_NUMBER_INT);
+
+            $muscles = $this->muscle_mapper->getAll();
+            $exercise_muscles = $this->mapper->getMusclesOfExercises($exercise_ids);
+
+            $primary = [];
+            $secondary = [];
+            foreach ($exercise_muscles as $em) {
+                if ($em["is_primary"] > 0) {
+                    $primary[] = $muscles[$em["muscle"]];
+                } else {
+                    $secondary[] = $muscles[$em["muscle"]];
+                }
+            }
+
+            // Get Muscle Image
+            $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
+            if ($baseMuscleImage && $baseMuscleImage->getValue()) {
+                $size = "small";
+                $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
+                $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
+                $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
+            }
+
+            $response_data["data"] = [
+                "primary" => $primary,
+                "secondary" => $secondary,
+                "baseMuscleImageThumbnail" => $baseMuscleImageThumbnail,
+                "small" => false
+            ];
+        }
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 

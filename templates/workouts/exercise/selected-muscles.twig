@@ -1,0 +1,15 @@
+{% if data["baseMuscleImageThumbnail"] != '' %}
+    <div id="exercise-images" class="{% if data["small"] %}small{% endif %}">
+        <img class="image-base" src="/{{uploads_folder}}/muscles/{{data["baseMuscleImageThumbnail"]}}"/>
+        {% for muscle in data["secondary"] %}
+            {% if muscle.get_image_secondary() != '' %}
+                <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_secondary(true)}}"/>
+            {% endif %}
+        {% endfor %}
+        {% for muscle in data["primary"] %}
+            {% if muscle.get_image_primary() != '' %}
+                <img class="image-overlay" src="/{{uploads_folder}}/muscles/{{muscle.get_image_primary(true)}}"/>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

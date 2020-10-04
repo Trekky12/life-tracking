@@ -144,12 +144,7 @@ class ExerciseMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
     
-    public function getMusclesOfExercisesFull($exercises = []) {
-
-        if (empty($exercises)) {
-            return [];
-        }
-        
+    public function getMusclesOfExercisesFull($exercises = []) {        
         $sql = "SELECT exercise, muscle, is_primary FROM " . $this->getTableName("workouts_exercises_muscles") . "";
 
         $bindings = [];

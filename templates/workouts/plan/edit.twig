@@ -26,6 +26,16 @@
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
 
+                <h3>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h3>
+
+                <div>
+                    <div id="usedMusclesWrapper">
+                    </div>
+                    <div id="loadingIconMuscles" class="centered loading-icon">
+                        <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                    </div>
+                </div>
+
                 <div class="workout-selection">
                     <div class="row">
                         <div class="col" id="exercises_selected">
