@@ -28,7 +28,7 @@
 
         {% if event.notice %}
             <div class="description">
-                <a href="#" class="description_text">Beschreibung</a>
+                <a href="#" class="description_text">{{ lang["DESCRIPTION"] }}</a>
                 <div class="description_full">
                     {{ event.getNotice()|raw|nl2br }}
                 </div>

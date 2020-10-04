@@ -1,0 +1,248 @@
+.workout-selection{
+    margin-bottom:2rem;
+
+    .row{
+        height: 100%;
+        display:flex;
+        flex-direction: column;
+
+        @media screen and (min-width: $size_mobile) {
+            flex-direction: row;
+            max-height: 100vh;
+        }
+    }
+    .col{
+        h2{
+            margin: 1rem 0;
+            @include font-size(1.6);
+        }
+        @media screen and (min-width: $size_mobile) {
+            width: 50%;
+        }
+        .content{
+            overflow: auto;
+            max-height: 500px;
+
+            @media screen and (min-width: $size_mobile) {
+                max-height: calc(100% - 44px);
+            }
+        }
+    }
+
+
+    .exercise{
+        @media screen and (min-width: $size_mobile) {
+            display:flex;
+        }
+
+        padding: 1rem;
+        border: 1px solid $color_blue_light_gray;
+        border-radius: 5px;
+        margin: 0.5rem;
+
+        //user-select: none;
+
+        .thumbnail{
+            flex-basis: 20%;
+
+            img{
+                margin-left: 10px;
+            }
+        }
+
+        .icons{
+
+            display:flex;
+            justify-content: flex-end;
+
+            @media screen and (min-width: $size_mobile) {
+                margin-top: 2.8rem;
+                margin-right: 1rem;
+            }
+
+            .minus, .plus, .handle{
+                cursor:pointer;
+            }
+
+            .handle{
+                margin-left: 10px;
+            }
+        }
+
+        .exercise-content{
+            flex-basis: 80%;
+            margin-bottom: 1rem;
+
+            .bodypart{
+                @include font-size(1.2);
+            }
+            .title{
+                @include font-size(1.6);
+                margin: 0;
+            }
+
+
+            .instructions, .sets, .sets-description{
+                @include font-size(1.4);
+
+                word-break: break-word;
+                hyphens: auto;
+
+                .content{
+                    padding-top: 0.5rem;
+                    padding-bottom: 0.5rem;
+                    margin:0;
+                }
+
+                .headline{
+                    display:none;
+                }
+            }
+
+            .sets{
+                display:none;
+            }
+
+            .set{
+                margin-bottom: 0.2rem;
+                input{
+                    padding: 0.2rem;
+                    @include font-size(1.2);
+                }
+            }
+
+            .buttons{
+                display:flex;
+                margin: 0.5rem 0;
+
+                button{
+                    margin-left:0.5rem;
+                }
+            }
+
+        }
+
+        &.selected {
+            display:flex;
+            flex-direction: row-reverse;
+
+            .thumbnail{
+                display:none;
+                @media screen and (min-width: $size_mobile) {
+                    display:block;
+                    flex-basis: 10%;
+                }
+                img{
+                    margin-right: 10px;
+                    margin-left: 0;
+                }
+            }
+            .exercise-content{
+                flex-basis: 90%;
+            }
+            .instructions, .sets{
+                display:block;
+                .content{
+                    display:none;
+                }
+                .headline{
+                    display:block;
+
+                    &:before {
+                        content: "\f078";
+                        font-family: "Font Awesome 5 Free";
+                        font-weight: 900;
+                        display:inline-block;
+                        font-style: normal;
+                        font-variant: normal;
+                        text-rendering: auto;
+                        -webkit-font-smoothing: antialiased;
+                        font-size: inherit;
+                        transition: all 250ms;
+                        @include font-size(1.4);
+                        color: $color_text-main;
+                        position: relative;
+                        margin-right: 5px;
+                    }
+                }
+
+                &.active {
+                    .content{
+                        display:block;
+                    }
+
+                    .headline:before{
+                        content: "\f077";
+                    }
+                }
+            }
+
+            .buttons{
+                justify-content: flex-end;
+            }
+        }
+
+        h4{
+            font-weight: bold;
+        }
+        p{
+            margin-top:0;
+            margin-bottom:0.5rem;
+            @include font-size(1.4);
+        }
+    }
+
+    &.view {
+        .exercise{
+            display:block;
+            @media screen and (min-width: $size_mobile) {
+                display:flex;
+            }
+
+            .exercise-content{
+                .sets{
+                    display:none;
+                }
+                .headline{
+                    display:none;
+                }
+                .content{
+                    display:block;
+                }
+            }
+        }
+
+        .icons{
+            display:none;
+        }
+    }
+
+    #filterBodyParts{
+        margin: 0.5rem;
+    }
+}
+
+#exercise-images{
+    position:relative;
+
+    .image-base{
+        position:relative;
+        top:0;
+        left:0;
+    }
+
+    .image-overlay{
+        position:absolute;
+        top:0;
+        left:0;
+    }
+
+    &.small{
+        max-width: 250px;
+    }
+}
+
+#setCount{
+    padding: 0.2rem;
+    @include font-size(1.6);
+}

@@ -1,0 +1,3 @@
+{% for exercise in data %}
+    {% include "workouts/exercise/view-single-exercise.twig" with {'exercise':exercise, 'exercise_idx': loop.index, 'baseMuscleImageThumbnail': baseMuscleImageThumbnail} only %}
+{% endfor %}

@@ -157,7 +157,7 @@ return [
         } else {
             $guard = new \Slim\Csrf\Guard($responseFactory);
         }
-        $guard->setStorageLimit(10);
+        $guard->setStorageLimit(1000);
         $guard->setFailureHandler(function (Request $request, RequestHandler $handler) use($container): ResponseInterface {
 
                     $routeContext = RouteContext::fromRequest($request);

@@ -1,0 +1,34 @@
+<div class="exercise" data-id="{{ exercise["exercise"].id }}">
+    <div class="exercise-content">
+        <small class="bodypart">{{ exercise["mainBodyPart"] }} / {{ exercise["mainMuscle"] }}</small>
+        <h3 class="title">{{ exercise["exercise"].name }}</h3>
+        <div class="instructions">
+            <a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
+            <p class="content">{{ exercise["exercise"].instructions }}</p>
+        </div>
+        {% if exercise["primary_muscles"]|length > 0 %}
+            <h4>{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</h4>
+            <p>
+            {% for muscle in exercise["primary_muscles"] %}
+                {{ muscle.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        {% endif %}
+
+        {% if exercise["secondary_muscles"]|length > 0 %}
+            <h4>{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</h4>
+            <p>
+            {% for muscle in exercise["secondary_muscles"] %}
+                {{ muscle.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        {% endif %}
+
+        {% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': exercise["primary_muscles"], 'secondary': exercise["secondary_muscles"], 'small': true}} only %}
+    </div>                                   
+    {% if exercise["exercise"].get_thumbnail() != ''%}
+        <div class="thumbnail">
+            <a href="/{{uploads_folder}}/exercises/{{exercise["exercise"].get_image()}}" target="_blank"><img src="/{{uploads_folder}}/exercises/{{exercise["exercise"].get_thumbnail()}}"/></a>
+        </div>
+    {% endif %}
+</div>

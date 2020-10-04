@@ -494,6 +494,11 @@ $lang["DATAOBJECT_MOBILEFAVORITE"] = "Mobiler Favoriteneintrag";
 $lang["DATAOBJECT_USER"] = "Benutzer";
 $lang["DATAOBJECT_APPLICATIONPASSWORD"] = "Anwendungspasswort";
 $lang["DATAOBJECT_WIDGET_ENTRY"] = "Widget";
+$lang["DATAOBJECT_WORKOUTS_EXERCISE"] = "Übung";
+$lang["DATAOBJECT_WORKOUTS_MUSCLE"] = "Muskelgruppe";
+$lang["DATAOBJECT_WORKOUTS_BODYPART"] = "Körperbereich";
+$lang["DATAOBJECT_WORKOUTS_PLAN"] = "Trainingsplan";
+$lang["DATAOBJECT_WORKOUTS_SESSION"] = "Trainingseinheit";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -552,5 +557,59 @@ $lang["WIDGET_URL"] = "URL";
 $lang["WIDGET_TITLE"] = "Titel";
 $lang["WIDGET_CURRENTWEATHER"] = "aktuelles Wetter";
 $lang["WIDGET_WEATHERFORECAST"] = "Wettervorhersage";
+
+$lang["WORKOUTS"] = "Workouts";
+$lang["WORKOUTS_EXERCISES"] = "Übungen";
+$lang["WORKOUTS_EXERCISES_MANAGE"] = "Übungen verwalten";
+$lang["WORKOUTS_EXERCISE"] = "Übung";
+$lang["WORKOUTS_MUSCLES"] = "Muskelgruppen";
+$lang["WORKOUTS_MUSCLE"] = "Muskelgruppe";
+$lang["WORKOUTS_BODYPARTS"] = "Körperbereiche";
+$lang["WORKOUTS_BODYPART"] = "Körperbereiche";
+$lang["WORKOUTS_PLANS"] = "Trainingspläne";
+$lang["WORKOUTS_PLAN"] = "Trainingsplan";
+
+$lang["WORKOUTS_INSTRUCTIONS"] = "Instruktionen";
+$lang["WORKOUTS_LEVEL"] = "Schwierigkeit";
+$lang["WORKOUTS_RATING"] = "Bewertung";
+$lang["WORKOUTS_CATEGORY"] = "Kategorie";
+$lang["WORKOUTS_CATEGORY_REPS"] = "Wiederholungen";
+$lang["WORKOUTS_CATEGORY_REPS_WEIGHT"] = "Wiederholungen und Gewicht";
+$lang["WORKOUTS_CATEGORY_TIME"] = "Zeit";
+$lang["WORKOUTS_CATEGORY_DISTANCE_TIME"] = "Distanz und Zeit";
+$lang["WORKOUTS_MAIN_MUSCLE"] = "Hauptmuskelgruppe";
+$lang["WORKOUTS_MUSCLES_PRIMARY"] = "primäre Muskeln";
+$lang["WORKOUTS_MUSCLES_SECONDARY"] = "sekundäre Muskeln";
+$lang["WORKOUTS_MAIN_BODYPART"] = "Hauptkörperbereich";
+$lang["THUMBNAIL"] = "Vorschaubild";
+
+$lang["WORKOUTS_EXERCISES_SELECTED"] = "gewählte Übungen";
+$lang["WORKOUTS_EXERCISES_AVAILABLE"] = "verfügbare Übungen";
+
+$lang["WORKOUTS_SET"] = "Satz";
+$lang["WORKOUTS_SETS"] = "Sätze";
+$lang["WORKOUTS_REPEATS"] = "Wiederholungen";
+$lang["WORKOUTS_REPEATS_SHORT"] = "Wdh.";
+$lang["WORKOUTS_KG"] = "kg";
+$lang["WORKOUTS_MINUTES"] = "Minuten";
+$lang["WORKOUTS_KM"] = "km";
+
+$lang["WORKOUTS_SET_ADD"] = "Set hinzufügen";
+$lang["WORKOUTS_SET_REMOVE"] = "Set entfernen";
+
+$lang["LOAD_MORE"] = "Mehr laden";
+
+$lang["ALL"] = "alle";
+
+$lang["WORKOUTS_EXPORT"] = "Export";
+$lang["WORKOUTS_SESSION"] = "Trainingseinheit";
+$lang["WORKOUTS_SESSIONS"] = "Trainingseinheiten";
+$lang["WORKOUTS_SESSION_ADD"] = "Trainingseinheit erfassen";
+
+$lang["WORKOUTS_MUSCLES_PRIMARY_IMAGE"] = "Bild für primärer Muskel";
+$lang["WORKOUTS_MUSCLES_SECONDARY_IMAGE"] = "Bild für sekundärer Muskel";
+$lang["WORKOUTS_MUSCLES_USED"] = "beanspruchte Muskeln";
+
+$lang["WORKOUTS_ADD_EXERCISE"] = "Übung hinzufügen";
         
 return $lang;

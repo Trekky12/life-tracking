@@ -1,0 +1,78 @@
+{% extends "base.twig" %}
+
+{% set active = 'workouts' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
+    <script src="{{baseURL}}/static/js/workouts.js?ver=20201004"></script>
+    <script src="{{baseURL}}/static/js/exercises.js?ver=20201004"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["WORKOUTS_PLAN"]}}</h2></div>
+        <div class="page-content">
+
+            <form class="form-horizontal" action="{{  url_for('workouts_plans_save', {'id' : entry.id}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="inputName">{{lang["NAME"]}}</label>
+                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+                </div>
+
+                <div>
+                    <div id="usedMusclesWrapper">
+                        {% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': selected_muscles["primary"], 'secondary': selected_muscles["secondary"], 'small': false}} only %}
+                    </div>
+                </div>
+
+                <div class="workout-selection">
+                    <div class="row">
+                        <div class="col" id="exercises_selected">
+                            <h2>{{ lang["WORKOUTS_EXERCISES_SELECTED"] }}</h2>
+                            <div class="content">
+                                {% for exercise in selected_exercises %}
+                                    {% include "workouts/plan/edit-exercise-selected.twig" with {'exercise':exercise, 'exercise_idx': loop.index-1} only %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h2>{{ lang["WORKOUTS_EXERCISES_AVAILABLE"] }}</h2>
+                            <select id="filterBodyParts">
+                                <option value="-1">{{ lang["ALL"] }}</option>
+                                {% for bodypart in bodyparts %}
+                                    <option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="content" id="exercises_available" data-edit="1">
+                                <div id="exercises_available_list">
+                                </div>
+                                <div id="loadingIconExercises" class="centered loading-icon">
+                                    <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                                </div>
+                                <div id="loadMoreExercises" class="centered hidden">
+                                    <button type="button">{{ lang["LOAD_MORE"] }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

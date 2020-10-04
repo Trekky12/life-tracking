@@ -33,7 +33,7 @@ class User extends \App\Domain\DataObject {
         if ($this->exists('image', $data)) {
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
         }
-        
+
         if ($this->exists('secret', $data)) {
             $this->secret = filter_var($data['secret'], FILTER_SANITIZE_STRING);
         }
@@ -46,6 +46,7 @@ class User extends \App\Domain\DataObject {
         $this->module_splitbills = $this->exists('module_splitbills', $data) ? filter_var($data['module_splitbills'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_trips = $this->exists('module_trips', $data) ? filter_var($data['module_trips'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_timesheets = $this->exists('module_timesheets', $data) ? filter_var($data['module_timesheets'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->module_workouts = $this->exists('module_workouts', $data) ? filter_var($data['module_workouts'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
@@ -94,6 +95,8 @@ class User extends \App\Domain\DataObject {
                 return $this->module_trips == 1;
             case 'timesheets':
                 return $this->module_timesheets == 1;
+            case 'workouts':
+                return $this->module_workouts == 1;
         }
 
         return false;
