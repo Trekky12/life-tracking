@@ -910,6 +910,7 @@ CREATE TABLE workouts_plans (
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) DEFAULT NULL,
+    is_template INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE

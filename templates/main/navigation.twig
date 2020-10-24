@@ -103,6 +103,7 @@
 
                 <ul class="dropdown-content">
                     <li><a href="{{ url_for('workouts_exercises_view') }}"><i class="fas fa-dumbbell" aria-hidden="true"></i> {{lang["WORKOUTS_EXERCISES"]}}</a></li>
+                    <li><a href="{{ url_for('workouts_templates') }}">{{lang["WORKOUTS_TEMPLATE_PLANS"]}}</a></li>
                     {% if user.isAdmin() %}
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ url_for('workouts_exercises') }}">{{lang["WORKOUTS_EXERCISES_MANAGE"]}}</a></li>

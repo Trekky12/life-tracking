@@ -949,3 +949,20 @@ var workoutSessionsTable = new JSTable("#workouts_sessions_table", {
         }
     ]
 });
+
+var workoutTemplateTable = new JSTable("#workouts_templates_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sort: "asc",
+            sortable: true
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});

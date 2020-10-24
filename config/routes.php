@@ -452,13 +452,24 @@ return function (App $app) {
             $group_plans->delete('/delete/{id}', \App\Application\Action\Workouts\Plan\PlanDeleteAction::class)->setName('workouts_plans_delete');
         });
 
+        $group->group('/templates', function(RouteCollectorProxy $group_templates) {
+            $group_templates->get('/', \App\Application\Action\Workouts\Template\TemplateListAction::class)->setName('workouts_templates');
+            $group_templates->get('/{plan}/view/', \App\Application\Action\Workouts\Template\TemplateViewAction::class)->setName('workouts_template_view');
+
+            $group_templates->group('/manage', function(RouteCollectorProxy $group_templates_admin) {
+                $group_templates_admin->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Template\TemplateEditAction::class)->setName('workouts_templates_edit');
+                $group_templates_admin->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Template\TemplateSaveAction::class)->setName('workouts_templates_save');
+                $group_templates_admin->delete('/delete/{id}', \App\Application\Action\Workouts\Template\TemplateDeleteAction::class)->setName('workouts_templates_delete');
+            })->add(\App\Application\Middleware\AdminMiddleware::class);
+        });
+
         $group->group('/exercises', function(RouteCollectorProxy $group_exercises) {
 
             $group_exercises->get('/view', \App\Application\Action\Workouts\Exercise\ExerciseViewAction::class)->setName('workouts_exercises_view');
             $group_exercises->get('/list', \App\Application\Action\Workouts\Exercise\ExercisesListAction::class)->setName('workouts_exercises_get');
             $group_exercises->post('/muscles', \App\Application\Action\Workouts\Exercise\ExercisesSelectedMusclesAction::class)->setName('workouts_exercises_selected_muscles');
             $group_exercises->get('/data', \App\Application\Action\Workouts\Exercise\ExercisesDataAction::class)->setName('workouts_exercises_data');
-            
+
             $group_exercises->group('/manage', function(RouteCollectorProxy $group_exercises_admin) {
                 $group_exercises_admin->get('/', \App\Application\Action\Workouts\Exercise\ExerciseListAction::class)->setName('workouts_exercises');
                 $group_exercises_admin->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Exercise\ExerciseEditAction::class)->setName('workouts_exercises_edit');

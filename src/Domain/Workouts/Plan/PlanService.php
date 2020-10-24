@@ -39,24 +39,36 @@ class PlanService extends Service {
         $this->settings_mapper = $settings_mapper;
     }
 
-    public function index() {
-        $plans = $this->mapper->getAll();
+    public function index($is_template = false) {
+        $plans = $this->mapper->getAllPlans('id', $is_template);
 
         return new Payload(Payload::$RESULT_HTML, ['plans' => $plans]);
     }
 
-    public function edit($entry_id) {
-        $entry = $this->getEntry($entry_id);
+    public function edit($entry_id, $is_template = false, $use_template = null) {
+        $entry = null;
+        if (!empty($entry_id)) {
+            $filtered = !$is_template;
+            $entry = $this->mapper->get($entry_id, $filtered);
+        }
 
         $bodyparts = $this->bodypart_mapper->getAll();
-        list($exercises, $muscles) = $this->getPlanExercises($entry_id);
+        
+        if(is_null($entry) && !$is_template && !is_null($use_template)){
+            // load exercises from template instead of real plan
+            $template = $this->mapper->getFromHash($use_template);
+            list($exercises, $muscles) = $this->getPlanExercises($template->id);
+        }else{
+            list($exercises, $muscles) = $this->getPlanExercises($entry_id);
+        }
+        
         
         $selected_muscles = ["primary" => [], "secondary" => []];
         foreach($muscles["primary"] as $sm){
-            $selected_muscles["primary"][] = $sm->id;
+            $selected_muscles["primary"][] = $sm;
         }
         foreach($muscles["secondary"] as $sm){
-            $selected_muscles["secondary"][] = $sm->id;
+            $selected_muscles["secondary"][] = $sm;
         }
         
         $allMuscles = $this->muscle_mapper->getAll();
@@ -69,7 +81,7 @@ class PlanService extends Service {
             $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
             $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
         }
-
+        
         return new Payload(Payload::$RESULT_HTML, [
             'entry' => $entry,
             'bodyparts' => $bodyparts,
@@ -80,11 +92,11 @@ class PlanService extends Service {
         ]);
     }
 
-    public function view($hash): Payload {
+    public function view($hash, $is_template = false): Payload {
 
         $plan = $this->getFromHash($hash);
 
-        if (!$this->isOwner($plan->id)) {
+        if (!$is_template && !$this->isOwner($plan->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

@@ -611,5 +611,9 @@ $lang["WORKOUTS_MUSCLES_SECONDARY_IMAGE"] = "Bild für sekundärer Muskel";
 $lang["WORKOUTS_MUSCLES_USED"] = "beanspruchte Muskeln";
 
 $lang["WORKOUTS_ADD_EXERCISE"] = "Übung hinzufügen";
+
+$lang["WORKOUTS_TEMPLATE_PLAN"] = "Trainingsplan Vorlage";
+$lang["WORKOUTS_TEMPLATE_PLANS"] = "Trainingsplan Vorlagen";
+$lang["WORKOUTS_TEMPLATE_USE"] = "Trainingsplan verwenden";
         
 return $lang;

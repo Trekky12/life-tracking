@@ -613,4 +613,8 @@ $lang["WORKOUTS_MUSCLES_USED"] = "muscles used";
 
 $lang["WORKOUTS_ADD_EXERCISE"] = "add exercise";
 
+$lang["WORKOUTS_TEMPLATE_PLAN"] = "workout template";
+$lang["WORKOUTS_TEMPLATE_PLANS"] = "workout templates";
+$lang["WORKOUTS_TEMPLATE_USE"] = "use template";
+
 return $lang;

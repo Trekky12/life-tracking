@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Application\Action\Workouts\Plan;
+namespace App\Application\Action\Workouts\Template;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Workouts\Plan\PlanService;
 use App\Application\Responder\HTMLTemplateResponder;
 
-class PlanEditAction {
+class TemplateEditAction {
 
     private $responder;
     private $service;
@@ -19,9 +19,8 @@ class PlanEditAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $entry_id = $request->getAttribute('id');
-        $template = $request->getParam("template");
-        $data = $this->service->edit($entry_id, false, $template);
-        return $this->responder->respond($data->withTemplate('workouts/plan/edit.twig'));
+        $data = $this->service->edit($entry_id, true);
+        return $this->responder->respond($data->withTemplate('workouts/template/edit.twig'));
     }
 
 }

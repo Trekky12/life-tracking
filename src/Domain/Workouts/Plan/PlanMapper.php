@@ -13,6 +13,35 @@ class PlanMapper extends \App\Domain\Mapper {
     //protected $user_table = "timesheets_projects_users";
     //protected $element_name = "project";
 
+    public function getAllPlans($sorted, $is_template = false) {
+        $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE is_template = :is_template";
+
+        $bindings = [
+            "is_template" => $is_template ? 1 : 0,
+        ];
+        if (!$is_template) {
+            $this->addSelectFilterForUser($sql, $bindings);
+        }
+
+        if ($sorted && !is_null($sorted)) {
+            $sql .= " ORDER BY {$sorted}";
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
+    public function getPlan() {
+        
+    }
+
     public function deleteExercises($plan_id) {
         $sql = "DELETE FROM " . $this->getTableName("workouts_plans_exercises") . "  WHERE plan = :plan";
         $stmt = $this->db->prepare($sql);
