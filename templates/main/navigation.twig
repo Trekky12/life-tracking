@@ -23,12 +23,12 @@
             {% endfor %}
         {% endif %}
     <a href="{{ url_for('notifications') }}" class="badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="far fa-bell"></i></a>
-    <button id="menu-toggle" class="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
+    <div id="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
-    </button>
+    </div>
 </div>
 <div id="navigation-overlay"></div>
 <nav id="site-navigation" class="main-navigation" role="navigation">
