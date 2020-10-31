@@ -459,6 +459,9 @@ $lang["ACTIVITY_DELETE"] = "%s hat \"%s\" gelöscht";
 $lang["ACTIVITY_CREATE_ME"] = "Du hast \"%s\" erstellt";
 $lang["ACTIVITY_UPDATE_ME"] = "Du hast \"%s\" aktualisiert";
 $lang["ACTIVITY_DELETE_ME"] = "Du hast \"%s\" gelöscht";
+$lang["ACTIVITY_CREATE_SYSTEM"] = "\"%s\" wurde erstellt";
+$lang["ACTIVITY_UPDATE_SYSTEM"] = "\"%s\" wurde aktualisiert";
+$lang["ACTIVITY_DELETE_SYSTEM"] = "\"%s\" wurde gelöscht";
 
 $lang["DATAOBJECT_ACITIVY"] = "Aktivität";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "Board";

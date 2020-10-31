@@ -460,6 +460,9 @@ $lang["ACTIVITY_DELETE"] = "%s deleted \"%s\"";
 $lang["ACTIVITY_CREATE_ME"] = "You created \"%s\"";
 $lang["ACTIVITY_UPDATE_ME"] = "You updated \"%s\"";
 $lang["ACTIVITY_DELETE_ME"] = "You deleted \"%s\"";
+$lang["ACTIVITY_CREATE_SYSTEM"] = "\"%s\" created";
+$lang["ACTIVITY_UPDATE_SYSTEM"] = "\"%s\" updated";
+$lang["ACTIVITY_DELETE_SYSTEM"] = "\"%s\" deleted";
 
 $lang["DATAOBJECT_ACITIVY"] = "activity";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "board";

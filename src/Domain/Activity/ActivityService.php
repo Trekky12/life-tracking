@@ -78,12 +78,15 @@ class ActivityService extends Service {
             }
 
 
-            if ($el->user !== $me) {
-                $user = $users[$el->user]->name;
-                $description = sprintf($this->translation->getTranslatedString($action), $user, $el->object_description);
-            } else {
+            if (is_null($el->user)) {
+                $action = $action . "_SYSTEM";
+                $description = sprintf($this->translation->getTranslatedString($action), $el->object_description);
+            } elseif ($el->user === $me) {
                 $action = $action . "_ME";
                 $description = sprintf($this->translation->getTranslatedString($action), $el->object_description);
+            } else {
+                $user = $users[$el->user]->name;
+                $description = sprintf($this->translation->getTranslatedString($action), $user, $el->object_description);
             }
 
 

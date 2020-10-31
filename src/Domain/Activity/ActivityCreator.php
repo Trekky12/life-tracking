@@ -48,7 +48,7 @@ class ActivityCreator {
 
     private function createActivityEntry($type, $module, $object = [], $parent = [], $users = []): Activity {
         $data = [];
-        $data["user"] = $this->current_user->getUser()->id;
+        $data["user"] = !is_null($this->current_user->getUser()) ? $this->current_user->getUser()->id: null;
         $data["type"] = $type;
         $data["module"] = $module;
         $data["controller"] = null;
