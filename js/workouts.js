@@ -4,7 +4,7 @@ const exercisesSelected = document.querySelector('#exercises_selected .content')
 
 document.addEventListener('click', function (event) {
     let plus = event.target.closest('.exercise .plus');
-    let minus = event.target.closest('.exercise .minus');
+    let minus = event.target.closest('.minus');
 
     let headline = event.target.closest('.exercise .headline');
 
@@ -13,9 +13,11 @@ document.addEventListener('click', function (event) {
     let add_set = event.target.closest('.add_set');
     let remove_set = event.target.closest('.remove_set');
 
+    let add_day = event.target.closest('#add_workout_day');
+
     if (minus) {
         event.preventDefault();
-        exercise.remove();
+        minus.parentElement.parentElement.remove();
         loadSelectedMuscles();
     }
 
@@ -41,7 +43,7 @@ document.addEventListener('click', function (event) {
 
         new_exercise.appendChild(input_id);
 
-        let inputs = new_exercise.querySelectorAll('.sets input');
+        let inputs = new_exercise.querySelectorAll('input');
         inputs.forEach(function (input, idx) {
             if (!input.name.includes("dummy")) {
                 input.setAttribute('name', input.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + id + ']'));
@@ -89,6 +91,47 @@ document.addEventListener('click', function (event) {
             last_set.remove();
         }
     }
+
+    if (add_day) {
+        event.preventDefault();
+
+        let id = exercisesSelected.childElementCount;
+
+        let workout_day = document.createElement("div");
+        workout_day.classList.add("workout_day_split");
+
+        let input_type = document.createElement("input");
+        input_type.type = 'hidden';
+        input_type.name = 'exercises[' + id + '][type]';
+        input_type.value = 'day';
+
+        let input_notice = document.createElement("input");
+        input_notice.type = 'text';
+        input_notice.name = 'exercises[' + id + '][notice]';
+        input_notice.required = true;
+
+        let div_icons = document.createElement("div");
+        div_icons.classList.add("icons");
+
+        let i_minus = document.createElement("i");
+        i_minus.classList.add("minus");
+        i_minus.classList.add("fas");
+        i_minus.classList.add("fa-minus");
+
+        let i_handle = document.createElement("i");
+        i_handle.classList.add("handle");
+        i_handle.classList.add("fas");
+        i_handle.classList.add("fa-arrows-alt");
+
+        div_icons.appendChild(i_minus);
+        div_icons.appendChild(i_handle);
+
+        workout_day.appendChild(input_type);
+        workout_day.appendChild(input_notice);
+        workout_day.appendChild(div_icons);
+
+        exercisesSelected.appendChild(workout_day);
+    }
 });
 
 
@@ -96,7 +139,7 @@ new Sortable(exercisesSelected, {
     group: {
         name: "exercise"
     },
-    draggable: ".exercise.selected",
+    //draggable: ".exercise.selected",
     handle: ".handle",
     dataIdAttr: 'data-id',
     onUpdate: function (evt) {
@@ -105,7 +148,7 @@ new Sortable(exercisesSelected, {
         // change input field array key
         // @see https://stackoverflow.com/a/47948276
 
-        let exercises = exercisesSelected.querySelectorAll('.exercise');
+        let exercises = exercisesSelected.querySelectorAll('.exercise, .workout_day_split');
         exercises.forEach(function (item, idx) {
             let fields = item.querySelectorAll('input');
             fields.forEach(function (field) {

@@ -161,7 +161,9 @@ class PlanService extends Service {
                 "mainBodyPart" => array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
                 "mainMuscle" => array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
                 "sets" => $se["sets"],
-                "id" => $idx
+                "id" => $idx,
+                "type" => $se["type"],
+                "notice" => $se["notice"],
             ];
         }
 

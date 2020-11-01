@@ -63,10 +63,12 @@ class PlanMapper extends \App\Domain\Mapper {
             $data_array["exercise" . $idx] = $exercise["id"];
             $data_array["position" . $idx] = $exercise["position"];
             $data_array["sets" . $idx] = json_encode($exercise["sets"]);
-            $keys_array[] = "(:plan" . $idx . " , :exercise" . $idx . ", :position" . $idx . ", :sets" . $idx . ")";
+            $data_array["type" . $idx] = $exercise["type"];
+            $data_array["notice" . $idx] = $exercise["notice"];
+            $keys_array[] = "(:plan" . $idx . " , :exercise" . $idx . ", :position" . $idx . ", :sets" . $idx . ", :type" . $idx . ", :notice" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTableName("workouts_plans_exercises") . " (plan, exercise, position, sets) "
+        $sql = "INSERT INTO " . $this->getTableName("workouts_plans_exercises") . " (plan, exercise, position, sets, type, notice) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -80,7 +82,7 @@ class PlanMapper extends \App\Domain\Mapper {
     }
 
     public function getExercises($plan_id) {
-        $sql = "SELECT id, exercise, sets FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
+        $sql = "SELECT id, exercise, sets, type, notice FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
 
         $bindings = [
             "plan" => $plan_id
@@ -91,7 +93,7 @@ class PlanMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[$row["id"]] = ["exercise" => intval($row["exercise"]), "sets" => json_decode($row["sets"], true)];
+            $results[$row["id"]] = ["exercise" => intval($row["exercise"]), "sets" => json_decode($row["sets"], true), "type" => $row["type"], "notice" => $row["notice"]];
         }
         return $results;
     }

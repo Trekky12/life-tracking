@@ -27,7 +27,11 @@
         <div class="page-content">
             <div class="workout-selection view">
                 {% for exercise in exercises %}
-                    {% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise} only %}
+                    {% if exercise.type == "exercise" %}
+                        {% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise} only %}
+                    {% elseif exercise.type == "day" %}
+                        <h3>{{ exercise.notice }}</h3>
+                    {% endif %}
                 {% endfor %}
             </div>
 

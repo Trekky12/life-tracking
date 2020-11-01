@@ -620,4 +620,6 @@ $lang["WORKOUTS_TEMPLATE_PLAN"] = "workout template";
 $lang["WORKOUTS_TEMPLATE_PLANS"] = "workout templates";
 $lang["WORKOUTS_TEMPLATE_USE"] = "use template";
 
+$lang["WORKOUTS_ADD_DAY"] = "add workout day";
+
 return $lang;

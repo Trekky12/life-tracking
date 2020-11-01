@@ -618,5 +618,7 @@ $lang["WORKOUTS_ADD_EXERCISE"] = "Übung hinzufügen";
 $lang["WORKOUTS_TEMPLATE_PLAN"] = "Trainingsplan Vorlage";
 $lang["WORKOUTS_TEMPLATE_PLANS"] = "Trainingsplan Vorlagen";
 $lang["WORKOUTS_TEMPLATE_USE"] = "Trainingsplan verwenden";
+
+$lang["WORKOUTS_ADD_DAY"] = "Trainingstag hinzufügen";
         
 return $lang;

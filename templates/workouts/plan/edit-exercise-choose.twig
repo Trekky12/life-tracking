@@ -71,4 +71,5 @@
             <img src="/{{uploads_folder}}/exercises/{{exercise["exercise"].get_thumbnail()}}"/>
         </div>
     {% endif %}
+    <input type="hidden" name="exercises[{{ exercise_idx }}][type]" value="exercise" disabled="disabled"/>
 </div>

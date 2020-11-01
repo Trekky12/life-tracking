@@ -24,7 +24,12 @@
             max-height: 500px;
 
             @media screen and (min-width: $size_mobile) {
-                max-height: calc(100% - 44px);
+                max-height: calc(100% - 80px);
+            }
+        }
+        &.selected-exercises .content{
+            @media screen and (min-width: $size_mobile) {
+                max-height: calc(100% - 95px);
             }
         }
     }
@@ -125,6 +130,7 @@
         &.selected {
             display:flex;
             flex-direction: row-reverse;
+            justify-content: space-between;
 
             .thumbnail{
                 display:none;
@@ -189,6 +195,36 @@
             margin-top:0;
             margin-bottom:0.5rem;
             @include font-size(1.4);
+        }
+    }
+
+    .workout_day_split{
+        @media screen and (min-width: $size_mobile) {
+            display:flex;
+            justify-content: space-between;
+        }
+
+        padding: 1rem;
+        border: 1px solid $color_blue_light_gray;
+        border-radius: 5px;
+        margin: 0.5rem;
+
+        .icons{
+
+            display:flex;
+            justify-content: flex-end;
+            
+            @media screen and (min-width: $size_mobile) {
+                margin-right: 1rem;
+            }
+
+            .minus, .handle{
+                cursor:pointer;
+            }
+
+            .handle{
+                margin-left: 10px;
+            }
         }
     }
 
