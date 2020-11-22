@@ -26,6 +26,29 @@
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
 
+                <div class="form-group">
+                    <label for="category">{{lang["WORKOUTS_CATEGORY"]}}</label>
+                    <select class="form-control" id="category" name="category">
+                        {% for cat in categories %}
+                            <option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.category) %}selected{% endif %}>{{lang[cat.name]}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="level">{{lang["WORKOUTS_LEVEL"]}}</label>
+                    <select class="form-control" id="level" name="level">
+                        {% for level in levels %}
+                            <option value="{{level.id}}" {% if (not entry is null and level.id == entry.level) %}selected{% endif %}>{{lang[level.name]}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputNotice">{{lang["NOTICE"]}}</label>
+                    <textarea class="form-control" id="inputNotice" name="notice" rows="3">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
+                </div>
+
                 <div>
                     <div id="usedMusclesWrapper">
                         {% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': selected_muscles["primary"], 'secondary': selected_muscles["secondary"], 'small': false}} only %}

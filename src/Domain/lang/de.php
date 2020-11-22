@@ -624,5 +624,12 @@ $lang["WORKOUTS_ADD_DAY"] = "Trainingstag hinzufügen";
 $lang["WORKOUTS_ADD_SUPERSET"] = "Superset hinzufügen";
 
 $lang["WORKOUTS_SUPERSET"] = "Superset";
+
+$lang["WORKOUTS_PLAN_CATEGORY_STRENGTH"] = "Stärke gewinnen";
+$lang["WORKOUTS_PLAN_CATEGORY_MUSCLE"] = "Muskelmasse aufbauen";
+$lang["WORKOUTS_PLAN_CATEGORY_FAT"] = "Fett abbauen";
+$lang["WORKOUTS_LEVEL_BEGINNER"] = "Anfänger";
+$lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "Fortgeschrittene";
+$lang["WORKOUTS_LEVEL_ADVANCED"] = "Profis";
         
 return $lang;

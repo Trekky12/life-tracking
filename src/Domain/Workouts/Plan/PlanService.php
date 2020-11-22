@@ -89,7 +89,9 @@ class PlanService extends Service {
             'selected_exercises' => $exercises,
             'selected_muscles' => $selected_muscles,
             'muscles' => $allMuscles,
-            'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail
+            'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail,
+            'categories' => Plan::getCategories(),
+            'levels' => Plan::getLevels()
         ]);
     }
 
@@ -105,6 +107,7 @@ class PlanService extends Service {
 
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
+        $baseMuscleImageThumbnail = "";
         if ($baseMuscleImage && $baseMuscleImage->getValue()) {
             $size = "small";
             $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
@@ -117,7 +120,9 @@ class PlanService extends Service {
             'exercises' => $exercises,
             'muscles' => $muscles,
             'baseMuscleImage' => $baseMuscleImage,
-            'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail
+            'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail,
+            'categories' => Plan::getCategories(),
+            'levels' => Plan::getLevels()
         ]);
     }
 

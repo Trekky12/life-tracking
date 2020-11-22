@@ -25,6 +25,18 @@
         </div>
 
         <div class="page-content">
+            {% if not plan.category is null %}
+                <h4>{{ lang["WORKOUTS_CATEGORY"] }}</h4>
+                <p>{{ lang[categories[plan.category].name] }}</p>
+            {% endif %}
+            {% if not plan.level is null %}
+                <h4>{{ lang["WORKOUTS_LEVEL"] }}</h4>
+                <p>{{ lang[levels[plan.level].name] }}</p>
+            {% endif %}
+            {% if not plan.notice is null %}
+                <h4>{{ lang["NOTICE"] }}</h4>
+                <p>{{ plan.notice|raw }}</p>
+            {% endif %}
             <div class="workout-selection view">
                 {% for exercise in exercises %}
                     {% if exercise.type == "exercise" %}
