@@ -47,10 +47,14 @@ class AdminTest extends BaseTestCase {
             "name" => "Test Workout Template Plan 1",
             "exercises" => [
                 0 => [
-                    "id" => 3
+                    "id" => 3,
+                    "type" => "exercise",
+                    "is_child" => 0
                 ],
                 1 => [
                     "id" => 2,
+                    "type" => "exercise",
+                    "is_child" => 0,
                     "sets" => [
                         0 => [
                             "repeats" => 1,
@@ -63,7 +67,26 @@ class AdminTest extends BaseTestCase {
                     ]
                 ],
                 2 => [
-                    "id" => 1
+                    "id" => 1,
+                    "type" => "exercise",
+                    "is_child" => 0
+                ],
+                3 => [
+                    "type" => "day",
+                    "notice" => "test"
+                ],
+                4 => [
+                    "type" => "superset"
+                ],
+                5 => [
+                    "id" => 1,
+                    "type" => "exercise",
+                    "is_child" => 1
+                ],
+                6 => [
+                    "id" => 2,
+                    "type" => "exercise",
+                    "is_child" => 1
                 ]
             ]
         ];
@@ -131,10 +154,14 @@ class AdminTest extends BaseTestCase {
             "name" => "Test Workout Template Plan 1 Updated",
             "exercises" => [
                 0 => [
-                    "id" => 1
+                    "id" => 1,
+                    "type" => "exercise",
+                    "is_child" => 0
                 ],
                 1 => [
                     "id" => 2,
+                    "type" => "exercise",
+                    "is_child" => 0,
                     "sets" => [
                         0 => [
                             "repeats" => 1,

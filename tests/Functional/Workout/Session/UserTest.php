@@ -47,10 +47,14 @@ class UserTest extends BaseTestCase {
             "notice" => "test",
             "exercises" => [
                 0 => [
-                    "id" => 3
+                    "id" => 3,
+                    "type" => "exercise",
+                    "is_child" => 0
                 ],
                 1 => [
                     "id" => 2,
+                    "type" => "exercise",
+                    "is_child" => 0,
                     "sets" => [
                         0 => [
                             "repeats" => 1,
@@ -63,7 +67,9 @@ class UserTest extends BaseTestCase {
                     ]
                 ],
                 2 => [
-                    "id" => 1
+                    "id" => 1,
+                    "type" => "exercise",
+                    "is_child" => 0
                 ]
             ]
         ];
@@ -134,10 +140,14 @@ class UserTest extends BaseTestCase {
             "notice" => "test",
             "exercises" => [
                 0 => [
-                    "id" => 1
+                    "id" => 1,
+                    "type" => "exercise",
+                    "is_child" => 0
                 ],
                 1 => [
                     "id" => 2,
+                    "type" => "exercise",
+                    "is_child" => 0,
                     "sets" => [
                         0 => [
                             "repeats" => 1,

@@ -937,11 +937,10 @@ CREATE TABLE workouts_plans_exercises (
     sets JSON NULL DEFAULT NULL,
     type VARCHAR(255) NULL DEFAULT NULL,
     notice TEXT DEFAULT NULL,
-    parent int(11) unsigned DEFAULT NULL,
+    is_child INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(plan) REFERENCES workouts_plans(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(parent) REFERENCES workouts_plans_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS workouts_sessions;
@@ -966,12 +965,12 @@ CREATE TABLE workouts_sessions_exercises (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     session INTEGER unsigned DEFAULT NULL,
     exercise INTEGER unsigned DEFAULT NULL,
+    position INT(10) NULL,
     sets JSON NULL DEFAULT NULL,
+    type VARCHAR(255) NULL DEFAULT NULL,
+    notice TEXT DEFAULT NULL,
+    is_child INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(session) REFERENCES workouts_sessions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*
-ALTER TABLE `global_users` ADD `module_workouts` INT(1) NULL AFTER `module_timesheets`; 
-*/

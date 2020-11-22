@@ -1,4 +1,4 @@
-<div class="exercise" data-id="{{ exercise["exercise"].id }}">
+<div class="exercise" data-id="{{ exercise["exercise"].id }}" data-type="workout-element">
     <div class="icons">
         <i class="plus fas fa-plus"></i>
         <i class="minus fas fa-minus hidden"></i>
@@ -28,7 +28,7 @@
 
                         {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
                             <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
-                            <label>{{ lang["WORKOUTS_MINUTES"] }}</label>
+                            <label>{{ lang["WORKOUTS_SECONDS"] }}</label>
                         {% endif %}
                         {% if exercise["exercise"].isCategoryDistanceTime() %}
                             <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
@@ -50,7 +50,7 @@
 
                             {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
                                 <input id="time_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][time]" disabled="disabled"/>
-                                <label for="time_{{ loop.index-1 }}">{{ lang["WORKOUTS_MINUTES"] }}</label>
+                                <label for="time_{{ loop.index-1 }}">{{ lang["WORKOUTS_SECONDS"] }}</label>
                             {% endif %}
                             {% if exercise["exercise"].isCategoryDistanceTime() %}
                                 <input id="distance_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][distance]" disabled="disabled"/>
@@ -72,4 +72,5 @@
         </div>
     {% endif %}
     <input type="hidden" name="exercises[{{ exercise_idx }}][type]" value="exercise" disabled="disabled"/>
+    <input type="hidden" name="exercises[{{ exercise_idx }}][is_child]" value="0" disabled="disabled"/>
 </div>

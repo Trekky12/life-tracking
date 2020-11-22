@@ -55,9 +55,9 @@ class SessionService extends Service {
             $selected_exercises = $this->mapper->getExercises($entry_id);
         }
         list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $selected_exercises);
-        
+                
         $exercisesList = $this->exercise_mapper->getAll('name');
-
+        
         $response_data = [
             'entry' => $entry,
             'plan' => $plan,

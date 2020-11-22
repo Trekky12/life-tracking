@@ -138,12 +138,12 @@ INSERT INTO global_users_application_passwords (id, user, name, password) VALUES
 (2, 2, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S'),
 (3, 3, 'application', '$2y$10$0GLfqS6qKvfNBvqPitciAOi96Sk.Yvg9ESl4GiYRjT1AT0GgKm08S');
 
-INSERT INTO workouts_muscles (id, name, category) VALUES
-(1, 'Test muscle 1',0),
-(2, 'Test muscle 2',1),
-(3, 'Test muscle 3',2),
-(4, 'Test muscle 4',3),
-(5, 'Test muscle 5',2);
+INSERT INTO workouts_muscles (id, name) VALUES
+(1, 'Test muscle 1'),
+(2, 'Test muscle 2'),
+(3, 'Test muscle 3'),
+(4, 'Test muscle 4'),
+(5, 'Test muscle 5');
 
 INSERT INTO workouts_bodyparts (id, name) VALUES
 (1, 'Test bodypart');
@@ -152,10 +152,10 @@ INSERT INTO workouts_plans (id, user, name, hash, is_template) VALUES
 (1, 1, 'Test workout plan', 'ABCabc123', 0),
 (2, 1, 'Test workout template plan', 'ABCabc456', 1);
 
-INSERT INTO workouts_exercises (id, name) VALUES
-(1, 'Exercise 1'),
-(2, 'Exercise 2'),
-(3, 'Exercise 3');
+INSERT INTO workouts_exercises (id, name, category, mainBodyPart, mainMuscle) VALUES
+(1, 'Exercise 1', 0, 1, 1),
+(2, 'Exercise 2', 1, 1, 1),
+(3, 'Exercise 3', 2, 1, 1);
 
 INSERT INTO workouts_sessions (id, user, date) VALUES
 (1, 1, '2020-08-29');

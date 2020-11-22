@@ -41,12 +41,30 @@ document.addEventListener('click', function (event) {
 const sessionExercises = document.querySelector('#sessionExercises');
 
 document.addEventListener('click', function (event) {
-    let minus = event.target.closest('.exercise .minus');
-    let exercise = event.target.closest('.exercise');
+    let minus = event.target.closest('.minus');
 
     if (minus) {
         event.preventDefault();
-        exercise.remove();
+        let element = minus.parentElement.parentElement;
+        let cat = element.dataset.category;
+        
+        if (cat === "day") {
+            // get all "childs"
+            let exercises_day = [];
+            exercises_day.push(element);
+            element = element.nextElementSibling;
+            while (element) {
+                if (element.dataset.category === "day")
+                    break;
+                exercises_day.push(element);
+                element = element.nextElementSibling;
+            }
+            exercises_day.forEach(function(exercise){
+                exercise.remove()
+            });
+        } else {
+            element.remove();
+        }
     }
 });
 
@@ -68,7 +86,6 @@ addExerciseBtn.addEventListener('click', function (event) {
         return response.json();
     }).then(function (data) {
         if (data.status !== 'error') {
-            console.log(data);
             sessionExercises.insertAdjacentHTML('beforeend', data["data"]);
         }
     }).catch(function (error) {

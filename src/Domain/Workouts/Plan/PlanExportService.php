@@ -54,7 +54,7 @@ class PlanExportService extends PlanService {
                     $description[] = sprintf("%s %s", $set["weight"], $this->translation->getTranslatedString("WORKOUTS_KG"));
                 }
                 if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
-                    $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_MINUTES"));
+                    $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
                 }
                 if ($exercise->isCategoryDistanceTime()) {
                     $description[] = sprintf("%s %s", $set["distance"], $this->translation->getTranslatedString("WORKOUTS_KM"));

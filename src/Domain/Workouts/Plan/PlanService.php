@@ -53,28 +53,29 @@ class PlanService extends Service {
         }
 
         $bodyparts = $this->bodypart_mapper->getAll();
-        
-        if(is_null($entry) && !$is_template && !is_null($use_template)){
+
+        if (is_null($entry) && !$is_template && !is_null($use_template)) {
             // load exercises from template instead of real plan
             $template = $this->mapper->getFromHash($use_template);
             list($exercises, $muscles) = $this->getPlanExercises($template->id);
-        }else{
+        } else {
             list($exercises, $muscles) = $this->getPlanExercises($entry_id);
         }
-        
-        
+
+
         $selected_muscles = ["primary" => [], "secondary" => []];
-        foreach($muscles["primary"] as $sm){
+        foreach ($muscles["primary"] as $sm) {
             $selected_muscles["primary"][] = $sm;
         }
-        foreach($muscles["secondary"] as $sm){
+        foreach ($muscles["secondary"] as $sm) {
             $selected_muscles["secondary"][] = $sm;
         }
-        
+
         $allMuscles = $this->muscle_mapper->getAll();
-        
+
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
+        $baseMuscleImageThumbnail = '';
         if ($baseMuscleImage && $baseMuscleImage->getValue()) {
             $size = "small";
             $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
@@ -102,29 +103,6 @@ class PlanService extends Service {
 
         list($exercises, $muscles) = $this->getPlanExercises($plan->id);
 
-        $exercises_print = array_map(function($exercise) {
-
-            $set_description = array_map(function($set) use ($exercise) {
-                $description = [];
-                if ($exercise["exercise"]->isCategoryReps() || $exercise["exercise"]->isCategoryRepsWeight()) {
-                    $description[] = sprintf("%s %s", $set["repeats"], $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
-                }
-                if ($exercise["exercise"]->isCategoryRepsWeight()) {
-                    $description[] = sprintf("%s %s", $set["weight"], $this->translation->getTranslatedString("WORKOUTS_KG"));
-                }
-                if ($exercise["exercise"]->isCategoryTime() || $exercise["exercise"]->isCategoryDistanceTime()) {
-                    $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_MINUTES"));
-                }
-                if ($exercise["exercise"]->isCategoryDistanceTime()) {
-                    $description[] = sprintf("%s %s", $set["distance"], $this->translation->getTranslatedString("WORKOUTS_KM"));
-                }
-                return implode(', ', $description);
-            }, $exercise["sets"]);
-            $exercise["set_description"] = $set_description;
-
-            return $exercise;
-        }, $exercises);
-
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
         if ($baseMuscleImage && $baseMuscleImage->getValue()) {
@@ -136,7 +114,7 @@ class PlanService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, [
             "plan" => $plan,
-            'exercises' => $exercises_print,
+            'exercises' => $exercises,
             'muscles' => $muscles,
             'baseMuscleImage' => $baseMuscleImage,
             'baseMuscleImageThumbnail' => $baseMuscleImageThumbnail
@@ -153,18 +131,49 @@ class PlanService extends Service {
         }
 
         $exercises_print = [];
+        $exercise_idx = 0;
         foreach ($selected_exercises as $idx => $se) {
-            $exercise = $exercises[$se["exercise"]];
+            $exercise = !is_null($se["exercise"]) ? $exercises[$se["exercise"]] : null;
 
-            $exercises_print[] = [
+            if (!is_null($se["exercise"])) {
+                $set_description = array_map(function($set) use ($exercise) {
+                    $description = [];
+                    if ($exercise->isCategoryReps() || $exercise->isCategoryRepsWeight()) {
+                        $description[] = sprintf("%s %s", $set["repeats"], $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
+                    }
+                    if ($exercise->isCategoryRepsWeight()) {
+                        $description[] = sprintf("%s %s", $set["weight"], $this->translation->getTranslatedString("WORKOUTS_KG"));
+                    }
+                    if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
+                        $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
+                    }
+                    if ($exercise->isCategoryDistanceTime()) {
+                        $description[] = sprintf("%s %s", $set["distance"], $this->translation->getTranslatedString("WORKOUTS_KM"));
+                    }
+                    return implode(', ', $description);
+                }, $se["sets"]);
+            }
+
+            $exercise_print = [
                 "exercise" => $exercise,
-                "mainBodyPart" => array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
-                "mainMuscle" => array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
+                "mainBodyPart" => !is_null($exercise) && array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
+                "mainMuscle" => !is_null($exercise) && array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
                 "sets" => $se["sets"],
-                "id" => $idx,
+                "idx" => $exercise_idx,
                 "type" => $se["type"],
                 "notice" => $se["notice"],
+                "is_child" => $se["is_child"],
+                "children" => [],
+                "set_description" => !is_null($exercise) ? $set_description : null
             ];
+
+            // add as child
+            if ($se["type"] === "exercise" && $se["is_child"] > 0) {
+                $exercises_print[count($exercises_print) - 1]["children"][] = $exercise_print;
+            } else {
+                $exercises_print[] = $exercise_print;
+            }
+            $exercise_idx++;
         }
 
         $exercise_ids = array_map(function($exercise) {

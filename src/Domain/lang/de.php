@@ -595,6 +595,7 @@ $lang["WORKOUTS_REPEATS"] = "Wiederholungen";
 $lang["WORKOUTS_REPEATS_SHORT"] = "Wdh.";
 $lang["WORKOUTS_KG"] = "kg";
 $lang["WORKOUTS_MINUTES"] = "Minuten";
+$lang["WORKOUTS_SECONDS"] = "Sekunden";
 $lang["WORKOUTS_KM"] = "km";
 
 $lang["WORKOUTS_SET_ADD"] = "Set hinzufügen";
@@ -620,5 +621,8 @@ $lang["WORKOUTS_TEMPLATE_PLANS"] = "Trainingsplan Vorlagen";
 $lang["WORKOUTS_TEMPLATE_USE"] = "Trainingsplan verwenden";
 
 $lang["WORKOUTS_ADD_DAY"] = "Trainingstag hinzufügen";
+$lang["WORKOUTS_ADD_SUPERSET"] = "Superset hinzufügen";
+
+$lang["WORKOUTS_SUPERSET"] = "Superset";
         
 return $lang;

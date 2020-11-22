@@ -42,8 +42,35 @@
 
                 <div class="workout-selection" id="sessionExercises">
                     {% for exercise in exercises %}
-                        {% set exercise_idx = loop.index - 1 %}
-                        {% include "workouts/sessions/edit-single-exercise.twig" with {'data': { 'exercise': exercise["exercise"], 'exercise_idx': exercise_idx, 'sets': exercise["sets"]}} only %}
+                        {% if exercise.type == "exercise" %}
+                            {% include "workouts/sessions/edit-single-exercise.twig" with {'data': exercise} only %}
+                        {% elseif exercise.type == "day" %}
+                            <div class="workout_day_split" data-type="workout-element"  data-category="day">
+                                <div class="content">
+                                    <h3>{{ exercise.notice }}</h3>
+                                    <input type="hidden" name="exercises[{{ exercise["idx"] }}][notice]" value="{{ exercise["notice"] }}"/>
+                                    <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="day"/>
+                                </div>
+                                <div class="icons">
+                                    <i class="minus fas fa-minus"></i>
+                                </div>
+                            </div>
+                            {% elseif exercise.type == "superset" %}
+                            <div class="workout_superset" data-type="workout-element" data-category="superset">
+                                <div class="content">
+                                    <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
+                                    <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="superset"/>
+                                    <div class="workout_superset_child">
+                                        {% for child in exercise["children"] %}
+                                            {% include "workouts/sessions/edit-single-exercise.twig" with {'data': child} only %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="icons">
+                                    <i class="minus fas fa-minus"></i>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
 

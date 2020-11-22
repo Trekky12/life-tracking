@@ -114,6 +114,7 @@ class ExerciseService extends Service {
         $exercise_muscles = $this->mapper->getMusclesOfExercisesFull($exercise_ids);
 
         $exercises_print = [];
+        $exercise_idx = 0;
         foreach ($exercises as $exercise) {
 
             // get muscles
@@ -133,8 +134,10 @@ class ExerciseService extends Service {
                 "mainBodyPart" => $bodyparts[$exercise->mainBodyPart]->name,
                 "mainMuscle" => $muscles[$exercise->mainMuscle]->name,
                 "primary_muscles" => $primary,
-                "secondary_muscles" => $secondary
+                "secondary_muscles" => $secondary,
+                "idx" => $exercise_idx
             ];
+            $exercise_idx++;
         }
 
         $response_data["data"] = $exercises_print;
@@ -142,6 +145,7 @@ class ExerciseService extends Service {
 
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
+        $baseMuscleImageThumbnail = '';
         if ($baseMuscleImage && $baseMuscleImage->getValue()) {
             $size = "small";
             $file_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_EXTENSION);
@@ -200,7 +204,15 @@ class ExerciseService extends Service {
 
         try {
             $exercise = $this->mapper->get($exercise_id);
-            $response_data["data"] = ["exercise" => $exercise, "exercise_idx" => $exercise_idx, "sets" => range(0,$sets-1)];
+            $response_data["data"] = [
+                "exercise" => $exercise,
+                "idx" => $exercise_idx + 1,
+                "sets" => range(0, $sets - 1),
+                "type" => "exercise",
+                "notice" => null,
+                "is_child" => 0,
+                "children" => []
+            ];
         } catch (\Exception $e) {
             $response_data["status"] = "error";
         }

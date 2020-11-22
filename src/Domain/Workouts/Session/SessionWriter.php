@@ -44,6 +44,9 @@ class SessionWriter extends ObjectActivityWriter {
             foreach ($data["exercises"] as $idx => $exercise) {
 
                 $exercise_id = array_key_exists("id", $exercise) && !empty($exercise["id"]) ? intval(filter_var($exercise["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                $type = array_key_exists("type", $exercise) && !empty($exercise["type"]) ? filter_var($exercise["type"], FILTER_SANITIZE_STRING) : 'exercise';
+                $notice = array_key_exists("notice", $exercise) && !empty($exercise["notice"]) ? filter_var($exercise["notice"], FILTER_SANITIZE_STRING) : null;
+                $is_child = array_key_exists("is_child", $exercise) && !empty($exercise["is_child"]) ? intval(filter_var($exercise["is_child"], FILTER_SANITIZE_NUMBER_INT)) : 0;           
 
                 $sets = [];
                 if (array_key_exists("sets", $exercise) && is_array($exercise["sets"])) {
@@ -57,9 +60,9 @@ class SessionWriter extends ObjectActivityWriter {
                     }
                 }
 
-                $exercises[] = ["id" => $exercise_id, "sets" => $sets];
+                $exercises[] = ["id" => $exercise_id, "position" => $idx, "sets" => $sets, "type" => $type, "notice" => $notice, "is_child" => $is_child > 0 ? 1 : 0];
             }
-
+            
             $this->mapper->addExercises($entry->id, $exercises);
         }
 

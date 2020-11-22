@@ -65,10 +65,11 @@ class PlanMapper extends \App\Domain\Mapper {
             $data_array["sets" . $idx] = json_encode($exercise["sets"]);
             $data_array["type" . $idx] = $exercise["type"];
             $data_array["notice" . $idx] = $exercise["notice"];
-            $keys_array[] = "(:plan" . $idx . " , :exercise" . $idx . ", :position" . $idx . ", :sets" . $idx . ", :type" . $idx . ", :notice" . $idx . ")";
+            $data_array["is_child" . $idx] = $exercise["is_child"];
+            $keys_array[] = "(:plan" . $idx . " , :exercise" . $idx . ", :position" . $idx . ", :sets" . $idx . ", :type" . $idx . ", :notice" . $idx . ", :is_child" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTableName("workouts_plans_exercises") . " (plan, exercise, position, sets, type, notice) "
+        $sql = "INSERT INTO " . $this->getTableName("workouts_plans_exercises") . " (plan, exercise, position, sets, type, notice, is_child) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -82,7 +83,7 @@ class PlanMapper extends \App\Domain\Mapper {
     }
 
     public function getExercises($plan_id) {
-        $sql = "SELECT id, exercise, sets, type, notice FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
+        $sql = "SELECT id, exercise, sets, type, notice, is_child FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
 
         $bindings = [
             "plan" => $plan_id
@@ -93,7 +94,7 @@ class PlanMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[$row["id"]] = ["exercise" => intval($row["exercise"]), "sets" => json_decode($row["sets"], true), "type" => $row["type"], "notice" => $row["notice"]];
+            $results[$row["id"]] = ["exercise" => !is_null($row["exercise"]) ? intval($row["exercise"]) : null, "sets" => json_decode($row["sets"], true), "type" => $row["type"], "notice" => $row["notice"], "is_child" => $row["is_child"]];
         }
         return $results;
     }

@@ -596,6 +596,7 @@ $lang["WORKOUTS_REPEATS"] = "Repeats";
 $lang["WORKOUTS_REPEATS_SHORT"] = "rps";
 $lang["WORKOUTS_KG"] = "kg";
 $lang["WORKOUTS_MINUTES"] = "minutes";
+$lang["WORKOUTS_SECONDS"] = "seconds";
 $lang["WORKOUTS_KM"] = "km";
 
 $lang["WORKOUTS_SET_ADD"] = "add set";
@@ -621,5 +622,8 @@ $lang["WORKOUTS_TEMPLATE_PLANS"] = "workout templates";
 $lang["WORKOUTS_TEMPLATE_USE"] = "use template";
 
 $lang["WORKOUTS_ADD_DAY"] = "add workout day";
+$lang["WORKOUTS_ADD_SUPERSET"] = "add superset";
+
+$lang["WORKOUTS_SUPERSET"] = "superset";
 
 return $lang;

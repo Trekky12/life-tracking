@@ -75,7 +75,7 @@
         }
 
         .exercise-content{
-            flex-basis: 80%;
+            flex-basis: 100%;
             margin-bottom: 1rem;
 
             .bodypart{
@@ -198,22 +198,23 @@
         }
     }
 
-    .workout_day_split{
-        @media screen and (min-width: $size_mobile) {
-            display:flex;
-            justify-content: space-between;
-        }
+    .workout_day_split, .workout_superset{
 
         padding: 1rem;
         border: 1px solid $color_blue_light_gray;
         border-radius: 5px;
         margin: 0.5rem;
 
+        @media screen and (min-width: $size_mobile) {
+            display:flex;
+            justify-content: space-between;
+        }
+
         .icons{
 
             display:flex;
             justify-content: flex-end;
-            
+
             @media screen and (min-width: $size_mobile) {
                 margin-right: 1rem;
             }
@@ -226,6 +227,17 @@
                 margin-left: 10px;
             }
         }
+
+        .content{
+            width: 100%;
+            .exercises{
+                min-height: 50px;
+                width: 100%;
+                border: 1px dotted $color_text-main;
+                border-radius: 2px;
+            }
+        }
+
     }
 
     &.view {
@@ -285,4 +297,11 @@
 
 #addExerciseToSession{
     max-width: 50%;
+}
+
+.workout_superset_child{
+    padding: 1rem;
+    border: 1px dotted $color_text-main;
+    border-radius: 2px;
+    margin: 0.5rem;
 }
