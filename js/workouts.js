@@ -1,7 +1,6 @@
 'use strict';
 
 const exercisesSelected = document.querySelector('#exercises_selected .content');
-const workoutSupersets = document.querySelectorAll('.workout_superset .exercises');
 
 document.addEventListener('click', function (event) {
     let plus = event.target.closest('.exercise .plus');
@@ -195,6 +194,7 @@ document.addEventListener('click', function (event) {
     }
 });
 
+const workoutSupersets = document.querySelectorAll('.workout_superset .exercises');
 workoutSupersets.forEach(function (item, idx) {
     createSortable(item);
 });
@@ -212,15 +212,7 @@ function createSortable(element) {
         handle: ".handle",
         dataIdAttr: 'data-id',
         onUpdate: function (evt) {
-            // change input field array key
-            // @see https://stackoverflow.com/a/47948276
-            let workoutElements = exercisesSelected.querySelectorAll('[data-type="workout-element"]');
-            workoutElements.forEach(function (item, idx) {
-                let fields = item.querySelectorAll('input');
-                fields.forEach(function (field) {
-                    field.setAttribute('name', field.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + idx + ']'));
-                });
-            });
+            updateFields();
         },
         onAdd: function (evt) {
             let targetType = evt.to.dataset.type;
@@ -231,7 +223,20 @@ function createSortable(element) {
             } else {
                 input.value = 1;
             }
+            updateFields();
         }
+    });
+}
+
+function updateFields() {
+    // change input field array key
+    // @see https://stackoverflow.com/a/47948276
+    let workoutElements = exercisesSelected.querySelectorAll('[data-type="workout-element"]');
+    workoutElements.forEach(function (item, idx) {
+        let fields = item.querySelectorAll('input');
+        fields.forEach(function (field) {
+            field.setAttribute('name', field.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + idx + ']'));
+        });
     });
 }
 

@@ -81,7 +81,7 @@ class SessionMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[] = ["exercise" => intval($row["exercise"]), "sets" => json_decode($row["sets"], true), "type" => $row["type"], "notice" => $row["notice"], "is_child" => $row["is_child"]];
+            $results[] = ["exercise" => !is_null($row["exercise"]) ? intval($row["exercise"]) : null, "sets" => json_decode($row["sets"], true), "type" => $row["type"], "notice" => $row["notice"], "is_child" => $row["is_child"]];
         }
         return $results;
     }

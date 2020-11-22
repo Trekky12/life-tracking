@@ -3,6 +3,7 @@
 {% set active = 'workouts' %}
 
 {% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
     <script src="{{baseURL}}/static/js/workouts_session.js?ver=20200825"></script>
 {% endblock %}
 
@@ -40,7 +41,7 @@
                     <textarea class="form-control" id="inputNotice" name="notice" rows="2">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
                 </div>
 
-                <div class="workout-selection" id="sessionExercises">
+                <div class="workout-selection" id="sessionExercises" data-type="main">
                     {% for exercise in exercises %}
                         {% if exercise.type == "exercise" %}
                             {% include "workouts/sessions/edit-single-exercise.twig" with {'data': exercise} only %}
@@ -53,6 +54,7 @@
                                 </div>
                                 <div class="icons">
                                     <i class="minus fas fa-minus"></i>
+                                    <i class="handle fas fa-arrows-alt"></i>
                                 </div>
                             </div>
                             {% elseif exercise.type == "superset" %}
@@ -68,6 +70,7 @@
                                 </div>
                                 <div class="icons">
                                     <i class="minus fas fa-minus"></i>
+                                    <i class="handle fas fa-arrows-alt"></i>
                                 </div>
                             </div>
                         {% endif %}

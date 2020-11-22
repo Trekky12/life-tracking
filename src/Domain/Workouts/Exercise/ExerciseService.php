@@ -206,7 +206,7 @@ class ExerciseService extends Service {
             $exercise = $this->mapper->get($exercise_id);
             $response_data["data"] = [
                 "exercise" => $exercise,
-                "idx" => $exercise_idx + 1,
+                "idx" => $exercise_idx,
                 "sets" => range(0, $sets - 1),
                 "type" => "exercise",
                 "notice" => null,

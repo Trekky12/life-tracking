@@ -4,6 +4,8 @@ document.addEventListener('click', function (event) {
     let add_set = event.target.closest('.add_set');
     let remove_set = event.target.closest('.remove_set');
 
+    let minus = event.target.closest('.minus');
+
     if (add_set) {
         let exercise = event.target.closest('.exercise');
         let setsList = exercise.querySelector('.set-list');
@@ -36,18 +38,12 @@ document.addEventListener('click', function (event) {
             last_set.remove();
         }
     }
-});
-
-const sessionExercises = document.querySelector('#sessionExercises');
-
-document.addEventListener('click', function (event) {
-    let minus = event.target.closest('.minus');
 
     if (minus) {
         event.preventDefault();
         let element = minus.parentElement.parentElement;
         let cat = element.dataset.category;
-        
+
         if (cat === "day") {
             // get all "childs"
             let exercises_day = [];
@@ -59,7 +55,7 @@ document.addEventListener('click', function (event) {
                 exercises_day.push(element);
                 element = element.nextElementSibling;
             }
-            exercises_day.forEach(function(exercise){
+            exercises_day.forEach(function (exercise) {
                 exercise.remove()
             });
         } else {
@@ -68,15 +64,19 @@ document.addEventListener('click', function (event) {
     }
 });
 
+
+const exercisesSession = document.querySelector('#sessionExercises');
 const addExerciseBtn = document.querySelector('#addExercise');
 const addExerciseSelect = document.querySelector('#addExerciseToSession');
 const addExerciseSetNr = document.querySelector('#setCount');
 addExerciseBtn.addEventListener('click', function (event) {
     let exercise = addExerciseSelect.value;
     let sets = addExerciseSetNr.value;
-    let exercise_idx = sessionExercises.childElementCount;
 
-    return fetch(jsObject.workouts_exercises_data + '?exercise=' + exercise + '&sets=' + sets + '&count=' + exercise_idx, {
+    let workoutElements = exercisesSession.querySelectorAll('[data-type="workout-element"]');
+    let nextID = workoutElements.length;
+
+    return fetch(jsObject.workouts_exercises_data + '?exercise=' + exercise + '&sets=' + sets + '&count=' + nextID, {
         method: 'GET',
         credentials: "same-origin",
         headers: {
@@ -86,10 +86,56 @@ addExerciseBtn.addEventListener('click', function (event) {
         return response.json();
     }).then(function (data) {
         if (data.status !== 'error') {
-            sessionExercises.insertAdjacentHTML('beforeend', data["data"]);
+            exercisesSession.insertAdjacentHTML('beforeend', data["data"]);
         }
     }).catch(function (error) {
         console.log(error);
     });
 
 });
+
+createSortable(exercisesSession);
+
+const workoutSupersets = document.querySelectorAll('.workout_superset_child');
+workoutSupersets.forEach(function (item, idx) {
+    createSortable(item);
+});
+
+function createSortable(element) {
+    new Sortable(element, {
+        group: {
+            name: "exercise"
+        },
+        swapThreshold: 0.5,
+        fallbackOnBody: true,
+        handle: ".handle",
+        dataIdAttr: 'data-id',
+        onUpdate: function (evt) {
+            console.log("update");
+            updateFields();
+        },
+        onAdd: function (evt) {
+            console.log("add");
+            let targetType = evt.to.dataset.type;
+            let exercise = evt.item;
+            let input = exercise.querySelector('input[name*="is_child"]');
+            if (targetType === "main") {
+                input.value = 0;
+            } else {
+                input.value = 1;
+            }
+            updateFields();
+        }
+    });
+}
+
+function updateFields() {
+    let workoutElements = exercisesSession.querySelectorAll('[data-type="workout-element"]');
+    console.log(workoutElements);
+    workoutElements.forEach(function (item, idx) {
+        let fields = item.querySelectorAll('input');
+        fields.forEach(function (field) {
+            field.setAttribute('name', field.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + idx + ']'));
+        });
+    });
+}
