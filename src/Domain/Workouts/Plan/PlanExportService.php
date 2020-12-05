@@ -16,13 +16,13 @@ class PlanExportService extends PlanService {
 
     private $exercise_service;
 
-    public function __construct(LoggerInterface $logger, 
-            CurrentUser $user, 
-            PlanMapper $mapper, 
-            ExerciseMapper $exercise_mapper, 
-            BodypartMapper $bodypart_mapper, 
-            MuscleMapper $muscle_mapper, 
-            Translator $translation, 
+    public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
+            PlanMapper $mapper,
+            ExerciseMapper $exercise_mapper,
+            BodypartMapper $bodypart_mapper,
+            MuscleMapper $muscle_mapper,
+            Translator $translation,
             SettingsMapper $settings_mapper,
             ExerciseService $exercise_service) {
         parent::__construct($logger, $user, $mapper, $exercise_mapper, $bodypart_mapper, $muscle_mapper, $translation, $settings_mapper);
@@ -36,38 +36,7 @@ class PlanExportService extends PlanService {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $exercises = $this->exercise_mapper->getAll();
-        $bodyparts = $this->bodypart_mapper->getAll();
-        $muscles = $this->muscle_mapper->getAll();
-        $selected_exercises = $this->mapper->getExercises($plan->id);
-
-        $exercises_print = [];
-        foreach ($selected_exercises as $se) {
-            $exercise = $exercises[$se["exercise"]];
-
-            $sets = array_map(function($set) use ($exercise) {
-                $description = [];
-                if ($exercise->isCategoryReps() || $exercise->isCategoryRepsWeight()) {
-                    $description[] = sprintf("%s %s", $set["repeats"], $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
-                }
-                if ($exercise->isCategoryRepsWeight()) {
-                    $description[] = sprintf("%s %s", $set["weight"], $this->translation->getTranslatedString("WORKOUTS_KG"));
-                }
-                if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
-                    $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
-                }
-                if ($exercise->isCategoryDistanceTime()) {
-                    $description[] = sprintf("%s %s", $set["distance"], $this->translation->getTranslatedString("WORKOUTS_KM"));
-                }
-                return implode(', ', $description);
-            }, $se["sets"]);
-
-            $exercises_print[] = ["exercise" => $exercise,
-                "mainBodyPart" => array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
-                "mainMuscle" => array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
-                "sets" => $sets
-            ];
-        }
+        list($exercises, $muscles) = $this->getPlanExercises($plan->id);
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -88,44 +57,50 @@ class PlanExportService extends PlanService {
 
         $offset = 2;
         $idx = 0;
-        foreach ($exercises_print as $ex) {
+        foreach ($exercises as $ex) {
 
-            // Exercise Name
-            $sheet->setCellValue('A' . ($idx + 1 + $offset), $ex["exercise"]->name);
-            $sheet->getStyle('A' . ($idx + 1 + $offset))->getFont()->setBold(true)->setSize(14);
-            $sheet->mergeCells('A' . ($idx + 1 + $offset) . ":L" . ($idx + 1 + $offset));
-            $sheet->getStyle('A' . ($idx + 1 + $offset) . ":L" . ($idx + 1 + $offset))->applyFromArray(
-                    ['borders' => [
-                            'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
-                        ],
-                    ]
-            );
+            $row_nr = ($idx + $offset);
 
-            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-            $drawing->setName($ex["exercise"]->name);
-            $drawing->setCoordinates('A' . ($idx + 2 + $offset));
-            $drawing->setPath($this->exercise_service->getFullImagePath() . "/" . $ex["exercise"]->get_thumbnail());
-            $drawing->setWorksheet($spreadsheet->getActiveSheet());
-            $drawing->setHeight(20 * count($ex["sets"]) - 2);
-            $drawing->setOffsetY(2);
+            switch ($ex["type"]) {
+                case "exercise":
+                    $sets_count = $this->createExerciseRows($row_nr, $ex, $spreadsheet, $sheet);
+                    $idx = $idx + 1 + $sets_count;
+                    break;
+                case "day":
+                    $sheet->setCellValue('A' . ($row_nr + 1), $ex["notice"]);
+                    $sheet->getStyle('A' . ($row_nr + 1))->getFont()->setBold(true)->setSize(16);
+                    $sheet->mergeCells('A' . ($row_nr + 1) . ":L" . ($row_nr + 1));
+                    $sheet->getStyle('A' . ($row_nr + 1) . ":L" . ($row_nr + 1))->applyFromArray(
+                            ['borders' => [
+                                    'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                                ],
+                            ]
+                    );
+                    $idx = $idx + 1;
+                    break;
+                case "superset":
+                    $superset_row = $row_nr + 2;
+                    $sheet->setCellValue('A' . ($superset_row), $this->translation->getTranslatedString('WORKOUTS_SUPERSET'));
+                    $sheet->getStyle('A' . ($superset_row))->getFont()->setBold(true)->setSize(14);
+                    $sheet->mergeCells('A' . ($superset_row) . ":L" . ($superset_row));
 
-            // Sets
-            $sheet->setCellValue('B' . ($idx + 2 + $offset), implode("\n", $ex["sets"]));
-            $sheet->getStyle('B' . ($idx + 2 + $offset))->getAlignment()->setWrapText(true);
-            $sheet->getStyle('B' . ($idx + 2))->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
-            $sheet->mergeCells('B' . ($idx + 2 + $offset) . ':B' . ($idx + 1 + $offset + count($ex["sets"])));
+                    $idx = $idx + 2;
+                    foreach ($ex["children"] as $child) {
+                        $row_nr = ($idx + $offset);
+                        $sets_count = $this->createExerciseRows($row_nr, $child, $spreadsheet, $sheet);
+                        $idx = $idx + 1 + $sets_count;
+                    }
+                    $row_nr = ($idx + $offset);
 
-            // Columns
-            $sheet->getStyle('B' . ($idx + 2 + $offset) . ':L' . ($idx + 1 + $offset + count($ex["sets"])))->applyFromArray(
-                    ['borders' => [
-                            'allBorders' => [
-                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
-                            ],
-                        ],
-                    ]
-            );
+                    $sheet->getStyle('A' . ($superset_row) . ":L" . ($row_nr))->applyFromArray(
+                            ['borders' => [
+                                    'left' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
+                                ],
+                            ]
+                    );
 
-            $idx = $idx + 1 + count($ex["sets"]);
+                    break;
+            }
         }
 
 
@@ -170,6 +145,54 @@ class PlanExportService extends PlanService {
 
 
         return new Payload(Payload::$RESULT_RAW, $body);
+    }
+
+    private function createExerciseRows($row_nr, $exercise, $spreadsheet, $sheet) {
+        // Exercise Name
+        $sheet->setCellValue('A' . ($row_nr + 1), $exercise["exercise"]->name);
+        $sheet->getStyle('A' . ($row_nr + 1))->getFont()->setBold(true)->setSize(14);
+        $sheet->mergeCells('A' . ($row_nr + 1) . ":L" . ($row_nr + 1));
+        $sheet->getStyle('A' . ($row_nr + 1) . ":L" . ($row_nr + 1))->applyFromArray(
+                ['borders' => [
+                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                    ],
+                ]
+        );
+
+        if (!is_null($exercise["exercise"]->get_thumbnail())) {
+            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+            $drawing->setName($exercise["exercise"]->name);
+            $drawing->setCoordinates('A' . ($row_nr + 2));
+            $drawing->setPath($this->exercise_service->getFullImagePath() . "/" . $exercise["exercise"]->get_thumbnail());
+            $drawing->setWorksheet($spreadsheet->getActiveSheet());
+            $drawing->setHeight(20 * count($exercise["sets"]) - 2);
+            $drawing->setOffsetY(2);
+            $drawing->setOffsetX(10);
+        }
+
+        // Sets
+        $sets_count = 0;
+        if (array_key_exists("sets", $exercise) && is_array($exercise["sets"]) && !empty($exercise["sets"])) {
+            $sets_count = count($exercise["sets"]);
+
+            $sheet->setCellValue('B' . ($row_nr + 2), implode("\n", $exercise["set_description"]));
+            $sheet->getStyle('B' . ($row_nr + 2))->getAlignment()->setWrapText(true);
+            $sheet->getStyle('B' . ($row_nr + 2))->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+            $sheet->mergeCells('B' . ($row_nr + 2) . ':B' . ($row_nr + 1 + $sets_count));
+
+            // Columns
+            $sheet->getStyle('B' . ($row_nr + 2) . ':L' . ($row_nr + 1 + $sets_count))->applyFromArray(
+                    ['borders' => [
+                            'allBorders' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+                            ],
+                        ],
+                    ]
+            );
+        }
+
+
+        return $sets_count;
     }
 
 }
