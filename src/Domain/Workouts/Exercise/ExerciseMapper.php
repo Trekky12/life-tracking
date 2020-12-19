@@ -95,14 +95,24 @@ class ExerciseMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getExercisesWithBodyPart($sorted, $limit, $bodypart = -1) {
+    public function getExercisesWithBodyPart($sorted, $limit, $bodypart = -1, $query = '') {
         $sql = "SELECT * FROM " . $this->getTableName();
 
         $bindings = array();
 
+        $where = [];
         if ($bodypart != -1) {
-            $sql .= " WHERE mainBodyPart = :bodypart";
+            $where[] = "mainBodyPart = :bodypart";
             $bindings["bodypart"] = $bodypart;
+        }
+        
+        if (!empty($query)) {
+            $where[] = "name like :query ";
+            $bindings["query"] = '%'.$query.'%';
+        }
+        
+        if(count($where) > 0){
+            $sql .= " WHERE ".implode(" AND ", $where);
         }
 
         $this->addSelectFilterForUser($sql, $bindings);
@@ -122,15 +132,25 @@ class ExerciseMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getExercisesWithBodyPartCount($bodypart = -1) {
+    public function getExercisesWithBodyPartCount($bodypart = -1, $query = '') {
 
         $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTableName();
 
         $bindings = array();
 
+        $where = [];
         if ($bodypart != -1) {
-            $sql .= " WHERE mainBodyPart = :bodypart";
+            $where[] = " mainBodyPart = :bodypart";
             $bindings["bodypart"] = $bodypart;
+        }
+        
+        if (!empty($query)) {
+            $where[] = "name like :query";
+            $bindings["query"] = '%'.$query.'%';
+        }
+        
+        if(count($where) > 0){
+            $sql .= " WHERE ".implode(" AND ", $where);
         }
 
         $this->addSelectFilterForUser($sql, $bindings);

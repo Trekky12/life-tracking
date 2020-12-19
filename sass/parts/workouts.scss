@@ -265,9 +265,6 @@
         }
     }
 
-    #filterBodyParts{
-        margin: 0.5rem;
-    }
 }
 
 #exercise-images{
@@ -304,4 +301,18 @@
     border: 1px dotted $color_text-main;
     border-radius: 2px;
     margin: 0.5rem;
+}
+
+.exercise-filter{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.5rem;
+
+    #filterBodyParts{
+        padding: 2px;
+    }
+    #filterSearchExercises{
+        padding: 2px;
+    }
 }

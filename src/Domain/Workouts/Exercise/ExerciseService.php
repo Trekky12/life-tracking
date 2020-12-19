@@ -102,8 +102,9 @@ class ExerciseService extends Service {
         $limit = sprintf("%s,%s", $offset, $count);
 
         $bodypart = array_key_exists('bodypart', $data) ? intval(filter_var($data['bodypart'], FILTER_SANITIZE_NUMBER_INT)) : -1;
+        $query = array_key_exists('query', $data) ? filter_var($data['query'], FILTER_SANITIZE_STRING) : '';
 
-        $exercises = $this->mapper->getExercisesWithBodyPart("name ASC", $limit, $bodypart);
+        $exercises = $this->mapper->getExercisesWithBodyPart("name ASC", $limit, $bodypart, $query);
         $bodyparts = $this->bodypart_mapper->getAll();
         $muscles = $this->muscle_mapper->getAll();
 
@@ -141,7 +142,7 @@ class ExerciseService extends Service {
         }
 
         $response_data["data"] = $exercises_print;
-        $response_data["count"] = $this->mapper->getExercisesWithBodyPartCount($bodypart);
+        $response_data["count"] = $this->mapper->getExercisesWithBodyPartCount($bodypart, $query);
 
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');

@@ -77,12 +77,15 @@
                         </div>
                         <div class="col">
                             <h2>{{ lang["WORKOUTS_EXERCISES_AVAILABLE"] }}</h2>
-                            <select id="filterBodyParts">
-                                <option value="-1">{{ lang["ALL"] }}</option>
-                                {% for bodypart in bodyparts %}
-                                    <option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <div class="exercise-filter">
+                                <select id="filterBodyParts">
+                                    <option value="-1">{{ lang["ALL"] }}</option>
+                                    {% for bodypart in bodyparts %}
+                                        <option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="text" id="filterSearchExercises" />
+                            </div>
                             <div class="content" id="exercises_available" data-edit="1">
                                 <div id="exercises_available_list">
                                 </div>
