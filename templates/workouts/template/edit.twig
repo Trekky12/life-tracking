@@ -4,7 +4,7 @@
 
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-    <script src="{{baseURL}}/static/js/workouts.js?ver=20201031"></script>
+    <script src="{{baseURL}}/static/js/workouts.js?ver=20201220"></script>
     <script src="{{baseURL}}/static/js/exercises.js?ver=20201031"></script>
 {% endblock %}
 
@@ -55,7 +55,7 @@
                     </div>
                 </div>
 
-                <div class="workout-selection">
+                <div class="workout-selection" id="workoutExerciseSelection">
                     <div class="row">
                         <div class="col selected-exercises" id="exercises_selected">
                             <h2>{{ lang["WORKOUTS_EXERCISES_SELECTED"] }}</h2>
@@ -68,7 +68,7 @@
                                     {% if exercise.type == "exercise" %}
                                         {% include "workouts/plan/edit-exercise-selected.twig" with {'exercise':exercise} only %}
                                     {% elseif exercise.type == "day" %}
-                                        <div class="workout_day_split" data-type="workout-element">
+                                        <div class="workout_day_split" data-type="workout-element" data-category="day">
                                             <div class="content">
                                                 <input type="text" name="exercises[{{ exercise["idx"] }}][notice]" value="{{ exercise["notice"] }}"/>
                                                 <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="day"/>
@@ -79,7 +79,7 @@
                                             </div>
                                         </div>
                                         {% elseif exercise.type == "superset" %}
-                                        <div class="workout_superset" data-type="workout-element">
+                                        <div class="workout_superset" data-type="workout-element" data-category="superset">
                                             <div class="content">
                                                 <h2>{{lang["WORKOUTS_SUPERSET"]}}</h2>
                                                 <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="superset"/>

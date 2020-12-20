@@ -45,10 +45,12 @@
                         <h3>{{ exercise.notice }}</h3>
                     {% elseif exercise.type == "superset" %}
                         <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
-                        <div class="workout_superset_child">
-                            {% for child in exercise["children"] %}
-                                {% include "workouts/plan/view-single-exercise.twig" with {'exercise':child} only %}
-                            {% endfor %}
+                        <div class="workout_superset">
+                            <div class="exercises" data-type="superset">
+                                {% for child in exercise["children"] %}
+                                    {% include "workouts/plan/view-single-exercise.twig" with {'exercise':child} only %}
+                                {% endfor %}
+                            </div>
                         </div>
                     {% endif %}
                 {% endfor %}

@@ -1,6 +1,6 @@
 'use strict';
 
-const exercisesSelected = document.querySelector('#exercises_selected .content');
+const exercisesSelected = document.querySelector('#workoutExerciseSelection .content');
 
 document.addEventListener('click', function (event) {
     let plus = event.target.closest('.exercise .plus');
@@ -24,7 +24,26 @@ document.addEventListener('click', function (event) {
 
     if (minus) {
         event.preventDefault();
-        minus.parentElement.parentElement.remove();
+        let element = minus.parentElement.parentElement;
+        let cat = element.dataset.category;
+
+        if (cat === "day") {
+            // get all "childs"
+            let exercises_day = [];
+            exercises_day.push(element);
+            element = element.nextElementSibling;
+            while (element) {
+                if (element.dataset.category === "day")
+                    break;
+                exercises_day.push(element);
+                element = element.nextElementSibling;
+            }
+            exercises_day.forEach(function (exercise) {
+                exercise.remove()
+            });
+        } else {
+            element.remove();
+        }
         loadSelectedMuscles();
     }
 
@@ -103,6 +122,7 @@ document.addEventListener('click', function (event) {
         let workout_day = document.createElement("div");
         workout_day.classList.add("workout_day_split");
         workout_day.dataset.type = "workout-element";
+        workout_day.dataset.category = "day";
 
         let workout_day_content = document.createElement("div");
         workout_day_content.classList.add("content");
@@ -242,43 +262,38 @@ function updateFields() {
 
 
 const usedMusclesWrapper = document.querySelector('#usedMusclesWrapper');
-const loadingIconMuscles = document.querySelector('#loadingIconMuscles');
-
-
-//loadSelectedMuscles();
 
 function loadSelectedMuscles() {
 
-    let exercise_ids = [];
-    let exercises = exercisesSelected.querySelectorAll('.exercise');
-    exercises.forEach(function (item, idx) {
-        exercise_ids.push(item.dataset.id);
-    });
-
-    let data = {'exercises': exercise_ids};
-
-    //loadingIconMuscles.classList.remove("hidden");
-
-    getCSRFToken().then(function (token) {
-        data['csrf_name'] = token.csrf_name;
-        data['csrf_value'] = token.csrf_value;
-
-        return fetch(jsObject.workouts_exercises_selected_muscles, {
-            method: 'POST',
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+    if (usedMusclesWrapper) {
+        let exercise_ids = [];
+        let exercises = exercisesSelected.querySelectorAll('.exercise');
+        exercises.forEach(function (item, idx) {
+            exercise_ids.push(item.dataset.id);
         });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        if (data.status !== 'error') {
-            usedMusclesWrapper.innerHTML = data['data'];
-            //loadingIconMuscles.classList.add("hidden");
-        }
-    }).catch(function (error) {
-        console.log(error);
-    });
+
+        let data = {'exercises': exercise_ids};
+
+        getCSRFToken().then(function (token) {
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
+
+            return fetch(jsObject.workouts_exercises_selected_muscles, {
+                method: 'POST',
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            if (data.status !== 'error') {
+                usedMusclesWrapper.innerHTML = data['data'];
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
 }

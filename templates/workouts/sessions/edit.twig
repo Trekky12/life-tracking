@@ -4,7 +4,8 @@
 
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-    <script src="{{baseURL}}/static/js/workouts_session.js?ver=20200825"></script>
+    <script src="{{baseURL}}/static/js/workouts.js?ver=20201220"></script>
+    <script src="{{baseURL}}/static/js/workouts_session.js?ver=20201220"></script>
 {% endblock %}
 
 {% block body %}
@@ -41,12 +42,13 @@
                     <textarea class="form-control" id="inputNotice" name="notice" rows="2">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
                 </div>
 
-                <div class="workout-selection" id="sessionExercises" data-type="main">
+                <div class="workout-selection" id="workoutExerciseSelection">
+                    <div class="content" data-type="main">
                     {% for exercise in exercises %}
                         {% if exercise.type == "exercise" %}
                             {% include "workouts/sessions/edit-single-exercise.twig" with {'data': exercise} only %}
                         {% elseif exercise.type == "day" %}
-                            <div class="workout_day_split" data-type="workout-element"  data-category="day">
+                            <div class="workout_day_split" data-type="workout-element" data-category="day">
                                 <div class="content">
                                     <h3>{{ exercise.notice }}</h3>
                                     <input type="hidden" name="exercises[{{ exercise["idx"] }}][notice]" value="{{ exercise["notice"] }}"/>
@@ -62,10 +64,12 @@
                                 <div class="content">
                                     <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
                                     <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="superset"/>
-                                    <div class="workout_superset_child">
-                                        {% for child in exercise["children"] %}
-                                            {% include "workouts/sessions/edit-single-exercise.twig" with {'data': child} only %}
-                                        {% endfor %}
+                                    <div class="workout_superset">
+                                        <div class="exercises" data-type="superset">
+                                            {% for child in exercise["children"] %}
+                                                {% include "workouts/sessions/edit-single-exercise.twig" with {'data': child} only %}
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="icons">
@@ -75,6 +79,7 @@
                             </div>
                         {% endif %}
                     {% endfor %}
+                    </div>
                 </div>
 
                 <h3>{{ lang["WORKOUTS_ADD_EXERCISE"] }}</h3>
