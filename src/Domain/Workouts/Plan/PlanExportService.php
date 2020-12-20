@@ -159,17 +159,6 @@ class PlanExportService extends PlanService {
                 ]
         );
 
-        if (!is_null($exercise["exercise"]->get_thumbnail())) {
-            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-            $drawing->setName($exercise["exercise"]->name);
-            $drawing->setCoordinates('A' . ($row_nr + 2));
-            $drawing->setPath($this->exercise_service->getFullImagePath() . "/" . $exercise["exercise"]->get_thumbnail());
-            $drawing->setWorksheet($spreadsheet->getActiveSheet());
-            $drawing->setHeight(20 * count($exercise["sets"]) - 2);
-            $drawing->setOffsetY(2);
-            $drawing->setOffsetX(10);
-        }
-
         // Sets
         $sets_count = 0;
         if (array_key_exists("sets", $exercise) && is_array($exercise["sets"]) && !empty($exercise["sets"])) {
@@ -191,8 +180,23 @@ class PlanExportService extends PlanService {
             );
         }
 
+        $thumbnail_rows = $sets_count;
+        if (!is_null($exercise["exercise"]->get_thumbnail())) {
+            // min height 3 rows
+            $thumbnail_rows = $sets_count < 3 ? 3 : $sets_count;
 
-        return $sets_count;
+            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+            $drawing->setName($exercise["exercise"]->name);
+            $drawing->setCoordinates('A' . ($row_nr + 2));
+            $drawing->setPath($this->exercise_service->getFullImagePath() . "/" . $exercise["exercise"]->get_thumbnail());
+            $drawing->setWorksheet($spreadsheet->getActiveSheet());
+            $drawing->setHeight(20 * $thumbnail_rows - 2);
+            $drawing->setOffsetY(2);
+            $drawing->setOffsetX(10);
+        }
+
+
+        return $thumbnail_rows;
     }
 
 }
