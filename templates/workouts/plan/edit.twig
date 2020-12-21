@@ -99,6 +99,11 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <input id="setCount" type="number" min="0" max="999" step="any" size="5" value="3" class="small"/>
+                    <label for="setCount">{{ lang["WORKOUTS_SETS"] }}</label>
+                </div>
 
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

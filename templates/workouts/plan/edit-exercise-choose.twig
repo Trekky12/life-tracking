@@ -35,29 +35,6 @@
                             <label>{{ lang["WORKOUTS_KM"] }}</label>
                         {% endif %}
                     </div>
-
-                    {% for i in range(0,2) %}
-                        <div class="set">
-                            {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}:
-                            {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
-                                <input id="repeats_{{ loop.index }}" type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][repeats]" disabled="disabled"/>
-                                <label for="repeats_{{ loop.index }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
-                            {% endif %}
-                            {% if exercise["exercise"].isCategoryRepsWeight() %}
-                                <input id="weights_{{ loop.index }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][weight]" disabled="disabled"/>
-                                <label for="weights_{{ loop.index }}">{{ lang["WORKOUTS_KG"] }}</label>
-                            {% endif %}
-
-                            {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
-                                <input id="time_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][time]" disabled="disabled"/>
-                                <label for="time_{{ loop.index-1 }}">{{ lang["WORKOUTS_SECONDS"] }}</label>
-                            {% endif %}
-                            {% if exercise["exercise"].isCategoryDistanceTime() %}
-                                <input id="distance_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][{{ loop.index-1 }}][distance]" disabled="disabled"/>
-                                <label for="distance_{{ loop.index-1 }}">{{ lang["WORKOUTS_KM"] }}</label>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
                 </div>
                 <div class="buttons">
                     <button type="button" class="add_set gray small">{{ lang["WORKOUTS_SET_ADD"] }}</button>

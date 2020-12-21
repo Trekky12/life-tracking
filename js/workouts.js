@@ -66,6 +66,12 @@ document.addEventListener('click', function (event) {
         input_id.value = exercise.dataset.id;
 
         new_exercise.appendChild(input_id);
+        
+        let sets = parseInt(document.querySelector('#setCount').value);
+        let set = 0;
+        for (set = 0; set < sets; set++) {
+            addSet(new_exercise);
+        }
 
         let inputs = new_exercise.querySelectorAll('input');
         inputs.forEach(function (input, idx) {
@@ -86,26 +92,7 @@ document.addEventListener('click', function (event) {
 
     if (add_set) {
         console.log("add set");
-        let setsList = exercise.querySelector('.sets .set-list');
-        let set_dummy = exercise.querySelector('.sets .set-dummy');
-        let sets = exercise.querySelectorAll('.sets .set');
-
-        let set_id = sets.length;
-
-        let new_set = set_dummy.cloneNode(true);
-        new_set.classList.remove("hidden");
-        new_set.classList.remove("set-dummy");
-
-        let set_nr = new_set.querySelector('.set-nr');
-        set_nr.innerHTML = set_id;
-
-        let inputs = new_set.querySelectorAll('input');
-        inputs.forEach(function (input, idx) {
-            input.setAttribute('name', input.name.replace("dummy", set_id - 1));
-            input.removeAttribute('disabled');
-        });
-
-        setsList.appendChild(new_set);
+        addSet(exercise);
     }
 
     if (remove_set) {
@@ -296,4 +283,27 @@ function loadSelectedMuscles() {
             console.log(error);
         });
     }
+}
+
+function addSet(exercise) {
+    let setsList = exercise.querySelector('.sets .set-list');
+    let set_dummy = exercise.querySelector('.sets .set-dummy');
+    let sets = exercise.querySelectorAll('.sets .set');
+
+    let set_id = sets.length;
+
+    let new_set = set_dummy.cloneNode(true);
+    new_set.classList.remove("hidden");
+    new_set.classList.remove("set-dummy");
+
+    let set_nr = new_set.querySelector('.set-nr');
+    set_nr.innerHTML = set_id;
+
+    let inputs = new_set.querySelectorAll('input');
+    inputs.forEach(function (input, idx) {
+        input.setAttribute('name', input.name.replace("dummy", set_id - 1));
+        input.removeAttribute('disabled');
+    });
+
+    setsList.appendChild(new_set);
 }
