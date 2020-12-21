@@ -4,7 +4,7 @@
         <h3 class="title">{{ exercise["exercise"].name }}</h3>
         <div class="instructions">
             <a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
-            <p class="content">{{ exercise["exercise"].instructions }}</p>
+            <p class="content">{{ exercise["exercise"].getInstructions()|raw }}</p>
         </div>
         {% if exercise["primary_muscles"]|length > 0 %}
             <h4>{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</h4>

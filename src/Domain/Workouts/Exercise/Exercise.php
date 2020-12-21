@@ -2,6 +2,8 @@
 
 namespace App\Domain\Workouts\Exercise;
 
+use App\Domain\Main\Utility\Utility;
+
 class Exercise extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_WORKOUTS_EXERCISE";
@@ -107,5 +109,8 @@ class Exercise extends \App\Domain\DataObject {
     public function isCategoryTime(){
         return $this->category == self::$WORKOUTS_CATEGORY_TIME;
     }
-
+    
+    public function getInstructions(){
+        return Utility::replaceLinks(nl2br($this->instructions));
+    }
 }

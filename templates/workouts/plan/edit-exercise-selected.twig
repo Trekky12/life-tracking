@@ -9,7 +9,7 @@
         <h3 class="title">{{ exercise["exercise"].name|raw }}</h3>
         <div class="instructions">
             <a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
-            <p class="content">{{ exercise["exercise"].instructions }}</p>
+            <p class="content">{{ exercise["exercise"].getInstructions()|raw }}</p>
         </div>
         <div class="sets">
             <a href="#" class="headline">{{ lang["WORKOUTS_SETS"] }}</a>
