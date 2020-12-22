@@ -45,6 +45,7 @@ document.addEventListener('click', function (event) {
             element.remove();
         }
         loadSelectedMuscles();
+        updateFields();
     }
 
     if (plus) {
@@ -73,7 +74,7 @@ document.addEventListener('click', function (event) {
             addSet(new_exercise);
         }
 
-        let inputs = new_exercise.querySelectorAll('input');
+        let inputs = new_exercise.querySelectorAll('input, textarea');
         inputs.forEach(function (input, idx) {
             if (!input.name.includes("dummy")) {
                 input.setAttribute('name', input.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + nextID + ']'));
@@ -240,7 +241,7 @@ function updateFields() {
     // @see https://stackoverflow.com/a/47948276
     let workoutElements = exercisesSelected.querySelectorAll('[data-type="workout-element"]');
     workoutElements.forEach(function (item, idx) {
-        let fields = item.querySelectorAll('input');
+        let fields = item.querySelectorAll('input, textarea');
         fields.forEach(function (field) {
             field.setAttribute('name', field.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + idx + ']'));
         });

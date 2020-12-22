@@ -11,6 +11,12 @@
             <a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
             <p class="content">{{ exercise["exercise"].getInstructions()|raw }}</p>
         </div>
+        <div class="notices">
+            <a href="#" class="headline">{{ lang["NOTICE"] }}</a>
+            <p class="content">
+                <textarea name="exercises[{{ exercise_idx }}][notice]" disabled="disabled"></textarea>
+            </p>
+        </div>
         <div class="sets">
             <a href="#" class="headline">{{ lang["WORKOUTS_SETS"] }}</a>
             <div class="content">

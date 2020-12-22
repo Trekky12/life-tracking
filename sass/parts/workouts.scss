@@ -87,7 +87,7 @@
             }
 
 
-            .instructions, .sets, .sets-description{
+            .instructions, .sets, .sets-description, .notices, .view-notices{
                 @include font-size(1.4);
 
                 word-break: break-word;
@@ -104,7 +104,7 @@
                 }
             }
 
-            .sets{
+            .sets, .notices{
                 display:none;
             }
 
@@ -146,7 +146,7 @@
             .exercise-content{
                 flex-basis: 90%;
             }
-            .instructions, .sets{
+            .instructions, .sets, .notices{
                 display:block;
                 .content{
                     display:none;

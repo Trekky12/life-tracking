@@ -598,8 +598,8 @@ $lang["WORKOUTS_MINUTES"] = "Minuten";
 $lang["WORKOUTS_SECONDS"] = "Sekunden";
 $lang["WORKOUTS_KM"] = "km";
 
-$lang["WORKOUTS_SET_ADD"] = "Set hinzufügen";
-$lang["WORKOUTS_SET_REMOVE"] = "Set entfernen";
+$lang["WORKOUTS_SET_ADD"] = "Satz hinzufügen";
+$lang["WORKOUTS_SET_REMOVE"] = "Satz entfernen";
 
 $lang["LOAD_MORE"] = "Mehr laden";
 

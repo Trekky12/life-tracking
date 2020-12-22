@@ -53,6 +53,10 @@
         <input type="hidden" name="exercises[{{ data["idx"] }}][id]" value="{{ data["exercise"].id }}"/>
         <input type="hidden" name="exercises[{{ data["idx"] }}][type]" value="{{ data["type"] }}"/>
         <input type="hidden" name="exercises[{{ data["idx"] }}][is_child]" value="{{ data["is_child"] }}"/>
+
+        <div class="view-notices">
+            <p class="content"><textarea name="exercises[{{ data["idx"] }}][notice]">{{ data["notice"] }}</textarea></p>
+        </div>
     </div>    
     {% if data["exercise"].get_thumbnail() != ''%}
         <div class="thumbnail">

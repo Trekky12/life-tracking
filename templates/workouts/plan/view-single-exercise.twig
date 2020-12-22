@@ -6,8 +6,14 @@
             <a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
             <p class="content">{{ exercise["exercise"].getInstructions()|raw }}</p>
         </div>
+        {% if exercise["notice"] %}
+        <div class="view-notices">
+            <h4>{{ lang["NOTICE"] }}</h4>
+            <p class="content">{{ exercise["notice"]|raw }}</p>
+        </div>
+        {% endif %}
         <div class="sets-description">
-            <a href="#" class="headline">{{ lang["WORKOUTS_SETS"] }}</a>
+            <h4>{{ lang["WORKOUTS_SETS"] }}</h4>
             <div class="content">
                 {% for set in exercise["set_description"] %}
                     <div class="set">
