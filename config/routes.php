@@ -423,6 +423,13 @@ return function (App $app) {
             });
 
             $group_project->get('/export', \App\Application\Action\Timesheets\Sheet\SheetExportAction::class)->setName('timesheets_export');
+            
+            $group_project->group('/categories', function(RouteCollectorProxy $group_category) {
+                $group_category->get('/', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryListAction::class)->setName('timesheets_project_categories');
+                $group_category->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryEditAction::class)->setName('timesheets_project_categories_edit');
+                $group_category->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategorySaveAction::class)->setName('timesheets_project_categories_save');
+                $group_category->delete('/delete/{id}', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryDeleteAction::class)->setName('timesheets_project_categories_delete');
+            });
         });
     });
 

@@ -13,12 +13,18 @@
                         <th>{{lang["NAME"]}}</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for project in projects %}
                         <tr>
                             <td><a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a></td> 
+                            <td>
+                                {% if project.user == user.id %}
+                                    <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}"><span class="fas fa-tags"></span></a>
+                                {% endif %}
+                            </td>                            
                             <td>
                                 {% if project.user == user.id %}
                                     <a href="{{  url_for('timesheets_projects_edit', {'id' : project.id}) }}"><span class="fas fa-edit fa-lg"></span></a>

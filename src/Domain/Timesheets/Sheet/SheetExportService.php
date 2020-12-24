@@ -8,6 +8,7 @@ use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
@@ -15,8 +16,16 @@ class SheetExportService extends SheetService {
 
     private $translation;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, SheetMapper $mapper, ProjectService $project_service, UserService $user_service, Settings $settings, RouteParser $router, Translator $translation) {
-        parent::__construct($logger, $user, $mapper, $project_service, $user_service, $settings, $router);
+    public function __construct(LoggerInterface $logger, 
+            CurrentUser $user, 
+            SheetMapper $mapper, 
+            ProjectService $project_service, 
+            ProjectCategoryService $project_category_service, 
+            UserService $user_service, 
+            Settings $settings, 
+            RouteParser $router, 
+            Translator $translation) {
+        parent::__construct($logger, $user, $mapper, $project_service, $project_category_service, $user_service, $settings, $router);
         $this->translation = $translation;
     }
 
@@ -60,13 +69,15 @@ class SheetExportService extends SheetService {
         $sheet->setCellValue('B4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_COME_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_COME_PROJECT_BASED"));
         $sheet->setCellValue('C4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_LEAVE_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_LEAVE_PROJECT_BASED"));
         $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
-        $sheet->getStyle('A4:D4')->applyFromArray(
+        $sheet->setCellValue('E4', $this->translation->getTranslatedString("NOTICE"));
+        $sheet->setCellValue('F4', $this->translation->getTranslatedString("CATEGORIES"));
+        $sheet->getStyle('A4:F4')->applyFromArray(
                 ['borders' => [
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
                     ],
                 ]
         );
-        $sheet->getStyle('A4:D4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:F4')->getFont()->setBold(true);
 
 
         $excelTime = "[$-F400]h:mm:ss AM/PM";
@@ -117,7 +128,17 @@ class SheetExportService extends SheetService {
                 $sheet->getStyle('D' . $row)->getNumberFormat()->setFormatCode($excelTimeDiff);
             }
 
+            if (!is_null($timesheet->notice)) {
+                $sheet->setCellValue('E' . $row, $timesheet->notice);
+                $sheet->getStyle('E' . $row)->getAlignment()->setWrapText(true);
+            }
+
+            if (!is_null($timesheet->categories)) {
+                $sheet->setCellValue('F' . $row, $timesheet->categories);
+            }
+
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
+            $sheet->getStyle('A' . $row . ':F' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
             $idx++;
         }
@@ -128,7 +149,7 @@ class SheetExportService extends SheetService {
         $sheet->setCellValue('D' . $sumRow, "=SUM(D" . $firstRow . ":D" . ($sumRow - 1) . ")");
         $sheet->getStyle('D' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDiff);
 
-        $sheet->getStyle('A' . $sumRow . ':D' . $sumRow)->applyFromArray(
+        $sheet->getStyle('A' . $sumRow . ':F' . $sumRow)->applyFromArray(
                 ['borders' => [
                         'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
@@ -141,6 +162,8 @@ class SheetExportService extends SheetService {
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
         $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
 
         // sheet protection
         $sheet->getProtection()->setSheet(true);

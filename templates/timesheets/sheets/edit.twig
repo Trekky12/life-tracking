@@ -4,11 +4,14 @@
 
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
 {% endblock %}
 
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/leaflet.js" type="text/javascript"></script>
     <script src="{{baseURL}}/static/js/geolocation.js?ver=20200126"></script>
+    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
+    <script src="{{baseURL}}/static/js/timesheets.js?ver=20201224"></script>
 {% endblock %}
 
 {% set hasMap_start = not entry.start_lat is null and not entry.start_lng is null %}
@@ -68,6 +71,15 @@
                     <label for="inputNotice">{{lang["NOTICE"]}}</label>
                     <textarea class="form-control" id="inputNotice" name="notice">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
                 </div>
+
+                <div class="form-group category">
+                    <label for="projectCategory">{{lang["CATEGORIES"]}}</label>
+                    <select class="form-control category" id="projectCategory" name="category[]" multiple>
+                        {% for cat in categories %}
+                            <option value="{{cat.id}}" {% if cat.id in sheet_categories %}selected{%endif%}>{{cat.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>  
 
                 <div class="form-group btn">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

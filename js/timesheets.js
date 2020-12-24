@@ -8,8 +8,6 @@ const timesheetLngField = document.querySelector('input#geoLng');
 const timesheetAccField = document.querySelector('input#geoAcc');
 
 const alertSuccess = document.querySelector('#alertSuccess');
-const alertError = document.querySelector('#alertError');
-const alertErrorDetail = alertError.querySelector('#alertErrorDetail');
 
 comeButtons.forEach(function (item, idx) {
     item.addEventListener('click', function (event) {
@@ -26,6 +24,8 @@ leaveButtons.forEach(function (item, idx) {
 });
 
 function send(button, type) {
+    let alertError = document.querySelector('#alertError');
+    let alertErrorDetail = alertError.querySelector('#alertErrorDetail');
 
     alertError.classList.add("hidden");
     alertSuccess.classList.add("hidden");
@@ -74,3 +74,12 @@ function send(button, type) {
         alertError.classList.remove("hidden");
     });
 }
+
+
+const projectCategorySelects = document.querySelectorAll('select.category');
+projectCategorySelects.forEach(function (item, idx) {
+    new Selectr(item, {
+        searchable: false,
+        placeholder: lang.categories
+    });
+});

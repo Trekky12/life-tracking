@@ -449,6 +449,7 @@ $lang["TIMESHEETS_LEAVE_DAY_BASED"] = "Gehen";
 $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "Ende";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "Tagesbasiert (anstatt Projektbasiert)";
+$lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Zeiterfassungskategorien";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
@@ -494,6 +495,7 @@ $lang["DATAOBJECT_SPLITBILLS_BILL"] = "geteilte Ausgabe";
 $lang["DATAOBJECT_SPLITBILLS_GROUP"] = "geteilte Ausgabengruppe";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfasungsprojekt";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfasungseintrag";
+$lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "Kategorie";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "Reise-Event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "Reise";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "Route";

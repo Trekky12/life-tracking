@@ -159,3 +159,6 @@ INSERT INTO workouts_exercises (id, name, category, mainBodyPart, mainMuscle) VA
 
 INSERT INTO workouts_sessions (id, user, date) VALUES
 (1, 1, '2020-08-29');
+
+INSERT INTO timesheets_categories (id, project, user, name) VALUES
+(1, 1, 1, 'Test Category 1');

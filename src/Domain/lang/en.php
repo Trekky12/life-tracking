@@ -450,6 +450,7 @@ $lang["TIMESHEETS_LEAVE_DAY_BASED"] = "Leave";
 $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "End";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
+$lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
 
 $lang["THIS_DEVICE"] = "this device";
 
@@ -495,6 +496,7 @@ $lang["DATAOBJECT_SPLITBILLS_BILL"] = "splitted bill";
 $lang["DATAOBJECT_SPLITBILLS_GROUP"] = "splitted bills group";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "timesheets project";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "timesheets sheet";
+$lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "timesheets category";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "trip event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "trip";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "route";

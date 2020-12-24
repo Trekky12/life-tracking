@@ -1,0 +1,41 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}} ({{ project.name }})</h2> 
+            <a href="{{  url_for('timesheets_project_categories_edit', {'project': project.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+        </div>
+        <div class="page-content">
+            <table id="project_categories_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["NAME"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cat in categories %}
+                        <tr>
+                            <td>{{cat.name}}</td> 
+                            <td>
+                                {% if project.user == user.id %}
+                                    <a href="{{  url_for('timesheets_project_categories_edit', {'id' : cat.id, 'project' : project.hash}) }}"><span class="fas fa-edit fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if project.user == user.id %}
+                                    <a href="#" data-url="{{  url_for('timesheets_project_categories_delete', {'id' : cat.id, 'project' : project.hash}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

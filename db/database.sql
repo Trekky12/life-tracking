@@ -821,6 +821,29 @@ CREATE TABLE timesheets_sheets (
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS timesheets_categories;
+CREATE TABLE timesheets_categories (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    project INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS timesheets_sheets_categories;
+CREATE TABLE timesheets_sheets_categories (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sheet INTEGER unsigned DEFAULT NULL,
+    category INTEGER unsigned DEFAULT NULL,
+    UNIQUE(sheet, category),
+    FOREIGN KEY(sheet) REFERENCES timesheets_sheets(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS activities;
 CREATE TABLE activities (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

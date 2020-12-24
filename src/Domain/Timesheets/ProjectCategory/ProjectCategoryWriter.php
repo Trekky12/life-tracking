@@ -1,25 +1,23 @@
 <?php
 
-namespace App\Domain\Timesheets\Sheet;
+namespace App\Domain\Timesheets\ProjectCategory;
 
 use App\Domain\ObjectActivityWriter;
 use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
-use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Project\ProjectMapper;
+use App\Domain\Timesheets\Project\ProjectService;
 
-class SheetWriter extends ObjectActivityWriter {
+class ProjectCategoryWriter extends ObjectActivityWriter {
 
-    private $service;
     private $project_service;
     private $project_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SheetMapper $mapper, SheetService $service, ProjectService $project_service, ProjectMapper $project_mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, ProjectCategoryMapper $mapper, ProjectService $project_service, ProjectMapper $project_mapper) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
-        $this->service = $service;
         $this->project_service = $project_service;
         $this->project_mapper = $project_mapper;
     }
@@ -28,30 +26,13 @@ class SheetWriter extends ObjectActivityWriter {
 
         $project = $this->project_service->getFromHash($additionalData["project"]);
 
-        if (!$this->project_service->isMember($project->id)) {
+        if (!$this->project_service->isOwner($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
         $data['project'] = $project->id;
 
-        $payload = parent::save($id, $data, $additionalData);
-        $entry = $payload->getResult();
-
-        $this->service->setDiff($entry->id);
-
-        try {
-            
-            $this->mapper->deleteCategoriesFromSheet($id);
-            if (array_key_exists("category", $data) && is_array($data["category"]) && !empty($data["category"])) {
-                $categories = filter_var_array($data["category"], FILTER_SANITIZE_NUMBER_INT);
-
-                $this->mapper->addCategoriesToSheet($entry->id, $categories);
-            }
-        } catch (\Exception $e) {
-            $this->logger->error("Error while saving categories at timesheet", array("data" => $id, "error" => $e->getMessage()));
-        }
-
-        return $payload;
+        return parent::save($id, $data, $additionalData);
     }
 
     public function getParentMapper() {
@@ -59,7 +40,7 @@ class SheetWriter extends ObjectActivityWriter {
     }
 
     public function getObjectViewRoute(): string {
-        return 'timesheets_sheets';
+        return 'timesheets_project_categories_edit';
     }
 
     public function getObjectViewRouteParams($entry): array {

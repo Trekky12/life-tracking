@@ -31,6 +31,8 @@ class Sheet extends \App\Domain\DataObject {
         $this->end_lng = $this->exists('end_lng', $data) ? filter_var($data['end_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->end_acc = $this->exists('end_acc', $data) ? filter_var($data['end_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
+        
+        $this->categories = $this->exists('categories', $data) ? filter_var($data['categories'], FILTER_SANITIZE_STRING) : null;
 
         /* if (empty($this->name) && $this->settleup == 0) {
           $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
@@ -115,6 +117,14 @@ class Sheet extends \App\Domain\DataObject {
 
     public function getParentID() {
         return $this->project;
+    }
+
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+
+        unset($temp["categories"]);
+
+        return $temp;
     }
 
 }

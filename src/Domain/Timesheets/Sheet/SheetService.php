@@ -9,21 +9,31 @@ use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
 use App\Domain\Main\Utility\DateUtility;
 use App\Application\Payload\Payload;
 
 class SheetService extends Service {
 
     protected $project_service;
+    protected $project_category_service;
     protected $user_service;
     protected $settings;
     protected $router;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, SheetMapper $mapper, ProjectService $project_service, UserService $user_service, Settings $settings, RouteParser $router) {
+    public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
+            SheetMapper $mapper,
+            ProjectService $project_service,
+            ProjectCategoryService $project_category_service,
+            UserService $user_service,
+            Settings $settings,
+            RouteParser $router) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
         $this->project_service = $project_service;
+        $this->project_category_service = $project_category_service;
         $this->user_service = $user_service;
         $this->settings = $settings;
         $this->router = $router;
@@ -115,7 +125,6 @@ class SheetService extends Service {
 
         $rendered_data = [];
         foreach ($sheets as $sheet) {
-
             list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
             $row = [];
@@ -123,6 +132,7 @@ class SheetService extends Service {
             $row[] = $start;
             $row[] = $end;
             $row[] = DateUtility::splitDateInterval($sheet->diff);
+            $row[] = $sheet->categories;
 
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
             $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
@@ -154,12 +164,17 @@ class SheetService extends Service {
 
         $users = $this->user_service->getAll();
         $project_users = $this->project_service->getUsers($project->id);
+        
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+        $sheet_categories = $this->mapper->getCategoriesFromSheet($entry->id);
 
         $response_data = [
             'entry' => $entry,
             'project' => $project,
             'project_users' => $project_users,
-            'users' => $users
+            'users' => $users,
+            'categories' => $project_categories,
+            'sheet_categories' => $sheet_categories
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
