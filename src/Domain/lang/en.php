@@ -442,10 +442,14 @@ $lang["APPLICATION_PASSWORDS"] = "application passwords";
 $lang["TIMESHEETS"] = "timesheets";
 $lang["TIMESHEETS_PROJECTS"] = "timesheet projects";
 $lang["TIMESHEETS_OVERVIEW"] = "Overview";
-$lang["TIMESHEETS_FAST"] = "Come/Leave";
-$lang["TIMESHEETS_COME"] = "Come";
-$lang["TIMESHEETS_LEAVE"] = "Leave";
+$lang["TIMESHEETS_FAST_DAY_BASED"] = "Come/Leave";
+$lang["TIMESHEETS_FAST_PROJECT_BASED"] = "Start/End";
+$lang["TIMESHEETS_COME_DAY_BASED"] = "Come";
+$lang["TIMESHEETS_COME_PROJECT_BASED"] = "Start";
+$lang["TIMESHEETS_LEAVE_DAY_BASED"] = "Leave";
+$lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "End";
 $lang["TIMESHEETS_EXPORT"] = "Export";
+$lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
 
 $lang["THIS_DEVICE"] = "this device";
 

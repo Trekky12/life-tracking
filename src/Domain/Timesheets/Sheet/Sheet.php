@@ -96,7 +96,7 @@ class Sheet extends \App\Domain\DataObject {
 
 
         if (!is_null($this->start) && !is_null($this->end)) {
-            $type = $translator->getTranslatedString('TIMESHEETS_FAST');
+            $type = $translator->getTranslatedString('TIMESHEETS_FAST_PROJECT_BASED');
 
             $start = $fmtDateTime->format($this->getStartDateTime());
             $end = $fmtDateTime->format($this->getEndDateTime());
@@ -104,10 +104,10 @@ class Sheet extends \App\Domain\DataObject {
             $date = sprintf("%s - %s", $start, $end);
         } elseif (!is_null($this->start)) {
             $date = $fmtDateTime->format($this->getStartDateTime());
-            $type = $translator->getTranslatedString('TIMESHEETS_COME');
+            $type = $translator->getTranslatedString('TIMESHEETS_COME_PROJECT_BASED');
         } elseif (!is_null($this->end)) {
             $date = $fmtDateTime->format($this->getEndDateTime());
-            $type = $translator->getTranslatedString('TIMESHEETS_LEAVE');
+            $type = $translator->getTranslatedString('TIMESHEETS_LEAVE_PROJECT_BASED');
         }
 
         return sprintf("%s (%s)", $date, $type);

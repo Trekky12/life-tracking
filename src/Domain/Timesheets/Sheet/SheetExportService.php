@@ -57,8 +57,8 @@ class SheetExportService extends SheetService {
 
         // Table Header
         $sheet->setCellValue('A4', $this->translation->getTranslatedString("DATE"));
-        $sheet->setCellValue('B4', $this->translation->getTranslatedString("TIMESHEETS_COME"));
-        $sheet->setCellValue('C4', $this->translation->getTranslatedString("TIMESHEETS_LEAVE"));
+        $sheet->setCellValue('B4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_COME_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_COME_PROJECT_BASED"));
+        $sheet->setCellValue('C4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_LEAVE_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_LEAVE_PROJECT_BASED"));
         $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
         $sheet->getStyle('A4:D4')->applyFromArray(
                 ['borders' => [

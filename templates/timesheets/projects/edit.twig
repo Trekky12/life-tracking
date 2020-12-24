@@ -33,6 +33,13 @@
                         {% endfor %}
                     </select>
                 </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxIsDayBased">
+                            <input name="is_day_based" type="checkbox" value="1" id="checkboxIsDayBased" {% if entry is not null and entry.is_day_based == 1 %}checked{% endif %}>
+                        {{lang["TIMESHEETS_IS_DAY_BASED"]}}
+                    </label>
+                </div>
 
                 <div class="form-group btn">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

@@ -441,10 +441,14 @@ $lang["APPLICATION_PASSWORDS"] = "Anwendungspasswörter";
 $lang["TIMESHEETS"] = "Zeiterfassung";
 $lang["TIMESHEETS_PROJECTS"] = "Zeiterfassungsprojekte";
 $lang["TIMESHEETS_OVERVIEW"] = "Übersicht";
-$lang["TIMESHEETS_FAST"] = "Kommen/Gehen";
-$lang["TIMESHEETS_COME"] = "Kommen";
-$lang["TIMESHEETS_LEAVE"] = "Gehen";
+$lang["TIMESHEETS_FAST_DAY_BASED"] = "Kommen/Gehen";
+$lang["TIMESHEETS_FAST_PROJECT_BASED"] = "Beginn/Ende";
+$lang["TIMESHEETS_COME_DAY_BASED"] = "Kommen";
+$lang["TIMESHEETS_COME_PROJECT_BASED"] = "Beginn";
+$lang["TIMESHEETS_LEAVE_DAY_BASED"] = "Gehen";
+$lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "Ende";
 $lang["TIMESHEETS_EXPORT"] = "Export";
+$lang["TIMESHEETS_IS_DAY_BASED"] = "Tagesbasiert (anstatt Projektbasiert)";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 

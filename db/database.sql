@@ -781,6 +781,7 @@ CREATE TABLE timesheets_projects (
     changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) DEFAULT NULL,
+    is_day_based INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
