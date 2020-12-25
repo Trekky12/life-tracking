@@ -78,7 +78,7 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
 
-        $sql = $this->getTableSQL("SUM(DISTINCT t.diff)");
+        $sql = $this->getTableSQL("SUM(t.diff)");
 
         $stmt = $this->db->prepare($sql);
 

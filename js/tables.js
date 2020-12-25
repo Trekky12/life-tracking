@@ -961,7 +961,7 @@ var workoutSessionsTable = new JSTable("#workouts_sessions_table", {
             }
         },
         {
-            select: [1, 2],
+            select: [1, 2, 3],
             sortable: false,
             searchable: false
         }
