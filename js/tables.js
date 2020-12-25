@@ -840,8 +840,9 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     }
 });
 
-timesheetsSheetsTable.on("fetchData", function (data) {
-    this.table.getFooterRow().setCellContent(3, data.sum);
+timesheetsSheetsTable.on("fetchData", function (data) {    
+    let footer = document.querySelector("#timesheets_sheets_table tfoot tr th:nth-child(4)");
+    footer.innerHTML = data.sum;
 });
 
 var timesheetsProjectCategoriesTable = new JSTable("#project_categories_table", {
