@@ -4,6 +4,9 @@ namespace App\Domain\Finances\Recurring;
 
 use Psr\Log\LoggerInterface;
 use App\Domain\Finances\FinancesEntry;
+use App\Domain\Notifications\NotificationsService;
+use Slim\Routing\RouteParser;
+use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
 class RecurringFinanceEntryCreator {
@@ -11,11 +14,17 @@ class RecurringFinanceEntryCreator {
     private $logger;
     private $mapper;
     private $finances_entry_writer;
+    private $notification_service;
+    private $router;
+    private $translation;
 
-    public function __construct(LoggerInterface $logger, RecurringMapper $mapper, RecurringFinanceEntryWriter $finances_entry_writer) {
+    public function __construct(LoggerInterface $logger, RecurringMapper $mapper, RecurringFinanceEntryWriter $finances_entry_writer, NotificationsService $notification_service, RouteParser $router, Translator $translation) {
         $this->logger = $logger;
         $this->mapper = $mapper;
         $this->finances_entry_writer = $finances_entry_writer;
+        $this->notification_service = $notification_service;
+        $this->router = $router;
+        $this->translation = $translation;
     }
 
     public function update() {
@@ -41,9 +50,16 @@ class RecurringFinanceEntryCreator {
     public function createEntry($id) {
         $mentry = $this->mapper->get($id);
 
-        $entry = $this->createElement($mentry);
+        $entry_id = $this->createElement($mentry);
 
         //$this->mapper->updateLastRun($mentry->id);
+        // Notification
+        $subject = $this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_SUBJECT');
+        $content = sprintf($this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT'), $mentry->description);
+        
+        $entry_path = $this->router->urlFor('finances_edit', array('id' => $entry_id));
+        
+        $this->notification_service->sendNotificationsToUserWithCategory($mentry->user, "NOTIFICATION_CATEGORY_FINANCES_RECURRING", $subject, $content, $entry_path);
 
         return new Payload(Payload::$STATUS_NEW, $mentry);
     }
@@ -61,9 +77,7 @@ class RecurringFinanceEntryCreator {
             'fixed' => 1,
             'paymethod' => $mentry->paymethod
         ]);
-        $this->finances_entry_writer->addFinanceEntry($entry);
-        
-        return $mentry;
+        return $this->finances_entry_writer->addFinanceEntry($entry);
     }
 
 }

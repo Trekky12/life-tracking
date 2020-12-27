@@ -277,6 +277,8 @@ $lang["SETTINGS"] = "Settings";
 $lang["LOGOUT"] = "Logout";
 $lang["NOTIFICATIONS"] = "Notifications";
 $lang["PUSH_NOTIFICATIONS"] = "Push notifications";
+$lang["NOTIFICATION_FINANCES_RECURRING_ADDED_SUBJECT"] = 'new recurring finance entry added';
+$lang["NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT"] = '"%s" was added';
 
 $lang["IP_ADDRESS"] = "IP address";
 $lang["USER_AGENT"] = "User agent";
@@ -319,6 +321,7 @@ $lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifier cannot be empty";
 $lang["IDENTIFIER"] = "Identifier";
 $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "internal notifications";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
+$lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "notify on execution of recurring finance entries";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Headlines";

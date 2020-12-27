@@ -277,6 +277,8 @@ $lang["SETTINGS"] = "Einstellungen";
 $lang["LOGOUT"] = "Abmelden";
 $lang["NOTIFICATIONS"] = "Benachrichtigungen";
 $lang["PUSH_NOTIFICATIONS"] = "Push Benachrichtigungen";
+$lang["NOTIFICATION_FINANCES_RECURRING_ADDED_SUBJECT"] = 'Neuer wiederkehrender Finanzeintrag hinzugefügt';
+$lang["NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT"] = '"%s" wurde hinzugefügt';
 
 $lang["IP_ADDRESS"] = "IP-Adresse";
 $lang["USER_AGENT"] = "User Agent";
@@ -318,6 +320,7 @@ $lang["IDENTIFIER_CANNOT_BE_EMPTY"] = "Identifikator darf nicht leer sein";
 $lang["IDENTIFIER"] = "Identifikator";
 $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "interne Benachrichtigungen";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
+$lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "benachrichtige beim Ausführen von wiederkehrenden Finanzeinträgen";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Überschriften";

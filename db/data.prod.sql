@@ -7,3 +7,4 @@ INSERT INTO finances_categories (id, user, name, is_default) VALUES (1, 1, 'not 
 INSERT INTO finances_paymethods (id, user, name, is_default) VALUES (1, 1, 'default paymethod', 1); 
 
 INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
+INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (2, 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 1);
