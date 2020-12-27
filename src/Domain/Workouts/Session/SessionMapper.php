@@ -12,10 +12,9 @@ class SessionMapper extends \App\Domain\Mapper {
     public function getFromPlan($id, $order = null) {
         $bindings = array("id" => $id);
 
-        $sql = "SELECT DISTINCT s.*, GROUP_CONCAT(se.notice SEPARATOR ', ') as days "
+        $sql = "SELECT DISTINCT s.*, GROUP_CONCAT(CASE WHEN se.type = 'day' THEN se.notice ELSE NULL END SEPARATOR ', ') as days "
                 . " FROM " . $this->getTableName() . " s LEFT JOIN " . $this->getTableName("workouts_sessions_exercises") . " se ON s.id = se.session "
-                . " WHERE (se.type = 'day' OR se.type IS NULL ) "
-                . " AND plan = :id "
+                . " WHERE plan = :id "
                 . " GROUP BY s.id ";
 
         if (!is_null($order)) {

@@ -20,7 +20,7 @@ class PlanRemover extends ObjectActivityRemover {
     }
 
     public function getObjectViewRoute(): string {
-        return 'workouts_plans';
+        return 'workouts';
     }
 
     public function getObjectViewRouteParams($entry): array {

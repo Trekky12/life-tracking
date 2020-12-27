@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Workouts\Session\SessionService;
 use App\Application\Responder\HTMLTemplateResponder;
 
-class SessionListAction {
+class SessionViewAction {
 
     private $responder;
     private $service;
@@ -19,10 +19,10 @@ class SessionListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $hash = $request->getAttribute('plan');
+        $entry_id = $request->getAttribute('id');
         
-        $index = $this->service->index($hash);
-
-        return $this->responder->respond($index->withTemplate('workouts/sessions/index.twig'));
+        $index = $this->service->view($hash, $entry_id);
+        return $this->responder->respond($index->withTemplate('workouts/sessions/view.twig'));
     }
 
 }

@@ -20,6 +20,7 @@ class PlanWriter extends ObjectActivityWriter {
         $entry = $payload->getResult();
 
         $this->setHash($entry);
+        
 
         /**
          * Save exercises
@@ -57,7 +58,7 @@ class PlanWriter extends ObjectActivityWriter {
     }
 
     public function getObjectViewRoute(): string {
-        return 'workouts_plans';
+        return 'workouts';
     }
 
     public function getObjectViewRouteParams($entry): array {

@@ -21,7 +21,7 @@ class PlanSaveAction {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();        
         $entry = $this->service->save($id, $data);
-        return $this->responder->respond($entry->withRouteName('workouts_plans'));
+        return $this->responder->respond($entry->withRouteName('workouts'));
     }
 
 }

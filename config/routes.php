@@ -449,11 +449,13 @@ return function (App $app) {
                 $group_session->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Session\SessionEditAction::class)->setName('workouts_sessions_edit');
                 $group_session->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Session\SessionSaveAction::class)->setName('workouts_sessions_save');
                 $group_session->delete('/delete/{id}', \App\Application\Action\Workouts\Session\SessionDeleteAction::class)->setName('workouts_sessions_delete');
+                
+                $group_session->get('/view/{id:[0-9]+}', \App\Application\Action\Workouts\Session\SessionViewAction::class)->setName('workouts_sessions_view');
             });
         });
 
         $group->group('/plans', function(RouteCollectorProxy $group_plans) {
-            $group_plans->get('/', \App\Application\Action\Workouts\Plan\PlanListAction::class)->setName('workouts_plans');
+            $group_plans->get('/', \App\Application\Action\Workouts\Plan\PlanListAction::class)->setName('workouts');
             $group_plans->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Plan\PlanEditAction::class)->setName('workouts_plans_edit');
             $group_plans->post('/save/[{id:[0-9]+}]', \App\Application\Action\Workouts\Plan\PlanSaveAction::class)->setName('workouts_plans_save');
             $group_plans->delete('/delete/{id}', \App\Application\Action\Workouts\Plan\PlanDeleteAction::class)->setName('workouts_plans_delete');

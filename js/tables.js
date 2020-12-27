@@ -956,8 +956,15 @@ var workoutSessionsTable = new JSTable("#workouts_sessions_table", {
             sortable: true,
             sort: "desc",
             render: function (cell, idx) {
-                let data = cell.innerHTML;
-                return moment(data).format(i18n.dateformatJS.date);
+                if (cell.children.length > 0) {
+                    let link = cell.children[0];
+                    let data = link.innerHTML;
+                    
+                    if(data.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/)){
+                        link.innerHTML = moment(data).format(i18n.dateformatJS.date);
+                    }
+                }
+                return cell.innerHTML;
             }
         },
         {

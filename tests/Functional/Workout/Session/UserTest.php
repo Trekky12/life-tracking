@@ -10,6 +10,7 @@ class UserTest extends BaseTestCase {
     protected $uri_child_edit = "/workouts/HASH/sessions/edit/";
     protected $uri_child_save = "/workouts/HASH/sessions/save/";
     protected $uri_child_delete = "/workouts/HASH/sessions/delete/";
+    protected $uri_child_view = "/workouts/HASH/sessions/view/";
     protected $TEST_PLAN_HASH = "ABCabc123";
 
     protected function setUp(): void {
@@ -215,10 +216,14 @@ class UserTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["date"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildEdit($this->TEST_PLAN_HASH)) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($this->TEST_PLAN_HASH)) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildView($this->TEST_PLAN_HASH)) . '(?<id_view>.*)">' . preg_quote($data["date"]) . '<\/a><\/td>\s*<td>\s*<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildEdit($this->TEST_PLAN_HASH)) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($this->TEST_PLAN_HASH)) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-
+        
         return $matches;
+    }
+    
+    protected function getURIChildView($hash) {
+        return str_replace("HASH", $hash, $this->uri_child_view);
     }
 
 }

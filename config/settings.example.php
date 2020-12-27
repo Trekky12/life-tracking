@@ -156,7 +156,7 @@ return [
             ],
             "workouts" => [
                 "url" => "/workouts/",
-                "rootRoute" => "workouts_plans",
+                "rootRoute" => "workouts",
                 "icon" => "fas fa-dumbbell",
                 "title" => "WORKOUTS"
             ]
