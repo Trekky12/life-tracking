@@ -631,6 +631,7 @@ $lang["WORKOUTS_ADD_DAY"] = "add workout day";
 $lang["WORKOUTS_ADD_SUPERSET"] = "add superset";
 
 $lang["WORKOUTS_SUPERSET"] = "superset";
+$lang["WORKOUTS_DAYS"] = "workout days";
 
 $lang["WORKOUTS_PLAN_CATEGORY_STRENGTH"] = "gain strength";
 $lang["WORKOUTS_PLAN_CATEGORY_MUSCLE"] = "build muscle";

@@ -630,6 +630,7 @@ $lang["WORKOUTS_ADD_DAY"] = "Trainingstag hinzufügen";
 $lang["WORKOUTS_ADD_SUPERSET"] = "Superset hinzufügen";
 
 $lang["WORKOUTS_SUPERSET"] = "Superset";
+$lang["WORKOUTS_DAYS"] = "Trainingstage";
 
 $lang["WORKOUTS_PLAN_CATEGORY_STRENGTH"] = "Stärke gewinnen";
 $lang["WORKOUTS_PLAN_CATEGORY_MUSCLE"] = "Muskelmasse aufbauen";

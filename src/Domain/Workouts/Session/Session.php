@@ -19,6 +19,8 @@ class Session extends \App\Domain\DataObject {
         if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
             $this->date = date('Y-m-d');
         }
+        
+        $this->days = $this->exists('days', $data) ? filter_var($data['days'], FILTER_SANITIZE_STRING) : null;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
@@ -27,6 +29,14 @@ class Session extends \App\Domain\DataObject {
 
     public function getParentID() {
         return $this->plan;
+    }
+    
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+        
+        unset($temp["days"]);
+        
+        return $temp;
     }
 
 }
