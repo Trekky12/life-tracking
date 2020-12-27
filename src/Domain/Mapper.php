@@ -331,7 +331,7 @@ abstract class Mapper {
         if ($limit && !is_null($limit)) {
             $sql .= " LIMIT {$limit}";
         }
-        
+
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -402,10 +402,14 @@ abstract class Mapper {
         }
     }
 
-    public function getMinMaxDate($min = 'date', $max = 'date') {
+    public function getMinMaxDate($min = 'date', $max = 'date', $id = null, $pk = 'id') {
         $sql = "SELECT DATE(MIN($min)) as min, DATE(MAX($max)) as max FROM " . $this->getTableName() . "";
 
         $bindings = [];
+        if (!is_null($id)) {
+            $sql .= " WHERE {$pk} = :id ";
+            $bindings["id"] = $id;
+        }
         $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " LIMIT 1";
@@ -419,8 +423,8 @@ abstract class Mapper {
         }
         return $result;
     }
-    
-    public function getDataObject(){
+
+    public function getDataObject() {
         return $this->dataobject;
     }
 

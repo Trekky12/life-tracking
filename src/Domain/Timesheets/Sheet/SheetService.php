@@ -62,7 +62,7 @@ class SheetService extends Service {
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
-        $range = $this->mapper->getMinMaxDate("start", "end");
+        $range = $this->mapper->getMinMaxDate("start", "end", $project->id, "project");
         $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
         return [
@@ -125,6 +125,7 @@ class SheetService extends Service {
 
         $rendered_data = [];
         foreach ($sheets as $sheet) {
+
             list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
             $row = [];
@@ -164,7 +165,7 @@ class SheetService extends Service {
 
         $users = $this->user_service->getAll();
         $project_users = $this->project_service->getUsers($project->id);
-        
+
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
         $sheet_categories = $this->mapper->getCategoriesFromSheet($entry->id);
 
