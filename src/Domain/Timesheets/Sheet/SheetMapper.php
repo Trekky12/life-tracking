@@ -43,7 +43,7 @@ class SheetMapper extends \App\Domain\Mapper {
      * Table
      */
     private function getTableSQL($select) {
-        $sql = "SELECT DISTINCT {$select} FROM " . $this->getTableName() . " t"
+        $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
                 . " LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " tcs ON t.id = tcs.sheet"
                 . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
                 . " WHERE t.project = :project "
@@ -55,7 +55,8 @@ class SheetMapper extends \App\Domain\Mapper {
                 . "     t.start LIKE :searchQuery OR "
                 . "     t.end LIKE :searchQuery OR "
                 . "     tc.name LIKE :searchQuery "
-                . ") ";
+                . ") "
+                . " GROUP BY t.id";
         return $sql;
     }
 
@@ -63,10 +64,11 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
 
-        $sql = $this->getTableSQL("COUNT(DISTINCT t.id)");
-
-        $stmt = $this->db->prepare($sql);
+        $sql = "SELECT COUNT(t.id) FROM ";
+        $sql .= "(". $this->getTableSQL("DISTINCT t.id").") as t";
         
+        $stmt = $this->db->prepare($sql);
+
         $stmt->execute($bindings);
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
@@ -78,7 +80,8 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
 
-        $sql = $this->getTableSQL("SUM(t.diff)");
+        $sql = "SELECT SUM(t.diff) FROM ";
+        $sql .= "(". $this->getTableSQL("t.diff").") as t";
 
         $stmt = $this->db->prepare($sql);
 
@@ -109,13 +112,11 @@ class SheetMapper extends \App\Domain\Mapper {
                 break;
         }
 
-        $select = "t.*, GROUP_CONCAT(tc.name SEPARATOR ', ') as categories";
+        $select = "DISTINCT t.*, GROUP_CONCAT(tc.name SEPARATOR ', ') as categories";
         $sql = $this->getTableSQL($select);
-        
-        $sql .= " GROUP BY t.id";
 
         $sql .= " ORDER BY {$sort} {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
-        
+
         if (!is_null($limit)) {
             $sql .= " LIMIT {$start}, {$limit}";
         }
