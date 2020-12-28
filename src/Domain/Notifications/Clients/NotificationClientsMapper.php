@@ -102,4 +102,18 @@ class NotificationClientsMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function getClientByUserAndType($user, $type) {
+        $sql = "SELECT * FROM " . $this->getTableName() . " c WHERE c.user = :user and type = :type LIMIT 1";
+
+        $bindings = array("user" => $user, "type" => $type);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return new $this->dataobject($stmt->fetch());
+        }
+        return null;
+    }
+
 }

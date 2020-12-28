@@ -15,6 +15,7 @@ class NotificationClient extends \App\Domain\DataObject {
         $this->contentEncoding = $this->exists('contentEncoding', $data) ? filter_var($data['contentEncoding'], FILTER_SANITIZE_STRING) : null;
         $this->ip = $this->exists('ip', $data) ? filter_var($data['ip'], FILTER_SANITIZE_STRING) : null;
         $this->agent = $this->exists('agent', $data) ? filter_var($data['agent'], FILTER_SANITIZE_STRING) : null;
+        $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : null;
 
         if ($this->exists('createdOn', $data)) {
             $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);

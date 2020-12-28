@@ -128,13 +128,22 @@ class NotificationsService extends Service {
             if (in_array($category->id, $user_categories)) {
                 $notification = new Notification(["title" => $title, "message" => $message, "user" => $user_id, "category" => $category->id, "link" => $path]);
                 $id = $this->mapper->insert($notification);
-            }
+            }            
         } catch (\Exception $e) {
             $this->logger->error("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
         }
     }
 
     private function sendNotification(\App\Domain\Notifications\Clients\NotificationClient $entry, $title, $content, $path = null, $id = null) {
+
+        if ($entry->type == "ifttt") {
+            $ifttt_data = json_encode(["value1" => $title, "value2" => $content]);
+            list($status, $result) = $this->helper->request($entry->endpoint, 'POST', $ifttt_data, array('Content-Type: application/json'));
+
+            $this->logger->info('PUSH IFTTT', array("data" => $ifttt_data, "status" => $status, "result" => $result));
+            
+            return $status == 200;
+        }
 
         $settings = $this->settings->getAppSettings()['push'];
 
@@ -216,7 +225,9 @@ class NotificationsService extends Service {
         $categories = $this->cat_service->getAllCategories();
         $user_categories = $this->getCategoriesOfCurrentUser();
 
-        return new Payload(Payload::$RESULT_HTML, ["categories" => $categories, "user_categories" => $user_categories]);
+        $user_client = $this->client_service->getClientByUserAndType("ifttt");
+
+        return new Payload(Payload::$RESULT_HTML, ["categories" => $categories, "user_categories" => $user_categories, "user_client" => $user_client]);
     }
 
     public function sendTestNotification($entry_id, $data) {

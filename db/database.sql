@@ -409,6 +409,7 @@ CREATE TABLE notifications_clients (
     contentEncoding VARCHAR(255) NULL,
     ip VARCHAR(255) NULL,
     agent VARCHAR(255) NULL,
+    type VARCHAR(255) NULL DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(endpoint),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE

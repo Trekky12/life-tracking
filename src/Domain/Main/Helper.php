@@ -20,7 +20,7 @@ class Helper {
         $this->settings = $settings;
     }
 
-    public function request($URL, $method = 'GET', $data = array(), $secure = true) {
+    public function request($URL, $method = 'GET', $data = array(), $headers = null) {
 
         if ($method != 'POST' && $method != 'PUT' && !empty($data)) {
 
@@ -42,19 +42,18 @@ class Helper {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 Life-Tracking');
 
-            //  Need to comment in for local development
-            if (!$secure) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            }
 
             if ($method == 'POST' || $method == 'PUT') {
                 curl_setopt($ch, CURLOPT_POST, count($data));
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($data) ? http_build_query($data) : $data);
             }
 
             if ($method != 'GET' && $method != 'POST') {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+            }
+
+            if (!is_null($headers) && is_array($headers)) {
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             }
 
             $result = curl_exec($ch);

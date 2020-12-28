@@ -8,6 +8,7 @@ const pushButton = document.querySelector('#enable_notifications');
 const categoriesList = document.querySelector('#notifications_categories_list');
 const categoriesElements = document.querySelectorAll('#notifications_categories_list input.set_notifications_category');
 const loadingIconManage = document.querySelector('#loadingIconManageNotifications');
+const iftttUrlWrapper = document.querySelector('#ifttt_url_wrapper');
 
 const badges = document.querySelectorAll('.header-inner .badge');
 //const bell = document.querySelector('#iconBell');
@@ -167,37 +168,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 request.result.forEach(function (form, idx) {
                     //@see https://stackoverflow.com/a/38362312
                     promises.push(
-                        getCSRFToken().then(function (token) {
-                            let data = new URLSearchParams(form.data);
-                            data.set("csrf_name", token.csrf_name);
-                            data.set("csrf_value", token.csrf_value);
+                            getCSRFToken().then(function (token) {
+                        let data = new URLSearchParams(form.data);
+                        data.set("csrf_name", token.csrf_name);
+                        data.set("csrf_value", token.csrf_value);
 
-                            return fetch(form.action, {
-                                method: 'POST',
-                                credentials: "same-origin",
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                },
-                                body: data
-                            });
-                        }).then(function (response) {
-                            return new Promise(function (resolve, reject) {
-                                if (!response.ok) {
-                                    reject("error, wrong response");
-                                } else {
-                                    let deleteRequest = db.transaction('forms', 'readwrite').objectStore('forms').delete(form.id);
-                                    deleteRequest.onsuccess = function (event) {
-                                        success++;
-                                        resolve();
-                                    };
-                                    deleteRequest.onerror = function (err) {
-                                        failed++;
-                                        reject(err);
-                                    };
-                                }
-                            });
-                        })
-                    );
+                        return fetch(form.action, {
+                            method: 'POST',
+                            credentials: "same-origin",
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: data
+                        });
+                    }).then(function (response) {
+                        return new Promise(function (resolve, reject) {
+                            if (!response.ok) {
+                                reject("error, wrong response");
+                            } else {
+                                let deleteRequest = db.transaction('forms', 'readwrite').objectStore('forms').delete(form.id);
+                                deleteRequest.onsuccess = function (event) {
+                                    success++;
+                                    resolve();
+                                };
+                                deleteRequest.onerror = function (err) {
+                                    failed++;
+                                    reject(err);
+                                };
+                            }
+                        });
+                    })
+                            );
                 });
 
                 Promise.all(promises).then(function (response) {
@@ -209,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (success <= 0 && failed > 0) {
                         color = "red";
                     }
-                    showToast(lang.locally_saved_entries_submitted + " " + lang.locally_saved_entries_submitted_success+": " + success + ", "+ lang.locally_saved_entries_submitted_error + ": " + failed, color);
+                    showToast(lang.locally_saved_entries_submitted + " " + lang.locally_saved_entries_submitted_success + ": " + success + ", " + lang.locally_saved_entries_submitted_error + ": " + failed, color);
                 });
             }
         };
@@ -296,6 +297,29 @@ function initServiceWorker() {
         notificationsDisabled('incompatible');
     }
 
+    // Load Entries of Client
+    if (iftttUrlWrapper !== null) {
+        let iftttUrl = iftttUrlWrapper.querySelector('input[name="ifttt_url"]');
+        if (iftttUrl.value !== '') {
+            getCategorySubscriptions(iftttUrl.value)
+        }
+
+        let removeBtn = iftttUrlWrapper.querySelector('button#ifttt_url_remove');
+        removeBtn.addEventListener('click', function (event) {
+            let ifttt_url = iftttUrlWrapper.querySelector('input[name="ifttt_url"]').value;
+
+            let data = {
+                endpoint: ifttt_url,
+                type: "ifttt"
+            };
+            return _sendSubscriptionRequest(data, 'DELETE').then(function (result) {
+                console.log(result);
+            }).then(function (subscription) {
+                window.location.reload();
+            });
+        });
+    }
+
 }
 
 function syncSubscription() {
@@ -330,7 +354,7 @@ function syncSubscription() {
         //bell.classList.remove('disabled');
         return subscription;
     }).then(function (subscription) {
-        return getCategorySubscriptions(subscription).then(function () {
+        return getCategorySubscriptions(subscription.endpoint).then(function () {
             return subscription;
         });
     }).catch(function (e) {
@@ -355,7 +379,7 @@ function subscribeUser() {
             return subscription;
         });
     }).then(function (subscription) {
-        return getCategorySubscriptions(subscription);
+        return getCategorySubscriptions(subscription.endpoint);
     }).then(function () {
         updateButton('enabled');
     }).catch(function (e) {
@@ -405,6 +429,10 @@ function updateSubscriptionOnServer(subscription, method = 'POST') {
         authToken: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null,
         contentEncoding: contentEncoding
     };
+    return _sendSubscriptionRequest(data, method);
+}
+
+function _sendSubscriptionRequest(data, method) {
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
@@ -466,6 +494,30 @@ function updateButton(state) {
             pushButton.disabled = true;
             pushButton.textContent = lang.no_push_notifications_possible;
             //bell.classList.add('disabled');
+
+            iftttUrlWrapper.classList.remove("hidden");
+
+            let saveBtn = iftttUrlWrapper.querySelector('button#ifttt_url_save');
+            saveBtn.addEventListener('click', function (event) {
+                let ifttt_input = iftttUrlWrapper.querySelector('input[name="ifttt_url"]');
+                let ifttt_url = ifttt_input.value;
+
+                let data = {
+                    endpoint: ifttt_url,
+                    type: "ifttt"
+                };
+                return _sendSubscriptionRequest(data, 'POST').then(function (result) {
+                    pushButton.classList.add("hidden");
+                    ifttt_input.type = "hidden";
+                    saveBtn.classList.add("hidden");
+                    iftttUrlWrapper.querySelector('button#ifttt_url_remove').classList.remove("hidden");
+                    iftttUrlWrapper.querySelector('p#ifttt_enable').classList.add("hidden");
+                    iftttUrlWrapper.querySelector('p#ifttt_enabled').classList.remove("hidden");
+                }).then(function () {
+                    return getCategorySubscriptions(ifttt_url);
+                });
+            });
+
             break;
         default:
             console.error('Unhandled push button state', state);
@@ -474,9 +526,8 @@ function updateButton(state) {
 }
 
 
-function getCategorySubscriptions(subscription) {
+function getCategorySubscriptions(endpoint) {
     if (categoriesList !== null) {
-        let endpoint = subscription.endpoint;
         let data = {"endpoint": endpoint};
         loadingIconManage.classList.remove("hidden");
         return getCSRFToken().then(function (token) {

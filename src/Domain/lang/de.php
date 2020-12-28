@@ -641,5 +641,10 @@ $lang["WORKOUTS_PLAN_CATEGORY_FAT"] = "Fett abbauen";
 $lang["WORKOUTS_LEVEL_BEGINNER"] = "Anfänger";
 $lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "Fortgeschrittene";
 $lang["WORKOUTS_LEVEL_ADVANCED"] = "Profis";
+
+$lang["SAVE_IFTTT_URL"] = "IFTTT-URL speichern";
+$lang["DELETE_IFTTT_URL"] = "IFTTT-URL löschen";
+$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] = "Web Push Nachrichten sind nicht verfügbar. Alternativ kann der IFTTT-Maker Channel verwendet werden. Hierzu die URL nachfolgend eintragen:";
+$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "Web Push Nachrichten sind nicht verfügbar. Es wurde eine IFTTT-URL hinterlegt.";
         
 return $lang;

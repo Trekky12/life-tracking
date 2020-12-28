@@ -643,4 +643,9 @@ $lang["WORKOUTS_LEVEL_BEGINNER"] = "beginner";
 $lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "intermediate";
 $lang["WORKOUTS_LEVEL_ADVANCED"] = "advanced";
 
+$lang["SAVE_IFTTT_URL"] = "Save IFTTT-URL";
+$lang["DELETE_IFTTT_URL"] = "Delete IFTTT-URL";
+$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] = "Web Push Notifications are not available. Alternativly the IFTTT-Maker Channel could be used. Therefore insert the URL:";
+$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "Web Push Nachrichten are not available. A IFTTT-URL has been saved.";
+
 return $lang;
