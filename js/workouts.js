@@ -97,6 +97,7 @@ document.addEventListener('click', function (event) {
     }
 
     if (remove_set) {
+        console.log("remove set");
         let sets = exercise.querySelectorAll('.sets .set:not(.set-dummy)');
         if (sets.length > 0) {
             let last_set = sets[sets.length - 1];

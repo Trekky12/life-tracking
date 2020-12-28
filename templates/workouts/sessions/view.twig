@@ -15,7 +15,7 @@
         <div class="page-header"><h2>{{plan.name|raw}} | {{ session.date|date(i18n.dateformatTwig.date) }}</h2>
         </div>
 
-        <div class="page-content">
+        <div class="page-content workouts-session-view">
             {% if not session.notice is null %}
                 <h4>{{ lang["NOTICE"] }}</h4>
                 <p>{{ session.notice|raw }}</p>

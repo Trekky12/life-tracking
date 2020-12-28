@@ -104,9 +104,6 @@
                 }
             }
 
-            .sets, .notices{
-                display:none;
-            }
 
             .set{
                 margin-bottom: 0.2rem;
@@ -188,6 +185,12 @@
             }
         }
 
+
+        &.choose{
+            .sets, .notices{
+                display:none;
+            }
+        }
         h4{
             font-weight: bold;
         }
@@ -314,5 +317,15 @@
     }
     #filterSearchExercises{
         padding: 2px;
+    }
+}
+
+
+.workouts-session-view{
+    .instructions{
+        display:none;
+    }
+    .workout_superset .exercises{
+        width: 100%;
     }
 }
