@@ -38,6 +38,8 @@ class NotificationsService extends Service {
         $this->cat_service = $cat_service;
         $this->client_service = $client_service;
         $this->helper = $helper;
+        
+        //var_dump(\Minishlink\WebPush\VAPID::createVapidKeys());
     }
 
     public function getCategoriesOfCurrentUser() {
@@ -180,24 +182,22 @@ class NotificationsService extends Service {
             "TTL" => $settings["TTL"],
             "urgency" => $settings["urgency"]
         ];
-        $res = $webPush->sendNotification($subscription, json_encode($notification), true, $options);
+        $report = $webPush->sendOneNotification($subscription, json_encode($notification), $options);
 
-        foreach ($res as $report) {
-            if ($report->isSuccess()) {
-                $this->logger->info('[PUSH] Message sent successfully', array("endpoint" => $report->getEndpoint()));
-            } else {
-                $data = [
-                    "reason" => $report->getReason(),
-                    "request" => $report->getRequest(),
-                    "response" => $report->getResponse(),
-                    "expired" => $report->isSubscriptionExpired()
-                ];
-                $this->logger->error('[PUSH] Message failed to sent', $data);
+        if ($report->isSuccess()) {
+            $this->logger->info('[PUSH] Message sent successfully', array("endpoint" => $report->getEndpoint()));
+        } else {
+            $data = [
+                "reason" => $report->getReason(),
+                "request" => $report->getRequest(),
+                "response" => $report->getResponse(),
+                "expired" => $report->isSubscriptionExpired()
+            ];
+            $this->logger->error('[PUSH] Message failed to sent', $data);
 
-                if ($report->isSubscriptionExpired()) {
-                    $this->client_service->deleteClient($entry->id);
-                    $this->logger->error('[PUSH] Remove expired endpoint', array("id" => $entry->id, "endpoint" => $report->getEndpoint()));
-                }
+            if ($report->isSubscriptionExpired()) {
+                $this->client_service->deleteClient($entry->id);
+                $this->logger->error('[PUSH] Remove expired endpoint', array("id" => $entry->id, "endpoint" => $report->getEndpoint()));
             }
         }
         //$this->logger->error('[PUSH] Result', ["data" => $report]);
