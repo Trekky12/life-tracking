@@ -129,7 +129,7 @@ class SheetExportService extends SheetService {
             }
 
             if (!is_null($timesheet->notice)) {
-                $sheet->setCellValue('E' . $row, $timesheet->notice);
+                $sheet->setCellValue('E' . $row, htmlspecialchars_decode($timesheet->notice));
                 $sheet->getStyle('E' . $row)->getAlignment()->setWrapText(true);
             }
 
