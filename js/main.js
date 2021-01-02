@@ -427,21 +427,6 @@ flatpickr('#dateSelectEnd', {
 });
 
 
-let dateTimePickers = document.querySelectorAll('input.datetimePicker');
-dateTimePickers.forEach(function (item, idx) {
-    flatpickr(item, {
-        "altInput": true,
-        "altFormat": i18n.dateformatTwig.datetimeShort,
-        "dateFormat": "Y-m-d H:i",
-        "locale": i18n.template,
-        "enableTime": true,
-        "time_24hr": true,
-        //"enableSeconds": true,
-        "minuteIncrement": 1
-    });
-});
-
-
 /**
  * Get Adress of marker
  */

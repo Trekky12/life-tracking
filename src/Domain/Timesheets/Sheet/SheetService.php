@@ -167,7 +167,7 @@ class SheetService extends Service {
         $project_users = $this->project_service->getUsers($project->id);
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
-        $sheet_categories = $this->mapper->getCategoriesFromSheet($entry->id);
+        $sheet_categories = !is_null($entry) ? $this->mapper->getCategoriesFromSheet($entry->id): [];
 
         $response_data = [
             'entry' => $entry,

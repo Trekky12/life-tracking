@@ -83,3 +83,33 @@ projectCategorySelects.forEach(function (item, idx) {
         placeholder: lang.categories
     });
 });
+
+
+const dateTimePickerStart = document.querySelector('#datetimePickerStart');
+const dateTimePickerEnd = document.querySelector('#datetimePickerEnd');
+
+if (dateTimePickerStart && dateTimePickerEnd) {
+
+    flatpickr(dateTimePickerStart, {
+        "altInput": true,
+        "altFormat": i18n.dateformatTwig.datetimeShort,
+        "dateFormat": "Y-m-d H:i",
+        "locale": i18n.template,
+        "enableTime": true,
+        "time_24hr": true,
+        "minuteIncrement": 1,
+        "onValueUpdate": function (selectedDates) {
+            dateTimePickerEnd._flatpickr.setDate(selectedDates[0]);
+        }
+    });
+
+    flatpickr(dateTimePickerEnd, {
+        "altInput": true,
+        "altFormat": i18n.dateformatTwig.datetimeShort,
+        "dateFormat": "Y-m-d H:i",
+        "locale": i18n.template,
+        "enableTime": true,
+        "time_24hr": true,
+        "minuteIncrement": 1
+    });
+}

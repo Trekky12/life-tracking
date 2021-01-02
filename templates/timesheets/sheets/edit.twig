@@ -33,7 +33,7 @@
 
                 <div class="form-group">
                     <label for="datetimePickerStart">{% if entry.is_day_based == 1 %}{{lang["TIMESHEETS_COME_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}{% endif %}</label>
-                    <input type="text" class="form-control datetimePicker" id="datetimePickerStart" placeholder="" name="start" value="{% if not entry is null %}{{entry.start}}{% endif %}">
+                    <input type="text" class="form-control" id="datetimePickerStart" placeholder="" name="start" value="{% if not entry is null %}{{entry.start}}{% else %}{{ "now"|date("Y-m-d H:i") }}{% endif %}">
                 </div>
 
                 <div class="mapWrapper">
@@ -51,7 +51,7 @@
 
                 <div class="form-group">
                     <label for="datetimePickerEnd">{% if entry.is_day_based == 1 %}{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}{% endif %}</label>
-                    <input type="text" class="form-control datetimePicker" id="datetimePickerEnd" placeholder="" name="end" value="{% if not entry is null %}{{entry.end}}{% endif %}">
+                    <input type="text" class="form-control" id="datetimePickerEnd" placeholder="" name="end" value="{% if not entry is null %}{{entry.end}}{% else %}{{ "now"|date("Y-m-d H:i") }}{% endif %}">
                 </div>
 
                 <div class="mapWrapper">
