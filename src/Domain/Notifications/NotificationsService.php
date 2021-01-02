@@ -38,7 +38,7 @@ class NotificationsService extends Service {
         $this->cat_service = $cat_service;
         $this->client_service = $client_service;
         $this->helper = $helper;
-        
+
         //var_dump(\Minishlink\WebPush\VAPID::createVapidKeys());
     }
 
@@ -130,7 +130,7 @@ class NotificationsService extends Service {
             if (in_array($category->id, $user_categories)) {
                 $notification = new Notification(["title" => $title, "message" => $message, "user" => $user_id, "category" => $category->id, "link" => $path]);
                 $id = $this->mapper->insert($notification);
-            }            
+            }
         } catch (\Exception $e) {
             $this->logger->error("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
         }
@@ -138,12 +138,18 @@ class NotificationsService extends Service {
 
     private function sendNotification(\App\Domain\Notifications\Clients\NotificationClient $entry, $title, $content, $path = null, $id = null) {
 
+        $data = [
+            "url" => $this->helper->getBaseURL(),
+            "path" => !is_null($path) ? $path : "/notifications/",
+            "id" => !is_null($id) ? $id : -1
+        ];
+
         if ($entry->type == "ifttt") {
-            $ifttt_data = json_encode(["value1" => $title, "value2" => $content]);
+            $ifttt_data = json_encode(["value1" => $title, "value2" => $content, "value3" => sprintf("%s%s", $data["url"], $data["path"]) ]);
             list($status, $result) = $this->helper->request($entry->endpoint, 'POST', $ifttt_data, array('Content-Type: application/json'));
 
             $this->logger->info('PUSH IFTTT', array("data" => $ifttt_data, "status" => $status, "result" => $result));
-            
+
             return $status == 200;
         }
 
@@ -161,12 +167,6 @@ class NotificationsService extends Service {
                 'publicKey' => $settings["publicKey"],
                 'privateKey' => $settings["privateKey"]
             ]
-        ];
-
-        $data = [
-            "url" => $this->helper->getBaseURL(),
-            "path" => !is_null($path) ? $path : "/notifications/",
-            "id" => !is_null($id) ? $id : -1
         ];
 
         $notification = [
