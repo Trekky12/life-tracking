@@ -72,6 +72,24 @@ class SplitbillBillService extends Service {
 
         $paymethods = $this->paymethod_service->getAllfromUsers($group_users);
 
+        list($totalBalance, $myTotalBalance) = $this->calculateBalance($group->id);
+
+        // Prefill on new settle up
+        if ($type == 'settleup' && is_null($entry) && $myTotalBalance["balance"] < 0) {
+
+            $totalValue = -1 * $myTotalBalance["balance"];
+
+            $me = $this->current_user->getUser()->id;
+
+            $balance = [];
+            $balance[$me]["paid"] = $totalValue;
+            $balance[$me]["spend"] = 0;
+            foreach ($totalBalance as $user => $tBalance) {
+                $balance[$user]["paid"] = 0;
+                $balance[$user]["spend"] = $tBalance["owe"];
+            }
+        }
+
         $response_data = [
             'entry' => $entry,
             'group' => $group,
