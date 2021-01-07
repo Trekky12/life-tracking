@@ -10,7 +10,7 @@ use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
 class TripService extends Service {
-    
+
     private $event_mapper;
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, TripMapper $mapper, EventMapper $event_mapper, UserService $user_service) {
@@ -20,11 +20,10 @@ class TripService extends Service {
         $this->user_service = $user_service;
     }
 
-    public function index() {
-        $trips = $this->mapper->getUserItems('t.createdOn DESC, name');
-        $dates = $this->event_mapper->getMinMaxEventsDates();
+    public function index($filter = null) {
+        $trips = $this->mapper->getTripsOfUser($filter);
 
-        return new Payload(Payload::$RESULT_HTML, ['trips' => $trips, 'dates' => $dates]);
+        return new Payload(Payload::$RESULT_HTML, ['trips' => $trips, "filter" => $filter]);
     }
 
     public function edit($entry_id) {

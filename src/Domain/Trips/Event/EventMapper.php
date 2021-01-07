@@ -69,8 +69,6 @@ class EventMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $min = null;
-            $max = null;
             $min = !is_null($row["start_min"]) ? $row["start_min"] : $row["end_min"];
             $max = !is_null($row["end_max"]) ? $row["end_max"] : $row["start_max"];
             $results[$row["trip"]] = ["min" => $min, "max" => $max];

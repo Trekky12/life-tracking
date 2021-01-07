@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TRIPS"]}}</h2> <a href="{{  url_for('trips_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{%if filter == "past" %}{{lang["TRIPS_PAST"]}}{% elseif  filter == "plan" %}{{lang["TRIPS_PLANNED"]}}{% else %}{{lang["TRIPS"]}}{% endif %}</h2> <a href="{{  url_for('trips_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
         <div class="page-content">
             <table id="trips_table" class="table table-hover small">
                 <thead>
@@ -21,8 +21,8 @@
                     {% for trip in trips %}
                         <tr>
                             <td><a href="{{  url_for('trips_view', {'trip' : trip.hash}) }}">{{trip.name|raw}}</a></td> 
-                            <td>{{dates[trip.id].min}}</td>
-                            <td>{{dates[trip.id].max}}</td>
+                            <td>{{trip.min_date}}</td>
+                            <td>{{trip.max_date}}</td>
                             <td>
                                 {% if trip.user == user.id %}
                                     <a href="{{  url_for('trips_edit', {'id' : trip.id}) }}"><span class="fas fa-edit fa-lg"></span></a>

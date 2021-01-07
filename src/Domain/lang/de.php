@@ -414,6 +414,8 @@ $lang["END_DATE"] = "Datum Ende";
 $lang["SEARCH_ADDRESS"] = "Suche Adresse";
 
 $lang["TRIPS_OVERVIEW"] = "Übersicht";
+$lang["TRIPS_PLANNED"] = "geplante Reisen";
+$lang["TRIPS_PAST"] = "vergangene Reisen";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "Schulden begleichen";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "Bezahler";

@@ -367,7 +367,7 @@ return function (App $app) {
             $group_trip->get('/view/', \App\Application\Action\Trips\Event\EventViewAction::class)->setName('trips_view');
             $group_trip->get('/markers/', \App\Application\Action\Trips\Event\EventMarkersAction::class)->setName('trips_markers');
 
-            $group_trip->group('/event', function(RouteCollectorProxy $group_event) {
+            $group_trip->group('/tripevent', function(RouteCollectorProxy $group_event) {
                 $group_event->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Trips\Event\EventEditAction::class)->setName('trips_event_edit');
                 $group_event->post('/save/[{id:[0-9]+}]', \App\Application\Action\Trips\Event\EventSaveAction::class)->setName('trips_event_save');
                 $group_event->delete('/delete/{id}', \App\Application\Action\Trips\Event\EventDeleteAction::class)->setName('trips_event_delete');

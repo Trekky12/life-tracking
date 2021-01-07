@@ -415,6 +415,8 @@ $lang["END_DATE"] = "end date";
 $lang["SEARCH_ADDRESS"] = "search address";
 
 $lang["TRIPS_OVERVIEW"] = "Overview";
+$lang["TRIPS_PLANNED"] = "planned trips";
+$lang["TRIPS_PAST"] = "past trips";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "settle up";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "sender";

@@ -308,7 +308,7 @@ abstract class Mapper {
         return $results;
     }
 
-    private function getUserItemsSQL($select = "DISTINCT t.*") {
+    protected function getUserItemsSQL($select = "DISTINCT t.*") {
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t LEFT JOIN " . $this->getTableName($this->user_table) . " tu ";
         $sql .= " ON t.id = tu.{$this->element_name} ";
         $sql .= " WHERE tu.user = :user OR t.user = :user";

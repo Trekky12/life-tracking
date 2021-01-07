@@ -90,6 +90,10 @@
         {% if user.hasModule("trips") %}
             <li {% if active == modules['trips']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ url_for(modules['trips']['rootRoute']) }}">{{lang[modules['trips']['title']]}}</a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ url_for(modules['trips']['rootRoute']) }}?filter=plan">{{ lang["TRIPS_PLANNED"] }}</a></li>
+                    <li><a href="{{ url_for(modules['trips']['rootRoute']) }}?filter=past">{{ lang["TRIPS_PAST"] }}</a></li>
+                </ul>
             </li> 
         {% endif %}
         {% if user.hasModule("timesheets") %}
