@@ -111,7 +111,7 @@ class BillNotificationService {
                 }
 
                 // Notification
-                $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path);
+                $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path, $sbgroup->id);
             }
         }
     }

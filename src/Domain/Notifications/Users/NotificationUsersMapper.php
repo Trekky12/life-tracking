@@ -6,10 +6,10 @@ class NotificationUsersMapper extends \App\Domain\Mapper {
 
     protected $table = "notifications_categories_users";
 
-    public function addCategory($user, $category) {
-        $bindings = array("category" => $category, "user" => $user);
+    public function addCategory($user, $category, $object_id = null) {
+        $bindings = array("category" => $category, "user" => $user, "object_id" => $object_id);
 
-        $sql = "INSERT INTO " . $this->getTableName($this->table) . " (category, user) VALUES (:category, :user)";
+        $sql = "INSERT INTO " . $this->getTableName($this->table) . " (category, user, object_id) VALUES (:category, :user, :object_id)";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
@@ -21,13 +21,20 @@ class NotificationUsersMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function deleteCategory($user, $category) {
+    public function deleteCategory($user, $category, $object_id = null) {
         $sql = "DELETE FROM " . $this->getTableName($this->table) . "  WHERE user = :user AND category = :category";
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
+
+        $bindings = [
             "category" => $category,
             "user" => $user
-        ]);
+        ];
+
+        if (!is_null($object_id)) {
+            $sql .= " AND object_id = :object_id";
+            $bindings["object_id"] = $object_id;
+        }
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
         if (!$result) {
             throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
@@ -35,7 +42,7 @@ class NotificationUsersMapper extends \App\Domain\Mapper {
     }
 
     public function getCategoriesByUser($user) {
-        $sql = "SELECT category FROM " . $this->getTableName($this->table) . " WHERE user = :user";
+        $sql = "SELECT category, object_id FROM " . $this->getTableName($this->table) . " WHERE user = :user";
 
         $bindings = array("user" => $user);
 
@@ -43,8 +50,14 @@ class NotificationUsersMapper extends \App\Domain\Mapper {
         $stmt->execute($bindings);
 
         $results = [];
-        while ($el = $stmt->fetchColumn()) {
-            $results[] = intval($el);
+        while ($row = $stmt->fetch()) {
+            $category = $row["category"];
+
+            $val = $category;
+            if (!is_null($row["object_id"])) {
+                $val = sprintf("%s_%s", $category, $row["object_id"]);
+            }
+            $results[] = $val;
         }
         return $results;
     }
@@ -62,6 +75,28 @@ class NotificationUsersMapper extends \App\Domain\Mapper {
             $results[] = intval($el);
         }
         return $results;
+    }
+
+    public function doesUserHaveCategory($category, $user, $object_id = null) {
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE category = :category AND user = :user";
+
+        $bindings = [
+            "category" => $category,
+            "user" => $user
+        ];
+
+        if (!is_null($object_id)) {
+            $sql .= " AND object_id = :object_id";
+            $bindings["object_id"] = $object_id;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
     }
 
 }

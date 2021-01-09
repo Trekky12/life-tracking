@@ -548,7 +548,7 @@ function getCategorySubscriptions(endpoint) {
 
                 loadingIconManage.classList.add("hidden");
                 categoriesElements.forEach(function (item, idx) {
-                    let val = parseInt(item.value);
+                    let val = item.value;
                     if (data.data.indexOf(val) !== -1) {
                         item.setAttribute("checked", true);
                     } else {

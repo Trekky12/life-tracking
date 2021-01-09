@@ -420,7 +420,8 @@ CREATE TABLE notifications_categories_clients (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     client INTEGER unsigned DEFAULT NULL,
-    UNIQUE(category, client),
+    object_id int(11) unsigned NOT NULL,
+    UNIQUE(category, client, object_id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -430,7 +431,8 @@ CREATE TABLE notifications_categories_users (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
-    UNIQUE(category, user),
+    object_id int(11) unsigned NOT NULL,
+    UNIQUE(category, user, object_id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

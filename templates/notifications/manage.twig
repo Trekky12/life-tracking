@@ -17,12 +17,29 @@
                     <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
                     {% for cat in categories %}
                         {% if cat.isInternal() %}
-                            <div class="form-group">
-                                <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                                    {{lang[cat.name]}}
-                                </label>
-                            </div>
+
+                            {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
+                                <div class="form-group">
+                                    {{ lang[cat.name] }}
+                                    {% for group in splitbill_user_groups  %}
+                                        <div>
+                                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ group }}">
+                                                <input name="user_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ group }}" class="set_notifications_category_user" {% if "%s_%s"|format(cat.id, group) in user_categories %}checked{% endif %}>
+                                                {{splitbill_all_groups[group].name}}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-group">
+                                    <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
+                                        <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                                        {{lang[cat.name]}}
+                                    </label>
+                                </div>
+                            {% endif %}
+
+
                         {% endif %}
                     {% endfor %}
                     <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
@@ -30,7 +47,7 @@
                         {% if not cat.isInternal() %}
                             <div class="form-group">
                                 <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories|keys %}checked{% endif %}>
                                     {{cat.name}}
                                 </label>
                             </div>
@@ -45,18 +62,18 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["PUSH_NOTIFICATIONS"]}}</h2></div>
         <div class="page-content">
-            
+
             {% if user_client is null %}
-            <button id="enable_notifications" class="hidden">
-                {{lang["ENABLE_NOTIFICATIONS"]}}
-            </button>
+                <button id="enable_notifications" class="hidden">
+                    {{lang["ENABLE_NOTIFICATIONS"]}}
+                </button>
             {% endif %}
 
 
             <div id="ifttt_url_wrapper" class="{% if user_client is null %}hidden{% endif %}">
                 <p class="{% if not user_client is null %}hidden{% endif %}" id="ifttt_enable">{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] }}</p>
                 <p class="{% if user_client is null %}hidden{% endif %}" id="ifttt_enabled">{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] }}</p>
-                
+
                 <label for="ifttt_url" class="{% if user_client is null %}text{% else %}hidden{% endif %}">IFTTT-URL</label>
                 <input type="{% if user_client is null %}text{% else %}hidden{% endif %}" name="ifttt_url" id="ifttt_url" value="{% if user_client is not null and user_client.type == "ifttt" %}{{ user_client.endpoint }}{% endif %}"/>
                 <button id="ifttt_url_save" class="{% if not user_client is null %}hidden{% endif %}">{{ lang["SAVE_IFTTT_URL"] }}</button>
@@ -72,12 +89,26 @@
                 <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
                 {% for cat in categories %}
                     {% if cat.isInternal() %}
-                        <div class="form-group">
-                            <label class="checkbox" for="checkboxCategory_{{cat.id}}">
-                                <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
-                                {{lang[cat.name]}}
-                            </label>
-                        </div>
+                        {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
+                            <div class="form-group">
+                                {{ lang[cat.name] }}
+                                {% for group in splitbill_user_groups  %}
+                                    <div>
+                                        <label class="checkbox" for="checkboxCategory_{{cat.id}}_{{ group }}">
+                                            <input name="categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxCategory_{{cat.id}}_{{ group }}" class="set_notifications_category">
+                                            {{splitbill_all_groups[group].name}}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                <label class="checkbox" for="checkboxCategory_{{cat.id}}">
+                                    <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
+                                    {{lang[cat.name]}}
+                                </label>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
                 <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
