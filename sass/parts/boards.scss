@@ -51,7 +51,6 @@
 
     @media screen and (max-width: $size_mobile) {   
         margin-right: 10%;
-
     }
 
     /* Stack */
@@ -93,6 +92,8 @@
         padding:0 1rem 0 1rem;
         display:flex;
         justify-content: space-between;
+        
+        -webkit-tap-highlight-color: transparent;
 
         @media screen and (max-width: $size_mobile) {
             word-break: break-all;
@@ -132,6 +133,8 @@
         overflow:hidden;
 
         @include font-size(1.4);
+        
+        -webkit-tap-highlight-color: transparent;
 
         &:hover{
             cursor:pointer;
@@ -209,6 +212,13 @@
 
     .card-placeholder{
         border: 1px dashed $color_text-main;
+    }
+    
+    .handle{
+        display: block;
+        @media screen and (min-width: $size_mobile) {
+            display: none;
+        }
     }
 
 }
@@ -389,6 +399,7 @@
     margin: 1rem 1rem 0 1rem;
     color: #a1a1a1!important;
     display:block;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover{
         color: $color_text-main!important;

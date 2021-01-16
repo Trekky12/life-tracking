@@ -12,7 +12,7 @@
     <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
     <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
     <script src="{{baseURL}}/static/assets/js/simplemde.min.js"></script>
-    <script src="{{baseURL}}/static/js/boards.js"></script>
+    <script src="{{baseURL}}/static/js/boards.js?v=20210109b"></script>
 {% endblock %}
 
 {% block body %}
@@ -56,84 +56,84 @@
             <div class="modal-header">{{lang["CARD"]}}<span class="edit-bar"></span></div>
             <form>
                 <div class="modal-content">
-                        <input name="stack" type="hidden" value="" class="reset-field"/>
-                        <input name="id" type="hidden" value="" class="reset-field"/>
-                        <input name="position" type="hidden" value="" class="reset-field"/>
-                        <input name="archive" type="hidden" value="" class="reset-field"/>
-                        <div class="form-group card-dates hidden">
-                            <span>{{lang["CHANGED_BY"]}}:</span> <span id="changedBy"></span> (<span id="changedOn"></span>) | 
-                            <span>{{lang["CREATED_BY"]}}:</span> <span id="createdBy"></span> (<span id="createdOn"></span>)
-                        </div>
-                        <div class="form-group hidden">
-                            <select class="form-control" id="users" name="users[]" multiple="true">
-                                {# not using "if user.id in board_user" so users removed and readded to the board are still on assigned cards #}
+                    <input name="stack" type="hidden" value="" class="reset-field"/>
+                    <input name="id" type="hidden" value="" class="reset-field"/>
+                    <input name="position" type="hidden" value="" class="reset-field"/>
+                    <input name="archive" type="hidden" value="" class="reset-field"/>
+                    <div class="form-group card-dates hidden">
+                        <span>{{lang["CHANGED_BY"]}}:</span> <span id="changedBy"></span> (<span id="changedOn"></span>) | 
+                        <span>{{lang["CREATED_BY"]}}:</span> <span id="createdBy"></span> (<span id="createdOn"></span>)
+                    </div>
+                    <div class="form-group hidden">
+                        <select class="form-control" id="users" name="users[]" multiple="true">
+                            {# not using "if user.id in board_user" so users removed and readded to the board are still on assigned cards #}
+                            {% for user in users %}
+                                <option value="{{user.id}}">{{user.login}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTitle">{{lang["TITLE"]}}</label>
+                        <input class="form-control" id="inputTitle" name="title" type="text"/>
+                    </div>
+                    <div class="two-columns">
+                        <div class="form-group left">
+                            <label>{{lang["USERS"]}}</label>
+                            <div class="member-list">
                                 {% for user in users %}
-                                    <option value="{{user.id}}">{{user.login}}</option>
+                                    {% if user.id in board_user %}
+                                        {% if user.get_thumbnail() != '' %}
+                                            <img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
+                                        {% else %}
+                                            <svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}">
+                                            <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+                                            </svg>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group right">
+                            <label>{{lang["LABELS"]}}</label>
+                            <select class="form-control" id="card-label-list" name="labels[]" multiple="true">
+                                {% for label in labels %}
+                                    <option value="{{label.id}}" data-background-color="{{label.background_color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="inputTitle">{{lang["TITLE"]}}</label>
-                            <input class="form-control" id="inputTitle" name="title" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_DESCRIPTION"]}}</a>
+                        <div class="hidden-field hidden">
+                            <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+                            <textarea class="form-control" id="inputDescription" name="description"></textarea>
                         </div>
-                        <div class="two-columns">
-                            <div class="form-group left">
-                                <label>{{lang["USERS"]}}</label>
-                                <div class="member-list">
-                                    {% for user in users %}
-                                        {% if user.id in board_user %}
-                                            {% if user.get_thumbnail() != '' %}
-                                                <img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
-                                            {% else %}
-                                                <svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}">
-                                                <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
-                                                </svg>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="form-group right">
-                                <label>{{lang["LABELS"]}}</label>
-                                <select class="form-control" id="card-label-list" name="labels[]" multiple="true">
-                                    {% for label in labels %}
-                                        <option value="{{label.id}}" data-background-color="{{label.background_color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_DESCRIPTION"]}}</a>
+                    </div>
+                    <div class="two-columns">
+                        <div class="form-group left">
+                            <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_DATE"]}}</a>
                             <div class="hidden-field hidden">
-                                <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
-                                <textarea class="form-control" id="inputDescription" name="description"></textarea>
+                                <label for="dateSelect">{{lang["DATE"]}}</label>
+                                <input type="text" class="form-control date-display" id="dateSelect"  name="date">
+
                             </div>
                         </div>
-                        <div class="two-columns">
-                            <div class="form-group left">
-                                <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_DATE"]}}</a>
-                                <div class="hidden-field hidden">
-                                    <label for="dateSelect">{{lang["DATE"]}}</label>
-                                    <input type="text" class="form-control date-display" id="dateSelect"  name="date">
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group right">
-                                <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_TIME"]}}</a>
-                                <div class="hidden-field hidden">
-                                    <label for="inputTime">{{lang["TIME"]}}</label>
-                                    <input type="time" step="1" class="form-control" id="inputTime" name="time"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group hidden">
-                            <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_COMMENT"]}}</a>
+                        <div class="form-group right">
+                            <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_TIME"]}}</a>
                             <div class="hidden-field hidden">
-                                <label for="inputComment">{{lang["COMMENT"]}}</label>
-                                <textarea class="form-control" id="inputComment" name="comment"></textarea>
-                                <button id="addComment">{{lang["ADD_COMMENT"]}}</button>
+                                <label for="inputTime">{{lang["TIME"]}}</label>
+                                <input type="time" step="1" class="form-control" id="inputTime" name="time"/>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group hidden">
+                        <a class="show-sibling add-element-text" href="#"><i class="fas fa-plus"></i> {{lang["ADD_COMMENT"]}}</a>
+                        <div class="hidden-field hidden">
+                            <label for="inputComment">{{lang["COMMENT"]}}</label>
+                            <textarea class="form-control" id="inputComment" name="comment"></textarea>
+                            <button id="addComment">{{lang["ADD_COMMENT"]}}</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="buttons">
@@ -150,26 +150,26 @@
             <div class="modal-header">{{lang["LABEL"]}}<span class="edit-bar"></span></div>
             <form>
                 <div class="modal-content">
-                        <input name="board" type="hidden" value="{{board.id}}"/>
-                        <input name="id" type="hidden" value="" class="reset-field"/>
-                        <div class="form-group">
-                            <label for="inputName">{{lang["NAME"]}}</label>
-                            <input class="form-control" id="inputName" name="name" type="text"/>
+                    <input name="board" type="hidden" value="{{board.id}}"/>
+                    <input name="id" type="hidden" value="" class="reset-field"/>
+                    <div class="form-group">
+                        <label for="inputName">{{lang["NAME"]}}</label>
+                        <input class="form-control" id="inputName" name="name" type="text"/>
+                    </div>
+                    <div class="two-columns form-group">
+                        <div class="left">
+                            <h4>{{lang["BACKGROUND"]}} {{lang["COLOR"]}}</h4>
+                            <label for="inputBackgroundColor" class="color-wrapper">
+                                <input class="form-control" id="inputBackgroundColor" name="background_color" type="color"/>
+                            </label>
                         </div>
-                        <div class="two-columns form-group">
-                            <div class="left">
-                                <h4>{{lang["BACKGROUND"]}} {{lang["COLOR"]}}</h4>
-                                <label for="inputBackgroundColor" class="color-wrapper">
-                                    <input class="form-control" id="inputBackgroundColor" name="background_color" type="color"/>
-                                </label>
-                            </div>
-                            <div class="right">
-                                <h4>{{lang["TEXT"]}} {{lang["COLOR"]}}</h4>
-                                <label for="inputTextColor" class="color-wrapper">
-                                    <input class="form-control" id="inputTextColor" name="text_color" type="color"/>
-                                </label>
-                            </div>
+                        <div class="right">
+                            <h4>{{lang["TEXT"]}} {{lang["COLOR"]}}</h4>
+                            <label for="inputTextColor" class="color-wrapper">
+                                <input class="form-control" id="inputTextColor" name="text_color" type="color"/>
+                            </label>
                         </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="buttons">
@@ -232,6 +232,7 @@
                         <span class="title">{{stack.name|raw}}</span>
                         <span class="edit-bar">
                             <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                            <i class="handle fas fa-arrows-alt"></i>
                         </span>
                     </div>
 
@@ -243,6 +244,7 @@
                                     {% for label in card_label[card.id] %}
                                         <div class="card-label" style="background-color:{{labels[label].background_color}}; color:{{labels[label].getTextColor()}}"></div>
                                     {% endfor %}
+                                    <i class="handle fas fa-arrows-alt"></i>
                                 </div>
 
                                 <div class="card-title">{{card.title|raw}}</div>
