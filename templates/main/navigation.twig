@@ -108,12 +108,12 @@
                 <ul class="dropdown-content">
                     <li><a href="{{ url_for('workouts_exercises_view') }}"><i class="fas fa-dumbbell" aria-hidden="true"></i> {{lang["WORKOUTS_EXERCISES"]}}</a></li>
                     <li><a href="{{ url_for('workouts_templates') }}">{{lang["WORKOUTS_TEMPLATE_PLANS"]}}</a></li>
-                    {% if user.isAdmin() %}
+                        {% if user.isAdmin() %}
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ url_for('workouts_exercises') }}">{{lang["WORKOUTS_EXERCISES_MANAGE"]}}</a></li>
                         <li><a href="{{ url_for('workouts_muscles') }}">{{lang["WORKOUTS_MUSCLES"]}}</a></li>
                         <li><a href="{{ url_for('workouts_bodyparts') }}">{{lang["WORKOUTS_BODYPARTS"]}}</a></li>
-                    {% endif %}
+                        {% endif %}
                 </ul>
 
             </li> 
@@ -134,7 +134,7 @@
                 </ul>
             </li>
         {% endif %}
-        <li {% if active == 'profile' or active == 'notifications' %}class="active"{% endif %}>
+        <li {% if active == 'profile' or active == 'notifications' or active == 'help' %}class="active"{% endif %}>
             <a href="{{ url_for('users_profile_edit') }}" class="profile badge {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}"> 
                 {% if user.get_thumbnail() != '' %}
                     <img src="/{{uploads_folder}}/profile/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
@@ -157,6 +157,8 @@
                 <li><a href="{{ url_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<i class="far fa-bell fa-pull-right"></i></a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ url_for('users_activities') }}">{{lang["ACTIVITIES"]}}<i class="fas fa-history fa-pull-right"></i></a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ url_for('help') }}">{{lang["HELP"]}}<i class="far fa-question-circle fa-pull-right"></i></a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ url_for('logout') }}" >{{lang["LOGOUT"]}}<i class="fas fa-sign-out-alt fa-pull-right"></i></a></li>
             </ul>

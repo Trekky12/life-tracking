@@ -19,6 +19,10 @@
             flex-direction: row;
             height: $header_height;
         }
+        
+        .page-title{
+            color: $color_navigation_text;
+        }
        
     }
 }

@@ -15,6 +15,7 @@ return function (App $app) {
         $group->get('/logout', \App\Application\Action\Main\LogoutAction::class)->setName('logout');
 
         $group->get('/cron', \App\Application\Action\Main\CronAction::class)->setName('cron');
+        $group->get('/help', \App\Application\Action\Main\HelpAction::class)->setName('help');
 
         $group->group('/logfile', function(RouteCollectorProxy $group_logfile) {
             $group_logfile->get('', \App\Application\Action\Main\LogfileAction::class)->setName('logfile');

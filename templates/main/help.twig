@@ -1,0 +1,665 @@
+{% extends "base.twig" %}
+
+{% set active = 'help' %}
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>Übersicht</h2></div>
+        <div class="page-content">
+            <ul>
+                <li><a href="#general">Allgemein</a></li>
+                <li><a href="#locationhistory">Modul: Standortverlauf</a></li>
+                <li><a href="#finances">Modul: Finanzen</a></li>
+                <li><a href="#cars">Modul: Autos</a></li>
+                <li><a href="#boards">Modul: Boards</a></li>
+                <li><a href="#crawlers">Modul: Crawlers</a></li>
+                <li><a href="#splittedbills">Modul: geteilte Ausgaben</a></li>
+                <li><a href="#trips">Modul: Reisen</a></li>
+                <li><a href="#timesheets">Modul: Zeiterfassung</a></li>
+                <li><a href="#workouts">Modul: Workouts</a></li>
+                <li><a href="#admin">Spezielle Admin-Funktionen</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="general">Allgemein</h2></div>
+        <div class="page-content">
+
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/1_login.png" target="_blank"><img src="{{baseURL}}/static/help/1_login.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Startseite</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_frontpage.png" target="_blank"><img src="{{baseURL}}/static/help/2_frontpage.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_frontpage-1.png" target="_blank"><img src="{{baseURL}}/static/help/2_frontpage-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_frontpage-2.png" target="_blank"><img src="{{baseURL}}/static/help/2_frontpage-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_frontpage-3.png" target="_blank"><img src="{{baseURL}}/static/help/2_frontpage-3.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Profil</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_profile.png" target="_blank"><img src="{{baseURL}}/static/help/2_profile.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_password.png" target="_blank"><img src="{{baseURL}}/static/help/2_password.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_profilepic.png" target="_blank"><img src="{{baseURL}}/static/help/2_profilepic.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_twofactor.png" target="_blank"><img src="{{baseURL}}/static/help/2_twofactor.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_applicationpasswords.png" target="_blank"><img src="{{baseURL}}/static/help/2_applicationpasswords.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_applicationpasswords-1.png" target="_blank"><img src="{{baseURL}}/static/help/2_applicationpasswords-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_logintokens.png" target="_blank"><img src="{{baseURL}}/static/help/2_logintokens.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_activities.png" target="_blank"><img src="{{baseURL}}/static/help/2_activities.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>mobile Favoriten</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_mobilefavorites.png" target="_blank"><img src="{{baseURL}}/static/help/2_mobilefavorites.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_mobilefavorites-1.png" target="_blank"><img src="{{baseURL}}/static/help/2_mobilefavorites-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_mobilefavorites-2.png" target="_blank"><img src="{{baseURL}}/static/help/2_mobilefavorites-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_mobilefavorites-3.png" target="_blank"><img src="{{baseURL}}/static/help/2_mobilefavorites-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_mobilefavorites-4.png" target="_blank"><img src="{{baseURL}}/static/help/2_mobilefavorites-4.png" width="300" /s-3.png" wi></a>
+                </div>
+            </div>
+
+            <h3>Benachrichtigungen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-1.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-2.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-3.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-4.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-4.png" width="300" /s-3.png" wi></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="locationhistory">Modul Standortverlauf</h2></div>
+        <div class="page-content">
+            <h3>Standortverlauf anzeigen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-2.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-3.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-3.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Standort manuell hinzufügen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-4.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-4.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-1.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-1.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Schritte Statistik</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-5.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-5.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-6.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-6.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-7.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-7.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/3_location_history-8.png" target="_blank"><img src="{{baseURL}}/static/help/3_location_history-8.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Standort mit Tasker automatisch hinzufügen</h3>
+
+            <h4>Schritte zählen</h4>
+            <pre>
+Profil: Schritte (14)
+    	Ereignis: Ausgeführte Schritte [ Nummer:1 ]
+    Eingang: Schritte (23)
+    	A1: Variable Setzen [ Name:%STEPS Zu:%evtprm1 Recurse Variables:Aus Mathematisch:Aus Hinzufügen:Aus Max Rounding Digits:3 ]
+            </pre>
+
+            <h4>Schritte zurücksetzen</h4>
+            <pre>
+Profil: Schritte zurücksetzen (21)
+    	Variables: [  ]
+    	Zeit: 00:00
+    Eingang: Schritte Reset (22)
+    	A1: Profil Status [ Name:Schritte setzen:Aus ] 
+    	A2: Profil Status [ Name:Schritte setzen:An ] 
+    	A3: Variable Setzen [ Name:%STEPS Zu:0 Recurse Variables:Aus Mathematisch:Aus Hinzufügen:Aus Max Rounding Digits:3 ]
+            </pre>
+
+            <h4>Standort erfassen</h4>
+            <pre>
+    Profil: Standort erfassen (2)
+    	Zeit:  Jede 30m
+    Eingang: Standort senden 2 (19)
+    	A1: If [ %TIMES > %LASTLOC+600 ]
+    	A2: Get Location v2 [  Timeout (Sekunden):20 Minimum Accuracy (meters): Speed (meters/second): Altitude (meters): Near Location: Enable Location If Needed:Aus Last Location If Timeout:Aus Min Speed Accuracy (m/s): ] 
+    	A3: HTTP Auth [  Method:Username and Password Client ID: Client Secret: Endpoint To Get Code: Endpoint To Get Refresh Token: Scopes: Force Re-Authentication:Aus Timeout (Sekunden):30 Username:<span style="color: red; font-weight: bold;">my-username</span> Password:<span style="color: red; font-weight: bold;">my-application-password</span> ] 
+    	A4: HTTP Request [  Method:POST URL:<span style="color: red; font-weight: bold;">my-url</span>/api/location/record Headers:%http_auth_headers Query Parameters: Body:{
+    "identifier":"<span style="color: red; font-weight: bold;">my-device</span>", 
+    "device":"%DEVID",
+    "date":"%DATE",
+    "time":"%TIME",
+    "batt":"%BATT",
+    "times":"%TIMES",
+    "wifi_state":"%WIFI",
+    "gps_state":"%GPS",
+    "mfield":"%MFIELD",
+    "screen_state":"%SCREEN",
+    "ups":"%UPS",
+    "gps_loc":"%gl_coordinates",
+    "gps_acc":"%gl_coordinates_accuracy",
+    "gps_alt":"%gl_altitude",
+    "gps_alt_acc":"%gl_altitude_accuracy",
+    "gps_spd":"%gl_speed",
+    "gps_spd_acc":"%gl_speed_accuracy",
+    "gps_bearing":"%gl_bearing",
+    "gps_bearing_acc":"%gl_bearing_accuracy", 
+    "gps_tms":"%gl_time_seconds",
+    "cell_id":"%CELLID",
+    "cell_sig":"%CELLSIG",
+    "cell_srv":"%CELLSRV", 
+    "steps":"%STEPS" 
+    } File To Send: File/Directory To Save With Output: Timeout (Sekunden):10 Trust Any Certificate:Aus Automatically Follow Redirects:Aus Use Cookies:Aus ] 
+    	A5: If [ %http_response_code = 200 ]
+    	A6: Variable Setzen [ Name:%LASTLOC Zu:%TIMES Recurse Variables:Aus Mathematisch:Aus Hinzufügen:Aus Max Rounding Digits:3 ] 
+    	A7: Else 
+    	A8: Benachrichtigung [ Titel:Response %http_response_code Text:%http_data Icon:null Nummer:0 Dauerhaft:Aus Priorität:3 Repeat Alert:Aus LED Colour:Lila LED Rate:0 Sound Datei: Vibration Pattern: Category:test ] 
+            </pre>
+
+
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="finances">Modul Finanzen</h2></div>
+        <div class="page-content">
+            <h3>Einnahmen und Ausgaben erfassen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-1.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-1.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Kategorien verwalten und Einnahmen/Ausgaben kategorisieren</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-3.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-4.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-4.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>Kategorien automatisch anhand des Namens zuordnen lassen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-5.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-5.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-6.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-6.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>wiederkehrende Einnahmen und Ausgaben automatisch erfassen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-7.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-7.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-8.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-8.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>Zahlungsmethoden verwalten</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-9.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-9.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-10.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-10.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>monatliches Budget verwalten</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-11.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-11.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-12.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-12.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-13.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-13.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-14.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-14.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>verschiedene Statistiken</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-15.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-15.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-16.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-16.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-17.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-17.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-18.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-18.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-19.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-19.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-20.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-20.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-21.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-21.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-22.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-22.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-23.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-23.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-24.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-24.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>monatliche Statistiken per E-Mail</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/4_finances-25.png" target="_blank"><img src="{{baseURL}}/static/help/4_finances-25.png" width="300" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="cars">Modul Autos</h2></div>
+        <div class="page-content">
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Autos verwalten</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars-1.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars-2.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars-2.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Tanken erfassen und Benzinverbrauch berechnen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars-3.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars-5.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars-5.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Wartungen erfassen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars-4.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars-4.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars-6.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars-6.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Benzinverbrauchsstatistik und Laufleistung</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/5_cars-7.png" target="_blank"><img src="{{baseURL}}/static/help/5_cars-7.png" width="300" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="boards">Modul Boards</h2></div>
+        <div class="page-content">
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/6_boards.png" target="_blank"><img src="{{baseURL}}/static/help/6_boards.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/6_boards-1.png" target="_blank"><img src="{{baseURL}}/static/help/6_boards-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/6_boards-2.png" target="_blank"><img src="{{baseURL}}/static/help/6_boards-2.png" width="300" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="crawlers">Modul Crawlers</h2></div>
+        <div class="page-content">
+
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-6.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-6.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Crawler verwalten</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-1.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-1.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Crawler Überschriften</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-2.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-3.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-4.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-4.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Crawler Links</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-5.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-5.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Crawler Merkliste</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-7.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-7.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/7_crawlers-8.png" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-8.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Datensatz hinzufügen</h3>
+            <pre>
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"crawler": "&lt;hash&gt;", "identifier":"offer1", "data":{"name":"job offer 1", "company":"company 2", "pay":50000, "url":"http://www.google.com"}}' \
+  http://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/crawlers/record
+            </pre>
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="splittedbills">Modul geteilte Ausgaben</h2></div>
+        <div class="page-content">
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/8_splittedbills.png" target="_blank"><img src="{{baseURL}}/static/help/8_splittedbills.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/8_splittedbills-1.png" target="_blank"><img src="{{baseURL}}/static/help/8_splittedbills-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/8_splittedbills-2.png" target="_blank"><img src="{{baseURL}}/static/help/8_splittedbills-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/8_splittedbills-3.png" target="_blank"><img src="{{baseURL}}/static/help/8_splittedbills-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/8_splittedbills-4.png" target="_blank"><img src="{{baseURL}}/static/help/8_splittedbills-4.png" width="300" /></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="trips">Modul Reisen</h2></div>
+        <div class="page-content">
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/9_trips.png" target="_blank"><img src="{{baseURL}}/static/help/9_trips.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/9_trips-1.png" target="_blank"><img src="{{baseURL}}/static/help/9_trips-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/9_trips-2.png" target="_blank"><img src="{{baseURL}}/static/help/9_trips-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/9_trips-3.png" target="_blank"><img src="{{baseURL}}/static/help/9_trips-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/9_trips-4.png" target="_blank"><img src="{{baseURL}}/static/help/9_trips-4.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/9_trips-5.png" target="_blank"><img src="{{baseURL}}/static/help/9_trips-5.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/9_trips-6.png" target="_blank"><img src="{{baseURL}}/static/help/9_trips-6.png" width="300" /></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="timesheets">Modul Zeiterfassung</h2></div>
+        <div class="page-content">
+            <h3>Projekt</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/10_timesheets.png" target="_blank"><img src="{{baseURL}}/static/help/10_timesheets.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/10_timesheets-1.png" target="_blank"><img src="{{baseURL}}/static/help/10_timesheets-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/10_timesheets-4.png" target="_blank"><img src="{{baseURL}}/static/help/10_timesheets-4.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/10_timesheets-5.png" target="_blank"><img src="{{baseURL}}/static/help/10_timesheets-5.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Schnellerfassung</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/10_timesheets-6.png" target="_blank"><img src="{{baseURL}}/static/help/10_timesheets-6.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>Kategorien</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/10_timesheets-2.png" target="_blank"><img src="{{baseURL}}/static/help/10_timesheets-2.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/10_timesheets-3.png" target="_blank"><img src="{{baseURL}}/static/help/10_timesheets-3.png" width="300" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="workouts">Modul Workouts</h2></div>
+        <div class="page-content">
+            <h3>Trainingspläne verwalten</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-1.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-1.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Übungen anzeigen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-2.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-2.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Vorlagen anwenden</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-14.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-14.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-15.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-15.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Trainingseinheit erfassen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-16.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-16.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-17.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-17.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Übungen verwalten (nur Admin)</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-6.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-6.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-7.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-7.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Vorlagen verwalten (nur Admin)</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-3.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-3.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-4.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-4.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Muskelgruppen verwalten (nur Admin)</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-8.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-8.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-9.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-9.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-10.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-10.png" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Körperbereiche verwalten (nur Admin)</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-11.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-11.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/11_workouts-12.png" target="_blank"><img src="{{baseURL}}/static/help/11_workouts-12.png" width="300" /></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="admin">Spezielle Admin-Funktionen</h2></div>
+        <div class="page-content">
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_logintokens-1.png" target="_blank"><img src="{{baseURL}}/static/help/2_logintokens-1.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_banlist.png" target="_blank"><img src="{{baseURL}}/static/help/2_banlist.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_users.png" target="_blank"><img src="{{baseURL}}/static/help/2_users.png" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_users-1.png" target="_blank"><img src="{{baseURL}}/static/help/2_users-1.png" width="300" /></a>
+                </div>
+            </div>
+            <h3>Benachrichtigungen testen</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-5.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-5.png" width="300" /s-3.png" wi></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-6.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-6.png" width="300" /s-3.png" wi></a>
+                </div>
+            </div>
+            <h3>Individuelle Benachrichtigskategorien</h3>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-7.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-7.png" width="300" /s-3.png" wi></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/2_notifications-8.png" target="_blank"><img src="{{baseURL}}/static/help/2_notifications-8.png" width="300" /s-3.png" wi></a>
+                </div>
+            </div>
+            <pre>
+curl "http://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/notifications/notify?type=test11&title=Test%20title&message=Test%20message"
+            </pre>
+        </div>
+    </div>
+{% endblock %}

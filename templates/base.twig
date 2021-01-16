@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20201004" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210116" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -28,7 +28,6 @@
         <link rel="shortcut icon" href="{{baseURL}}/favicon.ico?v=20180727">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="msapplication-config" content="{{baseURL}}/static/assets/favicon/browserconfig.xml?v=20180727">
-        <meta name="theme-color" content="#ffffff">
         <meta name="timestamp" content="{{ 'now'|date('U') }}">
     </head>
 
@@ -37,6 +36,12 @@
             <header id="masthead" class="site-header">
                 <div class="header-inner">
                     {% include 'main/navigation.twig' %}
+                </div>
+            </header>
+        {% elseif active == 'help' %}
+            <header id="masthead" class="site-header">
+                <div class="header-inner">
+                    <h2 class="page-title">{{ lang["PAGE_TITLE"] }} - {{ lang["HELP"] }}</h2>
                 </div>
             </header>
         {% endif %}
