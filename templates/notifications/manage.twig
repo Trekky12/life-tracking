@@ -47,7 +47,7 @@
                         {% if not cat.isInternal() %}
                             <div class="form-group">
                                 <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories|keys %}checked{% endif %}>
+                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
                                     {{cat.name}}
                                 </label>
                             </div>
