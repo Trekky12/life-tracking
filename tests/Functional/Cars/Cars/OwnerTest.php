@@ -2,14 +2,9 @@
 
 namespace Tests\Functional\Cars\Cars;
 
-use Tests\Functional\Base\BaseTestCase;
+use Tests\Functional\Cars\CarTestBase;
 
-class AdminTest extends BaseTestCase {
-
-    protected $uri_overview = "/cars/control/";
-    protected $uri_edit = "/cars/control/edit/";
-    protected $uri_save = "/cars/control/save/";
-    protected $uri_delete = "/cars/control/delete/";
+class OwnerTest extends CarTestBase {
 
     protected function setUp(): void {
         $this->login("admin", "admin");
@@ -34,7 +29,7 @@ class AdminTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<form class="form-horizontal" id="carsForm" action="' . $this->uri_save . '" method="POST">', $body);
+        $this->assertStringContainsString('<form class="form-horizontal" action="' . $this->uri_save . '" method="POST">', $body);
     }
 
     /**
@@ -67,7 +62,7 @@ class AdminTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $row = $this->getElementInTable($body, $data);
+        $row = $this->getParent($body, $data["name"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
@@ -83,7 +78,7 @@ class AdminTest extends BaseTestCase {
     public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
-
+        
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -91,12 +86,12 @@ class AdminTest extends BaseTestCase {
         $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $entry_id . "\">", $body);
 
         $matches = [];
-        $re = '/<form class="form-horizontal" id=\"carsForm\" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
+        $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
         preg_match($re, $body, $matches);
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
-        
+
         $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
@@ -124,7 +119,7 @@ class AdminTest extends BaseTestCase {
 
         return $data;
     }
-
+    
     /**
      * Is the element updated?
      * @depends testPostElementCreatedSave
@@ -136,14 +131,14 @@ class AdminTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
 
-        $row = $this->getElementInTable($body, $result_data);
+        $row = $this->getParent($body, $result_data["name"]);
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
 
         return intval($row["id_edit"]);
     }
-    
+
     /**
      * @depends testGetElementUpdated
      * @depends testPostElementCreatedSave
@@ -165,15 +160,10 @@ class AdminTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('{"is_deleted":true,"error":""}', $body);
-    }
+        $json = json_decode($body, true);
 
-    protected function getElementInTable($body, $data) {
-        $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
-        preg_match($re, $body, $matches);
-
-        return $matches;
+        $this->assertArrayHasKey("is_deleted", $json);
+        $this->assertTrue($json["is_deleted"]);
     }
 
 }

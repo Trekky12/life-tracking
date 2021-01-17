@@ -1,13 +1,13 @@
 {% extends "base.twig" %}
 
-{% set active = 'settings' %}
+{% set active = 'car_service' %}
 
 {% block body %}
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["CARS"]}}</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="carsForm" action="{{  url_for('cars_save', {'id' : entry.id}) }}" method="POST">
+            <form class="form-horizontal" action="{{  url_for('cars_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 

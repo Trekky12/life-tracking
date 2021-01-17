@@ -68,6 +68,8 @@
             <li {% if active == modules['cars']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ url_for(modules['cars']['rootRoute']) }}">{{lang[modules['cars']['title']]}}</a>
                 <ul class="dropdown-content">
+                    <li><a href="{{ url_for('cars') }}"><i class="fas fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
+                    <li role="separator" class="divider"></li>
                     <li><a href="{{ url_for('car_service_stats') }}"><i class="fas fa-chart-pie" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
                 </ul>
             </li>
@@ -123,7 +125,6 @@
                 <a href="#">{{lang["SETTINGS"]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ url_for('users') }}"><i class="fas fa-user" aria-hidden="true"></i> {{lang["USERS"]}}</a></li>
-                    <li><a href="{{ url_for('cars') }}"><i class="fas fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ url_for('notifications_clients') }}"><i class="fas fa-bell" aria-hidden="true"></i> {{lang["NOTIFICATIONS"]}}</a></li>
                     <li><a href="{{ url_for('notifications_categories') }}"><i class="fas fa-tags" aria-hidden="true"></i> {{lang["CATEGORIES"]}}</a></li>

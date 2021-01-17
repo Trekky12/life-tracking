@@ -132,7 +132,7 @@ return function (App $app) {
             $group_control->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarEditAction::class)->setName('cars_edit');
             $group_control->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarSaveAction::class)->setName('cars_save');
             $group_control->delete('/delete/{id}', \App\Application\Action\Car\Car\CarDeleteAction::class)->setName('cars_delete');
-        })->add(\App\Application\Middleware\AdminMiddleware::class);
+        });
     });
 
 
