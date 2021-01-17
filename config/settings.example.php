@@ -91,8 +91,7 @@ return [
         'guest_access' => [
             'login',
             'logout',
-            'cron',
-            'help'
+            'cron'
         ],
         // the secret for the user token cookie
         'secret' => 'my_hash_secret',
