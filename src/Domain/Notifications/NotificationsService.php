@@ -226,7 +226,7 @@ class NotificationsService extends Service {
     }
 
     public function manage() {
-        $categories = $this->cat_service->getAllCategories();
+        $categories = $this->cat_service->getUserCategories();
         $user_categories = $this->getCategoriesOfCurrentUser();
 
         $user_client = $this->client_service->getClientByUserAndType("ifttt");

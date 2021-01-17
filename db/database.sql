@@ -390,11 +390,23 @@ CREATE TABLE notifications_categories (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
     name varchar(255) NOT NULL,
     identifier varchar(255) NOT NULL,
     internal int(1) DEFAULT 0,
     PRIMARY KEY (id),
-    UNIQUE(identifier)
+    UNIQUE(identifier),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS notifications_categories_user;
+CREATE TABLE notifications_categories_user (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(category, user),
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS notifications_clients;
@@ -415,8 +427,8 @@ CREATE TABLE notifications_clients (
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS notifications_categories_clients;
-CREATE TABLE notifications_categories_clients (
+DROP TABLE IF EXISTS notifications_subscription_clients;
+CREATE TABLE notifications_subscription_clients (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     client INTEGER unsigned DEFAULT NULL,
@@ -426,8 +438,8 @@ CREATE TABLE notifications_categories_clients (
     FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS notifications_categories_users;
-CREATE TABLE notifications_categories_users (
+DROP TABLE IF EXISTS notifications_subscription_users;
+CREATE TABLE notifications_subscription_users (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,

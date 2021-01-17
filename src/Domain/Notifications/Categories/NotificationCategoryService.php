@@ -5,13 +5,17 @@ namespace App\Domain\Notifications\Categories;
 use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
+use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
 
 class NotificationCategoryService extends Service {
+    
+    private $user_service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, NotificationCategoryMapper $mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, NotificationCategoryMapper $mapper, UserService $user_service) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->user_service = $user_service;
     }
 
     public function getAllCategories() {
@@ -50,7 +54,13 @@ class NotificationCategoryService extends Service {
         }
 
         $entry = $this->getEntry($entry_id);
-        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
+        $users = $this->user_service->getAll();
+        
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
+    }
+    
+    public function getUserCategories(){
+        return $this->mapper->getUserCategories('t.createdOn DESC, name');
     }
 
 }

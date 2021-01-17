@@ -9,7 +9,7 @@ class NotificationClientsMapper extends \App\Domain\Mapper {
     protected $id = "id";
     protected $select_results_of_user_only = false;
     protected $insert_user = true;
-    private $client_table = "notifications_categories_clients";
+    private $client_table = "notifications_subscription_clients";
 
     public function getClientByEndpoint($endpoint) {
         $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE endpoint = :endpoint";

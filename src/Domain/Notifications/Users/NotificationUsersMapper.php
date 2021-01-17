@@ -4,7 +4,7 @@ namespace App\Domain\Notifications\Users;
 
 class NotificationUsersMapper extends \App\Domain\Mapper {
 
-    protected $table = "notifications_categories_users";
+    protected $table = "notifications_subscription_users";
 
     public function addCategory($user, $category, $object_id = null) {
         $bindings = array("category" => $category, "user" => $user, "object_id" => $object_id);
