@@ -58,6 +58,8 @@ class SessionService extends Service {
 
         $entry = $this->getEntry($entry_id);
         
+        $days = $this->plan_service->getWorkoutDays($plan->id);
+        
         // load planned exercises on new entries
         $selected_exercises = null;
         if(!is_null($entry_id)){
@@ -71,7 +73,8 @@ class SessionService extends Service {
             'entry' => $entry,
             'plan' => $plan,
             'exercises' => $exercises,
-            'exercisesList' => $exercisesList
+            'exercisesList' => $exercisesList,
+            'workoutdays' => $days
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);

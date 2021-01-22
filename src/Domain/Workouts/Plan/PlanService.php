@@ -169,7 +169,8 @@ class PlanService extends Service {
                 "notice" => $se["notice"],
                 "is_child" => $se["is_child"],
                 "children" => [],
-                "set_description" => !is_null($exercise) ? $set_description : null
+                "set_description" => !is_null($exercise) ? $set_description : null,
+                "id" => $idx
             ];
 
             // add as child
@@ -196,6 +197,10 @@ class PlanService extends Service {
             }
         }
         return [$exercises_print, $selected_muscles];
+    }
+    
+    public function getWorkoutDays($plan_id){
+        return $this->mapper->getWorkoutDays($plan_id);
     }
 
 }

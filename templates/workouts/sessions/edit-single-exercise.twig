@@ -1,4 +1,4 @@
-<div class="exercise" data-type="workout-element"  data-category="exercise">
+<div class="exercise {% if hidden %}hidden{% endif %}" data-type="workout-element"  data-category="exercise">
     <div class="exercise-content">
         <h3 class="title">{{ data["exercise"].name|raw }}</h3>
         <div class="sets">

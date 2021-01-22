@@ -99,4 +99,21 @@ class PlanMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function getWorkoutDays($plan_id) {
+        $sql = "SELECT id, notice FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan AND type = 'day' ORDER BY position";
+
+        $bindings = [
+            "plan" => $plan_id
+        ];
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[$row["id"]] = $row["notice"];
+        }
+        return $results;
+    }
+
 }
