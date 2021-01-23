@@ -452,6 +452,8 @@ return function (App $app) {
                 $group_session->delete('/delete/{id}', \App\Application\Action\Workouts\Session\SessionDeleteAction::class)->setName('workouts_sessions_delete');
                 
                 $group_session->get('/view/{id:[0-9]+}', \App\Application\Action\Workouts\Session\SessionViewAction::class)->setName('workouts_sessions_view');
+                
+                $group_session->get('/stats', \App\Application\Action\Workouts\Session\SessionStatsAction::class)->setName('workouts_sessions_stats');
             });
         });
 

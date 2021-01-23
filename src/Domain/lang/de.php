@@ -612,6 +612,9 @@ $lang["WORKOUTS_KM"] = "km";
 $lang["WORKOUTS_SET_ADD"] = "Satz hinzufügen";
 $lang["WORKOUTS_SET_REMOVE"] = "Satz entfernen";
 
+$lang["WORKOUTS_WEIGHT"] = "Gewicht";
+$lang["WORKOUTS_DISTANCE"] = "Distanz";
+
 $lang["LOAD_MORE"] = "Mehr laden";
 
 $lang["ALL"] = "alle";
