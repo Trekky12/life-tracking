@@ -41,7 +41,7 @@ class OwnerTest extends BoardTestBase {
             "users" => [1]
         ];
         $response = $this->request('POST', $this->uri_save, $data);
-
+        
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
 

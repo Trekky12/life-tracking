@@ -18,7 +18,7 @@ class MemberTest extends TripTestBase {
     }
 
     public function testGetParentInList() {
-        $response = $this->request('GET', $this->uri_overview);
+        $response = $this->request('GET', $this->uri_overview . '?filter=past');
 
         $this->assertEquals(200, $response->getStatusCode());
 

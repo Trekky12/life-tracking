@@ -81,7 +81,7 @@
                             <label>{{lang["USERS"]}}</label>
                             <div class="member-list">
                                 {% for user in users %}
-                                    {% if user.id in board_user %}
+                                    {% if user.id in board_user|keys %}
                                         {% if user.get_thumbnail() != '' %}
                                             <img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
                                         {% else %}
@@ -188,7 +188,7 @@
                 <h4>{{lang["USERS"]}}</h4>
                 <div class="member-list">
                     {% for user in users %}
-                        {% if user.id in board_user %}
+                        {% if user.id in board_user|keys %}
                             <div class="avatar-wrapper">
                                 {% if user.get_thumbnail() != '' %}
                                     <img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
@@ -259,7 +259,7 @@
                                     </div>
                                     <div class="card-member">
                                         {% for user in card_user[card.id] %}
-                                            {% if user in board_user %}
+                                            {% if user in board_user|keys %}
                                                 {% if users[user].get_thumbnail() != '' %}
                                                     <img src="/{{uploads_folder}}/profile/{{users[user].get_thumbnail('mini')}}" class="avatar-mini">
                                                 {% else %}

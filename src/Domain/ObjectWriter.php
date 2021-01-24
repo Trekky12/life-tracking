@@ -47,7 +47,7 @@ abstract class ObjectWriter {
          */
         if (array_key_exists("users", $data) && is_array($data["users"])) {
             $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
-            $entry->setUsers($users);
+            $entry->setUserIDs($users);
         }
 
         return $entry;
@@ -83,7 +83,7 @@ abstract class ObjectWriter {
             $this->getMapper()->deleteUsers($id);
 
             if (!empty($entry->getUsers())) {
-                $this->getMapper()->addUsers($id, $entry->getUsers());
+                $this->getMapper()->addUsers($id, $entry->getUserIDs());
             }
         }
     }

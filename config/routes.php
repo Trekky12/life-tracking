@@ -215,7 +215,8 @@ return function (App $app) {
             });
         });
     })->add(\App\Application\Middleware\AdminMiddleware::class);
-
+    
+    $app->get('/usersearch', \App\Application\Action\User\UserSearchAction::class)->setName('usersearch');
 
     $app->group('/notifications', function(RouteCollectorProxy $group) {
 

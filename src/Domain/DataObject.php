@@ -11,6 +11,7 @@ class DataObject implements \JsonSerializable {
      * Save potential parsing errors
      */
     protected $parsing_errors = array();
+    protected $users = [];
 
     protected function parseData(array $data) {
         foreach ($data as $k => $v) {
@@ -30,7 +31,7 @@ class DataObject implements \JsonSerializable {
          */
         if ($this->exists("users", $data) && is_array($data["users"])) {
             $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
-            $this->setUsers($users);
+            $this->setUserIDs($users);
         }
 
         /**
@@ -113,6 +114,14 @@ class DataObject implements \JsonSerializable {
         return $this->parsing_errors;
     }
 
+    public function setUserIDs($user_ids) {
+        $this->users = array_fill_keys($user_ids, null);
+    }
+
+    public function getUserIDs() {
+        return array_keys($this->users);
+    }
+
     public function setUsers($users) {
         $this->users = $users;
     }
@@ -122,7 +131,11 @@ class DataObject implements \JsonSerializable {
     }
 
     public function jsonSerialize() {
-        return $this->get_fields(true, false, false);
+        $fields = $this->get_fields(true, false, false);
+        if (!empty($this->users)) {
+            $fields["users"] = $this->getUserIDs();
+        }
+        return $fields;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

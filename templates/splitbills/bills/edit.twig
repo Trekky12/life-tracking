@@ -83,7 +83,7 @@
                 <h4>{{ lang["REMAINING"] }}: <span id="remaining_paid">{{ 0|number_format(2) }}</span> {{ i18n.currency }}</h4>
                 <div class="form-group">
                     <button class="gray splitbill_btn small" data-type="paid_same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
-                    {% for user_id in group_users %}
+                    {% for user_id in group_users|keys %}
                         <button class="gray splitbill_btn small" data-type="paid_person" data-id="{{ user_id }}">{% if settleUp %}{{ users[user_id].name }}{%else %}{{ lang["SPLITBILLS_BY_PERSON"]|format(users[user_id].name) }}{% endif %}</button>    
                     {% endfor %}
                 </div>
@@ -103,7 +103,7 @@
                             {{lang["FINANCES_PAYMETHOD"]}}
                         </div>
                     </div>
-                    {% for user_id in group_users %}
+                    {% for user_id in group_users|keys %}
                         <div class="form-group user-entry">
                             <div class="user">
                                 {{ users[user_id].name }}
@@ -131,7 +131,7 @@
                 <h4>{{ lang["REMAINING"] }}: <span id="remaining_spend">{{ 0|number_format(2) }}</span> {{ i18n.currency }}</h4>
                 <div class="form-group">
                     <button class="gray splitbill_btn small" data-type="spend_same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
-                    {% for user_id in group_users %}
+                    {% for user_id in group_users|keys %}
                         <button class="gray splitbill_btn small" data-type="spend_person" data-id="{{ user_id }}">{% if settleUp %}{{ users[user_id].name }}{%else %}{{ lang["SPLITBILLS_ONLY_PERSON"]|format(users[user_id].name) }}{% endif %}</button>    
                     {% endfor %}
                 </div>
@@ -148,7 +148,7 @@
                             {{lang["VALUE"]}} ({{ i18n.currency }})
                         </div>
                     </div>
-                    {% for user_id in group_users %}
+                    {% for user_id in group_users|keys %}
                         <div class="form-group user-entry">
                             <div class="user">
                                 {{ users[user_id].name }}

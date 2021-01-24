@@ -1,0 +1,18 @@
+<select class="hidden" id="users" name="users[]" multiple="true" data-module="{{ module }}">
+    {% for user_id, login in entry.getUsers() %}
+        <option value="{{user_id}}" selected="true">{{login}}</option>
+    {% endfor %}
+</select>
+<label for="users_query">{{lang["USERS"]}}</label>
+<input type="text" id="users_query" class="form-control"/>
+
+<div id="users_collection-wrapper">
+    <ul class="hidden users-collection">
+        <li class="autoComplete_result">{{ lang["NOTHING_FOUND"] }}</li>
+    </ul>
+</div>
+<div id="users_chips">
+    {% for user_id, login in entry.getUsers() %}
+        <div class="chip chip-{{user_id}}" data-id="{{user_id}}">{{login}}<span class="remove">×</span></div>
+    {% endfor %}
+</div>

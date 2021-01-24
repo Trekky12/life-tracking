@@ -153,7 +153,7 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-
+        
         $row = $this->getChild($body, $data, $this->TEST_GROUP_HASH, 1);
 
         $this->assertArrayHasKey("id_edit", $row);

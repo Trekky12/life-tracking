@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210116" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210124" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -158,6 +158,7 @@
                 'workouts_exercises_get': '{{url_for('workouts_exercises_get')}}',
                 'workouts_exercises_selected_muscles': '{{url_for('workouts_exercises_selected_muscles')}}',
                 'workouts_exercises_data': '{{url_for('workouts_exercises_data')}}',
+                'usersearch': '{{url_for('usersearch')}}',
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};

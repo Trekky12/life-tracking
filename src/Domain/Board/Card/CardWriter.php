@@ -117,7 +117,7 @@ class CardWriter extends ObjectActivityWriter {
 
         $subject = $this->translation->getTranslatedString('MAIL_ADDED_TO_CARD');
 
-        foreach ($new_users as $nu) {
+        foreach ($new_users as $nu => $login) {
 
             // except self
             if ($nu !== $my_user_id) {

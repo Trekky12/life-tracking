@@ -61,10 +61,10 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
 
         $existing_balance = $this->getMapper()->getBalance($bill->id);
 
-        $removed_users = array_diff(array_keys($existing_balance), $splitbill_groups_users);
-
+        $removed_users = array_diff(array_keys($existing_balance), array_keys($splitbill_groups_users));
+        
         list($balances, $sum_paid, $sum_spend, $totalValue, $totalValueForeign) = $this->filterBalances($data, $splitbill_groups_users);
-
+        
         // floating point comparison
         if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
             $this->logger->info('Add balance for bill', array("bill" => $bill->id, "balances" => $balances));
@@ -104,7 +104,7 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
         foreach ($data["balance"] as $user_id => $bdata) {
             $user = intval(filter_var($user_id, FILTER_SANITIZE_NUMBER_INT));
 
-            if (in_array($user, $group_users)) {
+            if (array_key_exists($user, $group_users)) {
                 $spend = array_key_exists("spend", $bdata) ? floatval(filter_var($bdata["spend"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
                 $paid = array_key_exists("paid", $bdata) ? floatval(filter_var($bdata["paid"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
                 $paymethod = array_key_exists("paymethod", $bdata) && !empty($bdata["paymethod"]) ? intval(filter_var($bdata["paymethod"], FILTER_SANITIZE_NUMBER_INT)) : null;

@@ -41,7 +41,7 @@ class BoardTestBase extends BaseTestCase {
 
     protected function getStack($body, $name = "") {
         $matches = [];
-        $re = '/<div class="stack-header" data-stack="(?<id>[0-9]+)">\s*<span class="title">' . preg_quote($name) . '<\/span>\s*<span class="edit-bar">\s*<i class="fas fa-pencil-alt" aria-hidden="true"><\/i>\s*<\/span>\s*<\/div>/';
+        $re = '/<div class="stack-header" data-stack="(?<id>[0-9]+)">\s*<span class="title">' . preg_quote($name) . '<\/span>\s*<span class="edit-bar">\s*<i class="fas fa-pencil-alt" aria-hidden="true"><\/i>\s*<i class="handle fas fa-arrows-alt"><\/i>\s*<\/span>\s*<\/div>/';
         preg_match($re, $body, $matches);
 
         return $matches;

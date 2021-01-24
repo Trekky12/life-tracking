@@ -88,7 +88,7 @@ function copyJSTask(cb) {
             './node_modules/sortablejs/Sortable.min.js',
             './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.min.js',
             './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
-            
+            './node_modules/@tarekraafat/autocomplete.js/dist/js/autoComplete.min.js',
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
@@ -251,6 +251,22 @@ function replaceFontWeatherIcons(cb){
         .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
+
+
+function copyAutocompleteIcon(cb) {
+    return gulp.src( './node_modules/@tarekraafat/autocomplete.js/dist/css/images/search.svg', )
+        .pipe( gulp.dest( 'public/static/assets/images/autocomplete' ) );
+}
+
+function replaceAutocompleteIcons(cb){
+    return gulp
+        .src( './node_modules/@tarekraafat/autocomplete.js/dist/css/autoComplete.css')
+        .pipe( replace("./images/", "../images/autocomplete/") )
+        .pipe( minifyCSS() )
+        .pipe( rename("autoComplete.min.css") )
+        .pipe( gulp.dest( 'public/static/assets/css' ) );
+}
+
 function printError( error ) {
     console.log( '---- Error ----' );
     console.log( "message", error.cause.message );
@@ -267,7 +283,7 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyFontsFontAwesome5Task, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask);
+exports.copy = gulp.series(copyFontsFontAwesome5Task, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, copyAutocompleteIcon);
 
 exports.test = replaceFontAwesome5Webfonts;
 exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);

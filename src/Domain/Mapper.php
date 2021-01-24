@@ -278,7 +278,10 @@ abstract class Mapper {
         }
 
         if (!is_null($table)) {
-            $sql = "SELECT user FROM " . $this->getTableName($table) . " WHERE {$element} = :id";
+            $sql = "SELECT u.id, u.login "
+                    . "FROM " . $this->getTableName($table) . " ut," . $this->getTableName("global_users") . " u "
+                    . "WHERE ut.user = u.id "
+                    . "AND ut.{$element} = :id";
 
             $bindings = array("id" => $id);
 
@@ -286,11 +289,12 @@ abstract class Mapper {
             $stmt->execute($bindings);
 
             $results = [];
-            while ($el = $stmt->fetchColumn()) {
-                $results[] = intval($el);
+            while ($row = $stmt->fetch()) {
+                $results[intval($row["id"])] = $row["login"];
             }
             return $results;
         }
+        return [];
     }
 
     public function getElementsOfUser($id) {

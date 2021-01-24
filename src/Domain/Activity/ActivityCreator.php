@@ -25,7 +25,7 @@ class ActivityCreator {
 
     public function saveActivity(Activity $activity) {
         $id = $this->mapper->insert($activity);
-        $this->mapper->addUsers($id, $activity->getUsers());
+        $this->mapper->addUsers($id, $activity->getUserIDs());
     }
 
     public function createActivity($activity_type, $module, $id, $mapper, $link, $parent_mapper = null, $parent_id = null): Activity {
@@ -42,7 +42,7 @@ class ActivityCreator {
             $users = $parent_mapper->getUsers($parent_id);
             $parent = ["object" => $parent_mapper->getDataObject(), "id" => $parent_id, "description" => $parent_entry->getDescription($this->translation, $this->settings)];
         }
-
+        
         return $this->createActivityEntry($activity_type, $module, $object, $parent, $users);
     }
 

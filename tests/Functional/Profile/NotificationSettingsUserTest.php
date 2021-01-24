@@ -58,7 +58,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("user_categories", $input_fields);
         $this->assertArrayHasKey($this->TEST_USER_CATEGORY, $input_fields["user_categories"]);
-        $this->assertSame(1, $input_fields["user_categories"][$this->TEST_USER_CATEGORY]);
+        $this->assertEquals(1, $input_fields["user_categories"][$this->TEST_USER_CATEGORY]);
     }
 
     public function testSetUserCategoryBack() {
@@ -81,7 +81,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
     }
 
     /**
-     * @depends testSetUserCategoryBack
+     * @depends1 testSetUserCategoryBack
      */
     public function testSettedUserCategoryBack() {
         $response = $this->request('GET', $this->uri_overview);

@@ -36,7 +36,7 @@ class BoardWriter extends ObjectActivityWriter {
         if ($this->board_service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        
+       
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
@@ -53,10 +53,10 @@ class BoardWriter extends ObjectActivityWriter {
         $my_user_id = intval($this->current_user->getUser()->id);
         $users_afterSave = $this->board_service->getUsers($entry->id);
         $new_users = array_diff($users_afterSave, $users_preSave);
-
+        
         $subject = $this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD');
 
-        foreach ($new_users as $nu) {
+        foreach ($new_users as $nu => $login) {
 
             // except self
             if ($nu !== $my_user_id) {

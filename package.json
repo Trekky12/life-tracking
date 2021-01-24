@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
+    "@tarekraafat/autocomplete.js": "^8.2.2",
     "chart.js": "^2.9.4",
     "flatpickr": "^4.6.9",
     "font-awesome": "^4.7.0",

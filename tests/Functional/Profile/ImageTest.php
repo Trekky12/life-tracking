@@ -55,7 +55,7 @@ class ImageTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertRegExp('/<img class="image_uploaded" src="\/uploads\/(.*)_' . $data["filename"] . '-small.' . $data["extension"] . '"\/>/', $body);
+        $this->assertMatchesRegularExpression('/<img class="image_uploaded" src="\/uploads\/(.*)_' . $data["filename"] . '-small.' . $data["extension"] . '"\/>/', $body);
     }
 
     public function testdeleteImageUpload() {
@@ -76,7 +76,7 @@ class ImageTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertNotRegExp('/<img class="image_uploaded" src="\/uploads\/(.*)"\/>/', $body);
+        $this->assertDoesNotMatchRegularExpression('/<img class="image_uploaded" src="\/uploads\/(.*)"\/>/', $body);
     }
 
 }

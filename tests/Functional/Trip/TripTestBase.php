@@ -11,9 +11,9 @@ class TripTestBase extends BaseTestCase {
     protected $uri_save = "/trips/save/";
     protected $uri_delete = "/trips/delete/";
     protected $uri_view = "/trips/HASH/view/";
-    protected $uri_child_edit = "/trips/HASH/event/edit/";
-    protected $uri_child_save = "/trips/HASH/event/save/";
-    protected $uri_child_delete = "/trips/HASH/event/delete/";
+    protected $uri_child_edit = "/trips/HASH/tripevent/edit/";
+    protected $uri_child_save = "/trips/HASH/tripevent/save/";
+    protected $uri_child_delete = "/trips/HASH/tripevent/delete/";
     protected $uri_waypoint_add = "/trips/HASH/waypoint/add";
     protected $uri_waypoint_delete = "/trips/HASH/waypoint/delete";
     protected $uri_route_add = "/trips/HASH/route/add";

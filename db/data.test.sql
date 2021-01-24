@@ -111,10 +111,15 @@ INSERT INTO boards_cards_user (card, user) VALUES
 (1, 2);
 
 INSERT INTO notifications_categories (id, name, identifier, internal) VALUES 
-(1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1),
-(2, 'Test Notification Category', 'test_notification_cat', 0);
+(1, 'Test Notification Category', 'test_notification_cat', 0),
+(2, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
 
-INSERT INTO notifications_clients (id, user, endpoint, authToken, publicKey, contentEncoding, ip, agent) VALUES (1, 1, 'endpoint', 'auth', 'p256dh', 'contentEncoding', '127.0.0.1', 'TEST');
+
+INSERT INTO notifications_categories_user (category, user) VALUES 
+(2, 1);
+
+INSERT INTO notifications_clients (id, user, endpoint, authToken, publicKey, contentEncoding, ip, agent) VALUES 
+(1, 1, 'endpoint', 'auth', 'p256dh', 'contentEncoding', '127.0.0.1', 'TEST');
 
 INSERT INTO notifications (id, category, user, title, message, seen, link) VALUES 
 (1, 1, 1, 'Test Notification 1', 'Test', NULL, ''),
