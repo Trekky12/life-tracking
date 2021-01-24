@@ -81,7 +81,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
     }
 
     /**
-     * @depends1 testSetUserCategoryBack
+     * @depends testSetUserCategoryBack
      */
     public function testSettedUserCategoryBack() {
         $response = $this->request('GET', $this->uri_overview);
