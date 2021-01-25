@@ -233,6 +233,7 @@ $lang["MAIL_FORCE_CHANGE_PASSWORD"] = "Nach dem ersten Anmelden musst du dein Pa
 
 $lang["MAIL_ADDED_TO_CARD"] = "Du wurdest zu einer Karte hinzugefügt";
 $lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</a> im Stapel %s zur Karte \"%s\" hinzugefügt.";
+$lang["NOTIFICATION_ADDED_TO_CARD"] = "du wurdest auf dem Board %s im Stapel %s zur Karte \"%s\" hinzugefügt.";
 
 $lang["MAIL_ADDED_TO_BOARD"] = "Du wurdest zu einem Board hinzugefügt";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%s'>%s</a> hinzugefügt.";
@@ -321,6 +322,7 @@ $lang["IDENTIFIER"] = "Identifikator";
 $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "interne Benachrichtigungen";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "benachrichtige beim Ausführen von wiederkehrenden Finanzeinträgen";
+$lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "benachrichtige beim Hinzufügen zu Karten bei Boards";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Überschriften";

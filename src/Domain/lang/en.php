@@ -233,6 +233,7 @@ $lang["MAIL_FORCE_CHANGE_PASSWORD"] = "You need to change your password after th
 
 $lang["MAIL_ADDED_TO_CARD"] = "You have been added to a card";
 $lang["MAIL_ADDED_TO_CARD_DETAIL"] = "you have been added on the board <a href='%s'>%s</a> at stack %s to the card \"%s\".";
+$lang["NOTIFICATION_ADDED_TO_CARD"] = "you have been added on the board %s at stack %s to the card \"%s\".";
 
 $lang["MAIL_ADDED_TO_BOARD"] = "You have been added to a board";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "you have been added to the board <a href='%s'>%s</a>.";
@@ -322,6 +323,7 @@ $lang["IDENTIFIER"] = "Identifier";
 $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "internal notifications";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "notify on execution of recurring finance entries";
+$lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "notify on assignment to cards on boards";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Headlines";

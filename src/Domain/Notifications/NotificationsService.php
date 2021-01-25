@@ -12,6 +12,7 @@ use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 use App\Application\Payload\Payload;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
+use App\Domain\Board\BoardService;
 
 class NotificationsService extends Service {
 
@@ -22,6 +23,7 @@ class NotificationsService extends Service {
     private $client_service;
     private $helper;
     private $splitbill_group_service;
+    private $boards_service;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -32,7 +34,8 @@ class NotificationsService extends Service {
             Categories\NotificationCategoryService $cat_service,
             Clients\NotificationClientsService $client_service,
             Helper $helper,
-            SplitbillGroupService $splitbill_group_service) {
+            SplitbillGroupService $splitbill_group_service,
+            BoardService $boards_service) {
         parent::__construct($logger, $user);
         $this->translation = $translation;
         $this->settings = $settings;
@@ -42,6 +45,7 @@ class NotificationsService extends Service {
         $this->client_service = $client_service;
         $this->helper = $helper;
         $this->splitbill_group_service = $splitbill_group_service;
+        $this->boards_service = $boards_service;
 
         //var_dump(\Minishlink\WebPush\VAPID::createVapidKeys());
     }
@@ -231,17 +235,25 @@ class NotificationsService extends Service {
 
         $user_client = $this->client_service->getClientByUserAndType("ifttt");
 
-        $splitbill_user_groups = $this->splitbill_group_service->getUserGroups();
+        $splitbill_user_groups = $this->splitbill_group_service->getUserElements();
+        $splitbill_all_groups = $this->splitbill_group_service->getAll();
 
-        $splitbill_all_groups = $this->splitbill_group_service->getGroups();
+        $boards_user_boards = $this->boards_service->getUserElements();
+        $boards_all_boards = $this->boards_service->getAll();
 
 
         return new Payload(Payload::$RESULT_HTML, [
             "categories" => $categories,
             "user_categories" => $user_categories,
             "user_client" => $user_client,
-            "splitbill_user_groups" => $splitbill_user_groups,
-            "splitbill_all_groups" => $splitbill_all_groups
+            "splitbill" => [
+                "groups" => $splitbill_all_groups,
+                "user_groups" => $splitbill_user_groups
+            ],
+            "boards" => [
+                "boards" => $boards_all_boards,
+                "user_boards" => $boards_user_boards
+            ],
         ]);
     }
 

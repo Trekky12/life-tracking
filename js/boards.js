@@ -303,7 +303,7 @@ function loadAndOpenCard(card) {
                 let user_id = parseInt(avatar.dataset.user);
                 var option = usersSelect.querySelector("option[value='" + user_id + "']");
 
-                if (data.entry.users.indexOf(user_id) !== -1) {
+                if (typeof data.entry.users !== 'undefined' && data.entry.users.indexOf(user_id) !== -1) {
                     avatar.classList.add('selected');
                     option.selected = true;
                 } else {

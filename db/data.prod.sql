@@ -8,3 +8,4 @@ INSERT INTO finances_paymethods (id, user, name, is_default) VALUES (1, 1, 'defa
 
 INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (1, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1);
 INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (2, 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 1);
+INSERT INTO notifications_categories (id, name, identifier, internal) VALUES (3, 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 1);

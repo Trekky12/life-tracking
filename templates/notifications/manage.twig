@@ -21,11 +21,23 @@
                             {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
                                 <div class="form-group">
                                     {{ lang[cat.name] }}
-                                    {% for group in splitbill_user_groups  %}
+                                    {% for group in splitbill["user_groups"]  %}
                                         <div>
                                             <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ group }}">
                                                 <input name="user_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ group }}" class="set_notifications_category_user" {% if "%s_%s"|format(cat.id, group) in user_categories %}checked{% endif %}>
-                                                {{splitbill_all_groups[group].name}}
+                                                {{splitbill["groups"][group].name}}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
+                                <div class="form-group">
+                                    {{ lang[cat.name] }}
+                                    {% for board in boards["user_boards"]  %}
+                                        <div>
+                                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
+                                                <input name="user_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ board }}" class="set_notifications_category_user" {% if "%s_%s"|format(cat.id, board) in user_categories %}checked{% endif %}>
+                                                {{boards["boards"][board].name}}
                                             </label>
                                         </div>
                                     {% endfor %}
@@ -92,11 +104,23 @@
                         {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
                             <div class="form-group">
                                 {{ lang[cat.name] }}
-                                {% for group in splitbill_user_groups  %}
+                                {% for group in splitbill["user_groups"]  %}
                                     <div>
                                         <label class="checkbox" for="checkboxCategory_{{cat.id}}_{{ group }}">
                                             <input name="categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxCategory_{{cat.id}}_{{ group }}" class="set_notifications_category">
-                                            {{splitbill_all_groups[group].name}}
+                                            {{splitbill["groups"][group].name}}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
+                            <div class="form-group">
+                                {{ lang[cat.name] }}
+                                {% for board in boards["user_boards"]  %}
+                                    <div>
+                                        <label class="checkbox" for="checkboxCategory_{{cat.id}}_{{ board }}">
+                                            <input name="categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxCategory_{{cat.id}}_{{ board }}" class="set_notifications_category">
+                                            {{boards["boards"][board].name}}
                                         </label>
                                     </div>
                                 {% endfor %}

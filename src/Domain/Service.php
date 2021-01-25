@@ -22,7 +22,7 @@ abstract class Service {
             $entry = $this->mapper->get($entry_id);
 
             if ($this->mapper->hasUserTable()) {
-                $entry_users = $this->mapper->getUsers($entry_id);     
+                $entry_users = $this->mapper->getUsers($entry_id);
                 $entry->setUsers($entry_users);
             }
         }
@@ -50,7 +50,7 @@ abstract class Service {
     public function getUsers($id) {
         return $this->getMapper()->getUsers($id);
     }
-    
+
     public function isMember($id) {
         $group_users = $this->getUsers($id);
         $user = $this->current_user->getUser()->id;
@@ -62,6 +62,15 @@ abstract class Service {
 
     public function getFromHash($hash) {
         return $this->getMapper()->getFromHash($hash);
+    }
+
+    public function getUserElements() {
+        $user = $this->current_user->getUser()->id;
+        return $this->mapper->getElementsOfUser($user);
+    }
+
+    public function getAll() {
+        return $this->mapper->getAll();
     }
 
 }
