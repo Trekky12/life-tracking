@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}}{% if not for_user is null %} ({{ for_user.login }}){% endif %}</h2> <a href="{% if for_user is null %}{{ url_for('users_application_passwords_edit') }}{% else %}{{ url_for('users_application_passwords_edit_admin', {'user': for_user.id}) }}{% endif %}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}}</h2> <a href="{{ url_for('users_application_passwords_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
         <div class="page-content">
             <table id="application_passwords_table" class="table table-hover small">
                 <thead>
@@ -18,7 +18,7 @@
                     {% for el in list %}
                         <tr>
                             <td>{{ el.name }}</td>
-                            <td><a href="#" data-url="{% if for_user is null %}{{ url_for('users_application_passwords_delete', {'id' : el.id}) }}{% else %}{{ url_for('users_application_passwords_delete_admin', {'id' : el.id, 'user': for_user.id}) }}{% endif %}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{ url_for('users_application_passwords_delete', {'id' : el.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

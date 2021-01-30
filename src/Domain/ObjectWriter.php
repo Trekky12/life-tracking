@@ -22,7 +22,7 @@ abstract class ObjectWriter {
         return $this->mapper;
     }
 
-    protected function createEntry($data, $user = null) {
+    protected function createEntry($data) {
         // Remove CSRF attributes
         if (array_key_exists('csrf_name', $data)) {
             unset($data["csrf_name"]);
@@ -31,13 +31,7 @@ abstract class ObjectWriter {
             unset($data["csrf_value"]);
         }
 
-        if (!isset($user)) {
-            $data['user'] = $this->current_user->getUser()->id;
-        } else {
-            $data['user'] = $user;
-            // use this user for filtering
-            $this->getMapper()->setUser($user);
-        }
+        $data['user'] = $this->current_user->getUser()->id;
 
         $dataobject = $this->getMapper()->getDataObject();
         $entry = new $dataobject($data);
@@ -90,12 +84,7 @@ abstract class ObjectWriter {
 
     public function save($id, $data, $additionalData = null): Payload {
 
-        $for_user = null;
-        if (isset($additionalData) && is_array($additionalData) && array_key_exists("user", $additionalData)) {
-            $for_user = $additionalData["user"];
-        }
-
-        $entry = $this->createEntry($data, $for_user);
+        $entry = $this->createEntry($data);
 
         if ($entry->hasParsingErrors()) {
             $this->logger->error("Insert failed " . get_class($entry), array("message" => $entry->getParsingErrors()[0]));

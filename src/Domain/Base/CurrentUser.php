@@ -7,6 +7,7 @@ use App\Domain\User\User;
 class CurrentUser {
 
     private $user = null;
+    private $token = null;
 
     function getUser() {
         // get cached user object
@@ -18,6 +19,14 @@ class CurrentUser {
 
     function setUser(User $user): void {
         $this->user = $user;
+    }
+    
+    public function setToken($token): void {
+        $this->token = $token;
+    }
+    
+    public function getToken(){
+        return $this->token;
     }
 
 }

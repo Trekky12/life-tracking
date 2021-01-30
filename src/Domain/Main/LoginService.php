@@ -70,13 +70,14 @@ class LoginService {
             // refresh user for possible changed access rights
             $user = $this->user_service->getEntry($user_id);
             $this->current_user->setUser($user);
+            $this->current_user->setToken($token);
 
             // add user object to view
             $this->twig->getEnvironment()->addGlobal("user", $user);
             $this->twig->getEnvironment()->addGlobal("user_token", $token);
 
             $this->token_service->updateToken($token);
-
+            
             return true;
         }
 

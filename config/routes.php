@@ -201,23 +201,10 @@ return function (App $app) {
         });
 
         $group->group('/{user:[0-9]+}', function(RouteCollectorProxy $group_user) {
-
             $group_user->get('/testmail', \App\Application\Action\User\TestMailAction::class)->setName('users_test_mail');
-
-            $group_user->group('/favorites', function(RouteCollectorProxy $group_user_favorites) {
-                $group_user_favorites->get('/', \App\Application\Action\User\MobileFavorites\MobileFavoritesListAction::class)->setName('users_mobile_favorites_admin');
-                $group_user_favorites->get('/edit/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesEditAction::class)->setName('users_mobile_favorites_edit_admin');
-                $group_user_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\MobileFavorites\MobileFavoritesSaveAction::class)->setName('users_mobile_favorites_save_admin');
-                $group_user_favorites->delete('/delete/{id}', \App\Application\Action\User\MobileFavorites\MobileFavoritesDeleteAction::class)->setName('users_mobile_favorites_delete_admin');
-            });
-
-            $group_user->group('/applicationpasswords', function(RouteCollectorProxy $group_user_favorites) {
-                $group_user_favorites->get('/', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsListAction::class)->setName('users_application_passwords_admin');
-                $group_user_favorites->get('/edit', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsEditAction::class)->setName('users_application_passwords_edit_admin');
-                $group_user_favorites->post('/save/[{id:[0-9]+}]', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsSaveAction::class)->setName('users_application_passwords_save_admin');
-                $group_user_favorites->delete('/delete/{id}', \App\Application\Action\User\ApplicationPasswords\ApplicationPasswordsDeleteAction::class)->setName('users_application_passwords_delete_admin');
-            });
+            $group_user->get('/identity', \App\Application\Action\User\TakeIdentityAction::class)->setName('users_take_identity');
         });
+        
     })->add(\App\Application\Middleware\AdminMiddleware::class);
     
     $app->get('/usersearch', \App\Application\Action\User\UserSearchAction::class)->setName('usersearch');

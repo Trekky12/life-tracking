@@ -4,10 +4,10 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}} {% if not for_user is null %} ({{ for_user.login }}){% endif %}</h2></div>
+        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}}</h2></div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="applicationPasswordsForm" action="{% if for_user is null %}{{ url_for('users_application_passwords_save', {'id' : entry.id}) }}{% else %}{{ url_for('users_application_passwords_save_admin', {'id' : entry.id, 'user': for_user.id}) }}{% endif %}" method="POST">
+            <form class="form-horizontal" id="applicationPasswordsForm" action="{{ url_for('users_application_passwords_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
