@@ -219,11 +219,6 @@ $lang["UNDO_ARCHIVE"] = "Soll die Archivierung für den Eintrag wirklich aufgeho
 $lang["OTHER_SETTINGS"] = "Sonstige Einstellungen";
 $lang["FORCE_PW_CHANGE"] = "Passwortänderung erzwingen";
 $lang["MAIL_SETTINGS"] = "Benachrichtigungsmails";
-$lang["MAILS_BOARD"] = "Hinzufügen zu Board/Karte";
-$lang["MAILS_BOARD_REMINDER"] = "Karten-Erinnerung";
-$lang["MAILS_USER"] = "Erstellen des Nutzers";
-$lang["MAILS_FINANCES"] = "monatliche Finanzstatistik";
-$lang["MAILS_SPLITTED_BILLS"] = "geteilte Ausgaben";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Dein Benutzeraccount bei %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "für dich wurde ein Benutzeraccount auf <a href='%s'>%s</a> erstellt.";
@@ -323,6 +318,14 @@ $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "interne Benachrichtigungen";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "benachrichtige beim Ausführen von wiederkehrenden Finanzeinträgen";
 $lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "benachrichtige beim Hinzufügen zu Karten bei Boards";
+
+$lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monatliche Finanzstatistik (am 1. des Monats um 06:00 Uhr)";
+$lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
+$lang["MAIL_CATEGORY_BOARDS_ADD"] = "benachrichtige beim Hinzufügen zu Boards";
+$lang["MAIL_CATEGORY_BOARDS_CARD_ADD"] = "benachrichtige beim Hinzufügen zu Karten bei Boards";
+$lang["MAIL_CATEGORY_BOARDS_CARD_DUE"] = "tägliche Erinnerung an fällige Karten (09:00 Uhr)";
+
+$lang["MAIL_NOTIFY_USER_CREATION"] = "Sende E-Mail mit Hinweis zur Benutzererstellung";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Überschriften";

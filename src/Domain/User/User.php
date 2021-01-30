@@ -49,12 +49,6 @@ class User extends \App\Domain\DataObject {
         $this->module_workouts = $this->exists('module_workouts', $data) ? filter_var($data['module_workouts'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : 0;
-
-        $this->mails_user = $this->exists('mails_user', $data) ? filter_var($data['mails_user'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        $this->mails_finances = $this->exists('mails_finances', $data) ? filter_var($data['mails_finances'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        $this->mails_board = $this->exists('mails_board', $data) ? filter_var($data['mails_board'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        $this->mails_board_reminder = $this->exists('mails_board_reminder', $data) ? filter_var($data['mails_board_reminder'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        $this->mails_splitted_bills = $this->exists('mails_splitted_bills', $data) ? filter_var($data['mails_splitted_bills'], FILTER_SANITIZE_NUMBER_INT) : 0;
     }
 
     public function isAdmin() {

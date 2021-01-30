@@ -182,6 +182,10 @@ return function (App $app) {
 
             $group_frontpage->get('/request/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetRequestAction::class)->setName('frontpage_widget_request');
         });
+        
+        $group->get('/mail/manage/', \App\Application\Action\MailNotifications\MailNotificationsManageAction::class)->setName('mail_manage');
+        $group->post('/mail/setCategoryUser', \App\Application\Action\MailNotifications\MailNotificationsSetCategoryAction::class)->setName('mail_notifications_set_category_user');
+        
     });
 
     $app->group('/users', function(RouteCollectorProxy $group) {

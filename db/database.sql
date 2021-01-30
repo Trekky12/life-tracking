@@ -20,11 +20,6 @@ CREATE TABLE IF NOT EXISTS global_users (
     module_timesheets int(1) DEFAULT 0,
     module_workouts int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
-    mails_user int(1) DEFAULT 1,
-    mails_finances int(1) DEFAULT 1,
-    mails_board int(1) DEFAULT 1,
-    mails_board_reminder int(1) DEFAULT 1,
-    mails_splitted_bills  int(1) DEFAULT 1,
     start_url varchar(255) DEFAULT NULL,
     secret VARCHAR(255) NULL,
     PRIMARY KEY(id),
@@ -432,7 +427,7 @@ CREATE TABLE notifications_subscription_clients (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     client INTEGER unsigned DEFAULT NULL,
-    object_id int(11) unsigned NOT NULL,
+    object_id int(11) unsigned NULL,
     UNIQUE(category, client, object_id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -443,7 +438,7 @@ CREATE TABLE notifications_subscription_users (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
-    object_id int(11) unsigned NOT NULL,
+    object_id int(11) unsigned NULL,
     UNIQUE(category, user, object_id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -462,6 +457,26 @@ CREATE TABLE notifications (
     link varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS mail_categories;
+CREATE TABLE mail_categories (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    name varchar(255) NOT NULL,
+    identifier varchar(255) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(identifier)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS mail_subscription_users;
+CREATE TABLE mail_subscription_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    object_id int(11) unsigned NULL,
+    UNIQUE(category, user, object_id),
+    FOREIGN KEY(category) REFERENCES mail_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

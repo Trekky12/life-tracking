@@ -8,6 +8,7 @@ use App\Domain\Base\Settings;
 use App\Domain\Main\Helper;
 use App\Domain\User\UserService;
 use App\Domain\Finances\FinancesMapper;
+use App\Domain\MailNotifications\MailNotificationsService;
 
 class FinanceStatsMonthlyMailService {
 
@@ -16,14 +17,22 @@ class FinanceStatsMonthlyMailService {
     private $translation;
     private $finances_mapper;
     private $user_service;
+    private $mail_notification_service;
 
-    public function __construct(LoggerInterface $logger, Settings $settings, Translator $translation, FinancesMapper $finances_mapper, Helper $helper, UserService $user_service) {
+    public function __construct(LoggerInterface $logger, 
+            Settings $settings, 
+            Translator $translation, 
+            FinancesMapper $finances_mapper, 
+            Helper $helper, 
+            UserService $user_service,
+            MailNotificationsService $mail_notification_service) {
         $this->logger = $logger;
         $this->settings = $settings;
         $this->translation = $translation;
         $this->finances_mapper = $finances_mapper;
         $this->helper = $helper;
         $this->user_service = $user_service;
+        $this->mail_notification_service = $mail_notification_service;
     }
 
     public function sendSummary() {
@@ -42,7 +51,7 @@ class FinanceStatsMonthlyMailService {
         $subject = sprintf('[Life-Tracking] %s %s %s %s', $this->translation->getTranslatedString('STATS'), $this->translation->getTranslatedString('FOR'), $fmt->format($dateObj), $year);
 
         foreach ($users as $user) {
-            if ($user->mail && $user->mails_finances == 1) {
+            if ($user->mail) {
 
                 /**
                  * Calculate Statistic
@@ -74,7 +83,8 @@ class FinanceStatsMonthlyMailService {
                         'expenses' => $expenses
                     );
 
-                    $this->helper->send_mail('mail/stats.twig', $user->mail, $subject, $variables);
+                    //$this->helper->send_mail('mail/stats.twig', $user->mail, $subject, $variables);
+                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_FINANCE_STATISTIC", 'mail/stats.twig', $subject, $variables);
                 }
             }
         }

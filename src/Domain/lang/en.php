@@ -219,11 +219,6 @@ $lang["UNDO_ARCHIVE"] = "Do you really want to cancel archiving this entry?";
 $lang["OTHER_SETTINGS"] = "Other settings";
 $lang["FORCE_PW_CHANGE"] = "Force password change";
 $lang["MAIL_SETTINGS"] = "Mail notifications";
-$lang["MAILS_BOARD"] = "added to board/card";
-$lang["MAILS_BOARD_REMINDER"] = "card reminder";
-$lang["MAILS_USER"] = "creation of user";
-$lang["MAILS_FINANCES"] = "monthly finance stats";
-$lang["MAILS_SPLITTED_BILLS"] = "splitted bills";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Your user account at %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "someone created a user account for you at <a href='%s'>%s</a>";
@@ -324,6 +319,14 @@ $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "internal notifications";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "notify on execution of recurring finance entries";
 $lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "notify on assignment to cards on boards";
+
+$lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monthly finance statistics (1. of month at 06:00 Uhr)";
+$lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
+$lang["MAIL_CATEGORY_BOARDS_ADD"] = "notify when added to board";
+$lang["MAIL_CATEGORY_BOARDS_CARD_ADD"] = "notify on assignment to cards on boards";
+$lang["MAIL_CATEGORY_BOARDS_CARD_DUE"] = "daily reminder of due cards (09:00 Uhr)";
+
+$lang["MAIL_NOTIFY_USER_CREATION"] = "send e-mail with notice of user creation";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Headlines";

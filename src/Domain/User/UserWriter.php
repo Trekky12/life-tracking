@@ -36,7 +36,7 @@ class UserWriter extends ObjectActivityWriter {
     }
     
     private function sendNewUserNotificationMail($user, $data) {
-        if ($user->mail && $user->mails_user == 1) {
+        if ($user->mail && array_key_exists("notify_creation", $data)) {
 
             $subject = sprintf($this->translation->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->helper->getBaseURL());
 

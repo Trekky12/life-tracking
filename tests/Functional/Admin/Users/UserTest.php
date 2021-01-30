@@ -60,11 +60,6 @@ class UserTest extends BaseTestCase {
             "module_trips" => 1,
             "module_timesheets" => 1,
             "force_pw_change" => 1,
-            "mails_user" => 1,
-            "mails_finances" => 1,
-            "mails_board" => 1,
-            "mails_board_reminder" => 1,
-            "mails_splitted_bills" => 1,
             "start_url" => "/test"
         ];
 
@@ -96,11 +91,6 @@ class UserTest extends BaseTestCase {
             "module_trips" => 0,
             "module_timesheets" => 0,
             "force_pw_change" => 0,
-            "mails_user" => 0,
-            "mails_finances" => 0,
-            "mails_board" => 0,
-            "mails_board_reminder" => 0,
-            "mails_splitted_bills" => 0,
             "start_url" => "/test1"
         ];
 

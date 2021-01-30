@@ -18,7 +18,12 @@
     {% endif %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>  <a href="{{  url_for('notifications_clients_manage') }}"><button class="white"><i class="fas fa-cogs" aria-hidden="true"></i> {{lang["SETTINGS"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>  
+            <div class="buttons">
+                <a href="{{  url_for('mail_manage') }}"><button class="white"><i class="far fa-envelope"></i> {{lang["MAIL_SETTINGS"]}}</button></a>
+                <a href="{{  url_for('notifications_clients_manage') }}"><button class="white"><i class="fas fa-cogs" aria-hidden="true"></i> {{lang["SETTINGS"]}}</button></a>
+            </div>
+        </div>
     </div>
     <div class="notifications_overview">
         <div id="notifications">
