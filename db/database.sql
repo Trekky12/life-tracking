@@ -188,6 +188,7 @@ CREATE TABLE cars (
     mileage_per_year INT(20) DEFAULT NULL,
     mileage_term INT(3) DEFAULT NULL,
     mileage_start_date DATE DEFAULT NULL,
+    mileage_start INT(20) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

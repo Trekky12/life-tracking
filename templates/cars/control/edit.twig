@@ -49,6 +49,11 @@
                     <label for="dateSelect">{{lang["START"]}} {{lang["DATE"]}}</label>
                     <input type="text" class="form-control" id="dateSelect"  placeholder="" name="mileage_start_date" value="{% if not entry is null %}{{entry.mileage_start_date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
                 </div>
+                
+                <div class="form-group">
+                    <label for="inputMileageStart">{{lang["MILEAGE_START"]}}</label>
+                    <input type="number" class="form-control" id="inputMileageStart" name="mileage_start" step="1" placeholder="" value="{% if not entry is null %}{{entry.mileage_start}}{% else %}0{% endif %}">
+                </div>
 
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

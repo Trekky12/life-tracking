@@ -72,6 +72,7 @@ $lang["MILEAGE"] = "Mileage";
 $lang["MILEAGE_PER_YEAR"] = "km/year";
 $lang["MILEAGE_TERM"] = "Term (years)";
 $lang["MILEAGE_TRAVELLED"] = "km driven";
+$lang["MILEAGE_START"] = "start mileage";
 $lang["KM"] = "km";
 $lang["START_WITH_YEAR"] = "calculation base 01.01.";
 $lang["START_WITH_FIRST_ENTRY"] = "calculation base 1. entry";

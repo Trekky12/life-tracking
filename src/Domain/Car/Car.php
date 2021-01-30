@@ -14,8 +14,14 @@ class Car extends \App\Domain\DataObject {
         $this->mileage_term = $this->exists('mileage_term', $data) ? filter_var($data['mileage_term'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->mileage_start_date = $this->exists('mileage_start_date', $data) ? filter_var($data['mileage_start_date'], FILTER_SANITIZE_STRING) : null;
 
+        $this->mileage_start = $this->exists('mileage_start', $data) ? filter_var($data['mileage_start'], FILTER_SANITIZE_NUMBER_INT) : null;
+        
         if (!is_null($this->mileage_start_date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->mileage_start_date)) {
             $this->mileage_start_date = date('Y-m-d');
+        }
+        
+        if (!is_null($this->mileage_start_date) && is_null($this->mileage_start)) {
+            $this->mileage_start = 0;
         }
 
         if (empty($this->name)) {

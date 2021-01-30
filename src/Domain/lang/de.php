@@ -72,6 +72,7 @@ $lang["MILEAGE"] = "Kilometerstand";
 $lang["MILEAGE_PER_YEAR"] = "km/Jahr";
 $lang["MILEAGE_TERM"] = "Laufzeit (Jahre)";
 $lang["MILEAGE_TRAVELLED"] = "gefahrene Kilometer";
+$lang["MILEAGE_START"] = "Start Kilometerstand";
 $lang["KM"] = "km";
 $lang["START_WITH_YEAR"] = "Berechnungsgrundlage 01.01.";
 $lang["START_WITH_FIRST_ENTRY"] = "Berechnungsgrundlage 1. Eintrag";
