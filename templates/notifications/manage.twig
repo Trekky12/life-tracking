@@ -53,15 +53,17 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-                    <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                    {% for cat in categories["individual"] %}
-                        <div class="form-group">
-                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                                {{cat.name}}
-                            </label>
-                        </div>
-                    {% endfor %}
+                    {% if categories["individual"]|length > 0 %}
+                        <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+                        {% for cat in categories["individual"] %}
+                            <div class="form-group">
+                                <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
+                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                                    {{cat.name}}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
 
                 </form> 
             </div>
@@ -134,16 +136,17 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-                <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                {% for cat in categories["individual"] %}
-                    <div class="form-group">
-                        <label class="checkbox" for="checkboxCategory_{{cat.id}}">
-                            <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
-                            {{cat.name}}
-                        </label>
-                    </div>
-                {% endfor %}
-
+                {% if categories["individual"]|length > 0 %}
+                    <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+                    {% for cat in categories["individual"] %}
+                        <div class="form-group">
+                            <label class="checkbox" for="checkboxCategory_{{cat.id}}">
+                                <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
+                                {{cat.name}}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
 
         </div>

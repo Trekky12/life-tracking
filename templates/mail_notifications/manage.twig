@@ -59,13 +59,25 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
-                        {% else %}
-                            <div class="form-group">
-                                <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_mail_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                                    {{lang[cat.name]}}
-                                </label>
-                            </div>
+                        {% elseif cat.identifier == 'MAIL_CATEGORY_FINANCE_STATISTIC'  %}
+                            {% if user.hasModule("finances") %}
+                                <div class="form-group">
+                                    <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
+                                        <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_mail_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                                        {{lang[cat.name]}}
+                                    </label>
+                                </div>
+                            {% endif %}
+                        {% elseif cat.identifier == 'MAIL_CATEGORY_BOARDS_ADD'  %}
+                            {% if user.hasModule("boards") %}
+                                <div class="form-group">
+                                    <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
+                                        <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_mail_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                                        {{lang[cat.name]}}
+                                    </label>
+                                </div>
+                            {% endif %}
+
                         {% endif %}
 
                     {% endfor %}
