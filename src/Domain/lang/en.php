@@ -395,6 +395,10 @@ $lang["PERSON_RECEIVES_BY_ME"] = "%s receives %s %s by me";
 $lang["PERSON_OWES_TOTAL"] = "(owes total %s %s)";
 $lang["PERSON_RECEIVES_TOTAL"] = "(receives total %s %s)";
 
+$lang["SPEND_BY"] = "Share (%s)";
+$lang["PAID_BY"] = "Paid (%s)";
+$lang["SPLITBILLY_PAID_SPEND_BY_PERSON"] = "by";
+
 $lang["TRIPS"] = "Trips";
 $lang["ADD_EVENT"] = "add event";
 $lang["TRIPS_EVENT"] = "event";
@@ -428,9 +432,10 @@ $lang["SPLITBILLS_SETTLE_UP"] = "settle up";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "sender";
 $lang["SPLITBILLS_SETTLE_UP_RECEIVER"] = "receiver";
 
-$lang["SPLITBILLS_ONLY_PERSON"] = "only %s";
-$lang["SPLITBILLS_BY_PERSON"] = "by %s";
-$lang["SPLITBILLS_EQUALLY"] = "equally";
+$lang["SPLITBILLS_ONLY_PERSON"] = "only owed by %s";
+$lang["SPLITBILLS_BY_PERSON"] = "total paid by %s";
+$lang["SPLITBILLS_EQUALLY_PAID"] = "equally paid";
+$lang["SPLITBILLS_EQUALLY_SPEND"] = "equally spend";
 $lang["RECEIVED"] = "received";
 
 $lang["CLONE"] = "clone";

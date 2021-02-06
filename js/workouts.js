@@ -54,6 +54,7 @@ document.addEventListener('click', function (event) {
 
         let new_exercise = exercise.cloneNode(true);
         new_exercise.classList.add("selected");
+        new_exercise.classList.remove("choose");
 
         new_exercise.querySelector('.plus').classList.add('hidden');
         new_exercise.querySelector('.minus').classList.remove('hidden');

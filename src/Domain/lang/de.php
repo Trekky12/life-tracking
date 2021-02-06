@@ -394,6 +394,10 @@ $lang["PERSON_RECEIVES_BY_ME"] = "%s bekommt %s %s von mir";
 $lang["PERSON_OWES_TOTAL"] = "(schuldet insgesamt %s %s)";
 $lang["PERSON_RECEIVES_TOTAL"] = "(bekommt insgesamt %s %s)";
 
+$lang["SPEND_BY"] = "Anteil (%s)";
+$lang["PAID_BY"] = "Bezahlt (%s)";
+$lang["SPLITBILLY_PAID_SPEND_BY_PERSON"] = "von";
+
 $lang["TRIPS"] = "Reisen";
 $lang["ADD_EVENT"] = "Event hinzufügen";
 $lang["TRIPS_EVENT"] = "Event";
@@ -427,9 +431,10 @@ $lang["SPLITBILLS_SETTLE_UP"] = "Schulden begleichen";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "Bezahler";
 $lang["SPLITBILLS_SETTLE_UP_RECEIVER"] = "Empfänger";
 
-$lang["SPLITBILLS_ONLY_PERSON"] = "nur %s";
-$lang["SPLITBILLS_BY_PERSON"] = "von %s";
-$lang["SPLITBILLS_EQUALLY"] = "gleichmäßig";
+$lang["SPLITBILLS_ONLY_PERSON"] = "nur geschuldet von %s";
+$lang["SPLITBILLS_BY_PERSON"] = "komplett bezahlt von %s";
+$lang["SPLITBILLS_EQUALLY_PAID"] = "jeder hat gleichviel gezahlt";
+$lang["SPLITBILLS_EQUALLY_SPEND"] = "jeder muss gleichviel zahlen";
 $lang["RECEIVED"] = "erhalten";
 
 $lang["CLONE"] = "Kopieren";
