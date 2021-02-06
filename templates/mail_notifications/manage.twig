@@ -18,41 +18,47 @@
                     {% for cat in categories %}
 
                         {% if cat.identifier == 'MAIL_CATEGORY_SPLITTED_BILLS' %}
-                            <div class="form-group">
-                                {{ lang[cat.name] }}
-                                {% for group in splitbill["user_groups"]  %}
-                                    <div>
-                                        <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ group }}">
-                                            <input name="user_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ group }}" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, group) in user_categories %}checked{% endif %}>
-                                            {{splitbill["groups"][group].name}}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
+                            {% if user.hasModule("splitbills") %}
+                                <div class="form-group">
+                                    {{ lang[cat.name] }}
+                                    {% for group in splitbill["user_groups"]  %}
+                                        <div>
+                                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ group }}">
+                                                <input name="user_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ group }}" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, group) in user_categories %}checked{% endif %}>
+                                                {{splitbill["groups"][group].name}}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         {% elseif cat.identifier == 'MAIL_CATEGORY_BOARDS_CARD_ADD' %}
-                            <div class="form-group">
-                                {{ lang[cat.name] }}
-                                {% for board in boards["user_boards"]  %}
-                                    <div>
-                                        <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
-                                            <input name="user_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ board }}" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in user_categories %}checked{% endif %}>
-                                            {{boards["boards"][board].name}}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
+                            {% if user.hasModule("boards") %}
+                                <div class="form-group">
+                                    {{ lang[cat.name] }}
+                                    {% for board in boards["user_boards"]  %}
+                                        <div>
+                                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
+                                                <input name="user_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ board }}" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in user_categories %}checked{% endif %}>
+                                                {{boards["boards"][board].name}}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         {% elseif cat.identifier == 'MAIL_CATEGORY_BOARDS_CARD_DUE' %}
-                            <div class="form-group">
-                                {{ lang[cat.name] }}
-                                {% for board in boards["user_boards"]  %}
-                                    <div>
-                                        <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
-                                            <input name="user_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ board }}" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in user_categories %}checked{% endif %}>
-                                            {{boards["boards"][board].name}}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
+                            {% if user.hasModule("boards") %}
+                                <div class="form-group">
+                                    {{ lang[cat.name] }}
+                                    {% for board in boards["user_boards"]  %}
+                                        <div>
+                                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
+                                                <input name="user_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ board }}" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in user_categories %}checked{% endif %}>
+                                                {{boards["boards"][board].name}}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         {% else %}
                             <div class="form-group">
                                 <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">

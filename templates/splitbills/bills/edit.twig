@@ -82,7 +82,7 @@
                 <h3 id="splitbill_headline">{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_SENDER"]}}{%else %}{{lang['PAID_BY']| format(i18n.currency)}}{% endif %} </h3>
                 <h4>{{ lang["REMAINING"] }}: <span id="remaining_paid">{{ 0|number_format(2) }}</span> {{ i18n.currency }}</h4>
                 <div class="form-group">
-                    <button class="gray splitbill_btn small" data-type="paid_same">{{ lang["SPLITBILLS_EQUALLY_PAID"] }}</button>
+                    <button class="gray splitbill_btn small" data-type="paid_same">{% if settleUp %}{{ lang["SPLITBILLS_EQUALLY"] }}{%else %}{{ lang["SPLITBILLS_EQUALLY_PAID"] }}{% endif %}</button>
                     {% for user_id in group_users|keys %}
                         <button class="gray splitbill_btn small" data-type="paid_person" data-id="{{ user_id }}">{% if settleUp %}{{ users[user_id].name }}{%else %}{{ lang["SPLITBILLS_BY_PERSON"]|format(users[user_id].name) }}{% endif %}</button>    
                     {% endfor %}
@@ -130,7 +130,7 @@
                 <h3 id="splitbill_headline">{% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP_RECEIVER"]}}{%else %}{{lang['SPEND_BY']| format(i18n.currency)}}{% endif %}</h3>
                 <h4>{{ lang["REMAINING"] }}: <span id="remaining_spend">{{ 0|number_format(2) }}</span> {{ i18n.currency }}</h4>
                 <div class="form-group">
-                    <button class="gray splitbill_btn small" data-type="spend_same">{{ lang["SPLITBILLS_EQUALLY_SPEND"] }}</button>
+                    <button class="gray splitbill_btn small" data-type="spend_same">{% if settleUp %}{{ lang["SPLITBILLS_EQUALLY"] }}{%else %}{{ lang["SPLITBILLS_EQUALLY_SPEND"] }}{% endif %}</button>
                     {% for user_id in group_users|keys %}
                         <button class="gray splitbill_btn small" data-type="spend_person" data-id="{{ user_id }}">{% if settleUp %}{{ users[user_id].name }}{%else %}{{ lang["SPLITBILLS_ONLY_PERSON"]|format(users[user_id].name) }}{% endif %}</button>    
                     {% endfor %}

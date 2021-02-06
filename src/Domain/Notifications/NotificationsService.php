@@ -241,9 +241,20 @@ class NotificationsService extends Service {
         $boards_user_boards = $this->boards_service->getUserElements();
         $boards_all_boards = $this->boards_service->getAll();
 
+        $categories_internal = array_filter($categories, function($cat) {
+            return $cat->isInternal();
+        });
+
+        $categories_individual = array_filter($categories, function($cat) {
+            return !$cat->isInternal();
+        });
+
 
         return new Payload(Payload::$RESULT_HTML, [
-            "categories" => $categories,
+            "categories" => [
+                "internal" => $categories_internal,
+                "individual" => $categories_individual
+            ],
             "user_categories" => $user_categories,
             "user_client" => $user_client,
             "splitbill" => [

@@ -15,10 +15,9 @@
             <div id="notifications_categories_list_user">
                 <form>
                     <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
-                    {% for cat in categories %}
-                        {% if cat.isInternal() %}
-
-                            {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
+                    {% for cat in categories["internal"] %}
+                        {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
+                            {% if user.hasModule("splitbills") %}
                                 <div class="form-group">
                                     {{ lang[cat.name] }}
                                     {% for group in splitbill["user_groups"]  %}
@@ -30,7 +29,9 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                            {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
+                            {% endif %}
+                        {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
+                            {% if user.hasModule("boards") %}
                                 <div class="form-group">
                                     {{ lang[cat.name] }}
                                     {% for board in boards["user_boards"]  %}
@@ -42,28 +43,24 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                            {% else %}
-                                <div class="form-group">
-                                    <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                        <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                                        {{lang[cat.name]}}
-                                    </label>
-                                </div>
                             {% endif %}
-
-
-                        {% endif %}
-                    {% endfor %}
-                    <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                    {% for cat in categories %}
-                        {% if not cat.isInternal() %}
+                        {% else %}
                             <div class="form-group">
                                 <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
                                     <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                                    {{cat.name}}
+                                    {{lang[cat.name]}}
                                 </label>
                             </div>
                         {% endif %}
+                    {% endfor %}
+                    <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+                    {% for cat in categories["individual"] %}
+                        <div class="form-group">
+                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
+                                <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
+                                {{cat.name}}
+                            </label>
+                        </div>
                     {% endfor %}
 
                 </form> 
@@ -99,9 +96,9 @@
             <div id="notifications_categories_list" class="hidden">
 
                 <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
-                {% for cat in categories %}
-                    {% if cat.isInternal() %}
-                        {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
+                {% for cat in categories["internal"] %}
+                    {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
+                        {% if user.hasModule("splitbills") %}
                             <div class="form-group">
                                 {{ lang[cat.name] }}
                                 {% for group in splitbill["user_groups"]  %}
@@ -113,7 +110,9 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                        {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
+                        {% endif %}
+                    {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
+                        {% if user.hasModule("boards") %}
                             <div class="form-group">
                                 {{ lang[cat.name] }}
                                 {% for board in boards["user_boards"]  %}
@@ -125,26 +124,24 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                        {% else %}
-                            <div class="form-group">
-                                <label class="checkbox" for="checkboxCategory_{{cat.id}}">
-                                    <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
-                                    {{lang[cat.name]}}
-                                </label>
-                            </div>
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-                <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                {% for cat in categories %}
-                    {% if not cat.isInternal() %}
+                    {% else %}
                         <div class="form-group">
                             <label class="checkbox" for="checkboxCategory_{{cat.id}}">
                                 <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
-                                {{cat.name}}
+                                {{lang[cat.name]}}
                             </label>
                         </div>
                     {% endif %}
+                {% endfor %}
+                <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+                {% for cat in categories["individual"] %}
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxCategory_{{cat.id}}">
+                            <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
+                            {{cat.name}}
+                        </label>
+                    </div>
                 {% endfor %}
 
             </div>

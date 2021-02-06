@@ -434,6 +434,7 @@ $lang["SPLITBILLS_SETTLE_UP_RECEIVER"] = "receiver";
 
 $lang["SPLITBILLS_ONLY_PERSON"] = "only owed by %s";
 $lang["SPLITBILLS_BY_PERSON"] = "total paid by %s";
+$lang["SPLITBILLS_EQUALLY"] = "equally";
 $lang["SPLITBILLS_EQUALLY_PAID"] = "equally paid";
 $lang["SPLITBILLS_EQUALLY_SPEND"] = "equally spend";
 $lang["RECEIVED"] = "received";
