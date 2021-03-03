@@ -468,6 +468,9 @@ $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "End";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
+$lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
+$lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "total range";
+$lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "current month";
 
 $lang["THIS_DEVICE"] = "this device";
 

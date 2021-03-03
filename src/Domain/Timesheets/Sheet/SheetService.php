@@ -56,14 +56,35 @@ class SheetService extends Service {
 
     private function getTableDataIndex($project, $from, $to, $count = 20) {
 
+        $range = $this->mapper->getMinMaxDate("start", "end", $project->id, "project");
+        $minTotal = $range["min"];
+        $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
+        
+        // Month Filter
+        $d1 = new \DateTime('first day of this month');
+        $minMonth = $d1->format('Y-m-d');
+        $d2 = new \DateTime('last day of this month');
+        $maxMonth = $d2->format('Y-m-d');
+
+        if ($project->default_view == "month") {
+            $from = !is_null($from) ? $from : $minMonth;
+            $to = !is_null($to) ? $to : $maxMonth;
+        } elseif ($project->default_view == "all") {
+            $from = !is_null($from) ? $from : $minTotal;
+            $to = !is_null($to) ? $to : $maxTotal;
+        }
+
+
+
+
+
         $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data);
         $datacount = $this->mapper->tableCount($project->id, $from, $to);
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
-        $range = $this->mapper->getMinMaxDate("start", "end", $project->id, "project");
-        $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
+        
 
         return [
             "sheets" => $rendered_data,
@@ -73,8 +94,14 @@ class SheetService extends Service {
             "sum" => DateUtility::splitDateInterval($totalSeconds),
             "from" => $from,
             "to" => $to,
-            "min" => $range["min"],
-            "max" => $max,
+            "min" => [
+                "total" => $minTotal,
+                "month" => $minMonth
+            ],
+            "max" => [
+                "total" => $maxTotal,
+                "month" => $maxMonth
+            ],
         ];
     }
 
@@ -167,7 +194,7 @@ class SheetService extends Service {
         $project_users = $this->project_service->getUsers($project->id);
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
-        $sheet_categories = !is_null($entry) ? $this->mapper->getCategoriesFromSheet($entry->id): [];
+        $sheet_categories = !is_null($entry) ? $this->mapper->getCategoriesFromSheet($entry->id) : [];
 
         $response_data = [
             'entry' => $entry,

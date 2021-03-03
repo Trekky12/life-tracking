@@ -813,10 +813,14 @@ CREATE TABLE timesheets_projects (
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) DEFAULT NULL,
     is_day_based INT(1) DEFAULT 0,
+    default_view varchar(255) DEFAULT 'month',
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/**
+ALTER TABLE `timesheets_projects` ADD `default_view` VARCHAR(255) DEFAULT 'month' AFTER `is_day_based`; 
+*/
 
 DROP TABLE IF EXISTS timesheets_projects_users;
 CREATE TABLE timesheets_projects_users (

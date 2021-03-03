@@ -23,11 +23,8 @@ class SheetViewAction {
 
         $requestData = $request->getQueryParams();
 
-        // Date Filter
-        $d = new \DateTime('first day of this month');
-        $defaultFrom = $d->format('Y-m-d');
-        list($from, $to) = DateUtility::getDateRange($requestData, $defaultFrom);
-
+        list($from, $to) = DateUtility::getDateRange($requestData, null, null); //, $defaultFrom);
+        
         $index = $this->service->view($hash, $from, $to);
 
         return $this->responder->respond($index->withTemplate('timesheets/sheets/index.twig'));

@@ -42,6 +42,14 @@
                         {{lang["TIMESHEETS_IS_DAY_BASED"]}}
                     </label>
                 </div>
+                    
+                <div class="form-group">
+                    <label for="defaultView">{{lang["TIMESHEETS_DEFAULT_VIEW"]}}</label>
+                    <select class="form-control" id="defaultView" name="default_view">
+                            <option value="all" {% if (not entry is null and 'all' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_ALL"]}}</option>
+                            <option value="month" {% if (not entry is null and 'month' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
+                    </select>
+                </div>
 
                 <div class="form-group btn">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

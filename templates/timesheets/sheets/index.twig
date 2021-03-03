@@ -30,10 +30,10 @@
                             <input type="submit" value="{{lang["SHOW"]}}"/>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
+                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["month"] }}&to={{ max["month"] }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
+                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["total"] }}&to={{ max["total"] }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
                         </div>
                     </div>
                 </div>
