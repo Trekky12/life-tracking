@@ -471,6 +471,7 @@ $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "total range";
 $lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "current month";
+$lang["TIMESHEETS_TIME"] = "sum";
 
 $lang["THIS_DEVICE"] = "this device";
 

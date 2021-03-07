@@ -127,14 +127,14 @@ class SheetExportService extends SheetService {
                 $sheet->setCellValue('D' . $row, "=C" . $row . "-B" . $row);
                 $sheet->getStyle('D' . $row)->getNumberFormat()->setFormatCode($excelTimeDiff);
             }
-
-            if (!is_null($timesheet->notice)) {
-                $sheet->setCellValue('E' . $row, htmlspecialchars_decode($timesheet->notice));
-                $sheet->getStyle('E' . $row)->getAlignment()->setWrapText(true);
+            
+            if (!is_null($timesheet->categories)) {
+                $sheet->setCellValue('E' . $row, $timesheet->categories);
             }
 
-            if (!is_null($timesheet->categories)) {
-                $sheet->setCellValue('F' . $row, $timesheet->categories);
+            if (!is_null($timesheet->notice)) {
+                $sheet->setCellValue('F' . $row, htmlspecialchars_decode($timesheet->notice));
+                $sheet->getStyle('F' . $row)->getAlignment()->setWrapText(true);
             }
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);

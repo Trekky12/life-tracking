@@ -74,17 +74,11 @@ class SheetService extends Service {
             $to = !is_null($to) ? $to : $maxTotal;
         }
 
-
-
-
-
         $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data);
         $datacount = $this->mapper->tableCount($project->id, $from, $to);
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
-
-        
 
         return [
             "sheets" => $rendered_data,

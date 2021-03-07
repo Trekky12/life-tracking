@@ -6,23 +6,28 @@ use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
+use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Application\Payload\Payload;
 
 class ProjectService extends Service {
 
     private $user_service;
+    private $sheet_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ProjectMapper $mapper, UserService $user_service) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ProjectMapper $mapper, UserService $user_service, SheetMapper $sheet_mapper) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
         $this->user_service = $user_service;
+        $this->sheet_mapper = $sheet_mapper;
     }
 
     public function index() {
         $projects = $this->mapper->getUserItems('t.createdOn DESC, name');
+        
+        $times = $this->sheet_mapper->getTimes();
 
-        return new Payload(Payload::$RESULT_HTML, ['projects' => $projects]);
+        return new Payload(Payload::$RESULT_HTML, ['projects' => $projects, 'times' => $times]);
     }
 
     public function edit($entry_id) {

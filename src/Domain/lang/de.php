@@ -470,6 +470,7 @@ $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Zeiterfassungskategorien";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Standardansicht";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "kompletter Zeitraum";
 $lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "aktueller Monat";
+$lang["TIMESHEETS_TIME"] = "Summe";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
