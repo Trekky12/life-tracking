@@ -2,8 +2,6 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
-use App\Domain\Main\Utility\DateUtility;
-
 class SheetMapper extends \App\Domain\Mapper {
 
     protected $table = "timesheets_sheets";
@@ -194,7 +192,7 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[intval($row["project"])] = DateUtility::splitDateInterval(floatval($row["sum"]));
+            $results[intval($row["project"])] = floatval($row["sum"]);
         }
         return $results;
     }

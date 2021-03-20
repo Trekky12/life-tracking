@@ -8,6 +8,7 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\DateUtility;
 
 class ProjectService extends Service {
 
@@ -25,9 +26,23 @@ class ProjectService extends Service {
     public function index() {
         $projects = $this->mapper->getUserItems('t.createdOn DESC, name');
         
-        $times = $this->sheet_mapper->getTimes();
+        $times = $this->sheet_mapper->getTimes($projects);
+        
+        $new_times = [];
+        
+        foreach($times as $project_id => $time){
+            
+            $project = $projects[$project_id];
+            
+            $new_time = DateUtility::splitDateInterval($time);
+            if ($project->has_time_conversion > 0 && $time > 0) {
+                $new_time = DateUtility::splitDateInterval($time * $project->time_conversion_rate) . ' (' . $new_time . ')';
+            }
+            
+            $new_times[$project_id] = $new_time;
+        }
 
-        return new Payload(Payload::$RESULT_HTML, ['projects' => $projects, 'times' => $times]);
+        return new Payload(Payload::$RESULT_HTML, ['projects' => $projects, 'times' => $new_times]);
     }
 
     public function edit($entry_id) {

@@ -814,12 +814,15 @@ CREATE TABLE timesheets_projects (
     hash VARCHAR(255) DEFAULT NULL,
     is_day_based INT(1) DEFAULT 0,
     default_view varchar(255) DEFAULT 'month',
+    has_time_conversion INT(1) DEFAULT 0,
+    time_conversion_rate varchar(100) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /**
 ALTER TABLE `timesheets_projects` ADD `default_view` VARCHAR(255) DEFAULT 'month' AFTER `is_day_based`; 
+ALTER TABLE `timesheets_projects` ADD `has_time_conversion` INT(1) NOT NULL DEFAULT '0' AFTER `default_view`, ADD `time_conversion_rate` VARCHAR(100) NULL AFTER `has_time_conversion`; 
 */
 
 DROP TABLE IF EXISTS timesheets_projects_users;

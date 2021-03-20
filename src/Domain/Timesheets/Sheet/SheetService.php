@@ -59,7 +59,7 @@ class SheetService extends Service {
         $range = $this->mapper->getMinMaxDate("start", "end", $project->id, "project");
         $minTotal = $range["min"];
         $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
-        
+
         // Month Filter
         $d1 = new \DateTime('first day of this month');
         $minMonth = $d1->format('Y-m-d');
@@ -80,12 +80,17 @@ class SheetService extends Service {
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
+        $sum = DateUtility::splitDateInterval($totalSeconds);
+        if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
+            $sum = DateUtility::splitDateInterval($totalSeconds * $project->time_conversion_rate) . ' (' . $sum . ')';
+        }
+
         return [
             "sheets" => $rendered_data,
             "project" => $project,
             "datacount" => $datacount,
             "hasTimesheetTable" => true,
-            "sum" => DateUtility::splitDateInterval($totalSeconds),
+            "sum" => $sum,
             "from" => $from,
             "to" => $to,
             "min" => [
@@ -130,11 +135,16 @@ class SheetService extends Service {
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $searchQuery);
 
+        $sum = DateUtility::splitDateInterval($totalSeconds);
+        if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
+            $sum = DateUtility::splitDateInterval($totalSeconds * $project->time_conversion_rate) . ' (' . $sum . ')';
+        }
+
         $response_data = [
             "recordsTotal" => intval($recordsTotal),
             "recordsFiltered" => intval($recordsFiltered),
             "data" => $rendered_data,
-            "sum" => DateUtility::splitDateInterval($totalSeconds)
+            "sum" => $sum
         ];
 
         return $response_data;
@@ -149,11 +159,16 @@ class SheetService extends Service {
 
             list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
+            $time = DateUtility::splitDateInterval($sheet->diff);
+            if ($project->has_time_conversion > 0 && $sheet->diff > 0) {
+                $time = DateUtility::splitDateInterval($sheet->diff * $project->time_conversion_rate) . ' (' . $time . ')';
+            }
+
             $row = [];
             $row[] = $date;
             $row[] = $start;
             $row[] = $end;
-            $row[] = DateUtility::splitDateInterval($sheet->diff);
+            $row[] = $time;
             $row[] = $sheet->categories;
 
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';

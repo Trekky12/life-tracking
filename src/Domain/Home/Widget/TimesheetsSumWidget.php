@@ -43,7 +43,12 @@ class TimesheetsSumWidget implements Widget {
             $range = $this->sheet_mapper->getMinMaxDate("start", "end", $project_id, "project");
             $totalSeconds = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"]);
 
-            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "sum" => DateUtility::splitDateInterval($totalSeconds)];
+            $sum = DateUtility::splitDateInterval($totalSeconds);
+            if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
+                $sum = DateUtility::splitDateInterval($totalSeconds * $project->time_conversion_rate) . ' (' . $sum . ')';
+            }
+
+            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "sum" => $sum];
         }
 
         return $result;

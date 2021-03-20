@@ -342,7 +342,8 @@ abstract class Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[] = new $this->dataobject($row);
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

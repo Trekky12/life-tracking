@@ -50,6 +50,18 @@
                             <option value="month" {% if (not entry is null and 'month' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
                     </select>
                 </div>
+                    
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxHasTimeConversion">
+                        <input name="has_time_conversion" type="checkbox" value="1" id="checkboxHasTimeConversion" {% if entry is not null and entry.has_time_conversion == 1 %}checked{% endif %}>
+                        {{lang["TIMESHEETS_HAS_TIME_CONVERSION"]}}
+                    </label>
+                </div>
+                    
+                <div class="form-group">
+                    <label for="inputRate">{{lang["TIMESHEETS_HAS_TIME_CONVERSION_RATE"]}}</label>
+                    <input type="text" class="form-control" id="inputRate" name="time_conversion_rate" value="{% if not entry is null %}{{entry.time_conversion_rate}}{% else %}1{% endif %}">
+                </div>
 
                 <div class="form-group btn">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
