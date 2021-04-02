@@ -41,7 +41,7 @@ $lang["VALUE"] = "Betrag";
 
 $lang["SAVE"] = "Speichern";
 $lang["CANCEL"] = "Abbrechen";
-$lang["INSERT"] = "Einfügen";
+$lang["INSERT"] = "Hinzufügen";
 $lang["DELETE"] = "Löschen";
 
 
@@ -516,8 +516,8 @@ $lang["DATAOBJECT_NOTIFICATIONS_NOTIFICATION"] = "Benachrichtigung";
 $lang["DATAOBJECT_SETTING"] = "Einstellung";
 $lang["DATAOBJECT_SPLITBILLS_BILL"] = "geteilte Ausgabe";
 $lang["DATAOBJECT_SPLITBILLS_GROUP"] = "geteilte Ausgabengruppe";
-$lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfasungsprojekt";
-$lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfasungseintrag";
+$lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfassungsprojekt";
+$lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfassungseintrag";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "Kategorie";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "Reise-Event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "Reise";
@@ -673,5 +673,7 @@ $lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "Web Push Nachrichten sind nicht ver
 
 $lang["HELP"] = "Hilfe";
 $lang["TAKE_IDENTITY"] = "Identität übernehmen";
+
+$lang["NO_OPTIONS"] = "Keine Auswahl verfügbar.";
 
 return $lang;

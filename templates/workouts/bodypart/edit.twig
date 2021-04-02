@@ -4,7 +4,11 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["WORKOUTS_BODYPART"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["WORKOUTS_BODYPART"]}}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('workouts_bodyparts') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>      
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" action="{{  url_for('workouts_bodyparts_save', {'id' : entry.id}) }}" method="POST">

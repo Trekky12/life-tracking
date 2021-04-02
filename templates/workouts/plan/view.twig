@@ -13,16 +13,21 @@
 {% block body %}
     <div class="inner-content">
         <div class="page-header"><h2>{{plan.name|raw}}</h2>
+            <div class="buttons">
+
                 {% if not plan.is_template %}
-                <div class="buttons">
+                    <a href="{{  url_for('workouts') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
                     <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["WORKOUTS_SESSION_ADD"]}}</button></a>
                     <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="white">{{lang["WORKOUTS_SESSIONS"]}}</button></a>
                     <a href="{{  url_for('workouts_sessions_stats', {'plan':plan.hash}) }}"><button class="white">{{lang["STATS"]}}</button></a>
                     <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a>
-                </div>
-            {% else %}
-                <a href="{{  url_for('workouts_plans_edit') }}?template={{ plan.hash }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["WORKOUTS_TEMPLATE_USE"]}}</button></a>
-            {% endif %}
+
+                {% else %}
+                    <a href="{{  url_for('workouts_templates') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+                    <a href="{{  url_for('workouts_plans_edit') }}?template={{ plan.hash }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["WORKOUTS_TEMPLATE_USE"]}}</button></a>
+                {% endif %}
+
+            </div>
         </div>
 
         <div class="page-content">
@@ -44,7 +49,7 @@
                         {% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise} only %}
                     {% elseif exercise.type == "day" %}
                         <h3>{{ exercise.notice }}</h3>
-                    {% elseif exercise.type == "superset" %}
+                        {% elseif exercise.type == "superset" %}
                         <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
                         <div class="workout_superset">
                             <div class="exercises" data-type="superset">

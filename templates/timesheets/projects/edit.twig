@@ -14,7 +14,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
+            <div class="buttons">
+                <a href="{{ url_for('timesheets')}}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" action="{{  url_for('timesheets_projects_save', {'id' : entry.id}) }}" method="POST">
@@ -42,22 +46,22 @@
                         {{lang["TIMESHEETS_IS_DAY_BASED"]}}
                     </label>
                 </div>
-                    
+
                 <div class="form-group">
                     <label for="defaultView">{{lang["TIMESHEETS_DEFAULT_VIEW"]}}</label>
                     <select class="form-control" id="defaultView" name="default_view">
-                            <option value="all" {% if (not entry is null and 'all' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_ALL"]}}</option>
-                            <option value="month" {% if (not entry is null and 'month' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
+                        <option value="all" {% if (not entry is null and 'all' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_ALL"]}}</option>
+                        <option value="month" {% if (not entry is null and 'month' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
                     </select>
                 </div>
-                    
+
                 <div class="form-group">
                     <label class="checkbox" for="checkboxHasTimeConversion">
                         <input name="has_time_conversion" type="checkbox" value="1" id="checkboxHasTimeConversion" {% if entry is not null and entry.has_time_conversion == 1 %}checked{% endif %}>
                         {{lang["TIMESHEETS_HAS_TIME_CONVERSION"]}}
                     </label>
                 </div>
-                    
+
                 <div class="form-group">
                     <label for="inputRate">{{lang["TIMESHEETS_HAS_TIME_CONVERSION_RATE"]}}</label>
                     <input type="text" class="form-control" id="inputRate" name="time_conversion_rate" value="{% if not entry is null %}{{entry.time_conversion_rate}}{% else %}1{% endif %}">

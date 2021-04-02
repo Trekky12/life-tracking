@@ -41,6 +41,7 @@ class BaseTestCase extends TestCase {
      */
     protected $USE_GUZZLE = true;
     protected $LOCAL_IP = '::1';
+    //protected $LOCAL_IP = '127.0.0.1';
     protected $USER_AGENT = 'PHPUnit Test';
 
     /**

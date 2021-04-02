@@ -9,11 +9,11 @@
     overflow: hidden;
     background-color:$color_blue;
     margin-bottom: 1rem;
-    
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    
+
     &, a{
         color: $color_background-body;
     }
@@ -22,7 +22,7 @@
         margin:0;
         margin-right: 1rem;
     }
-    
+
     button{
         padding: 0.2rem 1rem!important;
     }
@@ -46,24 +46,38 @@
 }
 
 
-.page-header .buttons{
-    display:flex;
-    flex-direction: column;
-
-    a{
-        margin-left:1rem;
-        margin-bottom:1rem;
-        &:last-child{
-            margin-bottom:0;
-        }
+.page-header {
+    flex-direction:column;
+    @media screen and (min-width: $size_tablet) {
+        flex-direction:row;
     }
-
-    @media screen and (min-width: $size_mobile_navigation) {
+    .buttons{
+        display:flex;
         flex-direction: row;
+        margin-top: 1rem;
+
 
         a{
-            margin-bottom:0;
+            margin-left:1rem;
+            margin-bottom:1rem;
+            &:last-child{
+                margin-bottom:0;
+            }
         }
-    }
 
+        button{
+            @include font-size(1.2);
+        }
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            margin-top: 0;
+            a{
+                margin-bottom:0;
+            }
+            button{
+                @include font-size(1.4);
+            }
+        }
+
+    }
 }

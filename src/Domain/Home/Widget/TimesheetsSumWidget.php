@@ -60,7 +60,9 @@ class TimesheetsSumWidget implements Widget {
 
     public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
-        return $this->projects[$id]["sum"];
+
+        $sum = $this->projects[$id]["sum"];
+        return !empty($sum) ? $sum : "00:00:00";
     }
 
     public function getTitle(WidgetObject $widget = null) {

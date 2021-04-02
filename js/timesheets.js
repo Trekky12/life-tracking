@@ -80,7 +80,10 @@ const projectCategorySelects = document.querySelectorAll('select.category');
 projectCategorySelects.forEach(function (item, idx) {
     new Selectr(item, {
         searchable: false,
-        placeholder: lang.categories
+        placeholder: lang.categories,
+        messages: {
+            noOptions: lang.no_options
+        }
     });
 });
 

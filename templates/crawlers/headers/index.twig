@@ -5,8 +5,9 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINES"]}} ({{ crawler.name }})</h2> 
+        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINES"]}} | {{ crawler.name }}</h2> 
             <div class="buttons">
+                <a href="{{  url_for('crawlers') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>            
                 <a href="{{  url_for('crawlers_headers_clone', {'crawler': crawler.hash}) }}"><button class="white"><i class="fas fa-clone" aria-hidden="true"></i> {{lang["CLONE"]}}</button></a>
                 <a href="{{  url_for('crawlers_headers_edit', {'crawler': crawler.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
             </div>

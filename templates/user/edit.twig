@@ -5,7 +5,11 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["USERS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["USERS"]}}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('users') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form action="{{  url_for('users_save', {'id' : entry.id}) }}" method="POST">
@@ -106,7 +110,7 @@
                         {{lang["WORKOUTS"]}}
                     </label>
                 </div>
-                
+
                 <h3>{{lang["OTHER_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label class="checkbox" for="checkboxForcePWChange">
@@ -114,17 +118,17 @@
                         {{lang["FORCE_PW_CHANGE"]}}
                     </label>
                 </div>
-                
+
                 {% if entry is null %}
-                <h3>{{lang["MAIL_SETTINGS"]}}</h3>
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxNotifyCreation">
-                        <input name="notify_creation" type="checkbox" value="1" id="checkboxNotifyCreation">
-                        {{lang["MAIL_NOTIFY_USER_CREATION"]}}
-                    </label>
-                </div>
+                    <h3>{{lang["MAIL_SETTINGS"]}}</h3>
+                    <div class="form-group">
+                        <label class="checkbox" for="checkboxNotifyCreation">
+                            <input name="notify_creation" type="checkbox" value="1" id="checkboxNotifyCreation">
+                            {{lang["MAIL_NOTIFY_USER_CREATION"]}}
+                        </label>
+                    </div>
                 {% endif %}
-                    
+
                 <h3>{{lang["PWA_SETTINGS"]}}</h3>
                 <div class="form-group">
                     <label for="inputStartURL">{{lang["START_URL"]}}</label>

@@ -13,6 +13,9 @@
 {% block body %}
     <div class="inner-content">
         <div class="page-header"><h2>{{plan.name|raw}} | {{ session.date|date(i18n.dateformatTwig.date) }}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>
         </div>
 
         <div class="page-content workouts-session-view">
@@ -26,7 +29,7 @@
                         {% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise} only %}
                     {% elseif exercise.type == "day" %}
                         <h3>{{ exercise.notice }}</h3>
-                    {% elseif exercise.type == "superset" %}
+                        {% elseif exercise.type == "superset" %}
                         <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
                         <div class="workout_superset">
                             <div class="exercises" data-type="superset">

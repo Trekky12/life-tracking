@@ -21,7 +21,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["RECURRING"]}} {% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP"]}}{%else %}{{lang["SPLITBILL_BILL"]}}{% endif %}</h2></div>
+        <div class="page-header"><h2>{{lang["RECURRING"]}} {% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP"]}}{%else %}{{lang["SPLITBILL_BILL"]}}{% endif %} | {{group.name|raw}}</h2>
+            <div class="buttons">
+                <a href="{{ url_for('splitbill_bills_recurring', {'group': group.hash})}}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" id="splitbillsBillsForm" action="{{  url_for('splitbill_bills_recurring_save', {'id' : entry.id, 'group' : group.hash}) }}" method="POST">
@@ -180,7 +184,7 @@
                     <label for="inputMultiplier">{{lang["MULTIPLIER"]}}</label>
                     <input type="number" class="form-control" id="inputMultiplier" name="multiplier" step="1" value="{% if not entry is null %}{{entry.multiplier}}{% else %}1{% endif %}">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="checkbox" for="checkboxActive">
                         <input name="is_active" type="checkbox" value="1" id="checkboxActive" {% if entry is not null and entry.is_active == 1 %}checked{% endif %}>

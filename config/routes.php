@@ -511,5 +511,7 @@ return function (App $app) {
         $group->group('/notifications', function(RouteCollectorProxy $notifications_group) {
             $notifications_group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         });
+        
+        $group->post('/workout', \App\Application\Action\Workouts\Exercise\ExerciseSaveAction::class);
     });
 };

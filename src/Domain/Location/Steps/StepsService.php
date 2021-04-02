@@ -41,7 +41,10 @@ class StepsService extends Service {
 
     public function getStepsOfDate($date) {
         $steps = $this->mapper->getStepsOfDate($date);
-        return new Payload(Payload::$RESULT_HTML, ['date' => $date, 'steps' => $steps > 0 ? $steps : 0]);
+        
+        $datetime = new \DateTime($date);
+        
+        return new Payload(Payload::$RESULT_HTML, ['date' => $date, 'steps' => $steps > 0 ? $steps : 0, "year" => $datetime->format('Y'), "month" => $datetime->format('m')]);
     }
 
     private function createChartData($stats, $key = "year") {

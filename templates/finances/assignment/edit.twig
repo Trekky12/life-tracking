@@ -5,13 +5,17 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</h2>
+            <div class="buttons">
+                <a href="{{ url_for('finances_categories_assignment') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>  
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" id="financeForm" action="{{  url_for('finances_categories_assignment_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                
+
                 {% if not entry is null %}
                     <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
                 {% endif %}
@@ -20,7 +24,7 @@
                     <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
                     <input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %}value="{{entry.description|raw}}"{% endif %}>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="category">{{lang["CATEGORY"]}}</label>
                     <select class="form-control" id="category" name="category">
@@ -29,17 +33,17 @@
                         {% endfor %}
                     </select>
                 </div>
-                    
-                    <div class="form-group">
+
+                <div class="form-group">
                     <label for="inputMinValue">{{lang["MIN_VALUE"]}}</label>
                     <input type="number" class="form-control" id="inputMinValue" name="min_value" step="any" value="{% if not entry is null %}{{entry.min_value}}{% endif %}">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="inputMaxValue">{{lang["MAX_VALUE"]}}</label>
                     <input type="number" class="form-control" id="inputMaxValue" name="max_value" step="any" value="{% if not entry is null %}{{entry.max_value}}{% endif %}">
                 </div>
-                
+
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}

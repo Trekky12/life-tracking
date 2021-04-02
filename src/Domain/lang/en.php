@@ -675,4 +675,6 @@ $lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "Web Push Nachrichten are not availa
 $lang["HELP"] = "help";
 $lang["TAKE_IDENTITY"] = "take identity";
 
+$lang["NO_OPTIONS"] = "No options available.";
+
 return $lang;

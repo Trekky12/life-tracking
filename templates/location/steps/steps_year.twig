@@ -1,4 +1,4 @@
-    {% extends "base.twig" %}
+{% extends "base.twig" %}
 
 {% set active = 'steps' %}
 
@@ -8,13 +8,15 @@
     <div class="inner-content">
         <div class="page-header">
             <h2>{{lang["STEPS"]}} {{lang["STATS"]}} {{lang["IN"]}} {{year}}</h2>
-            <a href="{{ url_for('steps') }}"><button class="white">{{lang["BACK"]}}</button></a>
+            <div class="buttons">
+                <a href="{{ url_for('steps') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>
         </div>
 
         <div class="page-content">
-            
+
             <canvas id="stepsSummaryChart" data-values="{{data}}" data-labels="{{labels}}" data-label="{{lang["STEPS_AVG"]}}"></canvas>
-            
+
             <table id="steps_year_table" class="table table-hover small">
                 <thead>
                     <tr>

@@ -10,7 +10,11 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["WORKOUTS_TEMPLATE_PLAN"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["WORKOUTS_TEMPLATE_PLAN"]}}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('workouts_templates') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" action="{{  url_for('workouts_templates_save', {'id' : entry.id}) }}" method="POST">
@@ -122,7 +126,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <input id="setCount" type="number" min="0" max="999" step="any" size="5" value="3" class="small"/>
                     <label for="setCount">{{ lang["WORKOUTS_SETS"] }}</label>

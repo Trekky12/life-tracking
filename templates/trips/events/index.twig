@@ -33,7 +33,12 @@
         <span class="sr-only">Loading...</span>
     </div>
     <div class="inner-content">
-        <div class="page-header"><h2>{{trip.name|raw}}</h2> <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD_EVENT"]}}</button></a></div>
+        <div class="page-header"><h2>{{trip.name|raw}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('trips') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+                <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD_EVENT"]}}</button></a>
+            </div>
+        </div>
         <div id="trip-map"></div>
         <div class="page-content" id="trip_overview">
 
@@ -79,12 +84,12 @@
             <div class="modal-content">
                 <table>
                     <thead>
-                    <tr>
-                        <th>{{ lang["NAME"] }}</th>
-                        <th>{{ lang["DATE"] }}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>{{ lang["NAME"] }}</th>
+                            <th>{{ lang["DATE"] }}</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
                     </tbody>

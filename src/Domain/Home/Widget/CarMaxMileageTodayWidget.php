@@ -82,7 +82,7 @@ class CarMaxMileageTodayWidget implements Widget {
     }
 
     public function getLink(WidgetObject $widget = null) {
-        return $this->router->urlFor('car_service');
+        return $this->router->urlFor('car_service_stats');
     }
 
 }

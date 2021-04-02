@@ -9,7 +9,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MAIL_SETTINGS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["MAIL_SETTINGS"]}}</h2>
+            <div class="buttons">
+                <a href="{{ url_for('notifications')}}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <div id="mail_notifications_categories_list_user">

@@ -8,7 +8,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
 
     protected $uri_overview = "/notifications/manage/";
     protected $uri_set_category_user = "/notifications/setCategoryUser";
-    protected $TEST_USER_CATEGORY = 1;
+    protected $TEST_USER_CATEGORY = "2_1";
 
     protected function setUp(): void {
         $this->login("admin", "admin");
