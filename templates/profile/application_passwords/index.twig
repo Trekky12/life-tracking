@@ -5,7 +5,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}}</h2> <a href="{{ url_for('users_application_passwords_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}}</h2> 
+            <div class="buttons">
+                <a href="{{ url_for('users_application_passwords_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="application_passwords_table" class="table table-hover small">
                 <thead>

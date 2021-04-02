@@ -56,10 +56,12 @@
         flex-direction: row;
         margin-top: 1rem;
 
+        flex-wrap: wrap;
+        justify-content: center;
 
         a{
-            margin-left:1rem;
-            margin-bottom:1rem;
+            margin-left:0.5rem;
+            margin-bottom:0.5rem;
             &:last-child{
                 margin-bottom:0;
             }
@@ -67,15 +69,21 @@
 
         button{
             @include font-size(1.2);
+            padding-left: 0.5rem!important;
+            padding-right: 0.5rem!important;
         }
 
+
         @media screen and (min-width: $size_mobile_navigation) {
+            margin-left:1rem;
             margin-top: 0;
             a{
                 margin-bottom:0;
             }
             button{
                 @include font-size(1.4);
+                padding-left: 1rem!important;
+                padding-right: 1rem!important;
             }
         }
 

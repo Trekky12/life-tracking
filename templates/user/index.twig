@@ -5,7 +5,13 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["USERS"]}}</h2> {% if user.isAdmin() %}<a href="{{  url_for('users_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>{% endif%}</div>
+        <div class="page-header"><h2>{{lang["USERS"]}}</h2> 
+                {% if user.isAdmin() %}
+                <div class="buttons">
+                    <a href="{{  url_for('users_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+                </div>
+            {% endif%}
+        </div>
         <div class="page-content">
             <table id="users_table" class="table table-hover small">
                 <thead>
@@ -34,10 +40,10 @@
                             <td>{% if entry.mail %}<a href="{{  url_for('users_test_mail', {'user' : entry.id}) }}"><span class="fas fa-envelope fa-lg"></span> {{lang["TESTMAIL"]}}</a>{%endif%}</td>
                             <td>
                                 {% if user.id != entry.id %}
-                                <a href="{{  url_for('users_take_identity', {'user': entry.id}) }}">Identität übernehmen{{lang["1APPLICATION_PASSWORDS"]}}</a>
+                                    <a href="{{  url_for('users_take_identity', {'user': entry.id}) }}">Identität übernehmen{{lang["1APPLICATION_PASSWORDS"]}}</a>
                                 {% endif %}
                             </td>
-                            
+
                         </tr>
                     {% endfor %}
                 </tbody>

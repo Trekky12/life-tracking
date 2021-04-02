@@ -5,7 +5,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["BOARDS"]}}</h2> <a href="{{  url_for('boards_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["BOARDS"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('boards_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="boards_table" class="table table-hover small">
                 <thead>
@@ -22,12 +26,12 @@
                             <td>
                                 {% if board.user == user.id %}
                                     <a href="{{  url_for('boards_edit', {'id' : board.id}) }}"><span class="fas fa-edit fa-lg"></span></a>
-                                {% endif %}
+                                    {% endif %}
                             </td>
                             <td>
                                 {% if board.user == user.id %}
                                     <a href="#" data-url="{{  url_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-type="board"><span class="fas fa-trash fa-lg"></span></a>
-                                {% endif %}
+                                    {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
