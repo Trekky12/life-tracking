@@ -30,7 +30,7 @@ class TripMapper extends \App\Domain\Mapper {
                 . " GROUP BY t.id"
                 . " ORDER BY t.createdOn DESC, name";
 
-        switch ($filter) {#
+        switch ($filter) {
             case "past":
                 $sql = "SELECT l.* FROM (" . $sql2 . ") as l WHERE min_date < CURDATE() AND max_date < CURDATE()";
                 break;
@@ -38,7 +38,7 @@ class TripMapper extends \App\Domain\Mapper {
                 $sql = "SELECT l.* FROM (" . $sql2 . ") as l WHERE min_date IS NULL AND max_date IS NULL";
                 break;
             default:
-                $sql = "SELECT l.* FROM (" . $sql2 . ") as l WHERE min_date >= CURDATE() AND max_date <= CURDATE()";
+                $sql = "SELECT l.* FROM (" . $sql2 . ") as l"; // WHERE min_date >= CURDATE() AND max_date <= CURDATE()";
                 break;
         }
 

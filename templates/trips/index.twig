@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{%if filter == "past" %}{{lang["TRIPS_PAST"]}}{% elseif  filter == "plan" %}{{lang["TRIPS_PLANNED"]}}{% else %}{{lang["TRIPS"]}}{% endif %}</h2> 
+        <div class="page-header"><h2>{{lang["TRIPS"]}}</h2> 
             <div class="buttons">
                 <a href="{{  url_for('trips_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
             </div>
