@@ -1,4 +1,7 @@
 <select class="hidden" id="users" name="users[]" multiple="true" data-module="{{ module }}">
+    {% if entry is null %}
+        <option value="{{user.id}}" selected="true">{{user.id}}</option>
+    {% endif %}
     {% for user_id, login in entry.getUsers() %}
         <option value="{{user_id}}" selected="true">{{login}}</option>
     {% endfor %}
@@ -12,6 +15,9 @@
     </ul>
 </div>
 <div id="users_chips">
+    {% if entry is null %}
+        <div class="chip chip-{{user.id}}" data-id="{{user.id}}">{{user.login}}<span class="remove">×</span></div>
+    {% endif %}
     {% for user_id, login in entry.getUsers() %}
         <div class="chip chip-{{user_id}}" data-id="{{user_id}}">{{login}}<span class="remove">×</span></div>
     {% endfor %}
