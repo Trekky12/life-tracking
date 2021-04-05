@@ -471,8 +471,9 @@ $lang["TIMESHEETS_DEFAULT_VIEW"] = "Standardansicht";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "kompletter Zeitraum";
 $lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "aktueller Monat";
 $lang["TIMESHEETS_TIME"] = "Summe";
-$lang["TIMESHEETS_HAS_TIME_CONVERSION"] = "Zeitumrechnung";
-$lang["TIMESHEETS_HAS_TIME_CONVERSION_RATE"] = "Zeitumrechnungsrate";
+$lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "Zeitberechnung anpassbar";
+$lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "Zeitumrechnungsrate";
+$lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 

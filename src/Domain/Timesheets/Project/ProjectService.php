@@ -35,7 +35,7 @@ class ProjectService extends Service {
             $project = $projects[$project_id];
 
             $new_time = DateUtility::splitDateInterval($time["sum"]);
-            if ($project->has_time_conversion > 0 && $time["sum"] > 0) {
+            if ($project->has_duration_modifications > 0 && $time["sum"] > 0) {
                 $new_time = DateUtility::splitDateInterval($time["sum_modified"]) . ' (' . $new_time . ')';
             }
 

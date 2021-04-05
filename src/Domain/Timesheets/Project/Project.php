@@ -14,7 +14,7 @@ class Project extends \App\Domain\DataObject {
         $this->is_day_based = $this->exists('is_day_based', $data) ? filter_var($data['is_day_based'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->default_view = $this->exists('default_view', $data) ? filter_var($data['default_view'], FILTER_SANITIZE_STRING) : "month";
         
-        $this->has_time_conversion = $this->exists('has_time_conversion', $data) ? filter_var($data['has_time_conversion'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->has_duration_modifications = $this->exists('has_duration_modifications', $data) ? filter_var($data['has_duration_modifications'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->time_conversion_rate = $this->exists('time_conversion_rate', $data) ? filter_var($data['time_conversion_rate'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 1;
 
         if (empty($this->name)) {

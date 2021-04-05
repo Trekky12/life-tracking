@@ -82,7 +82,7 @@ class SheetService extends Service {
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
-        if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
+        if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
             $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
@@ -138,7 +138,7 @@ class SheetService extends Service {
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $searchQuery);
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
-        if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
+        if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
             $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $searchQuery, "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
@@ -163,7 +163,7 @@ class SheetService extends Service {
             list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
             $time = DateUtility::splitDateInterval($sheet->duration);
-            if ($project->has_time_conversion > 0 && $sheet->duration_modified > 0 && $sheet->duration !== $sheet->duration_modified) {
+            if ($project->has_duration_modifications > 0 && $sheet->duration_modified > 0 && $sheet->duration !== $sheet->duration_modified) {
                 $time = DateUtility::splitDateInterval($sheet->duration_modified) . ' (' . $time . ')';
             }
 
@@ -183,14 +183,22 @@ class SheetService extends Service {
         return $rendered_data;
     }
 
-    public function setDuration(Sheet $entry, Project $project) {
+    public function setDuration(Sheet $entry, Project $project, $duration_modification = false) {
 
         // get and save duration
         $duration = $entry->calculateDuration();
         if (!is_null($duration)) {
-            $duration_modified = intval($project->has_time_conversion) > 0 ? $duration * $project->time_conversion_rate : $duration;
+            $this->mapper->set_duration($entry->id, $duration);
 
-            $this->mapper->set_duration($entry->id, $duration, $duration_modified);
+            // set the time converstion
+            if (is_null($entry->duration_modified)) {
+                $duration_modified = (intval($project->has_duration_modifications) > 0 && $project->time_conversion_rate > 0) ? $duration * $project->time_conversion_rate : $duration;
+                $this->mapper->set_duration_modified($entry->id, $duration_modified);
+            }
+            // reset the modified duration
+            if (!$duration_modification) {
+                $this->mapper->set_duration_modified($entry->id, $duration);
+            }
         }
     }
 

@@ -116,3 +116,19 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "minuteIncrement": 1
     });
 }
+
+const checkboxDurationModification = document.getElementById('checkboxDurationModification');
+const inputDurationModificationWrapper = document.getElementById('inputDurationModificationWrapper');
+
+if (checkboxDurationModification && inputDurationModificationWrapper) {
+    checkboxDurationModification.addEventListener('click', function (event) {
+
+        if (checkboxDurationModification.checked) {
+            inputDurationModificationWrapper.classList.remove("hidden");
+            inputDurationModificationWrapper.querySelector('input').disabled = false;
+        } else {
+            inputDurationModificationWrapper.classList.add("hidden");
+            inputDurationModificationWrapper.querySelector('input').disabled = true;
+        }
+    });
+}

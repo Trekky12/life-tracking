@@ -70,7 +70,7 @@ class SheetExportService extends SheetService {
         $sheet->setCellValue('B4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_COME_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_COME_PROJECT_BASED"));
         $sheet->setCellValue('C4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_LEAVE_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_LEAVE_PROJECT_BASED"));
 
-        if ($project->has_time_conversion > 0) {
+        if ($project->has_duration_modifications > 0) {
             $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
             $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE_CALCULATED"));
         } else {
@@ -126,7 +126,7 @@ class SheetExportService extends SheetService {
 
             if (!is_null($timesheet->start) && !is_null($timesheet->end)) {
 
-                if ($project->has_time_conversion > 0) {
+                if ($project->has_duration_modifications > 0) {
                     $sum = DateUtility::splitDateInterval($timesheet->duration_modified);
                     $sheet->setCellValue('D' . $row, $sum);
                 }
@@ -153,7 +153,7 @@ class SheetExportService extends SheetService {
         $firstRow = (1 + $offset);
         $sumRow = ($idx + 1 + $offset);
 
-        if ($project->has_time_conversion > 0) {
+        if ($project->has_duration_modifications > 0) {
             $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified);
 
@@ -191,7 +191,7 @@ class SheetExportService extends SheetService {
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
         );
 
-        if ($project->has_time_conversion > 0) {
+        if ($project->has_duration_modifications > 0) {
             $sheet->getColumnDimension('D')->setVisible(true);
         } else {
             $sheet->getColumnDimension('D')->setVisible(false);

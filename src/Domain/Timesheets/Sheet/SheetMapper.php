@@ -9,9 +9,20 @@ class SheetMapper extends \App\Domain\Mapper {
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
-    public function set_duration($id, $duration, $duration_modified) {
-        $sql = "UPDATE " . $this->getTableName() . " SET duration = :duration, duration_modified = :duration_modified WHERE id  = :id";
-        $bindings = array("id" => $id, "duration" => $duration, "duration_modified" => $duration_modified);
+    public function set_duration($id, $duration) {
+        $sql = "UPDATE " . $this->getTableName() . " SET duration = :duration WHERE id  = :id";
+        $bindings = array("id" => $id, "duration" => $duration);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
+    public function set_duration_modified($id, $duration_modified) {
+        $sql = "UPDATE " . $this->getTableName() . " SET duration_modified = :duration_modified WHERE id  = :id";
+        $bindings = array("id" => $id, "duration_modified" => $duration_modified);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 

@@ -34,13 +34,15 @@ class SheetWriter extends ObjectActivityWriter {
 
         $data['project'] = $project->id;
 
+        $duration_modification = $project->has_duration_modifications && array_key_exists("duration_modification", $data) && intval(filter_var($data["duration_modification"], FILTER_SANITIZE_NUMBER_INT)) > 0 ? true : false;
+
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
-        $this->service->setDuration($entry, $project);
+        $this->service->setDuration($entry, $project, $duration_modification);
 
         try {
-            
+
             $this->mapper->deleteCategoriesFromSheet($id);
             if (array_key_exists("category", $data) && is_array($data["category"]) && !empty($data["category"])) {
                 $categories = filter_var_array($data["category"], FILTER_SANITIZE_NUMBER_INT);

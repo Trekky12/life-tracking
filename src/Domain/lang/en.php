@@ -472,8 +472,9 @@ $lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "total range";
 $lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "current month";
 $lang["TIMESHEETS_TIME"] = "sum";
-$lang["TIMESHEETS_HAS_TIME_CONVERSION"] = "time conversion";
-$lang["TIMESHEETS_HAS_TIME_CONVERSION_RATE"] = "time conversion rate";
+$lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
+$lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "time conversion rate";
+$lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
 
 $lang["THIS_DEVICE"] = "this device";
 
