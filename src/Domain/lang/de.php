@@ -437,6 +437,7 @@ $lang["SPLITBILLS_EQUALLY"] = "gleichmäßig";
 $lang["SPLITBILLS_EQUALLY_PAID"] = "jeder hat gleichviel gezahlt";
 $lang["SPLITBILLS_EQUALLY_SPEND"] = "jeder muss gleichviel zahlen";
 $lang["RECEIVED"] = "erhalten";
+$lang["SPLITBILLS_INDIVIDUAL"] = "individuell";
 
 $lang["CLONE"] = "Kopieren";
 

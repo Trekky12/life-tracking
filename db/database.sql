@@ -614,6 +614,8 @@ CREATE TABLE splitbill_bill (
     settleup INT(1) DEFAULT 0,
     exchange_rate varchar(100) DEFAULT NULL,
     exchange_fee varchar(100) DEFAULT NULL,
+    paid_by varchar(20) DEFAULT NULL,
+    spend_by varchar(20) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -654,6 +656,8 @@ CREATE TABLE splitbill_bill_recurring (
     unit varchar(255) DEFAULT 'month',
     multiplier int(5) DEFAULT 1,
     is_active int(1) DEFAULT 1,
+    paid_by varchar(20) DEFAULT NULL,
+    spend_by varchar(20) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE

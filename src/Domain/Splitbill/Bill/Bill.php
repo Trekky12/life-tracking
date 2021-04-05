@@ -47,6 +47,9 @@ class Bill extends \App\Domain\DataObject {
 
         $this->spend_foreign = $this->exists('spend_foreign', $data) ? filter_var($data['spend_foreign'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->paid_foreign = $this->exists('paid_foreign', $data) ? filter_var($data['paid_foreign'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+
+        $this->paid_by = $this->exists('paid_by', $data) ? filter_var($data['paid_by'], FILTER_SANITIZE_STRING) : null;
+        $this->spend_by = $this->exists('spend_by', $data) ? filter_var($data['spend_by'], FILTER_SANITIZE_STRING) : null;
     }
 
     /**
