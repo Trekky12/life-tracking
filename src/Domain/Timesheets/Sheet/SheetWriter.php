@@ -37,7 +37,7 @@ class SheetWriter extends ObjectActivityWriter {
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
-        $this->service->setDiff($entry->id);
+        $this->service->setDuration($entry, $project);
 
         try {
             

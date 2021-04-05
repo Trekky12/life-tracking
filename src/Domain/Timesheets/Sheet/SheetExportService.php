@@ -9,6 +9,7 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
+use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
@@ -16,14 +17,14 @@ class SheetExportService extends SheetService {
 
     private $translation;
 
-    public function __construct(LoggerInterface $logger, 
-            CurrentUser $user, 
-            SheetMapper $mapper, 
-            ProjectService $project_service, 
-            ProjectCategoryService $project_category_service, 
-            UserService $user_service, 
-            Settings $settings, 
-            RouteParser $router, 
+    public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
+            SheetMapper $mapper,
+            ProjectService $project_service,
+            ProjectCategoryService $project_category_service,
+            UserService $user_service,
+            Settings $settings,
+            RouteParser $router,
             Translator $translation) {
         parent::__construct($logger, $user, $mapper, $project_service, $project_category_service, $user_service, $settings, $router);
         $this->translation = $translation;
@@ -68,34 +69,34 @@ class SheetExportService extends SheetService {
         $sheet->setCellValue('A4', $this->translation->getTranslatedString("DATE"));
         $sheet->setCellValue('B4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_COME_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_COME_PROJECT_BASED"));
         $sheet->setCellValue('C4', $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_LEAVE_DAY_BASED") : $this->translation->getTranslatedString("TIMESHEETS_LEAVE_PROJECT_BASED"));
-        $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
-        $sheet->setCellValue('E4', $this->translation->getTranslatedString("NOTICE"));
-        $sheet->setCellValue('F4', $this->translation->getTranslatedString("CATEGORIES"));
-        $sheet->getStyle('A4:F4')->applyFromArray(
+
+        if ($project->has_time_conversion > 0) {
+            $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
+            $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE_CALCULATED"));
+        } else {
+            $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE"));
+        }
+
+        $sheet->setCellValue('F4', $this->translation->getTranslatedString("NOTICE"));
+        $sheet->setCellValue('G4', $this->translation->getTranslatedString("CATEGORIES"));
+        $sheet->getStyle('A4:G4')->applyFromArray(
                 ['borders' => [
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
                     ],
                 ]
         );
-        $sheet->getStyle('A4:F4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:G4')->getFont()->setBold(true);
 
 
         $excelTime = "[$-F400]h:mm:ss AM/PM";
         $excelDate = $dateFormatPHP['date'];
         $excelDateTime = $dateFormatPHP['datetime'];
-        $excelTimeDiff = "[hh]:mm:ss";
+        $excelTimeDuration = "[hh]:mm:ss";
 
         // Table Data
         $offset = 4;
         $idx = 0;
         foreach ($data as $timesheet) {
-
-            //list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetimeShort'], $dateFormatPHP['time']);
-            //$diff = $this->helper->splitDateInterval($timesheet->diff);
-            //$sheet->setCellValue('A' . ($idx + 1 + $offset), $date);
-            //$sheet->setCellValue('B' . ($idx + 1 + $offset), $start);
-            //$sheet->setCellValue('C' . ($idx + 1 + $offset), $end);
-            //$sheet->setCellValue('D' . ($idx + 1 + $offset), $diff);
 
             $start = $timesheet->getStartDateTime();
             $end = $timesheet->getEndDateTime();
@@ -124,21 +125,26 @@ class SheetExportService extends SheetService {
             }
 
             if (!is_null($timesheet->start) && !is_null($timesheet->end)) {
-                $sheet->setCellValue('D' . $row, "=C" . $row . "-B" . $row);
-                $sheet->getStyle('D' . $row)->getNumberFormat()->setFormatCode($excelTimeDiff);
+
+                if ($project->has_time_conversion > 0) {
+                    $sum = DateUtility::splitDateInterval($timesheet->duration_modified);
+                    $sheet->setCellValue('D' . $row, $sum);
+                }
+                $sheet->setCellValue('E' . $row, "=C" . $row . "-B" . $row);
+                $sheet->getStyle('E' . $row)->getNumberFormat()->setFormatCode($excelTimeDuration);
             }
-            
+
             if (!is_null($timesheet->categories)) {
-                $sheet->setCellValue('E' . $row, $timesheet->categories);
+                $sheet->setCellValue('F' . $row, $timesheet->categories);
             }
 
             if (!is_null($timesheet->notice)) {
-                $sheet->setCellValue('F' . $row, htmlspecialchars_decode($timesheet->notice));
-                $sheet->getStyle('F' . $row)->getAlignment()->setWrapText(true);
+                $sheet->setCellValue('G' . $row, htmlspecialchars_decode($timesheet->notice));
+                $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
             }
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
-            $sheet->getStyle('A' . $row . ':F' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+            $sheet->getStyle('A' . $row . ':G' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
             $idx++;
         }
@@ -146,10 +152,18 @@ class SheetExportService extends SheetService {
         // Table Footer
         $firstRow = (1 + $offset);
         $sumRow = ($idx + 1 + $offset);
-        $sheet->setCellValue('D' . $sumRow, "=SUM(D" . $firstRow . ":D" . ($sumRow - 1) . ")");
-        $sheet->getStyle('D' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDiff);
 
-        $sheet->getStyle('A' . $sumRow . ':F' . $sumRow)->applyFromArray(
+        if ($project->has_time_conversion > 0) {
+            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, "%", "t.duration_modified");
+            $sum = DateUtility::splitDateInterval($totalSecondsModified);
+
+            $sheet->setCellValue('D' . $sumRow, $sum);
+        }
+
+        $sheet->setCellValue('E' . $sumRow, "=SUM(E" . $firstRow . ":E" . ($sumRow - 1) . ")");
+        $sheet->getStyle('E' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDuration);
+
+        $sheet->getStyle('A' . $sumRow . ':G' . $sumRow)->applyFromArray(
                 ['borders' => [
                         'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
@@ -164,6 +178,7 @@ class SheetExportService extends SheetService {
         $sheet->getColumnDimension('D')->setAutoSize(true);
         $sheet->getColumnDimension('E')->setAutoSize(true);
         $sheet->getColumnDimension('F')->setAutoSize(true);
+        $sheet->getColumnDimension('G')->setAutoSize(true);
 
         // sheet protection
         $sheet->getProtection()->setSheet(true);
@@ -171,10 +186,16 @@ class SheetExportService extends SheetService {
                 ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
         );
-        $sheet->getStyle("A1:F2")
+        $sheet->getStyle("A1:G2")
                 ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
         );
+
+        if ($project->has_time_conversion > 0) {
+            $sheet->getColumnDimension('D')->setVisible(true);
+        } else {
+            $sheet->getColumnDimension('D')->setVisible(false);
+        }
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 

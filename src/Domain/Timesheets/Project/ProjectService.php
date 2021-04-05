@@ -25,20 +25,20 @@ class ProjectService extends Service {
 
     public function index() {
         $projects = $this->mapper->getUserItems('t.createdOn DESC, name');
-        
+
         $times = $this->sheet_mapper->getTimes($projects);
-        
+
         $new_times = [];
-        
-        foreach($times as $project_id => $time){
-            
+
+        foreach ($times as $project_id => $time) {
+
             $project = $projects[$project_id];
-            
-            $new_time = DateUtility::splitDateInterval($time);
-            if ($project->has_time_conversion > 0 && $time > 0) {
-                $new_time = DateUtility::splitDateInterval($time * $project->time_conversion_rate) . ' (' . $new_time . ')';
+
+            $new_time = DateUtility::splitDateInterval($time["sum"]);
+            if ($project->has_time_conversion > 0 && $time["sum"] > 0) {
+                $new_time = DateUtility::splitDateInterval($time["sum_modified"]) . ' (' . $new_time . ')';
             }
-            
+
             $new_times[$project_id] = $new_time;
         }
 
@@ -55,7 +55,7 @@ class ProjectService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
-    
+
     public function getUserProjects() {
         $user = $this->current_user->getUser()->id;
         return $this->mapper->getElementsOfUser($user);

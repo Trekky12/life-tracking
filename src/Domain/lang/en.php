@@ -676,5 +676,6 @@ $lang["HELP"] = "help";
 $lang["TAKE_IDENTITY"] = "take identity";
 
 $lang["NO_OPTIONS"] = "No options available.";
+$lang["DIFFERENCE_CALCULATED"] = "difference (calculated)";
 
 return $lang;

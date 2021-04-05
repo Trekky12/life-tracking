@@ -45,9 +45,10 @@ class TimesheetsSumWidget implements Widget {
 
             $sum = DateUtility::splitDateInterval($totalSeconds);
             if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
-                $sum = DateUtility::splitDateInterval($totalSeconds * $project->time_conversion_rate) . ' (' . $sum . ')';
+                $totalSecondsModified = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], "%", "t.duration_modified");
+                $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
             }
-
+            
             $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "sum" => $sum];
         }
 

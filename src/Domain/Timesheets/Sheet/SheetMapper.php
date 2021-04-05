@@ -9,9 +9,9 @@ class SheetMapper extends \App\Domain\Mapper {
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
-    public function set_diff($id, $diff) {
-        $sql = "UPDATE " . $this->getTableName() . " SET diff = :diff WHERE id  = :id";
-        $bindings = array("id" => $id, "diff" => $diff);
+    public function set_duration($id, $duration, $duration_modified) {
+        $sql = "UPDATE " . $this->getTableName() . " SET duration = :duration, duration_modified = :duration_modified WHERE id  = :id";
+        $bindings = array("id" => $id, "duration" => $duration, "duration_modified" => $duration_modified);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -76,12 +76,12 @@ class SheetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $searchQuery = "%") {
+    public function tableSum($project, $from, $to, $searchQuery = "%", $field = "t.duration") {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
 
-        $sql = "SELECT SUM(t.diff) FROM ";
-        $sql .= "(" . $this->getTableSQL("t.diff") . ") as t";
+        $sql = "SELECT SUM($field) FROM ";
+        $sql .= "(" . $this->getTableSQL($field) . ") as t";
 
         $stmt = $this->db->prepare($sql);
 
@@ -108,7 +108,7 @@ class SheetMapper extends \App\Domain\Mapper {
                 $sort = "end";
                 break;
             case 3:
-                $sort = "diff";
+                $sort = "duration";
                 break;
         }
 
@@ -183,7 +183,7 @@ class SheetMapper extends \App\Domain\Mapper {
     }
 
     public function getTimes() {
-        $sql = "SELECT s.project, SUM(s.diff) as sum "
+        $sql = "SELECT s.project, SUM(s.duration) as sum, SUM(s.duration_modified) as sum_modified "
                 . " FROM " . $this->getTableName() . " s "
                 . " GROUP BY s.project";
 
@@ -192,7 +192,7 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[intval($row["project"])] = floatval($row["sum"]);
+            $results[intval($row["project"])] = ["sum" => floatval($row["sum"]), "sum_modified" => floatval($row["sum_modified"])];
         }
         return $results;
     }

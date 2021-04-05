@@ -12,6 +12,7 @@ use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
 use App\Domain\Main\Utility\DateUtility;
 use App\Application\Payload\Payload;
+use App\Domain\Timesheets\Project\Project;
 
 class SheetService extends Service {
 
@@ -82,7 +83,8 @@ class SheetService extends Service {
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
-            $sum = DateUtility::splitDateInterval($totalSeconds * $project->time_conversion_rate) . ' (' . $sum . ')';
+            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, "%", "t.duration_modified");
+            $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 
         return [
@@ -137,7 +139,8 @@ class SheetService extends Service {
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_time_conversion > 0 && $totalSeconds > 0) {
-            $sum = DateUtility::splitDateInterval($totalSeconds * $project->time_conversion_rate) . ' (' . $sum . ')';
+            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $searchQuery, "t.duration_modified");
+            $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 
         $response_data = [
@@ -159,9 +162,9 @@ class SheetService extends Service {
 
             list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
-            $time = DateUtility::splitDateInterval($sheet->diff);
-            if ($project->has_time_conversion > 0 && $sheet->diff > 0) {
-                $time = DateUtility::splitDateInterval($sheet->diff * $project->time_conversion_rate) . ' (' . $time . ')';
+            $time = DateUtility::splitDateInterval($sheet->duration);
+            if ($project->has_time_conversion > 0 && $sheet->duration_modified > 0 && $sheet->duration !== $sheet->duration_modified) {
+                $time = DateUtility::splitDateInterval($sheet->duration_modified) . ' (' . $time . ')';
             }
 
             $row = [];
@@ -180,12 +183,14 @@ class SheetService extends Service {
         return $rendered_data;
     }
 
-    public function setDiff($id) {
-        $entry = $this->mapper->get($id);
-        // get and save diff
-        $diff = $entry->getDiff();
-        if (!is_null($diff)) {
-            $this->mapper->set_diff($id, $diff);
+    public function setDuration(Sheet $entry, Project $project) {
+
+        // get and save duration
+        $duration = $entry->calculateDuration();
+        if (!is_null($duration)) {
+            $duration_modified = intval($project->has_time_conversion) > 0 ? $duration * $project->time_conversion_rate : $duration;
+
+            $this->mapper->set_duration($entry->id, $duration, $duration_modified);
         }
     }
 

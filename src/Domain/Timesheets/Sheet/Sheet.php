@@ -19,7 +19,8 @@ class Sheet extends \App\Domain\DataObject {
 
         $this->start = $this->exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_STRING) : null;
         $this->end = $this->exists('end', $data) ? filter_var($data['end'], FILTER_SANITIZE_STRING) : null;
-        $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->duration = $this->exists('duration', $data) ? filter_var($data['duration'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->duration_modified = $this->exists('duration_modified', $data) ? filter_var($data['duration_modified'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
 
@@ -49,7 +50,7 @@ class Sheet extends \App\Domain\DataObject {
         return !is_null($this->end) ? $end : $fallback;
     }
 
-    public function getDiff($fallback = null) {
+    public function calculateDuration($fallback = null) {
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
 
