@@ -189,15 +189,16 @@ class SheetService extends Service {
         $duration = $entry->calculateDuration();
         if (!is_null($duration)) {
             $this->mapper->set_duration($entry->id, $duration);
-
+            
             // set the time converstion
             if (is_null($entry->duration_modified)) {
                 $duration_modified = (intval($project->has_duration_modifications) > 0 && $project->time_conversion_rate > 0) ? $duration * $project->time_conversion_rate : $duration;
                 $this->mapper->set_duration_modified($entry->id, $duration_modified);
-            }
-            // reset the modified duration
-            if (!$duration_modification) {
-                $this->mapper->set_duration_modified($entry->id, $duration);
+            } else {
+                // reset the modified duration
+                if (!$duration_modification) {
+                    $this->mapper->set_duration_modified($entry->id, $duration);
+                }
             }
         }
     }

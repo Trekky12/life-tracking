@@ -476,6 +476,7 @@ $lang["TIMESHEETS_TIME"] = "sum";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "time conversion rate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
+$lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
 
 $lang["THIS_DEVICE"] = "this device";
 
