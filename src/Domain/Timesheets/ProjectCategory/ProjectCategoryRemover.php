@@ -25,7 +25,7 @@ class ProjectCategoryRemover extends ObjectActivityRemover {
     public function delete($id, $additionalData = null): Payload {
         $project = $this->project_service->getFromHash($additionalData["project"]);
 
-        if (!$this->project_service->isOwner($project->id)) {
+        if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
         return parent::delete($id, $additionalData);

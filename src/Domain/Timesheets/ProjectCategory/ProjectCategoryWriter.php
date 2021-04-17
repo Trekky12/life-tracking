@@ -26,7 +26,7 @@ class ProjectCategoryWriter extends ObjectActivityWriter {
 
         $project = $this->project_service->getFromHash($additionalData["project"]);
 
-        if (!$this->project_service->isOwner($project->id)) {
+        if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

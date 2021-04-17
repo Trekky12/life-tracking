@@ -5,10 +5,9 @@ namespace Tests\Functional\Timesheet\ProjectCategory;
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
 class MemberTest extends TimesheetTestBase {
-
-    protected $TEST_PROJECT_HASH = "ABCabc123";
-    protected $TEST_CATEGORY_ID = 1;
     
+    protected $TEST_PROJECT_HASH = "ABCabc123";
+
     protected $uri_child_overview = "/timesheets/HASH/categories/";
     protected $uri_child_edit = "/timesheets/HASH/categories/edit/";
     protected $uri_child_save = "/timesheets/HASH/categories/save/";
@@ -28,7 +27,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+        $this->assertStringContainsString('<table id="project_categories_table"', $body);
     }
 
     public function testGetAddElement() {
@@ -37,7 +36,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+        $this->assertStringContainsString('<form class="form-horizontal" id="projectCategoriesForm" action="' . $this->getURIChildSave($this->TEST_PROJECT_HASH) . '" method="POST">', $body);
     }
 
     /**
@@ -51,44 +50,123 @@ class MemberTest extends TimesheetTestBase {
 
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        
-        $body = (string) $response->getBody();
-        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+        $this->assertEquals(301, $response->getStatusCode());
+        $this->assertEquals($this->getURIChildOverview($this->TEST_PROJECT_HASH), $response->getHeaderLine("Location"));
 
+        return $data;
     }
 
     /**
+     * @depends testPostAddElement
      */
-    public function testPostElementCreatedSave() {
- 
+    public function testAddedElement($data) {
+        $response = $this->request('GET', $this->getURIChildOverview($this->TEST_PROJECT_HASH));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $row = $this->getElementInTable($body, $data, $this->TEST_PROJECT_HASH);
+
+        $this->assertArrayHasKey("id_edit", $row);
+        $this->assertArrayHasKey("id_delete", $row);
+
+        return intval($row["id_edit"]);
+    }
+
+    /**
+     * Edit created element
+     * @depends testAddedElement
+     * @depends testPostAddElement
+     */
+    public function testGetElementCreatedEdit(int $entry_id, array $data) {
+
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $entry_id);
+
+        $body = (string) $response->getBody();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $entry_id . "\">", $body);
+
+        $matches = [];
+        $re = '/<form class="form-horizontal" id=\"projectCategoriesForm\" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
+        preg_match($re, $body, $matches);
+
+        $this->assertArrayHasKey("save", $matches);
+        $this->assertArrayHasKey("id", $matches);
+
+        $this->compareInputFields($body, $data);
+
+        return intval($matches["id"]);
+    }
+
+    /**
+     * 
+     * @depends testGetElementCreatedEdit
+     */
+    public function testPostElementCreatedSave(int $entry_id) {
         $data = [
-            "id" => $this->TEST_CATEGORY_ID,
+            "id" => $entry_id,
             "name" => "Test Category Updated"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_CATEGORY_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $entry_id, $data);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        
-        $body = (string) $response->getBody();
-        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+        $this->assertEquals(301, $response->getStatusCode());
+        $this->assertEquals($this->getURIChildOverview($this->TEST_PROJECT_HASH), $response->getHeaderLine("Location"));
+
+        return $data;
     }
 
     /**
+     * Is the element updated?
+     * @depends testPostElementCreatedSave
      */
-    public function testDeleteElement() {
-
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_CATEGORY_ID);
+    public function testGetElementUpdated(array $result_data) {
+        $response = $this->request('GET', $this->getURIChildOverview($this->TEST_PROJECT_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $json = json_decode($body, true);
 
-        $this->assertArrayHasKey("is_deleted", $json);
-        $this->assertFalse($json["is_deleted"]);
-        $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
+        $row = $this->getElementInTable($body, $result_data, $this->TEST_PROJECT_HASH);
+
+        $this->assertArrayHasKey("id_edit", $row);
+        $this->assertArrayHasKey("id_delete", $row);
+
+        return intval($row["id_edit"]);
+    }
+
+    /**
+     * @depends testGetElementUpdated
+     * @depends testPostElementCreatedSave
+     */
+    public function testChanges(int $child_id, $data) {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $child_id);
+
+        $body = (string) $response->getBody();
+        $this->compareInputFields($body, $data);
+    }
+
+    /**
+     * @depends testGetElementUpdated
+     */
+    public function testDeleteElement(int $entry_id) {
+
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $entry_id);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('{"is_deleted":true,"error":""}', $body);
+    }
+
+    protected function getElementInTable($body, $data, $hash) {
+        $matches = [];
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        preg_match($re, $body, $matches);
+
+        return $matches;
     }
 
     protected function getURIChildOverview($hash) {

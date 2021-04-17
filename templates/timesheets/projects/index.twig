@@ -27,9 +27,7 @@
                             <td><a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a></td> 
                             <td>{{times[project.id]}}</td> 
                             <td>
-                                {% if project.user == user.id %}
-                                    <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}"><span class="fas fa-tags"></span></a>
-                                    {% endif %}
+                                <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}"><span class="fas fa-tags"></span></a>
                             </td>                            
                             <td>
                                 {% if project.user == user.id %}

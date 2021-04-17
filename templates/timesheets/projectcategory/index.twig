@@ -25,14 +25,10 @@
                         <tr>
                             <td>{{cat.name}}</td> 
                             <td>
-                                {% if project.user == user.id %}
-                                    <a href="{{  url_for('timesheets_project_categories_edit', {'id' : cat.id, 'project' : project.hash}) }}"><span class="fas fa-edit fa-lg"></span></a>
-                                    {% endif %}
+                                <a href="{{  url_for('timesheets_project_categories_edit', {'id' : cat.id, 'project' : project.hash}) }}"><span class="fas fa-edit fa-lg"></span></a>
                             </td>
                             <td>
-                                {% if project.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('timesheets_project_categories_delete', {'id' : cat.id, 'project' : project.hash}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
-                                    {% endif %}
+                                <a href="#" data-url="{{  url_for('timesheets_project_categories_delete', {'id' : cat.id, 'project' : project.hash}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
                             </td>
                         </tr>
                     {% endfor %}
