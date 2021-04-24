@@ -74,8 +74,19 @@ class SplitbillBillService extends Service {
 
         list($totalBalance, $myTotalBalance) = $this->calculateBalance($group->id);
 
+        $isSettleUp = false;
+        if ($type == 'settleup' || (!is_null($entry) && $entry->settleup == 1)) {
+            $isSettleUp = true;
+        }
+        
+        $paid_by = !is_null($entry) ? $entry->paid_by : "";
+        $spend_by = !is_null($entry) ? $entry->spend_by : "";
+        
         // Prefill on new settle up
+        $settleUpPrefill = false;
         if ($type == 'settleup' && is_null($entry) && $myTotalBalance["balance"] < 0) {
+            
+            $settleUpPrefill = true;
 
             $totalValue = -1 * $myTotalBalance["balance"];
 
@@ -87,7 +98,15 @@ class SplitbillBillService extends Service {
             foreach ($totalBalance as $user => $tBalance) {
                 $balance[$user]["paid"] = 0;
                 $balance[$user]["spend"] = $tBalance["owe"];
+                
+                $spend_by = $user;
             }
+            
+            if(count($totalBalance) > 1){
+                $spend_by = "individual";
+            }
+            
+            $paid_by = $me;
         }
 
         $response_data = [
@@ -99,7 +118,11 @@ class SplitbillBillService extends Service {
             'totalValue' => $totalValue,
             'type' => $type,
             'paymethods' => $paymethods,
-            'totalValueForeign' => $totalValueForeign
+            'totalValueForeign' => $totalValueForeign,
+            'isSettleUp' => $isSettleUp,
+            'paid_by' => $paid_by,
+            'spend_by' => $spend_by,
+            'settleUpPrefill' => $settleUpPrefill
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
