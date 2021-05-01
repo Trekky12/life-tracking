@@ -1,6 +1,9 @@
 'use strict';
 
-const exercisesSelected = document.querySelector('#workoutExerciseSelection .content');
+const hideSelectionBtn = document.querySelector('#hide_exercise_selection');
+const exercisesAvailableView = document.querySelector('.available_exercises');
+const exercisesSelectedView = document.querySelector('.selected_exercises');
+const exercisesSelected = exercisesSelectedView.querySelector('.content');
 
 document.addEventListener('click', function (event) {
     let plus = event.target.closest('.exercise .plus');
@@ -39,13 +42,14 @@ document.addEventListener('click', function (event) {
                 element = element.nextElementSibling;
             }
             exercises_day.forEach(function (exercise) {
-                exercise.remove()
+                exercise.remove();
             });
         } else {
             element.remove();
         }
         loadSelectedMuscles();
         updateFields();
+        adjustAvailableExercisesColumnHeight();
     }
 
     if (plus) {
@@ -68,7 +72,7 @@ document.addEventListener('click', function (event) {
         input_id.value = exercise.dataset.id;
 
         new_exercise.appendChild(input_id);
-        
+
         let sets = parseInt(document.querySelector('#setCount').value);
         let set = 0;
         for (set = 0; set < sets; set++) {
@@ -85,6 +89,7 @@ document.addEventListener('click', function (event) {
 
         exercisesSelected.appendChild(new_exercise);
         loadSelectedMuscles();
+        adjustAvailableExercisesColumnHeight();
     }
 
     if (headline) {
@@ -310,3 +315,26 @@ function addSet(exercise) {
 
     setsList.appendChild(new_set);
 }
+
+if (hideSelectionBtn) {
+    hideSelectionBtn.addEventListener('click', function (event) {
+        exercisesAvailableView.classList.toggle("hidden");
+        if (exercisesAvailableView.classList.contains("hidden")) {
+            hideSelectionBtn.textContent = lang.show;
+            exercisesSelectedView.style.gridArea = " 2 / 1 / 3 / 3";
+        } else {
+            hideSelectionBtn.textContent = lang.hide;
+            exercisesSelectedView.style.removeProperty("grid-area");
+        }
+    });
+}
+
+
+function adjustAvailableExercisesColumnHeight() {
+    if (!isMobile() && exercisesAvailableView) {
+        exercisesAvailableView.style.height = "500px";
+        exercisesAvailableView.style.height = exercisesSelectedView.offsetHeight - 10 + 'px';
+    }
+}
+
+adjustAvailableExercisesColumnHeight();

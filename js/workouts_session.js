@@ -1,6 +1,6 @@
 'use strict';
 
-const exercisesSession = document.querySelector('#workoutExerciseSelection .content');
+const exercisesSession = document.querySelector('#workoutExercises .content');
 const addExerciseBtn = document.querySelector('#addExercise');
 const addExerciseSelect = document.querySelector('#addExerciseToSession');
 const addExerciseSetNr = document.querySelector('#setCount');

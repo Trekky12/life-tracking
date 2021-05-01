@@ -680,4 +680,7 @@ $lang["TAKE_IDENTITY"] = "Identität übernehmen";
 $lang["NO_OPTIONS"] = "Keine Auswahl verfügbar.";
 $lang["DIFFERENCE_CALCULATED"] = "Differenz (berechnet)";
 
+$lang["HIDE"] = "Ausblenden";
+$lang["SHOW"] = "Anzeigen";
+
 return $lang;
