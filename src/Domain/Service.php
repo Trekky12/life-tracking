@@ -39,7 +39,7 @@ abstract class Service {
         if (!is_null($id)) {
             $element = $this->getMapper()->get($id);
 
-            if ($element->user !== $user) {
+            if ($element->getOwner() !== $user) {
                 return false;
             }
             return true;

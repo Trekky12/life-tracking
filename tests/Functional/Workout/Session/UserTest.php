@@ -50,7 +50,8 @@ class UserTest extends BaseTestCase {
                 0 => [
                     "id" => 3,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
@@ -65,12 +66,14 @@ class UserTest extends BaseTestCase {
                             "repeats" => 3,
                             "weight" => 4
                         ]
-                    ]
+                    ],
+                    "notice" => ''
                 ],
                 2 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ]
             ]
         ];
@@ -143,7 +146,8 @@ class UserTest extends BaseTestCase {
                 0 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
@@ -158,7 +162,8 @@ class UserTest extends BaseTestCase {
                             "repeats" => 3,
                             "weight" => 4
                         ]
-                    ]
+                    ],
+                    "notice" => ''
                 ]
             ]
         ];
@@ -201,7 +206,6 @@ class UserTest extends BaseTestCase {
         $this->compareInputFields($body, $data);
     }
 
-
     /**
      * @depends testGetElementUpdated
      */
@@ -218,10 +222,10 @@ class UserTest extends BaseTestCase {
         $matches = [];
         $re = '/<tr>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildView($this->TEST_PLAN_HASH)) . '(?<id_view>.*)">' . preg_quote($data["date"]) . '<\/a><\/td>\s*<td>\s*<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildEdit($this->TEST_PLAN_HASH)) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($this->TEST_PLAN_HASH)) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-        
+
         return $matches;
     }
-    
+
     protected function getURIChildView($hash) {
         return str_replace("HASH", $hash, $this->uri_child_view);
     }

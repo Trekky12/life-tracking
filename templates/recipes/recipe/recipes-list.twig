@@ -1,0 +1,10 @@
+
+{% for recipe in data %}
+    <div class="recipe">
+        <h3><a href="{% if cookbook %}{{ url_for('recipes_cookbooks_view_recipe', {'recipe': recipe.hash, 'cookbook': cookbook}) }}{% else %}{{ url_for('recipes_recipe_view', {'recipe': recipe.hash}) }}{% endif %}">{{ recipe.name|raw }}</a></h3>
+        {% if recipe.get_image() != ''%}
+            <img class="recipe-image" src="/{{uploads_folder}}/recipes/{{recipe.get_thumbnail()}}"/>
+        {% endif %}
+        <div class="recipe-description">{{recipe.description|raw}}</div>
+    </div>
+{% endfor %}

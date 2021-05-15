@@ -77,8 +77,14 @@ function deleteObject(url, type) {
             body: JSON.stringify(token)
         });
     }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
         allowedReload = true;
-        window.location.reload();
+        if ("redirect" in data) {
+            window.location.href = data["redirect"];
+        } else {
+            window.location.reload();
+        }
     }).catch(function (error) {
         console.log(error);
     });

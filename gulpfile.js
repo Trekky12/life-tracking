@@ -73,7 +73,7 @@ function copyJSTask(cb) {
     return gulp
         .src( [ 
             './node_modules/flatpickr/dist/flatpickr.min.js',
-            './node_modules/chart.js/dist/Chart.min.js',
+            './node_modules/chart.js/dist/chart.min.js',
             './node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.js',
             './node_modules/leaflet-curve/leaflet.curve.js',
             './node_modules/leaflet-extra-markers/dist/js/leaflet.extra-markers.min.js',
@@ -82,13 +82,14 @@ function copyJSTask(cb) {
             './node_modules/leaflet.markercluster/dist/leaflet.markercluster.js',
             './node_modules/moment/min/moment-with-locales.min.js',
             './node_modules/mustache/mustache.min.js',
-            './node_modules/nouislider/distribute/nouislider.min.js',
+            './node_modules/nouislider/dist/nouislider.min.js',
             './node_modules/mobius1-selectr/dist/selectr.min.js',
             './node_modules/simplemde/dist/simplemde.min.js',
             './node_modules/sortablejs/Sortable.min.js',
             './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.min.js',
             './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
             './node_modules/@tarekraafat/autocomplete.js/dist/js/autoComplete.min.js',
+            './node_modules/choices.js/public/assets/scripts/choices.min.js',
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
@@ -140,9 +141,10 @@ function copyCSSTask(cb) {
             './node_modules/flatpickr/dist/flatpickr.min.css',
             './node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css',
             './node_modules/leaflet.markercluster/dist/MarkerCluster.css',
-            './node_modules/nouislider/distribute/nouislider.min.css',
+            './node_modules/nouislider/dist/nouislider.min.css',
             './node_modules/mobius1-selectr/dist/selectr.min.css',
             './node_modules/simplemde/dist/simplemde.min.css',
+            './node_modules/choices.js/public/assets/styles/choices.min.css',
             ] )
         // remove source map
         .pipe(replace(/\/\*# sourceMappingURL=(.?)*\.css\.map \*\//g, ""))

@@ -534,6 +534,9 @@ $lang["DATAOBJECT_WORKOUTS_MUSCLE"] = "Muskelgruppe";
 $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "Körperbereich";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "Trainingsplan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "Trainingseinheit";
+$lang["DATAOBJECT_RECIPES_COOKBOOK"] = "Kochbuch";
+$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
+$lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -682,5 +685,24 @@ $lang["DIFFERENCE_CALCULATED"] = "Differenz (berechnet)";
 
 $lang["HIDE"] = "Ausblenden";
 $lang["SHOW"] = "Anzeigen";
+
+$lang["RECIPE"] = "Rezept";
+$lang["RECIPES"] = "Rezepte";
+$lang["RECIPES_COOKBOOKS"] = "Kochbücher";
+$lang["RECIPES_COOKBOOK"] = "Kochbuch";
+$lang["RECIPES_INGREDIENTS"] = "Zutaten";
+$lang["RECIPES_INGREDIENT"] = "Zutat";
+
+$lang["RECIPES_PREPARATION_TIME"] = "Vorbereitungszeit";
+$lang["RECIPES_WAITING_TIME"] = "Wartezeit";
+$lang["RECIPES_SERVINGS"] = "Portion(en)";
+
+$lang["RECIPES_STEPS"] = "Schritte";
+$lang["RECIPES_AMOUNT"] = "Menge";
+$lang["RECIPES_ADD_INGREDIENT"] = "Zutat hinzufügen";
+$lang["RECIPES_ADD_STEP"] = "Schritt hinzufügen";
+$lang["RECIPES_MINUTES"] = "min.";
+$lang["RECIPES_ADD_TO_COOKBOOK"] = "Zum Kochbuch hinzufügen";
+$lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Aus Kochbuch entfernen";
 
 return $lang;

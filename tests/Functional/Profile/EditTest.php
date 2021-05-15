@@ -43,6 +43,8 @@ class EditTest extends BaseTestCase {
             "module_splitbills" => 0,
             "module_trips" => 0,
             "module_timesheets" => 0,
+            "module_workouts" => 0,
+            "module_recipes" => 0,
             "start_url" => "/test1"
         ];
 
@@ -63,7 +65,7 @@ class EditTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->compareInputFields($body, $data);
     }
-    
+
     public function testUpdateBack() {
 
         $data = [
@@ -78,6 +80,8 @@ class EditTest extends BaseTestCase {
             "module_splitbills" => 1,
             "module_trips" => 1,
             "module_timesheets" => 1,
+            "module_workouts" => 1,
+            "module_recipes" => 1,
             "start_url" => "/test"
         ];
 
@@ -88,8 +92,8 @@ class EditTest extends BaseTestCase {
 
         return $data;
     }
-    
-     /**
+
+    /**
      * @depends testUpdateBack
      */
     public function testChangesBack($data) {

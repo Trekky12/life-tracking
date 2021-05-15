@@ -16,7 +16,10 @@ composer.phar
 !/public/uploads/exercises/.gitkeep 
 
 /public/uploads/muscles/*
-!/public/uploads/muscles/.gitkeep 
+!/public/uploads/muscles/.gitkeep
+
+/public/uploads/recipes/*
+!/public/uploads/recipes/.gitkeep 
 
 koala-config.json
 

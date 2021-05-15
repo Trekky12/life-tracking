@@ -59,6 +59,8 @@ class UserTest extends BaseTestCase {
             "module_splitbills" => 1,
             "module_trips" => 1,
             "module_timesheets" => 1,
+            "module_workouts" => 1,
+            "module_recipes" => 1,
             "force_pw_change" => 1,
             "start_url" => "/test"
         ];

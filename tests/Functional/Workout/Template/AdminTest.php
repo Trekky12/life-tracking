@@ -49,7 +49,8 @@ class AdminTest extends BaseTestCase {
                 0 => [
                     "id" => 3,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
@@ -64,12 +65,14 @@ class AdminTest extends BaseTestCase {
                             "repeats" => 3,
                             "weight" => 4
                         ]
-                    ]
+                    ],
+                    "notice" => ''
                 ],
                 2 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 3 => [
                     "type" => "day",
@@ -81,12 +84,14 @@ class AdminTest extends BaseTestCase {
                 5 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 1
+                    "is_child" => 1,
+                    "notice" => ''
                 ],
                 6 => [
                     "id" => 2,
                     "type" => "exercise",
-                    "is_child" => 1
+                    "is_child" => 1,
+                    "notice" => ''
                 ]
             ]
         ];
@@ -156,7 +161,8 @@ class AdminTest extends BaseTestCase {
                 0 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
@@ -171,7 +177,8 @@ class AdminTest extends BaseTestCase {
                             "repeats" => 3,
                             "weight" => 4
                         ]
-                    ]
+                    ],
+                    "notice" => ''
                 ]
             ]
         ];

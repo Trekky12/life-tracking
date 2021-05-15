@@ -1,0 +1,34 @@
+{% extends "base.twig" %}
+
+{% set active = 'recipes' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/recipes_recipe.js?ver=20210514"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["RECIPES"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('recipes_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="recipe-filter">
+                <input type="text" id="filterSearchRecipes" placeholder="{{ lang["SEARCHING"] }}"/>
+            </div>
+            <div class="content">
+                <div id="recipes_list"></div>
+                <div id="loadingIconRecipes" class="centered loading-icon">
+                    <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                </div>
+                <div id="loadMoreRecipes" class="centered hidden">
+                    <button type="button">{{ lang["LOAD_MORE"] }}</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

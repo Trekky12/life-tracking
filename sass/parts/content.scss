@@ -14,13 +14,21 @@
     justify-content:space-between;
     align-items:center;
 
+    &.light{
+        background-color: $color_blue_light;
+    }
+
     &, a{
         color: $color_background-body;
     }
 
-    h1, h2{
+    h1, h2, h3{
         margin:0;
         margin-right: 1rem;
+    }
+    
+    h3{
+        font-weight: 400;
     }
 
     button{

@@ -5,14 +5,14 @@ namespace App\Application\Action\Workouts\Exercise;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Workouts\Exercise\ExerciseService;
-use App\Application\Responder\Workouts\ExercisesListResponder;
+use App\Application\Responder\JSONHTMLTemplateResponder;
 
 class ExercisesListAction {
 
     private $responder;
     private $service;
 
-    public function __construct(ExercisesListResponder $responder, ExerciseService $service) {
+    public function __construct(JSONHTMLTemplateResponder $responder, ExerciseService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

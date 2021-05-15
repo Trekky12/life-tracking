@@ -25,7 +25,7 @@ class DataObject implements \JsonSerializable {
         // Always save these values
         $this->user = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d H:i:s');
-
+        
         /**
          * Add users (for m:n)
          */
@@ -152,6 +152,16 @@ class DataObject implements \JsonSerializable {
 
     public function addParsingError($error) {
         return $this->parsing_errors[] = $error;
+    }
+
+    public function getOwner() {
+        if (isset($this->user) && !is_null($this->user)) {
+            return $this->user;
+        }
+        if (isset($this->createdBy) && !is_null($this->createdBy)) {
+            return $this->createdBy;
+        }
+        return null;
     }
 
 }

@@ -254,6 +254,8 @@ body.mobile-navigation-open{
             justify-content: center;
 
             overflow-y:visible;
+            
+            align-items: center;
         }
     }
 
@@ -274,7 +276,7 @@ body.mobile-navigation-open{
                 @include font-size(1.2);
             }
             @media screen and (min-width: $size_desktop){
-                @include font-size(1.3);
+                @include font-size(1.25);
             }
 
             a{

@@ -116,6 +116,17 @@
 
             </li> 
         {% endif %}
+        {% if user.hasModule("recipes") %}
+            <li {% if active == modules['recipes']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ url_for(modules['recipes']['rootRoute']) }}">{{lang[modules['recipes']['title']]}}</a>
+                
+                <ul class="dropdown-content">
+                    <li><a href="{{ url_for('recipes_cookbooks') }}">{{lang["RECIPES_COOKBOOKS"]}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{{ url_for('recipes_ingredients') }}">{{lang["RECIPES_INGREDIENTS"]}}</a></li>
+                </ul>
+            </li> 
+        {% endif %}
         {% if user.isAdmin() %}
             <li {% if active == 'settings' %}class="active"{% endif %}>
                 <a href="#">{{lang["SETTINGS"]}}</a>

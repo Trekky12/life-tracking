@@ -47,6 +47,7 @@ class User extends \App\Domain\DataObject {
         $this->module_trips = $this->exists('module_trips', $data) ? filter_var($data['module_trips'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_timesheets = $this->exists('module_timesheets', $data) ? filter_var($data['module_timesheets'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->module_workouts = $this->exists('module_workouts', $data) ? filter_var($data['module_workouts'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->module_recipes = $this->exists('module_recipes', $data) ? filter_var($data['module_recipes'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->force_pw_change = $this->exists('force_pw_change', $data) ? filter_var($data['force_pw_change'], FILTER_SANITIZE_NUMBER_INT) : 0;
     }
@@ -91,6 +92,8 @@ class User extends \App\Domain\DataObject {
                 return $this->module_timesheets == 1;
             case 'workouts':
                 return $this->module_workouts == 1;
+            case 'recipes':
+                return $this->module_recipes == 1;
         }
 
         return false;

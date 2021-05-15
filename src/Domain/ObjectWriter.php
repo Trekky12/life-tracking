@@ -120,7 +120,10 @@ abstract class ObjectWriter {
             $hashids = new Hashids('', 10);
             $hash = $hashids->encode($entry->id);
             $this->getMapper()->setHash($entry->id, $hash);
+
+            return $hash;
         }
+        return $entry->getHash();
     }
 
 }

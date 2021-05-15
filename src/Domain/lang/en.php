@@ -535,6 +535,9 @@ $lang["DATAOBJECT_WORKOUTS_MUSCLE"] = "muscle group";
 $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "body part";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "training plan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "training session";
+$lang["DATAOBJECT_RECIPES_COOKBOOK"] = "cookbook";
+$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "ingredient";
+$lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -683,5 +686,24 @@ $lang["DIFFERENCE_CALCULATED"] = "difference (calculated)";
 
 $lang["HIDE"] = "Hide";
 $lang["SHOW"] = "Show";
+
+$lang["RECIPE"] = "Recipe";
+$lang["RECIPES"] = "Recipes";
+$lang["RECIPES_COOKBOOKS"] = "cookbooks";
+$lang["RECIPES_COOKBOOK"] = "cookbook";
+$lang["RECIPES_INGREDIENTS"] = "ingredients";
+$lang["RECIPES_INGREDIENT"] = "ingredient";
+
+$lang["RECIPES_PREPARATION_TIME"] = "preparation time";
+$lang["RECIPES_WAITING_TIME"] = "waiting time";
+$lang["RECIPES_SERVINGS"] = "servings";
+
+$lang["RECIPES_STEPS"] = "steps";
+$lang["RECIPES_AMOUNT"] = "amount";
+$lang["RECIPES_ADD_INGREDIENT"] = "Add ingredient";
+$lang["RECIPES_ADD_STEP"] = "Add step";
+$lang["RECIPES_MINUTES"] = "min.";
+$lang["RECIPES_ADD_TO_COOKBOOK"] = "Add to cookbook";
+$lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Remove from cookbook";
 
 return $lang;

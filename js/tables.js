@@ -808,7 +808,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
             sort: "asc"
         },
         {
-            select: [1, 2, 3],
+            select: [1, 2, 3, 4],
             sortable: false,
             searchable: false
         }
@@ -983,6 +983,40 @@ var workoutTemplateTable = new JSTable("#workouts_templates_table", {
             select: 0,
             sort: "asc",
             sortable: true
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var recipesCookbooksTable = new JSTable("#recipes_cookbooks_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var recipesIngredientsTable = new JSTable("#recipes_ingredients_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
         },
         {
             select: [1, 2],

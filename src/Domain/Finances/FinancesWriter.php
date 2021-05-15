@@ -25,6 +25,10 @@ class FinancesWriter extends ObjectActivityWriter {
     public function save($id, $data, $additionalData = null): Payload {
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
+        
+        if(!in_array($payload->getStatus(),[Payload::$STATUS_NEW, Payload::$STATUS_UPDATE])){
+            return $payload;
+        }
 
         // set default or assigned category
         $category = $this->setDefaultOrAssignedCategory($entry->id);

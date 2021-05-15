@@ -1,20 +1,21 @@
 INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'); 
 
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (2, 'user', '$2y$10$tC4twYpdcq0TibT6MZsdI.Tmu36UkTxFNymd2icHv5KVB1oEu5mBW', 'user', 'user', 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (3, 'user2', '$2y$10$pDAiS7Y30JibG.qKh03MgeO8fkmIMNrjXC.ogVAi526VRKu8sm7V.', 'user2', 'user', 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (4, 'user_force_pw_change', '$2y$10$AvUMEP0RstuGIjngb6a3R.wvE0I5gk4wRI7PzBjaRe3ed1naj/0Ae', 'User (Force PW Change)', 'user', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (5, 'user_no_module', '$2y$10$naqMnK3ANOl1SkOyfZEofOaHRqEK1T2t.0.N.M.Z2OscGj2.2C832', 'User (No Modules)', 'user', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (6, 'user_module_location', '$2y$10$4SXgGX3UBYDhvHX3vnFyrelwRFEpReAIXnZ50m8Uy86CdaDuTf7ki', 'User (Module Location)', 'user', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (7, 'user_module_finance', '$2y$10$U2tVe/2n3hPQDhDHtyACj.MLBPHmZVFWzWLmW1GkbmAZI9QQvEG.S', 'User (Module Finances)', 'user', 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (8, 'user_module_cars', '$2y$10$d04PQx8DRVfAUODHMZ1NPeDVTy099ekrk70fvDYygDvX5Pg2WCbRm', 'User (Module Cars)', 'user', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (9, 'user_module_boards', '$2y$10$Z35.cWlpxNFkyoyVPyUc1eej25Z5kJs6.zRZ.X54S8VqnbrRvbjAK', 'User (Module Boards)', 'user', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (10, 'user_module_crawlers', '$2y$10$PmOrx2pR5pN.nPCGwKrwX.kxMqoL2uM5fKMn6TzgnAJMwUGC.QcU6', 'User (Module Crawlers)', 'user', 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (11, 'user_module_splitbills', '$2y$10$X6zxyJQnNarAHS6eaEKFJuIq7zW0krIIWbNOIhHauj0U0Ot/mmyOO', 'User (Module Splitbills)', 'user', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (12, 'user_module_trips', '$2y$10$MWy6UOXVwkLJAdz9VxCwoOrnhy8SaDmesYoJbriHGIiptzDXc.7re', 'User (Module Trips)', 'user', 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (13, 'user_module_timesheets', '$2y$10$gujLijuoSEZ3xOUdjo10Xuw7b6t0aG.3uSYSAobgnSx5I/WwYIfXy', 'User (Module Timesheets)', 'user', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change, secret) VALUES (14, 'user2fa', '$2y$10$zzEUi14yhm3l57c/CLmKj.P3DpvFyuU6gNdk7xcnLrhgnBd5AawSm', 'user2fa', 'user2fa', 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 'ZONTUSYMICAFZZBMDZQXGSCXWSEPTKGW'); 
-INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, force_pw_change) VALUES (15, 'user_module_workouts', '$2y$10$LKQvexVWeM6Sm0A6oWVTqOLxcO8Fb1NUE0O3c61wlKiUvORT0f7am', 'User (Module Workouts)', 'user', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (2, 'user', '$2y$10$tC4twYpdcq0TibT6MZsdI.Tmu36UkTxFNymd2icHv5KVB1oEu5mBW', 'user', 'user', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (3, 'user2', '$2y$10$pDAiS7Y30JibG.qKh03MgeO8fkmIMNrjXC.ogVAi526VRKu8sm7V.', 'user2', 'user', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (4, 'user_force_pw_change', '$2y$10$AvUMEP0RstuGIjngb6a3R.wvE0I5gk4wRI7PzBjaRe3ed1naj/0Ae', 'User (Force PW Change)', 'user', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (5, 'user_no_module', '$2y$10$naqMnK3ANOl1SkOyfZEofOaHRqEK1T2t.0.N.M.Z2OscGj2.2C832', 'User (No Modules)', 'user', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (6, 'user_module_location', '$2y$10$4SXgGX3UBYDhvHX3vnFyrelwRFEpReAIXnZ50m8Uy86CdaDuTf7ki', 'User (Module Location)', 'user', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (7, 'user_module_finance', '$2y$10$U2tVe/2n3hPQDhDHtyACj.MLBPHmZVFWzWLmW1GkbmAZI9QQvEG.S', 'User (Module Finances)', 'user', 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (8, 'user_module_cars', '$2y$10$d04PQx8DRVfAUODHMZ1NPeDVTy099ekrk70fvDYygDvX5Pg2WCbRm', 'User (Module Cars)', 'user', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (9, 'user_module_boards', '$2y$10$Z35.cWlpxNFkyoyVPyUc1eej25Z5kJs6.zRZ.X54S8VqnbrRvbjAK', 'User (Module Boards)', 'user', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (10, 'user_module_crawlers', '$2y$10$PmOrx2pR5pN.nPCGwKrwX.kxMqoL2uM5fKMn6TzgnAJMwUGC.QcU6', 'User (Module Crawlers)', 'user', 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (11, 'user_module_splitbills', '$2y$10$X6zxyJQnNarAHS6eaEKFJuIq7zW0krIIWbNOIhHauj0U0Ot/mmyOO', 'User (Module Splitbills)', 'user', 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (12, 'user_module_trips', '$2y$10$MWy6UOXVwkLJAdz9VxCwoOrnhy8SaDmesYoJbriHGIiptzDXc.7re', 'User (Module Trips)', 'user', 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (13, 'user_module_timesheets', '$2y$10$gujLijuoSEZ3xOUdjo10Xuw7b6t0aG.3uSYSAobgnSx5I/WwYIfXy', 'User (Module Timesheets)', 'user', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change, secret) VALUES (14, 'user2fa', '$2y$10$zzEUi14yhm3l57c/CLmKj.P3DpvFyuU6gNdk7xcnLrhgnBd5AawSm', 'user2fa', 'user2fa', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 'ZONTUSYMICAFZZBMDZQXGSCXWSEPTKGW'); 
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (15, 'user_module_workouts', '$2y$10$LKQvexVWeM6Sm0A6oWVTqOLxcO8Fb1NUE0O3c61wlKiUvORT0f7am', 'User (Module Workouts)', 'user', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (16, 'user_module_recipes', '$2y$10$gcYdyJe502suQKdr2j85F.9Y1MMmp6MwPPPxu86XOZX92a8yMCUWm', 'User (Module Recipes)', 'user', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
 
 INSERT INTO finances_categories (id, user, name, is_default) VALUES 
 (1, 1, 'not categorized', 1),
@@ -44,7 +45,7 @@ INSERT INTO timesheets_projects (id, user, name, hash) VALUES
 INSERT INTO timesheets_projects_users (project, user) VALUES 
 (1, 1),
 (1, 2);
-INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, diff) VALUES
+INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, duration) VALUES
 (1, 1, 1, 1, '2020-01-01 09:00:00', '2020-01-01 12:00:00', 10800);
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
@@ -168,3 +169,25 @@ INSERT INTO workouts_sessions (id, user, date) VALUES
 
 INSERT INTO timesheets_categories (id, project, user, name) VALUES
 (1, 1, 1, 'Test Category 1');
+
+
+INSERT INTO recipes_cookbooks (id, user, name, hash) VALUES 
+(1, 1, 'Test recipe cookbook 1', 'ABCabc123'),
+(2, 1, 'Test recipe cookbook 2 (no access to owner)', 'DEFdef456'); 
+INSERT INTO recipes_cookbooks_users (cookbook, user) VALUES 
+(1, 1),
+(1, 2);
+
+INSERT INTO recipes_ingredients (id, createdBy, name) VALUES
+(1, 1, 'Test Ingredient 1'),
+(2, 1, 'Test Ingredient 2');
+
+INSERT INTO recipes (id, createdBy, name, hash) VALUES
+(1, 1, 'Test Recipe 1', 'ABCabc123'),
+(2, 1, 'Test Recipe 2', 'DEFdef456'),
+(3, 1, 'Test Recipe 3', 'GHIghi789');
+
+INSERT INTO recipes_cookbook_recipes (id, createdBy, cookbook, recipe) VALUES 
+(1, 1, 1, 1),
+(2, 1, 2, 1); 
+

@@ -393,8 +393,7 @@ class BaseTestCase extends TestCase {
 
             $textareas = $xpath->query('//form//textarea');
             foreach ($textareas as $textarea) {
-                $name = $textarea->getAttribute('name');
-                $input_fields[$name] = $textarea->textContent;
+                $this->extractArray($xpath, $textarea, $input_fields);
             }
         }
         return $input_fields;
@@ -434,10 +433,16 @@ class BaseTestCase extends TestCase {
             } elseif (count($options) > 0) {
                 $value = $options->item(0)->nodeValue;
 
+                
+            } elseif($node->hasAttribute('data-selected')){
+                $value = $node->getAttribute('data-selected'); 
+                        
                 // no value so do not create anything
-            } else {
+            }else {
                 $value = null;
             }
+        }elseif ($type == "textarea") {
+            $value = $node->textContent;
         }
 
         // it's an array 
