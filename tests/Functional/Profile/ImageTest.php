@@ -30,7 +30,7 @@ class ImageTest extends BaseTestCase {
         $filename = 'profile_image';
         $file_extension = 'png';
 
-        $data = [
+        $files = [
             [
                 'name' => 'image',
                 'contents' => __DIR__ . DIRECTORY_SEPARATOR . $filename . '.' . $file_extension,
@@ -38,7 +38,7 @@ class ImageTest extends BaseTestCase {
             ]
         ];
 
-        $response = $this->request('POST', $this->uri_overview, [], [], $data);
+        $response = $this->request('POST', $this->uri_overview, [], [], $files);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));

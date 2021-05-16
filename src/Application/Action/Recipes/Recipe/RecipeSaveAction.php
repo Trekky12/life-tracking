@@ -24,7 +24,10 @@ class RecipeSaveAction {
         
         $entry = $this->service->save($id, $data, ["files" => $files]);
         
-        return $this->responder->respond($entry->withRouteName('recipes_recipe_view')->withRouteParams(["recipe" => $entry->getAdditionalData()["hash"]]));
+        $additionalData = $entry->getAdditionalData();
+        $hash = is_array($additionalData) && array_key_exists("hash", $additionalData) ? $additionalData["hash"] : null;
+        
+        return $this->responder->respond($entry->withRouteName('recipes_recipe_view')->withRouteParams(["recipe" => $hash]));
     }
 
 }

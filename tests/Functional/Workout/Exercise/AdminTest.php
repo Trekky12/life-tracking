@@ -57,6 +57,7 @@ class AdminTest extends BaseTestCase {
         ];
 
         $filename = 'exercise_image.png';
+        $filename_thumb = 'exercise_image-thumbnail.png';
 
         $files = [
             [
@@ -66,11 +67,11 @@ class AdminTest extends BaseTestCase {
             ],
             [
                 'name' => 'thumbnail',
-                'contents' => __DIR__ . DIRECTORY_SEPARATOR . $filename,
-                'filename' => $filename
+                'contents' => __DIR__ . DIRECTORY_SEPARATOR . $filename_thumb,
+                'filename' => $filename_thumb
             ]
         ];
-
+        
         $response = $this->request('POST', $this->uri_save, $data, [], $files);
 
         $this->assertEquals(301, $response->getStatusCode());
