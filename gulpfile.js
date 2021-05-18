@@ -81,7 +81,6 @@ function copyJSTask(cb) {
             './node_modules/leaflet/dist/leaflet.js',
             './node_modules/leaflet.markercluster/dist/leaflet.markercluster.js',
             './node_modules/moment/min/moment-with-locales.min.js',
-            './node_modules/mustache/mustache.min.js',
             './node_modules/nouislider/dist/nouislider.min.js',
             './node_modules/mobius1-selectr/dist/selectr.min.js',
             './node_modules/simplemde/dist/simplemde.min.js',

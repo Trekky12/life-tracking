@@ -3,7 +3,6 @@
 {% set active = 'finances' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/mustache.min.js"></script>
     <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
     <script src="{{baseURL}}/static/js/budget.js?ver=20181122"></script>
 {% endblock %}
@@ -13,56 +12,6 @@
 {% endblock %}
 
 {% block body %}
-    <script id="budgetTemplate" type="x-tmpl-mustache">
-        <div class="budget-entry edit">
-        <div class="form-group description">
-        <label for="inputDescription_{% verbatim %}{{index}}{% endverbatim %}">{{lang["DESCRIPTION"]}}</label>
-        {% verbatim %}
-            <input required type="text" class="form-control description" id="inputDescription_{{index}}" name="budget[{{index}}][description]">
-        {% endverbatim %}
-        </div>
-
-        <div class="form-group category">
-        <label for="category_{% verbatim %}{{index}}{% endverbatim %}">{{lang["CATEGORY"]}}</label>
-        {% verbatim %}
-            <select required class="form-control category" id="category_{{index}}" name="budget[{{index}}][category][]" multiple>
-        {% endverbatim %}
-        {% for cat in categories %}
-            <option value="{{cat.id}}">{{cat.name|raw}}</option>
-        {% endfor %}
-        </select>
-        </div>  
-
-        <div class="form-group cat-costs">
-        <h4>{{lang["RECURRING"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
-        <div class="category_costs">
-        </div> 
-        </div>
-
-        <div class="form-group value">
-        <label for="inputValue_{% verbatim %}{{index}}{% endverbatim %}">{{lang["BUDGET"]}}</label>
-        {% verbatim %}
-            <input type="number" required class="form-control value" id="inputValue_{{index}}" name="budget[{{index}}][value]" step="any">
-        {% endverbatim %}
-        </div>
-
-        <div class="form-group is_hidden">
-
-        <label class="checkbox" for="checkboxHidden_{% verbatim %}{{index}}{% endverbatim %}">
-        {% verbatim %}
-            <input name="budget[{{index}}][is_hidden]" type="checkbox" value="1" id="checkboxHidden_{{index}}">
-        {% endverbatim %}
-        {{lang["HIDE_ENTRY"]}}
-        </label>
-
-        </div>
-
-        <a href="#" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
-        </div>
-    </script> 
-
-
-
 
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> 
@@ -165,5 +114,45 @@
 
         </div>
     </div>
+
+
+    <div id="budgetTemplate" class="hidden">
+        <div class="budget-entry-dummy edit">
+            <div class="form-group description">
+                <label for="inputDescription_DUMMY">{{lang["DESCRIPTION"]}}</label>
+                <input required type="text" class="form-control description" id="inputDescription_DUMMY" name="budget[DUMMY][description]" disabled="disabled">
+            </div>
+
+            <div class="form-group category">
+                <label for="category_DUMMY">{{lang["CATEGORY"]}}</label>
+                <select required class="form-control category" id="category_DUMMY" name="budget[DUMMY][category][]" multiple disabled="disabled">
+                    {% for cat in categories %}
+                        <option value="{{cat.id}}">{{cat.name|raw}}</option>
+                    {% endfor %}
+                </select>
+            </div>  
+
+            <div class="form-group cat-costs">
+                <h4>{{lang["RECURRING"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
+                <div class="category_costs">
+                </div> 
+            </div>
+
+            <div class="form-group value">
+                <label for="inputValue_DUMMY">{{lang["BUDGET"]}}</label>
+                <input type="number" required class="form-control value" id="inputValue_DUMMY" name="budget[DUMMY][value]" step="any" disabled="disabled">
+            </div>
+
+            <div class="form-group is_hidden">
+
+                <label class="checkbox" for="checkboxHidden_DUMMY">
+                    <input name="budget[DUMMY][is_hidden]" type="checkbox" value="1" id="checkboxHidden_DUMMY" disabled="disabled">
+                    {{lang["HIDE_ENTRY"]}}
+                </label>
+            </div>
+
+            <a href="#" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
+        </div>
+    </div> 
 
 {% endblock %}

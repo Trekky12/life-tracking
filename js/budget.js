@@ -1,15 +1,14 @@
 'use strict';
 
 
-const budgetSelect = document.querySelectorAll('select.category');
+const budgetSelect = document.querySelectorAll('.budget-entry select.category');
 budgetSelect.forEach(function (item, idx) {
     get_recurring_costs(item);
     add_selectr(item);
 });
 
 
-var template = document.getElementById('budgetTemplate').innerHTML;
-Mustache.parse(template);
+const budget_dummy = document.querySelector('#budgetTemplate .budget-entry-dummy');
 
 
 document.getElementById('add_budget').addEventListener('click', function (e) {
@@ -17,10 +16,30 @@ document.getElementById('add_budget').addEventListener('click', function (e) {
 
     var index = document.querySelectorAll('.budget-entry').length;
 
-    var rendered = Mustache.render(template, {index: index});
+    let new_budget_entry = budget_dummy.cloneNode(true);
+    new_budget_entry.classList.remove("hidden");
+    new_budget_entry.classList.remove("budget-entry-dummy");
+    new_budget_entry.classList.add("budget-entry");
+    new_budget_entry.dataset.idx = index;
 
-    let budget = document.querySelector('#budgetForm .budget-entry.remaining');
-    budget.insertAdjacentHTML('beforebegin', rendered);
+    let inputs = new_budget_entry.querySelectorAll('input, textarea, select');
+    inputs.forEach(function (input, idx) {
+        input.setAttribute('name', input.name.replace("DUMMY", index));
+        input.removeAttribute('disabled');
+        
+        input.setAttribute('id', input.id.replace("DUMMY", index));
+    });
+    
+    let labels = new_budget_entry.querySelectorAll('label');
+    labels.forEach(function (label, idx) {
+        label.setAttribute('for', label.getAttribute('for').replace("DUMMY", index));
+    });
+
+
+    let budgetForm = document.querySelector('#budgetForm');
+    let budget_remaining = budgetForm.querySelector('.budget-entry.remaining');
+    budgetForm.insertBefore(new_budget_entry, budget_remaining);
+
 
     add_selectr('#category_' + index);
 });
@@ -67,17 +86,6 @@ function add_selectr(element) {
     new Selectr(element, {
         searchable: false,
         placeholder: lang.categories
-        /*renderOption: function (option) {
-            var template = [
-                "<div class='select-option-label'><span>",
-                option.textContent,
-                "</span></div>"
-            ];
-            return template.join('');
-        }, renderSelection: function (option) {
-            var template = ['<div class="select-label"><span>', option.textContent.trim(), '</span></div>'];
-            return template.join('');
-        }*/
     });
 }
 

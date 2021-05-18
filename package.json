@@ -26,7 +26,6 @@
     "leaflet.markercluster": "^1.5.0",
     "mobius1-selectr": "^2.4.13",
     "moment": "^2.29.1",
-    "mustache": "^4.2.0",
     "normalize.css": "^8.0.1",
     "nouislider": "^15.1.0",
     "randomcolor": "^0.6.2",

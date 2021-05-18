@@ -58,7 +58,6 @@ const staticAssets = [
     '/static/assets/js/leaflet.js',
     '/static/assets/js/leaflet.markercluster.js',
     '/static/assets/js/moment-with-locales.min.js',
-    '/static/assets/js/mustache.min.js',
     '/static/assets/js/nouislider.min.js',
     '/static/assets/js/randomColor.min.js',
     '/static/assets/js/selectr.min.js',
