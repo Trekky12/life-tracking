@@ -1,0 +1,489 @@
+[
+    {
+        "name": "2_activities",
+        "url": "http://tracking.localhost/profile/activity",
+        "height": 2000
+    },
+    {
+        "name": "2_applicationpasswords",
+        "url": "http://tracking.localhost/profile/applicationpasswords/"
+    },
+    {
+        "name": "2_applicationpasswords-1",
+        "url": "http://tracking.localhost/profile/applicationpasswords/edit/"
+    },
+    {
+        "name": "2_banlist",
+        "url": "http://tracking.localhost/banlist/"
+    },
+    {
+        "name": "2_frontpage",
+        "url": "http://tracking.localhost"
+    },
+    {
+        "name": "2_frontpage-1",
+        "url": "http://tracking.localhost/profile/frontpage/"
+    },
+    {
+        "name": "2_logintokens",
+        "url": "http://tracking.localhost/profile/tokens/"
+    },
+    {
+        "name": "2_logintokens-1",
+        "url": "http://tracking.localhost/users/tokens/"
+    },
+    {
+        "name": "2_mobilefavorites",
+        "url": "http://tracking.localhost/profile/favorites/"
+    },
+    {
+        "name": "2_mobilefavorites-1",
+        "url": "http://tracking.localhost/profile/favorites/edit/1"
+    },
+    {
+        "name": "2_notifications",
+        "url": "http://tracking.localhost/notifications/",
+        "height": 1700
+    },
+    {
+        "name": "2_notifications-3",
+        "url": "http://tracking.localhost/notifications/manage/"
+    },
+    {
+        "name": "2_notifications-5",
+        "url": "http://tracking.localhost/notifications/clients/"
+    },
+    {
+        "name": "2_notifications-6",
+        "url": "http://tracking.localhost/notifications/clients/test/1"
+    },
+    {
+        "name": "2_notifications-7",
+        "url": "http://tracking.localhost/notifications/categories/"
+    },
+    {
+        "name": "2_notifications-8",
+        "url": "http://tracking.localhost/notifications/categories/edit/1"
+    },
+    {
+        "name": "2_password",
+        "url": "http://tracking.localhost/profile/changepassword"
+    },
+    {
+        "name": "2_profile",
+        "url": "http://tracking.localhost/profile/edit",
+        "height": 1200
+    },
+    {
+        "name": "2_profilepic",
+        "url": "http://tracking.localhost/profile/image"
+    },
+    {
+        "name": "2_twofactor",
+        "url": "http://tracking.localhost/profile/twofactorauth/"
+    },
+    {
+        "name": "2_users",
+        "url": "http://tracking.localhost/users/",
+        "height": 1000
+    },
+    {
+        "name": "3_location_history",
+        "url": "http://tracking.localhost/location/"
+    },
+    {
+        "name": "3_location_history-1",
+        "url": "http://tracking.localhost/location/edit/1"
+    },
+    {
+        "name": "3_location_history-2",
+        "url": "http://tracking.localhost/location/?from=2020-01-01&to=2021-12-31"
+    },
+    {
+        "name": "3_location_history-4",
+        "url": "http://tracking.localhost/location/edit/"
+    },
+    {
+        "name": "3_location_history-5",
+        "url": "http://tracking.localhost/location/steps/"
+    },
+    {
+        "name": "3_location_history-6",
+        "url": "http://tracking.localhost/location/steps/2021/"
+    },
+    {
+        "name": "3_location_history-7",
+        "url": "http://tracking.localhost/location/steps/2021/1/"
+    },
+    {
+        "name": "3_location_history-8",
+        "url": "http://tracking.localhost/location/steps/2021-01-01/edit/"
+    },
+    {
+        "name": "4_finances",
+        "url": "http://tracking.localhost/finances/?from=2020-01-01&to=2021-05-18"
+    },
+    {
+        "name": "4_finances-1",
+        "url": "http://tracking.localhost/finances/edit/"
+    },
+    {
+        "name": "4_finances-2",
+        "url": "http://tracking.localhost/finances/edit/1",
+        "height": 1500
+    },
+    {
+        "name": "4_finances-3",
+        "url": "http://tracking.localhost/finances/categories/"
+    },
+    {
+        "name": "4_finances-4",
+        "url": "http://tracking.localhost/finances/categories/edit/"
+    },
+    {
+        "name": "4_finances-5",
+        "url": "http://tracking.localhost/finances/categories/assignment/"
+    },
+    {
+        "name": "4_finances-6",
+        "url": "http://tracking.localhost/finances/categories/assignment/edit/"
+    },
+    {
+        "name": "4_finances-7",
+        "url": "http://tracking.localhost/finances/recurring/"
+    },
+    {
+        "name": "4_finances-8",
+        "url": "http://tracking.localhost/finances/recurring/edit/",
+        "height": 1300
+    },
+    {
+        "name": "4_finances-9",
+        "url": "http://tracking.localhost/finances/methods/"
+    },
+    {
+        "name": "4_finances-10",
+        "url": "http://tracking.localhost/finances/methods/edit/"
+    },
+    {
+        "name": "4_finances-11",
+        "url": "http://tracking.localhost/finances/budgets/"
+    },
+    {
+        "name": "4_finances-12",
+        "url": "http://tracking.localhost/finances/budgets/edit/"
+    },
+    {
+        "name": "4_finances-15",
+        "url": "http://tracking.localhost/finances/stats/"
+    },
+    {
+        "name": "4_finances-16",
+        "url": "http://tracking.localhost/finances/stats/2020/categories/1"
+    },
+    {
+        "name": "4_finances-17",
+        "url": "http://tracking.localhost/finances/stats/2020/categories/1/1"
+    },
+    {
+        "name": "4_finances-18",
+        "url": "http://tracking.localhost/finances/stats/2020/categories/0"
+    },
+    {
+        "name": "4_finances-19",
+        "url": "http://tracking.localhost/finances/stats/2020/categories/0/1"
+    },
+    {
+        "name": "4_finances-20",
+        "url": "http://tracking.localhost/finances/stats/2020/"
+    },
+    {
+        "name": "4_finances-21",
+        "url": "http://tracking.localhost/finances/stats/2020/1/1/"
+    },
+    {
+        "name": "4_finances-22",
+        "url": "http://tracking.localhost/finances/stats/2020/1/1/1"
+    },
+    {
+        "name": "4_finances-23",
+        "url": "http://tracking.localhost/finances/stats/2020/1/0/"
+    },
+    {
+        "name": "4_finances-24",
+        "url": "http://tracking.localhost/finances/stats/2020/1/0/1"
+    },
+    {
+        "name": "5_cars",
+        "url": "http://tracking.localhost/cars/service/"
+    },
+    {
+        "name": "5_cars-1",
+        "url": "http://tracking.localhost/cars/control/"
+    },
+    {
+        "name": "5_cars-2",
+        "url": "http://tracking.localhost/cars/control/edit/",
+        "height": 1000
+    },
+    {
+        "name": "5_cars-3",
+        "url": "http://tracking.localhost/cars/service/edit/",
+        "height": 1200
+    },
+    {
+        "name": "5_cars-4",
+        "url": "http://tracking.localhost/cars/service/edit/?type=service",
+        "height": 1500
+    },
+    {
+        "name": "5_cars-5",
+        "url": "http://tracking.localhost/cars/service/edit/1",
+        "height": 1700
+    },
+    {
+        "name": "5_cars-6",
+        "url": "http://tracking.localhost/cars/service/edit/2",
+        "height": 1500
+    },
+    {
+        "name": "5_cars-7",
+        "url": "http://tracking.localhost/cars/service/stats/",
+        "height": 1500
+    },
+    {
+        "name": "6_boards",
+        "url": "http://tracking.localhost/boards/"
+    },
+    {
+        "name": "6_boards-1",
+        "url": "http://tracking.localhost/boards/view/ABCabc123"
+    },
+    {
+        "name": "6_boards-2",
+        "url": "http://tracking.localhost/boards/view/ABCabc123?card=1"
+    },
+    {
+        "name": "7_crawlers",
+        "url": "http://tracking.localhost/crawlers/"
+    },
+    {
+        "name": "7_crawlers-1",
+        "url": "http://tracking.localhost/crawlers/edit/"
+    },
+    {
+        "name": "7_crawlers-2",
+        "url": "http://tracking.localhost/crawlers/ABCabc123/headers/"
+    },
+    {
+        "name": "7_crawlers-3",
+        "url": "http://tracking.localhost/crawlers/ABCabc123/headers/edit/",
+        "height": 1200
+    },
+    {
+        "name": "7_crawlers-4",
+        "url": "http://tracking.localhost/crawlers/ABCabc123/headers/clone/"
+    },
+    {
+        "name": "7_crawlers-5",
+        "url": "http://tracking.localhost/crawlers/ABCabc123/links/"
+    },
+    {
+        "name": "7_crawlers-7",
+        "url": "http://tracking.localhost/crawlers/ABCabc123/view/?from=2020-01-01&to=2021-12-31"
+    },
+    {
+        "name": "7_crawlers-8",
+        "url": "http://tracking.localhost/crawlers/ABCabc123/saved/"
+    },
+    {
+        "name": "8_splittedbills",
+        "url": "http://tracking.localhost/splitbills/groups/"
+    },
+    {
+        "name": "8_splittedbills-1",
+        "url": "http://tracking.localhost/splitbills/groups/edit/"
+    },
+    {
+        "name": "8_splittedbills-2",
+        "url": "http://tracking.localhost/splitbills/ABCabc123/view/"
+    },
+    {
+        "name": "8_splittedbills-3",
+        "url": "http://tracking.localhost/splitbills/ABCabc123/bills/edit/",
+        "height": 1000
+    },
+    {
+        "name": "8_splittedbills-4",
+        "url": "http://tracking.localhost/splitbills/ABCabc123/bills/edit/?type=settleup",
+        "height": 1000
+    },
+    {
+        "name": "8_splittedbills-5",
+        "url": "http://tracking.localhost/splitbills/groups/edit/3",
+        "height": 1000
+    },
+    {
+        "name": "8_splittedbills-6",
+        "url": "http://tracking.localhost/splitbills/Opnel5aKBz/bills/edit/2",
+        "height": 1500
+    },
+    {
+        "name": "8_splittedbills-7",
+        "url": "http://tracking.localhost/splitbills/Opnel5aKBz/view/"
+    },
+    {
+        "name": "8_splittedbills-9",
+        "url": "http://tracking.localhost/splitbills/ABCabc123/recurring/"
+    },
+    {
+        "name": "8_splittedbills-10",
+        "url": "http://tracking.localhost/splitbills/ABCabc123/recurring/edit/",
+        "height": 1400
+    },
+    {
+        "name": "9_trips",
+        "url": "http://tracking.localhost/trips/"
+    },
+    {
+        "name": "9_trips-1",
+        "url": "http://tracking.localhost/trips/edit/"
+    },
+    {
+        "name": "9_trips-3",
+        "url": "http://tracking.localhost/trips/ABCabc123/view/",
+        "height": 1200
+    },
+    {
+        "name": "9_trips-4",
+        "url": "http://tracking.localhost/trips/ABCabc123/view/?from=2020-01-01&to=2020-01-01",
+        "height": 1000
+    },
+    {
+        "name": "9_trips-6",
+        "url": "http://tracking.localhost/trips/ABCabc123/tripevent/edit/",
+        "height": 1300
+    },
+    {
+        "name": "10_timesheets",
+        "url": "http://tracking.localhost/timesheets/projects/"
+    },
+    {
+        "name": "10_timesheets-1",
+        "url": "http://tracking.localhost/timesheets/projects/edit/"
+    },
+    {
+        "name": "10_timesheets-2",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/categories/"
+    },
+    {
+        "name": "10_timesheets-3",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/categories/edit/"
+    },
+    {
+        "name": "10_timesheets-4",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/view/"
+    },
+    {
+        "name": "10_timesheets-5",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/sheets/edit/1",
+        "height": 1000
+    },
+    {
+        "name": "10_timesheets-6",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/fast/"
+    },
+    {
+        "name": "11_workouts",
+        "url": "http://tracking.localhost/workouts/plans/"
+    },
+    {
+        "name": "11_workouts-1",
+        "url": "http://tracking.localhost/workouts/plans/edit/",
+        "height": 1200
+    },
+    {
+        "name": "11_workouts-18",
+        "url": "http://tracking.localhost/workouts/plans/edit/1",
+        "height": 1200
+    },
+    {
+        "name": "11_workouts-2",
+        "url": "http://tracking.localhost/workouts/ABCabc123/view/",
+        "height": 1000
+    },
+    {
+        "name": "11_workouts-3",
+        "url": "http://tracking.localhost/workouts/templates/"
+    },
+    {
+        "name": "11_workouts-4",
+        "url": "http://tracking.localhost/workouts/templates/manage/edit/2",
+        "height": 1700
+    },
+    {
+        "name": "11_workouts-6",
+        "url": "http://tracking.localhost/workouts/exercises/manage/"
+    },
+    {
+        "name": "11_workouts-7",
+        "url": "http://tracking.localhost/workouts/exercises/manage/edit/1",
+        "height": 1700
+    },
+    {
+        "name": "11_workouts-8",
+        "url": "http://tracking.localhost/workouts/muscles/"
+    },
+    {
+        "name": "11_workouts-9",
+        "url": "http://tracking.localhost/workouts/muscles/edit/"
+    },
+    {
+        "name": "11_workouts-10",
+        "url": "http://tracking.localhost/workouts/muscles/image"
+    },
+    {
+        "name": "11_workouts-11",
+        "url": "http://tracking.localhost/workouts/bodyparts/"
+    },
+    {
+        "name": "11_workouts-12",
+        "url": "http://tracking.localhost/workouts/bodyparts/edit/"
+    },
+    {
+        "name": "11_workouts-14",
+        "url": "http://tracking.localhost/workouts/plans/edit/?template=ABCabc456",
+        "height": 1200
+    },
+    {
+        "name": "11_workouts-15",
+        "url": "http://tracking.localhost/workouts/exercises/view"
+    },
+    {
+        "name": "11_workouts-16",
+        "url": "http://tracking.localhost/workouts/ABCabc123/sessions/"
+    },
+    {
+        "name": "11_workouts-17",
+        "url": "http://tracking.localhost/workouts/ABCabc123/sessions/edit/1",
+        "height": 1500
+    },
+    {
+        "name": "11_workouts-19",
+        "url": "http://tracking.localhost/workouts/DEFdef123/sessions/edit/"
+    },
+    {
+        "name": "11_workouts-21",
+        "url": "http://tracking.localhost/workouts/ABCabc123/sessions/edit/",
+        "height": 1500
+    },
+    {
+        "name": "11_workouts-23",
+        "url": "http://tracking.localhost/workouts/templates/ABCabc456/view/",
+        "height": 1200
+    },
+    {
+        "name": "101_notifications-mails",
+        "url": "http://tracking.localhost/profile/mail/manage/"
+    }
+]
