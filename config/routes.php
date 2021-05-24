@@ -408,7 +408,8 @@ return function (App $app) {
                 $group_fast->post('/checkout', \App\Application\Action\Timesheets\Sheet\SheetFastCheckOutAction::class)->setName('timesheets_fast_checkout');
             });
 
-            $group_project->get('/export', \App\Application\Action\Timesheets\Sheet\SheetExportAction::class)->setName('timesheets_export');
+            $group_project->get('/exportExcel', \App\Application\Action\Timesheets\Sheet\SheetExportExcelAction::class)->setName('timesheets_export_excel');
+            $group_project->get('/exportWord', \App\Application\Action\Timesheets\Sheet\SheetExportWordAction::class)->setName('timesheets_export_word');
 
             $group_project->group('/categories', function (RouteCollectorProxy $group_category) {
                 $group_category->get('/', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryListAction::class)->setName('timesheets_project_categories');

@@ -18,7 +18,8 @@ class TimesheetTestBase extends BaseTestCase {
     private $uri_sheets_fast = "/timesheets/HASH/fast/";
     private $uri_sheets_fast_checkin = "/timesheets/HASH/fast/checkin";
     private $uri_sheets_fast_checkout = "/timesheets/HASH/fast/checkout";
-    private $uri_sheets_export = "/timesheets/HASH/export";
+    private $uri_sheets_export_excel = "/timesheets/HASH/exportExcel";
+    private $uri_sheets_export_word = "/timesheets/HASH/exportWord";
 
     protected function getParent($body, $name) {
         $matches = [];
@@ -69,8 +70,12 @@ class TimesheetTestBase extends BaseTestCase {
         return str_replace("HASH", $hash, $this->uri_sheets_fast_checkout);
     }
 
-    protected function getURISheetsExport($hash) {
-        return str_replace("HASH", $hash, $this->uri_sheets_export);
+    protected function getURISheetsExportExcel($hash) {
+        return str_replace("HASH", $hash, $this->uri_sheets_export_excel);
+    }
+    
+    protected function getURISheetsExportWord($hash) {
+        return str_replace("HASH", $hash, $this->uri_sheets_export_word);
     }
 
 }

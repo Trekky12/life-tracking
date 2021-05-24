@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Functional\Timesheet\Export;
+namespace Tests\Functional\Timesheet\ExportExcel;
 
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
@@ -20,7 +20,7 @@ class NoAccessTest extends TimesheetTestBase {
      * Test Exporting 
      */
     public function testTimesheetsSheetsExport() {
-        $response = $this->request('GET', $this->getURISheetsExport($this->TEST_PROJECT_HASH));
+        $response = $this->request('GET', $this->getURISheetsExportExcel($this->TEST_PROJECT_HASH));
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

@@ -4,16 +4,16 @@ namespace App\Application\Action\Timesheets\Sheet;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Domain\Timesheets\Sheet\SheetExportService;
+use App\Domain\Timesheets\Sheet\SheetExportExcelService;
 use App\Application\Responder\Excel\ExcelExportResponder;
 use App\Domain\Main\Utility\DateUtility;
 
-class SheetExportAction {
+class SheetExportExcelAction {
 
     private $responder;
     private $service;
 
-    public function __construct(ExcelExportResponder $responder, SheetExportService $service) {
+    public function __construct(ExcelExportResponder $responder, SheetExportExcelService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

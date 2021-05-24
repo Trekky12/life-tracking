@@ -29,7 +29,8 @@
         "symfony/console": "^5.1",
         "robthree/twofactorauth": "^1.7",
         "endroid/qr-code": "^4.1",
-        "minishlink/web-push": "^6.0"
+        "minishlink/web-push": "^6.0",
+        "phpoffice/phpword": "^0.18.1"
     },
     "autoload": {
         "psr-4": {

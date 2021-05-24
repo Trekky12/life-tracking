@@ -13,7 +13,7 @@ use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
-class SheetExportService extends SheetService {
+class SheetExportExcelService extends SheetService {
 
     private $translation;
 
