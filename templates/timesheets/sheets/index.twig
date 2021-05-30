@@ -2,8 +2,14 @@
 
 {% set active = 'timesheets' %}
 
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/choices.min.css" />
+{% endblock %}
+
 {% block javascript %}
     <script src="{{baseURL}}/static/js/datefilter.js?ver=20191031"></script>
+    <script src="{{baseURL}}/static/assets/js/choices.min.js"></script>
+    <script src="{{baseURL}}/static/js/timesheets.js?ver=20210514"></script>
 {% endblock %}
 
 {% block body %}
@@ -18,8 +24,8 @@
             </div>
         </div>
         <div class="page-content">
-            
-            <form method="GET" id="search-filter" class="hidden1">
+
+            <form method="GET" id="search-filter" class="hidden1" action="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">
                 <div class="filter-content">
                     <div class="date-filter">
                         <div class="date-element">
@@ -27,7 +33,20 @@
 
                             <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
                             <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+
+                            <input type="hidden" id="selected_categories" disabled="disabled" name="selected_categories" value="{{ categories_selected|join(',')  }}"/>
+
                         </div>
+                    </div>
+                    <div class="categories-filter filter-element">
+                        <select id="category-filter" multiple name="categories[]">
+                            <option value="">{{lang["CATEGORIES"]}}</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="date-filter">
                         <div class="filter-element">
                             <input type="submit" value="{{lang["SHOW"]}}"/>
                         </div>
@@ -40,7 +59,7 @@
                     </div>
                 </div>
             </form>  
-            
+
             <table id="timesheets_sheets_table" class="table table-hover small">
                 <thead>
                     <tr>

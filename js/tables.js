@@ -815,6 +815,8 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
     ]
 });
 
+const timesheetCategories = document.querySelector("#selected_categories");
+
 var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     perPage: 20,
     perPageSelect: [10, 20, 50, 100, 200],
@@ -836,7 +838,8 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     ajax: jsObject.timesheets_table,
     ajaxParams: {
         "from": jsObject.dateFrom,
-        "to": jsObject.dateTo
+        "to": jsObject.dateTo,
+        "categories": timesheetCategories ? timesheetCategories.value : []
     }
 });
 

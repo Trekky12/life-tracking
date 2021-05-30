@@ -78,13 +78,19 @@ function send(button, type) {
 
 const projectCategorySelects = document.querySelectorAll('select.category');
 projectCategorySelects.forEach(function (item, idx) {
-    new Selectr(item, {
+    new Choices(item, {
+        itemSelectText: 'Press to select',
+        noChoicesText: lang.no_options,
+        removeItemButton: true,
+        searchEnabled: false,
+    });
+    /*new Selectr(item, {
         searchable: false,
         placeholder: lang.categories,
         messages: {
             noOptions: lang.no_options
         }
-    });
+    });*/
 });
 
 
@@ -130,5 +136,16 @@ if (checkboxDurationModification && inputDurationModificationWrapper) {
             inputDurationModificationWrapper.classList.add("hidden");
             inputDurationModificationWrapper.querySelector('input').disabled = true;
         }
+    });
+}
+
+
+const categoryFilter = document.getElementById("category-filter");
+if (categoryFilter) {
+    new Choices(categoryFilter, {
+        itemSelectText: 'Press to select',
+        noChoicesText: lang.no_options,
+        removeItemButton: true,
+        searchEnabled: false,
     });
 }

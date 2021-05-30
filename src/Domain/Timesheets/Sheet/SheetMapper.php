@@ -53,7 +53,13 @@ class SheetMapper extends \App\Domain\Mapper {
     /**
      * Table
      */
-    private function getTableSQL($select) {
+    private function getTableSQL($select, $categories) {
+
+        $cat_bindings = array();
+        foreach ($categories as $idx => $cat) {
+            $cat_bindings[":cat_" . $idx] = $cat;
+        }
+
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
                 . " LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " tcs ON t.id = tcs.sheet"
                 . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
@@ -66,46 +72,62 @@ class SheetMapper extends \App\Domain\Mapper {
                 . "     t.start LIKE :searchQuery OR "
                 . "     t.end LIKE :searchQuery OR "
                 . "     tc.name LIKE :searchQuery "
-                . ") "
-                . " GROUP BY t.id";
-        return $sql;
+                . ") ";
+        if (!empty($cat_bindings)) {
+            $sql .= " AND (tcs.sheet IN ( "
+                    . "             SELECT sheet "
+                    . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
+                    . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                    . ") "
+                    . " OR tcs.category is NULL)";
+        }
+        $sql .= " GROUP BY t.id";
+        return [$sql, $cat_bindings];
     }
 
-    public function tableCount($project, $from, $to, $searchQuery = "%") {
+    public function tableCount($project, $from, $to, $categories, $searchQuery = "%") {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
+
+        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories);
 
         $sql = "SELECT COUNT(t.id) FROM ";
-        $sql .= "(" . $this->getTableSQL("DISTINCT t.id") . ") as t";
+        $sql .= "(" . $tableSQL . ") as t";
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $cat_bindings));
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $searchQuery = "%", $field = "t.duration") {
+    public function tableSum($project, $from, $to, $categories, $searchQuery = "%", $field = "t.duration") {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
 
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories);
+
         $sql = "SELECT SUM($field) FROM ";
-        $sql .= "(" . $this->getTableSQL($field) . ") as t";
+        $sql .= "(" . $tableSQL . ") as t";
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $cat_bindings));
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableData($project, $from, $to, $categories, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
-        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "project" => $project, "from" => $from, "to" => $to);
+        $bindings = array(
+            "searchQuery" => "%" . $searchQuery . "%",
+            "project" => $project,
+            "from" => $from,
+            "to" => $to);
 
         $sort = "id";
         switch ($sortColumn) {
@@ -124,8 +146,10 @@ class SheetMapper extends \App\Domain\Mapper {
         }
 
         $select = "DISTINCT t.*, GROUP_CONCAT(tc.name SEPARATOR ', ') as categories";
-        $sql = $this->getTableSQL($select);
 
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories);
+
+        $sql = $tableSQL;
         $sql .= " ORDER BY {$sort} {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
 
         if (!is_null($limit)) {
@@ -134,7 +158,7 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $cat_bindings));
 
         $results = [];
         while ($row = $stmt->fetch()) {

@@ -40,7 +40,7 @@ class SheetService extends Service {
         $this->router = $router;
     }
 
-    public function view($hash, $from, $to): Payload {
+    public function view($hash, $from, $to, $categories): Payload {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -48,14 +48,26 @@ class SheetService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $response_data = $this->getTableDataIndex($project, $from, $to);
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+
+        $selected_categories = $categories;
+        /* if (empty($categories)) {
+          $selected_categories = array_map(function ($cat) {
+          return $cat->id;
+          }, $project_categories);
+          } */
+
+        $response_data = $this->getTableDataIndex($project, $from, $to, $selected_categories);
 
         $response_data["users"] = $this->user_service->getAll();
+        $response_data["categories"] = $project_categories;
+
+        $response_data["categories_selected"] = $selected_categories;
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    private function getTableDataIndex($project, $from, $to, $count = 20) {
+    private function getTableDataIndex($project, $from, $to, $selected_categories = [], $count = 20) {
 
         $range = $this->mapper->getMinMaxDate("start", "end", $project->id, "project");
         $minTotal = $range["min"];
@@ -75,15 +87,15 @@ class SheetService extends Service {
             $to = !is_null($to) ? $to : $maxTotal;
         }
 
-        $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'DESC', $count);
+        $data = $this->mapper->getTableData($project->id, $from, $to, $selected_categories, 0, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data);
-        $datacount = $this->mapper->tableCount($project->id, $from, $to);
+        $datacount = $this->mapper->tableCount($project->id, $from, $to, $selected_categories);
 
-        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
+        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $selected_categories);
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, "%", "t.duration_modified");
+            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $selected_categories, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 
@@ -129,17 +141,23 @@ class SheetService extends Service {
         $sortColumnIndex = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
         $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
 
-        $recordsTotal = $this->mapper->tableCount($project->id, $from, $to);
-        $recordsFiltered = $this->mapper->tableCount($project->id, $from, $to, $searchQuery);
+        $categoriesList = array_key_exists("categories", $requestData) ? filter_var($requestData["categories"], FILTER_SANITIZE_STRING) : null;
+        $categories = [];
+        if (!empty($categoriesList)) {
+            $categories = explode(",", $categoriesList);
+        }
 
-        $data = $this->mapper->getTableData($project->id, $from, $to, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
+        $recordsTotal = $this->mapper->tableCount($project->id, $from, $to, $categories);
+        $recordsFiltered = $this->mapper->tableCount($project->id, $from, $to, $categories, $searchQuery);
+
+        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
         $rendered_data = $this->renderTableRows($project, $data);
 
-        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $searchQuery);
+        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $categories, $searchQuery);
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $searchQuery, "t.duration_modified");
+            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $categories, $searchQuery, "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 
@@ -189,7 +207,7 @@ class SheetService extends Service {
         $duration = $entry->calculateDuration();
         if (!is_null($duration)) {
             $this->mapper->set_duration($entry->id, $duration);
-            
+
             // set the time converstion
             if (is_null($entry->duration_modified)) {
                 $duration_modified = (intval($project->has_duration_modifications) > 0 && $project->time_conversion_rate > 0) ? $duration * $project->time_conversion_rate : $duration;

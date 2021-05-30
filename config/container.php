@@ -151,7 +151,12 @@ return [
      */
     CSRF::class => function (ContainerInterface $container) {
         $responseFactory = $container->get(App::class)->getResponseFactory();
-        $guard = new \Slim\Csrf\Guard($responseFactory);
+        if (PHP_SAPI === 'cli') {
+            $storage = [];
+            $guard = new \Slim\Csrf\Guard($responseFactory, 'csrf', $storage);
+        } else {
+            $guard = new \Slim\Csrf\Guard($responseFactory);
+        }
         $guard->setStorageLimit(1000);
         $guard->setFailureHandler(function (Request $request, RequestHandler $handler) use($container): ResponseInterface {
 

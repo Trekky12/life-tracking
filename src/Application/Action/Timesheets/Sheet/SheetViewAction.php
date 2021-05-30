@@ -24,8 +24,10 @@ class SheetViewAction {
         $requestData = $request->getQueryParams();
 
         list($from, $to) = DateUtility::getDateRange($requestData, null, null); //, $defaultFrom);
-        
-        $index = $this->service->view($hash, $from, $to);
+
+        $categories = array_key_exists("categories", $requestData) ? filter_var_array($requestData["categories"], FILTER_SANITIZE_NUMBER_INT) : [];
+
+        $index = $this->service->view($hash, $from, $to, $categories);
 
         return $this->responder->respond($index->withTemplate('timesheets/sheets/index.twig'));
     }

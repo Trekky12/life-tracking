@@ -39,7 +39,7 @@ class SheetExportWordService extends SheetService {
         }
 
         // get Data
-        $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'ASC', null);
+        $data = $this->mapper->getTableData($project->id, $from, $to, [], 0, 'ASC', null);
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];

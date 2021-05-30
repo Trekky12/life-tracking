@@ -39,7 +39,7 @@ class SheetExportExcelService extends SheetService {
         }
 
         // get Data
-        $data = $this->mapper->getTableData($project->id, $from, $to, 0, 'ASC', null);
+        $data = $this->mapper->getTableData($project->id, $from, $to, [], 0, 'ASC', null);
         //$rendered_data = $this->renderTableRows($project, $data);
         //$totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 

@@ -1,0 +1,35 @@
+input.choices__input{
+    border: 0;
+    height: initial;
+    padding: initial;
+    margin-top: 3px;
+}
+
+.choices__button{
+
+}
+
+.is-open .choices__inner, .choices__inner, .choices__list{
+    border-radius: 0;
+}
+
+.choices__inner{
+    min-height: 37px;
+    //padding: 5px 12px;
+    padding: 5px 12px 3px 12px;
+    border: 1px solid #ccc;
+    @include font-size(1.4);
+
+    .choices__list{
+        padding: 0;
+    }
+
+    .choices__item{
+        &, &.is-highlighted{
+            background-color: $color_blue;
+            border: 1px solid $color_blue_light;
+            //margin-bottom: 0;
+        }
+    }
+
+}
