@@ -104,6 +104,9 @@ return [
             'urgency' => 'normal',
         ],
         'mapbox_token' => '',
+        'timesheets' => [
+            'key' => ''
+        ],
         'modules' => [
             "location" => [
                 "url" => "/location/",

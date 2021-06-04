@@ -230,6 +230,9 @@ class SheetService extends Service {
         }
 
         $entry = $this->getEntry($entry_id);
+        if (!is_null($entry)) {
+            $entry->notice = $this->mapper->getNotice($entry->id);
+        }
 
         $users = $this->user_service->getAll();
         $project_users = $this->project_service->getUsers($project->id);

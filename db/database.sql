@@ -849,7 +849,7 @@ CREATE TABLE timesheets_sheets (
     end DATETIME DEFAULT NULL,
     duration INTEGER DEFAULT NULL,
     duration_modified INTEGER DEFAULT NULL,
-    notice TEXT DEFAULT NULL,
+    notice BLOB DEFAULT NULL,
     start_lat DECIMAL(17,14) DEFAULT NULL,
     start_lng DECIMAL(17,14) DEFAULT NULL,
     start_acc DECIMAL(10,3) DEFAULT NULL,
