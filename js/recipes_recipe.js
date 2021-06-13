@@ -8,7 +8,6 @@ stepsIngredientsSelect.forEach(function (item, idx) {
         let items = document.querySelectorAll('.ingredient-select[data-id="' + id + '"]');
         items.forEach(function (el) {
             el.classList.toggle('active');
-            item.blur();
         });
     });
 });

@@ -2,6 +2,8 @@
 
 namespace App\Domain\Recipes\Recipe;
 
+use App\Domain\Main\Utility\Utility;
+
 class Recipe extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_RECIPES_RECIPE";
@@ -25,7 +27,7 @@ class Recipe extends \App\Domain\DataObject {
         $this->link = $this->exists('link', $data) ? filter_var($data['link'], FILTER_SANITIZE_STRING) : null;
 
         $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
-        
+
         // image from database
         if ($this->exists('image', $data)) {
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
@@ -63,6 +65,10 @@ class Recipe extends \App\Domain\DataObject {
             return $this->image;
         }
         return null;
+    }
+
+    public function getRecipeDescription() {
+        return Utility::replaceLinks(nl2br($this->description));
     }
 
 }

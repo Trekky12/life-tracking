@@ -9,7 +9,7 @@
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
     <script src="{{baseURL}}/static/assets/js/choices.min.js"></script>
-    <script src="{{baseURL}}/static/js/recipes.js?ver=20210514"></script>
+    <script src="{{baseURL}}/static/js/recipes.js?ver=20210613"></script>
 {% endblock %}
 
 {% block body %}
@@ -167,7 +167,7 @@
             <div class="step-content">
                 <div class="form-group">
                     <label>{{lang["NAME"]}}</label>
-                    <input type="text" disabled="disabled" name="steps[dummy][name]">
+                    <input type="text" disabled="disabled" name="steps[dummy][name]" class="step_name">
                 </div>
                 <div class="form-group two-columns mobile">
                     <div class="left">

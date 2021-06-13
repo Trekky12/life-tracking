@@ -16,6 +16,8 @@ addStepBtn.addEventListener('click', function (event) {
     new_step.classList.remove("hidden");
     new_step.classList.remove("step-dummy");
     new_step.dataset.idx = step_idx;
+    
+    new_step.querySelector('.step_name').value = "Schritt " + (step_idx+1);
 
     let inputs = new_step.querySelectorAll('input, textarea, select');
     inputs.forEach(function (input, idx) {

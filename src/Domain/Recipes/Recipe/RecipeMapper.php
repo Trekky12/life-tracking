@@ -101,7 +101,7 @@ class RecipeMapper extends \App\Domain\Mapper {
     public function getRecipeIngredients($recipe_id) {
         $sql = "SELECT ri.id, ri.step, ri.ingredient, ri.position, ri.amount, ri.notice, i.name, i.unit "
                 . "FROM " . $this->getTableName("recipes_recipe_ingredients") . " ri, " . $this->getTableName("recipes_ingredients") . " i "
-                . "WHERE ri.ingredient = i.id AND recipe = :recipe ORDER BY position";
+                . "WHERE ri.ingredient = i.id AND recipe = :recipe ORDER BY ri.step, position";
 
         $bindings = [
             "recipe" => $recipe_id
