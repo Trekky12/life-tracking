@@ -16,8 +16,8 @@ addStepBtn.addEventListener('click', function (event) {
     new_step.classList.remove("hidden");
     new_step.classList.remove("step-dummy");
     new_step.dataset.idx = step_idx;
-    
-    new_step.querySelector('.step_name').value = "Schritt " + (step_idx+1);
+
+    new_step.querySelector('.step_name').value = "Schritt " + (step_idx + 1);
 
     let inputs = new_step.querySelectorAll('input, textarea, select');
     inputs.forEach(function (input, idx) {
@@ -149,29 +149,20 @@ function createChoiceIngredients(element) {
 
     let selected = element.dataset.selected ? element.dataset.selected : "";
 
-    new Choices(element, {
-        loadingText: lang.loading,
-        itemSelectText: 'Press to select',
-        noResultsText: lang.nothing_found,
-        shouldSort: false,
-        classNames: {
-            containerOuter: 'choices ingredient-choices',
-        },
-    }).setChoices(function () {
-        return fetch(jsObject.ingredients_get)
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (data) {
-                    return data;
-                });
-    }).then(function (choice) {
-        
-        let placeholder = element.closest('.step-ingredient').querySelector('.choices__placeholder');
-        placeholder.innerHTML = lang.ingredient;
-        
-        choice.setChoiceByValue(selected);
+    let selectr = new Selectr(element, {
+        searchable: true,
+        placeholder: lang.ingredient,
+        messages: {
+            noOptions: lang.no_options
+        }
     });
 
+    return fetch(jsObject.ingredients_get)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                selectr.add(data);
+            });
 
 }

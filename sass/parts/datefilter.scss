@@ -53,7 +53,7 @@
             align-items: start;
         }
 
-        button:not(.choices__button), input:not(.choices__input), select, .flatpickr-input, .choices__inner{
+        button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input), select, .flatpickr-input, .choices__inner{
             min-height: 41px;
         }
 
@@ -70,7 +70,7 @@
 }
 
 #search, #search-filter{
-    button:not(.choices__button), input:not(.choices__input), select{
+    button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input), select{
         width: 100%;
 
         @include font-size(1.2);

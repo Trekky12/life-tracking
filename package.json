@@ -12,7 +12,6 @@
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@tarekraafat/autocomplete.js": "^9.1.1",
     "chart.js": "^3.2.1",
-    "choices.js": "^9.0.1",
     "flatpickr": "^4.6.9",
     "font-awesome": "^4.7.0",
     "leaflet": "^1.7.1",

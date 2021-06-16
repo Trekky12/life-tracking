@@ -88,7 +88,6 @@ function copyJSTask(cb) {
             './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.min.js',
             './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
             './node_modules/@tarekraafat/autocomplete.js/dist/js/autoComplete.min.js',
-            './node_modules/choices.js/public/assets/scripts/choices.min.js',
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
@@ -143,7 +142,6 @@ function copyCSSTask(cb) {
             './node_modules/nouislider/dist/nouislider.min.css',
             './node_modules/mobius1-selectr/dist/selectr.min.css',
             './node_modules/simplemde/dist/simplemde.min.css',
-            './node_modules/choices.js/public/assets/styles/choices.min.css',
             ] )
         // remove source map
         .pipe(replace(/\/\*# sourceMappingURL=(.?)*\.css\.map \*\//g, ""))

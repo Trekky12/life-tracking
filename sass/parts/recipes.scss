@@ -24,7 +24,7 @@
         label{
             display:block;
         }
-        input{
+        input:not(.selectr-input){
             width: 100%;
         }
 
@@ -60,7 +60,7 @@
         align-items:center;
         margin-bottom: 1rem;
 
-        input, .ingredient-handle{
+        input, .ingredient-handle, .selectr-container{
             margin-right: 1rem;
         }
 
@@ -71,6 +71,15 @@
         input{
             padding: 8px 12px;
             @include font-size(1.4);
+        }
+
+        input, .selectr-selected{
+            border: 1px solid #ccc;
+            border-radius: 0px;
+        }
+        .selectr-options-container{
+            border-color: #ccc;
+            border-radius: 0px;
         }
 
         .ingredient-choices{

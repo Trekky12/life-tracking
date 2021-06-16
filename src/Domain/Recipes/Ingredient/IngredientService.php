@@ -44,7 +44,7 @@ class IngredientService extends Service {
                 $label .= " (" . $ingredient->unit . ")";
             }
 
-            $el = ["label" => $label, "value" => $ingredient->id];
+            $el = ["text" => $label, "value" => $ingredient->id];
 
             $ingredients[] = $el;
         }
