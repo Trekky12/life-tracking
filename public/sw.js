@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20210605';
+const cacheName = 'pwa-life-tracking-v20210619';
 const staticAssets = [
     '/',
     '/static/style.css',

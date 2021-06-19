@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210530" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210619" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -65,6 +65,10 @@
                 <span class="alert-message">
                     <p>{{ lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] }}</p>
                 </span>
+            </div>
+            <div id="loading-overlay" class="hidden">
+                <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                <span class="sr-only">Loading...</span>
             </div>
             {% block body %}
             {% endblock %}
@@ -235,13 +239,13 @@
         <script src="{{baseURL}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20200609" type="text/javascript"></script>  
 
-        <script src="{{baseURL}}/static/js/main.js?ver=20200606" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/main.js?ver=20210619" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20200812" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/tables.js?ver=20200627" type="text/javascript"></script>
 
 
         {% if not user is null %}
-        <script src="{{baseURL}}/static/js/app.js?ver=20201228" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/app.js?ver=20210619" type="text/javascript"></script>
         {% endif %}
 
         {% block javascript %}
