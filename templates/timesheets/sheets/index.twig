@@ -17,8 +17,7 @@
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
             <div class="buttons">
                 <a href="{{ url_for('timesheets')}}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
-                <a href="{{  url_for('timesheets_export_excel', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["TIMESHEETS_EXPORT"]}}</button></a>
-                <a href="{{  url_for('timesheets_export_word', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white"><i class="far fa-file-word" aria-hidden="true"></i> {{lang["TIMESHEETS_EXPORT"]}}</button></a>
+                <a href="{{  url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white">{{lang["TIMESHEETS_EXPORT"]}}</button></a>
                 <a href="{{  url_for('timesheets_fast', {'project':project.hash}) }}"><button class="white"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> {% if project.is_day_based == 1 %}{{lang["TIMESHEETS_FAST_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}{% endif %} <i class="fas fa-sign-out-alt" aria-hidden="true"></i></button></a>
                 <a href="{{  url_for('timesheets_sheets_edit', {'project':project.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
             </div>

@@ -151,7 +151,8 @@ return [
      */
     CSRF::class => function (ContainerInterface $container) {
         $responseFactory = $container->get(App::class)->getResponseFactory();
-        if (PHP_SAPI === 'cli') {
+
+        if (PHP_SAPI === 'cli' && (strpos($_SERVER['argv'][0], 'phpunit') === false)) {
             $storage = [];
             $guard = new \Slim\Csrf\Guard($responseFactory, 'csrf', $storage);
         } else {

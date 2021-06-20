@@ -269,4 +269,21 @@ class SheetService extends Service {
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
     }
 
+    public function showExport($hash, $from, $to) {
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+
+        return new Payload(Payload::$RESULT_HTML, [
+            "project" => $project,
+            "categories" => $project_categories,
+            "from" => $from,
+            "to" => $to
+        ]);
+    }
+
 }

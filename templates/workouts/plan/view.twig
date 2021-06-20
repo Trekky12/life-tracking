@@ -20,7 +20,7 @@
                     <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["WORKOUTS_SESSION_ADD"]}}</button></a>
                     <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="white">{{lang["WORKOUTS_SESSIONS"]}}</button></a>
                     <a href="{{  url_for('workouts_sessions_stats', {'plan':plan.hash}) }}"><button class="white">{{lang["STATS"]}}</button></a>
-                    <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a>
+                    <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}" class="no-loading"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["WORKOUTS_EXPORT"]}}</button></a>
 
                 {% else %}
                     <a href="{{  url_for('workouts_templates') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>

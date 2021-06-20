@@ -195,7 +195,11 @@ class BaseTestCase extends TestCase {
 
         // Add request data, if it exists
         if (isset($requestData)) {
-            $request = $request->withParsedBody($requestData);
+            if ($requestMethod == 'GET') {
+                $request = $request->withQueryParams($requestData);
+            } else {
+                $request = $request->withParsedBody($requestData);
+            }
         }
 
         if (!empty(self::$LOGIN_TOKEN)) {
@@ -426,7 +430,6 @@ class BaseTestCase extends TestCase {
                 // has an option
             } elseif (count($options) > 0) {
                 $value = $options->item(0)->nodeValue;
-                
             } elseif ($node->hasAttribute('data-selected')) {
                 $value = $node->getAttribute('data-selected');
 

@@ -408,8 +408,10 @@ return function (App $app) {
                 $group_fast->post('/checkout', \App\Application\Action\Timesheets\Sheet\SheetFastCheckOutAction::class)->setName('timesheets_fast_checkout');
             });
 
-            $group_project->get('/exportExcel', \App\Application\Action\Timesheets\Sheet\SheetExportExcelAction::class)->setName('timesheets_export_excel');
-            $group_project->get('/exportWord', \App\Application\Action\Timesheets\Sheet\SheetExportWordAction::class)->setName('timesheets_export_word');
+            $group_project->group('/export', function (RouteCollectorProxy $group_export) {
+                $group_export->get('/', \App\Application\Action\Timesheets\Sheet\SheetExportViewAction::class)->setName('timesheets_export');
+                $group_export->get('/download', \App\Application\Action\Timesheets\Sheet\SheetExportAction::class)->setName('timesheets_sheets_export');
+            });
 
             $group_project->group('/categories', function (RouteCollectorProxy $group_category) {
                 $group_category->get('/', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryListAction::class)->setName('timesheets_project_categories');
@@ -501,7 +503,7 @@ return function (App $app) {
         $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Recipe\RecipeEditAction::class)->setName('recipes_edit');
         $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Recipe\RecipeSaveAction::class)->setName('recipes_save');
         $group->delete('/delete/{id}', \App\Application\Action\Recipes\Recipe\RecipeDeleteAction::class)->setName('recipes_delete');
-        
+
         $group->get('/list', \App\Application\Action\Recipes\Recipe\RecipesListAction::class)->setName('recipes_get');
 
         $group->group('/{recipe}', function (RouteCollectorProxy $group_recipe) {
