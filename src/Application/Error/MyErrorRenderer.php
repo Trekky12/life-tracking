@@ -33,6 +33,15 @@ class MyErrorRenderer implements \Slim\Interfaces\ErrorRendererInterface {
             return json_encode(["status" => "error", "error" => $exception->getMessage()]);
         }
 
+        if ($exception instanceof CSRFException) {
+            $data = $exception->getData();
+            return $this->twig->fetch('error.twig', [
+                        'message' => $this->translation->getTranslatedString("REQUEST_ERROR"),
+                        'message_type' => 'danger',
+                        'data' => $data
+            ]);
+        }
+
         $this->logger->critical($exception->getMessage());
 
         return $this->twig->fetch('error.twig', ['message' => $exception->getMessage(), 'message_type' => 'danger']);

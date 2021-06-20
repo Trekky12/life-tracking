@@ -17,10 +17,22 @@
         </span>
     </div>
 
-    <div class="inner-content">
-        <div class="page-content">
-            {{lang["ERROR"]}}
+    {% if data is not null %}
+        {% if data is iterable %}
+            <div class="inner-content">
+                <div class="page-content">
+                    {% for field_name, field_value in data %}
+                        <p>{{ field_name }}: {% if field_value is iterable %}{{field_value|json_encode()}}{% else %}{{ field_value }}{% endif %}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="inner-content">
+            <div class="page-content">
+                {{lang["ERROR"]}}
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}

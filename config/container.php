@@ -22,6 +22,7 @@ use Slim\Psr7\Factory\ResponseFactory;
 use App\Application\TwigExtensions\FlashExtension;
 use App\Application\TwigExtensions\CsrfExtension;
 use App\Domain\Main\Utility\Utility;
+use App\Application\Error\CSRFException;
 
 return [
     Settings::class => function () {
@@ -169,12 +170,14 @@ return [
                 return $handler->handle($request);
             }
 
-            $logger = $container->get(LoggerInterface::class);
-            $logger->critical("Failed CSRF check");
+            $data = $request->getParsedBody();
 
-            $response = new Response();
-            $response->getBody()->write('Failed CSRF check!');
-            return $response->withStatus(400)->withHeader('Content-type', 'text/plain');
+            $logger = $container->get(LoggerInterface::class);
+            $logger->critical("Failed CSRF check", $data);
+            
+            $ex = new CSRFException();
+            $ex->setData($data);
+            throw $ex;
         });
         return $guard;
     },
