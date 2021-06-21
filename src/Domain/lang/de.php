@@ -478,6 +478,8 @@ $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "Zeitberechnung anpassbar";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "Zeitumrechnungsrate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Zeit (sek.)";
+$lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "keine Anpassung der Zeit";
+$lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "nutze die Zeitumrechnungsrate des Projekts";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 

@@ -117,19 +117,30 @@ if (dateTimePickerStart && dateTimePickerEnd) {
     });
 }
 
-const checkboxDurationModification = document.getElementById('checkboxDurationModification');
+const radioDurationCustomModification = document.getElementById('radioDurationCustom');
+const radioDurationNoModification = document.getElementById('radioDurationReal');
+const radioDurationRateModification = document.getElementById('radioDurationProjectRate');
 const inputDurationModificationWrapper = document.getElementById('inputDurationModificationWrapper');
 
-if (checkboxDurationModification && inputDurationModificationWrapper) {
-    checkboxDurationModification.addEventListener('click', function (event) {
+if (radioDurationCustomModification && radioDurationNoModification && radioDurationRateModification && inputDurationModificationWrapper) {
+    radioDurationCustomModification.addEventListener('click', function (event) {
 
-        if (checkboxDurationModification.checked) {
+        if (radioDurationCustomModification.checked) {
             inputDurationModificationWrapper.classList.remove("hidden");
             inputDurationModificationWrapper.querySelector('input').disabled = false;
         } else {
             inputDurationModificationWrapper.classList.add("hidden");
             inputDurationModificationWrapper.querySelector('input').disabled = true;
         }
+    });
+
+    radioDurationNoModification.addEventListener('click', function (event) {
+        inputDurationModificationWrapper.classList.add("hidden");
+        inputDurationModificationWrapper.querySelector('input').disabled = true;
+    });
+    radioDurationRateModification.addEventListener('click', function (event) {
+        inputDurationModificationWrapper.classList.add("hidden");
+        inputDurationModificationWrapper.querySelector('input').disabled = true;
     });
 }
 

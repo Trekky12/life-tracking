@@ -201,22 +201,23 @@ class SheetService extends Service {
         return $rendered_data;
     }
 
-    public function setDuration(Sheet $entry, Project $project, $duration_modification = false) {
+    public function setDuration(Sheet $entry, Project $project, $duration_modification = 0) {
 
         // get and save duration
         $duration = $entry->calculateDuration();
         if (!is_null($duration)) {
             $this->mapper->set_duration($entry->id, $duration);
 
-            // set the time converstion
-            if (is_null($entry->duration_modified)) {
-                $duration_modified = (intval($project->has_duration_modifications) > 0 && $project->time_conversion_rate > 0) ? $duration * $project->time_conversion_rate : $duration;
-                $this->mapper->set_duration_modified($entry->id, $duration_modified);
-            } else {
-                // reset the modified duration
-                if (!$duration_modification) {
+            switch ($duration_modification) {
+                case 0:
                     $this->mapper->set_duration_modified($entry->id, $duration);
-                }
+                    break;
+                case 1:
+                    $conversion_rate = (intval($project->has_duration_modifications) > 0 && $project->time_conversion_rate > 0) ? $project->time_conversion_rate : 1;
+                    $this->mapper->set_duration_modified($entry->id, $duration * $conversion_rate);
+                    break;
+                case 2:
+                    // do nothing since duration_modified is already set from the input box
             }
         }
     }

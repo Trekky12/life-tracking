@@ -479,6 +479,8 @@ $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "time conversion rate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
+$lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "no time calculation modification";
+$lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "use the time conversion rate of the project";
 
 $lang["THIS_DEVICE"] = "this device";
 

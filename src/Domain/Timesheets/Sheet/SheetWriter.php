@@ -38,7 +38,7 @@ class SheetWriter extends ObjectActivityWriter {
         $notice = $data["notice"];
         $data["notice"] = null;
 
-        $duration_modification = $project->has_duration_modifications && array_key_exists("duration_modification", $data) && intval(filter_var($data["duration_modification"], FILTER_SANITIZE_NUMBER_INT)) > 0 ? true : false;
+        $duration_modification = $project->has_duration_modifications && array_key_exists("duration_modification", $data) ? intval(filter_var($data["duration_modification"], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();

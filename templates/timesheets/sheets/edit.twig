@@ -85,25 +85,33 @@
                     </select>
                 </div>  
 
-
                 {% if project.has_duration_modifications > 0 %}
                     <div class="form-group">
-                        <label class="checkbox" for="checkboxDurationModification">
-                            <input name="duration_modification" type="checkbox" value="1" id="checkboxDurationModification" {% if entry is not null and entry.duration != entry.duration_modified %}checked{% endif %}>
+                        <label class="checkbox" for="radioDurationReal">
+                            <input name="duration_modification" type="radio" value="0" id="radioDurationReal" {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 0 )%}checked="checked"{% endif %}>
+                            {{lang["TIMESHEETS_DURATION_NO_MODIFICATION"]}}
+                        </label>
+                        <br/>
+                        <label class="checkbox" for="radioDurationProjectRate">
+                            <input name="duration_modification" type="radio" value="1" id="radioDurationProjectRate" {% if ( entry is null ) or (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 1 )%}checked="checked"{% endif %}>
+                            {{lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"]}} ({{ project.time_conversion_rate }})
+                        </label>
+                        <br/>
+                        <label class="checkbox" for="radioDurationCustom">
+                            <input name="duration_modification" type="radio" value="2" id="radioDurationCustom" {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 2 )%}checked="checked"{% endif %}>
                             {{lang["TIMESHEETS_DURATION_MODIFICATION"]}}
                         </label>
-                    </div>
-
-                    <div id="inputDurationModificationWrapper" class="form-group {% if entry is null or entry.duration == entry.duration_modified %}hidden{% endif %}">
-                        <label for="inputDurationModification">{{lang["TIMESHEETS_TIME_MODIFICATION"]}}</label>
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            id="inputRate" 
-                            name="duration_modified" 
-                            value="{% if not entry is null %}{{entry.duration_modified}}{% else %}{{ entry.duration }}{% endif %}"
-                            {% if entry is null or entry.duration == entry.duration_modified %}disabled="disabled"{% endif %}
-                            >
+                        <br/>
+                        <div id="inputDurationModificationWrapper" class="form-group {% if ( entry is null ) or (entry is not null and ( entry.getDurationModification(project.time_conversion_rate) == 0 or entry.getDurationModification(project.time_conversion_rate) == 1 ))%}hidden{% endif %}">
+                            <label for="inputDurationModification">{{lang["TIMESHEETS_TIME_MODIFICATION"]}}</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="inputRate" 
+                                name="duration_modified" 
+                                value="{% if not entry is null %}{{entry.duration_modified}}{% endif %}"
+                                >
+                        </div>
                     </div>
                 {% endif %}
 
