@@ -378,7 +378,7 @@ function initCharts() {
                 }
             }
         });
-        financeDetailChart.before(fdChart.generateLegend());
+        //financeDetailChart.before(fdChart.generateLegend());
     }
 
 
