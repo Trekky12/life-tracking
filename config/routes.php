@@ -9,6 +9,8 @@ use Slim\Routing\RouteParser;
 return function (App $app) {
 
     $app->group('', function (RouteCollectorProxy $group) {
+        $group->get('/pwa', \App\Application\Action\Main\PWAFrontpageAction::class)->setName('pwa');
+        
         $group->get('/', \App\Application\Action\Main\FrontpageAction::class)->setName('index');
         $group->get('/login', \App\Application\Action\Main\LoginpageAction::class)->setName('login');
         $group->post('/login', \App\Application\Action\Main\LoginAction::class)->setName('login');

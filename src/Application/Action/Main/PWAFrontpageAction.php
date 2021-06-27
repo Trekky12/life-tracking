@@ -4,22 +4,24 @@ namespace App\Application\Action\Main;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Domain\Main\HelpService;
-use App\Application\Responder\HTMLTemplateResponder;
+use App\Domain\Home\HomeService;
+use App\Application\Responder\RedirectResponder;
 
-class HelpAction {
+class PWAFrontpageAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLTemplateResponder $responder, HelpService $service) {
+    public function __construct(RedirectResponder $responder, HomeService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $payload = $this->service->getHelpPage();
-        return $this->responder->respond($payload->withTemplate('main/help.twig'));
+        $payload = $this->service->getPWAStartPage();
+
+        $data = $payload->getResult();
+        return $this->responder->respond($data["url"], 302, false);
     }
 
 }

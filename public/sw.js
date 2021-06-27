@@ -9,9 +9,10 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20210619';
+const cacheName = 'pwa-life-tracking-v20210626';
 const staticAssets = [
     '/',
+    '/pwa',
     '/static/style.css',
     '/static/js/activities.js',
     '/static/js/app.js',
@@ -64,12 +65,40 @@ const staticAssets = [
     '/static/assets/js/simplemde.min.js',
     '/static/assets/js/i18n/de.js',
     '/static/assets/js/i18n/en.js',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
+    '/static/assets/fonts/font-awesome/fa-brands-400.eot',
+    '/static/assets/fonts/font-awesome/fa-brands-400.svg',
+    '/static/assets/fonts/font-awesome/fa-brands-400.ttf',
+    '/static/assets/fonts/font-awesome/fa-brands-400.woff',
     '/static/assets/fonts/font-awesome/fa-brands-400.woff2',
+    '/static/assets/fonts/font-awesome/fa-regular-400.eot',
+    '/static/assets/fonts/font-awesome/fa-regular-400.svg',
+    '/static/assets/fonts/font-awesome/fa-regular-400.ttf',
+    '/static/assets/fonts/font-awesome/fa-regular-400.woff',
     '/static/assets/fonts/font-awesome/fa-regular-400.woff2',
+    '/static/assets/fonts/font-awesome/fa-solid-900.eot',
+    '/static/assets/fonts/font-awesome/fa-solid-900.svg',
+    '/static/assets/fonts/font-awesome/fa-solid-900.ttf',
+    '/static/assets/fonts/font-awesome/fa-solid-900.woff',
     '/static/assets/fonts/font-awesome/fa-solid-900.woff2',
     '/static/assets/favicon/android-chrome-192x192.png',
     '/static/assets/favicon/android-chrome-256x256.png',
@@ -84,6 +113,7 @@ const staticAssets = [
     '/static/assets/css/autoComplete.min.css',
     '/static/assets/css/choices.min.css',
     '/static/assets/css/flatpickr.min.css',
+    '/static/assets/css/font-awesome5.min.css',
     '/static/assets/css/jstable.css',
     '/static/assets/css/leaflet-routing-machine.min.css',
     '/static/assets/css/leaflet.extra-markers.min.css',
@@ -104,12 +134,12 @@ self.addEventListener('install', event => {
     console.log('Attempting to install service worker and cache static assets');
 
     event.waitUntil(
-            caches.open(cacheName).then(cache => {
-        return cache.addAll(staticAssets);
-    }).then(function () {
-        self.skipWaiting();
-    })
-            );
+        caches.open(cacheName).then(cache => {
+            return cache.addAll(staticAssets);
+        }).then(function () {
+            self.skipWaiting();
+        })
+    );
 });
 
 self.addEventListener('activate', event => {
@@ -117,18 +147,21 @@ self.addEventListener('activate', event => {
     const cacheWhitelist = [cacheName];
 
     event.waitUntil(
-            caches.keys().then(cacheNames => {
-        return Promise.all(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
                 cacheNames.map(cacheName => {
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
                         return caches.delete(cacheName);
                     }
+                }),
+                caches.open(cacheName).then(cache => {
+                    return cache.addAll(staticAssets);
                 })
-                );
-    }).then(function () {
-        self.clients.claim()
-    })
             );
+        }).then(function () {
+            self.clients.claim()
+        })
+    );
 });
 
 self.addEventListener('fetch', event => {
@@ -145,6 +178,10 @@ self.addEventListener('fetch', event => {
     }
 
     if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
+        return event.respondWith(cacheFirst(req));
+    } else if (/.*(\/pwa)/.test(req.url)) {
+        // load new version into cache
+        _fetchAndCache(req.clone());
         return event.respondWith(cacheFirst(req));
     } else {
         //console.log('network first', req.url);
@@ -207,7 +244,7 @@ function _notifyCache(req) {
 /**
  * @see https://serviceworke.rs/strategy-network-or-cache_service-worker_doc.html
  */
-function _fromCache(request) {
+function _fromCache(request) {    
     return caches.open(cacheName).then(function (cache) {
         return cache.match(request).then(function (cachedResponse) {
             return cachedResponse || Promise.reject('no-match');

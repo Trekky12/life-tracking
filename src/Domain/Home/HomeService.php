@@ -22,6 +22,7 @@ use App\Domain\Main\Helper;
 use App\Domain\Home\Widget\EFAWidget;
 use App\Domain\Home\Widget\CurrentWeatherWidget;
 use App\Domain\Home\Widget\WeatherForecastWidget;
+use Slim\Routing\RouteParser;
 
 class HomeService extends Service {
 
@@ -40,6 +41,7 @@ class HomeService extends Service {
     private $currentweather_widget;
     private $weatherforecast_widget;
     private $widget_mapper;
+    private $router;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -58,7 +60,8 @@ class HomeService extends Service {
             EFAWidget $efa_widget,
             CurrentWeatherWidget $currentweather_widget,
             WeatherForecastWidget $weatherforecast_widget,
-            WidgetMapper $widget_mapper) {
+            WidgetMapper $widget_mapper,
+            RouteParser $router) {
         parent::__construct($logger, $user);
         $this->translation = $translation;
         $this->settings = $settings;
@@ -78,15 +81,19 @@ class HomeService extends Service {
         $this->weatherforecast_widget = $weatherforecast_widget;
 
         $this->widget_mapper = $widget_mapper;
+
+        $this->router = $router;
     }
 
-    public function getUserStartPage($pwa) {
-        // is PWA? redirect to start page
+    public function getPWAStartPage() {
         $user = $this->current_user->getUser();
-        if (!is_null($pwa) && !is_null($user) && !empty($user->start_url)) {
-            return new Payload(Payload::$STATUS_HAS_START_URL, $user->start_url);
+        if (!is_null($user) && !empty($user->start_url)) {
+            return new Payload(Payload::$RESULT_HTML, ["url" => $user->start_url]);
         }
+        return new Payload(Payload::$RESULT_HTML, ["url" => $this->router->urlFor('index')]);
+    }
 
+    public function getUserStartPage() {
         $widgets = $this->widget_mapper->getAll('position');
         $list = [];
         if (count($widgets) > 0) {
