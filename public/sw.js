@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20210626';
+const cacheName = 'pwa-life-tracking-v20210627a';
 const staticAssets = [
     '/',
     '/pwa',
@@ -179,10 +179,10 @@ self.addEventListener('fetch', event => {
 
     if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
         return event.respondWith(cacheFirst(req));
-    } else if (/.*(\/pwa)/.test(req.url)) {
-        // load new version into cache
-        _fetchAndCache(req.clone());
-        return event.respondWith(cacheFirst(req));
+//    } else if (/.*(\/pwa)/.test(req.url)) {
+//        // load new version into cache
+//        _fetchAndCache(req.clone());
+//        return event.respondWith(cacheFirst(req));
     } else {
         //console.log('network first', req.url);
         //self.clients.matchAll().then(function (clientList) {
