@@ -69,6 +69,13 @@ function replaceFontAwesome5Webfonts(cb) {
         .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
+function copyFontAwesome5JS(cb) {
+    return gulp
+        .src( './node_modules/@fortawesome/fontawesome-free/js/all.min.js')
+        .pipe( rename("font-awesome5.min.js") )
+        .pipe( gulp.dest( 'public/static/assets/js' ) );
+}
+
 function copyJSTask(cb) {
     return gulp
         .src( [ 
@@ -282,7 +289,6 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyFontsFontAwesome5Task, copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, copyAutocompleteIcon);
+exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontAwesome5JS);
 
-exports.test = replaceFontAwesome5Webfonts;
 exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);

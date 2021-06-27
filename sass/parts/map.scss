@@ -38,12 +38,16 @@
         content: "\f106";
         font-family: "Font Awesome 5 Free";
         font-weight: 900;
-        display:inline-block;
+        //display:inline-block;
+        display: none;
         font-style: normal;
         font-variant: normal;
         text-rendering: auto;
         -webkit-font-smoothing: antialiased;
         font-size: inherit;
+        transition: all 250ms;
+    }
+    svg{
         transition: all 250ms;
     }
 
@@ -130,6 +134,7 @@
     label{
         display:block!important;
         text-align: center;
+        margin-bottom: 0!important;
     }
 
     input[type=checkbox] + span:hover{
@@ -139,28 +144,42 @@
     input[type=checkbox] { 
         display:none; 
     }
-    input[type=checkbox] + span span:before {
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        display:inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
+    input[type=checkbox] + span  {
+        span::before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            //display:inline-block;
+            display: none;
+            font-style: normal;
+            font-variant: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
 
-        display: inline-block;
-        color: $color_border-input;
-        margin-left: 1rem;
-        margin-right:1rem;
-        @include font-size(1.5); 
+            color: $color_border-input;
+            margin-left: 1rem;
+            margin-right:1rem;
+            @include font-size(1.5); 
 
-        @media screen and (min-width: $size_mobile_navigation) {
-            @include font-size(3); 
+            @media screen and (min-width: $size_mobile_navigation) {
+                @include font-size(3); 
+            }
+        }
+        svg{
+            color: $color_border-input;
+            margin-left: 1rem;
+            margin-right:1rem;
+            @include font-size(1.5); 
+
+            @media screen and (min-width: $size_mobile_navigation) {
+                @include font-size(3); 
+            }
         }
     }
 
-    input[type=checkbox]:checked + span span:before { 
-        color: $color_blue;
+    input[type=checkbox]:checked + span  { 
+        span:before, svg{
+            color: $color_blue;
+        }
     }
 
     input[type=checkbox] + span span#layerLocation:before  {
@@ -229,13 +248,14 @@ body.trips{
 .leaflet-routing-container-hide .leaflet-routing-collapse-btn{
     left: 4px;
     top: -8px;
-    
+
     background-image:none;
-    
+
     &::before{
         font-family: "Font Awesome 5 Free";
         font-weight: 900;
-        display:inline-block;
+        //display:inline-block;
+        display: none;
         font-style: normal;
         font-variant: normal;
         text-rendering: auto;
@@ -244,6 +264,12 @@ body.trips{
         position: relative;
         color: $color_blue;
         content: "\f4d7";
+        @include font-size(2);
+    }
+    
+    svg{
+        position: relative;
+        color: $color_blue;
         @include font-size(2);
     }
 }
@@ -260,12 +286,17 @@ body.trips{
     &::before{
         font-family: "Font Awesome 5 Free";
         font-weight: 900;
-        display:inline-block;
+        //display:inline-block;
+        display: none;
         font-style: normal;
         font-variant: normal;
         text-rendering: auto;
         -webkit-font-smoothing: antialiased;
         font-size: inherit;
+        position: relative;
+    }
+    
+    svg{
         position: relative;
     }
 
@@ -301,7 +332,7 @@ body.trips{
             content:"\f0c7";
         }
     }
-    
+
     &.load{
         float:left!important;
         &::before{

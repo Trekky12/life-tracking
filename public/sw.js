@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20210627a';
+const cacheName = 'pwa-life-tracking-v20210627b';
 const staticAssets = [
     '/',
     '/pwa',
@@ -51,6 +51,7 @@ const staticAssets = [
     '/static/assets/js/chart.min.js',
     '/static/assets/js/choices.min.js',
     '/static/assets/js/flatpickr.min.js',
+    '/static/assets/js/font-awesome5.min.js',
     '/static/assets/js/jstable.min.js',
     '/static/assets/js/leaflet-easyPrint.min.js',
     '/static/assets/js/leaflet-routing-machine.min.js',
@@ -85,21 +86,6 @@ const staticAssets = [
     '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.ttf',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
-    '/static/assets/fonts/font-awesome/fa-brands-400.eot',
-    '/static/assets/fonts/font-awesome/fa-brands-400.svg',
-    '/static/assets/fonts/font-awesome/fa-brands-400.ttf',
-    '/static/assets/fonts/font-awesome/fa-brands-400.woff',
-    '/static/assets/fonts/font-awesome/fa-brands-400.woff2',
-    '/static/assets/fonts/font-awesome/fa-regular-400.eot',
-    '/static/assets/fonts/font-awesome/fa-regular-400.svg',
-    '/static/assets/fonts/font-awesome/fa-regular-400.ttf',
-    '/static/assets/fonts/font-awesome/fa-regular-400.woff',
-    '/static/assets/fonts/font-awesome/fa-regular-400.woff2',
-    '/static/assets/fonts/font-awesome/fa-solid-900.eot',
-    '/static/assets/fonts/font-awesome/fa-solid-900.svg',
-    '/static/assets/fonts/font-awesome/fa-solid-900.ttf',
-    '/static/assets/fonts/font-awesome/fa-solid-900.woff',
-    '/static/assets/fonts/font-awesome/fa-solid-900.woff2',
     '/static/assets/favicon/android-chrome-192x192.png',
     '/static/assets/favicon/android-chrome-256x256.png',
     '/static/assets/favicon/apple-touch-icon.png',
@@ -113,7 +99,6 @@ const staticAssets = [
     '/static/assets/css/autoComplete.min.css',
     '/static/assets/css/choices.min.css',
     '/static/assets/css/flatpickr.min.css',
-    '/static/assets/css/font-awesome5.min.css',
     '/static/assets/css/jstable.css',
     '/static/assets/css/leaflet-routing-machine.min.css',
     '/static/assets/css/leaflet.extra-markers.min.css',

@@ -20,7 +20,7 @@
     opacity:0.7;
     filter:alpha(opacity=70);
     z-index:1000;
-    i, span{
+    i, span, svg{
         position:absolute;
         top:50%;
         left:50%;
@@ -30,7 +30,7 @@
         margin-bottom:0;
     }
 
-    i{
+    i, svg{
         margin-top: -20px;
         margin-left: -20px;
         width: 40px;
@@ -92,7 +92,7 @@
         padding:0 1rem 0 1rem;
         display:flex;
         justify-content: space-between;
-        
+
         -webkit-tap-highlight-color: transparent;
 
         @media screen and (max-width: $size_mobile) {
@@ -133,7 +133,7 @@
         overflow:hidden;
 
         @include font-size(1.4);
-        
+
         -webkit-tap-highlight-color: transparent;
 
         &:hover{
@@ -158,12 +158,21 @@
                 content: "\f073";
                 font-family: "Font Awesome 5 Free";
                 font-weight: 900;
-                display:inline-block;
+                //display:inline-block;
+                display: none;
                 font-style: normal;
                 font-variant: normal;
                 text-rendering: auto;
                 -webkit-font-smoothing: antialiased;
 
+                transition: all 250ms;
+                @include font-size(1);
+                margin-right: 5px;
+                position: relative;
+                top: -1px;
+            }
+
+            svg{
                 transition: all 250ms;
                 @include font-size(1);
                 margin-right: 5px;
@@ -213,7 +222,7 @@
     .card-placeholder{
         border: 1px dashed $color_text-main;
     }
-    
+
     .handle{
         display: block;
         @media screen and (min-width: $size_mobile) {
@@ -248,7 +257,8 @@
         content: "\f053";
         font-family: "Font Awesome 5 Free";
         font-weight: 900;
-        display:inline-block;
+        //display:inline-block;
+        display: none;
         font-style: normal;
         font-variant: normal;
         text-rendering: auto;
