@@ -181,7 +181,7 @@ class OwnerTest extends CrawlerTestBase {
 
     protected function getElementInTable($body, $data, $hash) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["headline"]) . '<\/td>\s*<td>' . preg_quote($data["field_name"]) . '<\/td>\s*<td>' . str_replace('/', "\/", $data["field_link"]) . '<\/td>\s*<td>' . preg_quote($data["field_content"]) . '<\/td>\s*<td>' . preg_quote($data["position"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["headline"]) . '<\/td>\s*<td>' . preg_quote($data["field_name"]) . '<\/td>\s*<td>' . str_replace('/', "\/", $data["field_link"]) . '<\/td>\s*<td>' . preg_quote($data["field_content"]) . '<\/td>\s*<td>' . preg_quote($data["position"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

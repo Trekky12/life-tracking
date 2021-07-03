@@ -172,7 +172,7 @@ class UserTest extends BaseTestCase {
         $max_value = !is_null($data["max_value"]) ? number_format($data["max_value"], 2) : "";
 
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . preg_quote($category_name) . '<\/td>\s*<td>' . $min_value . '<\/td>\s*<td>' . $max_value . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . preg_quote($category_name) . '<\/td>\s*<td>' . $min_value . '<\/td>\s*<td>' . $max_value . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

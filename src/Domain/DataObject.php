@@ -91,6 +91,7 @@ class DataObject implements \JsonSerializable {
          */
         if ($insert || $update) {
             unset($temp["users"]);
+            unset($temp["hash"]);
         }
 
         return $temp;

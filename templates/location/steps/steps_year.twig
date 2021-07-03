@@ -9,7 +9,7 @@
         <div class="page-header">
             <h2>{{lang["STEPS"]}} {{lang["STATS"]}} {{lang["IN"]}} {{year}}</h2>
             <div class="buttons">
-                <a href="{{ url_for('steps') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+                <a href="{{ url_for('steps') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
 
@@ -35,7 +35,7 @@
                             <td data-title="{{lang["STEPS_MAX"]}}">{{ entry[3]|number_format(0, '', '.')}}</td> 
                             <td data-title="{{lang["STEPS_SUM"]}}">{{ entry[4]|number_format(0, '', '.')}}</td> 
                             <td>
-                                <a href="{{  url_for('steps_stats_month', { 'year' : year, 'month': entry[1] }) }}"><i class="fas fa-chart-bar fa-lg"></i></a>
+                                <a href="{{  url_for('steps_stats_month', { 'year' : year, 'month': entry[1] }) }}">{{ fontawesome('fas fa-chart-bar') }}</a>
                             </td>
                         </tr>
                     {% endfor %}

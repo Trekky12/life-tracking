@@ -28,12 +28,21 @@
                 <input type="submit" value="{{lang["SHOW"]}}"/>
             </div>
         </form>       
-        <i id="show-filter" class="hiddenSearch" aria-hidden="true"></i>
+        <span id="show-filter" class="hiddenSearch" aria-hidden="true">
+            <span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+            <span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+        </span>
     </div>
-
 
 {% endblock %}
 
 {% block bottom %}
     <div id="mapid"></div>
+    <div class="hidden">
+        <div id="iconClustering">{{ fontawesome('fas fa-object-group') }}</div>
+        <div id="iconLocation">{{ fontawesome('fas fa-location-arrow') }}</div>
+        <div id="iconFinances">{{ fontawesome('fas fa-money-bill') }}</div>
+        <div id="iconCars">{{ fontawesome('fas fa-road') }}</div>
+        <div id="iconDirections">{{ fontawesome('fas fa-arrows-alt-h') }}</div>
+    </div>
 {% endblock %}

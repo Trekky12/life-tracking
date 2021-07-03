@@ -32,14 +32,17 @@ class ProjectService extends Service {
 
         foreach ($times as $project_id => $time) {
 
-            $project = $projects[$project_id];
+            if (array_key_exists($project_id, $projects)) {
 
-            $new_time = DateUtility::splitDateInterval($time["sum"]);
-            if ($project->has_duration_modifications > 0 && $time["sum"] > 0) {
-                $new_time = DateUtility::splitDateInterval($time["sum_modified"]) . ' (' . $new_time . ')';
+                $project = $projects[$project_id];
+
+                $new_time = DateUtility::splitDateInterval($time["sum"]);
+                if ($project->has_duration_modifications > 0 && $time["sum"] > 0) {
+                    $new_time = DateUtility::splitDateInterval($time["sum_modified"]) . ' (' . $new_time . ')';
+                }
+
+                $new_times[$project_id] = $new_time;
             }
-
-            $new_times[$project_id] = $new_time;
         }
 
         return new Payload(Payload::$RESULT_HTML, ['projects' => $projects, 'times' => $new_times]);

@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20210627b';
+const cacheName = 'pwa-life-tracking-v20210703';
 const staticAssets = [
     '/',
     '/pwa',
@@ -51,7 +51,6 @@ const staticAssets = [
     '/static/assets/js/chart.min.js',
     '/static/assets/js/choices.min.js',
     '/static/assets/js/flatpickr.min.js',
-    '/static/assets/js/font-awesome5.min.js',
     '/static/assets/js/jstable.min.js',
     '/static/assets/js/leaflet-easyPrint.min.js',
     '/static/assets/js/leaflet-routing-machine.min.js',

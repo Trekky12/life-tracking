@@ -9,6 +9,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Base\Settings;
 use App\Domain\User\UserMapper;
 use App\Domain\Main\Translator;
+use App\Domain\Main\Utility\Utility;
 
 class ActivityService extends Service {
 
@@ -98,7 +99,7 @@ class ActivityService extends Service {
             $row = [];
             $row["date"] = $fmtDate->format(new \Datetime($el->createdOn));
             $row["time"] = $fmtTime->format(new \Datetime($el->createdOn));
-            $row["icon"] = array_key_exists($el->module, $modules) ? $modules[$el->module]['icon'] : "fas fa-toolbox";
+            $row["icon"] = array_key_exists($el->module, $modules) ? Utility::getFontAwesomeIcon($modules[$el->module]['icon']) : Utility::getFontAwesomeIcon("fas fa-toolbox");
             $row["description"] = $description;
             $row["link"] = $el->type !== 'delete' ? $el->link : null;
 

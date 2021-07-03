@@ -16,8 +16,8 @@
         <div class="page-header">
             <h2>{{crawler.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('crawlers') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
-                <a href="{{  url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}"><button class="white"><i class="far fa-star"></i> {{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button></a>
+                <a href="{{  url_for('crawlers') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}"><button class="white">{{ fontawesome('far fa-star') }} {{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -72,7 +72,7 @@
             <div class="page-header"><h2>{{lang["LINKLIST"]}}</h2></div>
             <div class="page-content">
                 <ul id="crawler_links">
-                    {% include "crawlers/links/menu-links.twig" with {'links':links} only %}
+                    {% include "crawlers/links/menu-links.twig" with {'links':links, 'root': 1} only %}
                 </ul>
             </div>
         </div>

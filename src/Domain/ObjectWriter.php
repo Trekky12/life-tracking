@@ -57,7 +57,7 @@ abstract class ObjectWriter {
     protected function updateEntry($entry) {
         // try to access entry, maybe the user is not authorized, so this throws an exception (not found)
         $oldEntry = $this->getMapper()->get($entry->id);
-
+        
         $elements_changed = $this->getMapper()->update($entry);
 
         $updated = $elements_changed > 0;
@@ -105,6 +105,8 @@ abstract class ObjectWriter {
         $update = $this->updateEntry($entry);
         if ($update) {
             $this->logger->notice("Update Entry " . get_class($entry), array("id" => $entry->id));
+            // get the updated entry
+            $entry = $this->getMapper()->get($entry->id);
             return new Payload(Payload::$STATUS_UPDATE, $entry);
         } else {
             $this->logger->notice("No Update of Entry " . get_class($entry), array("id" => $entry->id));

@@ -302,7 +302,7 @@ CREATE TABLE boards_cards (
     description TEXT DEFAULT NULL,
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
-    hash VARCHAR(255) NOT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(stack) REFERENCES boards_stacks(id) ON DELETE CASCADE ON UPDATE CASCADE,

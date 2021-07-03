@@ -14,11 +14,11 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPE"]}} - {{ recipe.name|raw }}</h2>
             <div class="buttons">
-                <a href="{{  url_for('recipes_cookbooks_view', {'cookbook': cookbook.hash} ) }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
-                <a href="#" data-url="{{  url_for('recipes_cookbooks_remove_recipe', {'cookbook' : cookbook.hash}) }}?recipe={{ recipe.id }}" class="btn-delete"><button class="white">{{lang["RECIPES_REMOVE_FROM_COOKBOOK"]}} <i class="fas fa-book"></i></button></a>
+                <a href="{{  url_for('recipes_cookbooks_view', {'cookbook': cookbook.hash} ) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="#" data-url="{{  url_for('recipes_cookbooks_remove_recipe', {'cookbook' : cookbook.hash}) }}?recipe={{ recipe.id }}" class="btn-delete"><button class="white">{{lang["RECIPES_REMOVE_FROM_COOKBOOK"]}} {{ fontawesome('fas fa-book') }}</button></a>
                         {% if recipe.getOwner() == user.id %}
-                    <a href="{{  url_for('recipes_edit', {'id' : recipe.id}) }}"><button class="white"><span class="fas fa-edit fa-lg"></span></button></a>
-                    <a href="#" data-url="{{  url_for('recipes_delete', {'id' : recipe.id}) }}" class="btn-delete"><button class="white"><span class="fas fa-trash fa-lg"></span></button></a>
+                    <a href="{{  url_for('recipes_edit', {'id' : recipe.id}) }}"><button class="white">{{ fontawesome('fas fa-edit') }}</button></a>
+                    <a href="#" data-url="{{  url_for('recipes_delete', {'id' : recipe.id}) }}" class="btn-delete"><button class="white">{{ fontawesome('fas fa-trash') }}</button></a>
                         {% endif %}
             </div>      
         </div>
@@ -29,17 +29,17 @@
             <div class="recipe-icons">
                 {% if recipe.preparation_time %}
                     <div>
-                        <i class="fas fa-user-clock"></i><span>{{recipe.preparation_time}} {{ lang["RECIPES_MINUTES"] }}</span>
+                        {{ fontawesome('fas fa-user-clock') }}<span>{{recipe.preparation_time}} {{ lang["RECIPES_MINUTES"] }}</span>
                     </div>
                 {% endif %}
                 {% if recipe.waiting_time %}
                     <div>
-                        <i class="fas fa-hourglass-half"></i><span>{{recipe.waiting_time}} {{ lang["RECIPES_MINUTES"] }}</span>
+                        {{ fontawesome('fas fa-hourglass-half') }}<span>{{recipe.waiting_time}} {{ lang["RECIPES_MINUTES"] }}</span>
                     </div>
                 {% endif %}
                 {% if recipe.servings %}
                     <div>
-                        <i class="fas fa-users"></i><span>{{recipe.servings}} {{ lang["RECIPES_SERVINGS"] }}</span>
+                        {{ fontawesome('fas fa-users') }}<span>{{recipe.servings}} {{ lang["RECIPES_SERVINGS"] }}</span>
                     </div>
                 {% endif %}
             </div>
@@ -54,12 +54,12 @@
                 {% endif %}
 
                 <div class="recipe-ingredients">
-                    <div class="recipe-ingredients-title"><i class="fas fa-pepper-hot"></i> {{ lang["RECIPES_INGREDIENTS"] }}</div>
+                    <div class="recipe-ingredients-title">{{ fontawesome('fas fa-pepper-hot') }} {{ lang["RECIPES_INGREDIENTS"] }}</div>
                     <table>
                         {% for step_ingredients in ingredients %}
                             {% for ingredient in step_ingredients %}
                                 <tr>
-                                    <td><a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}"><i class="far fa-check-circle"></i></a></td>
+                                    <td><a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}</a></td>
                                     <td>{{ ingredient["amount"] }} {% if ingredient["unit"] %}{{ ingredient["unit"]|raw }}{% endif %}</td>
                                     <td {% if not ingredient["notice"] %}colspan="2"{% endif %}>{{ ingredient["name"] }} </td>
                                     {% if ingredient["notice"] %}
@@ -85,12 +85,12 @@
                 <div class="recipe-icons recipe-step-icons">
                     {% if step["preparation_time"] %}
                         <div>
-                            <i class="fas fa-user-clock"></i><span>{{step["preparation_time"]}} {{ lang["RECIPES_MINUTES"] }}</span>
+                            {{ fontawesome('fas fa-user-clock') }}<span>{{step["preparation_time"]}} {{ lang["RECIPES_MINUTES"] }}</span>
                         </div>
                     {% endif %}
                     {% if step["waiting_time"] %}
                         <div>
-                            <i class="fas fa-hourglass-half"></i><span>{{step["waiting_time"]}} {{ lang["RECIPES_MINUTES"] }}</span>
+                            {{ fontawesome('fas fa-hourglass-half') }}<span>{{step["waiting_time"]}} {{ lang["RECIPES_MINUTES"] }}</span>
                         </div>
                     {% endif %}
                 </div>
@@ -99,12 +99,12 @@
 
                     {% if step.id in ingredients|keys %}
                         <div class="recipe-step-ingredients">
-                            <div class="recipe-step-ingredients-title"><i class="fas fa-pepper-hot"></i> {{ lang["RECIPES_INGREDIENTS"] }}</div>
+                            <div class="recipe-step-ingredients-title">{{ fontawesome('fas fa-pepper-hot') }} {{ lang["RECIPES_INGREDIENTS"] }}</div>
                             <table>
 
                                 {% for ingredient in ingredients[step.id] %}
                                     <tr>
-                                        <td><a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}"><i class="far fa-check-circle"></i></a></td>
+                                        <td><a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}</a></td>
                                         <td>{{ ingredient["amount"] }} {% if ingredient["unit"] %}{{ ingredient["unit"]|raw }}{% endif %}</td>
                                         <td {% if not ingredient["notice"] %}colspan="2"{% endif %}>{{ ingredient["name"] }} </td>
                                         {% if ingredient["notice"] %}

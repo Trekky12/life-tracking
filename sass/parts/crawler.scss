@@ -19,18 +19,7 @@
             justify-content: space-between;
             align-items: center;
 
-            &:after {
-                content: "\f067";
-                font-family: "Font Awesome 5 Free";
-                font-weight: 900;
-                //display:inline-block;
-                display: none;
-                font-style: normal;
-                font-variant: normal;
-                text-rendering: auto;
-                -webkit-font-smoothing: antialiased;
-                font-size: inherit;
-
+            svg{
                 float: right;
                 transition: all 250ms;
                 @include font-size(1.6);
@@ -38,12 +27,11 @@
                 position: relative;
             }
 
-            svg{
-                float: right;
-                transition: all 250ms;
-                @include font-size(1.6);
-                color: $color_background-body;
-                position: relative;
+            span.plus {
+                display:inline-block;
+            }
+            span.minus{
+                display:none;
             }
         }
 
@@ -58,8 +46,13 @@
                 display:block;
             }
 
-            & > a:after{
-                content: "\f068";
+            & > a{
+                span.plus {
+                    display:none;
+                }
+                span.minus{
+                    display:inline-block;
+                }
             }
         }
 
@@ -69,27 +62,23 @@
 
 .save_crawler_dataset {
 
-    &:after{
-        font-family: "Font Awesome 5 Free";
-        font-weight: 400;
-        //display:inline-block;
-        display: none;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        font-size: inherit;
-        content: "\f005";
-
-        cursor:pointer;
-    }
-    
     svg{
         cursor:pointer;
     }
 
-    &.is_saved:after{
-        font-weight: 900;
-        content: "\f005";
+    .star-blank {
+        display: inline-block;
+    }
+    .star-filled{
+        display:none;
+    }
+
+    &.is_saved{
+        .star-blank {
+            display: none;
+        }
+        .star-filled{
+            display:inline-block;
+        }
     }
 }

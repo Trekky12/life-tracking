@@ -154,23 +154,6 @@
         .card-date{
             background: $color_background-screen;
             color: $color_text-main;
-            &::before{
-                content: "\f073";
-                font-family: "Font Awesome 5 Free";
-                font-weight: 900;
-                //display:inline-block;
-                display: none;
-                font-style: normal;
-                font-variant: normal;
-                text-rendering: auto;
-                -webkit-font-smoothing: antialiased;
-
-                transition: all 250ms;
-                @include font-size(1);
-                margin-right: 5px;
-                position: relative;
-                top: -1px;
-            }
 
             svg{
                 transition: all 250ms;
@@ -225,6 +208,9 @@
 
     .handle{
         display: block;
+        margin-left: 10px;
+        @include font-size(2);
+        cursor: pointer;
         @media screen and (min-width: $size_mobile) {
             display: none;
         }
@@ -253,17 +239,11 @@
         cursor: pointer;
     }
 
-    &::before{
-        content: "\f053";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        //display:inline-block;
-        display: none;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        font-size: inherit;
+    .chevron-left{
+        display:inline-block;
+    }
+    .chevron-right{
+        display:none;
     }
 }
 
@@ -284,8 +264,13 @@
     &.mobile-visible {
         width: 200px;
 
-        #sidebar-toggle::before{
-            content: "\f054";
+        #sidebar-toggle{
+            .chevron-left{
+                display:none;
+            }
+            .chevron-right{
+                display:inline-block;
+            }
         }
     }
 
@@ -313,13 +298,23 @@
         // click on toggle: hide on desktop
         &.desktop-hidden {
             width: 0px;
-            #sidebar-toggle::before{
-                content: "\f053";
+            #sidebar-toggle{                
+                .chevron-left{
+                    display:inline-block;
+                }
+                .chevron-right{
+                    display:none;
+                }
             }
         }
     }
-    #sidebar-toggle::before{
-        content: "\f054";
+    #sidebar-toggle{
+        .chevron-left{
+            display:none;
+        }
+        .chevron-right{
+            display:inline-block;
+        }
     }
 
 
@@ -489,8 +484,9 @@
     align-items: center;
     @include font-size(2);
 
-    i{
-        padding:0 0 0 10px;
+    i, svg{
+        cursor: pointer;
+        margin-left: 10px;
     }
     &, a{
         color: $color_background-body;

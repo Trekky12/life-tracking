@@ -16,8 +16,8 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('finances_budgets') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
-                <a href="#" id="add_budget"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+                <a href="{{  url_for('finances_budgets') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="#" id="add_budget"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>      
         </div>
         <div class="page-content">
@@ -81,7 +81,7 @@
                         </div>
 
                         {% if not budget.is_remaining() %}
-                            <a href="#" data-url="{{  url_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
+                            <a href="#" data-url="{{  url_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
                             {% endif %}
                     </div>
                 {% endfor %}
@@ -151,7 +151,7 @@
                 </label>
             </div>
 
-            <a href="#" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
+            <a href="#" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
         </div>
     </div> 
 

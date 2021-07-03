@@ -31,8 +31,8 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{trip.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('trips') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
-                <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD_EVENT"]}}</button></a>
+                <a href="{{  url_for('trips') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD_EVENT"]}}</button></a>
             </div>
         </div>
         <div id="trip-map"></div>
@@ -50,7 +50,7 @@
                 <div class="trip_dates">
                     {% for d in range %}
                         {% if d["date"] is null or not d["events"] is empty %}
-                            <a class="change_day" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
+                            <a class="change_day no-loading" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
                             {% endif %}
                         {% endfor %}
                 </div>
@@ -92,5 +92,22 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="hidden">
+        <div id="iconPlanes">{{ fontawesome('fas fa-plane') }}</div>
+        <div id="iconTrains">{{ fontawesome('fas fa-train') }}</div>
+        <div id="iconStreets">{{ fontawesome('fas fa-road') }}</div>
+        <div id="iconCarRentals">{{ fontawesome('fas fa-car') }}</div>
+        <div id="iconHotels">{{ fontawesome('fas fa-bed') }}</div>
+        <div id="iconEvents">{{ fontawesome('fas fa-calendar') }}</div>
+        
+        <div id="iconWalking">{{ fontawesome('fas fa-walking') }}</div>
+        <div id="iconBiking">{{ fontawesome('fas fa-biking') }}</div>
+        <div id="iconSave">{{ fontawesome('fas fa-save') }}</div>
+        <div id="iconMaps">{{ fontawesome('fas fa-map-signs') }}</div>
+        
+        <div id="iconRoute">{{ fontawesome('fas fa-route') }}</div>
+        <div id="iconLocation">{{ fontawesome('fas fa-map-marker-alt') }}</div>
+        <div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
     </div>
 {% endblock %}

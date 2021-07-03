@@ -27,7 +27,7 @@ class MemberTest extends TimesheetTestBase {
 
         // search for all elements
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/timesheets\/(?<hash>.*)\/view\/">(?<name>.*)<\/a><\/td>\s*<td>\s*<a href="(?<edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="(?<delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/timesheets\/(?<hash>.*)\/view\/">(?<name>.*)<\/a><\/td>\s*<td>\s*<a href="(?<edit>.*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="(?<delete>.*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match_all($re, $body, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {

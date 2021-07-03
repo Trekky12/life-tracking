@@ -11,6 +11,7 @@ use App\Domain\User\UserService;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\Utility;
 
 class SplitbillBillService extends Service {
 
@@ -207,8 +208,8 @@ class SplitbillBillService extends Service {
             }
 
             if ($bill->user == $user) {
-                $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-                $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+                $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
+                $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
             }
 
             $rendered_data[] = $row;

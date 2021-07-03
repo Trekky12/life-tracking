@@ -220,7 +220,7 @@ class UserTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildView($this->TEST_PLAN_HASH)) . '(?<id_view>.*)">' . preg_quote($data["date"]) . '<\/a><\/td>\s*<td>\s*<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildEdit($this->TEST_PLAN_HASH)) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($this->TEST_PLAN_HASH)) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildView($this->TEST_PLAN_HASH)) . '(?<id_view>.*)">' . preg_quote($data["date"]) . '<\/a><\/td>\s*<td>\s*<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->getURIChildEdit($this->TEST_PLAN_HASH)) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($this->TEST_PLAN_HASH)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

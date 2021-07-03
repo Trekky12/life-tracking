@@ -16,7 +16,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPE"]}}</h2>
             <div class="buttons">
-                <a href="{% if not entry is null %}{{  url_for('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{  url_for('recipes') }}{% endif %}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+                <a href="{% if not entry is null %}{{  url_for('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{  url_for('recipes') }}{% endif %}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>      
         </div>
         <div class="page-content">
@@ -115,12 +115,12 @@
                                     {% if step.id in ingredients|keys %}
                                         {% for ingredient in ingredients[step.id] %}
                                             <div class="step-ingredient">
-                                                <i class="ingredient-handle handle fas fa-arrows-alt"></i>
+                                                <span class="ingredient-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
                                                 <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}" value="{{ ingredient["amount"] }}"/>
                                                 <select name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][ingredient]" class="step-ingredient-select" data-selected="{{ ingredient["ingredient"] }}">
                                                 </select>
                                                 <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][notice]" placeholder="{{ lang["NOTICE"] }}" value="{{ ingredient["notice"] }}"/>
-                                                <i class="remove-ingredient minus fas fa-minus"></i>
+                                                <span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
@@ -133,8 +133,8 @@
                             </div>
 
                             <div class="icons">
-                                <i class="step-minus minus fas fa-minus"></i>
-                                <i class="step-handle handle fas fa-arrows-alt"></i>
+                                <span class="step-minus minus">{{ fontawesome('fas fa-minus') }}</span>
+                                <span class="step-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
                             </div>
                         </div>
                     {% endfor %}
@@ -151,7 +151,7 @@
                     tes
                     t
                 </div> -->
-                
+
                 <div class="form-group">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
@@ -196,17 +196,17 @@
                 </div>
             </div>
             <div class="icons">
-                <i class="step-minus minus fas fa-minus"></i>
-                <i class="step-handle handle fas fa-arrows-alt"></i>
+                <span class="step-minus minus">{{ fontawesome('fas fa-minus') }}</span>
+                <span class="step-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
             </div>
         </div>
         <div class="step-ingredient step-ingredient-dummy">
-            <i class="ingredient-handle handle fas fa-arrows-alt"></i>
+            <span class="ingredient-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
             <input name="steps[dummy_step][ingredients][dummy_ingredient][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}"/>
             <select name="steps[dummy_step][ingredients][dummy_ingredient][ingredient]" class="step-ingredient-select">
             </select>
             <input name="steps[dummy_step][ingredients][dummy_ingredient][notice]" placeholder="{{ lang["NOTICE"] }}"/>
-            <i class="remove-ingredient minus fas fa-minus"></i>
+            <span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
         </div>
     </div>
 {% endblock %}

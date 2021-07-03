@@ -66,24 +66,14 @@ body.trips .inner-content .page-header{
             }
 
             .description_text{
-                &:before {
-                    content: "\f067";
-                    font-family: "Font Awesome 5 Free";
-                    font-weight: 900;
-                    //display:inline-block;
-                    display: none;
-                    font-style: normal;
-                    font-variant: normal;
-                    text-rendering: auto;
-                    -webkit-font-smoothing: antialiased;
-                    font-size: inherit;
-                    transition: all 250ms;
-                    @include font-size(1.4);
-                    color: $color_text-main;
-                    position: relative;
-                    margin-right: 5px;
+
+                span.plus {
+                    display:inline-block;
                 }
-                
+                span.minus{
+                    display:none;
+                }
+
                 svg{
                     transition: all 250ms;
                     @include font-size(1.4);
@@ -98,9 +88,13 @@ body.trips .inner-content .page-header{
                     display:block;
                 }
 
-                .description_text:before{
-                    content: "\f068";
+                span.plus {
+                    display:none;
                 }
+                span.minus{
+                    display:inline-block;
+                }
+
             }
 
 
@@ -112,7 +106,7 @@ body.trips .inner-content .page-header{
         .icon{
             margin-right: 2rem;
 
-            i{
+            i, svg{
                 margin-top:5px;
                 @include font-size(2);
                 width:20px;
@@ -165,6 +159,16 @@ body.trips .inner-content .page-header{
     //background-color:#CCCCCC;
 }
 
-.trip_day .icon i:hover{
+.trip_day .icon i:hover, svg:hover{
     cursor:pointer;
+}
+
+.leaflet-marker-icon.extra-marker{
+    
+    svg{
+        margin-top: 10px;
+        color: #FFFFFF;
+        width: 1.5em;
+    }
+    
 }

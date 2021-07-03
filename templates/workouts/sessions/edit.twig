@@ -13,7 +13,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["WORKOUTS_SESSION"]}} | {{ plan.name }}</h2>
             <div class="buttons">
-                <a href="{{  url_for('workouts_sessions', {'plan': plan.hash}) }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+                <a href="{{  url_for('workouts_sessions', {'plan': plan.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -71,8 +71,8 @@
                                         <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="day"/>
                                     </div>
                                     <div class="icons hidden">
-                                        <i class="minus fas fa-minus"></i>
-                                        <i class="handle fas fa-arrows-alt"></i>
+                                        <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+                                        <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
                                     </div>
                                 </div>
                                 {% elseif exercise.type == "superset" %}
@@ -87,8 +87,8 @@
                                         </div>
                                     </div>
                                     <div class="icons">
-                                        <i class="minus fas fa-minus"></i>
-                                        <i class="handle fas fa-arrows-alt"></i>
+                                        <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+                                        <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
                                     </div>
                                 </div>
                             {% endif %}

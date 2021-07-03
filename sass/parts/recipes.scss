@@ -139,7 +139,7 @@
     justify-content: space-around;
     margin: 1rem;
 
-    i, span{
+    i, span, svg{
         @include font-size(1.6);
         margin-right: 0.5rem;
         @media screen and (min-width: $size_mobile) {
@@ -152,7 +152,7 @@
     }
 
     &.recipe-step-icons{
-        i, span{
+        i, span, svg{
             @include font-size(1.4);
             @media screen and (min-width: $size_mobile) {
                 @include font-size(1.6);

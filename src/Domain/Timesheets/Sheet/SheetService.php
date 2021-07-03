@@ -13,6 +13,7 @@ use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
 use App\Domain\Main\Utility\DateUtility;
 use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Project\Project;
+use App\Domain\Main\Utility\Utility;
 
 class SheetService extends Service {
 
@@ -192,8 +193,8 @@ class SheetService extends Service {
             $row[] = $time;
             $row[] = $sheet->categories;
 
-            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
+            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
 
             $rendered_data[] = $row;
         }

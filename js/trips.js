@@ -135,31 +135,27 @@ function drawMarkers(data) {
         let options = {saved: true};
         if (marker.isCarrental) {
             options['icon'] = L.ExtraMarkers.icon({
-                icon: 'fa-car',
                 markerColor: 'red',
                 shape: 'circle',
-                prefix: 'fa'
+                innerHTML: document.getElementById('iconCarRentals').innerHTML
             });
         } else if (marker.isHotel) {
             options['icon'] = L.ExtraMarkers.icon({
-                icon: 'fa-bed',
                 markerColor: 'blue',
                 shape: 'circle',
-                prefix: 'fas'
+                innerHTML: document.getElementById('iconHotels').innerHTML
             });
         } else if (marker.isEvent) {
             options['icon'] = L.ExtraMarkers.icon({
-                icon: 'fa-calendar-alt',
                 markerColor: 'yellow',
                 shape: 'circle',
-                prefix: 'fas'
+                innerHTML: document.getElementById('iconEvents').innerHTML
             });
         } else if (marker.isPlane) {
             options['icon'] = L.ExtraMarkers.icon({
-                icon: 'fa-plane',
                 markerColor: 'black',
                 shape: 'circle',
-                prefix: 'fas'
+                innerHTML: document.getElementById('iconPlanes').innerHTML
             });
         }
 
@@ -317,12 +313,12 @@ function initMap() {
     controlLayer = L.control.layers(null, null, {
         collapsed: false
     });
-    controlLayer.addOverlay(layerPlanes, "<span id='layerPlanes'></span>");
-    controlLayer.addOverlay(layerTrains, "<span id='layerTrains'></span>");
-    controlLayer.addOverlay(layerCars, "<span id='layerStreets'></span>");
-    controlLayer.addOverlay(layerCarRentals, "<span id='layerCarrental'></span>");
-    controlLayer.addOverlay(layerHotels, "<span id='layerHotels'></span>");
-    controlLayer.addOverlay(layerEvents, "<span id='layerEvents'></span>");
+    controlLayer.addOverlay(layerPlanes, "<span id='layerPlanes'>" + document.getElementById('iconPlanes').innerHTML + "</span>");
+    controlLayer.addOverlay(layerTrains, "<span id='layerTrains'>" + document.getElementById('iconTrains').innerHTML + "</span>");
+    controlLayer.addOverlay(layerCars, "<span id='layerStreets'>" + document.getElementById('iconStreets').innerHTML + "</span>");
+    controlLayer.addOverlay(layerCarRentals, "<span id='layerCarrental'>" + document.getElementById('iconCarRentals').innerHTML + "</span>");
+    controlLayer.addOverlay(layerHotels, "<span id='layerHotels'>" + document.getElementById('iconHotels').innerHTML + "</span>");
+    controlLayer.addOverlay(layerEvents, "<span id='layerEvents'>" + document.getElementById('iconEvents').innerHTML + "</span>");
     controlLayer.addTo(mymap);
 
     // current location
@@ -334,7 +330,26 @@ function initMap() {
         locateOptions: {
             enableHighAccuracy: true
         },
-        icon: 'fas fa-map-marker-alt',
+        createButtonCallback: function (container, options) {
+            var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', container);
+            link.title = options.strings.title;
+            link.role = 'button';
+            link.href = '#';
+            var icon = L.DomUtil.create(options.iconElementTag, options.icon, link);
+            icon.innerHTML = document.getElementById('iconLocation').innerHTML;
+
+            if (options.strings.text !== undefined) {
+                var text = L.DomUtil.create(options.textElementTag, 'leaflet-locate-text', link);
+                text.textContent = options.strings.text;
+                        link.classList.add('leaflet-locate-text-active');
+                link.parentNode.style.display = "flex";
+                if (options.icon.length > 0) {
+                    icon.classList.add('leaflet-locate-icon');
+                }
+            }
+
+            return { link: link, icon: icon };
+        },
     });
     mymap.addControl(lc);
 
@@ -445,7 +460,7 @@ function initMap() {
                         a_route.dataset.route = val['id'];
                         a_route.classList.add("btn-route");
                         let span_route = document.createElement("span");
-                        span_route.classList = "fas fa-route fa-lg";
+                        span_route.innerHTML = document.getElementById('iconRoute').innerHTML;
                         a_route.appendChild(span_route);
                         td_route.appendChild(a_route);
                         tr.appendChild(td_route);
@@ -486,7 +501,7 @@ function initMap() {
                         a_delete.dataset.url = val['delete'];
                         a_delete.classList.add("btn-delete");
                         let span_delete = document.createElement("span");
-                        span_delete.classList = "fas fa-trash fa-lg";
+                        span_delete.innerHTML = document.getElementById('iconTrash').innerHTML;
                         a_delete.appendChild(span_delete);
                         td_delete.appendChild(a_delete);
                         tr.appendChild(td_delete);
@@ -593,6 +608,12 @@ function initMap() {
         }),
         show: false,
         collapsible: true,
+        collapseBtn: function(itinerary) {
+                var collapseBtn = L.DomUtil.create('span', itinerary.options.collapseBtnClass);
+                collapseBtn.innerHTML = document.getElementById('iconRoute').innerHTML;
+                L.DomEvent.on(collapseBtn, 'click', itinerary._toggle, itinerary);
+                itinerary._container.insertBefore(collapseBtn, itinerary._container.firstChild);
+        },
         showAlternatives: false,
         routeWhileDragging: false,
         plan: plan
@@ -647,6 +668,24 @@ function createButton(container, type, active = false) {
     btn.title = type;
     btn.classList.add("leaflet-routing-btn");
     btn.classList.add(type);
+    switch (type) {
+        case "walk":
+            btn.innerHTML = document.getElementById('iconWalking').innerHTML;
+            break;
+        case "car":
+            btn.innerHTML = document.getElementById('iconCarRentals').innerHTML;
+            break;
+        case "bike":
+            btn.innerHTML = document.getElementById('iconBiking').innerHTML;
+            break;
+        case "load":
+            btn.innerHTML = document.getElementById('iconMaps').innerHTML;
+            break;
+        case "save":
+            btn.innerHTML = document.getElementById('iconSave').innerHTML;
+            break;
+    }
+
     if (active) {
         btn.classList.add('active');
     }

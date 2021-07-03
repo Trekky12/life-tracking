@@ -151,9 +151,10 @@ class MobileFavoritesTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . $data["position"] . '<\/td>\s*<td><i class="fa-lg ' . preg_quote($data["icon"]) . '"><\/i><\/td>\s*<td>' . str_replace('/', "\/", $data["url"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $iconName = preg_quote(str_replace("fas fa-", "", $data["icon"]));
+        $re = '/<tr>\s*<td>' . $data["position"] . '<\/td>\s*<td><span class="fontawesome-icon icon-'. $iconName .'">.*?<\/span><\/td>\s*<td>' . str_replace('/', "\/", $data["url"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-
+        
         return $matches;
     }
 

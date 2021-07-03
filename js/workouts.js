@@ -135,18 +135,16 @@ document.addEventListener('click', function (event) {
         let div_icons = document.createElement("div");
         div_icons.classList.add("icons");
 
-        let i_minus = document.createElement("i");
-        i_minus.classList.add("minus");
-        i_minus.classList.add("fas");
-        i_minus.classList.add("fa-minus");
+        let span_minus = document.createElement("span");
+        span_minus.classList.add("minus");
+        span_minus.innerHTML = document.getElementById('iconMinus').innerHTML;
 
-        let i_handle = document.createElement("i");
-        i_handle.classList.add("handle");
-        i_handle.classList.add("fas");
-        i_handle.classList.add("fa-arrows-alt");
+        let span_handle = document.createElement("span");
+        span_handle.classList.add("handle");
+        span_handle.innerHTML = document.getElementById('iconHandle').innerHTML;
 
-        div_icons.appendChild(i_minus);
-        div_icons.appendChild(i_handle);
+        div_icons.appendChild(span_minus);
+        div_icons.appendChild(span_handle);
 
         workout_day_content.appendChild(input_type);
         workout_day_content.appendChild(input_notice);
@@ -182,18 +180,16 @@ document.addEventListener('click', function (event) {
         let div_icons = document.createElement("div");
         div_icons.classList.add("icons");
 
-        let i_minus = document.createElement("i");
-        i_minus.classList.add("minus");
-        i_minus.classList.add("fas");
-        i_minus.classList.add("fa-minus");
+        let span_minus = document.createElement("span");
+        span_minus.classList.add("minus");
+        span_minus.innerHTML = document.getElementById('iconMinus').innerHTML;
 
-        let i_handle = document.createElement("i");
-        i_handle.classList.add("handle");
-        i_handle.classList.add("fas");
-        i_handle.classList.add("fa-arrows-alt");
+        let span_handle = document.createElement("span");
+        span_handle.classList.add("handle");
+        span_handle.innerHTML = document.getElementById('iconHandle').innerHTML;
 
-        div_icons.appendChild(i_minus);
-        div_icons.appendChild(i_handle);
+        div_icons.appendChild(span_minus);
+        div_icons.appendChild(span_handle);
 
         workout_superset_content.appendChild(headline_superset);
         workout_superset_content.appendChild(input_type);

@@ -11,6 +11,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Assignment\AssignmentService;
 use App\Domain\Finances\Paymethod\PaymethodService;
+use App\Domain\Main\Utility\Utility;
 
 class FinancesService extends Service {
 
@@ -102,8 +103,8 @@ class FinancesService extends Service {
             $row[] = $dataset[3];
             $row[] = $dataset[4];
             $row[] = $dataset[5];
-            $row[] = '<a href="' . $this->router->urlFor('finances_edit', ['id' => $dataset[6]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>' : '';
+            $row[] = '<a href="' . $this->router->urlFor('finances_edit', ['id' => $dataset[6]]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
+            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</span></a>' : '';
 
             $rendered_data[] = $row;
         }

@@ -9,7 +9,7 @@ class Event extends \App\Domain\DataObject {
     static $NAME = "DATAOBJECT_TRIPS_EVENT";
 
     public function parseData(array $data) {
-
+        
         // new dataset --> save createdBy 
         if (!$this->exists('id', $data)) {
             $this->createdBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -36,8 +36,8 @@ class Event extends \App\Domain\DataObject {
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : null;
-
-        if (!in_array($this->type, array_keys(\App\Domain\Trips\Event\TripEventService::getEventTypes()))) {
+        
+        if (!in_array($this->type, \App\Domain\Trips\Event\TripEventService::getEventTypes())) {
             $this->type = null;
         }
 
@@ -77,9 +77,9 @@ class Event extends \App\Domain\DataObject {
             $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
         }
 
-        /*if (empty($this->name)) {
-            $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
-        }*/
+        /* if (empty($this->name)) {
+          $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
+          } */
     }
 
     public function isFlight() {
@@ -109,7 +109,7 @@ class Event extends \App\Domain\DataObject {
     public function isTravel() {
         return $this->isFlight() || $this->isTrainride() || $this->isDrive();
     }
-    
+
     public function isWaypoint() {
         return strcmp($this->type, "WAYPOINT") === 0;
     }
@@ -169,7 +169,7 @@ class Event extends \App\Domain\DataObject {
         if (!is_null($this->start_address)) {
             $start_address = "{$start_link}{$this->start_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
-            $start_address = " {$start_link}<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
+            $start_address = " {$start_link}" . Utility::getFontAwesomeIcon('fas fa-map-marker-alt') . "</a>{$loc_suffix}";
         }
 
         $end_address = null;
@@ -177,7 +177,7 @@ class Event extends \App\Domain\DataObject {
         if (!is_null($this->end_address)) {
             $end_address = "{$end_link}{$this->end_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
-            $start_address = " {$end_link}<i class=\"fas fa-map-marker-alt\" aria-hidden=\"true\"></i></a>{$loc_suffix}";
+            $start_address = " {$end_link}" . Utility::getFontAwesomeIcon('fas fa-map-marker-alt') . "</a>{$loc_suffix}";
         }
 
         // same start and end date? hide end date
@@ -206,13 +206,12 @@ class Event extends \App\Domain\DataObject {
         $this->popup = $popup;
     }
 
-    
     public function getNotice() {
         return Utility::replaceLinks($this->notice);
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
-        if($this->isWaypoint()){
+        if ($this->isWaypoint()) {
             return sprintf("%s, %s", $this->start_lat, $this->start_lng);
         }
         return $this->name;

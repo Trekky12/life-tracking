@@ -7,7 +7,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}}</h2> 
             <div class="buttons">
-                <a href="{{ url_for('users_application_passwords_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+                <a href="{{ url_for('users_application_passwords_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -22,7 +22,7 @@
                     {% for el in list %}
                         <tr>
                             <td>{{ el.name }}</td>
-                            <td><a href="#" data-url="{{ url_for('users_application_passwords_delete', {'id' : el.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
+                            <td><a href="#" data-url="{{ url_for('users_application_passwords_delete', {'id' : el.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

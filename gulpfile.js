@@ -76,6 +76,11 @@ function copyFontAwesome5JS(cb) {
         .pipe( gulp.dest( 'public/static/assets/js' ) );
 }
 
+function copyFontsFontAwesome5SVG(cb) {
+    return gulp.src( './node_modules/@fortawesome/fontawesome-free/svgs/**/*.svg' )
+        .pipe( gulp.dest( 'public/static/assets/svg/font-awesome' ) );
+}
+
 function copyJSTask(cb) {
     return gulp
         .src( [ 
@@ -292,3 +297,4 @@ exports.default = watchTask;
 exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontAwesome5JS);
 
 exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);
+exports.test = copyFontsFontAwesome5SVG;

@@ -75,8 +75,8 @@ stackHeaders.forEach(function (item, idx) {
                 stackModal.querySelector('input[name="name"]').value = data.entry.name;
                 stackModal.querySelector('input[name="position"]').value = data.entry.position;
 
-                var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'><i class='fas fa-archive' aria-hidden='true'></i></a> \n\
-                                    <a href='#' data-url='" + jsObject.stack_delete + data.entry.id + "' class='btn-delete' data-type='stack'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
+                                    <a href='#' data-url='" + jsObject.stack_delete + data.entry.id + "' class='btn-delete' data-type='stack'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
                 stackModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
@@ -152,7 +152,7 @@ labels.forEach(function (item, idx) {
                 labelModal.querySelector('input[name="text_color"]').value = data.entry.text_color;
                 labelModal.querySelector('input[name="text_color"]').parentElement.style.backgroundColor = data.entry.text_color;
 
-                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-type='label'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-type='label'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
                 labelModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
@@ -319,8 +319,8 @@ function loadAndOpenCard(card) {
             selector.setValue(data.entry.labels.map(String));
 
 
-            var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'><i class='fas fa-archive' aria-hidden='true'></i></a> \n\
-                                    <a href='#' data-url='" + jsObject.card_delete + data.entry.id + "' class='btn-delete' data-type='card'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+            var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
+                                    <a href='#' data-url='" + jsObject.card_delete + data.entry.id + "' class='btn-delete' data-type='card'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
             cardModal.querySelector(".edit-bar").innerHTML = edit_bar;
 

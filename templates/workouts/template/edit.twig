@@ -12,7 +12,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["WORKOUTS_TEMPLATE_PLAN"]}}</h2>
             <div class="buttons">
-                <a href="{{  url_for('workouts_templates') }}"><button class="white">{{lang["BACK"]}} <i class="fas fa-level-up-alt"></i></button></a>
+                <a href="{{  url_for('workouts_templates') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -79,8 +79,8 @@
                                             <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="day"/>
                                         </div>
                                         <div class="icons">
-                                            <i class="minus fas fa-minus"></i>
-                                            <i class="handle fas fa-arrows-alt"></i>
+                                            <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+                                            <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
                                         </div>
                                     </div>
                                     {% elseif exercise.type == "superset" %}
@@ -95,8 +95,8 @@
                                             </div>
                                         </div>
                                         <div class="icons">
-                                            <i class="minus fas fa-minus"></i>
-                                            <i class="handle fas fa-arrows-alt"></i>
+                                            <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+                                            <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -123,7 +123,7 @@
                             <div id="exercises_available_list">
                             </div>
                             <div id="loadingIconExercises" class="centered loading-icon">
-                                <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                                <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
                             </div>
                             <div id="loadMoreExercises" class="centered hidden">
                                 <button type="button">{{ lang["LOAD_MORE"] }}</button>
@@ -147,5 +147,8 @@
         </div>
     </div>
 
-
+    <div class="hidden">
+        <div id="iconMinus">{{ fontawesome('fas fa-minus') }}</div>
+        <div id="iconHandle">{{ fontawesome('fas fa-arrows-alt') }}</div>
+    </div>
 {% endblock %}
