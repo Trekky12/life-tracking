@@ -153,7 +153,7 @@ function initialize() {
         let link = event.target.closest('a');
         let submit = event.target.closest('[type="submit"]');
         
-        if ((link && link.getAttribute("href") != '#' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname)) || (submit && !submit.classList.contains("no-loading"))) {
+        if ((link && link.getAttribute("href") != '#' && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname)) || (submit && !submit.classList.contains("no-loading"))) {
             loadingWindowOverlay.classList.remove("hidden");
         }
 
