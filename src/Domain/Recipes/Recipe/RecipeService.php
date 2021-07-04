@@ -147,8 +147,8 @@ class RecipeService extends Service {
                 return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
             }
 
-            $response_data["data"] = $this->mapper->getRecipesFromCookbook($cookbook->id, "createdOn DESC", $limit);
-            $response_data["count"] = $this->mapper->getRecipesFromCookbookCount($cookbook->id);
+            $response_data["data"] = $this->mapper->getRecipesFromCookbookFiltered($cookbook->id, "createdOn DESC", $limit, $query);
+            $response_data["count"] = $this->mapper->getRecipesFromCookbookFilteredCount($cookbook->id, $query);
             $response_data["cookbook"] = $cookbook_hash;
         } else {
             $response_data["data"] = $this->mapper->getRecipesFiltered("createdOn DESC", $limit, $query);

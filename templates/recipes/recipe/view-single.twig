@@ -60,8 +60,8 @@
                     {% for step_ingredients in ingredients %}
                         {% for ingredient in step_ingredients %}
                             <div>
-                                <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}</a>
-                                {{ ingredient["amount"] }} {% if ingredient["unit"] and ingredient["amount"] %}{{ ingredient["unit"]|raw }}{% endif %} <strong>{{ ingredient["name"] }}</strong>{% if ingredient["notice"] %}, {{ ingredient["notice"] }}{% endif %}
+                                <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}
+                                {{ ingredient["amount"] }} {% if ingredient["unit"] and ingredient["amount"] %}{{ ingredient["unit"]|raw }}{% endif %} <strong>{{ ingredient["name"] }}</strong>{% if ingredient["notice"] %}, {{ ingredient["notice"] }}{% endif %}</a>
                             </div>
                         {% endfor %}
                     {% endfor %}
@@ -100,8 +100,8 @@
                             <div class="recipe-step-ingredients-title">{{ fontawesome('fas fa-pepper-hot') }} {{ lang["RECIPES_INGREDIENTS"] }}</div>
                             {% for ingredient in ingredients[step.id] %}
                                 <div>
-                                    <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}</a>
-                                    {{ ingredient["amount"] }} {% if ingredient["unit"] and ingredient["amount"] %}{{ ingredient["unit"]|raw }}{% endif %} <strong>{{ ingredient["name"] }}</strong>{% if ingredient["notice"] %}, {{ ingredient["notice"] }}{% endif %}
+                                    <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}
+                                    {{ ingredient["amount"] }} {% if ingredient["unit"] and ingredient["amount"] %}{{ ingredient["unit"]|raw }}{% endif %} <strong>{{ ingredient["name"] }}</strong>{% if ingredient["notice"] %}, {{ ingredient["notice"] }}{% endif %}</a>
                                 </div>
                             {% endfor %}
                         </div>

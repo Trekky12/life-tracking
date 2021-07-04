@@ -121,17 +121,28 @@ class RecipeMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getRecipesFromCookbook($cookbook_id, $sorted, $limit) {
+    public function getRecipesFromCookbookFiltered($cookbook_id, $sorted, $limit, $query = '') {
         $sql = "SELECT r.* "
-                . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r "
-                . "WHERE r.id  = cr.recipe AND cr.cookbook = :cookbook ";
-
-        $sql .= " ORDER BY {$sorted}";
-        $sql .= " LIMIT {$limit}";
+                . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r ";
 
         $bindings = [
             "cookbook" => $cookbook_id
         ];
+        $where = [
+            "r.id  = cr.recipe",
+            "cr.cookbook = :cookbook"
+        ];
+        if (!empty($query)) {
+            $where[] = "name like :query ";
+            $bindings["query"] = '%' . $query . '%';
+        }
+
+        if (count($where) > 0) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $sql .= " ORDER BY {$sorted}";
+        $sql .= " LIMIT {$limit}";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -143,15 +154,27 @@ class RecipeMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getRecipesFromCookbookCount($cookbook_id) {
+    public function getRecipesFromCookbookFilteredCount($cookbook_id, $query = '') {
 
         $sql = "SELECT COUNT(r.id) "
-                . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r "
-                . "WHERE r.id  = cr.recipe AND cr.cookbook = :cookbook ";
+                . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r ";
 
         $bindings = [
             "cookbook" => $cookbook_id
         ];
+        $where = [
+            "r.id  = cr.recipe",
+            "cr.cookbook = :cookbook"
+        ];
+
+        if (!empty($query)) {
+            $where[] = "name like :query";
+            $bindings["query"] = '%' . $query . '%';
+        }
+
+        if (count($where) > 0) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -161,7 +184,7 @@ class RecipeMapper extends \App\Domain\Mapper {
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
-    
+
     public function getRecipesFiltered($sorted, $limit, $query = '') {
         $sql = "SELECT * FROM " . $this->getTableName();
 
@@ -170,11 +193,11 @@ class RecipeMapper extends \App\Domain\Mapper {
         $where = [];
         if (!empty($query)) {
             $where[] = "name like :query ";
-            $bindings["query"] = '%'.$query.'%';
+            $bindings["query"] = '%' . $query . '%';
         }
-        
-        if(count($where) > 0){
-            $sql .= " WHERE ".implode(" AND ", $where);
+
+        if (count($where) > 0) {
+            $sql .= " WHERE " . implode(" AND ", $where);
         }
 
         $sql .= " ORDER BY {$sorted}";
@@ -199,14 +222,14 @@ class RecipeMapper extends \App\Domain\Mapper {
         $bindings = array();
 
         $where = [];
-        
+
         if (!empty($query)) {
             $where[] = "name like :query";
-            $bindings["query"] = '%'.$query.'%';
+            $bindings["query"] = '%' . $query . '%';
         }
-        
-        if(count($where) > 0){
-            $sql .= " WHERE ".implode(" AND ", $where);
+
+        if (count($where) > 0) {
+            $sql .= " WHERE " . implode(" AND ", $where);
         }
 
         $stmt = $this->db->prepare($sql);
