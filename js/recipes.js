@@ -148,7 +148,7 @@ function createSortableIngredients(step_ingredients_wrapper) {
 function createChoiceIngredients(element) {
 
     let selected = element.dataset.selected ? element.dataset.selected : "";
-
+    
     let selectr = new Selectr(element, {
         searchable: true,
         placeholder: lang.ingredient,
@@ -163,6 +163,7 @@ function createChoiceIngredients(element) {
             })
             .then(function (data) {
                 selectr.add(data);
+                selectr.setValue(selected);
             });
 
 }
