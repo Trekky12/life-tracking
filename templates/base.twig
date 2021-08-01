@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210619" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210801" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -176,6 +176,11 @@
                 'usersearch': '{{url_for('usersearch')}}',
                 'ingredients_get': '{{url_for('ingredients_get')}}',
                 'recipes_get': '{{url_for('recipes_get')}}',
+                'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
+                {% if not isMealplanEdit is null %}
+                'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
+                'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}'
+                {% endif %}
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};
@@ -251,7 +256,7 @@
 
         <script src="{{baseURL}}/static/js/main.js?ver=20210620" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20200812" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/js/tables.js?ver=20200627" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/tables.js?ver=20210715" type="text/javascript"></script>
 
 
         {% if not user is null %}

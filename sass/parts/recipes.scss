@@ -102,13 +102,24 @@
     }
 
 
-    .minus, .handle{
-        cursor:pointer;
-        &:hover{
-            color: $color_blue;
+
+
+}
+
+#recipes_steps, .mealplan-recipe{
+    .icons{
+
+        .minus, .handle{
+            cursor:pointer;
+            &:hover{
+                color: $color_blue;
+            }
+        }
+
+        .handle{
+            margin-right: 10px;
         }
     }
-
 }
 
 .add-step-btn-wrapper{
@@ -283,4 +294,58 @@
 
 .recipe-step-header{
     margin: 0;
+}
+
+
+.mealplan-list{
+    display:flex;
+    .mealplans{
+        display: flex; 
+        flex-direction: column; 
+        flex-grow: 1;
+        flex-basis: 50%;
+    }
+    .mealplan-list-settings{
+        position: sticky;
+        top: $header_height + $header_height_margin;
+        align-self: flex-start;
+        flex-basis: 50%;
+
+        margin-left: 1rem;
+    }
+
+}
+
+.mealplan-recipe{
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: 1px solid $color_blue_light_gray;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+
+    .title{
+        display: flex;
+        align-items: center;
+    }
+
+    h3{
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.mealplan-date{
+    h2{
+        padding: 0.5rem 3rem;
+        margin: 0;
+    }
+
+    .recipes-target{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }

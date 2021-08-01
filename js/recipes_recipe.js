@@ -32,11 +32,12 @@ function getRecipes(reset = false) {
         let start = reset ? 0 : recipesList.querySelectorAll('.recipe').length;
         let count = 20;
         let query = filterSearchRecipes ? filterSearchRecipes.value : '';
+        let type = 'list';
 
         loadingIconRecipes.classList.remove("hidden");
         loadMoreRecipes.classList.add("hidden");
 
-        let url = jsObject.recipes_get + '?count=' + count + '&start=' + start + '&query=' + query;
+        let url = jsObject.recipes_get + '?type=' + type + '&count=' + count + '&start=' + start + '&query=' + query;
 
         if (recipesList.dataset.cookbook !== undefined) {
             url = url + '&cookbook=' + recipesList.dataset.cookbook;

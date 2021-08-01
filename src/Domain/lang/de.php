@@ -541,6 +541,7 @@ $lang["DATAOBJECT_WORKOUTS_SESSION"] = "Trainingseinheit";
 $lang["DATAOBJECT_RECIPES_COOKBOOK"] = "Kochbuch";
 $lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
+$lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -696,6 +697,8 @@ $lang["RECIPES_COOKBOOKS"] = "Kochbücher";
 $lang["RECIPES_COOKBOOK"] = "Kochbuch";
 $lang["RECIPES_INGREDIENTS"] = "Zutaten";
 $lang["RECIPES_INGREDIENT"] = "Zutat";
+$lang["RECIPES_MEALPLANS"] = "Speisepläne";
+$lang["RECIPES_MEALPLAN"] = "Speiseplan";
 
 $lang["RECIPES_PREPARATION_TIME"] = "Vorbereitungszeit";
 $lang["RECIPES_WAITING_TIME"] = "Wartezeit";

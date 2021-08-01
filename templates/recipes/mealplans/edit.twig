@@ -4,7 +4,7 @@
 
 {% block javascript %}
     <script src="{{baseURL}}/static/assets/js/autoComplete.min.js"></script>
-    <script src="{{baseURL}}/static/js/user-select.js?ver=20210514"></script>
+    <script src="{{baseURL}}/static/js/user-select.js?ver=20210801"></script>
 {% endblock %}
 
 {% block style %}
@@ -14,14 +14,14 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["RECIPES_COOKBOOK"]}}</h2>
+        <div class="page-header"><h2>{{lang["RECIPES_MEALPLAN"]}}</h2>
             <div class="buttons">
-                <a href="{{ url_for('recipes_cookbooks')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for('recipes_mealplans')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
 
-            <form class="form-horizontal" action="{{  url_for('recipes_cookbooks_save', {'id' : entry.id}) }}" method="POST">
+            <form class="form-horizontal" action="{{  url_for('recipes_mealplans_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 

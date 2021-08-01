@@ -47,7 +47,11 @@ class OwnerTest extends BoardTestBase {
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('{"status":"success"}', $body);
+        $json = json_decode($body, true);
+
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey("status", $json);
+        $this->assertStringContainsString($json["status"], "success");
 
         return $data;
     }
@@ -106,7 +110,11 @@ class OwnerTest extends BoardTestBase {
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('{"status":"success"}', $body);
+        $json = json_decode($body, true);
+
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey("status", $json);
+        $this->assertStringContainsString($json["status"], "success");
 
         return $data;
     }

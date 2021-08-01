@@ -250,6 +250,13 @@ INSERT INTO recipes_cookbook_recipes (id, createdBy, cookbook, recipe) VALUES
 (1, 1, 1, 1),
 (2, 1, 2, 1); 
 
+INSERT INTO recipes_mealplans (id, user, name, hash) VALUES 
+(1, 1, 'Test recipe mealplan 1', 'ABCabc123'),
+(2, 1, 'Test recipe mealplan 2 (no access to owner)', 'DEFdef456'); 
+INSERT INTO recipes_mealplans_users (mealplan, user) VALUES 
+(1, 1),
+(1, 2);
+
 
 INSERT INTO global_widgets (id, user, name, options, position) VALUES
 (1, 2, 'last_finance_entries', '[]', 999),

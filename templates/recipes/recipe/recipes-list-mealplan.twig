@@ -1,0 +1,14 @@
+
+{% for recipe in data %}
+    <div class="mealplan-recipe" data-recipe="{{ recipe.id }}">
+        <div class="title">
+            <div class="icons">
+                <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+            </div>
+            <h3><a href="{{ url_for('recipes_recipe_view', {'recipe': recipe.hash}) }}">{{ recipe.name|raw }}</a></h3>
+        </div>
+        <div class="icons">
+            <span class="minus hidden">{{ fontawesome('fas fa-minus') }}</span>
+        </div>
+    </div>
+{% endfor %}

@@ -507,6 +507,7 @@ return function (App $app) {
         $group->delete('/delete/{id}', \App\Application\Action\Recipes\Recipe\RecipeDeleteAction::class)->setName('recipes_delete');
 
         $group->get('/list', \App\Application\Action\Recipes\Recipe\RecipesListAction::class)->setName('recipes_get');
+        $group->get('/listForMealplan', \App\Application\Action\Recipes\Recipe\RecipesListForMealplanAction::class)->setName('recipes_get_mealplan');
 
         $group->group('/{recipe}', function (RouteCollectorProxy $group_recipe) {
             $group_recipe->get('/view', \App\Application\Action\Recipes\Recipe\RecipeViewAction::class)->setName('recipes_recipe_view');
@@ -536,6 +537,21 @@ return function (App $app) {
 
             $group_ingredients->get('/list', \App\Application\Action\Recipes\Ingredient\IngredientSelectionListAction::class)->setName('ingredients_get');
         });
+        
+        $group->group('/mealplans', function (RouteCollectorProxy $group_mealplans) {
+            $group_mealplans->get('/', \App\Application\Action\Recipes\Mealplan\MealplanListAction::class)->setName('recipes_mealplans');
+            $group_mealplans->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Mealplan\MealplanEditAction::class)->setName('recipes_mealplans_edit');
+            $group_mealplans->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Mealplan\MealplanSaveAction::class)->setName('recipes_mealplans_save');
+            $group_mealplans->delete('/delete/{id}', \App\Application\Action\Recipes\Mealplan\MealplanDeleteAction::class)->setName('recipes_mealplans_delete');
+
+            $group_mealplans->group('/{mealplan}', function (RouteCollectorProxy $group_mealplan) {
+                $group_mealplan->get('/view/', \App\Application\Action\Recipes\Mealplan\MealplanViewAction::class)->setName('recipes_mealplans_view');
+                
+                $group_mealplan->post('/moverecipe/', \App\Application\Action\Recipes\Mealplan\MealplanMoveRecipeAction::class)->setName('recipes_mealplans_move_recipe');
+                $group_mealplan->delete('/removerecipe/', \App\Application\Action\Recipes\Mealplan\MealplanRemoveRecipeAction::class)->setName('recipes_mealplans_remove_recipe');
+            });
+        });
+        
     });
 
     $app->group('/api', function (RouteCollectorProxy $group) {

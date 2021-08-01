@@ -2,9 +2,9 @@
 
 namespace Tests\Functional\Recipes\Cookbook;
 
-use Tests\Functional\Recipes\RecipesTestBase;
+use Tests\Functional\Recipes\RecipesCookbooksTestBase;
 
-class OwnerNoViewTest extends RecipesTestBase {
+class OwnerNoViewTest extends RecipesCookbooksTestBase {
 
     protected $TEST_COOKBOOK_HASH = "DEFdef456";
     protected $TEST_RECIPE_HASH = "ABCabc123";

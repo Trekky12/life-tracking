@@ -45,7 +45,12 @@ class LocationAPITest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('{"status":"success"}', $body);
+        
+        $json = json_decode($body, true);
+
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey("status", $json);
+        $this->assertStringContainsString($json["status"], "success");
 
         return $location_data;
     }

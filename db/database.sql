@@ -1145,3 +1145,41 @@ CREATE TABLE recipes_cookbook_recipes (
     FOREIGN KEY(cookbook) REFERENCES recipes_cookbooks(id) ON DELETE CASCADE ON UPDATE CASCADE,    
     FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_mealplans;
+CREATE TABLE recipes_mealplans (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_mealplans_users;
+CREATE TABLE recipes_mealplans_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    mealplan INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(mealplan, user),
+    FOREIGN KEY(mealplan) REFERENCES recipes_mealplans(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_mealplans_recipes;
+CREATE TABLE recipes_mealplans_recipes (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    mealplan int(11) unsigned NULL,
+    recipe INTEGER unsigned DEFAULT NULL,
+    date DATE NOT NULL,
+    position INT(10) NULL,
+    notice TEXT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(mealplan) REFERENCES recipes_mealplans(id) ON DELETE CASCADE ON UPDATE CASCADE,    
+    FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,14 +1,13 @@
 <?php
 
-namespace Tests\Functional\Recipes\Cookbook;
+namespace Tests\Functional\Recipes\Mealplan;
 
-use Tests\Functional\Recipes\RecipesCookbooksTestBase;
+use Tests\Functional\Recipes\RecipesMealplansTestBase;
 
-class MemberTest extends RecipesCookbooksTestBase {
+class MemberTest extends RecipesMealplansTestBase {
 
-    protected $TEST_COOKBOOK_ID = 1;
-    protected $TEST_COOKBOOK_HASH = "ABCabc123";
-    protected $TEST_RECIPE_HASH = "ABCabc123";
+    protected $TEST_MEALPLAN_ID = 1;
+    protected $TEST_MEALPLAN_HASH = "ABCabc123";
 
     protected function setUp(): void {
         $this->login("user", "user");
@@ -30,7 +29,7 @@ class MemberTest extends RecipesCookbooksTestBase {
         $hashs = array_map(function($match) {
             return $match["hash"];
         }, $matches);
-        $this->assertContains($this->TEST_COOKBOOK_HASH, $hashs);
+        $this->assertContains($this->TEST_MEALPLAN_HASH, $hashs);
     }
 
     /**
@@ -38,7 +37,7 @@ class MemberTest extends RecipesCookbooksTestBase {
      * 
      */
     public function testGetParentEdit() {
-        $response = $this->request('GET', $this->uri_edit . $this->TEST_COOKBOOK_ID);
+        $response = $this->request('GET', $this->uri_edit . $this->TEST_MEALPLAN_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -48,12 +47,12 @@ class MemberTest extends RecipesCookbooksTestBase {
 
     public function testPostParentSave() {
         $data = [
-            "id" => $this->TEST_COOKBOOK_ID,
-            "hash" => $this->TEST_COOKBOOK_HASH,
-            "name" => "Test Cookbook Update",
+            "id" => $this->TEST_MEALPLAN_ID,
+            "hash" => $this->TEST_MEALPLAN_HASH,
+            "name" => "Test Mealplan Update",
             "users" => [1, 3]
         ];
-        $response = $this->request('POST', $this->uri_save . $this->TEST_COOKBOOK_ID, $data);
+        $response = $this->request('POST', $this->uri_save . $this->TEST_MEALPLAN_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
@@ -63,7 +62,7 @@ class MemberTest extends RecipesCookbooksTestBase {
      * Delete
      */
     public function testDeleteParent() {
-        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_COOKBOOK_ID);
+        $response = $this->request('DELETE', $this->uri_delete . $this->TEST_MEALPLAN_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -75,24 +74,12 @@ class MemberTest extends RecipesCookbooksTestBase {
      * View (members can access)
      */
     public function testGetViewParent() {
-        $response = $this->request('GET', $this->getURIView($this->TEST_COOKBOOK_HASH));
+        $response = $this->request('GET', $this->getURIView($this->TEST_MEALPLAN_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<div id="recipes_list" data-cookbook=', $body);
-    }
-    
-    /**
-     * View recipe of cookbook (members can access)
-     */
-    public function testGetViewRecipe() {
-        $response = $this->request('GET', $this->getURIChildView($this->TEST_COOKBOOK_HASH, $this->TEST_RECIPE_HASH));
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $body = (string) $response->getBody();
-        $this->assertStringContainsString('<div class="recipe-description">', $body);
+        $this->assertStringContainsString('<div class="mealplan-list"', $body);
     }
 
 }

@@ -1,13 +1,10 @@
 <?php
 
-namespace Tests\Functional\Recipes\Cookbook;
+namespace Tests\Functional\Recipes\Mealplan;
 
-use Tests\Functional\Recipes\RecipesCookbooksTestBase;
+use Tests\Functional\Recipes\RecipesMealplansTestBase;
 
-class OwnerTest extends RecipesCookbooksTestBase {
-    
-    protected $TEST_COOKBOOK_HASH = "ABCabc123";
-    protected $TEST_RECIPE_HASH = "ABCabc123";
+class OwnerTest extends RecipesMealplansTestBase {
 
     protected function setUp(): void {
         $this->login("admin", "admin");
@@ -24,7 +21,7 @@ class OwnerTest extends RecipesCookbooksTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString("recipes_cookbooks_table", $body);
+        $this->assertStringContainsString("recipes_mealplans_table", $body);
     }
 
     public function testGetParentEdit() {
@@ -41,7 +38,7 @@ class OwnerTest extends RecipesCookbooksTestBase {
      */
     public function testPostParentSave() {
         $data = [
-            "name" => "Test Cookbook",
+            "name" => "Test Mealplan",
             "users" => [1]
         ];
         $response = $this->request('POST', $this->uri_save, $data);
@@ -116,7 +113,7 @@ class OwnerTest extends RecipesCookbooksTestBase {
         $data = [
             "id" => $result_data["id"],
             "hash" => $result_data["hash"],
-            "name" => "Test Cookbook Updated",
+            "name" => "Test Mealplan Updated",
             "users" => [1, 3]
         ];
         $response = $this->request('POST', $this->uri_save . $result_data["id"], $data);
@@ -148,20 +145,9 @@ class OwnerTest extends RecipesCookbooksTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<div id="recipes_list" data-cookbook=', $body);
+        $this->assertStringContainsString('<div class="mealplan-list"', $body);
     }
     
-    /**
-     * View recipe of cookbook
-     */
-    public function testGetViewRecipe() {
-        $response = $this->request('GET', $this->getURIChildView($this->TEST_COOKBOOK_HASH, $this->TEST_RECIPE_HASH));
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $body = (string) $response->getBody();
-        $this->assertStringContainsString('<div class="recipe-description">', $body);
-    }
 
     /**
      * Delete / clean
