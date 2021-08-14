@@ -412,6 +412,7 @@ $lang["EVENT_TYPE_HOTEL"] = "hotel";
 $lang["EVENT_TYPE_FLIGHT"] = "flight";
 $lang["EVENT_TYPE_DRIVE"] = "car drive";
 $lang["EVENT_TYPE_TRAINRIDE"] = "train ride";
+$lang["EVENT_TYPE_SHIP"] = "ship";
 $lang["EVENT_TYPE_CARRENTAL"] = "car rental";
 $lang["EVENT_TYPE_WAYPOINT"] = "waypoint";
 

@@ -14,6 +14,8 @@
             {{ fontawesome('fas fa-calendar-alt') }}
         {% elseif event.isWaypoint() %}
             {{ fontawesome('fas fa-map-marker-alt') }}
+        {% elseif event.isShip() %}
+            {{ fontawesome('fas fa-ship') }}
         {% endif %}
     </div>
     <div class="text">

@@ -107,11 +107,15 @@ class Event extends \App\Domain\DataObject {
     }
 
     public function isTravel() {
-        return $this->isFlight() || $this->isTrainride() || $this->isDrive();
+        return $this->isFlight() || $this->isTrainride() || $this->isDrive() || $this->isShip();
     }
 
     public function isWaypoint() {
         return strcmp($this->type, "WAYPOINT") === 0;
+    }
+    
+    public function isShip() {
+        return strcmp($this->type, "SHIP") === 0;
     }
 
     public function getPosition() {
@@ -123,6 +127,7 @@ class Event extends \App\Domain\DataObject {
         $data['isCarrental'] = $this->isCarrental();
         $data['isEvent'] = $this->isEvent();
         $data['isWaypoint'] = $this->isWaypoint();
+        $data['isShip'] = $this->isShip();
 
         $data['data'] = $this->get_fields();
 
