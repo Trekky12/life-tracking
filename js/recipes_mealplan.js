@@ -3,9 +3,12 @@
 const recipesList = document.querySelector('#recipes_list');
 const loadingIconRecipes = document.querySelector('#loadingIconRecipes');
 const filterSearchRecipes = document.getElementById('filterSearchRecipes');
+const noticeModal = document.getElementById("notice-modal");
+const noticeModalClose = document.getElementById("modal-close-btn");
 
 document.addEventListener('click', function (event) {
     let minus = event.target.closest('.minus');
+    let add_notice = event.target.closest('.create-notice');
 
     if (minus) {
         event.preventDefault();
@@ -34,6 +37,19 @@ document.addEventListener('click', function (event) {
         }).catch(function (error) {
             console.log(error);
         });
+
+    }
+
+    if (add_notice) {
+        event.preventDefault();
+
+        let target = add_notice.parentElement.querySelector('.recipes-target');
+        let date = target.dataset.date;
+
+        noticeModal.querySelector("input[name='date']").value = date;
+
+        freeze();
+        noticeModal.classList.add('visible');
 
     }
 });
@@ -75,9 +91,15 @@ function move_recipe(evt) {
     let recipe = evt.item.dataset.recipe;
     let id = evt.item.dataset.id;
 
-    var data = {'recipe': recipe, 'date': date, 'position': evt.newDraggableIndex, 'id': id};
+    createRecipeEntry(evt.item, recipe, date, evt.newDraggableIndex, id, null);
 
-    getCSRFToken().then(function (token) {
+}
+
+function createRecipeEntry(target, recipe, date, position, id, notice) {
+
+    var data = {'recipe': recipe, 'date': date, 'position': position, 'id': id, 'notice': notice};
+
+    return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
 
@@ -95,10 +117,10 @@ function move_recipe(evt) {
     }).then(function (data) {
         if (data['status'] === 'success') {
             let id = data["id"];
-            evt.item.dataset.id = id;
-            evt.item.querySelector('.minus').classList.remove("hidden");
+            target.dataset.id = id;
+            target.querySelector('.minus').classList.remove("hidden");
         } else {
-            evt.item.remove();
+            target.remove();
         }
     }).catch(function (error) {
         console.log(error);
@@ -150,3 +172,39 @@ if (filterSearchRecipes) {
         getRecipes();
     });
 }
+
+
+if (noticeModalClose) {
+    noticeModalClose.addEventListener('click', function (e) {
+        noticeModal.classList.remove('visible');
+        noticeModal.querySelector('form').reset();
+        unfreeze();
+    });
+}
+noticeModal.querySelector("form").addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('loading-overlay').classList.remove('hidden');
+
+    let notice = noticeModal.querySelector('input[name="notice"]').value;
+    let date = noticeModal.querySelector('input[name="date"]').value;
+
+    let target = document.querySelector(".recipes-target[data-date='" + date + "']");
+    let notice_dummy = document.querySelector("#templates .mealplan-recipe");
+    let notice_entry = notice_dummy.cloneNode(true);
+
+    notice_entry.querySelector('h3.title').innerHTML = notice;
+
+    target.appendChild(notice_entry);
+
+    createRecipeEntry(notice_entry, null, date, 999, null, notice).then(function () {
+
+        document.getElementById('loading-overlay').classList.add('hidden');
+        unfreeze();
+        noticeModal.querySelector('form').reset();
+        noticeModal.classList.remove("visible");
+    });
+
+
+
+
+});

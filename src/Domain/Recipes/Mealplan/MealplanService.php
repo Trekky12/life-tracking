@@ -68,7 +68,7 @@ class MealplanService extends Service {
             $recipes_of_day = array_key_exists($date, $recipes) ? $recipes[$date] : null;
             $dateRange[$date] = ["date" => $date, "recipes" => $recipes_of_day];
         }
-
+        
         return new Payload(Payload::$RESULT_HTML, [
             'mealplan' => $mealplan,
             'from' => $from,
@@ -96,18 +96,25 @@ class MealplanService extends Service {
 
         $mealplan_recipe_id = array_key_exists("id", $data) && !empty($data["id"]) ? intval(filter_var($data["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
 
+        $notice = array_key_exists("notice", $data) && !empty($data["notice"]) ? filter_var($data["notice"], FILTER_SANITIZE_STRING) : null;
+
         if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $date)) {
             $date = date('Y-m-d');
         }
 
-        if (!is_null($recipe)) {
+        $entry_id = null;
 
-            if (is_null($mealplan_recipe_id)) {
+        if (is_null($mealplan_recipe_id)) {
+            if (!is_null($recipe)) {
                 $entry_id = $this->mapper->addRecipe($mealplan->id, $recipe, $date, $position);
-            } else {
-                $entry_id = $this->mapper->moveRecipe($date, $position, $mealplan_recipe_id);
+            } elseif (!is_null($notice)) {
+                $entry_id = $this->mapper->addRecipeNotice($mealplan->id, $notice, $date, $position);
             }
+        } else {
+            $entry_id = $this->mapper->moveRecipe($date, $position, $mealplan_recipe_id);
+        }
 
+        if (!is_null($entry_id)) {
             $this->logger->notice("Add Recipe to mealplan", array("recipe" => $recipe, "mealplan" => $mealplan->id));
 
             return new Payload(Payload::$STATUS_NEW, ["id" => $entry_id], $data);

@@ -4,7 +4,7 @@ namespace App\Application\Action\Recipes\Mealplan;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Application\Responder\DeleteResponder;
+use App\Application\Responder\DeleteJSONResponder;
 use App\Domain\Recipes\Mealplan\MealplanService;
 
 class MealplanRemoveRecipeAction {
@@ -12,7 +12,7 @@ class MealplanRemoveRecipeAction {
     private $responder;
     private $service;
 
-    public function __construct(DeleteResponder $responder, MealplanService $service) {
+    public function __construct(DeleteJSONResponder $responder, MealplanService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

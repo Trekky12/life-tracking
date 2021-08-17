@@ -714,4 +714,6 @@ $lang["RECIPES_MINUTES"] = "min.";
 $lang["RECIPES_ADD_TO_COOKBOOK"] = "Add to cookbook";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Remove from cookbook";
 
+$lang["ADD_NOTICE"] = "Add notice";
+
 return $lang;

@@ -57,6 +57,27 @@ class MealplanMapper extends \App\Domain\Mapper {
         }
         return true;
     }
+    
+    public function addRecipeNotice($mealplan_id, $notice, $date, $position) {
+
+        $sql = "INSERT INTO " . $this->getTableName("recipes_mealplans_recipes") . " (mealplan, recipe, date, position, notice, createdBy) VALUES (:mealplan, :recipe, :date, :position, :notice, :createdBy)";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "mealplan" => $mealplan_id,
+            "recipe" => null,
+            "date" => $date,
+            "position" => $position,
+            "notice" => $notice,
+            "createdBy" => $this->user_id
+        ]);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
+        } else {
+            return $this->db->lastInsertId();
+        }
+    }
 
     public function getMealplanRecipes($mealplan_id, $from, $to) {
 
