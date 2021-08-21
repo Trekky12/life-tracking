@@ -54,6 +54,7 @@ return [
                 'trips_list' => 'EEEE dd. MMMM yyyy',
                 'month_name' => 'MMMM',
                 'month_name_full' => 'dd. MMMM y',
+                'mealplan_list' => 'EEEE dd. MMMM yyyy'
             ],
             'dateformatExcel' => [
                 'date' => 'dd.mm.yyyy',

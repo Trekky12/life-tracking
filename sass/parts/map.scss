@@ -250,3 +250,7 @@ body.trips{
         padding-top: 4px!important;
     }
 }
+
+#trip-map.leaflet-pseudo-fullscreen{
+    z-index:1000;
+}

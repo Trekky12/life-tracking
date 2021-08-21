@@ -17,9 +17,11 @@
         <div class="inner-content">
             <div class="page-header">
                 <h2>{{plan.name|raw}} | {{ exercise["exercise"].name }}</h2>
+                {% if loop.index == 1 %}
                 <div class="buttons">
                     <a href="{{  url_for('workouts_plan_view', {'plan': plan.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
                 </div>
+                {% endif %}
             </div>
 
             <div class="page-content">

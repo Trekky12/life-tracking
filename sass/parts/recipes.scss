@@ -299,21 +299,28 @@
 
 .mealplan-list{
     display:flex;
+    flex-direction: column-reverse;
+    @media screen and (min-width: $size_mobile_navigation) {
+        flex-direction: row;
+    }
     .mealplans{
         display: flex; 
         flex-direction: column; 
         flex-grow: 1;
-        flex-basis: 50%;
+        @media screen and (min-width: $size_mobile_navigation) {
+            flex-basis: 50%;
+        }
     }
     .mealplan-list-settings{
-        position: sticky;
-        top: $header_height + $header_height_margin;
-        align-self: flex-start;
-        flex-basis: 50%;
+        @media screen and (min-width: $size_mobile_navigation) {
+            position: sticky;
+            top: $header_height + $header_height_margin;
+            align-self: flex-start;
+            flex-basis: 50%;
 
-        margin-left: 1rem;
+            margin-left: 1rem;
+        }
     }
-
 }
 
 .mealplan-recipe{
@@ -348,10 +355,16 @@
         padding-left: 1rem;
         padding-right: 1rem;
     }
-    
+
     .create-notice{
         padding-left: 1rem;
         padding-right: 1rem;
         margin-bottom: 1rem;
+    }
+}
+
+body.sortable-select{
+    .step-container{
+        display: none;
     }
 }

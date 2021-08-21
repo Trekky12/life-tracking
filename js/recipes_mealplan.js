@@ -74,7 +74,7 @@ function createSortable(element, isSource) {
             },
             onAdd: function (evt) {
                 move_recipe(evt);
-            }
+            }           
         };
 
         if (isSource) {

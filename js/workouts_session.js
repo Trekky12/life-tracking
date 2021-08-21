@@ -71,7 +71,9 @@ function setFields(exercise, disabled) {
         if (disabled) {
             input.setAttribute('disabled', true);
         } else {
-            input.removeAttribute('disabled');
+            if (input.name.indexOf("dummy") === -1) {
+                input.removeAttribute('disabled');
+            }
         }
     });
 }

@@ -91,44 +91,46 @@
                                     <label>{{lang["NAME"]}}</label>
                                     <input type="text" name="steps[{{ step_idx }}][name]" value="{{ step["name"] }}">
                                 </div>
-                                <div class="form-group two-columns mobile">
-                                    <div class="left">
-                                        <div class="form-group">
-                                            <label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
-                                            <input type="number" step="1" name="steps[{{ step_idx }}][preparation_time]" value="{{ step["preparation_time"] }}">
-                                        </div>
-                                    </div>
-                                    <div class="right">
-                                        <div class="form-group">
-                                            <label>{{lang["RECIPES_WAITING_TIME"]}}</label>
-                                            <input type="number" step="1" name="steps[{{ step_idx }}][waiting_time]" value="{{ step["waiting_time"] }}">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>{{lang["DESCRIPTION"]}}</label>
-                                    <textarea rows="5" name="steps[{{ step_idx }}][description]">{{ step["description"] }}</textarea>
-                                </div>
-
-                                <div class="step-ingredients">
-                                    {% if step.id in ingredients|keys %}
-                                        {% for ingredient in ingredients[step.id] %}
-                                            <div class="step-ingredient">
-                                                <span class="ingredient-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-                                                <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}" value="{{ ingredient["amount"] }}"/>
-                                                <select name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][ingredient]" class="step-ingredient-select" data-selected="{{ ingredient["ingredient"] }}">
-                                                </select>
-                                                <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][notice]" placeholder="{{ lang["NOTICE"] }}" value="{{ ingredient["notice"] }}"/>
-                                                <span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
+                                <div class="step-container">
+                                    <div class="form-group two-columns mobile">
+                                        <div class="left">
+                                            <div class="form-group">
+                                                <label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
+                                                <input type="number" step="1" name="steps[{{ step_idx }}][preparation_time]" value="{{ step["preparation_time"] }}">
                                             </div>
-                                        {% endfor %}
-                                    {% endif %}
+                                        </div>
+                                        <div class="right">
+                                            <div class="form-group">
+                                                <label>{{lang["RECIPES_WAITING_TIME"]}}</label>
+                                                <input type="number" step="1" name="steps[{{ step_idx }}][waiting_time]" value="{{ step["waiting_time"] }}">
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                </div>
+                                    <div class="form-group">
+                                        <label>{{lang["DESCRIPTION"]}}</label>
+                                        <textarea rows="5" name="steps[{{ step_idx }}][description]">{{ step["description"] }}</textarea>
+                                    </div>
 
-                                <div class="form-group add-ingredient-btn-wrapper">
-                                    <button type="button" class="add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
+                                    <div class="step-ingredients">
+                                        {% if step.id in ingredients|keys %}
+                                            {% for ingredient in ingredients[step.id] %}
+                                                <div class="step-ingredient">
+                                                    <span class="ingredient-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+                                                    <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}" value="{{ ingredient["amount"] }}"/>
+                                                    <select name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][ingredient]" class="step-ingredient-select" data-selected="{{ ingredient["ingredient"] }}">
+                                                    </select>
+                                                    <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][notice]" placeholder="{{ lang["NOTICE"] }}" value="{{ ingredient["notice"] }}"/>
+                                                    <span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+
+                                    </div>
+
+                                    <div class="form-group add-ingredient-btn-wrapper">
+                                        <button type="button" class="add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
+                                    </div>
                                 </div>
                             </div>
 

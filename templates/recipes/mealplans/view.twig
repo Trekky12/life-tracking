@@ -40,7 +40,7 @@
 
                 <div class="inner-content recipe-list">
                     <div class="mealplan-date">
-                        <h2>{{ date["date"] }}</h2>
+                        <h2>{{ date["full_date"] }}</h2>
                         <div class="recipes-target" data-date="{{ date["date"] }}">
                             {% for recipe_of_day in date["recipes"] %}
                                 <div class="mealplan-recipe" data-recipe="{{ recipe_of_day["recipe_id"] }}" data-id="{{ recipe_of_day["id"] }}">

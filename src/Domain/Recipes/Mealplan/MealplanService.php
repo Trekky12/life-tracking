@@ -5,13 +5,20 @@ namespace App\Domain\Recipes\Mealplan;
 use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
+use App\Domain\Base\Settings;
+use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
 class MealplanService extends Service {
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, MealplanMapper $mapper) {
+    private $settings;
+    private $translation;
+
+    public function __construct(LoggerInterface $logger, CurrentUser $user, MealplanMapper $mapper, Settings $settings, Translator $translation) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->settings = $settings;
+        $this->translation = $translation;
     }
 
     public function index() {
@@ -62,13 +69,19 @@ class MealplanService extends Service {
 
         $recipes = $this->mapper->getMealplanRecipes($mealplan->id, $from, $to);
 
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+
+        $fmt = new \IntlDateFormatter($language, NULL, NULL);
+        $fmt->setPattern($dateFormatPHP["mealplan_list"]);
+
         $dateRange = [];
         foreach ($dateInterval as $d) {
             $date = $d->format('Y-m-d');
             $recipes_of_day = array_key_exists($date, $recipes) ? $recipes[$date] : null;
-            $dateRange[$date] = ["date" => $date, "recipes" => $recipes_of_day];
+            $dateRange[$date] = ["date" => $date, "full_date" => $fmt->format($d), "recipes" => $recipes_of_day];
         }
-        
+
         return new Payload(Payload::$RESULT_HTML, [
             'mealplan' => $mealplan,
             'from' => $from,

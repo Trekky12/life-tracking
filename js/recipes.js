@@ -96,6 +96,7 @@ function updateStepFields() {
 
 function createSortableSteps(element) {
     new Sortable(element, {
+        scroll: true,
         draggable: ".step",
         swapThreshold: 0.9,
         fallbackOnBody: true,
@@ -103,6 +104,13 @@ function createSortableSteps(element) {
         ghostClass: 'step-drag',
         onUpdate: function (evt) {
             updateStepFields();
+        },
+        onStart: function (evt) {
+            document.body.classList.add("sortable-select");
+        },
+        onEnd: function (evt) {
+            document.body.classList.remove("sortable-select");
+            evt.item.scrollIntoView();
         }
     });
 }
@@ -148,7 +156,7 @@ function createSortableIngredients(step_ingredients_wrapper) {
 function createChoiceIngredients(element) {
 
     let selected = element.dataset.selected ? element.dataset.selected : "";
-    
+
     let selectr = new Selectr(element, {
         searchable: true,
         placeholder: lang.ingredient,

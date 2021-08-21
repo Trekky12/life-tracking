@@ -217,6 +217,7 @@ function createSortable(element) {
         group: {
             name: "exercise"
         },
+        scroll: true,
         swapThreshold: 0.5,
         fallbackOnBody: true,
         //draggable: ".exercise.selected",
@@ -235,6 +236,13 @@ function createSortable(element) {
                 input.value = 1;
             }
             updateFields();
+        },
+        onStart: function (evt) {
+            document.body.classList.add("sortable-select");
+        },
+        onEnd: function (evt) {
+            document.body.classList.remove("sortable-select");
+            evt.item.scrollIntoView();
         }
     });
 }

@@ -93,7 +93,7 @@ class SessionMapper extends \App\Domain\Mapper {
         $sql = "SELECT se.exercise, se.sets, s.date"
                 . " FROM " . $this->getTableName() . " s, " . $this->getTableName("workouts_sessions_exercises") . " se"
                 . " WHERE s.id = se.session AND s.plan = :plan AND se.type = :type AND se.exercise IS NOT NULL"
-                . " ORDER by s.date DESC";
+                . " ORDER by s.date ASC";
 
         $bindings = [
             "plan" => $plan_id,
