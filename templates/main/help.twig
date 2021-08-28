@@ -8,17 +8,18 @@
         <div class="page-header"><h2>Übersicht</h2></div>
         <div class="page-content">
             <ul>
-                <li><a href="#general">Allgemein</a></li>
-                <li><a href="#locationhistory">Modul: Standortverlauf</a></li>
-                <li><a href="#finances">Modul: Finanzen</a></li>
-                <li><a href="#cars">Modul: Autos</a></li>
-                <li><a href="#boards">Modul: Boards</a></li>
-                <li><a href="#crawlers">Modul: Crawlers</a></li>
-                <li><a href="#splittedbills">Modul: geteilte Ausgaben</a></li>
-                <li><a href="#trips">Modul: Reisen</a></li>
-                <li><a href="#timesheets">Modul: Zeiterfassung</a></li>
-                <li><a href="#workouts">Modul: Workouts</a></li>
-                <li><a href="#admin">Spezielle Admin-Funktionen</a></li>
+                <li><a href="#general" class="no-loading">Allgemein</a></li>
+                <li><a href="#locationhistory" class="no-loading">Modul: Standortverlauf</a></li>
+                <li><a href="#finances" class="no-loading">Modul: Finanzen</a></li>
+                <li><a href="#cars" class="no-loading">Modul: Autos</a></li>
+                <li><a href="#boards" class="no-loading">Modul: Boards</a></li>
+                <li><a href="#crawlers" class="no-loading">Modul: Crawlers</a></li>
+                <li><a href="#splittedbills" class="no-loading">Modul: geteilte Ausgaben</a></li>
+                <li><a href="#trips" class="no-loading">Modul: Reisen</a></li>
+                <li><a href="#timesheets" class="no-loading">Modul: Zeiterfassung</a></li>
+                <li><a href="#workouts" class="no-loading">Modul: Workouts</a></li>
+                <li><a href="#recipes" class="no-loading">Modul: Rezepte</a></li>
+                <li><a href="#admin" class="no-loading">Spezielle Admin-Funktionen</a></li>
             </ul>
         </div>
     </div>
@@ -624,12 +625,12 @@ curl --header "Content-Type: application/json" \
 
             <h3>Crawler Links</h3>
             <p>Unterhalb der Liste lassen sich zusätzlich noch Links für den Schnellzugriff anlegen.
-            Dabei können maximal zwei Ebenen abgebildet werden.</p>
+                Dabei können maximal zwei Ebenen abgebildet werden.</p>
             <div class="image-gallery">
                 <div class="image">
                     <a href="{{baseURL}}/static/help/7_crawlers-5.jpg" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-5.jpg" width="300" /></a>
                 </div>
-                 <div class="image">
+                <div class="image">
                     <a href="{{baseURL}}/static/help/7_crawlers-5b.jpg" target="_blank"><img src="{{baseURL}}/static/help/7_crawlers-5b.jpg" width="300" /></a>
                 </div>
             </div>
@@ -880,6 +881,88 @@ curl --header "Content-Type: application/json" \
                 </div>
             </div>
 
+        </div>
+    </div>
+    <div class="inner-content">
+        <div class="page-header"><h2 id="recipes">Modul Rezepte</h2></div>
+        <div class="page-content">
+            <p>Im Modul Rezepte können Rezepte erfasst und zu Kochbüchern oder Speisepläne hinzugefügt werden.</p>
+
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-1.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-1.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-2.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-2.jpg" width="300" /></a>
+                </div>     
+            </div>
+
+            <h3>Zutaten verwalten</h3>
+            <p>Für die einzelnen Schritte bei Rezepten können Zutaten hinterlegt werden. Diese müssen zuerst angelegt werden.</p>
+
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-9.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-9.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-10.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-10.jpg" width="300" /></a>
+                </div>     
+            </div>
+
+            <h3>Rezept anlegen/bearbeiten</h3>
+            <p>Beim Anlegen oder Bearbeiten eines Rezepts müssen einzelne Arbeitsschritte erstellt werden. Den einzelnen Schritten können dann Beschreibungen und Zutaten hinzugefügt werden.</p>
+            <div class="image">
+                <a href="{{baseURL}}/static/help/12_recipes-3.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-3.jpg" width="300" /></a>
+            </div>
+
+
+            <h3>Kochbücher</h3>
+            <p>Es können Kochbücher als Rezeptsammlung angelegt werden. Diese können auch mit anderen Nutzern geteilt werden.</p>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-5.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-5.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-6.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-6.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-7.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-7.jpg" width="300" /></a>
+                </div>
+            </div>
+
+            <p>In der Rezeptansicht kann ein Rezept zu einem Kochbuch hinzugefügt werden.</p>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-2.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-2.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-4.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-4.jpg" width="300" /></a>
+                </div>
+            </div>
+
+            <p>Wird ein Rezept aus dem Kochbuch heraus aufgerufen kann dieses wieder aus dem Kochbuch entfernt werden.</p>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-8.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-8.jpg" width="300" /></a>
+                </div>
+            </div>
+
+            <h3>Speisepläne</h3>
+            <p>Es ist möglich für einzelne Wochentage Rezepte und Notizen als Speiseplan zu hinterlegen.</p>
+            <div class="image-gallery">
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-11.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-11.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-12.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-12.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-13.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-13.jpg" width="300" /></a>
+                </div>
+                <div class="image">
+                    <a href="{{baseURL}}/static/help/12_recipes-14.jpg" target="_blank"><img src="{{baseURL}}/static/help/12_recipes-14.jpg" width="300" /></a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="inner-content">

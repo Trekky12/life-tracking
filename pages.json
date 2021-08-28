@@ -485,5 +485,46 @@
     {
         "name": "101_notifications-mails",
         "url": "http://tracking.localhost/profile/mail/manage/"
+    },
+    {
+        "name": "12_recipes-2",
+        "url": "http://tracking.localhost/recipes/ABCabc123/view"
+    },
+    {
+        "name": "12_recipes-3",
+        "url": "http://tracking.localhost/recipes/edit/1",
+        "height": 2200
+    },
+    {
+        "name": "12_recipes-4",
+        "url": "http://tracking.localhost/recipes/DEFdef456/addtocookbook"
+    },
+    {
+        "name": "12_recipes-5",
+        "url": "http://tracking.localhost/recipes/cookbooks/"
+    },
+    {
+        "name": "12_recipes-6",
+        "url": "http://tracking.localhost/recipes/cookbooks/edit/1"
+    },
+    {
+        "name": "12_recipes-8",
+        "url": "http://tracking.localhost/recipes/cookbooks/ABCabc123/view/ABCabc123"
+    },
+    {
+        "name": "12_recipes-9",
+        "url": "http://tracking.localhost/recipes/ingredients/"
+    },
+    {
+        "name": "12_recipes-10",
+        "url": "http://tracking.localhost/recipes/ingredients/edit/1"
+    },
+    {
+        "name": "12_recipes-11",
+        "url": "http://tracking.localhost/recipes/mealplans/"
+    },
+    {
+        "name": "12_recipes-12",
+        "url": "http://tracking.localhost/recipes/mealplans/edit/1"
     }
 ]

@@ -118,6 +118,22 @@ async function captureScreenshots() {
             height: height
         });
         await page.waitForTimeout(1000);
+        
+        await page.goto("http://tracking.localhost/recipes/");
+        await page.waitForTimeout(1000);
+        await page.screenshot({path: `${folder}/12_recipes-1.jpg`});
+        
+        await page.goto("http://tracking.localhost/recipes/cookbooks/ABCabc123/view/");
+        await page.waitForTimeout(1000);
+        await page.screenshot({path: `${folder}/12_recipes-7.jpg`});
+        
+        await page.goto("http://tracking.localhost/recipes/mealplans/ABCabc123/view/?from=2021-08-23&to=2021-08-29");
+        await page.waitForTimeout(1000);
+        await page.screenshot({path: `${folder}/12_recipes-13.jpg`});
+        
+        await page.click('.create-notice');
+        await page.waitForTimeout(1000);
+        await page.screenshot({path: `${folder}/12_recipes-14.jpg`});
 
     } catch (err) {
         console.log(`❌ Error: ${err.message}`);

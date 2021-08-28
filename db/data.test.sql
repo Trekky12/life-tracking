@@ -241,10 +241,18 @@ INSERT INTO recipes_ingredients (id, createdBy, name) VALUES
 (1, 1, 'Test Ingredient 1'),
 (2, 1, 'Test Ingredient 2');
 
-INSERT INTO recipes (id, createdBy, name, hash) VALUES
-(1, 1, 'Test Recipe 1', 'ABCabc123'),
-(2, 1, 'Test Recipe 2', 'DEFdef456'),
-(3, 1, 'Test Recipe 3', 'GHIghi789');
+INSERT INTO recipes (id, createdBy, name, description, image, preparation_time, waiting_time, servings, link, hash) VALUES
+(1, 1, 'Test Recipe 1', 'Test Description', NULL, 1, 2, 3, 'https://www.google.com', 'ABCabc123'),
+(2, 1, 'Test Recipe 2', NULL, NULL, NULL, NULL, NULL, NULL, 'DEFdef456'),
+(3, 1, 'Test Recipe 3', NULL, NULL, NULL, NULL, NULL, NULL, 'GHIghi789');
+
+INSERT INTO recipes_steps (id, createdBy, recipe, position, name, description, preparation_time, waiting_time) VALUES
+(1, 1, 1, 0, 'Schritt 1', 'Description Step 1', 1, 2),
+(2, 1, 1, 1, 'Schritt 2', 'Cooking', NULL, NULL);
+
+INSERT INTO recipes_recipe_ingredients (id, createdBy, recipe, step, ingredient, position, amount, notice) VALUES
+(1, 1, 1, 1, 1, 0, '1', NULL),
+(2, 1, 1, 1, 2, 1, '2', NULL);
 
 INSERT INTO recipes_cookbook_recipes (id, createdBy, cookbook, recipe) VALUES 
 (1, 1, 1, 1),
@@ -256,6 +264,10 @@ INSERT INTO recipes_mealplans (id, user, name, hash) VALUES
 INSERT INTO recipes_mealplans_users (mealplan, user) VALUES 
 (1, 1),
 (1, 2);
+INSERT INTO recipes_mealplans_recipes (id, createdBy, mealplan, recipe, date, position, notice) VALUES
+(1, 1, 1, 1, '2021-08-23', 0, NULL),
+(2, 1, 1, 2, '2021-08-24', 0, NULL),
+(3, 1, 1, NULL, '2021-08-25', 999, 'Notice without specific recipe');
 
 
 INSERT INTO global_widgets (id, user, name, options, position) VALUES
