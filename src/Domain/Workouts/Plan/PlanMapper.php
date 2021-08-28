@@ -14,14 +14,21 @@ class PlanMapper extends \App\Domain\Mapper {
     //protected $element_name = "project";
 
     public function getAllPlans($sorted, $is_template = false) {
-        $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE is_template = :is_template";
+        $sql = "SELECT p.id, p.*, "
+                . "COUNT(CASE WHEN pe.type = 'day' THEN 1 END) AS days,"
+                . "COUNT(CASE WHEN pe.type = 'exercise' THEN 1 END) AS exercises "
+                . " FROM " . $this->getTableName() . " p LEFT JOIN " . $this->getTableName("workouts_plans_exercises") . " pe ON p.id = pe.plan "
+                . " WHERE is_template = :is_template ";
+        //$sql = "SELECT * FROM " . $this->getTableName() . "  WHERE is_template = :is_template";
 
         $bindings = [
             "is_template" => $is_template ? 1 : 0,
         ];
         if (!$is_template) {
-            $this->addSelectFilterForUser($sql, $bindings);
+            $this->addSelectFilterForUser($sql, $bindings, "p.");
         }
+
+        $sql .= " GROUP BY p.id ";
 
         if ($sorted && !is_null($sorted)) {
             $sql .= " ORDER BY {$sorted}";

@@ -943,7 +943,7 @@ var workoutPlansTable = new JSTable("#workouts_plans_table", {
             sortable: true
         },
         {
-            select: [1, 2],
+            select: [3, 4],
             sortable: false,
             searchable: false
         }
@@ -988,7 +988,7 @@ var workoutTemplateTable = new JSTable("#workouts_templates_table", {
             sortable: true
         },
         {
-            select: [1, 2],
+            select: [3, 4],
             sortable: false,
             searchable: false
         }

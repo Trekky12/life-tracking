@@ -101,7 +101,7 @@ class UserTest extends BaseTestCase {
     
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/workouts\/templates\/(?<hash>.*)\/view\/">' . preg_quote($data["name"]) . '<\/a><\/td>\s*<td><\/td>\s*<td><\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/workouts\/templates\/(?<hash>.*)\/view\/">' . preg_quote($data["name"]) . '<\/a><\/td>\s*<td>[0-9]*<\/td>\s*<td>[0-9]*<\/td>\s*<td><\/td>\s*<td><\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

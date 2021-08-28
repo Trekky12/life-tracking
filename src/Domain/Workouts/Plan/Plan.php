@@ -25,6 +25,9 @@ class Plan extends \App\Domain\DataObject {
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
+
+        $this->days = $this->exists('days', $data) ? filter_var($data['days'], FILTER_SANITIZE_STRING) : null;
+        $this->exercises = $this->exists('exercises', $data) ? filter_var($data['exercises'], FILTER_SANITIZE_STRING) : null;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
@@ -45,6 +48,15 @@ class Plan extends \App\Domain\DataObject {
             ["id" => self::$WORKOUTS_LEVEL_INTERMEDIATE, "name" => "WORKOUTS_LEVEL_INTERMEDIATE"],
             ["id" => self::$WORKOUTS_LEVEL_ADVANCED, "name" => "WORKOUTS_LEVEL_ADVANCED"]
         ];
+    }
+
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+
+        unset($temp["days"]);
+        unset($temp["exercises"]);
+
+        return $temp;
     }
 
 }

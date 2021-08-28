@@ -17,6 +17,8 @@
                 <thead>
                     <tr>
                         <th>{{lang["NAME"]}}</th>
+                        <th>{{ lang["WORKOUTS_DAYS"] }}</th>
+                        <th>{{ lang["WORKOUTS_EXERCISES"] }}</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -25,6 +27,8 @@
                     {% for plan in plans %}
                         <tr>
                             <td><a href="{{  url_for('workouts_template_view', {'plan' : plan.hash}) }}">{{plan.name|raw}}</a></td> 
+                            <td>{%if plan.days > 0 %}{{ plan.days }}{% endif %}</td> 
+                            <td>{%if plan.exercises > 0 %}{{ plan.exercises }}{% endif %}</td> 
                                 {% if user.isAdmin() %}
                                 <td><a href="{{  url_for('workouts_templates_edit', {'id' : plan.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
                                 <td><a href="#" data-url="{{  url_for('workouts_templates_delete', {'id' : plan.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
