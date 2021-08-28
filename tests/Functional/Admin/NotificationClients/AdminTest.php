@@ -138,7 +138,7 @@ class AdminTest extends BaseTestCase {
 
     protected function getElementsInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["user"]) . '<\/td>\s*<td>' . preg_quote($data["ip"]) . '<\/td>\s*<td>' . preg_quote($data["user_agent"]) . '<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_test) . '(?<id_edit>.*)"><span class="far fa-bell fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["user"]) . '<\/td>\s*<td>' . preg_quote($data["ip"]) . '<\/td>\s*<td>' . preg_quote($data["user_agent"]) . '<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_test) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match_all($re, $body, $matches, PREG_SET_ORDER);
 
         return $matches;

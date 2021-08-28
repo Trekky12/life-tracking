@@ -5,7 +5,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["SPLITBILL_GROUPS"]}}</h2> <a href="{{  url_for('splitbill_groups_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["SPLITBILL_GROUPS"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('splitbill_groups_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="splitbills_groups_table" class="table table-hover small">
                 <thead>
@@ -22,16 +26,16 @@
                         <tr>
                             <td><a href="{{  url_for('splitbill_bills', {'group' : group.hash}) }}">{{group.name|raw}}</a></td> 
                             <td data-currency="{{i18n.currency}}">{{balances[group.id].balance}}</td> 
-                            <td><a href="{{  url_for('splitbill_bills_recurring', {'group' : group.hash}) }}"><span class="fas fa-calendar-alt fa-lg"></span></a></td>
+                            <td><a href="{{  url_for('splitbill_bills_recurring', {'group' : group.hash}) }}">{{ fontawesome('fas fa-calendar-alt') }}</a></td>
                             <td>
                                 {% if group.user == user.id %}
-                                    <a href="{{  url_for('splitbill_groups_edit', {'id' : group.id}) }}"><span class="fas fa-edit fa-lg"></span></a>
-                                {% endif %}
+                                    <a href="{{  url_for('splitbill_groups_edit', {'id' : group.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    {% endif %}
                             </td>
                             <td>
                                 {% if group.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('splitbill_groups_delete', {'id' : group.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
-                                {% endif %}
+                                    <a href="#" data-url="{{  url_for('splitbill_groups_delete', {'id' : group.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+                                    {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

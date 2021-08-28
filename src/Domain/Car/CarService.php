@@ -26,11 +26,16 @@ class CarService extends Service {
     }
 
     public function index() {
-        $cars = $this->mapper->getAll('name');
+        $cars = $this->mapper->getUserItems('t.createdOn DESC, name');
+
         return new Payload(Payload::$RESULT_HTML, ["cars" => $cars]);
     }
 
     public function edit($entry_id) {
+        if ($this->isOwner($entry_id) === false) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
         $entry = $this->getEntry($entry_id);
         $users = $this->user_service->getAll();
 

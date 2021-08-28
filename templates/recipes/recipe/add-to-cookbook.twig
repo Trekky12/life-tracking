@@ -1,0 +1,40 @@
+{% extends "base.twig" %}
+
+{% set active = 'recipes' %}
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["RECIPE"]}} - {{ recipe.name|raw }}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('recipes_recipe_view', {'recipe': recipe.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>      
+        </div>
+        <div class="page-content">
+
+            <form class="form-horizontal" action="{{  url_for('recipes_cookbooks_add_recipe') }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                <input type="hidden" name="recipe" value="{{recipe.id}}">
+
+                <div class="form-group">
+                    <label for="cookbook">{{lang["RECIPES_COOKBOOK"]}}</label>
+                    <select class="form-control" id="cookbook" name="cookbook">
+                        {% for cookbook in cookbooks %}
+                            <option value="{{cookbook.id}}">{{cookbook.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

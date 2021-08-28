@@ -88,38 +88,12 @@
                         {{lang["WORKOUTS"]}}
                     </label>
                 </div>
-
-                <h3>{{lang["MAIL_SETTINGS"]}}</h3>
                 <div class="form-group">
-                    <label class="checkbox" for="checkboxMailsUser">
-                        <input name="mails_user" type="checkbox" value="1" id="checkboxMailsUser" {% if user.mails_user == 1 %}checked{% endif %}>
-                        {{lang["MAILS_USER"]}}
+                    <label class="checkbox" for="checkboxRecipesModule">
+                        <input name="module_recipes" type="checkbox" value="1" id="checkboxRecipesModule" {% if user.module_recipes == 1 %}checked{% endif %}>
+                        {{lang["RECIPES"]}}
                     </label>
                 </div>
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxMailsFinances">
-                        <input name="mails_finances" type="checkbox" value="1" id="checkboxMailsFinances" {% if user.mails_finances == 1 %}checked{% endif %}>
-                        {{lang["MAILS_FINANCES"]}}
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxMailsBoard">
-                        <input name="mails_board" type="checkbox" value="1" id="checkboxMailsBoard" {% if user.mails_board == 1 %}checked{% endif %}>
-                        {{lang["MAILS_BOARD"]}}
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxMailsBoardReminder">
-                        <input name="mails_board_reminder" type="checkbox" value="1" id="checkboxMailsBoardReminder" {% if user.mails_board_reminder == 1 %}checked{% endif %}>
-                        {{lang["MAILS_BOARD_REMINDER"]}}
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxMailsSplittedBills">
-                        <input name="mails_splitted_bills" type="checkbox" value="1" id="checkboxMailsSplittedBills" {% if user.mails_splitted_bills == 1 %}checked{% endif %}>
-                        {{lang["MAILS_SPLITTED_BILLS"]}}
-                    </label>
-                </div>    
 
                 <h3>{{lang["PWA_SETTINGS"]}}</h3>
                 <div class="form-group">

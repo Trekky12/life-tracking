@@ -41,7 +41,7 @@ $lang["VALUE"] = "Betrag";
 
 $lang["SAVE"] = "Speichern";
 $lang["CANCEL"] = "Abbrechen";
-$lang["INSERT"] = "Einfügen";
+$lang["INSERT"] = "Hinzufügen";
 $lang["DELETE"] = "Löschen";
 
 
@@ -72,6 +72,7 @@ $lang["MILEAGE"] = "Kilometerstand";
 $lang["MILEAGE_PER_YEAR"] = "km/Jahr";
 $lang["MILEAGE_TERM"] = "Laufzeit (Jahre)";
 $lang["MILEAGE_TRAVELLED"] = "gefahrene Kilometer";
+$lang["MILEAGE_START"] = "Start Kilometerstand";
 $lang["KM"] = "km";
 $lang["START_WITH_YEAR"] = "Berechnungsgrundlage 01.01.";
 $lang["START_WITH_FIRST_ENTRY"] = "Berechnungsgrundlage 1. Eintrag";
@@ -219,11 +220,6 @@ $lang["UNDO_ARCHIVE"] = "Soll die Archivierung für den Eintrag wirklich aufgeho
 $lang["OTHER_SETTINGS"] = "Sonstige Einstellungen";
 $lang["FORCE_PW_CHANGE"] = "Passwortänderung erzwingen";
 $lang["MAIL_SETTINGS"] = "Benachrichtigungsmails";
-$lang["MAILS_BOARD"] = "Hinzufügen zu Board/Karte";
-$lang["MAILS_BOARD_REMINDER"] = "Karten-Erinnerung";
-$lang["MAILS_USER"] = "Erstellen des Nutzers";
-$lang["MAILS_FINANCES"] = "monatliche Finanzstatistik";
-$lang["MAILS_SPLITTED_BILLS"] = "geteilte Ausgaben";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Dein Benutzeraccount bei %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "für dich wurde ein Benutzeraccount auf <a href='%s'>%s</a> erstellt.";
@@ -233,6 +229,7 @@ $lang["MAIL_FORCE_CHANGE_PASSWORD"] = "Nach dem ersten Anmelden musst du dein Pa
 
 $lang["MAIL_ADDED_TO_CARD"] = "Du wurdest zu einer Karte hinzugefügt";
 $lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</a> im Stapel %s zur Karte \"%s\" hinzugefügt.";
+$lang["NOTIFICATION_ADDED_TO_CARD"] = "du wurdest auf dem Board %s im Stapel %s zur Karte \"%s\" hinzugefügt.";
 
 $lang["MAIL_ADDED_TO_BOARD"] = "Du wurdest zu einem Board hinzugefügt";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%s'>%s</a> hinzugefügt.";
@@ -321,6 +318,15 @@ $lang["IDENTIFIER"] = "Identifikator";
 $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "interne Benachrichtigungen";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "benachrichtige beim Ausführen von wiederkehrenden Finanzeinträgen";
+$lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "benachrichtige beim Hinzufügen zu Karten bei Boards";
+
+$lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monatliche Finanzstatistik (am 1. des Monats um 06:00 Uhr)";
+$lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
+$lang["MAIL_CATEGORY_BOARDS_ADD"] = "benachrichtige beim Hinzufügen zu Boards";
+$lang["MAIL_CATEGORY_BOARDS_CARD_ADD"] = "benachrichtige beim Hinzufügen zu Karten bei Boards";
+$lang["MAIL_CATEGORY_BOARDS_CARD_DUE"] = "tägliche Erinnerung an fällige Karten (09:00 Uhr)";
+
+$lang["MAIL_NOTIFY_USER_CREATION"] = "Sende E-Mail mit Hinweis zur Benutzererstellung";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Überschriften";
@@ -388,6 +394,10 @@ $lang["PERSON_RECEIVES_BY_ME"] = "%s bekommt %s %s von mir";
 $lang["PERSON_OWES_TOTAL"] = "(schuldet insgesamt %s %s)";
 $lang["PERSON_RECEIVES_TOTAL"] = "(bekommt insgesamt %s %s)";
 
+$lang["SPEND_BY"] = "Anteil (%s)";
+$lang["PAID_BY"] = "Bezahlt (%s)";
+$lang["SPLITBILLY_PAID_SPEND_BY_PERSON"] = "von";
+
 $lang["TRIPS"] = "Reisen";
 $lang["ADD_EVENT"] = "Event hinzufügen";
 $lang["TRIPS_EVENT"] = "Event";
@@ -401,6 +411,7 @@ $lang["EVENT_TYPE_HOTEL"] = "Unterkunft";
 $lang["EVENT_TYPE_FLIGHT"] = "Flug";
 $lang["EVENT_TYPE_DRIVE"] = "Autofahrt";
 $lang["EVENT_TYPE_TRAINRIDE"] = "Zugfahrt";
+$lang["EVENT_TYPE_SHIP"] = "Schifffahrt";
 $lang["EVENT_TYPE_CARRENTAL"] = "Mietwagen";
 $lang["EVENT_TYPE_WAYPOINT"] = "Wegepunkt";
 
@@ -414,15 +425,20 @@ $lang["END_DATE"] = "Datum Ende";
 $lang["SEARCH_ADDRESS"] = "Suche Adresse";
 
 $lang["TRIPS_OVERVIEW"] = "Übersicht";
+$lang["TRIPS_PLANNED"] = "geplante Reisen";
+$lang["TRIPS_PAST"] = "vergangene Reisen";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "Schulden begleichen";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "Bezahler";
 $lang["SPLITBILLS_SETTLE_UP_RECEIVER"] = "Empfänger";
 
-$lang["SPLITBILLS_ONLY_PERSON"] = "nur %s";
-$lang["SPLITBILLS_BY_PERSON"] = "von %s";
+$lang["SPLITBILLS_ONLY_PERSON"] = "nur geschuldet von %s";
+$lang["SPLITBILLS_BY_PERSON"] = "komplett bezahlt von %s";
 $lang["SPLITBILLS_EQUALLY"] = "gleichmäßig";
+$lang["SPLITBILLS_EQUALLY_PAID"] = "jeder hat gleichviel gezahlt";
+$lang["SPLITBILLS_EQUALLY_SPEND"] = "jeder muss gleichviel zahlen";
 $lang["RECEIVED"] = "erhalten";
+$lang["SPLITBILLS_INDIVIDUAL"] = "individuell";
 
 $lang["CLONE"] = "Kopieren";
 
@@ -451,8 +467,20 @@ $lang["TIMESHEETS_COME_PROJECT_BASED"] = "Beginn";
 $lang["TIMESHEETS_LEAVE_DAY_BASED"] = "Gehen";
 $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "Ende";
 $lang["TIMESHEETS_EXPORT"] = "Export";
+$lang["EXPORT_WORD"] = "Word";
+$lang["EXPORT_EXCEL"] = "Excel";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "Tagesbasiert (anstatt Projektbasiert)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Zeiterfassungskategorien";
+$lang["TIMESHEETS_DEFAULT_VIEW"] = "Standardansicht";
+$lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "kompletter Zeitraum";
+$lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "aktueller Monat";
+$lang["TIMESHEETS_TIME"] = "Summe";
+$lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "Zeitberechnung anpassbar";
+$lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "Zeitumrechnungsrate";
+$lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
+$lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Zeit (sek.)";
+$lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "keine Anpassung der Zeit";
+$lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "nutze die Zeitumrechnungsrate des Projekts";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
@@ -496,8 +524,8 @@ $lang["DATAOBJECT_NOTIFICATIONS_NOTIFICATION"] = "Benachrichtigung";
 $lang["DATAOBJECT_SETTING"] = "Einstellung";
 $lang["DATAOBJECT_SPLITBILLS_BILL"] = "geteilte Ausgabe";
 $lang["DATAOBJECT_SPLITBILLS_GROUP"] = "geteilte Ausgabengruppe";
-$lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfasungsprojekt";
-$lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfasungseintrag";
+$lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfassungsprojekt";
+$lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfassungseintrag";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "Kategorie";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "Reise-Event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "Reise";
@@ -511,6 +539,10 @@ $lang["DATAOBJECT_WORKOUTS_MUSCLE"] = "Muskelgruppe";
 $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "Körperbereich";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "Trainingsplan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "Trainingseinheit";
+$lang["DATAOBJECT_RECIPES_COOKBOOK"] = "Kochbuch";
+$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
+$lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
+$lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -610,6 +642,9 @@ $lang["WORKOUTS_KM"] = "km";
 $lang["WORKOUTS_SET_ADD"] = "Satz hinzufügen";
 $lang["WORKOUTS_SET_REMOVE"] = "Satz entfernen";
 
+$lang["WORKOUTS_WEIGHT"] = "Gewicht";
+$lang["WORKOUTS_DISTANCE"] = "Distanz";
+
 $lang["LOAD_MORE"] = "Mehr laden";
 
 $lang["ALL"] = "alle";
@@ -634,6 +669,7 @@ $lang["WORKOUTS_ADD_SUPERSET"] = "Superset hinzufügen";
 
 $lang["WORKOUTS_SUPERSET"] = "Superset";
 $lang["WORKOUTS_DAYS"] = "Trainingstage";
+$lang["WORKOUTS_DAY"] = "Trainingstag";
 
 $lang["WORKOUTS_PLAN_CATEGORY_STRENGTH"] = "Stärke gewinnen";
 $lang["WORKOUTS_PLAN_CATEGORY_MUSCLE"] = "Muskelmasse aufbauen";
@@ -646,5 +682,37 @@ $lang["SAVE_IFTTT_URL"] = "IFTTT-URL speichern";
 $lang["DELETE_IFTTT_URL"] = "IFTTT-URL löschen";
 $lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] = "Web Push Nachrichten sind nicht verfügbar. Alternativ kann der IFTTT-Maker Channel verwendet werden. Hierzu die URL nachfolgend eintragen:";
 $lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "Web Push Nachrichten sind nicht verfügbar. Es wurde eine IFTTT-URL hinterlegt.";
-        
+
+$lang["HELP"] = "Hilfe";
+$lang["TAKE_IDENTITY"] = "Identität übernehmen";
+
+$lang["NO_OPTIONS"] = "Keine Auswahl verfügbar.";
+$lang["DIFFERENCE_CALCULATED"] = "Differenz (berechnet)";
+
+$lang["HIDE"] = "Ausblenden";
+$lang["SHOW"] = "Anzeigen";
+
+$lang["RECIPE"] = "Rezept";
+$lang["RECIPES"] = "Rezepte";
+$lang["RECIPES_COOKBOOKS"] = "Kochbücher";
+$lang["RECIPES_COOKBOOK"] = "Kochbuch";
+$lang["RECIPES_INGREDIENTS"] = "Zutaten";
+$lang["RECIPES_INGREDIENT"] = "Zutat";
+$lang["RECIPES_MEALPLANS"] = "Speisepläne";
+$lang["RECIPES_MEALPLAN"] = "Speiseplan";
+
+$lang["RECIPES_PREPARATION_TIME"] = "Vorbereitungszeit";
+$lang["RECIPES_WAITING_TIME"] = "Wartezeit";
+$lang["RECIPES_SERVINGS"] = "Portion(en)";
+
+$lang["RECIPES_STEPS"] = "Schritte";
+$lang["RECIPES_AMOUNT"] = "Menge";
+$lang["RECIPES_ADD_INGREDIENT"] = "Zutat hinzufügen";
+$lang["RECIPES_ADD_STEP"] = "Schritt hinzufügen";
+$lang["RECIPES_MINUTES"] = "min.";
+$lang["RECIPES_ADD_TO_COOKBOOK"] = "Zum Kochbuch hinzufügen";
+$lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Aus Kochbuch entfernen";
+
+$lang["ADD_NOTICE"] = "Notiz hinzufügen";
+
 return $lang;

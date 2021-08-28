@@ -62,5 +62,5 @@ class NotificationsMapper extends \App\Domain\Mapper {
         }
         return 0;
     }
-
+    
 }

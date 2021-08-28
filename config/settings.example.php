@@ -54,6 +54,7 @@ return [
                 'trips_list' => 'EEEE dd. MMMM yyyy',
                 'month_name' => 'MMMM',
                 'month_name_full' => 'dd. MMMM y',
+                'mealplan_list' => 'EEEE dd. MMMM yyyy'
             ],
             'dateformatExcel' => [
                 'date' => 'dd.mm.yyyy',
@@ -97,13 +98,16 @@ return [
         'secret' => 'my_hash_secret',
         // push notifications settings
         'push' => [
-            'publicKey' => '',
-            'privateKey' => '',
+            'publicKey' => 'BHTdRzN90bnvOXiBtxHe1HaOL12EPW2m7sPa9q2EyDnsTjxe8ANhX07St_c1ZfOBlKDwsNrlWeZWBmAWr8hPJio',
+            'privateKey' => '9bjcsaIxn1Zaf19N_oxKRBqYQfb_GnAubsd2gAnp4wI',
             'subject' => '',
             'TTL' => 3600,
             'urgency' => 'normal',
         ],
         'mapbox_token' => '',
+        'timesheets' => [
+            'key' => ''
+        ],
         'modules' => [
             "location" => [
                 "url" => "/location/",

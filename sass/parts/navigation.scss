@@ -27,7 +27,7 @@ body.mobile-navigation-open{
     align-items:center;
     height: $header_height;
 
-    i{
+    i, svg{
         color: $color_navigation_text;
 
         &:hover, &:focus{
@@ -46,12 +46,16 @@ body.mobile-navigation-open{
         margin-left:0;
     }
 
-    a.active i{
-        color: $color_navigation_text_hover;
+    a.active {
+        i, svg{
+            color: $color_navigation_text_hover;
+        }
     }
 
-    .disabled i{
-        color: $color_border-input;
+    .disabled {
+        i, svg{ 
+            color: $color_border-input;
+        }
     }
 
     @media screen and (min-width: $size_mobile_navigation){
@@ -69,7 +73,7 @@ body.mobile-navigation-open{
     &.size-8,
     &.size-9,
     &.size-10{
-        i{
+        i, svg{
             @include font-size(1.6);
             margin-left:1.1rem;
             @media screen and (min-width: $size_mini){
@@ -83,7 +87,7 @@ body.mobile-navigation-open{
     }
 
     &.size-11{
-        i{
+        i, svg{
             @include font-size(1.6);
             margin-left:1.2rem;
             @media screen and (min-width: $size_mini){
@@ -121,7 +125,7 @@ body.mobile-navigation-open{
         display:block;
         position:absolute;
         height:4px;
-        width:100%;
+        width:25px;
         background:$color_navigation_text;
         opacity:1;
         left:0;
@@ -254,6 +258,8 @@ body.mobile-navigation-open{
             justify-content: center;
 
             overflow-y:visible;
+
+            align-items: center;
         }
     }
 
@@ -274,7 +280,7 @@ body.mobile-navigation-open{
                 @include font-size(1.2);
             }
             @media screen and (min-width: $size_desktop){
-                @include font-size(1.3);
+                @include font-size(1.25);
             }
 
             a{

@@ -13,26 +13,26 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["TIMESHEETS_OVERVIEW"]}}</button></a>
+                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
     </div>
 
     <div class="grid content-xsmall">
         <div class="card positive {% if entry is not null %}inactive{% endif %}">
-            <div class="card-content">
+            <div class="card-content timesheet">
                 <div class="card-header">
                     <h3><a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">{% if project.is_day_based == 1 %}{{lang["TIMESHEETS_COME_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}{% endif %}</a></h3>
                 </div>
-                <a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}"><i class="fas fa-sign-in-alt" aria-hidden="true"></i></a>
+                <a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">{{ fontawesome('fas fa-sign-in-alt') }}</a>
             </div>
         </div>      
         <div class="card negative {% if entry is null %}inactive{% endif %}">
-            <div class="card-content">
+            <div class="card-content timesheet">
                 <div class="card-header">
                     <h3><a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">{% if project.is_day_based == 1 %}{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}{% endif %}</a></h3>
                 </div>
-                <a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
+                <a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">{{ fontawesome('fas fa-sign-out-alt') }}</a>
             </div>
         </div>          
     </div>

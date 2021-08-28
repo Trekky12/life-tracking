@@ -10,15 +10,15 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <meta name="theme-color" content="#1565c0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
 
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/open-sans.css" />
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/font-awesome5.min.css" />
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/normalize.min.css" />
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/flatpickr.min.css" />
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20201004" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210814" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -26,9 +26,18 @@
         <link rel="manifest" href="{{baseURL}}/static/assets/favicon/site.webmanifest?v=20181102">
         <link rel="mask-icon" href="{{baseURL}}/static/assets/favicon/safari-pinned-tab.svg?v=20180727" color="#5bbad5">
         <link rel="shortcut icon" href="{{baseURL}}/favicon.ico?v=20180727">
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/iphone5_splash.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/iphone6_splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/iphoneplus_splash.png" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/iphonex_splash.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/iphonexr_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/iphonexsmax_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/ipad_splash.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/ipadpro1_splash.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/ipadpro3_splash.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+        <link href="{{baseURL}}/static/assets/favicon/splashscreens/ipadpro2_splash.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="msapplication-config" content="{{baseURL}}/static/assets/favicon/browserconfig.xml?v=20180727">
-        <meta name="theme-color" content="#ffffff">
         <meta name="timestamp" content="{{ 'now'|date('U') }}">
     </head>
 
@@ -37,6 +46,12 @@
             <header id="masthead" class="site-header">
                 <div class="header-inner">
                     {% include 'main/navigation.twig' %}
+                </div>
+            </header>
+        {% elseif active == 'help' %}
+            <header id="masthead" class="site-header">
+                <div class="header-inner">
+                    <h2 class="page-title">{{ lang["PAGE_TITLE"] }} - {{ lang["HELP"] }}</h2>
                 </div>
             </header>
         {% endif %}
@@ -60,6 +75,10 @@
                 <span class="alert-message">
                     <p>{{ lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] }}</p>
                 </span>
+            </div>
+            <div id="loading-overlay" class="hidden">
+                <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+                <span class="hidden">Loading...</span>
             </div>
             {% block body %}
             {% endblock %}
@@ -108,6 +127,7 @@
                 'notifications_clients_categories': '{{url_for('notifications_clients_categories')}}',
                 'notifications_clients_set_category': '{{url_for('notifications_clients_set_category')}}',
                 'notifications_clients_set_category_user': '{{url_for('notifications_clients_set_category_user')}}',
+                'mail_notifications_set_category_user': '{{url_for('mail_notifications_set_category_user')}}',
                 'notifications_clients_manage': '{{url_for('notifications_clients_manage')}}',
                 'notifications_get': '{{url_for('notifications_get')}}',
                 'activities_get': '{{url_for('activities_get')}}',
@@ -153,6 +173,14 @@
                 'workouts_exercises_get': '{{url_for('workouts_exercises_get')}}',
                 'workouts_exercises_selected_muscles': '{{url_for('workouts_exercises_selected_muscles')}}',
                 'workouts_exercises_data': '{{url_for('workouts_exercises_data')}}',
+                'usersearch': '{{url_for('usersearch')}}',
+                'ingredients_get': '{{url_for('ingredients_get')}}',
+                'recipes_get': '{{url_for('recipes_get')}}',
+                'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
+                {% if not isMealplanEdit is null %}
+                'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
+                'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}'
+                {% endif %}
             };
             var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
             var i18n = {{i18n|json_encode()|raw}};
@@ -168,6 +196,7 @@
                 'update': '{{lang["UPDATE"]}}',
                 'labels': '{{lang["LABELS"]}}',
                 'categories': '{{lang["CATEGORIES"]}}',
+                'no_options': '{{lang["NO_OPTIONS"]}}',
                 'undo_archive': '{{lang["UNDO_ARCHIVE"]}}',
                 'really_close_page': '{{lang["REALLY_CLOSE_PAGE"]}}',
                 'nothing_found': '{{lang["NOTHING_FOUND"]}}',
@@ -209,7 +238,11 @@
                 "trips_route_saved_successfully": '{{lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"]}}',
                 "trips_route_saved_error": '{{lang["TRIPS_ROUTE_SAVED_ERROR"]}}',
                 "trips_waypoint_save": '{{lang["TRIPS_WAYPOINT_SAVE"]}}',
-                "workouts_superset": '{{lang["WORKOUTS_SUPERSET"]}}'
+                "workouts_superset": '{{lang["WORKOUTS_SUPERSET"]}}',
+                "workouts_set": '{{lang["WORKOUTS_SET"]}}',
+                "show": '{{lang["SHOW"]}}',
+                "hide": '{{lang["HIDE"]}}',
+                "ingredient": '{{lang["RECIPES_INGREDIENT"]}}'
             };
             var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
@@ -217,17 +250,17 @@
         <script src="{{baseURL}}/static/assets/js/flatpickr.min.js" type="text/javascript"></script>
         <script src="{{baseURL}}/static/assets/js/i18n/{{i18n.template}}.js" type="text/javascript"></script>
         <script src="{{baseURL}}/static/assets/js/moment-with-locales.min.js" type="text/javascript"></script>  
-        <script src="{{baseURL}}/static/assets/js/Chart.min.js" type="text/javascript"></script>  
+        <script src="{{baseURL}}/static/assets/js/chart.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20200609" type="text/javascript"></script>  
 
-        <script src="{{baseURL}}/static/js/main.js?ver=20200606" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/main.js?ver=20210620" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20200812" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/js/tables.js?ver=20200627" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/tables.js?ver=20210715" type="text/javascript"></script>
 
 
         {% if not user is null %}
-        <script src="{{baseURL}}/static/js/app.js?ver=20201228" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/app.js?ver=20210619" type="text/javascript"></script>
         {% endif %}
 
         {% block javascript %}

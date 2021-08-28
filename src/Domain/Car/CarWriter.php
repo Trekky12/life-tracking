@@ -10,12 +10,18 @@ use App\Application\Payload\Payload;
 
 class CarWriter extends ObjectActivityWriter {
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, CarMapper $mapper) {
+    private $car_service;
+
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, CarMapper $mapper, CarService $car_service) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
+        $this->car_service = $car_service;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
+        if ($this->car_service->isOwner($id) === false) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
         return parent::save($id, $data, $additionalData);
     }
 

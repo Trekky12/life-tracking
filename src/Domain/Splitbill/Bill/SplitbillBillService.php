@@ -11,6 +11,7 @@ use App\Domain\User\UserService;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\Utility;
 
 class SplitbillBillService extends Service {
 
@@ -72,6 +73,43 @@ class SplitbillBillService extends Service {
 
         $paymethods = $this->paymethod_service->getAllfromUsers($group_users);
 
+        list($totalBalance, $myTotalBalance) = $this->calculateBalance($group->id);
+
+        $isSettleUp = false;
+        if ($type == 'settleup' || (!is_null($entry) && $entry->settleup == 1)) {
+            $isSettleUp = true;
+        }
+        
+        $paid_by = !is_null($entry) ? $entry->paid_by : "";
+        $spend_by = !is_null($entry) ? $entry->spend_by : "";
+        
+        // Prefill on new settle up
+        $settleUpPrefill = false;
+        if ($type == 'settleup' && is_null($entry) && $myTotalBalance["balance"] < 0) {
+            
+            $settleUpPrefill = true;
+
+            $totalValue = -1 * $myTotalBalance["balance"];
+
+            $me = $this->current_user->getUser()->id;
+
+            $balance = [];
+            $balance[$me]["paid"] = $totalValue;
+            $balance[$me]["spend"] = 0;
+            foreach ($totalBalance as $user => $tBalance) {
+                $balance[$user]["paid"] = 0;
+                $balance[$user]["spend"] = $tBalance["owe"];
+                
+                $spend_by = $user;
+            }
+            
+            if(count($totalBalance) > 1){
+                $spend_by = "individual";
+            }
+            
+            $paid_by = $me;
+        }
+
         $response_data = [
             'entry' => $entry,
             'group' => $group,
@@ -81,7 +119,11 @@ class SplitbillBillService extends Service {
             'totalValue' => $totalValue,
             'type' => $type,
             'paymethods' => $paymethods,
-            'totalValueForeign' => $totalValueForeign
+            'totalValueForeign' => $totalValueForeign,
+            'isSettleUp' => $isSettleUp,
+            'paid_by' => $paid_by,
+            'spend_by' => $spend_by,
+            'settleUpPrefill' => $settleUpPrefill
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
@@ -166,8 +208,8 @@ class SplitbillBillService extends Service {
             }
 
             if ($bill->user == $user) {
-                $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-                $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+                $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
+                $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
             }
 
             $rendered_data[] = $row;

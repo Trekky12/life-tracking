@@ -21,7 +21,9 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use App\Application\TwigExtensions\FlashExtension;
 use App\Application\TwigExtensions\CsrfExtension;
+use App\Application\TwigExtensions\FontAwesomeExtension;
 use App\Domain\Main\Utility\Utility;
+use App\Application\Error\CSRFException;
 
 return [
     Settings::class => function () {
@@ -40,13 +42,15 @@ return [
         $twig_settings = $settings->all()['view'];
 
         $twig = Twig::create($twig_settings['template_path'], [
-//'cache' => $settings[ 'cache_path' ]
+                    //'cache' => $settings[ 'cache_path' ]
                     'cache' => false
         ]);
 
         $twig->addExtension(new FlashExtension($flash));
 
         $twig->addExtension(new CsrfExtension($csrf));
+        
+        $twig->addExtension(new FontAwesomeExtension());
 
 
         /**
@@ -100,12 +104,12 @@ return [
 
         // Add User Entry to Logger
         $logger->pushProcessor(function ($record) use($current_user) {
-                    if (!is_null($current_user->getUser())) {
-                        $record['extra']['user'] = $current_user->getUser()->login;
-                    }
+            if (!is_null($current_user->getUser())) {
+                $record['extra']['user'] = $current_user->getUser()->login;
+            }
 
-                    return $record;
-                });
+            return $record;
+        });
 
         $extraFields = [
             'url' => 'REQUEST_URI',
@@ -151,7 +155,8 @@ return [
      */
     CSRF::class => function (ContainerInterface $container) {
         $responseFactory = $container->get(App::class)->getResponseFactory();
-        if (PHP_SAPI === 'cli') {
+
+        if (PHP_SAPI === 'cli' && (strpos($_SERVER['argv'][0], 'phpunit') === false)) {
             $storage = [];
             $guard = new \Slim\Csrf\Guard($responseFactory, 'csrf', $storage);
         } else {
@@ -160,21 +165,23 @@ return [
         $guard->setStorageLimit(1000);
         $guard->setFailureHandler(function (Request $request, RequestHandler $handler) use($container): ResponseInterface {
 
-                    $routeContext = RouteContext::fromRequest($request);
-                    $route = $routeContext->getRoute();
-                    $allowed_routes = $container->get(Settings::class)->all()['CSRF']['exclude'];
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $allowed_routes = $container->get(Settings::class)->all()['CSRF']['exclude'];
 
-                    if ((!is_null($route) && (in_array($route->getName(), $allowed_routes) || (Utility::startsWith($route->getPattern(), "/api"))))) {
-                        return $handler->handle($request);
-                    }
+            if ((!is_null($route) && (in_array($route->getName(), $allowed_routes) || (Utility::startsWith($route->getPattern(), "/api"))))) {
+                return $handler->handle($request);
+            }
 
-                    $logger = $container->get(LoggerInterface::class);
-                    $logger->critical("Failed CSRF check");
+            $data = $request->getParsedBody();
 
-                    $response = new Response();
-                    $response->getBody()->write('Failed CSRF check!');
-                    return $response->withStatus(400)->withHeader('Content-type', 'text/plain');
-                });
+            $logger = $container->get(LoggerInterface::class);
+            $logger->critical("Failed CSRF check", $data);
+            
+            $ex = new CSRFException();
+            $ex->setData($data);
+            throw $ex;
+        });
         return $guard;
     },
     RouteParser::class => function (ContainerInterface $container) {

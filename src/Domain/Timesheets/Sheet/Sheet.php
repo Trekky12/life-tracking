@@ -19,7 +19,8 @@ class Sheet extends \App\Domain\DataObject {
 
         $this->start = $this->exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_STRING) : null;
         $this->end = $this->exists('end', $data) ? filter_var($data['end'], FILTER_SANITIZE_STRING) : null;
-        $this->diff = $this->exists('diff', $data) ? filter_var($data['diff'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->duration = $this->exists('duration', $data) ? filter_var($data['duration'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->duration_modified = $this->exists('duration_modified', $data) ? filter_var($data['duration_modified'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
 
@@ -31,7 +32,7 @@ class Sheet extends \App\Domain\DataObject {
         $this->end_lng = $this->exists('end_lng', $data) ? filter_var($data['end_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->end_acc = $this->exists('end_acc', $data) ? filter_var($data['end_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-        
+
         $this->categories = $this->exists('categories', $data) ? filter_var($data['categories'], FILTER_SANITIZE_STRING) : null;
 
         /* if (empty($this->name) && $this->settleup == 0) {
@@ -49,7 +50,7 @@ class Sheet extends \App\Domain\DataObject {
         return !is_null($this->end) ? $end : $fallback;
     }
 
-    public function getDiff($fallback = null) {
+    public function calculateDuration($fallback = null) {
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
 
@@ -125,6 +126,18 @@ class Sheet extends \App\Domain\DataObject {
         unset($temp["categories"]);
 
         return $temp;
+    }
+
+    public function getDurationModification($project_conversion_rate = 1) {
+        if ($this->duration == $this->duration_modified) {
+            return 0;
+        }
+
+        if ($this->duration * $project_conversion_rate == $this->duration_modified) {
+            return 1;
+        }
+
+        return 2;
     }
 
 }

@@ -17,12 +17,20 @@ class SaveJSONResponder extends JSONResponder {
         $response = parent::respond($payload);
 
         $data = ["status" => "success"];
+
+        $result = $payload->getResult();
+        if (is_object($result) && isset($result->id)) {
+            $data["id"] = $result->id;
+        } elseif (is_array($result) && array_key_exists("id", $result)) {
+            $data["id"] = $result["id"];
+        }
+
         switch ($payload->getStatus()) {
             case Payload::$STATUS_PARSING_ERRORS:
                 $data = ["status" => "error"];
                 break;
             case Payload::$STATUS_ERROR:
-                $data = ["status" => "error", "error" => $payload->getResult()];
+                $data = ["status" => "error", "error" => $result];
                 break;
         }
 

@@ -27,8 +27,8 @@ class NotificationClientsService extends Service {
         return $this->mapper->getClientsByCategory($category);
     }
 
-    public function getClientsByCategoryAndUser($category, $user) {
-        return $this->mapper->getClientsByCategoryAndUser($category, $user);
+    public function getClientsByCategoryAndUser($category, $user, $object_id) {
+        return $this->mapper->getClientsByCategoryAndUser($category, $user, $object_id);
     }
     
     public function getClientByUserAndType($type) {
@@ -84,20 +84,28 @@ class NotificationClientsService extends Service {
         $result = ["data" => [], "status" => "success"];
         $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
         $result["data"] = $this->mapper->getCategoriesFromEndpoint($endpoint);
-
+        
         return new Payload(Payload::$RESULT_JSON, $result);
     }
 
     public function setCategoryOfEndpoint($data) {
         $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
-        $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $cat = array_key_exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_STRING) : "";
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+        
+        $category = intval($cat);
+        $object_id = null;
+        if(strpos($cat, "_")){
+            $cat_and_id = explode("_", $cat);
+            $category = intval($cat_and_id[0]);
+            $object_id = intval($cat_and_id[1]);
+        }
 
         $client = $this->mapper->getClientByEndpoint($endpoint);
         if ($type == 1) {
-            $this->mapper->addCategory($client->id, $category);
+            $this->mapper->addCategory($client->id, $category, $object_id);
         } else {
-            $this->mapper->deleteCategory($client->id, $category);
+            $this->mapper->deleteCategory($client->id, $category, $object_id);
         }
         $result = ["status" => "success"];
         return new Payload(Payload::$RESULT_JSON, $result);

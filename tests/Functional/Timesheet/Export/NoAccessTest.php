@@ -16,11 +16,27 @@ class NoAccessTest extends TimesheetTestBase {
         $this->logout();
     }
 
+    public function testGetExportPage() {
+        $response = $this->request('GET', $this->getURISheetsExportView($this->TEST_PROJECT_HASH));
+
+        $body = (string) $response->getBody();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+    }
+
     /**
      * Test Exporting 
      */
-    public function testTimesheetsSheetsExport() {
-        $response = $this->request('GET', $this->getURISheetsExport($this->TEST_PROJECT_HASH));
+    public function testTimesheetsSheetsExportExcel() {
+        $response = $this->request('GET', $this->getURISheetsExport($this->TEST_PROJECT_HASH), ["type" => "excel"]);
+
+        $body = (string) $response->getBody();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+    }
+
+    public function testTimesheetsSheetsExportWord() {
+        $response = $this->request('GET', $this->getURISheetsExport($this->TEST_PROJECT_HASH), ["type" => "word"]);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

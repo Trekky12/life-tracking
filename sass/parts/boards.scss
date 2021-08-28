@@ -20,7 +20,7 @@
     opacity:0.7;
     filter:alpha(opacity=70);
     z-index:1000;
-    i, span{
+    i, span, svg{
         position:absolute;
         top:50%;
         left:50%;
@@ -30,7 +30,7 @@
         margin-bottom:0;
     }
 
-    i{
+    i, svg{
         margin-top: -20px;
         margin-left: -20px;
         width: 40px;
@@ -51,7 +51,6 @@
 
     @media screen and (max-width: $size_mobile) {   
         margin-right: 10%;
-
     }
 
     /* Stack */
@@ -94,6 +93,8 @@
         display:flex;
         justify-content: space-between;
 
+        -webkit-tap-highlight-color: transparent;
+
         @media screen and (max-width: $size_mobile) {
             word-break: break-all;
         }
@@ -133,6 +134,8 @@
 
         @include font-size(1.4);
 
+        -webkit-tap-highlight-color: transparent;
+
         &:hover{
             cursor:pointer;
         }
@@ -151,16 +154,8 @@
         .card-date{
             background: $color_background-screen;
             color: $color_text-main;
-            &::before{
-                content: "\f073";
-                font-family: "Font Awesome 5 Free";
-                font-weight: 900;
-                display:inline-block;
-                font-style: normal;
-                font-variant: normal;
-                text-rendering: auto;
-                -webkit-font-smoothing: antialiased;
 
+            svg{
                 transition: all 250ms;
                 @include font-size(1);
                 margin-right: 5px;
@@ -211,6 +206,16 @@
         border: 1px dashed $color_text-main;
     }
 
+    .handle{
+        display: block;
+        margin-left: 10px;
+        @include font-size(2);
+        cursor: pointer;
+        @media screen and (min-width: $size_mobile) {
+            display: none;
+        }
+    }
+
 }
 
 /* inspired by https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
@@ -234,16 +239,11 @@
         cursor: pointer;
     }
 
-    &::before{
-        content: "\f053";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
+    .chevron-left{
         display:inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        font-size: inherit;
+    }
+    .chevron-right{
+        display:none;
     }
 }
 
@@ -264,8 +264,13 @@
     &.mobile-visible {
         width: 200px;
 
-        #sidebar-toggle::before{
-            content: "\f054";
+        #sidebar-toggle{
+            .chevron-left{
+                display:none;
+            }
+            .chevron-right{
+                display:inline-block;
+            }
         }
     }
 
@@ -293,13 +298,23 @@
         // click on toggle: hide on desktop
         &.desktop-hidden {
             width: 0px;
-            #sidebar-toggle::before{
-                content: "\f053";
+            #sidebar-toggle{                
+                .chevron-left{
+                    display:inline-block;
+                }
+                .chevron-right{
+                    display:none;
+                }
             }
         }
     }
-    #sidebar-toggle::before{
-        content: "\f054";
+    #sidebar-toggle{
+        .chevron-left{
+            display:none;
+        }
+        .chevron-right{
+            display:inline-block;
+        }
     }
 
 
@@ -389,6 +404,7 @@
     margin: 1rem 1rem 0 1rem;
     color: #a1a1a1!important;
     display:block;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover{
         color: $color_text-main!important;
@@ -468,8 +484,9 @@
     align-items: center;
     @include font-size(2);
 
-    i{
-        padding:0 0 0 10px;
+    i, svg{
+        cursor: pointer;
+        margin-left: 10px;
     }
     &, a{
         color: $color_background-body;

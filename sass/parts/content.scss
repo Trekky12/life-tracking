@@ -9,20 +9,28 @@
     overflow: hidden;
     background-color:$color_blue;
     margin-bottom: 1rem;
-    
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    
+
+    &.light{
+        background-color: $color_blue_light;
+    }
+
     &, a{
         color: $color_background-body;
     }
 
-    h1, h2{
+    h1, h2, h3{
         margin:0;
         margin-right: 1rem;
     }
     
+    h3{
+        font-weight: 400;
+    }
+
     button{
         padding: 0.2rem 1rem!important;
     }
@@ -46,24 +54,46 @@
 }
 
 
-.page-header .buttons{
-    display:flex;
-    flex-direction: column;
-
-    a{
-        margin-left:1rem;
-        margin-bottom:1rem;
-        &:last-child{
-            margin-bottom:0;
-        }
+.page-header {
+    flex-direction:column;
+    @media screen and (min-width: $size_tablet) {
+        flex-direction:row;
     }
-
-    @media screen and (min-width: $size_mobile_navigation) {
+    .buttons{
+        display:flex;
         flex-direction: row;
+        margin-top: 1rem;
+
+        flex-wrap: wrap;
+        justify-content: center;
 
         a{
-            margin-bottom:0;
+            margin-left:0.5rem;
+            margin-bottom:0.5rem;
+            &:last-child{
+                margin-bottom:0;
+            }
         }
-    }
 
+        button{
+            @include font-size(1.2);
+            padding-left: 0.5rem!important;
+            padding-right: 0.5rem!important;
+        }
+
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            margin-left:1rem;
+            margin-top: 0;
+            a{
+                margin-bottom:0;
+            }
+            button{
+                @include font-size(1.4);
+                padding-left: 1rem!important;
+                padding-right: 1rem!important;
+            }
+        }
+
+    }
 }

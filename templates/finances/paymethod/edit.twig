@@ -5,23 +5,27 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["FINANCES_PAYMETHOD"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["FINANCES_PAYMETHOD"]}}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('finances_paymethod') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>  
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" id="financeForm" action="{{  url_for('finances_paymethod_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                
+
                 {% if not entry is null %}
                     <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
                 {% endif %}
 
-                
+
                 <div class="form-group">
                     <label for="inputName">{{lang["NAME"]}}</label>
                     <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="checkbox" for="checkboxDefault">
                         <input name="is_default" type="checkbox" id="checkboxDefault" value="1" {% if entry is not null and entry.is_default == 1 %}checked{% endif %}>

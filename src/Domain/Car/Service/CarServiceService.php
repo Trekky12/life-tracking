@@ -10,6 +10,7 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Utility\SessionUtility;
 use App\Domain\Car\CarService;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\Utility;
 
 class CarServiceService extends Service {
 
@@ -49,16 +50,16 @@ class CarServiceService extends Service {
 
     private function renderFuelTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[9] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[9]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[10] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[9] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[9]]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
+            $row[10] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
         }
         return $table;
     }
 
     private function renderServiceTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[8] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[8]]) . '"><span class="fas fa-edit fa-lg"></span></a>';
-            $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>';
+            $row[8] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[8]]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
+            $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
         }
         return $table;
     }

@@ -4,7 +4,11 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CAR_REFUEL"]}}</h2> <a href="{{  url_for('car_service_edit') }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["CAR_REFUEL"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('car_service_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="fuel_table" class="table table-hover small">
                 <thead>
@@ -42,10 +46,14 @@
             </table>
         </div>
     </div>
-                
-                
+
+
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CAR_SERVICE"]}}</h2> <a href="{{  url_for('car_service_edit')}}?type=service"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["CAR_SERVICE"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('car_service_edit')}}?type=service"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="service_table" class="table table-hover small">
                 <thead>

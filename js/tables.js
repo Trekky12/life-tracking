@@ -808,12 +808,14 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
             sort: "asc"
         },
         {
-            select: [1, 2, 3],
+            select: [1, 2, 3, 4],
             sortable: false,
             searchable: false
         }
     ]
 });
+
+const timesheetCategories = document.querySelector("#selected_categories");
 
 var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     perPage: 20,
@@ -836,7 +838,8 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     ajax: jsObject.timesheets_table,
     ajaxParams: {
         "from": jsObject.dateFrom,
-        "to": jsObject.dateTo
+        "to": jsObject.dateTo,
+        "categories": timesheetCategories ? timesheetCategories.value : []
     }
 });
 
@@ -940,7 +943,7 @@ var workoutPlansTable = new JSTable("#workouts_plans_table", {
             sortable: true
         },
         {
-            select: [1, 2],
+            select: [3, 4],
             sortable: false,
             searchable: false
         }
@@ -983,6 +986,57 @@ var workoutTemplateTable = new JSTable("#workouts_templates_table", {
             select: 0,
             sort: "asc",
             sortable: true
+        },
+        {
+            select: [3, 4],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var recipesCookbooksTable = new JSTable("#recipes_cookbooks_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var recipesIngredientsTable = new JSTable("#recipes_ingredients_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var recipesMealplanssTable = new JSTable("#recipes_mealplans_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
         },
         {
             select: [1, 2],

@@ -49,8 +49,11 @@ function getExercises(reset = false) {
 
                 let totalCount = parseInt(data.count);
                 if (totalCount > 0) {
-                    if (start + count < totalCount) {
+                    // there are more data available
+                    if ((start + count) < totalCount) {
                         loadMoreExercises.classList.remove("hidden");
+                    }else{
+                        loadMoreExercises.classList.add("hidden");
                     }
                     exercisesList.insertAdjacentHTML('beforeend', data["data"]);
                 } else {
@@ -59,6 +62,7 @@ function getExercises(reset = false) {
                     exercisesList.innerHTML = '';
                     
                     exercisesList.appendChild(nothing_found);
+                    loadMoreExercises.classList.add("hidden");
                 }
             }
         }).catch(function (error) {

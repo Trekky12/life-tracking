@@ -123,7 +123,7 @@ function drawMarkers(markers, hideClusters = false) {
             accuracyString = lang.accuracy + ' : ' + marker.acc + ' m<br/>';
         }
         var addressString = '<a href="#" data-lat="' + marker.lat + '" data-lng="' + marker.lng + '" class="btn-get-address">' + lang.address + '</a>';
-        var stepsString = marker.steps > 0 ? lang.steps+': '+ marker.steps + '<br/>': '';
+        var stepsString = marker.steps > 0 ? lang.steps + ': ' + marker.steps + '<br/>' : '';
         var removeString = '<br/><br/><a href="#" data-url="' + jsObject.delete_marker_url + marker.id + '" class="btn-delete">' + lang.delete_text + '</a>';
 
         let popup = dateString + accuracyString + stepsString + addressString;
@@ -162,11 +162,11 @@ function drawMarkers(markers, hideClusters = false) {
             my_marker.on('mouseout', function (e) {
                 removeCircleLayer();
             });
-            
+
             my_marker.on('popupopen', function (e) {
                 addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
             });
-            
+
             my_marker.on('popupclose', function (e) {
                 removeCircleLayer();
             });
@@ -226,11 +226,12 @@ function drawMarkers(markers, hideClusters = false) {
     controlLayer = L.control.layers(null, null, {
         collapsed: false
     });
-    controlLayer.addOverlay(clusterToggleLayer, "<span id='toggleClustering'></span>");
-    controlLayer.addOverlay(layerLocation, "<span id='layerLocation'></span>");
-    controlLayer.addOverlay(layerFinances, "<span id='layerFinances'></span>");
-    controlLayer.addOverlay(layerCars, "<span id='layerCars'></span>");
-    controlLayer.addOverlay(layerDirections, "<span id='layerDirections'></span>");
+
+    controlLayer.addOverlay(clusterToggleLayer, "<span id='toggleClustering'>" + document.getElementById('iconClustering').innerHTML + "</span>");
+    controlLayer.addOverlay(layerLocation, "<span id='layerLocation'>" + document.getElementById('iconLocation').innerHTML + "</span>");
+    controlLayer.addOverlay(layerFinances, "<span id='layerFinances'>" + document.getElementById('iconFinances').innerHTML + "</span>");
+    controlLayer.addOverlay(layerCars, "<span id='layerCars'>" + document.getElementById('iconCars').innerHTML + "</span>");
+    controlLayer.addOverlay(layerDirections, "<span id='layerDirections'>" + document.getElementById('iconDirections').innerHTML + "</span>");
     controlLayer.addTo(mymap);
 
     // empty circle layer
@@ -264,7 +265,7 @@ mymap.on('overlayremove', function (eventLayer) {
 });
 mymap.on('overlayadd', function (eventLayer) {
     if (eventLayer.layer === layerLocation && !mymap.hasLayer(layerDirections)) {
-        controlLayer.addOverlay(layerDirections, "<span id='layerDirections'></span>");
+        controlLayer.addOverlay(layerDirections, "<span id='layerDirections'>" + document.getElementById('iconDirections').innerHTML + "</span>");
     }
     /**
      * Switch Sub-Layers
@@ -313,15 +314,15 @@ function addCircleLayer(lat, lng, radius, color) {
         weight: 5,
         color: color
     };
-    
+
     let circle = L.circle([lat, lng], circle_options);
-    
+
     let poly_options = {
         weight: 10,
         color: color
     };
     let poly = L.polygon([[lat, lng]], poly_options);
-    
+
     circleLayer.addLayer(circle);
     circleLayer.addLayer(poly);
 }

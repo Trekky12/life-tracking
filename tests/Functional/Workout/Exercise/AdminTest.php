@@ -57,6 +57,7 @@ class AdminTest extends BaseTestCase {
         ];
 
         $filename = 'exercise_image.png';
+        $filename_thumb = 'exercise_image-thumbnail.png';
 
         $files = [
             [
@@ -66,11 +67,11 @@ class AdminTest extends BaseTestCase {
             ],
             [
                 'name' => 'thumbnail',
-                'contents' => __DIR__ . DIRECTORY_SEPARATOR . $filename,
-                'filename' => $filename
+                'contents' => __DIR__ . DIRECTORY_SEPARATOR . $filename_thumb,
+                'filename' => $filename_thumb
             ]
         ];
-
+        
         $response = $this->request('POST', $this->uri_save, $data, [], $files);
 
         $this->assertEquals(301, $response->getStatusCode());
@@ -195,7 +196,7 @@ class AdminTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

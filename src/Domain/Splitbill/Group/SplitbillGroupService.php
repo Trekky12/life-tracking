@@ -21,21 +21,12 @@ class SplitbillGroupService extends Service {
         $this->user_service = $user_service;
     }
 
-    public function getUserGroups() {
-        $user = $this->current_user->getUser()->id;
-        return $this->mapper->getElementsOfUser($user);
-    }
-
     public function index() {
         $groups = $this->mapper->getUserItems('t.createdOn DESC, name');
 
         $balances = $this->bill_mapper->getBalances();
 
         return new Payload(Payload::$RESULT_HTML, ['groups' => $groups, 'balances' => $balances]);
-    }
-
-    public function getGroups() {
-        return $this->mapper->getAll();
     }
 
     public function edit($entry_id) {

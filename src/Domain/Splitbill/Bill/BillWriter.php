@@ -42,6 +42,10 @@ class BillWriter extends BaseBillWriter {
     public function save($id, $data, $additionalData = null): Payload {
         $payload = parent::save($id, $data, $additionalData);
         $bill = $payload->getResult();
+                
+        if($payload->getStatus() == Payload::$NO_ACCESS){
+            return $payload;
+        }
         
         $group = $this->group_service->getFromHash($additionalData["group"]);
         $users = $this->user_service->getAll();

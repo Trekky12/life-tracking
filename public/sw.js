@@ -9,52 +9,106 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20201031';
+const cacheName = 'pwa-life-tracking-v20210814';
 const staticAssets = [
     '/',
+    '/pwa',
     '/static/style.css',
+    '/static/js/activities.js',
     '/static/js/app.js',
     '/static/js/boards.js',
     '/static/js/budget.js',
     '/static/js/car_service.js',
     '/static/js/crawler.js',
+    '/static/js/crawler_saved.js',
     '/static/js/datefilter.js',
+    '/static/js/exercises.js',
+    '/static/js/frontpage_edit.js',
     '/static/js/geolocation.js',
     '/static/js/location.js',
+    '/static/js/logfile.js',
+    '/static/js/mail-notifications.js',
     '/static/js/main.js',
     '/static/js/navigation.js',
+    '/static/js/notifications.js',
+    '/static/js/recipes.js',
+    '/static/js/recipes_recipe.js',
     '/static/js/splitbills.js',
     '/static/js/tables.js',
+    '/static/js/timesheets.js',
     '/static/js/trips.js',
-    '/static/assets/js/Chart.min.js',
+    '/static/js/trips_edit.js',
+    '/static/js/user-select.js',
+    '/static/js/widgets.js',
+    '/static/js/workouts-stats.js',
+    '/static/js/workouts.js',
+    '/static/js/workouts_session.js',
+    '/static/assets/js/Control.Geocoder.min.js',
+    '/static/assets/js/L.Control.Locate.min.js',
+    '/static/assets/js/Leaflet.fullscreen.min.js',
     '/static/assets/js/Sortable.min.js',
-    '/static/assets/js/jstable.min.js',
+    '/static/assets/js/autoComplete.min.js',
+    '/static/assets/js/chart.min.js',
+    '/static/assets/js/choices.min.js',
     '/static/assets/js/flatpickr.min.js',
+    '/static/assets/js/jstable.min.js',
+    '/static/assets/js/leaflet-easyPrint.min.js',
+    '/static/assets/js/leaflet-routing-machine.min.js',
+    '/static/assets/js/leaflet.curve.js',
+    '/static/assets/js/leaflet.extra-markers.min.js',
     '/static/assets/js/leaflet.js',
+    '/static/assets/js/leaflet.markercluster.js',
     '/static/assets/js/moment-with-locales.min.js',
-    '/static/assets/js/mustache.min.js',
     '/static/assets/js/nouislider.min.js',
     '/static/assets/js/randomColor.min.js',
     '/static/assets/js/selectr.min.js',
     '/static/assets/js/simplemde.min.js',
+    '/static/assets/js/i18n/de.js',
+    '/static/assets/js/i18n/en.js',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.eot',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.svg',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.ttf',
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
-    '/static/assets/fonts/font-awesome/fa-brands-400.woff2',
-    '/static/assets/fonts/font-awesome/fa-regular-400.woff2',
-    '/static/assets/fonts/font-awesome/fa-solid-900.woff2',
     '/static/assets/favicon/android-chrome-192x192.png',
+    '/static/assets/favicon/android-chrome-256x256.png',
+    '/static/assets/favicon/apple-touch-icon.png',
+    '/static/assets/favicon/browserconfig.xml',
+    '/static/assets/favicon/favicon-16x16.png',
+    '/static/assets/favicon/favicon-32x32.png',
+    '/static/assets/favicon/mstile-150x150.png',
+    '/static/assets/favicon/safari-pinned-tab.svg',
+    '/static/assets/css/L.Control.Locate.min.css',
+    '/static/assets/css/MarkerCluster.css',
+    '/static/assets/css/autoComplete.min.css',
+    '/static/assets/css/choices.min.css',
     '/static/assets/css/flatpickr.min.css',
-    '/static/assets/css/font-awesome5.min.css',
+    '/static/assets/css/jstable.css',
+    '/static/assets/css/leaflet-routing-machine.min.css',
+    '/static/assets/css/leaflet.extra-markers.min.css',
+    '/static/assets/css/leaflet.fullscreen.min.css',
     '/static/assets/css/leaflet.min.css',
     '/static/assets/css/normalize.min.css',
     '/static/assets/css/nouislider.min.css',
     '/static/assets/css/open-sans.css',
     '/static/assets/css/selectr.min.css',
     '/static/assets/css/simplemde.min.css',
-    '/static/assets/css/jstable.css',
-    '/static/assets/js/i18n/de.js',
+    '/static/assets/css/weather-icons.min.css',
 ];
 
 const NETWORK_TIMEOUT = 5000;
@@ -62,11 +116,11 @@ const NETWORK_TIMEOUT = 5000;
 
 self.addEventListener('install', event => {
     console.log('Attempting to install service worker and cache static assets');
-    
+
     event.waitUntil(
         caches.open(cacheName).then(cache => {
             return cache.addAll(staticAssets);
-        }).then(function(){
+        }).then(function () {
             self.skipWaiting();
         })
     );
@@ -83,9 +137,12 @@ self.addEventListener('activate', event => {
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
                         return caches.delete(cacheName);
                     }
+                }),
+                caches.open(cacheName).then(cache => {
+                    return cache.addAll(staticAssets);
                 })
             );
-        }).then(function(){
+        }).then(function () {
             self.clients.claim()
         })
     );
@@ -93,7 +150,7 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
     const req = event.request;
-    
+
     if (!req.url.includes(self.location.hostname)) {
         //console.log('WORKER: fetch event ignored.', event.request.url);
         return;
@@ -106,6 +163,10 @@ self.addEventListener('fetch', event => {
 
     if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
         return event.respondWith(cacheFirst(req));
+//    } else if (/.*(\/pwa)/.test(req.url)) {
+//        // load new version into cache
+//        _fetchAndCache(req.clone());
+//        return event.respondWith(cacheFirst(req));
     } else {
         //console.log('network first', req.url);
         //self.clients.matchAll().then(function (clientList) {
@@ -167,7 +228,7 @@ function _notifyCache(req) {
 /**
  * @see https://serviceworke.rs/strategy-network-or-cache_service-worker_doc.html
  */
-function _fromCache(request) {
+function _fromCache(request) {    
     return caches.open(cacheName).then(function (cache) {
         return cache.match(request).then(function (cachedResponse) {
             return cachedResponse || Promise.reject('no-match');
@@ -253,12 +314,12 @@ function _fetchAndCache(request) {
  * @returns {Promise}
  */
 function _sendMessageToClients(message) {
-    
+
     let data = {
         type: message,
         time: new Date().toString()
     };
-    
+
     return self.clients.matchAll().then(function (clientList) {
         clientList.forEach(function (client) {
             client.postMessage(data);
@@ -330,7 +391,7 @@ self.addEventListener('notificationclick', function (event) {
 
     // close current notification
     event.notification.close();
-    
+
     // notify all clients that the notification was clicked
     event.waitUntil(_sendMessageToClients(2));
 
@@ -338,23 +399,23 @@ self.addEventListener('notificationclick', function (event) {
     // @see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#2_using_the_notifications_api
     // @see https://github.com/google-developer-training/pwa-training-labs/blob/master/push-notification-lab/
     event.waitUntil(
-        clients.matchAll().then(clis => {
-            
-            // get visible or focused client and open the path
-            const client = clis.find(c => {
-                //return c.visibilityState === 'visible';
-                return c.focused === true && c.visibilityState === 'visible';
-            });
+            clients.matchAll().then(clis => {
 
-            if (client !== undefined) {
-                client.navigate(data.path);
-                client.focus();
-            } else {
-                // there are no visible windows. Open one.
-                clients.openWindow(data.path);
-            }
-        })
-    );
+        // get visible or focused client and open the path
+        const client = clis.find(c => {
+            //return c.visibilityState === 'visible';
+            return c.focused === true && c.visibilityState === 'visible';
+        });
+
+        if (client !== undefined) {
+            client.navigate(data.path);
+            client.focus();
+        } else {
+            // there are no visible windows. Open one.
+            clients.openWindow(data.path);
+        }
+    })
+            );
 
     //@see https://developers.google.com/web/fundamentals/push-notifications/common-notification-patterns#focus_an_existing_window
 //    event.waitUntil(clients.matchAll({
@@ -381,7 +442,7 @@ self.addEventListener('notificationclick', function (event) {
 
 });
 
-self.addEventListener('notificationclose', function(event) {
+self.addEventListener('notificationclose', function (event) {
     const dismissedNotification = event.notification;
     console.log(dismissedNotification);
 

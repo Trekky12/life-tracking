@@ -2,10 +2,23 @@
 
 {% set active = 'trips' %}
 
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js"></script>
+    <script src="{{baseURL}}/static/js/user-select.js?ver=20210124"></script>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css" />
+{% endblock %}
+
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TRIPS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["TRIPS"]}}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('trips') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" action="{{  url_for('trips_save', {'id' : entry.id}) }}" method="POST">
@@ -29,14 +42,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="users">{{lang["USERS"]}}</label>
-                    <select class="form-control" id="users" name="users[]" multiple="true">
-                        {% for user in users %} 
-                            {% if user.module_trips == 1%}
-                                <option value="{{user.id}}" {% if (not entry is null and user.id in entry.getUsers()) %}selected{% endif %}>{{user.login}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
+                    {% include "main/user-select.twig" with {'entry':entry, 'module': 'trips'} only %}
                 </div>
 
                 <div class="form-group btn">

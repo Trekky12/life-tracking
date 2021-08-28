@@ -70,7 +70,7 @@ class UserMapper extends \App\Domain\Mapper {
         }
         return $stmt->rowCount();
     }
-    
+
     public function update_secret($id, $secret) {
         $sql = "UPDATE " . $this->getTableName() . " SET secret=:secret WHERE id=:id";
         $stmt = $this->db->prepare($sql);
@@ -84,6 +84,36 @@ class UserMapper extends \App\Domain\Mapper {
         if ($stmt->rowCount() === 0) {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'), 404);
         }
+    }
+
+    public function getUsersWithModule($query = "", $module = null, $users = []) {
+        $sql = "SELECT id, login FROM " . $this->getTableName() . " "
+                . "WHERE login like :login ";
+
+        $bindings = [
+            'login' => '%' . $query . '%'
+        ];
+
+        if (!empty($module) && in_array($module, ['location', 'finance', 'cars', 'boards', 'crawlers', 'splitbills', 'trips', 'timesheets', 'workouts'])) {
+            $sql .= " AND module_{$module} = 1";
+        }
+
+        $user_bindings = [];
+        if (!empty($users)) {
+
+            foreach ($users as $idx => $car) {
+                $user_bindings[":user_" . $idx] = $car;
+            }
+            $sql .= " AND id NOT IN (" . implode(',', array_keys($user_bindings)) . ")";
+        }
+
+        $sql .= " ORDER BY login";
+
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(array_merge($bindings, $user_bindings));
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 }

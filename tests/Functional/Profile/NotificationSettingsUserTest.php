@@ -8,7 +8,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
 
     protected $uri_overview = "/notifications/manage/";
     protected $uri_set_category_user = "/notifications/setCategoryUser";
-    protected $TEST_USER_CATEGORY = 1;
+    protected $TEST_USER_CATEGORY = "2_1";
 
     protected function setUp(): void {
         $this->login("admin", "admin");
@@ -58,7 +58,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("user_categories", $input_fields);
         $this->assertArrayHasKey($this->TEST_USER_CATEGORY, $input_fields["user_categories"]);
-        $this->assertSame(1, $input_fields["user_categories"][$this->TEST_USER_CATEGORY]);
+        $this->assertEquals(1, $input_fields["user_categories"][$this->TEST_USER_CATEGORY]);
     }
 
     public function testSetUserCategoryBack() {

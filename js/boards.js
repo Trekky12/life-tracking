@@ -5,6 +5,8 @@
  });
  */
 
+let openedDialogData = null;
+
 const selector = new Selectr("select#card-label-list", {
     searchable: false,
     customClass: 'selectr-boards',
@@ -27,13 +29,13 @@ var simplemde = null;
 document.addEventListener('keydown', function (event) {
     if (event.keyCode === 27) {
         if (isVisible(stackModal)) {
-            setDialogOpen(stackModal, false);
+            closeDialog(stackModal);
         }
         if (isVisible(labelModal)) {
-            setDialogOpen(labelModal, false);
+            closeDialog(labelModal);
         }
         if (isVisible(cardModal)) {
-            setDialogOpen(cardModal, false);
+            closeDialog(cardModal);
         }
     }
 });
@@ -73,13 +75,13 @@ stackHeaders.forEach(function (item, idx) {
                 stackModal.querySelector('input[name="name"]').value = data.entry.name;
                 stackModal.querySelector('input[name="position"]').value = data.entry.position;
 
-                var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'><i class='fas fa-archive' aria-hidden='true'></i></a> \n\
-                                    <a href='#' data-url='" + jsObject.stack_delete + data.entry.id + "' class='btn-delete' data-type='stack'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
+                                    <a href='#' data-url='" + jsObject.stack_delete + data.entry.id + "' class='btn-delete' data-type='stack'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
                 stackModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
                 document.getElementById('stack-add-btn').value = lang.update;
-                setDialogOpen(stackModal, true);
+                openDialog(stackModal);
             }
         }).then(function () {
             document.getElementById('loading-overlay').classList.add('hidden');
@@ -92,7 +94,7 @@ stackHeaders.forEach(function (item, idx) {
 
 document.getElementById("create-stack").addEventListener("click", function (event) {
     event.preventDefault();
-    setDialogOpen(stackModal, true);
+    openDialog(stackModal);
 });
 
 stackModal.querySelector("form").addEventListener('submit', function (e) {
@@ -101,7 +103,7 @@ stackModal.querySelector("form").addEventListener('submit', function (e) {
 });
 
 document.getElementById("stack-close-btn").addEventListener('click', function (e) {
-    setDialogOpen(stackModal, false);
+    closeDialog(stackModal);
 });
 
 
@@ -116,7 +118,7 @@ const labelModal = document.getElementById("label-modal");
 
 document.getElementById("create-label").addEventListener("click", function (event) {
     event.preventDefault();
-    setDialogOpen(labelModal, true);
+    openDialog(labelModal);
 });
 
 labelModal.querySelector("form").addEventListener('submit', function (e) {
@@ -125,7 +127,7 @@ labelModal.querySelector("form").addEventListener('submit', function (e) {
 });
 
 document.getElementById("label-close-btn").addEventListener('click', function (e) {
-    setDialogOpen(labelModal, false);
+    closeDialog(labelModal);
 });
 
 let labels = document.querySelectorAll('a.edit-label');
@@ -150,13 +152,13 @@ labels.forEach(function (item, idx) {
                 labelModal.querySelector('input[name="text_color"]').value = data.entry.text_color;
                 labelModal.querySelector('input[name="text_color"]').parentElement.style.backgroundColor = data.entry.text_color;
 
-                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-type='label'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-type='label'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
                 labelModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
                 document.getElementById('label-add-btn').value = lang.update;
 
-                setDialogOpen(labelModal, true);
+                openDialog(labelModal);
 
             }
         }).then(function () {
@@ -182,7 +184,7 @@ create_card_link.forEach(function (item, idx) {
         event.preventDefault();
         var stack_id = this.dataset.stack;
         cardModal.querySelector('input[name="stack"]').value = stack_id;
-        setDialogOpen(cardModal, true);
+        openDialog(cardModal);
     });
 });
 
@@ -203,7 +205,7 @@ cardModal.addEventListener('keypress', function (event) {
 });
 
 document.getElementById("card-close-btn").addEventListener('click', function (e) {
-    setDialogOpen(cardModal, false);
+    closeDialog(cardModal);
 });
 
 
@@ -301,7 +303,7 @@ function loadAndOpenCard(card) {
                 let user_id = parseInt(avatar.dataset.user);
                 var option = usersSelect.querySelector("option[value='" + user_id + "']");
 
-                if (data.entry.users.indexOf(user_id) !== -1) {
+                if (typeof data.entry.users !== 'undefined' && data.entry.users.indexOf(user_id) !== -1) {
                     avatar.classList.add('selected');
                     option.selected = true;
                 } else {
@@ -317,13 +319,13 @@ function loadAndOpenCard(card) {
             selector.setValue(data.entry.labels.map(String));
 
 
-            var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'><i class='fas fa-archive' aria-hidden='true'></i></a> \n\
-                                    <a href='#' data-url='" + jsObject.card_delete + data.entry.id + "' class='btn-delete' data-type='card'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+            var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + data.entry.id + "' data-archive='" + data.entry.archive + "' class='btn-archive'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
+                                    <a href='#' data-url='" + jsObject.card_delete + data.entry.id + "' class='btn-delete' data-type='card'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
             cardModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
             document.getElementById('card-add-btn').value = lang.update;
-            setDialogOpen(cardModal, true);
+            openDialog(cardModal);
         } else {
             cleanURL();
         }
@@ -413,119 +415,126 @@ if (res !== null && res.length > 1) {
 }
 
 
-function setDialogOpen(element, state) {
-    if (state) {
+function openDialog(element) {
+    openedDialogData = formToJSON(element.querySelector('form'));
 
-        freeze();
+    freeze();
 
-        element.style.display = 'block';
+    element.style.display = 'block';
 
-        if (!isMobile()) {
-            element.querySelector('input[type="text"]').focus();
+    if (!isMobile()) {
+        element.querySelector('input[type="text"]').focus();
+    }
+
+
+    if (element === cardModal) {
+        // init simplemde
+        var textarea = cardModal.querySelector('textarea[name="description"]');
+        simplemde = new SimpleMDE({
+            element: textarea,
+            autosave: {
+                enabled: false
+            },
+            forceSync: true,
+            spellChecker: false,
+            promptURLs: true,
+            status: false,
+            styleSelectedText: isMobile() ? false : true,
+            minHeight: '50px'
+
+        });
+        if (textarea.value !== '') {
+            simplemde.togglePreview();
         }
+    }
+}
+function closeDialog(element) {
 
+    let new_data = formToJSON(element.querySelector('form'));
 
-        if (element === cardModal) {
-            // init simplemde
-            var textarea = cardModal.querySelector('textarea[name="description"]');
-            simplemde = new SimpleMDE({
-                element: textarea,
-                autosave: {
-                    enabled: false
-                },
-                forceSync: true,
-                spellChecker: false,
-                promptURLs: true,
-                status: false,
-                styleSelectedText: isMobile() ? false : true,
-                minHeight: '50px'
+    let confirm_text = lang.really_close;
 
-            });
-            if (textarea.value !== '') {
-                simplemde.togglePreview();
-            }
-        }
+    if (element === stackModal) {
+        confirm_text = lang.really_close_stack;
+    }
+    if (element === cardModal) {
+        confirm_text = lang.really_close_card;
+    }
+    if (element === labelModal) {
+        confirm_text = lang.really_close_label;
+    }
 
-    } else {
-        let confirm_text = lang.really_close;
-
-        if (element === stackModal) {
-            confirm_text = lang.really_close_stack;
-        }
-        if (element === cardModal) {
-            confirm_text = lang.really_close_card;
-        }
-        if (element === labelModal) {
-            confirm_text = lang.really_close_label;
-        }
-
+    if (JSON.stringify(openedDialogData) !== JSON.stringify(new_data)) {
+        console.log("test");
         if (!confirm(confirm_text)) {
             return false;
         }
-
-        unfreeze();
-
-        element.style.display = 'none';
-
-        // for labels
-        if (element === labelModal) {
-            let colorPickers = element.querySelectorAll('.color-wrapper');
-            colorPickers.forEach(function (item, idx) {
-                item.style.backgroundColor = 'black';
-            });
-        }
-
-        // for cards
-        if (element === cardModal) {
-
-            if (simplemde) {
-                simplemde.toTextArea();
-                simplemde = null;
-            }
-
-            let siblings = cardModal.querySelectorAll('.show-sibling');
-            siblings.forEach(function (sibling, idx) {
-                sibling.classList.remove('hidden');
-            });
-            let hiddens = cardModal.querySelectorAll('.hidden-field');
-            hiddens.forEach(function (hidden, idx) {
-                hidden.classList.add('hidden');
-            });
-
-            cardModal.querySelector('textarea[name="description"]').style.height = "auto";
-
-            cardModal.querySelector('#createdBy').innerHTML = "";
-            cardModal.querySelector('#createdOn').innerHTML = "";
-            cardModal.querySelector('#changedBy').innerHTML = "";
-            cardModal.querySelector('#changedOn').innerHTML = "";
-
-            let cardDates = cardModal.querySelectorAll('.form-group.card-dates');
-            cardDates.forEach(function (cardDate, idx) {
-                cardDate.classList.add('hidden');
-            });
-
-            cardModal.querySelector('select[name="labels[]"]').value = "";
-
-            cardModal.querySelector('select[name="users[]"]').value = "";
-
-            let avatars = cardModal.querySelectorAll('.avatar-small, .avatar-small');
-            avatars.forEach(function (avatar, idx) {
-                avatar.classList.remove('selected');
-            });
-
-            cleanURL();
-
-        }
-
-        // general
-        document.getElementById('stack-add-btn').value = lang.add;
-        document.getElementById('card-add-btn').value = lang.add;
-        document.getElementById('label-add-btn').value = lang.add;
-
-        element.querySelector('form').reset();
-        element.querySelector('input[type="hidden"].reset-field').value = "";
-        element.querySelector(".edit-bar").innerHTML = "";
     }
+
+    unfreeze();
+
+    element.style.display = 'none';
+
+    // for labels
+    if (element === labelModal) {
+        let colorPickers = element.querySelectorAll('.color-wrapper');
+        colorPickers.forEach(function (item, idx) {
+            item.style.backgroundColor = 'black';
+        });
+    }
+
+    // for cards
+    if (element === cardModal) {
+
+        if (simplemde) {
+            simplemde.toTextArea();
+            simplemde = null;
+        }
+
+        let siblings = cardModal.querySelectorAll('.show-sibling');
+        siblings.forEach(function (sibling, idx) {
+            sibling.classList.remove('hidden');
+        });
+        let hiddens = cardModal.querySelectorAll('.hidden-field');
+        hiddens.forEach(function (hidden, idx) {
+            hidden.classList.add('hidden');
+        });
+
+        cardModal.querySelector('textarea[name="description"]').style.height = "auto";
+
+        cardModal.querySelector('#createdBy').innerHTML = "";
+        cardModal.querySelector('#createdOn').innerHTML = "";
+        cardModal.querySelector('#changedBy').innerHTML = "";
+        cardModal.querySelector('#changedOn').innerHTML = "";
+
+        let cardDates = cardModal.querySelectorAll('.form-group.card-dates');
+        cardDates.forEach(function (cardDate, idx) {
+            cardDate.classList.add('hidden');
+        });
+
+        cardModal.querySelector('select[name="labels[]"]').value = "";
+
+        cardModal.querySelector('select[name="users[]"]').value = "";
+
+        let avatars = cardModal.querySelectorAll('.avatar-small, .avatar-small');
+        avatars.forEach(function (avatar, idx) {
+            avatar.classList.remove('selected');
+        });
+
+        cleanURL();
+
+    }
+
+    // general
+    document.getElementById('stack-add-btn').value = lang.add;
+    document.getElementById('card-add-btn').value = lang.add;
+    document.getElementById('label-add-btn').value = lang.add;
+
+    element.querySelector('form').reset();
+    element.querySelector('input[type="hidden"].reset-field').value = "";
+    element.querySelector(".edit-bar").innerHTML = "";
+
+    openedDialogData = null;
 }
 
 
@@ -771,7 +780,7 @@ var sortable = new Sortable(stacks, {
         name: "stacks",
     },
     draggable: ".stack",
-    handle: ".stack-header",
+    handle: isMobile() ? ".handle" : ".stack-header",
     dataIdAttr: 'data-stack',
     filter: '.stack-dummy',
     onEnd: function (evt) {
@@ -805,6 +814,7 @@ movableCards.forEach(function (card) {
             name: "cards"
         },
         draggable: ".board-card",
+        handle: isMobile() ? ".handle" : ".board-card",
         dataIdAttr: 'data-card',
         ghostClass: 'card-placeholder',
         onUpdate: function (evt) {

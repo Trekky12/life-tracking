@@ -1,43 +1,17 @@
 .workout-selection{
     margin-bottom:2rem;
 
-    .row{
-        height: 100%;
+    h2{
+        margin: 1rem 0;
+        @include font-size(1.6);
+    }
+
+    .exercise{
         display:flex;
         flex-direction: column;
 
         @media screen and (min-width: $size_mobile) {
             flex-direction: row;
-            max-height: 100vh;
-        }
-    }
-    .col{
-        h2{
-            margin: 1rem 0;
-            @include font-size(1.6);
-        }
-        @media screen and (min-width: $size_mobile) {
-            width: 50%;
-        }
-        .content{
-            overflow: auto;
-            max-height: 500px;
-
-            @media screen and (min-width: $size_mobile) {
-                max-height: calc(100% - 80px);
-            }
-        }
-        &.selected-exercises .content{
-            @media screen and (min-width: $size_mobile) {
-                max-height: calc(100% - 95px);
-            }
-        }
-    }
-
-
-    .exercise{
-        @media screen and (min-width: $size_mobile) {
-            display:flex;
         }
 
         padding: 1rem;
@@ -49,6 +23,7 @@
 
         .thumbnail{
             flex-basis: 20%;
+            order: 3;
 
             img{
                 margin-left: 10px;
@@ -59,14 +34,21 @@
 
             display:flex;
             justify-content: flex-end;
+            order: 1;
 
             @media screen and (min-width: $size_mobile) {
-                margin-top: 2.8rem;
+                //margin-top: 2.8rem;
                 margin-right: 1rem;
+                margin-left: 1rem;
+
+                order: 4;
             }
 
             .minus, .plus, .handle{
                 cursor:pointer;
+                &:hover{
+                    color: $color_blue;
+                }
             }
 
             .handle{
@@ -77,6 +59,7 @@
         .exercise-content{
             flex-basis: 100%;
             margin-bottom: 1rem;
+            order: 2;
 
             .bodypart{
                 @include font-size(1.2);
@@ -84,6 +67,7 @@
             .title{
                 @include font-size(1.6);
                 margin: 0;
+                margin-bottom: 0.5rem;
             }
 
 
@@ -110,6 +94,10 @@
                 input{
                     padding: 0.2rem;
                     @include font-size(1.2);
+
+                    &[type="number"]{
+                        max-width: 50px;
+                    }
                 }
             }
 
@@ -126,14 +114,17 @@
 
         &.selected {
             display:flex;
-            flex-direction: row-reverse;
+            flex-direction: column;
             justify-content: space-between;
+            @media screen and (min-width: $size_mobile) {
+                flex-direction: row;
+            }
 
             .thumbnail{
                 display:none;
                 @media screen and (min-width: $size_mobile) {
                     display:block;
-                    flex-basis: 10%;
+                    flex-basis: 15%;
                 }
                 img{
                     margin-right: 10px;
@@ -141,7 +132,7 @@
                 }
             }
             .exercise-content{
-                flex-basis: 90%;
+                flex-basis: 85%;
             }
             .instructions, .sets, .notices{
                 display:block;
@@ -151,16 +142,14 @@
                 .headline{
                     display:block;
 
-                    &:before {
-                        content: "\f078";
-                        font-family: "Font Awesome 5 Free";
-                        font-weight: 900;
+                    span.angle-down {
                         display:inline-block;
-                        font-style: normal;
-                        font-variant: normal;
-                        text-rendering: auto;
-                        -webkit-font-smoothing: antialiased;
-                        font-size: inherit;
+                    }
+                    span.angle-up{
+                        display:none;
+                    }
+
+                    svg{
                         transition: all 250ms;
                         @include font-size(1.4);
                         color: $color_text-main;
@@ -174,8 +163,11 @@
                         display:block;
                     }
 
-                    .headline:before{
-                        content: "\f077";
+                    span.angle-down {
+                        display:none;
+                    }
+                    span.angle-up{
+                        display:inline-block;
                     }
                 }
             }
@@ -201,6 +193,16 @@
         }
     }
 
+    .exercise-session{
+        .thumbnail{
+            display:none;
+
+            @media screen and (min-width: $size_mobile) {
+                display:block;
+            }
+        }
+    }
+
     .workout_day_split, .workout_superset{
 
         padding: 1rem;
@@ -208,10 +210,10 @@
         border-radius: 5px;
         margin: 0.5rem;
 
-        @media screen and (min-width: $size_mobile) {
-            display:flex;
-            justify-content: space-between;
-        }
+        //@media screen and (min-width: $size_mobile) {
+        display:flex;
+        justify-content: space-between;
+        //}
 
         .icons{
 
@@ -293,6 +295,7 @@
 #setCount{
     padding: 0.2rem;
     @include font-size(1.6);
+    max-width: 50px;
 }
 
 #addExerciseToSession{
@@ -327,5 +330,59 @@
     }
     .workout_superset .exercises{
         width: 100%;
+    }
+}
+
+#workoutExerciseSelection {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 10px 10px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "selected_exercises_title"
+        "selected_exercises"
+        "available_exercises_title"
+        "available_exercises";
+
+    @media screen and (min-width: $size_mobile) {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "selected_exercises_title available_exercises_title"
+            "selected_exercises available_exercises";
+    }
+
+    .selected_exercises_title { 
+        grid-area: selected_exercises_title; 
+    }
+
+    .selected_exercises { 
+        grid-area: selected_exercises; 
+
+    }
+
+    .available_exercises_title { 
+        grid-area: available_exercises_title; 
+    }
+
+    .available_exercises { 
+        grid-area: available_exercises; 
+
+        min-height: 500px;
+        .content{
+            overflow: auto;
+            max-height: calc(500px - 40px);
+
+            @media screen and (min-width: $size_mobile) {
+                max-height: calc(100% - 40px);
+            }
+        }
+    }
+}
+
+body.workouts.sortable-select{
+    .exercise.selected, .exercise-session{
+        .bodypart, .instructions, .notices, .sets, .buttons, .view-notices{
+            display: none;
+        }
     }
 }

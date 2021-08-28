@@ -206,6 +206,7 @@ class TripEventService extends Service {
             "FLIGHT",
             "DRIVE",
             "TRAINRIDE",
+            "SHIP",
             "CARRENTAL",
             "WAYPOINT"
         ];

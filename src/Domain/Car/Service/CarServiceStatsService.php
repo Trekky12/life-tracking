@@ -59,7 +59,7 @@ class CarServiceStatsService extends Service {
         // Get total distance
         $totalMileages = $this->mapper->getTotalMileage();
         $totalMileagesWithStartDate = $this->mapper->getTotalMileage(true);
-
+                
         $table = [];
 
         // Get Calculation type
@@ -75,10 +75,13 @@ class CarServiceStatsService extends Service {
                     $table[$car_id] = array();
                 }
 
+                // Start Date
                 if (intval($calculation_type) === 0) {
                     $mindate = !is_null($cars[$car_id]->mileage_start_date) ? $cars[$car_id]->mileage_start_date : $min["date"];
+                    // First Entry
                 } elseif (intval($calculation_type) === 1) {
                     $mindate = $min["date"];
+                    // 01.01.
                 } else {
                     $date = \DateTime::createFromFormat("Y-m-d", $min["date"]);
                     $date->modify('first day of january ' . $date->format('Y'));
@@ -88,7 +91,7 @@ class CarServiceStatsService extends Service {
                 /**
                  * Table Data
                  */
-                $last_mileage = $min["mileage"];
+                $last_mileage = $cars[$car_id]->mileage_start;
                 $diff = 0;
                 do {
                     $miledata = $this->mapper->sumMileageInterval($car_id, $mindate);

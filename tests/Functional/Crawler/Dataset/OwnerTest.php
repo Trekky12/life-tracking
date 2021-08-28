@@ -118,9 +118,9 @@ class OwnerTest extends CrawlerTestBase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td><span class="save_crawler_dataset " data-id="([0-9]*)"><\/span><\/td>\s*<td>(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td><a href="' . str_replace('/', "\/", $data["data"]["link"]) . '" target="_blank">' . preg_quote($data["data"]["title"]) . '<\/a><\/td>\s*<td>' . preg_quote($data["data"]["value"]) . '<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><span class="save_crawler_dataset " data-id="([0-9]*)">.*?<\/td>\s*<td>(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td><a href="' . str_replace('/', "\/", $data["data"]["link"]) . '" target="_blank">' . preg_quote($data["data"]["title"]) . '<\/a><\/td>\s*<td>' . preg_quote($data["data"]["value"]) . '<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-
+        
         return $matches;
     }
 

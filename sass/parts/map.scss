@@ -34,22 +34,18 @@
         cursor: pointer;
     }
 
-    &::before{
-        content: "\f106";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        display:inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        font-size: inherit;
-        transition: all 250ms;
+    span.angle-up{
+        display:block;
+    }
+    span.angle-down{
+        display:none;
     }
 
-    &.hiddenSearch::before{
-        content: "\f107";
-        transition: all 250ms;
+    &.hiddenSearch span.angle-up{
+        display:none;
+    }
+    &.hiddenSearch span.angle-down{
+        display:block;
     }
 }
 
@@ -130,6 +126,7 @@
     label{
         display:block!important;
         text-align: center;
+        margin-bottom: 0!important;
     }
 
     input[type=checkbox] + span:hover{
@@ -139,65 +136,28 @@
     input[type=checkbox] { 
         display:none; 
     }
-    input[type=checkbox] + span span:before {
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        display:inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
+    input[type=checkbox] + span  {
+        
+        svg{
+            color: $color_border-input;
+            margin-left: 1rem;
+            margin-right:1rem;
+            
+            @include font-size(1.5); 
 
-        display: inline-block;
-        color: $color_border-input;
-        margin-left: 1rem;
-        margin-right:1rem;
-        @include font-size(1.5); 
-
-        @media screen and (min-width: $size_mobile_navigation) {
-            @include font-size(3); 
+            @media screen and (min-width: $size_mobile_navigation) {
+                @include font-size(3); 
+                
+            }
         }
     }
 
-    input[type=checkbox]:checked + span span:before { 
-        color: $color_blue;
+    input[type=checkbox]:checked + span  { 
+        svg{
+            color: $color_blue;
+        }
     }
 
-    input[type=checkbox] + span span#layerLocation:before  {
-        content: "\f124"; 
-    }
-    input[type=checkbox] + span span#layerFinances:before  {
-        content: "\f0d6"; 
-    }
-    input[type=checkbox] + span span#layerCars:before  {
-        content: "\f018"; 
-    }
-    input[type=checkbox] + span span#layerDirections:before  {
-        content: "\f337"; 
-    }
-
-    input[type=checkbox] + span span#toggleClustering:before  {
-        content: "\f247"; 
-    }
-
-    input[type=checkbox] + span span#layerPlanes:before  {
-        content: "\f072"; 
-    }
-    input[type=checkbox] + span span#layerTrains:before  {
-        content: "\f238"; 
-    }
-    input[type=checkbox] + span span#layerStreets:before  {
-        content: "\f018"; 
-    }
-    input[type=checkbox] + span span#layerEvents:before  {
-        content: "\f133"; 
-    }
-    input[type=checkbox] + span span#layerHotels:before  {
-        content: "\f236"; 
-    }
-    input[type=checkbox] + span span#layerCarrental:before  {
-        content: "\f1b9"; 
-    }
 
 }
 
@@ -226,24 +186,24 @@ body.trips{
     }
 }
 
+.leaflet-routing-container {
+    .fontawesome-icon.icon-route{
+        display: none;
+    }
+}
 .leaflet-routing-container-hide .leaflet-routing-collapse-btn{
     left: 4px;
     top: -8px;
-    
+
     background-image:none;
     
-    &::before{
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        display:inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        font-size: inherit;
+    .fontawesome-icon.icon-route{
+        display: block;
+    }
+
+    svg{
         position: relative;
         color: $color_blue;
-        content: "\f4d7";
         @include font-size(2);
     }
 }
@@ -257,56 +217,21 @@ body.trips{
     padding:0;
     outline: none;
 
-    &::before{
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        display:inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        font-size: inherit;
-        position: relative;
-    }
-
     &.active{
         color:$color_blue;
     }
 
-    &.car::before{
-        content: "\f1b9";
-        //left: -5px;
-    }
-    &.bike::before{
-        content: "\f84a";
-        //left: -5px;
-    }
-    &.walk::before{
-        content: "\f554";
-        //left: -3px;
-    }
-
+    
     &.calc{
         float:left!important;
-        &::before{
-            content:"\f277";
-            //left: -3px;
-        }
     }
 
     &.save{
         float:left!important;
-        &::before{
-            font-weight: 400;
-            content:"\f0c7";
-        }
     }
-    
+
     &.load{
         float:left!important;
-        &::before{
-            content:"\f277";
-        }
     }
 }
 
@@ -324,4 +249,8 @@ body.trips{
         margin-top: 10px!important;
         padding-top: 4px!important;
     }
+}
+
+#trip-map.leaflet-pseudo-fullscreen{
+    z-index:1000;
 }

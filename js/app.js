@@ -16,6 +16,7 @@ const badges = document.querySelectorAll('.header-inner .badge');
 const offlineAlert = document.getElementById("offline-alert");
 const toast = document.getElementById('toastmessage');
 const offlineElementsAlert = document.getElementById("offline-entries-alert");
+const appLoadingWindowOverlay = document.getElementById('loading-overlay');
 
 let isSubscribed = false;
 var isCached = false;
@@ -95,12 +96,15 @@ function setFormFieldsDisabled(value) {
                 let request = forms.add({'action': item.action, 'data': formData});
 
                 request.onsuccess = function () {
+                    console.log("saved locally");
+                    appLoadingWindowOverlay.classList.add("hidden");
                     showToast(lang.entry_saved_locally, "green");
                     offlineElementsAlert.classList.remove("hidden");
                     item.reset();
                 }
                 request.onerror = function () {
                     console.log("Error", request.error);
+                    appLoadingWindowOverlay.classList.add("hidden");
                     showToast(lang.entry_saved_locally_error, "red");
                 }
             });
@@ -548,7 +552,7 @@ function getCategorySubscriptions(endpoint) {
 
                 loadingIconManage.classList.add("hidden");
                 categoriesElements.forEach(function (item, idx) {
-                    let val = parseInt(item.value);
+                    let val = item.value;
                     if (data.data.indexOf(val) !== -1) {
                         item.setAttribute("checked", true);
                     } else {

@@ -106,7 +106,7 @@ class LocationStepsTest extends BaseTestCase {
 
     protected function getElement($body, $date) {
         $matches = [];
-        $re = '/<tr>\s*<td>(?<date>' . preg_quote($date) . ')<\/td>\s*<td>(?<steps>[0-9.]+)<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIEdit($date)) . '"><i class="fas fa-edit fa-lg"><\/i><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>(?<date>' . preg_quote($date) . ')<\/td>\s*<td>(?<steps>[0-9.]+)<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIEdit($date)) . '">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

@@ -2,16 +2,36 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
+use \App\Domain\Base\Settings;
+
 class SheetMapper extends \App\Domain\Mapper {
 
     protected $table = "timesheets_sheets";
     protected $dataobject = \App\Domain\Timesheets\Sheet\Sheet::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
+    private $KEY = null;
 
-    public function set_diff($id, $diff) {
-        $sql = "UPDATE " . $this->getTableName() . " SET diff = :diff WHERE id  = :id";
-        $bindings = array("id" => $id, "diff" => $diff);
+    public function __construct(\PDO $db, \App\Domain\Main\Translator $translation, \App\Domain\Base\CurrentUser $user, Settings $settings) {
+        parent::__construct($db, $translation, $user);
+
+        $this->KEY = hash('sha256', $settings->getAppSettings()['timesheets']['key']);
+    }
+
+    public function set_duration($id, $duration) {
+        $sql = "UPDATE " . $this->getTableName() . " SET duration = :duration WHERE id  = :id";
+        $bindings = array("id" => $id, "duration" => $duration);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
+    public function set_duration_modified($id, $duration_modified) {
+        $sql = "UPDATE " . $this->getTableName() . " SET duration_modified = :duration_modified WHERE id  = :id";
+        $bindings = array("id" => $id, "duration_modified" => $duration_modified);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -42,7 +62,13 @@ class SheetMapper extends \App\Domain\Mapper {
     /**
      * Table
      */
-    private function getTableSQL($select) {
+    private function getTableSQL($select, $categories) {
+
+        $cat_bindings = array();
+        foreach ($categories as $idx => $cat) {
+            $cat_bindings[":cat_" . $idx] = $cat;
+        }
+
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
                 . " LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " tcs ON t.id = tcs.sheet"
                 . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
@@ -55,46 +81,62 @@ class SheetMapper extends \App\Domain\Mapper {
                 . "     t.start LIKE :searchQuery OR "
                 . "     t.end LIKE :searchQuery OR "
                 . "     tc.name LIKE :searchQuery "
-                . ") "
-                . " GROUP BY t.id";
-        return $sql;
+                . ") ";
+        if (!empty($cat_bindings)) {
+            $sql .= " AND (tcs.sheet IN ( "
+                    . "             SELECT sheet "
+                    . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
+                    . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                    . ") "
+                    . " OR tcs.category is NULL)";
+        }
+        $sql .= " GROUP BY t.id";
+        return [$sql, $cat_bindings];
     }
 
-    public function tableCount($project, $from, $to, $searchQuery = "%") {
+    public function tableCount($project, $from, $to, $categories, $searchQuery = "%") {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
+
+        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories);
 
         $sql = "SELECT COUNT(t.id) FROM ";
-        $sql .= "(". $this->getTableSQL("DISTINCT t.id").") as t";
-        
+        $sql .= "(" . $tableSQL . ") as t";
+
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $cat_bindings));
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $searchQuery = "%") {
+    public function tableSum($project, $from, $to, $categories, $searchQuery = "%", $field = "t.duration") {
 
         $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
 
-        $sql = "SELECT SUM(t.diff) FROM ";
-        $sql .= "(". $this->getTableSQL("t.diff").") as t";
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories);
+
+        $sql = "SELECT SUM($field) FROM ";
+        $sql .= "(" . $tableSQL . ") as t";
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $cat_bindings));
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchColumn();
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableData($project, $from, $to, $categories, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
-        $bindings = array("searchQuery" => "%" . $searchQuery . "%", "project" => $project, "from" => $from, "to" => $to);
+        $bindings = array(
+            "searchQuery" => "%" . $searchQuery . "%",
+            "project" => $project,
+            "from" => $from,
+            "to" => $to);
 
         $sort = "id";
         switch ($sortColumn) {
@@ -108,13 +150,27 @@ class SheetMapper extends \App\Domain\Mapper {
                 $sort = "end";
                 break;
             case 3:
-                $sort = "diff";
+                $sort = "duration";
                 break;
         }
 
-        $select = "DISTINCT t.*, GROUP_CONCAT(tc.name SEPARATOR ', ') as categories";
-        $sql = $this->getTableSQL($select);
+        $select = "DISTINCT "
+                . "t.id, "
+                . "t.createdBy, "
+                . "t.createdOn, "
+                . "t.changedBy, "
+                . "t.changedOn, "
+                . "t.project, "
+                . "t.start, "
+                . "t.end, "
+                . "t.duration, "
+                . "t.duration_modified, "
+                . "CAST( AES_DECRYPT(notice, '" . $this->KEY . "') AS CHAR) AS notice, "
+                . "GROUP_CONCAT(tc.name SEPARATOR ', ') as categories";
 
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories);
+
+        $sql = $tableSQL;
         $sql .= " ORDER BY {$sort} {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
 
         if (!is_null($limit)) {
@@ -123,7 +179,7 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute($bindings);
+        $stmt->execute(array_merge($bindings, $cat_bindings));
 
         $results = [];
         while ($row = $stmt->fetch()) {
@@ -180,6 +236,49 @@ class SheetMapper extends \App\Domain\Mapper {
             $results[] = intval($el);
         }
         return $results;
+    }
+
+    public function getTimes() {
+        $sql = "SELECT s.project, SUM(s.duration) as sum, SUM(s.duration_modified) as sum_modified "
+                . " FROM " . $this->getTableName() . " s "
+                . " GROUP BY s.project";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([]);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[intval($row["project"])] = ["sum" => floatval($row["sum"]), "sum_modified" => floatval($row["sum_modified"])];
+        }
+        return $results;
+    }
+
+    public function setNotice($id, $notice) {
+        $sql = "UPDATE " . $this->getTableName() . " SET notice  = AES_ENCRYPT(:notice, '" . $this->KEY . "') WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            'notice' => $notice,
+            'id' => $id
+        ]);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
+    public function getNotice($id) {
+        $sql = "SELECT CAST( AES_DECRYPT(notice, '" . $this->KEY . "') AS CHAR) FROM " . $this->getTableName() . "  WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            'id' => $id
+        ]);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchColumn();
+        }
+        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
 }

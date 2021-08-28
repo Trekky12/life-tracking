@@ -9,7 +9,12 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["CRAWLER_DATASET_SAVE_LIST"]}} ({{ crawler.name }})</h2></div>
+        <div class="page-header">
+            <h2>{{lang["CRAWLERS"]}} {{lang["CRAWLER_DATASET_SAVE_LIST"]}} | {{ crawler.name }}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('crawlers_view', {'crawler' : crawler.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="crawlers_data_saved_table" class="table table-hover small">
                 <thead>

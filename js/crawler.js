@@ -43,9 +43,9 @@ function add_save_dataset_function() {
     crawlerFavorite.forEach(function (item, idx) {
         item.addEventListener('click', function (event) {
 
-            var data = {'state': event.target.classList.contains("is_saved") ? 0 : 1, 'dataset': event.target.dataset.id};
+            var data = {'state': item.classList.contains("is_saved") ? 0 : 1, 'dataset': item.dataset.id};
             
-            if (event.target.classList.contains("is_saved") && !confirm(lang.really_unsave_dataset)) {
+            if (item.classList.contains("is_saved") && !confirm(lang.really_unsave_dataset)) {
                 return false;
             }
 
@@ -65,7 +65,7 @@ function add_save_dataset_function() {
                 return response.json();
             }).then(function (data) {
                 if (data['status'] === 'success') {
-                    event.target.classList.toggle('is_saved');
+                    item.classList.toggle('is_saved');
                 }
             }).catch(function (error) {
                 console.log(error);

@@ -49,7 +49,8 @@ class UserTest extends BaseTestCase {
                 0 => [
                     "id" => 3,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
@@ -64,16 +65,18 @@ class UserTest extends BaseTestCase {
                             "repeats" => 3,
                             "weight" => 4
                         ]
-                    ]
+                    ],
+                    "notice" => ''
                 ],
                 2 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 3 => [
                     "type" => "day",
-                    "notice" => "test"
+                    "notice" => ''
                 ],
                 4 => [
                     "type" => "superset"
@@ -81,12 +84,14 @@ class UserTest extends BaseTestCase {
                 5 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 1
+                    "is_child" => 1,
+                    "notice" => ''
                 ],
                 6 => [
                     "id" => 2,
                     "type" => "exercise",
-                    "is_child" => 1
+                    "is_child" => 1,
+                    "notice" => ''
                 ]
             ]
         ];
@@ -156,7 +161,8 @@ class UserTest extends BaseTestCase {
                 0 => [
                     "id" => 1,
                     "type" => "exercise",
-                    "is_child" => 0
+                    "is_child" => 0,
+                    "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
@@ -171,7 +177,8 @@ class UserTest extends BaseTestCase {
                             "repeats" => 3,
                             "weight" => 4
                         ]
-                    ]
+                    ],
+                    "notice" => ''
                 ]
             ]
         ];
@@ -246,7 +253,7 @@ class UserTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/workouts\/(?<hash>.*)\/view\/">' . preg_quote($data["name"]) . '<\/a><\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/workouts\/(?<hash>.*)\/view\/">' . preg_quote($data["name"]) . '<\/a><\/td>\s*<td>[0-9]*<\/td>\s*<td>[0-9]*<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

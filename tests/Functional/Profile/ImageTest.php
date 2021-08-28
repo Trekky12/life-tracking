@@ -30,7 +30,7 @@ class ImageTest extends BaseTestCase {
         $filename = 'profile_image';
         $file_extension = 'png';
 
-        $data = [
+        $files = [
             [
                 'name' => 'image',
                 'contents' => __DIR__ . DIRECTORY_SEPARATOR . $filename . '.' . $file_extension,
@@ -38,7 +38,7 @@ class ImageTest extends BaseTestCase {
             ]
         ];
 
-        $response = $this->request('POST', $this->uri_overview, [], [], $data);
+        $response = $this->request('POST', $this->uri_overview, [], [], $files);
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
@@ -55,7 +55,7 @@ class ImageTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertRegExp('/<img class="image_uploaded" src="\/uploads\/(.*)_' . $data["filename"] . '-small.' . $data["extension"] . '"\/>/', $body);
+        $this->assertMatchesRegularExpression('/<img class="image_uploaded" src="\/uploads\/(.*)_' . $data["filename"] . '-small.' . $data["extension"] . '"\/>/', $body);
     }
 
     public function testdeleteImageUpload() {
@@ -76,7 +76,7 @@ class ImageTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertNotRegExp('/<img class="image_uploaded" src="\/uploads\/(.*)"\/>/', $body);
+        $this->assertDoesNotMatchRegularExpression('/<img class="image_uploaded" src="\/uploads\/(.*)"\/>/', $body);
     }
 
 }

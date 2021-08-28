@@ -39,11 +39,19 @@ class TimesheetsSumWidget implements Widget {
         $result = [];
         foreach ($user_projects as $project_id) {
             $project = $projects[$project_id];
+            
+            $categories = [];
 
             $range = $this->sheet_mapper->getMinMaxDate("start", "end", $project_id, "project");
-            $totalSeconds = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"]);
+            $totalSeconds = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories);
 
-            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "sum" => DateUtility::splitDateInterval($totalSeconds)];
+            $sum = DateUtility::splitDateInterval($totalSeconds);
+            if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
+                $totalSecondsModified = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories, "%", "t.duration_modified");
+                $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
+            }
+            
+            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "sum" => $sum];
         }
 
         return $result;
@@ -55,7 +63,9 @@ class TimesheetsSumWidget implements Widget {
 
     public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
-        return $this->projects[$id]["sum"];
+
+        $sum = $this->projects[$id]["sum"];
+        return !empty($sum) ? $sum : "00:00:00";
     }
 
     public function getTitle(WidgetObject $widget = null) {

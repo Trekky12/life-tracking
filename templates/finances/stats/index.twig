@@ -31,7 +31,7 @@
                             <td data-title="{{lang["FINANCES_SPENDINGS"]}}"><a href="{{  url_for('finances_stats_category', { 'year' : year, 'type' :0 }) }}">{{entry[0]}}</a></td> 
                             <td data-title="{{lang["DIFFERENCE"]}}">{{ (entry[1] - entry[0])|number_format(2, '.', '')}}</td> 
                             <td>
-                                <a href="{{  url_for('finances_stats_year', { 'year' : year }) }}"><i class="fas fa-chart-bar fa-lg"></i></a>
+                                <a href="{{  url_for('finances_stats_year', { 'year' : year }) }}">{{ fontawesome('fas fa-chart-bar') }}</a>
                             </td>
                         </tr>
                     {% endfor %}

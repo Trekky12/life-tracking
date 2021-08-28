@@ -212,7 +212,7 @@ class CarServiceMapper extends \App\Domain\Mapper {
     }
 
     public function getTotalMileage($startdate = null) {
-        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - MIN(mileage) as diff FROM " . $this->getTableName() . " cs,  " . $this->getTableName("cars") . " c ";
+        $sql = "SELECT car, MIN(mileage) as min, MAX(mileage) as max, MAX(mileage) - c.mileage_start as diff FROM " . $this->getTableName() . " cs,  " . $this->getTableName("cars") . " c ";
         $sql .= "WHERE c.id = cs.car ";
 
         if (!is_null($startdate)) {

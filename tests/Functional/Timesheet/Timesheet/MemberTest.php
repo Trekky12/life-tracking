@@ -38,7 +38,7 @@ class MemberTest extends TimesheetTestBase {
             "notice" => "Test"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
-
+        
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_PROJECT_HASH), $response->getHeaderLine("Location"));
 

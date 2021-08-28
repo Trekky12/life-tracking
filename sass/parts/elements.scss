@@ -20,6 +20,26 @@ table {
     width: 100%;   
 }
 
+table .fontawesome-icon svg{
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.spinning svg {
+    animation: spinning 2s infinite linear;
+}
+
+@keyframes spinning {
+    0% {
+        -webkit-transform:rotate(0);
+        transform:rotate(0)
+    }
+    100% {
+        -webkit-transform:rotate(360deg);
+        transform:rotate(360deg)
+    }
+}
+
 
 .alert {
     padding: 20px;
@@ -155,4 +175,23 @@ select.button-height{
             margin-left:1rem;  
         }
     }
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.right-align{
+    float:right;
+}
+
+.fontawesome-icon svg{
+    height: 1em;
+    width: 1em;
+    fill: currentColor;
+    display: inline-block;
+    vertical-align: -.125em;
+    overflow: visible;
+    font-size: inherit;
 }

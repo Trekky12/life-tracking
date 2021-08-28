@@ -1,6 +1,9 @@
 'use strict';
 
-const exercisesSelected = document.querySelector('#workoutExerciseSelection .content');
+const hideSelectionBtn = document.querySelector('#hide_exercise_selection');
+const exercisesAvailableView = document.querySelector('.available_exercises');
+const exercisesSelectedView = document.querySelector('.selected_exercises');
+const exercisesSelected = exercisesSelectedView.querySelector('.content');
 
 document.addEventListener('click', function (event) {
     let plus = event.target.closest('.exercise .plus');
@@ -39,13 +42,14 @@ document.addEventListener('click', function (event) {
                 element = element.nextElementSibling;
             }
             exercises_day.forEach(function (exercise) {
-                exercise.remove()
+                exercise.remove();
             });
         } else {
             element.remove();
         }
         loadSelectedMuscles();
         updateFields();
+        adjustAvailableExercisesColumnHeight();
     }
 
     if (plus) {
@@ -54,6 +58,7 @@ document.addEventListener('click', function (event) {
 
         let new_exercise = exercise.cloneNode(true);
         new_exercise.classList.add("selected");
+        new_exercise.classList.remove("choose");
 
         new_exercise.querySelector('.plus').classList.add('hidden');
         new_exercise.querySelector('.minus').classList.remove('hidden');
@@ -67,7 +72,7 @@ document.addEventListener('click', function (event) {
         input_id.value = exercise.dataset.id;
 
         new_exercise.appendChild(input_id);
-        
+
         let sets = parseInt(document.querySelector('#setCount').value);
         let set = 0;
         for (set = 0; set < sets; set++) {
@@ -84,6 +89,7 @@ document.addEventListener('click', function (event) {
 
         exercisesSelected.appendChild(new_exercise);
         loadSelectedMuscles();
+        adjustAvailableExercisesColumnHeight();
     }
 
     if (headline) {
@@ -129,18 +135,16 @@ document.addEventListener('click', function (event) {
         let div_icons = document.createElement("div");
         div_icons.classList.add("icons");
 
-        let i_minus = document.createElement("i");
-        i_minus.classList.add("minus");
-        i_minus.classList.add("fas");
-        i_minus.classList.add("fa-minus");
+        let span_minus = document.createElement("span");
+        span_minus.classList.add("minus");
+        span_minus.innerHTML = document.getElementById('iconMinus').innerHTML;
 
-        let i_handle = document.createElement("i");
-        i_handle.classList.add("handle");
-        i_handle.classList.add("fas");
-        i_handle.classList.add("fa-arrows-alt");
+        let span_handle = document.createElement("span");
+        span_handle.classList.add("handle");
+        span_handle.innerHTML = document.getElementById('iconHandle').innerHTML;
 
-        div_icons.appendChild(i_minus);
-        div_icons.appendChild(i_handle);
+        div_icons.appendChild(span_minus);
+        div_icons.appendChild(span_handle);
 
         workout_day_content.appendChild(input_type);
         workout_day_content.appendChild(input_notice);
@@ -176,18 +180,16 @@ document.addEventListener('click', function (event) {
         let div_icons = document.createElement("div");
         div_icons.classList.add("icons");
 
-        let i_minus = document.createElement("i");
-        i_minus.classList.add("minus");
-        i_minus.classList.add("fas");
-        i_minus.classList.add("fa-minus");
+        let span_minus = document.createElement("span");
+        span_minus.classList.add("minus");
+        span_minus.innerHTML = document.getElementById('iconMinus').innerHTML;
 
-        let i_handle = document.createElement("i");
-        i_handle.classList.add("handle");
-        i_handle.classList.add("fas");
-        i_handle.classList.add("fa-arrows-alt");
+        let span_handle = document.createElement("span");
+        span_handle.classList.add("handle");
+        span_handle.innerHTML = document.getElementById('iconHandle').innerHTML;
 
-        div_icons.appendChild(i_minus);
-        div_icons.appendChild(i_handle);
+        div_icons.appendChild(span_minus);
+        div_icons.appendChild(span_handle);
 
         workout_superset_content.appendChild(headline_superset);
         workout_superset_content.appendChild(input_type);
@@ -215,6 +217,7 @@ function createSortable(element) {
         group: {
             name: "exercise"
         },
+        scroll: true,
         swapThreshold: 0.5,
         fallbackOnBody: true,
         //draggable: ".exercise.selected",
@@ -233,6 +236,13 @@ function createSortable(element) {
                 input.value = 1;
             }
             updateFields();
+        },
+        onStart: function (evt) {
+            document.body.classList.add("sortable-select");
+        },
+        onEnd: function (evt) {
+            document.body.classList.remove("sortable-select");
+            evt.item.scrollIntoView();
         }
     });
 }
@@ -309,3 +319,26 @@ function addSet(exercise) {
 
     setsList.appendChild(new_set);
 }
+
+if (hideSelectionBtn) {
+    hideSelectionBtn.addEventListener('click', function (event) {
+        exercisesAvailableView.classList.toggle("hidden");
+        if (exercisesAvailableView.classList.contains("hidden")) {
+            hideSelectionBtn.textContent = lang.show;
+            exercisesSelectedView.style.gridArea = " 2 / 1 / 3 / 3";
+        } else {
+            hideSelectionBtn.textContent = lang.hide;
+            exercisesSelectedView.style.removeProperty("grid-area");
+        }
+    });
+}
+
+
+function adjustAvailableExercisesColumnHeight() {
+    if (!isMobile() && exercisesAvailableView) {
+        exercisesAvailableView.style.height = "500px";
+        exercisesAvailableView.style.height = exercisesSelectedView.offsetHeight - 10 + 'px';
+    }
+}
+
+adjustAvailableExercisesColumnHeight();

@@ -22,7 +22,7 @@ abstract class ObjectWriter {
         return $this->mapper;
     }
 
-    protected function createEntry($data, $user = null) {
+    protected function createEntry($data) {
         // Remove CSRF attributes
         if (array_key_exists('csrf_name', $data)) {
             unset($data["csrf_name"]);
@@ -31,13 +31,7 @@ abstract class ObjectWriter {
             unset($data["csrf_value"]);
         }
 
-        if (!isset($user)) {
-            $data['user'] = $this->current_user->getUser()->id;
-        } else {
-            $data['user'] = $user;
-            // use this user for filtering
-            $this->getMapper()->setUser($user);
-        }
+        $data['user'] = $this->current_user->getUser()->id;
 
         $dataobject = $this->getMapper()->getDataObject();
         $entry = new $dataobject($data);
@@ -47,7 +41,7 @@ abstract class ObjectWriter {
          */
         if (array_key_exists("users", $data) && is_array($data["users"])) {
             $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
-            $entry->setUsers($users);
+            $entry->setUserIDs($users);
         }
 
         return $entry;
@@ -63,7 +57,7 @@ abstract class ObjectWriter {
     protected function updateEntry($entry) {
         // try to access entry, maybe the user is not authorized, so this throws an exception (not found)
         $oldEntry = $this->getMapper()->get($entry->id);
-
+        
         $elements_changed = $this->getMapper()->update($entry);
 
         $updated = $elements_changed > 0;
@@ -83,19 +77,14 @@ abstract class ObjectWriter {
             $this->getMapper()->deleteUsers($id);
 
             if (!empty($entry->getUsers())) {
-                $this->getMapper()->addUsers($id, $entry->getUsers());
+                $this->getMapper()->addUsers($id, $entry->getUserIDs());
             }
         }
     }
 
     public function save($id, $data, $additionalData = null): Payload {
 
-        $for_user = null;
-        if (isset($additionalData) && is_array($additionalData) && array_key_exists("user", $additionalData)) {
-            $for_user = $additionalData["user"];
-        }
-
-        $entry = $this->createEntry($data, $for_user);
+        $entry = $this->createEntry($data);
 
         if ($entry->hasParsingErrors()) {
             $this->logger->error("Insert failed " . get_class($entry), array("message" => $entry->getParsingErrors()[0]));
@@ -116,6 +105,8 @@ abstract class ObjectWriter {
         $update = $this->updateEntry($entry);
         if ($update) {
             $this->logger->notice("Update Entry " . get_class($entry), array("id" => $entry->id));
+            // get the updated entry
+            $entry = $this->getMapper()->get($entry->id);
             return new Payload(Payload::$STATUS_UPDATE, $entry);
         } else {
             $this->logger->notice("No Update of Entry " . get_class($entry), array("id" => $entry->id));
@@ -131,7 +122,10 @@ abstract class ObjectWriter {
             $hashids = new Hashids('', 10);
             $hash = $hashids->encode($entry->id);
             $this->getMapper()->setHash($entry->id, $hash);
+
+            return $hash;
         }
+        return $entry->getHash();
     }
 
 }

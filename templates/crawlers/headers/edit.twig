@@ -6,7 +6,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINE"]}} ({{ crawler.name }})</h2></div>
+        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINE"]}} | {{ crawler.name }}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('crawlers_headers', {'crawler': crawler.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>            
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" id="crawlerHeadersForm" action="{{  url_for('crawlers_headers_save', {'id' : entry.id, 'crawler' : crawler.hash}) }}" method="POST">
@@ -65,7 +69,7 @@
                     <label for="inputSuffix">{{lang["SUFFIX"]}}</label>
                     <input type="text" class="form-control" id="inputSuffix" name="suffix" {% if not entry is null %}value="{{entry.suffix|raw}}"{% endif %}>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="sort">{{lang["SORT"]}}</label>
                     <select class="form-control" id="sort" name="sort">
@@ -74,7 +78,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                    
+
                 <div class="form-group">
                     <label for="datatype">{{lang["DATA_TYPE"]}}</label>
                     <select class="form-control" id="datatype" name="datatype">

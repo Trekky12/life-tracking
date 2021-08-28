@@ -52,4 +52,27 @@ class Utility {
         return $text;
     }
 
+    public static function getFontAwesomeIcon($name = null) {
+        $PREFIX_TO_STYLE = [
+            'fas' => 'solid',
+            'far' => 'regular',
+            'fab' => 'brands',
+            'fa' => 'solid'
+        ];
+
+        if (null !== $name) {
+
+            $icon = explode(" ", $name);
+            $family = $PREFIX_TO_STYLE[$icon[0]];
+            $iconName = str_replace("fa-", "", $icon[1]);
+
+            $file = __DIR__ . '/../../../../public/static/assets/svgs/font-awesome/' . $family . '/' . $iconName . '.svg';
+
+            if (file_exists($file)) {
+                return '<span class="fontawesome-icon icon-' . $iconName . '">' . file_get_contents($file) . '</span>';
+            }
+        }
+        return null;
+    }
+
 }

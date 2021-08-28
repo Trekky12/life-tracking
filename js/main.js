@@ -7,6 +7,8 @@ initialize();
 
 initCharts();
 
+const loadingWindowOverlay = document.getElementById('loading-overlay');
+
 function getCSRFToken() {
     // take available token
     if (tokens.length > 1) {
@@ -64,6 +66,7 @@ function deleteObject(url, type) {
 
 
     if (!confirm(confirm_text)) {
+        loadingWindowOverlay.classList.add("hidden");
         return false;
     }
 
@@ -77,8 +80,14 @@ function deleteObject(url, type) {
             body: JSON.stringify(token)
         });
     }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
         allowedReload = true;
-        window.location.reload();
+        if ("redirect" in data) {
+            window.location.href = data["redirect"];
+        } else {
+            window.location.reload();
+        }
     }).catch(function (error) {
         console.log(error);
     });
@@ -121,6 +130,7 @@ function initialize() {
     let backbtn = document.querySelector('#go-back-btn');
     if (backbtn !== null) {
         backbtn.addEventListener('click', function () {
+            loadingWindowOverlay.classList.remove("hidden");
             window.history.back();
         });
     }
@@ -129,6 +139,7 @@ function initialize() {
     if (cancelbtn !== null) {
         cancelbtn.addEventListener('click', function (e) {
             e.preventDefault();
+            loadingWindowOverlay.classList.remove("hidden");
             window.history.back();
         });
     }
@@ -138,17 +149,26 @@ function initialize() {
      * https://elliotekj.com/2016/11/05/jquery-to-pure-js-event-listeners-on-dynamically-created-elements/
      */
     document.addEventListener('click', function (event) {
+
+        let link = event.target.closest('a');
+        let submit = event.target.closest('[type="submit"]');
+        
+        if ((link && link.getAttribute("href") != '#' && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname)) || (submit && !submit.classList.contains("no-loading"))) {
+            loadingWindowOverlay.classList.remove("hidden");
+        }
+
         // https://stackoverflow.com/a/50901269
-        let closest = event.target.closest('.btn-delete');
-        if (closest) {
+        let deleteBtn = event.target.closest('.btn-delete');
+        if (deleteBtn) {
             event.preventDefault();
-            let url = closest.dataset.url;
+            let url = deleteBtn.dataset.url;
             if (url) {
-                let type = closest.dataset.type ? closest.dataset.type : "default";
+                let type = deleteBtn.dataset.type ? deleteBtn.dataset.type : "default";
                 deleteObject(url, type);
             } else {
-                closest.parentNode.remove();
+                deleteBtn.parentNode.remove();
             }
+            return;
         }
     });
 
@@ -358,7 +378,7 @@ function initCharts() {
                 }
             }
         });
-        financeDetailChart.before(fdChart.generateLegend());
+        //financeDetailChart.before(fdChart.generateLegend());
     }
 
 

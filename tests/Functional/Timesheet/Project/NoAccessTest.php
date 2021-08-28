@@ -28,7 +28,7 @@ class NoAccessTest extends TimesheetTestBase {
 
         // search for all elements
         $matches = [];
-        $re = '/<tr data-id="(?<id>[0-9]*)">\s*<td data-title="Name"><a href="\/timesheets\/(?<hash>.*)\/view\/">(?<name>.*)<\/a><\/td>\s*<td>\s*<a href="(?<edit>.*)"><span class="fa fa-pencil-square-o fa-lg"><\/span><\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="(?<delete>.*)" class="btn-delete"><span class="fa fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/timesheets\/(?<hash>.*)\/view\/">(?<name>.*)<\/a><\/td>\s*<td>\s*<a href="(?<edit>.*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="(?<delete>.*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match_all($re, $body, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {

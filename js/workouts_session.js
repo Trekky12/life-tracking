@@ -1,6 +1,6 @@
 'use strict';
 
-const exercisesSession = document.querySelector('#workoutExerciseSelection .content');
+const exercisesSession = document.querySelector('#workoutExercises .content');
 const addExerciseBtn = document.querySelector('#addExercise');
 const addExerciseSelect = document.querySelector('#addExerciseToSession');
 const addExerciseSetNr = document.querySelector('#setCount');
@@ -28,3 +28,52 @@ addExerciseBtn.addEventListener('click', function (event) {
     });
 
 });
+
+const selectWorkoutDay = document.querySelector("#workoutsDaySelect");
+if (selectWorkoutDay) {
+    selectWorkoutDay.addEventListener('change', function (event) {
+        let id = selectWorkoutDay.value;
+
+        let start = false;
+        let workoutElements = exercisesSession.querySelectorAll('[data-type="workout-element"]');
+        workoutElements.forEach(function (exercise, idx) {
+
+            if (start) {
+                setFields(exercise, false);
+            } else {
+                setFields(exercise, true);
+            }
+
+            if (exercise.dataset.category == "day") {
+                if (exercise.dataset.id == id) {
+                    start = true;
+                    setFields(exercise, false);
+                } else {
+                    start = false;
+                    setFields(exercise, true);
+                }
+            }
+        });
+
+    });
+}
+
+function setFields(exercise, disabled) {
+
+    if (disabled) {
+        exercise.classList.add("hidden");
+    } else {
+        exercise.classList.remove("hidden");
+    }
+
+    let inputs = exercise.querySelectorAll('input, textarea');
+    inputs.forEach(function (input, idx) {
+        if (disabled) {
+            input.setAttribute('disabled', true);
+        } else {
+            if (input.name.indexOf("dummy") === -1) {
+                input.removeAttribute('disabled');
+            }
+        }
+    });
+}

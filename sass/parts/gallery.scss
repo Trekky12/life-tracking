@@ -1,0 +1,27 @@
+.image-gallery {
+    width: 100%;
+    @media screen and (min-width: $size_mobile) {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(33%, 1fr));
+    }
+    justify-content: center;
+
+    .image {
+        flex-basis: 33%;
+        //width: 100%;
+        padding: 10px;
+        margin: 2px;
+
+        img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            object-position: left top;
+            transform: scale(1);
+            transition: all 0.3s ease-in-out;
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+}

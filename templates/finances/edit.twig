@@ -17,7 +17,11 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('finances') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>  
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" id="financeForm" action="{{  url_for('finances_save', {'id' : entry.id}) }}" method="POST">
@@ -28,7 +32,7 @@
                 {% if not entry is null and not entry.bill is null %}  
                     <input type="hidden" name="bill" value="{% if not entry is null %}{{entry.bill}}{% endif %}">    
                 {% endif %}
-                
+
                 {% if not entry is null and not entry.bill is null and not entry.paymethod is null %}
                     <input type="hidden" name="paymethod" value="{% if not entry is null %}{{entry.paymethod}}{% endif %}">    
                 {% endif %}

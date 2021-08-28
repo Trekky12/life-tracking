@@ -5,7 +5,12 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["LINKLIST"]}} ({{ crawler.name }})</h2> <a href="{{  url_for('crawlers_links_edit', {'crawler': crawler.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a></div>
+        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["LINKLIST"]}} | {{ crawler.name }}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('crawlers') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>            
+                <a href="{{  url_for('crawlers_links_edit', {'crawler': crawler.hash}) }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
         <div class="page-content">
             <table id="crawlers_links_table" class="table table-hover small">
                 <thead>
@@ -27,13 +32,13 @@
                             <td>{{link.position}}</td> 
                             <td>
                                 {% if crawler.user == user.id %}
-                                    <a href="{{  url_for('crawlers_links_edit', {'id' : link.id, 'crawler' : crawler.hash}) }}"><span class="fas fa-edit fa-lg"></span></a>
-                                {% endif %}
+                                    <a href="{{  url_for('crawlers_links_edit', {'id' : link.id, 'crawler' : crawler.hash}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    {% endif %}
                             </td>
                             <td>
                                 {% if crawler.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('crawlers_links_delete', {'id' : link.id, 'crawler' : crawler.hash}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a>
-                                {% endif %}
+                                    <a href="#" data-url="{{  url_for('crawlers_links_delete', {'id' : link.id, 'crawler' : crawler.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+                                    {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

@@ -10,7 +10,9 @@
             <h2>{% if type == 0 %} {{lang["FINANCES_SPENDINGS"]}} {% else %} {{lang["FINANCES_INCOMES"]}} {% endif %}
                 {{lang["IN"]}} {{month}}/{{year}}
             </h2>
-            <a href="{{ url_for('finances_stats_year', {'year':year}) }}"><button class="white">{{lang["BACK"]}}</button></a>
+            <div class="buttons">
+                <a href="{{ url_for('finances_stats_year', {'year':year}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
         </div>
         <div class="page-content">
 
@@ -31,7 +33,7 @@
                             <td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td> 
                             <td data-title="{{lang["COUNT"]}}">{{entry.count}}</td> 
                             <td data-title="{{lang["SUM"]}}">{{entry.sum}}</td> 
-                            <td><a href="{{  url_for('finances_stats_month_category', {'year' : entry.year, 'month' : entry.month, 'type' :entry.type, 'category' : entry.category_id}) }}"><span class="fas fa-chart-pie fa-lg"></span></a></td>
+                            <td><a href="{{  url_for('finances_stats_month_category', {'year' : entry.year, 'month' : entry.month, 'type' :entry.type, 'category' : entry.category_id}) }}">{{ fontawesome('fas fa-chart-pie') }}</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

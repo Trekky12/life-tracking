@@ -64,7 +64,7 @@ class SheetFastWriter extends ObjectActivityWriter {
         $entry = $this->service->getLastSheetWithStartDateToday($project->id);
         if (!is_null($entry)) {
             $this->updateEntryForCheckOut($entry, $data);
-            $this->service->setDiff($entry->id);
+            $this->service->setDuration($entry, $project);
         } else {
             // otherwise create new entry               
             $this->createCheckOutEntry($project, $data);

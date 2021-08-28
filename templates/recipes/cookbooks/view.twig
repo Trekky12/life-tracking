@@ -1,0 +1,34 @@
+{% extends "base.twig" %}
+
+{% set active = 'recipes' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/recipes_recipe.js?ver=20210514"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["RECIPES_COOKBOOKS"]}} | {{ cookbook.name|raw }}</h2> 
+            <div class="buttons">
+                <a href="{{ url_for('recipes_cookbooks')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="recipe-filter">
+                <input type="text" id="filterSearchRecipes" placeholder="{{ lang["SEARCHING"] }}"/>
+            </div>
+
+        </div>
+    </div>
+    <div class="content">
+        <div id="recipes_list" data-cookbook="{{ cookbook.hash }}"></div>
+        <div id="loadingIconRecipes" class="centered loading-icon">
+            <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+        </div>
+        <div id="loadMoreRecipes" class="centered hidden">
+            <button type="button">{{ lang["LOAD_MORE"] }}</button>
+        </div>
+    </div>
+
+{% endblock %}

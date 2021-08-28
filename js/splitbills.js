@@ -20,7 +20,7 @@ if (splitbillsForm) {
     let exchange_rate = splitbillsForm.querySelector('#inputRate');
     let exchange_fee = splitbillsForm.querySelector('#inputFee');
 
-    input_total.addEventListener('change', function (e) {
+    input_total.addEventListener('input', function (e) {
         inputs_paid.forEach(function (input) {
             input.value = 0;
         });
@@ -29,11 +29,17 @@ if (splitbillsForm) {
         });
         calculateRemaining(inputs_paid, remaining_paid);
         calculateRemaining(inputs_spend, remaining_spend);
+
+        buttons.forEach(function (btn) {
+            btn.classList.add("gray");
+        });
     });
 
     buttons.forEach(function (item, idx) {
         item.addEventListener('click', function (e) {
             e.preventDefault();
+
+            let category = item.dataset.category;
             let type = item.dataset.type;
             let id = item.dataset.id;
 
@@ -42,8 +48,26 @@ if (splitbillsForm) {
 
             if (totalValue > 0) {
 
-                switch (type) {
-                    case 'paid_same':
+                let userlist = item.parentNode.nextElementSibling;
+                userlist.classList.add("hidden");
+
+                buttons.forEach(function (btn) {
+                    if (btn.dataset.category == category) {
+                        btn.classList.add("gray");
+                    }
+                });
+                item.classList.remove("gray");
+
+
+                if (category == "paid") {
+                    splitbillsForm.querySelector('input[name="paid_by"]').value = (type == "person") ? id : type;
+                }
+                if (category == "spend") {
+                    splitbillsForm.querySelector('input[name="spend_by"]').value = (type == "person") ? id : type;
+                }
+
+                if (type == "same") {
+                    if (category == "paid") {
                         equal_splitting(inputs_paid, totalValue);
 
                         inputs_paid.forEach(function (input, idx) {
@@ -51,10 +75,18 @@ if (splitbillsForm) {
                                 inputs_paid_foreign[idx].value = (input.value * getExchangeRateWithFee()).toFixed(2);
                             }
                         });
+                    } else if (category == "spend") {
+                        equal_splitting(inputs_spend, totalValue);
 
+                        inputs_spend.forEach(function (input, idx) {
+                            if (inputs_spend_foreign[idx]) {
+                                inputs_spend_foreign[idx].value = (input.value * getExchangeRateWithFee()).toFixed(2);
+                            }
+                        });
+                    }
 
-                        break;
-                    case 'paid_person':
+                } else if (type == 'person') {
+                    if (category == "paid") {
                         inputs_paid.forEach(function (input) {
                             input.value = 0;
                         });
@@ -68,18 +100,7 @@ if (splitbillsForm) {
                         if (input_user_paid_foreign) {
                             input_user_paid_foreign.value = totalValueForeign;
                         }
-                        break;
-                    case 'spend_same':
-                        equal_splitting(inputs_spend, totalValue);
-
-                        inputs_spend.forEach(function (input, idx) {
-                            if (inputs_spend_foreign[idx]) {
-                                inputs_spend_foreign[idx].value = (input.value * getExchangeRateWithFee()).toFixed(2);
-                            }
-                        });
-
-                        break;
-                    case 'spend_person':
+                    } else if (category == "spend") {
                         inputs_spend.forEach(function (input) {
                             input.value = 0;
                         });
@@ -94,8 +115,11 @@ if (splitbillsForm) {
                         if (input_user_spend_foreign) {
                             input_user_spend_foreign.value = totalValueForeign;
                         }
-                        break;
+                    }
+                } else if (type == "individual") {
+                    userlist.classList.remove("hidden");
                 }
+
                 calculateRemaining(inputs_paid, remaining_paid);
                 calculateRemaining(inputs_spend, remaining_spend);
             }
@@ -128,6 +152,9 @@ if (splitbillsForm) {
     }
 
     function getTotal() {
+        if (input_total.value == "") {
+            return 0;
+        }
         return parseFloat(input_total.value).toFixed(2);
     }
 

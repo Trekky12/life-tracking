@@ -135,16 +135,18 @@ class BudgetService extends Service {
             } else {
                 // Budget of category:
                 foreach ($budgets as $budget) {
-                    $type = 'success';
-                    if ($all_budgets[$budget->id]->percent > 80) {
-                        $type = 'danger';
-                    } elseif ($all_budgets[$budget->id]->percent > 50) {
-                        $type = 'warning';
-                    }
-                    //$message = $this->translation->getTranslatedString("REMAINING_BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->diff . " " . $this->settings->getAppSettings()['i18n']['currency'];
-                    $message = $this->translation->getTranslatedString("BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->percent . "%";
+                    if (array_key_exists($budget->id, $all_budgets)) {
+                        $type = 'success';
+                        if ($all_budgets[$budget->id]->percent > 80) {
+                            $type = 'danger';
+                        } elseif ($all_budgets[$budget->id]->percent > 50) {
+                            $type = 'warning';
+                        }
+                        //$message = $this->translation->getTranslatedString("REMAINING_BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->diff . " " . $this->settings->getAppSettings()['i18n']['currency'];
+                        $message = $this->translation->getTranslatedString("BUDGET") . " (" . html_entity_decode($all_budgets[$budget->id]->description) . "): " . $all_budgets[$budget->id]->percent . "%";
 
-                    array_push($results, array('message' => $message, 'type' => $type));
+                        array_push($results, array('message' => $message, 'type' => $type));
+                    }
                 }
             }
         }

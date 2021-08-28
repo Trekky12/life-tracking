@@ -18,7 +18,7 @@
         "slim/csrf": "^1.0",
         "slim/flash": "^0.4.0",
         "php-di/php-di": "^6.0",
-        "dflydev/fig-cookies": "^2.0",
+        "dflydev/fig-cookies": "^3.0",
         "twig/twig": "^3.0",
         "monolog/monolog": "^2.1",
         "phpmailer/phpmailer": "^6.1",
@@ -28,8 +28,9 @@
         "phpoffice/phpspreadsheet": "^1.9",
         "symfony/console": "^5.1",
         "robthree/twofactorauth": "^1.7",
-        "endroid/qr-code": "^3.8",
-        "minishlink/web-push": "^6.0"
+        "endroid/qr-code": "^4.1",
+        "minishlink/web-push": "^6.0",
+        "phpoffice/phpword": "^0.18.1"
     },
     "autoload": {
         "psr-4": {
@@ -44,5 +45,8 @@
         "psr-4": {
             "Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "php vendor/bin/phpunit tests"
     }
 }

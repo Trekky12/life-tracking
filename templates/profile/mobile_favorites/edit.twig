@@ -4,10 +4,14 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MOBILE_FAVORITES"]}} {% if not for_user is null %} ({{ for_user.login }}){% endif %}</h2></div>
+        <div class="page-header"><h2>{{lang["MOBILE_FAVORITES"]}}</h2>
+            <div class="buttons">
+                <a href="{{ url_for('users_mobile_favorites')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
 
-            <form class="form-horizontal" id="mobileFavoritesForm" action="{% if for_user is null %}{{ url_for('users_mobile_favorites_save', {'id' : entry.id}) }}{% else %}{{ url_for('users_mobile_favorites_save_admin', {'id' : entry.id, 'user': for_user.id}) }}{% endif %}" method="POST">
+            <form class="form-horizontal" id="mobileFavoritesForm" action="{{ url_for('users_mobile_favorites_save', {'id' : entry.id}) }}" method="POST">
                 <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                 <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 

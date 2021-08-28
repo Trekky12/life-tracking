@@ -214,6 +214,7 @@ class ExerciseService extends Service {
                 "is_child" => 0,
                 "children" => []
             ];
+            $response_data["hidden"] = false;
         } catch (\Exception $e) {
             $response_data["status"] = "error";
         }

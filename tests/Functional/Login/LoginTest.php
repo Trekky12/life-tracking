@@ -21,8 +21,8 @@ class LoginTest extends BaseTestCase {
      */
     public function testLoginCSRFFail() {
         $response = $this->request('POST', '/login', array("username" => "admin", "password" => "admin"));
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('Failed CSRF check!', (string) $response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString('Übertragungsfehler', (string) $response->getBody());
     }
 
     public function testLoginPage() {

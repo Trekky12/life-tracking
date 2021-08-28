@@ -5,7 +5,11 @@
 
 {% block body %}
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>
+            <div class="buttons">
+                <a href="{{ url_for('notifications_clients')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form action="{{  url_for('notifications_clients_test', {'id' : entry.id}) }}" method="POST">

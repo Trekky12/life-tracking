@@ -23,9 +23,9 @@ class RecurringBill extends \App\Domain\DataObject {
         $this->last_run = $this->exists('last_run', $data) ? filter_var($data['last_run'], FILTER_SANITIZE_STRING) : null;
         $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : 'month';
         $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
-        
+
         $this->is_active = $this->exists('is_active', $data) ? filter_var($data['is_active'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        
+
         $this->next_run = $this->exists('next_run', $data) ? filter_var($data['next_run'], FILTER_SANITIZE_STRING) : null;
 
         if (!in_array($this->unit, array_keys(self::getUnits()))) {
@@ -42,6 +42,9 @@ class RecurringBill extends \App\Domain\DataObject {
 
         $this->spend_foreign = $this->exists('spend_foreign', $data) ? filter_var($data['spend_foreign'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->paid_foreign = $this->exists('paid_foreign', $data) ? filter_var($data['paid_foreign'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+
+        $this->paid_by = $this->exists('paid_by', $data) ? filter_var($data['paid_by'], FILTER_SANITIZE_STRING) : null;
+        $this->spend_by = $this->exists('spend_by', $data) ? filter_var($data['spend_by'], FILTER_SANITIZE_STRING) : null;
     }
 
     /**
@@ -56,7 +59,7 @@ class RecurringBill extends \App\Domain\DataObject {
 
         unset($temp["spend_foreign"]);
         unset($temp["paid_foreign"]);
-        
+
         unset($temp["next_run"]);
 
         return $temp;

@@ -10,7 +10,7 @@ const loadMore = document.querySelector('#loadMoreNotifications');
 document.addEventListener("DOMContentLoaded", function () {
     categoriesUserElements.forEach(function (item, idx) {
         item.addEventListener('click', function () {
-            let val = parseInt(item.value);
+            let val = item.value;
             if (item.checked) {
                 return setCategoryUser(1, val).then(function (data) {
                     console.log(data);
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function setCategoryUser(type, category) {
-    let data = {"category": category, "type": type};
+    let data = {"type": type, "category": category};
 
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;

@@ -34,13 +34,22 @@ class SheetWriter extends ObjectActivityWriter {
 
         $data['project'] = $project->id;
 
+        // Do not save the notice
+        $notice = $data["notice"];
+        $data["notice"] = null;
+
+        $duration_modification = $project->has_duration_modifications && array_key_exists("duration_modification", $data) ? intval(filter_var($data["duration_modification"], FILTER_SANITIZE_NUMBER_INT)) : 0;
+
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
-        $this->service->setDiff($entry->id);
+        // Save the notice encrypted
+        $this->mapper->setNotice($entry->id, $notice);
+
+        $this->service->setDuration($entry, $project, $duration_modification);
 
         try {
-            
+
             $this->mapper->deleteCategoriesFromSheet($id);
             if (array_key_exists("category", $data) && is_array($data["category"]) && !empty($data["category"])) {
                 $categories = filter_var_array($data["category"], FILTER_SANITIZE_NUMBER_INT);

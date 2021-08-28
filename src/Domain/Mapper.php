@@ -278,7 +278,10 @@ abstract class Mapper {
         }
 
         if (!is_null($table)) {
-            $sql = "SELECT user FROM " . $this->getTableName($table) . " WHERE {$element} = :id";
+            $sql = "SELECT u.id, u.login "
+                    . "FROM " . $this->getTableName($table) . " ut," . $this->getTableName("global_users") . " u "
+                    . "WHERE ut.user = u.id "
+                    . "AND ut.{$element} = :id";
 
             $bindings = array("id" => $id);
 
@@ -286,11 +289,12 @@ abstract class Mapper {
             $stmt->execute($bindings);
 
             $results = [];
-            while ($el = $stmt->fetchColumn()) {
-                $results[] = intval($el);
+            while ($row = $stmt->fetch()) {
+                $results[intval($row["id"])] = $row["login"];
             }
             return $results;
         }
+        return [];
     }
 
     public function getElementsOfUser($id) {
@@ -308,7 +312,7 @@ abstract class Mapper {
         return $results;
     }
 
-    private function getUserItemsSQL($select = "DISTINCT t.*") {
+    protected function getUserItemsSQL($select = "DISTINCT t.*") {
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t LEFT JOIN " . $this->getTableName($this->user_table) . " tu ";
         $sql .= " ON t.id = tu.{$this->element_name} ";
         $sql .= " WHERE tu.user = :user OR t.user = :user";
@@ -338,7 +342,8 @@ abstract class Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[] = new $this->dataobject($row);
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
         }
         return $results;
     }

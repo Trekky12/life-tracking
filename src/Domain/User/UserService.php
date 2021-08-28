@@ -123,5 +123,17 @@ class UserService extends Service {
         $user = $this->current_user->getUser();
         $this->mapper->update_secret($user->id, $secret);
     }
+    
+    public function getData($data) {
+        
+        $response_data = ["data" => [], "status" => "success"];
+        $query = array_key_exists('query', $data) ? filter_var($data['query'], FILTER_SANITIZE_STRING) : "";
+        $module = array_key_exists('module', $data) ? filter_var($data['module'], FILTER_SANITIZE_STRING) : null;
+        $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
+        
+        $response_data["data"] = $this->mapper->getUsersWithModule($query, $module, $users);
+        
+        return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
 
 }

@@ -187,7 +187,7 @@ class UserTest extends BaseTestCase {
 
     private function checkBudget($body, $data) {
         $rows = $this->getElementsInTable($body);
-
+        
         $this->assertEquals(2, count($rows));
 
         // check first (regular) entry

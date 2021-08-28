@@ -50,11 +50,11 @@
     @media screen and (min-width: $size_mobile) {
         .date-filter{
             display:flex;
-            align-items: center;
+            align-items: start;
         }
 
-        button, input, select, .flatpickr-input{
-            height: 41px;
+        button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input), select, .flatpickr-input, .choices__inner{
+            min-height: 41px;
         }
 
         .flatpickr-input{
@@ -62,10 +62,15 @@
         }
 
     }
+
+    .categories-filter{
+        flex-grow: 1;
+        flex-basis: 30%;
+    }
 }
 
 #search, #search-filter{
-    button, input, select{
+    button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input), select{
         width: 100%;
 
         @include font-size(1.2);

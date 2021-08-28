@@ -88,5 +88,36 @@ class SessionMapper extends \App\Domain\Mapper {
         }
         return $results;
     }
+    
+    public function getAllSessionExercises($plan_id) {
+        $sql = "SELECT se.exercise, se.sets, s.date"
+                . " FROM " . $this->getTableName() . " s, " . $this->getTableName("workouts_sessions_exercises") . " se"
+                . " WHERE s.id = se.session AND s.plan = :plan AND se.type = :type AND se.exercise IS NOT NULL"
+                . " ORDER by s.date ASC";
+
+        $bindings = [
+            "plan" => $plan_id,
+            "type" => "exercise"
+        ];
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        $dates = [];
+        while ($row = $stmt->fetch()) {
+            $exercise_id = intval($row["exercise"]);
+            if(!array_key_exists($exercise_id, $results)){
+                $results[$exercise_id] = [];
+            }
+            $results[$exercise_id][] = ["date" => $row["date"],"sets" => json_decode($row["sets"], true)];
+            
+            if(!in_array($row["date"], $dates)){
+                $dates[] = $row["date"];
+            }
+            
+        }
+        return [$results, $dates];
+    }
 
 }

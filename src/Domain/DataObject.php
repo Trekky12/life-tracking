@@ -11,6 +11,7 @@ class DataObject implements \JsonSerializable {
      * Save potential parsing errors
      */
     protected $parsing_errors = array();
+    protected $users = [];
 
     protected function parseData(array $data) {
         foreach ($data as $k => $v) {
@@ -24,13 +25,13 @@ class DataObject implements \JsonSerializable {
         // Always save these values
         $this->user = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d H:i:s');
-
+        
         /**
          * Add users (for m:n)
          */
         if ($this->exists("users", $data) && is_array($data["users"])) {
             $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
-            $this->setUsers($users);
+            $this->setUserIDs($users);
         }
 
         /**
@@ -90,6 +91,7 @@ class DataObject implements \JsonSerializable {
          */
         if ($insert || $update) {
             unset($temp["users"]);
+            unset($temp["hash"]);
         }
 
         return $temp;
@@ -113,6 +115,14 @@ class DataObject implements \JsonSerializable {
         return $this->parsing_errors;
     }
 
+    public function setUserIDs($user_ids) {
+        $this->users = array_fill_keys($user_ids, null);
+    }
+
+    public function getUserIDs() {
+        return array_keys($this->users);
+    }
+
     public function setUsers($users) {
         $this->users = $users;
     }
@@ -122,7 +132,11 @@ class DataObject implements \JsonSerializable {
     }
 
     public function jsonSerialize() {
-        return $this->get_fields(true, false, false);
+        $fields = $this->get_fields(true, false, false);
+        if (!empty($this->users)) {
+            $fields["users"] = $this->getUserIDs();
+        }
+        return $fields;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
@@ -139,6 +153,16 @@ class DataObject implements \JsonSerializable {
 
     public function addParsingError($error) {
         return $this->parsing_errors[] = $error;
+    }
+
+    public function getOwner() {
+        if (isset($this->user) && !is_null($this->user)) {
+            return $this->user;
+        }
+        if (isset($this->createdBy) && !is_null($this->createdBy)) {
+            return $this->createdBy;
+        }
+        return null;
     }
 
 }

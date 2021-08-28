@@ -6,23 +6,46 @@ use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
+use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\DateUtility;
 
 class ProjectService extends Service {
 
     private $user_service;
+    private $sheet_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ProjectMapper $mapper, UserService $user_service) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ProjectMapper $mapper, UserService $user_service, SheetMapper $sheet_mapper) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
         $this->user_service = $user_service;
+        $this->sheet_mapper = $sheet_mapper;
     }
 
     public function index() {
         $projects = $this->mapper->getUserItems('t.createdOn DESC, name');
 
-        return new Payload(Payload::$RESULT_HTML, ['projects' => $projects]);
+        $times = $this->sheet_mapper->getTimes($projects);
+
+        $new_times = [];
+
+        foreach ($times as $project_id => $time) {
+
+            if (array_key_exists($project_id, $projects)) {
+
+                $project = $projects[$project_id];
+
+                $new_time = DateUtility::splitDateInterval($time["sum"]);
+                if ($project->has_duration_modifications > 0 && $time["sum"] > 0) {
+                    $new_time = DateUtility::splitDateInterval($time["sum_modified"]) . ' (' . $new_time . ')';
+                }
+
+                $new_times[$project_id] = $new_time;
+            }
+        }
+
+        return new Payload(Payload::$RESULT_HTML, ['projects' => $projects, 'times' => $new_times]);
     }
 
     public function edit($entry_id) {
@@ -35,7 +58,7 @@ class ProjectService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
-    
+
     public function getUserProjects() {
         $user = $this->current_user->getUser()->id;
         return $this->mapper->getElementsOfUser($user);

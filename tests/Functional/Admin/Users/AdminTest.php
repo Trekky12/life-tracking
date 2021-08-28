@@ -58,11 +58,6 @@ class AdminTest extends BaseTestCase {
             "module_trips" => 1,
             "module_timesheets" => 1,
             "force_pw_change" => 1,
-            "mails_user" => 1,
-            "mails_finances" => 1,
-            "mails_board" => 1,
-            "mails_board_reminder" => 1,
-            "mails_splitted_bills" => 1,
             "start_url" => "/test"
         ];
 
@@ -138,11 +133,6 @@ class AdminTest extends BaseTestCase {
             "module_trips" => 0,
             "module_timesheets" => 0,
             "force_pw_change" => 0,
-            "mails_user" => 0,
-            "mails_finances" => 0,
-            "mails_board" => 0,
-            "mails_board_reminder" => 0,
-            "mails_splitted_bills" => 0,
             "start_url" => "/test1"
         ];
 
@@ -188,9 +178,9 @@ class AdminTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . $data["login"] . '<\/td>\s*<td>' . $data["name"] . '<\/td>\s*<td>' . $data["lastname"] . '<\/td>\s*<td>' . $data["mail"] . '<\/td>\s*<td>' . $data["role"] . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<td><a href="\/users\/(?<id_mail>[0-9]+)\/testmail"><span class="fas fa-envelope fa-lg"><\/span> Test Mail<\/a><\/td>\s*<td><a href="\/users\/(?<id_favorites>[0-9]+)\/favorites\/">mobile Favoriten<\/a><\/td>\s*<td><a href="\/users\/(?<id_applicationpasswords>[0-9]+)\/applicationpasswords\/">Anwendungspasswörter<\/a><\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . $data["login"] . '<\/td>\s*<td>' . $data["name"] . '<\/td>\s*<td>' . $data["lastname"] . '<\/td>\s*<td>' . $data["mail"] . '<\/td>\s*<td>' . $data["role"] . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<td><a href="\/users\/(?<id_mail>[0-9]+)\/testmail">.*? Test Mail<\/a><\/td>\s*<td>\s*<a href="\/users\/(?<id_identity>[0-9]+)\/identity">Identität übernehmen<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-
+        
         return $matches;
     }
 

@@ -17,11 +17,11 @@ class SessionService extends Service {
     private $exercise_mapper;
     private $settings_mapper;
 
-    public function __construct(LoggerInterface $logger, 
-            CurrentUser $user, 
-            SessionMapper $mapper, 
-            PlanService $plan_service, 
-            ExerciseMapper $exercise_mapper, 
+    public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
+            SessionMapper $mapper,
+            PlanService $plan_service,
+            ExerciseMapper $exercise_mapper,
             SettingsMapper $settings_mapper) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
@@ -37,9 +37,9 @@ class SessionService extends Service {
         if (!$this->plan_service->isOwner($plan->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        
+
         $plan_sessions = $this->mapper->getFromPlan($plan->id, "date, start_time, end_time");
-        
+
         $response_data = [
             'plan' => $plan,
             'sessions' => $plan_sessions
@@ -57,26 +57,29 @@ class SessionService extends Service {
         }
 
         $entry = $this->getEntry($entry_id);
-        
+
+        $days = $this->plan_service->getWorkoutDays($plan->id);
+
         // load planned exercises on new entries
         $selected_exercises = null;
-        if(!is_null($entry_id)){
+        if (!is_null($entry_id)) {
             $selected_exercises = $this->mapper->getExercises($entry_id);
         }
         list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $selected_exercises);
-                
+
         $exercisesList = $this->exercise_mapper->getAll('name');
-        
+
         $response_data = [
             'entry' => $entry,
             'plan' => $plan,
             'exercises' => $exercises,
-            'exercisesList' => $exercisesList
+            'exercisesList' => $exercisesList,
+            'workoutdays' => $days
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
-    
+
     public function view($hash, $entry_id): Payload {
 
         $plan = $this->plan_service->getFromHash($hash);
@@ -84,9 +87,9 @@ class SessionService extends Service {
         if (!$this->plan_service->isOwner($plan->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        
+
         $session = $this->getEntry($entry_id);
-        
+
         $selected_exercises = $this->mapper->getExercises($entry_id);
         list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $selected_exercises);
 
@@ -110,6 +113,56 @@ class SessionService extends Service {
             'categories' => Plan::getCategories(),
             'levels' => Plan::getLevels()
         ]);
+    }
+
+    public function stats($hash): Payload {
+
+        $plan = $this->plan_service->getFromHash($hash);
+
+        if (!$this->plan_service->isOwner($plan->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        list($session_exercises, $dates) = $this->mapper->getAllSessionExercises($plan->id);
+        $exercisesList = $this->exercise_mapper->getAll('name');
+        
+        $exercises = [];
+        
+        foreach($session_exercises as $exercise_id => $exercise ){
+            $exercise_data = ["repeats" => [], "weight" => [], "time" => [], "distance" => []];
+            
+            foreach($exercise as $session){
+                foreach($session["sets"] as $set_idx => $set){
+                    if(!array_key_exists($set_idx, $exercise_data["repeats"])){
+                        $exercise_data["repeats"][$set_idx] = [];
+                    }
+                    if(!array_key_exists($set_idx, $exercise_data["weight"])){
+                        $exercise_data["weight"][$set_idx] = [];
+                    }
+                    if(!array_key_exists($set_idx, $exercise_data["time"])){
+                        $exercise_data["time"][$set_idx] = [];
+                    }
+                    if(!array_key_exists($set_idx, $exercise_data["distance"])){
+                        $exercise_data["distance"][$set_idx] = [];
+                    }
+                    
+                    $exercise_data["repeats"][$set_idx][] = ["x" => $session["date"], "y" => $set["repeats"]];
+                    $exercise_data["weight"][$set_idx][] = ["x" => $session["date"], "y" => $set["weight"]];
+                    $exercise_data["time"][$set_idx][] = ["x" => $session["date"], "y" => $set["time"]];
+                    $exercise_data["distance"][$set_idx][] = ["x" => $session["date"], "y" => $set["distance"]];
+                }
+            }
+            
+            $exercises[] = ["exercise" => $exercisesList[$exercise_id], "data" => $exercise_data];
+        }
+
+        $response_data = [
+            'plan' => $plan,
+            'exercisesList' => $exercisesList,
+            'exercises' => $exercises
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
 }

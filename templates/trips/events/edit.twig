@@ -18,7 +18,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TRIPS_EVENT"]}} </h2></div>
+        <div class="page-header"><h2>{{lang["TRIPS_EVENT"]}} | {{trip.name|raw}} </h2>
+            <div class="buttons">
+                <a href="{{ url_for('trips_view', {'trip':trip.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" action="{{  url_for('trips_event_save', {'id' : entry.id, 'trip' : trip.hash}) }}" method="POST">
@@ -101,7 +105,7 @@
                     <h3>{{lang["TRIPS_EVENT_IMAGE"]}}</h3>
                     <div class="form-group">
                         <div id="loadingIconImageUpload" class="hidden loading-icon">
-                            <i class="fas fa-circle-notch fa-spin fa-fw"></i>
+                            <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
                         </div>
                         <img class="image_uploaded {% if entry.get_thumbnail() == ''%}hidden{% endif %}" id="event_image" src="{% if entry.get_thumbnail() != ''%}/{{uploads_folder}}/events/{{entry.get_thumbnail()}}{% endif %}"/>
                         <button type="button" id="delete_image" class="danger {% if entry.get_thumbnail() == ''%}hidden{% endif %}">{{lang["DELETE"]}}</button>

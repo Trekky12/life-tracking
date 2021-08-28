@@ -71,8 +71,8 @@ function getActivities() {
                     let div = document.createElement("div");
                     div.classList = 'activity';
 
-                    let iIcon = document.createElement("i");
-                    iIcon.classList = item["icon"];
+                    let iIcon = document.createElement("span");
+                    iIcon.innerHTML = item["icon"];
                     div.appendChild(iIcon);
 
                     let divContent = document.createElement("div");

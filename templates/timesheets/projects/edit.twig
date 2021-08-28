@@ -2,10 +2,23 @@
 
 {% set active = 'timesheets' %}
 
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js"></script>
+    <script src="{{baseURL}}/static/js/user-select.js?ver=20210124"></script>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css" />
+{% endblock %}
+
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2></div>
+        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
+            <div class="buttons">
+                <a href="{{ url_for('timesheets')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" action="{{  url_for('timesheets_projects_save', {'id' : entry.id}) }}" method="POST">
@@ -24,21 +37,34 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="users">{{lang["USERS"]}}</label>
-                    <select class="form-control" id="users" name="users[]" multiple="true">
-                        {% for user in users %}
-                            {% if user.module_timesheets == 1 %}
-                                <option value="{{user.id}}" {% if (not entry is null and user.id in entry.getUsers()) %}selected{% endif %}>{{user.login}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
+                    {% include "main/user-select.twig" with {'entry':entry, 'module': 'timesheets'} only %}
                 </div>
-                    
-                    <div class="form-group">
-                        <label class="checkbox" for="checkboxIsDayBased">
-                            <input name="is_day_based" type="checkbox" value="1" id="checkboxIsDayBased" {% if entry is not null and entry.is_day_based == 1 %}checked{% endif %}>
+
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxIsDayBased">
+                        <input name="is_day_based" type="checkbox" value="1" id="checkboxIsDayBased" {% if entry is not null and entry.is_day_based == 1 %}checked{% endif %}>
                         {{lang["TIMESHEETS_IS_DAY_BASED"]}}
                     </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="defaultView">{{lang["TIMESHEETS_DEFAULT_VIEW"]}}</label>
+                    <select class="form-control" id="defaultView" name="default_view">
+                        <option value="all" {% if (not entry is null and 'all' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_ALL"]}}</option>
+                        <option value="month" {% if (not entry is null and 'month' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxHasDurationModifications">
+                        <input name="has_duration_modifications" type="checkbox" value="1" id="checkboxHasDurationModifications" {% if entry is not null and entry.has_duration_modifications == 1 %}checked{% endif %}>
+                        {{lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"]}}
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputRate">{{lang["TIMESHEETS_TIME_CONVERSION_RATE"]}}</label>
+                    <input type="text" class="form-control" id="inputRate" name="time_conversion_rate" value="{% if not entry is null %}{{entry.time_conversion_rate}}{% else %}1{% endif %}">
                 </div>
 
                 <div class="form-group btn">

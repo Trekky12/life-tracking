@@ -29,8 +29,8 @@
                             <td data-title="{{lang["CHANGED_ON"]}}">{{entry.changedOn is null ? "" : entry.changedOn|date(i18n.dateformatTwig.date)}}</td>
                             
                             
-                            <td><a href="{{  url_for('notifications_test', {'id' : entry.id}) }}"><span class="far fa-bell fa-lg"></span></a></td>
-                            <td><a href="#" data-url="{{  url_for('notifications_delete', {'id' : entry.id}) }}" class="btn-delete"><span class="fas fa-trash fa-lg"></span></a></td>
+                            <td><a href="{{  url_for('notifications_test', {'id' : entry.id}) }}">{{ fontawesome('far fa-bell') }}</a></td>
+                            <td><a href="#" data-url="{{  url_for('notifications_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

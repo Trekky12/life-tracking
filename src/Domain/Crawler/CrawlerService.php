@@ -11,6 +11,7 @@ use App\Domain\Crawler\CrawlerDataset\CrawlerDatasetMapper;
 use App\Domain\User\UserService;
 use App\Domain\Crawler\CrawlerLink\CrawlerLinkMapper;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\Utility;
 
 class CrawlerService extends Service {
 
@@ -177,7 +178,7 @@ class CrawlerService extends Service {
         foreach ($table as $dataset) {
             $row = [];
 
-            $row[] = '<span class="save_crawler_dataset ' . ($dataset->isSaved() ? 'is_saved' : '') . '" data-id="' . $dataset->id . '"></span>';
+            $row[] = '<span class="save_crawler_dataset ' . ($dataset->isSaved() ? 'is_saved' : '') . '" data-id="' . $dataset->id . '"><span class="star-blank">' . Utility::getFontAwesomeIcon('far fa-star') . '</span><span class="star-filled">' . Utility::getFontAwesomeIcon('fas fa-star') . '</span></span>';
 
             if ($filter === "changedOn") {
                 $row[] = $dataset->changedOn;

@@ -18,7 +18,11 @@ class TripListAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $index = $this->service->index();
+        
+        $filter = $request->getParam('filter');
+        
+        $index = $this->service->index($filter);
+        
         return $this->responder->respond($index->withTemplate('trips/index.twig'));
     }
 

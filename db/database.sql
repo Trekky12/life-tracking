@@ -19,12 +19,8 @@ CREATE TABLE IF NOT EXISTS global_users (
     module_trips int(1) DEFAULT 0,
     module_timesheets int(1) DEFAULT 0,
     module_workouts int(1) DEFAULT 0,
+    module_recipes int(1) DEFAULT 0,
     force_pw_change int(1) DEFAULT 1,
-    mails_user int(1) DEFAULT 1,
-    mails_finances int(1) DEFAULT 1,
-    mails_board int(1) DEFAULT 1,
-    mails_board_reminder int(1) DEFAULT 1,
-    mails_splitted_bills  int(1) DEFAULT 1,
     start_url varchar(255) DEFAULT NULL,
     secret VARCHAR(255) NULL,
     PRIMARY KEY(id),
@@ -193,6 +189,7 @@ CREATE TABLE cars (
     mileage_per_year INT(20) DEFAULT NULL,
     mileage_term INT(3) DEFAULT NULL,
     mileage_start_date DATE DEFAULT NULL,
+    mileage_start INT(20) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -305,7 +302,7 @@ CREATE TABLE boards_cards (
     description TEXT DEFAULT NULL,
     archive INT(1) DEFAULT 0,
     position INT(10) NULL,
-    hash VARCHAR(255) NOT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(stack) REFERENCES boards_stacks(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -390,11 +387,23 @@ CREATE TABLE notifications_categories (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
     name varchar(255) NOT NULL,
     identifier varchar(255) NOT NULL,
     internal int(1) DEFAULT 0,
     PRIMARY KEY (id),
-    UNIQUE(identifier)
+    UNIQUE(identifier),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS notifications_categories_user;
+CREATE TABLE notifications_categories_user (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(category, user),
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS notifications_clients;
@@ -415,22 +424,24 @@ CREATE TABLE notifications_clients (
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS notifications_categories_clients;
-CREATE TABLE notifications_categories_clients (
+DROP TABLE IF EXISTS notifications_subscription_clients;
+CREATE TABLE notifications_subscription_clients (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     client INTEGER unsigned DEFAULT NULL,
-    UNIQUE(category, client),
+    object_id int(11) unsigned NULL,
+    UNIQUE(category, client, object_id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS notifications_categories_users;
-CREATE TABLE notifications_categories_users (
+DROP TABLE IF EXISTS notifications_subscription_users;
+CREATE TABLE notifications_subscription_users (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
-    UNIQUE(category, user),
+    object_id int(11) unsigned NULL,
+    UNIQUE(category, user, object_id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -448,6 +459,26 @@ CREATE TABLE notifications (
     link varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS mail_categories;
+CREATE TABLE mail_categories (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    name varchar(255) NOT NULL,
+    identifier varchar(255) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(identifier)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS mail_subscription_users;
+CREATE TABLE mail_subscription_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    object_id int(11) unsigned NULL,
+    UNIQUE(category, user, object_id),
+    FOREIGN KEY(category) REFERENCES mail_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -584,6 +615,8 @@ CREATE TABLE splitbill_bill (
     settleup INT(1) DEFAULT 0,
     exchange_rate varchar(100) DEFAULT NULL,
     exchange_fee varchar(100) DEFAULT NULL,
+    paid_by varchar(20) DEFAULT NULL,
+    spend_by varchar(20) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -624,6 +657,8 @@ CREATE TABLE splitbill_bill_recurring (
     unit varchar(255) DEFAULT 'month',
     multiplier int(5) DEFAULT 1,
     is_active int(1) DEFAULT 1,
+    paid_by varchar(20) DEFAULT NULL,
+    spend_by varchar(20) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(sbgroup) REFERENCES splitbill_groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -783,10 +818,14 @@ CREATE TABLE timesheets_projects (
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) DEFAULT NULL,
     is_day_based INT(1) DEFAULT 0,
+    default_view varchar(255) DEFAULT 'month',
+    has_duration_modifications INT(1) DEFAULT 0,
+    time_conversion_rate varchar(100) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS timesheets_projects_users;
 CREATE TABLE timesheets_projects_users (
@@ -808,8 +847,9 @@ CREATE TABLE timesheets_sheets (
     changedBy INTEGER unsigned DEFAULT NULL,
     start DATETIME DEFAULT NULL,
     end DATETIME DEFAULT NULL,
-    diff INTEGER DEFAULT NULL,
-    notice TEXT DEFAULT NULL,
+    duration INTEGER DEFAULT NULL,
+    duration_modified INTEGER DEFAULT NULL,
+    notice BLOB DEFAULT NULL,
     start_lat DECIMAL(17,14) DEFAULT NULL,
     start_lng DECIMAL(17,14) DEFAULT NULL,
     start_acc DECIMAL(10,3) DEFAULT NULL,
@@ -1001,4 +1041,145 @@ CREATE TABLE workouts_sessions_exercises (
     PRIMARY KEY (id),
     FOREIGN KEY(session) REFERENCES workouts_sessions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_cookbooks;
+CREATE TABLE recipes_cookbooks (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_cookbooks_users;
+CREATE TABLE recipes_cookbooks_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    cookbook INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(cookbook, user),
+    FOREIGN KEY(cookbook) REFERENCES recipes_cookbooks(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS recipes_ingredients;
+CREATE TABLE recipes_ingredients (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    unit varchar(50) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes;
+CREATE TABLE recipes (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) NOT NULL,
+    description TEXT,
+    image VARCHAR(255) NULL,
+    preparation_time INT(10) NULL,
+    waiting_time INT(10) NULL,
+    servings INT(10) NULL,
+    link varchar(255) NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_steps;
+CREATE TABLE recipes_steps (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    recipe INTEGER unsigned DEFAULT NULL,
+    position INT(10) NULL,
+    name varchar(255) NULL,
+    description TEXT,
+    preparation_time INT(10) NULL,
+    waiting_time INT(10) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_recipe_ingredients;
+CREATE TABLE recipes_recipe_ingredients (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    recipe INTEGER unsigned DEFAULT NULL,
+    step int(11) unsigned NULL,
+    ingredient int(11) unsigned NULL,
+    position INT(10) NULL,
+    amount VARCHAR(10) NULL,
+    notice TEXT,
+    PRIMARY KEY (id),
+    FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(step) REFERENCES recipes_steps(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(ingredient) REFERENCES recipes_ingredients(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_cookbook_recipes;
+CREATE TABLE recipes_cookbook_recipes (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    cookbook int(11) unsigned NULL,
+    recipe INTEGER unsigned DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(cookbook) REFERENCES recipes_cookbooks(id) ON DELETE CASCADE ON UPDATE CASCADE,    
+    FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_mealplans;
+CREATE TABLE recipes_mealplans (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_mealplans_users;
+CREATE TABLE recipes_mealplans_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    mealplan INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(mealplan, user),
+    FOREIGN KEY(mealplan) REFERENCES recipes_mealplans(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_mealplans_recipes;
+CREATE TABLE recipes_mealplans_recipes (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    mealplan int(11) unsigned NULL,
+    recipe INTEGER unsigned DEFAULT NULL,
+    date DATE NOT NULL,
+    position INT(10) NULL,
+    notice TEXT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(mealplan) REFERENCES recipes_mealplans(id) ON DELETE CASCADE ON UPDATE CASCADE,    
+    FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

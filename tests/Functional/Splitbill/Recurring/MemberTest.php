@@ -81,7 +81,7 @@ class MemberTest extends SplitbillTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-
+        
         $row = $this->getRecurring($body, $data, $this->TEST_GROUP_HASH, 2);
 
         $this->assertArrayHasKey("id_edit", $row);

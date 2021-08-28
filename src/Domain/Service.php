@@ -39,7 +39,7 @@ abstract class Service {
         if (!is_null($id)) {
             $element = $this->getMapper()->get($id);
 
-            if ($element->user !== $user) {
+            if ($element->getOwner() !== $user) {
                 return false;
             }
             return true;
@@ -54,7 +54,7 @@ abstract class Service {
     public function isMember($id) {
         $group_users = $this->getUsers($id);
         $user = $this->current_user->getUser()->id;
-        if (!in_array($user, $group_users)) {
+        if (!array_key_exists($user, $group_users)) {
             return false;
         }
         return true;
@@ -62,6 +62,15 @@ abstract class Service {
 
     public function getFromHash($hash) {
         return $this->getMapper()->getFromHash($hash);
+    }
+
+    public function getUserElements() {
+        $user = $this->current_user->getUser()->id;
+        return $this->mapper->getElementsOfUser($user);
+    }
+
+    public function getAll() {
+        return $this->mapper->getAll();
     }
 
 }

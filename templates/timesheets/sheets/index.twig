@@ -2,22 +2,29 @@
 
 {% set active = 'timesheets' %}
 
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
+{% endblock %}
+
 {% block javascript %}
     <script src="{{baseURL}}/static/js/datefilter.js?ver=20191031"></script>
+    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
+    <script src="{{baseURL}}/static/js/timesheets.js?ver=20210514"></script>
 {% endblock %}
 
 {% block body %}
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white"><i class="far fa-file-excel" aria-hidden="true"></i> {{lang["TIMESHEETS_EXPORT"]}}</button></a>
-                <a href="{{  url_for('timesheets_fast', {'project':project.hash}) }}"><button class="white"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> {% if project.is_day_based == 1 %}{{lang["TIMESHEETS_FAST_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}{% endif %} <i class="fas fa-sign-out-alt" aria-hidden="true"></i></button></a>
-                <a href="{{  url_for('timesheets_sheets_edit', {'project':project.hash}) }}"><button class="white"><i class="fas fa-plus" aria-hidden="true"></i> {{lang["ADD"]}}</button></a>
+                <a href="{{ url_for('timesheets')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white">{{lang["TIMESHEETS_EXPORT"]}}</button></a>
+                <a href="{{  url_for('timesheets_fast', {'project':project.hash}) }}"><button class="white">{{ fontawesome('fas fa-sign-in-alt') }} {% if project.is_day_based == 1 %}{{lang["TIMESHEETS_FAST_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}{% endif %} {{ fontawesome('fas fa-sign-out-alt') }}</button></a>
+                <a href="{{  url_for('timesheets_sheets_edit', {'project':project.hash}) }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
         </div>
         <div class="page-content">
-            
-            <form method="GET" id="search-filter" class="hidden1">
+
+            <form method="GET" id="search-filter" class="hidden1" action="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">
                 <div class="filter-content">
                     <div class="date-filter">
                         <div class="date-element">
@@ -25,20 +32,32 @@
 
                             <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
                             <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+
+                            <input type="hidden" id="selected_categories" disabled="disabled" name="selected_categories" value="{{ categories_selected|join(',')  }}"/>
+
                         </div>
+                    </div>
+                    <div class="categories-filter filter-element">
+                        <select id="category-filter" multiple name="categories[]">
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="date-filter">
                         <div class="filter-element">
                             <input type="submit" value="{{lang["SHOW"]}}"/>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
+                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["month"] }}&to={{ max["month"] }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
+                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["total"] }}&to={{ max["total"] }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
                         </div>
                     </div>
                 </div>
             </form>  
-            
+
             <table id="timesheets_sheets_table" class="table table-hover small">
                 <thead>
                     <tr>

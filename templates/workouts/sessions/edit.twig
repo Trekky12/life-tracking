@@ -11,7 +11,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["WORKOUTS_SESSION"]}} </h2></div>
+        <div class="page-header"><h2>{{lang["WORKOUTS_SESSION"]}} | {{ plan.name }}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('workouts_sessions', {'plan': plan.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" action="{{  url_for('workouts_sessions_save', {'id' : entry.id, 'plan' : plan.hash}) }}" method="POST">
@@ -24,7 +28,7 @@
 
                 <div class="form-group">
                     <label for="dateSelect">{{lang["DATE"]}}</label>
-                    <input type="text" class="form-control" id="dateSelect" placeholder="" name="date" value="{% if not entry is null and not entry.date is null %}{{entry.date}}{% endif %}">
+                    <input type="text" class="form-control" id="dateSelect" placeholder="" name="date" value="{% if not entry is null and not entry.date is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
                 </div>
 
                 <div class="form-group">
@@ -34,7 +38,7 @@
 
                 <div class="form-group">
                     <label for="timeEnd">{{ lang["END"] }} {{lang["TIME"]}}</label>
-                    <input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% endif %}">
+                    <input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}">
                 </div>
 
                 <div class="form-group">
@@ -42,43 +46,53 @@
                     <textarea class="form-control" id="inputNotice" name="notice" rows="2">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
                 </div>
 
-                <div class="workout-selection" id="workoutExerciseSelection">
+                {% if entry is null and workoutdays|length > 0 %}
+                    <div class="form-group">
+                        <label for="workoutsDaySelect">{{lang["WORKOUTS_DAY"]}}</label>
+                        <select id="workoutsDaySelect" >
+                            <option value="-1" selected>{{ lang["CHOOSE"] }}</option>
+                            {% for id, day in workoutdays %}
+                                <option value="{{ id }}">{{ day }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+
+                <div class="workout-selection selected_exercises" id="workoutExercises">
                     <div class="content" data-type="main">
-                    {% for exercise in exercises %}
-                        {% if exercise.type == "exercise" %}
-                            {% include "workouts/sessions/edit-single-exercise.twig" with {'data': exercise} only %}
-                        {% elseif exercise.type == "day" %}
-                            <div class="workout_day_split" data-type="workout-element" data-category="day">
-                                <div class="content">
-                                    <h3>{{ exercise.notice }}</h3>
-                                    <input type="hidden" name="exercises[{{ exercise["idx"] }}][notice]" value="{{ exercise["notice"] }}"/>
-                                    <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="day"/>
+                        {% for exercise in exercises %}
+                            {% if exercise.type == "exercise" %}
+                                {% include "workouts/sessions/edit-single-exercise.twig" with {'data': exercise, 'hidden': (entry is null and workoutdays|length > 0) } only %}
+                            {% elseif exercise.type == "day" %}
+                                <div class="workout_day_split {% if entry is null and workoutdays|length > 0 %}hidden{% endif %}" data-type="workout-element" data-category="day" data-id="{{ exercise["id"] }}">
+                                    <div class="content">
+                                        <h3>{{ exercise.notice }}</h3>
+                                        <input type="hidden" name="exercises[{{ exercise["idx"] }}][notice]" value="{{ exercise["notice"] }}"/>
+                                        <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="day"/>
+                                    </div>
+                                    <div class="icons hidden">
+                                        <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+                                        <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+                                    </div>
                                 </div>
-                                <div class="icons">
-                                    <i class="minus fas fa-minus"></i>
-                                    <i class="handle fas fa-arrows-alt"></i>
-                                </div>
-                            </div>
-                            {% elseif exercise.type == "superset" %}
-                            <div class="workout_superset" data-type="workout-element" data-category="superset">
-                                <div class="content">
-                                    <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
-                                    <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="superset"/>
-                                    <div class="workout_superset">
+                                {% elseif exercise.type == "superset" %}
+                                <div class="workout_superset {% if entry is null and workoutdays|length > 0%}hidden{% endif %}" data-type="workout-element" data-category="superset">
+                                    <div class="content">
+                                        <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
+                                        <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="superset"/>
                                         <div class="exercises" data-type="superset">
                                             {% for child in exercise["children"] %}
-                                                {% include "workouts/sessions/edit-single-exercise.twig" with {'data': child} only %}
+                                                {% include "workouts/sessions/edit-single-exercise.twig" with {'data': child, 'hidden': (entry is null and workoutdays|length > 0)} only %}
                                             {% endfor %}
                                         </div>
                                     </div>
+                                    <div class="icons">
+                                        <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+                                        <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+                                    </div>
                                 </div>
-                                <div class="icons">
-                                    <i class="minus fas fa-minus"></i>
-                                    <i class="handle fas fa-arrows-alt"></i>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 

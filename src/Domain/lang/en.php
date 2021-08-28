@@ -72,6 +72,7 @@ $lang["MILEAGE"] = "Mileage";
 $lang["MILEAGE_PER_YEAR"] = "km/year";
 $lang["MILEAGE_TERM"] = "Term (years)";
 $lang["MILEAGE_TRAVELLED"] = "km driven";
+$lang["MILEAGE_START"] = "start mileage";
 $lang["KM"] = "km";
 $lang["START_WITH_YEAR"] = "calculation base 01.01.";
 $lang["START_WITH_FIRST_ENTRY"] = "calculation base 1. entry";
@@ -219,11 +220,6 @@ $lang["UNDO_ARCHIVE"] = "Do you really want to cancel archiving this entry?";
 $lang["OTHER_SETTINGS"] = "Other settings";
 $lang["FORCE_PW_CHANGE"] = "Force password change";
 $lang["MAIL_SETTINGS"] = "Mail notifications";
-$lang["MAILS_BOARD"] = "added to board/card";
-$lang["MAILS_BOARD_REMINDER"] = "card reminder";
-$lang["MAILS_USER"] = "creation of user";
-$lang["MAILS_FINANCES"] = "monthly finance stats";
-$lang["MAILS_SPLITTED_BILLS"] = "splitted bills";
 
 $lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Your user account at %s";
 $lang["MAIL_USER_ACCOUNT_CREATED"] = "someone created a user account for you at <a href='%s'>%s</a>";
@@ -233,6 +229,7 @@ $lang["MAIL_FORCE_CHANGE_PASSWORD"] = "You need to change your password after th
 
 $lang["MAIL_ADDED_TO_CARD"] = "You have been added to a card";
 $lang["MAIL_ADDED_TO_CARD_DETAIL"] = "you have been added on the board <a href='%s'>%s</a> at stack %s to the card \"%s\".";
+$lang["NOTIFICATION_ADDED_TO_CARD"] = "you have been added on the board %s at stack %s to the card \"%s\".";
 
 $lang["MAIL_ADDED_TO_BOARD"] = "You have been added to a board";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "you have been added to the board <a href='%s'>%s</a>.";
@@ -322,6 +319,15 @@ $lang["IDENTIFIER"] = "Identifier";
 $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "internal notifications";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "notify on execution of recurring finance entries";
+$lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "notify on assignment to cards on boards";
+
+$lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monthly finance statistics (1. of month at 06:00 Uhr)";
+$lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
+$lang["MAIL_CATEGORY_BOARDS_ADD"] = "notify when added to board";
+$lang["MAIL_CATEGORY_BOARDS_CARD_ADD"] = "notify on assignment to cards on boards";
+$lang["MAIL_CATEGORY_BOARDS_CARD_DUE"] = "daily reminder of due cards (09:00 Uhr)";
+
+$lang["MAIL_NOTIFY_USER_CREATION"] = "send e-mail with notice of user creation";
 
 $lang["CRAWLERS"] = "Crawlers";
 $lang["HEADLINES"] = "Headlines";
@@ -389,6 +395,10 @@ $lang["PERSON_RECEIVES_BY_ME"] = "%s receives %s %s by me";
 $lang["PERSON_OWES_TOTAL"] = "(owes total %s %s)";
 $lang["PERSON_RECEIVES_TOTAL"] = "(receives total %s %s)";
 
+$lang["SPEND_BY"] = "Share (%s)";
+$lang["PAID_BY"] = "Paid (%s)";
+$lang["SPLITBILLY_PAID_SPEND_BY_PERSON"] = "by";
+
 $lang["TRIPS"] = "Trips";
 $lang["ADD_EVENT"] = "add event";
 $lang["TRIPS_EVENT"] = "event";
@@ -402,6 +412,7 @@ $lang["EVENT_TYPE_HOTEL"] = "hotel";
 $lang["EVENT_TYPE_FLIGHT"] = "flight";
 $lang["EVENT_TYPE_DRIVE"] = "car drive";
 $lang["EVENT_TYPE_TRAINRIDE"] = "train ride";
+$lang["EVENT_TYPE_SHIP"] = "ship";
 $lang["EVENT_TYPE_CARRENTAL"] = "car rental";
 $lang["EVENT_TYPE_WAYPOINT"] = "waypoint";
 
@@ -415,15 +426,20 @@ $lang["END_DATE"] = "end date";
 $lang["SEARCH_ADDRESS"] = "search address";
 
 $lang["TRIPS_OVERVIEW"] = "Overview";
+$lang["TRIPS_PLANNED"] = "planned trips";
+$lang["TRIPS_PAST"] = "past trips";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "settle up";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "sender";
 $lang["SPLITBILLS_SETTLE_UP_RECEIVER"] = "receiver";
 
-$lang["SPLITBILLS_ONLY_PERSON"] = "only %s";
-$lang["SPLITBILLS_BY_PERSON"] = "by %s";
+$lang["SPLITBILLS_ONLY_PERSON"] = "only owed by %s";
+$lang["SPLITBILLS_BY_PERSON"] = "total paid by %s";
 $lang["SPLITBILLS_EQUALLY"] = "equally";
+$lang["SPLITBILLS_EQUALLY_PAID"] = "equally paid";
+$lang["SPLITBILLS_EQUALLY_SPEND"] = "equally spend";
 $lang["RECEIVED"] = "received";
+$lang["SPLITBILLS_INDIVIDUAL"] = "individually";
 
 $lang["CLONE"] = "clone";
 
@@ -452,8 +468,20 @@ $lang["TIMESHEETS_COME_PROJECT_BASED"] = "Start";
 $lang["TIMESHEETS_LEAVE_DAY_BASED"] = "Leave";
 $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "End";
 $lang["TIMESHEETS_EXPORT"] = "Export";
+$lang["EXPORT_WORD"] = "Word";
+$lang["EXPORT_EXCEL"] = "Excel";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
+$lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
+$lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "total range";
+$lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "current month";
+$lang["TIMESHEETS_TIME"] = "sum";
+$lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
+$lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "time conversion rate";
+$lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
+$lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
+$lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "no time calculation modification";
+$lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "use the time conversion rate of the project";
 
 $lang["THIS_DEVICE"] = "this device";
 
@@ -512,6 +540,10 @@ $lang["DATAOBJECT_WORKOUTS_MUSCLE"] = "muscle group";
 $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "body part";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "training plan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "training session";
+$lang["DATAOBJECT_RECIPES_COOKBOOK"] = "cookbook";
+$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "ingredient";
+$lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
+$lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -611,6 +643,9 @@ $lang["WORKOUTS_KM"] = "km";
 $lang["WORKOUTS_SET_ADD"] = "add set";
 $lang["WORKOUTS_SET_REMOVE"] = "remove set";
 
+$lang["WORKOUTS_WEIGHT"] = "weight";
+$lang["WORKOUTS_DISTANCE"] = "distance";
+
 $lang["LOAD_MORE"] = "load more";
 
 $lang["ALL"] = "all";
@@ -635,6 +670,7 @@ $lang["WORKOUTS_ADD_SUPERSET"] = "add superset";
 
 $lang["WORKOUTS_SUPERSET"] = "superset";
 $lang["WORKOUTS_DAYS"] = "workout days";
+$lang["WORKOUTS_DAY"] = "workout day";
 
 $lang["WORKOUTS_PLAN_CATEGORY_STRENGTH"] = "gain strength";
 $lang["WORKOUTS_PLAN_CATEGORY_MUSCLE"] = "build muscle";
@@ -647,5 +683,37 @@ $lang["SAVE_IFTTT_URL"] = "Save IFTTT-URL";
 $lang["DELETE_IFTTT_URL"] = "Delete IFTTT-URL";
 $lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] = "Web Push Notifications are not available. Alternativly the IFTTT-Maker Channel could be used. Therefore insert the URL:";
 $lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "Web Push Nachrichten are not available. A IFTTT-URL has been saved.";
+
+$lang["HELP"] = "help";
+$lang["TAKE_IDENTITY"] = "take identity";
+
+$lang["NO_OPTIONS"] = "No options available.";
+$lang["DIFFERENCE_CALCULATED"] = "difference (calculated)";
+
+$lang["HIDE"] = "Hide";
+$lang["SHOW"] = "Show";
+
+$lang["RECIPE"] = "Recipe";
+$lang["RECIPES"] = "Recipes";
+$lang["RECIPES_COOKBOOKS"] = "cookbooks";
+$lang["RECIPES_COOKBOOK"] = "cookbook";
+$lang["RECIPES_INGREDIENTS"] = "ingredients";
+$lang["RECIPES_INGREDIENT"] = "ingredient";
+$lang["RECIPES_MEALPLANS"] = "mealplans";
+$lang["RECIPES_MEALPLAN"] = "mealplan";
+
+$lang["RECIPES_PREPARATION_TIME"] = "preparation time";
+$lang["RECIPES_WAITING_TIME"] = "waiting time";
+$lang["RECIPES_SERVINGS"] = "servings";
+
+$lang["RECIPES_STEPS"] = "steps";
+$lang["RECIPES_AMOUNT"] = "amount";
+$lang["RECIPES_ADD_INGREDIENT"] = "Add ingredient";
+$lang["RECIPES_ADD_STEP"] = "Add step";
+$lang["RECIPES_MINUTES"] = "min.";
+$lang["RECIPES_ADD_TO_COOKBOOK"] = "Add to cookbook";
+$lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Remove from cookbook";
+
+$lang["ADD_NOTICE"] = "Add notice";
 
 return $lang;

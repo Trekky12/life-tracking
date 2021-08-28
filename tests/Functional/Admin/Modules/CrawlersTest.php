@@ -84,4 +84,20 @@ class CrawlersTest extends BaseTestCase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
+    public function testModuleWorkouts() {
+        $response = $this->request('GET', "/workouts/");
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+    }
+
+    public function testModuleRecipes() {
+        $response = $this->request('GET', "/recipes/");
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+    }
+
 }

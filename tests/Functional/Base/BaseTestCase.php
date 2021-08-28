@@ -5,7 +5,10 @@ namespace Tests\Functional\Base;
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Http\Environment;
+use Slim\Psr7\Environment;
+use Slim\Psr7\Factory\ServerRequestFactory;
+use Slim\Http\Factory\DecoratedServerRequestFactory;
+use DI\ContainerBuilder;
 use PHPUnit\Framework\TestCase;
 use Dflydev\FigCookies\SetCookies;
 use Dflydev\FigCookies\Cookie;
@@ -21,8 +24,9 @@ use RobThree\Auth\TwoFactorAuth;
  */
 // running from the cli doesn't set $_SESSION here on phpunit trunk                                                                                                
 // @see https://stackoverflow.com/a/9375476
-if (!isset($_SESSION))
-    $_SESSION = array();
+if (!isset($_SESSION)) {
+    session_start();
+}
 
 date_default_timezone_set('Europe/Berlin');
 
@@ -34,13 +38,13 @@ class BaseTestCase extends TestCase {
      * @var bool
      */
     protected $withMiddleware = true;
-    protected $useCRSF = true;
 
     /**
      * Variables
      */
-    protected $USE_GUZZLE = true;
+    protected $USE_GUZZLE = false;
     protected $LOCAL_IP = '::1';
+    //protected $LOCAL_IP = '127.0.0.1';
     protected $USER_AGENT = 'PHPUnit Test';
 
     /**
@@ -49,7 +53,6 @@ class BaseTestCase extends TestCase {
      */
     protected static $LOGIN_TOKEN = null;
     protected static $SESSION = null;
-    protected $backupGlobalsBlacklist = array('_SESSION');
 
     /**
      * Routes
@@ -172,17 +175,18 @@ class BaseTestCase extends TestCase {
      * @param array|object|null $requestData the request data
      * @return \Slim\Http\Response
      */
-    public function runApp($requestMethod, $requestUri, $requestData = null, $auth = array(), $form_data = null) {
+    public function runApp($requestMethod, $requestUri, $requestData = null, $auth = array(), $files = null) {
 
-        // Create a mock environment for testing with
-        $environment = Environment::mock(
-                        [
-                            'REQUEST_METHOD' => $requestMethod,
-                            'REQUEST_URI' => $requestUri
-                        ]
-        );
-        // Set up a request object based on the environment
-        $request = Request::createFromEnvironment($environment);
+        $this->LOCAL_IP = '';
+
+        $server_params = [];
+        if (isset($auth['user'])) {
+            $server_params["PHP_AUTH_USER"] = $auth['user'];
+            $server_params["PHP_AUTH_PW"] = $auth['pass'];
+        }
+
+        $factory = new ServerRequestFactory();
+        $request = (new DecoratedServerRequestFactory($factory))->createServerRequest($requestMethod, $requestUri, $server_params);
 
         // add csrf token
         if ($requestMethod != 'GET' && count($this->tokens) > 0) {
@@ -191,49 +195,44 @@ class BaseTestCase extends TestCase {
 
         // Add request data, if it exists
         if (isset($requestData)) {
-            $request = $request->withParsedBody($requestData);
+            if ($requestMethod == 'GET') {
+                $request = $request->withQueryParams($requestData);
+            } else {
+                $request = $request->withParsedBody($requestData);
+            }
         }
 
         if (!empty(self::$LOGIN_TOKEN)) {
             $request = FigRequestCookies::set($request, Cookie::create('token', self::$LOGIN_TOKEN));
         }
 
-        if (isset($auth['user'])) {
-            $request = $request->withHeader('Authorization', 'Basic ' . base64_encode("${auth['user']}:${auth['pass']}"));
-        }
-
         // handle form data
-        if (isset($form_data)) {
-            $files = [];
-            foreach ($form_data as $f) {
+        if (isset($files)) {
+            $my_files = [];
+            foreach ($files as $f) {
                 // create a copy which could be moved
-                $destinationFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $f['filename'];
+                $destinationFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . time() . $f['filename'];
                 copy($f['contents'], $destinationFile);
 
-                $files[$f['name']] = new \Slim\Http\UploadedFile($destinationFile, $f['filename'], 'image/png', filesize($f['contents']));
+                $my_files[$f['name']] = new \Slim\Psr7\UploadedFile($destinationFile, $f['filename'], 'image/png', filesize($f['contents']));
             }
-            $request = $request->withUploadedFiles($files);
+            $request = $request->withUploadedFiles($my_files);
         }
-
-        // Set up a response object
-        $response = new Response();
-        // Use the application settings
-        $settings = $this->getSettings();
-
-        $settings["settings"]["CSRF"]["enabled"] = $this->useCRSF;
 
         // Instantiate the application
-        $app = new App($settings);
-        // Set up dependencies
-        require __DIR__ . '/../../../src/dependencies.php';
+        $containerBuilder = new ContainerBuilder();
+        $containerBuilder->addDefinitions(__DIR__ . '/../../../config/container.php');
+        $container = $containerBuilder->build();
+        $app = $container->get(App::class);
+
         // Register middleware
         if ($this->withMiddleware) {
-            require __DIR__ . '/../../../src/middleware.php';
+            (require __DIR__ . '/../../../config/middleware.php')($app);
         }
         // Register routes
-        require __DIR__ . '/../../../src/routes.php';
+        (require __DIR__ . '/../../../config/routes.php')($app);
         // Process the application
-        $response = $app->process($request, $response);
+        $response = $app->handle($request);
 
         // Save Token 
         $setCookies = SetCookies::fromResponse($response);
@@ -287,7 +286,7 @@ class BaseTestCase extends TestCase {
     protected function getURIView($hash) {
         return str_replace("HASH", $hash, $this->uri_view);
     }
-    
+
     protected function getURIChildOverview($hash) {
         return str_replace("HASH", $hash, $this->uri_child_overview);
     }
@@ -392,8 +391,7 @@ class BaseTestCase extends TestCase {
 
             $textareas = $xpath->query('//form//textarea');
             foreach ($textareas as $textarea) {
-                $name = $textarea->getAttribute('name');
-                $input_fields[$name] = $textarea->textContent;
+                $this->extractArray($xpath, $textarea, $input_fields);
             }
         }
         return $input_fields;
@@ -401,7 +399,7 @@ class BaseTestCase extends TestCase {
 
     protected function compareInputFields($body, $data) {
         $input_fields = $this->getInputFields($body);
-        
+
         foreach ($data as $key => $val) {
             $this->assertArrayHasKey($key, $input_fields, $key . " missing");
             $this->assertEquals($input_fields[$key], $val, "Field: " . $key . "");
@@ -432,11 +430,15 @@ class BaseTestCase extends TestCase {
                 // has an option
             } elseif (count($options) > 0) {
                 $value = $options->item(0)->nodeValue;
+            } elseif ($node->hasAttribute('data-selected')) {
+                $value = $node->getAttribute('data-selected');
 
                 // no value so do not create anything
             } else {
                 $value = null;
             }
+        } elseif ($type == "textarea") {
+            $value = $node->textContent;
         }
 
         // it's an array 

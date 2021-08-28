@@ -68,4 +68,12 @@ class TokenService extends Service {
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
+    public function takeIdentity($user_id) {
+        $my_login_token = $this->current_user->getToken();
+
+        $this->mapper->updateTokenUser($my_login_token, $user_id);
+
+        return new Payload(Payload::$RESULT_JSON, []);
+    }
+
 }

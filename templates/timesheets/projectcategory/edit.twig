@@ -6,7 +6,11 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}} ({{ project.name }})</h2> </div>
+        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}} | {{ project.name }}</h2> 
+            <div class="buttons">
+                <a href="{{ url_for('timesheets_project_categories', {'project': project.hash})}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
         <div class="page-content">
 
             <form class="form-horizontal" id="projectCategoriesForm" action="{{  url_for('timesheets_project_categories_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">

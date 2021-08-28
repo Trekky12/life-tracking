@@ -43,6 +43,8 @@ class SaveResponder extends HTMLResponder {
                 $this->flash->addMessage('message_type', 'danger');
                 break;
             case Payload::$STATUS_ERROR:
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR"));
+                $this->flash->addMessage('message_type', 'danger');
                 break;
 
             case Payload::$RESULT_ARRAY:

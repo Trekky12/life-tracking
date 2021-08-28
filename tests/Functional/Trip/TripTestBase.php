@@ -11,9 +11,9 @@ class TripTestBase extends BaseTestCase {
     protected $uri_save = "/trips/save/";
     protected $uri_delete = "/trips/delete/";
     protected $uri_view = "/trips/HASH/view/";
-    protected $uri_child_edit = "/trips/HASH/event/edit/";
-    protected $uri_child_save = "/trips/HASH/event/save/";
-    protected $uri_child_delete = "/trips/HASH/event/delete/";
+    protected $uri_child_edit = "/trips/HASH/tripevent/edit/";
+    protected $uri_child_save = "/trips/HASH/tripevent/save/";
+    protected $uri_child_delete = "/trips/HASH/tripevent/delete/";
     protected $uri_waypoint_add = "/trips/HASH/waypoint/add";
     protected $uri_waypoint_delete = "/trips/HASH/waypoint/delete";
     protected $uri_route_add = "/trips/HASH/route/add";
@@ -23,7 +23,7 @@ class TripTestBase extends BaseTestCase {
 
     protected function getParent($body, $name) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/trips\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a><\/td>\s*(<td>\s*<\/td>\s*)*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>.*)"><span class="fas fa-edit fa-lg"><\/span><\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>.*)" class="btn-delete"><span class="fas fa-trash fa-lg"><\/span><\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/trips\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a><\/td>\s*(<td>\s*<\/td>\s*)*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
@@ -39,9 +39,9 @@ class TripTestBase extends BaseTestCase {
 
     protected function getChild($body, $name) {
         $matches = [];
-        $re = '/<div class="trip_event\s*(has_notice)?" data-event="(?<id>[0-9]*)">\s*<div class="icon">\s*<i class="(.*)?"><\/i>\s*<\/div>\s*<div class="text">\s*<h4>' . $name . '<\/h4>/';
+        $re = '/<div class="trip_event\s*(has_notice)?" data-event="(?<id>[0-9]*)" data-title="' . $name . '">/';
         preg_match($re, $body, $matches);
-
+        
         return $matches;
     }
 

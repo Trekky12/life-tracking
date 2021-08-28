@@ -80,7 +80,10 @@ const projectCategorySelects = document.querySelectorAll('select.category');
 projectCategorySelects.forEach(function (item, idx) {
     new Selectr(item, {
         searchable: false,
-        placeholder: lang.categories
+        placeholder: lang.categories,
+        messages: {
+            noOptions: lang.no_options
+        }
     });
 });
 
@@ -111,5 +114,44 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "enableTime": true,
         "time_24hr": true,
         "minuteIncrement": 1
+    });
+}
+
+const radioDurationCustomModification = document.getElementById('radioDurationCustom');
+const radioDurationNoModification = document.getElementById('radioDurationReal');
+const radioDurationRateModification = document.getElementById('radioDurationProjectRate');
+const inputDurationModificationWrapper = document.getElementById('inputDurationModificationWrapper');
+
+if (radioDurationCustomModification && radioDurationNoModification && radioDurationRateModification && inputDurationModificationWrapper) {
+    radioDurationCustomModification.addEventListener('click', function (event) {
+
+        if (radioDurationCustomModification.checked) {
+            inputDurationModificationWrapper.classList.remove("hidden");
+            inputDurationModificationWrapper.querySelector('input').disabled = false;
+        } else {
+            inputDurationModificationWrapper.classList.add("hidden");
+            inputDurationModificationWrapper.querySelector('input').disabled = true;
+        }
+    });
+
+    radioDurationNoModification.addEventListener('click', function (event) {
+        inputDurationModificationWrapper.classList.add("hidden");
+        inputDurationModificationWrapper.querySelector('input').disabled = true;
+    });
+    radioDurationRateModification.addEventListener('click', function (event) {
+        inputDurationModificationWrapper.classList.add("hidden");
+        inputDurationModificationWrapper.querySelector('input').disabled = true;
+    });
+}
+
+
+const categoryFilter = document.getElementById("category-filter");
+if (categoryFilter) {
+    new Selectr(categoryFilter, {
+        searchable: false,
+        placeholder: lang.categories,
+        messages: {
+            noOptions: lang.no_options
+        }
     });
 }

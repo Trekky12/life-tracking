@@ -2,10 +2,16 @@
 
 {% for link in links %}
     <li>
-        <a href="{{ link.link }}" target="_blank" rel="noreferrer">{{ link.name |raw }}</a>
+        <a href="{{ link.link }}" target="_blank" rel="noreferrer">
+            {{ link.name |raw }}
+            {% if root %}
+                <span class="plus">{{ fontawesome("fas fa-plus") }}</span>
+                <span class="minus">{{ fontawesome("fas fa-minus") }}</span>
+            {% endif %}
+        </a>
         {% if link.children %}
             <ul>
-                {% include "crawlers/links/menu-links.twig" with {'links': link.children} %}
+                {% include "crawlers/links/menu-links.twig" with {'links': link.children, 'root': 0} %}
             </ul>
         {% endif %}
     </li>

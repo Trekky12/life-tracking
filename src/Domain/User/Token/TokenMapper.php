@@ -76,5 +76,18 @@ class TokenMapper extends \App\Domain\Mapper {
         }
         return $stmt->rowCount();
     }
+    
+    public function updateTokenUser($token, $user_id) {
+        $sql = "UPDATE " . $this->getTableName() . " SET user =:user WHERE token=:token";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "user" => $user_id,
+            "token" => $token
+        ]);
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+            
 
 }

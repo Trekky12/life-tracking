@@ -61,10 +61,13 @@ class PaymethodMapper extends \App\Domain\Mapper {
     }
 
     public function getAllfromUsers($users = [], $sorted = false) {
-        if (empty($users)) {
+        
+        $user_ids = array_keys($users);
+        
+        if (empty($user_ids)) {
             return [];
         }
-        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE user IN (" . implode(',', $users) . ")";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE user IN (" . implode(',', $user_ids) . ")";
 
         $bindings = array();
 

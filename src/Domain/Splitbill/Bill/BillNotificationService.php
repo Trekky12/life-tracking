@@ -8,6 +8,7 @@ use Slim\Routing\RouteParser;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
 use App\Domain\Notifications\NotificationsService;
+use App\Domain\MailNotifications\MailNotificationsService;
 use App\Domain\User\UserService;
 
 class BillNotificationService {
@@ -20,8 +21,17 @@ class BillNotificationService {
     private $translation;
     private $user_service;
     private $notification_service;
+    private $mail_notification_service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, BillMapper $mapper, RouteParser $router, Helper $helper, Translator $translation, UserService $user_service, NotificationsService $notification_service) {
+    public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
+            BillMapper $mapper,
+            RouteParser $router,
+            Helper $helper,
+            Translator $translation,
+            UserService $user_service,
+            NotificationsService $notification_service,
+            MailNotificationsService $mail_notification_service) {
         $this->logger = $logger;
         $this->current_user = $user;
         $this->mapper = $mapper;
@@ -31,6 +41,7 @@ class BillNotificationService {
 
         $this->user_service = $user_service;
         $this->notification_service = $notification_service;
+        $this->mail_notification_service = $mail_notification_service;
     }
 
     public function notifyUsers($type, $bill, $sbgroup, $is_new_bill) {
@@ -93,7 +104,7 @@ class BillNotificationService {
                 $user = $users[$nu];
 
                 // Mail
-                if ($user->mail && $user->mails_splitted_bills == 1) {
+                if ($user->mail) {
 
                     $variables = array(
                         'header' => '',
@@ -107,11 +118,12 @@ class BillNotificationService {
                         'LANG_PAID' => $lang_paid,
                     );
 
-                    $this->helper->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
+                    //$this->helper->send_mail('mail/splitted_bill.twig', $user->mail, $subject, $variables);
+                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_SPLITTED_BILLS", 'mail/splitted_bill.twig', $subject, $variables, $sbgroup->id);
                 }
 
                 // Notification
-                $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path);
+                $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path, $sbgroup->id);
             }
         }
     }

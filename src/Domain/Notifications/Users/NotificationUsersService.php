@@ -24,19 +24,30 @@ class NotificationUsersService extends Service {
 
     public function setCategoryForUser($data) {
 
-        $category = array_key_exists('category', $data) ? intval(filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $cat = array_key_exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_STRING) : "";
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
-
+        $category = intval($cat);
+        $object_id = null;
+        if(strpos($cat, "_")){
+            $cat_and_id = explode("_", $cat);
+            $category = intval($cat_and_id[0]);
+            $object_id = intval($cat_and_id[1]);
+        }       
+        
         $user = $this->current_user->getUser();
 
         if ($type == 1) {
-            $this->mapper->addCategory($user->id, $category);
+            $this->mapper->addCategory($user->id, $category, $object_id);
         } else {
-            $this->mapper->deleteCategory($user->id, $category);
+            $this->mapper->deleteCategory($user->id, $category, $object_id);
         }
         $result = ["status" => "success"];
         return new Payload(Payload::$RESULT_JSON, $result);
+    }
+    
+    public function doesUserHaveCategory($category, $user, $object_id) {
+        return $this->mapper->doesUserHaveCategory($category, $user, $object_id);
     }
 
 }

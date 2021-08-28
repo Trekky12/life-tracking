@@ -144,7 +144,7 @@ class PlanExportService extends PlanService {
         unlink($excelFileName);
 
 
-        return new Payload(Payload::$RESULT_RAW, $body);
+        return new Payload(Payload::$RESULT_EXCEL, $body);
     }
 
     private function createExerciseRows($row_nr, $exercise, $spreadsheet, $sheet) {

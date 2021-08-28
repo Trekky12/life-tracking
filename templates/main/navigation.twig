@@ -10,19 +10,19 @@
 {% endif %}
 
 <div id="mobile-header-icons" class="size-{{mobile_elements}}">
-    <a href="{{ url_for('index') }}" {% if active == 'index' %}class="active"{% endif %}><i class="fas fa-sitemap"></i></a>
+    <a href="{{ url_for('index') }}" {% if active == 'index' %}class="active"{% endif %}>{{ fontawesome('fas fa-sitemap') }}</a>
         {% if mobile_favorites|length > 0 %}
             {%  for favorite in mobile_favorites %}
-            <a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %}class="active"{% endif %}><i class="{{ favorite.icon }}"></i></a>
+            <a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %}class="active"{% endif %}>{{ fontawesome(favorite.icon) }}</a>
             {% endfor %}
         {% else %}
             {% for module_name, module in modules %}
                 {% if user.hasModule(module_name)%}
-                <a href="{{ url_for(module['rootRoute']) }}" {% if active == module['rootRoute'] %}class="active"{% endif %}><i class="{{ module['icon'] }}"></i></a>
+                <a href="{{ url_for(module['rootRoute']) }}" {% if active == module['rootRoute'] %}class="active"{% endif %}>{{ fontawesome(module['icon']) }}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}
-    <a href="{{ url_for('notifications') }}" class="badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell"><i class="far fa-bell"></i></a>
+    <a href="{{ url_for('notifications') }}" class="badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell">{{ fontawesome('far fa-bell') }}</a>
     <div id="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -41,9 +41,9 @@
             <li {% if active == modules['location']['rootRoute'] or active == 'location_edit' or active == 'steps' %}class="active"{% endif %}>
                 <a href="{{ url_for(modules['location']['rootRoute']) }}">{{lang[modules['location']['title']]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ url_for('location_edit') }}"><i class="fas fa-location-arrow" aria-hidden="true"></i> {{lang["ADD_LOCATION"]}}</a></li>
+                    <li><a href="{{ url_for('location_edit') }}">{{ fontawesome('fas fa-location-arrow') }} {{lang["ADD_LOCATION"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('steps') }}"><i class="far fa-chart-bar" aria-hidden="true"></i> {{lang["STEPS"]}}</a></li>
+                    <li><a href="{{ url_for('steps') }}">{{ fontawesome('far fa-chart-bar') }} {{lang["STEPS"]}}</a></li>
                 </ul>
             </li> 
         {% endif %}
@@ -51,16 +51,16 @@
             <li {% if active == modules['finances']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ url_for(modules['finances']['rootRoute']) }}">{{lang[modules['finances']['title']]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ url_for('finances_categories') }}"><i class="fas fa-tags" aria-hidden="true"></i> {{lang["FINANCES_CATEGORIES"]}}</a></li>
-                    <li><a href="{{ url_for('finances_categories_assignment') }}"><i class="fas fa-magic" aria-hidden="true"></i> {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
+                    <li><a href="{{ url_for('finances_categories') }}">{{ fontawesome('fas fa-tags') }} {{lang["FINANCES_CATEGORIES"]}}</a></li>
+                    <li><a href="{{ url_for('finances_categories_assignment') }}">{{ fontawesome('fas fa-magic') }} {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('finances_recurring') }}"><i class="fas fa-calendar-alt" aria-hidden="true"></i> {{lang["FINANCES_RECURRING"]}}</a></li>
+                    <li><a href="{{ url_for('finances_recurring') }}">{{ fontawesome('fas fa-calendar-alt') }} {{lang["FINANCES_RECURRING"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('finances_paymethod') }}"><i class="fas fa-credit-card" aria-hidden="true"></i> {{lang["FINANCES_PAYMETHODS"]}}</a></li>
+                    <li><a href="{{ url_for('finances_paymethod') }}">{{ fontawesome('fas fa-credit-card') }} {{lang["FINANCES_PAYMETHODS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('finances_budgets') }}"><i class="far fa-money-bill-alt" aria-hidden="true"></i> {{lang["BUDGET"]}}</a></li>
+                    <li><a href="{{ url_for('finances_budgets') }}">{{ fontawesome('far fa-money-bill-alt') }} {{lang["BUDGET"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('finances_stats') }}"><i class="fas fa-chart-pie" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+                    <li><a href="{{ url_for('finances_stats') }}">{{ fontawesome('fas fa-chart-pie') }} {{lang["STATS"]}}</a></li>
                 </ul>
             </li>
         {% endif %}
@@ -68,7 +68,9 @@
             <li {% if active == modules['cars']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ url_for(modules['cars']['rootRoute']) }}">{{lang[modules['cars']['title']]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ url_for('car_service_stats') }}"><i class="fas fa-chart-pie" aria-hidden="true"></i> {{lang["STATS"]}}</a></li>
+                    <li><a href="{{ url_for('cars') }}">{{ fontawesome('fas fa-car') }} {{lang["CARS"]}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{{ url_for('car_service_stats') }}">{{ fontawesome('fas fa-chart-pie') }} {{lang["STATS"]}}</a></li>
                 </ul>
             </li>
         {% endif %}
@@ -102,35 +104,46 @@
                 <a href="{{ url_for(modules['workouts']['rootRoute']) }}">{{lang[modules['workouts']['title']]}}</a>
 
                 <ul class="dropdown-content">
-                    <li><a href="{{ url_for('workouts_exercises_view') }}"><i class="fas fa-dumbbell" aria-hidden="true"></i> {{lang["WORKOUTS_EXERCISES"]}}</a></li>
+                    <li><a href="{{ url_for('workouts_exercises_view') }}">{{ fontawesome('fas fa-dumbbell') }} {{lang["WORKOUTS_EXERCISES"]}}</a></li>
                     <li><a href="{{ url_for('workouts_templates') }}">{{lang["WORKOUTS_TEMPLATE_PLANS"]}}</a></li>
-                    {% if user.isAdmin() %}
+                        {% if user.isAdmin() %}
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ url_for('workouts_exercises') }}">{{lang["WORKOUTS_EXERCISES_MANAGE"]}}</a></li>
                         <li><a href="{{ url_for('workouts_muscles') }}">{{lang["WORKOUTS_MUSCLES"]}}</a></li>
                         <li><a href="{{ url_for('workouts_bodyparts') }}">{{lang["WORKOUTS_BODYPARTS"]}}</a></li>
-                    {% endif %}
+                        {% endif %}
                 </ul>
 
+            </li> 
+        {% endif %}
+        {% if user.hasModule("recipes") %}
+            <li {% if active == modules['recipes']['rootRoute'] %}class="active"{% endif %}>
+                <a href="{{ url_for(modules['recipes']['rootRoute']) }}">{{lang[modules['recipes']['title']]}}</a>
+                
+                <ul class="dropdown-content">
+                    <li><a href="{{ url_for('recipes_cookbooks') }}">{{lang["RECIPES_COOKBOOKS"]}}</a></li>
+                    <li><a href="{{ url_for('recipes_mealplans') }}">{{lang["RECIPES_MEALPLANS"]}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{{ url_for('recipes_ingredients') }}">{{lang["RECIPES_INGREDIENTS"]}}</a></li>
+                </ul>
             </li> 
         {% endif %}
         {% if user.isAdmin() %}
             <li {% if active == 'settings' %}class="active"{% endif %}>
                 <a href="#">{{lang["SETTINGS"]}}</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ url_for('users') }}"><i class="fas fa-user" aria-hidden="true"></i> {{lang["USERS"]}}</a></li>
-                    <li><a href="{{ url_for('cars') }}"><i class="fas fa-car" aria-hidden="true"></i> {{lang["CARS"]}}</a></li>
+                    <li><a href="{{ url_for('users') }}">{{ fontawesome('fas fa-user') }} {{lang["USERS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('notifications_clients') }}"><i class="fas fa-bell" aria-hidden="true"></i> {{lang["NOTIFICATIONS"]}}</a></li>
-                    <li><a href="{{ url_for('notifications_categories') }}"><i class="fas fa-tags" aria-hidden="true"></i> {{lang["CATEGORIES"]}}</a></li>
+                    <li><a href="{{ url_for('notifications_clients') }}">{{ fontawesome('fas fa-bell') }} {{lang["NOTIFICATIONS"]}}</a></li>
+                    <li><a href="{{ url_for('notifications_categories') }}">{{ fontawesome('fas fa-tags') }} {{lang["CATEGORIES"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('login_tokens') }}"><i class="fas fa-key" aria-hidden="true"></i> {{lang["LOGIN_TOKENS"]}}</a></li>
+                    <li><a href="{{ url_for('login_tokens') }}">{{ fontawesome('fas fa-key') }} {{lang["LOGIN_TOKENS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('banlist') }}"><i class="fas fa-key" aria-hidden="true"></i> {{lang["BANLIST"]}}</a></li>
+                    <li><a href="{{ url_for('banlist') }}">{{ fontawesome('fas fa-key') }} {{lang["BANLIST"]}}</a></li>
                 </ul>
             </li>
         {% endif %}
-        <li {% if active == 'profile' or active == 'notifications' %}class="active"{% endif %}>
+        <li {% if active == 'profile' or active == 'notifications' or active == 'help' %}class="active"{% endif %}>
             <a href="{{ url_for('users_profile_edit') }}" class="profile badge {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}"> 
                 {% if user.get_thumbnail() != '' %}
                     <img src="/{{uploads_folder}}/profile/{{user.get_thumbnail('mini')}}" class="avatar-mini navi">
@@ -150,11 +163,13 @@
                 <li><a href="{{ url_for('users_application_passwords') }}">{{lang["APPLICATION_PASSWORDS"]}}</a></li>
                 <li><a href="{{ url_for('users_twofactorauth') }}">{{lang["TWOFACTOR_AUTHENTICATION"]}}</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ url_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<i class="far fa-bell fa-pull-right"></i></a></li>
+                <li><a href="{{ url_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<span class="right-align">{{ fontawesome('fas fa-bell') }}</span></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ url_for('users_activities') }}">{{lang["ACTIVITIES"]}}<i class="fas fa-history fa-pull-right"></i></a></li>
+                <li><a href="{{ url_for('users_activities') }}">{{lang["ACTIVITIES"]}}<span class="right-align">{{ fontawesome('fas fa-history') }}</span></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ url_for('logout') }}" >{{lang["LOGOUT"]}}<i class="fas fa-sign-out-alt fa-pull-right"></i></a></li>
+                <li><a href="{{ url_for('help') }}">{{lang["HELP"]}}<span class="right-align">{{ fontawesome('far fa-question-circle') }}</span></a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ url_for('logout') }}" >{{lang["LOGOUT"]}}<span class="right-align">{{ fontawesome('fas fa-sign-out-alt') }}</span></a></li>
             </ul>
         </li>
     </ul>                        

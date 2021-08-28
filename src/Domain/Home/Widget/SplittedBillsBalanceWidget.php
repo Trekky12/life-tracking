@@ -31,9 +31,9 @@ class SplittedBillsBalanceWidget implements Widget {
     }
 
     private function createList() {
-        $user_groups = $this->group_service->getUserGroups();
+        $user_groups = $this->group_service->getUserElements();
 
-        $groups = $this->group_service->getGroups();
+        $groups = $this->group_service->getAll();
 
         $balances = $this->bill_mapper->getBalances();
         $result = [];
