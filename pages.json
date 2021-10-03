@@ -394,6 +394,24 @@
         "url": "http://tracking.localhost/timesheets/ABCabc123/fast/"
     },
     {
+        "name": "10_timesheets-8",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/categorybudget/view/"
+    },
+    {
+        "name": "10_timesheets-9",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/categorybudget/"
+    },
+    {
+        "name": "10_timesheets-10",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/categorybudget/edit/1",
+        "height": 1100
+    },
+    {
+        "name": "10_timesheets-11",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/categorybudget/edit/2",
+        "height": 1100
+    },
+    {
         "name": "11_workouts",
         "url": "http://tracking.localhost/workouts/plans/"
     },

@@ -85,7 +85,11 @@ function add_selectr(element) {
 
     new Selectr(element, {
         searchable: false,
-        placeholder: lang.categories
+        placeholder: lang.categories,
+        messages: {
+            noResults: lang.nothing_found,
+            noOptions: lang.no_options
+        }
     });
 }
 

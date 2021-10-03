@@ -29,4 +29,7 @@ public/test*
 !/files/.gitkeep 
 
 tests/.phpunit.result.cache
+tests/.rnd
 composer.bat
+
+TODO

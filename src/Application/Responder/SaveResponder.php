@@ -22,7 +22,7 @@ class SaveResponder extends HTMLResponder {
 
     public function respond(Payload $payload): ResponseInterface {
         parent::respond($payload);
-        
+
         $entry = $payload->getResult();
 
         switch ($payload->getStatus()) {
@@ -68,7 +68,9 @@ class SaveResponder extends HTMLResponder {
          */
         $flash_messages = $payload->getFlashMessages();
         foreach ($flash_messages as $flash_message_type => $flash_message) {
-            $this->flash->addMessage($flash_message_type, $flash_message);
+            foreach ($flash_message as $msg) {
+                $this->flash->addMessage($flash_message_type, $msg);
+            }
         }
 
         $response = $this->responseFactory->createResponse();

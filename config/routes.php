@@ -402,6 +402,8 @@ return function (App $app) {
                 $group_sheets->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetEditAction::class)->setName('timesheets_sheets_edit');
                 $group_sheets->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetSaveAction::class)->setName('timesheets_sheets_save');
                 $group_sheets->delete('/delete/{id}', \App\Application\Action\Timesheets\Sheet\SheetDeleteAction::class)->setName('timesheets_sheets_delete');
+                
+                $group_sheets->post('/setCategories', \App\Application\Action\Timesheets\Sheet\SheetSetCategoriesAction::class)->setName('timesheets_sheets_set_categories');
             });
 
             $group_project->group('/fast', function (RouteCollectorProxy $group_fast) {
@@ -420,6 +422,15 @@ return function (App $app) {
                 $group_category->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryEditAction::class)->setName('timesheets_project_categories_edit');
                 $group_category->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategorySaveAction::class)->setName('timesheets_project_categories_save');
                 $group_category->delete('/delete/{id}', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryDeleteAction::class)->setName('timesheets_project_categories_delete');
+            });
+            
+            $group_project->group('/categorybudget', function (RouteCollectorProxy $group_category_budget) {
+                $group_category_budget->get('/', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetListAction::class)->setName('timesheets_project_categorybudget');
+                $group_category_budget->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetEditAction::class)->setName('timesheets_project_categorybudget_edit');
+                $group_category_budget->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetSaveAction::class)->setName('timesheets_project_categorybudget_save');
+                $group_category_budget->delete('/delete/{id}', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetDeleteAction::class)->setName('timesheets_project_categorybudget_delete');
+                
+                $group_category_budget->get('/view/', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetViewAction::class)->setName('timesheets_project_categorybudget_view');
             });
         });
     });

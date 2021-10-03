@@ -808,7 +808,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
             sort: "asc"
         },
         {
-            select: [1, 2, 3, 4],
+            select: [1, 2, 3, 4, 5],
             sortable: false,
             searchable: false
         }
@@ -823,12 +823,12 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     labels: tableLabels,
     columns: [
         {
-            select: 0,
+            select: 1,
             sortable: true,
             sort: "desc"
         },
         {
-            select: [4, 5, 6],
+            select: [0, 5, 6, 7],
             sortable: false,
             searchable: false
         }
@@ -844,11 +844,28 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
 });
 
 timesheetsSheetsTable.on("fetchData", function (data) {    
-    let footer = document.querySelector("#timesheets_sheets_table tfoot tr th:nth-child(4)");
+    let footer = document.querySelector("#timesheets_sheets_table tfoot tr th:nth-child(5)");
     footer.innerHTML = data.sum;
 });
 
 var timesheetsProjectCategoriesTable = new JSTable("#project_categories_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var timesheetsCategoryBudgetTable = new JSTable("#project_categorybudgets_table", {
     perPage: 10,
     labels: tableLabels,
     columns: [

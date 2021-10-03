@@ -1,4 +1,4 @@
-button:not(.fa):not(.selectr-tag-remove):not(.leaflet-routing-reverse-waypoints):not(.leaflet-routing-add-waypoint):not(.leaflet-routing-btn):not(.user-selected-remove):not(.choices__button):not(.selectr-input-clear), 
+button:not(.fa):not(.selectr-tag-remove):not(.leaflet-routing-reverse-waypoints):not(.leaflet-routing-add-waypoint):not(.leaflet-routing-btn):not(.user-selected-remove):not(.choices__button):not(.selectr-input-clear):not(.scrollStyle), 
 input[type="submit"], 
 .button {
 
@@ -28,7 +28,7 @@ input[type="submit"],
 
         }
     }
-    
+
     &:active{
         background: none;
         border-width: 2px;
@@ -96,7 +96,7 @@ input[type="submit"],
     &.add-btn{
 
     }
-    
+
     &.blue{
         background-color: $color_blue;
         color: #FFFFFF;
@@ -114,7 +114,7 @@ input[type="submit"],
             color: $color_blue;
         }
     }
-    
+
     &.small{
         padding: 0.5rem 1rem; 
     }
@@ -202,4 +202,15 @@ form{
 
 input.read-only:read-only{
     background: #EEE;
+}
+
+.html-duration-picker-wrapper{
+    input.html-duration-picker{
+        padding-right: 25px;
+        text-align: left;
+    }
+    .controlsDivStyle{
+        top: 0px;
+    }
+
 }

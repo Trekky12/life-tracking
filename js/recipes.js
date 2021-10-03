@@ -161,6 +161,7 @@ function createChoiceIngredients(element) {
         searchable: true,
         placeholder: lang.ingredient,
         messages: {
+            noResults: lang.nothing_found,
             noOptions: lang.no_options
         }
     });

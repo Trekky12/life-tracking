@@ -62,7 +62,10 @@ class Payload {
     }
 
     public function addFlashMessage($key, $value) {
-        $this->flash_messages[$key] = $value;
+        if(!array_key_exists($key, $this->flash_messages)){
+            $this->flash_messages[$key] = [];
+        }
+        $this->flash_messages[$key][] = $value;
     }
 
     public function clearFlashMessage($key) {

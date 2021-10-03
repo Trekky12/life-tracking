@@ -885,6 +885,36 @@ CREATE TABLE timesheets_sheets_categories (
     FOREIGN KEY(category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS timesheets_categorybudgets;
+CREATE TABLE timesheets_categorybudgets (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    project INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    categorization ENUM('duration','duration_modified', 'count') default NULL,
+    notice TEXT DEFAULT NULL,
+    main_category INTEGER unsigned DEFAULT NULL,
+    value INT(11) NOT NULL,
+    warning1 INT(11) NULL,
+    warning2 INT(11) NULL,
+    warning3 INT(11) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(main_category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS timesheets_categorybudgets_categories;
+CREATE TABLE timesheets_categorybudgets_categories (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    categorybudget INTEGER unsigned DEFAULT NULL,
+    category INTEGER unsigned DEFAULT NULL,
+    FOREIGN KEY(categorybudget) REFERENCES timesheets_categorybudgets(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS activities;
 CREATE TABLE activities (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

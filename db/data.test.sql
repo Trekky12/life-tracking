@@ -53,7 +53,19 @@ INSERT INTO timesheets_projects_users (project, user) VALUES
 (1, 1),
 (1, 2);
 INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, duration) VALUES
-(1, 1, 1, 1, '2020-01-01 09:00:00', '2020-01-01 12:00:00', 10800);
+(1, 1, 1, 1, '2020-01-01 09:00:00', '2020-01-01 12:00:00', 10800),
+(2, 1, 1, 1, '2021-09-13 09:00:00', '2021-09-13 12:00:00', 10800);
+INSERT INTO timesheets_categories (id, project, name) VALUES 
+(1, 1, 'Test timesheets project category 1'),
+(2, 1, 'Test timesheets project category 2'); 
+INSERT INTO timesheets_sheets_categories (sheet, category) VALUES 
+(2, 1);
+INSERT INTO timesheets_categorybudgets (id, project, name, categorization, main_category, value, warning1, warning2, warning3) VALUES 
+(1, 1, 'Test timesheets project category budget 1', 'count', 1, 5, 2, 3, 4),
+(2, 1, 'Test timesheets project category budget 2', 'duration', 2, 10800, 4200, 8400, 9600); 
+INSERT INTO timesheets_categorybudgets_categories (categorybudget, category) VALUES 
+(1, 1),
+(2, 2);
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 
@@ -225,9 +237,6 @@ INSERT INTO workouts_sessions_exercises (id, session, exercise, position, sets, 
 (1, 1, 1, 0, '[{\"repeats\":10,\"weight\":null,\"time\":null,\"distance\":null},{\"repeats\":20,\"weight\":null,\"time\":null,\"distance\":null},{\"repeats\":30,\"weight\":null,\"time\":null,\"distance\":null}]', 'exercise', NULL, 0),
 (2, 1, 2, 1, '[{\"repeats\":10,\"weight\":5,\"time\":null,\"distance\":null},{\"repeats\":20,\"weight\":10,\"time\":null,\"distance\":null},{\"repeats\":30,\"weight\":20,\"time\":null,\"distance\":null}]', 'exercise', NULL, 0),
 (3, 1, 3, 2, '[{\"repeats\":null,\"weight\":null,\"time\":30,\"distance\":1}]', 'exercise', NULL, 0);
-
-INSERT INTO timesheets_categories (id, project, user, name) VALUES
-(1, 1, 1, 'Test Category 1');
 
 
 INSERT INTO recipes_cookbooks (id, user, name, hash) VALUES 

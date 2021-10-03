@@ -187,14 +187,15 @@ class SheetService extends Service {
             }
 
             $row = [];
+            $row[] = '<input type="checkbox" name="check_row" data-id="' . $sheet->id . '">';
             $row[] = $date;
             $row[] = $start;
             $row[] = $end;
             $row[] = $time;
             $row[] = $sheet->categories;
 
-            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
-            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-edit') . '</a>';
+            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 
             $rendered_data[] = $row;
         }
@@ -218,7 +219,7 @@ class SheetService extends Service {
                     $this->mapper->set_duration_modified($entry->id, $duration * $conversion_rate);
                     break;
                 case 2:
-                    // do nothing since duration_modified is already set from the input box
+                // do nothing since duration_modified is already set from the input box
             }
         }
     }
@@ -286,6 +287,45 @@ class SheetService extends Service {
             "from" => $from,
             "to" => $to
         ]);
+    }
+
+    public function setCategories($hash, $data) {
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $recipe = array_key_exists("recipe", $data) && !empty($data["recipe"]) ? intval(filter_var($data["recipe"], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $date = array_key_exists("date", $data) && !empty($data["date"]) ? filter_var($data["date"], FILTER_SANITIZE_STRING) : date('Y-m-d');
+        $type = array_key_exists("type", $data) && !empty($data["type"]) ? filter_var($data["type"], FILTER_SANITIZE_STRING) : null;
+        if (!in_array($type, ["assign", "remove"])) {
+            return new Payload(Payload::$STATUS_ERROR, "WRONG_TYPE");
+        }
+
+        $sheets = [];
+        if (array_key_exists("sheets", $data) && is_array($data["sheets"])) {
+            $sheets = filter_var_array($data["sheets"], FILTER_SANITIZE_NUMBER_INT);
+        }
+
+        $categories = [];
+        if (array_key_exists("categories", $data) && is_array($data["categories"])) {
+            $categories = filter_var_array($data["categories"], FILTER_SANITIZE_NUMBER_INT);
+        }
+
+        $result = false;
+        if (count($sheets) > 0 && count($categories) > 0) {
+            if ($type == "assign") {
+                $result = $this->mapper->addCategoriesToSheets($sheets, $categories);
+            } elseif ($type == "remove") {
+                $result = $this->mapper->removeCategoriesFromSheets($sheets, $categories);
+            }
+        }
+
+        if (!$result) {
+            return new Payload(Payload::$STATUS_NEW);
+        }
+        return new Payload(Payload::$STATUS_ERROR);
     }
 
 }

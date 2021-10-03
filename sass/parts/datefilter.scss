@@ -53,7 +53,7 @@
             align-items: start;
         }
 
-        button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input), select, .flatpickr-input, .choices__inner{
+        button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input):not(.selectr-input), select, .flatpickr-input, .choices__inner{
             min-height: 41px;
         }
 
@@ -70,12 +70,43 @@
 }
 
 #search, #search-filter{
-    button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input), select{
+    button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input):not(.selectr-input), select{
         width: 100%;
 
         @include font-size(1.2);
         @media screen and (min-width: $size_mobile) {
             @include font-size(1.4);
         }
+    }
+}
+
+
+#tableFooterFilter{
+    border-top: 1px solid #ccc;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    @media screen and (min-width: $size_mobile) {
+        display:flex;
+
+        .categories-filter{
+            width: $size_mini;
+            margin-top: 1rem;
+        }
+    }
+    .filter-element{
+        margin-top: 1rem;
+
+        display: inline-block;
+
+        @media screen and (min-width: $size_mobile) {
+            display: block;
+            margin-left: 1rem;
+        }
+    }
+    
+    
+
+    button, .selectr-container{
+        @include font-size(1.2);
     }
 }
