@@ -1,87 +1,12 @@
 'use strict';
 
-const comeButtons = document.querySelectorAll('.timesheet-fast-come-btn');
-const leaveButtons = document.querySelectorAll('.timesheet-fast-leave-btn');
-
-const timesheetLatField = document.querySelector('input#geoLat');
-const timesheetLngField = document.querySelector('input#geoLng');
-const timesheetAccField = document.querySelector('input#geoAcc');
-
-const alertSuccess = document.querySelector('#alertSuccess');
-
-comeButtons.forEach(function (item, idx) {
-    item.addEventListener('click', function (event) {
-        event.preventDefault();
-        send(item, "start");
-    });
-});
-
-leaveButtons.forEach(function (item, idx) {
-    item.addEventListener('click', function (event) {
-        event.preventDefault();
-        send(item, "end");
-    });
-});
-
-function send(button, type) {
-    let alertError = document.querySelector('#alertError');
-    let alertErrorDetail = alertError.querySelector('#alertErrorDetail');
-
-    alertError.classList.add("hidden");
-    alertSuccess.classList.add("hidden");
-    alertErrorDetail.innerHTML = "";
-
-    let url = button.dataset.url;
-
-    let data = {};
-    data[type + "_lat"] = timesheetLatField.value;
-    data[type + "_lng"] = timesheetLngField.value;
-    data[type + "_acc"] = timesheetAccField.value;
-
-    return getCSRFToken().then(function (token) {
-        data['csrf_name'] = token.csrf_name;
-        data['csrf_value'] = token.csrf_value;
-
-        return fetchWithTimeout(url, {
-            method: 'POST',
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        if (data['status'] === 'success') {
-            alertSuccess.classList.remove("hidden");
-
-            if (data['data'] === 1) {
-                let grid = button.closest('.grid');
-                let cards = grid.querySelectorAll('.card');
-
-                cards.forEach(function (item, idx) {
-                    item.classList.toggle("inactive");
-                });
-            }
-        } else {
-            alertErrorDetail.innerHTML = data['message'];
-            alertError.classList.remove("hidden");
-        }
-    }).catch(function (error) {
-        console.log(error);
-        alertErrorDetail.innerHTML = lang.request_error;
-        alertError.classList.remove("hidden");
-    });
-}
-
-
 const projectCategorySelects = document.querySelectorAll('select.category');
 projectCategorySelects.forEach(function (item, idx) {
     new Selectr(item, {
-        searchable: false,
+        searchable: true,
         placeholder: lang.categories,
         messages: {
+            noResults: lang.nothing_found,
             noOptions: lang.no_options
         }
     });
@@ -144,14 +69,172 @@ if (radioDurationCustomModification && radioDurationNoModification && radioDurat
     });
 }
 
+const assignCategoriesSelector = document.getElementById("assignCategoriesSelector");
+const assignCategoriesBtn = document.getElementById("assign_categories");
+const removeCategoriesBtn = document.getElementById("remove_categories");
 
-const categoryFilter = document.getElementById("category-filter");
-if (categoryFilter) {
-    new Selectr(categoryFilter, {
-        searchable: false,
+if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
+    let assignCategories = new Selectr(assignCategoriesSelector, {
+        searchable: true,
         placeholder: lang.categories,
         messages: {
+            noResults: lang.nothing_found,
             noOptions: lang.no_options
         }
     });
+
+    assignCategoriesBtn.addEventListener('click', function (event) {
+
+        let categories = assignCategories.getValue();
+
+        let sheets = [];
+
+        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                sheets.push(checkbox.dataset.id);
+            }
+        });
+
+        setCategories({'sheets': sheets, 'categories': categories, 'type': 'assign'});
+    });
+
+    removeCategoriesBtn.addEventListener('click', function (event) {
+
+        let categories = assignCategories.getValue();
+
+        let sheets = [];
+
+        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                sheets.push(checkbox.dataset.id);
+            }
+        });
+
+        setCategories({'sheets': sheets, 'categories': categories, 'type': 'remove'});
+    });
 }
+
+document.addEventListener('click', function (event) {
+    let checkAllRowsInput = event.target.closest('#checkAllRows');
+    if (checkAllRowsInput) {
+        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            if (checkAllRowsInput.checked) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+        });
+    }
+});
+
+
+function setCategories(data) {
+    return getCSRFToken().then(function (token) {
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
+        return fetch(jsObject.timesheets_sheets_set_categories, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        console.log(data);
+        allowedReload = true;
+        window.location.reload();
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+const radioBudgetCount = document.getElementById('radioCategorization1');
+const radioBudgetDuration = document.getElementById('radioCategorization2');
+const radioBudgetDurationModified = document.getElementById('radioCategorization3');
+
+if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
+
+    radioBudgetDuration.addEventListener('click', function (event) {
+        document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+            picker.classList.remove("hidden");
+        });
+        document.querySelectorAll('input.duration-input').forEach(function (input) {
+            input.classList.remove("hidden");
+            input.removeAttribute("disabled");
+            if (!input.classList.contains("html-duration-picker")) {
+                input.classList.add("html-duration-picker");
+            }
+            HtmlDurationPicker.refresh();
+        });
+
+        document.querySelectorAll('input.count-input').forEach(function (input) {
+            input.classList.add("hidden");
+            input.setAttribute("disabled", true);
+        });
+    });
+
+    radioBudgetDurationModified.addEventListener('click', function (event) {
+        document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+            picker.classList.remove("hidden");
+        });
+        document.querySelectorAll('input.duration-input').forEach(function (input) {
+            input.classList.remove("hidden");
+            input.removeAttribute("disabled");
+            if (!input.classList.contains("html-duration-picker")) {
+                input.classList.add("html-duration-picker");
+            }
+            HtmlDurationPicker.refresh();
+        });
+
+        document.querySelectorAll('input.count-input').forEach(function (input) {
+            input.classList.add("hidden");
+            input.setAttribute("disabled", true);
+        });
+    });
+    radioBudgetCount.addEventListener('click', function (event) {
+        if (radioBudgetCount.checked) {
+            document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+                picker.classList.add("hidden");
+            });
+            document.querySelectorAll('input.duration-input').forEach(function (input) {
+                input.classList.add("hidden");
+                input.setAttribute("disabled", true);
+            });
+
+            document.querySelectorAll('input.count-input').forEach(function (input) {
+                input.classList.remove("hidden");
+                input.removeAttribute("disabled");
+            });
+
+        } else {
+            document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+                picker.classList.remove("hidden");
+            });
+            document.querySelectorAll('input.duration-input').forEach(function (input) {
+                input.classList.remove("hidden");
+                input.removeAttribute("disabled");
+
+                if (!input.classList.contains("html-duration-picker")) {
+                    input.classList.add("html-duration-picker");
+                }
+
+                HtmlDurationPicker.refresh();
+            });
+
+
+            document.querySelectorAll('input.count-input').forEach(function (input) {
+                input.classList.add("hidden");
+                input.setAttribute("disabled", true);
+            });
+        }
+    });
+}
+
+

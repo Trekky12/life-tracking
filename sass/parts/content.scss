@@ -47,6 +47,10 @@
 .page-content{
     padding-top: 2rem;
     padding-bottom: 2rem;
+    
+    &.no-padding-top{
+        padding-top: 0;
+    }
 }
 
 .btn-margin-bottom{

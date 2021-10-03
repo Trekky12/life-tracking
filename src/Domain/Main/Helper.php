@@ -44,7 +44,7 @@ class Helper {
 
 
             if ($method == 'POST' || $method == 'PUT') {
-                curl_setopt($ch, CURLOPT_POST, count($data));
+                curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($data) ? http_build_query($data) : $data);
             }
 

@@ -87,6 +87,12 @@ return [
          */
         $modules = $settings->getAppSettings()['modules'];
         $twig->getEnvironment()->addGlobal('modules', $modules);
+        
+        /**
+         * Add filter to format seconds
+         */
+        $filter = new \Twig\TwigFilter('splitDateInterval', '\App\Domain\Main\Utility\DateUtility::splitDateInterval');
+        $twig->getEnvironment()->addFilter($filter);
 
         return $twig;
     },

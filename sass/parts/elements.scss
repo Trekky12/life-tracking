@@ -46,7 +46,7 @@ table .fontawesome-icon svg{
     margin-bottom: 15px;
     color: $color_text-main;
 
-    &.danger{
+    &.danger, &.warning3{
         background-color: $color_red;
         color: $color_background-body;
     }
@@ -55,13 +55,17 @@ table .fontawesome-icon svg{
         background-color: $color_green;
         color: $color_background-body;
     }
-    &.warning{
+    &.warning, &.warning2{
         background-color: $color_orange;
         color: $color_background-body;
     }
     &.info{
         background-color: $color_blue;
         color: $color_background-body;
+    }
+    &.warning1{
+        background-color: $color_yellow;
+        color: $color_text-main;
     }
 
 }
@@ -157,7 +161,7 @@ select.button-height{
 
     .filter-element{
         margin-top:1rem;
-        input{
+        input:not(.selectr-input){
             width:100%;
         }
         select {

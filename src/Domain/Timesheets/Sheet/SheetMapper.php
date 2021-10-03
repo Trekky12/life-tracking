@@ -87,6 +87,8 @@ class SheetMapper extends \App\Domain\Mapper {
                     . "             SELECT sheet "
                     . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
                     . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                    . "             GROUP BY sheet "
+                    . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
                     . ") "
                     . " OR tcs.category is NULL)";
         }
@@ -279,6 +281,67 @@ class SheetMapper extends \App\Domain\Mapper {
             return $stmt->fetchColumn();
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
+    }
+
+    public function addCategoriesToSheets($sheets = [], $categories = []) {
+
+        if (count($sheets) <= 0 || count($categories) <= 0) {
+            return;
+        }
+
+        $bindings = [];
+        $data = [];
+        foreach ($sheets as $sheet) {
+
+            $sheet_data = [];
+            foreach ($categories as $idx => $category) {
+                $bindings["sheet" . $sheet . "_" . $idx] = $sheet;
+                $bindings["category" . $sheet . "_" . $idx] = $category;
+                $data[] = "(:sheet" . $sheet . "_" . $idx . " , :category" . $sheet . "_" . $idx . ")";
+            }
+        }
+
+        // IGNORE duplicate keys (do not insert then)
+        $sql = "INSERT IGNORE INTO " . $this->getTableName("timesheets_sheets_categories") . " (sheet, category) "
+                . "VALUES " . implode(", ", $data) . "";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
+        }
+        return true;
+    }
+
+    public function removeCategoriesFromSheets($sheets = [], $categories = []) {
+
+        if (count($sheets) <= 0 || count($categories) <= 0) {
+            return;
+        }
+
+        $bindings = [];
+        $data = [];
+        foreach ($sheets as $sheet) {
+
+            $sheet_data = [];
+            foreach ($categories as $idx => $category) {
+                $bindings["sheet" . $sheet . "_" . $idx] = $sheet;
+                $bindings["category" . $sheet . "_" . $idx] = $category;
+                $data[] = "( sheet = :sheet" . $sheet . "_" . $idx . " AND category = :category" . $sheet . "_" . $idx . ")";
+            }
+        }
+
+        $sql = "DELETE FROM " . $this->getTableName("timesheets_sheets_categories") . " WHERE " . implode(" OR ", $data) . "";
+
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
+        }
+        return true;
     }
 
 }

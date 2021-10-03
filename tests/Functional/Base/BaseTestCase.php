@@ -413,10 +413,13 @@ class BaseTestCase extends TestCase {
          * Get the node value
          */
         $value = $node->getAttribute('value');
-
+        
         $type = $node->nodeName;
-        if ($type == "input" && ($node->getAttribute('type') == "checkbox" || $node->getAttribute('type') == "radio")) {
+        if ($type == "input" && $node->getAttribute('type') == "checkbox" ) {
             $value = $node->hasAttribute('checked') ? 1 : 0;
+        }elseif ($type == "input" && $node->getAttribute('type') == "radio" && !$node->hasAttribute('checked')){
+            // skip not selected radio boxes
+            return;
         } elseif ($type == "select") {
             // get selected options (for selects)
             $options = $xpath->query('option[@selected]/@value', $node);

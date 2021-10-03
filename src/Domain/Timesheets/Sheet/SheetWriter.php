@@ -9,19 +9,29 @@ use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Project\ProjectMapper;
+use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 
 class SheetWriter extends ObjectActivityWriter {
 
     private $service;
     private $project_service;
     private $project_mapper;
+    private $categorybudget_service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SheetMapper $mapper, SheetService $service, ProjectService $project_service, ProjectMapper $project_mapper) {
+    public function __construct(LoggerInterface $logger,
+            CurrentUser $user,
+            ActivityCreator $activity,
+            SheetMapper $mapper,
+            SheetService $service,
+            ProjectService $project_service,
+            ProjectMapper $project_mapper,
+            ProjectCategoryBudgetService $categorybudget_service) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->service = $service;
         $this->project_service = $project_service;
         $this->project_mapper = $project_mapper;
+        $this->categorybudget_service = $categorybudget_service;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -60,6 +70,14 @@ class SheetWriter extends ObjectActivityWriter {
             $this->logger->error("Error while saving categories at timesheet", array("data" => $id, "error" => $e->getMessage()));
         }
 
+        // Check Project category budget
+        $sheet_categories = $this->mapper->getCategoriesFromSheet($entry->id);
+        $budget_result = $this->categorybudget_service->checkCategoryBudgets($entry->project, $sheet_categories, $entry->id);
+
+        foreach ($budget_result as $idx => $result) {
+            $payload->addFlashMessage('budget_message_type', $result["type"]);
+            $payload->addFlashMessage('budget_message', $result["message"]);
+        }
         return $payload;
     }
 

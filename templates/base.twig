@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210814" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20210921" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -66,6 +66,16 @@
                     </span>
                 </div>
             {% endif %}
+            {% if flash("budget_message") is not empty %}
+                {% for msg in flash('budget_message') %}
+                    <div class="alert hide-offline {{flash('budget_message_type')[loop.index-1]}}">
+                        <span class="closebtn" >&times;</span>
+                        <span class="alert-message">
+                            <p>{{ msg }}</p>
+                        </span>
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div id="offline-alert" class="alert danger hidden">
                 <span class="alert-message">
                     <p>{{ lang["YOU_ARE_OFFLINE"] }}</p>
@@ -85,10 +95,10 @@
         </div>
         {% block bottom %}
         {% endblock %}
-        
+
         <footer class="site-footer hidden">
             <div class="footer-inner">
-                	
+
             </div>
         </footer>
         <div id="toastmessage"></div>
@@ -132,119 +142,116 @@
                 'notifications_get': '{{url_for('notifications_get')}}',
                 'activities_get': '{{url_for('activities_get')}}',
                 'logfile_get': '{{url_for('logfile_get')}}',
-                
-                {% if not hasCrawlerTable is null %}
-                'crawler_table': '{{url_for('crawlers_table', {'crawler': crawler.hash})}}',
-                'crawler_filter': '{{url_for('set_crawler_filter', {'crawler': crawler.hash})}}',
-                'crawler_dataset_save': '{{url_for('crawler_dataset_save', {'crawler': crawler.hash})}}',
-                {% endif %}
-                    
-                {% if not from is null %}    
-                'dateFrom': '{{from}}',
-                {% endif %}
-                {% if not to is null %}    
-                'dateTo': '{{to}}',
-                {% endif %}
-                    
-                {% if not hasSplitbillTable is null %}
-                'splitbill_table': '{{url_for('splitbill_bills_table', {'group': group.hash})}}',
-                {% endif %}
-                'get_location_of_address': '{{ url_for("get_location_of_address") }}',    
-                {% if not isTrips is null %}
-                'trip_markers_url': '{{url_for('trips_markers', {'trip': trip.hash})}}',
-                'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
-                'trip_add_waypoint': '{{  url_for('trips_add_waypoint', {'trip' : trip.hash})}}',
-                'trip_delete_waypoint': '{{  url_for('trips_delete_waypoint', {'trip' : trip.hash})}}',
-                'trip_add_route': '{{  url_for('trips_add_route', {'trip' : trip.hash})}}',
-                'trip_list_routes': '{{  url_for('trips_list_route', {'trip' : trip.hash})}}',
-                'trip_route_waypoints': '{{  url_for('trips_route_waypoints', {'trip' : trip.hash})}}',
-                {% endif %}
-                {% if not hasTimesheetTable is null %}
-                'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
-                {% endif %}
-                {% if not isTripEventEdit is null %}
-                'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
-                'trip_event_image_delete': '{{  url_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
-                {% endif %}
-                'frontpage_widget_option': '{{url_for('users_profile_frontpage_widget_option')}}',
-                'frontpage_widget_option_save': '{{url_for('users_profile_frontpage_widget_option_save')}}',
-                'frontpage_widget_position': '{{url_for('users_profile_frontpage_widget_position')}}',
-                'frontpage_widget_request': '{{url_for('frontpage_widget_request')}}',
-                'workouts_exercises_get': '{{url_for('workouts_exercises_get')}}',
-                'workouts_exercises_selected_muscles': '{{url_for('workouts_exercises_selected_muscles')}}',
-                'workouts_exercises_data': '{{url_for('workouts_exercises_data')}}',
-                'usersearch': '{{url_for('usersearch')}}',
-                'ingredients_get': '{{url_for('ingredients_get')}}',
-                'recipes_get': '{{url_for('recipes_get')}}',
-                'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
-                {% if not isMealplanEdit is null %}
-                'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
-                'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}'
-                {% endif %}
-            };
-            var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
-            var i18n = {{i18n|json_encode()|raw}};
-            var lang = {
-                "really_delete": '{{lang["REALLY_DELETE"]}}',
-                'address': '{{lang["ADDRESS"]}}',
-                'delete_text': '{{lang["DELETE"]}}',
-                'accuracy': '{{lang["ACCURACY"]}}',
-                'consumption': '{{lang["CONSUMPTION"]}}',
-                'add': '{{lang["ADD"]}}',
-                'cancel': '{{lang["CANCEL"]}}',
-                'really_archive': '{{lang["REALLY_ARCHIVE"]}}',
-                'update': '{{lang["UPDATE"]}}',
-                'labels': '{{lang["LABELS"]}}',
-                'categories': '{{lang["CATEGORIES"]}}',
-                'no_options': '{{lang["NO_OPTIONS"]}}',
-                'undo_archive': '{{lang["UNDO_ARCHIVE"]}}',
-                'really_close_page': '{{lang["REALLY_CLOSE_PAGE"]}}',
-                'nothing_found': '{{lang["NOTHING_FOUND"]}}',
-                'loading': '{{lang["LOADING"]}}',
-                'searching': '{{lang["SEARCHING"]}}',
-                'table_perpage': '{{lang["TABLE_PERPAGE"]}}',
-                'table_info': '{{lang["TABLE_INFO"]}}',
-                'table_infofiltered': '{{lang["TABLE_INFOFILTERED"]}}',
-                'enable_push_notifications': '{{lang["ENABLE_PUSH_NOTIFICATIONS"]}}',
-                'disable_push_notifications': '{{lang["DISABLE_PUSH_NOTIFICATIONS"]}}',
-                'no_push_notifications_possible': '{{lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"]}}',
-                "really_delete_stack": '{{lang["REALLY_DELETE_STACK"]}}',
-                "really_delete_board": '{{lang["REALLY_DELETE_BOARD"]}}',
-                "really_delete_card": '{{lang["REALLY_DELETE_CARD"]}}',
-                "really_delete_label": '{{lang["REALLY_DELETE_LABEL"]}}',
-                "set_current_location": '{{lang["SET_CURRENT_LOCATION"]}}',
-                "remove_location": '{{lang["REMOVE_LOCATION"]}}',
-                "car_refuel": '{{lang["CAR_REFUEL"]}}',
-                "car_service": '{{lang["CAR_SERVICE"]}}',
-                "category": '{{lang["CATEGORY"]}}',
-                "really_close_stack": '{{lang["REALLY_CLOSE_STACK"]}}',
-                "really_close_card": '{{lang["REALLY_CLOSE_CARD"]}}',
-                "really_close_label": '{{lang["REALLY_CLOSE_LABEL"]}}',
-                "splitbills_numbers_wrong": '{{lang["SPLITBILLS_NUMBERS_WRONG"]}}',
-                "from": '{{lang["FROM"]}}',
-                "to": '{{lang["TO"]}}',
-                "steps": '{{lang["STEPS"]}}',
-                "request_error": '{{lang["REQUEST_ERROR"]}}',
-                "routing_add_to_route": '{{lang["ADD_TO_ROUTE"]}}',
-                "routing_error": '{{lang["ROUTING_ERROR"]}}',
-                "routing_error_too_many_requests": '{{lang["ROUTING_ERROR_TOO_MANY_REQUESTS"]}}',
-                "really_unsave_dataset": '{{lang["CRAWLER_DATASET_UNSAVE"]}}',
-                "entry_saved_locally": '{{lang["ENTRY_SAVED_LOCALLY"]}}',
-                "entry_saved_locally_error": '{{lang["ENTRY_SAVED_LOCALLY_ERROR"]}}',
-                "locally_saved_entries_submitted": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"]}}',
-                "locally_saved_entries_submitted_success": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"]}}',
-                "locally_saved_entries_submitted_error": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"]}}',
-                "trips_route_name_prompt": '{{lang["TRIPS_ROUTE_NAME_PROMPT"]}}',
-                "trips_route_saved_successfully": '{{lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"]}}',
-                "trips_route_saved_error": '{{lang["TRIPS_ROUTE_SAVED_ERROR"]}}',
-                "trips_waypoint_save": '{{lang["TRIPS_WAYPOINT_SAVE"]}}',
-                "workouts_superset": '{{lang["WORKOUTS_SUPERSET"]}}',
-                "workouts_set": '{{lang["WORKOUTS_SET"]}}',
-                "show": '{{lang["SHOW"]}}',
-                "hide": '{{lang["HIDE"]}}',
-                "ingredient": '{{lang["RECIPES_INGREDIENT"]}}'
-            };
-            var tokens = {{ csrf_js|json_encode()|raw }};
+            {% if not hasCrawlerTable is null %}
+                        'crawler_table': '{{url_for('crawlers_table', {'crawler': crawler.hash})}}',
+                        'crawler_filter': '{{url_for('set_crawler_filter', {'crawler': crawler.hash})}}',
+                        'crawler_dataset_save': '{{url_for('crawler_dataset_save', {'crawler': crawler.hash})}}',                {% endif %}
+
+            {% if not from is null %}    
+                                'dateFrom': '{{from}}',                {% endif %}
+            {% if not to is null %}    
+                                        'dateTo': '{{to}}',                {% endif %}
+
+            {% if not hasSplitbillTable is null %}
+                        'splitbill_table': '{{url_for('splitbill_bills_table', {'group': group.hash})}}',
+            {% endif %}
+                        'get_location_of_address': '{{ url_for("get_location_of_address") }}',
+            {% if not isTrips is null %}
+                        'trip_markers_url': '{{url_for('trips_markers', {'trip': trip.hash})}}',
+                        'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
+                        'trip_add_waypoint': '{{  url_for('trips_add_waypoint', {'trip' : trip.hash})}}',
+                        'trip_delete_waypoint': '{{  url_for('trips_delete_waypoint', {'trip' : trip.hash})}}',
+                        'trip_add_route': '{{  url_for('trips_add_route', {'trip' : trip.hash})}}',
+                        'trip_list_routes': '{{  url_for('trips_list_route', {'trip' : trip.hash})}}',
+                        'trip_route_waypoints': '{{  url_for('trips_route_waypoints', {'trip' : trip.hash})}}',                {% endif %}
+
+            {% if not hasTimesheetTable is null %}
+                        'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
+                        'timesheets_sheets_set_categories': '{{url_for('timesheets_sheets_set_categories', {'project': project.hash})}}',                {% endif %}
+
+            {% if not isTripEventEdit is null %}
+                        'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
+                        'trip_event_image_delete': '{{  url_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
+            {% endif %}
+                        'frontpage_widget_option': '{{url_for('users_profile_frontpage_widget_option')}}',
+                        'frontpage_widget_option_save': '{{url_for('users_profile_frontpage_widget_option_save')}}',
+                        'frontpage_widget_position': '{{url_for('users_profile_frontpage_widget_position')}}',
+                        'frontpage_widget_request': '{{url_for('frontpage_widget_request')}}',
+                        'workouts_exercises_get': '{{url_for('workouts_exercises_get')}}',
+                        'workouts_exercises_selected_muscles': '{{url_for('workouts_exercises_selected_muscles')}}',
+                        'workouts_exercises_data': '{{url_for('workouts_exercises_data')}}',
+                        'usersearch': '{{url_for('usersearch')}}',
+                        'ingredients_get': '{{url_for('ingredients_get')}}',
+                        'recipes_get': '{{url_for('recipes_get')}}',
+                        'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
+            {% if not isMealplanEdit is null %}
+                        'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
+                        'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}'
+            {% endif %}
+                    };
+                    var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
+                    var i18n = {{i18n|json_encode()|raw}};
+                    var lang = {
+                        "really_delete": '{{lang["REALLY_DELETE"]}}',
+                        'address': '{{lang["ADDRESS"]}}',
+                        'delete_text': '{{lang["DELETE"]}}',
+                        'accuracy': '{{lang["ACCURACY"]}}',
+                        'consumption': '{{lang["CONSUMPTION"]}}',
+                        'add': '{{lang["ADD"]}}',
+                        'cancel': '{{lang["CANCEL"]}}',
+                        'really_archive': '{{lang["REALLY_ARCHIVE"]}}',
+                        'update': '{{lang["UPDATE"]}}',
+                        'labels': '{{lang["LABELS"]}}',
+                        'categories': '{{lang["CATEGORIES"]}}',
+                        'no_options': '{{lang["NO_OPTIONS"]}}',
+                        'undo_archive': '{{lang["UNDO_ARCHIVE"]}}',
+                        'really_close_page': '{{lang["REALLY_CLOSE_PAGE"]}}',
+                        'nothing_found': '{{lang["NOTHING_FOUND"]}}',
+                        'loading': '{{lang["LOADING"]}}',
+                        'searching': '{{lang["SEARCHING"]}}',
+                        'table_perpage': '{{lang["TABLE_PERPAGE"]}}',
+                        'table_info': '{{lang["TABLE_INFO"]}}',
+                        'table_infofiltered': '{{lang["TABLE_INFOFILTERED"]}}',
+                        'enable_push_notifications': '{{lang["ENABLE_PUSH_NOTIFICATIONS"]}}',
+                        'disable_push_notifications': '{{lang["DISABLE_PUSH_NOTIFICATIONS"]}}',
+                        'no_push_notifications_possible': '{{lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"]}}',
+                        "really_delete_stack": '{{lang["REALLY_DELETE_STACK"]}}',
+                        "really_delete_board": '{{lang["REALLY_DELETE_BOARD"]}}',
+                        "really_delete_card": '{{lang["REALLY_DELETE_CARD"]}}',
+                        "really_delete_label": '{{lang["REALLY_DELETE_LABEL"]}}',
+                        "set_current_location": '{{lang["SET_CURRENT_LOCATION"]}}',
+                        "remove_location": '{{lang["REMOVE_LOCATION"]}}',
+                        "car_refuel": '{{lang["CAR_REFUEL"]}}',
+                        "car_service": '{{lang["CAR_SERVICE"]}}',
+                        "category": '{{lang["CATEGORY"]}}',
+                        "really_close_stack": '{{lang["REALLY_CLOSE_STACK"]}}',
+                        "really_close_card": '{{lang["REALLY_CLOSE_CARD"]}}',
+                        "really_close_label": '{{lang["REALLY_CLOSE_LABEL"]}}',
+                        "splitbills_numbers_wrong": '{{lang["SPLITBILLS_NUMBERS_WRONG"]}}',
+                        "from": '{{lang["FROM"]}}',
+                        "to": '{{lang["TO"]}}',
+                        "steps": '{{lang["STEPS"]}}',
+                        "request_error": '{{lang["REQUEST_ERROR"]}}',
+                        "routing_add_to_route": '{{lang["ADD_TO_ROUTE"]}}',
+                        "routing_error": '{{lang["ROUTING_ERROR"]}}',
+                        "routing_error_too_many_requests": '{{lang["ROUTING_ERROR_TOO_MANY_REQUESTS"]}}',
+                        "really_unsave_dataset": '{{lang["CRAWLER_DATASET_UNSAVE"]}}',
+                        "entry_saved_locally": '{{lang["ENTRY_SAVED_LOCALLY"]}}',
+                        "entry_saved_locally_error": '{{lang["ENTRY_SAVED_LOCALLY_ERROR"]}}',
+                        "locally_saved_entries_submitted": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"]}}',
+                        "locally_saved_entries_submitted_success": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"]}}',
+                        "locally_saved_entries_submitted_error": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"]}}',
+                        "trips_route_name_prompt": '{{lang["TRIPS_ROUTE_NAME_PROMPT"]}}',
+                        "trips_route_saved_successfully": '{{lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"]}}',
+                        "trips_route_saved_error": '{{lang["TRIPS_ROUTE_SAVED_ERROR"]}}',
+                        "trips_waypoint_save": '{{lang["TRIPS_WAYPOINT_SAVE"]}}',
+                        "workouts_superset": '{{lang["WORKOUTS_SUPERSET"]}}',
+                        "workouts_set": '{{lang["WORKOUTS_SET"]}}',
+                        "show": '{{lang["SHOW"]}}',
+                        "hide": '{{lang["HIDE"]}}',
+                        "ingredient": '{{lang["RECIPES_INGREDIENT"]}}'
+                    };
+                    var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
 
         <script src="{{baseURL}}/static/assets/js/flatpickr.min.js" type="text/javascript"></script>
@@ -260,7 +267,7 @@
 
 
         {% if not user is null %}
-        <script src="{{baseURL}}/static/js/app.js?ver=20210619" type="text/javascript"></script>
+            <script src="{{baseURL}}/static/js/app.js?ver=20210619" type="text/javascript"></script>
         {% endif %}
 
         {% block javascript %}

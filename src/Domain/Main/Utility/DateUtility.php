@@ -53,13 +53,22 @@ class DateUtility {
         return array($from, $to);
     }
 
-    public static function splitDateInterval($total_seconds) {
+    public static function splitDateInterval($total_seconds, $hide_seconds = false) {
+
+        if (is_null($total_seconds)) {
+            return '';
+        }
+
+        $prefix = $total_seconds < 0 ? "-" : "";
+
+        $total_seconds = abs($total_seconds);
+
         $total_minutes = $total_seconds / 60;
         $hours = intval($total_minutes / 60);
         $minutes = intval($total_minutes - $hours * 60);
         $seconds = intval($total_seconds - $total_minutes * 60);
 
-        return !is_null($total_seconds) ? sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds) : '';
+        return $prefix . ($hide_seconds ? sprintf('%02d:%02d', $hours, $minutes) : sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds));
     }
 
 }

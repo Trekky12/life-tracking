@@ -482,6 +482,15 @@ $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "no time calculation modification";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "use the time conversion rate of the project";
+$lang["TIMESHEETS_CATEGORY_ASSIGN"] = "assign";
+$lang["TIMESHEETS_CATEGORY_REMOVE"] = "remove";
+$lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"] = "1. warning (yellow)";
+$lang["TIMESHEETS_CATEGORYBUDGET_WARNING_2_ORANGE"] = "2. warning (orange)";
+$lang["TIMESHEETS_CATEGORYBUDGET_WARNING_3_RED"] = "3. warning (red)";
+$lang["MAIN_CATEGORY"] = "main category";
+$lang["ASSIGNED_CATEGORIES"] = "assigned categories";
+$lang["TIMESHEETS_CATEGORYBUDGET_VALUE"] = "threshold";
+$lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- no main category -";
 
 $lang["THIS_DEVICE"] = "this device";
 
@@ -544,6 +553,7 @@ $lang["DATAOBJECT_RECIPES_COOKBOOK"] = "cookbook";
 $lang["DATAOBJECT_RECIPES_INGREDIENT"] = "ingredient";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
+$lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -715,5 +725,12 @@ $lang["RECIPES_ADD_TO_COOKBOOK"] = "Add to cookbook";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Remove from cookbook";
 
 $lang["ADD_NOTICE"] = "Add notice";
+
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"] = "project budgets";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
+
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"] = "sum of durations";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "sum of durations modified";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "number of entries";
 
 return $lang;

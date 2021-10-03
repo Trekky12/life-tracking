@@ -481,6 +481,15 @@ $lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Zeit (sek.)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "keine Anpassung der Zeit";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "nutze die Zeitumrechnungsrate des Projekts";
+$lang["TIMESHEETS_CATEGORY_ASSIGN"] = "zuweisen";
+$lang["TIMESHEETS_CATEGORY_REMOVE"] = "entfernen";
+$lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"] = "1. Warnung (gelb)";
+$lang["TIMESHEETS_CATEGORYBUDGET_WARNING_2_ORANGE"] = "2. Warnung (orange)";
+$lang["TIMESHEETS_CATEGORYBUDGET_WARNING_3_RED"] = "3. Warnung (rot)";
+$lang["MAIN_CATEGORY"] = "Hauptkategorie";
+$lang["ASSIGNED_CATEGORIES"] = "zugeordnete Kategorien";
+$lang["TIMESHEETS_CATEGORYBUDGET_VALUE"] = "Grenzwert";
+$lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- keine Hauptkategorie -";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
@@ -543,6 +552,7 @@ $lang["DATAOBJECT_RECIPES_COOKBOOK"] = "Kochbuch";
 $lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
+$lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -714,5 +724,12 @@ $lang["RECIPES_ADD_TO_COOKBOOK"] = "Zum Kochbuch hinzufügen";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Aus Kochbuch entfernen";
 
 $lang["ADD_NOTICE"] = "Notiz hinzufügen";
+
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"] = "Projektbudgets";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
+
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"] = "Summe der Zeiten";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "Summe der Zeiten modifiziert";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "Anzahl Einträge";
 
 return $lang;

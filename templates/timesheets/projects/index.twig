@@ -19,6 +19,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,7 +28,10 @@
                             <td><a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a></td> 
                             <td>{{times[project.id]}}</td> 
                             <td>
-                                <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{ fontawesome('fas fa-tags') }}</a>
+                                <a href="{{  url_for('timesheets_project_categorybudget_view', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
+                            </td>
+                            <td>
+                                <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>
                             </td>                            
                             <td>
                                 {% if project.user == user.id %}
