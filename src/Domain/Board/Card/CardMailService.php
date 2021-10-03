@@ -23,13 +23,13 @@ class CardMailService {
     private $router;
     private $mail_notification_service;
 
-    public function __construct(LoggerInterface $logger, 
-            CardMapper $mapper, 
-            StackService $stack_service, 
-            UserService $user_service, 
-            Translator $translation, 
-            Settings $settings, 
-            Helper $helper, 
+    public function __construct(LoggerInterface $logger,
+            CardMapper $mapper,
+            StackService $stack_service,
+            UserService $user_service,
+            Translator $translation,
+            Settings $settings,
+            Helper $helper,
             RouteParser $router,
             MailNotificationsService $mail_notification_service) {
         $this->logger = $logger;
@@ -80,9 +80,9 @@ class CardMailService {
                     } else {
                         $mail_content .= '<h2>' . $this->translation->getTranslatedString('OVERDUE') . ':</h2>';
                     }
-                    foreach ($stacks as $board_name => $board) {
+                    foreach ($stacks as $board_id => $board) {
                         $url = $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board["hash"]));
-                        $mail_content .= '<h3><a href="' . $url . '">Board: ' . $board_name . '</a></h3>';
+                        $mail_content .= '<h3><a href="' . $url . '">Board: ' . $board["name"] . '</a></h3>';
                         $mail_content .= '<ul>';
 
                         foreach ($board["stacks"] as $stack_name => $cards) {
@@ -108,7 +108,7 @@ class CardMailService {
 
                 if (!empty($mail_content)) {
                     //$this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_CARD_DUE", 'mail/general.twig', $subject, $variables, $board->id);
+                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_CARD_DUE", 'mail/general.twig', $subject, $variables, $board_id);
                 }
             }
         }

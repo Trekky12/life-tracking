@@ -129,7 +129,7 @@ class CardMapper extends \App\Domain\Mapper {
     }
 
     public function getCardReminder() {
-        $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board, b.hash, s.name as stack "
+        $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board_name, b.hash, b.id as board_id, s.name as stack "
                 . "FROM " . $this->getTableName() . " c, "
                 . "     " . $this->getTableName("boards_stacks") . " s,  "
                 . "     " . $this->getTableName("boards") . " b, "
@@ -150,7 +150,7 @@ class CardMapper extends \App\Domain\Mapper {
         while ($row = $stmt->fetch()) {
             $user = intval($row["user"]);
             $today = intval($row["today"]);
-            $board = $row["board"];
+            $board = $row["board_id"];
             $stack = $row["stack"];
 
             /**
@@ -172,6 +172,7 @@ class CardMapper extends \App\Domain\Mapper {
              */
             if (!array_key_exists($board, $results[$user][$today])) {
                 $results[$user][$today][$board]["hash"] = $row["hash"];
+                $results[$user][$today][$board]["name"] = $row["board_name"];
                 $results[$user][$today][$board]["stacks"] = array();
             }
 
