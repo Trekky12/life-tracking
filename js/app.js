@@ -85,32 +85,33 @@ function setFormFieldsDisabled(value) {
 
         let forms = document.querySelectorAll('form');
         forms.forEach(function (item, idx) {
-            item.addEventListener('submit', function (e) {
-                e.preventDefault();
+            if (item.method === 'post') {
+                item.addEventListener('submit', function (e) {
+                    e.preventDefault();
 
-                //@see https://stackoverflow.com/a/48950600
-                let formData = new URLSearchParams(new FormData(item)).toString();
+                    //@see https://stackoverflow.com/a/48950600
+                    let formData = new URLSearchParams(new FormData(item)).toString();
 
-                let transaction = db.transaction('forms', 'readwrite');
-                let forms = transaction.objectStore('forms');
-                let request = forms.add({'action': item.action, 'data': formData});
+                    let transaction = db.transaction('forms', 'readwrite');
+                    let forms = transaction.objectStore('forms');
+                    let request = forms.add({'action': item.action, 'data': formData});
 
-                request.onsuccess = function () {
-                    console.log("saved locally");
-                    appLoadingWindowOverlay.classList.add("hidden");
-                    showToast(lang.entry_saved_locally, "green");
-                    offlineElementsAlert.classList.remove("hidden");
-                    item.reset();
-                }
-                request.onerror = function () {
-                    console.log("Error", request.error);
-                    appLoadingWindowOverlay.classList.add("hidden");
-                    showToast(lang.entry_saved_locally_error, "red");
-                }
-            });
+                    request.onsuccess = function () {
+                        console.log("saved locally");
+                        appLoadingWindowOverlay.classList.add("hidden");
+                        showToast(lang.entry_saved_locally, "green");
+                        offlineElementsAlert.classList.remove("hidden");
+                        item.reset();
+                    }
+                    request.onerror = function () {
+                        console.log("Error", request.error);
+                        appLoadingWindowOverlay.classList.add("hidden");
+                        showToast(lang.entry_saved_locally_error, "red");
+                    }
+                });
+            }
         });
-    }
-
+    };
 
 }
 

@@ -3,7 +3,6 @@
 use Slim\App;
 use App\Domain\Base\Settings;
 use Slim\Csrf\Guard as CSRF;
-
 use App\Application\Error\MyErrorRenderer;
 use App\Application\Error\MyErrorHandler;
 
@@ -22,6 +21,21 @@ return function (App $app) {
     }
 
     /**
+     * Get the unread notifications count
+     */
+    $app->add('App\Application\Middleware\NotificationsMiddleware');
+
+    /**
+     * Get the mobile favorites of the user for the UI
+     */
+    $app->add('App\Application\Middleware\MobileFavoritesMiddleware');
+
+    /**
+     * Save last X urls params for redirects after save
+     */
+    $app->add('App\Application\Middleware\LastQueryParamsMiddleware');
+
+    /**
      * Redirect to initial URI
      */
     $app->add('App\Application\Middleware\RedirectMiddleware');
@@ -35,16 +49,6 @@ return function (App $app) {
      * Check if user needs to change the password
      */
     $app->add('App\Application\Middleware\PWChangeMiddleware');
-
-    /**
-     * Get the unread notifications count
-     */
-    $app->add('App\Application\Middleware\NotificationsMiddleware');
-
-    /**
-     * Get the mobile favorites of the user for the UI
-     */
-    $app->add('App\Application\Middleware\MobileFavoritesMiddleware');
 
     /**
      * Save logged In User
@@ -61,7 +65,6 @@ return function (App $app) {
      */
     $app->add('App\Application\Middleware\BaseURLMiddleware');
 
-
     /**
      * Routing
      */
@@ -77,7 +80,7 @@ return function (App $app) {
     $myErrorHandler->setDefaultErrorRenderer('text/html', MyErrorRenderer::class);
 
     $errorMiddleware->setDefaultErrorHandler($myErrorHandler);
-    
+
     // Add Twig-View Middleware
     $app->add('Slim\Views\TwigMiddleware');
 };

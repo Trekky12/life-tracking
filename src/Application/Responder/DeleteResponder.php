@@ -8,6 +8,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use \Slim\Flash\Messages as Flash;
 use Slim\Routing\RouteParser;
+use App\Domain\Main\Utility\SessionUtility;
 
 class DeleteResponder extends JSONResultResponder {
 
@@ -53,7 +54,13 @@ class DeleteResponder extends JSONResultResponder {
 
 
         if (!is_null($payload->getRouteName())) {
-            $response_data["redirect"] = $this->router->urlFor($payload->getRouteName(), $payload->getRouteParams());
+
+            $lastUrls = SessionUtility::getSessionVar("lastURLS", []);
+            if (array_key_exists($payload->getRouteName(), $lastUrls)) {
+                $payload = $payload->withRouteQueryParams($lastUrls[$payload->getRouteName()]);
+            }
+
+            $response_data["redirect"] = $this->router->urlFor($payload->getRouteName(), $payload->getRouteParams(), $payload->getRouteQueryParams());
         }
 
         return parent::respond(new Payload(Payload::$RESULT_JSON, $response_data));
