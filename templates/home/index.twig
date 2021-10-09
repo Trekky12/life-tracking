@@ -13,7 +13,7 @@
 {% block body %}
     <div class="grid">
         {% for widget in list %}
-            <div class="card" data-widget="{{ widget["id"] }}">
+            <div class="card" data-widget="{{ widget["id"] }}" data-widget-name="{{ widget["name"] }}">
                 <div class="card-content">
                     <div class="card-header">
                         <h3>{% if widget["url"] is not null %}<a href="{{ widget["url"] }}">{{ widget["title"] | raw }}</a>{% else %}{{ widget["title"] | raw }}{% endif %}</h3>

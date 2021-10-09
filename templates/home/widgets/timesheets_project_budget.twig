@@ -1,0 +1,10 @@
+<table class="timesheets_project_budget_widget">    
+    <tbody>
+        {% for list_entry in widget["content"] %}
+            <tr class="{%if list_entry["warning3"] > 0 and list_entry["sum"] >= list_entry["warning3"] %}red{%elseif list_entry["warning2"] > 0 and list_entry["sum"] >= list_entry["warning2"] %}orange{%elseif list_entry["warning1"] > 0 and list_entry["sum"] >= list_entry["warning1"] %}yellow{%else%}green{%endif%}">
+                <td>{{ list_entry["name"] }}</td>
+                <td style="white-space: nowrap">{%if list_entry["categorization"] != 'count' %}{{ list_entry["sum"] | splitDateInterval(true) }}/{{ list_entry["value"]| splitDateInterval(true) }}{% else %}{{ list_entry["sum"] }}/{{ list_entry["value"] }}{% endif %}, {{ lang["REMAINING"]}}: {%if list_entry["categorization"] != 'count' %}{{ list_entry["diff"]| splitDateInterval(true) }}{% else %}{{ list_entry["diff"] }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

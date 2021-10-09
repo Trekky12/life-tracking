@@ -15,6 +15,7 @@ use App\Domain\Home\Widget\CarMaxMileageTodayWidget;
 use App\Domain\Home\Widget\CarLastRefuelWidget;
 use App\Domain\Home\Widget\SplittedBillsBalanceWidget;
 use App\Domain\Home\Widget\TimesheetsSumWidget;
+use App\Domain\Home\Widget\TimesheetsProjectBudgetWidget;
 use App\Domain\Home\Widget\WidgetMapper;
 use App\Domain\Base\Settings;
 use App\Domain\Main\Translator;
@@ -37,6 +38,7 @@ class HomeService extends Service {
     private $car_max_mileage_today_widget;
     private $splitted_bills_balance_widget;
     private $timesheets_sum_widget;
+    private $timesheets_project_budget_widget;
     private $efa_widget;
     private $currentweather_widget;
     private $weatherforecast_widget;
@@ -57,6 +59,7 @@ class HomeService extends Service {
             CarLastRefuelWidget $car_last_refuel_widget,
             SplittedBillsBalanceWidget $splitted_bills_balance_widget,
             TimesheetsSumWidget $timesheets_sum_widget,
+            TimesheetsProjectBudgetWidget $timesheets_project_budget_widget,
             EFAWidget $efa_widget,
             CurrentWeatherWidget $currentweather_widget,
             WeatherForecastWidget $weatherforecast_widget,
@@ -76,6 +79,7 @@ class HomeService extends Service {
         $this->car_last_refuel_widget = $car_last_refuel_widget;
         $this->splitted_bills_balance_widget = $splitted_bills_balance_widget;
         $this->timesheets_sum_widget = $timesheets_sum_widget;
+        $this->timesheets_project_budget_widget = $timesheets_project_budget_widget;
         $this->efa_widget = $efa_widget;
         $this->currentweather_widget = $currentweather_widget;
         $this->weatherforecast_widget = $weatherforecast_widget;
@@ -170,6 +174,7 @@ class HomeService extends Service {
         }
         if ($this->current_user->getUser()->hasModule('timesheets')) {
             $available_widgets["timesheets_sum"] = ["name" => $this->translation->getTranslatedString("TIMESHEETS")];
+            $available_widgets["timesheets_project_budget"] = ["name" => $this->translation->getTranslatedString("TIMESHEETS_PROJECT_CATEGORY_BUDGET")];
         }
 
         $available_widgets["efa"] = ["name" => $this->translation->getTranslatedString("EFA")];
@@ -202,6 +207,9 @@ class HomeService extends Service {
                 break;
             case "timesheets_sum":
                 $result = $this->timesheets_sum_widget->getOptions($widget);
+                break;
+            case "timesheets_project_budget":
+                $result = $this->timesheets_project_budget_widget->getOptions($widget);
                 break;
             case "efa":
                 $result = $this->efa_widget->getOptions($widget);
@@ -275,6 +283,11 @@ class HomeService extends Service {
                 $list["title"] = $this->timesheets_sum_widget->getTitle($widget);
                 $list["content"] = $this->timesheets_sum_widget->getContent($widget);
                 $list["url"] = $this->timesheets_sum_widget->getLink($widget);
+                break;
+            case "timesheets_project_budget":
+                $list["title"] = $this->timesheets_project_budget_widget->getTitle($widget);
+                $list["content"] = $this->timesheets_project_budget_widget->getContent($widget);
+                $list["url"] = $this->timesheets_project_budget_widget->getLink($widget);
                 break;
             case "efa":
                 $list["title"] = $this->efa_widget->getTitle($widget);

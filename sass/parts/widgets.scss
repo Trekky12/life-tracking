@@ -48,3 +48,29 @@
         @include font-size(4);
     }
 }
+
+table.timesheets_project_budget_widget{
+    .red{
+        color: $color_red;
+    }
+    .green{
+        color: $color_green;
+    }
+    .orange{
+        color: $color_orange;
+    }
+    .yellow{
+        color: $color_yellow;
+    }
+    
+    margin-bottom: 0;
+}
+
+.card[data-widget-name="timesheets_project_budget"]{
+    flex-basis: 100%;
+
+    @media screen and (min-width: $size_tablet) {
+        flex-basis: 50%;
+    }
+
+}

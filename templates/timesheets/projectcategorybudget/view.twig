@@ -30,7 +30,7 @@
 
                         <div class="values">
                             <span>0</span>
-                            <span class="{%if budget.warning3 > 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 > 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 > 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}">{%if budget.categorization != 'count' %}{{budget.sum | splitDateInterval(true)}}{% else %}{{ budget.sum }}{% endif %}</span>
+                            <span>{%if budget.categorization != 'count' %}{{budget.sum | splitDateInterval(true)}}{% else %}{{ budget.sum }}{% endif %}</span>
                             <span>{%if budget.categorization != 'count' %}{{budget.value | splitDateInterval(true)}}{% else %}{{ budget.value }}{% endif %}</span>
                         </div>
 
