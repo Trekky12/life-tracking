@@ -70,11 +70,15 @@ class CrawlerDatasetMapper extends \App\Domain\Mapper {
     }
 
     public function deleteOldEntries($crawler_id, $month = 6) {
-        $sql = "DELETE FROM " . $this->getTableName() . " WHERE crawler = :crawler AND DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0";
+        $sql = "DELETE FROM " . $this->getTableName() . " "
+                . "WHERE crawler = :crawler "
+                . "AND DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0 "
+                . "AND saved = :saved";
 
         $bindings = [
             "crawler" => $crawler_id,
-            "month" => $month
+            "month" => $month,
+            "saved" => 0
         ];
 
         $stmt = $this->db->prepare($sql);
