@@ -146,7 +146,7 @@ class CrawlerService extends Service {
 
         // first two columns are static, so the correct index is $sortColumnIndex - 2
         // get sort column of array
-        if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && count($headers) >= $sortColumnIndex - 2) {
+        if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && array_key_exists(($sortColumnIndex - 2), $headers_numeric)) {
             $column = $headers_numeric[$sortColumnIndex - 2];
             // is this column really sortable?
             if (intval($column->sortable) === 1) {
