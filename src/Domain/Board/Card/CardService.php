@@ -67,6 +67,7 @@ class CardService extends Service {
 
         $stack = array_key_exists("stack", $data) && !empty($data["stack"]) ? filter_var($data['stack'], FILTER_SANITIZE_NUMBER_INT) : null;
         $card = array_key_exists("card", $data) && !empty($data["card"]) ? filter_var($data['card'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $position = array_key_exists("position", $data) && !empty($data["position"]) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $user = $this->current_user->getUser()->id;
         $user_cards = $this->mapper->getUserCards($user);
@@ -74,7 +75,7 @@ class CardService extends Service {
 
         $response_data = ['status' => 'error'];
         if (!is_null($stack) && !is_null($card) && in_array($stack, $user_stacks) && in_array($card, $user_cards)) {
-            $this->mapper->moveCard($card, $stack, $user);
+            $this->mapper->moveCard($card, $stack, $position, $user);
 
             $response_data = ['status' => 'success'];
         }

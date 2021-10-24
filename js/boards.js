@@ -843,8 +843,9 @@ movableCards.forEach(function (card) {
         onAdd: function (evt) {
             var stack = evt.to.dataset.stack;
             var card = evt.item.dataset.card;
+            let newPosition = evt.newIndex;
 
-            var data = {'card': card, 'stack': stack};
+            var data = {'card': card, 'stack': stack, 'position': newPosition};
 
             getCSRFToken().then(function (token) {
                 data['csrf_name'] = token.csrf_name;
