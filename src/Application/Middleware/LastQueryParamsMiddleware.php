@@ -3,7 +3,7 @@
 namespace App\Application\Middleware;
 
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 use App\Domain\Base\CurrentUser;
@@ -22,13 +22,13 @@ class LastQueryParamsMiddleware {
         $baseRoute = $routeContext->getRoute();
         $routeName = $baseRoute->getName();
         $params = $request->getQueryParams();
-
+        
         // get last saved urls
         $lastUrls = SessionUtility::getSessionVar("lastURLS", []);
         // save new params for this route
         $lastUrls[$routeName] = $params;
-        // only save 3 entries
-        if (count($lastUrls) > 3) {
+        // only save 5 entries
+        if (count($lastUrls) > 5) {
             array_shift($lastUrls);
         }
         SessionUtility::setSessionVar("lastURLS", $lastUrls);
