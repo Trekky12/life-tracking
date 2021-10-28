@@ -152,6 +152,10 @@ function setCategories(data) {
         window.location.reload();
     }).catch(function (error) {
         console.log(error);
+        if (document.body.classList.contains('offline')) {
+            let formData = new URLSearchParams(data).toString();
+            saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
+        }
     });
 }
 

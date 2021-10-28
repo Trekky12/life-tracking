@@ -78,7 +78,24 @@ function setFormFieldsDisabled(value) {
         return;
     }
 
+    saveFormDataWhenOffline();
 
+}
+
+function getIndexedDB() {
+    let openRequest = indexedDB.open('lifeTrackingData', 1);
+
+    openRequest.onupgradeneeded = function () {
+        let db = openRequest.result;
+        if (!db.objectStoreNames.contains('forms')) {
+            db.createObjectStore('forms', {keyPath: 'id', autoIncrement: true});
+        }
+    }
+
+    return openRequest;
+}
+
+function saveFormDataWhenOffline() {
     let openRequest = getIndexedDB();
     openRequest.onsuccess = function () {
         let db = openRequest.result;
@@ -90,11 +107,16 @@ function setFormFieldsDisabled(value) {
                     e.preventDefault();
 
                     //@see https://stackoverflow.com/a/48950600
-                    let formData = new URLSearchParams(new FormData(item)).toString();
+                    let form = new FormData(item);
+                    // append time of real request if field is not visible
+                    if (!form.has('time')) {
+                        form.append('time', new Date().toLocaleTimeString());
+                    }
+                    let formData = new URLSearchParams(form).toString();
 
                     let transaction = db.transaction('forms', 'readwrite');
                     let forms = transaction.objectStore('forms');
-                    let request = forms.add({'action': item.action, 'data': formData});
+                    let request = forms.add({'action': item.action, 'type': 'POST', 'data': formData});
 
                     request.onsuccess = function () {
                         console.log("saved locally");
@@ -112,20 +134,31 @@ function setFormFieldsDisabled(value) {
             }
         });
     };
-
 }
 
-function getIndexedDB() {
-    let openRequest = indexedDB.open('lifeTrackingData', 1);
-
-    openRequest.onupgradeneeded = function () {
+function saveDataWhenOffline(url, type = 'POST', data = null) {
+    let openRequest = getIndexedDB();
+    openRequest.onsuccess = function () {
         let db = openRequest.result;
-        if (!db.objectStoreNames.contains('forms')) {
-            db.createObjectStore('forms', {keyPath: 'id', autoIncrement: true});
-        }
-    }
 
-    return openRequest;
+        let transaction = db.transaction('forms', 'readwrite');
+        let forms = transaction.objectStore('forms');
+        let request = forms.add({'action': url, 'type': type, 'data': data});
+
+        request.onsuccess = function () {
+            console.log("saved locally");
+            appLoadingWindowOverlay.classList.add("hidden");
+            showToast(lang.entry_saved_locally, "green");
+            offlineElementsAlert.classList.remove("hidden");
+            allowedReload = true;
+            window.location.reload();
+        }
+        request.onerror = function () {
+            console.log("Error", request.error);
+            appLoadingWindowOverlay.classList.add("hidden");
+            showToast(lang.entry_saved_locally_error, "red");
+        }
+    };
 }
 
 initServiceWorker();
@@ -179,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         data.set("csrf_value", token.csrf_value);
 
                         return fetch(form.action, {
-                            method: 'POST',
+                            method: form.type,
                             credentials: "same-origin",
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'

@@ -531,7 +531,10 @@ function closeDialog(element) {
     document.getElementById('label-add-btn').value = lang.add;
 
     element.querySelector('form').reset();
-    element.querySelector('input[type="hidden"].reset-field').value = "";
+
+    element.querySelectorAll('input[type="hidden"].reset-field').forEach(function (field) {
+        field.value = "";
+    });
     element.querySelector(".edit-bar").innerHTML = "";
 
     openedDialogData = null;
@@ -579,9 +582,10 @@ function save(dialog, url) {
     cleanURL();
     var id = dialog.querySelector('input[name="id"]').value;
 
-    var data = formToJSON(dialog.querySelector('form'));
+    let form = dialog.querySelector('form');
 
     getCSRFToken().then(function (token) {
+        let data = formToJSON(form);
         data["csrf_name"] = token.csrf_name;
         data["csrf_value"] = token.csrf_value;
 
@@ -600,6 +604,10 @@ function save(dialog, url) {
         window.location.reload();
     }).catch(function (error) {
         console.log(error);
+        if (document.body.classList.contains('offline')) {
+            let formData = new URLSearchParams(new FormData(form)).toString();
+            saveDataWhenOffline(url + id, 'POST', formData);
+        }
     });
 
 
@@ -645,6 +653,10 @@ document.addEventListener('click', function (event) {
             window.location.reload();
         }).catch(function (error) {
             console.log(error);
+            if (document.body.classList.contains('offline')) {
+                let formData = new URLSearchParams(data).toString();
+                saveDataWhenOffline(url, 'POST', formData);
+            }
         });
 
     }

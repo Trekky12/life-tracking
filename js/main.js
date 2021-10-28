@@ -43,8 +43,9 @@ function getNewTokens(token) {
         return tokens.pop();
     }).catch(function (error) {
         tokens.push(token);
-        throw "No CRSF Tokens available";
         console.log(error);
+        loadingWindowOverlay.classList.add("hidden");
+        throw "No CRSF Tokens available";
     });
 }
 
@@ -90,6 +91,9 @@ function deleteObject(url, type) {
         }
     }).catch(function (error) {
         console.log(error);
+        if (document.body.classList.contains('offline')) {
+            saveDataWhenOffline(url, 'DELETE');
+        }
     });
 }
 
@@ -152,7 +156,7 @@ function initialize() {
 
         let link = event.target.closest('a');
         let submit = event.target.closest('[type="submit"]');
-        
+
         if ((link && link.getAttribute("href") != '#' && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname)) || (submit && !submit.classList.contains("no-loading"))) {
             loadingWindowOverlay.classList.remove("hidden");
         }
@@ -506,6 +510,12 @@ document.addEventListener('click', function (event) {
 // https://developers.google.com/web/updates/2017/09/abortable-fetch
 // https://dev.to/stereobooster/fetch-with-a-timeout-3d6
 function fetchWithTimeout(url, options, timeout = 3000) {
+    if (document.body.classList.contains("offline")) {
+        return new Promise(function (resolve, reject) {
+            reject('Offline');
+        });
+    }
+
     const abortController = new AbortController();
     const abortSignal = abortController.signal;
 
