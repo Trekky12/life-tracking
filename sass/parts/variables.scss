@@ -12,7 +12,7 @@ $size_tablet : 960px;
 $size_big: 1190px;
 $size_desktop: $size_content-width;
 $size_mobile_navigation: $size_tablet;
-$size_navigation_drawer : 200px;
+$size_navigation_drawer : 256px;
 
 
 // Colors
@@ -49,3 +49,4 @@ $color_text-input-focus: #111;
 
 $header_height : 55px;
 $header_height_margin: 20px;
+$header_height_navigation_offset: 20px;
