@@ -501,6 +501,7 @@ CREATE TABLE crawlers_user (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     crawler INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
+    lastAccess DATE DEFAULT NULL,
     UNIQUE(crawler, user),
     FOREIGN KEY(crawler) REFERENCES crawlers(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE

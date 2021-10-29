@@ -21,7 +21,7 @@ class CrawlerViewAction {
     public function __invoke(Request $request, Response $response): Response {
         $hash = $request->getAttribute('crawler');
         $data = $request->getQueryParams();
-        list($from, $to) = DateUtility::getDateRange($data);
+        list($from, $to) = DateUtility::getDateRange($data, null);
         
         $index = $this->service->view($hash, $from, $to);
 
