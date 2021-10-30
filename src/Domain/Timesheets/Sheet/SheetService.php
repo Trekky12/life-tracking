@@ -14,6 +14,7 @@ use App\Domain\Main\Utility\DateUtility;
 use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Project\Project;
 use App\Domain\Main\Utility\Utility;
+use App\Domain\Main\Translator;
 
 class SheetService extends Service {
 
@@ -22,6 +23,7 @@ class SheetService extends Service {
     protected $user_service;
     protected $settings;
     protected $router;
+    protected $translation;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -30,7 +32,8 @@ class SheetService extends Service {
             ProjectCategoryService $project_category_service,
             UserService $user_service,
             Settings $settings,
-            RouteParser $router) {
+            RouteParser $router,
+            Translator $translation) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
@@ -39,6 +42,7 @@ class SheetService extends Service {
         $this->user_service = $user_service;
         $this->settings = $settings;
         $this->router = $router;
+        $this->translation = $translation;
     }
 
     public function view($hash, $from, $to, $categories): Payload {
@@ -194,6 +198,7 @@ class SheetService extends Service {
             $row[] = $time;
             $row[] = $sheet->categories;
 
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' .  $this->translation->getTranslatedString("NOTICE") . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-edit') . '</a>';
             $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 
@@ -233,10 +238,6 @@ class SheetService extends Service {
         }
 
         $entry = $this->getEntry($entry_id);
-        if (!is_null($entry)) {
-            $entry->notice = $this->mapper->getNotice($entry->id);
-        }
-
         $users = $this->user_service->getAll();
         $project_users = $this->project_service->getUsers($project->id);
 

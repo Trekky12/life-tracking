@@ -916,6 +916,27 @@ CREATE TABLE timesheets_categorybudgets_categories (
     FOREIGN KEY(category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS timesheets_sheets_notices;
+CREATE TABLE timesheets_sheets_notices (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    sheet INTEGER unsigned DEFAULT NULL,
+    notice BLOB DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(sheet) REFERENCES timesheets_sheets(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+INSERT INTO timesheets_sheets_notices (sheet, createdOn, changedOn, createdBy, changedBy, notice)
+SELECT id, createdOn, changedOn, createdBy, changedBy, notice
+FROM timesheets_sheets
+*/
+
 DROP TABLE IF EXISTS activities;
 CREATE TABLE activities (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

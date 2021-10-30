@@ -1,0 +1,48 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/timesheets-notice.js?ver=20211030"></script>
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TIMESHEETS"]}} {{ lang["NOTICE"] }}| {{project.name|raw}}</h2>
+            <div class="buttons">
+                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div id="loadingIconTimesheetNotice" class="centered loading-icon">
+                <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+            </div>
+
+            <div id="alertError" class="alert danger hidden">
+                <span class="closebtn" >&times;</span>
+                <span class="alert-message">
+                    <p>{{ lang["ENTRY_ERROR"] }}</p>
+                    <p id="alertErrorDetail"></p>
+                </span>
+            </div>
+
+            <form id="timesheetNoticeForm" class="form-horizontal hidden" action="{{  url_for('timesheets_sheets_notice_save', {'sheet': sheet.id, 'project': project.hash}) }}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                <div class="form-group">
+                    <label for="inputNotice">{{lang["NOTICE"]}}</label>
+                    <textarea rows="15" class="form-control" id="inputNotice" name="notice">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group btn">
+                    <button type="submit">{{lang["SAVE"]}}</button>
+                    <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

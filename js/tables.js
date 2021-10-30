@@ -828,7 +828,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
             sort: "desc"
         },
         {
-            select: [0, 5, 6, 7],
+            select: [0, 5, 6, 7, 8],
             sortable: false,
             searchable: false
         }

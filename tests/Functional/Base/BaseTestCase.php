@@ -302,6 +302,13 @@ class BaseTestCase extends TestCase {
     protected function getURIChildDelete($hash) {
         return str_replace("HASH", $hash, $this->uri_child_delete);
     }
+    
+    protected function getURIWithHash($uri, $hash){
+        return str_replace("HASH", $hash, $uri);
+    }
+    protected function getURIWithHashAndID($uri, $hash, $id){
+        return str_replace("ID", $id, str_replace("HASH", $hash, $uri));
+    }
 
     /**
      * CSRF Tokens

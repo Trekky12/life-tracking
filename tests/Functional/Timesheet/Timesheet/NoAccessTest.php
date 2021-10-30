@@ -35,8 +35,7 @@ class NoAccessTest extends TimesheetTestBase {
 
         $data = [
             "start" => date('Y-m-d') . " 12:00",
-            "end" => date('Y-m-d') . " 14:10",
-            "notice" => "Test"
+            "end" => date('Y-m-d') . " 14:10"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
 

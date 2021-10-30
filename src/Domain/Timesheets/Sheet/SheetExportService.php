@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
 use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
@@ -16,11 +17,13 @@ class SheetExportService extends Service {
     private $translation;
     private $project_service;
     private $settings;
+    private $sheet_notice_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             SheetMapper $mapper,
             ProjectService $project_service,
+            SheetNoticeMapper $sheet_notice_mapper,
             Settings $settings,
             Translator $translation) {
         parent::__construct($logger, $user);
@@ -28,6 +31,7 @@ class SheetExportService extends Service {
         $this->project_service = $project_service;
         $this->settings = $settings;
         $this->translation = $translation;
+        $this->sheet_notice_mapper = $sheet_notice_mapper;
     }
 
     public function export($hash, $data) {
@@ -100,7 +104,6 @@ class SheetExportService extends Service {
         );
         $sheet->getStyle('A4:G4')->getFont()->setBold(true);
 
-
         $excelTime = "[$-F400]h:mm:ss AM/PM";
         $excelDate = $dateFormatPHP['date'];
         $excelDateTime = $dateFormatPHP['datetime'];
@@ -151,8 +154,9 @@ class SheetExportService extends Service {
                 $sheet->setCellValue('F' . $row, $timesheet->categories);
             }
 
-            if (!is_null($timesheet->notice)) {
-                $sheet->setCellValue('G' . $row, htmlspecialchars_decode($timesheet->notice));
+            $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+            if (!is_null($notice)) {
+                $sheet->setCellValue('G' . $row, htmlspecialchars_decode($notice->getNotice()));
                 $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
             }
 
@@ -221,7 +225,6 @@ class SheetExportService extends Service {
         $excelFileName = @tempnam($path, 'phpxltmp');
         $writer->save($excelFileName);
 
-
         /**
          * We should use a Stream Object but then deleting is not possible, so instead use file_get_contents
          * @see https://gist.github.com/odan/a7a1eb3c876c9c5b2ffd2db55f29fdb8
@@ -277,11 +280,12 @@ class SheetExportService extends Service {
                 $section->addText(sprintf("%s: %s", $this->translation->getTranslatedString("CATEGORIES"), $timesheet->categories));
             }
 
-            if (!is_null($timesheet->notice)) {
+            $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+            if (!is_null($notice)) {
 
                 $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
 
-                $notice = explode("\n", $timesheet->notice);
+                $notice = explode("\n", $notice->getNotice());
 
                 foreach ($notice as $line) {
                     $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
@@ -321,4 +325,5 @@ class SheetExportService extends Service {
 
         return new Payload(Payload::$RESULT_WORD, $body);
     }
+
 }

@@ -139,52 +139,56 @@
                 'notifications_get': '{{url_for('notifications_get')}}',
                 'activities_get': '{{url_for('activities_get')}}',
                 'logfile_get': '{{url_for('logfile_get')}}',
-            {% if not hasCrawlerTable is null %}
-                        'crawler_table': '{{url_for('crawlers_table', {'crawler': crawler.hash})}}',
-                        'crawler_filter': '{{url_for('set_crawler_filter', {'crawler': crawler.hash})}}',
-                        'crawler_dataset_save': '{{url_for('crawler_dataset_save', {'crawler': crawler.hash})}}',                {% endif %}
-
-            {% if not from is null %}    
-                                'dateFrom': '{{from}}',                {% endif %}
-            {% if not to is null %}    
-                                        'dateTo': '{{to}}',                {% endif %}
-
-            {% if not hasSplitbillTable is null %}
-                        'splitbill_table': '{{url_for('splitbill_bills_table', {'group': group.hash})}}',
-            {% endif %}
-                        'get_location_of_address': '{{ url_for("get_location_of_address") }}',
-            {% if not isTrips is null %}
-                        'trip_markers_url': '{{url_for('trips_markers', {'trip': trip.hash})}}',
-                        'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
-                        'trip_add_waypoint': '{{  url_for('trips_add_waypoint', {'trip' : trip.hash})}}',
-                        'trip_delete_waypoint': '{{  url_for('trips_delete_waypoint', {'trip' : trip.hash})}}',
-                        'trip_add_route': '{{  url_for('trips_add_route', {'trip' : trip.hash})}}',
-                        'trip_list_routes': '{{  url_for('trips_list_route', {'trip' : trip.hash})}}',
-                        'trip_route_waypoints': '{{  url_for('trips_route_waypoints', {'trip' : trip.hash})}}',                {% endif %}
-
-            {% if not hasTimesheetTable is null %}
-                        'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
-                        'timesheets_sheets_set_categories': '{{url_for('timesheets_sheets_set_categories', {'project': project.hash})}}',                {% endif %}
-
-            {% if not isTripEventEdit is null %}
-                        'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
-                        'trip_event_image_delete': '{{  url_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
-            {% endif %}
-                        'frontpage_widget_option': '{{url_for('users_profile_frontpage_widget_option')}}',
-                        'frontpage_widget_option_save': '{{url_for('users_profile_frontpage_widget_option_save')}}',
-                        'frontpage_widget_position': '{{url_for('users_profile_frontpage_widget_position')}}',
-                        'frontpage_widget_request': '{{url_for('frontpage_widget_request')}}',
-                        'workouts_exercises_get': '{{url_for('workouts_exercises_get')}}',
-                        'workouts_exercises_selected_muscles': '{{url_for('workouts_exercises_selected_muscles')}}',
-                        'workouts_exercises_data': '{{url_for('workouts_exercises_data')}}',
-                        'usersearch': '{{url_for('usersearch')}}',
-                        'ingredients_get': '{{url_for('ingredients_get')}}',
-                        'recipes_get': '{{url_for('recipes_get')}}',
-                        'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
-            {% if not isMealplanEdit is null %}
-                        'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
-                        'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}'
-            {% endif %}
+{% if not hasCrawlerTable is null %}
+                'crawler_table': '{{url_for('crawlers_table', {'crawler': crawler.hash})}}',
+                'crawler_filter': '{{url_for('set_crawler_filter', {'crawler': crawler.hash})}}',
+                'crawler_dataset_save': '{{url_for('crawler_dataset_save', {'crawler': crawler.hash})}}',
+{% endif %}
+{% if not from is null %}    
+                'dateFrom': '{{from}}',
+{% endif %}
+{% if not to is null %}    
+                'dateTo': '{{to}}',
+{% endif %}
+{% if not hasSplitbillTable is null %}
+                'splitbill_table': '{{url_for('splitbill_bills_table', {'group': group.hash})}}',
+{% endif %}
+                'get_location_of_address': '{{ url_for("get_location_of_address") }}',
+{% if not isTrips is null %}
+                'trip_markers_url': '{{url_for('trips_markers', {'trip': trip.hash})}}',
+                'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
+                'trip_add_waypoint': '{{  url_for('trips_add_waypoint', {'trip' : trip.hash})}}',
+                'trip_delete_waypoint': '{{  url_for('trips_delete_waypoint', {'trip' : trip.hash})}}',
+                'trip_add_route': '{{  url_for('trips_add_route', {'trip' : trip.hash})}}',
+                'trip_list_routes': '{{  url_for('trips_list_route', {'trip' : trip.hash})}}',
+                'trip_route_waypoints': '{{  url_for('trips_route_waypoints', {'trip' : trip.hash})}}',
+{% endif %}
+{% if not hasTimesheetTable is null %}
+                'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
+                'timesheets_sheets_set_categories': '{{url_for('timesheets_sheets_set_categories', {'project': project.hash})}}',
+{% endif %}
+{% if not isTimesheetNoticeEdit is null %}
+                'timesheets_sheets_notice_data': '{{url_for('timesheets_sheets_notice_data', {'project': project.hash, 'sheet': sheet.id})}}',
+{% endif %}
+{% if not isTripEventEdit is null %}
+                'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
+                'trip_event_image_delete': '{{  url_for('trips_event_image_delete', {'id' : entry.id, 'trip' : trip.hash}) }}',
+{% endif %}
+                'frontpage_widget_option': '{{url_for('users_profile_frontpage_widget_option')}}',
+                'frontpage_widget_option_save': '{{url_for('users_profile_frontpage_widget_option_save')}}',
+                'frontpage_widget_position': '{{url_for('users_profile_frontpage_widget_position')}}',
+                'frontpage_widget_request': '{{url_for('frontpage_widget_request')}}',
+                'workouts_exercises_get': '{{url_for('workouts_exercises_get')}}',
+                'workouts_exercises_selected_muscles': '{{url_for('workouts_exercises_selected_muscles')}}',
+                'workouts_exercises_data': '{{url_for('workouts_exercises_data')}}',
+                'usersearch': '{{url_for('usersearch')}}',
+                'ingredients_get': '{{url_for('ingredients_get')}}',
+                'recipes_get': '{{url_for('recipes_get')}}',
+                'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
+{% if not isMealplanEdit is null %}
+                'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
+                'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}'
+{% endif %}
                     };
                     var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
                     var i18n = {{i18n|json_encode()|raw}};
