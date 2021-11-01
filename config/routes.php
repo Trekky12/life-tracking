@@ -395,6 +395,8 @@ return function (App $app) {
 
         $group->group('/{project}', function (RouteCollectorProxy $group_project) {
 
+            $group_project->post('/check', \App\Application\Action\Timesheets\Project\ProjectCheckPasswordAction::class)->setName('timesheets_sheets_check_pw');
+            
             $group_project->get('/view/', \App\Application\Action\Timesheets\Sheet\SheetViewAction::class)->setName('timesheets_sheets');
             $group_project->get('/table/', \App\Application\Action\Timesheets\Sheet\SheetTableAction::class)->setName('timesheets_sheets_table');
 
@@ -405,10 +407,10 @@ return function (App $app) {
                 
                 $group_sheets->post('/setCategories', \App\Application\Action\Timesheets\Sheet\SheetSetCategoriesAction::class)->setName('timesheets_sheets_set_categories');
                 
+                $group_sheets->get('/notice/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeDataAction::class)->setName('timesheets_sheets_notice_data');
                 $group_sheets->group('/notice/{sheet:[0-9]+}', function (RouteCollectorProxy $group_notice) {
                     $group_notice->get('/edit/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeEditAction::class)->setName('timesheets_sheets_notice_edit');
                     $group_notice->post('/save/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeSaveAction::class)->setName('timesheets_sheets_notice_save');
-                    $group_notice->get('/data/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeDataAction::class)->setName('timesheets_sheets_notice_data');
                 });
             });
 

@@ -83,12 +83,15 @@ function setFormFieldsDisabled(value) {
 }
 
 function getIndexedDB() {
-    let openRequest = indexedDB.open('lifeTrackingData', 1);
+    let openRequest = indexedDB.open('lifeTrackingData', 2);
 
     openRequest.onupgradeneeded = function () {
         let db = openRequest.result;
         if (!db.objectStoreNames.contains('forms')) {
             db.createObjectStore('forms', {keyPath: 'id', autoIncrement: true});
+        }
+        if (!db.objectStoreNames.contains('keys')) {
+            db.createObjectStore('keys', {keyPath: 'project'});
         }
     }
 

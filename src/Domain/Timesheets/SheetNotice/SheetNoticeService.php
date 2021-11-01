@@ -45,7 +45,7 @@ class SheetNoticeService extends Service {
         $response_data = [
             'sheet' => $sheet,
             'project' => $project,
-            'isTimesheetNoticeEdit' => true
+            'hasTimesheetNotice' => true
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);

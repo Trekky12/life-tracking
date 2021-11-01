@@ -494,6 +494,8 @@ $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- keine Hauptkategorie -";
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
 $lang["REQUEST_ERROR"] = "Ein Übertragungsfehler ist aufgetreten!";
+$lang["ENCRYPT_ERROR"] = "Ein Fehler bei der Verschlüsselung ist aufgetreten!";
+$lang["DECRYPT_ERROR"] = "Ein Fehler bei der Entschlüsselung ist aufgetreten!";
 
 $lang["BANLIST"] = "gesperrte IP-Adressen";
 
@@ -732,5 +734,13 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"] = "Summe der Zeiten";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "Summe der Zeiten modifiziert";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "Anzahl Einträge";
+
+$lang["PASSWORDSDONOTMATCH"] = "Die Passwörter stimmen nicht überein!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Passwort für die Verschlüsselung der Notizen";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "Für die Verschlüsselung der Notizen muss ein Passwort vergeben werden. Das Passwort kann nicht mehr geändert werden!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "Das Passwort wurde bereits gesetzt und kann nicht geändert werden.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Passwort für die Verschlüsselung eingeben:";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Passwort ist falsch.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "Es wurde noch kein Passwort für die Verschlüsselung vergeben!";
 
 return $lang;

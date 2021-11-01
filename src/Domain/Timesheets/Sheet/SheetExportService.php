@@ -95,14 +95,14 @@ class SheetExportService extends Service {
         }
 
         $sheet->setCellValue('F4', $this->translation->getTranslatedString("CATEGORIES"));
-        $sheet->setCellValue('G4', $this->translation->getTranslatedString("NOTICE"));
-        $sheet->getStyle('A4:G4')->applyFromArray(
+        //$sheet->setCellValue('G4', $this->translation->getTranslatedString("NOTICE"));
+        $sheet->getStyle('A4:F4')->applyFromArray(
                 ['borders' => [
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
                     ],
                 ]
         );
-        $sheet->getStyle('A4:G4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:F4')->getFont()->setBold(true);
 
         $excelTime = "[$-F400]h:mm:ss AM/PM";
         $excelDate = $dateFormatPHP['date'];
@@ -154,14 +154,14 @@ class SheetExportService extends Service {
                 $sheet->setCellValue('F' . $row, $timesheet->categories);
             }
 
-            $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+            /*$notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
             if (!is_null($notice)) {
                 $sheet->setCellValue('G' . $row, htmlspecialchars_decode($notice->getNotice()));
                 $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
-            }
+            }*/
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
-            $sheet->getStyle('A' . $row . ':G' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+            $sheet->getStyle('A' . $row . ':F' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
             $idx++;
         }
@@ -180,7 +180,7 @@ class SheetExportService extends Service {
         $sheet->setCellValue('E' . $sumRow, "=SUM(E" . $firstRow . ":E" . ($sumRow - 1) . ")");
         $sheet->getStyle('E' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDuration);
 
-        $sheet->getStyle('A' . $sumRow . ':G' . $sumRow)->applyFromArray(
+        $sheet->getStyle('A' . $sumRow . ':F' . $sumRow)->applyFromArray(
                 ['borders' => [
                         'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
@@ -195,7 +195,7 @@ class SheetExportService extends Service {
         $sheet->getColumnDimension('D')->setAutoSize(true);
         $sheet->getColumnDimension('E')->setAutoSize(true);
         $sheet->getColumnDimension('F')->setAutoSize(true);
-        $sheet->getColumnDimension('G')->setAutoSize(true);
+        //$sheet->getColumnDimension('G')->setAutoSize(true);
 
         // sheet protection
         $sheet->getProtection()->setSheet(true);
@@ -203,7 +203,7 @@ class SheetExportService extends Service {
                 ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
         );
-        $sheet->getStyle("A1:G2")
+        $sheet->getStyle("A1:F2")
                 ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
         );
@@ -280,7 +280,7 @@ class SheetExportService extends Service {
                 $section->addText(sprintf("%s: %s", $this->translation->getTranslatedString("CATEGORIES"), $timesheet->categories));
             }
 
-            $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+            /*$notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
             if (!is_null($notice)) {
 
                 $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
@@ -290,7 +290,7 @@ class SheetExportService extends Service {
                 foreach ($notice as $line) {
                     $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
                 }
-            }
+            }*/
 
 
             if (next($data) == true) {

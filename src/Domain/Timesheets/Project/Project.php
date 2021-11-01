@@ -20,6 +20,18 @@ class Project extends \App\Domain\DataObject {
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
+        
+        if ($this->exists('password', $data)) {
+            $this->password = filter_var($data['password'], FILTER_SANITIZE_STRING);
+        }
+        if ($this->exists('salt', $data)) {
+            $this->salt = filter_var($data['salt'], FILTER_SANITIZE_STRING);
+        }
+        $set_password = $this->exists('set_password', $data) ? filter_var($data['set_password'], FILTER_SANITIZE_STRING) : null;
+        if (!is_null($set_password)) {
+            $this->password = password_hash($set_password, PASSWORD_DEFAULT);
+            $this->salt = base64_encode(random_bytes(16));
+        }
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

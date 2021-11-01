@@ -66,6 +66,22 @@
                     <label for="inputRate">{{lang["TIMESHEETS_TIME_CONVERSION_RATE"]}}</label>
                     <input type="text" class="form-control" id="inputRate" name="time_conversion_rate" value="{% if not entry is null %}{{entry.time_conversion_rate}}{% else %}1{% endif %}">
                 </div>
+                
+                <h3>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] }}</h3>
+                
+                {% if entry is null or not entry.password  %}
+                    <p>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] }}</p>
+                    <div class="form-group">
+                    <label for="inputSetPassword">{{lang["NEW_PASSWORD"]}}</label>
+                    <input name="set_password" id="inputSetPassword" class="form-control" type="password" >
+                </div>
+                <div class="form-group">
+                    <label for="inputSetPassword2">{{lang["NEW_PASSWORD_REPLY"]}}</label>
+                    <input name="set_password2" id="inputSetPassword2" class="form-control" type="password" >
+                </div>
+                {% else %}
+                        <p>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] }}</p>
+                {% endif %}
 
                 <div class="form-group btn">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>

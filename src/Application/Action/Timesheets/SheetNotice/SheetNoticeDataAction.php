@@ -19,7 +19,7 @@ class SheetNoticeDataAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $project_hash = $request->getAttribute('project');
-        $sheet_id = $request->getAttribute('sheet');
+        $sheet_id = $request->getQueryParam('sheet');
         
         $payload = $this->service->getData($project_hash, $sheet_id);
         return $this->responder->respond($payload);

@@ -40,8 +40,8 @@ class FinancesWriter extends ObjectActivityWriter {
         // Check Budget
         $budget_result = $this->budget_service->checkBudget($entry);
         foreach ($budget_result as $result) {
-            $payload->addFlashMessage('budget_message_type', $result["type"]);
-            $payload->addFlashMessage('budget_message', $result["message"]);
+            $payload->addFlashMessage('additional_flash_message_type', $result["type"]);
+            $payload->addFlashMessage('additional_flash_message', $result["message"]);
         }
         return $payload;
     }

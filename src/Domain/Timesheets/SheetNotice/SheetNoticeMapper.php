@@ -16,10 +16,11 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
         parent::__construct($db, $translation, $user);
 
         $this->KEY = hash('sha256', $settings->getAppSettings()['timesheets']['key']);
+        
     }
 
     public function setNotice($id, $notice) {
-        $sql = "UPDATE " . $this->getTableName() . " SET notice  = AES_ENCRYPT(:notice, '" . $this->KEY . "') WHERE id = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET notice2  = AES_ENCRYPT(:notice, '" . $this->KEY . "') WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -33,7 +34,13 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
     }
 
     public function getNotice($sheet_id) {
-        $sql = "SELECT *, CAST( AES_DECRYPT(notice, '" . $this->KEY . "') AS CHAR) as notice FROM " . $this->getTableName() . "  WHERE sheet = :sheet";
+        $sql = "SELECT *, "
+                ." CASE "
+                . " WHEN encrypted < 1 THEN CAST( AES_DECRYPT(notice2, '" . $this->KEY . "') AS CHAR) "
+                . " ELSE notice "
+                . "END as notice "
+                . "FROM " . $this->getTableName() . "  "
+                . "WHERE sheet = :sheet";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([

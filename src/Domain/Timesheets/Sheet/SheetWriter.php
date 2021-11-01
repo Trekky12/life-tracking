@@ -68,8 +68,8 @@ class SheetWriter extends ObjectActivityWriter {
         $budget_result = $this->categorybudget_service->checkCategoryBudgets($entry->project, $sheet_categories, $entry->id);
 
         foreach ($budget_result as $idx => $result) {
-            $payload->addFlashMessage('budget_message_type', $result["type"]);
-            $payload->addFlashMessage('budget_message', $result["message"]);
+            $payload->addFlashMessage('additional_flash_message_type', $result["type"]);
+            $payload->addFlashMessage('additional_flash_message', $result["message"]);
         }
         return $payload;
     }

@@ -10,7 +10,7 @@ class MemberTest extends TimesheetTestBase {
     protected $TEST_SHEET_ID = 1;
     protected $uri_child_edit = "/timesheets/HASH/sheets/notice/ID/edit/";
     protected $uri_child_save = "/timesheets/HASH/sheets/notice/ID/save/";
-    protected $uri_child_data = "/timesheets/HASH/sheets/notice/ID/data/";
+    protected $uri_child_data = "/timesheets/HASH/sheets/notice/";
 
     protected function setUp(): void {
         $this->login("user", "user");
@@ -26,7 +26,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<form id="timesheetNoticeForm" class="form-horizontal hidden" action="' . $this->getURIWithHashAndID($this->uri_child_save, $this->TEST_PROJECT_HASH, $this->TEST_SHEET_ID) . '" method="POST">', $body);
+        $this->assertStringContainsString('<form id="timesheetNoticeForm" class="form-horizontal" action="' . $this->getURIWithHashAndID($this->uri_child_save, $this->TEST_PROJECT_HASH, $this->TEST_SHEET_ID) . '" method="POST">', $body);
     }
 
     /**
@@ -57,7 +57,7 @@ class MemberTest extends TimesheetTestBase {
      */
     public function testGetChildData($data) {
 
-        $response = $this->request('GET', $this->getURIWithHashAndID($this->uri_child_data, $this->TEST_PROJECT_HASH, $this->TEST_SHEET_ID));
+        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH) . '?sheet=' . $this->TEST_SHEET_ID);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -65,7 +65,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertIsArray($json["entry"]);
 
         $this->assertSame($this->TEST_SHEET_ID, intval($json["entry"]["sheet"]));
-        $this->assertSame($data["notice"], $json["entry"]["notice"]);
+        $this->assertArrayHasKey("notice", $json["entry"]);
     }
 
 }

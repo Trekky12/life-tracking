@@ -10,7 +10,7 @@ class NoAccessTest extends TimesheetTestBase {
     protected $TEST_SHEET_ID = 1;
     protected $uri_child_edit = "/timesheets/HASH/sheets/notice/ID/edit/";
     protected $uri_child_save = "/timesheets/HASH/sheets/notice/ID/save/";
-    protected $uri_child_data = "/timesheets/HASH/sheets/notice/ID/data/";
+    protected $uri_child_data = "/timesheets/HASH/sheets/notice/";
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -48,7 +48,7 @@ class NoAccessTest extends TimesheetTestBase {
 
     public function testGetChildData() {
 
-        $response = $this->request('GET', $this->getURIWithHashAndID($this->uri_child_data, $this->TEST_PROJECT_HASH, $this->TEST_SHEET_ID));
+        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH).'?sheet='. $this->TEST_SHEET_ID);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);

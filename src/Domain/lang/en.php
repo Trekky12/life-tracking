@@ -495,6 +495,8 @@ $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- no main category -";
 $lang["THIS_DEVICE"] = "this device";
 
 $lang["REQUEST_ERROR"] = "A request error occured!";
+$lang["ENCRYPT_ERROR"] = "An error occured while encrypting!";
+$lang["DECRYPT_ERROR"] = "An error occured while decrypting!";
 
 $lang["BANLIST"] = "banned IP-addresses";
 
@@ -733,5 +735,13 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"] = "sum of durations";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "sum of durations modified";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "number of entries";
+
+$lang["PASSWORDSDONOTMATCH"] = "The passwords do not match!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Password for the sheet notice encryption";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "To encrypt the sheet notices a password is neeeded. It is not possible to change the password later!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "The password has been already set and is not changable!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Insert the encryption password:";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "The inserted password is wrong.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "There is no password for the encryption set!";
 
 return $lang;

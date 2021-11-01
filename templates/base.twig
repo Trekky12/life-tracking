@@ -63,9 +63,9 @@
                     </span>
                 </div>
             {% endif %}
-            {% if flash("budget_message") is not empty %}
-                {% for msg in flash('budget_message') %}
-                    <div class="alert hide-offline {{flash('budget_message_type')[loop.index-1]}}">
+            {% if flash("additional_flash_message") is not empty %}
+                {% for msg in flash('additional_flash_message') %}
+                    <div class="alert hide-offline {{flash('additional_flash_message_type')[loop.index-1]}}">
                         <span class="closebtn" >&times;</span>
                         <span class="alert-message">
                             <p>{{ msg }}</p>
@@ -167,8 +167,9 @@
                 'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
                 'timesheets_sheets_set_categories': '{{url_for('timesheets_sheets_set_categories', {'project': project.hash})}}',
 {% endif %}
-{% if not isTimesheetNoticeEdit is null %}
-                'timesheets_sheets_notice_data': '{{url_for('timesheets_sheets_notice_data', {'project': project.hash, 'sheet': sheet.id})}}',
+{% if not hasTimesheetNotice is null %}
+                'timesheets_sheets_notice_data': '{{url_for('timesheets_sheets_notice_data', {'project': project.hash})}}',
+                'timesheets_sheets_check_pw': '{{url_for('timesheets_sheets_check_pw', {'project': project.hash})}}',
 {% endif %}
 {% if not isTripEventEdit is null %}
                 'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',
@@ -233,6 +234,8 @@
                         "to": '{{lang["TO"]}}',
                         "steps": '{{lang["STEPS"]}}',
                         "request_error": '{{lang["REQUEST_ERROR"]}}',
+                        "encrypt_error": '{{lang["ENCRYPT_ERROR"]}}',
+                        "decrypt_error": '{{lang["DECRYPT_ERROR"]}}',
                         "routing_add_to_route": '{{lang["ADD_TO_ROUTE"]}}',
                         "routing_error": '{{lang["ROUTING_ERROR"]}}',
                         "routing_error_too_many_requests": '{{lang["ROUTING_ERROR_TOO_MANY_REQUESTS"]}}',
@@ -250,7 +253,8 @@
                         "workouts_set": '{{lang["WORKOUTS_SET"]}}',
                         "show": '{{lang["SHOW"]}}',
                         "hide": '{{lang["HIDE"]}}',
-                        "ingredient": '{{lang["RECIPES_INGREDIENT"]}}'
+                        "ingredient": '{{lang["RECIPES_INGREDIENT"]}}',
+                        "timesheets_notice_password": '{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"]}}'
                     };
                     var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
@@ -268,7 +272,7 @@
 
 
         {% if not user is null %}
-            <script src="{{baseURL}}/static/js/app.js?ver=20211028" type="text/javascript"></script>
+            <script src="{{baseURL}}/static/js/app.js?ver=20211101" type="text/javascript"></script>
         {% endif %}
 
         {% block javascript %}
