@@ -470,6 +470,7 @@ $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "End";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 $lang["EXPORT_WORD"] = "Word";
 $lang["EXPORT_EXCEL"] = "Excel";
+$lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (with notices)";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
@@ -743,5 +744,7 @@ $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "The password ha
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Insert the encryption password:";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "The inserted password is wrong.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "There is no password for the encryption set!";
+
+$lang["PRINT"] = "Print";
 
 return $lang;

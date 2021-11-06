@@ -1,0 +1,50 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block style %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/timesheets-notice.js?ver=20211106"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('timesheets_export', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div id="loadingIconTimesheetNotice" class="centered loading-icon">
+                <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+            </div>
+
+            <div id="alertError" class="alert danger hidden">
+                <span class="closebtn" >&times;</span>
+                <span class="alert-message">
+                    <p>{{ lang["ENTRY_ERROR"] }}</p>
+                    <p id="alertErrorDetail"></p>
+                </span>
+            </div>
+
+            <div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden">
+                <button class="print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
+                {% for sheet in sheets %}
+                    <div class="timesheet-notice-wrapper">
+                        <h1>{{ sheet["title"] }}</h1>
+                        {% if sheet["categories"] %}<small>{{lang["CATEGORIES"]}}: {{ sheet["categories"] }}</small>{% endif %}
+                        <p>{{lang["DIFFERENCE"]}}: {{ sheet["time"] }}</p>
+                        <p>{{ lang["NOTICE"] }}:</p>
+                        <div class="timesheet-notice" data-sheet="{{ sheet["id"] }}"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}        

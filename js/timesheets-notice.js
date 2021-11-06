@@ -15,10 +15,12 @@ const projectID = parseInt(timesheetNoticeWrapper.dataset.project);
 if (!window.crypto || !window.crypto.subtle) {
     alertErrorDetail.innerHTML = lang.decrypt_error;
     alertError.classList.remove("hidden");
-    timesheetNoticeForm.querySelectorAll('textarea, select, input').forEach(function (element) {
-        element.disabled = true;
-    });
-    timesheetNoticeForm.querySelector('button[type="submit"]').classList.add("hidden");
+    if (timesheetNoticeForm) {
+        timesheetNoticeForm.querySelectorAll('textarea, select, input').forEach(function (element) {
+            element.disabled = true;
+        });
+        timesheetNoticeForm.querySelector('button[type="submit"]').classList.add("hidden");
+    }
 }
 
 let aesKey;
@@ -64,16 +66,18 @@ async function checkPassword() {
         }
     }
 
-    let notice_field = timesheetNoticeWrapper.querySelector('.timesheet-notice');
-    let sheet_id = parseInt(notice_field.dataset.sheet);
-    let notice = await getNotice(sheet_id);
-    if (notice) {
-        if (notice_field.tagName && notice_field.tagName.toLowerCase() === "textarea") {
-            notice_field.value = notice;
-        } else {
-            notice_field.innerHTML = notice;
+    let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice'));
+    await Promise.all(notice_fields.map(async (notice_field) => {
+        let sheet_id = parseInt(notice_field.dataset.sheet);
+        let notice = await getNotice(sheet_id);
+        if (notice) {
+            if (notice_field.tagName && notice_field.tagName.toLowerCase() === "textarea") {
+                notice_field.value = notice;
+            } else {
+                notice_field.innerHTML = notice.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            }
         }
-    }
+    }));
 
     loadingIconTimesheetNotice.classList.add("hidden");
     timesheetNoticeWrapper.classList.remove("hidden");
@@ -106,51 +110,52 @@ async function getNotice(sheet_id) {
     return;
 }
 
+if (timesheetNoticeForm) {
+    timesheetNoticeForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-timesheetNoticeForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
+        alertError.classList.add("hidden");
+        alertErrorDetail.innerHTML = "";
 
-    alertError.classList.add("hidden");
-    alertErrorDetail.innerHTML = "";
+        document.getElementById("loading-overlay").classList.remove("hidden");
 
-    document.getElementById("loading-overlay").classList.remove("hidden");
+        const timesheetNotice = timesheetNoticeForm.querySelector("#inputNotice");
 
-    const timesheetNotice = timesheetNoticeForm.querySelector("#inputNotice");
+        var data = {};
+        data["notice"] = await encryptData(timesheetNotice.value);
+        // temporary save the notice without client encryption
+        data["notice2"] = timesheetNotice.value;
+        data["encrypted"] = 1;
 
-    var data = {};
-    data["notice"] = await encryptData(timesheetNotice.value);
-    // temporary save the notice without client encryption
-    data["notice2"] = timesheetNotice.value;
-    data["encrypted"] = 1;
+        getCSRFToken().then(function (token) {
+            data["csrf_name"] = token.csrf_name;
+            data["csrf_value"] = token.csrf_value;
 
-    getCSRFToken().then(function (token) {
-        data["csrf_name"] = token.csrf_name;
-        data["csrf_value"] = token.csrf_value;
-
-        return fetch(timesheetNoticeForm.action, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        if (data["status"] === "success") {
-            allowedReload = true;
-            window.location.reload();
-        } else {
+            return fetch(timesheetNoticeForm.action, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            if (data["status"] === "success") {
+                allowedReload = true;
+                window.location.reload();
+            } else {
+                document.getElementById("loading-overlay").classList.add("hidden");
+                alertErrorDetail.innerHTML = data["message"];
+                alertError.classList.remove("hidden");
+            }
+        }).catch(function (error) {
+            console.log(error);
             document.getElementById("loading-overlay").classList.add("hidden");
-            alertErrorDetail.innerHTML = data["message"];
-            alertError.classList.remove("hidden");
-        }
-    }).catch(function (error) {
-        console.log(error);
-        document.getElementById("loading-overlay").classList.add("hidden");
+        });
     });
-});
+}
 
 
 function createKeyMaterial(password) {

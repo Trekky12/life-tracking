@@ -23,7 +23,7 @@ class SheetExportAction {
         $data = $request->getQueryParams();
 
         $payload = $this->service->export($hash, $data);
-        return $this->responder->respond($payload);
+        return $this->responder->respond($payload->withTemplate('timesheets/sheets/export-html.twig'));
     }
 
 }

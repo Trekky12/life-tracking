@@ -49,8 +49,11 @@ class SheetExportService extends Service {
         if (strcmp($type, "word") == 0) {
             return $this->exportWord($project, $from, $to, $categories);
         }
+        if (strcmp($type, "excel") == 0) {
+            return $this->exportExcel($project, $from, $to, $categories);
+        }
 
-        return $this->exportExcel($project, $from, $to, $categories);
+        return $this->exportHTML($project, $from, $to, $categories);
     }
 
     private function exportExcel($project, $from, $to, $categories) {
@@ -154,11 +157,11 @@ class SheetExportService extends Service {
                 $sheet->setCellValue('F' . $row, $timesheet->categories);
             }
 
-            /*$notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
-            if (!is_null($notice)) {
-                $sheet->setCellValue('G' . $row, htmlspecialchars_decode($notice->getNotice()));
-                $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
-            }*/
+            /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+              if (!is_null($notice)) {
+              $sheet->setCellValue('G' . $row, htmlspecialchars_decode($notice->getNotice()));
+              $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
+              } */
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
             $sheet->getStyle('A' . $row . ':F' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
@@ -196,7 +199,6 @@ class SheetExportService extends Service {
         $sheet->getColumnDimension('E')->setAutoSize(true);
         $sheet->getColumnDimension('F')->setAutoSize(true);
         //$sheet->getColumnDimension('G')->setAutoSize(true);
-
         // sheet protection
         $sheet->getProtection()->setSheet(true);
         $sheet->getStyle("A" . $firstRow . ":C" . ($sumRow - 1))
@@ -280,17 +282,17 @@ class SheetExportService extends Service {
                 $section->addText(sprintf("%s: %s", $this->translation->getTranslatedString("CATEGORIES"), $timesheet->categories));
             }
 
-            /*$notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
-            if (!is_null($notice)) {
+            /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+              if (!is_null($notice)) {
 
-                $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
+              $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
 
-                $notice = explode("\n", $notice->getNotice());
+              $notice = explode("\n", $notice->getNotice());
 
-                foreach ($notice as $line) {
-                    $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
-                }
-            }*/
+              foreach ($notice as $line) {
+              $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
+              }
+              } */
 
 
             if (next($data) == true) {
@@ -324,6 +326,55 @@ class SheetExportService extends Service {
         unlink($wordFileName);
 
         return new Payload(Payload::$RESULT_WORD, $body);
+    }
+
+    private function exportHTML($project, $from, $to, $categories) {
+
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate->setPattern($dateFormatPHP["date"]);
+
+        // get Data
+        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, 0, 'ASC', null);
+
+        $sheets = [];
+
+        foreach ($data as $timesheet) {
+
+            $sheet = [
+                "id" => $timesheet->id
+            ];
+            list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+
+            $sheet["title"] = sprintf("%s %s - %s", $date, $start, $end);
+
+            if (!is_null($timesheet->start) && !is_null($timesheet->end)) {
+
+                $time_duration_real = DateUtility::splitDateInterval($timesheet->duration);
+
+                if ($project->has_duration_modifications > 0) {
+                    $time_duration_mod = DateUtility::splitDateInterval($timesheet->duration_modified);
+
+                    $sheet["time"] = sprintf("%s (%s)", $time_duration_mod, $time_duration_real);
+                } else {
+                    $sheet["time"] = $time_duration_real;
+                }
+            }
+
+            if (!is_null($timesheet->categories)) {
+                $sheet["categories"] = $timesheet->categories;
+            }
+            $sheets[] = $sheet;
+        }
+
+        $response = [
+            "project" => $project,
+            "hasTimesheetNotice" => true,
+            "sheets" => $sheets
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response);
     }
 
 }

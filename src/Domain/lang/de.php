@@ -469,6 +469,7 @@ $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "Ende";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 $lang["EXPORT_WORD"] = "Word";
 $lang["EXPORT_EXCEL"] = "Excel";
+$lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (mit Notizen)";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "Tagesbasiert (anstatt Projektbasiert)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Zeiterfassungskategorien";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Standardansicht";
@@ -742,5 +743,7 @@ $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "Das Passwort wu
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Passwort für die Verschlüsselung eingeben:";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Passwort ist falsch.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "Es wurde noch kein Passwort für die Verschlüsselung vergeben!";
+
+$lang["PRINT"] = "Drucken";
 
 return $lang;
