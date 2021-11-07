@@ -306,4 +306,25 @@ class SheetMapper extends \App\Domain\Mapper {
         return true;
     }
 
+    public function getUsers($id) {
+        $sql = "SELECT u.id, u.login "
+                . "FROM " . $this->getTableName("timesheets_projects_users") . " project_user,"
+                . "" .$this->getTableName() ." sheet, "
+                . "" . $this->getTableName("global_users") . " u "
+                . "WHERE sheet.id = :id "
+                . "AND sheet.project = project_user.project "
+                . "AND project_user.user = u.id ";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[intval($row["id"])] = $row["login"];
+        }
+        return $results;
+    }
+
 }
