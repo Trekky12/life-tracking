@@ -325,9 +325,17 @@ body.mobile-navigation-open{
                     padding: 0.6rem 1rem;
                     color: $color_navigation_text;
                 }
-
-                &:hover{
-                    //color: $color_blue;
+                @media (hover: hover) {
+                    &:hover {
+                        color: $color_link-hover;
+                        @media screen and (min-width: $size_mobile_navigation){
+                            color: $color_navigation_text_hover;
+                        }
+                    }
+                }
+                &:focus,
+                    &:active {
+                    color: $color_link-hover;
                     @media screen and (min-width: $size_mobile_navigation){
                         color: $color_navigation_text_hover;
                     }
