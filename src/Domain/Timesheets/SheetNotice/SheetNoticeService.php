@@ -7,6 +7,8 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Sheet\SheetService;
+use App\Domain\Timesheets\Sheet\SheetMapper;
+use App\Domain\Base\Settings;
 use App\Application\Payload\Payload;
 
 class SheetNoticeService extends Service {
@@ -15,19 +17,22 @@ class SheetNoticeService extends Service {
     protected $sheet_service;
     protected $user_service;
     protected $settings;
-    protected $router;
-    protected $translation;
+    protected $sheet_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             SheetNoticeMapper $mapper,
             ProjectService $project_service,
-            SheetService $sheet_service) {
+            SheetService $sheet_service,
+            SheetMapper $sheet_mapper,
+            Settings $settings) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
         $this->project_service = $project_service;
         $this->sheet_service = $sheet_service;
+        $this->sheet_mapper = $sheet_mapper;
+        $this->settings = $settings;
     }
 
     public function edit($hash, $sheet_id) {
@@ -40,10 +45,20 @@ class SheetNoticeService extends Service {
 
         $sheet = $this->sheet_service->getEntry($sheet_id);
 
-        $entry = $this->mapper->getNotice($sheet_id);
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate->setPattern($dateFormatPHP["date"]);
+
+        list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+        $sheet_title = sprintf("%s %s - %s", $date, $start, $end);
+
+        $sheet_categories = $this->sheet_mapper->getCategoriesWithNamesFromSheet($sheet_id);
 
         $response_data = [
             'sheet' => $sheet,
+            'sheet_categories' => $sheet_categories,
+            'sheet_title' => $sheet_title,
             'project' => $project,
             'hasTimesheetNotice' => true
         ];

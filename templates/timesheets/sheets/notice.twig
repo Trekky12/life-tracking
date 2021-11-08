@@ -3,7 +3,7 @@
 {% set active = 'timesheets' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/timesheets-notice.js?ver=20211106"></script>
+    <script src="{{baseURL}}/static/js/timesheets-notice.js?ver=20211107"></script>
 {% endblock %}
 
 
@@ -33,6 +33,9 @@
                 <form id="timesheetNoticeForm" class="form-horizontal" action="{{  url_for('timesheets_sheets_notice_save', {'sheet': sheet.id, 'project': project.hash}) }}" method="POST">
                     <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
                     <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                    
+                    <h3>{{ sheet_title }}</h3>
+                    <p><small>{{ sheet_categories }}</small></p>
 
                     <div class="form-group">
                         <label for="inputNotice">{{lang["NOTICE"]}}</label>

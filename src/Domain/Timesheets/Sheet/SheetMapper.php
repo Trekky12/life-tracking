@@ -163,7 +163,7 @@ class SheetMapper extends \App\Domain\Mapper {
         list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories);
 
         $sql = $tableSQL;
-        $sql .= " ORDER BY {$sort} {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
+        $sql .= " ORDER BY {$sort} {$sortDirection}, t.start {$sortDirection}, t.end {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
 
         if (!is_null($limit)) {
             $sql .= " LIMIT {$start}, {$limit}";
@@ -228,6 +228,23 @@ class SheetMapper extends \App\Domain\Mapper {
             $results[] = intval($el);
         }
         return $results;
+    }
+
+    public function getCategoriesWithNamesFromSheet($sheet_id) {
+        $sql = "SELECT GROUP_CONCAT(tc.name SEPARATOR ', ') "
+                . "FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs "
+                . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
+                . " WHERE tcs.sheet = :sheet";
+
+        $bindings = array("sheet" => $sheet_id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchColumn();
+        }
+        return "";
     }
 
     public function getTimes() {
