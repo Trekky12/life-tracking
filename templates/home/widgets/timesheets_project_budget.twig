@@ -3,7 +3,7 @@
         {% for list_entry in widget["content"] %}
             <tr class="{%if list_entry["warning3"] > 0 and list_entry["sum"] >= list_entry["warning3"] %}red{%elseif list_entry["warning2"] > 0 and list_entry["sum"] >= list_entry["warning2"] %}orange{%elseif list_entry["warning1"] > 0 and list_entry["sum"] >= list_entry["warning1"] %}yellow{%else%}green{%endif%}">
                 <td>{{ list_entry["name"] }}</td>
-                <td style="white-space: nowrap">{%if list_entry["categorization"] != 'count' %}{{ list_entry["sum"] | splitDateInterval(true) }}/{{ list_entry["value"]| splitDateInterval(true) }}{% else %}{{ list_entry["sum"] }}/{{ list_entry["value"] }}{% endif %}, {{ lang["REMAINING"]}}: {%if list_entry["categorization"] != 'count' %}{{ list_entry["diff"]| splitDateInterval(true) }}{% else %}{{ list_entry["diff"] }}{% endif %}</td>
+                <td style="white-space: nowrap">{%if list_entry["categorization"] != 'count' %}{% if list_entry["sum"] %}{{ list_entry["sum"] | splitDateInterval(true) }}{% else %}00:00{% endif %}/{{ list_entry["value"]| splitDateInterval(true) }}{% else %}{{ list_entry["sum"] }}/{{ list_entry["value"] }}{% endif %}, {{ lang["REMAINING"]}}: {%if list_entry["categorization"] != 'count' %}{% if list_entry["diff"] %}{{ list_entry["diff"]| splitDateInterval(true) }}{% else %}{{ list_entry["value"]| splitDateInterval(true) }}{% endif %}{% else %}{% if list_entry["diff"] %}{{ list_entry["diff"] }}{% else %}{{ list_entry["value"] }}{% endif %}{% endif %}</td>
             </tr>
         {% endfor %}
     </tbody>

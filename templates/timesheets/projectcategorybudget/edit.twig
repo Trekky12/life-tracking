@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block javascript %}
+    <script src="{{baseURL}}/static/js/datefilter.js?ver=20211113"></script>
     <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
     <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js"></script>
     <script src="{{baseURL}}/static/js/timesheets.js?ver=20210921"></script>
@@ -98,6 +99,13 @@
                     <label for="inputWarning3">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_3_RED"]}}</label>
                     <input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning3" name="set_warning3" value="{% if not entry is null and entry.warning3 %}{{entry.warning3 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}disabled="disabled"{% endif %}/>
                     <input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != "count" )%}hidden{% endif %}" name="set_warning3" value="{% if not entry is null %}{{entry.warning3}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%}disabled="disabled"{% endif %}/>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateRange">{{lang["FROM"]}}/{{ lang["TO"] }}</label>
+                    <input type="text" id="dateRange" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %} to {% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}" />
+                    <input type="hidden" id="inputStart" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}"/>
+                    <input type="hidden" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
                 </div>
 
                 <div class="form-group btn">
