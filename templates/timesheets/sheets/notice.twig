@@ -12,7 +12,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} {{ lang["NOTICE"] }}| {{project.name|raw}}</h2>
             <div class="buttons">
-                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}?{{ last_query_params('timesheets_sheets') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">

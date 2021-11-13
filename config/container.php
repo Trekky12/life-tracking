@@ -22,6 +22,7 @@ use Slim\Psr7\Factory\ResponseFactory;
 use App\Application\TwigExtensions\FlashExtension;
 use App\Application\TwigExtensions\CsrfExtension;
 use App\Application\TwigExtensions\FontAwesomeExtension;
+use App\Application\TwigExtensions\LastQueryParamsExtension;
 use App\Domain\Main\Utility\Utility;
 use App\Application\Error\CSRFException;
 
@@ -51,6 +52,8 @@ return [
         $twig->addExtension(new CsrfExtension($csrf));
         
         $twig->addExtension(new FontAwesomeExtension());
+        
+        $twig->addExtension(new LastQueryParamsExtension());
 
 
         /**
