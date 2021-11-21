@@ -202,7 +202,7 @@ class SheetMapper extends \App\Domain\Mapper {
             $keys_array[] = "(:sheet" . $idx . " , :category" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTableName("timesheets_sheets_categories") . " (sheet, category) "
+        $sql = "INSERT IGNORE INTO " . $this->getTableName("timesheets_sheets_categories") . " (sheet, category) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);

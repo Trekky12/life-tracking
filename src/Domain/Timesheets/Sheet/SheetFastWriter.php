@@ -36,6 +36,12 @@ class SheetFastWriter extends ObjectActivityWriter {
         // get a existing entry for today with start but without end
         $entry = $this->service->getLastSheetWithStartDateToday($project->id);
 
+        if (array_key_exists("category", $data) && is_array($data["category"]) && !empty($data["category"])) {
+            $categories = filter_var_array($data["category"], FILTER_SANITIZE_NUMBER_INT);
+
+            $this->mapper->addCategoriesToSheet($entry->id, $categories);
+        }
+
         $result = ["status" => "success", "data" => 0];
         $result["data"] = !is_null($entry) ? 1 : 0;
 
@@ -49,7 +55,7 @@ class SheetFastWriter extends ObjectActivityWriter {
         $data["user"] = $this->current_user->getUser()->id;
 
         $entry = $this->createEntry($data);
-        $this->insertEntry($entry);
+        return $this->insertEntry($entry);
     }
 
     public function fastCheckOut($hash, $data) {
@@ -65,9 +71,16 @@ class SheetFastWriter extends ObjectActivityWriter {
         if (!is_null($entry)) {
             $this->updateEntryForCheckOut($entry, $data);
             $this->service->setDuration($entry, $project);
+            $entry_id = $entry->id;
         } else {
             // otherwise create new entry               
-            $this->createCheckOutEntry($project, $data);
+            $entry_id = $this->createCheckOutEntry($project, $data);
+        }
+        
+        if (array_key_exists("category", $data) && is_array($data["category"]) && !empty($data["category"])) {
+            $categories = filter_var_array($data["category"], FILTER_SANITIZE_NUMBER_INT);
+
+            $this->mapper->addCategoriesToSheet($entry_id, $categories);
         }
 
         $result = ["status" => "success", "data" => 0];
@@ -83,7 +96,7 @@ class SheetFastWriter extends ObjectActivityWriter {
         $data["user"] = $this->current_user->getUser()->id;
 
         $entry = $this->createEntry($data);
-        $this->insertEntry($entry);
+        return $this->insertEntry($entry);
     }
 
     private function updateEntryForCheckOut($entry, $data) {

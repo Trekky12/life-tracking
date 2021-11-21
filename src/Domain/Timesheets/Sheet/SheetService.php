@@ -198,7 +198,7 @@ class SheetService extends Service {
             $row[] = $time;
             $row[] = $sheet->categories;
 
-            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' .  $this->translation->getTranslatedString("NOTICE") . '</a>';
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . $this->translation->getTranslatedString("NOTICE") . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-edit') . '</a>';
             $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 
@@ -266,7 +266,13 @@ class SheetService extends Service {
         // get a existing entry for today with start but without end
         $entry = $this->getLastSheetWithStartDateToday($project->id);
 
-        return new Payload(Payload::$RESULT_HTML, ["project" => $project, "entry" => $entry]);
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+
+        return new Payload(Payload::$RESULT_HTML, [
+            "project" => $project,
+            "categories" => $project_categories,
+            "entry" => $entry
+        ]);
     }
 
     public function getLastSheetWithStartDateToday($project_id) {

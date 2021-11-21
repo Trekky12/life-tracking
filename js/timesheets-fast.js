@@ -37,6 +37,11 @@ function send(button, type) {
     data[type + "_lat"] = timesheetLatField.value;
     data[type + "_lng"] = timesheetLngField.value;
     data[type + "_acc"] = timesheetAccField.value;
+    
+    let categoryFilter = document.querySelector("#category-filter");
+    let timesheetCategories  = Array.from(categoryFilter.selectedOptions).map(v=>v.value);
+    
+    data["category"] = timesheetCategories;
 
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
@@ -74,3 +79,15 @@ function send(button, type) {
         alertError.classList.remove("hidden");
     });
 }
+
+const projectCategorySelects = document.querySelectorAll('select.category');
+projectCategorySelects.forEach(function (item, idx) {
+    new Selectr(item, {
+        searchable: true,
+        placeholder: lang.categories,
+        messages: {
+            noResults: lang.nothing_found,
+            noOptions: lang.no_options
+        }
+    });
+});
