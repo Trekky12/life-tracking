@@ -74,3 +74,15 @@ table.timesheets_project_budget_widget{
     }
 
 }
+
+.widget-content{
+    padding: 1rem;
+    
+    .alert{
+        margin-top:1rem;
+    }
+    
+    button{
+        margin-bottom: 1rem;
+    }
+}

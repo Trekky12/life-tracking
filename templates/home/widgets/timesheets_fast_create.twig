@@ -1,0 +1,35 @@
+<div class="widget-content">
+	<a href="#" class="timesheet-fast-come-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : widget["content"].hash})}}">
+		<button>
+			{% if widget["content"].is_day_based == 1 %}
+				{{lang["TIMESHEETS_COME_DAY_BASED"]}}
+			{% else %}
+				{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}
+			{% endif %}
+		</button>
+	</a>
+
+	<a href="#" class="timesheet-fast-leave-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : widget["content"].hash})}}">
+		<button>
+			{% if widget["content"].is_day_based == 1 %}
+				{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}
+			{% else %}
+				{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}
+			{% endif %}
+		</button>
+	</a>
+
+	<div id="alertErrorTimesheetFast" class="alert danger hidden">
+		<span class="closebtn">&times;</span>
+		<span class="alert-message">
+			<p>{{ lang["ENTRY_ERROR"] }}</p>
+			<p id="alertErrorDetailTimesheetFast"></p>
+		</span>
+	</div>
+	<div id="alertSuccessTimesheetFast" class="alert success hidden">
+		<span class="closebtn">&times;</span>
+		<span class="alert-message">
+			<p>{{ lang["ENTRY_SUCCESS_ADD"] }}</p>
+		</span>
+	</div>
+</div>

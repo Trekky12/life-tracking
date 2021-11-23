@@ -7,25 +7,24 @@ const timesheetLatField = document.querySelector('input#geoLat');
 const timesheetLngField = document.querySelector('input#geoLng');
 const timesheetAccField = document.querySelector('input#geoAcc');
 
-const alertSuccess = document.querySelector('#alertSuccess');
-
 comeButtons.forEach(function (item, idx) {
     item.addEventListener('click', function (event) {
         event.preventDefault();
-        send(item, "start");
+        createTimesheet(item, "start");
     });
 });
 
 leaveButtons.forEach(function (item, idx) {
     item.addEventListener('click', function (event) {
         event.preventDefault();
-        send(item, "end");
+        createTimesheet(item, "end");
     });
 });
 
-function send(button, type) {
-    let alertError = document.querySelector('#alertError');
-    let alertErrorDetail = alertError.querySelector('#alertErrorDetail');
+function createTimesheet(button, type) {
+    let alertError = document.querySelector('#alertErrorTimesheetFast');
+    let alertErrorDetail = alertError.querySelector('#alertErrorDetailTimesheetFast');
+    const alertSuccess = document.querySelector('#alertSuccessTimesheetFast');
 
     alertError.classList.add("hidden");
     alertSuccess.classList.add("hidden");
@@ -34,14 +33,21 @@ function send(button, type) {
     let url = button.dataset.url;
 
     let data = {};
-    data[type + "_lat"] = timesheetLatField.value;
-    data[type + "_lng"] = timesheetLngField.value;
-    data[type + "_acc"] = timesheetAccField.value;
-    
+    if (timesheetLatField) {
+        data[type + "_lat"] = timesheetLatField.value;
+    }
+    if (timesheetLngField) {
+        data[type + "_lng"] = timesheetLngField.value;
+    }
+    if (timesheetAccField) {
+        data[type + "_acc"] = timesheetAccField.value;
+    }
+
     let categoryFilter = document.querySelector("#category-filter");
-    let timesheetCategories  = Array.from(categoryFilter.selectedOptions).map(v=>v.value);
-    
-    data["category"] = timesheetCategories;
+    if (categoryFilter) {
+        let timesheetCategories = Array.from(categoryFilter.selectedOptions).map(v => v.value);
+        data["category"] = timesheetCategories;
+    }
 
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
@@ -61,7 +67,7 @@ function send(button, type) {
         if (data['status'] === 'success') {
             alertSuccess.classList.remove("hidden");
 
-            if (data['data'] === 1) {
+            if (data['data'] === 1 && !button.classList.contains("no-toggle")) {
                 let grid = button.closest('.grid');
                 let cards = grid.querySelectorAll('.card');
 

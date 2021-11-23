@@ -615,6 +615,7 @@ $lang["WIDGET_URL"] = "URL";
 $lang["WIDGET_TITLE"] = "Titel";
 $lang["WIDGET_CURRENTWEATHER"] = "aktuelles Wetter";
 $lang["WIDGET_WEATHERFORECAST"] = "Wettervorhersage";
+$lang["WIDGET_TIMESHEETS_FAST_CREATE"] = "Schnellerfassung von Zeiten";
 
 $lang["WORKOUTS"] = "Workouts";
 $lang["WORKOUTS_EXERCISES"] = "Übungen";
