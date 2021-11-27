@@ -35,7 +35,8 @@ class OwnerTest extends TimesheetTestBase {
     public function testPostAddElement() {
 
         $data = [
-            "notice" => "Test Notice"
+            "notice" => "Test Notice",
+            "notice2" => "Test notice"
         ];
 
         $response = $this->request('POST', $this->getURIWithHashAndID($this->uri_child_save, $this->TEST_PROJECT_HASH, $this->TEST_SHEET_ID), $data);
