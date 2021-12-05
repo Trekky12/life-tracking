@@ -34,14 +34,15 @@
 
                     </div>
                 </div>
-
-                <div class="categories-filter form-group">
-                    <select id="category-filter" multiple name="categories[]" class="category">
-                        {% for cat in categories %}
-                            <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                {% if categories %}
+                    <div class="categories-filter form-group">
+                        <select id="category-filter" multiple name="categories[]" class="category">
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
                 <div class="form-group">
                     <div>
                         <label class="radio" for="radioExcel">

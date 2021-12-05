@@ -71,14 +71,16 @@
                     <input type="hidden" class="geo-draggable" name="draggable" value="1">
                 </div>
 
-                <div class="form-group category">
-                    <label for="projectCategory">{{lang["CATEGORIES"]}}</label>
-                    <select class="form-control category" id="projectCategory" name="category[]" multiple>
-                        {% for cat in categories %}
-                            <option value="{{cat.id}}" {% if cat.id in sheet_categories %}selected{%endif%}>{{cat.name|raw}}</option>
-                        {% endfor %}
-                    </select>
-                </div>  
+                {% if categories %}
+                    <div class="form-group category">
+                        <label for="projectCategory">{{lang["CATEGORIES"]}}</label>
+                        <select class="form-control category" id="projectCategory" name="category[]" multiple>
+                            {% for cat in categories %}
+                                <option value="{{cat.id}}" {% if cat.id in sheet_categories %}selected{%endif%}>{{cat.name|raw}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>  
+                {% endif %}
 
                 {% if project.has_duration_modifications > 0 %}
                     <div class="form-group">
