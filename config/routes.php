@@ -466,6 +466,8 @@ return function (App $app) {
             });
         });
 
+        $group->get('/stats', \App\Application\Action\Workouts\Session\SessionStatsAllAction::class)->setName('workouts_sessions_stats_all');
+
         $group->group('/plans', function (RouteCollectorProxy $group_plans) {
             $group_plans->get('/', \App\Application\Action\Workouts\Plan\PlanListAction::class)->setName('workouts');
             $group_plans->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Workouts\Plan\PlanEditAction::class)->setName('workouts_plans_edit');

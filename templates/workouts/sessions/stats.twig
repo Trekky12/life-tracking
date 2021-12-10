@@ -8,6 +8,9 @@
 	<script src="{{baseURL}}/static/assets/js/chart.min.js"></script>
 	<script src="{{baseURL}}/static/assets/js/chartjs-adapter-moment.min.js"></script>
 	<script src="{{baseURL}}/static/assets/js/chartjs-plugin-annotation.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+	<script src="{{baseURL}}/static/assets/js/hammer.min.js"></script>
+	<script src="{{baseURL}}/static/assets/js/chartjs-plugin-zoom.min.js"></script>
 	<script src="{{baseURL}}/static/js/workouts-stats.js?ver=20211210"></script>
 {% endblock %}
 
@@ -15,9 +18,9 @@
 
 	<div class="inner-content">
 		<div class="page-header">
-			<h2>{{plan.name|raw}}</h2>
+			<h2>{% if plan is not empty %}{{plan.name|raw}}{% else %}{{lang["WORKOUTS_SESSIONS"]}}{% endif %}</h2>
 			<div class="buttons">
-				<a href="{{ url_for('workouts_plan_view', {'plan': plan.hash}) }}">
+				<a href="{% if plan is not empty %}{{ url_for('workouts_plan_view', {'plan': plan.hash}) }}{% else %}{{ url_for('workouts') }}{% endif %}">
 					<button class="white">{{lang["BACK"]}}
 						{{ fontawesome('fas fa-level-up-alt') }}</button>
 				</a>

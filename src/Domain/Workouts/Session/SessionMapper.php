@@ -89,16 +89,23 @@ class SessionMapper extends \App\Domain\Mapper {
         return $results;
     }
     
-    public function getAllSessionExercises($plan_id) {
-        $sql = "SELECT se.exercise, se.sets, s.date"
-                . " FROM " . $this->getTableName() . " s, " . $this->getTableName("workouts_sessions_exercises") . " se"
-                . " WHERE s.id = se.session AND s.plan = :plan AND se.type = :type AND se.exercise IS NOT NULL"
-                . " ORDER by s.date ASC";
-
+    public function getAllSessionExercises($plan_id = null) {
         $bindings = [
-            "plan" => $plan_id,
             "type" => "exercise"
         ];
+        
+        $sql = "SELECT se.exercise, se.sets, s.date"
+                . " FROM " . $this->getTableName() . " s, " . $this->getTableName("workouts_sessions_exercises") . " se"
+                . " WHERE s.id = se.session AND se.type = :type AND se.exercise IS NOT NULL";
+
+        if(!is_null($plan_id)){
+            $sql .= " AND s.plan = :plan ";
+
+            $bindings["plan"] = $plan_id;
+        }
+
+        $this->addSelectFilterForUser($sql, $bindings, "s.");
+        $sql.= " ORDER by s.date ASC";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

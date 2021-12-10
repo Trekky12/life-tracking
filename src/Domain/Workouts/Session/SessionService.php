@@ -119,21 +119,24 @@ class SessionService extends Service
         ]);
     }
 
-    public function stats($hash): Payload
+    public function stats($hash = null): Payload
     {
+        $plan_id = null;
+        if (!is_null($hash)) {
+            $plan = $this->plan_service->getFromHash($hash);
 
-        $plan = $this->plan_service->getFromHash($hash);
-
-        if (!$this->plan_service->isOwner($plan->id)) {
-            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+            if (!$this->plan_service->isOwner($plan->id)) {
+                return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+            }
+            $plan_id = $plan->id;
         }
 
-        list($session_exercises, $exercises_max_sets) = $this->mapper->getAllSessionExercises($plan->id);
+        list($session_exercises, $exercises_max_sets) = $this->mapper->getAllSessionExercises($plan_id);
         $exercisesList = $this->exercise_mapper->getAll('name');
 
         $dates = array_keys($session_exercises);
 
-        list($start, $end) = $this->mapper->getMinMaxSessionsDate($plan->id);
+        list($start, $end) = $this->mapper->getMinMaxSessionsDate($plan_id);
 
         $exercisesStats = [];
         /**
@@ -193,22 +196,22 @@ class SessionService extends Service
          * Remove empty diagrams (only null y-values)
          */
         foreach ($exercisesStats as &$exercise) {
-            if($this->checkSkip($exercise["data"]["repeats"])){
+            if ($this->checkSkip($exercise["data"]["repeats"])) {
                 $exercise["data"]["repeats"] = null;
             }
-            if($this->checkSkip($exercise["data"]["weight"])){
+            if ($this->checkSkip($exercise["data"]["weight"])) {
                 $exercise["data"]["weight"] = null;
             }
-            if($this->checkSkip($exercise["data"]["time"])){
+            if ($this->checkSkip($exercise["data"]["time"])) {
                 $exercise["data"]["time"] = null;
             }
-            if($this->checkSkip($exercise["data"]["distance"])){
+            if ($this->checkSkip($exercise["data"]["distance"])) {
                 $exercise["data"]["distance"] = null;
             }
         }
 
         $response_data = [
-            'plan' => $plan,
+            'plan' => !is_null($plan_id) ? $plan : null,
             'exercisesList' => $exercisesList,
             'exercises' => $exercisesStats,
             'start' => $start,
@@ -219,15 +222,16 @@ class SessionService extends Service
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    private function checkSkip($data){
-            foreach ($data as $sets) {
-                foreach ($sets as $set) {
-                    if (!is_null($set["y"])) {
-                        return false;
-                    }
+    private function checkSkip($data)
+    {
+        foreach ($data as $sets) {
+            foreach ($sets as $set) {
+                if (!is_null($set["y"])) {
+                    return false;
                 }
             }
-            return true;
+        }
+        return true;
     }
 
 }
