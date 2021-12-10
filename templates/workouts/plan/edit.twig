@@ -13,6 +13,9 @@
         <div class="page-header"><h2>{{lang["WORKOUTS_PLAN"]}}</h2>
             <div class="buttons">
                 <a href="{{  url_for('workouts') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                {% if not entry is null %}
+                    <a href="{{  url_for('workouts_plans_edit') }}?template={{ entry.hash }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["CLONE"]}}</button></a>
+                {% endif %}
             </div>
         </div>
         <div class="page-content">

@@ -12,6 +12,8 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@tarekraafat/autocomplete.js": "^10.2.6",
     "chart.js": "^3.5.1",
+    "chartjs-adapter-moment": "^1.0.0",
+    "chartjs-plugin-annotation": "^1.1.0",
     "flatpickr": "^4.6.9",
     "font-awesome": "^4.7.0",
     "html-duration-picker": "^2.2.13",

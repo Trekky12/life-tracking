@@ -2,46 +2,58 @@
 
 {% set active = 'workouts' %}
 
-{% block style %}
-
-{% endblock %}
+{% block style %}{% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/chart.min.js"></script>
-    <script src="{{baseURL}}/static/js/workouts-stats.js?ver=20210123"></script>
+	<script src="{{baseURL}}/static/assets/js/chart.min.js"></script>
+	<script src="{{baseURL}}/static/assets/js/chartjs-adapter-moment.min.js"></script>
+	<script src="{{baseURL}}/static/assets/js/chartjs-plugin-annotation.min.js"></script>
+	<script src="{{baseURL}}/static/js/workouts-stats.js?ver=20211210"></script>
 {% endblock %}
 
 {% block body %}
 
-    {% for exercise in exercises %}
-        <div class="inner-content">
-            <div class="page-header">
-                <h2>{{plan.name|raw}} | {{ exercise["exercise"].name }}</h2>
-                {% if loop.index == 1 %}
-                <div class="buttons">
-                    <a href="{{  url_for('workouts_plan_view', {'plan': plan.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                </div>
-                {% endif %}
-            </div>
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{plan.name|raw}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for('workouts_plan_view', {'plan': plan.hash}) }}">
+					<button class="white">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+			</div>
+		</div>
+	</div>
 
-            <div class="page-content">
-                {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
-                    <h3>{{ lang["WORKOUTS_CATEGORY_REPS"] }}</h3>
-                    <canvas data-values="{{exercise["data"]["repeats"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" class="workoutChart chart"></canvas>
-                    {% endif %}
-                    {% if exercise["exercise"].isCategoryRepsWeight() %}
-                    <h3>{{ lang["WORKOUTS_WEIGHT"] }}</h3>
-                    <canvas data-values="{{exercise["data"]["weight"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" class="workoutChart chart"></canvas>
-                    {% endif %}
-                    {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
-                    <h3>{{ lang["WORKOUTS_CATEGORY_TIME"] }}</h3>
-                    <canvas data-values="{{exercise["data"]["time"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" class="workoutChart chart"></canvas>
-                    {% endif %}
-                    {% if exercise["exercise"].isCategoryDistanceTime() %}
-                    <h3>{{ lang["WORKOUTS_DISTANCE"] }}</h3>
-                    <canvas data-values="{{exercise["data"]["distance"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" class="workoutChart chart"></canvas>
-                    {% endif %}
-            </div>
-        </div>
-    {% endfor %}
-{% endblock %}        
+	{% for exercise in exercises %}
+		<div class="inner-content">
+			<div class="page-header">
+				<h2>{{ exercise["exercise"].name }}</h2>
+			</div>
+
+			<div class="page-content">
+				{% if exercise["exercise"].get_thumbnail() != ''%}
+					<div class="thumbnail">
+						<img src="/{{uploads_folder}}/exercises/{{exercise["exercise"].get_thumbnail()}}"/>
+					</div>
+				{% endif %}
+				{% if (exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight()) and exercise["data"]["repeats"] is not null %}
+					<h3>{{ lang["WORKOUTS_CATEGORY_REPS"] }}</h3>
+					<canvas data-values="{{exercise["data"]["repeats"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
+				{% endif %}
+				{% if exercise["exercise"].isCategoryRepsWeight() and exercise["data"]["weight"] is not null %}
+					<h3>{{ lang["WORKOUTS_WEIGHT"] }}</h3>
+					<canvas data-values="{{exercise["data"]["weight"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
+				{% endif %}
+				{% if (exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime()) and exercise["data"]["time"] is not null %}
+					<h3>{{ lang["WORKOUTS_CATEGORY_TIME"] }}</h3>
+					<canvas data-values="{{exercise["data"]["time"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
+				{% endif %}
+				{% if exercise["exercise"].isCategoryDistanceTime() and exercise["data"]["distance"] is not null %}
+					<h3>{{ lang["WORKOUTS_DISTANCE"] }}</h3>
+					<canvas data-values="{{exercise["data"]["distance"]|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
+				{% endif %}
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

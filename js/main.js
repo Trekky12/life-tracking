@@ -299,11 +299,11 @@ function initCharts() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
-                            ticks: {
-                                min: 0
-                            }
-                        }]
+                    y: {
+                        ticks: {
+                            min: 0
+                        }
+                    }
                 }
             }
         });
@@ -404,11 +404,11 @@ function initCharts() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
-                            ticks: {
-                                min: 0
-                            }
-                        }]
+                    y: {
+                        ticks: {
+                            min: 0
+                        }
+                    }
                 }
             }
         });
@@ -530,7 +530,7 @@ function fetchWithTimeout(url, options, timeout = 3000) {
     });
     promises.push(cacheWhenTimedOutPromise);
 
-    var networkPromise = fetch(url, {signal: abortSignal, ...options}).then(function (response) {
+    var networkPromise = fetch(url, { signal: abortSignal, ...options }).then(function (response) {
         //console.log('fetch success');
         clearTimeout(timeoutId);
         return response;

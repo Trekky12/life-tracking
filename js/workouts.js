@@ -218,8 +218,10 @@ function createSortable(element) {
             name: "exercise"
         },
         scroll: true,
+        scrollSensitivity: 100,
         swapThreshold: 0.5,
-        fallbackOnBody: true,
+        fallbackOnBody: false,
+        forceFallback: true,
         //draggable: ".exercise.selected",
         handle: ".handle",
         dataIdAttr: 'data-id',

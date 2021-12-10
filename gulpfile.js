@@ -101,6 +101,8 @@ function copyJSTask(cb) {
             './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
             './node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.min.js',
             './node_modules/html-duration-picker/dist/html-duration-picker.min.js',
+            './node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
+            './node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js',
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))

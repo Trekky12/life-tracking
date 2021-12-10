@@ -7,18 +7,37 @@ workoutCharts.forEach(function (workoutChart) {
     let datasets = [];
     let data = JSON.parse(workoutChart.dataset.values);
 
-    data.forEach(function (set, idx) {
+    let dates = JSON.parse(workoutChart.dataset.dates);
+
+    data.forEach(function (sets, idx) {
+
+        let color = randomColor({
+            hue: 'blue',
+            luminosity: 'bright'
+        });
         datasets.push(
-                {
-                    label: lang.workouts_set + ' ' + (idx + 1),
-                    data: set,
-                    spanGaps: true,
-                    fill: false,
-                    borderColor: randomColor({
-                        hue: 'blue',
-                        luminosity: 'bright'
-                    })
-                });
+            {
+                label: lang.workouts_set + ' ' + (idx + 1),
+                data: sets,
+                spanGaps: false,
+                fill: false,
+                borderColor: color,
+                backgroundColor: color,
+                pointRadius: 5,
+                pointHoverRadius: 6
+            });
+    });
+
+    let annotations = [];
+    dates.forEach(function (date) {
+        annotations.push({
+            type: 'line',
+            xMin: date,
+            xMax: date,
+            borderColor: '#CCCCCC',
+            borderWidth: 2,
+            drawTime: 'beforeDatasetsDraw'
+        });
     });
 
 
@@ -31,21 +50,31 @@ workoutCharts.forEach(function (workoutChart) {
             //responsive: true,
             maintainAspectRatio: false,
             scales: {
-                xAxes: [
-                    {
-                        type: "time",
-                        time: {
-                            unit: 'day'
-                        }
+                x: {
+                    type: "time",
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: i18n.dateformatJS.date
+                        },
+                        tooltipFormat: i18n.dateformatJS.date
+                    },
+                    min: workoutChart.dataset.min,
+                    max: workoutChart.dataset.max
+                },
+                y:
+                {
+                    ticks: {
+                        stepSize: 1
                     }
-                ],
-                yAxes: [
-                    {
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                ]
+                }
+
+            },
+            plugins: {
+                autocolors: false,
+                annotation: {
+                    annotations: annotations
+                }
             }
         }
     });
