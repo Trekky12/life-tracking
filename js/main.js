@@ -1,5 +1,7 @@
 'use strict';
 
+// @see https://stackoverflow.com/a/2638357
+window.onunload = function(){}; 
 
 moment.locale(i18n.template);
 
