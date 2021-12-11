@@ -28,20 +28,20 @@
                         {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}:
 
                         {% if data["exercise"].isCategoryReps() or data["exercise"].isCategoryRepsWeight() %}
-                            <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}"/>
+                            <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
                             <label for="repeats_{{ loop.index-1 }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
                         {% endif %}
                         {% if data["exercise"].isCategoryRepsWeight() %}
-                            <input id="weights_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}"/>
+                            <input id="weights_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
                             <label for="weights_{{ loop.index-1 }}">{{ lang["WORKOUTS_KG"] }}</label>
                         {% endif %}
 
                         {% if data["exercise"].isCategoryTime() or data["exercise"].isCategoryDistanceTime() %}
-                            <input id="time_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}"/>
+                            <input id="time_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
                             <label for="time_{{ loop.index-1 }}">{{ lang["WORKOUTS_SECONDS"] }}</label>
                         {% endif %}
                         {% if data["exercise"].isCategoryDistanceTime() %}
-                            <input id="distance_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}"/>
+                            <input id="distance_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
                             <label for="distance_{{ loop.index-1 }}">{{ lang["WORKOUTS_KM"] }}</label>
                         {% endif %}
                     </div>
@@ -52,9 +52,9 @@
             <button type="button" class="add_set gray small">{{ lang["WORKOUTS_SET_ADD"] }}</button>
             <button type="button" class="remove_set gray small">{{ lang["WORKOUTS_SET_REMOVE"] }}</button>
         </div>
-        <input type="hidden" name="exercises[{{ data["idx"] }}][id]" value="{{ data["exercise"].id }}"/>
-        <input type="hidden" name="exercises[{{ data["idx"] }}][type]" value="{{ data["type"] }}"/>
-        <input type="hidden" name="exercises[{{ data["idx"] }}][is_child]" value="{{ data["is_child"] }}"/>
+        <input type="hidden" name="exercises[{{ data["idx"] }}][id]" value="{{ data["exercise"].id }}" {% if hidden %}disabled="disabled"{% endif %}/>
+        <input type="hidden" name="exercises[{{ data["idx"] }}][type]" value="{{ data["type"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
+        <input type="hidden" name="exercises[{{ data["idx"] }}][is_child]" value="{{ data["is_child"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
 
         <div class="view-notices">
             <p class="content"><textarea name="exercises[{{ data["idx"] }}][notice]">{{ data["notice"] }}</textarea></p>
