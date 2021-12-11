@@ -18,12 +18,14 @@ class SessionService extends Service
     private $exercise_mapper;
     private $settings_mapper;
 
-    public function __construct(LoggerInterface $logger,
+    public function __construct(
+        LoggerInterface $logger,
         CurrentUser $user,
         SessionMapper $mapper,
         PlanService $plan_service,
         ExerciseMapper $exercise_mapper,
-        SettingsMapper $settings_mapper) {
+        SettingsMapper $settings_mapper
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->plan_service = $plan_service;
@@ -170,10 +172,10 @@ class SessionService extends Service
                         $exercisesStats[$exercise_id]["data"]["distance"][$set_idx] = [];
                     }
 
-                    $exercisesStats[$exercise_id]["data"]["repeats"][$set_idx][] = ["x" => $session_date, "y" => $set["repeats"]];
-                    $exercisesStats[$exercise_id]["data"]["weight"][$set_idx][] = ["x" => $session_date, "y" => $set["weight"]];
-                    $exercisesStats[$exercise_id]["data"]["time"][$set_idx][] = ["x" => $session_date, "y" => $set["time"]];
-                    $exercisesStats[$exercise_id]["data"]["distance"][$set_idx][] = ["x" => $session_date, "y" => $set["distance"]];
+                    $exercisesStats[$exercise_id]["data"]["repeats"][$set_idx][] = ["x" => $session_date, "y" => $set["repeats"] ? $set["repeats"] : 0];
+                    $exercisesStats[$exercise_id]["data"]["weight"][$set_idx][] = ["x" => $session_date, "y" => $set["weight"] ? $set["weight"] : 0];
+                    $exercisesStats[$exercise_id]["data"]["time"][$set_idx][] = ["x" => $session_date, "y" => $set["time"] ? $set["time"] : 0];
+                    $exercisesStats[$exercise_id]["data"]["distance"][$set_idx][] = ["x" => $session_date, "y" => $set["distance"] ? $set["distance"] : 0];
                 }
             }
 
@@ -233,5 +235,4 @@ class SessionService extends Service
         }
         return true;
     }
-
 }

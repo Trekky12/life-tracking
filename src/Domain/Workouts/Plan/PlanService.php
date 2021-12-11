@@ -144,16 +144,16 @@ class PlanService extends Service {
                 $set_description = array_map(function($set) use ($exercise) {
                     $description = [];
                     if ($exercise->isCategoryReps() || $exercise->isCategoryRepsWeight()) {
-                        $description[] = sprintf("%s %s", $set["repeats"], $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
+                        $description[] = sprintf("%s %s", $set["repeats"] ? $set["repeats"] : 0, $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
                     }
                     if ($exercise->isCategoryRepsWeight()) {
-                        $description[] = sprintf("%s %s", $set["weight"], $this->translation->getTranslatedString("WORKOUTS_KG"));
+                        $description[] = sprintf("%s %s", $set["weight"] ? $set["weight"] : 0, $this->translation->getTranslatedString("WORKOUTS_KG"));
                     }
                     if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
-                        $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
+                        $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
                     }
                     if ($exercise->isCategoryDistanceTime()) {
-                        $description[] = sprintf("%s %s", $set["distance"], $this->translation->getTranslatedString("WORKOUTS_KM"));
+                        $description[] = sprintf("%s %s", $set["distance"] ? $set["distance"] : 0, $this->translation->getTranslatedString("WORKOUTS_KM"));
                     }
                     return implode(', ', $description);
                 }, $se["sets"]);
