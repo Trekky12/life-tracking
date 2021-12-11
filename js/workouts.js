@@ -88,6 +88,9 @@ document.addEventListener('click', function (event) {
         });
 
         exercisesSelected.appendChild(new_exercise);
+
+        new_exercise.scrollIntoView();
+
         loadSelectedMuscles();
         adjustAvailableExercisesColumnHeight();
     }
@@ -153,6 +156,8 @@ document.addEventListener('click', function (event) {
         workout_day.appendChild(div_icons);
 
         exercisesSelected.appendChild(workout_day);
+
+        workout_day.scrollIntoView();
     }
 
     if (add_superset) {
@@ -200,6 +205,8 @@ document.addEventListener('click', function (event) {
 
         exercisesSelected.appendChild(workout_superset);
 
+        workout_superset.scrollIntoView();
+
         createSortable(div_exercises);
 
     }
@@ -238,13 +245,6 @@ function createSortable(element) {
                 input.value = 1;
             }
             updateFields();
-        },
-        onStart: function (evt) {
-            document.body.classList.add("sortable-select");
-        },
-        onEnd: function (evt) {
-            document.body.classList.remove("sortable-select");
-            evt.item.scrollIntoView();
         }
     });
 }
