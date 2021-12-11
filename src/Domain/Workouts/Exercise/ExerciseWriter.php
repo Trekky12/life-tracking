@@ -120,7 +120,7 @@ class ExerciseWriter extends ObjectActivityWriter {
     }
 
     public function getModule(): string {
-        return "workouts_exercises";
+        return "workouts";
     }
 
 }

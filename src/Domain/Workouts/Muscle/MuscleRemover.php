@@ -28,7 +28,7 @@ class MuscleRemover extends ObjectActivityRemover {
     }
 
     public function getModule(): string {
-        return "workouts_muscles";
+        return "workouts";
     }
 
 }

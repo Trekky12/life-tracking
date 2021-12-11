@@ -28,7 +28,7 @@ class BodypartWriter extends ObjectActivityWriter {
     }
 
     public function getModule(): string {
-        return "workouts_bodyparts";
+        return "workouts";
     }
 
 }
