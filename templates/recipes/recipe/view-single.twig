@@ -14,7 +14,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPE"]}} - {{ recipe.name|raw }}</h2>
             <div class="buttons">
-                <a href="{{  url_for('recipes') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('recipes') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
                 <a href="{{ url_for('recipes_recipe_add_to_cookbook', {'recipe': recipe.hash}) }}" id="add_to_cookbook"><button class="white">{{lang["RECIPES_ADD_TO_COOKBOOK"]}} {{ fontawesome('fas fa-book') }}</button></a>
                         {% if recipe.getOwner() == user.id %}
                     <a href="{{  url_for('recipes_edit', {'id' : recipe.id}) }}"><button class="white">{{ fontawesome('fas fa-edit') }}</button></a>

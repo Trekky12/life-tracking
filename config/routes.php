@@ -30,6 +30,8 @@ return function (App $app) {
             $group_banlist->get('/', \App\Application\Action\Admin\BanlistAction::class)->setName('banlist');
             $group_banlist->delete('/deleteIP/{ip}', \App\Application\Action\Admin\BanlistDeleteAction::class)->setName('banlist_delete');
         })->add(\App\Application\Middleware\AdminMiddleware::class);
+
+        $group->post('/storeParams', \App\Application\Action\Main\StoreQueryParamsAction::class)->setName('store_query_params');
     });
 
     $app->group('/finances', function (RouteCollectorProxy $group) {

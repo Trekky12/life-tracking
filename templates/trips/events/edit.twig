@@ -20,7 +20,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TRIPS_EVENT"]}} | {{trip.name|raw}} </h2>
             <div class="buttons">
-                <a href="{{ url_for('trips_view', {'trip':trip.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('trips_view', {'trip':trip.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">

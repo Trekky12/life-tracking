@@ -152,13 +152,21 @@ function initialize() {
      * Delete
      * https://elliotekj.com/2016/11/05/jquery-to-pure-js-event-listeners-on-dynamically-created-elements/
      */
-    document.addEventListener('click', function (event) {
+    document.addEventListener('click', async function (event) {
 
         let link = event.target.closest('a');
         let submit = event.target.closest('[type="submit"]');
 
-        if ((link && link.getAttribute("href") != '#' && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname)) || (submit && !submit.classList.contains("no-loading"))) {
+        let is_internal_link = (link && link.getAttribute("href") != '#' && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname));
+
+        if (is_internal_link || (submit && !submit.classList.contains("no-loading"))) {
             loadingWindowOverlay.classList.remove("hidden");
+        }
+
+        if (is_internal_link) {
+            event.preventDefault();
+            await storeQueryParams();
+            window.location.href = link.getAttribute("href");
         }
 
         // https://stackoverflow.com/a/50901269
@@ -567,4 +575,25 @@ function isVisible(element) {
 
 function getDisplay(element) {
     return element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
+}
+
+// Store query params
+async function storeQueryParams() {
+    try {
+        const token = await getCSRFToken(true);
+        var body = token;
+        body["path"] = window.location.pathname;
+        body["params"] = window.location.search;
+        const response = await fetch(jsObject.store_query_params, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+    }
 }

@@ -7,7 +7,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECURRING"]}} {{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{ url_for('splitbills')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
                 <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD_BILL"]}}</button></a>
                 <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup"><button class="white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
             </div>

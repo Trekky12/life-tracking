@@ -188,8 +188,9 @@
                 'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
 {% if not isMealplanEdit is null %}
                 'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
-                'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}'
+                'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}',
 {% endif %}
+                'store_query_params': '{{url_for('store_query_params')}}'
                     };
                     var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
                     var i18n = {{i18n|json_encode()|raw}};
