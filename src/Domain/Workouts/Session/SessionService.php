@@ -60,6 +60,15 @@ class SessionService extends Service
         if (!$this->plan_service->isOwner($plan->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        /**
+         * NOTICE
+         * All queries for this item are filtered for the current user,
+         * ($select_results_of_user_only = true, $insert_user = true)
+         * so actually no need check for match with parent item
+         */
+        if (!$this->isChildOf($plan->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $entry = $this->getEntry($entry_id);
 
@@ -91,6 +100,15 @@ class SessionService extends Service
         $plan = $this->plan_service->getFromHash($hash);
 
         if (!$this->plan_service->isOwner($plan->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        /**
+         * NOTICE
+         * All queries for this item are filtered for the current user,
+         * ($select_results_of_user_only = true, $insert_user = true)
+         * so actually no need check for match with parent item
+         */
+        if (!$this->isChildOf($plan->id, $entry_id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

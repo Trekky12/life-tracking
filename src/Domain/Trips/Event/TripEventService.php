@@ -219,6 +219,9 @@ class TripEventService extends Service {
         if (!$this->trip_service->isMember($trip->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->isChildOf($trip->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $entry = $this->getEntry($entry_id);
 

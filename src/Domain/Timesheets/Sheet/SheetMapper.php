@@ -344,4 +344,19 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function getSheetIDsFromProject($id) {
+        $sql = "SELECT id FROM " . $this->getTableName() . " WHERE project = :id ";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetchColumn()) {
+            $results[] = $row;
+        }
+        return $results;
+    }
+
 }

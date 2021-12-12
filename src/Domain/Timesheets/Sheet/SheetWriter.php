@@ -41,6 +41,9 @@ class SheetWriter extends ObjectActivityWriter {
         if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->service->isChildOf($project->id, $id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $data['project'] = $project->id;
 

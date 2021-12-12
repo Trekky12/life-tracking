@@ -72,7 +72,7 @@ class OtherUserTest extends BaseTestCase {
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
+        $this->assertStringContainsString("Element nicht gefunden", $body);
     }
 
     public function testDeleteElement() {

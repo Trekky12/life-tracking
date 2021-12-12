@@ -38,6 +38,9 @@ class CrawlerLinkService extends Service {
         if (!$this->crawler_service->isOwner($crawler->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if(!$this->isChildOf($crawler->id, $entry_id)){
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $entry = $this->getEntry($entry_id);
 

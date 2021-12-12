@@ -90,12 +90,13 @@ class CrawlerDatasetMapper extends \App\Domain\Mapper {
         return $stmt->rowCount();
     }
 
-    public function set_saved($id, $saved) {
-        $sql = "UPDATE " . $this->getTableName() . " SET saved=:saved WHERE id=:id";
+    public function set_saved($id, $crawler_id, $saved) {
+        $sql = "UPDATE " . $this->getTableName() . " SET saved=:saved WHERE id=:id AND crawler = :crawler";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "saved" => $saved,
-            "id" => $id
+            "id" => $id,
+            "crawler" => $crawler_id
         ]);
 
         if (!$result) {

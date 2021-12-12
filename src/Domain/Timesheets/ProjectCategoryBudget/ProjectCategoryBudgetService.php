@@ -50,6 +50,9 @@ class ProjectCategoryBudgetService extends Service {
         if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->isChildOf($project->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $entry = $this->getEntry($entry_id);
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);

@@ -12,11 +12,13 @@ use App\Domain\Workouts\Plan\PlanMapper;
 
 class SessionWriter extends ObjectActivityWriter {
 
+    private $service;
     private $plan_service;
     private $plan_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SessionMapper $mapper, PlanService $plan_service, PlanMapper $plan_mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SessionService $service, SessionMapper $mapper, PlanService $plan_service, PlanMapper $plan_mapper) {
         parent::__construct($logger, $user, $activity);
+        $this->service = $service;
         $this->mapper = $mapper;
         $this->plan_service = $plan_service;
         $this->plan_mapper = $plan_mapper;
@@ -26,7 +28,16 @@ class SessionWriter extends ObjectActivityWriter {
 
         $plan = $this->plan_service->getFromHash($additionalData["plan"]);
 
-        if (!$this->plan_service->isMember($plan->id)) {
+        if (!$this->plan_service->isOwner($plan->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        /**
+         * NOTICE
+         * All queries for this item are filtered for the current user,
+         * ($select_results_of_user_only = true, $insert_user = true)
+         * so actually no need check for match with parent item
+         */
+        if (!$this->service->isChildOf($plan->id, $id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

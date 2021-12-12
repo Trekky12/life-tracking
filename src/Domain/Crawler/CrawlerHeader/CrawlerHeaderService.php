@@ -74,6 +74,9 @@ class CrawlerHeaderService extends Service {
         if (!$this->crawler_service->isOwner($crawler->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if(!$this->isChildOf($crawler->id, $entry_id)){
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $entry = $this->getEntry($entry_id);
 
@@ -89,7 +92,7 @@ class CrawlerHeaderService extends Service {
 
         $crawler = $this->crawler_service->getFromHash($hash);
 
-        if (!$this->crawler_service->isMember($crawler->id)) {
+        if (!$this->crawler_service->isOwner($crawler->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

@@ -32,6 +32,9 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
         if (!$this->group_service->isMember($group->id) || $this->getService()->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if(!$this->service->isChildOf($group->id, $id)){
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $data['sbgroup'] = $group->id;
 

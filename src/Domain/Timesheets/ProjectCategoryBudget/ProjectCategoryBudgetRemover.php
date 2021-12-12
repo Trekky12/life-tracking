@@ -12,11 +12,13 @@ use App\Domain\Timesheets\Project\ProjectService;
 
 class ProjectCategoryBudgetRemover extends ObjectActivityRemover {
 
+    private $service;
     private $project_service;
     private $project_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, ProjectCategoryBudgetMapper $mapper, ProjectService $project_service, ProjectMapper $project_mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, ProjectCategoryBudgetService $service, ProjectCategoryBudgetMapper $mapper, ProjectService $project_service, ProjectMapper $project_mapper) {
         parent::__construct($logger, $user, $activity);
+        $this->service = $service;
         $this->mapper = $mapper;
         $this->project_service = $project_service;
         $this->project_mapper = $project_mapper;
@@ -28,6 +30,10 @@ class ProjectCategoryBudgetRemover extends ObjectActivityRemover {
         if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->service->isChildOf($project->id, $id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        
         return parent::delete($id, $additionalData);
     }
 

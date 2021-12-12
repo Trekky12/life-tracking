@@ -42,6 +42,9 @@ class SheetNoticeService extends Service {
         if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->isChildOf($project->id, $sheet_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $sheet = $this->sheet_service->getEntry($sheet_id);
 
@@ -71,6 +74,10 @@ class SheetNoticeService extends Service {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        if (!$this->isChildOf($project->id, $sheet_id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

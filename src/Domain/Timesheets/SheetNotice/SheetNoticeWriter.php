@@ -13,6 +13,7 @@ use App\Domain\Timesheets\Project\ProjectService;
 
 class SheetNoticeWriter extends ObjectActivityWriter {
 
+    private $service;
     private $sheet_mapper;
     private $project_service;
     private $project_mapper;
@@ -20,11 +21,13 @@ class SheetNoticeWriter extends ObjectActivityWriter {
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             ActivityCreator $activity,
+            SheetNoticeService $service,
             SheetNoticeMapper $mapper,
             SheetMapper $sheet_mapper,
             ProjectMapper $project_mapper,
             ProjectService $project_service) {
         parent::__construct($logger, $user, $activity);
+        $this->service = $service;
         $this->mapper = $mapper;
         $this->sheet_mapper = $sheet_mapper;
         $this->project_mapper = $project_mapper;
@@ -36,6 +39,9 @@ class SheetNoticeWriter extends ObjectActivityWriter {
         $project = $this->project_service->getFromHash($additionalData["project"]);
 
         if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        if (!$this->service->isChildOf($project->id, $additionalData["sheet"])) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

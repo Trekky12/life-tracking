@@ -26,6 +26,9 @@ abstract class ObjectRemover {
         $error = null;
         try {
 
+            // try to access entry, maybe the user is not authorized, so this throws an exception (not found)
+            $oldEntry = $this->getMapper()->get($id);
+
             $is_deleted = $this->deleteEntry($id);
 
             if ($is_deleted) {

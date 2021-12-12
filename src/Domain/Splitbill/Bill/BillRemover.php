@@ -39,6 +39,9 @@ class BillRemover extends ObjectActivityRemover {
         if (!$this->group_service->isMember($group->id) || $this->service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if(!$this->service->isChildOf($group->id, $id)){
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $bill = $this->service->getEntry($id);
 

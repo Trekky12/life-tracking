@@ -233,7 +233,10 @@ class SheetService extends Service {
 
         $project = $this->project_service->getFromHash($hash);
 
-        if (!$this->project_service->isMember($project->id)) {
+        if (!$this->project_service->isMember($project->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        if (!$this->isChildOf($project->id, $entry_id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
@@ -314,11 +317,19 @@ class SheetService extends Service {
         if (array_key_exists("sheets", $data) && is_array($data["sheets"])) {
             $sheets = filter_var_array($data["sheets"], FILTER_SANITIZE_NUMBER_INT);
         }
+        $project_sheets = $this->mapper->getSheetIDsFromProject($project->id);
+        $sheets = array_filter($sheets, function($sheet) use($project_sheets){
+            return in_array($sheet, $project_sheets);
+        });
 
         $categories = [];
         if (array_key_exists("categories", $data) && is_array($data["categories"])) {
             $categories = filter_var_array($data["categories"], FILTER_SANITIZE_NUMBER_INT);
         }
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+        $categories = array_filter($categories, function($cat) use($project_categories){
+            return in_array($cat, array_keys($project_categories));
+        });
 
         $result = false;
         if (count($sheets) > 0 && count($categories) > 0) {

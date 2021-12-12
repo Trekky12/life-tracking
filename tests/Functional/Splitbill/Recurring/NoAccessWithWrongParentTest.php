@@ -4,30 +4,19 @@ namespace Tests\Functional\Splitbill\Recurring;
 
 use Tests\Functional\Splitbill\SplitbillTestBase;
 
-class NoAccessTest extends SplitbillTestBase {
+class NoAccessWithWrongParentTest extends SplitbillTestBase {
 
-    protected $TEST_GROUP_ID = 1;
-    protected $TEST_GROUP_HASH = "ABCabc123";
-    protected $TEST_BILL_ID = 1;
+    protected $TEST_GROUP_HASH = "DEFdef456";
+    // Access a bill of this user in the other group
+    // only bills of the same user can be accessed
+    protected $TEST_BILL_ID = 3;
 
     protected function setUp(): void {
-        $this->login("user2", "user2");
+        $this->login("user", "user");
     }
 
     protected function tearDown(): void {
         $this->logout();
-    }
-
-    /**
-     * Add new Bill
-     */
-    public function testGetRecurringEdit() {
-
-        $response = $this->request('GET', $this->getURIRecurringEdit($this->TEST_GROUP_HASH));
-        $body = (string) $response->getBody();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
     /**
@@ -42,20 +31,6 @@ class NoAccessTest extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * Create the Bill
-     */
-    public function testPostRecurringSave() {
-
-        $data = [
-            "name" => "Test"
-        ];
-        $response = $this->request('POST', $this->getURIRecurringSave($this->TEST_GROUP_HASH), $data);
-
-        $body = (string) $response->getBody();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-    }
 
     /**
      * Update the Bill

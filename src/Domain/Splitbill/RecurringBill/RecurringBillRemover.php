@@ -36,6 +36,9 @@ class RecurringBillRemover extends ObjectActivityRemover {
         if (!$this->group_service->isMember($group->id) || $this->service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if(!$this->service->isChildOf($group->id, $id)){
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         return parent::delete($id, $additionalData);
     }

@@ -47,6 +47,9 @@ class RouteService extends Service {
         if (!$this->trip_service->isMember($trip->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->isChildOf($trip->id, $route_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $response_data = ["waypoints" => [], "start_date" => null, "end_date" => null];
         try {

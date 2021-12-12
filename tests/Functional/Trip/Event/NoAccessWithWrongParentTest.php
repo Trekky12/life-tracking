@@ -4,28 +4,17 @@ namespace Tests\Functional\Trip\Event;
 
 use Tests\Functional\Trip\TripTestBase;
 
-class NoAccessTest extends TripTestBase {
+class NoAccessWithWrongParentTest extends TripTestBase {
 
     protected $TEST_TRIP_HASH = "ABCabc123";
-    protected $TEST_TRIP_EVENT_ID = 1;
+    protected $TEST_TRIP_EVENT_ID = 2;
 
     protected function setUp(): void {
-        $this->login("user2", "user2");
+        $this->login("user", "user");
     }
 
     protected function tearDown(): void {
         $this->logout();
-    }
-
-    /**
-     * Add new Event
-     */
-    public function testGetChildEdit() {
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH));
-        $body = (string) $response->getBody();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
     /**
@@ -35,21 +24,6 @@ class NoAccessTest extends TripTestBase {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH).$this->TEST_TRIP_EVENT_ID);
         $body = (string) $response->getBody();
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
-    }
-
-    /**
-     * Create the event
-     */
-    public function testPostChildSave() {
-
-        $data = [
-            "name" => "Test",
-        ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH), $data);
-
-        $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
