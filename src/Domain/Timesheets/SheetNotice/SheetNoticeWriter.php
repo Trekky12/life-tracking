@@ -10,6 +10,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Domain\Timesheets\Project\ProjectMapper;
 use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\Sheet\SheetService;
 
 class SheetNoticeWriter extends ObjectActivityWriter {
 
@@ -21,7 +22,7 @@ class SheetNoticeWriter extends ObjectActivityWriter {
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             ActivityCreator $activity,
-            SheetNoticeService $service,
+            SheetService $service,
             SheetNoticeMapper $mapper,
             SheetMapper $sheet_mapper,
             ProjectMapper $project_mapper,
