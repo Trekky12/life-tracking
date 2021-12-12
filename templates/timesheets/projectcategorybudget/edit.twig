@@ -108,6 +108,13 @@
                     <input type="hidden" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
                 </div>
 
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxHidden">
+                        <input name="is_hidden" type="checkbox" value="1" id="checkboxHidden" {% if entry.is_hidden == 1 %}checked{% endif %}>
+                        {{lang["HIDE_ENTRY"]}}
+                    </label>
+                </div>
+
                 <div class="form-group btn">
                     <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}

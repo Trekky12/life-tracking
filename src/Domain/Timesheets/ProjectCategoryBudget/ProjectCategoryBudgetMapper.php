@@ -173,7 +173,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                         LEFT JOIN " . $this->getTableName("timesheets_categorybudgets_categories") . " bc ON b.id = bc.categorybudget 
                         LEFT JOIN " . $this->getTableName("timesheets_categories") . " c ON bc.category = c.id
                         LEFT JOIN " . $this->getTableName("timesheets_categories") . " main_cat ON b.main_category = main_cat.id
-                    WHERE b.project = :project ";
+                    WHERE b.project = :project AND b.is_hidden <= 0 ";
 
         if (!empty($cat_bindings)) {
             $sql .= " AND (bc.categorybudget IN ( "

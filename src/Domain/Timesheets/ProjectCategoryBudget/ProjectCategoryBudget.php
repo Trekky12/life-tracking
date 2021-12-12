@@ -29,6 +29,8 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
         $this->start = $this->exists('start', $data) ? $data['start'] : null;
         $this->end = $this->exists('end', $data) ? $data['end'] : null;
 
+        $this->is_hidden = $this->exists('is_hidden', $data) ? filter_var($data['is_hidden'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
