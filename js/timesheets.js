@@ -149,7 +149,7 @@ function setCategories(data) {
     }).then(function (data) {
         console.log(data);
         allowedReload = true;
-        window.location.reload();
+        window.location.reload(true);
     }).catch(function (error) {
         console.log(error);
         if (document.body.classList.contains('offline')) {
