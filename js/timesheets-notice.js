@@ -67,7 +67,9 @@ async function checkPassword() {
     }
 
     let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice'));
-    await Promise.all(notice_fields.map(async (notice_field) => {
+    
+    // Sequential
+    for (const notice_field of notice_fields) {
         let sheet_id = parseInt(notice_field.dataset.sheet);
         let notice = await getNotice(sheet_id);
         if (notice) {
@@ -77,7 +79,20 @@ async function checkPassword() {
                 notice_field.innerHTML = notice.replace(/(?:\r\n|\r|\n)/g, '<br>');
             }
         }
-    }));
+    }
+
+    // Parallel
+    // await Promise.all(notice_fields.map(async (notice_field) => {
+    //     let sheet_id = parseInt(notice_field.dataset.sheet);
+    //     let notice = await getNotice(sheet_id);
+    //     if (notice) {
+    //         if (notice_field.tagName && notice_field.tagName.toLowerCase() === "textarea") {
+    //             notice_field.value = notice;
+    //         } else {
+    //             notice_field.innerHTML = notice.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    //         }
+    //     }
+    // }));
 
     loadingIconTimesheetNotice.classList.add("hidden");
     timesheetNoticeWrapper.classList.remove("hidden");
@@ -144,7 +159,7 @@ if (timesheetNoticeForm) {
         }).then(function (data) {
             if (data["status"] === "success") {
                 allowedReload = true;
-                window.location.reload();
+                window.location.reload(true);
             } else {
                 document.getElementById("loading-overlay").classList.add("hidden");
                 alertErrorDetail.innerHTML = data["message"];
@@ -153,6 +168,8 @@ if (timesheetNoticeForm) {
         }).catch(function (error) {
             console.log(error);
             document.getElementById("loading-overlay").classList.add("hidden");
+            alertErrorDetail.innerHTML = error;
+            alertError.classList.remove("hidden");
         });
     });
 }
