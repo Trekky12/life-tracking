@@ -71,8 +71,15 @@ class SheetMapper extends \App\Domain\Mapper {
                 . " ) AND ("
                 . "     t.start LIKE :searchQuery OR "
                 . "     t.end LIKE :searchQuery OR "
-                . "     tc.name LIKE :searchQuery "
-                . ") ";
+                . "     (tcs.sheet IN ( "
+                . "              SELECT tcs2.sheet "
+                . "                 FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs2 "
+                . "                 LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc2 ON tc2.id = tcs2.category "
+                . "                 WHERE tc2.name LIKE :searchQuery "
+                . "             ) "
+                . "     ) "
+                . ")";
+        
         if (!empty($cat_bindings)) {
             $sql .= " AND (tcs.sheet IN ( "
                     . "             SELECT sheet "
