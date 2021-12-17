@@ -215,20 +215,20 @@ class SessionService extends Service
         /**
          * Remove empty diagrams (only null y-values)
          */
-        foreach ($exercisesStats as &$exercise) {
-            if ($this->checkSkip($exercise["data"]["repeats"])) {
-                $exercise["data"]["repeats"] = null;
-            }
-            if ($this->checkSkip($exercise["data"]["weight"])) {
-                $exercise["data"]["weight"] = null;
-            }
-            if ($this->checkSkip($exercise["data"]["time"])) {
-                $exercise["data"]["time"] = null;
-            }
-            if ($this->checkSkip($exercise["data"]["distance"])) {
-                $exercise["data"]["distance"] = null;
-            }
-        }
+        // foreach ($exercisesStats as &$exercise) {
+        //     if ($this->checkSkip($exercise["data"]["repeats"])) {
+        //         $exercise["data"]["repeats"] = null;
+        //     }
+        //     if ($this->checkSkip($exercise["data"]["weight"])) {
+        //         $exercise["data"]["weight"] = null;
+        //     }
+        //     if ($this->checkSkip($exercise["data"]["time"])) {
+        //         $exercise["data"]["time"] = null;
+        //     }
+        //     if ($this->checkSkip($exercise["data"]["distance"])) {
+        //         $exercise["data"]["distance"] = null;
+        //     }
+        // }
 
         $response_data = [
             'plan' => !is_null($plan_id) ? $plan : null,
