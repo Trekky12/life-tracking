@@ -8,7 +8,7 @@ class RecurringBill extends \App\Domain\DataObject {
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? trim(filter_var($data['name'], FILTER_SANITIZE_STRING)) : null;
         $this->sbgroup = $this->exists('sbgroup', $data) ? filter_var($data['sbgroup'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
