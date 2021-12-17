@@ -1,6 +1,9 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', (event) => {
+
+    let colors = [];
+
     const workoutCharts = document.querySelectorAll(".workoutChart");
     workoutCharts.forEach(function (workoutChart) {
 
@@ -11,10 +14,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         data.forEach(function (sets, idx) {
 
-            let color = randomColor({
-                hue: 'blue',
-                luminosity: 'bright'
-            });
+            if(colors.length <= idx){
+                colors.push(randomColor({
+                    hue: 'blue',
+                    luminosity: 'bright'
+                }));
+            }
+            let color = colors[idx];
+
             datasets.push(
                 {
                     label: lang.workouts_set + ' ' + (idx + 1),
