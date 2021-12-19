@@ -822,6 +822,7 @@ CREATE TABLE timesheets_projects (
     default_view varchar(255) DEFAULT 'month',
     has_duration_modifications INT(1) DEFAULT 0,
     time_conversion_rate varchar(100) DEFAULT NULL,
+    default_duration INT(11) NULL,
     password VARCHAR(255) NULL,
     salt VARCHAR(255) NULL,
     PRIMARY KEY (id),

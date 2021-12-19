@@ -27,7 +27,14 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "time_24hr": true,
         "minuteIncrement": 1,
         "onValueUpdate": function (selectedDates) {
-            dateTimePickerEnd._flatpickr.setDate(selectedDates[0]);
+            if (dateTimePickerEnd.dataset.saved != "1") {
+                let default_duration = dateTimePickerEnd.dataset.defaultDuration;
+                let selectedDate = selectedDates[0];
+                if (default_duration > 0) {
+                    selectedDate.setSeconds(selectedDate.getSeconds() + default_duration);
+                }
+                dateTimePickerEnd._flatpickr.setDate(selectedDate);
+            }
         }
     });
 
@@ -96,7 +103,7 @@ if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
             }
         });
 
-        setCategories({'sheets': sheets, 'categories': categories, 'type': 'assign'});
+        setCategories({ 'sheets': sheets, 'categories': categories, 'type': 'assign' });
     });
 
     removeCategoriesBtn.addEventListener('click', function (event) {
@@ -112,7 +119,7 @@ if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
             }
         });
 
-        setCategories({'sheets': sheets, 'categories': categories, 'type': 'remove'});
+        setCategories({ 'sheets': sheets, 'categories': categories, 'type': 'remove' });
     });
 }
 

@@ -71,4 +71,14 @@ class DateUtility {
         return $prefix . ($hide_seconds ? sprintf('%02d:%02d', $hours, $minutes) : sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds));
     }
 
+    public static function getSecondsFromDuration($value) {
+        $matches = [];
+        preg_match("/([0-9]+):([0-9]{2})/", $value, $matches);
+        if (count($matches) == 3) {
+            return intval($matches[1]) * 60 * 60 + intval($matches[2]) * 60;
+        }
+
+        return intval($value);
+    }
+
 }

@@ -55,7 +55,7 @@
 
                 <div class="form-group">
                     <label for="datetimePickerEnd">{% if entry.is_day_based == 1 %}{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}{% endif %}</label>
-                    <input type="text" class="form-control" id="datetimePickerEnd" placeholder="" name="end" value="{% if not entry is null %}{{entry.end}}{% else %}{{ "now"|date("Y-m-d H:i") }}{% endif %}">
+                    <input type="text" class="form-control" id="datetimePickerEnd" placeholder="" name="end" value="{{end}}" data-saved="{% if not entry is null %}1{% else %}0{% endif %}" data-default-duration="{{ project.default_duration }}">
                 </div>
 
                 <div class="mapWrapper">

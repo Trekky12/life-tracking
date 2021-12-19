@@ -45,20 +45,20 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
          */
         $set_value = $this->exists('set_value', $data) ? filter_var($data['set_value'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($set_value)) {
-            $this->value = $this->calculateValue($set_value);
+            $this->value = $this->categorization != "count" ?DateUtility::getSecondsFromDuration($set_value): intval($set_value);
         }
 
         $set_warning1 = $this->exists('set_warning1', $data) ? filter_var($data['set_warning1'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($set_warning1)) {
-            $this->warning1 = $this->calculateValue($set_warning1);
+            $this->warning1 = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_warning1) : intval($set_warning1);
         }
         $set_warning2 = $this->exists('set_warning2', $data) ? filter_var($data['set_warning2'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($set_warning2)) {
-            $this->warning2 = $this->calculateValue($set_warning2);
+            $this->warning2 = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_warning2): intval($set_warning2);
         }
         $set_warning3 = $this->exists('set_warning3', $data) ? filter_var($data['set_warning3'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($set_warning3)) {
-            $this->warning3 = $this->calculateValue($set_warning3);
+            $this->warning3 = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_warning3): intval($set_warning3);
         }
     }
 
@@ -72,16 +72,6 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
 
     public function getTimeValue() {
         return DateUtility::splitDateInterval($this->value, true);
-    }
-
-    private function calculateValue($value) {
-        $matches = [];
-        preg_match("/([0-9]+):([0-9]{2})/", $value, $matches);
-        if ($this->categorization != "count" && count($matches) == 3) {
-            return intval($matches[1]) * 60 * 60 + intval($matches[2]) * 60;
-        }
-
-        return intval($value);
     }
 
 }
