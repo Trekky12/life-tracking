@@ -79,7 +79,7 @@ document.addEventListener('click', function (event) {
             addSet(new_exercise);
         }
 
-        let inputs = new_exercise.querySelectorAll('input, textarea');
+        let inputs = new_exercise.querySelectorAll('input, textarea, select');
         inputs.forEach(function (input, idx) {
             if (!input.name.includes("dummy")) {
                 input.setAttribute('name', input.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + nextID + ']'));
@@ -313,7 +313,7 @@ function addSet(exercise) {
     let set_nr = new_set.querySelector('.set-nr');
     set_nr.innerHTML = set_id;
 
-    let inputs = new_set.querySelectorAll('input');
+    let inputs = new_set.querySelectorAll('input, select');
     inputs.forEach(function (input, idx) {
         input.setAttribute('name', input.name.replace("dummy", set_id - 1));
         input.removeAttribute('disabled');

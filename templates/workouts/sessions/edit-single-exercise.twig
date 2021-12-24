@@ -16,7 +16,10 @@
 
                     {% if data["exercise"].isCategoryTime() or data["exercise"].isCategoryDistanceTime() %}
                         <input type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][time]" disabled="disabled"/>
-                        <label>{{ lang["WORKOUTS_SECONDS"] }}</label>
+                         <select name="exercises[{{ data["idx"] }}][sets][dummy][time_type]" disabled="disabled">
+                            <option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
+                            <option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
+                        </select>
                     {% endif %}
                     {% if data["exercise"].isCategoryDistanceTime() %}
                         <input type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][distance]" disabled="disabled"/>
@@ -38,7 +41,10 @@
 
                         {% if data["exercise"].isCategoryTime() or data["exercise"].isCategoryDistanceTime() %}
                             <input id="time_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
-                            <label for="time_{{ loop.index-1 }}">{{ lang["WORKOUTS_SECONDS"] }}</label>
+                             <select name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time_type]" {% if hidden %}disabled="disabled"{% endif %}>
+                                <option value="sec" {% if set["time_type"] == "sec" %}selected="true"{% endif %}>{{ lang["WORKOUTS_SECONDS"] }}</option>
+                                <option value="min" {% if set["time_type"] == "min" %}selected="true"{% endif %}>{{ lang["WORKOUTS_MINUTES"] }}</option>
+                            </select>
                         {% endif %}
                         {% if data["exercise"].isCategoryDistanceTime() %}
                             <input id="distance_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}" {% if hidden %}disabled="disabled"{% endif %}/>

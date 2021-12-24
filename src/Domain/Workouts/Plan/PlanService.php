@@ -11,6 +11,7 @@ use App\Domain\Workouts\Bodypart\BodypartMapper;
 use App\Domain\Workouts\Muscle\MuscleMapper;
 use App\Domain\Main\Translator;
 use App\Domain\Settings\SettingsMapper;
+use App\Domain\Main\Utility\DateUtility;
 
 class PlanService extends Service {
 
@@ -150,7 +151,11 @@ class PlanService extends Service {
                         $description[] = sprintf("%s %s", $set["weight"] ? $set["weight"] : 0, $this->translation->getTranslatedString("WORKOUTS_KG"));
                     }
                     if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
-                        $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
+                        if($set["time_type"] == "min"){
+                            $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_MINUTES"));
+                        }else{
+                            $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
+                        }
                     }
                     if ($exercise->isCategoryDistanceTime()) {
                         $description[] = sprintf("%s %s", $set["distance"] ? $set["distance"] : 0, $this->translation->getTranslatedString("WORKOUTS_KM"));

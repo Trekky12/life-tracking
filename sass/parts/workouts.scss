@@ -107,6 +107,10 @@
                         max-width: 50px;
                     }
                 }
+                select{
+                    padding: 0.2rem;
+                    @include font-size(1.2);
+                }
             }
 
             .buttons {

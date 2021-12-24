@@ -65,9 +65,14 @@ class SessionWriter extends ObjectActivityWriter {
                         $repeats = array_key_exists("repeats", $set) && !empty($set["repeats"]) ? intval(filter_var($set["repeats"], FILTER_SANITIZE_NUMBER_INT)) : null;
                         $weight = array_key_exists("weight", $set) && !empty($set["weight"]) ? floatval(filter_var($set["weight"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
                         $time = array_key_exists("time", $set) && !empty($set["time"]) ? floatval(filter_var($set["time"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
+                        $time_type = array_key_exists("time_type", $set) && !empty($set["time_type"]) ? filter_var($set["time_type"], FILTER_SANITIZE_STRING) : null;
                         $distance = array_key_exists("distance", $set) && !empty($set["distance"]) ? floatval(filter_var($set["distance"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
 
-                        $sets[] = ["repeats" => $repeats, "weight" => $weight, "time" => $time, "distance" => $distance];
+                        if(!is_null($time) && !in_array($time_type, ["min", "sec"])){
+                            $time_type = "sec";
+                        }
+
+                        $sets[] = ["repeats" => $repeats, "weight" => $weight, "time" => $time, "time_type" => $time_type, "distance" => $distance];
                     }
                 }
 
