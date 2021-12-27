@@ -17,8 +17,6 @@ class SheetNotice extends \App\Domain\DataObject {
 
         $this->sheet = $this->exists('sheet', $data) ? filter_var($data['sheet'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
-        
-        $this->encrypted = $this->exists('encrypted', $data) ? intval(filter_var($data['encrypted'], FILTER_SANITIZE_STRING)) : 0;
 
     }
     

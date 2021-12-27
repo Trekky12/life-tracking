@@ -931,8 +931,6 @@ CREATE TABLE timesheets_sheets_notices (
     changedBy INTEGER unsigned DEFAULT NULL,
     sheet INTEGER unsigned DEFAULT NULL,
     notice TEXT DEFAULT NULL,
-    notice2 BLOB DEFAULT NULL,
-    encrypted INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,

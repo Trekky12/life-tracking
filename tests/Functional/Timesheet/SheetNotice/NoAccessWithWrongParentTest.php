@@ -7,7 +7,7 @@ use Tests\Functional\Timesheet\TimesheetTestBase;
 class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
-    protected $TEST_SHEET_ID = 2;
+    protected $TEST_SHEET_ID = 3;
     
     protected $uri_child_edit = "/timesheets/HASH/sheets/notice/ID/edit/";
     protected $uri_child_save = "/timesheets/HASH/sheets/notice/ID/save/";
@@ -36,8 +36,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
     public function testPostAddElement() {
 
         $data = [
-            "notice" => "Test Notice",
-            "notice2" => "Test Notice"
+            "notice" => "Test Notice"
         ];
 
         $response = $this->request('POST', $this->getURIWithHashAndID($this->uri_child_save, $this->TEST_PROJECT_HASH, $this->TEST_SHEET_ID), $data);

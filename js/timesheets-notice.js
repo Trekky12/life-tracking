@@ -107,11 +107,8 @@ async function getNotice(sheet_id) {
     if (notice_result.status !== "error" && notice_result.entry) {
         let notice = notice_result.entry.notice;
 
-        // old entries are not client side encrypted
-        if (notice && notice_result.entry.encrypted === 0) {
-            return notice;
-        }
-        if (notice && notice_result.entry.encrypted > 0) {
+       
+        if (notice) {
             if (!aesKey) {
                 alertErrorDetail.innerHTML = lang.decrypt_error;
                 alertError.classList.remove("hidden");
@@ -138,9 +135,6 @@ if (timesheetNoticeForm) {
 
         var data = {};
         data["notice"] = await encryptData(timesheetNotice.value);
-        // temporary save the notice without client encryption
-        data["notice2"] = timesheetNotice.value;
-        data["encrypted"] = 1;
 
         getCSRFToken().then(function (token) {
             data["csrf_name"] = token.csrf_name;

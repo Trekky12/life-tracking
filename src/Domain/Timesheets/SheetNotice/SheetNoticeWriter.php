@@ -51,17 +51,9 @@ class SheetNoticeWriter extends ObjectActivityWriter {
         // get last notice as id 
         $notice_id = $this->mapper->hasNotice($additionalData["sheet"]);
         $data["id"] = $notice_id;
-        
-        // Do not save the notice
-        $notice2 = $data["notice2"];
-        $data["notice2"] = null;
 
         $payload = parent::save($notice_id, $data, $additionalData);
         $entry = $payload->getResult();
-
-        // temporary save the notice without client encryption
-        // and server encrypted
-        $this->mapper->setNotice($entry->id, $notice2);
 
         return $payload;
     }
