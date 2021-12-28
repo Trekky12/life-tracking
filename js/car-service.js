@@ -14,3 +14,12 @@ sliders.forEach(function (item, idx) {
         item.parentNode.querySelector('.slider-value').value = parseInt(this.get());
     });
 });
+
+
+let carServiceType = document.querySelectorAll('input.carServiceType');
+carServiceType.forEach(function (item, idx) {
+    item.addEventListener('change', function (event) {
+        document.querySelector("#carServiceFuel").classList.toggle('hidden');
+        document.querySelector("#carServiceService").classList.toggle('hidden');
+    });
+});
