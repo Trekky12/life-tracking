@@ -26,7 +26,7 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "enableTime": true,
         "time_24hr": true,
         "minuteIncrement": 1,
-        "onValueUpdate": function (selectedDates) {
+        "onChange": function (selectedDates) {
             if (dateTimePickerEnd.dataset.saved != "1") {
                 let default_duration = dateTimePickerEnd.dataset.defaultDuration;
                 let selectedDate = selectedDates[0];
