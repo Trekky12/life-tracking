@@ -29,6 +29,10 @@ class UserService extends Service {
         return $this->mapper->getAll();
     }
 
+    public function getUsersData($users = []) {
+        return $this->mapper->getUsersData($users);
+    }
+
     public function getUserFromLogin($username) {
         return $this->mapper->getUserFromLogin($username);
     }

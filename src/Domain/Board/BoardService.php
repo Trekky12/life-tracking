@@ -32,7 +32,34 @@ class BoardService extends Service {
         return $this->mapper->getUserItems('name');
     }
 
-    public function view($hash, $sidebar) {
+    public function view($hash, $sidebar = []) {
+
+        $board = $this->getFromHash($hash);
+
+        if (!$this->isMember($board->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $show_archive = SessionUtility::getSessionVar('show_archive', 0);
+
+        $board_users = $this->getUsers($board->id);
+        $users = $this->user_service->getUsersData($board_users);
+
+        $labels = $this->label_mapper->getLabelsFromBoard($board->id);
+
+        $data = [
+            "board" => $board,
+            "users" => $users,
+            "labels" => $labels,
+            "show_archive" => $show_archive,
+            "sidebar" => $sidebar,
+            "isBoardView" => true
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $data);
+    }
+
+    public function data($hash) {
 
         $board = $this->getFromHash($hash);
 
@@ -49,31 +76,24 @@ class BoardService extends Service {
          */
         $stacks = $this->stack_mapper->getStacksFromBoard($board->id, $show_archive);
 
+        $card_users = $this->card_mapper->getCardsUser();
+        $card_labels = $this->label_mapper->getCardsLabel();
+
         foreach ($stacks as &$stack) {
-            $stack->cards = $this->card_mapper->getCardsFromStack($stack->id, $show_archive);
+            $stack->cards = $this->card_mapper->getCardsFromStack($stack->id, $card_users, $card_labels, $show_archive);
         }
 
-        $users = $this->user_service->getAllUsersOrderedByLogin();
-
-        $card_user = $this->card_mapper->getCardsUser();
+        $users = $this->user_service->getUsersData($board_users);
 
         $labels = $this->label_mapper->getLabelsFromBoard($board->id);
 
-        $card_label = $this->label_mapper->getCardsLabel();
-
         $data = [
-            "board" => $board,
             "stacks" => $stacks,
-            "users" => $users,
-            "card_user" => $card_user,
             "labels" => $labels,
-            "card_label" => $card_label,
-            "show_archive" => $show_archive,
-            "board_user" => $board_users,
-            "sidebar" => $sidebar
+            "users" => $users
         ];
 
-        return new Payload(Payload::$RESULT_HTML, $data);
+        return new Payload(Payload::$RESULT_JSON, $data);
     }
 
     public function setArchive($data) {

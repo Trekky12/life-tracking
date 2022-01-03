@@ -46,12 +46,28 @@ class MemberTest extends BoardTestBase {
      */
     public function testArchivedItem() {
 
-        $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
+        $json = json_decode($body, true);
 
-        $row = $this->getCard($body, $this->TEST_CARD_TITLE);
-        $this->assertTrue(empty($row));
+        $this->assertArrayHasKey("stacks", $json);
+        $this->assertIsArray($json["stacks"]);
+
+        foreach($json["stacks"] as $stack){
+            $this->assertIsArray($stack);
+            $this->assertArrayHasKey("cards", $stack);
+
+            foreach($stack["cards"] as $card){
+                $this->assertIsArray($card);
+                $this->assertArrayHasKey("id", $card);
+                $this->assertArrayHasKey("title", $card);
+
+                if($card["title"] == $this->TEST_CARD_TITLE){
+                    $this->fail("Card found!");
+                }
+            }
+        }
     }
 
     /**
@@ -79,12 +95,30 @@ class MemberTest extends BoardTestBase {
      */
     public function testUnArchivedItem() {
 
-        $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
+        $json = json_decode($body, true);
 
-        $row = $this->getCard($body, $this->TEST_CARD_TITLE);
-        $this->assertArrayHasKey("id", $row);
+        $this->assertArrayHasKey("stacks", $json);
+        $this->assertIsArray($json["stacks"]);
+
+        $found = false;
+        foreach($json["stacks"] as $stack){
+            $this->assertIsArray($stack);
+            $this->assertArrayHasKey("cards", $stack);
+
+            foreach($stack["cards"] as $card){
+                $this->assertIsArray($card);
+                $this->assertArrayHasKey("id", $card);
+                $this->assertArrayHasKey("title", $card);
+
+                if($card["title"] == $this->TEST_CARD_TITLE){
+                    $found = true;
+                }
+            }
+        }
+        $this->assertNotFalse($found);
     }
 
 }

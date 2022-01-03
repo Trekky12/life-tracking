@@ -125,6 +125,9 @@
 
     /* Card  */
     .board-card{
+
+        display: flex;
+
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
         box-sizing: border-box; 
         background-color: $color_background-body;
@@ -140,13 +143,21 @@
             cursor:pointer;
         }
 
+        .check{
+            margin-right: 1rem;
+        }
+
+        .board-card-content{
+            flex-grow: 1;
+        }
+
         .bottom-row{
             display:flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .card-member{
+        .card-members{
             display:flex;
             //justify-content: flex-end;
         }

@@ -249,6 +249,7 @@ return function (App $app) {
         $group->group('/view', function (RouteCollectorProxy $group_view) {
             $group_view->get('/{hash}', \App\Application\Action\Board\Board\BoardViewAction::class)->setName('boards_view');
         });
+        $group->get('/data/{hash}', \App\Application\Action\Board\Board\BoardDataAction::class)->setName('boards_data');
 
         $group->group('/stacks', function (RouteCollectorProxy $group_stacks) {
             $group_stacks->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackSaveAction::class)->setName('stack_save');

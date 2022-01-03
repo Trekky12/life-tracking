@@ -116,4 +116,29 @@ class UserMapper extends \App\Domain\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getUsersData($users = []) {
+
+        if (empty($users)) {
+            return [];
+        }
+        $sql = "SELECT * FROM " . $this->getTableName();
+
+        $user_bindings = array();
+        foreach ($users as $user_id => $user) {
+            $user_bindings[":user_" . $user_id] = $user_id;
+        }
+
+        $sql .= " WHERE id IN (" . implode(',', array_keys($user_bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($user_bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
 }

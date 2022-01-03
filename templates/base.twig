@@ -190,7 +190,10 @@
                 'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
                 'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}',
 {% endif %}
-                'store_query_params': '{{url_for('store_query_params')}}'
+                'store_query_params': '{{url_for('store_query_params')}}',
+{% if not isBoardView is null %}
+                'boards_data': '{{url_for('boards_data', {'hash': board.hash})}}'
+{% endif %}
                     };
                     var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
                     var i18n = {{i18n|json_encode()|raw}};

@@ -62,17 +62,30 @@ class MemberTest extends BoardTestBase {
      * @depends testPostChildSave
      */
     public function testGetChildCreated(array $data) {
-        $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
+        $json = json_decode($body, true);
 
-        $row = $this->getStack($body, $data["name"]);
+        $this->assertArrayHasKey("stacks", $json);
+        $this->assertIsArray($json["stacks"]);
 
-        $this->assertArrayHasKey("id", $row);
+        $found = false;
 
-        return intval($row["id"]);
+        foreach($json["stacks"] as $stack){
+            $this->assertIsArray($stack);
+            $this->assertArrayHasKey("name", $stack);
+
+            if($stack["name"] == $data["name"]){
+                $found = $stack["id"];
+                $this->assertSame($stack["name"], $data["name"]);
+            }
+        }
+        $this->assertNotFalse($found);
+
+        return intval($found);
     }
 
     /**
