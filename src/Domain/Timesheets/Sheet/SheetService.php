@@ -247,11 +247,14 @@ class SheetService extends Service {
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
         $sheet_categories = !is_null($entry) ? $this->mapper->getCategoriesFromSheet($entry->id) : [];
 
-        $end = $entry->end;
-        $default_duration = $project->default_duration;
-        if(is_null($entry) && !is_null($default_duration)){
-            $end_date = new \DateTime('+'.$default_duration.' seconds');
-            $end = $end_date->format('Y-m-d H:i');
+        $end = null;
+        if($entry){
+            $end = $entry->end;
+            $default_duration = $project->default_duration;
+            if(is_null($entry) && !is_null($default_duration)){
+                $end_date = new \DateTime('+'.$default_duration.' seconds');
+                $end = $end_date->format('Y-m-d H:i');
+            }
         }
 
         $response_data = [
