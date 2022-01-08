@@ -52,7 +52,7 @@ class OwnerTest extends TripTestBase {
      * @depends testPostParentSave
      */
     public function testGetParentCreated($data) {
-        $response = $this->request('GET', $this->uri_overview . '?filter=plan');
+        $response = $this->request('GET', $this->uri_overview );
 
         $this->assertEquals(200, $response->getStatusCode());
 

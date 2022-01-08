@@ -23,7 +23,7 @@ class OwnerDeleteRecursiveTest extends TripTestBase {
         $this->request('POST', $this->uri_save, $data1);
 
         // get Hash/ID from Overview
-        $response3 = $this->request('GET', $this->uri_overview . '?filter=plan');
+        $response3 = $this->request('GET', $this->uri_overview );
         $row = $this->getParent((string) $response3->getBody(), $data1["name"]);
 
         $parent_hash = $row["hash"];
