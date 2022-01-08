@@ -81,11 +81,7 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $json = json_decode($body, true);
-
-        $this->assertArrayHasKey("is_deleted", $json);
-        $this->assertFalse($json["is_deleted"]);
-        $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
+        $this->assertStringContainsString("Element nicht gefunden", $body);
     }
 
 }

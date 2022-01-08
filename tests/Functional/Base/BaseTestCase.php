@@ -391,7 +391,7 @@ class BaseTestCase extends TestCase {
                 $this->extractArray($xpath, $input, $input_fields);
             }
 
-            $selects = $xpath->query('//form//select');
+            $selects = $xpath->query('//form//select[not(@disabled) or @disabled != "disabled"]');
             foreach ($selects as $select) {
                 $this->extractArray($xpath, $select, $input_fields);
             }

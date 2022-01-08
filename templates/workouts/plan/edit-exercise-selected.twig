@@ -41,7 +41,7 @@
 
                         {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
                             <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise["idx"] }}][sets][dummy][time]" disabled="disabled"/>
-                            <select name="exercises[{{ exercise_idx }}][sets][dummy][time_type]" disabled="disabled">
+                            <select name="exercises[{{ exercise["idx"] }}][sets][dummy][time_type]" disabled="disabled">
                                 <option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
                                 <option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
                             </select>
