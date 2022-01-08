@@ -73,7 +73,7 @@ return function (App $app) {
     /**
      * Custom Error Renderer
      */
-    $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+    $errorMiddleware = $app->addErrorMiddleware(true, false, false);
 
     $myErrorHandler = new MyErrorHandler($app->getCallableResolver(), $app->getResponseFactory());
     $myErrorHandler->registerErrorRenderer('text/html', MyErrorRenderer::class);
