@@ -31,7 +31,7 @@ class FinancesWriter extends ObjectActivityWriter {
         }
 
         // set default or assigned category
-        $category = $this->setDefaultOrAssignedCategory($entry->id);
+        $category = $this->setDefaultOrAssignedCategory($entry);
         
         if(!is_null($category)){
             $entry->category = $category;
@@ -46,13 +46,10 @@ class FinancesWriter extends ObjectActivityWriter {
         return $payload;
     }
 
-    private function setDefaultOrAssignedCategory($id) {
-        $user_id = $this->current_user->getUser()->id;
-
-        $entry = $this->getMapper()->get($id);
-        $cat = $this->finances_service->getDefaultOrAssignedCategory($user_id, $entry);
+    private function setDefaultOrAssignedCategory($entry) {
+        $cat = $this->finances_service->getDefaultOrAssignedCategory($entry);
         if (!is_null($cat)) {
-            $this->getMapper()->set_category($id, $cat);
+            $this->getMapper()->set_category($entry->id, $cat);
             
             return $cat;
         }

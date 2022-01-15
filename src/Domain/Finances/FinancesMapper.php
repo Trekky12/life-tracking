@@ -304,58 +304,18 @@ class FinancesMapper extends \App\Domain\Mapper {
     /**
      * Bills
      */
-    public function addOrUpdateFromBill(FinancesEntry $entry) {
+    public function getEntryFromBill($user, $bill_id) {
 
-        $bindings = ["user" => $entry->user, "bill" => $entry->bill];
+        $bindings = ["user" => $user, "bill" => $bill_id];
 
-        $sql = "SELECT id FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
+        $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
-        // no entry present, so create one
         if ($stmt->rowCount() > 0) {
-            return $this->updateFromBill($entry);
-        } else {
-            return $this->insert($entry);
+            return new $this->dataobject($stmt->fetch());
         }
-    }
-
-    private function updateFromBill(FinancesEntry $entry) {
-        $sql = "UPDATE " . $this->getTableName() . " "
-                . " SET value = :value, "
-                . "     common_value = :common_value, "
-                . "     date = :date, "
-                . "     time = :time, "
-                . "     lat  = :lat,"
-                . "     lng  = :lng, "
-                . "     acc  = :acc, "
-                . "     paymethod  = :paymethod, "
-                . "     type  = :type, "
-                //. "     description  = :description, "
-                . "     common  = :common "
-                . "WHERE bill = :bill AND user = :user";
-        $bindings = [
-            "bill" => $entry->bill,
-            "user" => $entry->user,
-            "value" => $entry->value,
-            "common_value" => $entry->common_value,
-            "date" => $entry->date,
-            "time" => $entry->time,
-            "lat" => $entry->lat,
-            "lng" => $entry->lng,
-            "acc" => $entry->acc,
-            "paymethod" => $entry->paymethod,
-            //"description" => $entry->description,
-            "type" => $entry->type,
-            "common" => $entry->common
-        ];
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute($bindings);
-
-        if (!$result) {
-            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
-        }
-        return true;
+        return null;
     }
 
     public function deleteEntrywithBill($bill, $user) {

@@ -73,11 +73,13 @@ class FinancesEntry extends \App\Domain\DataObject {
 
     public function get_fields($remove_user_element = false, $insert = true, $update = false) {
 
-        if (!is_null($this->bill) && !$insert) {
-            /**
-             * When a finance entry from a bill is edited, 
-             * only the following fields can be updated
-             */
+        $is_bill_based_save = !is_null($this->bill) && (is_array($this->additionalData) && array_key_exists("is_bill_based_save", $this->additionalData) && $this->additionalData["is_bill_based_save"]);
+
+        /**
+         * When a finance entry from a bill is edited, 
+         * only the following fields can be updated
+         */
+        if (!is_null($this->bill) && !$is_bill_based_save) {
             $temp = [];
             $temp["id"] = $this->id;
             $temp["category"] = $this->category;

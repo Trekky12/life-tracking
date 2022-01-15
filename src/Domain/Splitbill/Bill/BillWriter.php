@@ -10,6 +10,9 @@ use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Splitbill\Group\GroupMapper;
 use App\Domain\User\UserService;
 use App\Domain\Finances\FinancesService;
+use App\Domain\Finances\FinancesWriter;
+use App\Domain\Finances\FinancesRemover;
+use App\Domain\Finances\FinancesMapper;
 use App\Domain\Finances\FinancesEntry;
 use App\Domain\Main\Translator;
 use App\Domain\Splitbill\BaseBillWriter;
@@ -19,6 +22,9 @@ class BillWriter extends BaseBillWriter {
     protected $user_service;
     protected $bill_notification_service;
     protected $finance_service;
+    protected $finances_entry_writer;
+    protected $finances_entry_remover;
+    protected $finance_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -28,6 +34,9 @@ class BillWriter extends BaseBillWriter {
             Translator $translation, 
             BillMapper $mapper,
             FinancesService $finance_service,
+            FinancesWriter $finances_entry_writer,
+            FinancesRemover $finances_entry_remover,
+            FinancesMapper $finance_mapper,
             BillNotificationService $bill_notification_service,
             UserService $user_service,
             SplitbillBillService $service) {
@@ -36,6 +45,9 @@ class BillWriter extends BaseBillWriter {
         $this->user_service = $user_service;
         $this->bill_notification_service = $bill_notification_service;
         $this->finance_service = $finance_service;
+        $this->finances_entry_writer = $finances_entry_writer;
+        $this->finances_entry_remover = $finances_entry_remover;
+        $this->finance_mapper = $finance_mapper;
         $this->service = $service;
     }
 
@@ -52,6 +64,8 @@ class BillWriter extends BaseBillWriter {
         $balances = $this->getMapper()->getBalance($bill->id);
         $totalValue = $this->getMapper()->getBillSpend($bill->id);
 
+        $me = $this->current_user->getUser();
+
         foreach ($balances as $balance) {
             /**
              * Create Finance Entry for User
@@ -59,8 +73,21 @@ class BillWriter extends BaseBillWriter {
             $userObj = $users[$balance["user"]];
 
             if ($group->add_finances > 0 && $bill->settleup != 1 && $userObj->module_finance == 1) {
+                
+                // Before creating/deleting a finance entry the user is checked
+                // for access rights, but when an entry for another user is created the 
+                // current user has no access rights
+                // So the current user needs to be set to the
+                // recurring splitted bill creator
+                $this->current_user->setUser(null);
+                $this->finance_mapper->setUser($balance["user"]);
+            
+                $finance_entry = $this->finance_mapper->getEntryFromBill($balance["user"], $bill->id);
+                
                 if ($balance["spend"] > 0) {
-                    $entry = new FinancesEntry([
+
+                    $data = [
+                        "id" => null,
                         "date" => $bill->date,
                         "time" => $bill->time,
                         "description" => $bill->name,
@@ -74,15 +101,25 @@ class BillWriter extends BaseBillWriter {
                         "lat" => $bill->lat,
                         "acc" => $bill->acc,
                         "paymethod" => $balance["paymethod"]
-                    ]);
+                    ];
 
-                    $entry->category = $this->finance_service->getDefaultOrAssignedCategory($balance["user"], $entry);
-                    $this->finance_service->addOrUpdateFromBill($entry);
+                    if(!is_null($finance_entry)){
+                        $data["id"] = $finance_entry->id;
+                        $data["description"] = $finance_entry->description;
+                    }
+
+                    $this->finances_entry_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
                 } else {
-                    $this->finance_service->deleteEntrywithBill($bill->id, $balance["user"]);
+                    if(!is_null($finance_entry)){
+                        $this->finances_entry_remover->delete($finance_entry->id, ["is_bill_based_delete" => true]);
+                    }
                 }
             }
         }
+
+
+        // Reset user back to initial!
+        $this->current_user->setUser($me);
 
         /**
          * Notify Users

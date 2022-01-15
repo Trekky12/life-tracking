@@ -23,7 +23,8 @@ class FinancesRemover extends ObjectActivityRemover {
 
         try {
             $is_splitted = $this->finances_service->isSplittedBillEntry($id);
-            if ($is_splitted) {
+            $is_splitted_bill_deletion = is_array($additionalData) && array_key_exists("is_bill_based_delete", $additionalData) && $additionalData["is_bill_based_delete"];
+            if ($is_splitted && !$is_splitted_bill_deletion) {
                 return new Payload(Payload::$STATUS_ERROR, 'NO_ACCESS');
             } else {
                 return parent::delete($id, $additionalData);

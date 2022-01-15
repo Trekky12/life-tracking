@@ -23,8 +23,8 @@ class AssignmentService extends Service {
         return $this->mapper->getAll('description');
     }
 
-    public function findMatchingCategory($user_id, FinancesEntry $entry) {
-        return $this->mapper->findMatchingCategory($user_id, $entry->description, $entry->value);
+    public function findMatchingCategory(FinancesEntry $entry) {
+        return $this->mapper->findMatchingCategory($entry->user, $entry->description, $entry->value);
     }
 
     public function index() {
