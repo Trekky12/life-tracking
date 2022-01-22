@@ -38,7 +38,7 @@ class ActivityService extends Service {
 
         $user_id = $this->current_user->getUser()->id;
 
-        $activities = $this->mapper->getUserItems("createdOn DESC", $limit, $user_id);
+        $activities = $this->mapper->getUserItems("createdOn DESC, id DESC", $limit, $user_id);
 
         $response_data["data"] = $this->renderTableRows($activities);
         $response_data["count"] = $this->mapper->getCountElementsOfUser($user_id);

@@ -11,6 +11,8 @@ class UserTest extends BaseTestCase {
     protected $uri_save = "/finances/methods/save/";
     protected $uri_delete = "/finances/methods/delete/";
 
+    protected $TEST_ACCOUNT_ID = 1;
+
     protected function setUp(): void {
         $this->login("admin", "admin");
     }
@@ -25,7 +27,7 @@ class UserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<table id="category_table"', $body);
+        $this->assertStringContainsString('<table id="finances_method_table"', $body);
     }
 
     public function testGetAddElement() {
@@ -45,6 +47,7 @@ class UserTest extends BaseTestCase {
         $data = [
             "name" => "Test Paymethod",
             "is_default" => 1,
+            "account" => $this->TEST_ACCOUNT_ID
         ];
 
         $response = $this->request('POST', $this->uri_save, $data);
@@ -108,7 +111,8 @@ class UserTest extends BaseTestCase {
         $data = [
             "id" => $entry_id,
             "name" => "Test Paymethod Updated",
-            "is_default" => 1
+            "is_default" => 1,
+            "account" => $this->TEST_ACCOUNT_ID
         ];
 
         $response = $this->request('POST', $this->uri_save . $entry_id, $data);
@@ -165,7 +169,7 @@ class UserTest extends BaseTestCase {
         $default = $data["is_default"] == 1 ? "x" : "";
 
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>' . $default . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>' . $default . '<\/td>\s*<td>(.*)?<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

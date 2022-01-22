@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20211123" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20220122" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -192,7 +192,11 @@
 {% endif %}
                 'store_query_params': '{{url_for('store_query_params')}}',
 {% if not isBoardView is null %}
-                'boards_data': '{{url_for('boards_data', {'hash': board.hash})}}'
+                'boards_data': '{{url_for('boards_data', {'hash': board.hash})}}',
+{% endif %}
+{% if not hasFinanceTransactionTable is null %}
+                'finances_transaction_table': '{{url_for('finances_transaction_table', {'account': account.getHash()})}}',
+                'finances_transaction_confirm': '{{url_for('finances_transaction_confirm')}}',
 {% endif %}
                     };
                     var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
@@ -268,11 +272,11 @@
         <script src="{{baseURL}}/static/assets/js/moment-with-locales.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/chart.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
-        <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20200609" type="text/javascript"></script>  
+        <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20220122" type="text/javascript"></script>  
 
         <script src="{{baseURL}}/static/js/main.js?ver=20211028" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20211029" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/js/tables.js?ver=20210715" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/tables.js?ver=20220122" type="text/javascript"></script>
 
 
         {% if not user is null %}

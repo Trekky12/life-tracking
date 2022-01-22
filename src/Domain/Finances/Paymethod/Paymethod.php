@@ -11,8 +11,14 @@ class Paymethod extends \App\Domain\DataObject {
         $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
         $this->is_default = $this->exists('is_default', $data) ? filter_var($data['is_default'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
+        $this->account = $this->exists('account', $data) ? filter_var($data['account'], FILTER_SANITIZE_NUMBER_INT) : null;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
+        }
+
+        if (is_null($this->account)) {
+            $this->parsing_errors[] = "ACCOUNT_REQUIRED";
         }
     }
 

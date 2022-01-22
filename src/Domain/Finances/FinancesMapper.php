@@ -249,6 +249,17 @@ class FinancesMapper extends \App\Domain\Mapper {
         }
     }
 
+    public function set_transaction($id, $transaction) {
+        $sql = "UPDATE " . $this->getTableName() . " SET transaction = :transaction WHERE id  = :id";
+        $bindings = array("id" => $id, "transaction" => $transaction);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
     public function statsBudget($budget) {
 
         $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTableName() . " f,   " . $this->getTableName("finances_categories") . " fc,  " . $this->getTableName("finances_budgets_categories") . " fbc "
@@ -318,17 +329,21 @@ class FinancesMapper extends \App\Domain\Mapper {
         return null;
     }
 
-    public function deleteEntrywithBill($bill, $user) {
-        $sql = "DELETE FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
+
+    public function getEntriesFromBill($bill_id) {
+
+        $bindings = ["bill" => $bill_id];
+
+        $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE bill = :bill ";
         $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            "bill" => $bill,
-            "user" => $user
-        ]);
-        if (!$result) {
-            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
         }
-        return true;
+        return $results;
     }
 
     public function statsLastExpenses($limit = 5) {

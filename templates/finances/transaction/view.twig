@@ -1,0 +1,34 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["FINANCES_TRANSACTION"]}}</h2>
+		</div>
+		<div class="page-content">
+
+			<h4>{{lang["DESCRIPTION"]}}</h4>
+			<p>{{entry.description|raw}}</p>
+
+			<h4>{{lang["VALUE"]}}</h4>
+			<p>{{entry.value}}</p>
+
+			<h4>{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</h4>
+			<p>
+				{% if not entry.account_from is null %}
+					{{accounts[entry.account_from].name|raw}}{% else %}-
+				{% endif %}
+			</p>
+
+			<h4>{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</h4>
+			<p>
+				{% if entry.account_to %}
+					{{accounts[entry.account_to].name|raw}}
+					{% else %}-
+				{% endif %}
+			</p>
+		</div>
+	</div>
+{% endblock %}

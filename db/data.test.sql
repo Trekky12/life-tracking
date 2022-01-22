@@ -20,12 +20,19 @@ INSERT INTO global_users (id, login, password, name, role, module_location, modu
 INSERT INTO finances_categories (id, user, name, is_default) VALUES 
 (1, 1, 'not categorized', 1),
 (2, 2, 'not categorized', 1);
-INSERT INTO finances_paymethods (id, user, name, is_default) VALUES 
-(1, 1, 'Test Paymethod', 1),
-(2, 2, 'Test Paymethod', 1); 
+INSERT INTO finances_accounts (id, user, name, value, hash) VALUES 
+(1, 1, 'Test Account', 0, 'ABCabc123'),
+(2, 2, 'Test Account User', 10, 'DEFdef456'),
+(3, 1, 'Test Account 2', 0, 'DEFdef123');
+INSERT INTO finances_paymethods (id, user, name, is_default, account) VALUES 
+(1, 1, 'Test Paymethod', 1, 1),
+(2, 2, 'Test Paymethod', 1, 2); 
+
+INSERT INTO finances_transactions (id, user, date, time, description, value, account_from, account_to) VALUES 
+(1, 1, '2022-01-01', '12:00:00', 'Test Transaction', 10, 1, 3);
 
 INSERT INTO splitbill_groups (id, user, name, hash, add_finances, currency, exchange_rate, exchange_fee) VALUES 
-(1, 1, 'Test splitted bills group', 'ABCabc123', 0, '€', '1', '0'),
+(1, 1, 'Test splitted bills group', 'ABCabc123', 1, '€', '1', '0'),
 (2, 1, 'Test splitted bills group (no access to owner)', 'DEFdef456', 0, '€', '1', '0'),
 (3, 1, 'Test Group Island', 'Opnel5aKBz', 0, 'ISK', '40', '1.75');
 INSERT INTO splitbill_groups_user (sbgroup, user) VALUES 

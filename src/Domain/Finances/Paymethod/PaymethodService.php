@@ -6,12 +6,16 @@ use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
+use App\Domain\Finances\Account\AccountService;
 
 class PaymethodService extends Service {
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, PaymethodMapper $cat_mapper) {
+    private $account_service;
+
+    public function __construct(LoggerInterface $logger, CurrentUser $user, PaymethodMapper $mapper, AccountService $account_service) {
         parent::__construct($logger, $user);
-        $this->mapper = $cat_mapper;
+        $this->mapper = $mapper;
+        $this->account_service = $account_service;
     }
 
     public function getAllPaymethodsOrderedByName() {
@@ -24,12 +28,18 @@ class PaymethodService extends Service {
 
     public function index() {
         $paymethods = $this->getAllPaymethodsOrderedByName();
-        return new Payload(Payload::$RESULT_HTML, ['paymethods' => $paymethods]);
+        $accounts = $this->account_service->getAllAccountsOrderedByName();
+        return new Payload(Payload::$RESULT_HTML, ['paymethods' => $paymethods, 'accounts' => $accounts]);
     }
 
     public function edit($entry_id) {
         $entry = $this->getEntry($entry_id);
-        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
+        $accounts = $this->account_service->getAllAccountsOrderedByName();
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'accounts' => $accounts]);
+    }
+
+    public function getPaymethodOfUser($id, $user_id){
+        return $this->mapper->getofUser($id, $user_id);
     }
 
 }

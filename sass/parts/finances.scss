@@ -5,3 +5,35 @@
         }
     }
 }
+
+.confirm_transaction {
+
+    svg{
+        cursor:pointer;
+    }
+
+    .check-circle {
+        display: inline-block;
+    }
+    .cross-circle{
+        display:none;
+    }
+
+    &.is_confirmed{
+        .check-circle {
+            display: none;
+        }
+        .cross-circle{
+            display:inline-block;
+        }
+    }
+}
+
+#finance_transaction_table {
+    tr[data-confirmed="1"]{
+        color: $color_green;
+    }
+    tr[data-confirmed="0"]{
+        color: $color_orange;
+    }
+}

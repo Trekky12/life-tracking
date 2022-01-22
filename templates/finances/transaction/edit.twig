@@ -1,0 +1,70 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+
+{% block body %}
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["FINANCES_TRANSACTION"]}}</h2>
+            <a href="{% if not account is null %}{{  url_for_with_last_query_params('finances_transaction', {'account': account.getHash()}) }}{% else %}{{  url_for_with_last_query_params('finances_account') }}{% endif %}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+        </div>
+        <div class="page-content">
+
+            <form class="form-horizontal" action="{{  url_for('finances_transaction_save', {'id' : entry.id}) }}{% if not account is null %}?account={{account.getHash()}}{% endif %}" method="POST">
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                {% if not entry is null %}
+                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+                    <input name="is_confirmed" type="hidden" value="{{entry.is_confirmed}}">
+                {% endif %}
+
+
+                <div class="form-group">
+                    <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+                    <input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %}value="{{entry.description|raw}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateSelect">{{lang["DATE"]}}</label>
+                    <input type="text" class="form-control" id="dateSelect" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">  
+                </div>
+                <div class="form-group">
+                    <label for="inputTime">{{lang["TIME"]}}</label>
+                    <input type="time" step="1" class="form-control" id="inputTime" name="time" value="{% if not entry is null %}{{entry.time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputValue">{{lang["VALUE"]}}</label>
+                    <input type="number" class="form-control" id="inputValue" name="value" step="any" value="{% if not entry is null %}{{entry.value}}{% else %}0{% endif %}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="account_from">{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</label>
+                    <select class="form-control" id="account_from" name="account_from" value="{% if not entry is null %}{{entry.account_from}}{% endif %}">
+                        <option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+                        {% for account in accounts %}
+                            <option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_from) %}selected{% endif %}>{{account.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="account_to">{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</label>
+                    <select class="form-control" id="account_to" name="account_to" value="{% if not entry is null %}{{entry.account_to}}{% endif %}">
+                        <option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+                        {% for account in accounts %}
+                            <option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_to) %}selected{% endif %}>{{account.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    {% if not entry is null %}
+                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

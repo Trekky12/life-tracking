@@ -8,18 +8,34 @@ use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Finances\FinancesService;
+use App\Domain\Finances\Transaction\TransactionRemover;
+use App\Domain\Finances\Transaction\TransactionMapper;
 
-class FinancesRemover extends ObjectActivityRemover {
+class FinancesRemover extends ObjectActivityRemover
+{
 
     private $finances_service;
+    private $transaction_remover;
+    private $transaction_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, FinancesMapper $mapper, FinancesService $finances_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        FinancesMapper $mapper,
+        FinancesService $finances_service,
+        TransactionRemover $transaction_remover,
+        TransactionMapper $transaction_mapper
+    ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->finances_service = $finances_service;
+        $this->transaction_remover = $transaction_remover;
+        $this->transaction_mapper = $transaction_mapper;
     }
 
-    public function delete($id, $additionalData = null): Payload {
+    public function delete($id, $additionalData = null): Payload
+    {
 
         try {
             $is_splitted = $this->finances_service->isSplittedBillEntry($id);
@@ -27,24 +43,41 @@ class FinancesRemover extends ObjectActivityRemover {
             if ($is_splitted && !$is_splitted_bill_deletion) {
                 return new Payload(Payload::$STATUS_ERROR, 'NO_ACCESS');
             } else {
+
+                // Get transaction of finance entry
+                $entry = $this->mapper->get($id);
+
+                /**
+                 * Delete Transaction
+                 */
+                if (!is_null($entry->transaction)) {
+                    $me = $this->current_user->getUser();
+                    $this->current_user->setUser(null);
+                    $this->transaction_mapper->setUser($entry->user);
+                    $this->transaction_remover->delete($entry->transaction, ["is_finance_entry_based_delete" => true]);
+                    $this->current_user->setUser($me);
+                    $this->transaction_mapper->setUser($me->id);
+                }
+
                 return parent::delete($id, $additionalData);
             }
         } catch (\Exception $ex) {
-            
         }
         return new Payload(Payload::$STATUS_ERROR, 'ELEMENT_NOT_FOUND');
     }
 
-    public function getObjectViewRoute(): string {
+    public function getObjectViewRoute(): string
+    {
         return 'finances_edit';
     }
 
-    public function getObjectViewRouteParams($entry): array {
+    public function getObjectViewRouteParams($entry): array
+    {
         return ["id" => $entry->id];
     }
 
-    public function getModule(): string {
+    public function getModule(): string
+    {
         return "finances";
     }
-
 }

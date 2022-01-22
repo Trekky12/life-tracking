@@ -60,6 +60,14 @@ $lang["IN"] = "in";
 
 $lang["FINANCES_RECURRING"] = "Recurring Einträge";
 
+$lang["FINANCES_ACCOUNTS"] = "Accounts";
+$lang["FINANCES_ACCOUNT"] = "Account";
+$lang["FINANCES_TRANSACTIONS"] = "Transactions";
+$lang["FINANCES_TRANSACTION"] = "Transaction";
+$lang["FINANCES_TRANSACTION_ACCOUNT_FROM"] = "from account";
+$lang["FINANCES_TRANSACTION_ACCOUNT_TO"] = "to account";
+$lang["FINANCES_TRANSACTION_ADD"] = "add transaction";
+
 $lang["FUEL_FULL"] = "full";
 $lang["FUEL_PARTLY"] = "partly";
 $lang["PRICE"] = "Price";
@@ -114,6 +122,7 @@ $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Category cannot be empty";
 $lang["WRONG_UNIT"] = "Wrong unit";
 $lang["LAST_RUN"] = "Last Run";
 $lang["NEXT_RUN"] = "Next Run";
+$lang["ACCOUNT_REQUIRED"] = "You need to assign an account!";
 
 $lang["USERS"] = "Users";
 $lang["LOGIN"] = "Login";
@@ -530,6 +539,8 @@ $lang["DATAOBJECT_FINANCES_CATEGORY"] = "finance category";
 $lang["DATAOBJECT_FINANCES_ENTRY"] = "finance entry";
 $lang["DATAOBJECT_FINANCES_PAYMETHOD"] = "paymethod";
 $lang["DATAOBJECT_FINANCES_ENTRY_RECURRING"] = "recurring finance entry";
+$lang["DATAOBJECT_FINANCES_ACCOUNT"] = "account";
+$lang["DATAOBJECT_FINANCES_TRANSACTION"] = "transaction";
 $lang["DATAOBJECT_LOCATION_ENTRY"] = "location";
 $lang["DATAOBJECT_NOTIFICATIONS_CATEGORY"] = "notification category";
 $lang["DATAOBJECT_NOTIFICATIONS_CLIENT"] = "notification client";

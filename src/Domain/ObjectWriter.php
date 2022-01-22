@@ -31,12 +31,12 @@ abstract class ObjectWriter {
             unset($data["csrf_value"]);
         }
 
-        $user_id = $this->current_user->getUser()->id;
-        $is_bill_based = is_array($additionalData) && array_key_exists("is_bill_based_save", $additionalData) && $additionalData["is_bill_based_save"];
+        $user = $this->current_user->getUser();
+        $use_user_from_data = is_array($additionalData) && ((array_key_exists("is_bill_based_save", $additionalData) && $additionalData["is_bill_based_save"]) || (array_key_exists("use_user_from_data", $additionalData) && $additionalData["use_user_from_data"]));
         
         // Add user only if not empty (not cron!)
-        if(!is_null($user_id) && !$is_bill_based){
-            $data['user'] = $user_id;
+        if(!is_null($user) && !$use_user_from_data){
+            $data['user'] = $user->id;
         }
 
         $dataobject = $this->getMapper()->getDataObject();

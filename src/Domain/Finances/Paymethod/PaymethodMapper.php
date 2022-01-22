@@ -60,6 +60,20 @@ class PaymethodMapper extends \App\Domain\Mapper {
         return null;
     }
 
+    public function getofUser($id, $user) {
+        $bindings = ["id" => $id, "user" => $user];
+
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE id = :id AND user =:user LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return new $this->dataobject($stmt->fetch());
+        }
+        return null;
+    }
+
     public function getAllfromUsers($users = [], $sorted = false) {
         
         $user_ids = array_keys($users);

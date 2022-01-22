@@ -28,9 +28,10 @@ class FinancesEntry extends \App\Domain\DataObject {
         $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->bill = $this->exists('bill', $data) ? filter_var($data['bill'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->bill_paid = $this->exists('bill_paid', $data) ? filter_var($data['bill_paid'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
-
+        $this->transaction = $this->exists('transaction', $data) ? filter_var($data['transaction'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         if (is_null($this->bill)) {
             /**
@@ -93,7 +94,10 @@ class FinancesEntry extends \App\Domain\DataObject {
             return $temp;
         }
 
-        return parent::get_fields($remove_user_element, $insert, $update);
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+        unset($temp["transaction"]);
+
+        return $temp;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

@@ -1,0 +1,52 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block javascript %}
+    <script src="{{baseURL}}/static/js/transactions.js?ver=20220122"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["FINANCES_TRANSACTIONS"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for_with_last_query_params('finances_account') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('finances_transaction_edit') }}?account={{account.getHash()}}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["FINANCES_TRANSACTION_ADD"]}}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+            <table id="finance_transaction_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>{{lang["DATE"]}}</th>
+                        <th>{{lang["TIME"]}}</th>
+                        <th>{{lang["DESCRIPTION"]}}</th>
+                        <th>{{lang["VALUE"]}}</th>
+                        <th>{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</th>
+                        <th>{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in list %}
+                        <tr data-confirmed="{{entry["attributes"]["data-confirmed"]}}">
+                            <td>{{ entry["data"][0]|raw }}</td> 
+                            <td>{{ entry["data"][1] }}</td> 
+                            <td>{{ entry["data"][2] }}</td> 
+                            <td>{{ entry["data"][3] }}</td> 
+                            <td>{{ entry["data"][4] }}</td> 
+                            <td>{{ entry["data"][5] }}</td> 
+                            <td>{{ entry["data"][6] }}</td> 
+                            <td>{{ entry["data"][7]|raw }}</td> 
+                            <td>{{ entry["data"][8]|raw }}</td> 
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

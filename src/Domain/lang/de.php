@@ -60,6 +60,14 @@ $lang["IN"] = "in";
 
 $lang["FINANCES_RECURRING"] = "Regelmäßige Einträge";
 
+$lang["FINANCES_ACCOUNTS"] = "Konten";
+$lang["FINANCES_ACCOUNT"] = "Konto";
+$lang["FINANCES_TRANSACTIONS"] = "Buchungen";
+$lang["FINANCES_TRANSACTION"] = "Buchung";
+$lang["FINANCES_TRANSACTION_ACCOUNT_FROM"] = "vom Konto";
+$lang["FINANCES_TRANSACTION_ACCOUNT_TO"] = "auf Konto";
+$lang["FINANCES_TRANSACTION_ADD"] = "Buchung hinzufügen";
+
 $lang["FUEL_FULL"] = "vollgetankt";
 $lang["FUEL_PARTLY"] = "nachgetankt";
 $lang["PRICE"] = "Preis";
@@ -114,6 +122,7 @@ $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Die Kategorie muss eingetragen werden";
 $lang["WRONG_UNIT"] = "Falsche Einheit";
 $lang["LAST_RUN"] = "Letzter Lauf";
 $lang["NEXT_RUN"] = "Nächster Lauf";
+$lang["ACCOUNT_REQUIRED"] = "Die Angabe eines Kontos ist erforderlich!";
 
 $lang["USERS"] = "Benutzer";
 $lang["LOGIN"] = "Benutzername";
@@ -529,6 +538,8 @@ $lang["DATAOBJECT_FINANCES_CATEGORY"] = "Finanzkategorie";
 $lang["DATAOBJECT_FINANCES_ENTRY"] = "Finanzeintrag";
 $lang["DATAOBJECT_FINANCES_PAYMETHOD"] = "Zahlungsmethode";
 $lang["DATAOBJECT_FINANCES_ENTRY_RECURRING"] = "wiederkehrender Finanzeintrag";
+$lang["DATAOBJECT_FINANCES_ACCOUNT"] = "Konto";
+$lang["DATAOBJECT_FINANCES_TRANSACTION"] = "Buchung";
 $lang["DATAOBJECT_LOCATION_ENTRY"] = "Standort";
 $lang["DATAOBJECT_NOTIFICATIONS_CATEGORY"] = "Benachrichtigungskategorie";
 $lang["DATAOBJECT_NOTIFICATIONS_CLIENT"] = "Benachrichtigungsclient";

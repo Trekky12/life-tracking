@@ -1,0 +1,38 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["FINANCES_ACCOUNTS"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('finances_account_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+                                <a href="{{  url_for('finances_transaction_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["FINANCES_TRANSACTION_ADD"]}}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+            <table id="finances_account_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["NAME"]}}</th>
+                        <th>{{lang["VALUE"]}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                        <tr>
+                            <td><a href="{{ url_for('finances_transaction', {'account': account.getHash()}) }}">{{account.name|raw}}</a></td> 
+                            <td>{{account.value}}</td> 
+                            <td><a href="{{  url_for('finances_account_edit', {'id' : account.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="#" data-url="{{  url_for('finances_account_delete', {'id' : account.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

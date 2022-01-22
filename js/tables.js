@@ -136,6 +136,78 @@ var financesRecurringTable = new JSTable("#recurring_table", {
     ]
 });
 
+var financesAccountTable = new JSTable("#finances_account_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: 1,
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data + " " + i18n.currency;
+            }
+        },
+        {
+            select: [2, 3],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var financesMethodTable = new JSTable("#finances_method_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [3, 4],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var financeTransactionTable = new JSTable('#finance_transaction_table', {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 1,
+            sortable: true,
+            sort: "desc",
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return moment(data).format(i18n.dateformatJS.date);
+            }
+        },
+        {
+            select: 4,
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data + " " + i18n.currency;
+            }
+        },
+        {
+            select: [7, 8],
+            sortable: false,
+            searchable: false
+        }
+    ],
+    deferLoading: jsObject.datacount,
+    serverSide: true,
+    ajax: jsObject.finances_transaction_table
+});
+
 var usersTable = new JSTable("#users_table", {
     perPage: 10,
     labels: tableLabels,
