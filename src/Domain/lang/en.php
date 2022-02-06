@@ -492,6 +492,7 @@ $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "no time calculation modification";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "use the time conversion rate of the project";
+$lang["TIMESHEETS_DURATION_DEFAULT"] = "default duration";
 $lang["TIMESHEETS_CATEGORY_ASSIGN"] = "assign";
 $lang["TIMESHEETS_CATEGORY_REMOVE"] = "remove";
 $lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"] = "1. warning (yellow)";
@@ -758,5 +759,8 @@ $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "The inserted passwo
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "There is no password for the encryption set!";
 
 $lang["PRINT"] = "Print";
+
+$lang["FINANCES_ROUND_UP_SAVINGS"] = "Round up savings";
+$lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "round up savings disabled";
 
 return $lang;

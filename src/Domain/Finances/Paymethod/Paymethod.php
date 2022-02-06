@@ -13,6 +13,9 @@ class Paymethod extends \App\Domain\DataObject {
 
         $this->account = $this->exists('account', $data) ? filter_var($data['account'], FILTER_SANITIZE_NUMBER_INT) : null;
 
+        $this->round_up_savings = $this->exists('round_up_savings', $data) ? intval(filter_var($data['round_up_savings'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+        $this->round_up_savings_account = $this->exists('round_up_savings_account', $data) ? filter_var($data['round_up_savings_account'], FILTER_SANITIZE_NUMBER_INT) : null;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }

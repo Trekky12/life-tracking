@@ -125,9 +125,12 @@ CREATE TABLE finances_paymethods (
     name varchar(255) DEFAULT NULL,
     is_default int(1) DEFAULT 0,
     account int(11) UNSIGNED DEFAULT NULL,
+    round_up_savings int(1) DEFAULT 0,
+    round_up_savings_account int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(account) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY(account) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(round_up_savings_account) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS finances_recurring;
@@ -742,12 +745,14 @@ CREATE TABLE finances (
     bill_paid DECIMAL(10,2) DEFAULT NULL,
     paymethod int(11) UNSIGNED DEFAULT NULL,
     transaction int(11) UNSIGNED DEFAULT NULL,
+    transaction_round_up_savings int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(transaction) REFERENCES finances_transactions(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(transaction_round_up_savings) REFERENCES finances_transactions(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

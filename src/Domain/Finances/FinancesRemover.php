@@ -50,14 +50,17 @@ class FinancesRemover extends ObjectActivityRemover
                 /**
                  * Delete Transaction
                  */
+                $me = $this->current_user->getUser();
+                $this->current_user->setUser(null);
+                $this->transaction_mapper->setUser($entry->user);
                 if (!is_null($entry->transaction)) {
-                    $me = $this->current_user->getUser();
-                    $this->current_user->setUser(null);
-                    $this->transaction_mapper->setUser($entry->user);
                     $this->transaction_remover->delete($entry->transaction, ["is_finance_entry_based_delete" => true]);
-                    $this->current_user->setUser($me);
-                    $this->transaction_mapper->setUser($me->id);
                 }
+                if (!is_null($entry->transaction_round_up_savings)) {
+                    $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
+                }
+                $this->current_user->setUser($me);
+                $this->transaction_mapper->setUser($me->id);
 
                 return parent::delete($id, $additionalData);
             }

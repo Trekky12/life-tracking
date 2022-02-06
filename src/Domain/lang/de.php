@@ -491,6 +491,7 @@ $lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Zeit (sek.)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "keine Anpassung der Zeit";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "nutze die Zeitumrechnungsrate des Projekts";
+$lang["TIMESHEETS_DURATION_DEFAULT"] = "Standarddauer";
 $lang["TIMESHEETS_CATEGORY_ASSIGN"] = "zuweisen";
 $lang["TIMESHEETS_CATEGORY_REMOVE"] = "entfernen";
 $lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"] = "1. Warnung (gelb)";
@@ -757,5 +758,8 @@ $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Pas
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "Es wurde noch kein Passwort für die Verschlüsselung vergeben!";
 
 $lang["PRINT"] = "Drucken";
+
+$lang["FINANCES_ROUND_UP_SAVINGS"] = "Kleingeldsparen";
+$lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "Kleingeldsparen deaktiviert";
 
 return $lang;

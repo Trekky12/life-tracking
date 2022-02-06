@@ -12,6 +12,7 @@ use App\Domain\Finances\FinancesService;
 use App\Domain\Finances\Transaction\TransactionWriter;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Domain\Finances\Transaction\TransactionMapper;
+use App\Domain\Main\Translator;
 
 class FinancesWriter extends ObjectActivityWriter
 {
@@ -21,6 +22,7 @@ class FinancesWriter extends ObjectActivityWriter
     private $paymethod_service;
     private $transaction_writer;
     private $transaction_mapper;
+    private $translation;
 
     public function __construct(
         LoggerInterface $logger,
@@ -31,7 +33,8 @@ class FinancesWriter extends ObjectActivityWriter
         BudgetService $budget_service,
         PaymethodService $paymethod_service,
         TransactionWriter $transaction_writer,
-        TransactionMapper $transaction_mapper
+        TransactionMapper $transaction_mapper,
+        Translator $translation
     ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
@@ -40,6 +43,7 @@ class FinancesWriter extends ObjectActivityWriter
         $this->paymethod_service = $paymethod_service;
         $this->transaction_writer = $transaction_writer;
         $this->transaction_mapper = $transaction_mapper;
+        $this->translation = $translation;
     }
 
     public function save($id, $data, $additionalData = null): Payload
@@ -103,6 +107,35 @@ class FinancesWriter extends ObjectActivityWriter
                 $transaction_entry = $transaction_payload->getResult();
                 $this->getMapper()->set_transaction($entry->id, $transaction_entry->id);
                 $entry->transaction = $transaction_entry->id;
+
+                /**
+                 * Round up savings
+                 */
+                if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0 && $entry->type == 0) {
+                    
+                    $value = is_null($entry->bill) ? $entry->value : $entry->bill_paid;
+                    $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
+                    
+                    $data2 = [
+                        "date" => $entry->date,
+                        "time" => $entry->time,
+                        "value" => $saving,
+                        "account_from" => $paymethod->account,
+                        "account_to" => $paymethod->round_up_savings_account,
+                        "description" => sprintf("%s %s", $this->translation->getTranslatedString("FINANCES_ROUND_UP_SAVINGS"), $entry->description),
+                        "user" => $entry->user,
+                        "finance_entry" => $entry->id,
+                        "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
+                        "id" => !is_null($entry->transaction_round_up_savings) ? $entry->transaction_round_up_savings : null
+                    ];
+
+                    $transaction_round_up_savings_payload = $this->transaction_writer->save($data2["id"], $data2, ["is_finance_entry_based_save" => true]);
+                    $transaction_round_up_savings_entry = $transaction_round_up_savings_payload->getResult();
+                    $this->getMapper()->set_transaction_round_up_savings($entry->id, $transaction_round_up_savings_entry->id);
+                    $entry->transaction_round_up_savings = $transaction_round_up_savings_entry->id;
+                        
+                }
+
             }
         }
         // Reset user back to initial!
