@@ -12,6 +12,7 @@ use App\Domain\Finances\FinancesService;
 use App\Domain\Finances\Transaction\TransactionWriter;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Domain\Finances\Transaction\TransactionMapper;
+use App\Domain\Finances\Transaction\TransactionRemover;
 use App\Domain\Main\Translator;
 
 class FinancesWriter extends ObjectActivityWriter
@@ -22,6 +23,7 @@ class FinancesWriter extends ObjectActivityWriter
     private $paymethod_service;
     private $transaction_writer;
     private $transaction_mapper;
+    private $transaction_remover;
     private $translation;
 
     public function __construct(
@@ -34,6 +36,7 @@ class FinancesWriter extends ObjectActivityWriter
         PaymethodService $paymethod_service,
         TransactionWriter $transaction_writer,
         TransactionMapper $transaction_mapper,
+        TransactionRemover $transaction_remover,
         Translator $translation
     ) {
         parent::__construct($logger, $user, $activity);
@@ -43,6 +46,7 @@ class FinancesWriter extends ObjectActivityWriter
         $this->paymethod_service = $paymethod_service;
         $this->transaction_writer = $transaction_writer;
         $this->transaction_mapper = $transaction_mapper;
+        $this->transaction_remover = $transaction_remover;
         $this->translation = $translation;
     }
 
@@ -133,10 +137,17 @@ class FinancesWriter extends ObjectActivityWriter
                     $transaction_round_up_savings_entry = $transaction_round_up_savings_payload->getResult();
                     $this->getMapper()->set_transaction_round_up_savings($entry->id, $transaction_round_up_savings_entry->id);
                     $entry->transaction_round_up_savings = $transaction_round_up_savings_entry->id;
-                        
                 }
-
             }
+            
+                /**
+                 * If paymethod was changed and the new paymethod doesn't have round up saving, delete the corresponding transaction
+                 */
+                if ($paymethod->round_up_savings == 0 && !is_null($entry->transaction_round_up_savings)) {
+                    $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
+                    $this->getMapper()->set_transaction_round_up_savings($entry->id, null);
+                    $entry->transaction_round_up_savings = null;
+                }
         }
         // Reset user back to initial!
         if(!is_null($me)){
