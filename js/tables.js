@@ -880,7 +880,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
             sort: "asc"
         },
         {
-            select: [1, 2, 3, 4, 5],
+            select: [1, 2, 3, 4, 5, 6],
             sortable: false,
             searchable: false
         }
@@ -1118,7 +1118,7 @@ var recipesIngredientsTable = new JSTable("#recipes_ingredients_table", {
     ]
 });
 
-var recipesMealplanssTable = new JSTable("#recipes_mealplans_table", {
+var noticefieldsTable = new JSTable("#noticefields_table", {
     perPage: 10,
     labels: tableLabels,
     columns: [
@@ -1134,3 +1134,4 @@ var recipesMealplanssTable = new JSTable("#recipes_mealplans_table", {
         }
     ]
 });
+

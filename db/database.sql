@@ -992,6 +992,24 @@ SELECT id, createdOn, changedOn, createdBy, changedBy, notice
 FROM timesheets_sheets
 */
 
+DROP TABLE IF EXISTS timesheets_noticefields;
+CREATE TABLE timesheets_noticefields (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    project INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    name varchar(255) NOT NULL,
+    description varchar(255) DEFAULT NULL,
+    datatype varchar(20) DEFAULT NULL,
+    initialization TEXT DEFAULT NULL,
+    position INT(10) NULL,
+    is_default int(1) DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS activities;
 CREATE TABLE activities (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

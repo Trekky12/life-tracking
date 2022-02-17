@@ -466,6 +466,13 @@ return function (App $app) {
 
                 $group_category_budget->get('/view/', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetViewAction::class)->setName('timesheets_project_categorybudget_view');
             });
+
+            $group_project->group('/noticefields', function (RouteCollectorProxy $group_noticefields) {
+                $group_noticefields->get('/', \App\Application\Action\Timesheets\NoticeField\NoticeFieldListAction::class)->setName('timesheets_noticefields');
+                $group_noticefields->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\NoticeField\NoticeFieldEditAction::class)->setName('timesheets_noticefields_edit');
+                $group_noticefields->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\NoticeField\NoticeFieldSaveAction::class)->setName('timesheets_noticefields_save');
+                $group_noticefields->delete('/delete/{id}', \App\Application\Action\Timesheets\NoticeField\NoticeFieldDeleteAction::class)->setName('timesheets_noticefields_delete');
+            });
         });
     });
 

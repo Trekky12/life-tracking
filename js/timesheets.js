@@ -27,14 +27,7 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "time_24hr": true,
         "minuteIncrement": 1,
         "onChange": function (selectedDates) {
-            if (dateTimePickerEnd.dataset.saved != "1") {
-                let default_duration = dateTimePickerEnd.dataset.defaultDuration;
-                let selectedDate = selectedDates[0];
-                if (default_duration > 0) {
-                    selectedDate.setSeconds(selectedDate.getSeconds() + default_duration);
-                }
-                dateTimePickerEnd._flatpickr.setDate(selectedDate);
-            }
+            setEndDate();
         }
     });
 
@@ -47,6 +40,19 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "time_24hr": true,
         "minuteIncrement": 1
     });
+    setEndDate();
+    
+}
+
+function setEndDate(){
+    if (dateTimePickerEnd.dataset.saved != "1") {
+        let default_duration = dateTimePickerEnd.dataset.defaultDuration;
+        let selectedDate = dateTimePickerStart._flatpickr.selectedDates[0];
+        if (default_duration > 0) {
+            selectedDate.setSeconds(selectedDate.getSeconds() + default_duration);
+        }
+        dateTimePickerEnd._flatpickr.setDate(selectedDate);
+    }
 }
 
 const radioDurationCustomModification = document.getElementById('radioDurationCustom');

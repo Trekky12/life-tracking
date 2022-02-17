@@ -85,6 +85,9 @@ INSERT INTO timesheets_categorybudgets_categories (categorybudget, category) VAL
 INSERT INTO timesheets_sheets_notices (id, sheet) VALUES
 (1, 1),
 (2, 3);
+INSERT INTO timesheets_noticefields (id, project, name) VALUES 
+(1, 1, 'Test timesheets notice field 1'),
+(2, 2, 'Test timesheets notice field 3');
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 

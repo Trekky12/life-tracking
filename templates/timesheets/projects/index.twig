@@ -20,6 +20,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,9 @@
                             </td>
                             <td>
                                 <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>
+                            </td>
+                            <td>
+                                <a href="{{  url_for('timesheets_noticefields', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICEFIELDS"]}}</a>
                             </td>                            
                             <td>
                                 {% if project.user == user.id %}

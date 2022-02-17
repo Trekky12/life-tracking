@@ -1,0 +1,77 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+
+{% block body %}
+
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS_NOTICEFIELDS"]}}
+				|
+				{{ project.name }}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets_noticefields', {'project': project.hash})}}">
+					<button class="white">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
+
+			<form class="form-horizontal" action="{{ url_for('timesheets_noticefields_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
+
+				<div class="form-group">
+					<label for="inputName">{{lang["NAME"]}}</label>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
+				</div>
+
+				<div class="form-group">
+                    <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+					<input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %} value="{{entry.description|raw}}" {% endif %}>
+                </div>
+
+				<div class="form-group">
+					<label for="inputPosition">{{lang["POSITION"]}}</label>
+					<input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
+				</div>
+
+				<div class="form-group">
+					<label for="datatype">{{lang["DATA_TYPE"]}}</label>
+					<select class="form-control" id="datatype" name="datatype">
+						{% for key, name in dataTypes %}
+							<option value="{{key}}" {% if not entry is null and key == entry.datatype %} selected {% endif %}>{{lang[name]}}</option>
+						{% endfor %}
+					</select>
+					<label for="initialization">{{lang["DATATYPE_INITIALIZATION"]}}</label>
+					<textarea class="form-control" id="initialization" name="initialization">{% if entry %}{{entry.initialization}}{% endif %}</textarea>
+			</div>
+
+			<div class="form-group">
+				<label class="checkbox" for="checkboxDefault">
+					<input name="is_default" type="checkbox" value="1" id="checkboxDefault" {% if entry is not null and entry.is_default == 1 %} checked {% endif %}>
+					{{lang["DEFAULT"]}}
+				</label>
+			</div>
+
+			<div class="form-group btn">
+				<button type="submit">
+					{% if not entry is null %}
+						{{lang["SAVE"]}}
+					{% else %}
+						{{lang["INSERT"]}}
+					{% endif %}
+				</button>
+				{% if not entry is null %}
+					<button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+				{% endif %}
+			</div>
+		</form>
+	</div>
+</div>{% endblock %}

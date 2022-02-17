@@ -570,6 +570,7 @@ $lang["DATAOBJECT_RECIPES_INGREDIENT"] = "ingredient";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
+$lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "notice field";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -757,6 +758,12 @@ $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "The password ha
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Insert the encryption password:";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "The inserted password is wrong.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "There is no password for the encryption set!";
+
+$lang["TIMESHEETS_NOTICEFIELDS"] = "Notice fields";
+$lang["DATATYPE_TEXTFIELD"] = "textfield";
+$lang["DATATYPE_TEXTAREA"] = "textarea";
+$lang["DATATYPE_SELECT"] = "dropdown";
+$lang["DATATYPE_INITIALIZATION"] = "Initialization (Dropdown)";
 
 $lang["PRINT"] = "Print";
 

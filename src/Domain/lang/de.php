@@ -569,6 +569,7 @@ $lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
+$lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "Feld für Notizen";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -756,6 +757,12 @@ $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "Das Passwort wu
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Passwort für die Verschlüsselung eingeben:";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Passwort ist falsch.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "Es wurde noch kein Passwort für die Verschlüsselung vergeben!";
+
+$lang["TIMESHEETS_NOTICEFIELDS"] = "Felder für Notizen";
+$lang["DATATYPE_TEXTFIELD"] = "Textfeld";
+$lang["DATATYPE_TEXTAREA"] = "Textbereich";
+$lang["DATATYPE_SELECT"] = "Dropdown";
+$lang["DATATYPE_INITIALIZATION"] = "Initialisierung (Dropdown)";
 
 $lang["PRINT"] = "Drucken";
 

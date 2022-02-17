@@ -8,6 +8,7 @@ use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
+use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
@@ -18,12 +19,14 @@ class SheetExportService extends Service {
     private $project_service;
     private $settings;
     private $sheet_notice_mapper;
+    private $notice_fields_service;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             SheetMapper $mapper,
             ProjectService $project_service,
             SheetNoticeMapper $sheet_notice_mapper,
+            NoticeFieldService $notice_fields_service,
             Settings $settings,
             Translator $translation) {
         parent::__construct($logger, $user);
@@ -32,6 +35,7 @@ class SheetExportService extends Service {
         $this->settings = $settings;
         $this->translation = $translation;
         $this->sheet_notice_mapper = $sheet_notice_mapper;
+        $this->notice_fields_service = $notice_fields_service;
     }
 
     public function export($hash, $data) {
@@ -371,7 +375,8 @@ class SheetExportService extends Service {
         $response = [
             "project" => $project,
             "hasTimesheetNotice" => true,
-            "sheets" => $sheets
+            "sheets" => $sheets,
+            "fields" => $this->notice_fields_service->getNoticeFields($project->id)
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);

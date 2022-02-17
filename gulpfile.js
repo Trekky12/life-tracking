@@ -104,6 +104,7 @@ function copyJSTask(cb) {
             './node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
             './node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js',
             './node_modules/hammerjs/hammer.min.js',
+            './node_modules/file-saver/dist/FileSaver.min.js'
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
@@ -282,6 +283,17 @@ function replaceAutocompleteIcons(cb){
         .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
+function copyDOCXJS(cb) {
+    return gulp
+        .src( [ 
+            './node_modules/docx/build/index.js'
+            ] )
+         // remove source map
+        //.pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
+        .pipe( rename("docxjs.min.js") )
+        .pipe( gulp.dest( 'public/static/assets/js' ) );
+}
+
 function printError( error ) {
     console.log( '---- Error ----' );
     console.log( "message", error.cause.message );
@@ -298,7 +310,7 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontsFontAwesome5SVG);
+exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontsFontAwesome5SVG, copyDOCXJS);
 
 exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);
 exports.test = copyFontsFontAwesome5SVG;
