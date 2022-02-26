@@ -158,7 +158,9 @@ if (timesheetNoticeForm) {
             let notice = {};
             for (const field of notice_fields) {
                 if (field.tagName && field.tagName.toLowerCase() === "select") {
-                    notice[field.name] = field.options[field.selectedIndex].text;
+                    if(field.selectedIndex >= 0) {
+                        notice[field.name] = field.options[field.selectedIndex].text;
+                    }
                 } else {
                     notice[field.name] = field.value;
                 }
@@ -373,7 +375,7 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
                 underline: {}
             })];
 
-            let content = field_element.tagName.toLowerCase() === "p" ? field_element.innerHTML.replace(/<br ?\/?>/g, "\n") : field_element.value;
+            let content = field_element.tagName.toLowerCase() === "p" ? field_element.innerHTML.replace(/<br ?\/?>/g, "\n").replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<") : field_element.value;
             const textRuns = content.split("\n").map(line => new docx.TextRun({ text: line, break: 1 }));
             notices.push(...textRuns);
             const value = new docx.Paragraph({
