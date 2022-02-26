@@ -69,6 +69,8 @@ class SheetService extends Service {
 
         $response_data["categories_selected"] = $selected_categories;
 
+        $response_data["categories_selected_query"] = ["categories" => $selected_categories];
+
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
@@ -293,7 +295,7 @@ class SheetService extends Service {
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
     }
 
-    public function showExport($hash, $from, $to) {
+    public function showExport($hash, $from, $to, $selected_categories) {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
@@ -306,7 +308,8 @@ class SheetService extends Service {
             "project" => $project,
             "categories" => $project_categories,
             "from" => $from,
-            "to" => $to
+            "to" => $to,
+            "categories_selected" => $selected_categories
         ]);
     }
 
