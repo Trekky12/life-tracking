@@ -8,6 +8,7 @@ class BanMapper extends \App\Domain\Mapper {
     protected $dataobject = \App\Domain\DataObject::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
+    protected $id = 'ip';
 
     public function getBlockedIPAdresses($attempts = 2) {
         $sql = "SELECT COUNT(ip) as attempts, createdOn, ip, username, changedOn FROM " . $this->getTableName() . " GROUP BY ip HAVING COUNT(ip) > :attempts ";
