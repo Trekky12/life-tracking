@@ -21,9 +21,9 @@ class LoginAction {
 
         $data = $request->getParsedBody();
 
-        $token = $this->service->login($data);
+        $payload = $this->service->login($data);
 
-        return $this->responder->respond($token);
+        return $this->responder->respond($payload);
     }
 
 }

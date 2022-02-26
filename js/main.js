@@ -149,6 +149,14 @@ function initialize() {
             window.history.back();
         });
     }
+    
+    if (document.body.classList.contains("login")) {
+        // Delete IndexedDBs
+        if (!('indexedDB' in window)) {
+            return;
+        }
+        window.indexedDB.deleteDatabase('lifeTrackingData');
+    }
 
     /**
      * Delete

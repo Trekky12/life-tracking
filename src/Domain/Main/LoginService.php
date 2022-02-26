@@ -14,6 +14,7 @@ use App\Domain\User\UserService;
 use App\Domain\User\Token\TokenService;
 use App\Domain\User\ApplicationPasswords\ApplicationPasswordMapper;
 use RobThree\Auth\TwoFactorAuth;
+use App\Application\Payload\Payload;
 
 class LoginService {
 
@@ -166,16 +167,17 @@ class LoginService {
         $username = array_key_exists('username', $data) ? filter_var($data['username'], FILTER_SANITIZE_STRING) : null;
         $password = array_key_exists('password', $data) ? filter_var($data['password'], FILTER_SANITIZE_STRING) : null;
         $code = array_key_exists('code', $data) ? filter_var($data['code'], FILTER_SANITIZE_STRING) : null;
+        $remember = array_key_exists('remember', $data) ? intval(filter_var($data['remember'], FILTER_SANITIZE_NUMBER_INT)) > 0 : false;
 
         if ($this->checkLogin($username, $password, $code)) {
             $token = $this->saveToken();
 
-            return $token;
+            return new Payload(Payload::$RESULT_ARRAY, ["token" => $token, "remember" => $remember]);
         }
 
         $this->addBan($username);
 
-        return false;
+        return new Payload(Payload::$RESULT_ARRAY, ["token" => false, "remember" => $remember]);
     }
 
     public function addBan($username) {

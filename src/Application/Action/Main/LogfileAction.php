@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Main;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Main\LogService;
 use App\Application\Responder\HTMLTemplateResponder;

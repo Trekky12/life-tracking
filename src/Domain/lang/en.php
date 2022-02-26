@@ -620,6 +620,8 @@ $lang["TWOFACTOR_TEXT"] = "Please scan the QR-Code or insert the secret in the T
 $lang["TWOFACTOR_CODE"]= "Code";
 $lang["TWOFACTOR_AUTHENTICATION"]= "Two Factor Authentication";
 
+$lang["REMEMBER_LOGIN"] = "Remember login";
+
 $lang["WIDGETS"] = "widgets";
 $lang["WIDGET_OPTIONS"] = "widget options";
 $lang["FRONTPAGE"] = "Frontpage";

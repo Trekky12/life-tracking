@@ -619,6 +619,8 @@ $lang["TWOFACTOR_TEXT"] = "Bitte den QR-Code einscannen oder das Geheimnis in di
 $lang["TWOFACTOR_CODE"]= "Code";
 $lang["TWOFACTOR_AUTHENTICATION"]= "Zweifaktorauthentifizierung";
 
+$lang["REMEMBER_LOGIN"] = "Anmeldung merken";
+
 $lang["WIDGETS"] = "Widgets";
 $lang["WIDGET_OPTIONS"] = "Widget Einstellungen";
 $lang["FRONTPAGE"] = "Startseite";
