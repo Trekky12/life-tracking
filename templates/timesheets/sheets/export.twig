@@ -36,7 +36,7 @@
                 </div>
                 {% if categories %}
                     <div class="categories-filter form-group">
-                        <select id="category-filter" multiple name="categories[]" class="category">
+                        <select id="category-filter" multiple name="categories[]" class="category" autocomplete="off">
                             {% for cat in categories %}
                                 <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
                             {% endfor %}
