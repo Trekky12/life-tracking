@@ -130,45 +130,28 @@ class BillWriter extends BaseBillWriter
 
                         $this->finances_entry_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
                     } else {
+
+                        // Entry was updated and the user has no longer "paid" something? => delete the corresponding finance entry of the user
                         if (!is_null($finance_entry)) {
                             $this->finances_entry_remover->delete($finance_entry->id, ["is_bill_based_delete" => true]);
                         }
+
+                        // Splitted bill was paid by the user but not spend by him? => Create only transaction
+                        $this->createTransaction($balance, $bill);
                     }
                 } else {
-                    $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id);
-
-                    if ($balance["paid"] > 0) {
-                        $data = [
-                            "id" => null,
-                            "date" => $bill->date,
-                            "time" => $bill->time,
-                            "description" => $bill->name,
-                            "value" => $balance["paid"],
-                            "user" => $balance["user"],
-                            "bill_entry" => $bill->id,
-                            "account_from" => $balance["paymethod"],
-                            "account_to" => null
-                        ];
-
-                        if (!is_null($transaction_entry)) {
-                            $data["id"] = $transaction_entry->id;
-                            $data["description"] = $transaction_entry->description;
-                        }
-
-                        $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
-                    } else {
-                        if (!is_null($transaction_entry)) {
-                            $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);
-                        }
-                    }
+                    // Create settle up transaction
+                    $this->createTransaction($balance, $bill);
                 }
             }
         }
 
         // Reset user back to initial!
-        $this->current_user->setUser($me);
-        $this->finance_mapper->setUser($me->id);
-        $this->transaction_mapper->setUser($me->id);
+        if(!is_null($me)){
+            $this->current_user->setUser($me);
+            $this->finance_mapper->setUser($me->id);
+            $this->transaction_mapper->setUser($me->id);
+        }
 
         /**
          * Notify Users
@@ -201,5 +184,34 @@ class BillWriter extends BaseBillWriter
     public function getModule(): string
     {
         return "splitbills";
+    }
+
+    private function createTransaction($balance, $bill){
+        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id);
+
+        if ($balance["paid"] > 0) {
+            $data = [
+                "id" => null,
+                "date" => $bill->date,
+                "time" => $bill->time,
+                "description" => $bill->name,
+                "value" => $balance["paid"],
+                "user" => $balance["user"],
+                "bill_entry" => $bill->id,
+                "account_from" => $balance["paymethod"],
+                "account_to" => null
+            ];
+
+            if (!is_null($transaction_entry)) {
+                $data["id"] = $transaction_entry->id;
+                $data["description"] = $transaction_entry->description;
+            }
+
+            $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
+        } else {
+            if (!is_null($transaction_entry)) {
+                $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);
+            }
+        }
     }
 }

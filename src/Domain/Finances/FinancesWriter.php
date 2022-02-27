@@ -120,23 +120,25 @@ class FinancesWriter extends ObjectActivityWriter
                     $value = is_null($entry->bill) ? $entry->value : $entry->bill_paid;
                     $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
                     
-                    $data2 = [
-                        "date" => $entry->date,
-                        "time" => $entry->time,
-                        "value" => $saving,
-                        "account_from" => $paymethod->account,
-                        "account_to" => $paymethod->round_up_savings_account,
-                        "description" => sprintf("%s %s", $this->translation->getTranslatedString("FINANCES_ROUND_UP_SAVINGS"), $entry->description),
-                        "user" => $entry->user,
-                        "finance_entry" => $entry->id,
-                        "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
-                        "id" => !is_null($entry->transaction_round_up_savings) ? $entry->transaction_round_up_savings : null
-                    ];
+                    if($saving > 0){
+                        $data2 = [
+                            "date" => $entry->date,
+                            "time" => $entry->time,
+                            "value" => $saving,
+                            "account_from" => $paymethod->account,
+                            "account_to" => $paymethod->round_up_savings_account,
+                            "description" => sprintf("%s %s", $this->translation->getTranslatedString("FINANCES_ROUND_UP_SAVINGS"), $entry->description),
+                            "user" => $entry->user,
+                            "finance_entry" => $entry->id,
+                            "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
+                            "id" => !is_null($entry->transaction_round_up_savings) ? $entry->transaction_round_up_savings : null
+                        ];
 
-                    $transaction_round_up_savings_payload = $this->transaction_writer->save($data2["id"], $data2, ["is_finance_entry_based_save" => true]);
-                    $transaction_round_up_savings_entry = $transaction_round_up_savings_payload->getResult();
-                    $this->getMapper()->set_transaction_round_up_savings($entry->id, $transaction_round_up_savings_entry->id);
-                    $entry->transaction_round_up_savings = $transaction_round_up_savings_entry->id;
+                        $transaction_round_up_savings_payload = $this->transaction_writer->save($data2["id"], $data2, ["is_finance_entry_based_save" => true]);
+                        $transaction_round_up_savings_entry = $transaction_round_up_savings_payload->getResult();
+                        $this->getMapper()->set_transaction_round_up_savings($entry->id, $transaction_round_up_savings_entry->id);
+                        $entry->transaction_round_up_savings = $transaction_round_up_savings_entry->id;
+                    }
                 }
             }
             

@@ -59,8 +59,11 @@ class FinancesRemover extends ObjectActivityRemover
                 if (!is_null($entry->transaction_round_up_savings)) {
                     $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
                 }
-                $this->current_user->setUser($me);
-                $this->transaction_mapper->setUser($me->id);
+                // when deleting a bill, the user can already be null
+                if(!is_null($me)){
+                    $this->current_user->setUser($me);
+                    $this->transaction_mapper->setUser($me->id);
+                }
 
                 return parent::delete($id, $additionalData);
             }
