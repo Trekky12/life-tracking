@@ -113,33 +113,4 @@ class CardService extends Service {
         return $this->mapper->getCardsUser();
     }
 
-    public function getData($entry_id) {
-        if (!$this->hasAccess($entry_id, [])) {
-            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
-        }
-        $entry = $this->getEntry($entry_id);
-
-        // append card labels and usernames to output
-        $card_labels = $this->label_service->getLabelsFromCard($entry_id);
-        $entry->labels = $card_labels;
-
-        $users = $this->user_service->getAll();
-
-        if ($entry->createdBy) {
-            $entry->createdBy = $users[$entry->createdBy]->name;
-        }
-        if ($entry->changedBy) {
-            $entry->changedBy = $users[$entry->changedBy]->name;
-        }
-        if ($entry->description) {
-            $entry->description = html_entity_decode(htmlspecialchars_decode($entry->description));
-        }
-        if ($entry->title) {
-            $entry->title = htmlspecialchars_decode($entry->title);
-        }
-
-        $response_data = ['entry' => $entry];
-        return new Payload(Payload::$RESULT_JSON, $response_data);
-    }
-
 }

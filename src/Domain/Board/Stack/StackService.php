@@ -86,17 +86,4 @@ class StackService extends Service {
         return $this->mapper->getAll();
     }
 
-    public function getData($entry_id) {
-        if (!$this->hasAccess($entry_id, [])) {
-            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
-        }
-        $entry = $this->getEntry($entry_id);
-        if ($entry->name) {
-            $entry->name = htmlspecialchars_decode($entry->name);
-        }
-
-        $response_data = ['entry' => $entry];
-        return new Payload(Payload::$RESULT_JSON, $response_data);
-    }
-
 }

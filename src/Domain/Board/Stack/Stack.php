@@ -13,7 +13,7 @@ class Stack extends \App\Domain\DataObject {
             $this->createdBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
         }
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
         $this->board = $this->exists('board', $data) ? filter_var($data['board'], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -35,6 +35,17 @@ class Stack extends \App\Domain\DataObject {
 
     public function getParentID() {
         return $this->board;
+    }
+
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+        
+        if ($temp["name"]) {
+            $temp["name"] = html_entity_decode(htmlspecialchars_decode($temp["name"]));
+        }
+
+        return $temp;
     }
 
 }

@@ -8,7 +8,7 @@ class Card extends \App\Domain\DataObject {
 
     public function parseData(array $data) {
 
-        $this->title = $this->exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING) : null;
+        $this->title = $this->exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
         // new card --> save createdBy and hash
         if (!$this->exists('id', $data)) {
@@ -50,6 +50,20 @@ class Card extends \App\Domain\DataObject {
 
     public function getParentID() {
         return $this->stack;
+    }
+
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+        
+        if ($temp["description"]) {
+            $temp["description"] = html_entity_decode(htmlspecialchars_decode($temp["description"]));
+        }
+        if ($temp["title"]) {
+            $temp["title"] = html_entity_decode(htmlspecialchars_decode($temp["title"]));
+        }
+
+        return $temp;
     }
 
 }

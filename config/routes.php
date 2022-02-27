@@ -279,13 +279,11 @@ return function (App $app) {
             $group_stacks->post('/updatePosition', \App\Application\Action\Board\Stack\StackUpdatePositionAction::class)->setName('stack_update_position');
             $group_stacks->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDeleteAction::class)->setName('stack_delete');
             $group_stacks->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackArchiveAction::class)->setName('stack_archive');
-            $group_stacks->get('/data/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDataAction::class)->setName('stack_get');
         });
         $group->group('/card', function (RouteCollectorProxy $group_cards) {
             $group_cards->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardSaveAction::class)->setName('card_save');
             $group_cards->post('/updatePosition', \App\Application\Action\Board\Card\CardUpdatePositionAction::class)->setName('card_update_position');
             $group_cards->post('/moveCard', \App\Application\Action\Board\Card\CardMoveStackAction::class)->setName('card_move_stack');
-            $group_cards->get('/data/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardDataAction::class)->setName('card_get');
             $group_cards->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardDeleteAction::class)->setName('card_delete');
             $group_cards->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardArchiveAction::class)->setName('card_archive');
         });

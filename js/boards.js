@@ -841,15 +841,20 @@ setInterval(async function () {
     var isOpenLabel = isVisible(labelModal);
 
     if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true) {
-        let newData = await loadBoard();
-        if (JSON.stringify(boardData) !== JSON.stringify(newData)) {
-            loadingIconBoard.classList.remove("hidden");
-            boardData = newData;
-            renderBoard();
-            loadingIconBoard.classList.add("hidden");
-        }
+        await updateBoard();
     }
 }, 10000);
+
+async function updateBoard(){
+    let newData = await loadBoard();
+    if (JSON.stringify(boardData) !== JSON.stringify(newData)) {
+        console.log("Update Board Data");
+        loadingIconBoard.classList.remove("hidden");
+        boardData = newData;
+        renderBoard();
+        loadingIconBoard.classList.add("hidden");
+    }
+}
 
 
 window.addEventListener('beforeunload', function (event) {
@@ -916,6 +921,8 @@ var sortable = new Sortable(stacksWrapper, {
             });
         }).then(function (response) {
             return response.json();
+        }).then(function (data) {
+            return updateBoard();
         }).catch(function (error) {
             console.log(error);
         });
@@ -952,6 +959,8 @@ function changeCardPosition(cards) {
         });
     }).then(function (response) {
         return response.json();
+    }).then(function (data) {
+        return updateBoard();
     }).catch(function (error) {
         console.log(error);
     });
