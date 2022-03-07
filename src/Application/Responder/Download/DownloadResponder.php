@@ -22,11 +22,13 @@ class DownloadResponder extends HTMLTemplateResponder {
 
         switch ($payload->getStatus()) {
             case Payload::$RESULT_WORD:
+                $response = $this->responseFactory->createResponse();
                 $response->getBody()->write($body);
                 return $response->withHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                                 ->withHeader('Content-Disposition', 'attachment; filename="' . date('Y-m-d') . '_Export.docx"')
                                 ->withHeader('Cache-Control', 'max-age=0');
             case Payload::$RESULT_EXCEL:
+                $response = $this->responseFactory->createResponse();
                 $response->getBody()->write($body);
                 return $response->withHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                                 ->withHeader('Content-Disposition', 'attachment; filename="' . date('Y-m-d') . '_Export.xlsx"')
