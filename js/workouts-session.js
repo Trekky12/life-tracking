@@ -66,7 +66,7 @@ function setFields(exercise, disabled) {
         exercise.classList.remove("hidden");
     }
 
-    let inputs = exercise.querySelectorAll('input, textarea');
+    let inputs = exercise.querySelectorAll('input, textarea, select');
     inputs.forEach(function (input, idx) {
         if (disabled) {
             input.setAttribute('disabled', true);

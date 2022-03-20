@@ -254,7 +254,7 @@ function updateFields() {
     // @see https://stackoverflow.com/a/47948276
     let workoutElements = exercisesSelected.querySelectorAll('[data-type="workout-element"]');
     workoutElements.forEach(function (item, idx) {
-        let fields = item.querySelectorAll('input, textarea');
+        let fields = item.querySelectorAll('input, textarea, select');
         fields.forEach(function (field) {
             field.setAttribute('name', field.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + idx + ']'));
         });
