@@ -123,17 +123,19 @@ function renderBoard() {
                 dataIdAttr: 'data-card',
                 ghostClass: 'card-placeholder',
                 onUpdate: function (evt) {
-                    changeCardPosition(this.toArray());
+                    let stack_id = card.closest('.stack').dataset.stack;
+                    changeCardPosition(stack_id, this.toArray());
                 },
                 // Moved card to new stack
                 onAdd: function (evt) {
-                    var stack = evt.to.closest('.stack').dataset.stack;
-                    var card = evt.item.dataset.card;
-                    let newPosition = evt.newIndex;
+                    let stack_id_from = evt.from.closest('.stack').dataset.stack;
+                    let stack_id_to = evt.to.closest('.stack').dataset.stack;
+                    let card_id = evt.item.dataset.card;
+                    //let newPosition = evt.newIndex;
 
                     let cardsOnNewStack = this.toArray();
 
-                    var data = { 'card': card, 'stack': stack };
+                    var data = { 'card': card_id, 'stack': stack_id_to };
 
                     getCSRFToken().then(function (token) {
                         data['csrf_name'] = token.csrf_name;
@@ -151,7 +153,20 @@ function renderBoard() {
                     }).then(function (response) {
                         return response.json();
                     }).then(function () {
-                        return changeCardPosition(cardsOnNewStack);
+                        let stack_from = getElementFromID(boardData.stacks, stack_id_from);
+                        let card = getElementFromID(stack_from.cards, card_id);
+
+                        // remove card from old stack
+                        stack_from.cards = stack_from.cards.filter(function(stack_card){ 
+                            return stack_card.id != card_id; 
+                        });
+
+                        // add card to new stack
+                        let stack_to = getElementFromID(boardData.stacks, stack_id_to);                       
+                        stack_to.cards.push(card);
+                        card.stack = stack_id_to;
+                        
+                        changeCardPosition(stack_id_to, cardsOnNewStack);
                     }).catch(function (error) {
                         console.log(error);
                     });
@@ -845,7 +860,7 @@ setInterval(async function () {
     }
 }, 10000);
 
-async function updateBoard(){
+async function updateBoard() {
     let newData = await loadBoard();
     if (JSON.stringify(boardData) !== JSON.stringify(newData)) {
         console.log("Update Board Data");
@@ -905,7 +920,8 @@ var sortable = new Sortable(stacksWrapper, {
     dataIdAttr: 'data-stack',
     filter: '.stack-dummy',
     onEnd: function (evt) {
-        var data = { 'stack': this.toArray() };
+        let stacks = this.toArray();
+        var data = { 'stack': stacks };
 
         getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
@@ -922,7 +938,10 @@ var sortable = new Sortable(stacksWrapper, {
         }).then(function (response) {
             return response.json();
         }).then(function (data) {
-            return updateBoard();
+            stacks.forEach(function (stack_id, position) {
+                let stack = getElementFromID(boardData.stacks, stack_id);
+                stack.position = position;
+            });
         }).catch(function (error) {
             console.log(error);
         });
@@ -941,7 +960,7 @@ function getElementFromID(data, element_id) {
     return null;
 }
 
-function changeCardPosition(cards) {
+function changeCardPosition(stack_id, cards) {
     var data = { 'card': cards };
 
     return getCSRFToken().then(function (token) {
@@ -960,7 +979,11 @@ function changeCardPosition(cards) {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        return updateBoard();
+        let stack = getElementFromID(boardData.stacks, stack_id);
+        cards.forEach(function (card_id, position) {
+            let card = getElementFromID(stack.cards, card_id);
+            card.position = position;
+        });
     }).catch(function (error) {
         console.log(error);
     });
