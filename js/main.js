@@ -55,18 +55,11 @@ function deleteObject(url, type) {
 
     let confirm_text = lang.really_delete;
     if (type === "board") {
-        confirm_text = lang.really_delete_board;
-    }
-    if (type === "stack") {
-        confirm_text = lang.really_delete_stack;
-    }
-    if (type === "card") {
-        confirm_text = lang.really_delete_card;
+        confirm_text = lang.boards_really_delete_board;
     }
     if (type === "label") {
-        confirm_text = confirm_text = lang.really_delete_label;
+        confirm_text = lang.boards_really_delete_label;
     }
-
 
     if (!confirm(confirm_text)) {
         loadingWindowOverlay.classList.add("hidden");
@@ -89,7 +82,7 @@ function deleteObject(url, type) {
         if ("redirect" in data) {
             window.location.href = data["redirect"];
         } else {
-            window.location.reload();
+            window.location.reload(true);
         }
     }).catch(function (error) {
         console.log(error);

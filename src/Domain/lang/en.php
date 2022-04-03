@@ -310,6 +310,13 @@ $lang["REALLY_CLOSE_STACK"] = "Do you really want to close the stack?";
 $lang["REALLY_CLOSE_CARD"] = "Do you really want to close the card?";
 $lang["REALLY_CLOSE_LABEL"] = "Do you really want to close the label?";
 
+$lang["BOARD_SAVE_ERROR_STACK"] = "The stack couldn't be saved!";
+$lang["BOARD_SAVE_ERROR_CARD"] = "The card couldn't be saved!";
+$lang["BOARD_UNSAVED_STACK"] = "The stack is not saved yet and therefore can't be opened!";
+$lang["BOARD_UNSAVED_CARD"] = "The card is not saved yet and therefore can't be opened!";
+$lang["BOARD_ARCHIVE_ERROR"] = "Archiving failed!";
+$lang["BOARD_DELETE_ERROR"] = "Deleting failed!";
+
 $lang["NOTHING_FOUND"] = "nothing found";
 $lang["LOADING"] = "Loading...";
 $lang["SEARCHING"] = "Search...";

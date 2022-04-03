@@ -35,77 +35,7 @@ function renderBoard() {
 
         Object.values(boardData.stacks).forEach(function (stack_data) {
 
-            let stack_dummy = document.querySelector("#templates .stack");
-            let stack = stack_dummy.cloneNode(true);
-
-            stack.dataset.stack = stack_data.id;
-            if (stack_data.archive == 1) {
-                stack.classList.add("archived");
-            }
-
-            stack.querySelector('.stack-header span.title').innerHTML = stack_data.name;
-            stack.querySelector('a#create-card').dataset.stack = stack_data.id;
-
-            Object.values(stack_data.cards).forEach(function (card_data) {
-                let card_dummy = document.querySelector("#templates .board-card");
-                let card = card_dummy.cloneNode(true);
-
-                card.dataset.card = card_data.id;
-                if (card_data.archive == 1) {
-                    card.classList.add("archived");
-                }
-                card.querySelector('.card-title').innerHTML = card_data.title;
-
-                if (card_data.description) {
-                    card.querySelector('.description').classList.remove("hidden");
-                }
-
-                if (card_data.date || card_data.time) {
-                    let card_date = card.querySelector('.card-date');
-                    card_date.classList.remove("hidden");
-
-                    if (card_data.date) {
-                        let date = moment(card_data.date, "YYYY-MM-DD");
-                        if (moment().isSameOrAfter(date)) {
-                            card_date.classList.add("due");
-                        }
-                        card_date.innerHTML = moment(card_data.date, "YYYY-MM-DD").format(i18n.dateformatJS.date);
-                    }
-                    if (card_data.time) {
-                        card_date.innerHTML = card_date.innerHTML + " " + moment(card_data.time, "HH:mm:ss").format("HH:mm");
-                    }
-
-                }
-
-                let card_checkbox = card.querySelector('.check');
-                card_checkbox.classList.add("btn-archive");
-                card_checkbox.dataset.url = jsObject.card_archive + card_data.id;
-                card_checkbox.dataset.archive = card_data.archive;
-
-                let card_handle = card.querySelector('.card-labels .handle');
-
-                card_data.labels.forEach(function (card_label) {
-                    let label = boardData.labels[card_label];
-
-                    let label_div = document.createElement("div");
-                    label_div.classList.add("card-label");
-                    label_div.style.backgroundColor = label.background_color;
-                    label_div.style.color = label.text_color;
-
-                    card.querySelector('.card-labels').insertBefore(label_div, card_handle);
-                });
-
-                card_data.users.forEach(function (card_user) {
-                    let user = boardData.users[card_user];
-                    card.querySelectorAll('.card-member').forEach(function (card_member) {
-                        if (card_member.dataset.user == card_user) {
-                            card_member.classList.remove("hidden");
-                        }
-                    });
-                });
-
-                stack.querySelector('.card-wrapper').appendChild(card);
-            });
+            let stack = createStack(stack_data);
 
             stacksWrapper.appendChild(stack);
 
@@ -153,19 +83,22 @@ function renderBoard() {
                     }).then(function (response) {
                         return response.json();
                     }).then(function () {
-                        let stack_from = getElementFromID(boardData.stacks, stack_id_from);
-                        let card = getElementFromID(stack_from.cards, card_id);
+                        let stack_from_Idx = getElementFromID(boardData.stacks, stack_id_from);
+                        let stack_from = boardData.stacks[stack_from_Idx];
+                        let cardIdx = getElementFromID(stack_from.cards, card_id);
+                        let card = stack.cards[cardIdx]
 
                         // remove card from old stack
-                        stack_from.cards = stack_from.cards.filter(function(stack_card){ 
-                            return stack_card.id != card_id; 
+                        stack_from.cards = stack_from.cards.filter(function (stack_card) {
+                            return stack_card.id != card_id;
                         });
 
                         // add card to new stack
-                        let stack_to = getElementFromID(boardData.stacks, stack_id_to);                       
+                        let stack_to_Idx = getElementFromID(boardData.stacks, stack_id_to);
+                        let stack_to = boardData.stacks[stack_to_Idx];
                         stack_to.cards.push(card);
                         card.stack = stack_id_to;
-                        
+
                         changeCardPosition(stack_id_to, cardsOnNewStack);
                     }).catch(function (error) {
                         console.log(error);
@@ -194,17 +127,24 @@ document.addEventListener('click', function (event) {
     let stack_header = event.target.closest('.stack-header');
     if (stack_header) {
         event.preventDefault();
-        document.getElementById('loading-overlay').classList.remove('hidden');
 
         let stack_id = stack_header.closest('.stack').dataset.stack;
-        let stack = getElementFromID(boardData.stacks, stack_id);
+
+        if (!stack_id) {
+            window.alert(lang.boards_error_open_stack);
+            return;
+        }
+        document.getElementById('loading-overlay').classList.remove('hidden');
+
+        let stackIdx = getElementFromID(boardData.stacks, stack_id);
+        let stack = boardData.stacks[stackIdx];
 
         stackModal.querySelector('input[name="id"]').value = stack.id;
         stackModal.querySelector('input[name="name"]').value = stack.name;
         stackModal.querySelector('input[name="position"]').value = stack.position;
 
-        var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + stack.id + "' data-archive='" + stack.archive + "' class='btn-archive'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
-                                    <a href='#' data-url='" + jsObject.stack_delete + stack.id + "' class='btn-delete' data-type='stack'>" + document.getElementById('iconTrash').innerHTML + "</a>";
+        var edit_bar = "<a href='#' data-url='" + jsObject.stack_archive + stack.id + "' data-archive='" + stack.archive + "' class='btn-archive-stack' data-id='" + stack.id + "'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
+                                    <a href='#' data-url='" + jsObject.stack_delete + stack.id + "' class='btn-delete-stack'  data-id='" + stack.id + "'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
         stackModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
@@ -214,23 +154,35 @@ document.addEventListener('click', function (event) {
         document.getElementById('loading-overlay').classList.add('hidden');
     }
 
-    let btn_archive = event.target.closest('.btn-archive');
-    if (btn_archive) {
-        btn_archive.parentElement.style.backgroundColor = btn_archive.value;
+    let btn_archive_stack = event.target.closest('.btn-archive-stack');
+    if (btn_archive_stack) {
         event.preventDefault();
-        var url = btn_archive.dataset.url;
-        var is_archived = parseInt(btn_archive.dataset.archive);
+        let url = btn_archive_stack.dataset.url;
+        let archive = parseInt(btn_archive_stack.dataset.archive) === 0 ? 1 : 0;
+        let id = parseInt(btn_archive_stack.dataset.id);
 
-        if (is_archived === 1) {
-            if (!confirm(lang.undo_archive)) {
+        if (archive === 0) {
+            if (!confirm(lang.boards_undo_archive)) {
                 return false;
             }
         } else {
-            if (!confirm(lang.really_archive)) {
+            if (!confirm(lang.boards_really_archive)) {
                 return false;
             }
         }
-        var data = { 'archive': is_archived === 0 ? 1 : 0 };
+        let stackIdx = getElementFromID(boardData.stacks, id);
+        let stack = boardData.stacks[stackIdx];
+        let savedStackEl = document.querySelector('.stack-wrapper .stack[data-stack="' + id + '"');
+
+        if (archive) {
+            savedStackEl.classList.add("archived");
+        } else {
+            savedStackEl.classList.remove("archived");
+        }
+        stack.archive = archive;
+        closeDialog(stackModal, true);
+
+        var data = { 'archive': archive };
 
         getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
@@ -246,17 +198,182 @@ document.addEventListener('click', function (event) {
             });
         }).then(function (response) {
             return response.json();
-        }).then(function (data) {
-            allowedReload = true;
-            window.location.reload(true);
         }).catch(function (error) {
             console.log(error);
+
+            window.alert(lang.boards_error_archive);
+
+            if (archive) {
+                savedStackEl.classList.remove("archived");
+            } else {
+                savedStackEl.classList.add("archived");
+            }
+            stack.archive = archive;
+
             if (document.body.classList.contains('offline')) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(url, 'POST', formData);
             }
         });
+    }
 
+    let btn_archive_card = event.target.closest('.btn-archive-card');
+    if (btn_archive_card) {
+        event.preventDefault();
+        let url = btn_archive_card.dataset.url;
+        let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
+        let stack_id = parseInt(btn_archive_card.dataset.stack);
+        let id = parseInt(btn_archive_card.dataset.id);
+
+        if (archive === 0) {
+            if (!confirm(lang.boards_undo_archive)) {
+                return false;
+            }
+        } else {
+            if (!confirm(lang.boards_really_archive)) {
+                return false;
+            }
+        }
+        let stackIdx = getElementFromID(boardData.stacks, stack_id);
+        let stack = boardData.stacks[stackIdx];
+        let cardIdx = getElementFromID(stack.cards, id);
+        let card = stack.cards[cardIdx]
+
+        let savedCardEl = document.querySelector('.stack-wrapper .stack[data-stack="' + stack_id + '"] .board-card[data-card="' + id + '"]');
+
+        if (archive) {
+            savedCardEl.classList.add("archived");
+        } else {
+            savedCardEl.classList.remove("archived");
+        }
+        card.archive = archive;
+        closeDialog(cardModal, true);
+
+        var data = { 'archive': archive };
+
+        getCSRFToken().then(function (token) {
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
+
+            return fetch(url, {
+                method: 'POST',
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }).then(function (response) {
+            return response.json();
+        }).catch(function (error) {
+            console.log(error);
+
+            window.alert(lang.boards_error_archive);
+
+            if (archive) {
+                savedCardEl.classList.remove("archived");
+            } else {
+                savedCardEl.classList.add("archived");
+            }
+            card.archive = archive;
+
+            if (document.body.classList.contains('offline')) {
+                let formData = new URLSearchParams(data).toString();
+                saveDataWhenOffline(url, 'POST', formData);
+            }
+        });
+    }
+
+    let btn_delete_stack = event.target.closest('.btn-delete-stack');
+    if (btn_delete_stack) {
+        event.preventDefault();
+        let url = btn_delete_stack.dataset.url;
+        let id = parseInt(btn_delete_stack.dataset.id);
+
+        if (!confirm(lang.boards_really_delete_stack)) {
+            return false;
+        }
+
+        let savedStackEl = document.querySelector('.stack-wrapper .stack[data-stack="' + id + '"');
+        savedStackEl.classList.add("hidden");
+
+        closeDialog(stackModal, true);
+
+        getCSRFToken(true).then(function (token) {
+            return fetch(url, {
+                method: 'DELETE',
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(token)
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (response) {
+            stacksWrapper.removeChild(savedStackEl);
+
+            let stackIdx = getElementFromID(boardData.stacks, id);
+            delete boardData.stacks[stackIdx];
+        }).catch(function (error) {
+            console.log(error);
+
+            window.alert(lang.boards_error_delete);
+            savedStackEl.classList.remove("hidden");
+
+            if (document.body.classList.contains('offline')) {
+                let formData = new URLSearchParams(data).toString();
+                saveDataWhenOffline(url, 'POST', formData);
+            }
+        });
+    }
+
+    let btn_delete_card = event.target.closest('.btn-delete-card');
+    if (btn_delete_card) {
+        event.preventDefault();
+        let url = btn_delete_card.dataset.url;
+        let stack_id = parseInt(btn_delete_card.dataset.stack);
+        let id = parseInt(btn_delete_card.dataset.id);
+
+        if (!confirm(lang.boards_really_delete_card)) {
+            return false;
+        }
+
+        let cardWrapper = document.querySelector('.stack-wrapper .stack[data-stack="' + stack_id + '"] .card-wrapper');
+        let savedCardEl = cardWrapper.querySelector('.board-card[data-card="' + id + '"]');
+        savedCardEl.classList.add("hidden");
+
+        closeDialog(cardModal, true);
+
+        getCSRFToken(true).then(function (token) {
+            return fetch(url, {
+                method: 'DELETE',
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(token)
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (response) {
+            cardWrapper.removeChild(savedCardEl);
+
+            let stackIdx = getElementFromID(boardData.stacks, stack_id);
+            let stack = boardData.stacks[stackIdx];
+            let cardIdx = getElementFromID(stack.cards, id);
+            delete stack.cards[cardIdx];
+        }).catch(function (error) {
+            console.log(error);
+
+            window.alert(lang.boards_error_delete);
+            savedCardEl.classList.remove("hidden");
+
+            if (document.body.classList.contains('offline')) {
+                let formData = new URLSearchParams(data).toString();
+                saveDataWhenOffline(url, 'POST', formData);
+            }
+        });
     }
 
     let stack_create_btn = event.target.closest("#create-stack")
@@ -336,12 +453,20 @@ document.addEventListener('click', function (event) {
     let board_card = event.target.closest(".board-card-content")
     if (board_card) {
         event.preventDefault();
-        document.getElementById('loading-overlay').classList.remove('hidden');
-
         let stack_id = board_card.closest('.stack').dataset.stack;
         let card_id = board_card.closest('.board-card').dataset.card;
-        let stack = getElementFromID(boardData.stacks, stack_id);
-        let card = getElementFromID(stack.cards, card_id);
+
+        if (!card_id) {
+            window.alert(lang.boards_error_open_card);
+            return;
+        }
+
+        document.getElementById('loading-overlay').classList.remove('hidden');
+
+        let stackIdx = getElementFromID(boardData.stacks, stack_id);
+        let stack = boardData.stacks[stackIdx];
+        let cardIdx = getElementFromID(stack.cards, card_id);
+        let card = stack.cards[cardIdx]
 
         cardModal.querySelector('input[name="id"]').value = card.id;
         cardModal.querySelector('input[name="title"]').value = card.title;
@@ -385,9 +510,9 @@ document.addEventListener('click', function (event) {
         }
 
 
-        cardModal.querySelector('#createdBy').innerHTML = card.createdBy;
+        cardModal.querySelector('#createdBy').innerHTML = boardData.users[card.createdBy].login;
         cardModal.querySelector('#createdOn').innerHTML = moment(card.createdOn).format(i18n.dateformatJS.datetime);
-        cardModal.querySelector('#changedBy').innerHTML = card.changedBy;
+        cardModal.querySelector('#changedBy').innerHTML = boardData.users[card.changedBy].login;
         cardModal.querySelector('#changedOn').innerHTML = moment(card.changedOn).format(i18n.dateformatJS.datetime);
         cardModal.querySelector('.form-group.card-dates').classList.remove('hidden');
 
@@ -413,8 +538,8 @@ document.addEventListener('click', function (event) {
         selector.setValue(card.labels.map(String));
 
 
-        var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + card.id + "' data-archive='" + card.archive + "' class='btn-archive'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
-                                    <a href='#' data-url='" + jsObject.card_delete + card.id + "' class='btn-delete' data-type='card'>" + document.getElementById('iconTrash').innerHTML + "</a>";
+        var edit_bar = "<a href='#' data-url='" + jsObject.card_archive + card.id + "' data-archive='" + card.archive + "' class='btn-archive-card' data-stack='" + card.stack + "' data-id='" + card.id + "'>" + document.getElementById('iconArchive').innerHTML + "</a> \n\
+                                    <a href='#' data-url='" + jsObject.card_delete + card.id + "' class='btn-delete-card' data-stack='" + card.stack + "' data-id='" + card.id + "'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
         cardModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
@@ -441,7 +566,7 @@ const selector = new Selectr("select#card-label-list", {
         var template = ['<div class="select-label" style="background-color:', option.dataset.backgroundColor, '; color:', option.dataset.textColor, '"><span>', option.textContent.trim(), '</span></div>'];
         return template.join('');
     },
-    placeholder: lang.labels
+    placeholder: lang.boards_labels
 });
 
 var simplemde = null;
@@ -478,7 +603,7 @@ const stackModal = document.getElementById("stack-modal");
 
 stackModal.querySelector("form").addEventListener('submit', function (e) {
     e.preventDefault();
-    save(stackModal, jsObject.stack_save);
+    saveStack(stackModal, jsObject.stack_save);
 });
 
 /**
@@ -491,7 +616,7 @@ const labelModal = document.getElementById("label-modal");
 
 labelModal.querySelector("form").addEventListener('submit', function (e) {
     e.preventDefault();
-    save(labelModal, jsObject.label_save);
+    saveLabel(labelModal, jsObject.label_save);
 });
 
 
@@ -505,7 +630,7 @@ const cardModal = document.getElementById("card-modal");
 
 cardModal.querySelector("form").addEventListener('submit', function (e) {
     e.preventDefault();
-    save(cardModal, jsObject.card_save);
+    saveCard(cardModal, jsObject.card_save);
 });
 
 /**
@@ -515,7 +640,7 @@ cardModal.querySelector("form").addEventListener('submit', function (e) {
 cardModal.addEventListener('keypress', function (event) {
     if (event.keyCode === 13) {
         event.preventDefault();
-        save(cardModal, jsObject.card_save);
+        saveCard(cardModal, jsObject.card_save);
     }
 });
 
@@ -610,23 +735,23 @@ function openDialog(element) {
         }
     }
 }
-function closeDialog(element) {
+function closeDialog(element, force = false) {
 
     let new_data = formToJSON(element.querySelector('form'));
 
-    let confirm_text = lang.really_close;
+    let confirm_text = '';
 
     if (element === stackModal) {
-        confirm_text = lang.really_close_stack;
+        confirm_text = lang.boards_really_close_stack;
     }
     if (element === cardModal) {
-        confirm_text = lang.really_close_card;
+        confirm_text = lang.boards_really_close_card;
     }
     if (element === labelModal) {
-        confirm_text = lang.really_close_label;
+        confirm_text = lang.boards_really_close_label;
     }
 
-    if (JSON.stringify(openedDialogData) !== JSON.stringify(new_data)) {
+    if (JSON.stringify(openedDialogData) !== JSON.stringify(new_data) && !force) {
         if (!confirm(confirm_text)) {
             return false;
         }
@@ -738,19 +863,40 @@ function formToJSON(elem) {
     return output;
 }
 
-function save(dialog, url) {
-    document.getElementById('loading-overlay').classList.remove('hidden');
-    cleanURL();
+async function saveStack(dialog, url) {
+    //document.getElementById('loading-overlay').classList.remove('hidden');
+
     var id = dialog.querySelector('input[name="id"]').value;
 
     let form = dialog.querySelector('form');
+    let formData = formToJSON(form);
+    let stack = createStack(formData);
 
-    getCSRFToken().then(function (token) {
-        let data = formToJSON(form);
+    let stackIdx = getElementFromID(boardData.stacks, formData.id);
+    let savedStack = boardData.stacks[stackIdx];
+
+    let savedStackEl = document.querySelector('.stack-wrapper .stack[data-stack="' + formData.id + '"');
+
+    if (savedStack) {
+        let newStackData = formData;
+        newStackData["cards"] = savedStack.cards;
+        let updatedStack = createStack(newStackData);
+
+        document.querySelector('.stack-wrapper').replaceChild(updatedStack, savedStackEl);
+    } else {
+        document.querySelector('.stack-wrapper').insertBefore(stack, new_stack_element);
+    }
+
+    closeDialog(dialog, true);
+
+    try {
+        let token = await getCSRFToken();
+
+        let data = formData;
         data["csrf_name"] = token.csrf_name;
         data["csrf_value"] = token.csrf_value;
 
-        return fetch(url + id, {
+        let response = await fetch(url + id, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
@@ -758,21 +904,152 @@ function save(dialog, url) {
             },
             body: JSON.stringify(data)
         });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
+        let data2 = await response.json();
+
+        //allowedReload = true;
+        //window.location.reload(true);
+
+        let stack_data = data2["entry"];
+        if (savedStack) {
+            boardData.stacks[stackIdx] = stack_data;
+            boardData.stacks[stackIdx].cards = savedStack.cards;
+        } else {
+            stack_data.cards = [];
+            boardData.stacks.push(stack_data);
+        }
+
+        stack.dataset.stack = stack_data.id;
+        stack.querySelector(".create-card").dataset.stack = stack_data.id;
+
+        //document.getElementById('loading-overlay').classList.add('hidden');
+
+    } catch (error) {
+        console.log(error);
+        window.alert(lang.boards_error_save_stack);
+
+        if (savedStack) {
+            let updatedStack = document.querySelector('.stack-wrapper .stack[data-stack="' + formData.id + '"');
+
+            document.querySelector('.stack-wrapper').replaceChild(savedStackEl, updatedStack);
+        } else {
+            document.querySelector('.stack-wrapper').removeChild(stack);
+        }
+
+        if (document.body.classList.contains('offline')) {
+            let formData = new URLSearchParams(new FormData(form)).toString();
+            saveDataWhenOffline(url + id, 'POST', formData);
+        }
+    }
+}
+
+async function saveCard(dialog, url) {
+    //document.getElementById('loading-overlay').classList.remove('hidden');
+    cleanURL();
+    var id = dialog.querySelector('input[name="id"]').value;
+
+    let form = dialog.querySelector('form');
+    let formData = formToJSON(form);
+
+    let stackEl = document.querySelector('.stack-wrapper .stack[data-stack="' + formData.stack + '"]');
+    let card = createCard(formData);
+
+    let stackIdx = getElementFromID(boardData.stacks, formData.stack);
+    let cardIdx = getElementFromID(boardData.stacks[stackIdx].cards, formData.id);
+    let savedCard = boardData.stacks[stackIdx].cards[cardIdx];
+
+    let savedCardEl = stackEl.querySelector('.board-card[data-card="' + formData.id + '"]');
+
+    if (savedCard) {
+        stackEl.querySelector('.card-wrapper').replaceChild(card, savedCardEl);
+    } else {
+        stackEl.querySelector('.card-wrapper').appendChild(card);
+    }
+
+    closeDialog(dialog, true);
+
+    try {
+        let token = await getCSRFToken();
+
+        let data = formData;
+        data["csrf_name"] = token.csrf_name;
+        data["csrf_value"] = token.csrf_value;
+
+        let response = await fetch(url + id, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        let data2 = await response.json();
+
+        //allowedReload = true;
+        //window.location.reload(true);
+
+        let card_data = data2["entry"];
+        if (savedCard) {
+            boardData.stacks[stackIdx].cards[cardIdx] = card_data;
+        } else {
+            boardData.stacks[stackIdx].cards.push(card_data);
+        }
+
+        card.dataset.card = card_data.id;
+
+        //closeDialog(dialog, true);
+        //document.getElementById('loading-overlay').classList.add('hidden');
+
+    } catch (error) {
+        console.log(error);
+        window.alert(lang.boards_error_save_card);
+
+        if (savedCard) {
+            stackEl.querySelector('.card-wrapper').replaceChild(savedCardEl, card);
+        } else {
+            stackEl.querySelector('.card-wrapper').removeChild(card);
+        }
+
+        if (document.body.classList.contains('offline')) {
+            let formData = new URLSearchParams(new FormData(form)).toString();
+            saveDataWhenOffline(url + id, 'POST', formData);
+        }
+    }
+}
+
+async function saveLabel(dialog, url) {
+    document.getElementById('loading-overlay').classList.remove('hidden');
+    cleanURL();
+    var id = dialog.querySelector('input[name="id"]').value;
+
+    let form = dialog.querySelector('form');
+
+    let data = formToJSON(form);
+
+    try {
+        let token = await getCSRFToken();
+
+        data["csrf_name"] = token.csrf_name;
+        data["csrf_value"] = token.csrf_value;
+
+        let response = await fetch(url + id, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        let data2 = await response.json();
+
         allowedReload = true;
         window.location.reload(true);
-    }).catch(function (error) {
+    } catch (error) {
         console.log(error);
         if (document.body.classList.contains('offline')) {
             let formData = new URLSearchParams(new FormData(form)).toString();
             saveDataWhenOffline(url + id, 'POST', formData);
         }
-    });
-
-
-
+    }
 }
 
 
@@ -820,37 +1097,18 @@ sidebarToggle.addEventListener('click', function (event) {
 let checkBoxArchivedItems = document.getElementById('checkboxArchivedItems');
 checkBoxArchivedItems.addEventListener('click', function (event) {
 
-    var data = { 'state': checkBoxArchivedItems.checked ? 1 : 0 };
-
-    getCSRFToken().then(function (token) {
-        data['csrf_name'] = token.csrf_name;
-        data['csrf_value'] = token.csrf_value;
-
-        return fetch(jsObject.set_archive, {
-            method: 'POST',
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        allowedReload = true;
-        window.location.reload(true);
-    }).catch(function (error) {
-        console.log(error);
-    });
-
-
+    if (checkBoxArchivedItems.checked) {
+        stacksWrapper.classList.remove("hide-archived");
+    } else {
+        stacksWrapper.classList.add("hide-archived");
+    }
     return;
 });
 
 /**
  * Auto Update page
  */
-setInterval(async function () {
+/*setInterval(async function () {
     var isOpenStack = isVisible(stackModal);
     var isOpenCard = isVisible(cardModal);
     var isOpenLabel = isVisible(labelModal);
@@ -858,7 +1116,7 @@ setInterval(async function () {
     if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true) {
         await updateBoard();
     }
-}, 10000);
+}, 10000);*/
 
 async function updateBoard() {
     let newData = await loadBoard();
@@ -878,7 +1136,7 @@ window.addEventListener('beforeunload', function (event) {
     var isOpenLabel = isVisible(labelModal);
 
     if (!allowedReload && (isOpenStack === true || isOpenCard === true || isOpenLabel === true)) {
-        event.returnValue = lang.really_close_page;
+        event.returnValue = lang.boards_really_close_page;
     }
 });
 
@@ -939,7 +1197,8 @@ var sortable = new Sortable(stacksWrapper, {
             return response.json();
         }).then(function (data) {
             stacks.forEach(function (stack_id, position) {
-                let stack = getElementFromID(boardData.stacks, stack_id);
+                let stackIdx = getElementFromID(boardData.stacks, stack_id);
+                let stack = boardData.stacks[stackIdx];
                 stack.position = position;
             });
         }).catch(function (error) {
@@ -954,10 +1213,102 @@ function getElementFromID(data, element_id) {
     for (let id in data) {
         let element_data = data[id];
         if (element_data.id == element_id) {
-            return element_data;
+            return id;
         }
     }
     return null;
+}
+
+function createStack(stack_data) {
+    let stack_dummy = document.querySelector("#templates .stack");
+    let stack = stack_dummy.cloneNode(true);
+
+    if (stack_data.id) {
+        stack.dataset.stack = stack_data.id;
+    }
+    if (stack_data.archive == 1) {
+        stack.classList.add("archived");
+    }
+
+    stack.querySelector('.stack-header span.title').innerHTML = stack_data.name;
+    stack.querySelector('a#create-card').dataset.stack = stack_data.id;
+
+    if (stack_data.cards) {
+        Object.values(stack_data.cards).forEach(function (card_data) {
+            let card = createCard(card_data);
+
+            stack.querySelector('.card-wrapper').appendChild(card);
+        });
+    }
+    return stack;
+}
+
+function createCard(card_data) {
+    let card_dummy = document.querySelector("#templates .board-card");
+    let card = card_dummy.cloneNode(true);
+
+    if (card_data.id) {
+        card.dataset.card = card_data.id;
+    }
+    if (card_data.archive == 1) {
+        card.classList.add("archived");
+    }
+    card.querySelector('.card-title').innerHTML = card_data.title;
+
+    if (card_data.description) {
+        card.querySelector('.description').classList.remove("hidden");
+    }
+
+    if (card_data.date || card_data.time) {
+        let card_date = card.querySelector('.card-date');
+        card_date.classList.remove("hidden");
+
+        if (card_data.date) {
+            let date = moment(card_data.date, "YYYY-MM-DD");
+            if (moment().isSameOrAfter(date)) {
+                card_date.classList.add("due");
+            }
+            card_date.innerHTML = moment(card_data.date, "YYYY-MM-DD").format(i18n.dateformatJS.date);
+        }
+        if (card_data.time) {
+            card_date.innerHTML = card_date.innerHTML + " " + moment(card_data.time, "HH:mm:ss").format("HH:mm");
+        }
+
+    }
+
+    let card_checkbox = card.querySelector('.check');
+    card_checkbox.classList.add("btn-archive-card");
+    card_checkbox.dataset.url = jsObject.card_archive + card_data.id;
+    card_checkbox.dataset.archive = card_data.archive;
+    card_checkbox.dataset.stack = card_data.stack;
+    card_checkbox.dataset.id = card_data.id;
+
+    if (card_data.labels) {
+        let card_handle = card.querySelector('.card-labels .handle');
+
+        card_data.labels.forEach(function (card_label) {
+            let label = boardData.labels[card_label];
+
+            let label_div = document.createElement("div");
+            label_div.classList.add("card-label");
+            label_div.style.backgroundColor = label.background_color;
+            label_div.style.color = label.text_color;
+
+            card.querySelector('.card-labels').insertBefore(label_div, card_handle);
+        });
+    }
+    if (card_data.users) {
+        card_data.users.forEach(function (card_user) {
+            let user = boardData.users[card_user];
+            card.querySelectorAll('.card-member').forEach(function (card_member) {
+                if (card_member.dataset.user == card_user) {
+                    card_member.classList.remove("hidden");
+                }
+            });
+        });
+    }
+
+    return card;
 }
 
 function changeCardPosition(stack_id, cards) {
@@ -979,9 +1330,11 @@ function changeCardPosition(stack_id, cards) {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        let stack = getElementFromID(boardData.stacks, stack_id);
+        let stackIdx = getElementFromID(boardData.stacks, stack_id);
+        let stack = boardData.stacks[stackIdx];
         cards.forEach(function (card_id, position) {
-            let card = getElementFromID(stack.cards, card_id);
+            let cardIdx = getElementFromID(stack.cards, card_id);
+            let card = stack.cards[cardIdx]
             card.position = position;
         });
     }).catch(function (error) {

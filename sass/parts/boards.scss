@@ -63,6 +63,12 @@
             min-height: calc(100vh - #{$header_height} - 20px - 36px - 20px);
             display:flex;
         }
+
+        &.hide-archived{
+            .board-card.archived, .stack.archived{
+                display: none;
+            }
+        }
     }
 
     .stack, .stack-dummy{

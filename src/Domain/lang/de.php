@@ -309,6 +309,13 @@ $lang["REALLY_CLOSE_STACK"] = "Soll der Stapel wirklich geschlossen werden?";
 $lang["REALLY_CLOSE_CARD"] = "Soll die Karte wirklich geschlossen werden?";
 $lang["REALLY_CLOSE_LABEL"] = "Soll das Label wirklich geschlossen werden?";
 
+$lang["BOARD_SAVE_ERROR_STACK"] = "Der Stapel konnte nicht gespeichert werden!";
+$lang["BOARD_SAVE_ERROR_CARD"] = "Die Karte konnte nicht gespeichert werden!";
+$lang["BOARD_UNSAVED_STACK"] = "Der Stapel wurde noch nicht gespeichert und kann daher nicht geöffnet werden!";
+$lang["BOARD_UNSAVED_CARD"] = "Die Karte wurde noch nicht gespeichert und kann daher nicht geöffnet werden!";
+$lang["BOARD_ARCHIVE_ERROR"] = "Archivieren fehlgeschlagen!";
+$lang["BOARD_DELETE_ERROR"] = "Löschen fehlgeschlagen!";
+
 $lang["NOTHING_FOUND"] = "Nichts gefunden";
 $lang["LOADING"] = "Lade...";
 $lang["SEARCHING"] = "Suche...";

@@ -10,7 +10,6 @@ class MemberTest extends BoardTestBase {
     protected $TEST_BOARD_HASH = "ABCabc123";
     protected $uri_save = "/boards/card/save/";
     protected $uri_delete = "/boards/card/delete/";
-    protected $uri_edit = "/boards/card/data/";
 
     protected function setUp(): void {
         $this->login("user", "user");
@@ -77,52 +76,34 @@ class MemberTest extends BoardTestBase {
         $this->assertArrayHasKey("stacks", $json);
         $this->assertIsArray($json["stacks"]);
 
-        $found = false;
-
+        $this_card = null;
         foreach($json["stacks"] as $stack){
             $this->assertIsArray($stack);
-            $this->assertArrayHasKey("cards", $stack);
+            $this->assertArrayHasKey("name", $stack);
+
             foreach($stack["cards"] as $card){
                 $this->assertIsArray($card);
                 $this->assertArrayHasKey("id", $card);
                 $this->assertArrayHasKey("title", $card);
 
                 if($card["title"] == $data["title"]){
-                    $found = $card["id"];
-                    $this->assertSame($card["title"], $data["title"]);
+                    $this_card = $card;
+                    break;
                 }
             }
         }
-        $this->assertNotFalse($found);
+        $this->assertNotNull($this_card);
+        $this->assertSame($data["title"], $this_card["title"]);
+        $this->assertSame($data["position"], $this_card["position"]);
+        $this->assertSame($data["stack"], intval($this_card["stack"]));
+        $this->assertSame($data["date"], $this_card["date"]);
+        $this->assertSame($data["time"], $this_card["time"]);
+        $this->assertSame($data["description"], $this_card["description"]);
+        $this->assertSame($data["archive"], $this_card["archive"]);
+        $this->assertSame($data["users"], $this_card["users"]);
+        $this->assertSame($data["labels"], $this_card["labels"]);
 
-        return intval($found);
-    }
-
-    /**
-     * Get card data
-     * @depends testPostChildSave
-     * @depends testGetChildCreated
-     */
-    public function testGetChildData(array $data, int $child_id) {
-
-        $response = $this->request('GET', $this->uri_edit . $child_id);
-
-        $body = (string) $response->getBody();
-        $json = json_decode($body, true);
-
-        $this->assertArrayHasKey("entry", $json);
-        $this->assertIsArray($json["entry"]);
-
-        $this->assertSame($data["title"], $json["entry"]["title"]);
-        $this->assertSame($data["position"], $json["entry"]["position"]);
-        $this->assertSame($data["stack"], intval($json["entry"]["stack"]));
-        $this->assertSame($data["date"], $json["entry"]["date"]);
-        $this->assertSame($data["time"], $json["entry"]["time"]);
-        $this->assertSame($data["description"], $json["entry"]["description"]);
-        $this->assertSame($data["archive"], $json["entry"]["archive"]);
-        $this->assertSame($data["users"], $json["entry"]["users"]);
-        $this->assertSame($data["labels"], $json["entry"]["labels"]);
-        $this->assertSame($child_id, intval($json["entry"]["id"]));
+        return intval($this_card["id"]);
     }
 
     /**
@@ -161,26 +142,39 @@ class MemberTest extends BoardTestBase {
      * @depends testPostChildUpdate
      * @depends testGetChildCreated
      */
-    public function testGetChildDataUpdated(array $data, int $child_id) {
+    public function testGetChildDataUpdated(array $data, int $card_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $child_id);
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
 
-        $this->assertArrayHasKey("entry", $json);
-        $this->assertIsArray($json["entry"]);
+        $this_card = null;
+        foreach($json["stacks"] as $stack){
+            $this->assertIsArray($stack);
+            $this->assertArrayHasKey("name", $stack);
 
-        $this->assertSame($data["title"], $json["entry"]["title"]);
-        $this->assertSame($data["position"], $json["entry"]["position"]);
-        $this->assertSame($data["stack"], intval($json["entry"]["stack"]));
-        $this->assertSame($data["date"], $json["entry"]["date"]);
-        $this->assertSame($data["time"], $json["entry"]["time"]);
-        $this->assertSame($data["description"], $json["entry"]["description"]);
-        $this->assertSame($data["archive"], $json["entry"]["archive"]);
-        $this->assertSame($data["users"], $json["entry"]["users"]);
-        $this->assertSame($data["labels"], $json["entry"]["labels"]);
-        $this->assertSame($child_id, intval($json["entry"]["id"]));
+            foreach($stack["cards"] as $card){
+                $this->assertIsArray($card);
+                $this->assertArrayHasKey("id", $card);
+                $this->assertArrayHasKey("title", $card);
+
+                if($card["id"] == $card_id){
+                    $this_card = $card;
+                    break;
+                }
+            }
+        }
+        $this->assertNotNull($this_card);
+        $this->assertSame($data["title"], $this_card["title"]);
+        $this->assertSame($data["position"], $this_card["position"]);
+        $this->assertSame($data["stack"], intval($this_card["stack"]));
+        $this->assertSame($data["date"], $this_card["date"]);
+        $this->assertSame($data["time"], $this_card["time"]);
+        $this->assertSame($data["description"], $this_card["description"]);
+        $this->assertSame($data["archive"], $this_card["archive"]);
+        $this->assertSame($data["users"], $this_card["users"]);
+        $this->assertSame($data["labels"], $this_card["labels"]);
     }
 
     /**

@@ -330,7 +330,7 @@ class SheetMapper extends \App\Domain\Mapper {
         return true;
     }
 
-    public function getUsers($id) {
+    public function getUsers($id, $only_id = false) {
         $sql = "SELECT u.id, u.login "
                 . "FROM " . $this->getTableName("timesheets_projects_users") . " project_user,"
                 . "" .$this->getTableName() ." sheet, "
@@ -346,7 +346,11 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[intval($row["id"])] = $row["login"];
+            if($only_id){
+                $results[] = intval($row["id"]);
+            }else{
+                $results[intval($row["id"])] = $row["login"];
+            }
         }
         return $results;
     }

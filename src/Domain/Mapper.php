@@ -266,7 +266,7 @@ abstract class Mapper {
      * @param type $id
      * @return type
      */
-    public function getUsers($id) {
+    public function getUsers($id, $only_id = false) {
         $table = null;
         $element = null;
         if ($this->has_user_table) {
@@ -290,7 +290,11 @@ abstract class Mapper {
 
             $results = [];
             while ($row = $stmt->fetch()) {
-                $results[intval($row["id"])] = $row["login"];
+                if($only_id){
+                    $results[] = intval($row["id"]);
+                }else{
+                    $results[intval($row["id"])] = $row["login"];
+                }
             }
             return $results;
         }

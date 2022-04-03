@@ -69,7 +69,7 @@ class BoardService extends Service {
 
         $board_users = $this->getUsers($board->id);
 
-        $show_archive = SessionUtility::getSessionVar('show_archive', 0);
+        $show_archive = true; //SessionUtility::getSessionVar('show_archive', 0);
 
         /**
          * Get stacks with cards

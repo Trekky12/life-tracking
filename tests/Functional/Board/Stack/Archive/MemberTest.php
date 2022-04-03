@@ -57,7 +57,7 @@ class MemberTest extends BoardTestBase {
             $this->assertArrayHasKey("name", $stack);
 
             if($stack["name"] == $this->TEST_STACK_NAME){
-                $this->fail("Stack found!");
+                $this->assertEquals(1, $stack["archive"]);
             }
         }
     }
@@ -95,16 +95,14 @@ class MemberTest extends BoardTestBase {
         $this->assertArrayHasKey("stacks", $json);
         $this->assertIsArray($json["stacks"]);
 
-        $found = false;
         foreach($json["stacks"] as $stack){
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
 
             if($stack["name"] == $this->TEST_STACK_NAME){
-                $found = true;
+                $this->assertEquals(0, $stack["archive"]);
             }
         }
-        $this->assertNotFalse($found);
     }
 
 }

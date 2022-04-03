@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20220122" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20220403" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20180727">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20180727">
@@ -207,13 +207,9 @@
                         'consumption': '{{lang["CONSUMPTION"]}}',
                         'add': '{{lang["ADD"]}}',
                         'cancel': '{{lang["CANCEL"]}}',
-                        'really_archive': '{{lang["REALLY_ARCHIVE"]}}',
                         'update': '{{lang["UPDATE"]}}',
-                        'labels': '{{lang["LABELS"]}}',
                         'categories': '{{lang["CATEGORIES"]}}',
                         'no_options': '{{lang["NO_OPTIONS"]}}',
-                        'undo_archive': '{{lang["UNDO_ARCHIVE"]}}',
-                        'really_close_page': '{{lang["REALLY_CLOSE_PAGE"]}}',
                         'nothing_found': '{{lang["NOTHING_FOUND"]}}',
                         'loading': '{{lang["LOADING"]}}',
                         'searching': '{{lang["SEARCHING"]}}',
@@ -223,18 +219,11 @@
                         'enable_push_notifications': '{{lang["ENABLE_PUSH_NOTIFICATIONS"]}}',
                         'disable_push_notifications': '{{lang["DISABLE_PUSH_NOTIFICATIONS"]}}',
                         'no_push_notifications_possible': '{{lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"]}}',
-                        "really_delete_stack": '{{lang["REALLY_DELETE_STACK"]}}',
-                        "really_delete_board": '{{lang["REALLY_DELETE_BOARD"]}}',
-                        "really_delete_card": '{{lang["REALLY_DELETE_CARD"]}}',
-                        "really_delete_label": '{{lang["REALLY_DELETE_LABEL"]}}',
                         "set_current_location": '{{lang["SET_CURRENT_LOCATION"]}}',
                         "remove_location": '{{lang["REMOVE_LOCATION"]}}',
                         "car_refuel": '{{lang["CAR_REFUEL"]}}',
                         "car_service": '{{lang["CAR_SERVICE"]}}',
                         "category": '{{lang["CATEGORY"]}}',
-                        "really_close_stack": '{{lang["REALLY_CLOSE_STACK"]}}',
-                        "really_close_card": '{{lang["REALLY_CLOSE_CARD"]}}',
-                        "really_close_label": '{{lang["REALLY_CLOSE_LABEL"]}}',
                         "splitbills_numbers_wrong": '{{lang["SPLITBILLS_NUMBERS_WRONG"]}}',
                         "from": '{{lang["FROM"]}}',
                         "to": '{{lang["TO"]}}',
@@ -260,7 +249,24 @@
                         "show": '{{lang["SHOW"]}}',
                         "hide": '{{lang["HIDE"]}}',
                         "ingredient": '{{lang["RECIPES_INGREDIENT"]}}',
-                        "timesheets_notice_password": '{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"]}}'
+                        "timesheets_notice_password": '{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"]}}',
+                        "boards_error_open_stack": '{{lang["BOARD_UNSAVED_STACK"]}}',
+                        "boards_error_open_card": '{{lang["BOARD_UNSAVED_CARD"]}}',
+                        "boards_error_save_stack": '{{lang["BOARD_SAVE_ERROR_STACK"]}}',
+                        "boards_error_save_card": '{{lang["BOARD_SAVE_ERROR_CARD"]}}',
+                        "boards_error_archive": '{{lang["BOARD_ARCHIVE_ERROR"]}}',
+                        "boards_error_delete": '{{lang["BOARD_DELETE_ERROR"]}}',
+                        "boards_really_close_stack": '{{lang["REALLY_CLOSE_STACK"]}}',
+                        "boards_really_close_card": '{{lang["REALLY_CLOSE_CARD"]}}',
+                        "boards_really_close_label": '{{lang["REALLY_CLOSE_LABEL"]}}',
+                        "boards_really_close_page": '{{lang["REALLY_CLOSE_PAGE"]}}',
+                        'boards_really_archive': '{{lang["REALLY_ARCHIVE"]}}',
+                        'boards_undo_archive': '{{lang["UNDO_ARCHIVE"]}}',
+                        "boards_really_delete_stack": '{{lang["REALLY_DELETE_STACK"]}}',
+                        "boards_really_delete_board": '{{lang["REALLY_DELETE_BOARD"]}}',
+                        "boards_really_delete_card": '{{lang["REALLY_DELETE_CARD"]}}',
+                        "boards_really_delete_label": '{{lang["REALLY_DELETE_LABEL"]}}',
+                        'boards_labels': '{{lang["LABELS"]}}',
                     };
                     var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
@@ -272,7 +278,7 @@
         <script src="{{baseURL}}/static/assets/js/randomColor.min.js" type="text/javascript"></script>  
         <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver=20220122" type="text/javascript"></script>  
 
-        <script src="{{baseURL}}/static/js/main.js?ver=20220220" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/main.js?ver=20220403" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20211029" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/tables.js?ver=20220213" type="text/javascript"></script>
 

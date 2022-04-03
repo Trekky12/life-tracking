@@ -12,6 +12,7 @@ class Payload {
     private $routeQueryParams = [];
     private $template = null;
     private $additionalData = [];
+    private $entry = [];
     public static $STATUS_NEW = "NEW";
     public static $STATUS_UPDATE = "UPDATED";
     public static $STATUS_NO_UPDATE = "NOT_UPDATED";
@@ -109,6 +110,17 @@ class Payload {
 
     public function getAdditionalData() {
         return $this->additionalData;
+    }
+
+    public function withEntry($data) {
+        $clone = clone $this;
+        $clone->entry = $data;
+
+        return $clone;
+    }
+
+    public function getEntry() {
+        return $this->entry;
     }
 
     public function withRouteParams($data) {
