@@ -42,69 +42,9 @@ function renderBoard() {
         });
         stacksWrapper.appendChild(new_stack_element);
 
-        var movableCards = document.querySelectorAll('.card-wrapper');
-        movableCards.forEach(function (card) {
-            new Sortable(card, {
-                group: {
-                    name: "cards"
-                },
-                draggable: ".board-card",
-                handle: isMobile() ? ".handle" : ".board-card",
-                dataIdAttr: 'data-card',
-                ghostClass: 'card-placeholder',
-                onUpdate: function (evt) {
-                    let stack_id = card.closest('.stack').dataset.stack;
-                    changeCardPosition(stack_id, this.toArray());
-                },
-                // Moved card to new stack
-                onAdd: function (evt) {
-                    let stack_id_from = evt.from.closest('.stack').dataset.stack;
-                    let stack_id_to = evt.to.closest('.stack').dataset.stack;
-                    let card_id = evt.item.dataset.card;
-                    //let newPosition = evt.newIndex;
-
-                    let cardsOnNewStack = this.toArray();
-
-                    var data = { 'card': card_id, 'stack': stack_id_to };
-
-                    getCSRFToken().then(function (token) {
-                        data['csrf_name'] = token.csrf_name;
-                        data['csrf_value'] = token.csrf_value;
-
-                        return fetch(jsObject.card_movestack_url, {
-                            method: 'POST',
-                            credentials: "same-origin",
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-
-                        });
-                    }).then(function (response) {
-                        return response.json();
-                    }).then(function () {
-                        let stack_from_Idx = getElementFromID(boardData.stacks, stack_id_from);
-                        let stack_from = boardData.stacks[stack_from_Idx];
-                        let cardIdx = getElementFromID(stack_from.cards, card_id);
-                        let card = stack.cards[cardIdx]
-
-                        // remove card from old stack
-                        stack_from.cards = stack_from.cards.filter(function (stack_card) {
-                            return stack_card.id != card_id;
-                        });
-
-                        // add card to new stack
-                        let stack_to_Idx = getElementFromID(boardData.stacks, stack_id_to);
-                        let stack_to = boardData.stacks[stack_to_Idx];
-                        stack_to.cards.push(card);
-                        card.stack = stack_id_to;
-
-                        changeCardPosition(stack_id_to, cardsOnNewStack);
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                }
-            });
+        var cardWrappers = document.querySelectorAll('.card-wrapper');
+        cardWrappers.forEach(function (cardWrapper) {
+            createSortableCards(cardWrapper);
         });
     }
 }
@@ -885,6 +825,8 @@ async function saveStack(dialog, url) {
         document.querySelector('.stack-wrapper').replaceChild(updatedStack, savedStackEl);
     } else {
         document.querySelector('.stack-wrapper').insertBefore(stack, new_stack_element);
+        let cardWrapper = stack.querySelector('.card-wrapper');
+        createSortableCards(cardWrapper);
     }
 
     closeDialog(dialog, true);
@@ -1339,5 +1281,69 @@ function changeCardPosition(stack_id, cards) {
         });
     }).catch(function (error) {
         console.log(error);
+    });
+}
+
+function createSortableCards(cardWrapper){
+    new Sortable(cardWrapper, {
+        group: {
+            name: "cards"
+        },
+        draggable: ".board-card",
+        handle: isMobile() ? ".handle" : ".board-card",
+        dataIdAttr: 'data-card',
+        ghostClass: 'card-placeholder',
+        onUpdate: function (evt) {
+            let stack_id = card.closest('.stack').dataset.stack;
+            changeCardPosition(stack_id, this.toArray());
+        },
+        // Moved card to new stack
+        onAdd: function (evt) {
+            let stack_id_from = evt.from.closest('.stack').dataset.stack;
+            let stack_id_to = evt.to.closest('.stack').dataset.stack;
+            let card_id = evt.item.dataset.card;
+            //let newPosition = evt.newIndex;
+
+            let cardsOnNewStack = this.toArray();
+
+            var data = { 'card': card_id, 'stack': stack_id_to };
+
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
+
+                return fetch(jsObject.card_movestack_url, {
+                    method: 'POST',
+                    credentials: "same-origin",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+
+                });
+            }).then(function (response) {
+                return response.json();
+            }).then(function () {
+                let stack_from_Idx = getElementFromID(boardData.stacks, stack_id_from);
+                let stack_from = boardData.stacks[stack_from_Idx];
+                let cardIdx = getElementFromID(stack_from.cards, card_id);
+                let card = stack_from.cards[cardIdx]
+
+                // remove card from old stack
+                stack_from.cards = stack_from.cards.filter(function (stack_card) {
+                    return stack_card.id != card_id;
+                });
+
+                // add card to new stack
+                let stack_to_Idx = getElementFromID(boardData.stacks, stack_id_to);
+                let stack_to = boardData.stacks[stack_to_Idx];
+                stack_to.cards.push(card);
+                card.stack = stack_id_to;
+
+                changeCardPosition(stack_id_to, cardsOnNewStack);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
     });
 }
