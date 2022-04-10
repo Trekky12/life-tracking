@@ -41,4 +41,27 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
         return null;
     }
 
+    public function hasNotices($sheet_ids = []){
+        if (empty($sheet_ids)) {
+            return [];
+        }
+        $sql = "SELECT sheet FROM " . $this->getTableName();
+
+        $notice_bindings = [];
+        foreach ($sheet_ids as $idx => $sheet_id) {
+            $notice_bindings[":sheet_" . $idx] = $sheet_id;
+        }
+
+        $sql .= " WHERE sheet IN (" . implode(',', array_keys($notice_bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($notice_bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[] = $row["sheet"];
+        }
+        return $results;
+    }
+
 }

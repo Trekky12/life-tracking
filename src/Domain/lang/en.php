@@ -773,6 +773,8 @@ $lang["DATATYPE_TEXTFIELD"] = "textfield";
 $lang["DATATYPE_TEXTAREA"] = "textarea";
 $lang["DATATYPE_SELECT"] = "dropdown";
 $lang["DATATYPE_INITIALIZATION"] = "Initialization (Dropdown)";
+$lang["TIMESHEETS_NOTICE_ADD"] = "Add notice";
+$lang["TIMESHEETS_NOTICE_EDIT"] = "Edit notice";
 
 $lang["PRINT"] = "Print";
 

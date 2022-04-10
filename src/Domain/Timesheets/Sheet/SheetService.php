@@ -15,6 +15,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Project\Project;
 use App\Domain\Main\Utility\Utility;
 use App\Domain\Main\Translator;
+use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
 
 class SheetService extends Service {
 
@@ -24,6 +25,7 @@ class SheetService extends Service {
     protected $settings;
     protected $router;
     protected $translation;
+    protected $sheet_notice_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -33,7 +35,8 @@ class SheetService extends Service {
             UserService $user_service,
             Settings $settings,
             RouteParser $router,
-            Translator $translation) {
+            Translator $translation,
+            SheetNoticeMapper $sheet_notice_mapper) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
@@ -43,6 +46,7 @@ class SheetService extends Service {
         $this->settings = $settings;
         $this->router = $router;
         $this->translation = $translation;
+        $this->sheet_notice_mapper = $sheet_notice_mapper;
     }
 
     public function view($hash, $from, $to, $categories): Payload {
@@ -182,6 +186,12 @@ class SheetService extends Service {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
+        // get information about notices
+        $sheet_ids = array_map(function($sheet){
+            return $sheet->id;
+        }, $sheets);
+        $hasNotices = $this->sheet_notice_mapper->hasNotices($sheet_ids);
+
         $rendered_data = [];
         foreach ($sheets as $sheet) {
 
@@ -200,7 +210,7 @@ class SheetService extends Service {
             $row[] = $time;
             $row[] = $sheet->categories;
 
-            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . $this->translation->getTranslatedString("NOTICE") . '</a>';
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-edit') . '</a>';
             $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 

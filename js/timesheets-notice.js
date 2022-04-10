@@ -94,7 +94,7 @@ async function checkPassword() {
 
             } else {
                 // Default: no notice fields, only one field
-                if (default_field && default_field.tagName && default_field.tagName.toLowerCase() === "textarea") {
+                if (default_field && default_field.tagName && (default_field.tagName.toLowerCase() === "textarea" || default_field.tagName.toLowerCase() === "input" || default_field.tagName.toLowerCase() === "select")) {
                     default_field.value = notice;
                 } else {
                     default_field.innerHTML = notice.replace(/(?:\r\n|\r|\n)/g, '<br>');
