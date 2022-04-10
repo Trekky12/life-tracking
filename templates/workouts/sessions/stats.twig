@@ -20,7 +20,7 @@
 			<h2>{% if plan is not empty %}{{plan.name|raw}}{% else %}{{lang["WORKOUTS_SESSIONS"]}}{% endif %}</h2>
 			<div class="buttons">
 				<a href="{% if plan is not empty %}{{ url_for_with_last_query_params('workouts_plan_view', {'plan': plan.hash}) }}{% else %}{{ url_for_with_last_query_params('workouts') }}{% endif %}">
-					<button class="white">{{lang["BACK"]}}
+					<button class="button white">{{lang["BACK"]}}
 						{{ fontawesome('fas fa-level-up-alt') }}</button>
 				</a>
 			</div>

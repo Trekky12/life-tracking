@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20220403c';
+const cacheName = 'pwa-life-tracking-v20220410';
 const staticAssets = [
     '/',
     '/pwa',
@@ -62,7 +62,7 @@ const staticAssets = [
     '/static/assets/js/nouislider.min.js',
     '/static/assets/js/randomColor.min.js',
     '/static/assets/js/selectr.min.js',
-    '/static/assets/js/simplemde.min.js',
+    '/static/assets/js/easymde.min.js',
     '/static/assets/js/i18n/de.js',
     '/static/assets/js/i18n/en.js',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-300.eot',
@@ -104,7 +104,7 @@ const staticAssets = [
     '/static/assets/css/nouislider.min.css',
     '/static/assets/css/open-sans.css',
     '/static/assets/css/selectr.min.css',
-    '/static/assets/css/simplemde.min.css',
+    '/static/assets/css/easymde.min.css',
     '/static/assets/css/weather-icons.min.css',
 ];
 

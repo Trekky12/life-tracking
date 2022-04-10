@@ -19,7 +19,7 @@
 				{{project.name|raw}}</h2>
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('timesheets_export', {'project' : project.hash}) }}">
-					<button class="white">{{lang["BACK"]}}
+					<button class="button white">{{lang["BACK"]}}
 						{{ fontawesome('fas fa-level-up-alt') }}</button>
 				</a>
 			</div>
@@ -39,8 +39,8 @@
 			</div>
 
 			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
-				<button class="print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
-				<button type="button" class="gray" id="wordExport">{{lang["EXPORT_WORD"]}} {{lang["TIMESHEETS_EXPORT"]}}</button>
+				<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
+				<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}} {{lang["TIMESHEETS_EXPORT"]}}</button>
 				{% for sheet in sheets %}
 					<div class="timesheet-notice-wrapper">
 						<h1 id="sheet_title">{{ sheet["title"] }}</h1>

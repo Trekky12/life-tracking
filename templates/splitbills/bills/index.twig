@@ -7,9 +7,9 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                <a href="{{  url_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD_BILL"]}}</button></a>
-                <a href="{{  url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup"><button class="white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
+                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="button white">{{ fontawesome('fas fa-plus') }} {{lang["ADD_BILL"]}}</button></a>
+                <a href="{{  url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup"><button class="button white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
             </div>
         </div>
     </div>

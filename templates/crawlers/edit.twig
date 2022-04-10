@@ -16,9 +16,9 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["CRAWLERS"]}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
                 {% if not entry is null %}
-                <a href="{{  url_for('crawlers_dataset_delete_old', {'id' : entry.id}) }}"><button class="white">{{ fontawesome('fas fa-trash') }} {{lang["CRAWLER_DATASETS_CLEAN"]}}</button></a>
+                <a href="{{  url_for('crawlers_dataset_delete_old', {'id' : entry.id}) }}"><button class="button white">{{ fontawesome('fas fa-trash') }} {{lang["CRAWLER_DATASETS_CLEAN"]}}</button></a>
                 {% endif %}
             </div>
         </div>
@@ -52,9 +52,9 @@
                 </div>
 
                 <div class="form-group btn">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

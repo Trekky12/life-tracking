@@ -564,3 +564,10 @@ body.boards-view{
         display:none;
     }
 }
+
+.editor-toolbar.fullscreen{
+    top: $header_height;
+}
+.EasyMDEContainer .CodeMirror-fullscreen{
+    top: $header_height+50px;
+}

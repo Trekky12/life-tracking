@@ -20,19 +20,19 @@
 				{{project.name|raw}}</h2>
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('timesheets')}}">
-					<button class="white">{{lang["BACK"]}}
+					<button class="button white">{{lang["BACK"]}}
 						{{ fontawesome('fas fa-level-up-alt') }}</button>
 				</a>
 				{% if categories %}
 					<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
-						<button class="white">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
+						<button class="button white">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
 					</a>
 				{% endif %}
 				<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}">
-					<button class="white">{{lang["TIMESHEETS_EXPORT"]}}</button>
+					<button class="button white">{{lang["TIMESHEETS_EXPORT"]}}</button>
 				</a>
 				<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
-					<button class="white">{{ fontawesome('fas fa-sign-in-alt') }}
+					<button class="button white">{{ fontawesome('fas fa-sign-in-alt') }}
 						{% if project.is_day_based == 1 %}
 							{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
 						{% else %}
@@ -41,7 +41,7 @@
 						{{ fontawesome('fas fa-sign-out-alt') }}</button>
 				</a>
 				<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
-					<button class="white">{{ fontawesome('fas fa-plus') }}
+					<button class="button white">{{ fontawesome('fas fa-plus') }}
 						{{lang["ADD"]}}</button>
 				</a>
 			</div>
@@ -76,12 +76,12 @@
 						</div>
 						<div class="filter-element">
 							<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["month"] }}&to={{ max["month"] }}">
-								<button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button>
+								<button type="button" class="button gray">{{ lang["SHOW_THIS_MONTH"] }}</button>
 							</a>
 						</div>
 						<div class="filter-element">
 							<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["total"] }}&to={{ max["total"] }}">
-								<button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button>
+								<button type="button" class="button gray">{{ lang["SHOW_ALL"] }}</button>
 							</a>
 						</div>
 					</div>
@@ -157,10 +157,10 @@
 						</select>
 					</div>
 					<div class="filter-element">
-						<button type="button" class="gray small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
+						<button type="button" class="button gray small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
 					</div>
 					<div class="filter-element">
-						<button type="button" class="gray small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
+						<button type="button" class="button gray small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
 					</div>
 				</div>
 			{% endif %}

@@ -10,7 +10,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('finances_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+                <a href="{{  url_for('finances_edit') }}"><button class="button white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -28,10 +28,10 @@
                             <input type="submit" value="{{lang["SHOW"]}}"/>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ url_for('finances') }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
+                            <a href="{{ url_for('finances') }}"><button type="button" class="button gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
                         </div>
                         <div class="filter-element">
-                            <a href="{{ url_for('finances') }}?from={{ min }}&to={{ max }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
+                            <a href="{{ url_for('finances') }}?from={{ min }}&to={{ max }}"><button type="button" class="button gray">{{ lang["SHOW_ALL"] }}</button></a>
                         </div>
                     </div>
                 </div>

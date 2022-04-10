@@ -11,7 +11,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPES_COOKBOOKS"]}} | {{ cookbook.name|raw }}</h2> 
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('recipes_cookbooks')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('recipes_cookbooks')}}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -27,7 +27,7 @@
             <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
         </div>
         <div id="loadMoreRecipes" class="centered hidden">
-            <button type="button">{{ lang["LOAD_MORE"] }}</button>
+            <button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
         </div>
     </div>
 

@@ -21,7 +21,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["CAR_REFUEL"]}} & {{lang["CAR_SERVICE"]}}</h2>
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('car_service') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>            
+                <a href="{{  url_for_with_last_query_params('car_service') }}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>            
             </div>
         </div>
         <div class="page-content">
@@ -221,8 +221,8 @@
                         <h3>{{lang["LOCATION"]}}</h3>
                         <div id="geo-map" class="geo-map"></div>
                         <div class="form-group map-btn">
-                            <button id="update-location" class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                            <button id="delete-location" class="delete-location danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                            <button id="update-location" class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                            <button id="delete-location" class="button delete-location danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                         </div>
                     {% endif %}
                     <input type="hidden" id="geoLat" class="geo-lat" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
@@ -232,9 +232,9 @@
 
 
                 <div class="form-group">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

@@ -36,9 +36,9 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

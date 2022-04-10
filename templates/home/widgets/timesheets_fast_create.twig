@@ -1,6 +1,6 @@
 <div class="widget-content">
 	<a href="#" class="timesheet-fast-come-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : widget["content"].hash})}}">
-		<button>
+		<button class="button">
 			{% if widget["content"].is_day_based == 1 %}
 				{{lang["TIMESHEETS_COME_DAY_BASED"]}}
 			{% else %}
@@ -10,7 +10,7 @@
 	</a>
 
 	<a href="#" class="timesheet-fast-leave-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : widget["content"].hash})}}">
-		<button>
+		<button class="button">
 			{% if widget["content"].is_day_based == 1 %}
 				{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}
 			{% else %}

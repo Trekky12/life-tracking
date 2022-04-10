@@ -5,14 +5,14 @@
 
 {% block style %}
 	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css"/>
-	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/simplemde.min.css"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/easymde.min.css"/>
 {% endblock %}
 
 {% block javascript %}
 	<script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
 	<script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/simplemde.min.js"></script>
-	<script src="{{baseURL}}/static/js/boards.js?v=20220403"></script>
+	<script src="{{baseURL}}/static/assets/js/easymde.min.js"></script>
+	<script src="{{baseURL}}/static/js/boards.js?v=20220410"></script>
 {% endblock %}
 
 {% block body %}
@@ -94,7 +94,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="buttons">
-						<input id="stack-add-btn" class="submit-btn no-loading" type="submit" tabindex="-1" value="{{lang["ADD"]}}"/>
+						<input id="stack-add-btn" class="button submit-btn no-loading" type="submit" tabindex="-1" value="{{lang["ADD"]}}"/>
 						<button id="stack-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
 					</div>
 				</div>
@@ -190,13 +190,13 @@
 						<div class="hidden-field hidden">
 							<label for="inputComment">{{lang["COMMENT"]}}</label>
 							<textarea class="form-control" id="inputComment" name="comment"></textarea>
-							<button id="addComment">{{lang["ADD_COMMENT"]}}</button>
+							<button id="addComment" class="button">{{lang["ADD_COMMENT"]}}</button>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="buttons">
-						<input id="card-add-btn" type="submit" class="submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
+						<input id="card-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
 						<button id="card-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
 					</div>
 				</div>
@@ -235,7 +235,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="buttons">
-						<input id="label-add-btn" type="submit" class="submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
+						<input id="label-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
 						<button id="label-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
 					</div>
 				</div>

@@ -508,9 +508,9 @@ function freeze() {
 
     document.body.style.overflow = 'hidden';
 
-    window.onscroll = function () {
+    /*window.onscroll = function () {
         window.scroll(0, top);
-    }
+    }*/
 }
 
 function unfreeze() {

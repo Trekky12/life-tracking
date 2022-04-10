@@ -509,7 +509,7 @@ const selector = new Selectr("select#card-label-list", {
     placeholder: lang.boards_labels
 });
 
-var simplemde = null;
+var editor = null;
 
 document.addEventListener('keydown', function (event) {
     if (event.keyCode === 27) {
@@ -632,10 +632,10 @@ siblings.forEach(function (sibling, idx) {
 
         });
 
-        if (simplemde) {
+        if (editor) {
             // Focus SimpleMDE
-            simplemde.codemirror.refresh();
-            simplemde.codemirror.focus();
+            editor.codemirror.refresh();
+            editor.codemirror.focus();
         }
     });
 });
@@ -655,9 +655,9 @@ function openDialog(element) {
 
 
     if (element === cardModal) {
-        // init simplemde
+        // init Editor
         var textarea = cardModal.querySelector('textarea[name="description"]');
-        simplemde = new SimpleMDE({
+        editor = new EasyMDE({
             element: textarea,
             autosave: {
                 enabled: false
@@ -671,7 +671,7 @@ function openDialog(element) {
 
         });
         if (textarea.value !== '') {
-            simplemde.togglePreview();
+            editor.togglePreview();
         }
     }
 }
@@ -712,9 +712,9 @@ function closeDialog(element, force = false) {
     // for cards
     if (element === cardModal) {
 
-        if (simplemde) {
-            simplemde.toTextArea();
-            simplemde = null;
+        if (editor) {
+            editor.toTextArea();
+            editor = null;
         }
 
         let siblings = cardModal.querySelectorAll('.show-sibling');
@@ -1050,7 +1050,7 @@ checkBoxArchivedItems.addEventListener('click', function (event) {
 /**
  * Auto Update page
  */
-/*setInterval(async function () {
+setInterval(async function () {
     var isOpenStack = isVisible(stackModal);
     var isOpenCard = isVisible(cardModal);
     var isOpenLabel = isVisible(labelModal);
@@ -1058,7 +1058,7 @@ checkBoxArchivedItems.addEventListener('click', function (event) {
     if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true) {
         await updateBoard();
     }
-}, 10000);*/
+}, 10000);
 
 async function updateBoard() {
     let newData = await loadBoard();
@@ -1294,7 +1294,7 @@ function createSortableCards(cardWrapper){
         dataIdAttr: 'data-card',
         ghostClass: 'card-placeholder',
         onUpdate: function (evt) {
-            let stack_id = card.closest('.stack').dataset.stack;
+            let stack_id = evt.item.closest('.stack').dataset.stack;
             changeCardPosition(stack_id, this.toArray());
         },
         // Moved card to new stack

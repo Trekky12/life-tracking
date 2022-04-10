@@ -95,7 +95,7 @@ function copyJSTask(cb) {
             './node_modules/moment/min/moment-with-locales.min.js',
             './node_modules/nouislider/dist/nouislider.min.js',
             './node_modules/mobius1-selectr/dist/selectr.min.js',
-            './node_modules/simplemde/dist/simplemde.min.js',
+            './node_modules/easymde/dist/easymde.min.js',
             './node_modules/sortablejs/Sortable.min.js',
             './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.min.js',
             './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
@@ -158,7 +158,7 @@ function copyCSSTask(cb) {
             './node_modules/leaflet.markercluster/dist/MarkerCluster.css',
             './node_modules/nouislider/dist/nouislider.min.css',
             './node_modules/mobius1-selectr/dist/selectr.min.css',
-            './node_modules/simplemde/dist/simplemde.min.css',
+            './node_modules/easymde/dist/easymde.min.css',
             ] )
         // remove source map
         .pipe(replace(/\/\*# sourceMappingURL=(.?)*\.css\.map \*\//g, ""))

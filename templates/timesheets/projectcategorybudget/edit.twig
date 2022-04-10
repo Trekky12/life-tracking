@@ -18,7 +18,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"]}} | {{ project.name }}</h2> 
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('timesheets_project_categorybudget', {'project': project.hash})}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('timesheets_project_categorybudget', {'project': project.hash})}}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -116,9 +116,9 @@
                 </div>
 
                 <div class="form-group btn">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

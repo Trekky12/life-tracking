@@ -22,7 +22,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2>
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -44,8 +44,8 @@
                     <h4>{{lang["START_ADDRESS"]}}</h4>
                     <div id="geo-map" class="geo-map"></div>
                     <div class="form-group map-btn">
-                        <button class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                        <button class="delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                        <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                        <button class="button delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                     </div>
                     <input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
@@ -62,8 +62,8 @@
                     <h4>{{lang["END_ADDRESS"]}}</h4>
                     <div id="geo-map2" class="geo-map"></div>
                     <div class="form-group map-btn">
-                        <button class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                        <button class="delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                        <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                        <button class="button delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                     </div>
                     <input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
@@ -113,9 +113,9 @@
                 {% endif %}
 
                 <div class="form-group btn">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>
