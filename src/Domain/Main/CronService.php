@@ -12,6 +12,8 @@ use App\Domain\Board\Card\CardMailService;
 use App\Application\Payload\Payload;
 use App\Domain\Settings\SettingsMapper;
 use App\Domain\Splitbill\RecurringBill\RecurringBillEntryCreator;
+use App\Domain\Main\Helper;
+use App\Domain\Base\Settings;
 
 class CronService extends Service {
 
@@ -29,7 +31,9 @@ class CronService extends Service {
             FinanceStatsMonthlyMailService $finance_stats_monthly_mail_service,
             CardMailService $card_mail_service,
             TokenService $token_service,
-            RecurringBillEntryCreator $bill_entry_creator) {
+            RecurringBillEntryCreator $bill_entry_creator,
+            Settings $settings,
+            Helper $helper) {
         parent::__construct($logger, $user);
 
         $this->settings_mapper = $settings_mapper;
@@ -38,6 +42,8 @@ class CronService extends Service {
         $this->card_mail_service = $card_mail_service;
         $this->bill_entry_creator = $bill_entry_creator;
         $this->token_service = $token_service;
+        
+        $helper->setBaseURL($settings->getAppSettings()['url']);
     }
 
     public function cron(): Payload {

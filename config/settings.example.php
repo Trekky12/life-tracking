@@ -26,6 +26,8 @@ return [
         'exclude' => []
     ],
     'app' => [
+        // Base URL for cron
+        'url' => 'https://example.com',
         // i18n settings
         'i18n' => [
             'template' => 'en',
