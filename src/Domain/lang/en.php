@@ -67,6 +67,13 @@ $lang["FINANCES_TRANSACTION"] = "Transaction";
 $lang["FINANCES_TRANSACTION_ACCOUNT_FROM"] = "from account";
 $lang["FINANCES_TRANSACTION_ACCOUNT_TO"] = "to account";
 $lang["FINANCES_TRANSACTION_ADD"] = "add transaction";
+$lang["FINANCES_TRANSACTION_UPDATE_HAS_ENTRY"] = "This transaction has a finance entry assigned.<br>Changes do not apply to the assigned finance entry.<br>When the finance entry is changed this transaction will be resetted!";
+$lang["FINANCES_TRANSACTION_UPDATE_HAS_SPLITTED_BILL"] = "This transaction has a splitted bill assigned.<br>Changes do not apply to the assigned splitted bill.<br>When the splitted bill is changed this transaction will be resetted!";
+$lang["FINANCES_TRANSACTION_DELETE_HAS_ENTRY"] = "This transaction has a finance entry assigned, which is not deleted! When the finance entry is changed a new transaction will be created.";
+$lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"] = "This transaction has a splitted bill assigned, which is not deleted! When the splitted bill is changed a new transaction will be created.";
+
+$lang["FINANCES_TRANSACTIONS_RECURRING"] = "recurring transactions";
+$lang["FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
 
 $lang["FUEL_FULL"] = "full";
 $lang["FUEL_PARTLY"] = "partly";
@@ -578,6 +585,7 @@ $lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "notice field";
+$lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";

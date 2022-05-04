@@ -68,6 +68,9 @@ class BillWriter extends BaseBillWriter
 
     public function save($id, $data, $additionalData = null): Payload
     {
+
+        $users_preSave = $this->mapper->getBillUsers($id);
+
         $payload = parent::save($id, $data, $additionalData);
         $bill = $payload->getResult();
 
@@ -157,7 +160,7 @@ class BillWriter extends BaseBillWriter
          * Notify Users
          */
         $is_new_bill = $payload->getStatus() == Payload::$STATUS_NEW;
-        $this->bill_notification_service->notifyUsers("edit", $bill, $group, $is_new_bill);
+        $this->bill_notification_service->notifyUsers("edit", $bill, $group, $is_new_bill, $users_preSave);
 
         return $payload;
     }

@@ -1135,3 +1135,38 @@ var noticefieldsTable = new JSTable("#noticefields_table", {
     ]
 });
 
+var transactionsRecurringTable = new JSTable("#transaction_recurring_table", {
+    perPage: 10,
+    labels: tableLabels,
+    columns: [
+        {
+            select: 1,
+            sortable: true,
+            sort: "desc",
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data + " " + i18n.currency;
+            }
+        },
+        {
+            select: [4, 5],
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data ? moment(data).format(i18n.dateformatJS.date) : "";
+            }
+        },
+        {
+            select: [7, 8],
+            render: function (cell, idx) {
+                let data = cell.innerHTML;
+                return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
+            }
+        },
+        {
+            select: [10, 11, 12],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+

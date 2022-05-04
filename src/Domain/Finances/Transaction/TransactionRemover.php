@@ -35,9 +35,9 @@ class TransactionRemover extends ObjectActivityRemover
         try {
             $entry = $this->mapper->get($id);
 
-            if (!is_null($entry) && ((!is_null($entry->finance_entry) && !$is_finance_entry_based_delete) || (!is_null($entry->bill_entry) && !$is_bill_based_delete))) {
+            /*if (!is_null($entry) && ((!is_null($entry->finance_entry) && !$is_finance_entry_based_delete) || (!is_null($entry->bill_entry) && !$is_bill_based_delete))) {
                 return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
-            }
+            }*/
 
             if (!is_null($entry->account_from)) {
                 $this->account_mapper->addValue($entry->account_from, $entry->value);

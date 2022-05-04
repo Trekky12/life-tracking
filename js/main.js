@@ -51,14 +51,11 @@ function getNewTokens(token) {
     });
 }
 
-function deleteObject(url, type) {
+function deleteObject(url, custom_confirm_text) {
 
     let confirm_text = lang.really_delete;
-    if (type === "board") {
-        confirm_text = lang.boards_really_delete_board;
-    }
-    if (type === "label") {
-        confirm_text = lang.boards_really_delete_label;
+    if (custom_confirm_text !== "default") {
+        confirm_text = custom_confirm_text;
     }
 
     if (!confirm(confirm_text)) {
@@ -178,8 +175,8 @@ function initialize() {
             event.preventDefault();
             let url = deleteBtn.dataset.url;
             if (url) {
-                let type = deleteBtn.dataset.type ? deleteBtn.dataset.type : "default";
-                deleteObject(url, type);
+                let confirm = deleteBtn.dataset.confirm ? deleteBtn.dataset.confirm : "default";
+                deleteObject(url, confirm);
             } else {
                 deleteBtn.parentNode.remove();
             }

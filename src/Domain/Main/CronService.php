@@ -12,6 +12,7 @@ use App\Domain\Board\Card\CardMailService;
 use App\Application\Payload\Payload;
 use App\Domain\Settings\SettingsMapper;
 use App\Domain\Splitbill\RecurringBill\RecurringBillEntryCreator;
+use App\Domain\Finances\TransactionRecurring\RecurringTransactionCreator;
 use App\Domain\Main\Helper;
 use App\Domain\Base\Settings;
 
@@ -23,6 +24,7 @@ class CronService extends Service {
     protected $card_mail_service;
     protected $token_service;
     private $bill_entry_creator;
+    protected $transaction_recurring_creator;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -32,6 +34,7 @@ class CronService extends Service {
             CardMailService $card_mail_service,
             TokenService $token_service,
             RecurringBillEntryCreator $bill_entry_creator,
+            RecurringTransactionCreator $transaction_recurring_creator,
             Settings $settings,
             Helper $helper) {
         parent::__construct($logger, $user);
@@ -42,6 +45,7 @@ class CronService extends Service {
         $this->card_mail_service = $card_mail_service;
         $this->bill_entry_creator = $bill_entry_creator;
         $this->token_service = $token_service;
+        $this->transaction_recurring_creator = $transaction_recurring_creator;
         
         $helper->setBaseURL($settings->getAppSettings()['url']);
     }
@@ -53,6 +57,7 @@ class CronService extends Service {
         $lastRunFinanceSummary = $this->settings_mapper->getSetting("lastRunFinanceSummary");
         $lastRunCardReminder = $this->settings_mapper->getSetting("lastRunCardReminder");
         $lastRunRecurringSplitbills = $this->settings_mapper->getSetting("lastRunRecurringSplitbills");
+        $lastRunRecurringTransactions = $this->settings_mapper->getSetting("lastRunRecurringTransactions");
 
         $date = new \DateTime('now');
 
@@ -88,6 +93,14 @@ class CronService extends Service {
 
             $this->bill_entry_creator->update();
             $this->settings_mapper->updateLastRun("lastRunRecurringSplitbills");
+        }
+
+        // Update recurring finance transactions @ 06:00
+        if ($date->format("H") === "06" && $lastRunRecurringTransactions->getDayDiff() > 0) {
+            $this->logger->notice('CRON - Update finance transactions');
+
+            $this->transaction_recurring_creator->update();
+            $this->settings_mapper->updateLastRun("lastRunRecurringTransactions");
         }
 
         $response_data = ['result' => 'success'];

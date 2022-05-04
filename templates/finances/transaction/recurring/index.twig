@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+
+{% set active = 'finances' %}
+
+
+{% block body %}
+
+    <div class="inner-content">
+        <div class="page-header"><h2>{{lang["FINANCES_TRANSACTIONS_RECURRING"]}}</h2> 
+            <div class="buttons">
+                <a href="{{  url_for('finances_transaction_recurring_edit') }}"><button class="button white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+            </div>
+        </div>
+        <div class="page-content">
+            <table id="transaction_recurring_table" class="table table-hover small">
+                <thead>
+                    <tr>
+                        <th>{{lang["DESCRIPTION"]}}</th>
+                        <th>{{lang["VALUE"]}}</th>
+                        <th>{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</th>
+                        <th>{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</th>
+                        <th>{{lang["START"]}}</th>
+                        <th>{{lang["END"]}}</th>
+                        <th>{{lang["INTERVAL"]}}</th>
+                        <th>{{lang["LAST_RUN"]}}</th>
+                        <th>{{lang["NEXT_RUN"]}}</th>
+                        <th>{{lang["ACTIVE"]}}</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in list%}
+                        <tr>
+                            <td>{{entry.description|raw}}</td> 
+                            <td>{{entry.value}}</td> 
+                            <td>{{accounts[entry.account_from].name|raw}}</td> 
+                            <td>{{accounts[entry.account_to].name|raw}}</td> 
+                            <td>{{entry.start}}</td> 
+                            <td>{{entry.end}}</td> 
+                            <td>{{entry.multiplier}} x {{lang[units[entry.unit]]}}</td> 
+                            <td>{{entry.last_run}}</td> 
+                            <td>{{entry.next_run}}</td> 
+                            <td>{% if entry.is_active > 0 %}x{% endif %}</td> 
+                            <td><a href="{{  url_for('finances_transaction_recurring_trigger', {'id' : entry.id}) }}">{{ fontawesome('fas fa-play') }}</a></td>
+                            <td><a href="{{  url_for('finances_transaction_recurring_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="#" data-url="{{  url_for('finances_transaction_recurring_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

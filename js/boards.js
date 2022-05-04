@@ -359,7 +359,7 @@ document.addEventListener('click', function (event) {
                 labelModal.querySelector('input[name="text_color"]').value = data.entry.text_color;
                 labelModal.querySelector('input[name="text_color"]').parentElement.style.backgroundColor = data.entry.text_color;
 
-                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-type='label'>" + document.getElementById('iconTrash').innerHTML + "</a>";
+                var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-confirm='" + lang.boards_really_delete_label + "'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
                 labelModal.querySelector(".edit-bar").innerHTML = edit_bar;
 
@@ -1284,7 +1284,7 @@ function changeCardPosition(stack_id, cards) {
     });
 }
 
-function createSortableCards(cardWrapper){
+function createSortableCards(cardWrapper) {
     new Sortable(cardWrapper, {
         group: {
             name: "cards"

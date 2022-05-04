@@ -9,28 +9,36 @@ use App\Application\Payload\Payload;
 use App\Domain\Finances\Account\AccountService;
 use App\Domain\Main\Utility\Utility;
 use Slim\Routing\RouteParser;
+use App\DOmain\Main\Translator;
 
-class TransactionService extends Service {
+class TransactionService extends Service
+{
 
     private $account_service;
     private $router;
+    private $translation;
 
-    public function __construct(LoggerInterface $logger, 
-        CurrentUser $user, 
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
         TransactionMapper $mapper,
         AccountService $account_service,
-        RouteParser $router) {
+        RouteParser $router,
+        Translator $translation
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->account_service = $account_service;
         $this->router = $router;
+        $this->translation = $translation;
     }
 
-    public function index($account_hash, $count = 10) {
+    public function index($account_hash, $count = 10)
+    {
 
         $account = $this->account_service->getFromHash($account_hash);
 
-        if(!$this->account_service->isOwner($account->id)){
+        if (!$this->account_service->isOwner($account->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
@@ -45,11 +53,12 @@ class TransactionService extends Service {
             "hasFinanceTransactionTable" => true
         ]);
     }
-    public function table($account_hash, $requestData): Payload {
+    public function table($account_hash, $requestData): Payload
+    {
 
         $account = $this->account_service->getFromHash($account_hash);
 
-        if(!$this->account_service->isOwner($account->id)){
+        if (!$this->account_service->isOwner($account->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
@@ -76,7 +85,8 @@ class TransactionService extends Service {
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    private function renderTableRows($account, array $table) {
+    private function renderTableRows($account, array $table)
+    {
         $rendered_data = [];
         foreach ($table as $dataset) {
             $row = [];
@@ -87,26 +97,27 @@ class TransactionService extends Service {
             $row[] = $dataset["value"];
             $row[] = $dataset["acc_from"];
             $row[] = $dataset["acc_to"];
-            $row[] = is_null($dataset["finance_entry"]) && is_null($dataset["bill_entry"]) ? '<a href="' . $this->router->urlFor('finances_transaction_edit', ['id' => $dataset["id"]]) . '?account='.$account->getHash().'">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>': '';
-            $row[] = is_null($dataset["finance_entry"]) && is_null($dataset["bill_entry"]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_transaction_delete', ['id' => $dataset["id"]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</span></a>' : '';
+            //$row[] = is_null($dataset["finance_entry"]) && is_null($dataset["bill_entry"]) ? '<a href="' . $this->router->urlFor('finances_transaction_edit', ['id' => $dataset["id"]]) . '?account='.$account->getHash().'">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>': '';
+            $row[] = '<a href="' . $this->router->urlFor('finances_transaction_edit', ['id' => $dataset["id"]]) . '?account=' . $account->getHash() . '">' . Utility::getFontAwesomeIcon('fas fa-edit') . '</a>';
+            //$row[] = is_null($dataset["finance_entry"]) && is_null($dataset["bill_entry"]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_transaction_delete', ['id' => $dataset["id"]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</span></a>' : '';
+
+            $delete_confirm_message = !is_null($dataset["bill_entry"]) ? $this->translation->getTranslatedString("FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL") : (!is_null($dataset["finance_entry"]) ? $this->translation->getTranslatedString("FINANCES_TRANSACTION_DELETE_HAS_ENTRY") : '');
+            $row[] = '<a href="#" data-url="' . $this->router->urlFor('finances_transaction_delete', ['id' => $dataset["id"]]) . '" class="btn-delete" data-confirm="' . $delete_confirm_message . '">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</span></a>';
 
             $rendered_data[] = ["data" => $row, "attributes" => ["data-confirmed" => $dataset["is_confirmed"]]];
         }
         return $rendered_data;
     }
 
-    public function edit($entry_id, $account_hash = null) {
+    public function edit($entry_id, $account_hash = null)
+    {
         $entry = $this->getEntry($entry_id);
-
-        if(!is_null($entry) && (!is_null($entry->finance_entry) || !is_null($entry->bill_entry))){
-            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
-        }
 
         $accounts = $this->account_service->getAllAccountsOrderedByName();
 
-        try{
+        try {
             $account = $this->account_service->getFromHash($account_hash);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $account = null;
         }
 
@@ -118,7 +129,8 @@ class TransactionService extends Service {
     }
 
 
-    public function view($entry_id) {
+    public function view($entry_id)
+    {
         $entry = $this->getEntry($entry_id);
 
         $accounts = $this->account_service->getAllAccountsOrderedByName();
@@ -129,7 +141,8 @@ class TransactionService extends Service {
         ]);
     }
 
-    public function setConfirmed($data) {
+    public function setConfirmed($data)
+    {
         $response_data = ['status' => 'error'];
 
         if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1)) && array_key_exists("transaction", $data)) {
@@ -143,5 +156,4 @@ class TransactionService extends Service {
         }
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
-
 }

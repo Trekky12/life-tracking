@@ -30,7 +30,7 @@
                             </td>
                             <td>
                                 {% if board.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-type="board">{{ fontawesome('fas fa-trash') }}</a>
+                                    <a href="#" data-url="{{  url_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-confirm="{{ lang["REALLY_DELETE_BOARD"]}}">{{ fontawesome('fas fa-trash') }}</a>
                                     {% endif %}
                             </td>
                         </tr>

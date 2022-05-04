@@ -1,15 +1,16 @@
 <?php
 
-namespace Tests\Functional\Finances\Transaction;
+namespace Tests\Functional\Finances\TransactionRecurring;
 
 use Tests\Functional\Base\BaseTestCase;
 
 class UserTest extends BaseTestCase {
 
-    protected $uri_overview = "/finances/accounts/ABCabc123/view/";
-    protected $uri_edit = "/finances/transactions/edit/";
-    protected $uri_save = "/finances/transactions/save/";
-    protected $uri_delete = "/finances/transactions/delete/";
+    protected $uri_overview = "/finances/transactions/recurring/";
+    protected $uri_edit = "/finances/transactions/recurring/edit/";
+    protected $uri_save = "/finances/transactions/recurring/save/";
+    protected $uri_delete = "/finances/transactions/recurring/delete/";
+    protected $uri_trigger = "/finances/transactions/recurring/trigger/";
     protected $uri_accounts = "/finances/accounts/";
 
     protected $TEST_FINANCE_ACCOUNT_1_ID = 1;
@@ -29,7 +30,7 @@ class UserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<table id="finance_transaction_table"', $body);
+        $this->assertStringContainsString('<table id="transaction_recurring_table"', $body);
     }
 
     public function testGetAddElement() {
@@ -48,17 +49,20 @@ class UserTest extends BaseTestCase {
 
         $data = [
             "description" => "Test Transaction 2",
-            "date" => date('Y-m-d'),
-            "time" => date("H:i:s"),
             "value" => rand(0, 10000) / 100,
             "account_from" => $this->TEST_FINANCE_ACCOUNT_1_ID,
-            "account_to" => $this->TEST_FINANCE_ACCOUNT_2_ID
+            "account_to" => $this->TEST_FINANCE_ACCOUNT_2_ID,
+            "start" => date('Y-m-d'),
+            "end" => null,
+            "unit" => "day",
+            "multiplier" => 1,
+            "is_active" => 1
         ];
 
         $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
-        $this->assertStringStartsWith($this->uri_accounts, $response->getHeaderLine("Location"));
+        $this->assertStringStartsWith($this->uri_overview, $response->getHeaderLine("Location"));
 
         return $data;
     }
@@ -116,17 +120,20 @@ class UserTest extends BaseTestCase {
         $data = [
             "id" => $entry_id,
             "description" => "Test Transaction 2 Updated",
-            "date" => date('Y-m-d'),
-            "time" => date("H:i:s"),
             "value" => rand(0, 10000) / 100,
             "account_from" => $this->TEST_FINANCE_ACCOUNT_1_ID,
-            "account_to" => $this->TEST_FINANCE_ACCOUNT_2_ID
+            "account_to" => $this->TEST_FINANCE_ACCOUNT_2_ID,
+            "start" => date('Y-m-d'),
+            "end" => null,
+            "unit" => "day",
+            "multiplier" => 2,
+            "is_active" => 1
         ];
 
         $response = $this->request('POST', $this->uri_save . $entry_id, $data);
 
         $this->assertEquals(301, $response->getStatusCode());
-        $this->assertStringStartsWith($this->uri_accounts, $response->getHeaderLine("Location"));
+        $this->assertStringStartsWith($this->uri_overview, $response->getHeaderLine("Location"));
 
         return $data;
     }
@@ -179,7 +186,7 @@ class UserTest extends BaseTestCase {
         $data["account_to_name"] = "Test Account 2";
 
         $matches = [];
-        $re = '/<tr data-confirmed="0">\s*<td>.*?<\/td>\s*<td>'.preg_quote($data["date"]).'<\/td>\s*<td>'.preg_quote($data["time"]).'<\/td>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . number_format($data["value"], 2) . '<\/td>\s*<td>' . preg_quote($data["account_from_name"]) . '<\/td>\s*<td>' . preg_quote($data["account_to_name"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)\?account=(?<hash>[\w]+)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete" data-confirm=".*?">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . number_format($data["value"], 2) . '<\/td>\s*<td>' . preg_quote($data["account_from_name"]) . '<\/td>\s*<td>' . preg_quote($data["account_to_name"]) . '<\/td>\s*<td>' . preg_quote($data["start"]) . '<\/td>\s*<td>' . preg_quote($data["end"]) . '<\/td>\s*<td>' . $data['multiplier'] . ' x Tag' . '<\/td>\s*<td><\/td>\s*<td><\/td>\s*<td>x<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_trigger) . '(?<id_trigger>.*)">.*?<\/a><\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

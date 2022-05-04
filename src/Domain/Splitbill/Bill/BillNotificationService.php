@@ -44,7 +44,7 @@ class BillNotificationService {
         $this->mail_notification_service = $mail_notification_service;
     }
 
-    public function notifyUsers($type, $bill, $sbgroup, $is_new_bill) {
+    public function notifyUsers($type, $bill, $sbgroup, $is_new_bill, $users_preSave = []) {
         /**
          * Notify users
          */
@@ -53,6 +53,7 @@ class BillNotificationService {
         $me = $this->current_user->getUser();
         $my_user_id = intval($me->id);
         $users_afterSave = $this->mapper->getBillUsers($bill->id);
+        $users_notify = array_merge($users_preSave, $users_afterSave);
 
         $new_balances = $this->mapper->getBalance($bill->id);
         $billValue = $this->mapper->getBillSpend($bill->id);
@@ -97,7 +98,7 @@ class BillNotificationService {
             $lang_paid = $this->translation->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
         }
 
-        foreach ($users_afterSave as $nu) {
+        foreach ($users_notify as $nu) {
 
             // except self
             if ($nu !== $my_user_id) {

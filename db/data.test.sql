@@ -31,6 +31,9 @@ INSERT INTO finances_paymethods (id, user, name, is_default, account) VALUES
 INSERT INTO finances_transactions (id, user, date, time, description, value, account_from, account_to) VALUES 
 (1, 1, '2022-01-01', '12:00:00', 'Test Transaction', 10, 1, 3);
 
+INSERT INTO finances_transactions_recurring (id, user, description, value, start, end, unit, multiplier, is_active) VALUES
+(1, 1, 'Test recurring finance transaction', '10.00', '2020-01-01', NULL, 'month', 1, 1);
+
 INSERT INTO splitbill_groups (id, user, name, hash, add_finances, currency, exchange_rate, exchange_fee) VALUES 
 (1, 1, 'Test splitted bills group', 'ABCabc123', 1, '€', '1', '0'),
 (2, 1, 'Test splitted bills group (no access to owner)', 'DEFdef456', 0, '€', '1', '0'),

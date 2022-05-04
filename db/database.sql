@@ -219,6 +219,29 @@ CREATE TABLE finances_transactions (
     FOREIGN KEY(account_to) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS finances_transactions_recurring;
+CREATE TABLE finances_transactions_recurring (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    description varchar(255) DEFAULT NULL,
+    value DECIMAL(10,2) NOT NULL,
+    account_from int(11) UNSIGNED DEFAULT NULL,
+    account_to int(11) UNSIGNED DEFAULT NULL,   
+    start DATE DEFAULT NULL,
+    end DATE DEFAULT NULL,
+    last_run TIMESTAMP NULL DEFAULT NULL,
+    unit varchar(255) DEFAULT 'month',
+    multiplier int(5) DEFAULT 1,
+    is_active int(1) DEFAULT 1,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(account_from) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(account_to) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS cars;
 CREATE TABLE cars (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,

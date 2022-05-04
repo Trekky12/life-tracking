@@ -111,6 +111,14 @@ return function (App $app) {
             $group_transactions->get('/view/[{id:[0-9]+}]', \App\Application\Action\Finances\Transaction\TransactionViewAction::class)->setName('finances_transaction_view');
 
             $group_transactions->post('/confirm/', \App\Application\Action\Finances\Transaction\TransactionConfirmAction::class)->setName('finances_transaction_confirm');
+
+            $group_transactions->group('/recurring', function (RouteCollectorProxy $group_transactions_recurring) {
+                $group_transactions_recurring->get('/', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringListAction::class)->setName('finances_transaction_recurring');
+                $group_transactions_recurring->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringEditAction::class)->setName('finances_transaction_recurring_edit');
+                $group_transactions_recurring->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringSaveAction::class)->setName('finances_transaction_recurring_save');
+                $group_transactions_recurring->delete('/delete/{id}', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringDeleteAction::class)->setName('finances_transaction_recurring_delete');
+                $group_transactions_recurring->get('/trigger/{id}', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringTriggerAction::class)->setName('finances_transaction_recurring_trigger');
+            });
         });
     });
 
