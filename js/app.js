@@ -105,7 +105,7 @@ function saveFormDataWhenOffline() {
 
         let forms = document.querySelectorAll('form');
         forms.forEach(function (item, idx) {
-            if (item.method === 'post') {
+            if (item.method === 'post' && item.id !== "timesheetNoticeForm") {
                 item.addEventListener('submit', function (e) {
                     e.preventDefault();
 

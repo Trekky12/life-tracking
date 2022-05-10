@@ -158,7 +158,7 @@ if (timesheetNoticeForm) {
             let notice = {};
             for (const field of notice_fields) {
                 if (field.tagName && field.tagName.toLowerCase() === "select") {
-                    if(field.selectedIndex >= 0) {
+                    if (field.selectedIndex >= 0) {
                         notice[field.name] = field.options[field.selectedIndex].text;
                     }
                 } else {
@@ -195,9 +195,16 @@ if (timesheetNoticeForm) {
             }
         }).catch(function (error) {
             console.log(error);
-            document.getElementById("loading-overlay").classList.add("hidden");
-            alertErrorDetail.innerHTML = error;
-            alertError.classList.remove("hidden");
+
+            if (document.body.classList.contains('offline')) {
+                let formData = new URLSearchParams(data).toString();
+                saveDataWhenOffline(timesheetNoticeForm.action, timesheetNoticeForm.method, formData);
+            } else {
+                document.getElementById("loading-overlay").classList.add("hidden");
+                alertErrorDetail.innerHTML = error;
+                alertError.classList.remove("hidden");
+            }
+
         });
     });
 }
