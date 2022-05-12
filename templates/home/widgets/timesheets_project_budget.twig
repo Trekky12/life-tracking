@@ -1,7 +1,7 @@
 {% set main_category = null %}
 <table class="timesheets_project_budget_widget">
 	<tbody>
-		{% for list_entry in widget["content"] %}
+		{% for list_entry in data %}
 			{% if main_category != list_entry["main_category"] %}
 				<tr>
 					<td colspan="2">

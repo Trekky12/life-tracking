@@ -213,7 +213,7 @@ return function (App $app) {
             $group_frontpage->post('/updatePosition', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetUpdatePositionAction::class)->setName('users_profile_frontpage_widget_position');
             $group_frontpage->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDeleteAction::class)->setName('users_profile_frontpage_widget_delete');
 
-            $group_frontpage->get('/request/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetRequestAction::class)->setName('frontpage_widget_request');
+            $group_frontpage->get('/data/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDataAction::class)->setName('frontpage_widget_request');
         });
 
         $group->get('/mail/manage/', \App\Application\Action\MailNotifications\MailNotificationsManageAction::class)->setName('mail_manage');

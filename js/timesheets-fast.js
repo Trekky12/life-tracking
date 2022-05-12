@@ -7,19 +7,20 @@ const timesheetLatField = document.querySelector('input#geoLat');
 const timesheetLngField = document.querySelector('input#geoLng');
 const timesheetAccField = document.querySelector('input#geoAcc');
 
-comeButtons.forEach(function (item, idx) {
-    item.addEventListener('click', function (event) {
+document.addEventListener('click', function (event) {
+    let comeBtn = event.target.closest('.timesheet-fast-come-btn');
+    let leaveBtn = event.target.closest('.timesheet-fast-leave-btn');
+
+    if (comeBtn) {
         event.preventDefault();
-        createTimesheet(item, "start");
-    });
+        createTimesheet(comeBtn, "start");
+    }
+    if(leaveBtn){
+        event.preventDefault();
+        createTimesheet(leaveBtn, "end");
+    }
 });
 
-leaveButtons.forEach(function (item, idx) {
-    item.addEventListener('click', function (event) {
-        event.preventDefault();
-        createTimesheet(item, "end");
-    });
-});
 
 function createTimesheet(button, type) {
     let alertError = document.querySelector('#alertErrorTimesheetFast');

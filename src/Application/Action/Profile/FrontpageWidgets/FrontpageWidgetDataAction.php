@@ -5,21 +5,21 @@ namespace App\Application\Action\Profile\FrontpageWidgets;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Home\HomeService;
-use App\Application\Responder\JSONResultResponder;
+use App\Application\Responder\JSONHTMLTemplateResponder;
 
-class FrontpageWidgetRequestAction {
+class FrontpageWidgetDataAction {
 
     private $responder;
     private $service;
 
-    public function __construct(JSONResultResponder $responder, HomeService $service) {
+    public function __construct(JSONHTMLTemplateResponder $responder, HomeService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }
 
     public function __invoke(Request $request, Response $response): Response {
         $id = $request->getAttribute('id');
-        $payload = $this->service->getWidgetRequestData($id);
+        $payload = $this->service->getWidgetData($id);
         return $this->responder->respond($payload);
     }
 

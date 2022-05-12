@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for list_entry in widget["content"] %}
+        {% for list_entry in data %}
             <tr>
                 <td>{{ list_entry[0]|date(i18n.dateformatTwig.date) }}</td>
                 <td>{{ list_entry[2] }}</td>

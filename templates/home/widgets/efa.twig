@@ -1,3 +1,20 @@
-<div class="request_widget" data-id="{{ widget["id"] }}" data-reload="60">
-    <span class="centered spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-</div>
+<table class="small table" border="0">
+	{% for departure in data %}
+		<tr>
+			<td class="departures__departure__line">
+				<span class="departures__departure__line__number xsmall">{{ departure["line"] }}</span>
+			</td>
+			<td>
+				<span class="departures__departure__direction small">{{ departure["direction"] }}</span>
+			</td>
+			<td class="departures__departure">
+				<span class="departures__departure__time-relative small bright">{{ departure["time"] }}</span>
+			</td>
+			<td class="departures__delay">
+				{% if departure["delay"] > 0 %}
+                    <span class="departures__delay__time xsmall">+ {{ departure["delay"] }}</span>
+                {% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+</table>

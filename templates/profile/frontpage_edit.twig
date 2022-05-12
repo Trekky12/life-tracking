@@ -46,7 +46,6 @@
                             <a href="#" data-url="{{ url_for('users_profile_frontpage_widget_delete', {'id' : widget["id"]}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
                         </div>
                     </div>
-                    {% include 'home/widgets/' ~ widget["name"] ~'.twig' with {'widget': widget} %}   
                 </div>
             </div>
         {%  endfor %}

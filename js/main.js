@@ -1,7 +1,7 @@
 'use strict';
 
 // @see https://stackoverflow.com/a/2638357
-window.onunload = function(){}; 
+window.onunload = function () { };
 
 moment.locale(i18n.template);
 
@@ -139,7 +139,7 @@ function initialize() {
             window.history.back();
         });
     }
-    
+
     if (document.body.classList.contains("login")) {
         // Delete IndexedDBs
         if (!('indexedDB' in window)) {
@@ -182,16 +182,6 @@ function initialize() {
             }
             return;
         }
-    });
-
-    /**
-     * Alert
-     */
-    let closebtn = document.querySelectorAll('span.closebtn');
-    closebtn.forEach(function (item, idx) {
-        item.addEventListener('click', function (event) {
-            event.target.parentElement.classList.add("hidden");
-        });
     });
 
     /**
@@ -409,15 +399,17 @@ flatpickr('#dateSelectEnd', {
 });
 
 
-/**
- * Get Adress of marker
- */
+
 document.addEventListener('click', function (event) {
     // https://stackoverflow.com/a/50901269
-    let closest = event.target.closest('.btn-get-address');
-    if (closest) {
-        let lat = closest.dataset.lat;
-        let lng = closest.dataset.lng;
+
+    /**
+     * Get Adress of marker
+     */
+    let addressBtn = event.target.closest('.btn-get-address');
+    if (addressBtn) {
+        let lat = addressBtn.dataset.lat;
+        let lng = addressBtn.dataset.lng;
         if (lat && lng) {
             event.preventDefault();
             fetch(jsObject.get_address_url + '?lat=' + lat + '&lng=' + lng, {
@@ -460,6 +452,16 @@ document.addEventListener('click', function (event) {
             });
         }
     }
+
+    /**
+     * Close Alert
+     */
+    let closebtn = event.target.closest('span.closebtn');
+    if (closebtn) {
+        event.preventDefault();
+        event.target.parentElement.classList.add("hidden");
+    }
+
 });
 
 

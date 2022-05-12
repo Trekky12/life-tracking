@@ -19,7 +19,7 @@
                     <div class="card-header">
                         <h3>{% if widget["url"] is not null %}<a href="{{ widget["url"] }}">{{ widget["title"] | raw }}</a>{% else %}{{ widget["title"] | raw }}{% endif %}</h3>
                     </div>
-                    {% include 'home/widgets/' ~ widget["name"] ~'.twig' with {'widget': widget} %}   
+                    {% include 'home/widgets/widget_loader.twig' with {'widget': widget} %}
                 </div>
             </div>
         {%  endfor %}

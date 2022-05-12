@@ -56,7 +56,8 @@ return [
                 'trips_list' => 'EEEE dd. MMMM yyyy',
                 'month_name' => 'MMMM',
                 'month_name_full' => 'dd. MMMM y',
-                'mealplan_list' => 'EEEE dd. MMMM yyyy'
+                'mealplan_list' => 'EEEE dd. MMMM yyyy',
+                'weekday' => 'EEE'
             ],
             'dateformatExcel' => [
                 'date' => 'dd.mm.yyyy',

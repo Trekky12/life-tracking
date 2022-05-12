@@ -1,7 +1,7 @@
 <div class="widget-content">
-	<a href="#" class="timesheet-fast-come-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : widget["content"].hash})}}">
+	<a href="#" class="timesheet-fast-come-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : data.hash})}}">
 		<button class="button">
-			{% if widget["content"].is_day_based == 1 %}
+			{% if data.is_day_based == 1 %}
 				{{lang["TIMESHEETS_COME_DAY_BASED"]}}
 			{% else %}
 				{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}
@@ -9,9 +9,9 @@
 		</button>
 	</a>
 
-	<a href="#" class="timesheet-fast-leave-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : widget["content"].hash})}}">
+	<a href="#" class="timesheet-fast-leave-btn no-toggle" data-url="{{url_for('timesheets_fast_checkin', {'project' : data.hash})}}">
 		<button class="button">
-			{% if widget["content"].is_day_based == 1 %}
+			{% if data.is_day_based == 1 %}
 				{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}
 			{% else %}
 				{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}
