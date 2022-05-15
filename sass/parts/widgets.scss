@@ -47,6 +47,9 @@
     .large{
         @include font-size(4);
     }
+    & + .loading-icon{
+        padding: 10rem;
+    }
 }
 
 table.timesheets_project_budget_widget{

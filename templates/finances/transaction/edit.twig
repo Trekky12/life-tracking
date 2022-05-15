@@ -27,7 +27,7 @@
 		<div class="page-header">
 			<h2>{{lang["FINANCES_TRANSACTION"]}}</h2>
 			<a href="{% if not account is null %}{{ url_for_with_last_query_params('finances_transaction', {'account': account.getHash()}) }}{% else %}{{ url_for_with_last_query_params('finances_account') }}{% endif %}">
-				<button class="button white">{{lang["BACK"]}}
+				<button class="button">{{lang["BACK"]}}
 					{{ fontawesome('fas fa-level-up-alt') }}</button>
 			</a>
 		</div>

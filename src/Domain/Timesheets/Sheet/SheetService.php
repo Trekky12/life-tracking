@@ -80,7 +80,7 @@ class SheetService extends Service {
 
     private function getTableDataIndex($project, $from, $to, $selected_categories = [], $count = 20) {
 
-        $range = $this->mapper->getMinMaxDate("start", "end", $project->id, "project");
+        $range = $this->getMapper()->getMinMaxDate("start", "end", $project->id, "project");
         $minTotal = $range["min"];
         $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
@@ -98,15 +98,15 @@ class SheetService extends Service {
             $to = !is_null($to) ? $to : $maxTotal;
         }
 
-        $data = $this->mapper->getTableData($project->id, $from, $to, $selected_categories, 0, 'DESC', $count);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, 0, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data);
-        $datacount = $this->mapper->tableCount($project->id, $from, $to, $selected_categories);
+        $datacount = $this->getMapper()->tableCount($project->id, $from, $to, $selected_categories);
 
-        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $selected_categories);
+        $totalSeconds = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories);
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $selected_categories, "%", "t.duration_modified");
+            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 

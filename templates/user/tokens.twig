@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="inner-content">
-        <div class="page-header"><h2>{{lang["LOGIN_TOKENS"]}}</h2> {% if users is not empty %}<a href="{{  url_for('login_tokens_delete_old') }}"><button class="button white">{{ fontawesome('fas fa-trash') }} {{lang["LOGIN_TOKENS_CLEAN"]}}</button></a>{% endif %}</div>
+        <div class="page-header"><h2>{{lang["LOGIN_TOKENS"]}}</h2> {% if users is not empty %}<a href="{{  url_for('login_tokens_delete_old') }}"><button class="button">{{ fontawesome('fas fa-trash') }} {{lang["LOGIN_TOKENS_CLEAN"]}}</button></a>{% endif %}</div>
         <div class="page-content">
             <table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
                 <thead>

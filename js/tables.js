@@ -7,7 +7,14 @@ var tableLabels = {
     infoFiltered: lang.table_infofiltered
 };
 
+var layout = {
+    top: "{search}{select}",
+    bottom: "{pager}{info}"
+};
+
 var financeTable = new JSTable("#finance_table", {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     sortable: true,
     searchable: true,
     perPage: parseInt(getCookie("perPage_financeTable", 10)),
@@ -15,6 +22,7 @@ var financeTable = new JSTable("#finance_table", {
     pagerDelta: 2,
     //firstLast : true,
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -67,8 +75,10 @@ financeTable.on("perPageChange", function (old_value, new_value) {
 
 
 var categoryTable = new JSTable("#category_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -85,8 +95,10 @@ var categoryTable = new JSTable("#category_table", {
 
 
 var categoryAssignmentTable = new JSTable("#category_assignment_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -102,8 +114,10 @@ var categoryAssignmentTable = new JSTable("#category_assignment_table", {
 });
 
 var financesRecurringTable = new JSTable("#recurring_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 3,
@@ -137,8 +151,10 @@ var financesRecurringTable = new JSTable("#recurring_table", {
 });
 
 var financesAccountTable = new JSTable("#finances_account_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -161,8 +177,10 @@ var financesAccountTable = new JSTable("#finances_account_table", {
 });
 
 var financesMethodTable = new JSTable("#finances_method_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -178,8 +196,10 @@ var financesMethodTable = new JSTable("#finances_method_table", {
 });
 
 var financeTransactionTable = new JSTable('#finance_transaction_table', {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 1,
@@ -209,8 +229,10 @@ var financeTransactionTable = new JSTable('#finance_transaction_table', {
 });
 
 var usersTable = new JSTable("#users_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -228,8 +250,10 @@ var usersTable = new JSTable("#users_table", {
 let mileageTables = document.querySelectorAll('table.mileage_year_table');
 mileageTables.forEach(function (item, idx) {
     new JSTable(item, {
-        perPage: 10,
+        perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
         labels: tableLabels,
+    layout: layout,
         columns: [
             {
                 select: 0,
@@ -241,8 +265,10 @@ mileageTables.forEach(function (item, idx) {
 });
 
 var statsTable = new JSTable("#stats_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -265,8 +291,10 @@ var statsTable = new JSTable("#stats_table", {
 });
 
 var statsYearTable = new JSTable("#stats_year_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -288,8 +316,10 @@ var statsYearTable = new JSTable("#stats_year_table", {
 });
 
 var statsMonthTable = new JSTable("#stats_month_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 2,
@@ -312,8 +342,10 @@ var statsMonthTable = new JSTable("#stats_month_table", {
 });
 
 var statsCatTable = new JSTable("#stats_cat_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -342,8 +374,10 @@ var statsCatTable = new JSTable("#stats_cat_table", {
 });
 
 var statsBudgetTable = new JSTable("#stats_budget_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -372,8 +406,10 @@ var statsBudgetTable = new JSTable("#stats_budget_table", {
 });
 
 var carsTable = new JSTable("#cars_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -389,8 +425,10 @@ var carsTable = new JSTable("#cars_table", {
 });
 
 var boardsTable = new JSTable("#boards_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -406,8 +444,10 @@ var boardsTable = new JSTable("#boards_table", {
 });
 
 var notificationsTable = new JSTable("#notifications_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -430,8 +470,10 @@ var notificationsTable = new JSTable("#notifications_table", {
 });
 
 var fuelTable = new JSTable("#fuel_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -455,8 +497,10 @@ var fuelTable = new JSTable("#fuel_table", {
 
 
 var serviceTable = new JSTable("#service_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     searchable: false,
     columns: [
         {
@@ -481,8 +525,10 @@ var serviceTable = new JSTable("#service_table", {
 
 
 var notificationsCategoryTable = new JSTable("#notifications_categories_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -501,8 +547,10 @@ const tokensTableContainer = document.getElementById('tokens_table');
 if (tokensTableContainer) {
     let lastColumn = tokensTableContainer.dataset.user === "1" ? 6 : 5;
     var tokensTable = new JSTable(tokensTableContainer, {
-        perPage: 10,
+        perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
         labels: tableLabels,
+    layout: layout,
         columns: [
             {
                 select: 1,
@@ -526,8 +574,10 @@ if (tokensTableContainer) {
 }
 
 var crawlersTable = new JSTable("#crawlers_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -543,8 +593,10 @@ var crawlersTable = new JSTable("#crawlers_table", {
 });
 
 var crawlersHeadersTable = new JSTable("#crawlers_headers_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 4,
@@ -563,6 +615,7 @@ var crawlersDataTable = new JSTable("#crawlers_data_table", {
     perPage: 20,
     perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     sortable: false,
     columns: [
         {
@@ -585,8 +638,10 @@ var crawlersDataTable = new JSTable("#crawlers_data_table", {
 });
 
 var crawlersLinksTable = new JSTable("#crawlers_links_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -604,6 +659,7 @@ var crawlersLinksTable = new JSTable("#crawlers_links_table", {
 var crawlersDataSavedTable = new JSTable("#crawlers_data_saved_table", {
     perPage: 20,
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: [1],
@@ -619,8 +675,10 @@ var crawlersDataSavedTable = new JSTable("#crawlers_data_saved_table", {
 });
 
 var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: [1],
@@ -642,8 +700,10 @@ var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
 
 const splitbillsBillsTableContainer = document.getElementById('splitbills_bills_table');
 var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -692,8 +752,10 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
 
 const splitbillsBillsRecurringTableContainer = document.getElementById('splitbills_bills_recurring_table');
 var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableContainer, {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: [1, 2, 3],
@@ -743,8 +805,10 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
 });
 
 var tripsTable = new JSTable("#trips_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: [1],
@@ -778,8 +842,10 @@ var tripsTable = new JSTable("#trips_table", {
 
 
 var stepsTable = new JSTable("#steps_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -797,6 +863,7 @@ var stepsTable = new JSTable("#steps_table", {
 var stepsYearTable = new JSTable("#steps_year_table", {
     perPage: 12,
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -818,6 +885,7 @@ var stepsYearTable = new JSTable("#steps_year_table", {
 var stepsMonthTable = new JSTable("#steps_month_table", {
     perPage: 31,
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -837,8 +905,10 @@ var stepsMonthTable = new JSTable("#steps_month_table", {
 });
 
 var mobileFavoritesTable = new JSTable("#mobile_favorites_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -854,8 +924,10 @@ var mobileFavoritesTable = new JSTable("#mobile_favorites_table", {
 });
 
 var applicationPasswords = new JSTable("#application_passwords_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -871,8 +943,10 @@ var applicationPasswords = new JSTable("#application_passwords_table", {
 });
 
 var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -893,6 +967,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     perPage: 20,
     perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 1,
@@ -921,8 +996,10 @@ timesheetsSheetsTable.on("fetchData", function (data) {
 });
 
 var timesheetsProjectCategoriesTable = new JSTable("#project_categories_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -938,8 +1015,10 @@ var timesheetsProjectCategoriesTable = new JSTable("#project_categories_table", 
 });
 
 var timesheetsCategoryBudgetTable = new JSTable("#project_categorybudgets_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -955,8 +1034,10 @@ var timesheetsCategoryBudgetTable = new JSTable("#project_categorybudgets_table"
 });
 
 var banlistTable = new JSTable("#banlist_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -972,8 +1053,10 @@ var banlistTable = new JSTable("#banlist_table", {
 });
 
 var workoutMusclesTable = new JSTable("#workouts_muscles_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -989,8 +1072,10 @@ var workoutMusclesTable = new JSTable("#workouts_muscles_table", {
 });
 
 var workoutBodypartsTable = new JSTable("#workouts_bodyparts_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1006,8 +1091,10 @@ var workoutBodypartsTable = new JSTable("#workouts_bodyparts_table", {
 });
 
 var workoutExercisesTable = new JSTable("#workouts_exercises_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1023,8 +1110,10 @@ var workoutExercisesTable = new JSTable("#workouts_exercises_table", {
 });
 
 var workoutPlansTable = new JSTable("#workouts_plans_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1040,8 +1129,10 @@ var workoutPlansTable = new JSTable("#workouts_plans_table", {
 });
 
 var workoutSessionsTable = new JSTable("#workouts_sessions_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1068,8 +1159,10 @@ var workoutSessionsTable = new JSTable("#workouts_sessions_table", {
 });
 
 var workoutTemplateTable = new JSTable("#workouts_templates_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1085,8 +1178,10 @@ var workoutTemplateTable = new JSTable("#workouts_templates_table", {
 });
 
 var recipesCookbooksTable = new JSTable("#recipes_cookbooks_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1102,8 +1197,29 @@ var recipesCookbooksTable = new JSTable("#recipes_cookbooks_table", {
 });
 
 var recipesIngredientsTable = new JSTable("#recipes_ingredients_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var recipesMealplansTable = new JSTable("#recipes_mealplans_table", {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
+    labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1119,8 +1235,10 @@ var recipesIngredientsTable = new JSTable("#recipes_ingredients_table", {
 });
 
 var noticefieldsTable = new JSTable("#noticefields_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 0,
@@ -1136,8 +1254,10 @@ var noticefieldsTable = new JSTable("#noticefields_table", {
 });
 
 var transactionsRecurringTable = new JSTable("#transaction_recurring_table", {
-    perPage: 10,
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
+    layout: layout,
     columns: [
         {
             select: 1,

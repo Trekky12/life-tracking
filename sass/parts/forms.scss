@@ -1,12 +1,13 @@
 //button:not(.fa):not(.selectr-tag-remove):not(.leaflet-routing-reverse-waypoints):not(.leaflet-routing-add-waypoint):not(.leaflet-routing-btn):not(.user-selected-remove):not(.choices__button):not(.selectr-input-clear):not(.scrollStyle), 
-input[type="submit"], 
+input[type="submit"],
 .button {
 
-    &, &:focus{
+    &,
+    &:focus {
         cursor: pointer;
         border-width: 2px;
         border-style: solid;
-        border-color:transparent;
+        border-color: transparent;
 
         color: #FFFFFF;
         background-color: $color_blue_light;
@@ -14,109 +15,71 @@ input[type="submit"],
         padding: 0.8rem 2.5rem;
         //transition: all 0.3s ease;
 
-        outline:none;
+        outline: none;
     }
 
     @media (hover: hover) {
         &:hover {
-            background: none;
+            background: $color_blue;
             border-width: 2px;
             border-style: solid;
-            border-color: $color_blue_light;
+            border-color: $color_blue;
 
-            color: $color_blue_light;
+            color: $color_background-body;
 
         }
     }
 
-    &:active{
-        background: none;
+    &:active {
+        background: $color_blue;
         border-width: 2px;
         border-style: solid;
-        border-color: $color_blue_light;
+        border-color: $color_blue;
 
-        color: $color_blue_light;
+        color: $color_background-body;
     }
 
 
-    &.gray{
-        background-color: #cccccc;
-        color: #000000;
+    &.gray {
+        background-color: $color_gray;
+        color: $color_text-main;
 
         @media (hover: hover) {
-            &:hover{
-                background-color: transparent;
-                border-color: #cccccc;
-                color: #cccccc;
+            &:hover {
+                background-color: $color_text-main;
+                border-color: $color_text-main;
+                color: $color_background-body;
             }
         }
-        &:active{
-            background-color: transparent;
-            border-color: #cccccc;
-            color: #cccccc;
+
+        &:active {
+            background-color: $color_text-main;
+            border-color: $color_text-main;
+            color: $color_background-body;
         }
     }
 
-    &.danger{
-        background-color: #ec7063;
+    &.danger {
+        background-color: $color_red_light;
 
         @media (hover: hover) {
-            &:hover{
-                background-color: #FFFFFF;
-                border-color: #ec7063;
-                color: #ec7063;
+            &:hover {
+                background-color: $color_red;
+                border-color: $color_red;
+                color: $color_background-body;
             }
         }
-        &:active{
-            background-color: #FFFFFF;
-            border-color: #ec7063;
-            color: #ec7063;
+
+        &:active {
+            background-color: $color_red;
+            border-color: $color_red;
+            color: $color_background-body;
         }
     }
 
-    &.white{
-        background-color: transparent;
-        border-color: #FFFFFF;
-        color: #FFFFFF;
 
-        @media (hover: hover) {
-            &:hover{
-                background-color: #FFFFFF;
-                border-color: transparent;
-                color: #000000;
-            }
-        }
-        &:active{
-            background-color: #FFFFFF;
-            border-color: transparent;
-            color: #000000;
-        }
-    }
-
-    &.add-btn{
-
-    }
-
-    &.blue{
-        background-color: $color_blue;
-        color: #FFFFFF;
-
-        @media (hover: hover) {
-            &:hover{
-                background-color: transparent;
-                border-color: $color_blue;
-                color: $color_blue;
-            }
-        }
-        &:active{
-            background-color: transparent;
-            border-color: $color_blue;
-            color: $color_blue;
-        }
-    }
-
-    &.small{
-        padding: 0.5rem 1rem; 
+    &.small {
+        padding: 0.5rem 1rem;
     }
 
 
@@ -152,7 +115,7 @@ textarea {
 
 select {
     border: 1px solid $color_border-input;
-    border-radius:0px;
+    border-radius: 0px;
 }
 
 textarea {
@@ -160,56 +123,61 @@ textarea {
 }
 
 
-.form-group{
+.form-group {
     position: relative;
     margin-bottom: 2rem;
 }
-.form-control{
+
+.form-control {
     display: block;
     width: 100%;
     padding: 0.8rem 1.2rem;
     @include font-size(1.4);
 }
-label:not(.radio):not(.checkbox){
+
+label:not(.radio):not(.checkbox) {
     @include font-size(1.4);
     display: inline-block;
     margin-bottom: 5px;
 }
 
-input[type=file]{
+input[type=file] {
     padding: 0;
 }
 
-input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:focus {
+input:focus:invalid:focus,
+textarea:focus:invalid:focus,
+select:focus:invalid:focus {
     border-color: #e9322d;
     box-shadow: 0 0 6px #f8b9b7;
 }
 
-form{
+form {
 
-    &#login.small{
+    &#login.small {
         max-width: $size_content-width-small/3;
         //@include center-block();
-        width:100%;
+        width: 100%;
 
-        button{
-            width:100%;
+        button {
+            width: 100%;
         }
     }
 
 }
 
 
-input.read-only:read-only{
+input.read-only:read-only {
     background: #EEE;
 }
 
-.html-duration-picker-wrapper{
-    input.html-duration-picker{
+.html-duration-picker-wrapper {
+    input.html-duration-picker {
         padding-right: 25px;
         text-align: left;
     }
-    .controlsDivStyle{
+
+    .controlsDivStyle {
         top: 0px;
     }
 

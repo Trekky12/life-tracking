@@ -16,9 +16,9 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["CRAWLERS"]}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
                 {% if not entry is null %}
-                <a href="{{  url_for('crawlers_dataset_delete_old', {'id' : entry.id}) }}"><button class="button white">{{ fontawesome('fas fa-trash') }} {{lang["CRAWLER_DATASETS_CLEAN"]}}</button></a>
+                <a href="{{  url_for('crawlers_dataset_delete_old', {'id' : entry.id}) }}"><button class="button">{{ fontawesome('fas fa-trash') }} {{lang["CRAWLER_DATASETS_CLEAN"]}}</button></a>
                 {% endif %}
             </div>
         </div>

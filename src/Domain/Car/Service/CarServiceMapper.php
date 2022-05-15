@@ -278,7 +278,7 @@ class CarServiceMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableDataFuel($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableDataFuel($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         if (empty($user_cars)) {
             return [];
@@ -341,7 +341,7 @@ class CarServiceMapper extends \App\Domain\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
 
-    public function tableDataService($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableDataService($user_cars, $sortColumn = "changedOn", $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         if (empty($user_cars)) {
             return [];

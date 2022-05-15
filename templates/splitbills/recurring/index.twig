@@ -7,9 +7,9 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECURRING"]}} {{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}"><button class="button white">{{ fontawesome('fas fa-plus') }} {{lang["ADD_BILL"]}}</button></a>
-                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup"><button class="button white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
+                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD_BILL"]}}</button></a>
+                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup"><button class="button">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
             </div>
         </div>
         <div class="page-content">

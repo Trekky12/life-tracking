@@ -132,11 +132,11 @@ class SplitbillBillService extends Service {
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    private function getTableDataIndex($group, $count = 10) {
+    private function getTableDataIndex($group, $count = 20) {
 
-        $list = $this->mapper->getTableData($group->id, 0, 'DESC', $count);
+        $list = $this->getMapper()->getTableData($group->id, 0, 'DESC', $count);
         $table = $this->renderTableRows($group, $list);
-        $datacount = $this->mapper->tableCount($group->id);
+        $datacount = $this->getMapper()->tableCount($group->id);
 
         $users = $this->user_service->getAll();
 

@@ -33,7 +33,7 @@ class TransactionService extends Service
         $this->translation = $translation;
     }
 
-    public function index($account_hash, $count = 10)
+    public function index($account_hash, $count = 20)
     {
 
         $account = $this->account_service->getFromHash($account_hash);

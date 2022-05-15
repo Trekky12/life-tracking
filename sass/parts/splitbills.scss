@@ -100,6 +100,10 @@
 .splitbill_total{
     margin-bottom: 1rem;
 
+    p{
+        text-align: left;
+    }
+
     p.negative{
         color: $color_red;
     }

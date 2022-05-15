@@ -16,7 +16,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPE"]}}</h2>
             <div class="buttons">
-                <a href="{% if not entry is null %}{{  url_for_with_last_query_params('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{  url_for_with_last_query_params('recipes') }}{% endif %}"><button class="button white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{% if not entry is null %}{{  url_for_with_last_query_params('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{  url_for_with_last_query_params('recipes') }}{% endif %}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>      
         </div>
         <div class="page-content">

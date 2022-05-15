@@ -40,7 +40,7 @@ class FinancesService extends Service {
         $this->paymethod_service = $paymethod_service;
     }
 
-    public function financeTableIndex($from, $to, $count = 10) {
+    public function financeTableIndex($from, $to, $count = 20) {
 
         $list = $this->getMapper()->getTableData($from, $to, 0, 'DESC', $count);
         $table = $this->renderTableRows($list);
