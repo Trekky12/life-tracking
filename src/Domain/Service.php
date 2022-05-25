@@ -51,10 +51,23 @@ abstract class Service {
         return $this->getMapper()->getUsers($id);
     }
 
-    public function isMember($id) {
-        $group_users = $this->getUsers($id);
+    public function isMember($group_id) {
+        $group_users = $this->getUsers($group_id);
         $user = $this->current_user->getUser()->id;
-        if (!array_key_exists($user, $group_users)) {
+        if (array_key_exists($user, $group_users)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isChildOf($group_id, $entry_id = null) {
+        // check if parent is not matching to the entries parent
+        if(!is_null($entry_id)){
+            $entry = $this->getEntry($entry_id);
+            $parent_id = $entry->getParentID();
+            if($group_id === $parent_id){
+                return true;
+            }
             return false;
         }
         return true;
@@ -67,6 +80,10 @@ abstract class Service {
     public function getUserElements() {
         $user = $this->current_user->getUser()->id;
         return $this->mapper->getElementsOfUser($user);
+    }
+
+    public function getParent($id){
+
     }
 
     public function getAll() {

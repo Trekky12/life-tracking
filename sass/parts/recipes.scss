@@ -74,11 +74,11 @@
         }
 
         input, .selectr-selected{
-            border: 1px solid #ccc;
+            border: 1px solid $color_gray;
             border-radius: 0px;
         }
         .selectr-options-container{
-            border-color: #ccc;
+            border-color: $color_gray;
             border-radius: 0px;
         }
 
@@ -91,7 +91,7 @@
                 min-height: 37px;
                 //padding: 5px 7.5px 5px 7.5px;
                 padding: 8px 12px;
-                border: 1px solid #ccc;
+                border: 1px solid $color_gray;
                 @include font-size(1.4);
 
                 .choices__list{
@@ -277,7 +277,7 @@
 
 .recipe-list .recipe{
     h3{
-        padding: 0.5rem 3rem;
+        padding: 0.5rem 0;
         margin: 0;
     }
 
@@ -347,18 +347,18 @@
 
 .mealplan-date{
     h2{
-        padding: 0.5rem 3rem;
+        //padding: 0.5rem 3rem;
         margin: 0;
     }
 
     .recipes-target{
-        padding-left: 1rem;
-        padding-right: 1rem;
+        //padding-left: 1rem;
+        padding-right: 2rem;
     }
 
     .create-notice{
-        padding-left: 1rem;
-        padding-right: 1rem;
+        //padding-left: 1rem;
+        padding-right: 2rem;
         margin-bottom: 1rem;
     }
 }

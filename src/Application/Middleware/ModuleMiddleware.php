@@ -52,7 +52,7 @@ class ModuleMiddleware {
             $hasAccess = $user->hasModule($current_module);
             // Has access
             if (!is_null($user) && $hasAccess) {
-                return $handler->handle($request);
+                return $handler->handle($request->withAttribute("module", $current_module));
             }
             // No Access
             $this->logger->warning("No Access");

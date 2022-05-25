@@ -9,6 +9,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
 use App\Domain\Main\Translator;
+use App\Domain\Main\Utility\DateUtility;
 
 class ProjectCategoryBudgetService extends Service {
 
@@ -49,6 +50,9 @@ class ProjectCategoryBudgetService extends Service {
         if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->isChildOf($project->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $entry = $this->getEntry($entry_id);
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
@@ -70,9 +74,6 @@ class ProjectCategoryBudgetService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $categorybudgets_categories = $this->mapper->getCategoryBudgetCategories();
-        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
-
         $categorybudgets = $this->mapper->getBudgetForCategories($project->id);
 
         // group by main category
@@ -88,9 +89,7 @@ class ProjectCategoryBudgetService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, [
             "categorybudgets" => $budgets,
-            "project" => $project,
-            "categorybudgets_categories" => $categorybudgets_categories,
-            "project_categories" => $project_categories
+            "project" => $project
         ]);
     }
 
@@ -112,6 +111,9 @@ class ProjectCategoryBudgetService extends Service {
                 $type = 'info';
             }
             $message = $this->translation->getTranslatedString("BUDGET") . " (" . html_entity_decode($budget["name"]) . "): " . $budget["percent"] . "%";
+
+            $message .= " (" . (($budget["categorization"] != 'count') ? DateUtility::splitDateInterval($budget["sum"], true) . "/" . DateUtility::splitDateInterval($budget["value"], true) : $budget["sum"] . "/" . $budget["value"]);
+            $message .= ", " . $this->translation->getTranslatedString("REMAINING") . ": " . (($budget["categorization"] != 'count') ? DateUtility::splitDateInterval($budget["diff"], true) : $budget["diff"]) . ")";
 
             // only budgets with this sheet
             if ($budget["sheet_in_budget"] > 0) {

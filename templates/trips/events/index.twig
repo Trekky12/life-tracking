@@ -24,15 +24,15 @@
     <script type='text/javascript' >
         const mapbox_token = '{{ mapbox_token }}';
     </script>
-    <script src="{{baseURL}}/static/js/trips.js?ver=20200607"></script>
+    <script src="{{baseURL}}/static/js/trips.js?ver=20211028"></script>
 {% endblock %}
 
 {% block body %}
     <div class="inner-content">
         <div class="page-header"><h2>{{trip.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('trips') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD_EVENT"]}}</button></a>
+                <a href="{{  url_for_with_last_query_params('trips') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD_EVENT"]}}</button></a>
             </div>
         </div>
         <div id="trip-map"></div>
@@ -50,11 +50,11 @@
                 <div class="trip_dates">
                     {% for d in range %}
                         {% if d["date"] is null or not d["events"] is empty %}
-                            <a class="change_day no-loading" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
+                            <a class="change_day no-loading" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="button small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
                             {% endif %}
                         {% endfor %}
                 </div>
-                <a id="createRoute" href="#"><button class="small trips_overview blue">{{ lang["CREATE_ROUTE"] }}</button></a>
+                <a id="createRoute" href="#"><button class="button small trips_overview blue">{{ lang["CREATE_ROUTE"] }}</button></a>
             </div>
 
             {% for item in range %}

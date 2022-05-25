@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="submit">{{lang["SAVE"]}}</button>
+                        <button type="submit" class="button">{{lang["SAVE"]}}</button>
                     </div>
                 </form>
 
@@ -38,7 +38,7 @@
                     <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
                     <div class="form-group">
-                        <button type="submit" class="danger">{{lang["TWOFACTOR_DISABLE"]}}</button>
+                        <button type="submit" class="button danger">{{lang["TWOFACTOR_DISABLE"]}}</button>
                     </div>
                 </form>
             {% endif %}

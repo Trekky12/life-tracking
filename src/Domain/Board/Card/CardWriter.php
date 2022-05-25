@@ -86,6 +86,11 @@ class CardWriter extends ObjectActivityWriter {
          */
         $this->notifyUsers($entry, $users_preSave);
 
+        $entry->users = $this->mapper->getUsers($entry->id, true);
+        $entry->labels = $this->label_service->getLabelsFromCard($entry->id);
+
+        $payload = $payload->withEntry($entry);
+
         return $payload;
     }
 

@@ -249,6 +249,28 @@ class FinancesMapper extends \App\Domain\Mapper {
         }
     }
 
+    public function set_transaction($id, $transaction) {
+        $sql = "UPDATE " . $this->getTableName() . " SET transaction = :transaction WHERE id  = :id";
+        $bindings = array("id" => $id, "transaction" => $transaction);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
+    public function set_transaction_round_up_savings($id, $transaction) {
+        $sql = "UPDATE " . $this->getTableName() . " SET transaction_round_up_savings = :transaction WHERE id  = :id";
+        $bindings = array("id" => $id, "transaction" => $transaction);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
     public function statsBudget($budget) {
 
         $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTableName() . " f,   " . $this->getTableName("finances_categories") . " fc,  " . $this->getTableName("finances_budgets_categories") . " fbc "
@@ -304,71 +326,35 @@ class FinancesMapper extends \App\Domain\Mapper {
     /**
      * Bills
      */
-    public function addOrUpdateFromBill(FinancesEntry $entry) {
+    public function getEntryFromBill($user, $bill_id) {
 
-        $bindings = ["user" => $entry->user, "bill" => $entry->bill];
+        $bindings = ["user" => $user, "bill" => $bill_id];
 
-        $sql = "SELECT id FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
+        $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
-        // no entry present, so create one
         if ($stmt->rowCount() > 0) {
-            return $this->updateFromBill($entry);
-        } else {
-            return $this->insert($entry);
+            return new $this->dataobject($stmt->fetch());
         }
+        return null;
     }
 
-    private function updateFromBill(FinancesEntry $entry) {
-        $sql = "UPDATE " . $this->getTableName() . " "
-                . " SET value = :value, "
-                . "     common_value = :common_value, "
-                . "     date = :date, "
-                . "     time = :time, "
-                . "     lat  = :lat,"
-                . "     lng  = :lng, "
-                . "     acc  = :acc, "
-                . "     paymethod  = :paymethod, "
-                . "     type  = :type, "
-                //. "     description  = :description, "
-                . "     common  = :common "
-                . "WHERE bill = :bill AND user = :user";
-        $bindings = [
-            "bill" => $entry->bill,
-            "user" => $entry->user,
-            "value" => $entry->value,
-            "common_value" => $entry->common_value,
-            "date" => $entry->date,
-            "time" => $entry->time,
-            "lat" => $entry->lat,
-            "lng" => $entry->lng,
-            "acc" => $entry->acc,
-            "paymethod" => $entry->paymethod,
-            //"description" => $entry->description,
-            "type" => $entry->type,
-            "common" => $entry->common
-        ];
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute($bindings);
 
-        if (!$result) {
-            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
-        }
-        return true;
-    }
+    public function getEntriesFromBill($bill_id) {
 
-    public function deleteEntrywithBill($bill, $user) {
-        $sql = "DELETE FROM " . $this->getTableName() . "  WHERE bill = :bill AND user =:user ";
+        $bindings = ["bill" => $bill_id];
+
+        $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE bill = :bill ";
         $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            "bill" => $bill,
-            "user" => $user
-        ]);
-        if (!$result) {
-            throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
         }
-        return true;
+        return $results;
     }
 
     public function statsLastExpenses($limit = 5) {

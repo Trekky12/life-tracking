@@ -3,117 +3,165 @@
 {% set active = 'timesheets' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/datefilter.js?ver=20191031"></script>
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
-    <script src="{{baseURL}}/static/js/timesheets.js?ver=20210921"></script>
+	<script src="{{baseURL}}/static/js/datefilter.js?ver=20191031"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
+	<script src="{{baseURL}}/static/js/timesheets.js?ver=20210921"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for('timesheets')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                <a href="{{  url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}"><button class="white">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button></a>
-                <a href="{{  url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}"><button class="white">{{lang["TIMESHEETS_EXPORT"]}}</button></a>
-                <a href="{{  url_for('timesheets_fast', {'project':project.hash}) }}"><button class="white">{{ fontawesome('fas fa-sign-in-alt') }} {% if project.is_day_based == 1 %}{{lang["TIMESHEETS_FAST_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}{% endif %} {{ fontawesome('fas fa-sign-out-alt') }}</button></a>
-                <a href="{{  url_for('timesheets_sheets_edit', {'project':project.hash}) }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS"]}}
+				|
+				{{project.name|raw}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets')}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+				{% if categories %}
+					<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
+						<button class="button">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
+					</a>
+				{% endif %}
+				<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}">
+					<button class="button">{{lang["TIMESHEETS_EXPORT"]}}</button>
+				</a>
+				<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
+					<button class="button">{{ fontawesome('fas fa-sign-in-alt') }}
+						{% if project.is_day_based == 1 %}
+							{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
+						{% else %}
+							{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}
+						{% endif %}
+						{{ fontawesome('fas fa-sign-out-alt') }}</button>
+				</a>
+				<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
+					<button class="button">{{ fontawesome('fas fa-plus') }}
+						{{lang["ADD"]}}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
 
-            <form method="GET" id="search-filter" class="hidden1" action="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">
-                <div class="filter-content">
-                    <div class="date-filter">
-                        <div class="date-element">
-                            <input type="text" id="dateRange" value="{{from}} to {{to}}" />
+			<form method="GET" id="search-filter" class="hidden1" action="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}">
+				<div class="filter-content">
+					<div class="date-filter">
+						<div class="date-element">
+							<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
 
-                            <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-                            <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+							<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+							<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 
-                            <input type="hidden" id="selected_categories" disabled="disabled" name="selected_categories" value="{{ categories_selected|join(',')  }}"/>
+							<input type="hidden" id="selected_categories" disabled="disabled" name="selected_categories" value="{{ categories_selected|join(',') }}"/>
 
-                        </div>
-                    </div>
-                    <div class="categories-filter filter-element">
-                        <select id="category-filter" multiple name="categories[]" class="category">
-                            {% for cat in categories %}
-                                <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="date-filter">
-                        <div class="filter-element">
-                            <input type="submit" value="{{lang["SHOW"]}}"/>
-                        </div>
-                        <div class="filter-element">
-                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["month"] }}&to={{ max["month"] }}"><button type="button" class="gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
-                        </div>
-                        <div class="filter-element">
-                            <a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["total"] }}&to={{ max["total"] }}"><button type="button" class="gray">{{ lang["SHOW_ALL"] }}</button></a>
-                        </div>
-                    </div>
-                </div>
-            </form>  
+						</div>
+					</div>
+					{% if categories %}
+						<div class="categories-filter filter-element">
+							<select id="category-filter" multiple name="categories[]" class="category">
+								{% for cat in categories %}
+									<option value="{{ cat.id }}" {% if cat.id in categories_selected %} selected {% endif %}>{{ cat.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					{% endif %}
+					<div class="date-filter">
+						<div class="filter-element">
+							<input type="submit" value="{{lang["SHOW"]}}"/>
+						</div>
+						<div class="filter-element">
+							<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["month"] }}&to={{ max["month"] }}">
+								<button type="button" class="button gray">{{ lang["SHOW_THIS_MONTH"] }}</button>
+							</a>
+						</div>
+						<div class="filter-element">
+							<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["total"] }}&to={{ max["total"] }}">
+								<button type="button" class="button gray">{{ lang["SHOW_ALL"] }}</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</form>
 
-            <table id="timesheets_sheets_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="checkAllRows"></th>
-                        <th>{{lang["DATE"]}}</th>
-                        <th>{% if project.is_day_based == 1 %}{{lang["TIMESHEETS_COME_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}{% endif %}</th>
-                        <th>{% if project.is_day_based == 1 %}{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}{% endif %}</th>
-                        <th>{{lang["DIFFERENCE"]}}</th>
-                        <th>{{lang["CATEGORIES"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for sheet in sheets %}
-                        <tr>
-                            <td>{{ sheet[0]| raw }}</td>
-                            <td>{{ sheet[1] }}</td>
-                            <td>{{ sheet[2] }}</td>
-                            <td>{{ sheet[3] }}</td>
-                            <td>{{ sheet[4] }}</td>
-                            <td>{{ sheet[5] }}</td>
-                            <td>{{ sheet[6]|raw }}</td>
-                            <td>{{ sheet[7]|raw }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>{{ sum  }}</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
-
-            <div id="tableFooterFilter">
-                <div class="categories-filter">
-                    <select id="assignCategoriesSelector" multiple name="categories[]">
-                        {% for cat in categories %}
-                            <option value="{{ cat.id }}">{{ cat.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="filter-element">
-                    <button type="button" class="gray small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
-                </div>
-                <div class="filter-element">
-                    <button type="button" class="gray small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
-                </div>
-            </div>
-
-        {% endblock %}        
+			<table id="timesheets_sheets_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="checkAllRows"></th>
+						<th>{{lang["DATE"]}}</th>
+						<th>
+							{% if project.is_day_based == 1 %}
+								{{lang["TIMESHEETS_COME_DAY_BASED"]}}
+							{% else %}
+								{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}
+							{% endif %}
+						</th>
+						<th>
+							{% if project.is_day_based == 1 %}
+								{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}
+							{% else %}
+								{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}
+							{% endif %}
+						</th>
+						<th>{{lang["DIFFERENCE"]}}</th>
+						{% if categories %}
+							<th>{{lang["CATEGORIES"]}}</th>
+						{% endif %}
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for sheet in sheets %}
+						<tr>
+							<td>{{ sheet[0]| raw }}</td>
+							<td>{{ sheet[1] }}</td>
+							<td>{{ sheet[2] }}</td>
+							<td>{{ sheet[3] }}</td>
+							<td>{{ sheet[4] }}</td>
+							{% if categories %}
+								<td>{{ sheet[5] }}</td>
+							{% endif %}
+							<td>{{ sheet[6]|raw }}</td>
+							<td>{{ sheet[7]|raw }}</td>
+							<td>{{ sheet[8]|raw }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th>{{ sum  }}</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+			{% if categories %}
+				<div id="tableFooterFilter">
+					<div class="categories-filter">
+						<select id="assignCategoriesSelector" multiple name="categories[]">
+							{% for cat in categories %}
+								<option value="{{ cat.id }}">{{ cat.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="filter-element">
+						<button type="button" class="button gray small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
+					</div>
+					<div class="filter-element">
+						<button type="button" class="button gray small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
+					</div>
+				</div>
+			{% endif %}
+		{% endblock %}

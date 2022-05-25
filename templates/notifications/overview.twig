@@ -20,8 +20,8 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>  
             <div class="buttons">
-                <a href="{{  url_for('mail_manage') }}"><button class="white">{{ fontawesome('far fa-envelope') }} {{lang["MAIL_SETTINGS"]}}</button></a>
-                <a href="{{  url_for('notifications_clients_manage') }}"><button class="white">{{ fontawesome('fas fa-cogs') }} {{lang["SETTINGS"]}}</button></a>
+                <a href="{{  url_for('mail_manage') }}"><button class="button">{{ fontawesome('far fa-envelope') }} {{lang["MAIL_SETTINGS"]}}</button></a>
+                <a href="{{  url_for('notifications_clients_manage') }}"><button class="button">{{ fontawesome('fas fa-cogs') }} {{lang["SETTINGS"]}}</button></a>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
             <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
         </div>
         <div id="loadMoreNotifications" class="centered hidden">
-            <button type="button">{{ lang["LOAD_MORE"] }}</button>
+            <button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
         </div>
     </div>
 

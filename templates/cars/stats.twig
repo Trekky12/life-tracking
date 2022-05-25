@@ -2,40 +2,10 @@
 
 {% set active = 'car_service' %}
 
-
 {% block javascript %}
-    <script>
-        var COLORS = [
-                '#4dc9f6',
-                '#f67019',
-                '#f53794',
-                '#537bc4',
-                '#acc236',
-                '#166a8f',
-                '#00a950',
-                '#58595b',
-                '#8549ba'
-        ];
-        let fuelChart = document.querySelector("#fuelChart");
-        if (fuelChart) {
-        new Chart(fuelChart, {
-        data: {
-        labels: JSON.parse(fuelChart.dataset.labels),
-                datasets: [
-        {% for el in data %}
-                                {
-                                label: lang.consumption + " {{el["name"]|raw}}",
-                                        data:{{el["data"]|json_encode(constant('JSON_NUMERIC_CHECK'))|raw}},
-                                        fill: false,
-                                        borderColor: COLORS[{{loop.index}}]
-                                },
-        {% endfor %}
-                                ]
-                        },
-                                type: 'line'
-                        });
-                        }
-    </script>
+    <script src="{{baseURL}}/static/assets/js/chart.min.js"></script>
+    <script src="{{baseURL}}/static/assets/js/chartjs-adapter-moment.min.js"></script>
+    <script src="{{baseURL}}/static/js/car-stats.js?ver=20211210"></script>
 {% endblock %}
 
 
@@ -44,7 +14,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["MENU_FUEL"]}} {{lang["STATS"]}}</h2></div>
         <div class="page-content">
-            <canvas id="fuelChart" data-labels="{{labels}}"></canvas>
+            <canvas id="fuelChart" data-labels="{{labels}}" data-values="{{data|json_encode(constant('JSON_NUMERIC_CHECK'))}}"></canvas>
         </div>
     </div>
     <div class="inner-content">

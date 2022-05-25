@@ -17,7 +17,7 @@ class CurrentUser {
         return null;
     }
 
-    function setUser(User $user): void {
+    function setUser(?User $user): void {
         $this->user = $user;
     }
     

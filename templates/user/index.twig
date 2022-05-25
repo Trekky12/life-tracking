@@ -8,7 +8,7 @@
         <div class="page-header"><h2>{{lang["USERS"]}}</h2> 
                 {% if user.isAdmin() %}
                 <div class="buttons">
-                    <a href="{{  url_for('users_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+                    <a href="{{  url_for('users_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
                 </div>
             {% endif%}
         </div>

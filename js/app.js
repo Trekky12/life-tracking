@@ -78,53 +78,90 @@ function setFormFieldsDisabled(value) {
         return;
     }
 
-
-    let openRequest = getIndexedDB();
-    openRequest.onsuccess = function () {
-        let db = openRequest.result;
-
-        let forms = document.querySelectorAll('form');
-        forms.forEach(function (item, idx) {
-            item.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                //@see https://stackoverflow.com/a/48950600
-                let formData = new URLSearchParams(new FormData(item)).toString();
-
-                let transaction = db.transaction('forms', 'readwrite');
-                let forms = transaction.objectStore('forms');
-                let request = forms.add({'action': item.action, 'data': formData});
-
-                request.onsuccess = function () {
-                    console.log("saved locally");
-                    appLoadingWindowOverlay.classList.add("hidden");
-                    showToast(lang.entry_saved_locally, "green");
-                    offlineElementsAlert.classList.remove("hidden");
-                    item.reset();
-                }
-                request.onerror = function () {
-                    console.log("Error", request.error);
-                    appLoadingWindowOverlay.classList.add("hidden");
-                    showToast(lang.entry_saved_locally_error, "red");
-                }
-            });
-        });
-    }
-
+    saveFormDataWhenOffline();
 
 }
 
 function getIndexedDB() {
-    let openRequest = indexedDB.open('lifeTrackingData', 1);
+    let openRequest = indexedDB.open('lifeTrackingData', 2);
 
     openRequest.onupgradeneeded = function () {
         let db = openRequest.result;
         if (!db.objectStoreNames.contains('forms')) {
             db.createObjectStore('forms', {keyPath: 'id', autoIncrement: true});
         }
+        if (!db.objectStoreNames.contains('keys')) {
+            db.createObjectStore('keys', {keyPath: 'project'});
+        }
     }
 
     return openRequest;
+}
+
+function saveFormDataWhenOffline() {
+    let openRequest = getIndexedDB();
+    openRequest.onsuccess = function () {
+        let db = openRequest.result;
+
+        let forms = document.querySelectorAll('form');
+        forms.forEach(function (item, idx) {
+            if (item.method === 'post' && item.id !== "timesheetNoticeForm") {
+                item.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    //@see https://stackoverflow.com/a/48950600
+                    let form = new FormData(item);
+                    // append time of real request if field is not visible
+                    if (!form.has('time')) {
+                        form.append('time', new Date().toLocaleTimeString());
+                    }
+                    let formData = new URLSearchParams(form).toString();
+
+                    let transaction = db.transaction('forms', 'readwrite');
+                    let forms = transaction.objectStore('forms');
+                    let request = forms.add({'action': item.action, 'type': 'POST', 'data': formData});
+
+                    request.onsuccess = function () {
+                        console.log("saved locally");
+                        appLoadingWindowOverlay.classList.add("hidden");
+                        showToast(lang.entry_saved_locally, "green");
+                        offlineElementsAlert.classList.remove("hidden");
+                        item.reset();
+                    }
+                    request.onerror = function () {
+                        console.log("Error", request.error);
+                        appLoadingWindowOverlay.classList.add("hidden");
+                        showToast(lang.entry_saved_locally_error, "red");
+                    }
+                });
+            }
+        });
+    };
+}
+
+function saveDataWhenOffline(url, type = 'POST', data = null) {
+    let openRequest = getIndexedDB();
+    openRequest.onsuccess = function () {
+        let db = openRequest.result;
+
+        let transaction = db.transaction('forms', 'readwrite');
+        let forms = transaction.objectStore('forms');
+        let request = forms.add({'action': url, 'type': type, 'data': data});
+
+        request.onsuccess = function () {
+            console.log("saved locally");
+            appLoadingWindowOverlay.classList.add("hidden");
+            showToast(lang.entry_saved_locally, "green");
+            offlineElementsAlert.classList.remove("hidden");
+            allowedReload = true;
+            window.location.reload();
+        }
+        request.onerror = function () {
+            console.log("Error", request.error);
+            appLoadingWindowOverlay.classList.add("hidden");
+            showToast(lang.entry_saved_locally_error, "red");
+        }
+    };
 }
 
 initServiceWorker();
@@ -178,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         data.set("csrf_value", token.csrf_value);
 
                         return fetch(form.action, {
-                            method: 'POST',
+                            method: form.type,
                             credentials: "same-origin",
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'

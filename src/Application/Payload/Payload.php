@@ -9,8 +9,10 @@ class Payload {
     private $flash_messages = [];
     private $routeName = null;
     private $routeParams = [];
+    private $routeQueryParams = [];
     private $template = null;
     private $additionalData = [];
+    private $entry = [];
     public static $STATUS_NEW = "NEW";
     public static $STATUS_UPDATE = "UPDATED";
     public static $STATUS_NO_UPDATE = "NOT_UPDATED";
@@ -62,7 +64,7 @@ class Payload {
     }
 
     public function addFlashMessage($key, $value) {
-        if(!array_key_exists($key, $this->flash_messages)){
+        if (!array_key_exists($key, $this->flash_messages)) {
             $this->flash_messages[$key] = [];
         }
         $this->flash_messages[$key][] = $value;
@@ -110,6 +112,17 @@ class Payload {
         return $this->additionalData;
     }
 
+    public function withEntry($data) {
+        $clone = clone $this;
+        $clone->entry = $data;
+
+        return $clone;
+    }
+
+    public function getEntry() {
+        return $this->entry;
+    }
+
     public function withRouteParams($data) {
         $clone = clone $this;
         $clone->routeParams = $data;
@@ -119,6 +132,17 @@ class Payload {
 
     public function getRouteParams() {
         return $this->routeParams;
+    }
+
+    public function withRouteQueryParams($routeQueryParams) {
+        $clone = clone $this;
+        $clone->routeQueryParams = $routeQueryParams;
+
+        return $clone;
+    }
+
+    public function getRouteQueryParams() {
+        return $this->routeQueryParams;
     }
 
 }

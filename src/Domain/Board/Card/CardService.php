@@ -67,6 +67,7 @@ class CardService extends Service {
 
         $stack = array_key_exists("stack", $data) && !empty($data["stack"]) ? filter_var($data['stack'], FILTER_SANITIZE_NUMBER_INT) : null;
         $card = array_key_exists("card", $data) && !empty($data["card"]) ? filter_var($data['card'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $position = array_key_exists("position", $data) && !empty($data["position"]) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $user = $this->current_user->getUser()->id;
         $user_cards = $this->mapper->getUserCards($user);
@@ -74,7 +75,7 @@ class CardService extends Service {
 
         $response_data = ['status' => 'error'];
         if (!is_null($stack) && !is_null($card) && in_array($stack, $user_stacks) && in_array($card, $user_cards)) {
-            $this->mapper->moveCard($card, $stack, $user);
+            $this->mapper->moveCard($card, $stack, $position, $user);
 
             $response_data = ['status' => 'success'];
         }
@@ -110,35 +111,6 @@ class CardService extends Service {
 
     public function getCardsUser() {
         return $this->mapper->getCardsUser();
-    }
-
-    public function getData($entry_id) {
-        if (!$this->hasAccess($entry_id, [])) {
-            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
-        }
-        $entry = $this->getEntry($entry_id);
-
-        // append card labels and usernames to output
-        $card_labels = $this->label_service->getLabelsFromCard($entry_id);
-        $entry->labels = $card_labels;
-
-        $users = $this->user_service->getAll();
-
-        if ($entry->createdBy) {
-            $entry->createdBy = $users[$entry->createdBy]->name;
-        }
-        if ($entry->changedBy) {
-            $entry->changedBy = $users[$entry->changedBy]->name;
-        }
-        if ($entry->description) {
-            $entry->description = html_entity_decode(htmlspecialchars_decode($entry->description));
-        }
-        if ($entry->title) {
-            $entry->title = htmlspecialchars_decode($entry->title);
-        }
-
-        $response_data = ['entry' => $entry];
-        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
 }

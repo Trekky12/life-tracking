@@ -2,9 +2,14 @@
  * DataTables
  */
 
-.dt-wrapper{
-    &, select, label, input{
+.dt-wrapper {
+
+    &,
+    select,
+    label,
+    input {
         @include font-size(1.2);
+
         @media screen and (min-width: $size_mobile) {
             @include font-size(1.4);
         }
@@ -13,8 +18,28 @@
     .dt-top,
     .dt-bottom {
         flex-direction: column;
+
+        &>* {
+            margin-bottom: 1rem;
+        }
+
         @media screen and (min-width: $size_mobile) {
             flex-direction: row;
+
+            &>* {
+                margin-bottom: 0;
+            }
         }
+
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .dt-table tbody tr:nth-child(odd) {
+        background-color: $color_light_gray;
+    }
+
+    .dt-info {
+        font-size: 1.2rem;
     }
 }

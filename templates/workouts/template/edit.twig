@@ -12,7 +12,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["WORKOUTS_TEMPLATE_PLAN"]}}</h2>
             <div class="buttons">
-                <a href="{{  url_for('workouts_templates') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('workouts_templates') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -63,8 +63,8 @@
                     <div class="selected_exercises_title">
                         <h2>{{ lang["WORKOUTS_EXERCISES_SELECTED"] }}</h2>
                         <div class="form-group">
-                            <button type="button" class="small gray" id="add_workout_day">{{ lang["WORKOUTS_ADD_DAY"] }}</button>
-                            <button type="button" class="small gray" id="add_superset">{{ lang["WORKOUTS_ADD_SUPERSET"] }}</button>
+                            <button type="button" class="button small gray" id="add_workout_day">{{ lang["WORKOUTS_ADD_DAY"] }}</button>
+                            <button type="button" class="button small gray" id="add_superset">{{ lang["WORKOUTS_ADD_SUPERSET"] }}</button>
                         </div>
                     </div>
                     <div class="selected_exercises" id="exercises_selected">
@@ -106,7 +106,7 @@
                     <div class="available_exercises_title">
                         <h2>{{ lang["WORKOUTS_EXERCISES_AVAILABLE"] }}</h2>
                         <div class="form-group">
-                            <button type="button" class="small gray" id="hide_exercise_selection">{{ lang["HIDE"] }}</button>
+                            <button type="button" class="button small gray" id="hide_exercise_selection">{{ lang["HIDE"] }}</button>
                         </div>
                     </div>
                     <div class="available_exercises">
@@ -126,7 +126,7 @@
                                 <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
                             </div>
                             <div id="loadMoreExercises" class="centered hidden">
-                                <button type="button">{{ lang["LOAD_MORE"] }}</button>
+                                <button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
                             </div>
                         </div>
                     </div>
@@ -138,9 +138,9 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

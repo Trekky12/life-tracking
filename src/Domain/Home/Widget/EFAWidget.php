@@ -17,9 +17,7 @@ class EFAWidget implements Widget {
     }
 
     public function getContent(WidgetObject $widget = null) {
-        return [
-            "url" => $widget->getOptions()["url"]
-        ];
+        return null;
     }
 
     public function getTitle(WidgetObject $widget = null) {

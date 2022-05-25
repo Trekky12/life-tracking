@@ -22,8 +22,11 @@ use Slim\Psr7\Factory\ResponseFactory;
 use App\Application\TwigExtensions\FlashExtension;
 use App\Application\TwigExtensions\CsrfExtension;
 use App\Application\TwigExtensions\FontAwesomeExtension;
+use App\Application\TwigExtensions\LastQueryParamsExtension;
 use App\Domain\Main\Utility\Utility;
 use App\Application\Error\CSRFException;
+use Slim\Routing\RouteResolver;
+use Slim\Routing\RouteCollector;
 
 return [
     Settings::class => function () {
@@ -38,7 +41,7 @@ return [
     /**
      * Twig View
      */
-    Twig::class => function (Settings $settings, Flash $flash, CSRF $csrf, Translator $translation) {
+    Twig::class => function (Settings $settings, Flash $flash, CSRF $csrf, Translator $translation, RouteParser $parser) {
         $twig_settings = $settings->all()['view'];
 
         $twig = Twig::create($twig_settings['template_path'], [
@@ -51,6 +54,8 @@ return [
         $twig->addExtension(new CsrfExtension($csrf));
         
         $twig->addExtension(new FontAwesomeExtension());
+        
+        $twig->addExtension(new LastQueryParamsExtension($parser));
 
 
         /**
@@ -196,5 +201,11 @@ return [
     // Response for HTML Responder
     ResponseFactoryInterface::class => function() {
         return new ResponseFactory();
-    }
+    },
+    RouteResolver::class => function (ContainerInterface $container) {
+        return $container->get(App::class)->getRouteResolver();
+    },
+    RouteCollector::class => function (ContainerInterface $container) {
+        return $container->get(App::class)->getRouteCollector();
+    },
 ];

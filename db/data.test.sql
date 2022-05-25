@@ -20,29 +20,45 @@ INSERT INTO global_users (id, login, password, name, role, module_location, modu
 INSERT INTO finances_categories (id, user, name, is_default) VALUES 
 (1, 1, 'not categorized', 1),
 (2, 2, 'not categorized', 1);
-INSERT INTO finances_paymethods (id, user, name, is_default) VALUES 
-(1, 1, 'Test Paymethod', 1),
-(2, 2, 'Test Paymethod', 1); 
+INSERT INTO finances_accounts (id, user, name, value, hash) VALUES 
+(1, 1, 'Test Account', 0, 'ABCabc123'),
+(2, 2, 'Test Account User', 10, 'DEFdef456'),
+(3, 1, 'Test Account 2', 0, 'DEFdef123');
+INSERT INTO finances_paymethods (id, user, name, is_default, account) VALUES 
+(1, 1, 'Test Paymethod', 1, 1),
+(2, 2, 'Test Paymethod', 1, 2); 
+
+INSERT INTO finances_transactions (id, user, date, time, description, value, account_from, account_to) VALUES 
+(1, 1, '2022-01-01', '12:00:00', 'Test Transaction', 10, 1, 3);
+
+INSERT INTO finances_transactions_recurring (id, user, description, value, start, end, unit, multiplier, is_active) VALUES
+(1, 1, 'Test recurring finance transaction', '10.00', '2020-01-01', NULL, 'month', 1, 1);
 
 INSERT INTO splitbill_groups (id, user, name, hash, add_finances, currency, exchange_rate, exchange_fee) VALUES 
-(1, 1, 'Test splitted bills group', 'ABCabc123', 0, '€', '1', '0'),
+(1, 1, 'Test splitted bills group', 'ABCabc123', 1, '€', '1', '0'),
 (2, 1, 'Test splitted bills group (no access to owner)', 'DEFdef456', 0, '€', '1', '0'),
 (3, 1, 'Test Group Island', 'Opnel5aKBz', 0, 'ISK', '40', '1.75');
 INSERT INTO splitbill_groups_user (sbgroup, user) VALUES 
 (1, 1),
 (1, 2),
 (3, 1),
-(3, 2);
+(3, 2),
+(2, 2);
 INSERT INTO splitbill_bill (id, sbgroup, user, name, date, time, lat, lng, acc, notice, settleup, exchange_rate, exchange_fee, spend_by, paid_by) VALUES
 (1, 1, 1,'Test bill', '2020-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL),
-(2, 3, 1, 'Test', '2021-05-18', '15:00:00', NULL, NULL, NULL, NULL, 0, '40', '1.75', 'individual', 'individual');
+(2, 3, 1, 'Test', '2021-05-18', '15:00:00', NULL, NULL, NULL, NULL, 0, '40', '1.75', 'individual', 'individual'),
+(3, 2, 2,'Test bill 2', '2022-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL),
+(4, 1, 2,'Test bill 3', '2022-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL);
 INSERT INTO splitbill_bill_users (id, bill, user, paid, spend, paymethod, paid_foreign, spend_foreign) VALUES
 (1, 1, 1, '10.00', '10.00', NULL, NULL, NULL),
 (2, 2, 1, '2.54', '1.27', 1, '100.00', '50.00'),
-(3, 2, 3, '0.00', '1.27', NULL, '0.00', '50.00');
+(3, 2, 3, '0.00', '1.27', NULL, '0.00', '50.00'),
+(4, 4, 2, '10.00', '10.00', NULL, NULL, NULL);
 
 INSERT INTO splitbill_bill_recurring (id, sbgroup, user, name, notice, settleup, exchange_rate, exchange_fee) VALUES
-(1, 1, 1,'Test bill', NULL, 0, '1', '0');
+(1, 1, 1,'Test bill', NULL, 0, '1', '0'),
+(2, 2, 2,'Test bill 2', NULL, 0, '1', '0'),
+(3, 1, 2,'Test bill 3', NULL, 0, '1', '0');
 INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paymethod, paid_foreign, spend_foreign) VALUES
 (1, 1, 1, '10.00', '10.00', NULL, NULL, NULL);
 
@@ -54,18 +70,27 @@ INSERT INTO timesheets_projects_users (project, user) VALUES
 (1, 2);
 INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, duration) VALUES
 (1, 1, 1, 1, '2020-01-01 09:00:00', '2020-01-01 12:00:00', 10800),
-(2, 1, 1, 1, '2021-09-13 09:00:00', '2021-09-13 12:00:00', 10800);
+(2, 1, 1, 1, '2021-09-13 09:00:00', '2021-09-13 12:00:00', 10800),
+(3, 2, 1, 1, '2021-09-14 09:00:00', '2021-09-14 12:00:00', 10800);
 INSERT INTO timesheets_categories (id, project, name) VALUES 
 (1, 1, 'Test timesheets project category 1'),
-(2, 1, 'Test timesheets project category 2'); 
+(2, 1, 'Test timesheets project category 2'),
+(3, 2, 'Test timesheets project category 3');
 INSERT INTO timesheets_sheets_categories (sheet, category) VALUES 
 (2, 1);
 INSERT INTO timesheets_categorybudgets (id, project, name, categorization, main_category, value, warning1, warning2, warning3) VALUES 
 (1, 1, 'Test timesheets project category budget 1', 'count', 1, 5, 2, 3, 4),
-(2, 1, 'Test timesheets project category budget 2', 'duration', 2, 10800, 4200, 8400, 9600); 
+(2, 1, 'Test timesheets project category budget 2', 'duration', 2, 10800, 4200, 8400, 9600),
+(3, 2, 'Test timesheets project category budget 3', 'count', 1, 10, null, null, null);
 INSERT INTO timesheets_categorybudgets_categories (categorybudget, category) VALUES 
 (1, 1),
 (2, 2);
+INSERT INTO timesheets_sheets_notices (id, sheet) VALUES
+(1, 1),
+(2, 3);
+INSERT INTO timesheets_noticefields (id, project, name) VALUES 
+(1, 1, 'Test timesheets notice field 1'),
+(2, 2, 'Test timesheets notice field 3');
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 
@@ -74,7 +99,11 @@ INSERT INTO trips_user (trip, user) VALUES
 (1, 1),
 (1, 2);
 INSERT INTO trips_event (id, trip, createdBy, changedBy, name, start_date, start_time, start_address, start_lat, start_lng, end_date, end_time, end_address, end_lat, end_lng, type, notice, image, position) VALUES
-(1, 1, 3, 3, 'Test Event', '2020-01-01', NULL, NULL, NULL, NULL, '2020-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 999);
+(1, 1, 3, 3, 'Test Event', '2020-01-01', NULL, NULL, NULL, NULL, '2020-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 999),
+(2, 2, NULL, NULL, 'Test Event 2', '2021-01-01', NULL, NULL, NULL, NULL, '2021-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 999);
+INSERT INTO trips_route (id, trip) VALUES
+(1, 1),
+(2, 2);
 
 INSERT INTO finances (id, user, type, date, time, category, description, value, common, common_value, notice, fixed, lat, lng, acc, bill, paymethod) VALUES
 (1, 1, 0, '2020-01-01', '14:44:49', 1, 'Test expense', '10.00', 0, NULL, NULL, 0, '52.51484846941138', '13.38930845260620', '0.000', NULL, 1),
@@ -103,23 +132,29 @@ INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, fu
 INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, notice, service_oil_before, service_oil_after, service_water_wiper_before, service_water_wiper_after, service_air_front_left_before, service_air_front_left_after, service_air_front_right_before, service_air_front_right_after, service_air_back_left_before, service_air_back_left_after, service_air_back_right_before, service_air_back_right_after, service_tire_change, service_garage) VALUES
 (2, 1, 1, 1, '2020-01-01', 0, 1, 'Test', 0, 100, 0, 100, '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', 1, 1);
 
-INSERT INTO crawlers (id, user, name, hash, filter) VALUES (1, 1, 'Test Crawler', 'ABCabc123', 'createdOn');
+INSERT INTO crawlers (id, user, name, hash, filter) VALUES 
+(1, 1, 'Test Crawler', 'ABCabc123', 'createdOn'),
+(2, 2, 'Test Crawler 2', 'DEFdef456', 'createdOn');
 INSERT INTO crawlers_user (crawler, user) VALUES 
 (1, 1),
-(1, 2);
+(1, 2),
+(2, 2);
 
 INSERT INTO crawlers_links (id, crawler, createdBy, changedBy, name, link, parent, position) VALUES 
-(1, 1, 2, 2, 'Test Category', 'http://localhost', NULL, 1),
-(2, 1, 2, 2, 'Test Link', '#', 1, 1);
+(1, 1, 1, 1, 'Test Category', 'http://localhost', NULL, 1),
+(2, 1, 1, 1, 'Test Link', '#', 1, 1),
+(3, 2, 2, 2, 'Test Link', '#', 1, 1);
 
 INSERT INTO crawlers_headers (id, crawler, createdBy, changedBy, headline, field_name, field_link, field_content, sortable, diff, prefix, suffix, sort, datatype, position) VALUES 
 (1, 1, 1, 1, 'title', 'title', 'link', NULL, 1, 0, NULL, NULL, NULL, NULL, 1),
-(3, 1, 1, 1, 'title previous', 'title', 'link', NULL, 0, 1, NULL, NULL, NULL, NULL, 2),
-(2, 1, 1, 1, 'number', 'value', NULL, NULL, 1, 0, NULL, NULL, 'desc', 'DECIMAL', 3);
+(2, 1, 1, 1, 'title previous', 'title', 'link', NULL, 0, 1, NULL, NULL, NULL, NULL, 2),
+(3, 1, 1, 1, 'number', 'value', NULL, NULL, 1, 0, NULL, NULL, 'desc', 'DECIMAL', 3),
+(4, 2, 2, 2, 'title', 'title', 'link', NULL, 1, 0, NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO crawlers_dataset (id, crawler, createdOn, changedOn, createdBy, changedBy, identifier, saved, data, diff) VALUES
 (1, 1, '2020-03-11 12:00:00', '2020-03-11 12:00:00', 1, 1, 'test', 0, '{\"title\":\"Dataset 1 Update\",\"link\":\"http:\\/\\/localhost\",\"value\":\"1\"}', '{\"title\":\"Dataset 1\",\"link\":\"http:\\/\\/localhost\",\"value\":1}'),
-(2, 1, '2020-03-12 12:00:00', '2020-03-12 12:00:00', 1, 1, 'test', 1, '{\"title\":\"Dataset Test\",\"link\":\"http:\\/\\/localhost\",\"value\":\"1\"}', NULL);
+(2, 1, '2020-03-12 12:00:00', '2020-03-12 12:00:00', 1, 1, 'test', 1, '{\"title\":\"Dataset Test\",\"link\":\"http:\\/\\/localhost\",\"value\":\"1\"}', NULL),
+(3, 2, '2020-03-12 12:00:00', '2020-03-12 12:00:00', 1, 1, 'test', 1, '{\"title\":\"Dataset 2 Test\",\"link\":\"http:\\/\\/localhost\",\"value\":\"1\"}', NULL);
 
 INSERT INTO boards (id, user, name, hash, archive) VALUES
 (1, 1, 'Test Board', 'ABCabc123', 0),

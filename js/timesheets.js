@@ -26,8 +26,8 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "enableTime": true,
         "time_24hr": true,
         "minuteIncrement": 1,
-        "onValueUpdate": function (selectedDates) {
-            dateTimePickerEnd._flatpickr.setDate(selectedDates[0]);
+        "onChange": function (selectedDates) {
+            setEndDate();
         }
     });
 
@@ -40,6 +40,19 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "time_24hr": true,
         "minuteIncrement": 1
     });
+    setEndDate();
+    
+}
+
+function setEndDate(){
+    if (dateTimePickerEnd.dataset.saved != "1") {
+        let default_duration = dateTimePickerEnd.dataset.defaultDuration;
+        let selectedDate = dateTimePickerStart._flatpickr.selectedDates[0];
+        if (default_duration > 0) {
+            selectedDate.setSeconds(selectedDate.getSeconds() + default_duration);
+        }
+        dateTimePickerEnd._flatpickr.setDate(selectedDate);
+    }
 }
 
 const radioDurationCustomModification = document.getElementById('radioDurationCustom');
@@ -96,7 +109,7 @@ if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
             }
         });
 
-        setCategories({'sheets': sheets, 'categories': categories, 'type': 'assign'});
+        setCategories({ 'sheets': sheets, 'categories': categories, 'type': 'assign' });
     });
 
     removeCategoriesBtn.addEventListener('click', function (event) {
@@ -112,7 +125,7 @@ if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
             }
         });
 
-        setCategories({'sheets': sheets, 'categories': categories, 'type': 'remove'});
+        setCategories({ 'sheets': sheets, 'categories': categories, 'type': 'remove' });
     });
 }
 
@@ -149,9 +162,13 @@ function setCategories(data) {
     }).then(function (data) {
         console.log(data);
         allowedReload = true;
-        window.location.reload();
+        window.location.reload(true);
     }).catch(function (error) {
         console.log(error);
+        if (document.body.classList.contains('offline')) {
+            let formData = new URLSearchParams(data).toString();
+            saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
+        }
     });
 }
 

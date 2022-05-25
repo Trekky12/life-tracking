@@ -25,6 +25,11 @@ class SaveJSONResponder extends JSONResponder {
             $data["id"] = $result["id"];
         }
 
+        $entry = $payload->getEntry();
+        if($entry){
+            $data["entry"] = $entry;
+        }
+
         switch ($payload->getStatus()) {
             case Payload::$STATUS_PARSING_ERRORS:
                 $data = ["status" => "error"];

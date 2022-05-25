@@ -4,112 +4,131 @@
 
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for('splitbills')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                <a href="{{  url_for('splitbill_bills_edit', {'group':group.hash}) }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD_BILL"]}}</button></a>
-                <a href="{{  url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup"><button class="white">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
-            </div>
-        </div>
-    </div>
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["SPLITBILLS"]}}
+				|
+				{{group.name|raw}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('splitbills')}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+				<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}">
+					<button class="button">{{ fontawesome('fas fa-plus') }}
+						{{lang["ADD_BILL"]}}</button>
+				</a>
+				<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup">
+					<button class="button">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
+				</a>
+			</div>
+		</div>
+	</div>
 
-    {% if my_balance %}
-        <div class="grid" id="splitbill_overview">
-            <div class="card negative">
-                <div class="card-content">
-                    <div class="card-header">
-                        <h3>{{ lang["SPEND"] }}</h3>
-                    </div>
-                    <p>{{ my_balance["spend"] - my_balance["settled"] }} {{i18n.currency}}</p>
-                </div>
-            </div>      
-            <div class="card positive">
-                <div class="card-content">
-                    <div class="card-header">
-                        <h3>{{ lang["PAID"] }}</h3>
-                    </div>
-                    <p>{{ my_balance["paid"] }} {{i18n.currency}}</p>
-                </div>
-            </div>          
-            <div class="card positive">
-                <div class="card-content">
-                    <div class="card-header">
-                        <h3>{{ lang["RECEIVED"] }}</h3>
-                    </div>
-                    <p>{{ my_balance["settled"] }} {{i18n.currency}}</p>
-                </div>
-            </div>
-            <div class="card {% if my_balance["balance"] >= 0 %}positive{% else %}negative{% endif %}">
-                <div class="card-content">
-                    <div class="card-header">
-                        <h3>{{ lang["BALANCE"] }}</h3>
-                    </div>
-                    <p>{{ my_balance["balance"] }} {{i18n.currency}}</p>
-                </div>
-            </div>
-        </div>
-    {% endif %}
+	{% if my_balance %}
+		<div class="grid" id="splitbill_overview">
+			<div class="card negative">
+				<div class="card-content">
+					<div class="card-header">
+						<h3>{{ lang["SPEND"] }}</h3>
+					</div>
+					<p>{{ my_balance["spend"] - my_balance["settled"] }}
+						{{i18n.currency}}</p>
+				</div>
+			</div>
+			<div class="card positive">
+				<div class="card-content">
+					<div class="card-header">
+						<h3>{{ lang["PAID"] }}</h3>
+					</div>
+					<p>{{ my_balance["paid"] }}
+						{{i18n.currency}}</p>
+				</div>
+			</div>
+			<div class="card positive">
+				<div class="card-content">
+					<div class="card-header">
+						<h3>{{ lang["RECEIVED"] }}</h3>
+					</div>
+					<p>{{ my_balance["settled"] }}
+						{{i18n.currency}}</p>
+				</div>
+			</div>
+			<div class="card {% if my_balance[" balance"] >= 0 %}positive{% else %}negative{% endif %}">
+				<div class="card-content">
+					<div class="card-header">
+						<h3>{{ lang["BALANCE"] }}</h3>
+					</div>
+					<p>{{ my_balance["balance"] }}
+						{{i18n.currency}}</p>
+				</div>
+			</div>
+		</div>
+	{% endif %}
 
-    {% if balance|length  > 0 %}
-        <div class="inner-content splitbill_total">
-            <div class="page-content">
-                {% for user_id, b in balance %}
+	{% if balance|length  > 0 %}
+		<div class="grid splitbill_total">
+			<div class="card">
+				<div class="card-content">
+					{% for user_id, b in balance %}
 
-                    {% set total = '' %}
-                    {% if balance|length  > 2 %}
-                        {% if  b['balance'] > 0 %}
-                            {% set total = lang['PERSON_RECEIVES_TOTAL']| format(b['balance']|abs, i18n.currency) %}
-                        {% else %}
-                            {% set total = lang['PERSON_OWES_TOTAL']| format(b['balance']|abs, i18n.currency) %}
-                        {% endif %}
+						{% set total = '' %}
+						{% if balance|length  > 2 %}
+							{% if  b['balance'] > 0 %}
+								{% set total = lang['PERSON_RECEIVES_TOTAL']| format(b['balance']|abs, i18n.currency) %}
+							{% else %}
+								{% set total = lang['PERSON_OWES_TOTAL']| format(b['balance']|abs, i18n.currency) %}
+							{% endif %}
 
-                    {% endif %}
+						{% endif %}
 
-                    {% if b["owe"] < 0 %}
-                        <p class="negative">{{ lang["PERSON_OWES_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }} {{ total }}</p>
-                    {% else %}
-                        <p class="positive">{{ lang["PERSON_RECEIVES_BY_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }} {{ total }}</p>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
+						{% if b["owe"] < 0 %}
+							<p class="negative">{{ lang["PERSON_OWES_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }}
+								{{ total }}</p>
+						{% else %}
+							<p class="positive">{{ lang["PERSON_RECEIVES_BY_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }}
+								{{ total }}</p>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	{% endif %}
 
-    <div class="inner-content">
-        <div class="page-content">
-            <table id="splitbills_bills_table" class="table table-hover small" data-currency="{{i18n.currency}}">
-                <thead>
-                    <tr>
-                        <th>{{lang["DATE"]}}</th>
-                        <th>{{lang["TIME"]}}</th>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{ lang["RECEIVED"] }}</th>
-                        <th>{{ lang["SPEND"] }}</th>
-                        <th>{{ lang["PAID"] }}</th>
-                        <th>{{ lang["BALANCE"] }}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for bill in bills %}
-                        <tr>
-                            <td>{{ bill[0] }}</td>
-                            <td>{{ bill[1] }}</td>
-                            <td>{{ bill[2]|raw }}</td>
-                            <td>{{ bill[3] }}</td>
-                            <td>{{ bill[4] }}</td>
-                            <td>{{ bill[5] }}</td>
-                            <td>{{ bill[6] }}</td>
-                            <td>{{ bill[7]|raw }}</td>
-                            <td>{{ bill[8]|raw }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="splitbills_bills_table" class="table table-hover small" data-currency="{{i18n.currency}}">
+				<thead>
+					<tr>
+						<th>{{lang["DATE"]}}</th>
+						<th>{{lang["TIME"]}}</th>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{ lang["RECEIVED"] }}</th>
+						<th>{{ lang["SPEND"] }}</th>
+						<th>{{ lang["PAID"] }}</th>
+						<th>{{ lang["BALANCE"] }}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for bill in bills %}
+						<tr>
+							<td>{{ bill[0] }}</td>
+							<td>{{ bill[1] }}</td>
+							<td>{{ bill[2]|raw }}</td>
+							<td>{{ bill[3] }}</td>
+							<td>{{ bill[4] }}</td>
+							<td>{{ bill[5] }}</td>
+							<td>{{ bill[6] }}</td>
+							<td>{{ bill[7]|raw }}</td>
+							<td>{{ bill[8]|raw }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 
-        </div>
-    </div>
+		</div>
+	</div>
 
-{% endblock %}        
+{% endblock %}

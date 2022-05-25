@@ -11,7 +11,6 @@ class NoAccessTest extends BoardTestBase {
     protected $TEST_STACK_ID = 1;
     protected $uri_save = "/boards/stacks/save/";
     protected $uri_delete = "/boards/stacks/delete/";
-    protected $uri_edit = "/boards/stacks/data/";
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -56,7 +55,7 @@ class NoAccessTest extends BoardTestBase {
      */
     public function testGetChildData() {
 
-        $response = $this->request('GET', $this->uri_edit . $this->TEST_STACK_ID);
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);

@@ -29,6 +29,17 @@ class NoAccessTest extends TripTestBase {
     }
 
     /**
+     * Access specific Event
+     */
+    public function testGetChildEditID() {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH).$this->TEST_TRIP_EVENT_ID);
+        $body = (string) $response->getBody();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+    }
+
+    /**
      * Create the event
      */
     public function testPostChildSave() {
@@ -37,6 +48,22 @@ class NoAccessTest extends TripTestBase {
             "name" => "Test",
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH), $data);
+
+        $body = (string) $response->getBody();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+    }
+
+     /**
+     * Update specific event
+     */
+    public function testPostChildSaveID() {
+
+        $data = [
+            "id" => $this->TEST_TRIP_EVENT_ID,
+            "name" => "Test",
+        ];
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH). $this->TEST_TRIP_EVENT_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

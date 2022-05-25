@@ -8,6 +8,7 @@ use Slim\Routing\RouteParser;
 use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use \Slim\Flash\Messages as Flash;
+use App\Domain\Main\Utility\LastURLsUtility;
 
 class SaveResponder extends HTMLResponder {
 
@@ -73,8 +74,10 @@ class SaveResponder extends HTMLResponder {
             }
         }
 
+        $queryParams = LastURLsUtility::getLastURLsForRoute($payload->getRouteName(), $payload->getRouteParams());
+
         $response = $this->responseFactory->createResponse();
-        return $response->withHeader('Location', $this->router->urlFor($payload->getRouteName(), $payload->getRouteParams()))->withStatus(301);
+        return $response->withHeader('Location', $this->router->urlFor($payload->getRouteName(), $payload->getRouteParams(), $queryParams))->withStatus(301);
     }
 
 }

@@ -11,7 +11,7 @@ class CardMapper extends \App\Domain\Mapper {
     protected $has_user_table = true;
     protected $user_table = "boards_cards_user";
     protected $element_name = "card";
-    
+
     public function getUserCards($id) {
         $sql = "SELECT ca.id FROM " . $this->getTableName("boards_user") . " ub, " . $this->getTableName("boards_stacks") . " st, " . $this->getTableName("boards_cards") . " ca "
                 . " WHERE ub.user = :id "
@@ -30,8 +30,7 @@ class CardMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    
-    public function getCardsFromStack($stack, $archive = 0) {
+    public function getCardsFromStack($stack, $card_users, $card_labels, $archive = 0) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE stack = :stack ";
 
         $bindings = ["stack" => $stack];
@@ -41,15 +40,20 @@ class CardMapper extends \App\Domain\Mapper {
             $bindings["archive"] = $archive;
         }
 
-        $sql .= "ORDER BY position, createdOn";
+        $sql .= "ORDER BY position, changedOn, createdOn";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $key = reset($row);
-            $results[$key] = new $this->dataobject($row);
+            $card_id = intval($row["id"]);
+            $card = new $this->dataobject($row);
+
+            $card->users = array_key_exists($card_id, $card_users) ? $card_users[$card_id] : [];
+            $card->labels = array_key_exists($card_id, $card_labels) ? $card_labels[$card_id] : [];
+
+            $results[] = $card;
         }
         return $results;
     }
@@ -68,11 +72,12 @@ class CardMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function moveCard($id, $stack, $user) {
-        $sql = "UPDATE " . $this->getTableName() . " SET stack=:stack, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
+    public function moveCard($id, $stack, $position, $user) {
+        $sql = "UPDATE " . $this->getTableName() . " SET stack=:stack, position = :position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "stack" => $stack,
+            "position" => $position,
             "id" => $id,
             "changedOn" => date('Y-m-d H:i:s'),
             "changedBy" => $user
@@ -129,7 +134,7 @@ class CardMapper extends \App\Domain\Mapper {
     }
 
     public function getCardReminder() {
-        $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board, b.hash, s.name as stack "
+        $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board_name, b.hash, b.id as board_id, s.name as stack "
                 . "FROM " . $this->getTableName() . " c, "
                 . "     " . $this->getTableName("boards_stacks") . " s,  "
                 . "     " . $this->getTableName("boards") . " b, "
@@ -150,7 +155,7 @@ class CardMapper extends \App\Domain\Mapper {
         while ($row = $stmt->fetch()) {
             $user = intval($row["user"]);
             $today = intval($row["today"]);
-            $board = $row["board"];
+            $board = $row["board_id"];
             $stack = $row["stack"];
 
             /**
@@ -172,6 +177,7 @@ class CardMapper extends \App\Domain\Mapper {
              */
             if (!array_key_exists($board, $results[$user][$today])) {
                 $results[$user][$today][$board]["hash"] = $row["hash"];
+                $results[$user][$today][$board]["name"] = $row["board_name"];
                 $results[$user][$today][$board]["stacks"] = array();
             }
 

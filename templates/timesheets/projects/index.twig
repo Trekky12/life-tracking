@@ -7,7 +7,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('timesheets_projects_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+                <a href="{{  url_for('timesheets_projects_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -16,6 +16,7 @@
                     <tr>
                         <th>{{ lang["NAME"] }}</th>
                         <th>{{ lang["SUM"] }}</th>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -32,6 +33,9 @@
                             </td>
                             <td>
                                 <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>
+                            </td>
+                            <td>
+                                <a href="{{  url_for('timesheets_noticefields', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICEFIELDS"]}}</a>
                             </td>                            
                             <td>
                                 {% if project.user == user.id %}

@@ -28,9 +28,12 @@ class FinancesEntry extends \App\Domain\DataObject {
         $this->acc = $this->exists('acc', $data) ? filter_var($data['acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->bill = $this->exists('bill', $data) ? filter_var($data['bill'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->bill_paid = $this->exists('bill_paid', $data) ? filter_var($data['bill_paid'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->transaction = $this->exists('transaction', $data) ? filter_var($data['transaction'], FILTER_SANITIZE_NUMBER_INT) : null;
 
+        $this->transaction_round_up_savings = $this->exists('transaction_round_up_savings', $data) ? filter_var($data['transaction_round_up_savings'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         if (is_null($this->bill)) {
             /**
@@ -73,11 +76,13 @@ class FinancesEntry extends \App\Domain\DataObject {
 
     public function get_fields($remove_user_element = false, $insert = true, $update = false) {
 
-        if (!is_null($this->bill) && !$insert) {
-            /**
-             * When a finance entry from a bill is edited, 
-             * only the following fields can be updated
-             */
+        $is_bill_based_save = !is_null($this->bill) && (is_array($this->additionalData) && array_key_exists("is_bill_based_save", $this->additionalData) && $this->additionalData["is_bill_based_save"]);
+
+        /**
+         * When a finance entry from a bill is edited, 
+         * only the following fields can be updated
+         */
+        if (!is_null($this->bill) && !$is_bill_based_save) {
             $temp = [];
             $temp["id"] = $this->id;
             $temp["category"] = $this->category;
@@ -91,7 +96,11 @@ class FinancesEntry extends \App\Domain\DataObject {
             return $temp;
         }
 
-        return parent::get_fields($remove_user_element, $insert, $update);
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+        unset($temp["transaction"]);
+        unset($temp["transaction_round_up_savings"]);
+
+        return $temp;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

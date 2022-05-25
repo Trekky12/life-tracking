@@ -96,16 +96,16 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
     }
 
     /*
-    //Search for exact same categories is not used => same categories or more is used
-    public function getCategoryBudgets($project_id, $categories = []) {
+      //Search for exact same categories is not used => same categories or more is used
+      public function getCategoryBudgets($project_id, $categories = []) {
 
-        $unique_categories = array_unique($categories);
-        asort($unique_categories);
-        $selected_categories = !empty($categories) ? implode($unique_categories, "|") : "";
+      $unique_categories = array_unique($categories);
+      asort($unique_categories);
+      $selected_categories = !empty($categories) ? implode($unique_categories, "|") : "";
 
-        $bindings = array("project" => $project_id);
+      $bindings = array("project" => $project_id);
 
-        $sql = "SELECT budget.main_category_name, budget.main_category, budget.id, budget.name, budget.notice, budget.value, budget.categorization, budget.warning1, budget.warning2, budget.warning3, budget.category_names,
+      $sql = "SELECT budget.main_category_name, budget.main_category, budget.id, budget.name, budget.notice, budget.value, budget.categorization, budget.warning1, budget.warning2, budget.warning3, budget.category_names,
       CASE
       WHEN budget.categorization = 'duration' THEN SUM(sheet.duration)
       WHEN budget.categorization = 'duration_modified' THEN SUM(sheet.duration_modified)
@@ -143,19 +143,19 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
       ) sheet
       ON sheet.categories = budget.categories";
 
-        if (!empty($selected_categories)) {
-            $sql .= " WHERE sheet.categories = :selected_categories ";
-            $bindings["selected_categories"] = $selected_categories;
-        }
+      if (!empty($selected_categories)) {
+      $sql .= " WHERE sheet.categories = :selected_categories ";
+      $bindings["selected_categories"] = $selected_categories;
+      }
 
-        $sql .= " GROUP BY budget.id "
-                . " ORDER BY budget.main_category_name, budget.name";
+      $sql .= " GROUP BY budget.id "
+      . " ORDER BY budget.main_category_name, budget.name";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
+      $stmt = $this->db->prepare($sql);
+      $stmt->execute($bindings);
 
-        return $stmt->fetchAll(\PDO::FETCH_BOTH);
-    }*/
+      return $stmt->fetchAll(\PDO::FETCH_BOTH);
+      } */
 
     public function getBudgetForCategories($project_id, $categories = [], $sheet_id = null) {
 
@@ -173,7 +173,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                         LEFT JOIN " . $this->getTableName("timesheets_categorybudgets_categories") . " bc ON b.id = bc.categorybudget 
                         LEFT JOIN " . $this->getTableName("timesheets_categories") . " c ON bc.category = c.id
                         LEFT JOIN " . $this->getTableName("timesheets_categories") . " main_cat ON b.main_category = main_cat.id
-                    WHERE b.project = :project ";
+                    WHERE b.project = :project AND b.is_hidden <= 0 ";
 
         if (!empty($cat_bindings)) {
             $sql .= " AND (bc.categorybudget IN ( "
@@ -199,14 +199,14 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
 
             $categories = explode(",", $budget["category_ids"]);
 
-            $data = $this->getBudget($project_id, $budget["categorization"], $budget["value"], $categories, $sheet_id);
+            $data = $this->getBudget($project_id, $budget, $categories, $sheet_id);
 
             $results[] = array_merge($budget, $data);
         }
         return $results;
     }
 
-    private function getBudget($project_id, $budget_type, $budget_value, $categories = [], $sheet_id = null) {
+    private function getBudget($project_id, $budget, $categories = [], $sheet_id = null) {
         $cat_bindings = array();
         foreach ($categories as $idx => $cat) {
             $cat_bindings[":cat_" . $idx] = $cat;
@@ -215,23 +215,21 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
 
         $bindings = ["project" => $project_id];
 
-
-
         $sql = "SELECT  
                 CASE 
-                    WHEN STRCMP('{$budget_type}', 'duration') = 0 THEN SUM(sheet.duration) 
-                    WHEN STRCMP('{$budget_type}', 'duration_modified') = 0 THEN SUM(sheet.duration_modified) 
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration') = 0 THEN SUM(sheet.duration) 
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration_modified') = 0 THEN SUM(sheet.duration_modified) 
                     ELSE COUNT(sheet.id) 
                  END as sum, 
                  CASE 
-                    WHEN STRCMP('{$budget_type}', 'duration') = 0 THEN ROUND(((SUM(sheet.duration)/{$budget_value})*100),2)
-                    WHEN STRCMP('{$budget_type}', 'duration_modified') = 0 THEN ROUND(((SUM(sheet.duration_modified)/{$budget_value})*100),2)
-                    ELSE ROUND(((COUNT(sheet.id)/{$budget_value})*100),2)
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration') = 0 THEN ROUND(((SUM(sheet.duration)/{$budget["value"]})*100),2)
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration_modified') = 0 THEN ROUND(((SUM(sheet.duration_modified)/{$budget["value"]})*100),2)
+                    ELSE ROUND(((COUNT(sheet.id)/{$budget["value"]})*100),2)
                   END as percent, 
                    CASE 
-                    WHEN STRCMP('{$budget_type}', 'duration') = 0 THEN {$budget_value}-SUM(sheet.duration)
-                    WHEN STRCMP('{$budget_type}', 'duration_modified') = 0 THEN {$budget_value}-SUM(sheet.duration_modified)
-                    ELSE {$budget_value}-COUNT(sheet.id)
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration') = 0 THEN {$budget["value"]}-SUM(sheet.duration)
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration_modified') = 0 THEN {$budget["value"]}-SUM(sheet.duration_modified)
+                    ELSE {$budget["value"]}-COUNT(sheet.id)
                   END as diff
                   ";
 
@@ -244,6 +242,16 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
         $sql .= "FROM " . $this->getTableName("timesheets_sheets") . " sheet 
                     WHERE sheet.project = :project ";
 
+        if ($budget["start"] && $budget["end"]) {
+            
+            $bindings["start"] = $budget["start"];
+            $bindings["end"] = $budget["end"];
+            
+            $sql .= " AND ("
+                    . "     (DATE(sheet.start) >= :start AND DATE(sheet.end) <= :end ) OR"
+                    . "     (DATE(sheet.start) >= :start AND DATE(sheet.start) <= :end AND sheet.end IS NULL ) OR"
+                    . "     (DATE(sheet.end) >= :start AND DATE(sheet.end) <= :end AND sheet.start IS NULL )) ";
+        }
 
         if (!empty($cat_bindings)) {
             $sql .= " AND sheet.id IN ( "

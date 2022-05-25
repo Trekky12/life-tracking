@@ -136,6 +136,7 @@ if (splitbillsForm) {
             console.log(totalValue);
             console.log(sum_paid);
             console.log(sum_spend);
+            document.getElementById('loading-overlay').classList.add('hidden');
             alert(lang.splitbills_numbers_wrong);
         }
     });

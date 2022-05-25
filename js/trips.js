@@ -49,6 +49,10 @@ function changeDay(item) {
         newEventButton.href = addEventLink + item.search;
     }
 
+    // change url     
+    window.history.pushState({}, '', window.location.pathname + item.search);
+
+
     getMarkers(date, date).then(function () {
         if (date) {
             let currentDay = document.getElementById('trip_day_' + date);
@@ -211,7 +215,7 @@ function drawMarkers(data) {
             layerCars.addLayer(start_marker);
         } else if (marker.isWaypoint) {
             layerWaypoints.addLayer(start_marker);
-        }else if (marker.isShip) {
+        } else if (marker.isShip) {
             layerShips.addLayer(start_marker);
         }
 
@@ -354,14 +358,14 @@ function initMap() {
             if (options.strings.text !== undefined) {
                 var text = L.DomUtil.create(options.textElementTag, 'leaflet-locate-text', link);
                 text.textContent = options.strings.text;
-                        link.classList.add('leaflet-locate-text-active');
+                link.classList.add('leaflet-locate-text-active');
                 link.parentNode.style.display = "flex";
                 if (options.icon.length > 0) {
                     icon.classList.add('leaflet-locate-icon');
                 }
             }
 
-            return { link: link, icon: icon };
+            return {link: link, icon: icon};
         },
     });
     mymap.addControl(lc);
@@ -373,10 +377,15 @@ function initMap() {
     }).addTo(mymap);
 
     // select current day
-    if (currentDayButton) {
+    if (!fromInput.value && !toInput.value && currentDayButton) {
         changeDay(currentDayButton);
     } else {
         getMarkers(fromInput.value, toInput.value);
+        
+        // add from/to parameters to add event link
+        if (newEventButton) {
+            newEventButton.href = addEventLink + '?from=' + fromInput.value + "&to=" + toInput.value;
+        }
     }
 
     /**
@@ -622,11 +631,11 @@ function initMap() {
         }),
         show: false,
         collapsible: true,
-        collapseBtn: function(itinerary) {
-                var collapseBtn = L.DomUtil.create('span', itinerary.options.collapseBtnClass);
-                collapseBtn.innerHTML = document.getElementById('iconRoute').innerHTML;
-                L.DomEvent.on(collapseBtn, 'click', itinerary._toggle, itinerary);
-                itinerary._container.insertBefore(collapseBtn, itinerary._container.firstChild);
+        collapseBtn: function (itinerary) {
+            var collapseBtn = L.DomUtil.create('span', itinerary.options.collapseBtnClass);
+            collapseBtn.innerHTML = document.getElementById('iconRoute').innerHTML;
+            L.DomEvent.on(collapseBtn, 'click', itinerary._toggle, itinerary);
+            itinerary._container.insertBefore(collapseBtn, itinerary._container.firstChild);
         },
         showAlternatives: false,
         routeWhileDragging: false,

@@ -22,7 +22,7 @@ abstract class ObjectWriter {
         return $this->mapper;
     }
 
-    protected function createEntry($data) {
+    protected function createEntry($data, $additionalData = null) {
         // Remove CSRF attributes
         if (array_key_exists('csrf_name', $data)) {
             unset($data["csrf_name"]);
@@ -31,10 +31,16 @@ abstract class ObjectWriter {
             unset($data["csrf_value"]);
         }
 
-        $data['user'] = $this->current_user->getUser()->id;
+        $user = $this->current_user->getUser();
+        $use_user_from_data = is_array($additionalData) && ((array_key_exists("is_bill_based_save", $additionalData) && $additionalData["is_bill_based_save"]) || (array_key_exists("use_user_from_data", $additionalData) && $additionalData["use_user_from_data"]));
+        
+        // Add user only if not empty (not cron!)
+        if(!is_null($user) && !$use_user_from_data){
+            $data['user'] = $user->id;
+        }
 
         $dataobject = $this->getMapper()->getDataObject();
-        $entry = new $dataobject($data);
+        $entry = new $dataobject($data, $additionalData);
 
         /**
          * Add users (for m:n)
@@ -84,7 +90,7 @@ abstract class ObjectWriter {
 
     public function save($id, $data, $additionalData = null): Payload {
 
-        $entry = $this->createEntry($data);
+        $entry = $this->createEntry($data, $additionalData);
 
         if ($entry->hasParsingErrors()) {
             $this->logger->error("Insert failed " . get_class($entry), array("message" => $entry->getParsingErrors()[0]));

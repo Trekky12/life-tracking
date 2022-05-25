@@ -25,7 +25,9 @@ class StackWriter extends ObjectActivityWriter {
         if (!$this->stack_service->hasAccess($id, $data)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        return parent::save($id, $data, $additionalData);
+        $payload = parent::save($id, $data, $additionalData);
+
+        return $payload->withEntry($payload->getResult());
     }
 
     public function getParentMapper() {

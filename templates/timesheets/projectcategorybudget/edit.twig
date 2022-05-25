@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block javascript %}
+    <script src="{{baseURL}}/static/js/datefilter.js?ver=20211113"></script>
     <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
     <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js"></script>
     <script src="{{baseURL}}/static/js/timesheets.js?ver=20210921"></script>
@@ -17,7 +18,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"]}} | {{ project.name }}</h2> 
             <div class="buttons">
-                <a href="{{ url_for('timesheets_project_categorybudget', {'project': project.hash})}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('timesheets_project_categorybudget', {'project': project.hash})}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -100,10 +101,24 @@
                     <input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != "count" )%}hidden{% endif %}" name="set_warning3" value="{% if not entry is null %}{{entry.warning3}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%}disabled="disabled"{% endif %}/>
                 </div>
 
+                <div class="form-group">
+                    <label for="dateRange">{{lang["FROM"]}}/{{ lang["TO"] }}</label>
+                    <input type="text" id="dateRange" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %} to {% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}" />
+                    <input type="hidden" id="inputStart" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}"/>
+                    <input type="hidden" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxHidden">
+                        <input name="is_hidden" type="checkbox" value="1" id="checkboxHidden" {% if entry.is_hidden == 1 %}checked{% endif %}>
+                        {{lang["HIDE_ENTRY"]}}
+                    </label>
+                </div>
+
                 <div class="form-group btn">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

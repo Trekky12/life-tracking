@@ -18,7 +18,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -34,25 +34,32 @@
 
                     </div>
                 </div>
-
-                <div class="categories-filter form-group">
-                    <select id="category-filter" multiple name="categories[]" class="category">
-                        {% for cat in categories %}
-                            <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                {% if categories %}
+                    <div class="categories-filter form-group">
+                        <select id="category-filter" multiple name="categories[]" class="category" autocomplete="off">
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
                 <div class="form-group">
-                    <div class="left">
+                    <div>
                         <label class="radio" for="radioExcel">
                             <input name="type" type="radio" value="excel" id="radioExcel" checked>
                             {{lang["EXPORT_EXCEL"]}}
                         </label>                               
                     </div>
-                    <div class="right">
+                    <div>
                         <label class="radio" for="radioWord">
                             <input name="type" type="radio" value="word" id="radioWord">
                             {{lang["EXPORT_WORD"]}}
+                        </label>
+                    </div>
+                    <div>
+                        <label class="radio" for="radioHTML">
+                            <input name="type" type="radio" value="html" id="radioHTML">
+                            {{lang["EXPORT_HTML_WITH_NOTICES"]}}
                         </label>
                     </div>
                 </div>

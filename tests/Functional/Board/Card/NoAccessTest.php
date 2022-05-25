@@ -11,7 +11,6 @@ class NoAccessTest extends BoardTestBase {
     protected $TEST_CARD_ID = 1;
     protected $uri_save = "/boards/card/save/";
     protected $uri_delete = "/boards/card/delete/";
-    protected $uri_edit = "/boards/card/data/";
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -62,7 +61,7 @@ class NoAccessTest extends BoardTestBase {
      */
     public function testGetChildData() {
 
-        $response = $this->request('GET', $this->uri_edit . $this->TEST_CARD_ID);
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);

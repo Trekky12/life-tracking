@@ -34,7 +34,7 @@ class IngredientRemover extends ObjectActivityRemover {
     }
 
     public function getModule(): string {
-        return "recipes_ingredients";
+        return "recipes";
     }
 
 }

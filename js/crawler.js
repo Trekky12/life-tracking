@@ -44,7 +44,7 @@ function add_save_dataset_function() {
         item.addEventListener('click', function (event) {
 
             var data = {'state': item.classList.contains("is_saved") ? 0 : 1, 'dataset': item.dataset.id};
-            
+
             if (item.classList.contains("is_saved") && !confirm(lang.really_unsave_dataset)) {
                 return false;
             }
@@ -69,6 +69,10 @@ function add_save_dataset_function() {
                 }
             }).catch(function (error) {
                 console.log(error);
+                if (document.body.classList.contains('offline')) {
+                    let formData = new URLSearchParams(data).toString();
+                    saveDataWhenOffline(jsObject.crawler_dataset_save, 'POST', formData);
+                }
             });
         });
     });

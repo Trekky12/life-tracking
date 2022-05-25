@@ -70,11 +70,15 @@ class CrawlerDatasetMapper extends \App\Domain\Mapper {
     }
 
     public function deleteOldEntries($crawler_id, $month = 6) {
-        $sql = "DELETE FROM " . $this->getTableName() . " WHERE crawler = :crawler AND DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0";
+        $sql = "DELETE FROM " . $this->getTableName() . " "
+                . "WHERE crawler = :crawler "
+                . "AND DATEDIFF(NOW(), DATE_ADD(changedOn, INTERVAL :month MONTH)) >= 0 "
+                . "AND saved = :saved";
 
         $bindings = [
             "crawler" => $crawler_id,
-            "month" => $month
+            "month" => $month,
+            "saved" => 0
         ];
 
         $stmt = $this->db->prepare($sql);
@@ -86,12 +90,13 @@ class CrawlerDatasetMapper extends \App\Domain\Mapper {
         return $stmt->rowCount();
     }
 
-    public function set_saved($id, $saved) {
-        $sql = "UPDATE " . $this->getTableName() . " SET saved=:saved WHERE id=:id";
+    public function set_saved($id, $crawler_id, $saved) {
+        $sql = "UPDATE " . $this->getTableName() . " SET saved=:saved WHERE id=:id AND crawler = :crawler";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
             "saved" => $saved,
-            "id" => $id
+            "id" => $id,
+            "crawler" => $crawler_id
         ]);
 
         if (!$result) {

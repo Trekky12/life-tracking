@@ -44,12 +44,22 @@ class MemberTest extends BoardTestBase {
      */
     public function testArchivedItem() {
 
-        $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
+        $json = json_decode($body, true);
 
-        $row = $this->getStack($body, $this->TEST_STACK_NAME);
-        $this->assertTrue(empty($row));
+        $this->assertArrayHasKey("stacks", $json);
+        $this->assertIsArray($json["stacks"]);
+
+        foreach($json["stacks"] as $stack){
+            $this->assertIsArray($stack);
+            $this->assertArrayHasKey("name", $stack);
+
+            if($stack["name"] == $this->TEST_STACK_NAME){
+                $this->assertEquals(1, $stack["archive"]);
+            }
+        }
     }
 
     /**
@@ -77,12 +87,22 @@ class MemberTest extends BoardTestBase {
      */
     public function testUnArchivedItem() {
 
-        $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
+        $json = json_decode($body, true);
 
-        $row = $this->getStack($body, $this->TEST_STACK_NAME);
-        $this->assertArrayHasKey("id", $row);
+        $this->assertArrayHasKey("stacks", $json);
+        $this->assertIsArray($json["stacks"]);
+
+        foreach($json["stacks"] as $stack){
+            $this->assertIsArray($stack);
+            $this->assertArrayHasKey("name", $stack);
+
+            if($stack["name"] == $this->TEST_STACK_NAME){
+                $this->assertEquals(0, $stack["archive"]);
+            }
+        }
     }
 
 }

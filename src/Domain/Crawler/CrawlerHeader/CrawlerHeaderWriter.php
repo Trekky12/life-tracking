@@ -12,11 +12,13 @@ use App\Domain\Crawler\CrawlerService;
 
 class CrawlerHeaderWriter extends ObjectActivityWriter {
 
+    private $service;
     private $crawler_service;
     private $crawler_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, CrawlerHeaderMapper $mapper, CrawlerService $crawler_service, CrawlerMapper $crawler_mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, CrawlerHeaderService $service, CrawlerHeaderMapper $mapper, CrawlerService $crawler_service, CrawlerMapper $crawler_mapper) {
         parent::__construct($logger, $user, $activity);
+        $this->service = $service;
         $this->mapper = $mapper;
         $this->crawler_service = $crawler_service;
         $this->crawler_mapper = $crawler_mapper;
@@ -29,7 +31,10 @@ class CrawlerHeaderWriter extends ObjectActivityWriter {
         if (!$this->crawler_service->isOwner($crawler->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-
+        if(!$this->service->isChildOf($crawler->id, $id)){
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        
         $data['crawler'] = $crawler->id;
 
         $payload = parent::save($id, $data, $additionalData);

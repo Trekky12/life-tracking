@@ -11,6 +11,7 @@ use App\Domain\Workouts\Bodypart\BodypartMapper;
 use App\Domain\Workouts\Muscle\MuscleMapper;
 use App\Domain\Main\Translator;
 use App\Domain\Settings\SettingsMapper;
+use App\Domain\Main\Utility\DateUtility;
 
 class PlanService extends Service {
 
@@ -144,16 +145,20 @@ class PlanService extends Service {
                 $set_description = array_map(function($set) use ($exercise) {
                     $description = [];
                     if ($exercise->isCategoryReps() || $exercise->isCategoryRepsWeight()) {
-                        $description[] = sprintf("%s %s", $set["repeats"], $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
+                        $description[] = sprintf("%s %s", $set["repeats"] ? $set["repeats"] : 0, $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
                     }
                     if ($exercise->isCategoryRepsWeight()) {
-                        $description[] = sprintf("%s %s", $set["weight"], $this->translation->getTranslatedString("WORKOUTS_KG"));
+                        $description[] = sprintf("%s %s", $set["weight"] ? $set["weight"] : 0, $this->translation->getTranslatedString("WORKOUTS_KG"));
                     }
                     if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
-                        $description[] = sprintf("%s %s", $set["time"], $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
+                        if(array_key_exists("time_type", $set) && $set["time_type"] == "min"){
+                            $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_MINUTES"));
+                        }else{
+                            $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
+                        }
                     }
                     if ($exercise->isCategoryDistanceTime()) {
-                        $description[] = sprintf("%s %s", $set["distance"], $this->translation->getTranslatedString("WORKOUTS_KM"));
+                        $description[] = sprintf("%s %s", $set["distance"] ? $set["distance"] : 0, $this->translation->getTranslatedString("WORKOUTS_KM"));
                     }
                     return implode(', ', $description);
                 }, $se["sets"]);

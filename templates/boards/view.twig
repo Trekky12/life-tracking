@@ -4,290 +4,302 @@
 {% set boardsview = 1 %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/simplemde.min.css" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/easymde.min.css"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
-    <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-    <script src="{{baseURL}}/static/assets/js/simplemde.min.js"></script>
-    <script src="{{baseURL}}/static/js/boards.js?v=20210109b"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
+	<script src="{{baseURL}}/static/assets/js/easymde.min.js"></script>
+	<script src="{{baseURL}}/static/js/boards.js?v=20220410"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="board-header">
-        <h2>{{board.name|raw}}</h2>
-    </div>
-{% endblock %}        
+	<div class="page-header">
+		<h2>{{board.name|raw}}</h2>
+	</div>
+{% endblock %}
 
 {% block bottom %}
-    <div id="stack-modal" class="modal">
-        <div class="modal-inner">
-            <div class="modal-header">{{lang["STACK"]}}<span class="edit-bar"></span></div>
-            <form>
-                <div class="modal-content">
+	<div id="sidebar" class="sidebar {% if sidebar[" mobilevisible"] == 1 %}mobile-visible{% elseif sidebar[" desktophidden"] == 1 %}desktop-hidden{% endif %}">
+		<span id="sidebar-toggle" aria-hidden="true">
+			<span class="chevron-left">{{ fontawesome('fas fa-chevron-left') }}</span>
+			<span class="chevron-right">{{ fontawesome('fas fa-chevron-right') }}</span>
+		</span>
+		<div class="sidebar-inner">
+			<div class="sidebar-box">
+				<h4>{{lang["USERS"]}}</h4>
+				<div class="member-list">
+					{% for user in users %}
+						<div class="avatar-wrapper">
+							{% if user.get_thumbnail() != '' %}
+								<img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
+							{% else %}
+								<svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewbox="0 0 24 15" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
+									<text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+								</svg>
+							{% endif %}
+							<div class="avatar-name">{{user.name}}
+								{{user.lastname}}</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
 
-                    <input name="board" type="hidden" value="{{board.id}}">
-
-                    <input name="id" type="hidden" value="" class="reset-field">
-                    <input name="position" type="hidden" value="" class="reset-field">
-                    <div class="form-group">
-                        <label for="inputName">{{lang["NAME"]}}</label>
-                        <input class="form-control" id="inputName" name="name" type="text">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="buttons">
-                        <input id="stack-add-btn" class="submit-btn" type="submit" tabindex="-1" value="{{lang["ADD"]}}"/>
-                        <button id="stack-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="card-modal" class="modal">
-        <div class="modal-inner">
-            <div class="modal-header">{{lang["CARD"]}}<span class="edit-bar"></span></div>
-            <form>
-                <div class="modal-content">
-                    <input name="stack" type="hidden" value="" class="reset-field"/>
-                    <input name="id" type="hidden" value="" class="reset-field"/>
-                    <input name="position" type="hidden" value="" class="reset-field"/>
-                    <input name="archive" type="hidden" value="" class="reset-field"/>
-                    <div class="form-group card-dates hidden">
-                        <span>{{lang["CHANGED_BY"]}}:</span> <span id="changedBy"></span> (<span id="changedOn"></span>) | 
-                        <span>{{lang["CREATED_BY"]}}:</span> <span id="createdBy"></span> (<span id="createdOn"></span>)
-                    </div>
-                    <div class="form-group hidden">
-                        <select class="form-control" id="users" name="users[]" multiple="true">
-                            {# not using "if user.id in board_user" so users removed and readded to the board are still on assigned cards #}
-                            {% for user in users %}
-                                <option value="{{user.id}}">{{user.login}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputTitle">{{lang["TITLE"]}}</label>
-                        <input class="form-control" id="inputTitle" name="title" type="text"/>
-                    </div>
-                    <div class="two-columns">
-                        <div class="form-group left">
-                            <label>{{lang["USERS"]}}</label>
-                            <div class="member-list">
-                                {% for user in users %}
-                                    {% if user.id in board_user|keys %}
-                                        {% if user.get_thumbnail() != '' %}
-                                            <img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
-                                        {% else %}
-                                            <svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}">
-                                            <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
-                                            </svg>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="form-group right">
-                            <label>{{lang["LABELS"]}}</label>
-                            <select class="form-control" id="card-label-list" name="labels[]" multiple="true">
-                                {% for label in labels %}
-                                    <option value="{{label.id}}" data-background-color="{{label.background_color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }} {{lang["ADD_DESCRIPTION"]}}</a>
-                        <div class="hidden-field hidden">
-                            <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
-                            <textarea class="form-control" id="inputDescription" name="description"></textarea>
-                        </div>
-                    </div>
-                    <div class="two-columns">
-                        <div class="form-group left">
-                            <a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }} {{lang["ADD_DATE"]}}</a>
-                            <div class="hidden-field hidden">
-                                <label for="dateSelect">{{lang["DATE"]}}</label>
-                                <input type="text" class="form-control date-display" id="dateSelect"  name="date">
-
-                            </div>
-                        </div>
-                        <div class="form-group right">
-                            <a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }} {{lang["ADD_TIME"]}}</a>
-                            <div class="hidden-field hidden">
-                                <label for="inputTime">{{lang["TIME"]}}</label>
-                                <input type="time" step="1" class="form-control" id="inputTime" name="time"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group hidden">
-                        <a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }} {{lang["ADD_COMMENT"]}}</a>
-                        <div class="hidden-field hidden">
-                            <label for="inputComment">{{lang["COMMENT"]}}</label>
-                            <textarea class="form-control" id="inputComment" name="comment"></textarea>
-                            <button id="addComment">{{lang["ADD_COMMENT"]}}</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="buttons">
-                        <input id="card-add-btn" type="submit" class="submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
-                        <button id="card-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="label-modal" class="modal">
-        <div class="modal-inner">
-            <div class="modal-header">{{lang["LABEL"]}}<span class="edit-bar"></span></div>
-            <form>
-                <div class="modal-content">
-                    <input name="board" type="hidden" value="{{board.id}}"/>
-                    <input name="id" type="hidden" value="" class="reset-field"/>
-                    <div class="form-group">
-                        <label for="inputName">{{lang["NAME"]}}</label>
-                        <input class="form-control" id="inputName" name="name" type="text"/>
-                    </div>
-                    <div class="two-columns form-group">
-                        <div class="left">
-                            <h4>{{lang["BACKGROUND"]}} {{lang["COLOR"]}}</h4>
-                            <label for="inputBackgroundColor" class="color-wrapper">
-                                <input class="form-control" id="inputBackgroundColor" name="background_color" type="color"/>
-                            </label>
-                        </div>
-                        <div class="right">
-                            <h4>{{lang["TEXT"]}} {{lang["COLOR"]}}</h4>
-                            <label for="inputTextColor" class="color-wrapper">
-                                <input class="form-control" id="inputTextColor" name="text_color" type="color"/>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="buttons">
-                        <input id="label-add-btn" type="submit" class="submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
-                        <button id="label-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="sidebar" class="sidebar {% if sidebar["mobilevisible"] == 1 %}mobile-visible{% elseif sidebar["desktophidden"] == 1 %}desktop-hidden{% endif %}">
-        <span id="sidebar-toggle" aria-hidden="true">
-            <span class="chevron-left">{{ fontawesome('fas fa-chevron-left') }}</span>
-            <span class="chevron-right">{{ fontawesome('fas fa-chevron-right') }}</span>
-        </span>
-        <div class="sidebar-inner">
-            <div class="sidebar-box">
-                <h4>{{lang["USERS"]}}</h4>
-                <div class="member-list">
-                    {% for user in users %}
-                        {% if user.id in board_user|keys %}
-                            <div class="avatar-wrapper">
-                                {% if user.get_thumbnail() != '' %}
-                                    <img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
-                                {% else %}
-                                    <svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewBox="0 0 24 15" data-user="{{user.id}}" title="{{user.name}} {{user.lastname}}">
-                                    <text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
-                                    </svg>
-                                {% endif %}
-                                <div class="avatar-name">{{user.name}} {{user.lastname}}</div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="sidebar-box">
-                <h4>{{lang["LABELS"]}}</h4>
-                <div class="card-label-list">
-                    {% for label in labels %}
-                        <span class="card-label" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}"><a href="#" class="edit-label" data-label="{{label.id}}">{{label.name|raw}}</a></span>
-                        {% endfor %}
-                </div>
-                <a id="create-label" class="create-label add-element-text" href="#">{{ fontawesome('fas fa-plus') }} {{lang["ADD_LABEL"]}}</a>
-            </div>
-            <div class="sidebar-box">
-                <label class="checkbox" for="checkboxArchivedItems">
-                    <input name="set_archived_items" type="checkbox" id="checkboxArchivedItems" {% if show_archive is not null and show_archive == 1 %}checked="checked"{% endif %}>
-                    {{lang["SHOW_ARCHIVED_ITEMS"]}}
-                </label>
-            </div>
-        </div>
-    </div>
+			<div class="sidebar-box">
+				<h4>{{lang["LABELS"]}}</h4>
+				<div class="card-label-list">
+					{% for label in labels %}
+						<span class="card-label" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">
+							<a href="#" class="edit-label" data-label="{{label.id}}">{{label.name|raw}}</a>
+						</span>
+					{% endfor %}
+				</div>
+				<a id="create-label" class="create-label add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD_LABEL"]}}</a>
+			</div>
+			<div class="sidebar-box">
+				<label class="checkbox" for="checkboxArchivedItems">
+					<input name="set_archived_items" type="checkbox" id="checkboxArchivedItems" autocomplete="off">
+					{{lang["SHOW_ARCHIVED_ITEMS"]}}
+				</label>
+			</div>
+		</div>
+	</div>
 
 
-    <div class="board-content">
-        <div class="stack-wrapper">
-            {% for stack in stacks %}
-                <div class="stack stack-border{%if stack.archive == 1%} archived{%endif%}" id="stack_{{stack.id}}" data-stack="{{stack.id}}">
+	<div class="board-content">
+		<div id="loadingIconBoard" class="centered loading-icon">
+			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+		</div>
+		<div class="stack-wrapper hide-archived"></div>
+	</div>
 
-                    <div class="stack-header" data-stack="{{stack.id}}">
-                        <span class="title">{{stack.name|raw}}</span>
-                        <span class="edit-bar">
-                            {{ fontawesome('fas fa-pencil-alt') }}
-                            <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-                        </span>
-                    </div>
+	<div id="stack-modal" class="modal">
+		<div class="modal-inner">
+			<div class="modal-header">{{lang["STACK"]}}<span class="edit-bar"></span>
+			</div>
+			<form>
+				<div class="modal-content">
 
+					<input name="board" type="hidden" value="{{board.id}}">
 
-                    <div class="card-wrapper" data-stack="{{stack.id}}">
-                        {% for card in stack.cards %}
-                            <div class="board-card{%if card.archive == 1%} archived{%endif%}" id="card_{{card.id}}" data-card="{{card.id}}">
-                                <div class="card-labels">
-                                    {% for label in card_label[card.id] %}
-                                        <div class="card-label" style="background-color:{{labels[label].background_color}}; color:{{labels[label].getTextColor()}}"></div>
-                                    {% endfor %}
-                                    <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-                                </div>
+					<input name="id" type="hidden" value="" class="reset-field">
+					<input name="position" type="hidden" value="" class="reset-field">
+					<div class="form-group">
+						<label for="inputName">{{lang["NAME"]}}</label>
+						<input class="form-control" id="inputName" name="name" type="text">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="buttons">
+						<input id="stack-add-btn" class="button submit-btn no-loading" type="submit" tabindex="-1" value="{{lang["ADD"]}}"/>
+						<button id="stack-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 
-                                <div class="card-title">{{card.title|raw}}</div>
-                                {% if card.date or card.time %}
-                                    <span class="card-date {% if "now"|date('Y-m-d') >= card.date|date('Y-m-d') %}due{% endif %}">{{ fontawesome('fas fa-calendar-alt') }}{{card.date is empty ? "" : card.date|date(i18n.dateformatTwig.date)}} {{ card.time is empty ? "" : card.time|date("H:i") }}</span>
-                                {% endif %}
-                                <div class="bottom-row">
-                                    <div class="icons">
-                                        {% if card.description %}
-                                            {{ fontawesome('fas fa-align-left') }}
-                                        {% endif %}
-                                    </div>
-                                    <div class="card-member">
-                                        {% for user in card_user[card.id] %}
-                                            {% if user in board_user|keys %}
-                                                {% if users[user].get_thumbnail() != '' %}
-                                                    <img src="/{{uploads_folder}}/profile/{{users[user].get_thumbnail('mini')}}" class="avatar-mini">
-                                                {% else %}
-                                                    <svg class="avatar-mini avatar-initials" viewBox="0 0 24 15">
-                                                    <text x="50%" y="13" text-anchor="middle">{{users[user].name|first|upper}}{{users[user].lastname|first|upper}}</text>
-                                                    </svg>
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
+	<div id="card-modal" class="modal">
+		<div class="modal-inner">
+			<div class="modal-header">{{lang["CARD"]}}<span class="edit-bar"></span>
+			</div>
+			<form>
+				<div class="modal-content">
+					<input name="stack" type="hidden" value="" class="reset-field"/>
+					<input name="id" type="hidden" value="" class="reset-field"/>
+					<input name="position" type="hidden" value="" class="reset-field"/>
+					<input name="archive" type="hidden" value="" class="reset-field"/>
+					<div class="form-group card-dates hidden">
+						<span>{{lang["CHANGED_BY"]}}:</span>
+						<span id="changedBy"></span>
+						(<span id="changedOn"></span>) |
+						<span>{{lang["CREATED_BY"]}}:</span>
+						<span id="createdBy"></span>
+						(<span id="createdOn"></span>)
+					</div>
+					<div class="form-group hidden">
+						<select
+							class="form-control" id="users" name="users[]" multiple="true">
+							{# not using "if user.id in board_user" so users removed and readded to the board are still on assigned cards #}
+							{% for user in users %}
+								<option value="{{user.id}}">{{user.login}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="inputTitle">{{lang["TITLE"]}}</label>
+						<input class="form-control" id="inputTitle" name="title" type="text"/>
+					</div>
+					<div class="two-columns">
+						<div class="form-group left">
+							<label>{{lang["USERS"]}}</label>
+							<div class="member-list">
+								{% for user in users %}
+									{% if user.get_thumbnail() != '' %}
+										<img alt="{{user.login}}" src="/{{uploads_folder}}/profile/{{user.get_thumbnail('small')}}" class="avatar avatar-small" data-user="{{user.id}}">
+									{% else %}
+										<svg alt="{{user.login}}" class="avatar avatar-small avatar-initials" viewbox="0 0 24 15" data-user="{{user.id}}">
+											<text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+										</svg>
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+						<div class="form-group right">
+							<label>{{lang["LABELS"]}}</label>
+							<select class="form-control" id="card-label-list" name="labels[]" multiple="true">
+								{% for label in labels %}
+									<option value="{{label.id}}" data-background-color="{{label.background_color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+							{{lang["ADD_DESCRIPTION"]}}</a>
+						<div class="hidden-field hidden">
+							<label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+							<textarea class="form-control" id="inputDescription" name="description"></textarea>
+						</div>
+					</div>
+					<div class="two-columns">
+						<div class="form-group left">
+							<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+								{{lang["ADD_DATE"]}}</a>
+							<div class="hidden-field hidden">
+								<label for="dateSelect">{{lang["DATE"]}}</label>
+								<input type="text" class="form-control date-display" id="dateSelect" name="date">
 
-                            </div>
-                        {% endfor %}
-                    </div>
+							</div>
+						</div>
+						<div class="form-group right">
+							<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+								{{lang["ADD_TIME"]}}</a>
+							<div class="hidden-field hidden">
+								<label for="inputTime">{{lang["TIME"]}}</label>
+								<input type="time" step="1" class="form-control" id="inputTime" name="time"/>
+							</div>
+						</div>
+					</div>
+					<div class="form-group hidden">
+						<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+							{{lang["ADD_COMMENT"]}}</a>
+						<div class="hidden-field hidden">
+							<label for="inputComment">{{lang["COMMENT"]}}</label>
+							<textarea class="form-control" id="inputComment" name="comment"></textarea>
+							<button id="addComment" class="button">{{lang["ADD_COMMENT"]}}</button>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="buttons">
+						<input id="card-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
+						<button id="card-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 
-                    <div class="board-card-dummy">
-                        <a id="create-card" class="create-card add-element-text" href="#" data-stack="{{stack.id}}">{{ fontawesome('fas fa-plus') }} {{lang["ADD_CARD"]}}</a>
-                    </div>
-                </div>
-            {% endfor %}
-            <div class="stack-dummy">
-                <a id="create-stack" class="create-stack add-element-text" href="#">{{ fontawesome('fas fa-plus') }} {{lang["ADD_STACK"]}}</a>
-            </div>
-        </div>
-    </div>
-                
-    <div class="hidden">
-        <div id="iconArchive">{{ fontawesome('fas fa-archive') }}</div>
-        <div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
-    </div>
+	<div id="label-modal" class="modal">
+		<div class="modal-inner">
+			<div class="modal-header">{{lang["LABEL"]}}<span class="edit-bar"></span>
+			</div>
+			<form>
+				<div class="modal-content">
+					<input name="board" type="hidden" value="{{board.id}}"/>
+					<input name="id" type="hidden" value="" class="reset-field"/>
+					<div class="form-group">
+						<label for="inputName">{{lang["NAME"]}}</label>
+						<input class="form-control" id="inputName" name="name" type="text"/>
+					</div>
+					<div class="two-columns form-group">
+						<div class="left">
+							<h4>{{lang["BACKGROUND"]}}
+								{{lang["COLOR"]}}</h4>
+							<label for="inputBackgroundColor" class="color-wrapper">
+								<input class="form-control" id="inputBackgroundColor" name="background_color" type="color"/>
+							</label>
+						</div>
+						<div class="right">
+							<h4>{{lang["TEXT"]}}
+								{{lang["COLOR"]}}</h4>
+							<label for="inputTextColor" class="color-wrapper">
+								<input class="form-control" id="inputTextColor" name="text_color" type="color"/>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="buttons">
+						<input id="label-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
+						<button id="label-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="templates" class="hidden">
+		<div class="stack stack-border" data-stack="">
+			<div class="stack-header">
+				<span class="title"></span>
+				<span class="edit-bar">
+					{{ fontawesome('fas fa-pencil-alt') }}
+					<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+				</span>
+			</div>
+
+			<div class="card-wrapper"></div>
+
+			<div class="board-card-dummy">
+				<a id="create-card" class="create-card add-element-text" href="#" data-stack="">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD_CARD"]}}</a>
+			</div>
+		</div>
+
+		<div class="stack-dummy">
+			<a id="create-stack" class="create-stack add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+				{{lang["ADD_STACK"]}}</a>
+		</div>
+
+		<div class="board-card" data-card="">
+			<div class="check">{{ fontawesome('far fa-check-circle') }}</div>
+			<div class="board-card-content">
+				<div class="card-labels">
+					<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+				</div>
+
+				<div class="card-title"></div>
+				<span class="card-date hidden">{{ fontawesome('fas fa-calendar-alt') }}</span>
+
+				<div class="bottom-row">
+					<div class="icons">
+						<span class="description hidden">
+							{{ fontawesome('fas fa-align-left') }}
+						</span>
+					</div>
+					<div class="card-members">
+						{% for user in users %}
+							<div class="card-member hidden" data-user="{{user.id}}">
+								{% if user.get_thumbnail() != '' %}
+									<img src="/{{uploads_folder}}/profile/{{user.get_thumbnail('mini')}}" class="avatar-mini">
+								{% else %}
+									<svg class="avatar-mini avatar-initials" viewbox="0 0 24 15">
+										<text x="50%" y="13" text-anchor="middle">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
+									</svg>
+								{% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="hidden">
+		<div id="iconArchive">{{ fontawesome('fas fa-archive') }}</div>
+		<div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
+	</div>
 {% endblock %}

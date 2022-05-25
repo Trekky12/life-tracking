@@ -31,7 +31,7 @@ class OwnerDeleteRecursiveTest extends TimesheetTestBase {
         $parent_id = $row["id_edit"];
 
         // Add Child
-        $data2 = ["start" => date('Y-m-d') . " 10:00", "end" => date('Y-m-d') . " 11:00", "notice" => "Test", "project" => $parent_id];
+        $data2 = ["start" => date('Y-m-d') . " 10:00", "end" => date('Y-m-d') . " 11:00", "project" => $parent_id];
         $response5 = $this->request('POST', $this->getURIChildSave($parent_hash), $data2);
         $this->assertEquals(301, $response5->getStatusCode());
         $this->assertEquals($this->getURIView($parent_hash), $response5->getHeaderLine("Location"));

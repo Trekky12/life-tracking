@@ -13,7 +13,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPES_MEALPLAN"]}} | {{ mealplan.name|raw }}</h2> 
             <div class="buttons">
-                <a href="{{ url_for('recipes_mealplans')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('recipes_mealplans')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -96,7 +96,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="buttons">
-                        <input id="add-notice-modal" type="submit" class="submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
+                        <input id="add-notice-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
                         <button id="modal-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
                     </div>
                 </div>

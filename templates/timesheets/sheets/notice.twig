@@ -1,0 +1,95 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block javascript %}
+	<script src="{{baseURL}}/static/assets/js/docxjs.min.js"></script>
+	<script src="{{baseURL}}/static/assets/js/FileSaver.min.js"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice.js?ver=20220226"></script>
+{% endblock %}
+
+
+{% block body %}
+
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS"]}}
+				{{ lang["NOTICE"] }}|
+				{{project.name|raw}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
+
+			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+			</div>
+
+			<div id="alertError" class="alert danger hidden">
+				<span class="closebtn">&times;</span>
+				<span class="alert-message">
+					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p id="alertErrorDetail"></p>
+				</span>
+			</div>
+			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden" data-sheetname="{{sheet_title_formatted}}" data-projectname="{{project.name}}">
+
+				<form id="timesheetNoticeForm" class="form-horizontal" action="{{ url_for('timesheets_sheets_notice_save', {'sheet': sheet.id, 'project': project.hash}) }}" method="POST">
+					<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+					<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+					<div class="timesheet-notice-wrapper">
+
+						<h3 id="sheet_title">{{ sheet_title }}</h3>
+						<p>
+							<small id="sheet_categories">{{ sheet_categories }}</small>
+						</p>
+
+						<div class="timesheet-notice" data-sheet="{{ sheet.id }}">
+							{% if fields %}
+								{% for field in fields %}
+									{% if field.datatype == 'textfield' %}
+										<div class="form-group">
+											<label for="input_{{field.id}}">{{field.description|raw}}</label>
+											<input type="text" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"/>
+										</div>
+									{% elseif field.datatype == 'textarea' %}
+										<div class="form-group">
+											<label for="input_{{field.id}}">{{field.description|raw}}</label>
+											<textarea rows="{% if field.initialization %}{{field.initialization}}{% else %}15{% endif %}" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"></textarea>
+										</div>
+									{% elseif field.datatype == 'select' %}
+										<div class="form-group">
+											<label for="input_{{field.id}}">{{field.description|raw}}</label>
+											<select class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}">
+												{% for option in field.initialization|split('\r\n') %}
+													<option>
+													{{option}}
+												</option>
+											{% endfor %}
+										</select>
+									</div>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							<div class="form-group">
+								<label for="inputNotice">{{lang["NOTICE"]}}</label>
+								<textarea rows="15" class="form-control" id="inputNotice" name="notice" data-default="1"></textarea>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="form-group btn">
+					<button type="submit" class="button">{{lang["SAVE"]}}</button>
+					<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
+						{{lang["TIMESHEETS_EXPORT"]}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>{% endblock %}

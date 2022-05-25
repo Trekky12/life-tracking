@@ -2,9 +2,14 @@
 
 {% set active = 'timesheets' %}
 
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
+{% endblock %}
+
 {% block javascript %}
     <script src="{{baseURL}}/static/js/geolocation.js?ver=20200126"></script>
-    <script src="{{baseURL}}/static/js/timesheets_fast.js?ver=20191121"></script>
+    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
+    <script src="{{baseURL}}/static/js/timesheets-fast.js?ver=20211113"></script>
 {% endblock %}
 
 {% block body %}
@@ -13,7 +18,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
     </div>
@@ -36,25 +41,36 @@
             </div>
         </div>          
     </div>
+    <div class="grid content-xsmall">
+        {% if categories %}
+            <div class="categories-filter form-group timesheet-fast">
+                <select id="category-filter" multiple name="categories[]" class="category">
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
 
-    <div class="mapWrapper">
-        <input type="hidden" id="geoLat" class="geo-lat" name="lat" value="">
-        <input type="hidden" id="geoLng" class="geo-lng" name="lng" value="">
-        <input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="">
-    </div>
+        <div class="mapWrapper">
+            <input type="hidden" id="geoLat" class="geo-lat" name="lat" value="">
+            <input type="hidden" id="geoLng" class="geo-lng" name="lng" value="">
+            <input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="">
+        </div>
 
-    <div id="alertError" class="alert danger hidden">
-        <span class="closebtn" >&times;</span>
-        <span class="alert-message">
-            <p>{{ lang["ENTRY_ERROR"] }}</p>
-            <p id="alertErrorDetail"></p>
-        </span>
-    </div>
-    <div id="alertSuccess" class="alert success hidden">
-        <span class="closebtn" >&times;</span>
-        <span class="alert-message">
-            <p>{{ lang["ENTRY_SUCCESS_ADD"] }}</p>
-        </span>
+        <div id="alertErrorTimesheetFast" class="alert danger hidden">
+            <span class="closebtn" >&times;</span>
+            <span class="alert-message">
+                <p>{{ lang["ENTRY_ERROR"] }}</p>
+                <p id="alertErrorDetailTimesheetFast"></p>
+            </span>
+        </div>
+        <div id="alertSuccessTimesheetFast" class="alert success hidden">
+            <span class="closebtn" >&times;</span>
+            <span class="alert-message">
+                <p>{{ lang["ENTRY_SUCCESS_ADD"] }}</p>
+            </span>
+        </div>
     </div>
 
 {% endblock %}        

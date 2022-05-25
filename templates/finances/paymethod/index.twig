@@ -7,15 +7,16 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["FINANCES_PAYMETHODS"]}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for('finances_paymethod_edit') }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
+                <a href="{{  url_for('finances_paymethod_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
         </div>
         <div class="page-content">
-            <table id="category_table" class="table table-hover small">
+            <table id="finances_method_table" class="table table-hover small">
                 <thead>
                     <tr>
                         <th>{{lang["NAME"]}}</th>
                         <th>{{lang["DEFAULT"]}}</th>
+                        <th>{{lang["FINANCES_ACCOUNT"]}}</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -25,6 +26,7 @@
                         <tr>
                             <td>{{method.name|raw}}</td> 
                             <td>{% if method.is_default == 1%}x{%endif%}</td> 
+                            <td>{{accounts[method.account].name|raw}}</td> 
                             <td><a href="{{  url_for('finances_paymethod_edit', {'id' : method.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('finances_paymethod_delete', {'id' : method.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>

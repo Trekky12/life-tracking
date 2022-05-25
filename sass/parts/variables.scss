@@ -12,7 +12,7 @@ $size_tablet : 960px;
 $size_big: 1190px;
 $size_desktop: $size_content-width;
 $size_mobile_navigation: $size_tablet;
-$size_navigation_drawer : 200px;
+$size_navigation_drawer : 256px;
 
 
 // Colors
@@ -22,10 +22,14 @@ $color_blue_light: #1e88e5;
 $color_text-main: #404040;
 
 $color_red: #eb4646;
+$color_red_light: #ec7063;
 $color_orange: #f39c12;
-$color_yellow: #FFE720;
+$color_yellow: #ffd620;
 $color_green: #4CAF50;
 $color_blue_light_gray: #9bb0c9;
+$color_light_gray: #f1f1f1;
+$color_border: #c4c4c4;
+$color_gray: #cccccc;
 
 
 $color_link: #404040;
@@ -33,7 +37,7 @@ $color_link-visited: $color_link;
 $color_link-hover: $color_blue_light;
 
 $color_background-body: #fff;
-$color_background-screen: #f1f1f1;
+$color_background-screen: #fff;
 
 $color_navigation_background: $color_blue;
 $color_navigation_text: #bdd8f5;
@@ -42,10 +46,11 @@ $color_navigation_divider: $color_navigation_text;
 
 
 // Forms
-$color_border-input: #ccc;
+$color_border-input: $color_gray;
 $color_text-input: #666;
 $color_text-input-focus: #111;
 
 
 $header_height : 55px;
 $header_height_margin: 20px;
+$header_height_navigation_offset: 20px;

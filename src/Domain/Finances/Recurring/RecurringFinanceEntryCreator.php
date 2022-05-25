@@ -3,7 +3,7 @@
 namespace App\Domain\Finances\Recurring;
 
 use Psr\Log\LoggerInterface;
-use App\Domain\Finances\FinancesEntry;
+use App\Domain\Finances\FinancesWriter;
 use App\Domain\Notifications\NotificationsService;
 use Slim\Routing\RouteParser;
 use App\Domain\Main\Translator;
@@ -18,7 +18,7 @@ class RecurringFinanceEntryCreator {
     private $router;
     private $translation;
 
-    public function __construct(LoggerInterface $logger, RecurringMapper $mapper, RecurringFinanceEntryWriter $finances_entry_writer, NotificationsService $notification_service, RouteParser $router, Translator $translation) {
+    public function __construct(LoggerInterface $logger, RecurringMapper $mapper, FinancesWriter $finances_entry_writer, NotificationsService $notification_service, RouteParser $router, Translator $translation) {
         $this->logger = $logger;
         $this->mapper = $mapper;
         $this->finances_entry_writer = $finances_entry_writer;
@@ -56,7 +56,7 @@ class RecurringFinanceEntryCreator {
     }
 
     private function createElement($mentry) {
-        $entry = new FinancesEntry([
+        $data = [
             'type' => $mentry->type,
             'category' => $mentry->category,
             'description' => $mentry->description,
@@ -67,17 +67,19 @@ class RecurringFinanceEntryCreator {
             'user' => $mentry->user,
             'fixed' => 1,
             'paymethod' => $mentry->paymethod
-        ]);
-        $entry_id =  $this->finances_entry_writer->addFinanceEntry($entry);
+        ];
+
+        $payload = $this->finances_entry_writer->save(null, $data);
+        $entry = $payload->getResult();
         
         // Notification
         $subject = $this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_SUBJECT');
         $content = sprintf($this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT'), $mentry->description);
-        $entry_path = $this->router->urlFor('finances_edit', array('id' => $entry_id));
+        $entry_path = $this->router->relativeUrlFor('finances_edit', array('id' => $entry->id));
         
         $this->notification_service->sendNotificationsToUserWithCategory($mentry->user, "NOTIFICATION_CATEGORY_FINANCES_RECURRING", $subject, $content, $entry_path);
 
-        return $entry_id;
+        return $entry->id;
     }
 
 }

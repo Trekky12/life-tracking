@@ -302,6 +302,13 @@ class BaseTestCase extends TestCase {
     protected function getURIChildDelete($hash) {
         return str_replace("HASH", $hash, $this->uri_child_delete);
     }
+    
+    protected function getURIWithHash($uri, $hash){
+        return str_replace("HASH", $hash, $uri);
+    }
+    protected function getURIWithHashAndID($uri, $hash, $id){
+        return str_replace("ID", $id, str_replace("HASH", $hash, $uri));
+    }
 
     /**
      * CSRF Tokens
@@ -384,7 +391,7 @@ class BaseTestCase extends TestCase {
                 $this->extractArray($xpath, $input, $input_fields);
             }
 
-            $selects = $xpath->query('//form//select');
+            $selects = $xpath->query('//form//select[not(@disabled) or @disabled != "disabled"]');
             foreach ($selects as $select) {
                 $this->extractArray($xpath, $select, $input_fields);
             }

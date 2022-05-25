@@ -112,7 +112,7 @@ class MuscleWriter extends ObjectActivityWriter {
     }
 
     public function getModule(): string {
-        return "workouts_muscles";
+        return "workouts";
     }
 
 }

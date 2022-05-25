@@ -37,6 +37,15 @@ class NoAccessTest extends CrawlerTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
+    public function testGetAddElementID() {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH).$this->TEST_CRAWLER_LINK_ID);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
+    }
+
     /**
      * 
      */

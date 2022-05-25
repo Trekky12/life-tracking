@@ -1,3 +1,19 @@
-<div class="request_widget" data-id="{{ widget["id"] }}" data-reload="3600">
-     <span class="centered spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-</div>
+<table class="small">
+	<tr>
+		<th></th>
+		<th></th>
+		<th>max</th>
+		<th>min</th>
+	</tr>
+	{% for forecast in data %}
+		<tr>
+			<td class="day">{{ forecast["weekday"] }}</td>
+			<td class="bright weather-icon">
+				<span class="wi weathericon {{ forecast["icon"] }}"></span>
+				<span class="description">{{ forecast["description"]|raw }}</span>
+			</td>
+			<td class="align-right bright max-temp">{{ forecast["maxTemp"] }} °C</td>
+			<td class="align-right min-temp">{{ forecast["minTemp"] }} °C</td>
+		</tr>
+	{% endfor %}
+</table>

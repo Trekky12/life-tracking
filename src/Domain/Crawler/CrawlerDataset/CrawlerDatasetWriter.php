@@ -10,10 +10,12 @@ use App\Domain\Crawler\CrawlerService;
 
 class CrawlerDatasetWriter extends ObjectWriter {
 
+    private $service;
     private $crawler_service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, CrawlerDatasetMapper $mapper, CrawlerService $crawler_service) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, CrawlerDatasetService $service, CrawlerDatasetMapper $mapper, CrawlerService $crawler_service) {
         parent::__construct($logger, $user);
+        $this->service = $service;
         $this->mapper = $mapper;
         $this->crawler_service = $crawler_service;
     }
@@ -25,6 +27,14 @@ class CrawlerDatasetWriter extends ObjectWriter {
         $crawler = $this->crawler_service->getFromHash($additionalData["crawler"]);
 
         if (!$this->crawler_service->isOwner($crawler->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        /**
+         * NOTICE
+         * This item is not editable,
+         * so actually no need check for match with parent item
+         */
+        if (!$this->service->isChildOf($crawler->id, $id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

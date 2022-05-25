@@ -20,7 +20,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TRIPS_EVENT"]}} | {{trip.name|raw}} </h2>
             <div class="buttons">
-                <a href="{{ url_for('trips_view', {'trip':trip.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('trips_view', {'trip':trip.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -54,10 +54,10 @@
                 <div class="form-group">
                     <label for="inputStartAddress">{{lang["ADDRESS"]}}</label>
                     <input type="text" class="form-control" id="inputStartAddress" name="start_address" value="{% if not entry is null %}{{entry.start_address}}{% endif %}">
-                    <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
+                    <button class="button gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
                     <div id="geo-map" class="geo-map"></div>
                     <div class="form-group map-btn">
-                        <button class="delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                        <button class="button delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                     </div>
                     <input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
@@ -78,10 +78,10 @@
                 <div class="form-group">
                     <label for="inputEndAddress">{{lang["ADDRESS"]}}</label>
                     <input type="text" class="form-control" id="inputEndAddress" name="end_address" value="{% if not entry is null %}{{entry.end_address}}{% endif %}">
-                    <button class="gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
+                    <button class="button gray set_address">{{lang["SEARCH_ADDRESS"]}}</button>
                     <div id="geo-map2" class="geo-map"></div>
                     <div class="form-group map-btn">
-                        <button class="delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                        <button class="button delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                     </div>
                     <input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
@@ -108,7 +108,7 @@
                             <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
                         </div>
                         <img class="image_uploaded {% if entry.get_thumbnail() == ''%}hidden{% endif %}" id="event_image" src="{% if entry.get_thumbnail() != ''%}/{{uploads_folder}}/events/{{entry.get_thumbnail()}}{% endif %}"/>
-                        <button type="button" id="delete_image" class="danger {% if entry.get_thumbnail() == ''%}hidden{% endif %}">{{lang["DELETE"]}}</button>
+                        <button type="button" id="delete_image" class="button danger {% if entry.get_thumbnail() == ''%}hidden{% endif %}">{{lang["DELETE"]}}</button>
                     </div>
                     <div class="form-group">
                         <input name="image" id="image" class="form-control" type="file">
@@ -116,9 +116,9 @@
                 {% endif %}
 
                 <div class="form-group btn">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

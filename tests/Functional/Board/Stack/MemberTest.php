@@ -10,7 +10,6 @@ class MemberTest extends BoardTestBase {
     protected $TEST_BOARD_HASH = "ABCabc123";
     protected $uri_save = "/boards/stacks/save/";
     protected $uri_delete = "/boards/stacks/delete/";
-    protected $uri_edit = "/boards/stacks/data/";
 
     protected function setUp(): void {
         $this->login("user", "user");
@@ -29,7 +28,7 @@ class MemberTest extends BoardTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<div class="board-header">', $body);
+        $this->assertStringContainsString('<body class="boards boards-view">', $body);
     }
 
     /**
@@ -62,37 +61,31 @@ class MemberTest extends BoardTestBase {
      * @depends testPostChildSave
      */
     public function testGetChildCreated(array $data) {
-        $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-
-        $row = $this->getStack($body, $data["name"]);
-
-        $this->assertArrayHasKey("id", $row);
-
-        return intval($row["id"]);
-    }
-
-    /**
-     * Get stack data
-     * @depends testPostChildSave
-     * @depends testGetChildCreated
-     */
-    public function testGetChildData(array $data, int $stack_id) {
-
-        $response = $this->request('GET', $this->uri_edit . $stack_id);
-
-        $body = (string) $response->getBody();
         $json = json_decode($body, true);
 
-        $this->assertArrayHasKey("entry", $json);
-        $this->assertIsArray($json["entry"]);
+        $this->assertArrayHasKey("stacks", $json);
+        $this->assertIsArray($json["stacks"]);
 
-        $this->assertSame($data["name"], $json["entry"]["name"]);
-        $this->assertSame($data["position"], $json["entry"]["position"]);
-        $this->assertSame($stack_id, intval($json["entry"]["id"]));
+        $this_stack = null;
+        foreach($json["stacks"] as $stack){
+            $this->assertIsArray($stack);
+            $this->assertArrayHasKey("name", $stack);
+            
+            if($stack["name"] == $data["name"]){
+                $this_stack = $stack;
+                break;
+            }
+        }
+        $this->assertNotNull($this_stack);
+        $this->assertSame($data["name"], $this_stack["name"]);
+        $this->assertSame($data["position"], $this_stack["position"]);
+
+        return intval($this_stack["id"]);
     }
 
     /**
@@ -127,17 +120,26 @@ class MemberTest extends BoardTestBase {
      */
     public function testGetChildDataUpdated(array $data, int $stack_id) {
 
-        $response = $this->request('GET', $this->uri_edit . $stack_id);
+        $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
 
-        $this->assertArrayHasKey("entry", $json);
-        $this->assertIsArray($json["entry"]);
+        $this->assertArrayHasKey("stacks", $json);
+        $this->assertIsArray($json["stacks"]);
 
-        $this->assertSame($data["name"], $json["entry"]["name"]);
-        $this->assertSame($data["position"], $json["entry"]["position"]);
-        $this->assertSame($stack_id, intval($json["entry"]["id"]));
+        $this_stack = null;
+        foreach($json["stacks"] as $stack){
+            if($stack["id"] == $stack_id){
+                $this_stack = $stack;
+                break;
+            }
+        }
+        $this->assertNotNull($this_stack);
+    
+        $this->assertSame($data["name"], $this_stack["name"]);
+        $this->assertSame($data["position"], $this_stack["position"]);
+        $this->assertSame($stack_id, intval($this_stack["id"]));
     }
 
     /**

@@ -4,23 +4,24 @@ html {
 
 *,
 *:before,
-*:after { /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
+*:after {
+    /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
     box-sizing: inherit;
 }
 
 
 img {
-    height: auto; 
-    max-width: 100%; 
-    display:block;
+    height: auto;
+    max-width: 100%;
+    display: block;
 }
 
 table {
     margin: 0 0 1.5em;
-    width: 100%;   
+    width: 100%;
 }
 
-table .fontawesome-icon svg{
+table .fontawesome-icon svg {
     width: 1.5em;
     height: 1.5em;
 }
@@ -31,50 +32,59 @@ table .fontawesome-icon svg{
 
 @keyframes spinning {
     0% {
-        -webkit-transform:rotate(0);
-        transform:rotate(0)
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
     }
+
     100% {
-        -webkit-transform:rotate(360deg);
-        transform:rotate(360deg)
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
     }
 }
 
 
 .alert {
+    width: 100%;
     padding: 20px;
     margin-bottom: 15px;
     color: $color_text-main;
 
-    &.danger, &.warning3{
+    &.danger,
+    &.warning3 {
         background-color: $color_red;
         color: $color_background-body;
     }
 
-    &.success{
+    &.success {
         background-color: $color_green;
         color: $color_background-body;
     }
-    &.warning, &.warning2{
+
+    &.warning,
+    &.warning2 {
         background-color: $color_orange;
         color: $color_background-body;
     }
-    &.info{
+
+    &.info {
         background-color: $color_blue;
         color: $color_background-body;
     }
-    &.warning1{
+
+    &.warning1 {
         background-color: $color_yellow;
         color: $color_text-main;
     }
 
 }
 
-.alert, .notification {
+.alert,
+.notification {
 
-    p{
-        margin:0;
+    p {
+        margin: 0;
     }
+
     .closebtn {
         margin-left: 15px;
         color: #FFFFFF;
@@ -87,11 +97,12 @@ table .fontawesome-icon svg{
 
         &::hover {
             color: black;
-        } 
+        }
     }
 }
 
-.notification{
+
+.notification {
 
     background-color: $color_background-body;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
@@ -101,22 +112,39 @@ table .fontawesome-icon svg{
 
     margin-bottom: 15px;
 
-    &.seen{
+    .notification-header,
+    .notification-content {
+        padding: 0.5rem 1rem;
+
+        @media screen and (min-width: $size_tablet) {
+            padding: 0.5rem 3rem;
+        }
+    }
+
+    &.seen {
         //border: 1px solid $color_text-main;
         //box-shadow: 0 0 6px #f8b9b7;
 
-        .notification-header{
+        .notification-header {
             background-color: $color_background-screen;
 
-            &, a{
+            &,
+            a {
                 color: $color_text-input;
             }
         }
     }
 
-    .notification-header{
+    .notification-header {
 
-        h2{
+        background-color: $color_blue;
+
+        &,
+        a {
+            color: $color_background-body;
+        }
+
+        h2 {
             margin: 0;
             overflow: hidden;
 
@@ -127,7 +155,7 @@ table .fontawesome-icon svg{
             }
         }
 
-        span{
+        span {
             @include font-size(1.2);
 
             @media screen and (min-width: $size_tablet) {
@@ -136,7 +164,7 @@ table .fontawesome-icon svg{
         }
     }
 
-    .createdOn{
+    .createdOn {
         @include font-size(1.2);
         font-style: italic;
         margin-top: 1rem;
@@ -144,39 +172,41 @@ table .fontawesome-icon svg{
 
 }
 
-.small{
+.small {
     @include font-size(1.2);
-    margin:0;
+    margin: 0;
 }
 
-.loading-icon{
+.loading-icon {
     @include font-size(4);
 }
 
-select.button-height{
-    height:44px;
+select.button-height {
+    height: 44px;
 }
 
-.filter-content{
+.filter-content {
 
-    .filter-element{
-        margin-top:1rem;
-        input:not(.selectr-input){
-            width:100%;
+    .filter-element {
+        margin-top: 1rem;
+
+        input:not(.selectr-input) {
+            width: 100%;
         }
+
         select {
-            height:44px;
+            height: 44px;
         }
     }
 
     @media screen and (min-width: $size_mobile) {
-        display:flex;
-        justify-content:space-between;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
 
-        .filter-element{
-            margin-top:0px;
-            margin-left:1rem;  
+        .filter-element {
+            margin-top: 0px;
+            margin-left: 1rem;
         }
     }
 }
@@ -186,11 +216,11 @@ pre {
     word-wrap: break-word;
 }
 
-.right-align{
-    float:right;
+.right-align {
+    float: right;
 }
 
-.fontawesome-icon svg{
+.fontawesome-icon svg {
     height: 1em;
     width: 1em;
     fill: currentColor;

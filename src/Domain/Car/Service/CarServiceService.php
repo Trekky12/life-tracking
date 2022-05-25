@@ -26,16 +26,16 @@ class CarServiceService extends Service {
         $this->translation = $translation;
     }
 
-    public function index() {
+    public function index($count = 20) {
         $user_cars = $this->car_service->getUserCars();
 
-        $fuel_list = $this->mapper->tableDataFuel($user_cars, 'date', 'DESC', 10);
+        $fuel_list = $this->getMapper()->getTableDataFuel($user_cars, 'date', 'DESC', $count);
         $fuel_table = $this->renderFuelTableRows($fuel_list);
-        $fuel_datacount = $this->mapper->tableCount($user_cars, 0);
+        $fuel_datacount = $this->getMapper()->tableCount($user_cars, 0);
 
-        $service_list = $this->mapper->tableDataService($user_cars, 'date', 'DESC', 10);
+        $service_list = $this->getMapper()->getTableDataService($user_cars, 'date', 'DESC', $count);
         $service_table = $this->renderServiceTableRows($service_list);
-        $service_datacount = $this->mapper->tableCount($user_cars, 1);
+        $service_datacount = $this->getMapper()->tableCount($user_cars, 1);
 
         $cars = $this->car_service->getAllCarsOrderedByName();
 
@@ -78,12 +78,12 @@ class CarServiceService extends Service {
 
         $user_cars = $this->car_service->getUserCars();
 
-        $recordsTotal = $this->mapper->countwithCars($user_cars);
-        $recordsFiltered = $this->mapper->tableCount($user_cars, 0, $searchQuery);
+        $recordsTotal = $this->getMapper()->countwithCars($user_cars);
+        $recordsFiltered = $this->getMapper()->tableCount($user_cars, 0, $searchQuery);
 
         $lang = [0 => $this->translation->getTranslatedString("FUEL_PARTLY"), 1 => $this->translation->getTranslatedString("FUEL_FULL")];
 
-        $data = $this->mapper->tableDataFuel($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->getMapper()->getTableDataFuel($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderFuelTableRows($data);
 
         $response_data = [
@@ -108,10 +108,10 @@ class CarServiceService extends Service {
 
         $user_cars = $this->car_service->getUserCars();
 
-        $recordsTotal = $this->mapper->countwithCars($user_cars, 1);
-        $recordsFiltered = $this->mapper->tableCount($user_cars, 1, $searchQuery);
+        $recordsTotal = $this->getMapper()->countwithCars($user_cars, 1);
+        $recordsFiltered = $this->getMapper()->tableCount($user_cars, 1, $searchQuery);
 
-        $data = $this->mapper->tableDataService($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->getMapper()->getTableDataService($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
         $table = $this->renderServiceTableRows($data);
 
         $response_data = [

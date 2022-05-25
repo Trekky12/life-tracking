@@ -29,16 +29,42 @@ class NoAccessTest extends TimesheetTestBase {
     }
 
     /**
+     * Access a specific child
+     */
+    public function testGetChildEditID() {
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $this->TEST_SHEET_ID);
+
+        $body = (string) $response->getBody();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+    }
+
+    /**
      * Create the sheet
      */
     public function testPostChildSave() {
 
         $data = [
             "start" => date('Y-m-d') . " 12:00",
-            "end" => date('Y-m-d') . " 14:10",
-            "notice" => "Test"
+            "end" => date('Y-m-d') . " 14:10"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
+
+        $body = (string) $response->getBody();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
+    }
+
+    /**
+     * Update the sheet
+     */
+    public function testPostChildSaveID() {
+
+        $data = [
+            "start" => date('Y-m-d') . " 12:00",
+            "end" => date('Y-m-d') . " 14:10"
+        ];
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH). $this->TEST_SHEET_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());

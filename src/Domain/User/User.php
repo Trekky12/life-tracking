@@ -103,4 +103,20 @@ class User extends \App\Domain\DataObject {
         return $this->login;
     }
 
+    public function get_fields($remove_user_element = false, $insert = true, $update = false) {
+        $temp = parent::get_fields($remove_user_element, $insert, $update);
+
+        if($insert || $update){
+            return $temp;
+        }
+
+        return [
+            "id" => $this->id,
+            "login" => $this->login,
+            "lastname" => $this->lastname,
+            "name" => $this->name
+        ];
+    }
+
+
 }

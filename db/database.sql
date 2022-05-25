@@ -102,6 +102,20 @@ CREATE TABLE finances_categories (
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS finances_accounts;
+CREATE TABLE finances_accounts (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,    
+    name varchar(255) NOT NULL,
+    value DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS finances_paymethods;
 CREATE TABLE finances_paymethods (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -110,8 +124,13 @@ CREATE TABLE finances_paymethods (
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     is_default int(1) DEFAULT 0,
+    account int(11) UNSIGNED DEFAULT NULL,
+    round_up_savings int(1) DEFAULT 0,
+    round_up_savings_account int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(account) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(round_up_savings_account) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS finances_recurring;
@@ -177,6 +196,50 @@ CREATE TABLE finances_budgets_categories (
     UNIQUE(budget, category),
     FOREIGN KEY(budget) REFERENCES finances_budgets(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS finances_transactions;
+CREATE TABLE finances_transactions (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    description varchar(255) DEFAULT NULL,
+    value DECIMAL(10,2) NOT NULL,
+    account_from int(11) UNSIGNED DEFAULT NULL,
+    account_to int(11) UNSIGNED DEFAULT NULL,   
+    is_confirmed INT(1) DEFAULT 0, 
+    finance_entry int(11) UNSIGNED DEFAULT NULL,
+    bill_entry int(11) UNSIGNED DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(account_from) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(account_to) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS finances_transactions_recurring;
+CREATE TABLE finances_transactions_recurring (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    description varchar(255) DEFAULT NULL,
+    value DECIMAL(10,2) NOT NULL,
+    account_from int(11) UNSIGNED DEFAULT NULL,
+    account_to int(11) UNSIGNED DEFAULT NULL,   
+    start DATE DEFAULT NULL,
+    end DATE DEFAULT NULL,
+    last_run TIMESTAMP NULL DEFAULT NULL,
+    unit varchar(255) DEFAULT 'month',
+    multiplier int(5) DEFAULT 1,
+    is_active int(1) DEFAULT 1,
+    PRIMARY KEY (id),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(account_from) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(account_to) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS cars;
@@ -501,6 +564,7 @@ CREATE TABLE crawlers_user (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     crawler INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
+    lastAccess DATE DEFAULT NULL,
     UNIQUE(crawler, user),
     FOREIGN KEY(crawler) REFERENCES crawlers(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -634,7 +698,7 @@ CREATE TABLE splitbill_bill_users (
     spend_foreign DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -701,14 +765,23 @@ CREATE TABLE finances (
     lng DECIMAL(17,14) DEFAULT NULL,
     acc DECIMAL(10,3) DEFAULT NULL,
     bill INTEGER unsigned DEFAULT NULL,
+    bill_paid DECIMAL(10,2) DEFAULT NULL,
     paymethod int(11) UNSIGNED DEFAULT NULL,
+    transaction int(11) UNSIGNED DEFAULT NULL,
+    transaction_round_up_savings int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(transaction) REFERENCES finances_transactions(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(transaction_round_up_savings) REFERENCES finances_transactions(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE finances_transactions ADD FOREIGN KEY(finance_entry) REFERENCES finances(id) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE finances_transactions ADD FOREIGN KEY(bill_entry) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 DROP TABLE IF EXISTS trips;
 CREATE TABLE trips (
@@ -821,6 +894,9 @@ CREATE TABLE timesheets_projects (
     default_view varchar(255) DEFAULT 'month',
     has_duration_modifications INT(1) DEFAULT 0,
     time_conversion_rate varchar(100) DEFAULT NULL,
+    default_duration INT(11) NULL,
+    password VARCHAR(255) NULL,
+    salt VARCHAR(255) NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -900,6 +976,9 @@ CREATE TABLE timesheets_categorybudgets (
     warning1 INT(11) NULL,
     warning2 INT(11) NULL,
     warning3 INT(11) NULL,
+    start DATE DEFAULT NULL,
+    end DATE DEFAULT NULL,
+    is_hidden INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -913,6 +992,45 @@ CREATE TABLE timesheets_categorybudgets_categories (
     category INTEGER unsigned DEFAULT NULL,
     FOREIGN KEY(categorybudget) REFERENCES timesheets_categorybudgets(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS timesheets_sheets_notices;
+CREATE TABLE timesheets_sheets_notices (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    sheet INTEGER unsigned DEFAULT NULL,
+    notice TEXT DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(sheet) REFERENCES timesheets_sheets(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+INSERT INTO timesheets_sheets_notices (sheet, createdOn, changedOn, createdBy, changedBy, notice)
+SELECT id, createdOn, changedOn, createdBy, changedBy, notice
+FROM timesheets_sheets
+*/
+
+DROP TABLE IF EXISTS timesheets_noticefields;
+CREATE TABLE timesheets_noticefields (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    project INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    name varchar(255) NOT NULL,
+    description varchar(255) DEFAULT NULL,
+    datatype varchar(20) DEFAULT NULL,
+    initialization TEXT DEFAULT NULL,
+    position INT(10) NULL,
+    is_default int(1) DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS activities;

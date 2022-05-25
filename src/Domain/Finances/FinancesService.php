@@ -40,7 +40,7 @@ class FinancesService extends Service {
         $this->paymethod_service = $paymethod_service;
     }
 
-    public function financeTableIndex($from, $to, $count = 10) {
+    public function financeTableIndex($from, $to, $count = 20) {
 
         $list = $this->getMapper()->getTableData($from, $to, 0, 'DESC', $count);
         $table = $this->renderTableRows($list);
@@ -128,8 +128,8 @@ class FinancesService extends Service {
         return false;
     }
 
-    public function getDefaultOrAssignedCategory($user_id, FinancesEntry $entry) {
-        $default_cat = $this->cat_service->getDefaultCategoryOfUser($user_id);
+    public function getDefaultOrAssignedCategory(FinancesEntry $entry) {
+        $default_cat = $this->cat_service->getDefaultCategoryOfUser($entry->user);
         $category = $entry->category;
 
         // when there is no category set the default category
@@ -139,16 +139,12 @@ class FinancesService extends Service {
 
         // when it is default category then check if there is a auto assignment possible
         if ($category == $default_cat) {
-            $cat = $this->cat_assignments_service->findMatchingCategory($user_id, $entry);
+            $cat = $this->cat_assignments_service->findMatchingCategory($entry);
             if (!is_null($cat)) {
                 $category = $cat;
             }
         }
         return $category;
-    }
-
-    public function addOrUpdateFromBill(FinancesEntry $entry) {
-        return $this->getMapper()->addOrUpdateFromBill($entry);
     }
 
     public function deleteEntrywithBill($bill, $user) {

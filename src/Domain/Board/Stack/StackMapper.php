@@ -45,8 +45,7 @@ class StackMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $key = reset($row);
-            $results[$key] = new $this->dataobject($row);
+            $results[] = new $this->dataobject($row);
         }
         return $results;
     }

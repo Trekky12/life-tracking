@@ -14,6 +14,8 @@ use App\Domain\Main\Utility\DateUtility;
 use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Project\Project;
 use App\Domain\Main\Utility\Utility;
+use App\Domain\Main\Translator;
+use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
 
 class SheetService extends Service {
 
@@ -22,6 +24,8 @@ class SheetService extends Service {
     protected $user_service;
     protected $settings;
     protected $router;
+    protected $translation;
+    protected $sheet_notice_mapper;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
@@ -30,7 +34,9 @@ class SheetService extends Service {
             ProjectCategoryService $project_category_service,
             UserService $user_service,
             Settings $settings,
-            RouteParser $router) {
+            RouteParser $router,
+            Translator $translation,
+            SheetNoticeMapper $sheet_notice_mapper) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
@@ -39,6 +45,8 @@ class SheetService extends Service {
         $this->user_service = $user_service;
         $this->settings = $settings;
         $this->router = $router;
+        $this->translation = $translation;
+        $this->sheet_notice_mapper = $sheet_notice_mapper;
     }
 
     public function view($hash, $from, $to, $categories): Payload {
@@ -65,12 +73,14 @@ class SheetService extends Service {
 
         $response_data["categories_selected"] = $selected_categories;
 
+        $response_data["categories_selected_query"] = ["categories" => $selected_categories];
+
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
     private function getTableDataIndex($project, $from, $to, $selected_categories = [], $count = 20) {
 
-        $range = $this->mapper->getMinMaxDate("start", "end", $project->id, "project");
+        $range = $this->getMapper()->getMinMaxDate("start", "end", $project->id, "project");
         $minTotal = $range["min"];
         $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
@@ -88,15 +98,15 @@ class SheetService extends Service {
             $to = !is_null($to) ? $to : $maxTotal;
         }
 
-        $data = $this->mapper->getTableData($project->id, $from, $to, $selected_categories, 0, 'DESC', $count);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, 0, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data);
-        $datacount = $this->mapper->tableCount($project->id, $from, $to, $selected_categories);
+        $datacount = $this->getMapper()->tableCount($project->id, $from, $to, $selected_categories);
 
-        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $selected_categories);
+        $totalSeconds = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories);
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $selected_categories, "%", "t.duration_modified");
+            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 
@@ -176,6 +186,12 @@ class SheetService extends Service {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
+        // get information about notices
+        $sheet_ids = array_map(function($sheet){
+            return $sheet->id;
+        }, $sheets);
+        $hasNotices = $this->sheet_notice_mapper->hasNotices($sheet_ids);
+
         $rendered_data = [];
         foreach ($sheets as $sheet) {
 
@@ -194,6 +210,7 @@ class SheetService extends Service {
             $row[] = $time;
             $row[] = $sheet->categories;
 
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-edit') . '</a>';
             $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 
@@ -228,20 +245,29 @@ class SheetService extends Service {
 
         $project = $this->project_service->getFromHash($hash);
 
-        if (!$this->project_service->isMember($project->id)) {
+        if (!$this->project_service->isMember($project->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        if (!$this->isChildOf($project->id, $entry_id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
         $entry = $this->getEntry($entry_id);
-        if (!is_null($entry)) {
-            $entry->notice = $this->mapper->getNotice($entry->id);
-        }
-
         $users = $this->user_service->getAll();
         $project_users = $this->project_service->getUsers($project->id);
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
         $sheet_categories = !is_null($entry) ? $this->mapper->getCategoriesFromSheet($entry->id) : [];
+
+        $end = null;
+        if($entry){
+            $end = $entry->end;
+            $default_duration = $project->default_duration;
+            if(is_null($entry) && !is_null($default_duration)){
+                $end_date = new \DateTime('+'.$default_duration.' seconds');
+                $end = $end_date->format('Y-m-d H:i');
+            }
+        }
 
         $response_data = [
             'entry' => $entry,
@@ -249,7 +275,8 @@ class SheetService extends Service {
             'project_users' => $project_users,
             'users' => $users,
             'categories' => $project_categories,
-            'sheet_categories' => $sheet_categories
+            'sheet_categories' => $sheet_categories,
+            'end' => $end
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
@@ -265,14 +292,20 @@ class SheetService extends Service {
         // get a existing entry for today with start but without end
         $entry = $this->getLastSheetWithStartDateToday($project->id);
 
-        return new Payload(Payload::$RESULT_HTML, ["project" => $project, "entry" => $entry]);
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+
+        return new Payload(Payload::$RESULT_HTML, [
+            "project" => $project,
+            "categories" => $project_categories,
+            "entry" => $entry
+        ]);
     }
 
     public function getLastSheetWithStartDateToday($project_id) {
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
     }
 
-    public function showExport($hash, $from, $to) {
+    public function showExport($hash, $from, $to, $selected_categories) {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
@@ -285,7 +318,8 @@ class SheetService extends Service {
             "project" => $project,
             "categories" => $project_categories,
             "from" => $from,
-            "to" => $to
+            "to" => $to,
+            "categories_selected" => $selected_categories
         ]);
     }
 
@@ -307,11 +341,19 @@ class SheetService extends Service {
         if (array_key_exists("sheets", $data) && is_array($data["sheets"])) {
             $sheets = filter_var_array($data["sheets"], FILTER_SANITIZE_NUMBER_INT);
         }
+        $project_sheets = $this->mapper->getSheetIDsFromProject($project->id);
+        $sheets = array_filter($sheets, function($sheet) use($project_sheets){
+            return in_array($sheet, $project_sheets);
+        });
 
         $categories = [];
         if (array_key_exists("categories", $data) && is_array($data["categories"])) {
             $categories = filter_var_array($data["categories"], FILTER_SANITIZE_NUMBER_INT);
         }
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+        $categories = array_filter($categories, function($cat) use($project_categories){
+            return in_array($cat, array_keys($project_categories));
+        });
 
         $result = false;
         if (count($sheets) > 0 && count($categories) > 0) {

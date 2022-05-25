@@ -47,4 +47,48 @@
     .large{
         @include font-size(4);
     }
+    & + .loading-icon{
+        padding: 10rem;
+    }
+}
+
+table.timesheets_project_budget_widget{
+    .red{
+        color: $color_red;
+    }
+    .green{
+        color: $color_green;
+    }
+    .orange{
+        color: $color_orange;
+    }
+    .yellow{
+        color: $color_yellow;
+    }
+    
+    margin-bottom: 0;
+}
+
+.card[data-widget-name="timesheets_project_budget"]{
+    flex-basis: 100%;
+
+    @media screen and (min-width: $size_tablet) {
+        flex-basis: 50%;
+    }
+
+    h4{
+        text-align: left;
+        padding: 0;
+        margin: 0;
+        margin-top: 1rem;
+    }
+
+}
+
+.widget-content{
+    padding: 1rem;
+    
+    .alert{
+        margin-top:1rem;
+    }
 }

@@ -41,7 +41,10 @@
 
                         {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
                             <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
-                            <label>{{ lang["WORKOUTS_SECONDS"] }}</label>
+                            <select name="exercises[{{ exercise_idx }}][sets][dummy][time_type]" disabled="disabled">
+                                <option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
+                                <option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
+                            </select>
                         {% endif %}
                         {% if exercise["exercise"].isCategoryDistanceTime() %}
                             <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
@@ -50,8 +53,8 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <button type="button" class="add_set gray small">{{ lang["WORKOUTS_SET_ADD"] }}</button>
-                    <button type="button" class="remove_set gray small">{{ lang["WORKOUTS_SET_REMOVE"] }}</button>
+                    <button type="button" class="button add_set gray small">{{ lang["WORKOUTS_SET_ADD"] }}</button>
+                    <button type="button" class="button remove_set gray small">{{ lang["WORKOUTS_SET_REMOVE"] }}</button>
                 </div>
             </div>
         </div>

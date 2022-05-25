@@ -12,11 +12,13 @@ use App\Domain\Timesheets\Project\ProjectMapper;
 
 class SheetRemover extends ObjectActivityRemover {
 
+    private $service;
     private $project_service;
     private $project_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SheetMapper $mapper, ProjectService $project_service, ProjectMapper $project_mapper) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SheetService $service, SheetMapper $mapper, ProjectService $project_service, ProjectMapper $project_mapper) {
         parent::__construct($logger, $user, $activity);
+        $this->service = $service;
         $this->mapper = $mapper;
         $this->project_service = $project_service;
         $this->project_mapper = $project_mapper;
@@ -26,6 +28,9 @@ class SheetRemover extends ObjectActivityRemover {
         $project = $this->project_service->getFromHash($additionalData["project"]);
 
         if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        if (!$this->service->isChildOf($project->id, $id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

@@ -95,12 +95,16 @@ function copyJSTask(cb) {
             './node_modules/moment/min/moment-with-locales.min.js',
             './node_modules/nouislider/dist/nouislider.min.js',
             './node_modules/mobius1-selectr/dist/selectr.min.js',
-            './node_modules/simplemde/dist/simplemde.min.js',
+            './node_modules/easymde/dist/easymde.min.js',
             './node_modules/sortablejs/Sortable.min.js',
             './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.min.js',
             './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
             './node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.min.js',
             './node_modules/html-duration-picker/dist/html-duration-picker.min.js',
+            './node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
+            './node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js',
+            './node_modules/hammerjs/hammer.min.js',
+            './node_modules/file-saver/dist/FileSaver.min.js'
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
@@ -154,7 +158,7 @@ function copyCSSTask(cb) {
             './node_modules/leaflet.markercluster/dist/MarkerCluster.css',
             './node_modules/nouislider/dist/nouislider.min.css',
             './node_modules/mobius1-selectr/dist/selectr.min.css',
-            './node_modules/simplemde/dist/simplemde.min.css',
+            './node_modules/easymde/dist/easymde.min.css',
             ] )
         // remove source map
         .pipe(replace(/\/\*# sourceMappingURL=(.?)*\.css\.map \*\//g, ""))
@@ -279,6 +283,17 @@ function replaceAutocompleteIcons(cb){
         .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
+function copyDOCXJS(cb) {
+    return gulp
+        .src( [ 
+            './node_modules/docx/build/index.js'
+            ] )
+         // remove source map
+        //.pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
+        .pipe( rename("docxjs.min.js") )
+        .pipe( gulp.dest( 'public/static/assets/js' ) );
+}
+
 function printError( error ) {
     console.log( '---- Error ----' );
     console.log( "message", error.cause.message );
@@ -295,7 +310,7 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontsFontAwesome5SVG);
+exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontsFontAwesome5SVG, copyDOCXJS);
 
 exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);
 exports.test = copyFontsFontAwesome5SVG;

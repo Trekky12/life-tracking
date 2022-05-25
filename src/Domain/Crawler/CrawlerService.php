@@ -61,6 +61,17 @@ class CrawlerService extends Service {
         $filter = $this->getFilter($crawler);
         $hide_diff = $filter == "createdOn";
 
+        /*
+         * when only new entries are shown is selected
+         * the last access should be used as "from" 
+         * so that all new entries since the last visit are shown
+         */
+        $lastAccess = $this->mapper->getLastAccess($crawler->id, $this->current_user->getUser()->id);
+        if (is_null($from)) {
+            $from = (!is_null($lastAccess) && $hide_diff) ? $lastAccess : date('Y-m-d');
+        }
+        $this->mapper->updateLastAccess($crawler->id, $this->current_user->getUser()->id);
+
         list($datacount, $rendered_data, $headers) = $this->getDatasets($crawler->id, $filter, $hide_diff, $from, $to);
 
         $links = $this->link_mapper->getFromCrawler($crawler->id, 'position');
@@ -146,7 +157,7 @@ class CrawlerService extends Service {
 
         // first two columns are static, so the correct index is $sortColumnIndex - 2
         // get sort column of array
-        if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && count($headers) >= $sortColumnIndex - 2) {
+        if (!empty($sortColumnIndex) && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex) && array_key_exists(($sortColumnIndex - 2), $headers_numeric)) {
             $column = $headers_numeric[$sortColumnIndex - 2];
             // is this column really sortable?
             if (intval($column->sortable) === 1) {

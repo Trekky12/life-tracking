@@ -1,3 +1,7 @@
-<div class="request_widget" data-id="{{ widget["id"] }}" data-reload="3600">
-    <span class="centered spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+<div>
+	<div class="large light">
+		<span class="wi weathericon {{ data["icon"] }}"></span>
+		<span class="bright">{{ data["temp"] }}°C</span>
+	</div>
+	<div class="description">{{ data["description"]|raw }}</div>
 </div>

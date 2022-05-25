@@ -42,8 +42,7 @@ class CarServiceStatsService extends Service {
          */
         foreach ($user_cars as $uc) {
             $data[$uc]["data"] = array_fill(0, count($raw_data), null);
-            $car_id = addslashes(htmlspecialchars_decode($cars[$uc]->name));
-            $data[$uc]["name"] = $car_id;
+            $data[$uc]["name"] = htmlspecialchars_decode($cars[$uc]->name);
         }
         /**
          * Replace null values with correct values at corresponding positions

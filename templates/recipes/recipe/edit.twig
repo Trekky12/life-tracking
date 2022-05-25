@@ -16,7 +16,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPE"]}}</h2>
             <div class="buttons">
-                <a href="{% if not entry is null %}{{  url_for('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{  url_for('recipes') }}{% endif %}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{% if not entry is null %}{{  url_for_with_last_query_params('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{  url_for_with_last_query_params('recipes') }}{% endif %}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>      
         </div>
         <div class="page-content">
@@ -129,7 +129,7 @@
                                     </div>
 
                                     <div class="form-group add-ingredient-btn-wrapper">
-                                        <button type="button" class="add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
+                                        <button type="button" class="button add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@
 
                 </div>
                 <div class="form-group add-step-btn-wrapper">
-                    <button type="button" id="add-step-btn" class="gray small">{{ lang["RECIPES_ADD_STEP"] }}</button>
+                    <button type="button" id="add-step-btn" class="button gray small">{{ lang["RECIPES_ADD_STEP"] }}</button>
                 </div>
 
 
@@ -155,9 +155,9 @@
                 </div> -->
 
                 <div class="form-group">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>
@@ -194,7 +194,7 @@
                 <div class="step-ingredients"></div>
 
                 <div class="form-group add-ingredient-btn-wrapper">
-                    <button type="button" class="add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
+                    <button type="button" class="button add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
                 </div>
             </div>
             <div class="icons">

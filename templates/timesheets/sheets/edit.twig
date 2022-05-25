@@ -11,7 +11,7 @@
     <script src="{{baseURL}}/static/assets/js/leaflet.js" type="text/javascript"></script>
     <script src="{{baseURL}}/static/js/geolocation.js?ver=20200126"></script>
     <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
-    <script src="{{baseURL}}/static/js/timesheets.js?ver=20210921"></script>
+    <script src="{{baseURL}}/static/js/timesheets.js?ver=20220213"></script>
 {% endblock %}
 
 {% set hasMap_start = not entry.start_lat is null and not entry.start_lng is null %}
@@ -22,7 +22,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2>
             <div class="buttons">
-                <a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -44,8 +44,8 @@
                     <h4>{{lang["START_ADDRESS"]}}</h4>
                     <div id="geo-map" class="geo-map"></div>
                     <div class="form-group map-btn">
-                        <button class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                        <button class="delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                        <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                        <button class="button delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                     </div>
                     <input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
@@ -55,15 +55,15 @@
 
                 <div class="form-group">
                     <label for="datetimePickerEnd">{% if entry.is_day_based == 1 %}{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}{% endif %}</label>
-                    <input type="text" class="form-control" id="datetimePickerEnd" placeholder="" name="end" value="{% if not entry is null %}{{entry.end}}{% else %}{{ "now"|date("Y-m-d H:i") }}{% endif %}">
+                    <input type="text" class="form-control" id="datetimePickerEnd" placeholder="" name="end" value="{{end}}" data-saved="{% if not entry is null %}1{% else %}0{% endif %}" data-default-duration="{{ project.default_duration }}">
                 </div>
 
                 <div class="mapWrapper">
                     <h4>{{lang["END_ADDRESS"]}}</h4>
                     <div id="geo-map2" class="geo-map"></div>
                     <div class="form-group map-btn">
-                        <button class="update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                        <button class="delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+                        <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+                        <button class="button delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
                     </div>
                     <input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
                     <input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
@@ -71,19 +71,16 @@
                     <input type="hidden" class="geo-draggable" name="draggable" value="1">
                 </div>
 
-                <div class="form-group">
-                    <label for="inputNotice">{{lang["NOTICE"]}}</label>
-                    <textarea rows="15" class="form-control" id="inputNotice" name="notice">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
-                </div>
-
-                <div class="form-group category">
-                    <label for="projectCategory">{{lang["CATEGORIES"]}}</label>
-                    <select class="form-control category" id="projectCategory" name="category[]" multiple>
-                        {% for cat in categories %}
-                            <option value="{{cat.id}}" {% if cat.id in sheet_categories %}selected{%endif%}>{{cat.name|raw}}</option>
-                        {% endfor %}
-                    </select>
-                </div>  
+                {% if categories %}
+                    <div class="form-group category">
+                        <label for="projectCategory">{{lang["CATEGORIES"]}}</label>
+                        <select class="form-control category" id="projectCategory" name="category[]" multiple>
+                            {% for cat in categories %}
+                                <option value="{{cat.id}}" {% if cat.id in sheet_categories %}selected{%endif%}>{{cat.name|raw}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>  
+                {% endif %}
 
                 {% if project.has_duration_modifications > 0 %}
                     <div class="form-group">
@@ -116,9 +113,9 @@
                 {% endif %}
 
                 <div class="form-group btn">
-                    <button type="submit">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
+                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
                     {% if not entry is null %}
-                        <button id="cancel" class="danger">{{lang["CANCEL"]}}</button>
+                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
                     {% endif %}
                 </div>
             </form>

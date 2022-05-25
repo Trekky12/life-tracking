@@ -83,7 +83,7 @@ class MemberTest extends BoardTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<div class="board-header">', $body);
+        $this->assertStringContainsString('<body class="boards boards-view">', $body);
     }
 
 }

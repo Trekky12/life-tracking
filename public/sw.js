@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20210929';
+const cacheName = 'pwa-life-tracking-v20220510';
 const staticAssets = [
     '/',
     '/pwa',
@@ -62,7 +62,7 @@ const staticAssets = [
     '/static/assets/js/nouislider.min.js',
     '/static/assets/js/randomColor.min.js',
     '/static/assets/js/selectr.min.js',
-    '/static/assets/js/simplemde.min.js',
+    '/static/assets/js/easymde.min.js',
     '/static/assets/js/i18n/de.js',
     '/static/assets/js/i18n/en.js',
     '/static/assets/fonts/open-sans/open-sans-v15-latin-300.eot',
@@ -88,11 +88,8 @@ const staticAssets = [
     '/static/assets/favicon/android-chrome-192x192.png',
     '/static/assets/favicon/android-chrome-256x256.png',
     '/static/assets/favicon/apple-touch-icon.png',
-    '/static/assets/favicon/browserconfig.xml',
     '/static/assets/favicon/favicon-16x16.png',
     '/static/assets/favicon/favicon-32x32.png',
-    '/static/assets/favicon/mstile-150x150.png',
-    '/static/assets/favicon/safari-pinned-tab.svg',
     '/static/assets/css/L.Control.Locate.min.css',
     '/static/assets/css/MarkerCluster.css',
     '/static/assets/css/autoComplete.min.css',
@@ -107,7 +104,7 @@ const staticAssets = [
     '/static/assets/css/nouislider.min.css',
     '/static/assets/css/open-sans.css',
     '/static/assets/css/selectr.min.css',
-    '/static/assets/css/simplemde.min.css',
+    '/static/assets/css/easymde.min.css',
     '/static/assets/css/weather-icons.min.css',
 ];
 

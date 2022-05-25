@@ -2,21 +2,12 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
-use \App\Domain\Base\Settings;
-
 class SheetMapper extends \App\Domain\Mapper {
 
     protected $table = "timesheets_sheets";
     protected $dataobject = \App\Domain\Timesheets\Sheet\Sheet::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
-    private $KEY = null;
-
-    public function __construct(\PDO $db, \App\Domain\Main\Translator $translation, \App\Domain\Base\CurrentUser $user, Settings $settings) {
-        parent::__construct($db, $translation, $user);
-
-        $this->KEY = hash('sha256', $settings->getAppSettings()['timesheets']['key']);
-    }
 
     public function set_duration($id, $duration) {
         $sql = "UPDATE " . $this->getTableName() . " SET duration = :duration WHERE id  = :id";
@@ -80,8 +71,15 @@ class SheetMapper extends \App\Domain\Mapper {
                 . " ) AND ("
                 . "     t.start LIKE :searchQuery OR "
                 . "     t.end LIKE :searchQuery OR "
-                . "     tc.name LIKE :searchQuery "
-                . ") ";
+                . "     (tcs.sheet IN ( "
+                . "              SELECT tcs2.sheet "
+                . "                 FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs2 "
+                . "                 LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc2 ON tc2.id = tcs2.category "
+                . "                 WHERE tc2.name LIKE :searchQuery "
+                . "             ) "
+                . "     ) "
+                . ")";
+        
         if (!empty($cat_bindings)) {
             $sql .= " AND (tcs.sheet IN ( "
                     . "             SELECT sheet "
@@ -167,13 +165,12 @@ class SheetMapper extends \App\Domain\Mapper {
                 . "t.end, "
                 . "t.duration, "
                 . "t.duration_modified, "
-                . "CAST( AES_DECRYPT(notice, '" . $this->KEY . "') AS CHAR) AS notice, "
                 . "GROUP_CONCAT(tc.name SEPARATOR ', ') as categories";
 
         list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories);
 
         $sql = $tableSQL;
-        $sql .= " ORDER BY {$sort} {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
+        $sql .= " ORDER BY {$sort} {$sortDirection}, t.start {$sortDirection}, t.end {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
 
         if (!is_null($limit)) {
             $sql .= " LIMIT {$start}, {$limit}";
@@ -212,7 +209,7 @@ class SheetMapper extends \App\Domain\Mapper {
             $keys_array[] = "(:sheet" . $idx . " , :category" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTableName("timesheets_sheets_categories") . " (sheet, category) "
+        $sql = "INSERT IGNORE INTO " . $this->getTableName("timesheets_sheets_categories") . " (sheet, category) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -240,6 +237,23 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function getCategoriesWithNamesFromSheet($sheet_id) {
+        $sql = "SELECT GROUP_CONCAT(tc.name SEPARATOR ', ') "
+                . "FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs "
+                . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
+                . " WHERE tcs.sheet = :sheet";
+
+        $bindings = array("sheet" => $sheet_id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchColumn();
+        }
+        return "";
+    }
+
     public function getTimes() {
         $sql = "SELECT s.project, SUM(s.duration) as sum, SUM(s.duration_modified) as sum_modified "
                 . " FROM " . $this->getTableName() . " s "
@@ -253,34 +267,6 @@ class SheetMapper extends \App\Domain\Mapper {
             $results[intval($row["project"])] = ["sum" => floatval($row["sum"]), "sum_modified" => floatval($row["sum_modified"])];
         }
         return $results;
-    }
-
-    public function setNotice($id, $notice) {
-        $sql = "UPDATE " . $this->getTableName() . " SET notice  = AES_ENCRYPT(:notice, '" . $this->KEY . "') WHERE id = :id";
-
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            'notice' => $notice,
-            'id' => $id
-        ]);
-
-        if (!$result) {
-            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
-        }
-    }
-
-    public function getNotice($id) {
-        $sql = "SELECT CAST( AES_DECRYPT(notice, '" . $this->KEY . "') AS CHAR) FROM " . $this->getTableName() . "  WHERE id = :id";
-
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            'id' => $id
-        ]);
-
-        if ($stmt->rowCount() > 0) {
-            return $stmt->fetchColumn();
-        }
-        throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
     public function addCategoriesToSheets($sheets = [], $categories = []) {
@@ -342,6 +328,46 @@ class SheetMapper extends \App\Domain\Mapper {
             throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return true;
+    }
+
+    public function getUsers($id, $only_id = false) {
+        $sql = "SELECT u.id, u.login "
+                . "FROM " . $this->getTableName("timesheets_projects_users") . " project_user,"
+                . "" .$this->getTableName() ." sheet, "
+                . "" . $this->getTableName("global_users") . " u "
+                . "WHERE sheet.id = :id "
+                . "AND sheet.project = project_user.project "
+                . "AND project_user.user = u.id ";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            if($only_id){
+                $results[] = intval($row["id"]);
+            }else{
+                $results[intval($row["id"])] = $row["login"];
+            }
+        }
+        return $results;
+    }
+
+    public function getSheetIDsFromProject($id) {
+        $sql = "SELECT id FROM " . $this->getTableName() . " WHERE project = :id ";
+
+        $bindings = array("id" => $id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetchColumn()) {
+            $results[] = $row;
+        }
+        return $results;
     }
 
 }

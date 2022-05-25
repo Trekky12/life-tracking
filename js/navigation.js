@@ -16,7 +16,7 @@ if (navigation && header && navigationOverlay) {
     let menuList = navigation.getElementsByTagName('ul')[0];
 
     let max_opacity = 0.8;
-    let navi_width = 200;
+    let navi_width = 256;
 
     let bar1 = document.querySelector('#menu-toggle .bar:nth-child(1)');
     let bar2 = document.querySelector('#menu-toggle .bar:nth-child(2)');
@@ -34,9 +34,9 @@ if (navigation && header && navigationOverlay) {
         }
     });
 
-    /*navigationOverlay.addEventListener('click', function (evt) {
-     menuButton.click();
-     });*/
+    navigationOverlay.addEventListener('click', function (evt) {
+        menuButton.click();
+    });
 
     function openMenu() {
         resetCross();
@@ -50,7 +50,8 @@ if (navigation && header && navigationOverlay) {
         navigationOverlay.style.removeProperty('transition-duration');
         navigationOverlay.style.opacity = max_opacity;
 
-        navigation.style.removeProperty('transition-duration');
+        navigation.classList.add("animate");
+        //navigation.style.removeProperty('transition-duration');
         navigation.style.transform = 'translateX(0px)';
         navigation.classList.add("toggled");
 
@@ -75,8 +76,8 @@ if (navigation && header && navigationOverlay) {
             navigationOverlay.classList.remove("visible");
         }, 200);
 
-
-        navigation.style.removeProperty("transition-duration");
+        navigation.classList.add("animate");
+        //navigation.style.removeProperty("transition-duration");
         navigation.style.removeProperty("transform");
         navigation.classList.remove("toggled");
 
@@ -85,21 +86,22 @@ if (navigation && header && navigationOverlay) {
 
     // reset manually triggered X animation
     function resetCross() {
-        bar1.style.removeProperty("transition-duration");
-        bar1.style.removeProperty("top");
-        bar1.style.removeProperty("width");
-        bar1.style.removeProperty("left");
-
-        bar2.style.removeProperty("transition-duration");
-        bar2.style.removeProperty("transform");
-
-        bar3.style.removeProperty("transition-duration");
-        bar3.style.removeProperty("transform");
-
-        bar4.style.removeProperty("transition-duration");
-        bar4.style.removeProperty("top");
-        bar4.style.removeProperty("width");
-        bar4.style.removeProperty("left");
+        /*bar1.style.removeProperty("transition-duration");
+         bar1.style.removeProperty("top");
+         bar1.style.removeProperty("width");
+         bar1.style.removeProperty("left");
+         
+         bar2.style.removeProperty("transition-duration");
+         bar2.style.removeProperty("transform");
+         
+         bar3.style.removeProperty("transition-duration");
+         bar3.style.removeProperty("transform");
+         
+         bar4.style.removeProperty("transition-duration");
+         bar4.style.removeProperty("top");
+         bar4.style.removeProperty("width");
+         bar4.style.removeProperty("left");
+         */
     }
 
     // https://stackoverflow.com/a/23230280
@@ -215,7 +217,8 @@ if (navigation && header && navigationOverlay) {
             pos = 0;
         }
 
-        navigation.style.transitionDuration = 0 + 's';
+        navigation.classList.remove("animate");
+        //navigation.style.transitionDuration = 0 + 's';
         navigation.style.transform = 'translateX(' + (navi_width - pos) + 'px)';
 
         currentPos = pos;
@@ -234,22 +237,23 @@ if (navigation && header && navigationOverlay) {
 
 
         // Manually trigger X animation
-        bar1.style.transitionDuration = 0 + 's';
-        bar1.style.top = 4 + (percent_open * 4) + 'px';
-        bar1.style.width = (1 - percent_open) * 100 + '%';
-        bar1.style.left = (percent_open * 50) + '%';
-
-        bar2.style.transitionDuration = 0 + 's';
-        bar2.style.transform = 'rotate(' + (percent_open * 45) + 'deg)';
-
-        bar3.style.transitionDuration = 0 + 's';
-        bar3.style.transform = 'rotate(-' + (percent_open * 45) + 'deg)';
-
-        bar4.style.transitionDuration = 0 + 's';
-        bar4.style.top = 20 - (percent_open * 4) + 'px';
-        bar4.style.width = (1 - percent_open) * 100 + '%';
-        bar4.style.left = (percent_open * 50) + '%';
-
+        /*
+         bar1.style.transitionDuration = 0 + 's';
+         bar1.style.top = 4 + (percent_open * 4) + 'px';
+         bar1.style.width = (1 - percent_open) * 100 + '%';
+         bar1.style.left = (percent_open * 50) + '%';
+         
+         bar2.style.transitionDuration = 0 + 's';
+         bar2.style.transform = 'rotate(' + (percent_open * 45) + 'deg)';
+         
+         bar3.style.transitionDuration = 0 + 's';
+         bar3.style.transform = 'rotate(-' + (percent_open * 45) + 'deg)';
+         
+         bar4.style.transitionDuration = 0 + 's';
+         bar4.style.top = 20 - (percent_open * 4) + 'px';
+         bar4.style.width = (1 - percent_open) * 100 + '%';
+         bar4.style.left = (percent_open * 50) + '%';
+         */
     }
 
     function handleTouchEnd(evt) {

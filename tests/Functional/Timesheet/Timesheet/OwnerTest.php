@@ -33,8 +33,7 @@ class OwnerTest extends TimesheetTestBase {
     public function testPostChildSave() {
         $data = [
             "start" => date('Y-m-d') . " 12:00:00",
-            "end" => date('Y-m-d') . " 14:10:00",
-            "notice" => "Test"
+            "end" => date('Y-m-d') . " 14:10:00"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
 
@@ -105,8 +104,7 @@ class OwnerTest extends TimesheetTestBase {
         $data = [
             "id" => $timesheet_id,
             "start" => date('Y-m-d') . " 10:02:00",
-            "end" => date('Y-m-d') . " 18:55:00",
-            "notice" => "Testnotice"
+            "end" => date('Y-m-d') . " 18:55:00"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $timesheet_id, $data);
 

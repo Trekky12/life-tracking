@@ -1,5 +1,7 @@
 'use strict';
 
+// @see https://stackoverflow.com/a/2638357
+window.onunload = function () { };
 
 moment.locale(i18n.template);
 
@@ -43,27 +45,18 @@ function getNewTokens(token) {
         return tokens.pop();
     }).catch(function (error) {
         tokens.push(token);
-        throw "No CRSF Tokens available";
         console.log(error);
+        loadingWindowOverlay.classList.add("hidden");
+        throw "No CRSF Tokens available";
     });
 }
 
-function deleteObject(url, type) {
+function deleteObject(url, custom_confirm_text) {
 
     let confirm_text = lang.really_delete;
-    if (type === "board") {
-        confirm_text = lang.really_delete_board;
+    if (custom_confirm_text !== "default") {
+        confirm_text = custom_confirm_text;
     }
-    if (type === "stack") {
-        confirm_text = lang.really_delete_stack;
-    }
-    if (type === "card") {
-        confirm_text = lang.really_delete_card;
-    }
-    if (type === "label") {
-        confirm_text = confirm_text = lang.really_delete_label;
-    }
-
 
     if (!confirm(confirm_text)) {
         loadingWindowOverlay.classList.add("hidden");
@@ -86,10 +79,13 @@ function deleteObject(url, type) {
         if ("redirect" in data) {
             window.location.href = data["redirect"];
         } else {
-            window.location.reload();
+            window.location.reload(true);
         }
     }).catch(function (error) {
         console.log(error);
+        if (document.body.classList.contains('offline')) {
+            saveDataWhenOffline(url, 'DELETE');
+        }
     });
 }
 
@@ -144,17 +140,33 @@ function initialize() {
         });
     }
 
+    if (document.body.classList.contains("login")) {
+        // Delete IndexedDBs
+        if (!('indexedDB' in window)) {
+            return;
+        }
+        window.indexedDB.deleteDatabase('lifeTrackingData');
+    }
+
     /**
      * Delete
      * https://elliotekj.com/2016/11/05/jquery-to-pure-js-event-listeners-on-dynamically-created-elements/
      */
-    document.addEventListener('click', function (event) {
+    document.addEventListener('click', async function (event) {
 
         let link = event.target.closest('a');
         let submit = event.target.closest('[type="submit"]');
-        
-        if ((link && link.getAttribute("href") != '#' && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname)) || (submit && !submit.classList.contains("no-loading"))) {
+
+        let is_internal_link = (link && link.getAttribute("href") != '#' && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname));
+
+        if (is_internal_link || (submit && !submit.classList.contains("no-loading"))) {
             loadingWindowOverlay.classList.remove("hidden");
+        }
+
+        if (is_internal_link) {
+            event.preventDefault();
+            await storeQueryParams();
+            window.location.href = link.getAttribute("href");
         }
 
         // https://stackoverflow.com/a/50901269
@@ -163,23 +175,13 @@ function initialize() {
             event.preventDefault();
             let url = deleteBtn.dataset.url;
             if (url) {
-                let type = deleteBtn.dataset.type ? deleteBtn.dataset.type : "default";
-                deleteObject(url, type);
+                let confirm = deleteBtn.dataset.confirm ? deleteBtn.dataset.confirm : "default";
+                deleteObject(url, confirm);
             } else {
                 deleteBtn.parentNode.remove();
             }
             return;
         }
-    });
-
-    /**
-     * Alert
-     */
-    let closebtn = document.querySelectorAll('span.closebtn');
-    closebtn.forEach(function (item, idx) {
-        item.addEventListener('click', function (event) {
-            event.target.parentElement.classList.add("hidden");
-        });
     });
 
     /**
@@ -215,56 +217,6 @@ function initialize() {
         });
     }
 
-
-    let carServiceType = document.querySelectorAll('input.carServiceType');
-    carServiceType.forEach(function (item, idx) {
-        item.addEventListener('change', function (event) {
-            document.querySelector("#carServiceFuel").classList.toggle('hidden');
-            document.querySelector("#carServiceService").classList.toggle('hidden');
-        });
-    });
-
-    /**
-     * Set km/year calculation base
-     */
-    let setCalculationDate = document.querySelectorAll('.set_calculation_date');
-    setCalculationDate.forEach(function (item, idx) {
-        item.addEventListener('click', function (event) {
-            event.preventDefault();
-
-            let state = 0;
-            if (item.checked) {
-                if (item.dataset.type === "1") {
-                    state = 1;
-                }
-                if (item.dataset.type === "2") {
-                    state = 2;
-                }
-            }
-            getCSRFToken(true).then(function (token) {
-
-                var data = token;
-                data["state"] = state;
-
-                return fetch(jsObject.set_mileage_type, {
-                    method: 'POST',
-                    credentials: "same-origin",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                });
-            }).then(function (response) {
-                allowedReload = true;
-                window.location.reload();
-            }).catch(function (error) {
-                console.log(error);
-            });
-
-        });
-    });
-
-
 }
 
 /**
@@ -295,11 +247,11 @@ function initCharts() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
-                            ticks: {
-                                min: 0
-                            }
-                        }]
+                    y: {
+                        ticks: {
+                            min: 0
+                        }
+                    }
                 }
             }
         });
@@ -400,11 +352,11 @@ function initCharts() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
-                            ticks: {
-                                min: 0
-                            }
-                        }]
+                    y: {
+                        ticks: {
+                            min: 0
+                        }
+                    }
                 }
             }
         });
@@ -447,15 +399,17 @@ flatpickr('#dateSelectEnd', {
 });
 
 
-/**
- * Get Adress of marker
- */
+
 document.addEventListener('click', function (event) {
     // https://stackoverflow.com/a/50901269
-    let closest = event.target.closest('.btn-get-address');
-    if (closest) {
-        let lat = closest.dataset.lat;
-        let lng = closest.dataset.lng;
+
+    /**
+     * Get Adress of marker
+     */
+    let addressBtn = event.target.closest('.btn-get-address');
+    if (addressBtn) {
+        let lat = addressBtn.dataset.lat;
+        let lng = addressBtn.dataset.lng;
         if (lat && lng) {
             event.preventDefault();
             fetch(jsObject.get_address_url + '?lat=' + lat + '&lng=' + lng, {
@@ -498,6 +452,16 @@ document.addEventListener('click', function (event) {
             });
         }
     }
+
+    /**
+     * Close Alert
+     */
+    let closebtn = event.target.closest('span.closebtn');
+    if (closebtn) {
+        event.preventDefault();
+        event.target.parentElement.classList.add("hidden");
+    }
+
 });
 
 
@@ -506,6 +470,12 @@ document.addEventListener('click', function (event) {
 // https://developers.google.com/web/updates/2017/09/abortable-fetch
 // https://dev.to/stereobooster/fetch-with-a-timeout-3d6
 function fetchWithTimeout(url, options, timeout = 3000) {
+    if (document.body.classList.contains("offline")) {
+        return new Promise(function (resolve, reject) {
+            reject('Offline');
+        });
+    }
+
     const abortController = new AbortController();
     const abortSignal = abortController.signal;
 
@@ -520,7 +490,7 @@ function fetchWithTimeout(url, options, timeout = 3000) {
     });
     promises.push(cacheWhenTimedOutPromise);
 
-    var networkPromise = fetch(url, {signal: abortSignal, ...options}).then(function (response) {
+    var networkPromise = fetch(url, { signal: abortSignal, ...options }).then(function (response) {
         //console.log('fetch success');
         clearTimeout(timeoutId);
         return response;
@@ -537,9 +507,9 @@ function freeze() {
 
     document.body.style.overflow = 'hidden';
 
-    window.onscroll = function () {
+    /*window.onscroll = function () {
         window.scroll(0, top);
-    }
+    }*/
 }
 
 function unfreeze() {
@@ -557,4 +527,25 @@ function isVisible(element) {
 
 function getDisplay(element) {
     return element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
+}
+
+// Store query params
+async function storeQueryParams() {
+    try {
+        const token = await getCSRFToken(true);
+        var body = token;
+        body["path"] = window.location.pathname;
+        body["params"] = window.location.search;
+        const response = await fetch(jsObject.store_query_params, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+    }
 }

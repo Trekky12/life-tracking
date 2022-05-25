@@ -57,6 +57,9 @@ class RecurringBillService extends Service {
         if (!$this->group_service->isMember($group->id) || $this->isOwner($entry_id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if(!$this->isChildOf($group->id, $entry_id)){
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
         $entry = $this->getEntry($entry_id);
         $users = $this->user_service->getAll();

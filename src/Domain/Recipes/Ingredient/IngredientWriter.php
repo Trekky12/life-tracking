@@ -34,7 +34,7 @@ class IngredientWriter extends ObjectActivityWriter {
     }
 
     public function getModule(): string {
-        return "recipes_ingredients";
+        return "recipes";
     }
 
 }

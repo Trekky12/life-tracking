@@ -40,7 +40,7 @@ class CarLastRefuelWidget implements Widget {
 
         $result = [];
         foreach ($user_cars as $car_id) {
-            $list = $this->carservice_mapper->tableDataFuel([$car_id], "mileage", "DESC", 2);
+            $list = $this->carservice_mapper->getTableDataFuel([$car_id], "mileage", "DESC", 2);
             $result[$car_id] = ["name" => $cars[$car_id]->name, "list" => $list];
         }
 

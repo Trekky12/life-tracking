@@ -21,7 +21,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="buttons">
-                        <input id="add-widget-modal" type="submit" class="submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
+                        <input id="add-widget-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
                         <button id="modal-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
                     </div>
                 </div>
@@ -46,7 +46,6 @@
                             <a href="#" data-url="{{ url_for('users_profile_frontpage_widget_delete', {'id' : widget["id"]}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
                         </div>
                     </div>
-                    {% include 'home/widgets/' ~ widget["name"] ~'.twig' with {'widget': widget} %}   
                 </div>
             </div>
         {%  endfor %}
@@ -57,6 +56,6 @@
                 <option value="{{ widget_key }}">{{ widget["name"] }}</option>
             {% endfor %}
         </select>
-        <a href="" id="add-widget"><button>{{ lang["ADD"] }}</button></a>
+        <a href="#" id="add-widget"><button class="button">{{ lang["ADD"] }}</button></a>
     </p>
 {% endblock %}

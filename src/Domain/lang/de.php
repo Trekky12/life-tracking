@@ -60,6 +60,21 @@ $lang["IN"] = "in";
 
 $lang["FINANCES_RECURRING"] = "Regelmäßige Einträge";
 
+$lang["FINANCES_ACCOUNTS"] = "Konten";
+$lang["FINANCES_ACCOUNT"] = "Konto";
+$lang["FINANCES_TRANSACTIONS"] = "Buchungen";
+$lang["FINANCES_TRANSACTION"] = "Buchung";
+$lang["FINANCES_TRANSACTION_ACCOUNT_FROM"] = "vom Konto";
+$lang["FINANCES_TRANSACTION_ACCOUNT_TO"] = "auf Konto";
+$lang["FINANCES_TRANSACTION_ADD"] = "Buchung hinzufügen";
+$lang["FINANCES_TRANSACTION_UPDATE_HAS_ENTRY"] = "Diese Buchung hat einen zugehörigen Finanzeintrag.<br>Änderungen wirken sich nicht auf diesen aus.<br>Bei Änderungen des Finanzeintrags wird die Buchung wieder zurückgesetzt!";
+$lang["FINANCES_TRANSACTION_UPDATE_HAS_SPLITTED_BILL"] = "Diese Buchung hat eine zugehörigen geteilte Ausgabe.<br>Änderungen wirken sich nicht auf diese aus.<br>Bei Änderungen der geteilten Ausgabe wird die Buchung wieder zurückgesetzt!";
+$lang["FINANCES_TRANSACTION_DELETE_HAS_ENTRY"] = "Diese Buchung hat einen zugehörigen Finanzeintrag, dieser wird nicht gelöscht! Bei Änderungen des Finanzeintrags wird die Buchung wieder erstellt.";
+$lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"] = "Diese Buchung hat eine zugehörigen geteilte Ausgabe, diese wird nicht gelöscht! Bei Änderungen der geteilten Ausgabe wird die Buchung wieder erstellt.";
+
+$lang["FINANCES_TRANSACTIONS_RECURRING"] = "wiederkehrende Buchungen";
+$lang["FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
+
 $lang["FUEL_FULL"] = "vollgetankt";
 $lang["FUEL_PARTLY"] = "nachgetankt";
 $lang["PRICE"] = "Preis";
@@ -114,6 +129,7 @@ $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Die Kategorie muss eingetragen werden";
 $lang["WRONG_UNIT"] = "Falsche Einheit";
 $lang["LAST_RUN"] = "Letzter Lauf";
 $lang["NEXT_RUN"] = "Nächster Lauf";
+$lang["ACCOUNT_REQUIRED"] = "Die Angabe eines Kontos ist erforderlich!";
 
 $lang["USERS"] = "Benutzer";
 $lang["LOGIN"] = "Benutzername";
@@ -300,6 +316,13 @@ $lang["REALLY_CLOSE_STACK"] = "Soll der Stapel wirklich geschlossen werden?";
 $lang["REALLY_CLOSE_CARD"] = "Soll die Karte wirklich geschlossen werden?";
 $lang["REALLY_CLOSE_LABEL"] = "Soll das Label wirklich geschlossen werden?";
 
+$lang["BOARD_SAVE_ERROR_STACK"] = "Der Stapel konnte nicht gespeichert werden!";
+$lang["BOARD_SAVE_ERROR_CARD"] = "Die Karte konnte nicht gespeichert werden!";
+$lang["BOARD_UNSAVED_STACK"] = "Der Stapel wurde noch nicht gespeichert und kann daher nicht geöffnet werden!";
+$lang["BOARD_UNSAVED_CARD"] = "Die Karte wurde noch nicht gespeichert und kann daher nicht geöffnet werden!";
+$lang["BOARD_ARCHIVE_ERROR"] = "Archivieren fehlgeschlagen!";
+$lang["BOARD_DELETE_ERROR"] = "Löschen fehlgeschlagen!";
+
 $lang["NOTHING_FOUND"] = "Nichts gefunden";
 $lang["LOADING"] = "Lade...";
 $lang["SEARCHING"] = "Suche...";
@@ -469,6 +492,7 @@ $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "Ende";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 $lang["EXPORT_WORD"] = "Word";
 $lang["EXPORT_EXCEL"] = "Excel";
+$lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (mit Notizen)";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "Tagesbasiert (anstatt Projektbasiert)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Zeiterfassungskategorien";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Standardansicht";
@@ -481,6 +505,7 @@ $lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Zeit (sek.)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "keine Anpassung der Zeit";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "nutze die Zeitumrechnungsrate des Projekts";
+$lang["TIMESHEETS_DURATION_DEFAULT"] = "Standarddauer";
 $lang["TIMESHEETS_CATEGORY_ASSIGN"] = "zuweisen";
 $lang["TIMESHEETS_CATEGORY_REMOVE"] = "entfernen";
 $lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"] = "1. Warnung (gelb)";
@@ -494,19 +519,21 @@ $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- keine Hauptkategorie -";
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
 $lang["REQUEST_ERROR"] = "Ein Übertragungsfehler ist aufgetreten!";
+$lang["ENCRYPT_ERROR"] = "Ein Fehler bei der Verschlüsselung ist aufgetreten!";
+$lang["DECRYPT_ERROR"] = "Ein Fehler bei der Entschlüsselung ist aufgetreten!";
 
 $lang["BANLIST"] = "gesperrte IP-Adressen";
 
 $lang["ACTIVITIES"] = "Aktivitäten";
-$lang["ACTIVITY_CREATE"] = "%s hat \"%s\" erstellt";
-$lang["ACTIVITY_UPDATE"] = "%s hat \"%s\" aktualisiert";
-$lang["ACTIVITY_DELETE"] = "%s hat \"%s\" gelöscht";
-$lang["ACTIVITY_CREATE_ME"] = "Du hast \"%s\" erstellt";
-$lang["ACTIVITY_UPDATE_ME"] = "Du hast \"%s\" aktualisiert";
-$lang["ACTIVITY_DELETE_ME"] = "Du hast \"%s\" gelöscht";
-$lang["ACTIVITY_CREATE_SYSTEM"] = "\"%s\" wurde erstellt";
-$lang["ACTIVITY_UPDATE_SYSTEM"] = "\"%s\" wurde aktualisiert";
-$lang["ACTIVITY_DELETE_SYSTEM"] = "\"%s\" wurde gelöscht";
+$lang["ACTIVITY_CREATE"] = "%s hat %s erstellt";
+$lang["ACTIVITY_UPDATE"] = "%s hat %s aktualisiert";
+$lang["ACTIVITY_DELETE"] = "%s hat %s gelöscht";
+$lang["ACTIVITY_CREATE_ME"] = "Du hast %s erstellt";
+$lang["ACTIVITY_UPDATE_ME"] = "Du hast %s aktualisiert";
+$lang["ACTIVITY_DELETE_ME"] = "Du hast %s gelöscht";
+$lang["ACTIVITY_CREATE_SYSTEM"] = "%s wurde erstellt";
+$lang["ACTIVITY_UPDATE_SYSTEM"] = "%s wurde aktualisiert";
+$lang["ACTIVITY_DELETE_SYSTEM"] = "%s wurde gelöscht";
 
 $lang["DATAOBJECT_ACITIVY"] = "Aktivität";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "Board";
@@ -526,6 +553,8 @@ $lang["DATAOBJECT_FINANCES_CATEGORY"] = "Finanzkategorie";
 $lang["DATAOBJECT_FINANCES_ENTRY"] = "Finanzeintrag";
 $lang["DATAOBJECT_FINANCES_PAYMETHOD"] = "Zahlungsmethode";
 $lang["DATAOBJECT_FINANCES_ENTRY_RECURRING"] = "wiederkehrender Finanzeintrag";
+$lang["DATAOBJECT_FINANCES_ACCOUNT"] = "Konto";
+$lang["DATAOBJECT_FINANCES_TRANSACTION"] = "Buchung";
 $lang["DATAOBJECT_LOCATION_ENTRY"] = "Standort";
 $lang["DATAOBJECT_NOTIFICATIONS_CATEGORY"] = "Benachrichtigungskategorie";
 $lang["DATAOBJECT_NOTIFICATIONS_CLIENT"] = "Benachrichtigungsclient";
@@ -536,6 +565,7 @@ $lang["DATAOBJECT_SPLITBILLS_GROUP"] = "geteilte Ausgabengruppe";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfassungsprojekt";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfassungseintrag";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "Kategorie";
+$lang["DATAOBJECT_TIMESHEETS_SHEET_NOTICE"] = "Notiz zum Zeiterfassungseintrag";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "Reise-Event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "Reise";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "Route";
@@ -553,6 +583,8 @@ $lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
+$lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "Feld für Notizen";
+$lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -602,6 +634,8 @@ $lang["TWOFACTOR_TEXT"] = "Bitte den QR-Code einscannen oder das Geheimnis in di
 $lang["TWOFACTOR_CODE"]= "Code";
 $lang["TWOFACTOR_AUTHENTICATION"]= "Zweifaktorauthentifizierung";
 
+$lang["REMEMBER_LOGIN"] = "Anmeldung merken";
+
 $lang["WIDGETS"] = "Widgets";
 $lang["WIDGET_OPTIONS"] = "Widget Einstellungen";
 $lang["FRONTPAGE"] = "Startseite";
@@ -611,6 +645,7 @@ $lang["WIDGET_URL"] = "URL";
 $lang["WIDGET_TITLE"] = "Titel";
 $lang["WIDGET_CURRENTWEATHER"] = "aktuelles Wetter";
 $lang["WIDGET_WEATHERFORECAST"] = "Wettervorhersage";
+$lang["WIDGET_TIMESHEETS_FAST_CREATE"] = "Schnellerfassung von Zeiten";
 
 $lang["WORKOUTS"] = "Workouts";
 $lang["WORKOUTS_EXERCISES"] = "Übungen";
@@ -731,5 +766,26 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"] = "Summe der Zeiten";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "Summe der Zeiten modifiziert";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "Anzahl Einträge";
+
+$lang["PASSWORDSDONOTMATCH"] = "Die Passwörter stimmen nicht überein!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Passwort für die Verschlüsselung der Notizen";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "Für die Verschlüsselung der Notizen muss ein Passwort vergeben werden. Das Passwort kann nicht mehr geändert werden!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "Das Passwort wurde bereits gesetzt und kann nicht geändert werden.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Passwort für die Verschlüsselung eingeben:";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Passwort ist falsch.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "Es wurde noch kein Passwort für die Verschlüsselung vergeben!";
+
+$lang["TIMESHEETS_NOTICEFIELDS"] = "Felder für Notizen";
+$lang["DATATYPE_TEXTFIELD"] = "Textfeld";
+$lang["DATATYPE_TEXTAREA"] = "Textbereich";
+$lang["DATATYPE_SELECT"] = "Dropdown";
+$lang["DATATYPE_INITIALIZATION"] = "Initialisierung (Dropdown)";
+$lang["TIMESHEETS_NOTICE_ADD"] = "Bemerkung hinzufügen";
+$lang["TIMESHEETS_NOTICE_EDIT"] = "Bemerkung bearbeiten";
+
+$lang["PRINT"] = "Drucken";
+
+$lang["FINANCES_ROUND_UP_SAVINGS"] = "Kleingeldsparen";
+$lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "Kleingeldsparen deaktiviert";
 
 return $lang;

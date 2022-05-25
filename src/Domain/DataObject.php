@@ -12,6 +12,7 @@ class DataObject implements \JsonSerializable {
      */
     protected $parsing_errors = array();
     protected $users = [];
+    protected $additionalData = [];
 
     protected function parseData(array $data) {
         foreach ($data as $k => $v) {
@@ -19,8 +20,10 @@ class DataObject implements \JsonSerializable {
         }
     }
 
-    public function __construct(array $data) {
+    public function __construct(array $data, $additionalData = null) {
         $this->parseData($data);
+
+        $this->additionalData = $additionalData;
 
         // Always save these values
         $this->user = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;

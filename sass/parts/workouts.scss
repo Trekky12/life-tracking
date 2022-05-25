@@ -1,13 +1,13 @@
-.workout-selection{
-    margin-bottom:2rem;
+.workout-selection {
+    margin-bottom: 2rem;
 
-    h2{
+    h2 {
         margin: 1rem 0;
         @include font-size(1.6);
     }
 
-    .exercise{
-        display:flex;
+    .exercise {
+        display: flex;
         flex-direction: column;
 
         @media screen and (min-width: $size_mobile) {
@@ -21,18 +21,22 @@
 
         //user-select: none;
 
-        .thumbnail{
+        &.sortable-ghost,
+        &.sortable-fallback {
+            background-color: $color_background-body;
+        }
+
+        .thumbnail {
             flex-basis: 20%;
             order: 3;
 
-            img{
+            img {
                 margin-left: 10px;
             }
         }
 
-        .icons{
-
-            display:flex;
+        .icons {
+            display: flex;
             justify-content: flex-end;
             order: 1;
 
@@ -44,112 +48,121 @@
                 order: 4;
             }
 
-            .minus, .plus, .handle{
-                cursor:pointer;
-                &:hover{
+            .minus,
+            .plus,
+            .handle {
+                cursor: pointer;
+                &:hover {
                     color: $color_blue;
                 }
             }
 
-            .handle{
+            .handle {
                 margin-left: 10px;
             }
         }
 
-        .exercise-content{
+        .exercise-content {
             flex-basis: 100%;
             margin-bottom: 1rem;
             order: 2;
 
-            .bodypart{
+            .bodypart {
                 @include font-size(1.2);
             }
-            .title{
+            .title {
                 @include font-size(1.6);
                 margin: 0;
                 margin-bottom: 0.5rem;
             }
 
-
-            .instructions, .sets, .sets-description, .notices, .view-notices{
+            .instructions,
+            .sets,
+            .sets-description,
+            .notices,
+            .view-notices {
                 @include font-size(1.4);
 
                 word-break: break-word;
                 hyphens: auto;
 
-                .content{
+                .content {
                     padding-top: 0.5rem;
                     padding-bottom: 0.5rem;
-                    margin:0;
+                    margin: 0;
                 }
 
-                .headline{
-                    display:none;
+                .headline {
+                    display: none;
                 }
             }
 
-
-            .set{
+            .set {
                 margin-bottom: 0.2rem;
-                input{
+                input {
                     padding: 0.2rem;
                     @include font-size(1.2);
 
-                    &[type="number"]{
+                    &[type="number"] {
                         max-width: 50px;
                     }
                 }
-            }
-
-            .buttons{
-                display:flex;
-                margin: 0.5rem 0;
-
-                button{
-                    margin-left:0.5rem;
+                select{
+                    padding: 0.2rem;
+                    @include font-size(1.2);
                 }
             }
 
+            .buttons {
+                display: flex;
+                margin: 0.5rem 0;
+
+                button {
+                    margin-left: 0.5rem;
+                }
+            }
         }
 
         &.selected {
-            display:flex;
+            display: flex;
             flex-direction: column;
             justify-content: space-between;
             @media screen and (min-width: $size_mobile) {
                 flex-direction: row;
             }
 
-            .thumbnail{
-                display:none;
+            .thumbnail {
+                display: none;
                 @media screen and (min-width: $size_mobile) {
-                    display:block;
+                    display: block;
                     flex-basis: 15%;
                 }
-                img{
+                img {
                     margin-right: 10px;
                     margin-left: 0;
                 }
             }
-            .exercise-content{
+            .exercise-content {
                 flex-basis: 85%;
             }
-            .instructions, .sets, .notices{
-                display:block;
-                .content{
-                    display:none;
+            .instructions,
+            .sets,
+            .notices {
+                display: block;
+                .content {
+                    display: none;
                 }
-                .headline{
-                    display:block;
+                .headline {
+                    display: block;
 
                     span.angle-down {
-                        display:inline-block;
+                        display: inline-block;
                     }
-                    span.angle-up{
-                        display:none;
+                    span.angle-up {
+                        display: none;
                     }
 
-                    svg{
+                    svg {
                         transition: all 250ms;
                         @include font-size(1.4);
                         color: $color_text-main;
@@ -159,176 +172,173 @@
                 }
 
                 &.active {
-                    .content{
-                        display:block;
+                    .content {
+                        display: block;
                     }
 
                     span.angle-down {
-                        display:none;
+                        display: none;
                     }
-                    span.angle-up{
-                        display:inline-block;
+                    span.angle-up {
+                        display: inline-block;
                     }
                 }
             }
 
-            .buttons{
+            .buttons {
                 justify-content: flex-end;
             }
         }
 
-
-        &.choose{
-            .sets, .notices{
-                display:none;
+        &.choose {
+            .sets,
+            .notices {
+                display: none;
             }
         }
-        h4{
+        h4 {
             font-weight: bold;
         }
-        p{
-            margin-top:0;
-            margin-bottom:0.5rem;
+        p {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
             @include font-size(1.4);
         }
     }
 
-    .exercise-session{
-        .thumbnail{
-            display:none;
+    .exercise-session {
+        .thumbnail {
+            display: none;
 
             @media screen and (min-width: $size_mobile) {
-                display:block;
+                display: block;
             }
         }
     }
 
-    .workout_day_split, .workout_superset{
-
+    .workout_day_split,
+    .workout_superset {
         padding: 1rem;
         border: 1px solid $color_blue_light_gray;
         border-radius: 5px;
         margin: 0.5rem;
 
         //@media screen and (min-width: $size_mobile) {
-        display:flex;
+        display: flex;
         justify-content: space-between;
         //}
 
-        .icons{
-
-            display:flex;
+        .icons {
+            display: flex;
             justify-content: flex-end;
 
             @media screen and (min-width: $size_mobile) {
                 margin-right: 1rem;
             }
 
-            .minus, .handle{
-                cursor:pointer;
+            .minus,
+            .handle {
+                cursor: pointer;
             }
 
-            .handle{
+            .handle {
                 margin-left: 10px;
             }
         }
 
-        .content{
+        .content {
             width: 100%;
-            .exercises{
+            .exercises {
                 min-height: 50px;
                 width: 100%;
                 border: 1px dotted $color_text-main;
                 border-radius: 2px;
             }
         }
-
     }
 
     &.view {
-        .exercise{
-            display:block;
+        .exercise {
+            display: block;
             @media screen and (min-width: $size_mobile) {
-                display:flex;
+                display: flex;
             }
 
-            .exercise-content{
-                .sets{
-                    display:none;
+            .exercise-content {
+                .sets {
+                    display: none;
                 }
-                .headline{
-                    display:none;
+                .headline {
+                    display: none;
                 }
-                .content{
-                    display:block;
+                .content {
+                    display: block;
                 }
             }
         }
 
-        .icons{
-            display:none;
+        .icons {
+            display: none;
         }
     }
-
 }
 
-#exercise-images{
-    position:relative;
+#exercise-images {
+    position: relative;
 
-    .image-base{
-        position:relative;
-        top:0;
-        left:0;
+    .image-base {
+        position: relative;
+        top: 0;
+        left: 0;
     }
 
-    .image-overlay{
-        position:absolute;
-        top:0;
-        left:0;
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 
-    &.small{
+    &.small {
         max-width: 250px;
     }
 }
 
-#setCount{
+#setCount {
     padding: 0.2rem;
     @include font-size(1.6);
     max-width: 50px;
 }
 
-#addExerciseToSession{
+#addExerciseToSession {
     max-width: 50%;
 }
 
-.workout_superset_child{
+.workout_superset_child {
     padding: 1rem;
     border: 1px dotted $color_text-main;
     border-radius: 2px;
     margin: 0.5rem;
 }
 
-.exercise-filter{
-    display:flex;
+.exercise-filter {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin: 0.5rem;
 
-    #filterBodyParts{
+    #filterBodyParts {
         padding: 2px;
     }
-    #filterSearchExercises{
+    #filterSearchExercises {
         padding: 2px;
     }
 }
 
-
-.workouts-session-view{
-    .instructions{
-        display:none;
+.workouts-session-view {
+    .instructions {
+        display: none;
     }
-    .workout_superset .exercises{
+    .workout_superset .exercises {
         width: 100%;
     }
 }
@@ -351,24 +361,23 @@
             "selected_exercises available_exercises";
     }
 
-    .selected_exercises_title { 
-        grid-area: selected_exercises_title; 
+    .selected_exercises_title {
+        grid-area: selected_exercises_title;
     }
 
-    .selected_exercises { 
-        grid-area: selected_exercises; 
-
+    .selected_exercises {
+        grid-area: selected_exercises;
     }
 
-    .available_exercises_title { 
-        grid-area: available_exercises_title; 
+    .available_exercises_title {
+        grid-area: available_exercises_title;
     }
 
-    .available_exercises { 
-        grid-area: available_exercises; 
+    .available_exercises {
+        grid-area: available_exercises;
 
         min-height: 500px;
-        .content{
+        .content {
             overflow: auto;
             max-height: calc(500px - 40px);
 
@@ -379,10 +388,17 @@
     }
 }
 
-body.workouts.sortable-select{
-    .exercise.selected, .exercise-session{
-        .bodypart, .instructions, .notices, .sets, .buttons, .view-notices{
-            display: none;
+body.workouts.sortable-select {
+    .exercise.selected,
+    .exercise-session {
+        .bodypart,
+        .instructions,
+        .notices,
+        .sets,
+        .buttons,
+        .view-notices,
+        .thumbnail {
+            //display: none;
         }
     }
 }

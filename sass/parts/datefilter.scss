@@ -45,7 +45,7 @@
 
 #search-filter{
 
-    padding: 5px 10px;
+    //padding: 5px 10px;
 
     @media screen and (min-width: $size_mobile) {
         .date-filter{
@@ -82,7 +82,7 @@
 
 
 #tableFooterFilter{
-    border-top: 1px solid #ccc;
+    border-top: 1px solid $color_gray;
     margin-top: 1rem;
     padding-top: 1rem;
     @media screen and (min-width: $size_mobile) {

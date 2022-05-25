@@ -26,6 +26,8 @@ return [
         'exclude' => []
     ],
     'app' => [
+        // Base URL for cron
+        'url' => 'https://example.com',
         // i18n settings
         'i18n' => [
             'template' => 'en',
@@ -54,7 +56,8 @@ return [
                 'trips_list' => 'EEEE dd. MMMM yyyy',
                 'month_name' => 'MMMM',
                 'month_name_full' => 'dd. MMMM y',
-                'mealplan_list' => 'EEEE dd. MMMM yyyy'
+                'mealplan_list' => 'EEEE dd. MMMM yyyy',
+                'weekday' => 'EEE'
             ],
             'dateformatExcel' => [
                 'date' => 'dd.mm.yyyy',
@@ -105,9 +108,6 @@ return [
             'urgency' => 'normal',
         ],
         'mapbox_token' => '',
-        'timesheets' => [
-            'key' => ''
-        ],
         'modules' => [
             "location" => [
                 "url" => "/location/",

@@ -57,7 +57,7 @@
     }
 
     .site-header,
-    a.change_day, 
+    a.change_day,
     .trip_event .buttons,
     .description_text{
         display:none!important;
@@ -78,8 +78,22 @@
     .exercise{
         break-inside: avoid;
         page-break-inside: avoid;
-        
+
         display:flex!important;
+    }
+
+    .timesheet-notice-wrapper{
+        break-inside: avoid;
+        page-break-inside: avoid;
+
+        &:not(:last-child){
+            page-break-after: always;
+            break-after: always;
+        }
+    }
+    
+    .print-btn{
+        display:none;
     }
 
 }

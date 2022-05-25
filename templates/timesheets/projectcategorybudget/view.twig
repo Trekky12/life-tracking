@@ -4,54 +4,91 @@
 
 {% block body %}
 
-    {% for cat in categorybudgets %}
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}
+				|
+				{{ project.name }}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets')}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+				<a href="{{ url_for('timesheets_project_categorybudget', {'project': project.hash}) }}">
+					<button class="button">{{lang["EDIT"]}}</button>
+				</a>
+			</div>
+		</div>
+	</div>
 
-        <div class="inner-content">
-            <div class="page-header"><h2>{% if cat["name"] %}{{ cat["name"] }}{% else %}{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}{% endif %}{% if loop.index == 1 %} | {{ project.name }}{% endif %}</h2> 
-                {% if loop.index == 1 %}
-                    <div class="buttons">
-                        <a href="{{ url_for('timesheets')}}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                        <a href="{{  url_for('timesheets_project_categorybudget', {'project': project.hash}) }}"><button class="white">{{lang["EDIT"]}}</button></a>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="page-content no-padding-top">
-                {% for budget in cat["items"] %}
-                    <div class="budget-entry">
-                        <h3>{{budget.name|raw}}</h3>
-                        {% if budget.category_names | length > 0 %}
-                            <div class="categories-list">
-                                {{lang["CATEGORIES"]}}: {{budget.category_names|raw}}     
-                            </div>
-                        {% endif %}
-                        {% if budget.notice %}
-                            <small>{{ budget.notice|raw }}</small>
-                        {% endif %}
+	{% for cat in categorybudgets %}
 
-                        <div class="values">
-                            <span>0</span>
-                            <span class="{%if budget.warning3 > 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 > 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 > 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}">{%if budget.categorization != 'count' %}{{budget.sum | splitDateInterval(true)}}{% else %}{{ budget.sum }}{% endif %}</span>
-                            <span>{%if budget.categorization != 'count' %}{{budget.value | splitDateInterval(true)}}{% else %}{{ budget.value }}{% endif %}</span>
-                        </div>
+		<div class="inner-content">
+			<div class="page-header">
+				<h2>{{ cat["name"] }}</h2>
+			</div>
+			<div class="page-content no-padding-top">
+				{% for budget in cat["items"] %}
+					<div class="budget-entry">
+						<h3>{{budget.name|raw}}
+							{% if budget.start and budget.end %}({{ budget.start|date(i18n.dateformatTwig.date) }}
+								-
+								{{ budget.end|date(i18n.dateformatTwig.date) }})
+							{% endif %}
+						</h3>
+						{% if budget.category_names | length > 0 %}
+							<div class="categories-list">
+								{{lang["CATEGORIES"]}}:
+								{{budget.category_names|raw}}
+							</div>
+						{% endif %}
+						{% if budget.notice %}
+							<small>{{ budget.notice|raw }}</small>
+						{% endif %}
 
-                        <div class="progress-bar">
-                            <div class="progress {%if budget.warning3 > 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 > 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 > 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}" style="width:{{budget.percent}}%">{%if budget.percent >= 25 %}{{budget.percent}}%{%endif%}</div>
-                            {%if budget.percent and budget.percent < 25 %}
-                                <div class="progress progress-text">{{budget.percent}}%</div>
-                            {% endif %}
-                        </div> 
+						<div class="values">
+							<span>0</span>
+							<span>
+								{%if budget.categorization != 'count' %}
+									{{budget.sum | splitDateInterval(true)}}
+								{% else %}
+									{{ budget.sum }}
+								{% endif %}
+							</span>
+							<span>
+								{%if budget.categorization != 'count' %}
+									{{budget.value | splitDateInterval(true)}}
+								{% else %}
+									{{ budget.value }}
+								{% endif %}
+							</span>
+						</div>
 
-                        {% if budget.diff is not null%}
-                            <div class="remaining">
-                                {{lang["REMAINING"]}}: {%if budget.categorization != 'count' %}{{budget.diff | splitDateInterval(true)}}{% else %}{{ budget.diff }}{% endif %}
-                            </div>
-                        {% endif %}
+						<div class="progress-bar">
+							<div class="progress {%if budget.warning3 > 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 > 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 > 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}" style="width:{{budget.percent}}%">
+								{%if budget.percent >= 25 %}
+									{{budget.percent}}%{%endif%}</div>
+								{%if budget.percent and budget.percent < 25 %}
+									<div class="progress progress-text">{{budget.percent}}%</div>
+								{% endif %}
+							</div>
 
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endfor %}
+							{% if budget.diff is not null %}
+								<div class="remaining">
+									{{lang["REMAINING"]}}:
+									{%if budget.categorization != 'count' %}
+										{{budget.diff | splitDateInterval(true)}}
+									{% else %}
+										{{ budget.diff }}
+									{% endif %}
+								</div>
+							{% endif %}
+
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
 
 
-{% endblock %}
+	{% endblock %}

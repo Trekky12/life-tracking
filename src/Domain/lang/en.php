@@ -60,6 +60,21 @@ $lang["IN"] = "in";
 
 $lang["FINANCES_RECURRING"] = "Recurring Einträge";
 
+$lang["FINANCES_ACCOUNTS"] = "Accounts";
+$lang["FINANCES_ACCOUNT"] = "Account";
+$lang["FINANCES_TRANSACTIONS"] = "Transactions";
+$lang["FINANCES_TRANSACTION"] = "Transaction";
+$lang["FINANCES_TRANSACTION_ACCOUNT_FROM"] = "from account";
+$lang["FINANCES_TRANSACTION_ACCOUNT_TO"] = "to account";
+$lang["FINANCES_TRANSACTION_ADD"] = "add transaction";
+$lang["FINANCES_TRANSACTION_UPDATE_HAS_ENTRY"] = "This transaction has a finance entry assigned.<br>Changes do not apply to the assigned finance entry.<br>When the finance entry is changed this transaction will be resetted!";
+$lang["FINANCES_TRANSACTION_UPDATE_HAS_SPLITTED_BILL"] = "This transaction has a splitted bill assigned.<br>Changes do not apply to the assigned splitted bill.<br>When the splitted bill is changed this transaction will be resetted!";
+$lang["FINANCES_TRANSACTION_DELETE_HAS_ENTRY"] = "This transaction has a finance entry assigned, which is not deleted! When the finance entry is changed a new transaction will be created.";
+$lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"] = "This transaction has a splitted bill assigned, which is not deleted! When the splitted bill is changed a new transaction will be created.";
+
+$lang["FINANCES_TRANSACTIONS_RECURRING"] = "recurring transactions";
+$lang["FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
+
 $lang["FUEL_FULL"] = "full";
 $lang["FUEL_PARTLY"] = "partly";
 $lang["PRICE"] = "Price";
@@ -114,6 +129,7 @@ $lang["CATEGORY_CANNOT_BE_EMPTY"] = "Category cannot be empty";
 $lang["WRONG_UNIT"] = "Wrong unit";
 $lang["LAST_RUN"] = "Last Run";
 $lang["NEXT_RUN"] = "Next Run";
+$lang["ACCOUNT_REQUIRED"] = "You need to assign an account!";
 
 $lang["USERS"] = "Users";
 $lang["LOGIN"] = "Login";
@@ -301,6 +317,13 @@ $lang["REALLY_CLOSE_STACK"] = "Do you really want to close the stack?";
 $lang["REALLY_CLOSE_CARD"] = "Do you really want to close the card?";
 $lang["REALLY_CLOSE_LABEL"] = "Do you really want to close the label?";
 
+$lang["BOARD_SAVE_ERROR_STACK"] = "The stack couldn't be saved!";
+$lang["BOARD_SAVE_ERROR_CARD"] = "The card couldn't be saved!";
+$lang["BOARD_UNSAVED_STACK"] = "The stack is not saved yet and therefore can't be opened!";
+$lang["BOARD_UNSAVED_CARD"] = "The card is not saved yet and therefore can't be opened!";
+$lang["BOARD_ARCHIVE_ERROR"] = "Archiving failed!";
+$lang["BOARD_DELETE_ERROR"] = "Deleting failed!";
+
 $lang["NOTHING_FOUND"] = "nothing found";
 $lang["LOADING"] = "Loading...";
 $lang["SEARCHING"] = "Search...";
@@ -470,6 +493,7 @@ $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "End";
 $lang["TIMESHEETS_EXPORT"] = "Export";
 $lang["EXPORT_WORD"] = "Word";
 $lang["EXPORT_EXCEL"] = "Excel";
+$lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (with notices)";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
@@ -482,6 +506,7 @@ $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "no time calculation modification";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "use the time conversion rate of the project";
+$lang["TIMESHEETS_DURATION_DEFAULT"] = "default duration";
 $lang["TIMESHEETS_CATEGORY_ASSIGN"] = "assign";
 $lang["TIMESHEETS_CATEGORY_REMOVE"] = "remove";
 $lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"] = "1. warning (yellow)";
@@ -495,19 +520,21 @@ $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- no main category -";
 $lang["THIS_DEVICE"] = "this device";
 
 $lang["REQUEST_ERROR"] = "A request error occured!";
+$lang["ENCRYPT_ERROR"] = "An error occured while encrypting!";
+$lang["DECRYPT_ERROR"] = "An error occured while decrypting!";
 
 $lang["BANLIST"] = "banned IP-addresses";
 
 $lang["ACTIVITIES"] = "Activities";
-$lang["ACTIVITY_CREATE"] = "%s created \"%s\"";
-$lang["ACTIVITY_UPDATE"] = "%s updated \"%s\"";
-$lang["ACTIVITY_DELETE"] = "%s deleted \"%s\"";
-$lang["ACTIVITY_CREATE_ME"] = "You created \"%s\"";
-$lang["ACTIVITY_UPDATE_ME"] = "You updated \"%s\"";
-$lang["ACTIVITY_DELETE_ME"] = "You deleted \"%s\"";
-$lang["ACTIVITY_CREATE_SYSTEM"] = "\"%s\" created";
-$lang["ACTIVITY_UPDATE_SYSTEM"] = "\"%s\" updated";
-$lang["ACTIVITY_DELETE_SYSTEM"] = "\"%s\" deleted";
+$lang["ACTIVITY_CREATE"] = "%s created %s";
+$lang["ACTIVITY_UPDATE"] = "%s updated %s";
+$lang["ACTIVITY_DELETE"] = "%s deleted %s";
+$lang["ACTIVITY_CREATE_ME"] = "You created %s";
+$lang["ACTIVITY_UPDATE_ME"] = "You updated %s";
+$lang["ACTIVITY_DELETE_ME"] = "You deleted %s";
+$lang["ACTIVITY_CREATE_SYSTEM"] = "%s created";
+$lang["ACTIVITY_UPDATE_SYSTEM"] = "%s updated";
+$lang["ACTIVITY_DELETE_SYSTEM"] = "%s deleted";
 
 $lang["DATAOBJECT_ACITIVY"] = "activity";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "board";
@@ -527,6 +554,8 @@ $lang["DATAOBJECT_FINANCES_CATEGORY"] = "finance category";
 $lang["DATAOBJECT_FINANCES_ENTRY"] = "finance entry";
 $lang["DATAOBJECT_FINANCES_PAYMETHOD"] = "paymethod";
 $lang["DATAOBJECT_FINANCES_ENTRY_RECURRING"] = "recurring finance entry";
+$lang["DATAOBJECT_FINANCES_ACCOUNT"] = "account";
+$lang["DATAOBJECT_FINANCES_TRANSACTION"] = "transaction";
 $lang["DATAOBJECT_LOCATION_ENTRY"] = "location";
 $lang["DATAOBJECT_NOTIFICATIONS_CATEGORY"] = "notification category";
 $lang["DATAOBJECT_NOTIFICATIONS_CLIENT"] = "notification client";
@@ -537,6 +566,7 @@ $lang["DATAOBJECT_SPLITBILLS_GROUP"] = "splitted bills group";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "timesheets project";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "timesheets sheet";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "timesheets category";
+$lang["DATAOBJECT_TIMESHEETS_SHEET_NOTICE"] = "notice to timesheets sheet";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "trip event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "trip";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "route";
@@ -554,6 +584,8 @@ $lang["DATAOBJECT_RECIPES_INGREDIENT"] = "ingredient";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
+$lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "notice field";
+$lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -603,6 +635,8 @@ $lang["TWOFACTOR_TEXT"] = "Please scan the QR-Code or insert the secret in the T
 $lang["TWOFACTOR_CODE"]= "Code";
 $lang["TWOFACTOR_AUTHENTICATION"]= "Two Factor Authentication";
 
+$lang["REMEMBER_LOGIN"] = "Remember login";
+
 $lang["WIDGETS"] = "widgets";
 $lang["WIDGET_OPTIONS"] = "widget options";
 $lang["FRONTPAGE"] = "Frontpage";
@@ -612,6 +646,7 @@ $lang["WIDGET_URL"] = "URL";
 $lang["WIDGET_TITLE"] = "title";
 $lang["WIDGET_CURRENTWEATHER"] = "current weather";
 $lang["WIDGET_WEATHERFORECAST"] = "weather forecast";
+$lang["WIDGET_TIMESHEETS_FAST_CREATE"] = "fast creation of times";
 
 $lang["WORKOUTS"] = "workouts";
 $lang["WORKOUTS_EXERCISES"] = "exercises";
@@ -732,5 +767,26 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"] = "sum of durations";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "sum of durations modified";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "number of entries";
+
+$lang["PASSWORDSDONOTMATCH"] = "The passwords do not match!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Password for the sheet notice encryption";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "To encrypt the sheet notices a password is neeeded. It is not possible to change the password later!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "The password has been already set and is not changable!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Insert the encryption password:";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "The inserted password is wrong.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "There is no password for the encryption set!";
+
+$lang["TIMESHEETS_NOTICEFIELDS"] = "Notice fields";
+$lang["DATATYPE_TEXTFIELD"] = "textfield";
+$lang["DATATYPE_TEXTAREA"] = "textarea";
+$lang["DATATYPE_SELECT"] = "dropdown";
+$lang["DATATYPE_INITIALIZATION"] = "Initialization (Dropdown)";
+$lang["TIMESHEETS_NOTICE_ADD"] = "Add notice";
+$lang["TIMESHEETS_NOTICE_EDIT"] = "Edit notice";
+
+$lang["PRINT"] = "Print";
+
+$lang["FINANCES_ROUND_UP_SAVINGS"] = "Round up savings";
+$lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "round up savings disabled";
 
 return $lang;

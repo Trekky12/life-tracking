@@ -11,23 +11,20 @@
 
 <div id="mobile-header-icons" class="size-{{mobile_elements}}">
     <a href="{{ url_for('index') }}" {% if active == 'index' %}class="active"{% endif %}>{{ fontawesome('fas fa-sitemap') }}</a>
-        {% if mobile_favorites|length > 0 %}
-            {%  for favorite in mobile_favorites %}
+    {% if mobile_favorites|length > 0 %}
+        {%  for favorite in mobile_favorites %}
             <a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %}class="active"{% endif %}>{{ fontawesome(favorite.icon) }}</a>
-            {% endfor %}
-        {% else %}
-            {% for module_name, module in modules %}
-                {% if user.hasModule(module_name)%}
+        {% endfor %}
+    {% else %}
+        {% for module_name, module in modules %}
+            {% if user.hasModule(module_name)%}
                 <a href="{{ url_for(module['rootRoute']) }}" {% if active == module['rootRoute'] %}class="active"{% endif %}>{{ fontawesome(module['icon']) }}</a>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     <a href="{{ url_for('notifications') }}" class="badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell">{{ fontawesome('far fa-bell') }}</a>
     <div id="menu-toggle" aria-controls = "primary-menu" aria-expanded = "false">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
+        {{ fontawesome('fas fa-bars') }}
     </div>
 </div>
 <div id="navigation-overlay"></div>
@@ -57,6 +54,7 @@
                     <li><a href="{{ url_for('finances_recurring') }}">{{ fontawesome('fas fa-calendar-alt') }} {{lang["FINANCES_RECURRING"]}}</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ url_for('finances_paymethod') }}">{{ fontawesome('fas fa-credit-card') }} {{lang["FINANCES_PAYMETHODS"]}}</a></li>
+                    <li><a href="{{ url_for('finances_account') }}">{{ fontawesome('fas fa-wallet') }} {{lang["FINANCES_ACCOUNTS"]}}</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ url_for('finances_budgets') }}">{{ fontawesome('far fa-money-bill-alt') }} {{lang["BUDGET"]}}</a></li>
                     <li role="separator" class="divider"></li>
@@ -119,7 +117,7 @@
         {% if user.hasModule("recipes") %}
             <li {% if active == modules['recipes']['rootRoute'] %}class="active"{% endif %}>
                 <a href="{{ url_for(modules['recipes']['rootRoute']) }}">{{lang[modules['recipes']['title']]}}</a>
-                
+
                 <ul class="dropdown-content">
                     <li><a href="{{ url_for('recipes_cookbooks') }}">{{lang["RECIPES_COOKBOOKS"]}}</a></li>
                     <li><a href="{{ url_for('recipes_mealplans') }}">{{lang["RECIPES_MEALPLANS"]}}</a></li>
@@ -152,7 +150,7 @@
                     <text x="50%" y="14" text-anchor="middle" fill="#F1F1F1">{{user.name|first|upper}}{{user.lastname|first|upper}}</text>
                     </svg>
                 {% endif %}
-                {{user.login}}
+                <span class="profile_description">{{lang["PROFILE"]}} ({{user.login}})</span><span class="profile_name">{{user.login}}</span>
             </a>
             <ul class="dropdown-content">
                 <li><a href="{{ url_for('users_change_password') }}">{{lang["CHANGE_PASSWORD"]}}</a></li>

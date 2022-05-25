@@ -7,6 +7,8 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
+use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
@@ -16,11 +18,15 @@ class SheetExportService extends Service {
     private $translation;
     private $project_service;
     private $settings;
+    private $sheet_notice_mapper;
+    private $notice_fields_service;
 
     public function __construct(LoggerInterface $logger,
             CurrentUser $user,
             SheetMapper $mapper,
             ProjectService $project_service,
+            SheetNoticeMapper $sheet_notice_mapper,
+            NoticeFieldService $notice_fields_service,
             Settings $settings,
             Translator $translation) {
         parent::__construct($logger, $user);
@@ -28,6 +34,8 @@ class SheetExportService extends Service {
         $this->project_service = $project_service;
         $this->settings = $settings;
         $this->translation = $translation;
+        $this->sheet_notice_mapper = $sheet_notice_mapper;
+        $this->notice_fields_service = $notice_fields_service;
     }
 
     public function export($hash, $data) {
@@ -45,8 +53,11 @@ class SheetExportService extends Service {
         if (strcmp($type, "word") == 0) {
             return $this->exportWord($project, $from, $to, $categories);
         }
+        if (strcmp($type, "excel") == 0) {
+            return $this->exportExcel($project, $from, $to, $categories);
+        }
 
-        return $this->exportExcel($project, $from, $to, $categories);
+        return $this->exportHTML($project, $from, $to, $categories);
     }
 
     private function exportExcel($project, $from, $to, $categories) {
@@ -91,15 +102,14 @@ class SheetExportService extends Service {
         }
 
         $sheet->setCellValue('F4', $this->translation->getTranslatedString("CATEGORIES"));
-        $sheet->setCellValue('G4', $this->translation->getTranslatedString("NOTICE"));
-        $sheet->getStyle('A4:G4')->applyFromArray(
+        //$sheet->setCellValue('G4', $this->translation->getTranslatedString("NOTICE"));
+        $sheet->getStyle('A4:F4')->applyFromArray(
                 ['borders' => [
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
                     ],
                 ]
         );
-        $sheet->getStyle('A4:G4')->getFont()->setBold(true);
-
+        $sheet->getStyle('A4:F4')->getFont()->setBold(true);
 
         $excelTime = "[$-F400]h:mm:ss AM/PM";
         $excelDate = $dateFormatPHP['date'];
@@ -151,13 +161,14 @@ class SheetExportService extends Service {
                 $sheet->setCellValue('F' . $row, $timesheet->categories);
             }
 
-            if (!is_null($timesheet->notice)) {
-                $sheet->setCellValue('G' . $row, htmlspecialchars_decode($timesheet->notice));
-                $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
-            }
+            /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+              if (!is_null($notice)) {
+              $sheet->setCellValue('G' . $row, htmlspecialchars_decode($notice->getNotice()));
+              $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
+              } */
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
-            $sheet->getStyle('A' . $row . ':G' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+            $sheet->getStyle('A' . $row . ':F' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
             $idx++;
         }
@@ -176,7 +187,7 @@ class SheetExportService extends Service {
         $sheet->setCellValue('E' . $sumRow, "=SUM(E" . $firstRow . ":E" . ($sumRow - 1) . ")");
         $sheet->getStyle('E' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDuration);
 
-        $sheet->getStyle('A' . $sumRow . ':G' . $sumRow)->applyFromArray(
+        $sheet->getStyle('A' . $sumRow . ':F' . $sumRow)->applyFromArray(
                 ['borders' => [
                         'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
                         'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
@@ -191,15 +202,14 @@ class SheetExportService extends Service {
         $sheet->getColumnDimension('D')->setAutoSize(true);
         $sheet->getColumnDimension('E')->setAutoSize(true);
         $sheet->getColumnDimension('F')->setAutoSize(true);
-        $sheet->getColumnDimension('G')->setAutoSize(true);
-
+        //$sheet->getColumnDimension('G')->setAutoSize(true);
         // sheet protection
         $sheet->getProtection()->setSheet(true);
         $sheet->getStyle("A" . $firstRow . ":C" . ($sumRow - 1))
                 ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
         );
-        $sheet->getStyle("A1:G2")
+        $sheet->getStyle("A1:F2")
                 ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
         );
@@ -217,10 +227,9 @@ class SheetExportService extends Service {
          * @see https://github.com/PHPOffice/PhpSpreadsheet/issues/28
          * so a temporary file in a specific directory is generated and later deleted 
          */
-        $path = __DIR__ . '/../../../files/';
+        $path = __DIR__ . '/../../../../files/';
         $excelFileName = @tempnam($path, 'phpxltmp');
         $writer->save($excelFileName);
-
 
         /**
          * We should use a Stream Object but then deleting is not possible, so instead use file_get_contents
@@ -277,16 +286,17 @@ class SheetExportService extends Service {
                 $section->addText(sprintf("%s: %s", $this->translation->getTranslatedString("CATEGORIES"), $timesheet->categories));
             }
 
-            if (!is_null($timesheet->notice)) {
+            /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
+              if (!is_null($notice)) {
 
-                $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
+              $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
 
-                $notice = explode("\n", $timesheet->notice);
+              $notice = explode("\n", $notice->getNotice());
 
-                foreach ($notice as $line) {
-                    $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
-                }
-            }
+              foreach ($notice as $line) {
+              $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
+              }
+              } */
 
 
             if (next($data) == true) {
@@ -302,7 +312,7 @@ class SheetExportService extends Service {
          * @see https://github.com/PHPOffice/PhpSpreadsheet/issues/28
          * so a temporary file in a specific directory is generated and later deleted 
          */
-        $path = __DIR__ . '/../../../files/';
+        $path = __DIR__ . '/../../../../files/';
         $wordFileName = @tempnam($path, 'phpwordtmp');
         $writer->save($wordFileName);
 
@@ -321,4 +331,55 @@ class SheetExportService extends Service {
 
         return new Payload(Payload::$RESULT_WORD, $body);
     }
+
+    private function exportHTML($project, $from, $to, $categories) {
+
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate->setPattern($dateFormatPHP["date"]);
+
+        // get Data
+        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, 0, 'ASC', null);
+
+        $sheets = [];
+
+        foreach ($data as $timesheet) {
+
+            $sheet = [
+                "id" => $timesheet->id
+            ];
+            list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+
+            $sheet["title"] = sprintf("%s %s - %s", $date, $start, $end);
+
+            if (!is_null($timesheet->start) && !is_null($timesheet->end)) {
+
+                $time_duration_real = DateUtility::splitDateInterval($timesheet->duration);
+
+                if ($project->has_duration_modifications > 0) {
+                    $time_duration_mod = DateUtility::splitDateInterval($timesheet->duration_modified);
+
+                    $sheet["time"] = sprintf("%s (%s)", $time_duration_mod, $time_duration_real);
+                } else {
+                    $sheet["time"] = $time_duration_real;
+                }
+            }
+
+            if (!is_null($timesheet->categories)) {
+                $sheet["categories"] = $timesheet->categories;
+            }
+            $sheets[] = $sheet;
+        }
+
+        $response = [
+            "project" => $project,
+            "hasTimesheetNotice" => true,
+            "sheets" => $sheets,
+            "fields" => $this->notice_fields_service->getNoticeFields($project->id)
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response);
+    }
+
 }

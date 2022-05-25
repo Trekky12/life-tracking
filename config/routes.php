@@ -10,7 +10,7 @@ return function (App $app) {
 
     $app->group('', function (RouteCollectorProxy $group) {
         $group->get('/pwa', \App\Application\Action\Main\PWAFrontpageAction::class)->setName('pwa');
-        
+
         $group->get('/', \App\Application\Action\Main\FrontpageAction::class)->setName('index');
         $group->get('/login', \App\Application\Action\Main\LoginpageAction::class)->setName('login');
         $group->post('/login', \App\Application\Action\Main\LoginAction::class)->setName('login');
@@ -30,6 +30,8 @@ return function (App $app) {
             $group_banlist->get('/', \App\Application\Action\Admin\BanlistAction::class)->setName('banlist');
             $group_banlist->delete('/deleteIP/{ip}', \App\Application\Action\Admin\BanlistDeleteAction::class)->setName('banlist_delete');
         })->add(\App\Application\Middleware\AdminMiddleware::class);
+
+        $group->post('/storeParams', \App\Application\Action\Main\StoreQueryParamsAction::class)->setName('store_query_params');
     });
 
     $app->group('/finances', function (RouteCollectorProxy $group) {
@@ -86,6 +88,37 @@ return function (App $app) {
             $group_methods->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Paymethod\PaymethodEditAction::class)->setName('finances_paymethod_edit');
             $group_methods->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Paymethod\PaymethodSaveAction::class)->setName('finances_paymethod_save');
             $group_methods->delete('/delete/{id}', \App\Application\Action\Finances\Paymethod\PaymethodDeleteAction::class)->setName('finances_paymethod_delete');
+        });
+
+        $group->group('/accounts', function (RouteCollectorProxy $group_accounts) {
+            $group_accounts->get('/', \App\Application\Action\Finances\Account\AccountListAction::class)->setName('finances_account');
+            $group_accounts->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Account\AccountEditAction::class)->setName('finances_account_edit');
+            $group_accounts->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Account\AccountSaveAction::class)->setName('finances_account_save');
+            $group_accounts->delete('/delete/{id}', \App\Application\Action\Finances\Account\AccountDeleteAction::class)->setName('finances_account_delete');
+
+
+            $group_accounts->group('/{account}', function (RouteCollectorProxy $group_transactions) {
+                $group_transactions->get('/view/', \App\Application\Action\Finances\Transaction\TransactionListAction::class)->setName('finances_transaction');
+                $group_transactions->get('/table/', \App\Application\Action\Finances\Transaction\TransactionTableAction::class)->setName('finances_transaction_table');
+            });
+        });
+
+        $group->group('/transactions', function (RouteCollectorProxy $group_transactions) {
+            $group_transactions->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\Transaction\TransactionEditAction::class)->setName('finances_transaction_edit');
+            $group_transactions->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\Transaction\TransactionSaveAction::class)->setName('finances_transaction_save');
+            $group_transactions->delete('/delete/{id}', \App\Application\Action\Finances\Transaction\TransactionDeleteAction::class)->setName('finances_transaction_delete');
+
+            $group_transactions->get('/view/[{id:[0-9]+}]', \App\Application\Action\Finances\Transaction\TransactionViewAction::class)->setName('finances_transaction_view');
+
+            $group_transactions->post('/confirm/', \App\Application\Action\Finances\Transaction\TransactionConfirmAction::class)->setName('finances_transaction_confirm');
+
+            $group_transactions->group('/recurring', function (RouteCollectorProxy $group_transactions_recurring) {
+                $group_transactions_recurring->get('/', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringListAction::class)->setName('finances_transaction_recurring');
+                $group_transactions_recurring->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringEditAction::class)->setName('finances_transaction_recurring_edit');
+                $group_transactions_recurring->post('/save/[{id:[0-9]+}]', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringSaveAction::class)->setName('finances_transaction_recurring_save');
+                $group_transactions_recurring->delete('/delete/{id}', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringDeleteAction::class)->setName('finances_transaction_recurring_delete');
+                $group_transactions_recurring->get('/trigger/{id}', \App\Application\Action\Finances\TransactionRecurring\TransactionRecurringTriggerAction::class)->setName('finances_transaction_recurring_trigger');
+            });
         });
     });
 
@@ -180,7 +213,7 @@ return function (App $app) {
             $group_frontpage->post('/updatePosition', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetUpdatePositionAction::class)->setName('users_profile_frontpage_widget_position');
             $group_frontpage->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDeleteAction::class)->setName('users_profile_frontpage_widget_delete');
 
-            $group_frontpage->get('/request/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetRequestAction::class)->setName('frontpage_widget_request');
+            $group_frontpage->get('/data/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDataAction::class)->setName('frontpage_widget_request');
         });
 
         $group->get('/mail/manage/', \App\Application\Action\MailNotifications\MailNotificationsManageAction::class)->setName('mail_manage');
@@ -247,19 +280,18 @@ return function (App $app) {
         $group->group('/view', function (RouteCollectorProxy $group_view) {
             $group_view->get('/{hash}', \App\Application\Action\Board\Board\BoardViewAction::class)->setName('boards_view');
         });
+        $group->get('/data/{hash}', \App\Application\Action\Board\Board\BoardDataAction::class)->setName('boards_data');
 
         $group->group('/stacks', function (RouteCollectorProxy $group_stacks) {
             $group_stacks->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackSaveAction::class)->setName('stack_save');
             $group_stacks->post('/updatePosition', \App\Application\Action\Board\Stack\StackUpdatePositionAction::class)->setName('stack_update_position');
             $group_stacks->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDeleteAction::class)->setName('stack_delete');
             $group_stacks->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackArchiveAction::class)->setName('stack_archive');
-            $group_stacks->get('/data/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDataAction::class)->setName('stack_get');
         });
         $group->group('/card', function (RouteCollectorProxy $group_cards) {
             $group_cards->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardSaveAction::class)->setName('card_save');
             $group_cards->post('/updatePosition', \App\Application\Action\Board\Card\CardUpdatePositionAction::class)->setName('card_update_position');
             $group_cards->post('/moveCard', \App\Application\Action\Board\Card\CardMoveStackAction::class)->setName('card_move_stack');
-            $group_cards->get('/data/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardDataAction::class)->setName('card_get');
             $group_cards->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardDeleteAction::class)->setName('card_delete');
             $group_cards->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardArchiveAction::class)->setName('card_archive');
         });
@@ -395,6 +427,8 @@ return function (App $app) {
 
         $group->group('/{project}', function (RouteCollectorProxy $group_project) {
 
+            $group_project->post('/check', \App\Application\Action\Timesheets\Project\ProjectCheckPasswordAction::class)->setName('timesheets_sheets_check_pw');
+
             $group_project->get('/view/', \App\Application\Action\Timesheets\Sheet\SheetViewAction::class)->setName('timesheets_sheets');
             $group_project->get('/table/', \App\Application\Action\Timesheets\Sheet\SheetTableAction::class)->setName('timesheets_sheets_table');
 
@@ -402,8 +436,14 @@ return function (App $app) {
                 $group_sheets->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetEditAction::class)->setName('timesheets_sheets_edit');
                 $group_sheets->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetSaveAction::class)->setName('timesheets_sheets_save');
                 $group_sheets->delete('/delete/{id}', \App\Application\Action\Timesheets\Sheet\SheetDeleteAction::class)->setName('timesheets_sheets_delete');
-                
+
                 $group_sheets->post('/setCategories', \App\Application\Action\Timesheets\Sheet\SheetSetCategoriesAction::class)->setName('timesheets_sheets_set_categories');
+
+                $group_sheets->get('/notice/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeDataAction::class)->setName('timesheets_sheets_notice_data');
+                $group_sheets->group('/notice/{sheet:[0-9]+}', function (RouteCollectorProxy $group_notice) {
+                    $group_notice->get('/edit/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeEditAction::class)->setName('timesheets_sheets_notice_edit');
+                    $group_notice->post('/save/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeSaveAction::class)->setName('timesheets_sheets_notice_save');
+                });
             });
 
             $group_project->group('/fast', function (RouteCollectorProxy $group_fast) {
@@ -423,14 +463,21 @@ return function (App $app) {
                 $group_category->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategorySaveAction::class)->setName('timesheets_project_categories_save');
                 $group_category->delete('/delete/{id}', \App\Application\Action\Timesheets\ProjectCategory\ProjectCategoryDeleteAction::class)->setName('timesheets_project_categories_delete');
             });
-            
+
             $group_project->group('/categorybudget', function (RouteCollectorProxy $group_category_budget) {
                 $group_category_budget->get('/', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetListAction::class)->setName('timesheets_project_categorybudget');
                 $group_category_budget->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetEditAction::class)->setName('timesheets_project_categorybudget_edit');
                 $group_category_budget->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetSaveAction::class)->setName('timesheets_project_categorybudget_save');
                 $group_category_budget->delete('/delete/{id}', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetDeleteAction::class)->setName('timesheets_project_categorybudget_delete');
-                
+
                 $group_category_budget->get('/view/', \App\Application\Action\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetViewAction::class)->setName('timesheets_project_categorybudget_view');
+            });
+
+            $group_project->group('/noticefields', function (RouteCollectorProxy $group_noticefields) {
+                $group_noticefields->get('/', \App\Application\Action\Timesheets\NoticeField\NoticeFieldListAction::class)->setName('timesheets_noticefields');
+                $group_noticefields->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\NoticeField\NoticeFieldEditAction::class)->setName('timesheets_noticefields_edit');
+                $group_noticefields->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\NoticeField\NoticeFieldSaveAction::class)->setName('timesheets_noticefields_save');
+                $group_noticefields->delete('/delete/{id}', \App\Application\Action\Timesheets\NoticeField\NoticeFieldDeleteAction::class)->setName('timesheets_noticefields_delete');
             });
         });
     });
@@ -457,6 +504,8 @@ return function (App $app) {
                 $group_session->get('/stats', \App\Application\Action\Workouts\Session\SessionStatsAction::class)->setName('workouts_sessions_stats');
             });
         });
+
+        $group->get('/stats', \App\Application\Action\Workouts\Session\SessionStatsAllAction::class)->setName('workouts_sessions_stats_all');
 
         $group->group('/plans', function (RouteCollectorProxy $group_plans) {
             $group_plans->get('/', \App\Application\Action\Workouts\Plan\PlanListAction::class)->setName('workouts');
@@ -548,7 +597,7 @@ return function (App $app) {
 
             $group_ingredients->get('/list', \App\Application\Action\Recipes\Ingredient\IngredientSelectionListAction::class)->setName('ingredients_get');
         });
-        
+
         $group->group('/mealplans', function (RouteCollectorProxy $group_mealplans) {
             $group_mealplans->get('/', \App\Application\Action\Recipes\Mealplan\MealplanListAction::class)->setName('recipes_mealplans');
             $group_mealplans->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Mealplan\MealplanEditAction::class)->setName('recipes_mealplans_edit');
@@ -557,12 +606,11 @@ return function (App $app) {
 
             $group_mealplans->group('/{mealplan}', function (RouteCollectorProxy $group_mealplan) {
                 $group_mealplan->get('/view/', \App\Application\Action\Recipes\Mealplan\MealplanViewAction::class)->setName('recipes_mealplans_view');
-                
+
                 $group_mealplan->post('/moverecipe/', \App\Application\Action\Recipes\Mealplan\MealplanMoveRecipeAction::class)->setName('recipes_mealplans_move_recipe');
                 $group_mealplan->delete('/removerecipe/', \App\Application\Action\Recipes\Mealplan\MealplanRemoveRecipeAction::class)->setName('recipes_mealplans_remove_recipe');
             });
         });
-        
     });
 
     $app->group('/api', function (RouteCollectorProxy $group) {

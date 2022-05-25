@@ -89,35 +89,79 @@ class SessionMapper extends \App\Domain\Mapper {
         return $results;
     }
     
-    public function getAllSessionExercises($plan_id) {
-        $sql = "SELECT se.exercise, se.sets, s.date"
-                . " FROM " . $this->getTableName() . " s, " . $this->getTableName("workouts_sessions_exercises") . " se"
-                . " WHERE s.id = se.session AND s.plan = :plan AND se.type = :type AND se.exercise IS NOT NULL"
-                . " ORDER by s.date ASC";
-
+    public function getAllSessionExercises($plan_id = null) {
         $bindings = [
-            "plan" => $plan_id,
             "type" => "exercise"
         ];
+        
+        $sql = "SELECT se.exercise, se.sets, s.date"
+                . " FROM " . $this->getTableName() . " s, " . $this->getTableName("workouts_sessions_exercises") . " se"
+                . " WHERE s.id = se.session AND se.type = :type AND se.exercise IS NOT NULL";
+
+        if(!is_null($plan_id)){
+            $sql .= " AND s.plan = :plan ";
+
+            $bindings["plan"] = $plan_id;
+        }
+
+        $this->addSelectFilterForUser($sql, $bindings, "s.");
+        $sql.= " ORDER by s.date ASC";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
         $results = [];
-        $dates = [];
+        $exercises_max_sets = [];
         while ($row = $stmt->fetch()) {
-            $exercise_id = intval($row["exercise"]);
-            if(!array_key_exists($exercise_id, $results)){
-                $results[$exercise_id] = [];
+
+            $session_date = $row["date"];
+            if(!array_key_exists($session_date, $results)){
+                $results[$session_date] = [];
             }
-            $results[$exercise_id][] = ["date" => $row["date"],"sets" => json_decode($row["sets"], true)];
+
+            $exercise_id = intval($row["exercise"]);
             
-            if(!in_array($row["date"], $dates)){
-                $dates[] = $row["date"];
+            if(!array_key_exists($exercise_id, $results[$session_date])){
+                $results[$session_date][$exercise_id] = [];
+            }
+
+            $sets = json_decode($row["sets"], true);
+            $results[$session_date][$exercise_id] = $sets;
+
+
+            /**
+             * Count maximum sets per exercise
+             */
+            if(!array_key_exists($exercise_id, $exercises_max_sets)){
+                $exercises_max_sets[$exercise_id] = 0;
+            }
+            if(count($sets) > $exercises_max_sets[$exercise_id]){
+                $exercises_max_sets[$exercise_id] = count($sets);
             }
             
         }
-        return [$results, $dates];
+        return [$results, $exercises_max_sets];
+    }
+
+    public function getMinMaxSessionsDate($plan_id) {
+        $sql = "SELECT DATE_SUB(MIN(date), INTERVAL 1 DAY) as start, DATE_ADD(MAX(date), INTERVAL 1 DAY) as end "
+                . " FROM " . $this->getTableName() . ""
+                . " WHERE plan = :plan ";
+        
+        $bindings = ["plan" => $plan_id];
+        $this->addSelectFilterForUser($sql, $bindings);
+        $sql .= " LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+        $start = null;
+        $end = null;
+        if ($stmt->rowCount() === 1) {
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $start = $row["start"];
+            $end = $row["end"];
+        }
+        return array($start, $end);
     }
 
 }

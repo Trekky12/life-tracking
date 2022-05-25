@@ -16,15 +16,15 @@
             <div class="buttons">
 
                 {% if not plan.is_template %}
-                    <a href="{{  url_for('workouts') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                    <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["WORKOUTS_SESSION_ADD"]}}</button></a>
-                    <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="white">{{lang["WORKOUTS_SESSIONS"]}}</button></a>
-                    <a href="{{  url_for('workouts_sessions_stats', {'plan':plan.hash}) }}"><button class="white">{{lang["STATS"]}}</button></a>
-                    <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}" class="no-loading"><button class="white">{{ fontawesome('far fa-file-excel') }} {{lang["WORKOUTS_EXPORT"]}}</button></a>
+                    <a href="{{  url_for_with_last_query_params('workouts') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                    <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["WORKOUTS_SESSION_ADD"]}}</button></a>
+                    <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="button">{{lang["WORKOUTS_SESSIONS"]}}</button></a>
+                    <a href="{{  url_for('workouts_sessions_stats', {'plan':plan.hash}) }}"><button class="button">{{lang["STATS"]}}</button></a>
+                    <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}" class="no-loading"><button class="button">{{ fontawesome('far fa-file-excel') }} {{lang["WORKOUTS_EXPORT"]}}</button></a>
 
                 {% else %}
-                    <a href="{{  url_for('workouts_templates') }}"><button class="white">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                    <a href="{{  url_for('workouts_plans_edit') }}?template={{ plan.hash }}"><button class="white">{{ fontawesome('fas fa-plus') }} {{lang["WORKOUTS_TEMPLATE_USE"]}}</button></a>
+                    <a href="{{  url_for_with_last_query_params('workouts_templates') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                    <a href="{{  url_for('workouts_plans_edit') }}?template={{ plan.hash }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["WORKOUTS_TEMPLATE_USE"]}}</button></a>
                 {% endif %}
 
             </div>

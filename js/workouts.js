@@ -79,7 +79,7 @@ document.addEventListener('click', function (event) {
             addSet(new_exercise);
         }
 
-        let inputs = new_exercise.querySelectorAll('input, textarea');
+        let inputs = new_exercise.querySelectorAll('input, textarea, select');
         inputs.forEach(function (input, idx) {
             if (!input.name.includes("dummy")) {
                 input.setAttribute('name', input.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + nextID + ']'));
@@ -88,6 +88,9 @@ document.addEventListener('click', function (event) {
         });
 
         exercisesSelected.appendChild(new_exercise);
+
+        new_exercise.scrollIntoView();
+
         loadSelectedMuscles();
         adjustAvailableExercisesColumnHeight();
     }
@@ -153,6 +156,8 @@ document.addEventListener('click', function (event) {
         workout_day.appendChild(div_icons);
 
         exercisesSelected.appendChild(workout_day);
+
+        workout_day.scrollIntoView();
     }
 
     if (add_superset) {
@@ -200,6 +205,8 @@ document.addEventListener('click', function (event) {
 
         exercisesSelected.appendChild(workout_superset);
 
+        workout_superset.scrollIntoView();
+
         createSortable(div_exercises);
 
     }
@@ -218,8 +225,10 @@ function createSortable(element) {
             name: "exercise"
         },
         scroll: true,
+        scrollSensitivity: 100,
         swapThreshold: 0.5,
-        fallbackOnBody: true,
+        fallbackOnBody: false,
+        forceFallback: true,
         //draggable: ".exercise.selected",
         handle: ".handle",
         dataIdAttr: 'data-id',
@@ -236,13 +245,6 @@ function createSortable(element) {
                 input.value = 1;
             }
             updateFields();
-        },
-        onStart: function (evt) {
-            document.body.classList.add("sortable-select");
-        },
-        onEnd: function (evt) {
-            document.body.classList.remove("sortable-select");
-            evt.item.scrollIntoView();
         }
     });
 }
@@ -252,7 +254,7 @@ function updateFields() {
     // @see https://stackoverflow.com/a/47948276
     let workoutElements = exercisesSelected.querySelectorAll('[data-type="workout-element"]');
     workoutElements.forEach(function (item, idx) {
-        let fields = item.querySelectorAll('input, textarea');
+        let fields = item.querySelectorAll('input, textarea, select');
         fields.forEach(function (field) {
             field.setAttribute('name', field.name.replace(/exercises\[[^\]]*\]/, 'exercises[' + idx + ']'));
         });
@@ -311,7 +313,7 @@ function addSet(exercise) {
     let set_nr = new_set.querySelector('.set-nr');
     set_nr.innerHTML = set_id;
 
-    let inputs = new_set.querySelectorAll('input');
+    let inputs = new_set.querySelectorAll('input, select');
     inputs.forEach(function (input, idx) {
         input.setAttribute('name', input.name.replace("dummy", set_id - 1));
         input.removeAttribute('disabled');

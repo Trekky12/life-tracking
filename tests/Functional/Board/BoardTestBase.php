@@ -11,13 +11,14 @@ class BoardTestBase extends BaseTestCase {
     protected $uri_save = "/boards/save/";
     protected $uri_delete = "/boards/delete/";
     protected $uri_view = "/boards/view/HASH";
+    protected $uri_data = "/boards/data/HASH";
     protected $uri_child_edit = "/trips/HASH/event/edit/";
     protected $uri_child_save = "/trips/HASH/event/save/";
     protected $uri_child_delete = "/trips/HASH/event/delete/";
 
     protected function getParent($body, $name) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/boards\/view\/(?<hash>.*)">' . preg_quote($name) . '<\/a><\/td>\s*(<td>\s*<\/td>\s*)*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete" data-type="board">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/boards\/view\/(?<hash>.*)">' . preg_quote($name) . '<\/a><\/td>\s*(<td>\s*<\/td>\s*)*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete" data-confirm=".*?">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
         
         return $matches;
@@ -33,7 +34,7 @@ class BoardTestBase extends BaseTestCase {
 
     protected function getLabel($body, $data) {
         $matches = [];
-        $re = '/<span class="card-label" style="background-color:' . $data["background_color"] . '; color:' . $data["text_color"] . '"><a href="#" class="edit-label" data-label="(?<id>[0-9]+)">' . preg_quote($data["name"]) . '<\/a><\/span>/';
+        $re = '/<span class="card-label" style="background-color:' . $data["background_color"] . '; color:' . $data["text_color"] . '">\s*<a href="#" class="edit-label" data-label="(?<id>[0-9]+)">' . preg_quote($data["name"]) . '<\/a>\s*<\/span>/';
         preg_match($re, $body, $matches);
 
         return $matches;
@@ -53,6 +54,10 @@ class BoardTestBase extends BaseTestCase {
         preg_match($re, $body, $matches);
 
         return $matches;
+    }
+
+    protected function getURIData($hash) {
+        return str_replace("HASH", $hash, $this->uri_data);
     }
 
 }

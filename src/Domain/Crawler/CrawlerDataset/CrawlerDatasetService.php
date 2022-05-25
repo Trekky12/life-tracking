@@ -49,7 +49,7 @@ class CrawlerDatasetService extends Service {
             $dataset = intval($data["dataset"]);
             $state = intval($data["state"]);
 
-            $this->mapper->set_saved($dataset, $state);
+            $this->mapper->set_saved($dataset, $crawler->id, $state);
 
             $response_data = ['status' => 'success'];
         }
