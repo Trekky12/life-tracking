@@ -53,6 +53,12 @@ async function captureScreenshots() {
         await page.waitForTimeout(1000);
         await page.screenshot({path: `${folder}/7_crawlers-5b.jpg`});
         
+        await page.goto("http://tracking.localhost/boards/view/ABCabc123");
+        await page.waitForTimeout(1000);
+        await page.click('.board-card[data-card="1"]');
+        await page.waitForTimeout(1000);
+        await page.screenshot({path: `${folder}/6_boards-2.jpg`});
+        
         await page.setViewport({
             width: width,
             height: 1200
