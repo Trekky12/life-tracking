@@ -254,7 +254,8 @@ class HomeService extends Service
             "name" => $widget_object->name,
             "hasOptions" => $options ? count($options) : false,
             "reload" => 0,
-            "content" => !is_null($content) ? $content : ''
+            "content" => !is_null($content) ? $content : '',
+            "options" => $widget_object->getOptions()
         ];
         switch ($widget_object->name) {
             case "last_finance_entries":
@@ -346,23 +347,26 @@ class HomeService extends Service
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function getWidgetData($id)
+    public function getWidgetData($id, $widget = null, $options = [])
     {
 
         $response_data = [];
 
-        $widget_object = $this->widget_mapper->get($id);
-        $type = $widget_object->name;
+        if (!is_null($id)) {
+            $widget_object = $this->widget_mapper->get($id);
+        } else {
+            $widget_object = new Widget\WidgetObject(["name" => $widget, "options" => $options]);
+        }
 
         $content = null;
 
-        if ($type == "efa") {
+        if ($widget_object->name == "efa") {
             $url = $widget_object->getOptions()["url"];
             $content = $this->getEFARequestData($url);
-        } elseif ($type == "currentweather") {
+        } elseif ($widget_object->name == "currentweather") {
             $url = $widget_object->getOptions()["url"];
             $content = $this->getCurrentWeatherRequestData($url);
-        } elseif ($type == "weatherforecast") {
+        } elseif ($widget_object->name == "weatherforecast") {
             $url = $widget_object->getOptions()["url"];
             $content = $this->getWeatherForecastRequestData($url);
         }
