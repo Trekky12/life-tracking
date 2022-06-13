@@ -251,9 +251,9 @@ let mileageTables = document.querySelectorAll('table.mileage_year_table');
 mileageTables.forEach(function (item, idx) {
     new JSTable(item, {
         perPage: 20,
-    perPageSelect: [10, 20, 50, 100, 200],
+        perPageSelect: [10, 20, 50, 100, 200],
         labels: tableLabels,
-    layout: layout,
+        layout: layout,
         columns: [
             {
                 select: 0,
@@ -548,9 +548,9 @@ if (tokensTableContainer) {
     let lastColumn = tokensTableContainer.dataset.user === "1" ? 6 : 5;
     var tokensTable = new JSTable(tokensTableContainer, {
         perPage: 20,
-    perPageSelect: [10, 20, 50, 100, 200],
+        perPageSelect: [10, 20, 50, 100, 200],
         labels: tableLabels,
-    layout: layout,
+        layout: layout,
         columns: [
             {
                 select: 1,
@@ -962,6 +962,8 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
 });
 
 const timesheetCategories = document.querySelector("#selected_categories");
+const timesheetBilled = document.querySelector("#timesheet_view_billed");
+const timesheetPayed = document.querySelector("#timesheet_view_payed");
 
 var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     perPage: 20,
@@ -986,13 +988,19 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     ajaxParams: {
         "from": jsObject.dateFrom,
         "to": jsObject.dateTo,
-        "categories": timesheetCategories ? timesheetCategories.value : []
+        "categories": timesheetCategories ? timesheetCategories.value : [],
+        "billed": timesheetBilled ? timesheetBilled.value : '',
+        "payed": timesheetPayed ? timesheetPayed.value : '',
     }
 });
 
-timesheetsSheetsTable.on("fetchData", function (data) {    
+timesheetsSheetsTable.on("fetchData", function (data) {
     let footer = document.querySelector("#timesheets_sheets_table tfoot tr th:nth-child(5)");
     footer.innerHTML = data.sum;
+});
+timesheetsSheetsTable.on("update", function () {
+    let selected_items = document.querySelector("#tableFooterFilter #selected_items");
+    selected_items.innerHTML = 0;
 });
 
 var timesheetsProjectCategoriesTable = new JSTable("#project_categories_table", {
@@ -1142,8 +1150,8 @@ var workoutSessionsTable = new JSTable("#workouts_sessions_table", {
                 if (cell.children.length > 0) {
                     let link = cell.children[0];
                     let data = link.innerHTML;
-                    
-                    if(data.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/)){
+
+                    if (data.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
                         link.innerHTML = moment(data).format(i18n.dateformatJS.date);
                     }
                 }

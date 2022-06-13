@@ -516,6 +516,18 @@ $lang["MAIN_CATEGORY"] = "main category";
 $lang["ASSIGNED_CATEGORIES"] = "assigned categories";
 $lang["TIMESHEETS_CATEGORYBUDGET_VALUE"] = "threshold";
 $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- no main category -";
+$lang["TIMESHEETS_BILLED"] = "billed";
+$lang["TIMESHEETS_NOT_BILLED"] = "not billed";
+$lang["TIMESHEETS_PAYED"] = "payed";
+$lang["TIMESHEETS_NOT_PAYED"] = "not payed";
+$lang["TIMESHEETS_APPLY"] = "apply";
+$lang["TIMESHEETS_APPLY_BILLED"] = "mark as billed";
+$lang["TIMESHEETS_APPLY_NOT_BILLED"] = "mark as not billed";
+$lang["TIMESHEETS_APPLY_PAYED"] = "mark as payed";
+$lang["TIMESHEETS_APPLY_NOT_PAYED"] = "mark as not payed";
+$lang["TIMESHEETS_ITEMS_SELECED"] = "item(s) selected";
+$lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "billed and not billed";
+$lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "payed and not payed";
 
 $lang["THIS_DEVICE"] = "this device";
 

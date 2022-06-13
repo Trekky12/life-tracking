@@ -80,6 +80,7 @@ if (datepickerStartEvent && datepickerEndEvent) {
     flatpickr(datepickerStartEvent, {
         "altInput": true,
         "altFormat": i18n.dateformatTwig.date,
+        "altInputClass": "input",
         "dateFormat": "Y-m-d",
         "locale": i18n.template, 
         "onValueUpdate": function (selectedDates) {
@@ -92,6 +93,7 @@ if (datepickerStartEvent && datepickerEndEvent) {
     flatpickr(datepickerEndEvent, {
         "altInput": true,
         "altFormat": i18n.dateformatTwig.date,
+        "altInputClass": "input",
         "dateFormat": "Y-m-d",
         "locale": i18n.template
     });

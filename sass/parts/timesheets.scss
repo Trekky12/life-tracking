@@ -1,6 +1,16 @@
-.timesheet-fast.categories-filter{
+.timesheet-fast.categories-filter {
     width: 100%;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     margin-top: 2rem;
+}
+
+#timesheets_sheets_table {
+    tr[data-billed="1"] {
+        color: $color_orange;
+    }
+
+    tr[data-payed="1"] {
+        color: $color_green;
+    }
 }

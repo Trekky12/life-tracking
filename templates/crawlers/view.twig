@@ -2,81 +2,89 @@
 
 {% set active = 'crawlers' %}
 
-{% block style %}
-
-{% endblock %}
+{% block style %}{% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/datefilter.js?ver=20190306"></script>
-    <script src="{{baseURL}}/static/js/crawler.js?ver=20190306"></script>
+	<script src="{{baseURL}}/static/js/datefilter.js?ver=20190306"></script>
+	<script src="{{baseURL}}/static/js/crawler.js?ver=20190306"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header">
-            <h2>{{crawler.name|raw}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                <a href="{{  url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}"><button class="button">{{ fontawesome('far fa-star') }} {{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <form method="GET" id="search-filter" class="">
-                <div class="filter-content">
-                    <div class="date-filter">
-                        <div class="date-element">
-                            <input type="text" id="dateRange" value="{{from}} to {{to}}" />
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{crawler.name|raw}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('crawlers') }}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+				<a href="{{ url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}">
+					<button class="button">{{ fontawesome('far fa-star') }}
+						{{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
+			<form method="GET" id="tableHeaderFilter" class="search-filter">
+				<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+				<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 
-                            <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-                            <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
-                        </div>
-                        <div class="filter-element">
-                            <input type="submit" value="{{lang["SHOW"]}}"/>
-                        </div>
-                    </div>
-                    <div class="filter-element">
-                        <select class="form-control" id="filterCrawlerDatasets" >
-                            <option value="createdOn" {% if filter =="createdOn" %}selected{% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
-                            <option value="changedOn" {% if filter =="changedOn" %}selected{% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
-                        </select>
-                    </div>
-                </div>
-            </form>   
+				<div class="filter-row">
+					<div class="filter-element">
+						<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
+					</div>
+					<div class="filter-group">
+						<div class="filter-element">
+							<select class="form-control" id="filterCrawlerDatasets">
+								<option value="createdOn" {% if filter =="createdOn" %} selected {% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
+								<option value="changedOn" {% if filter =="changedOn" %} selected {% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="filter-row">
+					<div class="filter-element">
+						<input type="submit" value="{{lang["SHOW"]}}"/>
+					</div>
+				</div>
+			</form>
 
-            <table id="crawlers_data_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>{{lang["DATE_CRAWL"]}}</th>
-                            {% for header in headers %}
-                            <th {% if header.sortable == 1 %}data-sortable="true"{% else %}data-sortable="false"{% endif %} {% if not header.sort is null %}data-sort="{{ header.sort }}"{% endif %}>{{header.headline}}</th>
-                            {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in datasets %}
-                        <tr>
-                            {% for column in row %}
-                                <td>{{ column | raw}}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+			<table id="crawlers_data_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th></th>
+						<th>{{lang["DATE_CRAWL"]}}</th>
+						{% for header in headers %}
+							<th {% if header.sortable == 1 %} data-sortable="true" {% else %} data-sortable="false" {% endif %} {% if not header.sort is null %} data-sort="{{ header.sort }}" {% endif %}>{{header.headline}}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in datasets %}
+						<tr>
+							{% for column in row %}
+								<td>{{ column | raw}}</td>
+							{% endfor %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 
-        </div>
-    </div>
+		</div>
+	</div>
 
-    {% if links  %}
-        <div class="inner-content">
-            <div class="page-header"><h2>{{lang["LINKLIST"]}}</h2></div>
-            <div class="page-content">
-                <ul id="crawler_links">
-                    {% include "crawlers/links/menu-links.twig" with {'links':links, 'root': 1} only %}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
+	{% if links  %}
+		<div class="inner-content">
+			<div class="page-header">
+				<h2>{{lang["LINKLIST"]}}</h2>
+			</div>
+			<div class="page-content">
+				<ul id="crawler_links">
+					{% include "crawlers/links/menu-links.twig" with {'links':links, 'root': 1} only %}
+				</ul>
+			</div>
+		</div>
+	{% endif %}
 
 
-{% endblock %}        
+{% endblock %}

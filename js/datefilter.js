@@ -8,6 +8,7 @@ if (datepickerRange && datepickerStart && datepickerEnd) {
     flatpickr(datepickerRange, {
         "altInput": true,
         "altFormat": i18n.dateformatTwig.date,
+        "altInputClass": "input",
         "dateFormat": "Y-m-d",
         "locale": i18n.template, 
         "mode": "range",

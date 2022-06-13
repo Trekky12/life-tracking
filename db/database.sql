@@ -932,6 +932,8 @@ CREATE TABLE timesheets_sheets (
     end_lat DECIMAL(17,14) DEFAULT NULL,
     end_lng DECIMAL(17,14) DEFAULT NULL,
     end_acc DECIMAL(10,3) DEFAULT NULL,
+    is_billed int(1) DEFAULT 0,
+    is_payed int(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,

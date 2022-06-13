@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css" />
         {% block style %}
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20220410" />
+        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver=20220613" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{baseURL}}/static/assets/favicon/apple-touch-icon.png?v=20220403">
         <link rel="icon" type="image/png" sizes="32x32" href="{{baseURL}}/static/assets/favicon/favicon-32x32.png?v=20220403">
@@ -164,6 +164,7 @@
 {% if not hasTimesheetTable is null %}
                 'timesheets_table': '{{url_for('timesheets_sheets_table', {'project': project.hash})}}',
                 'timesheets_sheets_set_categories': '{{url_for('timesheets_sheets_set_categories', {'project': project.hash})}}',
+                'timesheets_sheets_set_options': '{{url_for('timesheets_sheets_set_options', {'project': project.hash})}}',
 {% endif %}
 {% if not hasTimesheetNotice is null %}
                 'timesheets_sheets_notice_data': '{{url_for('timesheets_sheets_notice_data', {'project': project.hash})}}',
@@ -281,7 +282,7 @@
 
         <script src="{{baseURL}}/static/js/main.js?ver=20220403" type="text/javascript"></script>
         <script src="{{baseURL}}/static/js/navigation.js?ver=20211029" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/js/tables.js?ver=20220213" type="text/javascript"></script>
+        <script src="{{baseURL}}/static/js/tables.js?ver=20220613" type="text/javascript"></script>
 
 
         {% if not user is null %}

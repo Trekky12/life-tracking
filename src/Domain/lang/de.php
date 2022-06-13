@@ -515,6 +515,18 @@ $lang["MAIN_CATEGORY"] = "Hauptkategorie";
 $lang["ASSIGNED_CATEGORIES"] = "zugeordnete Kategorien";
 $lang["TIMESHEETS_CATEGORYBUDGET_VALUE"] = "Grenzwert";
 $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- keine Hauptkategorie -";
+$lang["TIMESHEETS_BILLED"] = "berechnet";
+$lang["TIMESHEETS_NOT_BILLED"] = "nicht berechnet";
+$lang["TIMESHEETS_PAYED"] = "bezahlt";
+$lang["TIMESHEETS_NOT_PAYED"] = "nicht bezahlt";
+$lang["TIMESHEETS_APPLY"] = "anwenden";
+$lang["TIMESHEETS_APPLY_BILLED"] = "als berechnet markieren";
+$lang["TIMESHEETS_APPLY_NOT_BILLED"] = "als nicht berechnet markieren";
+$lang["TIMESHEETS_APPLY_PAYED"] = "als bezahlt markieren";
+$lang["TIMESHEETS_APPLY_NOT_PAYED"] = "als nicht bezahlt markieren";
+$lang["TIMESHEETS_ITEMS_SELECED"] = "Element(e) markiert";
+$lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "berechnet und nicht berechnet";
+$lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "bezahlt und nicht bezahlt";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 

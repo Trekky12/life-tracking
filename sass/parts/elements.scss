@@ -185,32 +185,6 @@ select.button-height {
     height: 44px;
 }
 
-.filter-content {
-
-    .filter-element {
-        margin-top: 1rem;
-
-        input:not(.selectr-input) {
-            width: 100%;
-        }
-
-        select {
-            height: 44px;
-        }
-    }
-
-    @media screen and (min-width: $size_mobile) {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .filter-element {
-            margin-top: 0px;
-            margin-left: 1rem;
-        }
-    }
-}
-
 pre {
     white-space: pre-wrap;
     word-wrap: break-word;
