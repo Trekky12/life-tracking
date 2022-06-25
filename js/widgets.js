@@ -22,7 +22,8 @@ function load(item) {
         method: 'GET',
         credentials: "same-origin",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'sw-cache': 'none'
         }
     }).then(function (response) {
         return response.json();

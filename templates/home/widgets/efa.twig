@@ -1,6 +1,6 @@
 <table class="small table" border="0">
 	{% for departure in data %}
-		<tr>
+		<tr class="departures__departure" data-realtimeTripStatus="{{ departure["realtimeTripStatus"] }}">
 			<td class="departures__departure__line">
 				<span class="departures__departure__line__number xsmall">{{ departure["line"] }}</span>
 			</td>

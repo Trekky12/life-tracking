@@ -368,7 +368,7 @@ function initCharts() {
 flatpickr('#dateSelect', {
     "altInput": true,
     "altFormat": i18n.dateformatTwig.date,
-    "altInputClass": "input",
+    "altInputClass": "input form-control",
     "dateFormat": "Y-m-d",
     "locale": i18n.template,
     // reset to default value

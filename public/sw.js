@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20220613';
+const cacheName = 'pwa-life-tracking-v20220625';
 const staticAssets = [
     '/',
     '/pwa',
@@ -153,17 +153,22 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    if (event.request.method !== 'GET') {
+    if (req.method !== 'GET') {
         //console.log('WORKER: fetch event ignored.', event.request.method, event.request.url);
+        return;
+    }
+
+    // Custom Header to not cache
+    if(req.headers.has('sw-cache') && req.headers.get('sw-cache') === 'none'){
         return;
     }
 
     if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
         return event.respondWith(cacheFirst(req));
-//    } else if (/.*(\/pwa)/.test(req.url)) {
-//        // load new version into cache
-//        _fetchAndCache(req.clone());
-//        return event.respondWith(cacheFirst(req));
+        //    } else if (/.*(\/pwa)/.test(req.url)) {
+        //        // load new version into cache
+        //        _fetchAndCache(req.clone());
+        //        return event.respondWith(cacheFirst(req));
     } else {
         //console.log('network first', req.url);
         //self.clients.matchAll().then(function (clientList) {
@@ -225,7 +230,7 @@ function _notifyCache(req) {
 /**
  * @see https://serviceworke.rs/strategy-network-or-cache_service-worker_doc.html
  */
-function _fromCache(request) {    
+function _fromCache(request) {
     return caches.open(cacheName).then(function (cache) {
         return cache.match(request).then(function (cachedResponse) {
             return cachedResponse || Promise.reject('no-match');
@@ -276,15 +281,15 @@ function _fromNetwork(request, timeout) {
     /**
      * Promice Timeout Wrapper
      */
-//    return new Promise(function (resolve, reject) {
-//        var timeoutId = setTimeout(function (t) {
-//            reject();
-//        }, timeout);
-//        _fetchAndCache(request.clone()).then(function (response) {
-//            clearTimeout(timeoutId);
-//            resolve(response);
-//        }, reject);
-//    });
+    //    return new Promise(function (resolve, reject) {
+    //        var timeoutId = setTimeout(function (t) {
+    //            reject();
+    //        }, timeout);
+    //        _fetchAndCache(request.clone()).then(function (response) {
+    //            clearTimeout(timeoutId);
+    //            resolve(response);
+    //        }, reject);
+    //    });
 }
 
 
@@ -349,34 +354,34 @@ self.addEventListener('push', function (event) {
     event.waitUntil(notificationPromise);
     event.waitUntil(_sendMessageToClients(1));
 
-//    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
-//    event.waitUntil(
-//            clients.matchAll().then(clis => {
-//
-//            // only visible clients
-////            const client = clis.find(c => {
-////                return c.focused === true && c.visibilityState === 'visible';
-////            });
-//
-//            //console.log(client);
-//
-////            if (clis.length === 0) {
-////                if (client !== undefined) {
-//                    // Send a message to the page to update the UI
-//                    //console.log('Application is already open!');
-//                    // @see https://web-push-book.gauntface.com/chapter-05/04-common-notification-patterns/
-//                    clis.forEach(cli => {
-//                        cli.postMessage({
-//                            type: 1,
-//                            time: new Date().toString()
-//                        });
-//                    });
-////                }
-////            }
-//            // Show notification
-////            self.registration.showNotification(title, options);
-//        })
-//    );
+    //    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
+    //    event.waitUntil(
+    //            clients.matchAll().then(clis => {
+    //
+    //            // only visible clients
+    ////            const client = clis.find(c => {
+    ////                return c.focused === true && c.visibilityState === 'visible';
+    ////            });
+    //
+    //            //console.log(client);
+    //
+    ////            if (clis.length === 0) {
+    ////                if (client !== undefined) {
+    //                    // Send a message to the page to update the UI
+    //                    //console.log('Application is already open!');
+    //                    // @see https://web-push-book.gauntface.com/chapter-05/04-common-notification-patterns/
+    //                    clis.forEach(cli => {
+    //                        cli.postMessage({
+    //                            type: 1,
+    //                            time: new Date().toString()
+    //                        });
+    //                    });
+    ////                }
+    ////            }
+    //            // Show notification
+    ////            self.registration.showNotification(title, options);
+    //        })
+    //    );
 });
 
 self.addEventListener('notificationclick', function (event) {
@@ -396,37 +401,37 @@ self.addEventListener('notificationclick', function (event) {
     // @see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#2_using_the_notifications_api
     // @see https://github.com/google-developer-training/pwa-training-labs/blob/master/push-notification-lab/
     event.waitUntil(
-            clients.matchAll().then(clis => {
+        clients.matchAll().then(clis => {
 
-        // get visible or focused client and open the path
-        const client = clis.find(c => {
-            //return c.visibilityState === 'visible';
-            return c.focused === true && c.visibilityState === 'visible';
-        });
+            // get visible or focused client and open the path
+            const client = clis.find(c => {
+                //return c.visibilityState === 'visible';
+                return c.focused === true && c.visibilityState === 'visible';
+            });
 
-        if (client !== undefined) {
-            client.navigate(data.path);
-            client.focus();
-        } else {
-            // there are no visible windows. Open one.
-            clients.openWindow(data.path);
-        }
-    })
-            );
+            if (client !== undefined) {
+                client.navigate(data.path);
+                client.focus();
+            } else {
+                // there are no visible windows. Open one.
+                clients.openWindow(data.path);
+            }
+        })
+    );
 
     //@see https://developers.google.com/web/fundamentals/push-notifications/common-notification-patterns#focus_an_existing_window
-//    event.waitUntil(clients.matchAll({
-//        type: "window"
-//    }).then(function (clientList) {
-//        for (var i = 0; i < clientList.length; i++) {
-//            var client = clientList[i];
-//            console.log(client.url.toString().startsWith(data.url));
-//            if (client.url.toString().startsWith(data.url) && 'focus' in client)
-//                return client.focus();
-//        }
-//        if (clients.openWindow)
-//            return clients.openWindow(data.path);
-//    }));
+    //    event.waitUntil(clients.matchAll({
+    //        type: "window"
+    //    }).then(function (clientList) {
+    //        for (var i = 0; i < clientList.length; i++) {
+    //            var client = clientList[i];
+    //            console.log(client.url.toString().startsWith(data.url));
+    //            if (client.url.toString().startsWith(data.url) && 'focus' in client)
+    //                return client.focus();
+    //        }
+    //        if (clients.openWindow)
+    //            return clients.openWindow(data.path);
+    //    }));
 
 
     // Close all notifications
