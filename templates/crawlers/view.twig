@@ -69,7 +69,13 @@
 					{% endfor %}
 				</tbody>
 			</table>
-
+			<div id="tableFooterFilter" class="search-filter">
+				<div class="filter-row">
+					<div class="filter-element">
+						<button type="button" class="button gray small" id="mark_all_as_shown">{{ lang["CRAWLERS_MARK_ALL_AS_SHOWN"] }}</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -85,6 +91,4 @@
 			</div>
 		</div>
 	{% endif %}
-
-
 {% endblock %}

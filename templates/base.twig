@@ -141,6 +141,7 @@
                 'crawler_table': '{{url_for('crawlers_table', {'crawler': crawler.hash})}}',
                 'crawler_filter': '{{url_for('set_crawler_filter', {'crawler': crawler.hash})}}',
                 'crawler_dataset_save': '{{url_for('crawler_dataset_save', {'crawler': crawler.hash})}}',
+                'crawler_set_shown': '{{url_for('set_crawler_shown', {'crawler': crawler.hash})}}',
 {% endif %}
 {% if not from is null %}    
                 'dateFrom': '{{from}}',
@@ -269,6 +270,8 @@
                         'boards_labels': '{{lang["LABELS"]}}',
                         'transaction_delete_has_entry': '{{lang["FINANCES_TRANSACTION_DELETE_HAS_ENTRY"]}}',
                         'transaction_delete_has_splitted_bill': '{{lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"]}}',
+                        'crawlers_mark_all_as_shown_success':'{{lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"]}}',
+                        'crawlers_mark_all_as_shown_error':'{{lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"]}}',
                     };
                     var tokens = {{ csrf_js|json_encode()|raw }};
         </script>

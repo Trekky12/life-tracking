@@ -800,4 +800,8 @@ $lang["PRINT"] = "Drucken";
 $lang["FINANCES_ROUND_UP_SAVINGS"] = "Kleingeldsparen";
 $lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "Kleingeldsparen deaktiviert";
 
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN"] = "Markiere alle Einträge als gesehen";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"] = "Die Einträge wurden als gesehen markiert werden.";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"] = "Fehler! Die Einträge konnten nicht als gesehen markiert werden.";
+
 return $lang;

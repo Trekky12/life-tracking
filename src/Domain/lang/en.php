@@ -801,4 +801,8 @@ $lang["PRINT"] = "Print";
 $lang["FINANCES_ROUND_UP_SAVINGS"] = "Round up savings";
 $lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "round up savings disabled";
 
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN"] = "Mark all entries as shown";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"] = "The entries were marked as shown.";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"] = "Error! Couldn't mark the entries as shown.";
+
 return $lang;

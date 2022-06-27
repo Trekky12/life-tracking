@@ -316,7 +316,8 @@ return function (App $app) {
 
             $group_crawler->get('/view/', \App\Application\Action\Crawler\Crawler\CrawlerViewAction::class)->setName('crawlers_view');
             $group_crawler->get('/table/', \App\Application\Action\Crawler\Crawler\CrawlerTableAction::class)->setName('crawlers_table');
-            $group_crawler->post('/setFilter/', \App\Application\Action\Crawler\Crawler\CrawlerSetFilterAction::class)->setName('set_crawler_filter');
+            $group_crawler->post('/setFilter', \App\Application\Action\Crawler\Crawler\CrawlerSetFilterAction::class)->setName('set_crawler_filter');
+            $group_crawler->post('/setShown', \App\Application\Action\Crawler\Crawler\CrawlerSetShownAction::class)->setName('set_crawler_shown');
 
             $group_crawler->post('/save/', \App\Application\Action\Crawler\Dataset\CrawlerSaveDatasetAction::class)->setName('crawler_dataset_save');
             $group_crawler->get('/saved/', \App\Application\Action\Crawler\Dataset\DatasetSavedListAction::class)->setName('crawler_dataset_saved_list');
