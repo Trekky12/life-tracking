@@ -897,11 +897,12 @@ CREATE TABLE timesheets_projects (
     default_duration INT(11) NULL,
     password VARCHAR(255) NULL,
     salt VARCHAR(255) NULL,
+    show_month_button INT(1) DEFAULT 1,
+    show_quarters_buttons INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS timesheets_projects_users;
 CREATE TABLE timesheets_projects_users (

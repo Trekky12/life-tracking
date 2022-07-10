@@ -527,6 +527,12 @@ $lang["TIMESHEETS_APPLY_NOT_PAYED"] = "als nicht bezahlt markieren";
 $lang["TIMESHEETS_ITEMS_SELECED"] = "Element(e) markiert";
 $lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "berechnet und nicht berechnet";
 $lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "bezahlt und nicht bezahlt";
+$lang["TIMESHEETS_SHOW_MONTH_BUTTON"] = "zeige Button für Monat";
+$lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"] = "zeige Buttons für Quartale";
+$lang["TIMESHEETS_QUARTER_1"] = "Q1";
+$lang["TIMESHEETS_QUARTER_2"] = "Q2";
+$lang["TIMESHEETS_QUARTER_3"] = "Q3";
+$lang["TIMESHEETS_QUARTER_4"] = "Q4";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 

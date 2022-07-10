@@ -55,9 +55,10 @@
             display: flex;
             align-items: start;
             justify-content: space-between;
+            align-items: center;
 
 
-            button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
+            //button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
             input:not([type="checkbox"]):not(.choices__input):not(.selectr-input),
             select,
             .flatpickr-input,

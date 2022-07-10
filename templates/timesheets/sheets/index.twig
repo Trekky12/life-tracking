@@ -56,16 +56,30 @@
 					<div class="filter-element">
 						<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
 					</div>
-					<div class="filter-group">
-						<div class="filter-element">
-							<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["month"] }}&to={{ max["month"] }}">
-								<button type="button" class="button gray">{{ lang["SHOW_THIS_MONTH"] }}</button>
-							</a>
+					{% if project.show_quarters_buttons == 1 %}
+						<div class="filter-group">
+							<div class="filter-element">
+								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q1"] }}" data-to="{{ max["q1"] }}">{{ lang["TIMESHEETS_QUARTER_1"] }}/{{ 'now' | date('Y') }}</button>
+							</div>
+							<div class="filter-element">
+								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q2"] }}" data-to="{{ max["q2"] }}">{{ lang["TIMESHEETS_QUARTER_2"] }}/{{ 'now' | date('Y') }}</button>
+							</div>
+							<div class="filter-element">
+								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q3"] }}" data-to="{{ max["q3"] }}">{{ lang["TIMESHEETS_QUARTER_3"] }}/{{ 'now' | date('Y') }}</button>
+							</div>
+							<div class="filter-element">
+								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q4"] }}" data-to="{{ max["q4"] }}">{{ lang["TIMESHEETS_QUARTER_4"] }}/{{ 'now' | date('Y') }}</button>
+							</div>
 						</div>
+					{% endif %}
+					<div class="filter-group">
+						{% if project.show_month_button == 1 %}
+							<div class="filter-element">
+								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ lang["SHOW_THIS_MONTH"] }}</button>
+							</div>
+						{% endif %}
 						<div class="filter-element">
-							<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}?from={{ min["total"] }}&to={{ max["total"] }}">
-								<button type="button" class="button gray">{{ lang["SHOW_ALL"] }}</button>
-							</a>
+							<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ lang["SHOW_ALL"] }}</button>
 						</div>
 					</div>
 				</div>
@@ -84,14 +98,14 @@
 				{% endif %}
 
 				<div class="filter-grid">
-					<label for="billed">{{lang["TIMESHEETS_BILLED"]}}:</label>
-					<select name="billed" class="regular">
+					<label for="timesheet_view_billed">{{lang["TIMESHEETS_BILLED"]}}:</label>
+					<select name="billed" id="timesheet_view_billed" class="regular">
 						<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_BILLED_AND_NOT_BILLED"]}}</option>
 						<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_BILLED"]}}</option>
 						<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_BILLED"]}}</option>
 					</select>
-					<label for="payed">{{lang["TIMESHEETS_PAYED"]}}:</label>
-					<select name="payed" class="regular">
+					<label for="timesheet_view_payed">{{lang["TIMESHEETS_PAYED"]}}:</label>
+					<select name="payed" id="timesheet_view_payed" class="regular">
 						<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PAYED_AND_NOT_PAYED"]}}</option>
 						<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_PAYED"]}}</option>
 						<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_PAYED"]}}</option>
@@ -157,7 +171,9 @@
 						<th></th>
 						<th></th>
 						<th>{{ sum  }}</th>
-						<th></th>
+						{% if categories %}
+							<th></th>
+						{% endif %}
 						<th></th>
 						<th></th>
 						<th></th>

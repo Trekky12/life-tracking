@@ -47,7 +47,14 @@ class FinancesService extends Service {
         $datacount = $this->getMapper()->tableCount($from, $to);
 
         $range = $this->getMapper()->getMinMaxDate();
-        $max = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
+        $minTotal = $range["min"];
+        $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
+
+        // Month Filter
+        $d1 = new \DateTime('first day of this month');
+        $minMonth = $d1->format('Y-m-d');
+        $d2 = new \DateTime('last day of this month');
+        $maxMonth = $d2->format('Y-m-d');
 
         $recordSum = round($this->getMapper()->tableSum($from, $to, 0) - $this->getMapper()->tableSum($from, $to, 1), 2);
 
@@ -56,9 +63,15 @@ class FinancesService extends Service {
             "datacount" => $datacount,
             "from" => $from,
             "to" => $to,
-            "min" => $range["min"],
-            "max" => $max,
-            "sum" => $recordSum
+            "sum" => $recordSum,
+            "min" => [
+                "total" => $minTotal,
+                "month" => $minMonth
+            ],
+            "max" => [
+                "total" => $maxTotal,
+                "month" => $maxMonth
+            ],
         ]);
     }
 

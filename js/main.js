@@ -386,7 +386,7 @@ flatpickr('#dateSelect', {
 flatpickr('#dateSelectEnd', {
     "altInput": true,
     "altFormat": i18n.dateformatTwig.date,
-    "altInputClass": "input",
+    "altInputClass": "input form-control",
     "dateFormat": "Y-m-d",
     "locale": i18n.template,
     onReady: function (dateObj, dateStr, instance) {

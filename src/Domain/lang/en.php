@@ -528,6 +528,12 @@ $lang["TIMESHEETS_APPLY_NOT_PAYED"] = "mark as not payed";
 $lang["TIMESHEETS_ITEMS_SELECED"] = "item(s) selected";
 $lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "billed and not billed";
 $lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "payed and not payed";
+$lang["TIMESHEETS_SHOW_MONTH_BUTTON"] = "show button for month";
+$lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"] = "show buttons for quarters";
+$lang["TIMESHEETS_QUARTER_1"] = "Q1";
+$lang["TIMESHEETS_QUARTER_2"] = "Q2";
+$lang["TIMESHEETS_QUARTER_3"] = "Q3";
+$lang["TIMESHEETS_QUARTER_4"] = "Q4";
 
 $lang["THIS_DEVICE"] = "this device";
 

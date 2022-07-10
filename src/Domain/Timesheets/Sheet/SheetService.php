@@ -98,6 +98,18 @@ class SheetService extends Service
         $d2 = new \DateTime('last day of this month');
         $maxMonth = $d2->format('Y-m-d');
 
+        $q1Start = (new \DateTime('first day of january'))->format('Y-m-d');
+        $q1End = (new \DateTime('last day of march'))->format('Y-m-d');
+
+        $q2Start = (new \DateTime('first day of april'))->format('Y-m-d');
+        $q2End = (new \DateTime('last day of june'))->format('Y-m-d');
+
+        $q3Start = (new \DateTime('first day of july'))->format('Y-m-d');
+        $q3End = (new \DateTime('last day of september'))->format('Y-m-d');
+
+        $q4Start = (new \DateTime('first day of october'))->format('Y-m-d');
+        $q4End = (new \DateTime('last day of december'))->format('Y-m-d');
+
         if ($project->default_view == "month") {
             $from = !is_null($from) ? $from : $minMonth;
             $to = !is_null($to) ? $to : $maxMonth;
@@ -128,11 +140,19 @@ class SheetService extends Service
             "to" => $to,
             "min" => [
                 "total" => $minTotal,
-                "month" => $minMonth
+                "month" => $minMonth,
+                "q1" => $q1Start,
+                "q2" => $q2Start,
+                "q3" => $q3Start,
+                "q4" => $q4Start,
             ],
             "max" => [
                 "total" => $maxTotal,
-                "month" => $maxMonth
+                "month" => $maxMonth,
+                "q1" => $q1End,
+                "q2" => $q2End,
+                "q3" => $q3End,
+                "q4" => $q4End,
             ],
         ];
     }

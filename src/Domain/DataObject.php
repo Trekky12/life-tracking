@@ -168,4 +168,13 @@ class DataObject implements \JsonSerializable {
         return null;
     }
 
+    public function copy(){
+        $temp = array();
+        foreach ($this->fields as $k => $v) {
+            $temp[$k] = $v;
+        }
+        unset($temp["id"]);
+        return $temp;
+    }
+
 }

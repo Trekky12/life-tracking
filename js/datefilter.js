@@ -8,9 +8,9 @@ if (datepickerRange && datepickerStart && datepickerEnd) {
     flatpickr(datepickerRange, {
         "altInput": true,
         "altFormat": i18n.dateformatTwig.date,
-        "altInputClass": "input",
+        "altInputClass": "input form-control",
         "dateFormat": "Y-m-d",
-        "locale": i18n.template, 
+        "locale": i18n.template,
         "mode": "range",
         "defaultDate": [datepickerStart.value, datepickerEnd.value],
         "onChange": function (selectedDates) {
@@ -33,3 +33,14 @@ if (datepickerRange && datepickerStart && datepickerEnd) {
         }
     });
 }
+
+const dateRangeFilterButtons = document.querySelectorAll('.daterange-filter-btn');
+dateRangeFilterButtons.forEach(function (dateRangeFilterBtn){
+    dateRangeFilterBtn.addEventListener('click', function (event) {
+        event.preventDefault();
+        let from = dateRangeFilterBtn.dataset.from;
+        let to = dateRangeFilterBtn.dataset.to;
+
+        datepickerRange._flatpickr.setDate([from, to], true);
+    });
+});

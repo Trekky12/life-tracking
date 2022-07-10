@@ -18,6 +18,7 @@
                         <th>{{lang["NAME"]}}</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,6 +27,9 @@
                             <td>{{budget.name}}</td> 
                             <td>
                                 <a href="{{  url_for('timesheets_project_categorybudget_edit', {'id' : budget.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                            </td>
+                            <td>
+                                <a href="{{  url_for('timesheets_project_categorybudget_edit', {'project' : project.hash}) }}?template={{ budget.id }}">{{ fontawesome('fas fa-clone') }}</a>
                             </td>
                             <td>
                                 <a href="#" data-url="{{  url_for('timesheets_project_categorybudget_delete', {'id' : budget.id, 'project' : project.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>

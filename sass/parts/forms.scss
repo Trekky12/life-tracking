@@ -80,6 +80,7 @@ input[type="submit"],
 
     &.small {
         padding: 0.5rem 1rem;
+        @include font-size(1.2);
     }
 
 

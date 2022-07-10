@@ -11,18 +11,21 @@ use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
 use App\Domain\Main\Translator;
 use App\Domain\Main\Utility\DateUtility;
 
-class ProjectCategoryBudgetService extends Service {
+class ProjectCategoryBudgetService extends Service
+{
 
     private $project_service;
     protected $project_category_service;
     protected $translation;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            ProjectCategoryBudgetMapper $mapper,
-            ProjectService $project_service,
-            ProjectCategoryService $project_category_service,
-            Translator $translation) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ProjectCategoryBudgetMapper $mapper,
+        ProjectService $project_service,
+        ProjectCategoryService $project_category_service,
+        Translator $translation
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->project_service = $project_service;
@@ -30,7 +33,8 @@ class ProjectCategoryBudgetService extends Service {
         $this->translation = $translation;
     }
 
-    public function index($hash) {
+    public function index($hash)
+    {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -43,7 +47,8 @@ class ProjectCategoryBudgetService extends Service {
         return new Payload(Payload::$RESULT_HTML, ['categorybudgets' => $categorybudgets, "project" => $project]);
     }
 
-    public function edit($hash, $entry_id) {
+    public function edit($hash, $entry_id, $use_template = null)
+    {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -58,6 +63,14 @@ class ProjectCategoryBudgetService extends Service {
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
         $categorybudget_categories = !is_null($entry) ? $this->mapper->getCategoriesFromCategoryBudget($entry->id) : [];
 
+        if (is_null($entry) && !is_null($use_template)) {
+            $template = $this->mapper->get($use_template);
+            if ($this->isChildOf($project->id, $template->id)) {
+                $categorybudget_categories = $this->mapper->getCategoriesFromCategoryBudget($template->id);
+                $entry = $template->copy();
+            }
+        }
+
         return new Payload(Payload::$RESULT_HTML, [
             "entry" => $entry,
             "project" => $project,
@@ -66,7 +79,8 @@ class ProjectCategoryBudgetService extends Service {
         ]);
     }
 
-    public function view($hash) {
+    public function view($hash)
+    {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -93,7 +107,8 @@ class ProjectCategoryBudgetService extends Service {
         ]);
     }
 
-    public function checkCategoryBudgets($project_id, $categories, $sheet_id) {
+    public function checkCategoryBudgets($project_id, $categories, $sheet_id)
+    {
 
         $results = [];
 
@@ -123,5 +138,4 @@ class ProjectCategoryBudgetService extends Service {
 
         return $results;
     }
-
 }
