@@ -20,8 +20,8 @@
                     <tr>
                         <th>{{lang["DATE"]}}</th>
                         <th>{{lang["TIME"]}}</th>
-                        <th>{{lang["DESCRIPTION"]}}</th>
                         <th>{{lang["CATEGORY"]}}</th>
+                        <th>{{lang["DESCRIPTION"]}}</th>
                         <th>{{lang["VALUE"]}}</th>
                         <th></th>
                         <th></th>
@@ -32,8 +32,8 @@
                         <tr>
                             <td data-title="{{lang["DATE"]}}">{{entry.date}}</td> 
                             <td data-title="{{lang["TIME"]}}">{{entry.time}}</td> 
+                            <td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td>                             
                             <td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td> 
-                            <td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td> 
                             <td data-title="{{lang["VALUE"]}}">{{entry.value}}</td> 
                             <td><a href="{{  url_for('finances_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
                             <td>{% if entry.bill is empty %}<a href="#" data-url="{{  url_for('finances_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>{% endif %}</td>
