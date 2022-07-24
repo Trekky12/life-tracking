@@ -98,7 +98,8 @@ function setCookie(name, value, expiryDays, path) {
     var cookie = [
         name + '=' + value,
         'expires=' + exdate.toUTCString(),
-        'path=' + path || '/'
+        'path=' + path || '/',
+        'SameSite=Lax'
     ];
     document.cookie = cookie.join(';');
 }

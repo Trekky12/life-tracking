@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block bottom %}
-	<div id="sidebar" class="sidebar {% if sidebar[" mobilevisible"] == 1 %}mobile-visible{% elseif sidebar[" desktophidden"] == 1 %}desktop-hidden{% endif %}">
+	<div id="sidebar" class="sidebar {% if sidebar['mobilevisible'] == 1 %}mobile-visible{% elseif sidebar['desktophidden'] == 1 %}desktop-hidden{% endif %}">
 		<span id="sidebar-toggle" aria-hidden="true">
 			<span class="chevron-left">{{ fontawesome('fas fa-chevron-left') }}</span>
 			<span class="chevron-right">{{ fontawesome('fas fa-chevron-right') }}</span>
