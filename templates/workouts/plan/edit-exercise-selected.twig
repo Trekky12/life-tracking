@@ -1,101 +1,141 @@
-<div class="exercise selected" data-id="{{ exercise["exercise"].id }}" data-type="workout-element">
-    <div class="exercise-content">
-        <small class="bodypart">{{ exercise["mainBodyPart"] }} / {{ exercise["mainMuscle"] }}</small>
-        <h3 class="title">{{ exercise["exercise"].name|raw }}</h3>
-        <div class="instructions">
-            <a href="#" class="headline">
-                <span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
-                <span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-                {{ lang["WORKOUTS_INSTRUCTIONS"] }}
-            </a>
-            <p class="content">{{ exercise["exercise"].getInstructions()|raw }}</p>
-        </div>
-        <div class="notices">
-            <a href="#" class="headline">
-                <span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
-                <span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-                {{ lang["NOTICE"] }}
-            </a>
-            <p class="content">
-                <textarea name="exercises[{{ exercise["idx"] }}][notice]">{{ exercise["notice"]|raw }}</textarea>
-            </p>
-        </div>
-        <div class="sets">
-            <a href="#" class="headline">
-                <span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
-                <span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-                {{ lang["WORKOUTS_SETS"] }}
-            </a>
-            <div class="content">
-                <div class="set-list">
-                    <div class="set set-dummy hidden">
-                        <span class="set-nr"></span>. {{ lang["WORKOUTS_SET"] }}:
-                        {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
-                            <input type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise["idx"] }}][sets][dummy][repeats]" disabled="disabled"/>
-                            <label>{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
-                        {% endif %}
-                        {% if exercise["exercise"].isCategoryRepsWeight() %}
-                            <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise["idx"] }}][sets][dummy][weight]" disabled="disabled"/>
-                            <label>{{ lang["WORKOUTS_KG"] }}</label>
-                        {% endif %}
+<div class="exercise selected" data-id="{{ exercise['exercise'].id }}" data-type="workout-element">
+	<div class="exercise-content">
+		<small class="bodypart">{{ exercise['mainBodyPart'] }}
+			/
+			{{ exercise['mainMuscle'] }}</small>
+		<h3 class="title">{{ exercise['exercise'].name|raw }}</h3>
+		{% if exercise['exercise'].getInstructions()|length > 0 %}
+			<div class="instructions">
+				<a href="#" class="headline">
+					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+					{{ lang["WORKOUTS_INSTRUCTIONS"] }}
+				</a>
+				<p class="content">{{ exercise['exercise'].getInstructions()|raw }}</p>
+			</div>
+		{% endif %}
+		{% if exercise['primary_muscles']|length > 0 or exercise['secondary_muscles']|length > 0 %}
+			<div class="muscles">
+				<a href="#" class="headline">
+					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+					{{ lang["WORKOUTS_MUSCLES"] }}
+				</a>
+				<div class="content">
+					{% if exercise['primary_muscles']|length > 0  %}
+						<h4>{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</h4>
+						<p>
+							{% for muscle in exercise['primary_muscles'] %}
+								{{ muscle.name }}
+								{% if not loop.last %},
+								{% endif %}
+							{% endfor %}
+						</p>
+					{% endif %}
 
-                        {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
-                            <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise["idx"] }}][sets][dummy][time]" disabled="disabled"/>
-                            <select name="exercises[{{ exercise["idx"] }}][sets][dummy][time_type]" disabled="disabled">
-                                <option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
-                                <option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
-                            </select>
-                        {% endif %}
-                        {% if exercise["exercise"].isCategoryDistanceTime() %}
-                            <input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise["idx"] }}][sets][dummy][distance]" disabled="disabled"/>
-                            <label>{{ lang["WORKOUTS_KM"] }}</label>
-                        {% endif %}
-                    </div>
-                    {% for set in exercise["sets"] %}
-                        <div class="set">
-                            {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}:
+					{% if exercise['secondary_muscles']|length > 0 %}
+						<h4>{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</h4>
+						<p>
+							{% for muscle in exercise['secondary_muscles'] %}
+								{{ muscle.name }}
+								{% if not loop.last %},
+								{% endif %}
+							{% endfor %}
+						</p>
+					{% endif %}
 
-                            {% if exercise["exercise"].isCategoryReps() or exercise["exercise"].isCategoryRepsWeight() %}
-                                <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise["idx"] }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}"/>
-                                <label for="repeats_{{ loop.index-1 }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
-                            {% endif %}
-                            {% if exercise["exercise"].isCategoryRepsWeight() %}
-                                <input id="weights_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise["idx"] }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}"/>
-                                <label for="weights_{{ loop.index-1 }}">{{ lang["WORKOUTS_KG"] }}</label>
-                            {% endif %}
+					{% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': exercise['primary_muscles'], 'secondary': exercise['secondary_muscles'], 'small': true}} only %}
+				</div>
+			</div>
+		{% endif %}
+		<div class="notices">
+			<a href="#" class="headline">
+				<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+				<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+				{{ lang["NOTICE"] }}
+			</a>
+			<p class="content">
+				<textarea name="exercises[{{ exercise['idx'] }}][notice]">{{ exercise['notice']|raw }}</textarea>
+			</p>
+		</div>
+		<div class="sets">
+			<a href="#" class="headline">
+				<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+				<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+				{{ lang["WORKOUTS_SETS"] }}
+			</a>
+			<div class="content">
+				<div class="set-list">
+					<div class="set set-dummy hidden">
+						<span class="set-nr"></span>.
+						{{ lang["WORKOUTS_SET"] }}:
+						{% if exercise['exercise'].isCategoryReps() or exercise['exercise'].isCategoryRepsWeight() %}
+							<input type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise['idx'] }}][sets][dummy][repeats]" disabled="disabled"/>
+							<label>{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
+						{% endif %}
+						{% if exercise['exercise'].isCategoryRepsWeight() %}
+							<input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise['idx'] }}][sets][dummy][weight]" disabled="disabled"/>
+							<label>{{ lang["WORKOUTS_KG"] }}</label>
+						{% endif %}
 
-                            {% if exercise["exercise"].isCategoryTime() or exercise["exercise"].isCategoryDistanceTime() %}
-                                <input id="time_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise["idx"] }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}"/>
-                                <select name="exercises[{{ exercise["idx"] }}][sets][{{ loop.index-1 }}][time_type]">
-                                    <option value="sec" {% if set["time_type"] == "sec" %}selected="true"{% endif %}>{{ lang["WORKOUTS_SECONDS"] }}</option>
-                                    <option value="min" {% if set["time_type"] == "min" %}selected="true"{% endif %}>{{ lang["WORKOUTS_MINUTES"] }}</option>
-                                </select>
-                            {% endif %}
-                            {% if exercise["exercise"].isCategoryDistanceTime() %}
-                                <input id="distance_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise["idx"] }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}"/>
-                                <label for="distance_{{ loop.index-1 }}">{{ lang["WORKOUTS_KM"] }}</label>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="buttons">
-                    <button type="button" class="button add_set gray small">{{ lang["WORKOUTS_SET_ADD"] }}</button>
-                    <button type="button" class="button remove_set gray small">{{ lang["WORKOUTS_SET_REMOVE"] }}</button>
-                </div>
-            </div>
-        </div>
-    </div>                                   
-    {% if exercise["exercise"].get_thumbnail() != ''%}
-        <div class="thumbnail">
-            <img src="/{{uploads_folder}}/exercises/{{exercise["exercise"].get_thumbnail()}}"/>
-        </div>
-    {% endif %}
-    <div class="icons">
-        <span class="plus hidden">{{ fontawesome('fas fa-plus') }}</span>
-        <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
-        <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-    </div>
-    <input type="hidden" name="exercises[{{ exercise["idx"] }}][id]" value="{{ exercise["exercise"].id }}"/>
-    <input type="hidden" name="exercises[{{ exercise["idx"] }}][type]" value="exercise"/>
-    <input type="hidden" name="exercises[{{ exercise["idx"] }}][is_child]" value="{{ exercise["is_child"] }}"/>
+						{% if exercise['exercise'].isCategoryTime() or exercise['exercise'].isCategoryDistanceTime() %}
+							<input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise['idx'] }}][sets][dummy][time]" disabled="disabled"/>
+							<select name="exercises[{{ exercise['idx'] }}][sets][dummy][time_type]" disabled="disabled">
+								<option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
+								<option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
+							</select>
+						{% endif %}
+						{% if exercise['exercise'].isCategoryDistanceTime() %}
+							<input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise['idx'] }}][sets][dummy][distance]" disabled="disabled"/>
+							<label>{{ lang["WORKOUTS_KM"] }}</label>
+						{% endif %}
+					</div>
+					{% for set in exercise['sets'] %}
+						<div class="set">
+							{{ loop.index }}.
+							{{ lang["WORKOUTS_SET"] }}:
+
+							{% if exercise['exercise'].isCategoryReps() or exercise['exercise'].isCategoryRepsWeight() %}
+								<input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise['idx'] }}][sets][{{ loop.index-1 }}][repeats]" value="{{ set["repeats"] }}"/>
+								<label for="repeats_{{ loop.index-1 }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
+							{% endif %}
+							{% if exercise['exercise'].isCategoryRepsWeight() %}
+								<input id="weights_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise['idx'] }}][sets][{{ loop.index-1 }}][weight]" value="{{ set["weight"] }}"/>
+								<label for="weights_{{ loop.index-1 }}">{{ lang["WORKOUTS_KG"] }}</label>
+							{% endif %}
+
+							{% if exercise['exercise'].isCategoryTime() or exercise['exercise'].isCategoryDistanceTime() %}
+								<input id="time_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise['idx'] }}][sets][{{ loop.index-1 }}][time]" value="{{ set["time"] }}"/>
+								<select name="exercises[{{ exercise['idx'] }}][sets][{{ loop.index-1 }}][time_type]">
+									<option value="sec" {% if set["time_type"] == "sec" %} selected="true" {% endif %}>{{ lang["WORKOUTS_SECONDS"] }}</option>
+									<option value="min" {% if set["time_type"] == "min" %} selected="true" {% endif %}>{{ lang["WORKOUTS_MINUTES"] }}</option>
+								</select>
+							{% endif %}
+							{% if exercise['exercise'].isCategoryDistanceTime() %}
+								<input id="distance_{{ loop.index-1 }}" type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise['idx'] }}][sets][{{ loop.index-1 }}][distance]" value="{{ set["distance"] }}"/>
+								<label for="distance_{{ loop.index-1 }}">{{ lang["WORKOUTS_KM"] }}</label>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+				<div class="buttons">
+					<button type="button" class="button add_set gray small">{{ lang["WORKOUTS_SET_ADD"] }}</button>
+					<button type="button" class="button remove_set gray small">{{ lang["WORKOUTS_SET_REMOVE"] }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if exercise['exercise'].get_thumbnail() != ''%}
+		<div class="thumbnail">
+			<img src="/{{uploads_folder}}/exercises/{{exercise['exercise'].get_thumbnail()}}"/>
+		</div>
+	{% endif %}
+	<div class="icons">
+		<span class="plus hidden">{{ fontawesome('fas fa-plus') }}</span>
+		<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+		<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+	</div>
+	<input type="hidden" name="exercises[{{ exercise['idx'] }}][id]" value="{{ exercise['exercise'].id }}"/>
+	<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="exercise"/>
+	<input type="hidden" name="exercises[{{ exercise['idx'] }}][is_child]" value="{{ exercise['is_child'] }}"/>
 </div>

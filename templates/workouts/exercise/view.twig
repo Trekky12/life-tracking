@@ -3,36 +3,38 @@
 {% set active = 'workouts' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/exercises.js?ver=20201004"></script>
+	<script src="{{baseURL}}/static/js/workouts-view.js?ver=20220712"></script>
+	<script src="{{baseURL}}/static/js/exercises.js?ver=20201004"></script>
 {% endblock %}
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["WORKOUTS_EXERCISES"]}}</h2></div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["WORKOUTS_EXERCISES"]}}</h2>
+		</div>
+		<div class="page-content">
 
-            <div class="exercise-filter">
-                <select id="filterBodyParts">
-                    <option value="-1">{{ lang["ALL"] }}</option>
-                    {% for bodypart in bodyparts %}
-                        <option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="text" id="filterSearchExercises" />
-            </div>
-            <div class="content" id="exercises_available" data-edit="0">
-                <div id="exercises_available_list" class="workout-selection view">
-                </div>
-                <div id="loadingIconExercises" class="centered loading-icon">
-                    <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-                </div>
-                <div id="loadMoreExercises" class="centered hidden">
-                    <button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
-                </div>
-            </div>
+			<div class="exercise-filter">
+				<select id="filterBodyParts">
+					<option value="-1">{{ lang["ALL"] }}</option>
+					{% for bodypart in bodyparts %}
+						<option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
+					{% endfor %}
+				</select>
+				<input type="text" id="filterSearchExercises"/>
+			</div>
+			<div class="content" id="exercises_available" data-edit="0">
+				<div id="exercises_available_list" class="workout-selection view"></div>
+				<div id="loadingIconExercises" class="centered loading-icon">
+					<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+				</div>
+				<div id="loadMoreExercises" class="centered hidden">
+					<button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
+				</div>
+			</div>
 
-        </div>
-    </div>
+		</div>
+	</div>
 
 {% endblock %}

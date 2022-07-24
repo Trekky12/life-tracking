@@ -2,68 +2,86 @@
 
 {% set active = 'workouts' %}
 
-{% block style %}
-
-{% endblock %}
+{% block style %}{% endblock %}
 
 {% block javascript %}
-
+	<script src="{{baseURL}}/static/js/workouts-view.js?ver=20220712"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{plan.name|raw}}</h2>
-            <div class="buttons">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{plan.name|raw}}</h2>
+			<div class="buttons">
 
-                {% if not plan.is_template %}
-                    <a href="{{  url_for_with_last_query_params('workouts') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                    <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["WORKOUTS_SESSION_ADD"]}}</button></a>
-                    <a href="{{  url_for('workouts_sessions', {'plan':plan.hash}) }}"><button class="button">{{lang["WORKOUTS_SESSIONS"]}}</button></a>
-                    <a href="{{  url_for('workouts_sessions_stats', {'plan':plan.hash}) }}"><button class="button">{{lang["STATS"]}}</button></a>
-                    <a href="{{  url_for('workouts_plan_export', {'plan':plan.hash}) }}" class="no-loading"><button class="button">{{ fontawesome('far fa-file-excel') }} {{lang["WORKOUTS_EXPORT"]}}</button></a>
+				{% if not plan.is_template %}
+					<a href="{{ url_for_with_last_query_params('workouts') }}">
+						<button class="button">{{lang["BACK"]}}
+							{{ fontawesome('fas fa-level-up-alt') }}</button>
+					</a>
+					<a href="{{ url_for('workouts_sessions_edit', {'plan':plan.hash}) }}">
+						<button class="button">{{ fontawesome('fas fa-plus') }}
+							{{lang["WORKOUTS_SESSION_ADD"]}}</button>
+					</a>
+					<a href="{{ url_for('workouts_sessions', {'plan':plan.hash}) }}">
+						<button class="button">{{lang["WORKOUTS_SESSIONS"]}}</button>
+					</a>
+					<a href="{{ url_for('workouts_sessions_stats', {'plan':plan.hash}) }}">
+						<button class="button">{{lang["STATS"]}}</button>
+					</a>
+					<a href="{{ url_for('workouts_plan_export', {'plan':plan.hash}) }}" class="no-loading">
+						<button class="button">{{ fontawesome('far fa-file-excel') }}
+							{{lang["WORKOUTS_EXPORT"]}}</button>
+					</a>
 
-                {% else %}
-                    <a href="{{  url_for_with_last_query_params('workouts_templates') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                    <a href="{{  url_for('workouts_plans_edit') }}?template={{ plan.hash }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["WORKOUTS_TEMPLATE_USE"]}}</button></a>
-                {% endif %}
+				{% else %}
+					<a href="{{ url_for_with_last_query_params('workouts_templates') }}">
+						<button class="button">{{lang["BACK"]}}
+							{{ fontawesome('fas fa-level-up-alt') }}</button>
+					</a>
+					<a href="{{ url_for('workouts_plans_edit') }}?template={{ plan.hash }}">
+						<button class="button">{{ fontawesome('fas fa-plus') }}
+							{{lang["WORKOUTS_TEMPLATE_USE"]}}</button>
+					</a>
+				{% endif %}
 
-            </div>
-        </div>
+			</div>
+		</div>
 
-        <div class="page-content">
-            {% if not plan.category is null %}
-                <h4>{{ lang["WORKOUTS_CATEGORY"] }}</h4>
-                <p>{{ lang[categories[plan.category].name] }}</p>
-            {% endif %}
-            {% if not plan.level is null %}
-                <h4>{{ lang["WORKOUTS_LEVEL"] }}</h4>
-                <p>{{ lang[levels[plan.level].name] }}</p>
-            {% endif %}
-            {% if not plan.notice is null %}
-                <h4>{{ lang["NOTICE"] }}</h4>
-                <p>{{ plan.notice|raw }}</p>
-            {% endif %}
-            <div class="workout-selection view">
-                {% for exercise in exercises %}
-                    {% if exercise.type == "exercise" %}
-                        {% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise} only %}
-                    {% elseif exercise.type == "day" %}
-                        <h3>{{ exercise.notice }}</h3>
-                        {% elseif exercise.type == "superset" %}
-                        <h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
-                        <div class="workout_superset">
-                            <div class="exercises" data-type="superset">
-                                {% for child in exercise["children"] %}
-                                    {% include "workouts/plan/view-single-exercise.twig" with {'exercise':child} only %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+		<div class="page-content">
+			{% if not plan.category is null %}
+				<h4>{{ lang["WORKOUTS_CATEGORY"] }}</h4>
+				<p>{{ lang[categories[plan.category].name] }}</p>
+			{% endif %}
+			{% if not plan.level is null %}
+				<h4>{{ lang["WORKOUTS_LEVEL"] }}</h4>
+				<p>{{ lang[levels[plan.level].name] }}</p>
+			{% endif %}
+			{% if not plan.notice is null %}
+				<h4>{{ lang["NOTICE"] }}</h4>
+				<p>{{ plan.notice|raw }}</p>
+			{% endif %}
+			<div class="workout-selection view">
+				{% for exercise in exercises %}
+					{% if exercise.type == "exercise" %}
+						{% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}
+					{% elseif exercise.type == "day" %}
+						<h3>{{ exercise.notice }}</h3>
+					{% elseif exercise.type == "superset" %}
+						<h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
+						<div class="workout_superset">
+							<div class="exercises" data-type="superset">
+								{% for child in exercise['children'] %}
+									{% include "workouts/plan/view-single-exercise.twig" with {'exercise':child, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
 
-            <h2>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h2>
-            {% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': muscles["primary"], 'secondary': muscles["secondary"], 'small': false}} only %}
-        </div>
-    </div>
-{% endblock %}        
+			<h2>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h2>
+			{% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': muscles["primary"], 'secondary': muscles["secondary"], 'small': false}} only %}
+		</div>
+	</div>
+{% endblock %}

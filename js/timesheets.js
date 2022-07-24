@@ -23,7 +23,7 @@ if (dateTimePickerStart && dateTimePickerEnd) {
     flatpickr(dateTimePickerStart, {
         "altInput": true,
         "altFormat": i18n.dateformatTwig.datetimeShort,
-        "altInputClass": "input",
+        "altInputClass": "input form-control",
         "dateFormat": "Y-m-d H:i",
         "locale": i18n.template,
         "enableTime": true,

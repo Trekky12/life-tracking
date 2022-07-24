@@ -73,7 +73,7 @@ document.addEventListener('click', function (event) {
 
         new_exercise.appendChild(input_id);
 
-        let sets = parseInt(document.querySelector('#setCount').value);
+        let sets = parseInt(document.querySelector('#defaultSetCount').value);
         let set = 0;
         for (set = 0; set < sets; set++) {
             addSet(new_exercise);
@@ -89,7 +89,7 @@ document.addEventListener('click', function (event) {
 
         exercisesSelected.appendChild(new_exercise);
 
-        new_exercise.scrollIntoView();
+        //new_exercise.scrollIntoView();
 
         loadSelectedMuscles();
         adjustAvailableExercisesColumnHeight();

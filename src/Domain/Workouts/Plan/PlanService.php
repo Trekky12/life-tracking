@@ -13,7 +13,8 @@ use App\Domain\Main\Translator;
 use App\Domain\Settings\SettingsMapper;
 use App\Domain\Main\Utility\DateUtility;
 
-class PlanService extends Service {
+class PlanService extends Service
+{
 
     protected $exercise_mapper;
     protected $bodypart_mapper;
@@ -21,14 +22,16 @@ class PlanService extends Service {
     protected $translation;
     protected $settings_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            PlanMapper $mapper,
-            ExerciseMapper $exercise_mapper,
-            BodypartMapper $bodypart_mapper,
-            MuscleMapper $muscle_mapper,
-            Translator $translation,
-            SettingsMapper $settings_mapper) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        PlanMapper $mapper,
+        ExerciseMapper $exercise_mapper,
+        BodypartMapper $bodypart_mapper,
+        MuscleMapper $muscle_mapper,
+        Translator $translation,
+        SettingsMapper $settings_mapper
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
 
@@ -40,13 +43,15 @@ class PlanService extends Service {
         $this->settings_mapper = $settings_mapper;
     }
 
-    public function index($is_template = false) {
+    public function index($is_template = false)
+    {
         $plans = $this->mapper->getAllPlans('id', $is_template);
 
         return new Payload(Payload::$RESULT_HTML, ['plans' => $plans]);
     }
 
-    public function edit($entry_id, $is_template = false, $use_template = null) {
+    public function edit($entry_id, $is_template = false, $use_template = null)
+    {
         $entry = null;
         if (!empty($entry_id)) {
             $filtered = !$is_template;
@@ -83,7 +88,7 @@ class PlanService extends Service {
             $file_wo_extension = pathinfo($baseMuscleImage->getValue(), PATHINFO_FILENAME);
             $baseMuscleImageThumbnail = $file_wo_extension . '-' . $size . '.' . $file_extension;
         }
-        
+
         return new Payload(Payload::$RESULT_HTML, [
             'entry' => $entry,
             'bodyparts' => $bodyparts,
@@ -96,7 +101,8 @@ class PlanService extends Service {
         ]);
     }
 
-    public function view($hash, $is_template = false): Payload {
+    public function view($hash, $is_template = false): Payload
+    {
 
         $plan = $this->getFromHash($hash);
 
@@ -127,7 +133,8 @@ class PlanService extends Service {
         ]);
     }
 
-    public function getPlanExercises($plan_id, $selected_exercises = null) {
+    public function getPlanExercises($plan_id, $selected_exercises = null)
+    {
 
         $exercises = $this->exercise_mapper->getAll();
         $bodyparts = $this->bodypart_mapper->getAll();
@@ -136,13 +143,20 @@ class PlanService extends Service {
             $selected_exercises = $this->mapper->getExercises($plan_id);
         }
 
+        $exercise_ids = array_map(function ($exercise) {
+            return $exercise["exercise"];
+        }, $selected_exercises);
+
+        $exercise_muscles = $this->exercise_mapper->getMusclesOfExercisesFull($exercise_ids);
+
+        $all_selected_muscles = ["primary" => [], "secondary" => []];
         $exercises_print = [];
         $exercise_idx = 0;
         foreach ($selected_exercises as $idx => $se) {
             $exercise = !is_null($se["exercise"]) ? $exercises[$se["exercise"]] : null;
 
             if (!is_null($se["exercise"])) {
-                $set_description = array_map(function($set) use ($exercise) {
+                $set_description = array_map(function ($set) use ($exercise) {
                     $description = [];
                     if ($exercise->isCategoryReps() || $exercise->isCategoryRepsWeight()) {
                         $description[] = sprintf("%s %s", $set["repeats"] ? $set["repeats"] : 0, $this->translation->getTranslatedString("WORKOUTS_REPEATS"));
@@ -151,9 +165,9 @@ class PlanService extends Service {
                         $description[] = sprintf("%s %s", $set["weight"] ? $set["weight"] : 0, $this->translation->getTranslatedString("WORKOUTS_KG"));
                     }
                     if ($exercise->isCategoryTime() || $exercise->isCategoryDistanceTime()) {
-                        if(array_key_exists("time_type", $set) && $set["time_type"] == "min"){
+                        if (array_key_exists("time_type", $set) && $set["time_type"] == "min") {
                             $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_MINUTES"));
-                        }else{
+                        } else {
                             $description[] = sprintf("%s %s", $set["time"] ? $set["time"] : 0, $this->translation->getTranslatedString("WORKOUTS_SECONDS"));
                         }
                     }
@@ -164,18 +178,36 @@ class PlanService extends Service {
                 }, $se["sets"]);
             }
 
+            // get muscles
+            $primary = [];
+            $secondary = [];
+            if (array_key_exists($exercise->id, $exercise_muscles)) {
+                foreach ($exercise_muscles[$exercise->id] as $em) {
+                    if ($em["is_primary"] > 0) {
+                        $primary[] = $muscles[$em["muscle"]];
+                    } else {
+                        $secondary[] = $muscles[$em["muscle"]];
+                    }
+                }
+            }
+
+            $all_selected_muscles["primary"] = array_merge($all_selected_muscles["primary"], $primary);
+            $all_selected_muscles["secondary"] = array_merge($all_selected_muscles["secondary"], $secondary);
+
             $exercise_print = [
                 "exercise" => $exercise,
                 "mainBodyPart" => !is_null($exercise) && array_key_exists($exercise->mainBodyPart, $bodyparts) ? $bodyparts[$exercise->mainBodyPart]->name : '',
                 "mainMuscle" => !is_null($exercise) && array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
+                "primary_muscles" => $primary,
+                "secondary_muscles" => $secondary,
+                "id" => $idx,
                 "sets" => $se["sets"],
                 "idx" => $exercise_idx,
                 "type" => $se["type"],
                 "notice" => $se["notice"],
                 "is_child" => $se["is_child"],
                 "children" => [],
-                "set_description" => !is_null($exercise) ? $set_description : null,
-                "id" => $idx
+                "set_description" => !is_null($exercise) ? $set_description : null
             ];
 
             // add as child
@@ -187,25 +219,11 @@ class PlanService extends Service {
             $exercise_idx++;
         }
 
-        $exercise_ids = array_map(function($exercise) {
-            return $exercise["exercise"];
-        }, $selected_exercises);
-
-        $exercise_muscles = $this->exercise_mapper->getMusclesOfExercises($exercise_ids);
-
-        $selected_muscles = ["primary" => [], "secondary" => []];
-        foreach ($exercise_muscles as $em) {
-            if ($em["is_primary"] > 0) {
-                $selected_muscles["primary"][] = $muscles[$em["muscle"]];
-            } else {
-                $selected_muscles["secondary"][] = $muscles[$em["muscle"]];
-            }
-        }
-        return [$exercises_print, $selected_muscles];
+        return [$exercises_print, $all_selected_muscles];
     }
-    
-    public function getWorkoutDays($plan_id){
+
+    public function getWorkoutDays($plan_id)
+    {
         return $this->mapper->getWorkoutDays($plan_id);
     }
-
 }

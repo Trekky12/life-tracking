@@ -1,0 +1,1 @@
+"use strict";document.addEventListener("click",(function(e){console.log("click"),e.target.closest(".exercise .headline")&&(e.preventDefault(),e.target.parentElement.classList.toggle("active"))}));
