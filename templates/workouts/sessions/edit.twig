@@ -51,11 +51,7 @@
 
 				<div class="form-group">
 					<label for="inputNotice">{{lang["NOTICE"]}}</label>
-					<textarea class="form-control" id="inputNotice" name="notice" rows="2">
-						{% if not entry is null %}
-							{{entry.notice|raw}}
-						{% endif %}
-					</textarea>
+					<textarea class="form-control" id="inputNotice" name="notice" rows="2">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
 				</div>
 
 				{% if entry is null and workoutdays|length > 0 %}

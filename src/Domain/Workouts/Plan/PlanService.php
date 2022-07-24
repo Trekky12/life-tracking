@@ -181,7 +181,7 @@ class PlanService extends Service
             // get muscles
             $primary = [];
             $secondary = [];
-            if (array_key_exists($exercise->id, $exercise_muscles)) {
+            if (!is_null($exercise) && array_key_exists($exercise->id, $exercise_muscles)) {
                 foreach ($exercise_muscles[$exercise->id] as $em) {
                     if ($em["is_primary"] > 0) {
                         $primary[] = $muscles[$em["muscle"]];
