@@ -19,7 +19,7 @@ class EventMapper extends \App\Domain\Mapper {
         }
 
         if (!is_null($from) && !is_null($to)) {
-            $sql .= " AND ( start_date = :from OR end_date = :from OR (:from BETWEEN start_date AND end_date) OR (:to BETWEEN start_date AND end_date)) ";
+            $sql .= " AND (( start_date = :from OR end_date = :from OR (:from BETWEEN start_date AND end_date) OR (:to BETWEEN start_date AND end_date)) OR (start_date IS NULL and end_date IS NULL )) ";
             $bindings["from"] = $from;
             $bindings["to"] = $to;
         }
