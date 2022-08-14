@@ -539,7 +539,7 @@ async function storeQueryParams() {
         var body = token;
         body["path"] = window.location.pathname;
         body["params"] = window.location.search;
-        const response = await fetch(jsObject.store_query_params, {
+        const response = await fetchWithTimeout(jsObject.store_query_params, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
