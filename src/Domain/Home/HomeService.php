@@ -17,6 +17,7 @@ use App\Domain\Home\Widget\SplittedBillsBalanceWidget;
 use App\Domain\Home\Widget\TimesheetsSumWidget;
 use App\Domain\Home\Widget\TimesheetsProjectBudgetWidget;
 use App\Domain\Home\Widget\TimesheetsFastCreateWidget;
+use App\Domain\Home\Widget\BoardsCardsWidget;
 use App\Domain\Home\Widget\WidgetMapper;
 use App\Domain\Base\Settings;
 use App\Domain\Main\Translator;
@@ -45,6 +46,7 @@ class HomeService extends Service
     private $efa_widget;
     private $currentweather_widget;
     private $weatherforecast_widget;
+    private $boards_cards_widget;
     private $widget_mapper;
     private $router;
 
@@ -68,6 +70,7 @@ class HomeService extends Service
         EFAWidget $efa_widget,
         CurrentWeatherWidget $currentweather_widget,
         WeatherForecastWidget $weatherforecast_widget,
+        BoardsCardsWidget $boards_cards_widget,
         WidgetMapper $widget_mapper,
         RouteParser $router
     ) {
@@ -90,6 +93,7 @@ class HomeService extends Service
         $this->efa_widget = $efa_widget;
         $this->currentweather_widget = $currentweather_widget;
         $this->weatherforecast_widget = $weatherforecast_widget;
+        $this->boards_cards_widget = $boards_cards_widget;
 
         $this->widget_mapper = $widget_mapper;
 
@@ -187,6 +191,9 @@ class HomeService extends Service
             $available_widgets["timesheets_project_budget"] = ["name" => $this->translation->getTranslatedString("TIMESHEETS_PROJECT_CATEGORY_BUDGET")];
             $available_widgets["timesheets_fast_create"] = ["name" => $this->translation->getTranslatedString("WIDGET_TIMESHEETS_FAST_CREATE")];
         }
+        if ($this->current_user->getUser()->hasModule('boards')) {
+            $available_widgets["boards_cards"] = ["name" => $this->translation->getTranslatedString("WIDGET_BOARD_CARDS")];
+        }
 
         $available_widgets["efa"] = ["name" => $this->translation->getTranslatedString("EFA")];
         $available_widgets["currentweather"] = ["name" => $this->translation->getTranslatedString("WIDGET_CURRENTWEATHER")];
@@ -234,6 +241,9 @@ class HomeService extends Service
                 break;
             case "weatherforecast":
                 $result = $this->weatherforecast_widget->getOptions($widget_object);
+                break;
+            case "boards_cards":
+                $result = $this->boards_cards_widget->getOptions($widget_object);
                 break;
             default:
                 $result = null;
@@ -328,6 +338,11 @@ class HomeService extends Service
                 $list["url"] = $this->weatherforecast_widget->getLink($widget_object);
                 $list["reload"] = 3600;
                 break;
+            case "boards_cards":
+                $list["title"] = $this->boards_cards_widget->getTitle($widget_object);
+                $list["content"] = $this->boards_cards_widget->getContent($widget_object);
+                $list["url"] = $this->boards_cards_widget->getLink($widget_object);
+                break;
         }
         return $list;
     }
@@ -374,7 +389,7 @@ class HomeService extends Service
 
             $language = $this->settings->getAppSettings()['i18n']['php'];
             $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-    
+
             $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
             $fmtDate->setPattern($dateFormatPHP["weekday"]);
 
@@ -388,5 +403,4 @@ class HomeService extends Service
 
         return $payload->withTemplate('home/widgets/' . $widget_object->name . '.twig');
     }
-
 }

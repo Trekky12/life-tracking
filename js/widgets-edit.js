@@ -9,7 +9,7 @@ new Sortable(document.querySelector('.grid'), {
     handle: "h3",
     dataIdAttr: 'data-widget',
     onUpdate: function (evt) {
-        var data = {'widgets': this.toArray()};
+        var data = { 'widgets': this.toArray() };
 
         getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
@@ -54,7 +54,7 @@ widgetModal.querySelector("form").addEventListener('submit', function (e) {
 
     let options = {};
     new FormData(widgetModal.querySelector("form")).forEach(function (value, key) {
-        options[ key ] = value;
+        options[key] = value;
     });
 
     saveWidget(widget, options).then(function () {
@@ -98,10 +98,11 @@ addWidgetBtn.addEventListener("click", function (event) {
         }
     }).catch(function (error) {
         console.log(error);
+        document.getElementById('loading-overlay').classList.add('hidden');
     });
 });
 
-function setModalContent(data, id = null) {
+async function setModalContent(data, id = null) {
     data.forEach(function (element) {
 
         let group = document.createElement("div");
@@ -112,41 +113,33 @@ function setModalContent(data, id = null) {
 
         group.appendChild(label);
 
-        if (element.type == "select") {
+        let child = createWidgetOption(element);
 
-            let select = document.createElement("select");
-            select.classList.add("form-control");
-            select.name = element.name;
-
-            Object.keys(element.data).forEach(function (k) {
-                let option = document.createElement("option");
-                option.value = k;
-                option.innerHTML = element.data[k]["name"];
-
-                if (k == element.value) {
-                    option.selected = true;
-                }
-
-                select.appendChild(option);
-            });
-            group.appendChild(select);
-        } else if (element.type == "input") {
-
-            let input = document.createElement("input");
-            input.classList.add("form-control");
-            input.name = element.name;
-            input.value = element.value;
-
-            group.appendChild(input);
+        if (child) {
+            group.appendChild(child);
         }
-
-
         widgetModalContent.appendChild(group);
 
     });
 
+    // Load dependent data
+    for (const element of data) {
+        if (element.dependency) {
+            let dependency = widgetModalContent.querySelector('[name="' + element.dependency + '"]');
+
+            if (dependency) {
+                await populateDependentWidgetOption(element);
+                dependency.addEventListener('change', async function (event) {
+                    document.getElementById('loading-overlay').classList.remove('hidden');
+                    await populateDependentWidgetOption(element);
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                });
+            }
+        }
+    }
+
     document.getElementById('add-widget-modal').value = lang.add;
-    
+
     if (id !== null) {
         let inputID = document.createElement("input");
         inputID.type = "hidden";
@@ -159,11 +152,11 @@ function setModalContent(data, id = null) {
     widgetModal.style.display = 'block';
 }
 
-function saveWidget(type, options = {}){
+function saveWidget(type, options = {}) {
     document.getElementById('loading-overlay').classList.remove('hidden');
 
     return getCSRFToken().then(function (token) {
-        let data = {"name": type, "options": options, "csrf_name": token.csrf_name, "csrf_value": token.csrf_value};
+        let data = { "name": type, "options": options, "csrf_name": token.csrf_name, "csrf_value": token.csrf_value };
 
         return fetch(jsObject.frontpage_widget_option_save, {
             method: 'POST',
@@ -179,6 +172,7 @@ function saveWidget(type, options = {}){
         return data;
     }).catch(function (error) {
         console.log(error);
+        document.getElementById('loading-overlay').classList.add('hidden');
     });
 
 }
@@ -197,11 +191,11 @@ widgets.forEach(function (item, idx) {
             credentials: "same-origin"
         }).then(function (response) {
             return response.json();
-        }).then(function (data) {
+        }).then(async function (data) {
             if (data.status !== 'error') {
                 // show modal
                 if (data.entry) {
-                    setModalContent(data.entry, widget_id);
+                    await setModalContent(data.entry, widget_id);
                 }
             }
         }).then(function (response) {
@@ -216,3 +210,71 @@ widgets.forEach(function (item, idx) {
         });
     });
 });
+
+function createWidgetOption(element) {
+    if (element.type == "select") {
+
+        let select = document.createElement("select");
+        select.classList.add("form-control");
+        select.name = element.name;
+
+        Object.keys(element.data).forEach(function (k) {
+            let option = document.createElement("option");
+            option.value = k;
+            option.innerHTML = element.data[k]["name"];
+
+            if (k == element.value) {
+                option.selected = true;
+            }
+
+            if (element.data[k]["url"]) {
+                option.dataset.url = element.data[k]["url"];
+            }
+
+            select.appendChild(option);
+        });
+        return select;
+    } else if (element.type == "input") {
+
+        let input = document.createElement("input");
+        input.classList.add("form-control");
+        input.name = element.name;
+        input.value = element.value;
+
+        return input;
+    }
+    return;
+}
+
+async function populateDependentWidgetOption(element) {
+
+    let dependency = widgetModalContent.querySelector('[name="' + element.dependency + '"]');
+    let url = dependency.options[dependency.selectedIndex].dataset.url;
+
+    if (element.type == "select") {
+        let target = widgetModalContent.querySelector('[name="' + element.name + '"]');
+        target.innerHTML = "";
+
+        // remove all options and replace with loaded data
+        let response = await fetch(url, {
+            method: 'GET',
+            credentials: "same-origin"
+        });
+        let data = await response.json();
+
+        if (data.status == "success") {
+            Object.keys(data.data).forEach(function (k) {
+                let option = document.createElement("option");
+                option.value = k;
+                option.innerHTML = data.data[k]["name"];
+
+                if (k == element.value) {
+                    option.selected = true;
+                }
+
+                target.appendChild(option);
+            });
+        }
+
+    }
+}

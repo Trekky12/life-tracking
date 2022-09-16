@@ -811,4 +811,8 @@ $lang["CRAWLERS_MARK_ALL_AS_SHOWN"] = "Mark all entries as shown";
 $lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"] = "The entries were marked as shown.";
 $lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"] = "Error! Couldn't mark the entries as shown.";
 
+$lang["WIDGET_BOARD_CARDS"] = "cards of a board";
+$lang["CARDS_ALL"] = "show all cards";
+$lang["CARDS_DUE"] = "show due cards";
+
 return $lang;

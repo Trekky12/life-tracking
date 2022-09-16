@@ -287,6 +287,7 @@ return function (App $app) {
             $group_stacks->post('/updatePosition', \App\Application\Action\Board\Stack\StackUpdatePositionAction::class)->setName('stack_update_position');
             $group_stacks->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDeleteAction::class)->setName('stack_delete');
             $group_stacks->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackArchiveAction::class)->setName('stack_archive');
+            $group_stacks->get('/{hash}', \App\Application\Action\Board\Board\BoardStacksAction::class)->setName('boards_stacks');
         });
         $group->group('/card', function (RouteCollectorProxy $group_cards) {
             $group_cards->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardSaveAction::class)->setName('card_save');

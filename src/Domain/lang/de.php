@@ -810,4 +810,8 @@ $lang["CRAWLERS_MARK_ALL_AS_SHOWN"] = "Markiere alle Einträge als gesehen";
 $lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"] = "Die Einträge wurden als gesehen markiert werden.";
 $lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"] = "Fehler! Die Einträge konnten nicht als gesehen markiert werden.";
 
+$lang["WIDGET_BOARD_CARDS"] = "Karten eines Boards";
+$lang["CARDS_ALL"] = "zeige alle Karten";
+$lang["CARDS_DUE"] = "zeige fällige Karten";
+
 return $lang;
