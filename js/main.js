@@ -46,7 +46,6 @@ function getNewTokens(token) {
     }).catch(function (error) {
         tokens.push(token);
         console.log(error);
-        loadingWindowOverlay.classList.add("hidden");
         throw "No CRSF Tokens available";
     });
 }
@@ -83,6 +82,7 @@ function deleteObject(url, custom_confirm_text) {
         }
     }).catch(function (error) {
         console.log(error);
+        loadingWindowOverlay.classList.add("hidden");
         if (document.body.classList.contains('offline')) {
             saveDataWhenOffline(url, 'DELETE');
         }
@@ -98,7 +98,7 @@ function setCookie(name, value, expiryDays, path) {
     var cookie = [
         name + '=' + value,
         'expires=' + exdate.toUTCString(),
-        'path=' + path || '/',
+        'path=' + (path || '/'),
         'SameSite=Lax'
     ];
     document.cookie = cookie.join(';');
@@ -168,6 +168,15 @@ function initialize() {
             event.preventDefault();
             await storeQueryParams();
             window.location.href = link.getAttribute("href");
+        }
+
+        // Remove loading spinner if not all required form fields are filled
+        if (submit) {
+            for (const el of submit.closest('form').querySelectorAll("[required]")) {
+                if (!el.reportValidity()) {
+                    loadingWindowOverlay.classList.add("hidden");
+                }
+            }
         }
 
         // https://stackoverflow.com/a/50901269

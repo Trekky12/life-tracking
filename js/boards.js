@@ -140,6 +140,7 @@ document.addEventListener('click', function (event) {
             return response.json();
         }).catch(function (error) {
             console.log(error);
+            loadingWindowOverlay.classList.remove("hidden");
 
             window.alert(lang.boards_error_archive);
 
@@ -810,6 +811,8 @@ async function saveStack(dialog, url) {
 
     let form = dialog.querySelector('form');
     let formData = formToJSON(form);
+    let formData2 = new URLSearchParams(new FormData(form)).toString();
+
     let stack = createStack(formData);
 
     let stackIdx = getElementFromID(boardData.stacks, formData.id);
@@ -878,8 +881,7 @@ async function saveStack(dialog, url) {
         }
 
         if (document.body.classList.contains('offline')) {
-            let formData = new URLSearchParams(new FormData(form)).toString();
-            saveDataWhenOffline(url + id, 'POST', formData);
+            saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
     }
 }
@@ -891,6 +893,7 @@ async function saveCard(dialog, url) {
 
     let form = dialog.querySelector('form');
     let formData = formToJSON(form);
+    let formData2 = new URLSearchParams(new FormData(form)).toString();
 
     let stackEl = document.querySelector('.stack-wrapper .stack[data-stack="' + formData.stack + '"]');
     let card = createCard(formData);
@@ -952,8 +955,7 @@ async function saveCard(dialog, url) {
         }
 
         if (document.body.classList.contains('offline')) {
-            let formData = new URLSearchParams(new FormData(form)).toString();
-            saveDataWhenOffline(url + id, 'POST', formData);
+            saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
     }
 }
@@ -964,6 +966,7 @@ async function saveLabel(dialog, url) {
     var id = dialog.querySelector('input[name="id"]').value;
 
     let form = dialog.querySelector('form');
+    let formData2 = new URLSearchParams(new FormData(form)).toString();
 
     let data = formToJSON(form);
 
@@ -988,8 +991,7 @@ async function saveLabel(dialog, url) {
     } catch (error) {
         console.log(error);
         if (document.body.classList.contains('offline')) {
-            let formData = new URLSearchParams(new FormData(form)).toString();
-            saveDataWhenOffline(url + id, 'POST', formData);
+            saveDataWhenOffline(url + id, 'POST', formData2, true);
         }
     }
 }

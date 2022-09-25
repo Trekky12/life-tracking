@@ -88,10 +88,10 @@ function getIndexedDB() {
     openRequest.onupgradeneeded = function () {
         let db = openRequest.result;
         if (!db.objectStoreNames.contains('forms')) {
-            db.createObjectStore('forms', {keyPath: 'id', autoIncrement: true});
+            db.createObjectStore('forms', { keyPath: 'id', autoIncrement: true });
         }
         if (!db.objectStoreNames.contains('keys')) {
-            db.createObjectStore('keys', {keyPath: 'project'});
+            db.createObjectStore('keys', { keyPath: 'project' });
         }
     }
 
@@ -119,7 +119,7 @@ function saveFormDataWhenOffline() {
 
                     let transaction = db.transaction('forms', 'readwrite');
                     let forms = transaction.objectStore('forms');
-                    let request = forms.add({'action': item.action, 'type': 'POST', 'data': formData});
+                    let request = forms.add({ 'action': item.action, 'type': 'POST', 'data': formData });
 
                     request.onsuccess = function () {
                         console.log("saved locally");
@@ -139,22 +139,24 @@ function saveFormDataWhenOffline() {
     };
 }
 
-function saveDataWhenOffline(url, type = 'POST', data = null) {
+function saveDataWhenOffline(url, type = 'POST', data = null, reload = true) {
     let openRequest = getIndexedDB();
     openRequest.onsuccess = function () {
         let db = openRequest.result;
 
         let transaction = db.transaction('forms', 'readwrite');
         let forms = transaction.objectStore('forms');
-        let request = forms.add({'action': url, 'type': type, 'data': data});
+        let request = forms.add({ 'action': url, 'type': type, 'data': data });
 
         request.onsuccess = function () {
             console.log("saved locally");
             appLoadingWindowOverlay.classList.add("hidden");
             showToast(lang.entry_saved_locally, "green");
             offlineElementsAlert.classList.remove("hidden");
-            allowedReload = true;
-            window.location.reload();
+            if (reload) {
+                allowedReload = true;
+                window.location.reload();
+            }
         }
         request.onerror = function () {
             console.log("Error", request.error);
@@ -209,37 +211,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 request.result.forEach(function (form, idx) {
                     //@see https://stackoverflow.com/a/38362312
                     promises.push(
-                            getCSRFToken().then(function (token) {
-                        let data = new URLSearchParams(form.data);
-                        data.set("csrf_name", token.csrf_name);
-                        data.set("csrf_value", token.csrf_value);
+                        getCSRFToken().then(function (token) {
+                            let data = new URLSearchParams(form.data);
+                            data.set("csrf_name", token.csrf_name);
+                            data.set("csrf_value", token.csrf_value);
 
-                        return fetch(form.action, {
-                            method: form.type,
-                            credentials: "same-origin",
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            body: data
-                        });
-                    }).then(function (response) {
-                        return new Promise(function (resolve, reject) {
-                            if (!response.ok) {
-                                reject("error, wrong response");
-                            } else {
-                                let deleteRequest = db.transaction('forms', 'readwrite').objectStore('forms').delete(form.id);
-                                deleteRequest.onsuccess = function (event) {
-                                    success++;
-                                    resolve();
-                                };
-                                deleteRequest.onerror = function (err) {
-                                    failed++;
-                                    reject(err);
-                                };
-                            }
-                        });
-                    })
-                            );
+                            return fetch(form.action, {
+                                method: form.type,
+                                credentials: "same-origin",
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: data
+                            });
+                        }).then(function (response) {
+                            return new Promise(function (resolve, reject) {
+                                if (!response.ok) {
+                                    reject("error, wrong response");
+                                } else {
+                                    let deleteRequest = db.transaction('forms', 'readwrite').objectStore('forms').delete(form.id);
+                                    deleteRequest.onsuccess = function (event) {
+                                        success++;
+                                        resolve();
+                                    };
+                                    deleteRequest.onerror = function (err) {
+                                        failed++;
+                                        reject(err);
+                                    };
+                                }
+                            });
+                        })
+                    );
                 });
 
                 Promise.all(promises).then(function (response) {
@@ -364,10 +366,10 @@ function initServiceWorker() {
 }
 
 function syncSubscription() {
-// Keep server in sync of subscription
+    // Keep server in sync of subscription
     navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
 
-// close existing notifications
+        // close existing notifications
         serviceWorkerRegistration.getNotifications().then(notifications => {
             notifications.forEach(notification => {
                 notification.close();
@@ -375,10 +377,10 @@ function syncSubscription() {
         });
         return serviceWorkerRegistration;
     }).then(function (serviceWorkerRegistration) {
-// get subscription
+        // get subscription
         return serviceWorkerRegistration.pushManager.getSubscription();
     }).then(function (subscription) {
-//updateButton('disabled');
+        //updateButton('disabled');
 
         if (!subscription) {
             notificationsDisabled('disabled');
@@ -500,8 +502,8 @@ function _sendSubscriptionRequest(data, method) {
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
-            .replace(/\-/g, '+')
-            .replace(/_/g, '/');
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
     for (let i = 0; i < rawData.length; ++i) {
@@ -569,7 +571,7 @@ function updateButton(state) {
 
 function getCategorySubscriptions(endpoint) {
     if (categoriesList !== null) {
-        let data = {"endpoint": endpoint};
+        let data = { "endpoint": endpoint };
         loadingIconManage.classList.remove("hidden");
         return getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
@@ -619,7 +621,7 @@ function getCategorySubscriptions(endpoint) {
 }
 
 function setCategorySubscriptions(endpoint, type, category) {
-    let data = {"endpoint": endpoint, "category": category, "type": type};
+    let data = { "endpoint": endpoint, "category": category, "type": type };
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
