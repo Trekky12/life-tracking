@@ -3,13 +3,13 @@
 {% set active = 'profile' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-    <script src="{{baseURL}}/static/js/widgets-edit.js"></script>
-    <script src="{{baseURL}}/static/js/widgets.js?ver=20200809"></script>
+    <script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/widgets-edit.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/widgets.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

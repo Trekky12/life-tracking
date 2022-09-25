@@ -3,8 +3,8 @@
 {% set active = 'workouts' %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/js/workouts-view.js?ver=20220712"></script>
-	<script src="{{baseURL}}/static/js/exercises.js?ver=20201004"></script>
+	<script src="{{baseURL}}/static/js/workouts-view.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/exercises.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

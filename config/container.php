@@ -92,6 +92,12 @@ return [
          */
         $modules = $settings->getAppSettings()['modules'];
         $twig->getEnvironment()->addGlobal('modules', $modules);
+
+        /**
+         * Include cache miss
+         */
+        $modules = $settings->getAppSettings()['cachemiss'];
+        $twig->getEnvironment()->addGlobal('CACHEMISS', $modules);
         
         /**
          * Add filter to format seconds

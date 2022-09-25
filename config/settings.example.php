@@ -26,6 +26,7 @@ return [
         'exclude' => []
     ],
     'app' => [
+        'cachemiss' => '1',
         // Base URL for cron
         'url' => 'https://example.com',
         // i18n settings

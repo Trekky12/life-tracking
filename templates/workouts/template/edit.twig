@@ -3,9 +3,9 @@
 {% set active = 'workouts' %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-	<script src="{{baseURL}}/static/js/workouts.js?ver=20201220"></script>
-	<script src="{{baseURL}}/static/js/exercises.js?ver=20201031"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/workouts.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/exercises.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

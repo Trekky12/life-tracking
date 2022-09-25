@@ -4,15 +4,15 @@
 {% set boardsview = 1 %}
 
 {% block style %}
-	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css"/>
-	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/easymde.min.css"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/easymde.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/easymde.min.js"></script>
-	<script src="{{baseURL}}/static/js/boards.js?v=20220410"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/easymde.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/boards.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

@@ -5,12 +5,12 @@
 {% block style %}{% endblock %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/chart.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/chartjs-adapter-moment.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/chartjs-plugin-annotation.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/hammer.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/chartjs-plugin-zoom.min.js"></script>
-	<script src="{{baseURL}}/static/js/workouts-stats.js?ver=20211210"></script>
+	<script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/chartjs-adapter-moment.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/chartjs-plugin-annotation.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/hammer.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/chartjs-plugin-zoom.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/workouts-stats.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

@@ -5,15 +5,15 @@
 {% set hasMap = not entry.lat is null and not entry.lng is null %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/nouislider.min.css" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/nouislider.min.css?ver={{CACHEMISS}}" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/nouislider.min.js"></script>
-    <script src="{{baseURL}}/static/js/car-service.js?ver=20181122"></script>
-    <script src="{{baseURL}}/static/assets/js/leaflet.js" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/js/geolocation.js?ver=20200126"></script>
+    <script src="{{baseURL}}/static/assets/js/nouislider.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/car-service.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+    <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

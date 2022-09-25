@@ -3,9 +3,9 @@
 {% set active = 'recipes' %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/js/datefilter.js?ver=20191031"></script>
-	<script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-	<script src="{{baseURL}}/static/js/recipes_mealplan.js?ver=20210801"></script>
+	<script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/recipes_mealplan.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

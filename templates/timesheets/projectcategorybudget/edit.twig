@@ -3,14 +3,14 @@
 {% set active = 'timesheets' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/datefilter.js?ver=20211113"></script>
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
-    <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js"></script>
-    <script src="{{baseURL}}/static/js/timesheets.js?ver=20210921"></script>
+    <script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
