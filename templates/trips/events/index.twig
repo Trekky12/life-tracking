@@ -3,112 +3,132 @@
 {% set active = 'trips' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/L.Control.Locate.min.css?ver={{CACHEMISS}}" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.extra-markers.min.css?ver={{CACHEMISS}}" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.fullscreen.min.css?ver={{CACHEMISS}}" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet-routing-machine.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/L.Control.Locate.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.extra-markers.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.fullscreen.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet-routing-machine.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/leaflet.curve.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/L.Control.Locate.min.js?ver={{CACHEMISS}}" type="text/javascript" charset="utf-8"></script>
-    <script src="{{baseURL}}/static/assets/js/leaflet.extra-markers.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/Leaflet.fullscreen.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/leaflet-easyPrint.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/leaflet-routing-machine.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/Control.Geocoder.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.curve.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/L.Control.Locate.min.js?ver={{CACHEMISS}}" type="text/javascript" charset="utf-8"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.extra-markers.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/Leaflet.fullscreen.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet-easyPrint.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet-routing-machine.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/Control.Geocoder.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
 
-    <script type='text/javascript' >
-        const mapbox_token = '{{ mapbox_token }}';
-    </script>
-    <script src="{{baseURL}}/static/js/trips.js?ver={{CACHEMISS}}"></script>
+	<script type='text/javascript'>
+		const mapbox_token = '{{ mapbox_token }}';
+	</script>
+	<script src="{{baseURL}}/static/js/trips.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{trip.name|raw}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('trips') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-                <a href="{{  url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD_EVENT"]}}</button></a>
-            </div>
-        </div>
-        <div id="trip-map"></div>
-        <div class="page-content" id="trip_overview">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{trip.name|raw}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('trips') }}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+				<a href="{{ url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn">
+					<button class="button">{{ fontawesome('fas fa-plus') }}
+						{{lang["ADD_EVENT"]}}</button>
+				</a>
+			</div>
+		</div>
+		<div id="trip-map">
+			<div id="route-modal" class="modal">
+				<div class="modal-inner">
+					<div class="modal-header">{{lang["TRIPS_ROUTES"]}}<span class="modal-close" id="modal-close-btn">&times;</span>
+					</div>
+					<div class="modal-content">
+						<table>
+							<thead>
+								<tr>
+									<th>{{ lang["NAME"] }}</th>
+									<th>{{ lang["DATE"] }}</th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="page-content" id="trip_overview">
 
-            {% if not trip.notice is empty %}
-                <h3>{{ lang["NOTICE"]}}:</h3>
-                <p>{{trip.getNotice()|raw|nl2br}}</p>
-            {% endif %}
+			{% if not trip.notice is empty %}
+				<h3>{{ lang["NOTICE"]}}:</h3>
+				<p>{{trip.getNotice()|raw|nl2br}}</p>
+			{% endif %}
 
-            <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-            <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+			<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+			<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 
-            <div class="trip_buttonrow">
-                <div class="trip_dates">
-                    {% for d in range %}
-                        {% if d["date"] is null or not d["events"] is empty %}
-                            <a class="change_day no-loading" data-date="{% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}" href="?from={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}&to={% if not d["date"] is null %}{{ d["date"]|date('Y-m-d') }}{% endif %}"><button class="button small trips_overview {% if not d["active"] %}gray{% endif %}">{{ d["display_date"] }}</button></a>
-                            {% endif %}
-                        {% endfor %}
-                </div>
-                <a id="createRoute" href="#"><button class="button small trips_overview blue">{{ lang["CREATE_ROUTE"] }}</button></a>
-            </div>
+			<div class="trip_buttonrow">
+				<div class="trip_dates">
+					{% for d in range %}
+						{% if d['date'] is null or not d['events'] is empty %}
+							<a class="change_day no-loading" data-date="{% if not d['date'] is null %}{{ d['date']|date('Y-m-d') }}{% endif %}" href="?from={% if not d['date'] is null %}{{ d['date']|date('Y-m-d') }}{% endif %}&to={% if not d['date'] is null %}{{ d['date']|date('y-m-d') }}{% endif %}">
+								<button class="button small trips_overview {% if not d['active'] %}gray{% endif %}">{{ d['display_date'] }}</button>
+							</a>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<a id="createRoute" href="#">
+					<button class="button small trips_overview blue">{{ lang["CREATE_ROUTE"] }}</button>
+				</a>
+			</div>
 
-            {% for item in range %}
-                {% if not item["events"] is empty %}
-                    <div id="trip_day_{% if not item["date"] is null %}{{ item["date"] }}{% else %}none{% endif %}" class="trip_day {% if not item["active"] and not range["all"]["active"] and not item["date"] is null %}hidden{% endif %}" data-date="{{ item["date"] }}">
-                        <h3>{% if not item["date"] is null %}{{ item["full_date"] }}{% else %}{{ lang["WITHOUT_DATE"] }}{% endif %}</h3>
-                        {% for event in item["events"] %}
-                            {% include "trips/events/event-list-item.twig" with {'event':event, 'trip':trip, 'date':item["date"]} only %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endfor %}
+			{% for item in range %}
+				{% if not item['events'] is empty %}
+					<div id="trip_day_{% if not item['date'] is null %}{{ item['date'] }}{% else %}none{% endif %}" class="trip_day {% if not item['active'] and not range['all']['active'] and not item['date'] is null %}hidden{% endif %}" data-date="{{ item['date'] }}">
+						<h3>
+							{% if not item['date'] is null %}
+								{{ item['full_date'] }}
+							{% else %}
+								{{ lang['WITHOUT_DATE'] }}
+							{% endif %}
+						</h3>
+						{% for event in item['events'] %}
+							{% include "trips/events/event-list-item.twig" with {'event':event, 'trip':trip, 'date':item['date']} only %}
+						{% endfor %}
+					</div>
+				{% endif %}
+			{% endfor %}
 
-        </div>
-    </div>
+		</div>
+	</div>
 
-{% endblock %}        
+{% endblock %}
 
 {% block bottom %}
-    <div id="route-modal" class="modal">
-        <div class="modal-inner">
-            <div class="modal-header">{{lang["TRIPS_ROUTES"]}}<span class="modal-close" id="modal-close-btn">&times;</span></div>
-            <div class="modal-content">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>{{ lang["NAME"] }}</th>
-                            <th>{{ lang["DATE"] }}</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="hidden">
-        <div id="iconPlanes">{{ fontawesome('fas fa-plane') }}</div>
-        <div id="iconTrains">{{ fontawesome('fas fa-train') }}</div>
-        <div id="iconStreets">{{ fontawesome('fas fa-road') }}</div>
-        <div id="iconShips">{{ fontawesome('fas fa-ship') }}</div>
-        <div id="iconCarRentals">{{ fontawesome('fas fa-car') }}</div>
-        <div id="iconHotels">{{ fontawesome('fas fa-bed') }}</div>
-        <div id="iconEvents">{{ fontawesome('fas fa-calendar') }}</div>
-        
-        <div id="iconWalking">{{ fontawesome('fas fa-walking') }}</div>
-        <div id="iconBiking">{{ fontawesome('fas fa-biking') }}</div>
-        <div id="iconSave">{{ fontawesome('fas fa-save') }}</div>
-        <div id="iconMaps">{{ fontawesome('fas fa-map-signs') }}</div>
-        
-        <div id="iconRoute">{{ fontawesome('fas fa-route') }}</div>
-        <div id="iconLocation">{{ fontawesome('fas fa-map-marker-alt') }}</div>
-        <div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
-    </div>
+	<div class="hidden">
+		<div id="iconPlanes">{{ fontawesome('fas fa-plane') }}</div>
+		<div id="iconTrains">{{ fontawesome('fas fa-train') }}</div>
+		<div id="iconStreets">{{ fontawesome('fas fa-road') }}</div>
+		<div id="iconShips">{{ fontawesome('fas fa-ship') }}</div>
+		<div id="iconCarRentals">{{ fontawesome('fas fa-car') }}</div>
+		<div id="iconHotels">{{ fontawesome('fas fa-bed') }}</div>
+		<div id="iconEvents">{{ fontawesome('fas fa-calendar') }}</div>
+
+		<div id="iconWalking">{{ fontawesome('fas fa-walking') }}</div>
+		<div id="iconBiking">{{ fontawesome('fas fa-biking') }}</div>
+		<div id="iconSave">{{ fontawesome('fas fa-save') }}</div>
+		<div id="iconMaps">{{ fontawesome('fas fa-map-signs') }}</div>
+		<div id="iconAdd">{{ fontawesome('fas fa-plus') }}</div>
+		<div id="iconReverse">{{ fontawesome('fas fa-exchange-alt') }}</div>
+
+		<div id="iconRoute">{{ fontawesome('fas fa-route') }}</div>
+		<div id="iconLocation">{{ fontawesome('fas fa-map-marker-alt') }}</div>
+		<div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
+	</div>
 {% endblock %}

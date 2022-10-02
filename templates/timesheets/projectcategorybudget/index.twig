@@ -7,7 +7,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}} | {{ project.name }}</h2> 
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('timesheets_project_categorybudget_view', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('timesheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
                 <a href="{{  url_for('timesheets_project_categorybudget_edit', {'project': project.hash}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
         </div>

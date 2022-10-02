@@ -88,6 +88,13 @@ table.timesheets_project_budget_widget {
     }
 }
 
+.card[data-widget-name="timesheets_fast_create"] {
+    button {
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
 .widget-content {
     padding: 1rem;
 
@@ -104,7 +111,7 @@ table.timesheets_project_budget_widget {
         border-bottom: 1px solid $color_blue_light_gray;
     }
 
-    .widget-card-title{
+    .widget-card-title {
         margin-left: 2rem;
         text-align: left;
     }

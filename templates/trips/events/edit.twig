@@ -107,7 +107,7 @@
                         <div id="loadingIconImageUpload" class="hidden loading-icon">
                             <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
                         </div>
-                        <img class="image_uploaded {% if entry.get_thumbnail() == ''%}hidden{% endif %}" id="event_image" src="{% if entry.get_thumbnail() != ''%}/{{uploads_folder}}/events/{{entry.get_thumbnail()}}{% endif %}"/>
+                        <img class="image_uploaded {% if entry.get_thumbnail() == ''%}hidden{% endif %}" id="event_image" src="{% if entry.get_thumbnail() != ''%}/{{uploads_folder}}/trips/{{entry.get_thumbnail()}}{% endif %}"/>
                         <button type="button" id="delete_image" class="button danger {% if entry.get_thumbnail() == ''%}hidden{% endif %}">{{lang["DELETE"]}}</button>
                     </div>
                     <div class="form-group">

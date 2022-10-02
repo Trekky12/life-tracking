@@ -1118,7 +1118,7 @@ var sortable = new Sortable(stacksWrapper, {
         name: "stacks",
     },
     draggable: ".stack",
-    handle: isMobile() ? ".handle" : ".stack-header",
+    handle: isTouchEnabled() ? ".handle" : ".stack-header",
     dataIdAttr: 'data-stack',
     filter: '.stack-dummy',
     onEnd: function (evt) {
@@ -1292,7 +1292,7 @@ function createSortableCards(cardWrapper) {
             name: "cards"
         },
         draggable: ".board-card",
-        handle: isMobile() ? ".handle" : ".board-card",
+        handle: isTouchEnabled() ? ".handle" : ".board-card",
         dataIdAttr: 'data-card',
         ghostClass: 'card-placeholder',
         onUpdate: function (evt) {

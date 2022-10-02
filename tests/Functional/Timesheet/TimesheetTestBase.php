@@ -25,7 +25,7 @@ class TimesheetTestBase extends BaseTestCase {
 
     protected function getParent($body, $name) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/timesheets\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a><\/td>\s*(<td(.*)?>.*?|\s*<\/td>\s*)*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categorybudget\/view\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categories\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/noticefields\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><a href="\/timesheets\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a><\/td>\s*(<td(.*)?>.*?|\s*<\/td>\s*)*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categorybudget\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categories\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/noticefields\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
         
         return $matches;

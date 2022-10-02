@@ -2,6 +2,10 @@
 
 {% set active = 'finances' %}
 
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/finances-stats.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
 
 {% block body %}
 

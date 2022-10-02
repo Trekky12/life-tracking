@@ -29,7 +29,7 @@
                             <td><a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a></td> 
                             <td>{{times[project.id]}}</td> 
                             <td>
-                                <a href="{{  url_for('timesheets_project_categorybudget_view', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
+                                <a href="{{  url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
                             </td>
                             <td>
                                 <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>

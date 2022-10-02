@@ -24,7 +24,7 @@ class TripEventImageService {
     }
 
     private function getEventImagePath() {
-        return $this->settings->getAppSettings()['upload_folder'] . '/events/';
+        return $this->settings->getAppSettings()['upload_folder'] . '/trips/';
     }
 
     public function deleteImage($event_id) {

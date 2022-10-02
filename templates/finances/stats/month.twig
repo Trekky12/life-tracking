@@ -2,43 +2,60 @@
 
 {% set active = 'finances' %}
 
+{% block javascript %}
+	<script src="{{baseURL}}/static/assets/js/randomColor.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/finances-stats.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header">
-            <h2>{% if type == 0 %} {{lang["FINANCES_SPENDINGS"]}} {% else %} {{lang["FINANCES_INCOMES"]}} {% endif %}
-                {{lang["IN"]}} {{month}}/{{year}}
-            </h2>
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('finances_stats_year', {'year':year}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>
+				{% if type == 0 %}
+					{{lang["FINANCES_SPENDINGS"]}}
+				{% else %}
+					{{lang["FINANCES_INCOMES"]}}
+				{% endif %}
+				{{lang["IN"]}}
+				{{month}}/{{year}}
+			</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('finances_stats_year', {'year':year}) }}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-level-up-alt') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
 
-            <canvas id="financeDetailChart" data-values="{{data}}" data-labels="{{labels}}"></canvas>
+			<div id="financeDetailChartLegend"></div>
+			<canvas id="financeDetailChart" data-values="{{data}}" data-labels="{{labels}}"></canvas>
 
-            <table id="stats_month_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["CATEGORY"]}}</th>
-                        <th>{{lang["COUNT"]}}</th>
-                        <th>{{lang["SUM"]}}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in stats %}
-                        <tr>
-                            <td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td> 
-                            <td data-title="{{lang["COUNT"]}}">{{entry.count}}</td> 
-                            <td data-title="{{lang["SUM"]}}">{{entry.sum}}</td> 
-                            <td><a href="{{  url_for('finances_stats_month_category', {'year' : entry.year, 'month' : entry.month, 'type' :entry.type, 'category' : entry.category_id}) }}">{{ fontawesome('fas fa-chart-pie') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+			<table id="stats_month_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["CATEGORY"]}}</th>
+						<th>{{lang["COUNT"]}}</th>
+						<th>{{lang["SUM"]}}</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in stats %}
+						<tr>
+							<td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td>
+							<td data-title="{{lang["COUNT"]}}">{{entry.count}}</td>
+							<td data-title="{{lang["SUM"]}}">{{entry.sum}}</td>
+							<td>
+								<a href="{{ url_for('finances_stats_month_category', {'year' : entry.year, 'month' : entry.month, 'type' :entry.type, 'category' : entry.category_id}) }}">{{ fontawesome('fas fa-chart-pie') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

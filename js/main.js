@@ -7,8 +7,6 @@ moment.locale(i18n.template);
 
 initialize();
 
-initCharts();
-
 const loadingWindowOverlay = document.getElementById('loading-overlay');
 
 function getCSRFToken() {
@@ -124,6 +122,13 @@ function getCookie(cname, fallback) {
 
 
 function initialize() {
+
+    if (isTouchEnabled()) {
+        document.body.classList.add("is-touch-enabled");
+    } else {
+        document.body.classList.add("no-touch-enabled");
+    }
+
     let backbtn = document.querySelector('#go-back-btn');
     if (backbtn !== null) {
         backbtn.addEventListener('click', function () {
@@ -222,151 +227,6 @@ function initialize() {
                     // move commonValue to value and reset commonValue
                     document.querySelector('#inputValue').value = document.querySelector('#inputCommonValue').value;
                     document.querySelector('#inputCommonValue').value = "";
-                }
-            }
-        });
-    }
-
-}
-
-/**
- * Charts
- */
-function initCharts() {
-
-    let financeSummaryChart = document.querySelector("#financeSummaryChart");
-    if (financeSummaryChart) {
-        new Chart(financeSummaryChart, {
-            data: {
-                labels: JSON.parse(financeSummaryChart.dataset.labels),
-                datasets: [
-                    {
-                        label: financeSummaryChart.dataset.label1,
-                        data: JSON.parse(financeSummaryChart.dataset.values1),
-                        backgroundColor: '#FF0000'
-                    },
-                    {
-                        label: financeSummaryChart.dataset.label2,
-                        data: JSON.parse(financeSummaryChart.dataset.values2),
-                        backgroundColor: '#008800'
-                    }
-                ]
-            },
-            type: 'bar',
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        ticks: {
-                            min: 0
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    //var defaultColors = ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6', '#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11', '#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#3B3EAC'];
-    var defaultColors = randomColor({
-        count: 100,
-        hue: 'blue',
-        luminosity: 'bright'
-    });
-    let financeDetailChart = document.querySelector("#financeDetailChart");
-    if (financeDetailChart) {
-        var fdChart = new Chart(financeDetailChart, {
-            data: {
-                labels: JSON.parse(financeDetailChart.dataset.labels),
-                datasets: [
-                    {
-
-                        backgroundColor: defaultColors,
-                        data: JSON.parse(financeDetailChart.dataset.values),
-                        label: 'test'
-                    }
-                ]
-            },
-            type: 'pie',
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: 'top',
-                    display: false
-                },
-                tooltips: {
-                    // @see https://stackoverflow.com/a/44010778
-                    callbacks: {
-                        title: function (tooltipItem, data) {
-                            return data['labels'][tooltipItem[0]['index']];
-                        },
-                        label: function (tooltipItem, chart) {
-                            return chart['datasets'][tooltipItem['datasetIndex']]['data'][tooltipItem['index']].toFixed(2) + " " + i18n.currency;
-                        }
-                    }
-                },
-                // @see https://github.com/chartjs/Chart.js/issues/5049, 
-                // https://github.com/chartjs/Chart.js/issues/3761,
-                // https://jsfiddle.net/asimovwasright/xs15f60y/
-                legendCallback: function (chart) {
-                    let ul = document.createElement("ul");
-                    ul.id = "chart-legend";
-                    var items = chart.legend.legendItems;
-                    items.forEach(function (item, idx) {
-                        let li = document.createElement("li");
-                        li.innerHTML = item.text;
-
-                        let span = document.createElement('span');
-                        span.classList = "legend-item";
-                        span.style = "background-color:" + item.fillStyle + ";";
-                        li.insertBefore(span, li.firstChild);
-
-                        li.setAttribute("title", item.text);
-
-                        li.addEventListener("click", function (event) {
-                            event.target.closest('li').classList.toggle('excluded');
-
-                            var index = idx;
-                            var ci = fdChart.chart;
-                            var meta = ci.legend.legendItems[index];
-                            ci.data.datasets[0]._meta[ci.id].data[index].hidden = (!meta.hidden) ? true : null;
-                            ci.update();
-                        });
-
-                        ul.appendChild(li);
-                    });
-                    return ul;
-                }
-            }
-        });
-        //financeDetailChart.before(fdChart.generateLegend());
-    }
-
-
-    let stepsSummaryChart = document.querySelector("#stepsSummaryChart");
-    if (stepsSummaryChart) {
-        new Chart(stepsSummaryChart, {
-            data: {
-                labels: JSON.parse(stepsSummaryChart.dataset.labels),
-                datasets: [
-                    {
-                        label: stepsSummaryChart.dataset.label,
-                        data: JSON.parse(stepsSummaryChart.dataset.values),
-                        backgroundColor: '#1e88e5'
-                    }
-                ]
-            },
-            type: 'bar',
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        ticks: {
-                            min: 0
-                        }
-                    }
                 }
             }
         });
@@ -531,6 +391,12 @@ function unfreeze() {
 
 function isMobile() {
     return isVisible(document.getElementById('mobile-header-icons'));
+}
+
+function isTouchEnabled() {
+    return ('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (navigator.msMaxTouchPoints > 0);
 }
 
 function isVisible(element) {

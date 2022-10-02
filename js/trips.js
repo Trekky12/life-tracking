@@ -399,9 +399,20 @@ function initMap() {
         createGeocoders: function () {
             var container = L.Routing.Plan.prototype.createGeocoders.call(this);
 
+            //let addButton = createButton(container, "add");
+            //let reverseButton = createButton(container, "reverse");
             let walkButton = createButton(container, "walk");
             let bikeButton = createButton(container, "bike");
             let carButton = createButton(container, "car", true);
+
+            /*L.DomEvent.on(addButton, 'click', function () {
+                this.spliceWaypoints(routeControl.getWaypoints().length, 0, null);
+            }, this);
+
+            L.DomEvent.on(reverseButton, 'click', function () {
+                let waypoints = routeControl.getWaypoints().reverse();
+                this.setWaypoints(waypoints);
+            }, this);*/
 
             L.DomEvent.on(walkButton, 'click', function () {
                 setRoutingProfile('mapbox/walking');
@@ -708,6 +719,12 @@ function createButton(container, type, active = false) {
             break;
         case "save":
             btn.innerHTML = document.getElementById('iconSave').innerHTML;
+            break;
+        case "add":
+            btn.innerHTML = document.getElementById('iconAdd').innerHTML;
+            break;
+        case "reverse":
+            btn.innerHTML = document.getElementById('iconReverse').innerHTML;
             break;
     }
 

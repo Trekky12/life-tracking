@@ -217,11 +217,14 @@
         margin-left: 10px;
         @include font-size(2);
         cursor: pointer;
-        @media screen and (min-width: $size_mobile) {
-            display: none;
-        }
+        //@media screen and (min-width: $size_mobile) {
+        //    display: none;
+        //}
     }
+}
 
+body.no-touch-enabled .handle{
+    display: none;
 }
 
 /* inspired by https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */

@@ -2,6 +2,10 @@
 
 {% set active = 'steps' %}
 
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/location-steps-stats.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
 
 {% block body %}
 
