@@ -116,7 +116,7 @@ class FinancesService extends Service {
             $row[] = $dataset[3];
             $row[] = $dataset[4];
             $row[] = $dataset[5];
-            $row[] = '<a href="' . $this->router->urlFor('finances_edit', ['id' => $dataset[6]]) . '">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>';
+            $row[] = '<a href="' . $this->router->urlFor('finances_edit', ['id' => $dataset[6]]) . '">'.Utility::getFontAwesomeIcon('fas fa-pen-to-square').'</a>';
             $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</span></a>' : '';
 
             $rendered_data[] = $row;

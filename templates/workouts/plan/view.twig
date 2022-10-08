@@ -17,7 +17,7 @@
 				{% if not plan.is_template %}
 					<a href="{{ url_for_with_last_query_params('workouts') }}">
 						<button class="button">{{lang["BACK"]}}
-							{{ fontawesome('fas fa-level-up-alt') }}</button>
+							{{ fontawesome('fas fa-turn-up') }}</button>
 					</a>
 					<a href="{{ url_for('workouts_sessions_edit', {'plan':plan.hash}) }}">
 						<button class="button">{{ fontawesome('fas fa-plus') }}
@@ -37,7 +37,7 @@
 				{% else %}
 					<a href="{{ url_for_with_last_query_params('workouts_templates') }}">
 						<button class="button">{{lang["BACK"]}}
-							{{ fontawesome('fas fa-level-up-alt') }}</button>
+							{{ fontawesome('fas fa-turn-up') }}</button>
 					</a>
 					<a href="{{ url_for('workouts_plans_edit') }}?template={{ plan.hash }}">
 						<button class="button">{{ fontawesome('fas fa-plus') }}

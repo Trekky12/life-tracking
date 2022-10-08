@@ -14,10 +14,10 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPE"]}} - {{ recipe.name|raw }}</h2>
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('recipes') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('recipes') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
                 <a href="{{ url_for('recipes_recipe_add_to_cookbook', {'recipe': recipe.hash}) }}" id="add_to_cookbook"><button class="button">{{lang["RECIPES_ADD_TO_COOKBOOK"]}} {{ fontawesome('fas fa-book') }}</button></a>
                         {% if recipe.getOwner() == user.id %}
-                    <a href="{{  url_for('recipes_edit', {'id' : recipe.id}) }}"><button class="button">{{ fontawesome('fas fa-edit') }}</button></a>
+                    <a href="{{  url_for('recipes_edit', {'id' : recipe.id}) }}"><button class="button">{{ fontawesome('fas fa-pen-to-square') }}</button></a>
                     <a href="#" data-url="{{  url_for('recipes_delete', {'id' : recipe.id}) }}" class="btn-delete"><button class="button">{{ fontawesome('fas fa-trash') }}</button></a>
                         {% endif %}
             </div>      
@@ -35,7 +35,7 @@
                     {% endif %}
                     {% if recipe.waiting_time %}
                         <div>
-                            {{ fontawesome('fas fa-hourglass-half') }}<span>{{recipe.waiting_time}} {{ lang["RECIPES_MINUTES"] }}</span>
+                            {{ fontawesome('fas fa-hourglass') }}<span>{{recipe.waiting_time}} {{ lang["RECIPES_MINUTES"] }}</span>
                         </div>
                     {% endif %}
                     {% if recipe.servings %}
@@ -60,7 +60,7 @@
                     {% for step_ingredients in ingredients %}
                         {% for ingredient in step_ingredients %}
                             <div>
-                                <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}
+                                <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-circle-check') }}
                                 {{ ingredient["amount"] }} {% if ingredient["unit"] and ingredient["amount"] %}{{ ingredient["unit"]|raw }}{% endif %} <strong>{{ ingredient["name"] }}</strong>{% if ingredient["notice"] %}, {{ ingredient["notice"] }}{% endif %}</a>
                             </div>
                         {% endfor %}
@@ -87,7 +87,7 @@
                         {% endif %}
                         {% if step["waiting_time"] %}
                             <div>
-                                {{ fontawesome('fas fa-hourglass-half') }}<span>{{step["waiting_time"]}} {{ lang["RECIPES_MINUTES"] }}</span>
+                                {{ fontawesome('fas fa-hourglass') }}<span>{{step["waiting_time"]}} {{ lang["RECIPES_MINUTES"] }}</span>
                             </div>
                         {% endif %}
                     </div>
@@ -100,7 +100,7 @@
                             <div class="recipe-step-ingredients-title">{{ fontawesome('fas fa-pepper-hot') }} {{ lang["RECIPES_INGREDIENTS"] }}</div>
                             {% for ingredient in ingredients[step.id] %}
                                 <div>
-                                    <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-check-circle') }}
+                                    <a href="#" class="ingredient-select" data-id="{{ ingredient["id"] }}">{{ fontawesome('far fa-circle-check') }}
                                     {{ ingredient["amount"] }} {% if ingredient["unit"] and ingredient["amount"] %}{{ ingredient["unit"]|raw }}{% endif %} <strong>{{ ingredient["name"] }}</strong>{% if ingredient["notice"] %}, {{ ingredient["notice"] }}{% endif %}</a>
                                 </div>
                             {% endfor %}

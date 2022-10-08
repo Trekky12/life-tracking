@@ -15,7 +15,7 @@
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('workouts') }}">
 					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-level-up-alt') }}</button>
+						{{ fontawesome('fas fa-turn-up') }}</button>
 				</a>
 				{% if not entry is null %}
 					<a href="{{ url_for('workouts_plans_edit') }}?template={{ entry.hash }}">
@@ -67,7 +67,7 @@
 										</div>
 										<div class="icons">
 											<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
-											<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+											<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 										</div>
 									</div>
 								{% elseif exercise.type == "superset" %}
@@ -83,7 +83,7 @@
 										</div>
 										<div class="icons">
 											<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
-											<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+											<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 										</div>
 									</div>
 								{% endif %}
@@ -141,7 +141,7 @@
 
 	<div class="hidden">
 		<div id="iconMinus">{{ fontawesome('fas fa-minus') }}</div>
-		<div id="iconHandle">{{ fontawesome('fas fa-arrows-alt') }}</div>
+		<div id="iconHandle">{{ fontawesome('fas fa-up-down-left-right') }}</div>
 	</div>
 
 {% endblock %}

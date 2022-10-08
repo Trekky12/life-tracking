@@ -41,7 +41,7 @@
                         <h3>{% if widget["url"] is not null %}<a href="{{ widget["url"] }}">{{ widget["title"] | raw }}</a>{% else %}{{ widget["title"] | raw }}{% endif %}</h3>
                         <div class="buttons">
                             {% if widget["hasOptions"] %}
-                                <a href="#" class="btn-edit" data-id="{{ widget["id"] }}">{{ fontawesome('fas fa-edit') }}</a>
+                                <a href="#" class="btn-edit" data-id="{{ widget["id"] }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                             {% endif %}
                             <a href="#" data-url="{{ url_for('users_profile_frontpage_widget_delete', {'id' : widget["id"]}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
                         </div>

@@ -19,7 +19,7 @@
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('finances_budgets') }}">
 					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-level-up-alt') }}</button>
+						{{ fontawesome('fas fa-turn-up') }}</button>
 				</a>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 							<td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td>
 							<td data-title="{{lang["VALUE"]}}">{{entry.value}}</td>
 							<td>
-								<a href="{{ url_for('finances_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+								<a href="{{ url_for('finances_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 							</td>
 							<td>
 								{% if entry.bill is empty %}

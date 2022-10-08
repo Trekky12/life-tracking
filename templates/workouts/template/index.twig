@@ -30,7 +30,7 @@
                             <td>{%if plan.days > 0 %}{{ plan.days }}{% endif %}</td> 
                             <td>{%if plan.exercises > 0 %}{{ plan.exercises }}{% endif %}</td> 
                                 {% if user.isAdmin() %}
-                                <td><a href="{{  url_for('workouts_templates_edit', {'id' : plan.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                                <td><a href="{{  url_for('workouts_templates_edit', {'id' : plan.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                                 <td><a href="#" data-url="{{  url_for('workouts_templates_delete', {'id' : plan.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                                     {% else %}
                                 <td></td>

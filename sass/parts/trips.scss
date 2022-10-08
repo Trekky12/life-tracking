@@ -1,18 +1,19 @@
-.set_address{
-    margin-top:1rem;
-    margin-bottom:2rem;  
+.set_address {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
     @include font-size(1.2);
     padding: 1rem 0.5rem;
-    line-height:1;
+    line-height: 1;
 }
 
-#trip-map{
-    height:250px;
+#trip-map {
+    height: 250px;
     margin-bottom: 0;
-    position:relative;
-    z-index:0;
-    @media screen and (min-width: $size_mobile_navigation){
-        height:500px;
+    position: relative;
+    z-index: 0;
+
+    @media screen and (min-width: $size_mobile_navigation) {
+        height: 500px;
     }
 
     /*.leaflet-control-layers-overlays{
@@ -20,61 +21,63 @@
     }*/
 }
 
-button.trips_overview{
-    margin-bottom:0.5rem;
-    margin-right:0.5rem;
+button.trips_overview {
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
 }
 
-body.trips .inner-content .page-header{
-    margin-bottom:0;
+body.trips .inner-content .page-header {
+    margin-bottom: 0;
 }
 
-.trip_day{
+.trip_day {
 
-    h3{
+    h3 {
         @include font-size(1.8);
-        font-weight:600;
+        font-weight: 600;
         border-bottom: 1px solid $color_text-main;
     }
-    .trip_event{
+
+    .trip_event {
 
         padding: 0 0 2rem 0;
 
-        h4{
-            margin-top:0;
+        h4 {
+            margin-top: 0;
             margin-bottom: 1rem;
             @include font-size(1.6);
-            font-weight:600;
+            font-weight: 600;
         }
 
-        .date{
+        .date {
             margin-bottom: 1rem;
         }
 
-        .description{
+        .description {
 
             word-break: break-word;
             hyphens: auto;
 
             @include font-size(1.4);
 
-            .description_full{
-                display:none;
+            .description_full {
+                display: none;
                 padding-top: 0.5rem;
                 padding-bottom: 1rem;
 
             }
 
-            .description_text{
+            .description_text {
 
                 span.plus {
-                    display:inline-block;
-                }
-                span.minus{
-                    display:none;
+                    display: inline-block;
                 }
 
-                svg{
+                span.minus {
+                    display: none;
+                }
+
+                svg {
                     transition: all 250ms;
                     @include font-size(1.4);
                     color: $color_text-main;
@@ -84,15 +87,16 @@ body.trips .inner-content .page-header{
             }
 
             &.active {
-                .description_full{
-                    display:block;
+                .description_full {
+                    display: block;
                 }
 
                 span.plus {
-                    display:none;
+                    display: none;
                 }
-                span.minus{
-                    display:inline-block;
+
+                span.minus {
+                    display: inline-block;
                 }
 
             }
@@ -103,72 +107,85 @@ body.trips .inner-content .page-header{
         display:flex;
         justify-content: space-between;
 
-        .icon{
+        .icon {
             margin-right: 2rem;
 
-            i, svg{
-                margin-top:5px;
+            i,
+            svg {
+                margin-top: 5px;
                 @include font-size(2);
-                width:20px;
+                width: 20px;
+
                 @media screen and (min-width: $size_tablet) {
                     @include font-size(4);
-                    width:70px;
+                    width: 70px;
 
                 }
             }
         }
-        .text{
-            flex-grow:1;
+
+        .text {
+            flex-grow: 1;
         }
-        .buttons{
-            display:flex;
-            flex-direction:column;
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+
             @media screen and (min-width: $size_tablet) {
-                flex-direction:row;
+                flex-direction: row;
             }
-            a{
-                margin-left:1rem;
+
+            a {
+                margin-left: 1rem;
             }
         }
     }
 }
 
-.image_uploaded{
-    margin-bottom:1rem; 
+.image_uploaded {
+    margin-bottom: 1rem;
 }
 
-.trip_buttonrow{
+.trip_buttonrow {
     display: flex;
     flex-direction: column-reverse;
 
-    @media screen and (min-width: $size_mobile_navigation){
+    @media screen and (min-width: $size_mobile_navigation) {
         flex-direction: row;
         justify-content: space-between;
     }
 
-    #createRoute button{
-        margin-bottom:1rem;
-        @media screen and (min-width: $size_mobile_navigation){
-            margin-bottom:0;
+    #createRoute button {
+        margin-bottom: 1rem;
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            margin-bottom: 0;
         }
     }
 }
 
-.trip_event-placeholder{
+.trip_event-placeholder {
     //border: 1px dashed $color_text-main;
     //background-color:#CCCCCC;
 }
 
-.trip_day .icon i:hover, svg:hover{
-    cursor:pointer;
+.trip_day .icon i:hover,
+svg:hover {
+    cursor: pointer;
 }
 
-.leaflet-marker-icon.extra-marker{
-    
-    svg{
+.leaflet-marker-icon.extra-marker {
+
+    svg {
         margin-top: 10px;
         color: #FFFFFF;
         width: 1.5em;
+        height: 1.5em;
     }
-    
+
+}
+
+.leaflet-container {
+    @include font-size(1);
 }

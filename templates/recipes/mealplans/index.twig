@@ -25,7 +25,7 @@
                             <td><a href="{{  url_for('recipes_mealplans_view', {'mealplan' : mealplan.hash}) }}">{{ mealplan.name|raw }}</a></td> 
                             <td>
                                 {% if mealplan.getOwner() == user.id %}
-                                    <a href="{{  url_for('recipes_mealplans_edit', {'id' : mealplan.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('recipes_mealplans_edit', {'id' : mealplan.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>

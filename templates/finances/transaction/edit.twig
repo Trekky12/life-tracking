@@ -29,7 +29,7 @@
 			<div class="buttons">
 			<a href="{% if not account is null %}{{ url_for_with_last_query_params('finances_transaction', {'account': account.getHash()}) }}{% else %}{{ url_for_with_last_query_params('finances_account') }}{% endif %}">
 				<button class="button">{{lang["BACK"]}}
-					{{ fontawesome('fas fa-level-up-alt') }}</button>
+					{{ fontawesome('fas fa-turn-up') }}</button>
 			</a>
 			</div>
 		</div>

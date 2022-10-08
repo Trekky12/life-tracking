@@ -18,7 +18,7 @@
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('workouts_sessions', {'plan': plan.hash}) }}">
 					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-level-up-alt') }}</button>
+						{{ fontawesome('fas fa-turn-up') }}</button>
 				</a>
 			</div>
 		</div>
@@ -80,7 +80,7 @@
 									</div>
 									<div class="icons hidden">
 										<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
-										<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+										<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 									</div>
 								</div>
 							{% elseif exercise.type == "superset" %}
@@ -96,7 +96,7 @@
 									</div>
 									<div class="icons">
 										<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
-										<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+										<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 									</div>
 								</div>
 							{% endif %}

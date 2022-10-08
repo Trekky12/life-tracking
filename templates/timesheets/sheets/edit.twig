@@ -22,7 +22,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2>
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -80,6 +80,18 @@
                             {% endfor %}
                         </select>
                     </div>  
+                {% endif %}
+
+                {% if customers %}
+                <div class="form-group customer">
+                    <label for="category">{{lang["TIMESHEETS_CUSTOMER"]}}</label>
+                    <select class="form-control" id="customer" name="customer">
+                        <option value="" {% if entry is null %}selected{% endif %}>{{ lang["NONE"] }}</option>
+                        {% for customer in customers %}
+                            <option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %}selected{% endif %}>{{customer.name|raw}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 {% endif %}
 
                 {% if project.has_duration_modifications > 0 %}

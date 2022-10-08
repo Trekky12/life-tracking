@@ -50,6 +50,7 @@ function watchTask(cb) {
 /**
  * Copy fonts from node_modules to /public/static/assets
  */
+/*
 function copyFontsFontAwesome4Task(cb) {
     return gulp.src( './node_modules/font-awesome/fonts/**.*' )
         .pipe( gulp.dest( 'public/static/assets/fonts' ) );
@@ -75,6 +76,7 @@ function copyFontAwesome5JS(cb) {
         .pipe( rename("font-awesome5.min.js") )
         .pipe( gulp.dest( 'public/static/assets/js' ) );
 }
+*/
 
 function copyFontsFontAwesome5SVG(cb) {
     return gulp.src( './node_modules/@fortawesome/fontawesome-free/svgs/**/*.svg' )
@@ -104,7 +106,9 @@ function copyJSTask(cb) {
             './node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
             './node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js',
             './node_modules/hammerjs/hammer.min.js',
-            './node_modules/file-saver/dist/FileSaver.min.js'
+            './node_modules/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js',
+            './node_modules/file-saver/dist/FileSaver.min.js',
+            './node_modules/@jstable/jstable/dist/jstable.min.js'
             ] )
         // remove source maps
         .pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))
@@ -159,6 +163,7 @@ function copyCSSTask(cb) {
             './node_modules/nouislider/dist/nouislider.min.css',
             './node_modules/mobius1-selectr/dist/selectr.min.css',
             './node_modules/easymde/dist/easymde.min.css',
+            './node_modules/@jstable/jstable/dist/jstable.css'
             ] )
         // remove source map
         .pipe(replace(/\/\*# sourceMappingURL=(.?)*\.css\.map \*\//g, ""))
@@ -253,6 +258,25 @@ function replaceLeafletRoutingIconCSS(cb) {
         .pipe( gulp.dest( 'public/static/assets/css' ) );
 }
 
+function copyLeafletLocateControlIcons(cb) {
+    return gulp.src( './node_modules/leaflet.locatecontrol/*.svg', )
+        .pipe( gulp.dest( 'public/static/assets/images/leaflet-locatecontrol' ) );
+}
+
+function replaceLeafletLocateControlIconCSS(cb) {
+    return gulp
+        .src( [ 
+            './node_modules/leaflet.locatecontrol/dist/L.Control.Locate.css',
+            ] )
+        .pipe( replace("../location-arrow-solid.svg", "../images/leaflet-locatecontrol/location-arrow-solid.svg") )
+        .pipe( replace("../spinner-solid.svg", "../images/leaflet-locatecontrol/spinner-solid.svg") )
+        .pipe( minifyCSS() )
+        .pipe( rename( {
+            suffix: '.min'
+        } ) )
+        .pipe( gulp.dest( 'public/static/assets/css' ) );
+}
+
 function copyFontsWeatherIconsTask(cb) {
     return gulp.src( './node_modules/weather-icons/font/**.*' )
         .pipe( gulp.dest( 'public/static/assets/fonts/weather-icons' ) );
@@ -310,7 +334,7 @@ function printError( error ) {
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
 exports.default = watchTask;
-exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontsFontAwesome5SVG, copyDOCXJS);
+exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyLeafletLocateControlIcons, replaceLeafletLocateControlIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontsFontAwesome5SVG, copyDOCXJS);
 
 exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);
 exports.test = copyFontsFontAwesome5SVG;

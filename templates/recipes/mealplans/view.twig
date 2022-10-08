@@ -18,7 +18,7 @@
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('recipes_mealplans')}}">
 					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-level-up-alt') }}</button>
+						{{ fontawesome('fas fa-turn-up') }}</button>
 				</a>
 			</div>
 		</div>
@@ -51,7 +51,7 @@
 								<div class="mealplan-recipe" data-recipe="{{ recipe_of_day["recipe_id"] }}" data-id="{{ recipe_of_day["id"] }}">
 									<div class="title">
 										<div class="icons">
-											<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+											<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 										</div>
 										<h3>
 											{% if recipe_of_day["recipe_id"] %}
@@ -113,7 +113,7 @@
 		<div class="mealplan-recipe">
 			<div class="title">
 				<div class="icons">
-					<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+					<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 				</div>
 				<h3 class="title"></h3>
 			</div>

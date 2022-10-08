@@ -349,7 +349,7 @@ function initMap() {
         locateOptions: {
             enableHighAccuracy: true
         },
-        createButtonCallback: function (container, options) {
+        /*createButtonCallback: function (container, options) {
             var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', container);
             link.title = options.strings.title;
             link.role = 'button';
@@ -368,7 +368,7 @@ function initMap() {
             }
 
             return { link: link, icon: icon };
-        },
+        },*/
     });
     mymap.addControl(lc);
 

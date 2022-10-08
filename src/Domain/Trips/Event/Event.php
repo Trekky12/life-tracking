@@ -174,7 +174,7 @@ class Event extends \App\Domain\DataObject {
         if (!is_null($this->start_address)) {
             $start_address = "{$start_link}{$this->start_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
-            $start_address = " {$start_link}" . Utility::getFontAwesomeIcon('fas fa-map-marker-alt') . "</a>{$loc_suffix}";
+            $start_address = " {$start_link}" . Utility::getFontAwesomeIcon('fas fa-location-dot') . "</a>{$loc_suffix}";
         }
 
         $end_address = null;
@@ -182,7 +182,7 @@ class Event extends \App\Domain\DataObject {
         if (!is_null($this->end_address)) {
             $end_address = "{$end_link}{$this->end_address}</a>{$loc_suffix}";
         } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
-            $start_address = " {$end_link}" . Utility::getFontAwesomeIcon('fas fa-map-marker-alt') . "</a>{$loc_suffix}";
+            $start_address = " {$end_link}" . Utility::getFontAwesomeIcon('fas fa-location-dot') . "</a>{$loc_suffix}";
         }
 
         // same start and end date? hide end date

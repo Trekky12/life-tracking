@@ -25,7 +25,7 @@
                             <td>{{car.name|raw}}</td> 
                             <td>
                                 {% if car.user == user.id %}
-                                    <a href="{{  url_for('cars_edit', {'id' : car.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('cars_edit', {'id' : car.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>

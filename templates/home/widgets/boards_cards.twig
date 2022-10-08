@@ -1,6 +1,6 @@
 {% for card in data %}
 	<div class="widget-board-card">
-		<div class="check btn-archive-card" data-archive="{{card.archive}}" data-stack="{{card.stack}}" data-id="{{card.id}}" data-url="{{url_for('card_archive')}}{{card.id}}">{{ fontawesome('far fa-check-circle') }}</div>
+		<div class="check btn-archive-card" data-archive="{{card.archive}}" data-stack="{{card.stack}}" data-id="{{card.id}}" data-url="{{url_for('card_archive')}}{{card.id}}">{{ fontawesome('far fa-circle-check') }}</div>
 		<div class="widget-card-title">{{card.title|raw}}</div>
 	</div>
 {% endfor %}

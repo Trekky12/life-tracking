@@ -90,15 +90,15 @@ class TransactionService extends Service
         $rendered_data = [];
         foreach ($table as $dataset) {
             $row = [];
-            $row[] = '<span class="confirm_transaction ' . ($dataset["is_confirmed"] > 0 ? 'is_confirmed' : '') . '" data-id="' . $dataset["id"] . '"><span class="check-circle">' . Utility::getFontAwesomeIcon('far fa-check-circle') . '</span><span class="cross-circle">' . Utility::getFontAwesomeIcon('far fa-times-circle') . '</span></span>';
+            $row[] = '<span class="confirm_transaction ' . ($dataset["is_confirmed"] > 0 ? 'is_confirmed' : '') . '" data-id="' . $dataset["id"] . '"><span class="check-circle">' . Utility::getFontAwesomeIcon('far fa-circle-check') . '</span><span class="cross-circle">' . Utility::getFontAwesomeIcon('far fa-circle-xmark') . '</span></span>';
             $row[] = $dataset["date"];
             $row[] = $dataset["time"];
             $row[] = $dataset["description"];
             $row[] = $dataset["value"];
             $row[] = $dataset["acc_from"];
             $row[] = $dataset["acc_to"];
-            //$row[] = is_null($dataset["finance_entry"]) && is_null($dataset["bill_entry"]) ? '<a href="' . $this->router->urlFor('finances_transaction_edit', ['id' => $dataset["id"]]) . '?account='.$account->getHash().'">'.Utility::getFontAwesomeIcon('fas fa-edit').'</a>': '';
-            $row[] = '<a href="' . $this->router->urlFor('finances_transaction_edit', ['id' => $dataset["id"]]) . '?account=' . $account->getHash() . '">' . Utility::getFontAwesomeIcon('fas fa-edit') . '</a>';
+            //$row[] = is_null($dataset["finance_entry"]) && is_null($dataset["bill_entry"]) ? '<a href="' . $this->router->urlFor('finances_transaction_edit', ['id' => $dataset["id"]]) . '?account='.$account->getHash().'">'.Utility::getFontAwesomeIcon('fas fa-pen-to-square').'</a>': '';
+            $row[] = '<a href="' . $this->router->urlFor('finances_transaction_edit', ['id' => $dataset["id"]]) . '?account=' . $account->getHash() . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
             //$row[] = is_null($dataset["finance_entry"]) && is_null($dataset["bill_entry"]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_transaction_delete', ['id' => $dataset["id"]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</span></a>' : '';
 
             $delete_confirm_message = !is_null($dataset["bill_entry"]) ? $this->translation->getTranslatedString("FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL") : (!is_null($dataset["finance_entry"]) ? $this->translation->getTranslatedString("FINANCES_TRANSACTION_DELETE_HAS_ENTRY") : '');

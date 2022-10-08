@@ -13,7 +13,7 @@
         <div class="page-header">
             <h2>{{lang["STEPS"]}} {{lang["STATS"]}} {{lang["IN"]}} {{month}}/{{year}}</h2>
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('steps_stats_year', {'year':year}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('steps_stats_year', {'year':year}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
 
@@ -35,7 +35,7 @@
                             <td>{{entry[0]}}</td> 
                             <td>{{ entry[1]|number_format(0, '', '.')}}</td> 
                             <td>
-                                <a href="{{  url_for('steps_day_edit', {'date': entry[0] }) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                <a href="{{  url_for('steps_day_edit', {'date': entry[0] }) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                             </td>
                         </tr>
                     {% endfor %}

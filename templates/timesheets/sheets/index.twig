@@ -21,7 +21,7 @@
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('timesheets')}}">
 					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-level-up-alt') }}</button>
+						{{ fontawesome('fas fa-turn-up') }}</button>
 				</a>
 				{% if categories %}
 					<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
@@ -32,13 +32,13 @@
 					<button class="button">{{lang["TIMESHEETS_EXPORT"]}}</button>
 				</a>
 				<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
-					<button class="button">{{ fontawesome('fas fa-sign-in-alt') }}
+					<button class="button">{{ fontawesome('fas fa-right-to-bracket') }}
 						{% if project.is_day_based == 1 %}
 							{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
 						{% else %}
 							{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}
 						{% endif %}
-						{{ fontawesome('fas fa-sign-out-alt') }}</button>
+						{{ fontawesome('fas fa-right-from-bracket') }}</button>
 				</a>
 				<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
 					<button class="button">{{ fontawesome('fas fa-plus') }}
@@ -139,6 +139,9 @@
 							{% endif %}
 						</th>
 						<th>{{lang["DIFFERENCE"]}}</th>
+						{% if customers %}
+							<th>{{lang["TIMESHEETS_CUSTOMER"]}}</th>
+						{% endif %}
 						{% if categories %}
 							<th>{{lang["CATEGORIES"]}}</th>
 						{% endif %}
@@ -155,12 +158,15 @@
 							<td>{{ sheet["data"][2] }}</td>
 							<td>{{ sheet["data"][3] }}</td>
 							<td>{{ sheet["data"][4] }}</td>
-							{% if categories %}
+							{% if customers %}
 								<td>{{ sheet["data"][5] }}</td>
 							{% endif %}
-							<td>{{ sheet["data"][6]|raw }}</td>
+							{% if categories %}
+								<td>{{ sheet["data"][6] }}</td>
+							{% endif %}
 							<td>{{ sheet["data"][7]|raw }}</td>
 							<td>{{ sheet["data"][8]|raw }}</td>
+							<td>{{ sheet["data"][9]|raw }}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -171,6 +177,9 @@
 						<th></th>
 						<th></th>
 						<th>{{ sum  }}</th>
+						{% if customers %}
+							<th></th>
+						{% endif %}
 						{% if categories %}
 							<th></th>
 						{% endif %}

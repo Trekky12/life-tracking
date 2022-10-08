@@ -23,7 +23,7 @@
                     {% for exercise in exercises %}
                         <tr>
                             <td>{{exercise.name|raw}}</td> 
-                            <td><a href="{{  url_for('workouts_exercises_edit', {'id' : exercise.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('workouts_exercises_edit', {'id' : exercise.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('workouts_exercises_delete', {'id' : exercise.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

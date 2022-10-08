@@ -27,7 +27,7 @@
                             <td>{{method.name|raw}}</td> 
                             <td>{% if method.is_default == 1%}x{%endif%}</td> 
                             <td>{{accounts[method.account].name|raw}}</td> 
-                            <td><a href="{{  url_for('finances_paymethod_edit', {'id' : method.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('finances_paymethod_edit', {'id' : method.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('finances_paymethod_delete', {'id' : method.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

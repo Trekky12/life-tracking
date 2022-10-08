@@ -25,7 +25,7 @@
                             <td><a href="{{  url_for('boards_view', {'hash' : board.hash}) }}">{{board.name|raw}}</a></td> 
                             <td>
                                 {% if board.user == user.id %}
-                                    <a href="{{  url_for('boards_edit', {'id' : board.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('boards_edit', {'id' : board.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>

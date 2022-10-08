@@ -27,7 +27,7 @@
                             <td>{{ingredient.unit}}</td> 
                             <td>
                                 {% if ingredient.getOwner() == user.id %}
-                                    <a href="{{  url_for('recipes_ingredients_edit', {'id' : ingredient.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('recipes_ingredients_edit', {'id' : ingredient.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                 {% endif %}
                             </td>
                                 

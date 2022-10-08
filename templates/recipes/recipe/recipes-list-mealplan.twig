@@ -3,7 +3,7 @@
     <div class="mealplan-recipe" data-recipe="{{ recipe.id }}">
         <div class="title">
             <div class="icons">
-                <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+                <span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
             </div>
             <h3><a href="{{ url_for('recipes_recipe_view', {'recipe': recipe.hash}) }}">{{ recipe.name|raw }}</a></h3>
         </div>

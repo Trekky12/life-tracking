@@ -32,12 +32,12 @@
                             </td>
                             <td>
                                 {% if crawler.user == user.id %}
-                                    <a href="{{  url_for('crawlers_links', {'crawler' : crawler.hash}) }}">{{ fontawesome('fas fa-external-link-alt') }}</a>
+                                    <a href="{{  url_for('crawlers_links', {'crawler' : crawler.hash}) }}">{{ fontawesome('fas fa-up-right-from-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>
                                 {% if crawler.user == user.id %}
-                                    <a href="{{  url_for('crawlers_edit', {'id' : crawler.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('crawlers_edit', {'id' : crawler.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>

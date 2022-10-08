@@ -7,7 +7,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["WORKOUTS_SESSIONS"]}}</h2> 
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('workouts_plan_view', {'plan': plan.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{  url_for_with_last_query_params('workouts_plan_view', {'plan': plan.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
                 <a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
         </div>
@@ -26,7 +26,7 @@
                         <tr>
                             <td><a href="{{  url_for('workouts_sessions_view', {'plan':plan.hash, 'id' : session.id}) }}">{{session.date}}</a></td> 
                             <td>{{session.days}}</td> 
-                            <td><a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash, 'id' : session.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('workouts_sessions_edit', {'plan':plan.hash, 'id' : session.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('workouts_sessions_delete', {'plan':plan.hash, 'id' : session.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

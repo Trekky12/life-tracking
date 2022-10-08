@@ -25,7 +25,7 @@
                             <td><a href="{{  url_for('recipes_cookbooks_view', {'cookbook' : cookbook.hash}) }}">{{ cookbook.name|raw }}</a></td> 
                             <td>
                                 {% if cookbook.getOwner() == user.id %}
-                                    <a href="{{  url_for('recipes_cookbooks_edit', {'id' : cookbook.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('recipes_cookbooks_edit', {'id' : cookbook.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>

@@ -8,7 +8,7 @@
         <div class="page-header"><h2>{{lang["FINANCES_ACCOUNTS"]}}</h2> 
             <div class="buttons">
                 <a href="{{  url_for('finances_account_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-                <a href="{{  url_for('finances_transaction_recurring') }}"><button class="button">{{ fontawesome('fas fa-calendar-alt') }} {{lang["FINANCES_TRANSACTIONS_RECURRING"]}}</button></a>
+                <a href="{{  url_for('finances_transaction_recurring') }}"><button class="button">{{ fontawesome('fas fa-calendar-days') }} {{lang["FINANCES_TRANSACTIONS_RECURRING"]}}</button></a>
                 <a href="{{  url_for('finances_transaction_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["FINANCES_TRANSACTION_ADD"]}}</button></a>
             </div>
         </div>
@@ -27,7 +27,7 @@
                         <tr>
                             <td><a href="{{ url_for('finances_transaction', {'account': account.getHash()}) }}">{{account.name|raw}}</a></td> 
                             <td>{{account.value}}</td> 
-                            <td><a href="{{  url_for('finances_account_edit', {'id' : account.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('finances_account_edit', {'id' : account.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('finances_account_delete', {'id' : account.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

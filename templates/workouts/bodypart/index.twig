@@ -23,7 +23,7 @@
                     {% for bodypart in bodyparts %}
                         <tr>
                             <td>{{bodypart.name|raw}}</td> 
-                            <td><a href="{{  url_for('workouts_bodyparts_edit', {'id' : bodypart.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('workouts_bodyparts_edit', {'id' : bodypart.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('workouts_bodyparts_delete', {'id' : bodypart.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

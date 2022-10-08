@@ -34,7 +34,7 @@
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('trips') }}">
 					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-level-up-alt') }}</button>
+						{{ fontawesome('fas fa-turn-up') }}</button>
 				</a>
 				<a href="{{ url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn">
 					<button class="button">{{ fontawesome('fas fa-plus') }}
@@ -120,15 +120,15 @@
 		<div id="iconHotels">{{ fontawesome('fas fa-bed') }}</div>
 		<div id="iconEvents">{{ fontawesome('fas fa-calendar') }}</div>
 
-		<div id="iconWalking">{{ fontawesome('fas fa-walking') }}</div>
-		<div id="iconBiking">{{ fontawesome('fas fa-biking') }}</div>
-		<div id="iconSave">{{ fontawesome('fas fa-save') }}</div>
-		<div id="iconMaps">{{ fontawesome('fas fa-map-signs') }}</div>
+		<div id="iconWalking">{{ fontawesome('fas fa-person-walking') }}</div>
+		<div id="iconBiking">{{ fontawesome('fas fa-person-biking') }}</div>
+		<div id="iconSave">{{ fontawesome('fas fa-floppy-disk') }}</div>
+		<div id="iconMaps">{{ fontawesome('fas fa-signs-post') }}</div>
 		<div id="iconAdd">{{ fontawesome('fas fa-plus') }}</div>
-		<div id="iconReverse">{{ fontawesome('fas fa-exchange-alt') }}</div>
+		<div id="iconReverse">{{ fontawesome('fas fa-right-left') }}</div>
 
 		<div id="iconRoute">{{ fontawesome('fas fa-route') }}</div>
-		<div id="iconLocation">{{ fontawesome('fas fa-map-marker-alt') }}</div>
+		<div id="iconLocation">{{ fontawesome('fas fa-location-dot') }}</div>
 		<div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
 	</div>
 {% endblock %}

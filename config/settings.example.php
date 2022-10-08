@@ -113,13 +113,13 @@ return [
             "location" => [
                 "url" => "/location/",
                 "rootRoute" => "location",
-                "icon" => "fas fa-map-marker-alt",
+                "icon" => "fas fa-location-dot",
                 "title" => "MENU_LOCATION"
             ],
             "finances" => [
                 "url" => "/finances/",
                 "rootRoute" => "finances",
-                "icon" => "far fa-money-bill-alt",
+                "icon" => "far fa-money-bill-1",
                 "title" => "MENU_FINANCES"
             ],
             "cars" => [
@@ -131,7 +131,7 @@ return [
             "boards" => [
                 "url" => "/boards/",
                 "rootRoute" => "boards",
-                "icon" => "fas fa-tasks",
+                "icon" => "fas fa-list-check",
                 "title" => "BOARDS"
             ],
             "crawlers" => [

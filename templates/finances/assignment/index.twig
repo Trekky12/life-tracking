@@ -30,7 +30,7 @@
                             <td>{{categories[assignment.category].name|raw}}</td> 
                             <td>{{assignment.min_value}}</td> 
                             <td>{{assignment.max_value}}</td> 
-                            <td><a href="{{  url_for('finances_categories_assignment_edit', {'id' : assignment.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('finances_categories_assignment_edit', {'id' : assignment.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('finances_categories_assignment_delete', {'id' : assignment.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}
