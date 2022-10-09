@@ -168,11 +168,13 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                         GROUP_CONCAT(bc.category ORDER BY bc.category SEPARATOR '|') as categories, 
                         GROUP_CONCAT(c.name ORDER BY c.id SEPARATOR ', ') as category_names,
                         GROUP_CONCAT(bc.category ORDER BY bc.category SEPARATOR ', ') as category_ids, 
-                        main_cat.name as main_category_name
+                        main_cat.name as main_category_name,
+                        customer.name as customer_name
                     FROM " . $this->getTableName() . " b 
                         LEFT JOIN " . $this->getTableName("timesheets_categorybudgets_categories") . " bc ON b.id = bc.categorybudget 
                         LEFT JOIN " . $this->getTableName("timesheets_categories") . " c ON bc.category = c.id
                         LEFT JOIN " . $this->getTableName("timesheets_categories") . " main_cat ON b.main_category = main_cat.id
+                        LEFT JOIN " . $this->getTableName("timesheets_customers") . " customer ON b.customer = customer.id
                     WHERE b.project = :project AND b.is_hidden <= 0 ";
 
         if (!empty($cat_bindings)) {
@@ -186,7 +188,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                     . ")";
         }
         $sql .= " GROUP BY b.id";
-        $sql .= " ORDER BY main_category_name, b.name";
+        $sql .= " ORDER BY customer_name, main_category_name, b.name";
 
         $bindings = ["project" => $project_id];
 
@@ -261,6 +263,11 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                     . "             GROUP BY sheet "
                     . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
                     . ") ";
+        }
+
+        if ($budget["customer"]) {
+            $bindings["customer"] = $budget["customer"];
+            $sql .= " and sheet.customer = :customer";
         }
 
 

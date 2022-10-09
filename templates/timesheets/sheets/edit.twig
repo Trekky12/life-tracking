@@ -3,15 +3,15 @@
 {% set active = 'timesheets' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}" />
+  <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
+  <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
+  <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+  <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
+  <script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+  <script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% set hasMap_start = not entry.start_lat is null and not entry.start_lng is null %}
@@ -19,132 +19,157 @@
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2>
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-
-            <form class="form-horizontal" action="{{  url_for('timesheets_sheets_save', {'id' : entry.id, 'project': project.hash}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-
-                {% if not entry is null %}
-                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
-                {% endif %}
-
-                <div class="form-group">
-                    <label for="datetimePickerStart">{% if entry.is_day_based == 1 %}{{lang["TIMESHEETS_COME_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}{% endif %}</label>
-                    <input type="text" class="form-control" id="datetimePickerStart" placeholder="" name="start" value="{% if not entry is null %}{{entry.start}}{% else %}{{ "now"|date("Y-m-d H:i") }}{% endif %}">
-                </div>
-
-                <div class="mapWrapper">
-                    <h4>{{lang["START_ADDRESS"]}}</h4>
-                    <div id="geo-map" class="geo-map"></div>
-                    <div class="form-group map-btn">
-                        <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                        <button class="button delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
-                    </div>
-                    <input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
-                    <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
-                    <input type="hidden" class="geo-acc" name="start_acc" value="{% if not entry is null %}{{entry.start_acc}}{% endif %}">
-                    <input type="hidden" class="geo-draggable" name="draggable" value="1">
-                </div>
-
-                <div class="form-group">
-                    <label for="datetimePickerEnd">{% if entry.is_day_based == 1 %}{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}{% endif %}</label>
-                    <input type="text" class="form-control" id="datetimePickerEnd" placeholder="" name="end" value="{{end}}" data-saved="{% if not entry is null %}1{% else %}0{% endif %}" data-default-duration="{{ project.default_duration }}">
-                </div>
-
-                <div class="mapWrapper">
-                    <h4>{{lang["END_ADDRESS"]}}</h4>
-                    <div id="geo-map2" class="geo-map"></div>
-                    <div class="form-group map-btn">
-                        <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                        <button class="button delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
-                    </div>
-                    <input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
-                    <input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
-                    <input type="hidden" class="geo-acc" name="end_acc" value="{% if not entry is null %}{{entry.end_acc}}{% endif %}">
-                    <input type="hidden" class="geo-draggable" name="draggable" value="1">
-                </div>
-
-                {% if categories %}
-                    <div class="form-group category">
-                        <label for="projectCategory">{{lang["CATEGORIES"]}}</label>
-                        <select class="form-control category" id="projectCategory" name="category[]" multiple>
-                            {% for cat in categories %}
-                                <option value="{{cat.id}}" {% if cat.id in sheet_categories %}selected{%endif%}>{{cat.name|raw}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>  
-                {% endif %}
-
-                {% if customers %}
-                <div class="form-group customer">
-                    <label for="category">{{lang["TIMESHEETS_CUSTOMER"]}}</label>
-                    <select class="form-control" id="customer" name="customer">
-                        <option value="" {% if entry is null %}selected{% endif %}>{{ lang["NONE"] }}</option>
-                        {% for customer in customers %}
-                            <option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %}selected{% endif %}>{{customer.name|raw}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% endif %}
-
-                {% if project.has_duration_modifications > 0 %}
-                    <div class="form-group">
-                        <label class="checkbox" for="radioDurationReal">
-                            <input name="duration_modification" type="radio" value="0" id="radioDurationReal" {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 0 )%}checked="checked"{% endif %}>
-                            {{lang["TIMESHEETS_DURATION_NO_MODIFICATION"]}}
-                        </label>
-                        <br/>
-                        <label class="checkbox" for="radioDurationProjectRate">
-                            <input name="duration_modification" type="radio" value="1" id="radioDurationProjectRate" {% if ( entry is null ) or (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 1 )%}checked="checked"{% endif %}>
-                            {{lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"]}} ({{ project.time_conversion_rate }})
-                        </label>
-                        <br/>
-                        <label class="checkbox" for="radioDurationCustom">
-                            <input name="duration_modification" type="radio" value="2" id="radioDurationCustom" {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 2 )%}checked="checked"{% endif %}>
-                            {{lang["TIMESHEETS_DURATION_MODIFICATION"]}}
-                        </label>
-                        <br/>
-                        <div id="inputDurationModificationWrapper" class="form-group {% if ( entry is null ) or (entry is not null and ( entry.getDurationModification(project.time_conversion_rate) == 0 or entry.getDurationModification(project.time_conversion_rate) == 1 ))%}hidden{% endif %}">
-                            <label for="inputDurationModification">{{lang["TIMESHEETS_TIME_MODIFICATION"]}}</label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="inputRate" 
-                                name="duration_modified" 
-                                value="{% if not entry is null %}{{entry.duration_modified}}{% endif %}"
-                                >
-                        </div>
-                    </div>
-                {% endif %}
-
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxBilled">
-                        <input name="is_billed" type="checkbox" value="1" id="checkboxBilled" {% if entry.is_billed == 1 %}checked{% endif %}>
-                        {{lang["TIMESHEETS_BILLED"]}}
-                    </label>
-                </div>
-
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxPayed">
-                        <input name="is_payed" type="checkbox" value="1" id="checkboxPayed" {% if entry.is_payed == 1 %}checked{% endif %}>
-                        {{lang["TIMESHEETS_PAYED"]}}
-                    </label>
-                </div>
-
-                <div class="form-group btn">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
+  <div class="inner-content">
+    <div class="page-header">
+      <h2>{{lang["TIMESHEETS"]}}
+        |
+        {{project.name|raw}}</h2>
+      <div class="buttons">
+        <a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
+          <button class="button">{{lang["BACK"]}}
+            {{ fontawesome('fas fa-turn-up') }}</button>
+        </a>
+      </div>
     </div>
+    <div class="page-content">
+
+      <form class="form-horizontal" action="{{ url_for('timesheets_sheets_save', {'id' : entry.id, 'project': project.hash}) }}" method="POST">
+        <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+        <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+        {% if not entry is null %}
+          <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+        {% endif %}
+
+        <div class="form-group">
+          <label for="datetimePickerStart">
+            {% if entry.is_day_based == 1 %}
+              {{lang["TIMESHEETS_COME_DAY_BASED"]}}
+            {% else %}
+              {{lang["TIMESHEETS_COME_PROJECT_BASED"]}}
+            {% endif %}
+          </label>
+          <input type="text" class="form-control" id="datetimePickerStart" placeholder="" name="start" value="{% if not entry is null %}{{entry.start}}{% else %}{{ "now"|date("Y-m-d H:i") }}{% endif %}">
+        </div>
+
+        <div class="mapWrapper">
+          <h4>{{lang["START_ADDRESS"]}}</h4>
+          <div id="geo-map" class="geo-map"></div>
+          <div class="form-group map-btn">
+            <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+            <button class="button delete-location danger {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+          </div>
+          <input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
+          <input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
+          <input type="hidden" class="geo-acc" name="start_acc" value="{% if not entry is null %}{{entry.start_acc}}{% endif %}">
+          <input type="hidden" class="geo-draggable" name="draggable" value="1">
+        </div>
+
+        <div class="form-group">
+          <label for="datetimePickerEnd">
+            {% if entry.is_day_based == 1 %}
+              {{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}
+            {% else %}
+              {{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}
+            {% endif %}
+          </label>
+          <input type="text" class="form-control" id="datetimePickerEnd" placeholder="" name="end" value="{{end}}" data-saved="{% if not entry is null %}1{% else %}0{% endif %}" data-default-duration="{{ project.default_duration }}">
+        </div>
+
+        <div class="mapWrapper">
+          <h4>{{lang["END_ADDRESS"]}}</h4>
+          <div id="geo-map2" class="geo-map"></div>
+          <div class="form-group map-btn">
+            <button class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
+            <button class="button delete-location danger {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+          </div>
+          <input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
+          <input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
+          <input type="hidden" class="geo-acc" name="end_acc" value="{% if not entry is null %}{{entry.end_acc}}{% endif %}">
+          <input type="hidden" class="geo-draggable" name="draggable" value="1">
+        </div>
+
+        {% if customers %}
+          <div class="form-group customer">
+            <label for="category">
+              {% if project.customers_name_singular %}
+                {{project.customers_name_singular}}
+              {% else %}
+                {{lang["TIMESHEETS_CUSTOMER"]}}
+              {% endif %}
+            </label>
+            <select class="form-control" id="customer" name="customer">
+              <option value="" {% if entry is null %} selected {% endif %}>{{ lang["NONE"] }}</option>
+              {% for customer in customers %}
+                <option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %} selected {% endif %}>{{customer.name|raw}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+
+        {% if categories %}
+          <div class="form-group category">
+            <label for="projectCategory">{{lang["CATEGORIES"]}}</label>
+            <select class="form-control category" id="projectCategory" name="category[]" multiple>
+              {% for cat in categories %}
+                <option value="{{cat.id}}" {% if cat.id in sheet_categories %} selected {%endif%}>{{cat.name|raw}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+
+        {% if project.has_duration_modifications > 0 %}
+          <div class="form-group">
+            <label class="checkbox" for="radioDurationReal">
+              <input name="duration_modification" type="radio" value="0" id="radioDurationReal" {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 0 )%} checked="checked" {% endif %}>
+              {{lang["TIMESHEETS_DURATION_NO_MODIFICATION"]}}
+            </label>
+            <br/>
+            <label class="checkbox" for="radioDurationProjectRate">
+              <input name="duration_modification" type="radio" value="1" id="radioDurationProjectRate" {% if ( entry is null ) or (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 1 )%} checked="checked" {% endif %}>
+              {{lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"]}}
+              ({{ project.time_conversion_rate }})
+            </label>
+            <br/>
+            <label class="checkbox" for="radioDurationCustom">
+              <input name="duration_modification" type="radio" value="2" id="radioDurationCustom" {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 2 )%} checked="checked" {% endif %}>
+              {{lang["TIMESHEETS_DURATION_MODIFICATION"]}}
+            </label>
+            <br/>
+            <div id="inputDurationModificationWrapper" class="form-group {% if ( entry is null ) or (entry is not null and ( entry.getDurationModification(project.time_conversion_rate) == 0 or entry.getDurationModification(project.time_conversion_rate) == 1 ))%}hidden{% endif %}">
+              <label for="inputDurationModification">{{lang["TIMESHEETS_TIME_MODIFICATION"]}}</label>
+              <input type="text" class="form-control" id="inputRate" name="duration_modified" value="{% if not entry is null %}{{entry.duration_modified}}{% endif %}">
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label class="checkbox" for="checkboxBilled">
+            <input name="is_billed" type="checkbox" value="1" id="checkboxBilled" {% if entry.is_billed == 1 %} checked {% endif %}>
+            {{lang["TIMESHEETS_BILLED"]}}
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox" for="checkboxPayed">
+            <input name="is_payed" type="checkbox" value="1" id="checkboxPayed" {% if entry.is_payed == 1 %} checked {% endif %}>
+            {{lang["TIMESHEETS_PAYED"]}}
+          </label>
+        </div>
+
+        <div class="form-group btn">
+          <button type="submit" class="button">
+            {% if not entry is null %}
+              {{lang["SAVE"]}}
+            {% else %}
+              {{lang["INSERT"]}}
+            {% endif %}
+          </button>
+          {% if not entry is null %}
+            <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
 {% endblock %}

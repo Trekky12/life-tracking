@@ -85,6 +85,16 @@
                     <label for="inputDefaultDuration">{{lang["TIMESHEETS_DURATION_DEFAULT"]}}</label>
                     <input type="text" class="form-control duration-input html-duration-picker" data-hide-seconds id="inputDefaultDuration" name="set_default_duration" value="{% if not entry is null %}{{entry.default_duration | splitDateInterval(true)}}{% endif %}" />
                 </div>
+
+                <div class="form-group">
+                    <label for="inputCustomersNameSingular">{{lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"]}}</label>
+                    <input type="text" class="form-control" id="inputCustomersNameSingular" name="customers_name_singular" {% if not entry is null %}value="{{entry.customers_name_singular|raw}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputCustomersNamePlural">{{lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"]}}</label>
+                    <input type="text" class="form-control" id="inputCustomersNamePlural" name="customers_name_plural" {% if not entry is null %}value="{{entry.customers_name_plural|raw}}"{% endif %}>
+                </div>
                 
                 <h3>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] }}</h3>
                 

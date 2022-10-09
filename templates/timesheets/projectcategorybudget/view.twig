@@ -18,72 +18,79 @@
 		</div>
 	</div>
 
-	{% for cat in categorybudgets %}
+	{% for customer in categorybudgets %}
 
 		<div class="inner-content">
-			<div class="page-header">
-				<h2>{{ cat["name"] }}</h2>
-			</div>
-			<div class="page-content no-padding-top">
-				{% for budget in cat["items"] %}
-					<div class="budget-entry">
-						<h3>{{budget.name|raw}}
-							{% if budget.start and budget.end %}({{ budget.start|date(i18n.dateformatTwig.date) }}
-								-
-								{{ budget.end|date(i18n.dateformatTwig.date) }})
-							{% endif %}
-						</h3>
-						{% if budget.category_names | length > 0 %}
-							<div class="categories-list">
-								{{lang["CATEGORIES"]}}:
-								{{budget.category_names|raw}}
-							</div>
-						{% endif %}
-						{% if budget.notice %}
-							<small>{{ budget.notice|raw }}</small>
-						{% endif %}
-
-						<div class="values">
-							<span>0</span>
-							<span>
-								{%if budget.categorization != 'count' %}
-									{{budget.sum | splitDateInterval(true)}}
-								{% else %}
-									{{ budget.sum }}
+			{% if customer["name"] %}
+				<div class="page-header">
+					<h2>{{ customer["name"] }}</h2>
+				</div>
+			{% endif %}
+			{% for main_cat in customer["items"] %}
+				{% if main_cat["name"] %}
+					<h3>{{ main_cat["name"] }}</h3>
+				{% endif %}
+				<div class="page-content no-padding-top">
+					{% for budget in main_cat["items"] %}
+						<div class="budget-entry">
+							<h4>{{budget.name|raw}}
+								{% if budget.start and budget.end %}({{ budget.start|date(i18n.dateformatTwig.date) }}
+									-
+									{{ budget.end|date(i18n.dateformatTwig.date) }})
 								{% endif %}
-							</span>
-							<span>
-								{%if budget.categorization != 'count' %}
-									{{budget.value | splitDateInterval(true)}}
-								{% else %}
-									{{ budget.value }}
-								{% endif %}
-							</span>
-						</div>
-
-						<div class="progress-bar">
-							<div class="progress {%if budget.warning3 > 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 > 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 > 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}" style="width:{{budget.percent}}%">
-								{%if budget.percent >= 25 %}
-									{{budget.percent}}%{%endif%}</div>
-								{%if budget.percent and budget.percent < 25 %}
-									<div class="progress progress-text">{{budget.percent}}%</div>
-								{% endif %}
-							</div>
-
-							{% if budget.diff is not null %}
-								<div class="remaining">
-									{{lang["REMAINING"]}}:
-									{%if budget.categorization != 'count' %}
-										{{budget.diff | splitDateInterval(true)}}
-									{% else %}
-										{{ budget.diff }}
-									{% endif %}
+							</h4>
+							{% if budget.category_names | length > 0 %}
+								<div class="categories-list">
+									{{lang["CATEGORIES"]}}:
+									{{budget.category_names|raw}}
 								</div>
 							{% endif %}
+							{% if budget.notice %}
+								<small>{{ budget.notice|raw }}</small>
+							{% endif %}
 
-						</div>
-					{% endfor %}
-				</div>
+							<div class="values">
+								<span>0</span>
+								<span>
+									{%if budget.categorization != 'count' %}
+										{{budget.sum | splitDateInterval(true)}}
+									{% else %}
+										{{ budget.sum }}
+									{% endif %}
+								</span>
+								<span>
+									{%if budget.categorization != 'count' %}
+										{{budget.value | splitDateInterval(true)}}
+									{% else %}
+										{{ budget.value }}
+									{% endif %}
+								</span>
+							</div>
+
+							<div class="progress-bar">
+								<div class="progress {%if budget.warning3 > 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 > 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 > 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}" style="width:{{budget.percent}}%">
+									{%if budget.percent >= 25 %}
+										{{budget.percent}}%{%endif%}</div>
+									{%if budget.percent and budget.percent < 25 %}
+										<div class="progress progress-text">{{budget.percent}}%</div>
+									{% endif %}
+								</div>
+
+								{% if budget.diff is not null %}
+									<div class="remaining">
+										{{lang["REMAINING"]}}:
+										{%if budget.categorization != 'count' %}
+											{{budget.diff | splitDateInterval(true)}}
+										{% else %}
+											{{ budget.diff }}
+										{% endif %}
+									</div>
+								{% endif %}
+
+							</div>
+						{% endfor %}
+					</div>
+				{% endfor %}
 			</div>
 		{% endfor %}
 

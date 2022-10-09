@@ -25,6 +25,8 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
         $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
 
         $this->main_category = $this->exists('main_category', $data) ? filter_var($data['main_category'], FILTER_SANITIZE_NUMBER_INT) : null;
+        
+        $this->customer = $this->exists('customer', $data) ? filter_var($data['customer'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->start = $this->exists('start', $data) ? $data['start'] : null;
         $this->end = $this->exists('end', $data) ? $data['end'] : null;

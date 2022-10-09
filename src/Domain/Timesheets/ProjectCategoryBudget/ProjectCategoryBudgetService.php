@@ -10,6 +10,7 @@ use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\ProjectCategory\ProjectCategoryService;
 use App\Domain\Main\Translator;
 use App\Domain\Main\Utility\DateUtility;
+use App\Domain\Timesheets\Customer\CustomerService;
 
 class ProjectCategoryBudgetService extends Service
 {
@@ -17,6 +18,7 @@ class ProjectCategoryBudgetService extends Service
     private $project_service;
     protected $project_category_service;
     protected $translation;
+    protected $customer_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -24,13 +26,15 @@ class ProjectCategoryBudgetService extends Service
         ProjectCategoryBudgetMapper $mapper,
         ProjectService $project_service,
         ProjectCategoryService $project_category_service,
-        Translator $translation
+        Translator $translation,
+        CustomerService $customer_service
     ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->project_service = $project_service;
         $this->project_category_service = $project_category_service;
         $this->translation = $translation;
+        $this->customer_service = $customer_service;
     }
 
     public function index($hash)
@@ -43,8 +47,9 @@ class ProjectCategoryBudgetService extends Service
         }
 
         $categorybudgets = $this->mapper->getFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id);
 
-        return new Payload(Payload::$RESULT_HTML, ['categorybudgets' => $categorybudgets, "project" => $project]);
+        return new Payload(Payload::$RESULT_HTML, ['categorybudgets' => $categorybudgets, "project" => $project, 'customers' => $customers]);
     }
 
     public function edit($hash, $entry_id, $use_template = null)
@@ -62,6 +67,7 @@ class ProjectCategoryBudgetService extends Service
         $entry = $this->getEntry($entry_id);
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
         $categorybudget_categories = !is_null($entry) ? $this->mapper->getCategoriesFromCategoryBudget($entry->id) : [];
+        $customers = $this->customer_service->getCustomersFromProject($project->id);
 
         if (is_null($entry) && !is_null($use_template)) {
             $template = $this->mapper->get($use_template);
@@ -75,7 +81,8 @@ class ProjectCategoryBudgetService extends Service
             "entry" => $entry,
             "project" => $project,
             "categories" => $project_categories,
-            "categorybudget_categories" => $categorybudget_categories
+            "categorybudget_categories" => $categorybudget_categories,
+            "customers" => $customers
         ]);
     }
 
@@ -90,13 +97,19 @@ class ProjectCategoryBudgetService extends Service
 
         $categorybudgets = $this->mapper->getBudgetForCategories($project->id);
 
-        // group by main category
+        // group by customer and main category
         $budgets = [];
         foreach ($categorybudgets as $cat_budget) {
-            if (!array_key_exists($cat_budget["main_category"], $budgets)) {
-                $budgets[$cat_budget["main_category"]] = ["name" => $cat_budget["main_category_name"], "items" => []];
+            $customer = !is_null($cat_budget["customer"]) ? $cat_budget["customer"] : "none";
+            $main_category = !is_null($cat_budget["main_category"]) ? $cat_budget["main_category"] : "none";
+
+            if (!array_key_exists($customer, $budgets)) {
+                $budgets[$customer] = ["name" => $cat_budget["customer_name"], "items" => []];
             }
-            $budgets[$cat_budget["main_category"]]["items"][] = $cat_budget;
+            if (!array_key_exists($main_category, $budgets[$customer]["items"])) {
+                $budgets[$customer]["items"][$main_category] = ["name" => $cat_budget["main_category_name"], "items" => []];
+            }
+            $budgets[$customer]["items"][$main_category]["items"][] = $cat_budget;
         }
 
         //$test = $this->mapper->getBudgetForCategories($project->id, []);

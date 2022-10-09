@@ -24,6 +24,9 @@ class Project extends \App\Domain\DataObject {
         $this->show_month_button = $this->exists('show_month_button', $data) ? intval(filter_var($data['show_month_button'], FILTER_SANITIZE_NUMBER_INT)) : 0;
         $this->show_quarters_buttons = $this->exists('show_quarters_buttons', $data) ? intval(filter_var($data['show_quarters_buttons'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
+        $this->customers_name_singular = $this->exists('customers_name_singular', $data) ? filter_var($data['customers_name_singular'], FILTER_UNSAFE_RAW) : null;
+        $this->customers_name_plural = $this->exists('customers_name_plural', $data) ? filter_var($data['customers_name_plural'], FILTER_UNSAFE_RAW) : null;
+
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";

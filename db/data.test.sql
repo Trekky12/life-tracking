@@ -91,6 +91,10 @@ INSERT INTO timesheets_sheets_notices (id, sheet) VALUES
 INSERT INTO timesheets_noticefields (id, project, name) VALUES 
 (1, 1, 'Test timesheets notice field 1'),
 (2, 2, 'Test timesheets notice field 3');
+INSERT INTO timesheets_customers (id, project, name) VALUES 
+(1, 1, 'Test timesheets customer 1'),
+(2, 1, 'Test timesheets customer 2'),
+(3, 2, 'Test timesheets customer 3');
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 

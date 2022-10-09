@@ -36,6 +36,9 @@ class Sheet extends \App\Domain\DataObject {
         $this->is_billed = $this->exists('is_billed', $data) ? filter_var($data['is_billed'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->is_payed = $this->exists('is_payed', $data) ? filter_var($data['is_payed'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
+        $this->customer = $this->exists('customer', $data) ? filter_var($data['customer'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->customerName = $this->exists('customerName', $data) ? filter_var($data['customerName'], FILTER_SANITIZE_STRING) : null;
+
         /* if (empty($this->name) && $this->settleup == 0) {
           $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
           } */
@@ -125,6 +128,7 @@ class Sheet extends \App\Domain\DataObject {
         $temp = parent::get_fields($remove_user_element, $insert, $update);
 
         unset($temp["categories"]);
+        unset($temp["customerName"]);
 
         return $temp;
     }

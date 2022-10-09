@@ -604,6 +604,7 @@ $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "notice field";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "timsheet project customer";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -801,6 +802,11 @@ $lang["DATATYPE_SELECT"] = "dropdown";
 $lang["DATATYPE_INITIALIZATION"] = "Initialization (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Add notice";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Edit notice";
+
+$lang["TIMESHEETS_CUSTOMER"] = "customer";
+$lang["TIMESHEETS_CUSTOMERS"] = "customers";
+$lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"] = "Label for customer (singular)";
+$lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Label for customers (plural)";
 
 $lang["PRINT"] = "Print";
 

@@ -954,7 +954,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
             sort: "asc"
         },
         {
-            select: [1, 2, 3, 4, 5, 6],
+            select: [1, 2, 3, 4, 5, 6, 7],
             sortable: false,
             searchable: false
         }
@@ -964,6 +964,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
 const timesheetCategories = document.querySelector("#selected_categories");
 const timesheetBilled = document.querySelector("#timesheet_view_billed");
 const timesheetPayed = document.querySelector("#timesheet_view_payed");
+const timesheetCustomer = document.querySelector("#timesheet_view_customer");
 
 var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
     perPage: 20,
@@ -977,7 +978,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
             sort: "desc"
         },
         {
-            select: [0, 5, 6, 7, 8],
+            select: [0, 6, 7, 8, 9],
             sortable: false,
             searchable: false
         }
@@ -991,6 +992,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
         "categories": timesheetCategories ? timesheetCategories.value : [],
         "billed": timesheetBilled ? timesheetBilled.value : '',
         "payed": timesheetPayed ? timesheetPayed.value : '',
+        "customer": timesheetCustomer ? timesheetCustomer.value : '',
     }
 });
 
@@ -1035,6 +1037,25 @@ var timesheetsCategoryBudgetTable = new JSTable("#project_categorybudgets_table"
         },
         {
             select: [1, 2, 3],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var timesheetsCustomersTable = new JSTable("#project_customers_table", {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
+    labels: tableLabels,
+    layout: layout,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
             sortable: false,
             searchable: false
         }

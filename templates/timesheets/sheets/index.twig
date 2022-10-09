@@ -96,8 +96,23 @@
 						</div>
 					</div>
 				{% endif %}
-
+				
 				<div class="filter-grid">
+					{% if customers %}
+						<label for="timesheet_view_customer">
+							{% if project.customers_name_singular %}
+								{{project.customers_name_singular}}
+							{% else %}
+								{{lang["TIMESHEETS_CUSTOMER"]}}
+							{% endif %}:</label>
+
+						<select class="regular" id="timesheet_view_customer" name="customer">
+							<option value="" {% if customer is null %} selected {% endif %}>{{ lang["ALL"] }}</option>
+							{% for c in customers %}
+								<option value="{{c.id}}" {% if c.id == customer %} selected {% endif %}>{{c.name|raw}}</option>
+							{% endfor %}
+						</select>
+					{% endif %}
 					<label for="timesheet_view_billed">{{lang["TIMESHEETS_BILLED"]}}:</label>
 					<select name="billed" id="timesheet_view_billed" class="regular">
 						<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_BILLED_AND_NOT_BILLED"]}}</option>
@@ -140,7 +155,13 @@
 						</th>
 						<th>{{lang["DIFFERENCE"]}}</th>
 						{% if customers %}
-							<th>{{lang["TIMESHEETS_CUSTOMER"]}}</th>
+							<th>
+								{% if project.customers_name_singular %}
+									{{project.customers_name_singular}}
+								{% else %}
+									{{lang["TIMESHEETS_CUSTOMER"]}}
+								{% endif %}
+							</th>
 						{% endif %}
 						{% if categories %}
 							<th>{{lang["CATEGORIES"]}}</th>

@@ -482,6 +482,13 @@ return function (App $app) {
                 $group_noticefields->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\NoticeField\NoticeFieldSaveAction::class)->setName('timesheets_noticefields_save');
                 $group_noticefields->delete('/delete/{id}', \App\Application\Action\Timesheets\NoticeField\NoticeFieldDeleteAction::class)->setName('timesheets_noticefields_delete');
             });
+
+            $group_project->group('/customers', function (RouteCollectorProxy $group_customers) {
+                $group_customers->get('/', \App\Application\Action\Timesheets\Customer\CustomerListAction::class)->setName('timesheets_customers');
+                $group_customers->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerEditAction::class)->setName('timesheets_customers_edit');
+                $group_customers->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerSaveAction::class)->setName('timesheets_customers_save');
+                $group_customers->delete('/delete/{id}', \App\Application\Action\Timesheets\Customer\CustomerDeleteAction::class)->setName('timesheets_customers_delete');
+            });
         });
     });
 

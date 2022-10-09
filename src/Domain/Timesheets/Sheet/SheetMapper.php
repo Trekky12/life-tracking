@@ -57,7 +57,7 @@ class SheetMapper extends \App\Domain\Mapper
     /**
      * Table
      */
-    private function getTableSQL($select, $categories, $billed = null, $payed = null)
+    private function getTableSQL($select, $categories, $billed = null, $payed = null, $customer = null)
     {
 
         $cat_bindings = array();
@@ -68,6 +68,7 @@ class SheetMapper extends \App\Domain\Mapper
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
             . " LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " tcs ON t.id = tcs.sheet"
             . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
+            . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " tcus ON tcus.id = t.customer "
             . " WHERE t.project = :project "
             . " AND ("
             . "     (DATE(t.start) >= :from AND DATE(t.end) <= :to ) OR"
@@ -76,6 +77,7 @@ class SheetMapper extends \App\Domain\Mapper
             . " ) AND ("
             . "     t.start LIKE :searchQuery OR "
             . "     t.end LIKE :searchQuery OR "
+            . "     tcus.name LIKE :searchQuery OR "
             . "     (tcs.sheet IN ( "
             . "              SELECT tcs2.sheet "
             . "                 FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs2 "
@@ -104,11 +106,15 @@ class SheetMapper extends \App\Domain\Mapper
             $sql .= " AND t.is_payed = :payed ";
         }
 
+        if (!is_null($customer)) {
+            $sql .= " AND t.customer = :customer ";
+        }
+
         $sql .= " GROUP BY t.id";
         return [$sql, $cat_bindings];
     }
 
-    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $searchQuery = "%")
+    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%")
     {
 
         $bindings = array(
@@ -124,8 +130,11 @@ class SheetMapper extends \App\Domain\Mapper
         if (!is_null($payed)) {
             $bindings["payed"] = $payed;
         }
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+        }
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $billed, $payed);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $billed, $payed, $customer);
 
         $sql = "SELECT COUNT(t.id) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -139,7 +148,7 @@ class SheetMapper extends \App\Domain\Mapper
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $searchQuery = "%", $field = "t.duration")
+    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%", $field = "t.duration")
     {
 
         $bindings = array(
@@ -155,8 +164,11 @@ class SheetMapper extends \App\Domain\Mapper
         if (!is_null($payed)) {
             $bindings["payed"] = $payed;
         }
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+        }
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories, $billed, $payed);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories, $billed, $payed, $customer);
 
         $sql = "SELECT SUM($field) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -170,7 +182,7 @@ class SheetMapper extends \App\Domain\Mapper
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%')
+    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%')
     {
 
         $bindings = array(
@@ -186,20 +198,26 @@ class SheetMapper extends \App\Domain\Mapper
         if (!is_null($payed)) {
             $bindings["payed"] = $payed;
         }
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+        }
 
         $sort = "id";
         switch ($sortColumn) {
-            case 0:
-                $sort = "IFNULL(DATE(start),DATE(end))";
-                break;
             case 1:
-                $sort = "start";
+                $sort = "IFNULL(DATE(t.start),DATE(t.end))";
                 break;
             case 2:
-                $sort = "end";
+                $sort = "TIME(t.start)";
                 break;
             case 3:
-                $sort = "duration";
+                $sort = "TIME(t.end)";
+                break;
+            case 4:
+                $sort = "t.duration";
+                break;
+            case 5:
+                $sort = "customerName";
                 break;
         }
 
@@ -216,9 +234,10 @@ class SheetMapper extends \App\Domain\Mapper
             . "t.duration_modified, "
             . "GROUP_CONCAT(tc.name SEPARATOR ', ') as categories, "
             . "t.is_billed, "
-            . "t.is_payed";
+            . "t.is_payed, "
+            . "tcus.name as customerName";
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed, $customer);
 
         $sql = $tableSQL;
         $sql .= " ORDER BY {$sort} {$sortDirection}, t.start {$sortDirection}, t.end {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";

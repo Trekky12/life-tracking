@@ -3,125 +3,159 @@
 {% set active = 'timesheets' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"]}} | {{ project.name }}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('timesheets_project_categorybudget', {'project': project.hash})}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET"]}}
+				|
+				{{ project.name }}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets_project_categorybudget', {'project': project.hash})}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-turn-up') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
 
-            <form class="form-horizontal" id="projectCategoryBudgetForm" action="{{  url_for('timesheets_project_categorybudget_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<form class="form-horizontal" id="projectCategoryBudgetForm" action="{{ url_for('timesheets_project_categorybudget_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-                {% endif %}
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
-                <div class="form-group">
-                    <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputName">{{lang["NAME"]}}</label>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputNotice">{{lang["NOTICE"]}}</label>
-                    <textarea class="form-control" id="inputNotice" name="notice" rows="2">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
-                </div>
+				<div class="form-group">
+					<label for="inputNotice">{{lang["NOTICE"]}}</label>
+					<textarea class="form-control" id="inputNotice" name="notice" rows="2">
+						{% if not entry is null %}
+							{{entry.notice|raw}}
+						{% endif %}
+					</textarea>
+				</div>
 
-                <div class="form-group category">
-                    <label for="projectMainCategory">{{lang["MAIN_CATEGORY"]}}</label>
-                    <select class="form-control" id="projectMainCategory" name="main_category" >
-                        <option value="">{{lang["DROPDOWN_NO_MAIN_CATEGORY"]}}</option>
-                        {% for cat in categories %}
-                            <option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.main_category) %}selected{%endif%}>{{cat.name|raw}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+				{% if customers %}
+					<div class="form-group customer">
+						<label for="category">
+							{% if project.customers_name_singular %}
+								{{project.customers_name_singular}}
+							{% else %}
+								{{lang["TIMESHEETS_CUSTOMER"]}}
+							{% endif %}
+						</label>
+						<select class="form-control" id="customer" name="customer">
+							<option value="" {% if entry is null %} selected {% endif %}>{{ lang["NONE"] }}</option>
+							{% for customer in customers %}
+								<option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %} selected {% endif %}>{{customer.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				{% endif %}
 
-                <div class="form-group category">
-                    <label for="projectCategory">{{lang["ASSIGNED_CATEGORIES"]}}</label>
-                    <select class="form-control category" id="projectCategory" name="category[]" multiple>
-                        {% for cat in categories %}
-                            <option value="{{cat.id}}" {% if cat.id in categorybudget_categories %}selected{%endif%}>{{cat.name|raw}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+				<div class="form-group category">
+					<label for="projectMainCategory">{{lang["MAIN_CATEGORY"]}}</label>
+					<select class="form-control" id="projectMainCategory" name="main_category">
+						<option value="">{{lang["DROPDOWN_NO_MAIN_CATEGORY"]}}</option>
+						{% for cat in categories %}
+							<option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.main_category) %} selected {%endif%}>{{cat.name|raw}}</option>
+						{% endfor %}
+					</select>
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="radioCategorization1">
-                        <input name="categorization" type="radio" value="count" id="radioCategorization1" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}checked="checked"{% endif %}>
-                        {{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"]}}
-                    </label>
-                    <br/>
-                    <label class="checkbox" for="radioCategorization2">
-                        <input name="categorization" type="radio" value="duration" id="radioCategorization2" {% if (entry is not null and entry.categorization == "duration" )%}checked="checked"{% endif %}>
-                        {{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"]}}
-                    </label>
-                    <br/>
-                    <label class="checkbox" for="radioCategorization3">
-                        <input name="categorization" type="radio" value="duration_modified" id="radioCategorization3" {% if (entry is not null and entry.categorization == "duration_modified" )%}checked="checked"{% endif %}>
-                        {{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"]}}
-                    </label>                    
-                </div>
+				<div class="form-group category">
+					<label for="projectCategory">{{lang["ASSIGNED_CATEGORIES"]}}</label>
+					<select class="form-control category" id="projectCategory" name="category[]" multiple>
+						{% for cat in categories %}
+							<option value="{{cat.id}}" {% if cat.id in categorybudget_categories %} selected {%endif%}>{{cat.name|raw}}</option>
+						{% endfor %}
+					</select>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputValueDuration">{{lang["TIMESHEETS_CATEGORYBUDGET_VALUE"]}}</label>
-                    <input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputValueDuration" name="set_value" value="{% if not entry is null %}{{entry.value | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}disabled="disabled"{% endif %}/>
-                    <input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != "count" )%}hidden{% endif %}" id="inputValue" name="set_value" value="{% if not entry is null %}{{entry.value}}{% else %}0{% endif %}" {% if (entry is not null and entry.categorization != "count" )%}disabled="disabled"{% endif %}/>
-                </div>
+				<div class="form-group">
+					<label class="checkbox" for="radioCategorization1">
+						<input name="categorization" type="radio" value="count" id="radioCategorization1" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} checked="checked" {% endif %}>
+						{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"]}}
+					</label>
+					<br/>
+					<label class="checkbox" for="radioCategorization2">
+						<input name="categorization" type="radio" value="duration" id="radioCategorization2" {% if (entry is not null and entry.categorization == "duration" )%} checked="checked" {% endif %}>
+						{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"]}}
+					</label>
+					<br/>
+					<label class="checkbox" for="radioCategorization3">
+						<input name="categorization" type="radio" value="duration_modified" id="radioCategorization3" {% if (entry is not null and entry.categorization == "duration_modified" )%} checked="checked" {% endif %}>
+						{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"]}}
+					</label>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputWarning1">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"]}}</label>
-                    <input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning1" name="set_warning1" value="{% if not entry is null %}{{entry.warning1 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}disabled="disabled"{% endif %}/>
-                    <input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != "count" )%}hidden{% endif %}" name="set_warning1" value="{% if not entry is null %}{{entry.warning1}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%}disabled="disabled"{% endif %}/>
-                </div>
+				<div class="form-group">
+					<label for="inputValueDuration">{{lang["TIMESHEETS_CATEGORYBUDGET_VALUE"]}}</label>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == " count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputValueDuration" name="set_value" value="{% if not entry is null %}{{entry.value | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != " count" )%}hidden{% endif %}" id="inputValue" name="set_value" value="{% if not entry is null %}{{entry.value}}{% else %}0{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputWarning2">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_2_ORANGE"]}}</label>
-                    <input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning2" name="set_warning2" value="{% if not entry is null %}{{entry.warning2 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}disabled="disabled"{% endif %}/>
-                    <input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != "count" )%}hidden{% endif %}" name="set_warning2" value="{% if not entry is null %}{{entry.warning2}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%}disabled="disabled"{% endif %}/>
-                </div>
+				<div class="form-group">
+					<label for="inputWarning1">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"]}}</label>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == " count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning1" name="set_warning1" value="{% if not entry is null %}{{entry.warning1 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != " count" )%}hidden{% endif %}" name="set_warning1" value="{% if not entry is null %}{{entry.warning1}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputWarning3">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_3_RED"]}}</label>
-                    <input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning3" name="set_warning3" value="{% if not entry is null and entry.warning3 %}{{entry.warning3 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%}disabled="disabled"{% endif %}/>
-                    <input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != "count" )%}hidden{% endif %}" name="set_warning3" value="{% if not entry is null %}{{entry.warning3}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%}disabled="disabled"{% endif %}/>
-                </div>
+				<div class="form-group">
+					<label for="inputWarning2">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_2_ORANGE"]}}</label>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == " count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning2" name="set_warning2" value="{% if not entry is null %}{{entry.warning2 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != " count" )%}hidden{% endif %}" name="set_warning2" value="{% if not entry is null %}{{entry.warning2}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
+				</div>
 
-                <div class="form-group">
-                    <label for="dateRange">{{lang["FROM"]}}/{{ lang["TO"] }}</label>
-                    <input type="text" id="dateRange" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %} to {% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}" />
-                    <input type="hidden" id="inputStart" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}"/>
-                    <input type="hidden" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
-                </div>
+				<div class="form-group">
+					<label for="inputWarning3">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_3_RED"]}}</label>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == " count" )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning3" name="set_warning3" value="{% if not entry is null and entry.warning3 %}{{entry.warning3 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="number" step="1" class="form-control count-input {% if (entry is not null and entry.categorization != " count" )%}hidden{% endif %}" name="set_warning3" value="{% if not entry is null %}{{entry.warning3}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxHidden">
-                        <input name="is_hidden" type="checkbox" value="1" id="checkboxHidden" {% if entry.is_hidden == 1 %}checked{% endif %}>
-                        {{lang["HIDE_ENTRY"]}}
-                    </label>
-                </div>
+				<div class="form-group">
+					<label for="dateRange">{{lang["FROM"]}}/{{ lang["TO"] }}</label>
+					<input type="text" id="dateRange" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %} to {% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
+					<input type="hidden" id="inputStart" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}"/>
+					<input type="hidden" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
+				</div>
 
-                <div class="form-group btn">
-                    <button type="submit" class="button">{% if not entry is null and not entry.id is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null and not entry.id is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHidden">
+						<input name="is_hidden" type="checkbox" value="1" id="checkboxHidden" {% if entry.is_hidden == 1 %} checked {% endif %}>
+						{{lang["HIDE_ENTRY"]}}
+					</label>
+				</div>
+
+				<div class="form-group btn">
+					<button type="submit" class="button">
+						{% if not entry is null and not entry.id is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null and not entry.id is null %}
+						<button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

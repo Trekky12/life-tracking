@@ -899,10 +899,16 @@ CREATE TABLE timesheets_projects (
     salt VARCHAR(255) NULL,
     show_month_button INT(1) DEFAULT 1,
     show_quarters_buttons INT(1) DEFAULT 0,
+    customers_name_singular VARCHAR(255) DEFAULT NULL,
+    customers_name_plural VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE `timesheets_projects` ADD `customers_name_singular` VARCHAR(255) NULL DEFAULT NULL AFTER `show_quarters_buttons`, ADD `customers_name_plural` VARCHAR(255) NULL DEFAULT NULL AFTER `customers_name_singular`; 
+*/
 
 DROP TABLE IF EXISTS timesheets_projects_users;
 CREATE TABLE timesheets_projects_users (
@@ -912,6 +918,21 @@ CREATE TABLE timesheets_projects_users (
     UNIQUE(project, user),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS timesheets_customers;
+CREATE TABLE timesheets_customers (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    project INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS timesheets_sheets;
@@ -935,11 +956,18 @@ CREATE TABLE timesheets_sheets (
     end_acc DECIMAL(10,3) DEFAULT NULL,
     is_billed int(1) DEFAULT 0,
     is_payed int(1) DEFAULT 0,
+    customer INTEGER unsigned DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/* 
+ALTER TABLE `timesheets_sheets` ADD `customer` INT UNSIGNED NULL DEFAULT NULL AFTER `is_payed`; 
+ALTER TABLE `timesheets_sheets` ADD CONSTRAINT `timesheets_sheets_ibfk_4` FOREIGN KEY (`customer`) REFERENCES `timesheets_customers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE; 
+*/
 
 DROP TABLE IF EXISTS timesheets_categories;
 CREATE TABLE timesheets_categories (
@@ -974,6 +1002,7 @@ CREATE TABLE timesheets_categorybudgets (
     name varchar(255) DEFAULT NULL,
     categorization ENUM('duration','duration_modified', 'count') default NULL,
     notice TEXT DEFAULT NULL,
+    customer INTEGER unsigned DEFAULT NULL,
     main_category INTEGER unsigned DEFAULT NULL,
     value INT(11) NOT NULL,
     warning1 INT(11) NULL,
@@ -985,8 +1014,14 @@ CREATE TABLE timesheets_categorybudgets (
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(main_category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(main_category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE `timesheets_categorybudgets` ADD `customer` INT UNSIGNED NULL DEFAULT NULL AFTER `notice`; 
+ALTER TABLE `timesheets_categorybudgets` ADD CONSTRAINT `timesheets_categorybudgets_ibfk_4` FOREIGN KEY (`customer`) REFERENCES `timesheets_customers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; 
+*/
 
 DROP TABLE IF EXISTS timesheets_categorybudgets_categories;
 CREATE TABLE timesheets_categorybudgets_categories (

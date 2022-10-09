@@ -603,6 +603,7 @@ $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "Feld für Notizen";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "Zeiterfasungsprojekt Kunde";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -800,6 +801,11 @@ $lang["DATATYPE_SELECT"] = "Dropdown";
 $lang["DATATYPE_INITIALIZATION"] = "Initialisierung (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Bemerkung hinzufügen";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Bemerkung bearbeiten";
+
+$lang["TIMESHEETS_CUSTOMER"] = "Kunde";
+$lang["TIMESHEETS_CUSTOMERS"] = "Kunden";
+$lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"] = "Beschreibung für Kunde (Singular)";
+$lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Beschreibung für Kunden (Plural)";
 
 $lang["PRINT"] = "Drucken";
 
