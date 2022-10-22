@@ -13,7 +13,8 @@ use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
-class SheetExportService extends Service {
+class SheetExportService extends Service
+{
 
     private $translation;
     private $project_service;
@@ -21,14 +22,16 @@ class SheetExportService extends Service {
     private $sheet_notice_mapper;
     private $notice_fields_service;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            SheetMapper $mapper,
-            ProjectService $project_service,
-            SheetNoticeMapper $sheet_notice_mapper,
-            NoticeFieldService $notice_fields_service,
-            Settings $settings,
-            Translator $translation) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        SheetMapper $mapper,
+        ProjectService $project_service,
+        SheetNoticeMapper $sheet_notice_mapper,
+        NoticeFieldService $notice_fields_service,
+        Settings $settings,
+        Translator $translation
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->project_service = $project_service;
@@ -38,7 +41,8 @@ class SheetExportService extends Service {
         $this->notice_fields_service = $notice_fields_service;
     }
 
-    public function export($hash, $data) {
+    public function export($hash, $type, $from, $to, $categories, $billed, $payed, $customer)
+    {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -46,24 +50,21 @@ class SheetExportService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        list($from, $to) = DateUtility::getDateRange($data);
-        $categories = array_key_exists("categories", $data) ? filter_var_array($data["categories"], FILTER_SANITIZE_NUMBER_INT) : [];
-
-        $type = array_key_exists("type", $data) ? filter_var($data["type"], FILTER_SANITIZE_STRING) : null;
         if (strcmp($type, "word") == 0) {
-            return $this->exportWord($project, $from, $to, $categories);
+            return $this->exportWord($project, $from, $to, $categories, $billed, $payed, $customer);
         }
         if (strcmp($type, "excel") == 0) {
-            return $this->exportExcel($project, $from, $to, $categories);
+            return $this->exportExcel($project, $from, $to, $categories, $billed, $payed, $customer);
         }
 
-        return $this->exportHTML($project, $from, $to, $categories);
+        return $this->exportHTML($project, $from, $to, $categories, $billed, $payed, $customer);
     }
 
-    private function exportExcel($project, $from, $to, $categories) {
+    private function exportExcel($project, $from, $to, $categories, $billed, $payed, $customer)
+    {
 
         // get Data
-        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, 0, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $customer, 1, 'ASC', null);
         //$rendered_data = $this->renderTableRows($project, $data);
         //$totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
@@ -82,12 +83,12 @@ class SheetExportService extends Service {
         // Project Name
         $sheet->setCellValue('A1', $project->name);
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(18);
-        $sheet->mergeCells("A1:F1");
+        $sheet->mergeCells("A1:G1");
 
         // Range
         $sheet->setCellValue('A2', $fmtDate->format($fromDate) . " " . $this->translation->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
         $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(14);
-        $sheet->mergeCells("A2:F2");
+        $sheet->mergeCells("A2:G2");
 
         // Table Header
         $sheet->setCellValue('A4', $this->translation->getTranslatedString("DATE"));
@@ -101,15 +102,17 @@ class SheetExportService extends Service {
             $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE"));
         }
 
-        $sheet->setCellValue('F4', $this->translation->getTranslatedString("CATEGORIES"));
-        //$sheet->setCellValue('G4', $this->translation->getTranslatedString("NOTICE"));
-        $sheet->getStyle('A4:F4')->applyFromArray(
-                ['borders' => [
-                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
-                    ],
-                ]
+        $customerDescription = $project->customer_name_singular ? $project->customer_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+        $sheet->setCellValue('F4', $customerDescription);
+        $sheet->setCellValue('G4', $this->translation->getTranslatedString("CATEGORIES"));
+        $sheet->getStyle('A4:G4')->applyFromArray(
+            [
+                'borders' => [
+                    'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                ],
+            ]
         );
-        $sheet->getStyle('A4:F4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:G4')->getFont()->setBold(true);
 
         $excelTime = "[$-F400]h:mm:ss AM/PM";
         $excelDate = $dateFormatPHP['date'];
@@ -157,8 +160,12 @@ class SheetExportService extends Service {
                 $sheet->getStyle('E' . $row)->getNumberFormat()->setFormatCode($excelTimeDuration);
             }
 
+            if (!is_null($timesheet->customerName)) {
+                $sheet->setCellValue('F' . $row, $timesheet->customerName);
+            }
+
             if (!is_null($timesheet->categories)) {
-                $sheet->setCellValue('F' . $row, $timesheet->categories);
+                $sheet->setCellValue('G' . $row, $timesheet->categories);
             }
 
             /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
@@ -168,7 +175,7 @@ class SheetExportService extends Service {
               } */
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
-            $sheet->getStyle('A' . $row . ':F' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+            $sheet->getStyle('A' . $row . ':G' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
             $idx++;
         }
@@ -178,7 +185,7 @@ class SheetExportService extends Service {
         $sumRow = ($idx + 1 + $offset);
 
         if ($project->has_duration_modifications > 0) {
-            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, [], "%", "t.duration_modified");
+            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $categories, $billed, $payed, $customer, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified);
 
             $sheet->setCellValue('D' . $sumRow, $sum);
@@ -187,12 +194,13 @@ class SheetExportService extends Service {
         $sheet->setCellValue('E' . $sumRow, "=SUM(E" . $firstRow . ":E" . ($sumRow - 1) . ")");
         $sheet->getStyle('E' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDuration);
 
-        $sheet->getStyle('A' . $sumRow . ':F' . $sumRow)->applyFromArray(
-                ['borders' => [
-                        'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
-                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
-                    ],
-                ]
+        $sheet->getStyle('A' . $sumRow . ':G' . $sumRow)->applyFromArray(
+            [
+                'borders' => [
+                    'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
+                    'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                ],
+            ]
         );
 
         // auto width
@@ -202,17 +210,18 @@ class SheetExportService extends Service {
         $sheet->getColumnDimension('D')->setAutoSize(true);
         $sheet->getColumnDimension('E')->setAutoSize(true);
         $sheet->getColumnDimension('F')->setAutoSize(true);
-        //$sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('G')->setAutoSize(true);
+
         // sheet protection
         $sheet->getProtection()->setSheet(true);
         $sheet->getStyle("A" . $firstRow . ":C" . ($sumRow - 1))
-                ->getProtection()->setLocked(
+            ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
-        );
+            );
         $sheet->getStyle("A1:F2")
-                ->getProtection()->setLocked(
+            ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
-        );
+            );
 
         if ($project->has_duration_modifications > 0) {
             $sheet->getColumnDimension('D')->setVisible(true);
@@ -247,9 +256,10 @@ class SheetExportService extends Service {
         return new Payload(Payload::$RESULT_EXCEL, $body);
     }
 
-    private function exportWord($project, $from, $to, $categories) {
+    private function exportWord($project, $from, $to, $categories, $billed, $payed, $customer)
+    {
         // get Data
-        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, 0, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $customer, 1, 'ASC', null);
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -280,6 +290,11 @@ class SheetExportService extends Service {
                 } else {
                     $section->addText(sprintf("%s: %s", $this->translation->getTranslatedString("DIFFERENCE"), $time_duration_real));
                 }
+            }
+
+            if (!is_null($timesheet->customerName)) {
+                $customerDescription = $project->customer_name_singular ? $project->customer_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+                $section->addText(sprintf("%s: %s", $customerDescription, $timesheet->customerName));
             }
 
             if (!is_null($timesheet->categories)) {
@@ -332,7 +347,8 @@ class SheetExportService extends Service {
         return new Payload(Payload::$RESULT_WORD, $body);
     }
 
-    private function exportHTML($project, $from, $to, $categories) {
+    private function exportHTML($project, $from, $to, $categories, $billed, $payed, $customer)
+    {
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -340,7 +356,7 @@ class SheetExportService extends Service {
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
         // get Data
-        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, 0, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $customer, 1, 'ASC', null);
 
         $sheets = [];
 
@@ -369,6 +385,9 @@ class SheetExportService extends Service {
             if (!is_null($timesheet->categories)) {
                 $sheet["categories"] = $timesheet->categories;
             }
+            if (!is_null($timesheet->customerName)) {
+                $sheet["customer"] = $timesheet->customerName;
+            }
             $sheets[] = $sheet;
         }
 
@@ -381,5 +400,4 @@ class SheetExportService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, $response);
     }
-
 }

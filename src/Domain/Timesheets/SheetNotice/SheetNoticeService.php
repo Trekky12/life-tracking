@@ -65,11 +65,14 @@ class SheetNoticeService extends Service {
 
         $sheet_categories = $this->sheet_mapper->getCategoriesWithNamesFromSheet($sheet_id);
 
+        $sheet_customer = $this->sheet_mapper->getCustomerNameFromSheet($sheet->id);
+
         $fields = $this->noticefield_service->getNoticeFields($project->id);
 
         $response_data = [
             'sheet' => $sheet,
             'sheet_categories' => $sheet_categories,
+            'sheet_customer' => $sheet_customer,
             'sheet_title' => $sheet_title,
             'sheet_title_formatted' => $sheet_title_formatted,
             'project' => $project,

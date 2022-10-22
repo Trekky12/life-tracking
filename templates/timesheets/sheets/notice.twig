@@ -44,10 +44,22 @@
 
 					<div class="timesheet-notice-wrapper">
 
-						<h3 id="sheet_title">{{ sheet_title }}</h3>
-						<p>
-							<small id="sheet_categories">{{ sheet_categories }}</small>
-						</p>
+						<h3 class="sheet_title">{{ sheet_title }}</h3>
+						{% if sheet_customer %}
+							<h4 class="sheet_customer">
+								{%- if project.customers_name_singular %}
+									{{- project.customers_name_singular -}}
+								{% else %}
+									{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{% endif -%}:&nbsp;
+								{{- sheet_customer -}}
+							</h4>
+						{% endif %}
+						{% if sheet_categories %}
+							<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
+								{{- sheet_categories -}}
+							</h4>
+						{% endif %}
 
 						<div class="timesheet-notice" data-sheet="{{ sheet.id }}">
 							{% if fields %}
@@ -67,7 +79,7 @@
 											<label for="input_{{field.id}}">{{field.description|raw}}</label>
 											<select class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}">
 												{% for option in field.initialization|split('\r\n') %}
-													<option>
+													<option></option>
 													{{option}}
 												</option>
 											{% endfor %}

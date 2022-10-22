@@ -14,3 +14,37 @@
         color: $color_green;
     }
 }
+
+.timesheet-notice-wrapper {
+
+    h3,
+    h4 {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+    }
+
+    h3:not(.sheet_title) {
+        font-weight: 400;
+    }
+
+    h4 {
+        @include font-size(1.6);
+    }
+
+    .timesheet-notice {
+
+        margin-top: 2rem;
+
+        label,
+        h4 {
+            text-decoration: underline;
+            @include font-size(1.6);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-top: 0;
+            @include font-size(1.6);
+        }
+    }
+}

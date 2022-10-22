@@ -188,7 +188,7 @@ const radioBudgetDurationModified = document.getElementById('radioCategorization
 if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
 
     radioBudgetDuration.addEventListener('click', function (event) {
-        document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+        document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
             picker.classList.remove("hidden");
         });
         document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -207,7 +207,7 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
     });
 
     radioBudgetDurationModified.addEventListener('click', function (event) {
-        document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+        document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
             picker.classList.remove("hidden");
         });
         document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -226,7 +226,7 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
     });
     radioBudgetCount.addEventListener('click', function (event) {
         if (radioBudgetCount.checked) {
-            document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+            document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
                 picker.classList.add("hidden");
             });
             document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -240,7 +240,7 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
             });
 
         } else {
-            document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+            document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
                 picker.classList.remove("hidden");
             });
             document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -266,40 +266,42 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
 const applyOptionsBtn = document.querySelector('#apply_options');
 const optionsSelector = document.querySelector('select#applyOptions');
 
-applyOptionsBtn.addEventListener('click', function (event) {
+if (applyOptionsBtn) {
+    applyOptionsBtn.addEventListener('click', function (event) {
 
-    let option = optionsSelector.value;
+        let option = optionsSelector.value;
 
-    let sheets = getSelectedSheets();
+        let sheets = getSelectedSheets();
 
-    let data = { 'sheets': sheets, 'option': option };
+        let data = { 'sheets': sheets, 'option': option };
 
-    loadingWindowOverlay.classList.remove("hidden");
+        loadingWindowOverlay.classList.remove("hidden");
 
-    return getCSRFToken().then(function (token) {
-        data['csrf_name'] = token.csrf_name;
-        data['csrf_value'] = token.csrf_value;
+        return getCSRFToken().then(function (token) {
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
 
-        return fetch(jsObject.timesheets_sheets_set_options, {
-            method: 'POST',
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            return fetch(jsObject.timesheets_sheets_set_options, {
+                method: 'POST',
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            allowedReload = true;
+            window.location.reload(true);
+        }).catch(function (error) {
+            console.log(error);
+            if (document.body.classList.contains('offline')) {
+                let formData = new URLSearchParams(data).toString();
+                saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
+            }
+            loadingWindowOverlay.classList.add("hidden");
         });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        console.log(data);
-        allowedReload = true;
-        window.location.reload(true);
-    }).catch(function (error) {
-        console.log(error);
-        if (document.body.classList.contains('offline')) {
-            let formData = new URLSearchParams(data).toString();
-            saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
-        }
-        loadingWindowOverlay.classList.add("hidden");
     });
-});
+}

@@ -28,7 +28,7 @@
 						<button class="button">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
 					</a>
 				{% endif %}
-				<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}">
+				<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
 					<button class="button">{{lang["TIMESHEETS_EXPORT"]}}</button>
 				</a>
 				<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">

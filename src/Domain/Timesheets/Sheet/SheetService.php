@@ -126,7 +126,7 @@ class SheetService extends Service
             $to = !is_null($to) ? $to : $maxTotal;
         }
 
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, $billed, $payed, $customer, 0, 'DESC', $count);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, $billed, $payed, $customer, 1, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data);
         $datacount = $this->getMapper()->tableCount($project->id, $from, $to, $selected_categories, $billed, $payed, $customer);
 
@@ -356,7 +356,7 @@ class SheetService extends Service
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
     }
 
-    public function showExport($hash, $from, $to, $selected_categories)
+    public function showExport($hash, $from, $to, $categories, $billed = null, $payed = null, $customer = null): Payload
     {
         $project = $this->project_service->getFromHash($hash);
 
@@ -365,13 +365,18 @@ class SheetService extends Service
         }
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id);
 
         return new Payload(Payload::$RESULT_HTML, [
             "project" => $project,
             "categories" => $project_categories,
             "from" => $from,
             "to" => $to,
-            "categories_selected" => $selected_categories
+            "categories_selected" => $categories,
+            "billed" => $billed,
+            "payes" => $payed,
+            "customers" => $customers,
+            "customer" => $customer
         ]);
     }
 

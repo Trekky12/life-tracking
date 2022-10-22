@@ -346,9 +346,12 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
     let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice-wrapper'));
     for (const notice_field of notice_fields) {
 
-        let categoriesElement = notice_field.querySelector('#sheet_categories');
-        let categories = categoriesElement ? categoriesElement.innerHTML : "";
-        let title = notice_field.querySelector('#sheet_title').innerHTML;
+        let customerElement = notice_field.querySelector('.sheet_customer');
+        let customer = customerElement ? customerElement.innerHTML.replace(/&nbsp;/g, ' ') : "";
+
+        let categoriesElement = notice_field.querySelector('.sheet_categories');
+        let categories = categoriesElement ? categoriesElement.innerHTML.replace(/&nbsp;/g, ' ') : "";
+        let title = notice_field.querySelector('.sheet_title').innerHTML;
 
         const headline = new docx.Paragraph({
             heading: docx.HeadingLevel.HEADING_1,
@@ -360,6 +363,19 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
         });
 
         const subheadline = new docx.Paragraph({
+            children: [
+                new docx.TextRun({
+                    text: customer,
+                    italics: true,
+                    size: 24
+                })
+            ],
+            spacing: {
+                after: 200,
+            },
+        });
+
+        const subheadline2 = new docx.Paragraph({
             children: [
                 new docx.TextRun({
                     text: categories,
@@ -374,6 +390,7 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
 
         word_elements.push(headline);
         word_elements.push(subheadline);
+        word_elements.push(subheadline2);
 
         notice_field.querySelectorAll('input[type="text"], textarea, select, p.notice-field').forEach(function (field_element) {
 

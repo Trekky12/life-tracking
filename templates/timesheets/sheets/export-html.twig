@@ -40,12 +40,26 @@
 
 			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
 				<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
-				<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}} {{lang["TIMESHEETS_EXPORT"]}}</button>
+				<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
+					{{lang["TIMESHEETS_EXPORT"]}}</button>
 				{% for sheet in sheets %}
 					<div class="timesheet-notice-wrapper">
-						<h1 id="sheet_title">{{ sheet["title"] }}</h1>
+						<h3 class="sheet_title">{{ sheet["title"] }}</h1>
+						{% if sheet["customer"] %}
+							<h4 class="sheet_customer">
+								{%- if project.customers_name_singular %}
+									{{- project.customers_name_singular -}}
+								{% else %}
+									{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{% endif -%}:&nbsp;
+								{{- sheet["customer"] -}}
+							</h4>
+						{% endif %}
+
 						{% if sheet["categories"] %}
-							<small>{{lang["CATEGORIES"]}}:<span id="sheet_categories">{{ sheet["categories"] }}</span></small>
+							<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
+								{{- sheet["categories"] -}}
+							</h4>
 						{% endif %}
 						<h4>{{lang["DIFFERENCE"]}}:
 							{{ sheet["time"] }}</h4>

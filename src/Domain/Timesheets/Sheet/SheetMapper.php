@@ -182,7 +182,7 @@ class SheetMapper extends \App\Domain\Mapper
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%')
+    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%')
     {
 
         $bindings = array(
@@ -316,6 +316,24 @@ class SheetMapper extends \App\Domain\Mapper
             . "FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs "
             . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
             . " WHERE tcs.sheet = :sheet";
+
+        $bindings = array("sheet" => $sheet_id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchColumn();
+        }
+        return "";
+    }
+
+    public function getCustomerNameFromSheet($sheet_id)
+    {
+        $sql = "SELECT c.name "
+            . "FROM " . $this->getTableName("timesheets_sheets") . " s "
+            . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " c ON c.id = s.customer "
+            . " WHERE s.id = :sheet";
 
         $bindings = array("sheet" => $sheet_id);
 
