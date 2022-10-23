@@ -534,6 +534,8 @@ $lang["TIMESHEETS_QUARTER_1"] = "Q1";
 $lang["TIMESHEETS_QUARTER_2"] = "Q2";
 $lang["TIMESHEETS_QUARTER_3"] = "Q3";
 $lang["TIMESHEETS_QUARTER_4"] = "Q4";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Hide entries without notices";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Hide fields without content";
 
 $lang["THIS_DEVICE"] = "this device";
 

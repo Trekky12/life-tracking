@@ -533,6 +533,8 @@ $lang["TIMESHEETS_QUARTER_1"] = "Q1";
 $lang["TIMESHEETS_QUARTER_2"] = "Q2";
 $lang["TIMESHEETS_QUARTER_3"] = "Q3";
 $lang["TIMESHEETS_QUARTER_4"] = "Q4";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Einträge ohne Notizen ausblenden";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Felder ohne Inhalt ausblenden";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 

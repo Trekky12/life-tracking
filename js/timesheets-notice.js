@@ -74,8 +74,6 @@ async function checkPassword() {
         let notice = await getNotice(sheet_id);
 
         if (notice) {
-            let default_field = notice_field.querySelector('[data-default="1"]');
-
             if (IsJsonString(notice)) {
 
                 notice = JSON.parse(notice);
@@ -83,23 +81,48 @@ async function checkPassword() {
                 for (const [field_name, field_value] of Object.entries(notice)) {
                     let field_value = notice[field_name];
                     let field_element = notice_field.querySelector('[data-name="' + field_name + '"]');
+
                     if (field_element) {
+
                         if (field_element.tagName && (field_element.tagName.toLowerCase() === "textarea" || field_element.tagName.toLowerCase() === "input" || field_element.tagName.toLowerCase() === "select")) {
                             field_element.value = field_value;
                         } else {
-                            field_element.innerHTML = field_value.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+                            if (field_value) {
+                                field_element.innerHTML = field_value.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                            } else {
+                                // no value, hide field on export
+                                field_element.parentElement.dataset.empty = 1;
+                            }
                         }
+
                     }
+
+
                 }
 
             } else {
+
+                let default_field = notice_field.querySelector('[data-default="1"]');
+
                 // Default: no notice fields, only one field
                 if (default_field && default_field.tagName && (default_field.tagName.toLowerCase() === "textarea" || default_field.tagName.toLowerCase() === "input" || default_field.tagName.toLowerCase() === "select")) {
                     default_field.value = notice;
                 } else {
-                    default_field.innerHTML = notice.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                    if (notice) {
+                        default_field.innerHTML = notice.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                    } else {
+                        default_field.parentElement.dataset.empty = 1;
+                    }
+
+                    // possible other fields are apparently empty
+                    notice_field.querySelectorAll('[data-default="0"]').forEach(function (el) {
+                        el.parentElement.dataset.empty = 1;
+                    });
                 }
             }
+        } else {
+            notice_field.closest('.timesheet-notice-wrapper').dataset.empty = 1;
         }
     }
 
@@ -135,7 +158,7 @@ async function getNotice(sheet_id) {
                 alertError.classList.remove("hidden");
                 return;
             }
-            let decrypted_notice = await decryptData(notice);
+            let decrypted_notice = await decryptData(notice, sheet_id);
             return decrypted_notice;
         }
 
@@ -304,7 +327,7 @@ async function getAESKeyFromStore() {
 }
 
 
-async function decryptData(encryptedData) {
+async function decryptData(encryptedData, sheet_id) {
     try {
         const encryptedDataBuff = base64_to_buf(encryptedData);
         const iv = encryptedDataBuff.slice(0, 12);
@@ -320,6 +343,7 @@ async function decryptData(encryptedData) {
         );
         return new TextDecoder().decode(decryptedContent);
     } catch (e) {
+        console.log(sheet_id);
         console.log(`Error - ${e}`);
         alertErrorDetail.innerHTML = lang.decrypt_error;
         alertError.classList.remove("hidden");
@@ -343,7 +367,7 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
 
     const word_elements = [];
 
-    let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice-wrapper'));
+    let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice-wrapper:not(.hidden)'));
     for (const notice_field of notice_fields) {
 
         let customerElement = notice_field.querySelector('.sheet_customer');
@@ -392,24 +416,30 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
         word_elements.push(subheadline);
         word_elements.push(subheadline2);
 
-        notice_field.querySelectorAll('input[type="text"], textarea, select, p.notice-field').forEach(function (field_element) {
 
-            let notices = [new docx.TextRun({
-                text: field_element.previousElementSibling.innerHTML,
-                underline: {}
-            })];
+        let field_element_wrappers = notice_field.querySelectorAll('.timesheet-notice-field:not(.hidden)');
 
-            let content = field_element.tagName.toLowerCase() === "p" ? field_element.innerHTML.replace(/<br ?\/?>/g, "\n").replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<") : field_element.value;
-            const textRuns = content.split("\n").map(line => new docx.TextRun({ text: line, break: 1 }));
-            notices.push(...textRuns);
-            const value = new docx.Paragraph({
-                children: notices,
-                spacing: {
-                    after: 400,
-                }
+        field_element_wrappers.forEach(function (field_element_wrapper) {
+
+            field_element_wrapper.querySelectorAll('input[type="text"], textarea, select, p.notice-field').forEach(function (field_element) {
+
+                let notices = [new docx.TextRun({
+                    text: field_element.previousElementSibling.innerHTML,
+                    underline: {}
+                })];
+
+                let content = field_element.tagName.toLowerCase() === "p" ? field_element.innerHTML.replace(/<br ?\/?>/g, "\n").replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<") : field_element.value;
+                const textRuns = content.split("\n").map(line => new docx.TextRun({ text: line, break: 1 }));
+                notices.push(...textRuns);
+                const value = new docx.Paragraph({
+                    children: notices,
+                    spacing: {
+                        after: 400,
+                    }
+                });
+
+                word_elements.push(value);
             });
-
-            word_elements.push(value);
         });
 
         // Page break if not last item
@@ -458,3 +488,32 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
         saveAs(blob, filename + "_Export.docx");
     });
 });
+
+
+let checkboxHideEmptySheets = document.getElementById('checkboxHideEmptySheets');
+if (checkboxHideEmptySheets) {
+    checkboxHideEmptySheets.addEventListener('click', function (event) {
+        document.querySelectorAll('.timesheet-notice-wrapper[data-empty="1"]').forEach(function (el) {
+            if (checkboxHideEmptySheets.checked) {
+                el.classList.add("hidden");
+            } else {
+                el.classList.remove("hidden");
+            }
+        });
+        return;
+    });
+}
+
+let checkboxHideEmptyNoticeFields = document.getElementById('checkboxHideEmptyNoticeFields');
+if (checkboxHideEmptyNoticeFields) {
+    checkboxHideEmptyNoticeFields.addEventListener('click', function (event) {
+        document.querySelectorAll('.timesheet-notice-field[data-empty="1"]').forEach(function (el) {
+            if (checkboxHideEmptyNoticeFields.checked) {
+                el.classList.add("hidden");
+            } else {
+                el.classList.remove("hidden");
+            }
+        });
+        return;
+    });
+}

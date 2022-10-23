@@ -39,9 +39,26 @@
 			</div>
 
 			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
-				<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
-				<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
-					{{lang["TIMESHEETS_EXPORT"]}}</button>
+				<div class="search-filter">
+					<div class="filter-row">
+						<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
+						<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
+							{{lang["TIMESHEETS_EXPORT"]}}</button>
+					</div>
+					<div class="filter-row">
+						<label id="checkboxHideEmptySheetsLabel" for="checkboxHideEmptySheets">
+							<input type="checkbox" value="1" id="checkboxHideEmptySheets">
+							{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"]}}
+						</label>
+					</div>
+					<div class="filter-row">
+						<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
+							<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields">
+							{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"]}}
+						</label>
+					</div>
+				</div>
+
 				{% for sheet in sheets %}
 					<div class="timesheet-notice-wrapper">
 						<h3 class="sheet_title">{{ sheet["title"] }}</h1>
@@ -67,19 +84,22 @@
 						<div class="timesheet-notice" data-sheet="{{ sheet["id"] }}">
 							{% if fields %}
 								{% for field in fields %}
-									<h4>{{field.description|raw}}:</h4>
-									<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></p>
+									<div class="timesheet-notice-field">
+										<h4>{{field.description|raw}}:</h4>
+										<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></p>
+									</div>
 								{% endfor %}
-							{% else %}
+							</div>
+						{% else %}
+							<div class="timesheet-notice-field">
 								<h4>{{ lang["NOTICE"] }}:</h4>
 								<p class="notice-field" data-default="1"></p>
-							{% endif %}
-						</div>
+							</div>
+						{% endif %}
+
 					</div>
 				{% endfor %}
 			</div>
 		</div>
 	</div>
-
-
 {% endblock %}
