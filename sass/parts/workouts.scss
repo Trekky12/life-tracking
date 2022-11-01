@@ -255,10 +255,13 @@
 
             .exercises {
                 min-height: 50px;
-                width: 100%;
                 border: 1px dotted $color_text-main;
                 border-radius: 2px;
             }
+        }
+
+        .exercises{
+            width: 100%;
         }
     }
 
@@ -349,10 +352,6 @@
 .workouts-session-view {
     .instructions {
         display: none;
-    }
-
-    .workout_superset .exercises {
-        width: 100%;
     }
 }
 
