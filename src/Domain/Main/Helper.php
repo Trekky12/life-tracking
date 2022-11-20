@@ -89,7 +89,7 @@ class Helper {
             $mail->Password = $mailSettings["password"];
         }
 
-        $mail->setFrom($fromAddress, $fromName, false);
+        $mail->setFrom($fromAddress, $fromName);
         if (is_array($to)) {
             foreach ($to as $address) {
                 $mail->addAddress($address);
