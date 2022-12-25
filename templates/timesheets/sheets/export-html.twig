@@ -61,7 +61,7 @@
 
 				{% for sheet in sheets %}
 					<div class="timesheet-notice-wrapper">
-						<h3 class="sheet_title">{{ sheet["title"] }}</h1>
+						<h3 class="sheet_title">{{ sheet["title"] }}</h3>
 						{% if sheet["customer"] %}
 							<h4 class="sheet_customer">
 								{%- if project.customers_name_singular %}
@@ -89,14 +89,13 @@
 										<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></p>
 									</div>
 								{% endfor %}
-							</div>
-						{% else %}
-							<div class="timesheet-notice-field">
-								<h4>{{ lang["NOTICE"] }}:</h4>
-								<p class="notice-field" data-default="1"></p>
-							</div>
-						{% endif %}
-
+							{% else %}
+								<div class="timesheet-notice-field">
+									<h4>{{ lang["NOTICE"] }}:</h4>
+									<p class="notice-field" data-default="1"></p>
+								</div>
+							{% endif %}
+						</div>
 					</div>
 				{% endfor %}
 			</div>
