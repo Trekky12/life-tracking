@@ -60,9 +60,14 @@ document.addEventListener('click', function (event) {
             input.removeAttribute('disabled');
         });
 
-        createChoiceIngredients(new_ingredient.querySelector('.step-ingredient-select'));
-
         ingredientsList.appendChild(new_ingredient);
+
+        let ingredient_selector = new_ingredient.querySelector('.step-ingredient-select');
+        ingredient_selector.id = ingredient_selector.id + "-" + step_idx + "-" + ingredient_idx;
+        ingredient_selector.parentElement.id = ingredient_selector.parentElement.id + "-" + step_idx + "-" + ingredient_idx;
+        ingredient_selector.previousElementSibling.id = ingredient_selector.previousElementSibling.id + "-" + step_idx + "-" + ingredient_idx;
+
+        createChoiceIngredients(ingredient_selector);
     }
 
     if (step_minus) {
@@ -153,26 +158,72 @@ function createSortableIngredients(step_ingredients_wrapper) {
     });
 }
 
-function createChoiceIngredients(element) {
+async function createChoiceIngredients(element) {
 
-    let selected = element.dataset.selected ? element.dataset.selected : "";
+    new autoComplete({
+        data: {
+            src: async () => {
 
-    let selectr = new Selectr(element, {
-        searchable: true,
-        placeholder: lang.ingredient,
-        messages: {
-            noResults: lang.nothing_found,
-            noOptions: lang.no_options
+                try {
+                    let response = await fetch(jsObject.groceries_search + '?query=' + element.value + "&food=1", {
+                        method: 'GET',
+                        credentials: "same-origin"
+                    });
+                    let data = await response.json();
+
+                    if (data.status !== 'error') {
+                        return data.data;
+                    }
+                    return [];
+                } catch (exception) {
+                    return [];
+                }
+            },
+            keys: ['text'],
+            cache: false,
+        },
+        resultsList: {
+            class: 'groceries-suggestion',
+            destination: "#" + element.parentElement.id,
+            position: "beforeend",
+            tag: "ul",
+            noResults: true,
+            maxResults: 10,
+        },
+        resultItem: {
+            highlight: true
+        },
+        trigger: query => query.length > 0,
+        threshold: 1,
+        debounce: 100,
+        //placeHolder: lang.searching,
+        selector: "#" + element.id,
+        wrapper: false,
+    });
+
+
+    element.addEventListener("selection", function (event) {
+        const feedback = event.detail;
+        element.value = feedback.selection.value.name;
+
+        let unit = element.closest('.step-ingredient').querySelector('.step-ingredient-unit');
+        let id = element.closest('.step-ingredient').querySelector('.step-ingredient-id');
+        if (unit.value == '') {
+            unit.value = feedback.selection.value.unit;
+        }
+        id.value = feedback.selection.value.id;
+    });
+
+    element.addEventListener("results", function (event) {
+        console.log(event.detail.results.length);
+        if (event.detail.results.length == 0) {
+            event.target.nextElementSibling.classList.add('hidden');
+        } else {
+            event.target.nextElementSibling.classList.remove('hidden');
         }
     });
 
-    return fetch(jsObject.ingredients_get)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                selectr.add(data);
-                selectr.setValue(selected);
-            });
-
+    element.addEventListener("close", function (event) {
+        event.target.nextElementSibling.classList.add('hidden');
+    });
 }

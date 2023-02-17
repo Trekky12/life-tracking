@@ -18,6 +18,7 @@ use App\Domain\Home\Widget\TimesheetsSumWidget;
 use App\Domain\Home\Widget\TimesheetsProjectBudgetWidget;
 use App\Domain\Home\Widget\TimesheetsFastCreateWidget;
 use App\Domain\Home\Widget\BoardsCardsWidget;
+use App\Domain\Home\Widget\ShoppingListWidget;
 use App\Domain\Home\Widget\WidgetMapper;
 use App\Domain\Base\Settings;
 use App\Domain\Main\Translator;
@@ -39,6 +40,7 @@ class HomeService extends Service
     private $finance_month_income_widget;
     private $finance_month_balance_widget;
     private $car_max_mileage_today_widget;
+    private $car_last_refuel_widget;
     private $splitted_bills_balance_widget;
     private $timesheets_sum_widget;
     private $timesheets_project_budget_widget;
@@ -47,6 +49,7 @@ class HomeService extends Service
     private $currentweather_widget;
     private $weatherforecast_widget;
     private $boards_cards_widget;
+    private $shoppinglist_widget;
     private $widget_mapper;
     private $router;
 
@@ -71,6 +74,7 @@ class HomeService extends Service
         CurrentWeatherWidget $currentweather_widget,
         WeatherForecastWidget $weatherforecast_widget,
         BoardsCardsWidget $boards_cards_widget,
+        ShoppingListWidget $shoppinglist_widget,
         WidgetMapper $widget_mapper,
         RouteParser $router
     ) {
@@ -94,6 +98,7 @@ class HomeService extends Service
         $this->currentweather_widget = $currentweather_widget;
         $this->weatherforecast_widget = $weatherforecast_widget;
         $this->boards_cards_widget = $boards_cards_widget;
+        $this->shoppinglist_widget = $shoppinglist_widget;
 
         $this->widget_mapper = $widget_mapper;
 
@@ -194,6 +199,9 @@ class HomeService extends Service
         if ($this->current_user->getUser()->hasModule('boards')) {
             $available_widgets["boards_cards"] = ["name" => $this->translation->getTranslatedString("WIDGET_BOARD_CARDS")];
         }
+        if ($this->current_user->getUser()->hasModule('recipes')) {
+            $available_widgets["shoppinglist"] = ["name" => $this->translation->getTranslatedString("RECIPES_SHOPPINGLIST")];
+        }
 
         $available_widgets["efa"] = ["name" => $this->translation->getTranslatedString("EFA")];
         $available_widgets["currentweather"] = ["name" => $this->translation->getTranslatedString("WIDGET_CURRENTWEATHER")];
@@ -205,6 +213,44 @@ class HomeService extends Service
         ]);
     }
 
+    private function getWidget($widget_type): Widget\Widget
+    {
+        switch ($widget_type) {
+            case "last_finance_entries":
+                return $this->last_finance_entries_widget;
+            case "steps_today_entries":
+                return $this->steps_today_widget;
+            case "finances_month_expenses":
+                return $this->finance_month_expenses_widget;
+            case "finances_month_income":
+                return $this->finance_month_income_widget;
+            case "finances_month_balance":
+                return $this->finance_month_balance_widget;
+            case "last_refuel":
+                return $this->car_last_refuel_widget;
+            case "max_mileage":
+                return $this->car_max_mileage_today_widget;
+            case "splitted_bills_balances":
+                return $this->splitted_bills_balance_widget;
+            case "timesheets_sum":
+                return $this->timesheets_sum_widget;
+            case "timesheets_project_budget":
+                return $this->timesheets_project_budget_widget;
+            case "timesheets_fast_create":
+                return $this->timesheets_fast_create_widget;
+            case "efa":
+                return $this->efa_widget;
+            case "currentweather":
+                return $this->currentweather_widget;
+            case "weatherforecast":
+                return $this->weatherforecast_widget;
+            case "boards_cards":
+                return $this->boards_cards_widget;
+            case "shoppinglist":
+                return $this->shoppinglist_widget;
+        }
+    }
+
     public function getWidgetOptions($widget_type, $id)
     {
 
@@ -214,41 +260,8 @@ class HomeService extends Service
         }
 
         $result = null;
-        switch ($widget_type) {
-            case "max_mileage":
-                $result = $this->car_max_mileage_today_widget->getOptions($widget_object);
-                break;
-            case "last_refuel":
-                $result = $this->car_last_refuel_widget->getOptions($widget_object);
-                break;
-            case "splitted_bills_balances":
-                $result = $this->splitted_bills_balance_widget->getOptions($widget_object);
-                break;
-            case "timesheets_sum":
-                $result = $this->timesheets_sum_widget->getOptions($widget_object);
-                break;
-            case "timesheets_project_budget":
-                $result = $this->timesheets_project_budget_widget->getOptions($widget_object);
-                break;
-            case "timesheets_fast_create":
-                $result = $this->timesheets_fast_create_widget->getOptions($widget_object);
-                break;
-            case "efa":
-                $result = $this->efa_widget->getOptions($widget_object);
-                break;
-            case "currentweather":
-                $result = $this->currentweather_widget->getOptions($widget_object);
-                break;
-            case "weatherforecast":
-                $result = $this->weatherforecast_widget->getOptions($widget_object);
-                break;
-            case "boards_cards":
-                $result = $this->boards_cards_widget->getOptions($widget_object);
-                break;
-            default:
-                $result = null;
-                break;
-        }
+        $widget = $this->getWidget($widget_type);
+        $result = $widget->getOptions($widget_object);
 
         $response_data = ['entry' => $result];
         return new Payload(Payload::$RESULT_JSON, $response_data);
@@ -267,81 +280,23 @@ class HomeService extends Service
             "content" => !is_null($content) ? $content : '',
             "options" => $widget_object->getOptions()
         ];
+
+        $widget = $this->getWidget($widget_object->name);
+        $list["title"] = $widget->getTitle($widget_object);
+        $list["url"] = $widget->getLink($widget_object);
+
         switch ($widget_object->name) {
-            case "last_finance_entries":
-                $list["title"] = $this->last_finance_entries_widget->getTitle();
-                $list["content"] = $this->last_finance_entries_widget->getContent();
-                $list["url"] = $this->last_finance_entries_widget->getLink();
-                break;
-            case "steps_today_entries":
-                $list["title"] = $this->steps_today_widget->getTitle();
-                $list["content"] = $this->steps_today_widget->getContent();
-                $list["url"] = $this->steps_today_widget->getLink();
-                break;
-            case "finances_month_expenses":
-                $list["title"] = $this->finance_month_expenses_widget->getTitle();
-                $list["content"] = $this->finance_month_expenses_widget->getContent();
-                $list["url"] = $this->finance_month_expenses_widget->getLink();
-                break;
-            case "finances_month_income":
-                $list["title"] = $this->finance_month_income_widget->getTitle();
-                $list["content"] = $this->finance_month_income_widget->getContent();
-                $list["url"] = $this->finance_month_income_widget->getLink();
-                break;
-            case "finances_month_balance":
-                $list["title"] = $this->finance_month_balance_widget->getTitle();
-                $list["content"] = $this->finance_month_balance_widget->getContent();
-                $list["url"] = $this->finance_month_balance_widget->getLink();
-                break;
-            case "last_refuel":
-                $list["title"] = $this->car_last_refuel_widget->getTitle($widget_object);
-                $list["content"] = $this->car_last_refuel_widget->getContent($widget_object);
-                $list["url"] = $this->car_last_refuel_widget->getLink($widget_object);
-                break;
-            case "max_mileage":
-                $list["title"] = $this->car_max_mileage_today_widget->getTitle($widget_object);
-                $list["content"] = $this->car_max_mileage_today_widget->getContent($widget_object);
-                $list["url"] = $this->car_max_mileage_today_widget->getLink($widget_object);
-                break;
-            case "splitted_bills_balances":
-                $list["title"] = $this->splitted_bills_balance_widget->getTitle($widget_object);
-                $list["content"] = $this->splitted_bills_balance_widget->getContent($widget_object);
-                $list["url"] = $this->splitted_bills_balance_widget->getLink($widget_object);
-                break;
-            case "timesheets_sum":
-                $list["title"] = $this->timesheets_sum_widget->getTitle($widget_object);
-                $list["content"] = $this->timesheets_sum_widget->getContent($widget_object);
-                $list["url"] = $this->timesheets_sum_widget->getLink($widget_object);
-                break;
-            case "timesheets_project_budget":
-                $list["title"] = $this->timesheets_project_budget_widget->getTitle($widget_object);
-                $list["content"] = $this->timesheets_project_budget_widget->getContent($widget_object);
-                $list["url"] = $this->timesheets_project_budget_widget->getLink($widget_object);
-                break;
-            case "timesheets_fast_create":
-                $list["title"] = $this->timesheets_fast_create_widget->getTitle($widget_object);
-                $list["content"] = $this->timesheets_fast_create_widget->getContent($widget_object);
-                $list["url"] = $this->timesheets_fast_create_widget->getLink($widget_object);
-                break;
             case "efa":
-                $list["title"] = $this->efa_widget->getTitle($widget_object);
-                $list["url"] = $this->efa_widget->getLink($widget_object);
                 $list["reload"] = 60;
                 break;
             case "currentweather":
-                $list["title"] = $this->currentweather_widget->getTitle($widget_object);
-                $list["url"] = $this->currentweather_widget->getLink($widget_object);
                 $list["reload"] = 3600;
                 break;
             case "weatherforecast":
-                $list["title"] = $this->weatherforecast_widget->getTitle($widget_object);
-                $list["url"] = $this->weatherforecast_widget->getLink($widget_object);
                 $list["reload"] = 3600;
                 break;
-            case "boards_cards":
-                $list["title"] = $this->boards_cards_widget->getTitle($widget_object);
-                $list["content"] = $this->boards_cards_widget->getContent($widget_object);
-                $list["url"] = $this->boards_cards_widget->getLink($widget_object);
+            case "shoppinglist":
+                $list["reload"] = 60;
                 break;
         }
         return $list;
@@ -373,7 +328,9 @@ class HomeService extends Service
             $widget_object = new Widget\WidgetObject(["name" => $widget, "options" => $options]);
         }
 
-        $content = null;
+
+        $widget = $this->getWidget($widget_object->name);
+        $content = $widget->getContent($widget_object);
 
         if ($widget_object->name == "efa") {
             $url = $widget_object->getOptions()["url"];
@@ -395,9 +352,9 @@ class HomeService extends Service
 
             $content = Widget\WeatherForecastWidget::formatWeatherForecastRequestData($status, $result, $fmtDate);
         }
-        $widget = $this->getWidgetForFrontend($widget_object, $content);
-        $response_data["data"] = $widget["content"];
-        $response_data["url"] = $widget["url"];
+        $widget_data = $this->getWidgetForFrontend($widget_object, $content);
+        $response_data["data"] = $widget_data["content"];
+        $response_data["url"] = $widget_data["url"];
 
         $payload = new Payload(Payload::$RESULT_HTML, $response_data);
 

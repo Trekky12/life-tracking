@@ -1225,7 +1225,7 @@ var recipesCookbooksTable = new JSTable("#recipes_cookbooks_table", {
     ]
 });
 
-var recipesIngredientsTable = new JSTable("#recipes_ingredients_table", {
+var recipesGroceriesTable = new JSTable("#recipes_groceries_table", {
     perPage: 20,
     perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,
@@ -1245,6 +1245,25 @@ var recipesIngredientsTable = new JSTable("#recipes_ingredients_table", {
 });
 
 var recipesMealplansTable = new JSTable("#recipes_mealplans_table", {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
+    labels: tableLabels,
+    layout: layout,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+var recipesShopppingListsTable = new JSTable("#recipes_shoppinglists_table", {
     perPage: 20,
     perPageSelect: [10, 20, 50, 100, 200],
     labels: tableLabels,

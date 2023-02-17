@@ -8,23 +8,39 @@ use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Domain\Recipes\Grocery\GroceryService;
+use App\Domain\Recipes\Grocery\GroceryWriter;
 
-class RecipeWriter extends ObjectActivityWriter {
+class RecipeWriter extends ObjectActivityWriter
+{
 
     private $service;
+    private $grocery_service;
+    private $grocery_writer;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, RecipeMapper $mapper, RecipeService $service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        RecipeMapper $mapper,
+        RecipeService $service,
+        GroceryService $grocery_service,
+        GroceryWriter $grocery_writer
+    ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->service = $service;
+        $this->grocery_service = $grocery_service;
+        $this->grocery_writer = $grocery_writer;
     }
 
-    public function save($id, $data, $additionalData = null): Payload {
+    public function save($id, $data, $additionalData = null): Payload
+    {
 
         if ($this->service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        
+
         /**
          * Save Image
          */
@@ -69,7 +85,7 @@ class RecipeWriter extends ObjectActivityWriter {
         }
 
         $payload = parent::save($id, $data, $additionalData);
-        $entry = $payload->getResult();        
+        $entry = $payload->getResult();
 
         $hash = $this->setHash($entry);
 
@@ -93,19 +109,23 @@ class RecipeWriter extends ObjectActivityWriter {
         return $payload->withAdditionalData(["hash" => $hash]);
     }
 
-    public function getObjectViewRoute(): string {
+    public function getObjectViewRoute(): string
+    {
         return 'recipes_edit';
     }
 
-    public function getObjectViewRouteParams($entry): array {
+    public function getObjectViewRouteParams($entry): array
+    {
         return ["id" => $entry->id];
     }
 
-    public function getModule(): string {
+    public function getModule(): string
+    {
         return "recipes";
     }
 
-    private function getStepData($step_data, $idx) {
+    private function getStepData($step_data, $idx)
+    {
         $name = array_key_exists("name", $step_data) && !empty($step_data["name"]) ? filter_var($step_data["name"], FILTER_SANITIZE_STRING) : null;
         $description = array_key_exists("description", $step_data) && !empty($step_data["description"]) ? filter_var($step_data["description"], FILTER_SANITIZE_STRING) : null;
         $preparation_time = array_key_exists("preparation_time", $step_data) && !empty($step_data["preparation_time"]) ? intval(filter_var($step_data["preparation_time"], FILTER_SANITIZE_NUMBER_INT)) : null;
@@ -114,22 +134,61 @@ class RecipeWriter extends ObjectActivityWriter {
         return ["position" => $idx, "name" => $name, "description" => $description, "preparation_time" => $preparation_time, "waiting_time" => $waiting_time];
     }
 
-    private function getStepIngredients($step_data) {
+    private function getStepIngredients($step_data)
+    {
 
         $ingredients = [];
 
         if (array_key_exists("ingredients", $step_data) && is_array($step_data["ingredients"])) {
             foreach ($step_data["ingredients"] as $idx => $ingredient_data) {
 
-                $ingredient = array_key_exists("ingredient", $ingredient_data) && !empty($ingredient_data["ingredient"]) ? intval(filter_var($ingredient_data["ingredient"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                $grocery_input = array_key_exists("ingredient", $ingredient_data) && !empty($ingredient_data["ingredient"]) ? trim(filter_var($ingredient_data["ingredient"], FILTER_SANITIZE_STRING)) : null;
                 $amount = array_key_exists("amount", $ingredient_data) && !empty($ingredient_data["amount"]) ? filter_var($ingredient_data["amount"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+                $unit = array_key_exists("unit", $ingredient_data) && !empty($ingredient_data["unit"]) ? filter_var($ingredient_data["unit"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
                 $notice = array_key_exists("notice", $ingredient_data) && !empty($ingredient_data["notice"]) ? filter_var($ingredient_data["notice"], FILTER_SANITIZE_STRING) : null;
 
-                $ingredients[] = ["position" => $idx, "ingredient" => $ingredient, "amount" => $amount, "notice" => $notice];
+                $grocery_id = array_key_exists("id", $ingredient_data) && !empty($ingredient_data["id"]) ? intval(filter_var($ingredient_data["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+                $grocery = null;
+
+                /**
+                 * Get the grocery from an optional id and compare name with the input
+                 */
+                if (!is_null($grocery_id)) {
+                    $grocery = $this->grocery_service->getEntry($grocery_id);
+                    if (!is_null($grocery_input) && $grocery->name != $grocery_input) {
+                        $grocery = null;
+                    }
+                }
+
+                /**
+                 * Get the grocery from the input field
+                 */
+                if (is_null($grocery) && !is_null($grocery_input)) {
+
+                    $groceries = $this->grocery_service->getGroceryByName($grocery_input);
+
+                    $grocery = null;
+                    /**
+                     * Only use this grocery if there is exactly one match, otherwise create a new grocery
+                     */
+                    if (count($groceries) == 1) {
+                        $grocery = array_pop($groceries);
+                    } else {
+                        $grocery_new_payload = $this->grocery_writer->save(null, ["name" => $grocery_input, "unit" => $unit, "is_food" => 1]);
+                        $grocery = $grocery_new_payload->getResult();
+                    }
+                }
+
+                if (!is_null($grocery)) {
+
+                    $ingredients[] = ["position" => $idx, "ingredient" => $grocery->id, "amount" => $amount, "unit" => $unit, "notice" => $notice];
+
+                    $this->logger->notice("Add Grocery to recipe step", array("grocery" => $grocery->id));
+                }
             }
         }
 
         return $ingredients;
     }
-
 }

@@ -34,7 +34,7 @@ class CookbookRemover extends ObjectActivityRemover {
     }
 
     public function getModule(): string {
-        return "recipes_cookbooks";
+        return "recipes";
     }
 
 }

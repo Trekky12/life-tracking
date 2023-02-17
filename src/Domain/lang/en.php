@@ -600,9 +600,10 @@ $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "body part";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "training plan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "training session";
 $lang["DATAOBJECT_RECIPES_COOKBOOK"] = "cookbook";
-$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "ingredient";
+$lang["DATAOBJECT_RECIPES_GROCERY"] = "grocery";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
+$lang["DATAOBJECT_RECIPES_SHOPPINGLIST"] = "shopping list";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "notice field";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
@@ -763,6 +764,8 @@ $lang["RECIPE"] = "Recipe";
 $lang["RECIPES"] = "Recipes";
 $lang["RECIPES_COOKBOOKS"] = "cookbooks";
 $lang["RECIPES_COOKBOOK"] = "cookbook";
+$lang["RECIPES_GROCERIES"] = "groceries";
+$lang["RECIPES_GROCERY"] = "grocery";
 $lang["RECIPES_INGREDIENTS"] = "ingredients";
 $lang["RECIPES_INGREDIENT"] = "ingredient";
 $lang["RECIPES_MEALPLANS"] = "mealplans";
@@ -779,6 +782,11 @@ $lang["RECIPES_ADD_STEP"] = "Add step";
 $lang["RECIPES_MINUTES"] = "min.";
 $lang["RECIPES_ADD_TO_COOKBOOK"] = "Add to cookbook";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Remove from cookbook";
+
+$lang["RECIPES_SHOPPINGLISTS"] = "shopping lists";
+$lang["RECIPES_SHOPPINGLIST"] = "shopping list";
+$lang["RECIPES_SHOPPINGLIST_ERROR_ADD"] = "Error adding the entry to the list!";
+$lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"] = "New entries found! Please refresh.";
 
 $lang["ADD_NOTICE"] = "Add notice";
 

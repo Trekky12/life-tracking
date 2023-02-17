@@ -1,6 +1,6 @@
 {% for card in data %}
-	<div class="widget-board-card">
-		<div class="check btn-archive-card" data-archive="{{card.archive}}" data-stack="{{card.stack}}" data-id="{{card.id}}" data-url="{{url_for('card_archive')}}{{card.id}}">{{ fontawesome('far fa-circle-check') }}</div>
-		<div class="widget-card-title">{{card.title|raw}}</div>
+	<div class="widget-board-card custom-checkbox">
+		<input type="checkbox" id="card_{{card.id}}" class="btn-archive-card" data-archive="{{card.archive}}" data-stack="{{card.stack}}" data-id="{{card.id}}" data-url="{{url_for('card_archive')}}{{card.id}}" autocomplete="off"/>
+		<label class="widget-card-title" for="card_{{card.id}}">{{card.title|raw}}</label>
 	</div>
 {% endfor %}

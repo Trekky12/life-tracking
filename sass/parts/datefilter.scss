@@ -156,8 +156,8 @@
     }
 
     button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
-    input:not([type="checkbox"]):not([type="radio"]):not(.choices__input):not(.selectr-input),
-    //label,
+    input:not([type="checkbox"]):not(.choices__input):not(.selectr-input),
+    label,
     select {
         width: 100%;
 
@@ -166,14 +166,6 @@
         @media screen and (min-width: $size_mobile) {
             @include font-size(1.4);
             width: auto;
-        }
-    }
-
-    label{
-        @include font-size(1.2);
-
-        @media screen and (min-width: $size_mobile) {
-            @include font-size(1.4);
         }
     }
 }

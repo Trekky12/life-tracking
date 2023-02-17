@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const version = '20221022';
+const version = '20230217';
 
 const cacheName = 'pwa-life-tracking-v' + version;
 
@@ -22,12 +22,15 @@ const staticAssets = [
     '/static/js/boards.js?ver=' + version,
     '/static/js/budget.js?ver=' + version,
     '/static/js/car-service.js?ver=' + version,
+    '/static/js/car-stats.js?ver=' + version,
     '/static/js/crawler.js?ver=' + version,
     '/static/js/crawler_saved.js?ver=' + version,
     '/static/js/datefilter.js?ver=' + version,
     '/static/js/exercises.js?ver=' + version,
+    '/static/js/finances-stats.js?ver=' + version,
     '/static/js/geolocation.js?ver=' + version,
     '/static/js/location.js?ver=' + version,
+    '/static/js/location-steps-stats.js?ver=' + version,
     '/static/js/logfile.js?ver=' + version,
     '/static/js/mail-notifications.js?ver=' + version,
     '/static/js/main.js?ver=' + version,
@@ -35,7 +38,9 @@ const staticAssets = [
     '/static/js/notifications.js?ver=' + version,
     '/static/js/recipes.js?ver=' + version,
     '/static/js/recipes_mealplan.js?ver=' + version,
-    '/static/js/recipes_recipe.js?ver=' + version,
+    '/static/js/recipes-recipe.js?ver=' + version,
+    '/static/js/recipes-shoppinglist.js?ver=' + version,
+    '/static/js/recipes-shoppinglist-click.js?ver=' + version,
     '/static/js/splitbills.js?ver=' + version,
     '/static/js/tables.js?ver=' + version,
     '/static/js/timesheets.js?ver=' + version,

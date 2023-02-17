@@ -35,45 +35,50 @@ function load(item) {
 }
 
 
-document.addEventListener('click', function (event) {
+document.addEventListener('click', async function (event) {
     let btn_archive_card = event.target.closest('.btn-archive-card');
     if (btn_archive_card) {
-        event.preventDefault();
-        let url = btn_archive_card.dataset.url;
-        let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
+        //event.preventDefault();
 
-        if (archive === 0) {
-            if (!confirm(lang.boards_undo_archive)) {
-                return false;
+        setTimeout(function () {
+            let url = btn_archive_card.dataset.url;
+            let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
+
+            if (archive === 0) {
+                if (!confirm(lang.boards_undo_archive)) {
+                    btn_archive_card.checked = true;
+                    return false;
+                }
+            } else {
+                if (!confirm(lang.boards_really_archive)) {
+                    btn_archive_card.checked = false;
+                    return false;
+                }
             }
-        } else {
-            if (!confirm(lang.boards_really_archive)) {
-                return false;
-            }
-        }
 
-        var data = { 'archive': archive };
+            var data = { 'archive': archive };
 
-        getCSRFToken().then(function (token) {
-            data['csrf_name'] = token.csrf_name;
-            data['csrf_value'] = token.csrf_value;
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
 
-            return fetch(url, {
-                method: 'POST',
-                credentials: "same-origin",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+                return fetch(url, {
+                    method: 'POST',
+                    credentials: "same-origin",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                //allowedReload = true;
+                //window.location.reload();
+            }).catch(function (error) {
+                console.log(error);
             });
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            allowedReload = true;
-            window.location.reload();
-        }).catch(function (error) {
-            console.log(error);
-        });
-    }
+        }, 20);
 
+    }
 });

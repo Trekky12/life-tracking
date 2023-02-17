@@ -1,36 +1,30 @@
-
-#recipes_steps{
-
-    .step{
-
-        display:flex;
+#recipes_steps {
+    .step {
+        display: flex;
         flex-direction: column;
 
         @media screen and (min-width: $size_mobile) {
             flex-direction: row;
         }
 
-
         padding: 1rem;
         border: 1px solid $color_blue_light_gray;
         border-radius: 5px;
         margin: 0.5rem;
 
-        .step-content{
+        .step-content {
             flex-basis: 100%;
         }
 
-
-        label{
-            display:block;
+        label {
+            display: block;
         }
-        input:not(.selectr-input){
+        .form-group input:not(.selectr-input) {
             width: 100%;
         }
 
-        .icons{
-
-            display:flex;
+        .icons {
+            display: flex;
             justify-content: flex-end;
 
             @media screen and (min-width: $size_mobile) {
@@ -39,7 +33,7 @@
                 margin-left: 1rem;
             }
 
-            .step-handle{
+            .step-handle {
                 margin-left: 10px;
             }
         }
@@ -49,87 +43,103 @@
         border: 1px dashed $color_text-main;
     }
 
-    .add-ingredient-btn-wrapper{
-        display:flex;
+    .add-ingredient-btn-wrapper {
+        display: flex;
         margin-top: 1rem;
         justify-content: center;
     }
 
-    .step-ingredient{
-        display:flex;
-        align-items:center;
+    .step-ingredient {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         margin-bottom: 1rem;
 
-        input, .ingredient-handle, .selectr-container{
-            margin-right: 1rem;
-        }
-
-        input[name="amount"]{
-            flex-basis: 20%;
-        }
-
-        input{
+        input {
             padding: 8px 12px;
             @include font-size(1.4);
-        }
-
-        input, .selectr-selected{
+            margin-bottom: 1rem;
+            width: 100%;
             border: 1px solid $color_gray;
             border-radius: 0px;
         }
-        .selectr-options-container{
+
+        .ingredient-suggestion-wrapper {
+            width: 100%;
+        }
+
+        .ingredient-handle,
+        input,
+        .ingredient-suggestion-wrapper {
+            margin-right: 1rem;
+        }
+
+        .selectr-options-container {
             border-color: $color_gray;
             border-radius: 0px;
         }
 
-        .ingredient-choices{
+        /*.ingredient-choices {
             margin-bottom: 0;
             width: 100%;
             margin-right: 1rem;
 
-            .choices__inner{
+            .choices__inner {
                 min-height: 37px;
                 //padding: 5px 7.5px 5px 7.5px;
                 padding: 8px 12px;
                 border: 1px solid $color_gray;
                 @include font-size(1.4);
 
-                .choices__list{
+                .choices__list {
                     padding: 0;
                 }
             }
+        }*/
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            flex-direction: row;
+
+            input {
+                width: auto;
+                margin-bottom: 0;
+            }
+            .ingredient-suggestion-wrapper input {
+                width: 100%;
+            }
+
+            .step-ingredient-amount,
+            .step-ingredient-unit {
+                width: 100px;
+            }
         }
     }
-
-
-
-
 }
 
-#recipes_steps, .mealplan-recipe{
-    .icons{
-
-        .minus, .handle{
-            cursor:pointer;
-            &:hover{
+#recipes_steps,
+.mealplan-recipe {
+    .icons {
+        .minus,
+        .handle {
+            cursor: pointer;
+            &:hover {
                 color: $color_blue;
             }
         }
 
-        .handle{
+        .handle {
             margin-right: 10px;
         }
     }
 }
 
-.add-step-btn-wrapper{
-    display:flex;
+.add-step-btn-wrapper {
+    display: flex;
     margin: 2rem;
     justify-content: flex-end;
 }
 
-
-.recipe-description{
+.recipe-description {
     margin: 1rem;
     flex-grow: 1;
 
@@ -141,16 +151,18 @@
     font-weight: 400;
 }
 
-.recipe-link{
+.recipe-link {
     margin: 1rem;
 }
 
-.recipe-icons{
-    display:flex;
+.recipe-icons {
+    display: flex;
     justify-content: space-around;
     margin: 1rem;
 
-    i, span, svg{
+    i,
+    span,
+    svg {
         @include font-size(1.6);
         margin-right: 0.5rem;
         @media screen and (min-width: $size_mobile) {
@@ -158,23 +170,24 @@
         }
     }
 
-    span{
+    span {
         white-space: nowrap;
     }
 
-    &.recipe-step-icons{
-        i, span, svg{
+    &.recipe-step-icons {
+        i,
+        span,
+        svg {
             @include font-size(1.4);
             @media screen and (min-width: $size_mobile) {
                 @include font-size(1.6);
             }
         }
     }
-
 }
 
-.recipe-ingredients-image{
-    display:flex;
+.recipe-ingredients-image {
+    display: flex;
     justify-content: space-between;
     flex-direction: column;
 
@@ -183,7 +196,7 @@
         align-items: flex-start;
     }
 
-    .recipe-image{
+    .recipe-image {
         flex-grow: 1;
         max-height: 100%;
         @media screen and (min-width: $size_mobile_navigation) {
@@ -191,8 +204,7 @@
         }
     }
 
-    .recipe-ingredients{
-
+    .recipe-ingredients {
         margin-top: 1rem;
 
         @media screen and (min-width: $size_mobile_navigation) {
@@ -205,19 +217,20 @@
         flex-grow: 1;
         height: 100%;
 
-        .recipe-ingredients-title{
+        .recipe-ingredients-title {
             @include font-size(1.8);
         }
     }
 
-    img, .recipe-ingredients{
+    img,
+    .recipe-ingredients {
         border: 1px solid $color_blue_light_gray;
         border-radius: 5px;
     }
 }
 
-.recipe-step-ingredients-description{
-    display:flex;
+.recipe-step-ingredients-description {
+    display: flex;
     justify-content: space-between;
     flex-direction: column;
 
@@ -225,8 +238,7 @@
         flex-direction: row;
     }
 
-    .recipe-step-ingredients{
-
+    .recipe-step-ingredients {
         margin-top: 1rem;
 
         @media screen and (min-width: $size_mobile_navigation) {
@@ -236,7 +248,7 @@
         flex-basis: 30%;
         padding: 1rem;
 
-        .recipe-step-ingredients-title{
+        .recipe-step-ingredients-title {
             @include font-size(1.6);
             font-weight: 600;
         }
@@ -245,18 +257,17 @@
         border-radius: 5px;
     }
 
-    .recipe-description{
+    .recipe-description {
         //padding: 1rem;
         width: 100%;
         flex-basis: 70%;
     }
 }
 
+.ingredient-select {
+    cursor: pointer;
 
-.ingredient-select{
-    cursor:pointer;
-
-    &:focus{
+    &:focus {
         color: $color_text-main;
     }
 
@@ -265,24 +276,24 @@
             color: $color_blue;
         }
     }
-    &.active, &.active :focus {
+    &.active,
+    &.active :focus {
         color: $color_blue;
     }
-
 }
 
-#filterSearchRecipes{
+#filterSearchRecipes {
     width: 100%;
 }
 
-.recipe-list .recipe{
-    h3{
+.recipe-list .recipe {
+    h3 {
         padding: 0.5rem 0;
         margin: 0;
     }
 
-    .recipe-list-image-description{
-        display:flex;
+    .recipe-list-image-description {
+        display: flex;
         justify-content: space-between;
         flex-direction: column;
 
@@ -292,26 +303,25 @@
     }
 }
 
-.recipe-step-header{
+.recipe-step-header {
     margin: 0;
 }
 
-
-.mealplan-list{
-    display:flex;
+.mealplan-list {
+    display: flex;
     flex-direction: column-reverse;
     @media screen and (min-width: $size_mobile_navigation) {
         flex-direction: row;
     }
-    .mealplans{
-        display: flex; 
-        flex-direction: column; 
+    .mealplans {
+        display: flex;
+        flex-direction: column;
         flex-grow: 1;
         @media screen and (min-width: $size_mobile_navigation) {
             flex-basis: 50%;
         }
     }
-    .mealplan-list-settings{
+    .mealplan-list-settings {
         @media screen and (min-width: $size_mobile_navigation) {
             position: sticky;
             top: $header_height + $header_height_margin;
@@ -323,8 +333,7 @@
     }
 }
 
-.mealplan-recipe{
-
+.mealplan-recipe {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -334,37 +343,131 @@
     margin-bottom: 1rem;
     padding: 0.5rem;
 
-    .title{
+    .title {
         display: flex;
         align-items: center;
     }
 
-    h3{
+    h3 {
         margin: 0;
         padding: 0;
     }
 }
 
-.mealplan-date{
-    h2{
+.mealplan-date {
+    h2 {
         //padding: 0.5rem 3rem;
         margin: 0;
     }
 
-    .recipes-target{
+    .recipes-target {
         //padding-left: 1rem;
         padding-right: 2rem;
     }
 
-    .create-notice{
+    .create-notice {
         //padding-left: 1rem;
         padding-right: 2rem;
         margin-bottom: 1rem;
     }
 }
 
-body.sortable-select{
-    .step-container{
+body.sortable-select {
+    .step-container {
         display: none;
+    }
+}
+
+.recipes-grocery-shoppinglist-filter {
+    display: flex;
+    flex-direction: column;
+
+    input {
+        height: 42px;
+    }
+    input[type="submit"] {
+        padding: 0 2.5rem;
+    }
+
+    & > :not(:last-child) {
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    #addGroceryToList_name {
+        width: 100%;
+    }
+
+    @media screen and (min-width: $size_mobile_navigation) {
+        flex-direction: row;
+
+        & > :not(:last-child) {
+            margin-right: 1rem;
+            width: auto;
+        }
+
+        #addGroceryToList_amount {
+            width: 100px;
+        }
+
+        #groceries-suggestion-wrapper {
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: 100%;
+        }
+
+        #addGroceryToList_unit {
+            width: 100px;
+        }
+    }
+}
+
+.shopping-list-entries,
+.recipe-ingredient-entries {
+    list-style: none;
+    margin: 0;
+    background: #ffffff;
+    padding: 0;
+}
+
+.shopping-list-entries {
+
+    margin-top: 2rem;
+
+    .shopping-list-entry {
+        //padding: 1rem;
+        //border: 1px solid $color_blue_light_gray;
+        //border-radius: 5px;
+        margin: 0.5rem;
+
+        position: relative;
+
+        &:after {
+            position: absolute;
+            content: "";
+            border-bottom: 1px dotted $color_background-body;
+            bottom: -2px;
+            left: 20px;
+            right: 0;
+        }
+
+        label {
+            @include font-size(1.6);
+        }
+
+        .btn-delete {
+            display: none;
+        }
+
+        &:hover,
+        &:focus {
+            .btn-delete {
+                display: block;
+            }
+
+            &:after {
+                border-bottom-color: $color_blue_light_gray;
+            }
+        }
     }
 }

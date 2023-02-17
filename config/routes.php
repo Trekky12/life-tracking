@@ -599,13 +599,13 @@ return function (App $app) {
             });
         });
 
-        $group->group('/ingredients', function (RouteCollectorProxy $group_ingredients) {
-            $group_ingredients->get('/', \App\Application\Action\Recipes\Ingredient\IngredientListAction::class)->setName('recipes_ingredients');
-            $group_ingredients->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Ingredient\IngredientEditAction::class)->setName('recipes_ingredients_edit');
-            $group_ingredients->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Ingredient\IngredientSaveAction::class)->setName('recipes_ingredients_save');
-            $group_ingredients->delete('/delete/{id}', \App\Application\Action\Recipes\Ingredient\IngredientDeleteAction::class)->setName('recipes_ingredients_delete');
+        $group->group('/groceries', function (RouteCollectorProxy $group_groceries) {
+            $group_groceries->get('/', \App\Application\Action\Recipes\Grocery\GroceryListAction::class)->setName('recipes_groceries');
+            $group_groceries->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Grocery\GroceryEditAction::class)->setName('recipes_groceries_edit');
+            $group_groceries->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Grocery\GrocerySaveAction::class)->setName('recipes_groceries_save');
+            $group_groceries->delete('/delete/{id}', \App\Application\Action\Recipes\Grocery\GroceryDeleteAction::class)->setName('recipes_groceries_delete');
 
-            $group_ingredients->get('/list', \App\Application\Action\Recipes\Ingredient\IngredientSelectionListAction::class)->setName('ingredients_get');
+            $group_groceries->get('/search', \App\Application\Action\Recipes\Grocery\GrocerySearchAction::class)->setName('groceries_search');
         });
 
         $group->group('/mealplans', function (RouteCollectorProxy $group_mealplans) {
@@ -619,6 +619,21 @@ return function (App $app) {
 
                 $group_mealplan->post('/moverecipe/', \App\Application\Action\Recipes\Mealplan\MealplanMoveRecipeAction::class)->setName('recipes_mealplans_move_recipe');
                 $group_mealplan->delete('/removerecipe/', \App\Application\Action\Recipes\Mealplan\MealplanRemoveRecipeAction::class)->setName('recipes_mealplans_remove_recipe');
+            });
+        });
+        $group->group('/shoppinglists', function (RouteCollectorProxy $group_shoppinglists) {
+            $group_shoppinglists->get('/', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistListAction::class)->setName('recipes_shoppinglists');
+            $group_shoppinglists->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistEditAction::class)->setName('recipes_shoppinglists_edit');
+            $group_shoppinglists->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistSaveAction::class)->setName('recipes_shoppinglists_save');
+            $group_shoppinglists->delete('/delete/{id}', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistDeleteAction::class)->setName('recipes_shoppinglists_delete');
+
+
+            $group_shoppinglists->group('/{shoppinglist}', function (RouteCollectorProxy $group_shoppinglist) {
+                $group_shoppinglist->get('/view/', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistViewAction::class)->setName('recipes_shoppinglists_view');
+                $group_shoppinglist->post('/add', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistAddEntryAction::class)->setName('recipes_shoppinglists_add_entry');
+                $group_shoppinglist->get('/list', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistEntriesListAction::class)->setName('recipes_shoppinglistentries_get');
+                $group_shoppinglist->post('/setState', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistEntrySetStateAction::class)->setName('recipes_shoppinglistentries_set_state');
+                $group_shoppinglist->delete('/delete/[{id}]', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistDeleteEntryAction::class)->setName('recipes_shoppinglists_delete_entry');
             });
         });
     });

@@ -54,7 +54,7 @@
         {% endif %}
         <div id="content" class="site-content container">
             {% if flash() is not empty %}
-                <div class="alert hide-offline {{flash('message_type')|last}}">
+                <div class="alert hide-offline {{flash('message_type')|last}} flash-message">
                     <span class="closebtn" >&times;</span>
                     <span class="alert-message">
                         {% for msg in flash('message') %}
@@ -183,12 +183,18 @@
                 'workouts_exercises_selected_muscles': '{{url_for('workouts_exercises_selected_muscles')}}',
                 'workouts_exercises_data': '{{url_for('workouts_exercises_data')}}',
                 'usersearch': '{{url_for('usersearch')}}',
-                'ingredients_get': '{{url_for('ingredients_get')}}',
+                'groceries_search': '{{url_for('groceries_search')}}',
                 'recipes_get': '{{url_for('recipes_get')}}',
                 'recipes_get_mealplan': '{{url_for('recipes_get_mealplan')}}',
 {% if not isMealplanEdit is null %}
                 'recipes_mealplan_move_recipe': '{{url_for('recipes_mealplans_move_recipe', {'mealplan': mealplan.hash})}}',
                 'recipes_mealplan_remove_recipe': '{{url_for('recipes_mealplans_remove_recipe', {'mealplan': mealplan.hash})}}',
+{% endif %}
+{% if not isShoppingList is null %}
+                'recipes_shoppinglists_add_entry': '{{url_for('recipes_shoppinglists_add_entry', {'shoppinglist': shoppinglist.hash})}}',
+                'recipes_shoppinglistentries_get': '{{url_for('recipes_shoppinglistentries_get', {'shoppinglist': shoppinglist.hash})}}',
+                'recipes_shoppinglistentries_set_state': '{{url_for('recipes_shoppinglistentries_set_state', {'shoppinglist': shoppinglist.hash})}}',
+                'recipes_shoppinglists_delete_entry': '{{url_for('recipes_shoppinglists_delete_entry', {'shoppinglist': shoppinglist.hash})}}',
 {% endif %}
                 'store_query_params': '{{url_for('store_query_params')}}',
 {% if not isBoardView is null %}
@@ -272,6 +278,7 @@
                         'transaction_delete_has_splitted_bill': '{{lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"]}}',
                         'crawlers_mark_all_as_shown_success':'{{lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"]}}',
                         'crawlers_mark_all_as_shown_error':'{{lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"]}}',
+                        'recipes_shoppinglist_error_add':'{{lang["RECIPES_SHOPPINGLIST_ERROR_ADD"]}}'
                     };
                     var tokens = {{ csrf_js|json_encode()|raw }};
         </script>

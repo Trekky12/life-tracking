@@ -2,14 +2,16 @@
 
 namespace App\Domain\Recipes\Recipe;
 
-class RecipeMapper extends \App\Domain\Mapper {
+class RecipeMapper extends \App\Domain\Mapper
+{
 
     protected $table = "recipes";
     protected $dataobject = \App\Domain\Recipes\Recipe\Recipe::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
-    public function deleteSteps($recipe_id) {
+    public function deleteSteps($recipe_id)
+    {
         $sql = "DELETE FROM " . $this->getTableName("recipes_steps") . "  WHERE recipe = :recipe";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -21,11 +23,13 @@ class RecipeMapper extends \App\Domain\Mapper {
         return true;
     }
 
-    public function addStep($recipe_id, $step = []) {
+    public function addStep($recipe_id, $step = [])
+    {
         return $this->addSteps($recipe_id, [$step]);
     }
 
-    public function addSteps($recipe_id, $steps = []) {
+    public function addSteps($recipe_id, $steps = [])
+    {
 
         $data_array = array();
         $keys_array = array();
@@ -41,7 +45,7 @@ class RecipeMapper extends \App\Domain\Mapper {
         }
 
         $sql = "INSERT INTO " . $this->getTableName("recipes_steps") . " (recipe, position, name, description, preparation_time, waiting_time, createdBy) "
-                . "VALUES " . implode(", ", $keys_array) . "";
+            . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -53,7 +57,8 @@ class RecipeMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function getSteps($recipe_id) {
+    public function getSteps($recipe_id)
+    {
         $sql = "SELECT id, position, name, description, preparation_time, waiting_time FROM " . $this->getTableName("recipes_steps") . " WHERE recipe = :recipe ORDER BY position";
 
         $bindings = [
@@ -70,7 +75,8 @@ class RecipeMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function addRecipeIngredients($recipe_id, $step_id, $ingredients = []) {
+    public function addRecipeIngredients($recipe_id, $step_id, $ingredients = [])
+    {
 
         $data_array = array();
         $keys_array = array();
@@ -80,13 +86,14 @@ class RecipeMapper extends \App\Domain\Mapper {
             $data_array["ingredient" . $idx] = $ingredient["ingredient"];
             $data_array["position" . $idx] = $ingredient["position"];
             $data_array["amount" . $idx] = $ingredient["amount"];
+            $data_array["unit" . $idx] = $ingredient["unit"];
             $data_array["notice" . $idx] = $ingredient["notice"];
             $data_array["createdBy" . $idx] = $this->user_id;
-            $keys_array[] = "(:recipe" . $idx . ", :step" . $idx . ", :ingredient" . $idx . ", :position" . $idx . ", :amount" . $idx . ", :notice" . $idx . ", :createdBy" . $idx . ")";
+            $keys_array[] = "(:recipe" . $idx . ", :step" . $idx . ", :ingredient" . $idx . ", :position" . $idx . ", :amount" . $idx . ", :unit" . $idx . ", :notice" . $idx . ", :createdBy" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTableName("recipes_recipe_ingredients") . " (recipe, step, ingredient, position, amount, notice, createdBy) "
-                . "VALUES " . implode(", ", $keys_array) . "";
+        $sql = "INSERT INTO " . $this->getTableName("recipes_recipe_ingredients") . " (recipe, step, ingredient, position, amount, unit, notice, createdBy) "
+            . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -98,10 +105,16 @@ class RecipeMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function getRecipeIngredients($recipe_id) {
-        $sql = "SELECT ri.id, ri.step, ri.ingredient, ri.position, ri.amount, ri.notice, i.name, i.unit "
-                . "FROM " . $this->getTableName("recipes_recipe_ingredients") . " ri, " . $this->getTableName("recipes_ingredients") . " i "
-                . "WHERE ri.ingredient = i.id AND recipe = :recipe ORDER BY ri.step, position";
+    public function getRecipeIngredients($recipe_id)
+    {
+        $sql = "SELECT ri.id, ri.step, ri.ingredient, ri.position, ri.amount, "
+            . "CASE "
+            . " WHEN ri.unit IS NOT NULL THEN ri.unit "
+            . " ELSE i.unit "
+            . "END as unit, "
+            . "ri.notice, i.name "
+            . "FROM " . $this->getTableName("recipes_recipe_ingredients") . " ri, " . $this->getTableName("recipes_groceries") . " i "
+            . "WHERE ri.ingredient = i.id AND recipe = :recipe ORDER BY ri.step, position";
 
         $bindings = [
             "recipe" => $recipe_id
@@ -121,9 +134,10 @@ class RecipeMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getRecipesFromCookbookFiltered($cookbook_id, $sorted, $limit, $query = '') {
+    public function getRecipesFromCookbookFiltered($cookbook_id, $sorted, $limit, $query = '')
+    {
         $sql = "SELECT r.* "
-                . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r ";
+            . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r ";
 
         $bindings = [
             "cookbook" => $cookbook_id
@@ -154,10 +168,11 @@ class RecipeMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getRecipesFromCookbookFilteredCount($cookbook_id, $query = '') {
+    public function getRecipesFromCookbookFilteredCount($cookbook_id, $query = '')
+    {
 
         $sql = "SELECT COUNT(r.id) "
-                . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r ";
+            . "FROM " . $this->getTableName("recipes_cookbook_recipes") . " cr, " . $this->getTableName("recipes") . " r ";
 
         $bindings = [
             "cookbook" => $cookbook_id
@@ -185,7 +200,8 @@ class RecipeMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getRecipesFiltered($sorted, $limit, $query = '') {
+    public function getRecipesFiltered($sorted, $limit, $query = '')
+    {
         $sql = "SELECT * FROM " . $this->getTableName();
 
         $bindings = array();
@@ -215,7 +231,8 @@ class RecipeMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getRecipesFilteredCount($query = '') {
+    public function getRecipesFilteredCount($query = '')
+    {
 
         $sql = "SELECT COUNT({$this->id}) FROM " . $this->getTableName();
 
@@ -240,5 +257,4 @@ class RecipeMapper extends \App\Domain\Mapper {
         }
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
-
 }

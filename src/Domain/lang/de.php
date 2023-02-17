@@ -599,9 +599,10 @@ $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "Körperbereich";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "Trainingsplan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "Trainingseinheit";
 $lang["DATAOBJECT_RECIPES_COOKBOOK"] = "Kochbuch";
-$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
+$lang["DATAOBJECT_RECIPES_GROCERY"] = "Lebensmittel";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
+$lang["DATAOBJECT_RECIPES_SHOPPINGLIST"] = "Einkaufsliste";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "Feld für Notizen";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
@@ -762,6 +763,8 @@ $lang["RECIPE"] = "Rezept";
 $lang["RECIPES"] = "Rezepte";
 $lang["RECIPES_COOKBOOKS"] = "Kochbücher";
 $lang["RECIPES_COOKBOOK"] = "Kochbuch";
+$lang["RECIPES_GROCERIES"] = "Lebensmittel";
+$lang["RECIPES_GROCERY"] = "Lebensmittel";
 $lang["RECIPES_INGREDIENTS"] = "Zutaten";
 $lang["RECIPES_INGREDIENT"] = "Zutat";
 $lang["RECIPES_MEALPLANS"] = "Speisepläne";
@@ -778,6 +781,11 @@ $lang["RECIPES_ADD_STEP"] = "Schritt hinzufügen";
 $lang["RECIPES_MINUTES"] = "min.";
 $lang["RECIPES_ADD_TO_COOKBOOK"] = "Zum Kochbuch hinzufügen";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Aus Kochbuch entfernen";
+
+$lang["RECIPES_SHOPPINGLISTS"] = "Einkaufslisten";
+$lang["RECIPES_SHOPPINGLIST"] = "Einkaufsliste";
+$lang["RECIPES_SHOPPINGLIST_ERROR_ADD"] = "Fehler beim Hinzufügen des Eintrags zur Einkaufsliste!";
+$lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"] = "Neue Einträge gefunden! Bitte aktualisieren.";
 
 $lang["ADD_NOTICE"] = "Notiz hinzufügen";
 
