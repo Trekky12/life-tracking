@@ -502,7 +502,7 @@ $lang["TIMESHEETS_TIME"] = "Summe";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "Zeitberechnung anpassbar";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "Zeitumrechnungsrate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
-$lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Zeit (sek.)";
+$lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Dauer (HH:MM)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "keine Anpassung der Zeit";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "nutze die Zeitumrechnungsrate des Projekts";
 $lang["TIMESHEETS_DURATION_DEFAULT"] = "Standarddauer";
@@ -515,6 +515,26 @@ $lang["MAIN_CATEGORY"] = "Hauptkategorie";
 $lang["ASSIGNED_CATEGORIES"] = "zugeordnete Kategorien";
 $lang["TIMESHEETS_CATEGORYBUDGET_VALUE"] = "Grenzwert";
 $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- keine Hauptkategorie -";
+$lang["TIMESHEETS_BILLED"] = "berechnet";
+$lang["TIMESHEETS_NOT_BILLED"] = "nicht berechnet";
+$lang["TIMESHEETS_PAYED"] = "bezahlt";
+$lang["TIMESHEETS_NOT_PAYED"] = "nicht bezahlt";
+$lang["TIMESHEETS_APPLY"] = "anwenden";
+$lang["TIMESHEETS_APPLY_BILLED"] = "als berechnet markieren";
+$lang["TIMESHEETS_APPLY_NOT_BILLED"] = "als nicht berechnet markieren";
+$lang["TIMESHEETS_APPLY_PAYED"] = "als bezahlt markieren";
+$lang["TIMESHEETS_APPLY_NOT_PAYED"] = "als nicht bezahlt markieren";
+$lang["TIMESHEETS_ITEMS_SELECED"] = "Element(e) markiert";
+$lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "berechnet und nicht berechnet";
+$lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "bezahlt und nicht bezahlt";
+$lang["TIMESHEETS_SHOW_MONTH_BUTTON"] = "zeige Button für Monat";
+$lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"] = "zeige Buttons für Quartale";
+$lang["TIMESHEETS_QUARTER_1"] = "Q1";
+$lang["TIMESHEETS_QUARTER_2"] = "Q2";
+$lang["TIMESHEETS_QUARTER_3"] = "Q3";
+$lang["TIMESHEETS_QUARTER_4"] = "Q4";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Einträge ohne Notizen ausblenden";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Felder ohne Inhalt ausblenden";
 
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
@@ -579,12 +599,14 @@ $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "Körperbereich";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "Trainingsplan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "Trainingseinheit";
 $lang["DATAOBJECT_RECIPES_COOKBOOK"] = "Kochbuch";
-$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "Zutat";
+$lang["DATAOBJECT_RECIPES_GROCERY"] = "Lebensmittel";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "Rezept";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "Speiseplan";
+$lang["DATAOBJECT_RECIPES_SHOPPINGLIST"] = "Einkaufsliste";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "Feld für Notizen";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "Zeiterfasungsprojekt Kunde";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -710,9 +732,9 @@ $lang["WORKOUTS_TEMPLATE_PLANS"] = "Trainingsplan Vorlagen";
 $lang["WORKOUTS_TEMPLATE_USE"] = "Trainingsplan verwenden";
 
 $lang["WORKOUTS_ADD_DAY"] = "Trainingstag hinzufügen";
-$lang["WORKOUTS_ADD_SUPERSET"] = "Superset hinzufügen";
+$lang["WORKOUTS_ADD_SUPERSET"] = "Supersatz hinzufügen";
 
-$lang["WORKOUTS_SUPERSET"] = "Superset";
+$lang["WORKOUTS_SUPERSET"] = "Supersatz";
 $lang["WORKOUTS_DAYS"] = "Trainingstage";
 $lang["WORKOUTS_DAY"] = "Trainingstag";
 
@@ -722,6 +744,10 @@ $lang["WORKOUTS_PLAN_CATEGORY_FAT"] = "Fett abbauen";
 $lang["WORKOUTS_LEVEL_BEGINNER"] = "Anfänger";
 $lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "Fortgeschrittene";
 $lang["WORKOUTS_LEVEL_ADVANCED"] = "Profis";
+
+$lang["WORKOUTS_PLAN_EXERCISE_ADDED"] = "Übung hinzugefügt.";
+$lang["WORKOUTS_PLAN_WORKOUTDAY_ADDED"] = "Trainingstag hinzugefügt.";
+$lang["WORKOUTS_PLAN_SUPERSET_ADDED"] = "Supersatz hinzugefügt.";
 
 $lang["SAVE_IFTTT_URL"] = "IFTTT-URL speichern";
 $lang["DELETE_IFTTT_URL"] = "IFTTT-URL löschen";
@@ -741,6 +767,8 @@ $lang["RECIPE"] = "Rezept";
 $lang["RECIPES"] = "Rezepte";
 $lang["RECIPES_COOKBOOKS"] = "Kochbücher";
 $lang["RECIPES_COOKBOOK"] = "Kochbuch";
+$lang["RECIPES_GROCERIES"] = "Lebensmittel";
+$lang["RECIPES_GROCERY"] = "Lebensmittel";
 $lang["RECIPES_INGREDIENTS"] = "Zutaten";
 $lang["RECIPES_INGREDIENT"] = "Zutat";
 $lang["RECIPES_MEALPLANS"] = "Speisepläne";
@@ -757,6 +785,11 @@ $lang["RECIPES_ADD_STEP"] = "Schritt hinzufügen";
 $lang["RECIPES_MINUTES"] = "min.";
 $lang["RECIPES_ADD_TO_COOKBOOK"] = "Zum Kochbuch hinzufügen";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Aus Kochbuch entfernen";
+
+$lang["RECIPES_SHOPPINGLISTS"] = "Einkaufslisten";
+$lang["RECIPES_SHOPPINGLIST"] = "Einkaufsliste";
+$lang["RECIPES_SHOPPINGLIST_ERROR_ADD"] = "Fehler beim Hinzufügen des Eintrags zur Einkaufsliste!";
+$lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"] = "Neue Einträge gefunden! Bitte aktualisieren.";
 
 $lang["ADD_NOTICE"] = "Notiz hinzufügen";
 
@@ -783,9 +816,22 @@ $lang["DATATYPE_INITIALIZATION"] = "Initialisierung (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Bemerkung hinzufügen";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Bemerkung bearbeiten";
 
+$lang["TIMESHEETS_CUSTOMER"] = "Kunde";
+$lang["TIMESHEETS_CUSTOMERS"] = "Kunden";
+$lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"] = "Beschreibung für Kunde (Singular)";
+$lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Beschreibung für Kunden (Plural)";
+
 $lang["PRINT"] = "Drucken";
 
 $lang["FINANCES_ROUND_UP_SAVINGS"] = "Kleingeldsparen";
 $lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "Kleingeldsparen deaktiviert";
+
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN"] = "Markiere alle Einträge als gesehen";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"] = "Die Einträge wurden als gesehen markiert werden.";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"] = "Fehler! Die Einträge konnten nicht als gesehen markiert werden.";
+
+$lang["WIDGET_BOARD_CARDS"] = "Karten eines Boards";
+$lang["CARDS_ALL"] = "zeige alle Karten";
+$lang["CARDS_DUE"] = "zeige fällige Karten";
 
 return $lang;

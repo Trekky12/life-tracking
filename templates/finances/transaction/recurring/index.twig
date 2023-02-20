@@ -44,7 +44,7 @@
                             <td>{{entry.next_run}}</td> 
                             <td>{% if entry.is_active > 0 %}x{% endif %}</td> 
                             <td><a href="{{  url_for('finances_transaction_recurring_trigger', {'id' : entry.id}) }}">{{ fontawesome('fas fa-play') }}</a></td>
-                            <td><a href="{{  url_for('finances_transaction_recurring_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('finances_transaction_recurring_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('finances_transaction_recurring_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

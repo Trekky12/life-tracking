@@ -287,6 +287,7 @@ return function (App $app) {
             $group_stacks->post('/updatePosition', \App\Application\Action\Board\Stack\StackUpdatePositionAction::class)->setName('stack_update_position');
             $group_stacks->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackDeleteAction::class)->setName('stack_delete');
             $group_stacks->post('/archive/[{id:[0-9]+}]', \App\Application\Action\Board\Stack\StackArchiveAction::class)->setName('stack_archive');
+            $group_stacks->get('/{hash}', \App\Application\Action\Board\Board\BoardStacksAction::class)->setName('boards_stacks');
         });
         $group->group('/card', function (RouteCollectorProxy $group_cards) {
             $group_cards->post('/save/[{id:[0-9]+}]', \App\Application\Action\Board\Card\CardSaveAction::class)->setName('card_save');
@@ -316,7 +317,8 @@ return function (App $app) {
 
             $group_crawler->get('/view/', \App\Application\Action\Crawler\Crawler\CrawlerViewAction::class)->setName('crawlers_view');
             $group_crawler->get('/table/', \App\Application\Action\Crawler\Crawler\CrawlerTableAction::class)->setName('crawlers_table');
-            $group_crawler->post('/setFilter/', \App\Application\Action\Crawler\Crawler\CrawlerSetFilterAction::class)->setName('set_crawler_filter');
+            $group_crawler->post('/setFilter', \App\Application\Action\Crawler\Crawler\CrawlerSetFilterAction::class)->setName('set_crawler_filter');
+            $group_crawler->post('/setShown', \App\Application\Action\Crawler\Crawler\CrawlerSetShownAction::class)->setName('set_crawler_shown');
 
             $group_crawler->post('/save/', \App\Application\Action\Crawler\Dataset\CrawlerSaveDatasetAction::class)->setName('crawler_dataset_save');
             $group_crawler->get('/saved/', \App\Application\Action\Crawler\Dataset\DatasetSavedListAction::class)->setName('crawler_dataset_saved_list');
@@ -438,6 +440,7 @@ return function (App $app) {
                 $group_sheets->delete('/delete/{id}', \App\Application\Action\Timesheets\Sheet\SheetDeleteAction::class)->setName('timesheets_sheets_delete');
 
                 $group_sheets->post('/setCategories', \App\Application\Action\Timesheets\Sheet\SheetSetCategoriesAction::class)->setName('timesheets_sheets_set_categories');
+                $group_sheets->post('/setOptions', \App\Application\Action\Timesheets\Sheet\SheetSetOptionsAction::class)->setName('timesheets_sheets_set_options');
 
                 $group_sheets->get('/notice/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeDataAction::class)->setName('timesheets_sheets_notice_data');
                 $group_sheets->group('/notice/{sheet:[0-9]+}', function (RouteCollectorProxy $group_notice) {
@@ -478,6 +481,13 @@ return function (App $app) {
                 $group_noticefields->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\NoticeField\NoticeFieldEditAction::class)->setName('timesheets_noticefields_edit');
                 $group_noticefields->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\NoticeField\NoticeFieldSaveAction::class)->setName('timesheets_noticefields_save');
                 $group_noticefields->delete('/delete/{id}', \App\Application\Action\Timesheets\NoticeField\NoticeFieldDeleteAction::class)->setName('timesheets_noticefields_delete');
+            });
+
+            $group_project->group('/customers', function (RouteCollectorProxy $group_customers) {
+                $group_customers->get('/', \App\Application\Action\Timesheets\Customer\CustomerListAction::class)->setName('timesheets_customers');
+                $group_customers->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerEditAction::class)->setName('timesheets_customers_edit');
+                $group_customers->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerSaveAction::class)->setName('timesheets_customers_save');
+                $group_customers->delete('/delete/{id}', \App\Application\Action\Timesheets\Customer\CustomerDeleteAction::class)->setName('timesheets_customers_delete');
             });
         });
     });
@@ -589,13 +599,13 @@ return function (App $app) {
             });
         });
 
-        $group->group('/ingredients', function (RouteCollectorProxy $group_ingredients) {
-            $group_ingredients->get('/', \App\Application\Action\Recipes\Ingredient\IngredientListAction::class)->setName('recipes_ingredients');
-            $group_ingredients->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Ingredient\IngredientEditAction::class)->setName('recipes_ingredients_edit');
-            $group_ingredients->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Ingredient\IngredientSaveAction::class)->setName('recipes_ingredients_save');
-            $group_ingredients->delete('/delete/{id}', \App\Application\Action\Recipes\Ingredient\IngredientDeleteAction::class)->setName('recipes_ingredients_delete');
+        $group->group('/groceries', function (RouteCollectorProxy $group_groceries) {
+            $group_groceries->get('/', \App\Application\Action\Recipes\Grocery\GroceryListAction::class)->setName('recipes_groceries');
+            $group_groceries->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Grocery\GroceryEditAction::class)->setName('recipes_groceries_edit');
+            $group_groceries->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Grocery\GrocerySaveAction::class)->setName('recipes_groceries_save');
+            $group_groceries->delete('/delete/{id}', \App\Application\Action\Recipes\Grocery\GroceryDeleteAction::class)->setName('recipes_groceries_delete');
 
-            $group_ingredients->get('/list', \App\Application\Action\Recipes\Ingredient\IngredientSelectionListAction::class)->setName('ingredients_get');
+            $group_groceries->get('/search', \App\Application\Action\Recipes\Grocery\GrocerySearchAction::class)->setName('groceries_search');
         });
 
         $group->group('/mealplans', function (RouteCollectorProxy $group_mealplans) {
@@ -609,6 +619,21 @@ return function (App $app) {
 
                 $group_mealplan->post('/moverecipe/', \App\Application\Action\Recipes\Mealplan\MealplanMoveRecipeAction::class)->setName('recipes_mealplans_move_recipe');
                 $group_mealplan->delete('/removerecipe/', \App\Application\Action\Recipes\Mealplan\MealplanRemoveRecipeAction::class)->setName('recipes_mealplans_remove_recipe');
+            });
+        });
+        $group->group('/shoppinglists', function (RouteCollectorProxy $group_shoppinglists) {
+            $group_shoppinglists->get('/', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistListAction::class)->setName('recipes_shoppinglists');
+            $group_shoppinglists->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistEditAction::class)->setName('recipes_shoppinglists_edit');
+            $group_shoppinglists->post('/save/[{id:[0-9]+}]', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistSaveAction::class)->setName('recipes_shoppinglists_save');
+            $group_shoppinglists->delete('/delete/{id}', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistDeleteAction::class)->setName('recipes_shoppinglists_delete');
+
+
+            $group_shoppinglists->group('/{shoppinglist}', function (RouteCollectorProxy $group_shoppinglist) {
+                $group_shoppinglist->get('/view/', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistViewAction::class)->setName('recipes_shoppinglists_view');
+                $group_shoppinglist->post('/add', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistAddEntryAction::class)->setName('recipes_shoppinglists_add_entry');
+                $group_shoppinglist->get('/list', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistEntriesListAction::class)->setName('recipes_shoppinglistentries_get');
+                $group_shoppinglist->post('/setState', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistEntrySetStateAction::class)->setName('recipes_shoppinglistentries_set_state');
+                $group_shoppinglist->delete('/delete/[{id}]', \App\Application\Action\Recipes\Shoppinglist\ShoppinglistDeleteEntryAction::class)->setName('recipes_shoppinglists_delete_entry');
             });
         });
     });

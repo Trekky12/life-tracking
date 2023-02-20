@@ -9,7 +9,6 @@ html {
     box-sizing: inherit;
 }
 
-
 img {
     height: auto;
     max-width: 100%;
@@ -33,15 +32,14 @@ table .fontawesome-icon svg {
 @keyframes spinning {
     0% {
         -webkit-transform: rotate(0);
-        transform: rotate(0)
+        transform: rotate(0);
     }
 
     100% {
         -webkit-transform: rotate(360deg);
-        transform: rotate(360deg)
+        transform: rotate(360deg);
     }
 }
-
 
 .alert {
     width: 100%;
@@ -75,19 +73,17 @@ table .fontawesome-icon svg {
         background-color: $color_yellow;
         color: $color_text-main;
     }
-
 }
 
 .alert,
 .notification {
-
     p {
         margin: 0;
     }
 
     .closebtn {
         margin-left: 15px;
-        color: #FFFFFF;
+        color: #ffffff;
         font-weight: 600;
         float: right;
         font-size: 22px;
@@ -101,9 +97,7 @@ table .fontawesome-icon svg {
     }
 }
 
-
 .notification {
-
     background-color: $color_background-body;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 
@@ -136,7 +130,6 @@ table .fontawesome-icon svg {
     }
 
     .notification-header {
-
         background-color: $color_blue;
 
         &,
@@ -169,7 +162,6 @@ table .fontawesome-icon svg {
         font-style: italic;
         margin-top: 1rem;
     }
-
 }
 
 .small {
@@ -183,32 +175,6 @@ table .fontawesome-icon svg {
 
 select.button-height {
     height: 44px;
-}
-
-.filter-content {
-
-    .filter-element {
-        margin-top: 1rem;
-
-        input:not(.selectr-input) {
-            width: 100%;
-        }
-
-        select {
-            height: 44px;
-        }
-    }
-
-    @media screen and (min-width: $size_mobile) {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .filter-element {
-            margin-top: 0px;
-            margin-left: 1rem;
-        }
-    }
 }
 
 pre {
@@ -225,7 +191,72 @@ pre {
     width: 1em;
     fill: currentColor;
     display: inline-block;
-    vertical-align: -.125em;
+    vertical-align: -0.125em;
     overflow: visible;
     font-size: inherit;
+}
+
+/**
+https://freefrontend.com/css-checkboxes/
+https://codepen.io/ahmadnasr/pen/VwvEbzX
+*/
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+
+    input[type="checkbox"] {
+        -webkit-appearance: none;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 1px solid hsl(0, 0%, 85%);
+        border-radius: 1px;
+        position: relative;
+        outline: none;
+        flex-shrink: 0;
+
+        &:checked {
+            background-color: hsl(0, 0%, 40%);
+            border-color: hsl(0, 0%, 40%);
+
+            & + label {
+                text-decoration: line-through;
+                color: hsl(0, 0%, 70%);
+            }
+
+            &:focus,
+            &:hover {
+                box-shadow: 0 0 0 3px hsl(0, 0%, 85%);
+                border-color: hsl(0, 0%, 40%);
+            }
+
+            &:after {
+                content: "";
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>');
+                background-size: 13px;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+        }
+
+        &:focus,
+        &:hover {
+            box-shadow: 0 0 0 3px hsl(0, 0%, 92%);
+            border-color: hsl(0, 0%, 55%);
+        }
+
+        & + label {
+            padding-left: 1rem;
+            display: inline-block;
+            width: 100%;
+            user-select: none;
+
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+    }
 }

@@ -27,7 +27,7 @@
                             <td>{{ el.position }}</td> 
                             <td>{{ fontawesome(el.icon) }}</td> 
                             <td>{{el.url|raw}}</td> 
-                            <td><a href="{{ url_for('users_mobile_favorites_edit', {'id' : el.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{ url_for('users_mobile_favorites_edit', {'id' : el.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{ url_for('users_mobile_favorites_delete', {'id' : el.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

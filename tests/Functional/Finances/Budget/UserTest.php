@@ -179,7 +179,7 @@ class UserTest extends BaseTestCase {
 
     protected function getElementsInTable($body) {
         $matches = [];
-        $re = '/<div class=\"budget-entry\" data-budget="(?<value>[0-9.]+)">\s*<h3><a href="\/finances\/stats\/budget\/(?<id>[0-9]+)">(?<name>.*)<\/a><\/h3>/';
+        $re = '/<div class=\"budget-entry\" data-budget="(?<value>[0-9.]+)">\s*<h3>\s*<a href="\/finances\/stats\/budget\/(?<id>[0-9]+)">(?<name>.*)<\/a>\s*<\/h3>/';
         preg_match_all($re, $body, $matches, PREG_SET_ORDER);
 
         return $matches;

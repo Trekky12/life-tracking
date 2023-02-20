@@ -9,13 +9,13 @@
 {% set foreignCurrency = (not group.currency is empty and group.currency != i18n.currency) %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/leaflet.js" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/js/geolocation.js?ver=20200126"></script>
-    <script src="{{baseURL}}/static/js/splitbills.js?ver=20200112"></script>
+    <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+    <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/splitbills.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
@@ -23,7 +23,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECURRING"]}} {% if settleUp %}{{lang["SPLITBILLS_SETTLE_UP"]}}{%else %}{{lang["SPLITBILL_BILL"]}}{% endif %} | {{group.name|raw}}</h2>
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('splitbill_bills_recurring', {'group': group.hash})}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('splitbill_bills_recurring', {'group': group.hash})}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -61,11 +61,11 @@
                     <div class="two-columns">
                         <div class="form-group left">
                             <label for="inputRate">{{lang["EXCHANGE_RATE"]}} ({{ i18n.currency }} => {{ group.currency }}) </label>
-                            <input type="text" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}{{ group.exchange_rate }}{% endif %}">
+                            <input type="number" step="any" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}{{ group.exchange_rate }}{% endif %}">
                         </div>
                         <div class="form-group right">
                             <label for="inputFee">{{lang["EXCHANGE_FEE"]}} (%) </label>
-                            <input type="text" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}{{ group.exchange_fee }}{% endif %}">
+                            <input type="number" step="any" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}{{ group.exchange_fee }}{% endif %}">
                         </div>
                     </div>
                 {% else %}

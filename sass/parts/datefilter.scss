@@ -1,112 +1,171 @@
-#search{
+#location-filter {
 
-    box-shadow: 0 10px 5px -5px rgba(0,0,0,0.16);
+    box-shadow: 0 10px 5px -5px rgba(0, 0, 0, 0.16);
 
     background-color: $color_background-body;
 
-    margin-left:-5px;
-    margin-right:-5px;
+    margin-left: -5px;
+    margin-right: -5px;
     margin-top: 0;
-    padding:0.5rem;
+    padding: 0.5rem;
     position: relative;
     z-index: 1;
 
-    @media screen and (min-width: $size_mobile_navigation){
-        margin-top:-2.5rem;
+    @media screen and (min-width: $size_mobile_navigation) {
+        margin-top: -2.5rem;
     }
 
 
-    #search-form{
+    #search-form {
         transition: height .3s linear;
-        overflow:hidden;
-        padding:0;
+        overflow: hidden;
+        padding: 0;
 
-        &.collapsed{
-            height: 0!important;
+        &.collapsed {
+            height: 0 !important;
         }
 
-        .search-form-inner{
-            padding:1rem 1rem 0rem 1rem ;
+        .search-form-inner {
+            padding: 1rem 1rem 0rem 1rem;
         }
 
-        input[type="submit"]{
-            margin-top:1rem;
-            width:100%;
+        input[type="submit"] {
+            margin-top: 1rem;
+        }
+
+        input {
+            width: 100%;
         }
 
     }
 
-    @media screen and (min-width: $size_mobile){
+    @media screen and (min-width: $size_mobile) {
         max-width: $size_content-width-xsmall;
         margin: 0 auto;
     }
 }
 
 
-#search-filter{
+#tableHeaderFilter {
 
     //padding: 5px 10px;
 
     @media screen and (min-width: $size_mobile) {
-        .date-filter{
-            display:flex;
+        .filter-row {
+            display: flex;
             align-items: start;
-        }
+            justify-content: space-between;
+            align-items: center;
 
-        button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input):not(.selectr-input), select, .flatpickr-input, .choices__inner{
-            min-height: 41px;
-        }
 
-        .flatpickr-input{
-            min-width: 200px;
-        }
+            //button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
+            input:not([type="checkbox"]):not(.choices__input):not(.selectr-input),
+            select,
+            .flatpickr-input,
+            .choices__inner {
+                min-height: 41px;
+            }
 
+            .flatpickr-input {
+                min-width: 200px;
+            }
+
+        }
     }
 
-    .categories-filter{
+    .categories-filter {
         flex-grow: 1;
         flex-basis: 30%;
     }
 }
 
-#search, #search-filter{
-    button:not(.choices__button):not(.selectr-tag-remove), input:not(.choices__input):not(.selectr-input), select{
-        width: 100%;
 
-        @include font-size(1.2);
+
+#tableFooterFilter {
+    border-top: 1px solid $color_gray;
+    margin-top: 1rem;
+
+
+    .categories-filter {
         @media screen and (min-width: $size_mobile) {
-            @include font-size(1.4);
+            width: $size_mini;
         }
+    }
+
+    .selectr-selected,
+    .button,
+    select {
+        @include font-size(1.2);
+        min-height: 35px;
+    }
+
+    select {
+        height: 35px;
     }
 }
 
-
-#tableFooterFilter{
-    border-top: 1px solid $color_gray;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    @media screen and (min-width: $size_mobile) {
-        display:flex;
-
-        .categories-filter{
-            width: $size_mini;
-            margin-top: 1rem;
+.search-filter {
+    .filter-group {
+        @media screen and (min-width: $size_mobile) {
+            display: flex;
         }
     }
-    .filter-element{
+
+    .filter-row {
         margin-top: 1rem;
 
-        display: inline-block;
+        .filter-element {
+            width: 100%;
+            margin-top: 1rem;
+            display: inline-block;
 
-        @media screen and (min-width: $size_mobile) {
-            display: block;
-            margin-left: 1rem;
+            @media screen and (min-width: $size_mobile) {
+                width: auto;
+                display: block;
+                margin-top: 0px;
+            }
+
+
+            &:not(:nth-of-type(1)) {
+                @media screen and (min-width: $size_mobile) {
+                    margin-left: 1rem;
+                }
+            }
+
+            select {
+                height: 44px;
+            }
         }
     }
-    
-    
 
-    button, .selectr-container{
+    .filter-grid {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        display: grid;
+        grid-gap: 1rem;
+        grid-template-columns: min-content auto;
+
+        @media screen and (min-width: $size_mobile) {
+            grid-template-columns: min-content min-content;
+        }
+
+        label {
+            margin-bottom: 0px;
+        }
+
+    }
+
+    button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
+    input:not([type="checkbox"]):not(.choices__input):not(.selectr-input),
+    label,
+    select {
+        width: 100%;
+
         @include font-size(1.2);
+
+        @media screen and (min-width: $size_mobile) {
+            @include font-size(1.4);
+            width: auto;
+        }
     }
 }

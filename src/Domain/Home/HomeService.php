@@ -17,6 +17,8 @@ use App\Domain\Home\Widget\SplittedBillsBalanceWidget;
 use App\Domain\Home\Widget\TimesheetsSumWidget;
 use App\Domain\Home\Widget\TimesheetsProjectBudgetWidget;
 use App\Domain\Home\Widget\TimesheetsFastCreateWidget;
+use App\Domain\Home\Widget\BoardsCardsWidget;
+use App\Domain\Home\Widget\ShoppingListWidget;
 use App\Domain\Home\Widget\WidgetMapper;
 use App\Domain\Base\Settings;
 use App\Domain\Main\Translator;
@@ -38,6 +40,7 @@ class HomeService extends Service
     private $finance_month_income_widget;
     private $finance_month_balance_widget;
     private $car_max_mileage_today_widget;
+    private $car_last_refuel_widget;
     private $splitted_bills_balance_widget;
     private $timesheets_sum_widget;
     private $timesheets_project_budget_widget;
@@ -45,6 +48,8 @@ class HomeService extends Service
     private $efa_widget;
     private $currentweather_widget;
     private $weatherforecast_widget;
+    private $boards_cards_widget;
+    private $shoppinglist_widget;
     private $widget_mapper;
     private $router;
 
@@ -68,6 +73,8 @@ class HomeService extends Service
         EFAWidget $efa_widget,
         CurrentWeatherWidget $currentweather_widget,
         WeatherForecastWidget $weatherforecast_widget,
+        BoardsCardsWidget $boards_cards_widget,
+        ShoppingListWidget $shoppinglist_widget,
         WidgetMapper $widget_mapper,
         RouteParser $router
     ) {
@@ -90,6 +97,8 @@ class HomeService extends Service
         $this->efa_widget = $efa_widget;
         $this->currentweather_widget = $currentweather_widget;
         $this->weatherforecast_widget = $weatherforecast_widget;
+        $this->boards_cards_widget = $boards_cards_widget;
+        $this->shoppinglist_widget = $shoppinglist_widget;
 
         $this->widget_mapper = $widget_mapper;
 
@@ -187,6 +196,12 @@ class HomeService extends Service
             $available_widgets["timesheets_project_budget"] = ["name" => $this->translation->getTranslatedString("TIMESHEETS_PROJECT_CATEGORY_BUDGET")];
             $available_widgets["timesheets_fast_create"] = ["name" => $this->translation->getTranslatedString("WIDGET_TIMESHEETS_FAST_CREATE")];
         }
+        if ($this->current_user->getUser()->hasModule('boards')) {
+            $available_widgets["boards_cards"] = ["name" => $this->translation->getTranslatedString("WIDGET_BOARD_CARDS")];
+        }
+        if ($this->current_user->getUser()->hasModule('recipes')) {
+            $available_widgets["shoppinglist"] = ["name" => $this->translation->getTranslatedString("RECIPES_SHOPPINGLIST")];
+        }
 
         $available_widgets["efa"] = ["name" => $this->translation->getTranslatedString("EFA")];
         $available_widgets["currentweather"] = ["name" => $this->translation->getTranslatedString("WIDGET_CURRENTWEATHER")];
@@ -198,6 +213,44 @@ class HomeService extends Service
         ]);
     }
 
+    private function getWidget($widget_type): Widget\Widget
+    {
+        switch ($widget_type) {
+            case "last_finance_entries":
+                return $this->last_finance_entries_widget;
+            case "steps_today_entries":
+                return $this->steps_today_widget;
+            case "finances_month_expenses":
+                return $this->finance_month_expenses_widget;
+            case "finances_month_income":
+                return $this->finance_month_income_widget;
+            case "finances_month_balance":
+                return $this->finance_month_balance_widget;
+            case "last_refuel":
+                return $this->car_last_refuel_widget;
+            case "max_mileage":
+                return $this->car_max_mileage_today_widget;
+            case "splitted_bills_balances":
+                return $this->splitted_bills_balance_widget;
+            case "timesheets_sum":
+                return $this->timesheets_sum_widget;
+            case "timesheets_project_budget":
+                return $this->timesheets_project_budget_widget;
+            case "timesheets_fast_create":
+                return $this->timesheets_fast_create_widget;
+            case "efa":
+                return $this->efa_widget;
+            case "currentweather":
+                return $this->currentweather_widget;
+            case "weatherforecast":
+                return $this->weatherforecast_widget;
+            case "boards_cards":
+                return $this->boards_cards_widget;
+            case "shoppinglist":
+                return $this->shoppinglist_widget;
+        }
+    }
+
     public function getWidgetOptions($widget_type, $id)
     {
 
@@ -207,38 +260,8 @@ class HomeService extends Service
         }
 
         $result = null;
-        switch ($widget_type) {
-            case "max_mileage":
-                $result = $this->car_max_mileage_today_widget->getOptions($widget_object);
-                break;
-            case "last_refuel":
-                $result = $this->car_last_refuel_widget->getOptions($widget_object);
-                break;
-            case "splitted_bills_balances":
-                $result = $this->splitted_bills_balance_widget->getOptions($widget_object);
-                break;
-            case "timesheets_sum":
-                $result = $this->timesheets_sum_widget->getOptions($widget_object);
-                break;
-            case "timesheets_project_budget":
-                $result = $this->timesheets_project_budget_widget->getOptions($widget_object);
-                break;
-            case "timesheets_fast_create":
-                $result = $this->timesheets_fast_create_widget->getOptions($widget_object);
-                break;
-            case "efa":
-                $result = $this->efa_widget->getOptions($widget_object);
-                break;
-            case "currentweather":
-                $result = $this->currentweather_widget->getOptions($widget_object);
-                break;
-            case "weatherforecast":
-                $result = $this->weatherforecast_widget->getOptions($widget_object);
-                break;
-            default:
-                $result = null;
-                break;
-        }
+        $widget = $this->getWidget($widget_type);
+        $result = $widget->getOptions($widget_object);
 
         $response_data = ['entry' => $result];
         return new Payload(Payload::$RESULT_JSON, $response_data);
@@ -254,78 +277,26 @@ class HomeService extends Service
             "name" => $widget_object->name,
             "hasOptions" => $options ? count($options) : false,
             "reload" => 0,
-            "content" => !is_null($content) ? $content : ''
+            "content" => !is_null($content) ? $content : '',
+            "options" => $widget_object->getOptions()
         ];
+
+        $widget = $this->getWidget($widget_object->name);
+        $list["title"] = $widget->getTitle($widget_object);
+        $list["url"] = $widget->getLink($widget_object);
+
         switch ($widget_object->name) {
-            case "last_finance_entries":
-                $list["title"] = $this->last_finance_entries_widget->getTitle();
-                $list["content"] = $this->last_finance_entries_widget->getContent();
-                $list["url"] = $this->last_finance_entries_widget->getLink();
-                break;
-            case "steps_today_entries":
-                $list["title"] = $this->steps_today_widget->getTitle();
-                $list["content"] = $this->steps_today_widget->getContent();
-                $list["url"] = $this->steps_today_widget->getLink();
-                break;
-            case "finances_month_expenses":
-                $list["title"] = $this->finance_month_expenses_widget->getTitle();
-                $list["content"] = $this->finance_month_expenses_widget->getContent();
-                $list["url"] = $this->finance_month_expenses_widget->getLink();
-                break;
-            case "finances_month_income":
-                $list["title"] = $this->finance_month_income_widget->getTitle();
-                $list["content"] = $this->finance_month_income_widget->getContent();
-                $list["url"] = $this->finance_month_income_widget->getLink();
-                break;
-            case "finances_month_balance":
-                $list["title"] = $this->finance_month_balance_widget->getTitle();
-                $list["content"] = $this->finance_month_balance_widget->getContent();
-                $list["url"] = $this->finance_month_balance_widget->getLink();
-                break;
-            case "last_refuel":
-                $list["title"] = $this->car_last_refuel_widget->getTitle($widget_object);
-                $list["content"] = $this->car_last_refuel_widget->getContent($widget_object);
-                $list["url"] = $this->car_last_refuel_widget->getLink($widget_object);
-                break;
-            case "max_mileage":
-                $list["title"] = $this->car_max_mileage_today_widget->getTitle($widget_object);
-                $list["content"] = $this->car_max_mileage_today_widget->getContent($widget_object);
-                $list["url"] = $this->car_max_mileage_today_widget->getLink($widget_object);
-                break;
-            case "splitted_bills_balances":
-                $list["title"] = $this->splitted_bills_balance_widget->getTitle($widget_object);
-                $list["content"] = $this->splitted_bills_balance_widget->getContent($widget_object);
-                $list["url"] = $this->splitted_bills_balance_widget->getLink($widget_object);
-                break;
-            case "timesheets_sum":
-                $list["title"] = $this->timesheets_sum_widget->getTitle($widget_object);
-                $list["content"] = $this->timesheets_sum_widget->getContent($widget_object);
-                $list["url"] = $this->timesheets_sum_widget->getLink($widget_object);
-                break;
-            case "timesheets_project_budget":
-                $list["title"] = $this->timesheets_project_budget_widget->getTitle($widget_object);
-                $list["content"] = $this->timesheets_project_budget_widget->getContent($widget_object);
-                $list["url"] = $this->timesheets_project_budget_widget->getLink($widget_object);
-                break;
-            case "timesheets_fast_create":
-                $list["title"] = $this->timesheets_fast_create_widget->getTitle($widget_object);
-                $list["content"] = $this->timesheets_fast_create_widget->getContent($widget_object);
-                $list["url"] = $this->timesheets_fast_create_widget->getLink($widget_object);
-                break;
             case "efa":
-                $list["title"] = $this->efa_widget->getTitle($widget_object);
-                $list["url"] = $this->efa_widget->getLink($widget_object);
                 $list["reload"] = 60;
                 break;
             case "currentweather":
-                $list["title"] = $this->currentweather_widget->getTitle($widget_object);
-                $list["url"] = $this->currentweather_widget->getLink($widget_object);
                 $list["reload"] = 3600;
                 break;
             case "weatherforecast":
-                $list["title"] = $this->weatherforecast_widget->getTitle($widget_object);
-                $list["url"] = $this->weatherforecast_widget->getLink($widget_object);
                 $list["reload"] = 3600;
+                break;
+            case "shoppinglist":
+                $list["reload"] = 60;
                 break;
         }
         return $list;
@@ -346,202 +317,47 @@ class HomeService extends Service
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function getWidgetData($id)
+    public function getWidgetData($id, $widget = null, $options = [])
     {
 
         $response_data = [];
 
-        $widget_object = $this->widget_mapper->get($id);
-        $type = $widget_object->name;
-
-        $content = null;
-
-        if ($type == "efa") {
-            $url = $widget_object->getOptions()["url"];
-            $content = $this->getEFARequestData($url);
-        } elseif ($type == "currentweather") {
-            $url = $widget_object->getOptions()["url"];
-            $content = $this->getCurrentWeatherRequestData($url);
-        } elseif ($type == "weatherforecast") {
-            $url = $widget_object->getOptions()["url"];
-            $content = $this->getWeatherForecastRequestData($url);
+        if (!is_null($id)) {
+            $widget_object = $this->widget_mapper->get($id);
+        } else {
+            $widget_object = new Widget\WidgetObject(["name" => $widget, "options" => $options]);
         }
-        $widget = $this->getWidgetForFrontend($widget_object, $content);
-        $response_data["data"] = $widget["content"];
 
+
+        $widget = $this->getWidget($widget_object->name);
+        $content = $widget->getContent($widget_object);
+
+        if ($widget_object->name == "efa") {
+            $url = $widget_object->getOptions()["url"];
+            list($status, $result) = $this->helper->request($url);
+            $content = Widget\EFAWidget::formatEFARequestData($status, $result);
+        } elseif ($widget_object->name == "currentweather") {
+            $url = $widget_object->getOptions()["url"];
+            list($status, $result) = $this->helper->request($url);
+            $content = Widget\CurrentWeatherWidget::formatCurrentWeatherRequestData($status, $result);
+        } elseif ($widget_object->name == "weatherforecast") {
+            $url = $widget_object->getOptions()["url"];
+            list($status, $result) = $this->helper->request($url);
+
+            $language = $this->settings->getAppSettings()['i18n']['php'];
+            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+
+            $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+            $fmtDate->setPattern($dateFormatPHP["weekday"]);
+
+            $content = Widget\WeatherForecastWidget::formatWeatherForecastRequestData($status, $result, $fmtDate);
+        }
+        $widget_data = $this->getWidgetForFrontend($widget_object, $content);
+        $response_data["data"] = $widget_data["content"];
+        $response_data["url"] = $widget_data["url"];
 
         $payload = new Payload(Payload::$RESULT_HTML, $response_data);
 
         return $payload->withTemplate('home/widgets/' . $widget_object->name . '.twig');
-    }
-
-    private function getEFARequestData($url)
-    {
-        list($status, $result) = $this->helper->request($url);
-
-        $departures = [];
-
-        if ($status == 200) {
-            libxml_use_internal_errors(true);
-            $xml_result = [];
-            $xml = simplexml_load_string($result);
-
-            if ($xml !== false) {
-                foreach ($xml->itdDepartureMonitorRequest[0]->itdDepartureList[0]->itdDeparture as $departure) {
-                    $dep = [];
-
-                    $dep["servingLine"]["number"] = (string) $departure->itdServingLine->attributes()->number;
-                    $dep["servingLine"]["direction"] = (string) $departure->itdServingLine->attributes()->direction;
-                    $dep["servingLine"]["delay"] = (int) $departure->itdServingLine->itdNoTrain->attributes()->delay;
-
-                    $dep["dateTime"]["year"] = (string) $departure->itdDateTime->itdDate->attributes()->year;
-                    $dep["dateTime"]["month"] = (string) $departure->itdDateTime->itdDate->attributes()->month;
-                    $dep["dateTime"]["day"] = (string) $departure->itdDateTime->itdDate->attributes()->day;
-                    $dep["dateTime"]["hour"] = (string) $departure->itdDateTime->itdTime->attributes()->hour;
-                    $dep["dateTime"]["minute"] = (string) $departure->itdDateTime->itdTime->attributes()->minute;
-
-                    if (isset($departure->itdRTDateTime)) {
-                        $dep["realDateTime"]["year"] = (string) $departure->itdRTDateTime->itdDate->attributes()->year;
-                        $dep["realDateTime"]["month"] = (string) $departure->itdRTDateTime->itdDate->attributes()->month;
-                        $dep["realDateTime"]["day"] = (string) $departure->itdRTDateTime->itdDate->attributes()->day;
-                        $dep["realDateTime"]["hour"] = (string) $departure->itdRTDateTime->itdTime->attributes()->hour;
-                        $dep["realDateTime"]["minute"] = (string) $departure->itdRTDateTime->itdTime->attributes()->minute;
-                    }
-
-                    $xml_result["departureList"][] = $dep;
-                }
-            }
-
-            $result = json_encode($xml_result);
-
-            // Convert unicode 
-            // @see https://stackoverflow.com/a/2577882
-            $result = mb_convert_encoding($result, 'HTML-ENTITIES');
-
-            $response = json_decode($result, true);
-
-            foreach ($response["departureList"] as $departure) {
-
-                $dateTime = new \DateTime();
-                $dateTime->setDate($departure["dateTime"]["year"], $departure["dateTime"]["month"], $departure["dateTime"]["day"]);
-                $dateTime->setTime($departure["dateTime"]["hour"], $departure["dateTime"]["minute"]);
-                $calculatedDelay = 0;
-
-
-                if (array_key_exists("realDateTime", $departure)) {
-                    $realDateTime = new \DateTime();
-                    $realDateTime->setDate($departure["realDateTime"]["year"], $departure["realDateTime"]["month"], $departure["realDateTime"]["day"]);
-                    $realDateTime->setTime($departure["realDateTime"]["hour"], $departure["realDateTime"]["minute"]);
-                    $departureTime = $realDateTime;
-                    $calculatedDelay = ($realDateTime->getTimestamp() - $dateTime->getTimestamp()) / 1000 / 60;
-                } else {
-                    $departureTime = $dateTime;
-                }
-
-                $time = $departureTime->format('H:i');
-
-                $delay = '';
-                if ($departure["servingLine"]["delay"] > 0) {
-                    $delay = $departure["servingLine"]["delay"];
-                } else if ($calculatedDelay !== 0) {
-                    $delay = $calculatedDelay;
-                }
-
-                $departures[] = [
-                    "line" => $departure["servingLine"]["number"],
-                    "direction" => $departure["servingLine"]["direction"],
-                    "time" => $time,
-                    "delay" => $delay
-                ];
-            }
-        }
-
-        return $departures;
-    }
-
-    private function getCurrentWeatherRequestData($url)
-    {
-
-        list($status, $result) = $this->helper->request($url);
-
-        $weather = [];
-
-        if ($status == 200) {
-
-            // Convert unicode 
-            // @see https://stackoverflow.com/a/2577882
-            $result = mb_convert_encoding($result, 'HTML-ENTITIES');
-
-            $response = json_decode($result, true);
-
-            $weather["temp"] = round($response["main"]["temp"], 1);
-            $weather["description"] = $response["weather"][0]["description"];
-            $weather["icon"] = $this->getWeatherIcon($response["weather"][0]["icon"]);
-        }
-
-        return $weather;
-    }
-
-    private function getWeatherForecastRequestData($url)
-    {
-
-        $language = $this->settings->getAppSettings()['i18n']['php'];
-        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-
-        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
-        $fmtDate->setPattern($dateFormatPHP["weekday"]);
-
-        list($status, $result) = $this->helper->request($url);
-
-        $weather = [];
-
-        if ($status == 200) {
-
-            // Convert unicode 
-            // @see https://stackoverflow.com/a/2577882
-            $result = mb_convert_encoding($result, 'HTML-ENTITIES');
-
-            $response = json_decode($result, true);
-
-            foreach ($response["list"] as $forecast) {
-                $date = \DateTime::createFromFormat('U', $forecast["dt"]);
-
-                $weather[] = [
-                    "weekday" => $fmtDate->format($date),
-                    "icon" => $this->getWeatherIcon($forecast["weather"][0]["icon"]),
-                    "description" => $forecast["weather"][0]["description"],
-                    "minTemp" => round($forecast["temp"]["min"], 1),
-                    "maxTemp" => round($forecast["temp"]["max"], 1),
-                ];
-            }
-        }
-
-        return $weather;
-    }
-
-    private function getWeatherIcon($name)
-    {
-        $iconTable = [
-            "01d" => "wi-day-sunny",
-            "02d" => "wi-day-cloudy",
-            "03d" => "wi-cloudy",
-            "04d" => "wi-cloudy-windy",
-            "09d" => "wi-showers",
-            "10d" => "wi-rain",
-            "11d" => "wi-thunderstorm",
-            "13d" => "wi-snow",
-            "50d" => "wi-fog",
-            "01n" => "wi-night-clear",
-            "02n" => "wi-night-cloudy",
-            "03n" => "wi-night-cloudy",
-            "04n" => "wi-night-cloudy",
-            "09n" => "wi-night-showers",
-            "10n" => "wi-night-rain",
-            "11n" => "wi-night-thunderstorm",
-            "13n" => "wi-night-snow",
-            "50n" => "wi-night-alt-cloudy-windy"
-        ];
-
-        return $iconTable[$name];
     }
 }

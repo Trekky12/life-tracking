@@ -31,19 +31,16 @@ class SheetFastWriter extends ObjectActivityWriter {
         if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        $this->createCheckInEntry($project, $data);
-
-        // get a existing entry for today with start but without end
-        $entry = $this->service->getLastSheetWithStartDateToday($project->id);
+        $entry_id = $this->createCheckInEntry($project, $data);
 
         if (array_key_exists("category", $data) && is_array($data["category"]) && !empty($data["category"])) {
             $categories = filter_var_array($data["category"], FILTER_SANITIZE_NUMBER_INT);
 
-            $this->mapper->addCategoriesToSheet($entry->id, $categories);
+            $this->mapper->addCategoriesToSheet($entry_id, $categories);
         }
 
         $result = ["status" => "success", "data" => 0];
-        $result["data"] = !is_null($entry) ? 1 : 0;
+        $result["data"] = !is_null($entry_id) ? 1 : 0;
 
         return new Payload(Payload::$RESULT_JSON, $result);
     }

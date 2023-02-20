@@ -91,6 +91,10 @@ INSERT INTO timesheets_sheets_notices (id, sheet) VALUES
 INSERT INTO timesheets_noticefields (id, project, name) VALUES 
 (1, 1, 'Test timesheets notice field 1'),
 (2, 2, 'Test timesheets notice field 3');
+INSERT INTO timesheets_customers (id, project, name) VALUES 
+(1, 1, 'Test timesheets customer 1'),
+(2, 1, 'Test timesheets customer 2'),
+(3, 2, 'Test timesheets customer 3');
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 
@@ -281,9 +285,9 @@ INSERT INTO recipes_cookbooks_users (cookbook, user) VALUES
 (1, 1),
 (1, 2);
 
-INSERT INTO recipes_ingredients (id, createdBy, name) VALUES
-(1, 1, 'Test Ingredient 1'),
-(2, 1, 'Test Ingredient 2');
+INSERT INTO recipes_groceries (id, createdBy, name, is_food) VALUES
+(1, 1, 'Test Ingredient 1', 1),
+(2, 1, 'Test Ingredient 2', 1);
 
 INSERT INTO recipes (id, createdBy, name, description, image, preparation_time, waiting_time, servings, link, hash) VALUES
 (1, 1, 'Test Recipe 1', 'Test Description', NULL, 1, 2, 3, 'https://www.google.com', 'ABCabc123'),
@@ -312,7 +316,12 @@ INSERT INTO recipes_mealplans_recipes (id, createdBy, mealplan, recipe, date, po
 (1, 1, 1, 1, '2021-08-23', 0, NULL),
 (2, 1, 1, 2, '2021-08-24', 0, NULL),
 (3, 1, 1, NULL, '2021-08-25', 999, 'Notice without specific recipe');
-
+INSERT INTO recipes_shoppinglists (id, user, name, hash) VALUES 
+(1, 1, 'Test shoppinglist 1', 'ABCabc123'),
+(2, 1, 'Test shoppinglist 2 (no access to owner)', 'DEFdef456'); 
+INSERT INTO recipes_shoppinglists_users (shoppinglist, user) VALUES 
+(1, 1),
+(1, 2);
 
 INSERT INTO global_widgets (id, user, name, options, position) VALUES
 (1, 2, 'last_finance_entries', '[]', 999),

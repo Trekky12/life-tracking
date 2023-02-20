@@ -260,10 +260,6 @@
         "url": "http://tracking.localhost/boards/view/ABCabc123"
     },
     {
-        "name": "6_boards-2",
-        "url": "http://tracking.localhost/boards/view/ABCabc123?card=1"
-    },
-    {
         "name": "7_crawlers",
         "url": "http://tracking.localhost/crawlers/"
     },

@@ -3,81 +3,87 @@
 {% set active = 'finances' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/datefilter.js?ver=20190306"></script>
+	<script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MENU_FINANCES"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('finances_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["MENU_FINANCES"]}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for('finances_edit') }}">
+					<button class="button">{{ fontawesome('fas fa-plus') }}
+						{{lang["ADD"]}}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
 
-            <form method="GET" id="search-filter" class="hidden1">
-                <div class="filter-content">
-                    <div class="date-filter">
-                        <div class="date-element">
-                            <input type="text" id="dateRange" value="{{from}} to {{to}}" />
+			<form method="GET" id="tableHeaderFilter" class="search-filter">
 
-                            <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-                            <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
-                        </div>
-                        <div class="filter-element">
-                            <input type="submit" value="{{lang["SHOW"]}}"/>
-                        </div>
-                        <div class="filter-element">
-                            <a href="{{ url_for('finances') }}"><button type="button" class="button gray">{{ lang["SHOW_THIS_MONTH"] }}</button></a>
-                        </div>
-                        <div class="filter-element">
-                            <a href="{{ url_for('finances') }}?from={{ min }}&to={{ max }}"><button type="button" class="button gray">{{ lang["SHOW_ALL"] }}</button></a>
-                        </div>
-                    </div>
-                </div>
-            </form>   
+				<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+				<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+				<div class="filter-row">
+					<div class="filter-element">
+						<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
+					</div>
+					<div class="filter-group">
+						<div class="filter-element">
+							<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ lang["SHOW_THIS_MONTH"] }}</button>
+						</div>
+						<div class="filter-element">
+							<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ lang["SHOW_ALL"] }}</button>
+						</div>
+					</div>
+				</div>
+				<div class="filter-row">
+					<div class="filter-element">
+						<input type="submit" value="{{lang["SHOW"]}}"/>
+					</div>
+				</div>
+			</form>
 
-            <table id="finance_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["DATE"]}}</th>
-                        <th>{{lang["TIME"]}}</th>
-                        <th>{{lang["TYPE"]}}</th>
-                        <th>{{lang["CATEGORY"]}}</th>
-                        <th>{{lang["DESCRIPTION"]}}</th>
-                        <th>{{lang["VALUE"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in list%}
-                        <tr>
-                            <td>{{entry[0]}}</td> 
-                            <td>{{entry[1]}}</td> 
-                            <td>{{ entry[2] }}</td> 
-                            <td>{{ entry[3] }}</td> 
-                            <td>{{entry[4]|raw}}</td> 
-                            <td>{{entry[5]}}</td> 
-                            <td>{{entry[6]|raw}}</td> 
-                            <td>{{entry[7]|raw}}</td> 
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th class="{% if sum > 0 %}negative{% else %}positive{% endif %}">{{ sum | abs }} {{ i18n.currency }}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-
+			<table id="finance_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["DATE"]}}</th>
+						<th>{{lang["TIME"]}}</th>
+						<th>{{lang["TYPE"]}}</th>
+						<th>{{lang["CATEGORY"]}}</th>
+						<th>{{lang["DESCRIPTION"]}}</th>
+						<th>{{lang["VALUE"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in list%}
+						<tr>
+							<td>{{entry[0]}}</td>
+							<td>{{entry[1]}}</td>
+							<td>{{ entry[2] }}</td>
+							<td>{{ entry[3] }}</td>
+							<td>{{entry[4]|raw}}</td>
+							<td>{{entry[5]}}</td>
+							<td>{{entry[6]|raw}}</td>
+							<td>{{entry[7]|raw}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th class="{% if sum > 0 %}negative{% else %}positive{% endif %}">{{ sum | abs }}
+							{{ i18n.currency }}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
 {% endblock %}

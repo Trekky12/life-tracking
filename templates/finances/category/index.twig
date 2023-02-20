@@ -25,7 +25,7 @@
                         <tr>
                             <td>{{cat.name|raw}}</td> 
                             <td>{% if cat.is_default == 1%}x{%endif%}</td> 
-                            <td><a href="{{  url_for('finances_categories_edit', {'id' : cat.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('finances_categories_edit', {'id' : cat.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('finances_categories_delete', {'id' : cat.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

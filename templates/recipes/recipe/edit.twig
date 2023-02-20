@@ -3,212 +3,233 @@
 {% set active = 'recipes' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
-    <script src="{{baseURL}}/static/js/recipes.js?ver=20210613"></script>
+	<script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/recipes.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["RECIPE"]}}</h2>
-            <div class="buttons">
-                <a href="{% if not entry is null %}{{  url_for_with_last_query_params('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{  url_for_with_last_query_params('recipes') }}{% endif %}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
-            </div>      
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["RECIPE"]}}</h2>
+			<div class="buttons">
+				<a href="{% if not entry is null %}{{ url_for_with_last_query_params('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{ url_for_with_last_query_params('recipes') }}{% endif %}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-turn-up') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
 
-            <form class="form-horizontal" action="{{  url_for('recipes_save', {'id' : entry.id}) }}" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<form class="form-horizontal" action="{{ url_for('recipes_save', {'id' : entry.id}) }}" method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-                {% endif %}
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
-                <div class="form-group">
-                    <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" required="required" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputName">{{lang["NAME"]}}</label>
+					<input type="text" required="required" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
-                    <textarea class="form-control" id="inputDescription" name="description" rows="10">{% if not entry is null %}{{entry.description|raw}}{% endif %}</textarea>
-                </div>
+				<div class="form-group">
+					<label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+					<textarea class="form-control" id="inputDescription" name="description" rows="10">
+						{%- if not entry is null -%}
+							{{- entry.description|raw -}}
+						{%- endif -%}
+					</textarea>
+				</div>
 
-                <div class="form-group two-columns mobile">
-                    <div class="left">
-                        <div class="form-group">
-                            <label for="inputPreparationTime">{{lang["RECIPES_PREPARATION_TIME"]}}</label>
-                            <input type="number" class="form-control" id="inputPreparationTime" name="preparation_time" step="1" placeholder="" {% if not entry is null %}value="{{entry.preparation_time}}"{% endif %}>
-                        </div>
-                    </div>
-                    <div class="right">
-                        <div class="form-group">
-                            <label for="inputWaitingTime">{{lang["RECIPES_WAITING_TIME"]}}</label>
-                            <input type="number" class="form-control" id="inputWaitingTime" name="waiting_time" step="1" placeholder="" {% if not entry is null %}value="{{entry.waiting_time}}"{% endif %}>
-                        </div>
-                    </div>
-                </div>
+				<div class="form-group two-columns mobile">
+					<div class="left">
+						<div class="form-group">
+							<label for="inputPreparationTime">{{lang["RECIPES_PREPARATION_TIME"]}}</label>
+							<input type="number" class="form-control" id="inputPreparationTime" name="preparation_time" step="1" placeholder="" {% if not entry is null %} value="{{entry.preparation_time}}" {% endif %}>
+						</div>
+					</div>
+					<div class="right">
+						<div class="form-group">
+							<label for="inputWaitingTime">{{lang["RECIPES_WAITING_TIME"]}}</label>
+							<input type="number" class="form-control" id="inputWaitingTime" name="waiting_time" step="1" placeholder="" {% if not entry is null %} value="{{entry.waiting_time}}" {% endif %}>
+						</div>
+					</div>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputServings">{{lang["RECIPES_SERVINGS"]}}</label>
-                    <input type="number" class="form-control" id="inputServings" name="servings" step="1" placeholder="" {% if not entry is null %}value="{{entry.servings}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputServings">{{lang["RECIPES_SERVINGS"]}}</label>
+					<input type="number" class="form-control" id="inputServings" name="servings" step="1" placeholder="" {% if not entry is null %} value="{{entry.servings}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputLink">{{lang["LINK"]}}</label>
-                    <input type="text" class="form-control" id="inputLink" name="link" {% if not entry is null %}value="{{entry.link|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputLink">{{lang["LINK"]}}</label>
+					<input type="text" class="form-control" id="inputLink" name="link" {% if not entry is null %} value="{{entry.link|raw}}" {% endif %}>
+				</div>
 
-                <h3>{{lang["IMAGE"]}}</h3>
-                <div class="form-group">
-                    {% if not entry is null and entry.get_image() != ''%}
-                        <img class="image_uploaded" src="/{{uploads_folder}}/recipes/{{entry.get_thumbnail()}}"/>
-                    {% endif %}
-                    <input name="image" id="image" class="form-control" type="file">
-                </div>
-                {% if not entry is null and entry.get_image() != ''%}
-                    <div class="form-group">
-                        <label class="checkbox" for="checkboxDeleteImage">
-                            <input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
-                            {{lang["DELETE"]}}
-                        </label>
-                    </div>
-                {% endif %}
-
-
-                <h3>{{lang["RECIPES_STEPS"]}}</h3>
-                <div id="recipes_steps">
-                    {% for step in steps %}
-                        {% set step_idx = loop.index-1 %}
-                        <div class="step" data-idx="{{ step.position }}">
-                            <div class="step-content">
-                                <div class="form-group">
-                                    <label>{{lang["NAME"]}}</label>
-                                    <input type="text" name="steps[{{ step_idx }}][name]" value="{{ step["name"] }}">
-                                </div>
-                                <div class="step-container">
-                                    <div class="form-group two-columns mobile">
-                                        <div class="left">
-                                            <div class="form-group">
-                                                <label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
-                                                <input type="number" step="1" name="steps[{{ step_idx }}][preparation_time]" value="{{ step["preparation_time"] }}">
-                                            </div>
-                                        </div>
-                                        <div class="right">
-                                            <div class="form-group">
-                                                <label>{{lang["RECIPES_WAITING_TIME"]}}</label>
-                                                <input type="number" step="1" name="steps[{{ step_idx }}][waiting_time]" value="{{ step["waiting_time"] }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>{{lang["DESCRIPTION"]}}</label>
-                                        <textarea rows="5" name="steps[{{ step_idx }}][description]">{{ step["description"] }}</textarea>
-                                    </div>
-
-                                    <div class="step-ingredients">
-                                        {% if step.id in ingredients|keys %}
-                                            {% for ingredient in ingredients[step.id] %}
-                                                <div class="step-ingredient">
-                                                    <span class="ingredient-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-                                                    <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}" value="{{ ingredient["amount"] }}"/>
-                                                    <select name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][ingredient]" class="step-ingredient-select" data-selected="{{ ingredient["ingredient"] }}">
-                                                    </select>
-                                                    <input name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][notice]" placeholder="{{ lang["NOTICE"] }}" value="{{ ingredient["notice"] }}"/>
-                                                    <span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-
-                                    </div>
-
-                                    <div class="form-group add-ingredient-btn-wrapper">
-                                        <button type="button" class="button add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="icons">
-                                <span class="step-minus minus">{{ fontawesome('fas fa-minus') }}</span>
-                                <span class="step-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
-
-                </div>
-                <div class="form-group add-step-btn-wrapper">
-                    <button type="button" id="add-step-btn" class="button gray small">{{ lang["RECIPES_ADD_STEP"] }}</button>
-                </div>
+				<h3>{{lang["IMAGE"]}}</h3>
+				<div class="form-group">
+					{% if not entry is null and entry.get_image() != ''%}
+						<img class="image_uploaded" src="/{{uploads_folder}}/recipes/{{entry.get_thumbnail()}}"/>
+					{% endif %}
+					<input name="image" id="image" class="form-control" type="file">
+				</div>
+				{% if not entry is null and entry.get_image() != ''%}
+					<div class="form-group">
+						<label class="checkbox" for="checkboxDeleteImage">
+							<input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
+							{{lang["DELETE"]}}
+						</label>
+					</div>
+				{% endif %}
 
 
-                <!--<div class="right" style="position:sticky; top:75px; align-self:flex-start; ">
-                    test
-                    test
-                    tes
-                    t
-                </div> -->
+				<h3>{{lang["RECIPES_STEPS"]}}</h3>
+				<div id="recipes_steps">
+					{% for step in steps %}
+						{% set step_idx = loop.index-1 %}
+						<div class="step" data-idx="{{ step.position }}">
+							<div class="step-content">
+								<div class="form-group">
+									<label>{{lang["NAME"]}}</label>
+									<input type="text" name="steps[{{ step_idx }}][name]" value="{{ step["name"] }}">
+								</div>
+								<div class="step-container">
+									<div class="form-group two-columns mobile">
+										<div class="left">
+											<div class="form-group">
+												<label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
+												<input type="number" step="1" name="steps[{{ step_idx }}][preparation_time]" value="{{ step["preparation_time"] }}">
+											</div>
+										</div>
+										<div class="right">
+											<div class="form-group">
+												<label>{{lang["RECIPES_WAITING_TIME"]}}</label>
+												<input type="number" step="1" name="steps[{{ step_idx }}][waiting_time]" value="{{ step["waiting_time"] }}">
+											</div>
+										</div>
+									</div>
 
-                <div class="form-group">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+									<div class="form-group">
+										<label>{{lang["DESCRIPTION"]}}</label>
+										<textarea rows="5" name="steps[{{ step_idx }}][description]">{{ step["description"] }}</textarea>
+									</div>
 
-    <div id="templates" class="hidden">
-        <div class="step step-dummy">
-            <div class="step-content">
-                <div class="form-group">
-                    <label>{{lang["NAME"]}}</label>
-                    <input type="text" disabled="disabled" name="steps[dummy][name]" class="step_name">
-                </div>
-                <div class="form-group two-columns mobile">
-                    <div class="left">
-                        <div class="form-group">
-                            <label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
-                            <input type="number" disabled="disabled" step="1" name="steps[dummy][preparation_time]">
-                        </div>
-                    </div>
-                    <div class="right">
-                        <div class="form-group">
-                            <label>{{lang["RECIPES_WAITING_TIME"]}}</label>
-                            <input type="number" disabled="disabled" step="1" name="steps[dummy][waiting_time]">
-                        </div>
-                    </div>
-                </div>
+									<div class="step-ingredients">
+										{% if step.id in ingredients|keys %}
+											{% for ingredient in ingredients[step.id] %}
+												<div class="step-ingredient">
+													<span class="ingredient-handle handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
+													<input type="number" step="any" class="step-ingredient-amount" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}" value="{{ ingredient["amount"] }}"/>
+													<input type="text" class="step-ingredient-unit" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][unit]" placeholder="{{ lang["UNIT"] }}" value="{{ ingredient["unit"] }}"/>
+													<div id="ingredient-suggestion-wrapper-{{step_idx}}-{{loop.index-1}}" class="ingredient-suggestion-wrapper">
+														<input type="hidden" id="step-ingredient-id-{{step_idx}}-{{loop.index-1}}" class="step-ingredient-id" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][id]" value="{{ ingredient["ingredient"]}}"/>
+                                                        <input type="text" id="step-ingredient-select-{{step_idx}}-{{loop.index-1}}" class="step-ingredient-select" placeholder="{{ lang["RECIPES_INGREDIENT"] }}" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][ingredient]" autocomplete="off" value="{{ ingredient["name"] }}" data-ingredient="{{ ingredient["name"] }}"/>
+													</div>
+													<input type="text" class="step-ingredient-notice" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][notice]" placeholder="{{ lang["NOTICE"] }}" value="{{ ingredient["notice"] }}"/>
+													<span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
+												</div>
+											{% endfor %}
+										{% endif %}
 
-                <div class="form-group">
-                    <label>{{lang["DESCRIPTION"]}}</label>
-                    <textarea disabled="disabled" rows="5" name="steps[dummy][description]"></textarea>
-                </div>
+									</div>
 
-                <div class="step-ingredients"></div>
+									<div class="form-group add-ingredient-btn-wrapper">
+										<button type="button" class="button add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
+									</div>
+								</div>
+							</div>
 
-                <div class="form-group add-ingredient-btn-wrapper">
-                    <button type="button" class="button add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
-                </div>
-            </div>
-            <div class="icons">
-                <span class="step-minus minus">{{ fontawesome('fas fa-minus') }}</span>
-                <span class="step-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-            </div>
-        </div>
-        <div class="step-ingredient step-ingredient-dummy">
-            <span class="ingredient-handle handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
-            <input name="steps[dummy_step][ingredients][dummy_ingredient][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}"/>
-            <select name="steps[dummy_step][ingredients][dummy_ingredient][ingredient]" class="step-ingredient-select">
-            </select>
-            <input name="steps[dummy_step][ingredients][dummy_ingredient][notice]" placeholder="{{ lang["NOTICE"] }}"/>
-            <span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
-        </div>
-    </div>
+							<div class="icons">
+								<span class="step-minus minus">{{ fontawesome('fas fa-minus') }}</span>
+								<span class="step-handle handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
+							</div>
+						</div>
+					{% endfor %}
+
+				</div>
+				<div class="form-group add-step-btn-wrapper">
+					<button type="button" id="add-step-btn" class="button gray small">{{ lang["RECIPES_ADD_STEP"] }}</button>
+				</div>
+
+
+				<!--<div class="right" style="position:sticky; top:75px; align-self:flex-start; ">
+								                    test
+								                    test
+								                    tes
+								                    t
+								                </div> -->
+
+				<div class="form-group">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div id="templates" class="hidden">
+		<div class="step step-dummy">
+			<div class="step-content">
+				<div class="form-group">
+					<label>{{lang["NAME"]}}</label>
+					<input type="text" disabled="disabled" name="steps[dummy][name]" class="step_name">
+				</div>
+				<div class="form-group two-columns mobile">
+					<div class="left">
+						<div class="form-group">
+							<label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
+							<input type="number" disabled="disabled" step="1" name="steps[dummy][preparation_time]">
+						</div>
+					</div>
+					<div class="right">
+						<div class="form-group">
+							<label>{{lang["RECIPES_WAITING_TIME"]}}</label>
+							<input type="number" disabled="disabled" step="1" name="steps[dummy][waiting_time]">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>{{lang["DESCRIPTION"]}}</label>
+					<textarea disabled="disabled" rows="5" name="steps[dummy][description]"></textarea>
+				</div>
+
+				<div class="step-ingredients"></div>
+
+				<div class="form-group add-ingredient-btn-wrapper">
+					<button type="button" class="button add-ingredient-btn gray small">{{ lang["RECIPES_ADD_INGREDIENT"] }}</button>
+				</div>
+			</div>
+			<div class="icons">
+				<span class="step-minus minus">{{ fontawesome('fas fa-minus') }}</span>
+				<span class="step-handle handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
+			</div>
+		</div>
+		<div class="step-ingredient step-ingredient-dummy">
+			<span class="ingredient-handle handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
+			<input type="number" step="any" class="step-ingredient-amount" name="steps[dummy_step][ingredients][dummy_ingredient][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}"/>
+			<input type="text" class="step-ingredient-unit" name="steps[dummy_step][ingredients][dummy_ingredient][unit]" placeholder="{{ lang["UNIT"] }}"/>
+			<div id="ingredient-suggestion-wrapper" class="ingredient-suggestion-wrapper">
+                <input type="hidden" id="step-ingredient-id" class="step-ingredient-id" name="steps[dummy_step][ingredients][dummy_ingredient][id]"/>
+				<input type="text" id="step-ingredient-select" class="step-ingredient-select" placeholder="{{ lang["RECIPES_INGREDIENT"] }}" name="steps[dummy_step][ingredients][dummy_ingredient][ingredient]" autocomplete="off" data-selected=""/>
+			</div>
+			<input type="text" class="step-ingredient-notice" name="steps[dummy_step][ingredients][dummy_ingredient][notice]" placeholder="{{ lang["NOTICE"] }}"/>
+			<span class="remove-ingredient minus">{{ fontawesome('fas fa-minus') }}</span>
+		</div>
+	</div>
 {% endblock %}

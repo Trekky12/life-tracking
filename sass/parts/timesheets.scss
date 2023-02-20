@@ -1,6 +1,50 @@
-.timesheet-fast.categories-filter{
+.timesheet-fast.categories-filter {
     width: 100%;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     margin-top: 2rem;
+}
+
+#timesheets_sheets_table {
+    tr[data-billed="1"] {
+        color: $color_orange;
+    }
+
+    tr[data-payed="1"] {
+        color: $color_green;
+    }
+}
+
+.timesheet-notice-wrapper {
+
+    h3,
+    h4 {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+    }
+
+    h3:not(.sheet_title) {
+        font-weight: 400;
+    }
+
+    h4 {
+        @include font-size(1.6);
+    }
+
+    .timesheet-notice {
+
+        margin-top: 2rem;
+
+        label,
+        h4 {
+            text-decoration: underline;
+            @include font-size(1.6);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-top: 0;
+            @include font-size(1.6);
+        }
+    }
 }

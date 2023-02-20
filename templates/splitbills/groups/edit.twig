@@ -3,12 +3,12 @@
 {% set active = 'splitbills' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js"></script>
-    <script src="{{baseURL}}/static/js/user-select.js?ver=20210124"></script>
+    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block body %}
@@ -16,7 +16,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["SPLITBILL_GROUPS"]}}</h2>
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -43,12 +43,12 @@
 
                 <div class="form-group">
                     <label for="inputRate">{{lang["EXCHANGE_RATE"]}}</label>
-                    <input type="text" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}1{% endif %}">
+                    <input type="number" step="any" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}1{% endif %}">
                 </div>
 
                 <div class="form-group">
                     <label for="inputFee">{{lang["EXCHANGE_FEE"]}}</label>
-                    <input type="text" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}0{% endif %}">
+                    <input type="number" step="any" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}0{% endif %}">
                 </div>
 
                 <div class="form-group">

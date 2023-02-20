@@ -4,6 +4,7 @@ namespace App\Domain\Home\Widget;
 
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
+use App\Domain\Main\Utility\WeatherUtility;
 
 class WeatherForecastWidget implements Widget {
 
@@ -43,6 +44,35 @@ class WeatherForecastWidget implements Widget {
 
     public function getLink(WidgetObject $widget = null) {
         null;
+    }
+
+    public static function formatWeatherForecastRequestData($status, $result, $formatter)
+    {
+
+        $weather = [];
+
+        if ($status == 200) {
+
+            // Convert unicode 
+            // @see https://stackoverflow.com/a/2577882
+            $result = mb_convert_encoding($result, 'HTML-ENTITIES');
+
+            $response = json_decode($result, true);
+
+            foreach ($response["list"] as $forecast) {
+                $date = \DateTime::createFromFormat('U', $forecast["dt"]);
+
+                $weather[] = [
+                    "weekday" => $formatter->format($date),
+                    "icon" => WeatherUtility::getWeatherIcon($forecast["weather"][0]["icon"]),
+                    "description" => $forecast["weather"][0]["description"],
+                    "minTemp" => round($forecast["temp"]["min"], 1),
+                    "maxTemp" => round($forecast["temp"]["max"], 1),
+                ];
+            }
+        }
+
+        return $weather;
     }
 
 }

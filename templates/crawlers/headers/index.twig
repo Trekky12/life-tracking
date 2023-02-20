@@ -7,7 +7,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINES"]}} | {{ crawler.name }}</h2> 
             <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>            
+                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>            
                 <a href="{{  url_for('crawlers_headers_clone', {'crawler': crawler.hash}) }}"><button class="button">{{ fontawesome('fas fa-clone') }} {{lang["CLONE"]}}</button></a>
                 <a href="{{  url_for('crawlers_headers_edit', {'crawler': crawler.hash}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
             </div>
@@ -35,7 +35,7 @@
                             <td>{{header.position}}</td> 
                             <td>
                                 {% if crawler.user == user.id %}
-                                    <a href="{{  url_for('crawlers_headers_edit', {'id' : header.id, 'crawler' : crawler.hash}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('crawlers_headers_edit', {'id' : header.id, 'crawler' : crawler.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                 {% endif %}
                             </td>
                             <td>

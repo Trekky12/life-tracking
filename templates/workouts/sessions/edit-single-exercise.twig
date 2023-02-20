@@ -63,6 +63,11 @@
         <input type="hidden" name="exercises[{{ data["idx"] }}][is_child]" value="{{ data["is_child"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
 
         <div class="view-notices">
+			<a href="#" class="headline">
+				<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+				<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+				{{ lang["NOTICE"] }}
+			</a>
             <p class="content"><textarea name="exercises[{{ data["idx"] }}][notice]">{{ data["notice"] }}</textarea></p>
         </div>
     </div>    
@@ -73,6 +78,6 @@
     {% endif %}
     <div class="icons">
         <span class="minus">{{ fontawesome('fas fa-minus') }}</span>
-        <span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+        <span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
     </div>
 </div>

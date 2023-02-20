@@ -3,12 +3,13 @@
 {% set active = 'index' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/widgets.js?ver=20200805a"></script>
-    <script src="{{baseURL}}/static/js/timesheets-fast.js?ver=20211123"></script>
+    <script src="{{baseURL}}/static/js/widgets.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/timesheets-fast.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/recipes-shoppinglist-click.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}

@@ -9,103 +9,118 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const cacheName = 'pwa-life-tracking-v20220510';
+const version = '20230217';
+
+const cacheName = 'pwa-life-tracking-v' + version;
+
 const staticAssets = [
     '/',
     '/pwa',
-    '/static/style.css',
-    '/static/js/activities.js',
-    '/static/js/app.js',
-    '/static/js/boards.js',
-    '/static/js/budget.js',
-    '/static/js/car_service.js',
-    '/static/js/crawler.js',
-    '/static/js/crawler_saved.js',
-    '/static/js/datefilter.js',
-    '/static/js/exercises.js',
-    '/static/js/frontpage_edit.js',
-    '/static/js/geolocation.js',
-    '/static/js/location.js',
-    '/static/js/logfile.js',
-    '/static/js/mail-notifications.js',
-    '/static/js/main.js',
-    '/static/js/navigation.js',
-    '/static/js/notifications.js',
-    '/static/js/recipes.js',
-    '/static/js/recipes_recipe.js',
-    '/static/js/splitbills.js',
-    '/static/js/tables.js',
-    '/static/js/timesheets.js',
-    '/static/js/trips.js',
-    '/static/js/trips_edit.js',
-    '/static/js/user-select.js',
-    '/static/js/widgets.js',
-    '/static/js/workouts-stats.js',
-    '/static/js/workouts.js',
-    '/static/js/workouts_session.js',
-    '/static/assets/js/Control.Geocoder.min.js',
-    '/static/assets/js/L.Control.Locate.min.js',
-    '/static/assets/js/Leaflet.fullscreen.min.js',
-    '/static/assets/js/Sortable.min.js',
-    '/static/assets/js/autoComplete.min.js',
-    '/static/assets/js/chart.min.js',
-    '/static/assets/js/choices.min.js',
-    '/static/assets/js/flatpickr.min.js',
-    '/static/assets/js/jstable.min.js',
-    '/static/assets/js/leaflet-easyPrint.min.js',
-    '/static/assets/js/leaflet-routing-machine.min.js',
-    '/static/assets/js/leaflet.curve.js',
-    '/static/assets/js/leaflet.extra-markers.min.js',
-    '/static/assets/js/leaflet.js',
-    '/static/assets/js/leaflet.markercluster.js',
-    '/static/assets/js/moment-with-locales.min.js',
-    '/static/assets/js/nouislider.min.js',
-    '/static/assets/js/randomColor.min.js',
-    '/static/assets/js/selectr.min.js',
-    '/static/assets/js/easymde.min.js',
-    '/static/assets/js/i18n/de.js',
-    '/static/assets/js/i18n/en.js',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.eot',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.svg',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.ttf',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff2',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.eot',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.svg',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.ttf',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff2',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.eot',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.svg',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.ttf',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.eot',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.svg',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.ttf',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff',
-    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2',
-    '/static/assets/favicon/android-chrome-192x192.png',
-    '/static/assets/favicon/android-chrome-256x256.png',
-    '/static/assets/favicon/apple-touch-icon.png',
-    '/static/assets/favicon/favicon-16x16.png',
-    '/static/assets/favicon/favicon-32x32.png',
-    '/static/assets/css/L.Control.Locate.min.css',
-    '/static/assets/css/MarkerCluster.css',
-    '/static/assets/css/autoComplete.min.css',
-    '/static/assets/css/choices.min.css',
-    '/static/assets/css/flatpickr.min.css',
-    '/static/assets/css/jstable.css',
-    '/static/assets/css/leaflet-routing-machine.min.css',
-    '/static/assets/css/leaflet.extra-markers.min.css',
-    '/static/assets/css/leaflet.fullscreen.min.css',
-    '/static/assets/css/leaflet.min.css',
-    '/static/assets/css/normalize.min.css',
-    '/static/assets/css/nouislider.min.css',
-    '/static/assets/css/open-sans.css',
-    '/static/assets/css/selectr.min.css',
-    '/static/assets/css/easymde.min.css',
-    '/static/assets/css/weather-icons.min.css',
+    '/static/style.css?ver=' + version,
+    '/static/js/activities.js?ver=' + version,
+    '/static/js/app.js?ver=' + version,
+    '/static/js/boards.js?ver=' + version,
+    '/static/js/budget.js?ver=' + version,
+    '/static/js/car-service.js?ver=' + version,
+    '/static/js/car-stats.js?ver=' + version,
+    '/static/js/crawler.js?ver=' + version,
+    '/static/js/crawler_saved.js?ver=' + version,
+    '/static/js/datefilter.js?ver=' + version,
+    '/static/js/exercises.js?ver=' + version,
+    '/static/js/finances-stats.js?ver=' + version,
+    '/static/js/geolocation.js?ver=' + version,
+    '/static/js/location.js?ver=' + version,
+    '/static/js/location-steps-stats.js?ver=' + version,
+    '/static/js/logfile.js?ver=' + version,
+    '/static/js/mail-notifications.js?ver=' + version,
+    '/static/js/main.js?ver=' + version,
+    '/static/js/navigation.js?ver=' + version,
+    '/static/js/notifications.js?ver=' + version,
+    '/static/js/recipes.js?ver=' + version,
+    '/static/js/recipes_mealplan.js?ver=' + version,
+    '/static/js/recipes-recipe.js?ver=' + version,
+    '/static/js/recipes-shoppinglist.js?ver=' + version,
+    '/static/js/recipes-shoppinglist-click.js?ver=' + version,
+    '/static/js/splitbills.js?ver=' + version,
+    '/static/js/tables.js?ver=' + version,
+    '/static/js/timesheets.js?ver=' + version,
+    '/static/js/timesheets-fast.js?ver=' + version,
+    '/static/js/timesheets-notice.js?ver=' + version,
+    '/static/js/transactions.js?ver=' + version,
+    '/static/js/trips.js?ver=' + version,
+    '/static/js/trips_edit.js?ver=' + version,
+    '/static/js/user-select.js?ver=' + version,
+    '/static/js/widgets.js?ver=' + version,
+    '/static/js/widgets-edit.js?ver=' + version,
+    '/static/js/workouts.js?ver=' + version,
+    '/static/js/workouts-session.js?ver=' + version,
+    '/static/js/workouts-stats.js?ver=' + version,
+    '/static/js/workouts-view.js?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.eot?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.svg?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.ttf?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-300.woff2?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.eot?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.svg?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.ttf?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-600.woff2?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.eot?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.svg?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.ttf?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-italic.woff2?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.eot?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.svg?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.ttf?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff?ver=' + version,
+    '/static/assets/fonts/open-sans/open-sans-v15-latin-regular.woff2?ver=' + version,
+    '/static/assets/favicon/android-192x192.png?ver=' + version,
+    '/static/assets/favicon/android-512x512.png?ver=' + version,
+    '/static/assets/favicon/android-maskable-192x192.png?ver=' + version,
+    '/static/assets/favicon/android-maskable-512x512.png?ver=' + version,
+    '/static/assets/favicon/apple-touch-icon.png?ver=' + version,
+    '/static/assets/favicon/favicon-16x16.png?ver=' + version,
+    '/static/assets/favicon/favicon-32x32.png?ver=' + version,
+    '/static/assets/js/Control.Geocoder.min.js?ver=' + version,
+    '/static/assets/js/L.Control.Locate.min.js?ver=' + version,
+    '/static/assets/js/Leaflet.fullscreen.min.js?ver=' + version,
+    '/static/assets/js/Sortable.min.js?ver=' + version,
+    '/static/assets/js/autoComplete.min.js?ver=' + version,
+    '/static/assets/js/chart.min.js?ver=' + version,
+    '/static/assets/js/choices.min.js?ver=' + version,
+    '/static/assets/js/flatpickr.min.js?ver=' + version,
+    '/static/assets/js/jstable.min.js?ver=' + version,
+    '/static/assets/js/leaflet-easyPrint.min.js?ver=' + version,
+    '/static/assets/js/leaflet-routing-machine.min.js?ver=' + version,
+    '/static/assets/js/leaflet.curve.js?ver=' + version,
+    '/static/assets/js/leaflet.extra-markers.min.js?ver=' + version,
+    '/static/assets/js/leaflet.js?ver=' + version,
+    '/static/assets/js/leaflet.markercluster.js?ver=' + version,
+    '/static/assets/js/moment-with-locales.min.js?ver=' + version,
+    '/static/assets/js/nouislider.min.js?ver=' + version,
+    '/static/assets/js/randomColor.min.js?ver=' + version,
+    '/static/assets/js/selectr.min.js?ver=' + version,
+    '/static/assets/js/easymde.min.js?ver=' + version,
+    '/static/assets/js/i18n/de.js?ver=' + version,
+    '/static/assets/js/i18n/en.js?ver=' + version,
+    '/static/assets/css/L.Control.Locate.min.css?ver=' + version,
+    '/static/assets/css/MarkerCluster.css?ver=' + version,
+    '/static/assets/css/autoComplete.min.css?ver=' + version,
+    '/static/assets/css/choices.min.css?ver=' + version,
+    '/static/assets/css/flatpickr.min.css?ver=' + version,
+    '/static/assets/css/jstable.css?ver=' + version,
+    '/static/assets/css/leaflet-routing-machine.min.css?ver=' + version,
+    '/static/assets/css/leaflet.extra-markers.min.css?ver=' + version,
+    '/static/assets/css/leaflet.fullscreen.min.css?ver=' + version,
+    '/static/assets/css/leaflet.min.css?ver=' + version,
+    '/static/assets/css/normalize.min.css?ver=' + version,
+    '/static/assets/css/nouislider.min.css?ver=' + version,
+    '/static/assets/css/open-sans.css?ver=' + version,
+    '/static/assets/css/selectr.min.css?ver=' + version,
+    '/static/assets/css/easymde.min.css?ver=' + version,
+    '/static/assets/css/weather-icons.min.css?ver=' + version,
 ];
 
 const NETWORK_TIMEOUT = 5000;
@@ -153,17 +168,22 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    if (event.request.method !== 'GET') {
+    if (req.method !== 'GET') {
         //console.log('WORKER: fetch event ignored.', event.request.method, event.request.url);
+        return;
+    }
+
+    // Custom Header to not cache
+    if(req.headers.has('sw-cache') && req.headers.get('sw-cache') === 'none'){
         return;
     }
 
     if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
         return event.respondWith(cacheFirst(req));
-//    } else if (/.*(\/pwa)/.test(req.url)) {
-//        // load new version into cache
-//        _fetchAndCache(req.clone());
-//        return event.respondWith(cacheFirst(req));
+        //    } else if (/.*(\/pwa)/.test(req.url)) {
+        //        // load new version into cache
+        //        _fetchAndCache(req.clone());
+        //        return event.respondWith(cacheFirst(req));
     } else {
         //console.log('network first', req.url);
         //self.clients.matchAll().then(function (clientList) {
@@ -225,7 +245,7 @@ function _notifyCache(req) {
 /**
  * @see https://serviceworke.rs/strategy-network-or-cache_service-worker_doc.html
  */
-function _fromCache(request) {    
+function _fromCache(request) {
     return caches.open(cacheName).then(function (cache) {
         return cache.match(request).then(function (cachedResponse) {
             return cachedResponse || Promise.reject('no-match');
@@ -276,15 +296,15 @@ function _fromNetwork(request, timeout) {
     /**
      * Promice Timeout Wrapper
      */
-//    return new Promise(function (resolve, reject) {
-//        var timeoutId = setTimeout(function (t) {
-//            reject();
-//        }, timeout);
-//        _fetchAndCache(request.clone()).then(function (response) {
-//            clearTimeout(timeoutId);
-//            resolve(response);
-//        }, reject);
-//    });
+    //    return new Promise(function (resolve, reject) {
+    //        var timeoutId = setTimeout(function (t) {
+    //            reject();
+    //        }, timeout);
+    //        _fetchAndCache(request.clone()).then(function (response) {
+    //            clearTimeout(timeoutId);
+    //            resolve(response);
+    //        }, reject);
+    //    });
 }
 
 
@@ -349,34 +369,34 @@ self.addEventListener('push', function (event) {
     event.waitUntil(notificationPromise);
     event.waitUntil(_sendMessageToClients(1));
 
-//    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
-//    event.waitUntil(
-//            clients.matchAll().then(clis => {
-//
-//            // only visible clients
-////            const client = clis.find(c => {
-////                return c.focused === true && c.visibilityState === 'visible';
-////            });
-//
-//            //console.log(client);
-//
-////            if (clis.length === 0) {
-////                if (client !== undefined) {
-//                    // Send a message to the page to update the UI
-//                    //console.log('Application is already open!');
-//                    // @see https://web-push-book.gauntface.com/chapter-05/04-common-notification-patterns/
-//                    clis.forEach(cli => {
-//                        cli.postMessage({
-//                            type: 1,
-//                            time: new Date().toString()
-//                        });
-//                    });
-////                }
-////            }
-//            // Show notification
-////            self.registration.showNotification(title, options);
-//        })
-//    );
+    //    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
+    //    event.waitUntil(
+    //            clients.matchAll().then(clis => {
+    //
+    //            // only visible clients
+    ////            const client = clis.find(c => {
+    ////                return c.focused === true && c.visibilityState === 'visible';
+    ////            });
+    //
+    //            //console.log(client);
+    //
+    ////            if (clis.length === 0) {
+    ////                if (client !== undefined) {
+    //                    // Send a message to the page to update the UI
+    //                    //console.log('Application is already open!');
+    //                    // @see https://web-push-book.gauntface.com/chapter-05/04-common-notification-patterns/
+    //                    clis.forEach(cli => {
+    //                        cli.postMessage({
+    //                            type: 1,
+    //                            time: new Date().toString()
+    //                        });
+    //                    });
+    ////                }
+    ////            }
+    //            // Show notification
+    ////            self.registration.showNotification(title, options);
+    //        })
+    //    );
 });
 
 self.addEventListener('notificationclick', function (event) {
@@ -396,37 +416,37 @@ self.addEventListener('notificationclick', function (event) {
     // @see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#2_using_the_notifications_api
     // @see https://github.com/google-developer-training/pwa-training-labs/blob/master/push-notification-lab/
     event.waitUntil(
-            clients.matchAll().then(clis => {
+        clients.matchAll().then(clis => {
 
-        // get visible or focused client and open the path
-        const client = clis.find(c => {
-            //return c.visibilityState === 'visible';
-            return c.focused === true && c.visibilityState === 'visible';
-        });
+            // get visible or focused client and open the path
+            const client = clis.find(c => {
+                //return c.visibilityState === 'visible';
+                return c.focused === true && c.visibilityState === 'visible';
+            });
 
-        if (client !== undefined) {
-            client.navigate(data.path);
-            client.focus();
-        } else {
-            // there are no visible windows. Open one.
-            clients.openWindow(data.path);
-        }
-    })
-            );
+            if (client !== undefined) {
+                client.navigate(data.path);
+                client.focus();
+            } else {
+                // there are no visible windows. Open one.
+                clients.openWindow(data.path);
+            }
+        })
+    );
 
     //@see https://developers.google.com/web/fundamentals/push-notifications/common-notification-patterns#focus_an_existing_window
-//    event.waitUntil(clients.matchAll({
-//        type: "window"
-//    }).then(function (clientList) {
-//        for (var i = 0; i < clientList.length; i++) {
-//            var client = clientList[i];
-//            console.log(client.url.toString().startsWith(data.url));
-//            if (client.url.toString().startsWith(data.url) && 'focus' in client)
-//                return client.focus();
-//        }
-//        if (clients.openWindow)
-//            return clients.openWindow(data.path);
-//    }));
+    //    event.waitUntil(clients.matchAll({
+    //        type: "window"
+    //    }).then(function (clientList) {
+    //        for (var i = 0; i < clientList.length; i++) {
+    //            var client = clientList[i];
+    //            console.log(client.url.toString().startsWith(data.url));
+    //            if (client.url.toString().startsWith(data.url) && 'focus' in client)
+    //                return client.focus();
+    //        }
+    //        if (clients.openWindow)
+    //            return clients.openWindow(data.path);
+    //    }));
 
 
     // Close all notifications

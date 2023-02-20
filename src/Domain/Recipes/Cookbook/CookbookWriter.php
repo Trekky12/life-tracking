@@ -41,7 +41,7 @@ class CookbookWriter extends ObjectActivityWriter {
     }
 
     public function getModule(): string {
-        return "recipes_cookbooks";
+        return "recipes";
     }
 
 }

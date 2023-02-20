@@ -77,7 +77,7 @@ class TimesheetsFastCreateWidget implements Widget {
 
     public function getLink(WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
-        return $this->router->urlFor('timesheets_project_categorybudget_view', ["project" => $this->projects[$id]["hash"]]);
+        return $this->router->urlFor('timesheets_fast', ["project" => $this->projects[$id]["hash"]]);
     }
 
 }

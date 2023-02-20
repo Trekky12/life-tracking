@@ -3,12 +3,12 @@
 {% set active = 'recipes' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js"></script>
-    <script src="{{baseURL}}/static/js/user-select.js?ver=20210801"></script>
+    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block body %}
@@ -16,7 +16,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["RECIPES_MEALPLAN"]}}</h2>
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('recipes_mealplans')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('recipes_mealplans')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
         <div class="page-content">

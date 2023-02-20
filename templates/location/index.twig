@@ -3,21 +3,21 @@
 {% set active = 'location' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/MarkerCluster.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/MarkerCluster.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/leaflet.js" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/leaflet.markercluster.js" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/js/location.js?ver=20200126"></script>
-    <script src="{{baseURL}}/static/js/datefilter.js?ver=20181122"></script>
+    <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+    <script src="{{baseURL}}/static/assets/js/leaflet.markercluster.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+    <script src="{{baseURL}}/static/js/location.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 
 {% block body %}
 
-    <div id="search" class="page-content">
+    <div id="location-filter" class="page-content">
         <form method="GET" id="search-form" class="page-content collapsed">
             <div class="search-form-inner"> 
                 <div class="filter-content">
@@ -43,6 +43,6 @@
         <div id="iconLocation">{{ fontawesome('fas fa-location-arrow') }}</div>
         <div id="iconFinances">{{ fontawesome('fas fa-money-bill') }}</div>
         <div id="iconCars">{{ fontawesome('fas fa-road') }}</div>
-        <div id="iconDirections">{{ fontawesome('fas fa-arrows-alt-h') }}</div>
+        <div id="iconDirections">{{ fontawesome('fas fa-left-right') }}</div>
     </div>
 {% endblock %}

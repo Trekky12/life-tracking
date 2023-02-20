@@ -1,31 +1,75 @@
-<div class="exercise" data-id="{{ exercise["exercise"].id }}">
-    <div class="exercise-content">
-        <small class="bodypart">{{ exercise["mainBodyPart"] }} / {{ exercise["mainMuscle"] }}</small>
-        <h3 class="title">{{ exercise["exercise"].name|raw }}</h3>
-        <div class="instructions">
-            <a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
-            <p class="content">{{ exercise["exercise"].getInstructions()|raw }}</p>
-        </div>
-        {% if exercise["notice"] %}
-        <div class="view-notices">
-            <h4>{{ lang["NOTICE"] }}</h4>
-            <p class="content">{{ exercise["notice"]|raw }}</p>
-        </div>
-        {% endif %}
-        <div class="sets-description">
-            <h4>{{ lang["WORKOUTS_SETS"] }}</h4>
-            <div class="content">
-                {% for set in exercise["set_description"] %}
-                    <div class="set">
-                        {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}: {{ set }}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>                                   
-    {% if exercise["exercise"].get_thumbnail() != ''%}
-        <div class="thumbnail">
-            <img src="/{{uploads_folder}}/exercises/{{exercise["exercise"].get_thumbnail()}}"/>
-        </div>
-    {% endif %}
+<div class="exercise" data-id="{{ exercise['exercise'].id }}">
+	<div class="exercise-content">
+		<small class="bodypart">{{ exercise['mainBodyPart'] }}
+			/
+			{{ exercise['mainMuscle'] }}</small>
+		<h3 class="title">{{ exercise['exercise'].name|raw }}</h3>
+		{% if exercise['exercise'].getInstructions()|length > 0 %}
+			<div class="instructions">
+				<a href="#" class="headline">
+					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+					{{ lang["WORKOUTS_INSTRUCTIONS"] }}
+				</a>
+				<p class="content">{{ exercise['exercise'].getInstructions()|raw }}</p>
+			</div>
+		{% endif %}
+		{% if exercise['primary_muscles']|length > 0 or exercise['secondary_muscles']|length > 0 %}
+			<div class="muscles">
+				<a href="#" class="headline">
+					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+					{{ lang["WORKOUTS_MUSCLES"] }}
+				</a>
+				<div class="content">
+					{% if exercise['primary_muscles']|length > 0  %}
+						<h4>{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</h4>
+						<p>
+							{% for muscle in exercise['primary_muscles'] %}
+								{{ muscle.name }}
+								{% if not loop.last %},
+								{% endif %}
+							{% endfor %}
+						</p>
+					{% endif %}
+
+					{% if exercise['secondary_muscles']|length > 0 %}
+						<h4>{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</h4>
+						<p>
+							{% for muscle in exercise['secondary_muscles'] %}
+								{{ muscle.name }}
+								{% if not loop.last %},
+								{% endif %}
+							{% endfor %}
+						</p>
+					{% endif %}
+
+					{% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': exercise['primary_muscles'], 'secondary': exercise['secondary_muscles'], 'small': true}} only %}
+				</div>
+			</div>
+		{% endif %}
+		{% if exercise['notice'] %}
+			<div class="view-notices">
+				<h4>{{ lang["NOTICE"] }}</h4>
+				<p class="content">{{ exercise['notice']|nl2br|raw }}</p>
+			</div>
+		{% endif %}
+		<div class="sets-description">
+			<h4>{{ lang["WORKOUTS_SETS"] }}</h4>
+			<div class="content">
+				{% for set in exercise['set_description'] %}
+					<div class="set">
+						{{ loop.index }}.
+						{{ lang["WORKOUTS_SET"] }}:
+						{{ set }}
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	{% if exercise['exercise'].get_thumbnail() != ''%}
+		<div class="thumbnail">
+			<img src="/{{uploads_folder}}/exercises/{{exercise['exercise'].get_thumbnail()}}"/>
+		</div>
+	{% endif %}
 </div>

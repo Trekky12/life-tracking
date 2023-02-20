@@ -4,44 +4,50 @@
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TRIPS"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('trips_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="trips_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{lang["START_DATE"]}}</th>
-                        <th>{{lang["END_DATE"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for trip in trips %}
-                        <tr>
-                            <td><a href="{{  url_for('trips_view', {'trip' : trip.hash}) }}">{{trip.name|raw}}</a></td> 
-                            <td>{{trip.min_date}}</td>
-                            <td>{{trip.max_date}}</td>
-                            <td>
-                                {% if trip.user == user.id %}
-                                    <a href="{{  url_for('trips_edit', {'id' : trip.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
-                                    {% endif %}
-                            </td>
-                            <td>
-                                {% if trip.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('trips_delete', {'id' : trip.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                                    {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TRIPS"]}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for('trips_edit') }}">
+					<button class="button">{{ fontawesome('fas fa-plus') }}
+						{{lang["ADD"]}}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
+			<table id="trips_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{lang["START_DATE"]}}</th>
+						<th>{{lang["END_DATE"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for trip in trips %}
+						<tr>
+							<td>
+								<a href="{{ url_for('trips_view', {'trip' : trip.hash}) }}">{{trip.name|raw}}</a>
+							</td>
+							<td>{{trip.min_date}}</td>
+							<td>{{trip.max_date}}</td>
+							<td>
+								{% if trip.user == user.id %}
+									<a href="{{ url_for('trips_edit', {'id' : trip.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if trip.user == user.id %}
+									<a href="#" data-url="{{ url_for('trips_delete', {'id' : trip.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

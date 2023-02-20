@@ -21,6 +21,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +30,10 @@
                             <td><a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a></td> 
                             <td>{{times[project.id]}}</td> 
                             <td>
-                                <a href="{{  url_for('timesheets_project_categorybudget_view', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
+                                <a href="{{  url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
+                            </td>
+                            <td>
+                                <a href="{{  url_for('timesheets_customers', {'project' : project.hash}) }}">{% if project.customers_name_plural %}{{project.customers_name_plural}}{% else %}{{lang["TIMESHEETS_CUSTOMERS"]}}{% endif %}</a>
                             </td>
                             <td>
                                 <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>
@@ -39,7 +43,7 @@
                             </td>                            
                             <td>
                                 {% if project.user == user.id %}
-                                    <a href="{{  url_for('timesheets_projects_edit', {'id' : project.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('timesheets_projects_edit', {'id' : project.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>

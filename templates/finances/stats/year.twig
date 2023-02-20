@@ -2,6 +2,10 @@
 
 {% set active = 'finances' %}
 
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/finances-stats.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
 
 {% block body %}
 
@@ -10,7 +14,7 @@
             <h2>{{lang["FINANCES_SPENDINGS"]}}/{{lang["FINANCES_INCOMES"]}} {{lang["IN"]}} {{year}}
             </h2>
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('finances_stats') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('finances_stats') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
         <div class="page-content">

@@ -2,6 +2,10 @@
 
 {% set active = 'steps' %}
 
+{% block javascript %}
+    <script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/location-steps-stats.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
 
 {% block body %}
 
@@ -9,7 +13,7 @@
         <div class="page-header">
             <h2>{{lang["STEPS"]}} {{lang["STATS"]}} {{lang["IN"]}} {{year}}</h2>
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('steps') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('steps') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
 

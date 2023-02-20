@@ -139,7 +139,7 @@ class OwnerTest extends TripTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString("<div id=\"trip-map\"></div>", $body);
+        $this->assertStringContainsString("<div id=\"trip-map\">", $body);
     }
 
     /**

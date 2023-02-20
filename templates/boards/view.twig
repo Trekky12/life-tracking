@@ -4,15 +4,15 @@
 {% set boardsview = 1 %}
 
 {% block style %}
-	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css"/>
-	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/easymde.min.css"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/easymde.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/selectr.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/Sortable.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/easymde.min.js"></script>
-	<script src="{{baseURL}}/static/js/boards.js?v=20220410"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/easymde.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/boards.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block bottom %}
-	<div id="sidebar" class="sidebar {% if sidebar[" mobilevisible"] == 1 %}mobile-visible{% elseif sidebar[" desktophidden"] == 1 %}desktop-hidden{% endif %}">
+	<div id="sidebar" class="sidebar {% if sidebar['mobilevisible'] == 1 %}mobile-visible{% elseif sidebar['desktophidden'] == 1 %}desktop-hidden{% endif %}">
 		<span id="sidebar-toggle" aria-hidden="true">
 			<span class="chevron-left">{{ fontawesome('fas fa-chevron-left') }}</span>
 			<span class="chevron-right">{{ fontawesome('fas fa-chevron-right') }}</span>
@@ -247,8 +247,8 @@
 			<div class="stack-header">
 				<span class="title"></span>
 				<span class="edit-bar">
-					{{ fontawesome('fas fa-pencil-alt') }}
-					<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+					{{ fontawesome('fas fa-pencil') }}
+					<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 				</span>
 			</div>
 
@@ -266,14 +266,14 @@
 		</div>
 
 		<div class="board-card" data-card="">
-			<div class="check">{{ fontawesome('far fa-check-circle') }}</div>
+			<div class="custom-checkbox"><input type="checkbox" class="check" autocomplete="off"/></div>
 			<div class="board-card-content">
 				<div class="card-labels">
-					<span class="handle">{{ fontawesome('fas fa-arrows-alt') }}</span>
+					<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 				</div>
 
 				<div class="card-title"></div>
-				<span class="card-date hidden">{{ fontawesome('fas fa-calendar-alt') }}</span>
+				<span class="card-date hidden">{{ fontawesome('fas fa-calendar-days') }}</span>
 
 				<div class="bottom-row">
 					<div class="icons">
@@ -299,7 +299,7 @@
 		</div>
 	</div>
 	<div class="hidden">
-		<div id="iconArchive">{{ fontawesome('fas fa-archive') }}</div>
+		<div id="iconArchive">{{ fontawesome('fas fa-box-archive') }}</div>
 		<div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
 	</div>
 {% endblock %}

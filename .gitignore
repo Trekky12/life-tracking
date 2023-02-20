@@ -9,8 +9,8 @@ composer.phar
 /public/uploads/profile/*
 !/public/uploads/profile/.gitkeep 
 
-/public/uploads/events/*
-!/public/uploads/events/.gitkeep 
+/public/uploads/trips/*
+!/public/uploads/trips/.gitkeep 
 
 /public/uploads/exercises/*
 !/public/uploads/exercises/.gitkeep 

@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Timesheets\ProjectCategoryBudget;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 use App\Application\Responder\HTMLTemplateResponder;
@@ -20,7 +20,8 @@ class ProjectCategoryBudgetEditAction {
     public function __invoke(Request $request, Response $response): Response {
         $project_hash = $request->getAttribute('project');
         $entry_id = $request->getAttribute('id');
-        $data = $this->service->edit($project_hash, $entry_id);
+        $template = $request->getParam("template");
+        $data = $this->service->edit($project_hash, $entry_id, $template);
         return $this->responder->respond($data->withTemplate('timesheets/projectcategorybudget/edit.twig'));
     }
 

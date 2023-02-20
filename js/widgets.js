@@ -15,12 +15,15 @@ requestWidgets.forEach(function (item) {
 
 function load(item) {
     let id = item.dataset.id;
+    let widget = item.dataset.widget;
+    let options = item.dataset.options;
 
-    return fetch(jsObject.frontpage_widget_request + id, {
+    return fetch(jsObject.frontpage_widget_request + id + '?widget=' + widget + '&options=' + options, {
         method: 'GET',
         credentials: "same-origin",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'sw-cache': 'none'
         }
     }).then(function (response) {
         return response.json();
@@ -31,73 +34,51 @@ function load(item) {
     });
 }
 
-function createEFATable(efa_data) {
 
-    var departuresTable = document.createElement("table");
-    departuresTable.classList.add("small", "table");
-    departuresTable.border = '0';
+document.addEventListener('click', async function (event) {
+    let btn_archive_card = event.target.closest('.btn-archive-card');
+    if (btn_archive_card) {
+        //event.preventDefault();
 
-    var departures = efa_data.departureList;
+        setTimeout(function () {
+            let url = btn_archive_card.dataset.url;
+            let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
 
-    for (var d in departures) {
-        var departureRow = createEFADataRow(departures[d]);
-        departuresTable.appendChild(departureRow);
+            if (archive === 0) {
+                if (!confirm(lang.boards_undo_archive)) {
+                    btn_archive_card.checked = true;
+                    return false;
+                }
+            } else {
+                if (!confirm(lang.boards_really_archive)) {
+                    btn_archive_card.checked = false;
+                    return false;
+                }
+            }
+
+            var data = { 'archive': archive };
+
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
+
+                return fetch(url, {
+                    method: 'POST',
+                    credentials: "same-origin",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                //allowedReload = true;
+                //window.location.reload();
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }, 20);
+
     }
-    return departuresTable;
-
-}
-
-function createEFADataRow(data) {
-
-    var row = document.createElement("tr");
-
-    var line = document.createElement("td");
-    line.className = "departures__departure__line";
-    line.innerHTML = '<span class="departures__departure__line__number xsmall">' + data.servingLine.number + '</span>';
-    row.appendChild(line);
-
-    var destination = document.createElement("td");
-    destination.innerHTML = '<span class="departures__departure__direction small">' + data.servingLine.direction + '</span>';
-    row.appendChild(destination);
-
-    var departureTime = new Date;
-    var calculatedDelay = 0;
-    var dateTime = departureTime = new Date(data.dateTime.year, data.dateTime.month - 1, data.dateTime.day, data.dateTime.hour, data.dateTime.minute, 0);
-
-    if (data.realDateTime) {
-        var realDateTime = new Date(data.realDateTime.year, data.realDateTime.month - 1, data.realDateTime.day, data.realDateTime.hour, data.realDateTime.minute, 0);
-        departureTime = realDateTime;
-        calculatedDelay = (realDateTime - dateTime) / 1000 / 60;
-    } else {
-        departureTime = dateTime;
-    }
-
-    var hour = departureTime.getHours();
-
-    var minute = departureTime.getMinutes();
-    if (minute < 10) {
-        minute = "0" + minute;
-    }
-
-    var delay = '';
-    if (data.servingLine.delay > 0) {
-        delay = data.servingLine.delay;
-    } else if (calculatedDelay !== 0) {
-        delay = calculatedDelay;
-    }
-
-    var departureCell = document.createElement("td");
-    departureCell.className = "departures__departure";
-    departureCell.innerHTML = '<span class="departures__departure__time-relative small bright">' + hour + ':' + minute + '</span>';
-    row.appendChild(departureCell);
-
-    var delayCell = document.createElement("td");
-    delayCell.className = "departures__delay";
-    if (delay > 0) {
-        delayCell.innerHTML = '<span class="departures__delay__time xsmall">+ ' + delay + '</span>';
-    }
-    row.appendChild(delayCell);
-
-    return row;
-}
-
+});

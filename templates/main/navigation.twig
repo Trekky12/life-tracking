@@ -49,14 +49,14 @@
                 <a href="{{ url_for(modules['finances']['rootRoute']) }}">{{lang[modules['finances']['title']]}}</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ url_for('finances_categories') }}">{{ fontawesome('fas fa-tags') }} {{lang["FINANCES_CATEGORIES"]}}</a></li>
-                    <li><a href="{{ url_for('finances_categories_assignment') }}">{{ fontawesome('fas fa-magic') }} {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
+                    <li><a href="{{ url_for('finances_categories_assignment') }}">{{ fontawesome('fas fa-wand-magic') }} {{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('finances_recurring') }}">{{ fontawesome('fas fa-calendar-alt') }} {{lang["FINANCES_RECURRING"]}}</a></li>
+                    <li><a href="{{ url_for('finances_recurring') }}">{{ fontawesome('fas fa-calendar-days') }} {{lang["FINANCES_RECURRING"]}}</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ url_for('finances_paymethod') }}">{{ fontawesome('fas fa-credit-card') }} {{lang["FINANCES_PAYMETHODS"]}}</a></li>
                     <li><a href="{{ url_for('finances_account') }}">{{ fontawesome('fas fa-wallet') }} {{lang["FINANCES_ACCOUNTS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('finances_budgets') }}">{{ fontawesome('far fa-money-bill-alt') }} {{lang["BUDGET"]}}</a></li>
+                    <li><a href="{{ url_for('finances_budgets') }}">{{ fontawesome('far fa-money-bill-1') }} {{lang["BUDGET"]}}</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ url_for('finances_stats') }}">{{ fontawesome('fas fa-chart-pie') }} {{lang["STATS"]}}</a></li>
                 </ul>
@@ -121,8 +121,9 @@
                 <ul class="dropdown-content">
                     <li><a href="{{ url_for('recipes_cookbooks') }}">{{lang["RECIPES_COOKBOOKS"]}}</a></li>
                     <li><a href="{{ url_for('recipes_mealplans') }}">{{lang["RECIPES_MEALPLANS"]}}</a></li>
+                    <li><a href="{{ url_for('recipes_shoppinglists') }}">{{lang["RECIPES_SHOPPINGLISTS"]}}</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{{ url_for('recipes_ingredients') }}">{{lang["RECIPES_INGREDIENTS"]}}</a></li>
+                    <li><a href="{{ url_for('recipes_groceries') }}">{{lang["RECIPES_GROCERIES"]}}</a></li>
                 </ul>
             </li> 
         {% endif %}
@@ -163,11 +164,11 @@
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ url_for('notifications') }}">{{lang["NOTIFICATIONS"]}}<span class="right-align">{{ fontawesome('fas fa-bell') }}</span></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ url_for('users_activities') }}">{{lang["ACTIVITIES"]}}<span class="right-align">{{ fontawesome('fas fa-history') }}</span></a></li>
+                <li><a href="{{ url_for('users_activities') }}">{{lang["ACTIVITIES"]}}<span class="right-align">{{ fontawesome('fas fa-clock-rotate-left') }}</span></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ url_for('help') }}">{{lang["HELP"]}}<span class="right-align">{{ fontawesome('far fa-question-circle') }}</span></a></li>
+                <li><a href="{{ url_for('help') }}">{{lang["HELP"]}}<span class="right-align">{{ fontawesome('far fa-circle-question') }}</span></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{{ url_for('logout') }}" >{{lang["LOGOUT"]}}<span class="right-align">{{ fontawesome('fas fa-sign-out-alt') }}</span></a></li>
+                <li><a href="{{ url_for('logout') }}" >{{lang["LOGOUT"]}}<span class="right-align">{{ fontawesome('fas fa-right-from-bracket') }}</span></a></li>
             </ul>
         </li>
     </ul>                        

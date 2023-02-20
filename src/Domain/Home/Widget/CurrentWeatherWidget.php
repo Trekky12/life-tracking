@@ -4,6 +4,7 @@ namespace App\Domain\Home\Widget;
 
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
+use App\Domain\Main\Utility\WeatherUtility;
 
 class CurrentWeatherWidget implements Widget {
 
@@ -43,6 +44,27 @@ class CurrentWeatherWidget implements Widget {
 
     public function getLink(WidgetObject $widget = null) {
         return null;
+    }
+
+    public static function formatCurrentWeatherRequestData($status, $result)
+    {
+
+        $weather = [];
+
+        if ($status == 200) {
+
+            // Convert unicode 
+            // @see https://stackoverflow.com/a/2577882
+            $result = mb_convert_encoding($result, 'HTML-ENTITIES');
+
+            $response = json_decode($result, true);
+
+            $weather["temp"] = round($response["main"]["temp"], 1);
+            $weather["description"] = $response["weather"][0]["description"];
+            $weather["icon"] = WeatherUtility::getWeatherIcon($response["weather"][0]["icon"]);
+        }
+
+        return $weather;
     }
 
 }

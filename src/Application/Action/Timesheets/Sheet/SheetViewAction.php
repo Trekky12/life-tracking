@@ -27,7 +27,12 @@ class SheetViewAction {
 
         $categories = array_key_exists("categories", $requestData) ? filter_var_array($requestData["categories"], FILTER_SANITIZE_NUMBER_INT) : [];
 
-        $index = $this->service->view($hash, $from, $to, $categories);
+        $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $payed = array_key_exists('payed', $requestData) && $requestData['payed']!== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+        $customer = array_key_exists('customer', $requestData) && $requestData['customer']!== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+        $index = $this->service->view($hash, $from, $to, $categories, $billed, $payed, $customer);
 
         return $this->responder->respond($index->withTemplate('timesheets/sheets/index.twig'));
     }

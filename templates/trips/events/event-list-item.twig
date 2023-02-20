@@ -11,9 +11,9 @@
         {% elseif event.isCarrental() %}
             {{ fontawesome('fas fa-car') }}
         {% elseif event.isEvent() %}
-            {{ fontawesome('fas fa-calendar-alt') }}
+            {{ fontawesome('fas fa-calendar-days') }}
         {% elseif event.isWaypoint() %}
-            {{ fontawesome('fas fa-map-marker-alt') }}
+            {{ fontawesome('fas fa-location-dot') }}
         {% elseif event.isShip() %}
             {{ fontawesome('fas fa-ship') }}
         {% endif %}
@@ -25,7 +25,7 @@
         </div>
 
         {% if event.get_thumbnail() != ''%}
-            <img class="image_uploaded" src="/{{uploads_folder}}/events/{{event.get_thumbnail()}}"/>
+            <img class="image_uploaded" src="/{{uploads_folder}}/trips/{{event.get_thumbnail()}}"/>
         {% endif %}
 
         {% if event.notice %}
@@ -43,7 +43,7 @@
 
     </div>
     <div class="buttons">
-        <a href="{{  url_for('trips_event_edit', {'id' : event.id, 'trip' :trip.hash}) }}">{{ fontawesome('fas fa-edit') }}</a>
+        <a href="{{  url_for('trips_event_edit', {'id' : event.id, 'trip' :trip.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
         <a href="#" data-url="{{  url_for('trips_event_delete', {'id' : event.id, 'trip' : trip.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
     </div>
 </div>

@@ -3,9 +3,9 @@
 {% set active = 'timesheets' %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/docxjs.min.js"></script>
-	<script src="{{baseURL}}/static/assets/js/FileSaver.min.js"></script>
-	<script src="{{baseURL}}/static/js/timesheets-notice.js?ver=20220226"></script>
+	<script src="{{baseURL}}/static/assets/js/docxjs.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/FileSaver.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 
@@ -19,7 +19,7 @@
 			<div class="buttons">
 				<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
 					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-level-up-alt') }}</button>
+						{{ fontawesome('fas fa-turn-up') }}</button>
 				</a>
 			</div>
 		</div>
@@ -44,52 +44,67 @@
 
 					<div class="timesheet-notice-wrapper">
 
-						<h3 id="sheet_title">{{ sheet_title }}</h3>
-						<p>
-							<small id="sheet_categories">{{ sheet_categories }}</small>
-						</p>
+						<h3 class="sheet_title">{{ sheet_title }}</h3>
+						{% if sheet_customer %}
+							<h4 class="sheet_customer">
+								{%- if project.customers_name_singular %}
+									{{- project.customers_name_singular -}}
+								{% else %}
+									{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{% endif -%}:&nbsp;
+								{{- sheet_customer -}}
+							</h4>
+						{% endif %}
+						{% if sheet_categories %}
+							<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
+								{{- sheet_categories -}}
+							</h4>
+						{% endif %}
 
 						<div class="timesheet-notice" data-sheet="{{ sheet.id }}">
 							{% if fields %}
 								{% for field in fields %}
-									{% if field.datatype == 'textfield' %}
-										<div class="form-group">
-											<label for="input_{{field.id}}">{{field.description|raw}}</label>
-											<input type="text" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"/>
-										</div>
-									{% elseif field.datatype == 'textarea' %}
-										<div class="form-group">
-											<label for="input_{{field.id}}">{{field.description|raw}}</label>
-											<textarea rows="{% if field.initialization %}{{field.initialization}}{% else %}15{% endif %}" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"></textarea>
-										</div>
-									{% elseif field.datatype == 'select' %}
-										<div class="form-group">
-											<label for="input_{{field.id}}">{{field.description|raw}}</label>
-											<select class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}">
-												{% for option in field.initialization|split('\r\n') %}
-													<option>
-													{{option}}
-												</option>
-											{% endfor %}
-										</select>
+									<div class="timesheet-notice-field">
+										{% if field.datatype == 'textfield' %}
+											<div class="form-group">
+												<label for="input_{{field.id}}">{{field.description|raw}}</label>
+												<input type="text" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"/>
+											</div>
+										{% elseif field.datatype == 'textarea' %}
+											<div class="form-group">
+												<label for="input_{{field.id}}">{{field.description|raw}}</label>
+												<textarea rows="{% if field.initialization %}{{field.initialization}}{% else %}15{% endif %}" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"></textarea>
+											</div>
+										{% elseif field.datatype == 'select' %}
+											<div class="form-group">
+												<label for="input_{{field.id}}">{{field.description|raw}}</label>
+												<select class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}">
+													{% for field_option in field.initialization|split('\r\n') %}
+														<option>{{ field_option }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										{% endif %}
 									</div>
-								{% endif %}
-							{% endfor %}
-						{% else %}
-							<div class="form-group">
-								<label for="inputNotice">{{lang["NOTICE"]}}</label>
-								<textarea rows="15" class="form-control" id="inputNotice" name="notice" data-default="1"></textarea>
-							</div>
-						{% endif %}
+								{% endfor %}
+							{% else %}
+								<div class="timesheet-notice-field">
+									<div class="form-group">
+										<label for="inputNotice">{{lang["NOTICE"]}}</label>
+										<textarea rows="15" class="form-control" id="inputNotice" name="notice" data-default="1"></textarea>
+									</div>
+								</div>
+							{% endif %}
+						</div>
 					</div>
-				</div>
 
-				<div class="form-group btn">
-					<button type="submit" class="button">{{lang["SAVE"]}}</button>
-					<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
-						{{lang["TIMESHEETS_EXPORT"]}}</button>
-				</div>
-			</form>
+					<div class="form-group btn">
+						<button type="submit" class="button">{{lang["SAVE"]}}</button>
+						<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
+							{{lang["TIMESHEETS_EXPORT"]}}</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
-</div>{% endblock %}
+{% endblock %}

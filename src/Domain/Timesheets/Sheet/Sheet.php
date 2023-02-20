@@ -2,6 +2,8 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
+use App\Domain\Main\Utility\DateUtility;
+
 class Sheet extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_TIMESHEETS_SHEET";
@@ -22,6 +24,11 @@ class Sheet extends \App\Domain\DataObject {
         $this->duration = $this->exists('duration', $data) ? filter_var($data['duration'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->duration_modified = $this->exists('duration_modified', $data) ? filter_var($data['duration_modified'], FILTER_SANITIZE_NUMBER_INT) : null;
 
+        $set_duration_modified = $this->exists('set_duration_modified', $data) ? filter_var($data['set_duration_modified'], FILTER_SANITIZE_STRING) : null;
+        if (!is_null($set_duration_modified)) {
+            $this->duration_modified = DateUtility::getSecondsFromDuration($set_duration_modified);
+        }
+
         $this->start_lat = $this->exists('start_lat', $data) ? filter_var($data['start_lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->start_lng = $this->exists('start_lng', $data) ? filter_var($data['start_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->start_acc = $this->exists('start_acc', $data) ? filter_var($data['start_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
@@ -32,6 +39,12 @@ class Sheet extends \App\Domain\DataObject {
 
 
         $this->categories = $this->exists('categories', $data) ? filter_var($data['categories'], FILTER_SANITIZE_STRING) : null;
+
+        $this->is_billed = $this->exists('is_billed', $data) ? filter_var($data['is_billed'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->is_payed = $this->exists('is_payed', $data) ? filter_var($data['is_payed'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
+        $this->customer = $this->exists('customer', $data) ? filter_var($data['customer'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->customerName = $this->exists('customerName', $data) ? filter_var($data['customerName'], FILTER_SANITIZE_STRING) : null;
 
         /* if (empty($this->name) && $this->settleup == 0) {
           $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
@@ -122,6 +135,7 @@ class Sheet extends \App\Domain\DataObject {
         $temp = parent::get_fields($remove_user_element, $insert, $update);
 
         unset($temp["categories"]);
+        unset($temp["customerName"]);
 
         return $temp;
     }

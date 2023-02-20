@@ -26,10 +26,10 @@
                         <tr>
                             <td><a href="{{  url_for('splitbill_bills', {'group' : group.hash}) }}">{{group.name|raw}}</a></td> 
                             <td data-currency="{{i18n.currency}}">{{balances[group.id].balance}}</td> 
-                            <td><a href="{{  url_for('splitbill_bills_recurring', {'group' : group.hash}) }}">{{ fontawesome('fas fa-calendar-alt') }}</a></td>
+                            <td><a href="{{  url_for('splitbill_bills_recurring', {'group' : group.hash}) }}">{{ fontawesome('fas fa-calendar-days') }}</a></td>
                             <td>
                                 {% if group.user == user.id %}
-                                    <a href="{{  url_for('splitbill_groups_edit', {'id' : group.id}) }}">{{ fontawesome('fas fa-edit') }}</a>
+                                    <a href="{{  url_for('splitbill_groups_edit', {'id' : group.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
                                     {% endif %}
                             </td>
                             <td>

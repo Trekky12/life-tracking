@@ -24,7 +24,7 @@
                     {% for muscle in muscles %}
                         <tr>
                             <td>{{muscle.name|raw}}</td> 
-                            <td><a href="{{  url_for('workouts_muscles_edit', {'id' : muscle.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('workouts_muscles_edit', {'id' : muscle.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('workouts_muscles_delete', {'id' : muscle.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                         </tr>
                     {% endfor %}

@@ -57,7 +57,9 @@ function changeDay(item) {
         if (date) {
             let currentDay = document.getElementById('trip_day_' + date);
             tripDays.forEach(function (el) {
-                el.classList.add('hidden');
+                if (el.id !== 'trip_day_none') {
+                    el.classList.add('hidden');
+                }
             });
             currentDay.classList.remove('hidden');
         } else {
@@ -138,7 +140,7 @@ function drawMarkers(data) {
             continue;
         }
 
-        let options = {saved: true};
+        let options = { saved: true };
         if (marker.isCarrental) {
             options['icon'] = L.ExtraMarkers.icon({
                 markerColor: 'red',
@@ -239,9 +241,9 @@ function drawMarkers(data) {
                 layerEvents.addLayer(end_marker);
             } else if (marker.isTrain) {
                 let trainPolyline = [];
-                trainPolyline[0] = L.polyline(tripLine, {color: 'black', weight: '5'}).bindPopup(popup);
-                trainPolyline[1] = L.polyline(tripLine, {color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0'}).bindPopup(popup);
-                trainPolyline[2] = L.polyline(tripLine, {color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20'}).bindPopup(popup);
+                trainPolyline[0] = L.polyline(tripLine, { color: 'black', weight: '5' }).bindPopup(popup);
+                trainPolyline[1] = L.polyline(tripLine, { color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0' }).bindPopup(popup);
+                trainPolyline[2] = L.polyline(tripLine, { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);
                 layerTrains.addLayer(L.layerGroup(trainPolyline));
 
                 // remove start marker when there is a polyline
@@ -251,7 +253,7 @@ function drawMarkers(data) {
                 let planeCuve = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
-                ], {color: 'black', weight: '3', dashArray: '10, 10'}).bindPopup(popup);
+                ], { color: 'black', weight: '3', dashArray: '10, 10' }).bindPopup(popup);
 
                 //let planePolyline = L.polyline(tripLine, {color: 'black', weight: '3'}).bindPopup(marker.popup);
 
@@ -259,15 +261,15 @@ function drawMarkers(data) {
                 layerPlanes.addLayer(planeCuve);
             } else if (marker.isCar) {
                 let streetPolyline = [];
-                streetPolyline[0] = L.polyline(tripLine, {color: 'gray', weight: '5'}).bindPopup(popup);
-                streetPolyline[1] = L.polyline(tripLine, {color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0'}).bindPopup(popup);
+                streetPolyline[0] = L.polyline(tripLine, { color: 'gray', weight: '5' }).bindPopup(popup);
+                streetPolyline[1] = L.polyline(tripLine, { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
                 layerCars.addLayer(L.layerGroup(streetPolyline));
 
                 // remove start marker when there is a polyline
                 layerCars.removeLayer(start_marker);
             } else if (marker.isShip) {
                 let shipPolyline = [];
-                shipPolyline[0] = L.polyline(tripLine, {color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0'}).bindPopup(popup);
+                shipPolyline[0] = L.polyline(tripLine, { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
                 layerShips.addLayer(L.layerGroup(shipPolyline));
 
                 // remove start marker when there is a polyline
@@ -303,13 +305,13 @@ function getNextWaypointPos() {
 function addWaypoint(marker) {
     let pos = getNextWaypointPos();
     let name = marker.name ? marker.name + " (" + marker.address + ")" : null;
-    let waypoint = L.Routing.waypoint(marker.getLatLng(), name, {saved: marker.options.saved});
+    let waypoint = L.Routing.waypoint(marker.getLatLng(), name, { saved: marker.options.saved });
     routeControl.spliceWaypoints(pos, 1, waypoint);
     return pos;
 }
 
 function initMap() {
-    mymap = L.map('trip-map', {fullscreenControl: true}).setView([default_location.lat, default_location.lng], default_location.zoom);
+    mymap = L.map('trip-map', { fullscreenControl: true }).setView([default_location.lat, default_location.lng], default_location.zoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -347,7 +349,7 @@ function initMap() {
         locateOptions: {
             enableHighAccuracy: true
         },
-        createButtonCallback: function (container, options) {
+        /*createButtonCallback: function (container, options) {
             var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', container);
             link.title = options.strings.title;
             link.role = 'button';
@@ -365,8 +367,8 @@ function initMap() {
                 }
             }
 
-            return {link: link, icon: icon};
-        },
+            return { link: link, icon: icon };
+        },*/
     });
     mymap.addControl(lc);
 
@@ -381,7 +383,7 @@ function initMap() {
         changeDay(currentDayButton);
     } else {
         getMarkers(fromInput.value, toInput.value);
-        
+
         // add from/to parameters to add event link
         if (newEventButton) {
             newEventButton.href = addEventLink + '?from=' + fromInput.value + "&to=" + toInput.value;
@@ -397,9 +399,20 @@ function initMap() {
         createGeocoders: function () {
             var container = L.Routing.Plan.prototype.createGeocoders.call(this);
 
+            //let addButton = createButton(container, "add");
+            //let reverseButton = createButton(container, "reverse");
             let walkButton = createButton(container, "walk");
             let bikeButton = createButton(container, "bike");
             let carButton = createButton(container, "car", true);
+
+            /*L.DomEvent.on(addButton, 'click', function () {
+                this.spliceWaypoints(routeControl.getWaypoints().length, 0, null);
+            }, this);
+
+            L.DomEvent.on(reverseButton, 'click', function () {
+                let waypoints = routeControl.getWaypoints().reverse();
+                this.setWaypoints(waypoints);
+            }, this);*/
 
             L.DomEvent.on(walkButton, 'click', function () {
                 setRoutingProfile('mapbox/walking');
@@ -418,7 +431,7 @@ function initMap() {
                 let name = prompt(lang.trips_route_name_prompt);
                 if (name !== null) {
                     getCSRFToken().then(function (token) {
-                        let data = {'name': name, 'start_date': fromInput.value, 'end_date': toInput.value, 'waypoints': routeControl.getWaypoints(), 'profile': routeControl.getRouter().options.profile};
+                        let data = { 'name': name, 'start_date': fromInput.value, 'end_date': toInput.value, 'waypoints': routeControl.getWaypoints(), 'profile': routeControl.getRouter().options.profile };
                         data['csrf_name'] = token.csrf_name;
                         data['csrf_value'] = token.csrf_value;
 
@@ -573,54 +586,54 @@ function initMap() {
 
 
     let plan = new geoPlan(
-            [],
-            {
-                //geocoder: new L.Control.Geocoder.Nominatim(),
-                //geocoder: new L.Control.Geocoder.LatLng(),
-                geocoder: new L.Control.Geocoder.Mapbox({
-                    reverseQueryParams: {
-                        language: i18n.routing
-                    },
-                    apiKey: mapbox_token
-                }),
-                createMarker: function (i, wp) {
-                    // has already saved marker
-                    if (wp.options.saved) {
-                        return null;
-                    }
-                    let options = {
-                        saved: false,
-                        draggable: this.draggableWaypoints
-                    };
-                    let marker = L.marker(wp.latLng, options);
-                    let popup = document.createElement("div");
-                    let navigationBtn = getAddToRouteLink(marker);
-                    let saveBtn = saveWaypointLink(marker, wp);
-                    let deleteBtn = getDeleteWaypointLink(null, marker, false);
-                    popup.appendChild(navigationBtn);
-                    popup.appendChild(document.createElement("br"));
-                    popup.appendChild(saveBtn);
-                    popup.appendChild(document.createElement("br"));
-                    popup.appendChild(deleteBtn);
-                    marker.bindPopup(popup);
-                    return marker;
+        [],
+        {
+            //geocoder: new L.Control.Geocoder.Nominatim(),
+            //geocoder: new L.Control.Geocoder.LatLng(),
+            geocoder: new L.Control.Geocoder.Mapbox({
+                reverseQueryParams: {
+                    language: i18n.routing
                 },
-                routeWhileDragging: false,
-                reverseWaypoints: true,
-                addWaypoints: true,
-                language: i18n.routing,
-                draggableWaypoints: true
-            });
+                apiKey: mapbox_token
+            }),
+            createMarker: function (i, wp) {
+                // has already saved marker
+                if (wp.options.saved) {
+                    return null;
+                }
+                let options = {
+                    saved: false,
+                    draggable: this.draggableWaypoints
+                };
+                let marker = L.marker(wp.latLng, options);
+                let popup = document.createElement("div");
+                let navigationBtn = getAddToRouteLink(marker);
+                let saveBtn = saveWaypointLink(marker, wp);
+                let deleteBtn = getDeleteWaypointLink(null, marker, false);
+                popup.appendChild(navigationBtn);
+                popup.appendChild(document.createElement("br"));
+                popup.appendChild(saveBtn);
+                popup.appendChild(document.createElement("br"));
+                popup.appendChild(deleteBtn);
+                marker.bindPopup(popup);
+                return marker;
+            },
+            routeWhileDragging: false,
+            reverseWaypoints: true,
+            addWaypoints: true,
+            language: i18n.routing,
+            draggableWaypoints: true
+        });
 
     routeControl = L.Routing.control({
         waypoints: [],
         autoRoute: true,
-//        router: new L.Routing.OSRMv1({
-//            profile: 'driving',
-//            suppressDemoServerWarning: true,
-//            urlParameters: {
-//            }
-//        }),
+        //        router: new L.Routing.OSRMv1({
+        //            profile: 'driving',
+        //            suppressDemoServerWarning: true,
+        //            urlParameters: {
+        //            }
+        //        }),
         router: L.Routing.mapbox(mapbox_token, {
             profile: "mapbox/driving",
             routingOptions: {
@@ -669,18 +682,18 @@ function calculateMidPoint(start, end) {
     let latlng2 = end.getLatLng();
 
     var offsetX = latlng2.lng - latlng1.lng,
-            offsetY = latlng2.lat - latlng1.lat;
+        offsetY = latlng2.lat - latlng1.lat;
 
     var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
-            theta = Math.atan2(offsetY, offsetX);
+        theta = Math.atan2(offsetY, offsetX);
 
     var thetaOffset = (3.14 / 10);
 
     var r2 = (r / 2) / (Math.cos(thetaOffset)),
-            theta2 = theta + thetaOffset;
+        theta2 = theta + thetaOffset;
 
     var midpointX = (r2 * Math.cos(theta2)) + latlng1.lng,
-            midpointY = (r2 * Math.sin(theta2)) + latlng1.lat;
+        midpointY = (r2 * Math.sin(theta2)) + latlng1.lat;
 
     return [midpointY, midpointX];
 }
@@ -707,6 +720,12 @@ function createButton(container, type, active = false) {
         case "save":
             btn.innerHTML = document.getElementById('iconSave').innerHTML;
             break;
+        case "add":
+            btn.innerHTML = document.getElementById('iconAdd').innerHTML;
+            break;
+        case "reverse":
+            btn.innerHTML = document.getElementById('iconReverse').innerHTML;
+            break;
     }
 
     if (active) {
@@ -723,7 +742,7 @@ tripDays.forEach(function (day) {
         ghostClass: 'trip_event-placeholder',
         dataIdAttr: 'data-event',
         onUpdate: function (evt) {
-            var data = {'events': this.toArray()};
+            var data = { 'events': this.toArray() };
 
             getCSRFToken().then(function (token) {
                 data['csrf_name'] = token.csrf_name;
@@ -772,7 +791,7 @@ function saveWaypointLink(marker, waypoint) {
 
         // Create new Waypoint
         getCSRFToken().then(function (token) {
-            let data = {'start_lat': marker.getLatLng().lat, 'start_lng': marker.getLatLng().lng, 'type': 'WAYPOINT', 'start_date': fromInput.value, 'end_date': toInput.value};
+            let data = { 'start_lat': marker.getLatLng().lat, 'start_lng': marker.getLatLng().lng, 'type': 'WAYPOINT', 'start_date': fromInput.value, 'end_date': toInput.value };
 
             if (waypoint.name) {
                 data['start_address'] = waypoint.name;
@@ -795,7 +814,7 @@ function saveWaypointLink(marker, waypoint) {
         }).then(function (data) {
 
             // create new saved marker
-            let waypoint_marker = L.marker(marker.getLatLng(), {saved: true});
+            let waypoint_marker = L.marker(marker.getLatLng(), { saved: true });
             let popup = document.createElement("div");
             let navigationBtn = getAddToRouteLink(waypoint_marker);
             let deleteBtn = getDeleteWaypointLink(data['id'], waypoint_marker, true);

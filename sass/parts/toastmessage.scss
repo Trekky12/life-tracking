@@ -30,6 +30,10 @@
         background-color: $color_orange;
         color: $color_background-body;
     }
+    &.blue{
+        background-color: $color_blue;
+        color: $color_background-body;
+    }
 }
 
 @keyframes toastfadein {

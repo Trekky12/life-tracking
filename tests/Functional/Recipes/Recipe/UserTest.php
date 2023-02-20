@@ -59,8 +59,10 @@ class UserTest extends BaseTestCase {
                     "ingredients" => [
                         0 => [
                             "amount" => '1',
-                            "ingredient" => 1,
-                            "notice" => "Test notice"
+                            "ingredient" => 'Test Ingredient 1',
+                            "id" => 1,
+                            "notice" => "Test notice",
+                            "unit" => "ml"
                         ]
                     ],
                     "description" => "Test Step 1 Notice"
@@ -148,8 +150,10 @@ class UserTest extends BaseTestCase {
                     "ingredients" => [
                         0 => [
                             "amount" => '2',
-                            "ingredient" => 2,
-                            "notice" => "Test notice 2"
+                            "ingredient" => 'Test Ingredient 2',
+                            "id" => 2,
+                            "notice" => "Test notice 2",
+                            "unit" => "kg"
                         ]
                     ],
                     "description" => "Test Step 2 Notice"

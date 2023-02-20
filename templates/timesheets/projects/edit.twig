@@ -3,13 +3,13 @@
 {% set active = 'timesheets' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js"></script>
-    <script src="{{baseURL}}/static/js/user-select.js?ver=20210124"></script>
-    <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js"></script>
+    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
+    <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}" />
 {% endblock %}
 
 {% block body %}
@@ -17,7 +17,7 @@
     <div class="inner-content">
         <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
             <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('timesheets')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-level-up-alt') }}</button></a>
+                <a href="{{ url_for_with_last_query_params('timesheets')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
             </div>
         </div>
         <div class="page-content">
@@ -57,6 +57,19 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="checkbox" for="checkboxShowMonthButton">
+                        <input name="show_month_button" type="checkbox" value="1" id="checkboxShowMonthButton" {% if entry is not null and entry.show_month_button == 1 %}checked{% endif %}>
+                        {{lang["TIMESHEETS_SHOW_MONTH_BUTTON"]}}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox" for="checkboxShowQuartersButtons">
+                        <input name="show_quarters_buttons" type="checkbox" value="1" id="checkboxShowQuartersButtons" {% if entry is not null and entry.show_quarters_buttons == 1 %}checked{% endif %}>
+                        {{lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"]}}
+                    </label>
+                </div>
+
+                <div class="form-group">
                     <label class="checkbox" for="checkboxHasDurationModifications">
                         <input name="has_duration_modifications" type="checkbox" value="1" id="checkboxHasDurationModifications" {% if entry is not null and entry.has_duration_modifications == 1 %}checked{% endif %}>
                         {{lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"]}}
@@ -71,6 +84,16 @@
                 <div class="form-group">
                     <label for="inputDefaultDuration">{{lang["TIMESHEETS_DURATION_DEFAULT"]}}</label>
                     <input type="text" class="form-control duration-input html-duration-picker" data-hide-seconds id="inputDefaultDuration" name="set_default_duration" value="{% if not entry is null %}{{entry.default_duration | splitDateInterval(true)}}{% endif %}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="inputCustomersNameSingular">{{lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"]}}</label>
+                    <input type="text" class="form-control" id="inputCustomersNameSingular" name="customers_name_singular" {% if not entry is null %}value="{{entry.customers_name_singular|raw}}"{% endif %}>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputCustomersNamePlural">{{lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"]}}</label>
+                    <input type="text" class="form-control" id="inputCustomersNamePlural" name="customers_name_plural" {% if not entry is null %}value="{{entry.customers_name_plural|raw}}"{% endif %}>
                 </div>
                 
                 <h3>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] }}</h3>

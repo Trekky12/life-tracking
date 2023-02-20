@@ -142,6 +142,11 @@
             margin-right: 1rem;
         }
 
+        .custom-checkbox{
+            display: block;
+            margin-top: 0.3rem;
+        }
+
         .board-card-content{
             flex-grow: 1;
         }
@@ -217,11 +222,14 @@
         margin-left: 10px;
         @include font-size(2);
         cursor: pointer;
-        @media screen and (min-width: $size_mobile) {
-            display: none;
-        }
+        //@media screen and (min-width: $size_mobile) {
+        //    display: none;
+        //}
     }
+}
 
+body.boards.no-touch-enabled .handle{
+    display: none;
 }
 
 /* inspired by https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
@@ -527,7 +535,7 @@
 }
 
 .board-card.archived{
-    background: none;
+    background: #ebebeb;
 }
 
 .CodeMirror, .CodeMirror-scroll {

@@ -2,14 +2,16 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
-class SheetMapper extends \App\Domain\Mapper {
+class SheetMapper extends \App\Domain\Mapper
+{
 
     protected $table = "timesheets_sheets";
     protected $dataobject = \App\Domain\Timesheets\Sheet\Sheet::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
-    public function set_duration($id, $duration) {
+    public function set_duration($id, $duration)
+    {
         $sql = "UPDATE " . $this->getTableName() . " SET duration = :duration WHERE id  = :id";
         $bindings = array("id" => $id, "duration" => $duration);
         $stmt = $this->db->prepare($sql);
@@ -20,7 +22,8 @@ class SheetMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function set_duration_modified($id, $duration_modified) {
+    public function set_duration_modified($id, $duration_modified)
+    {
         $sql = "UPDATE " . $this->getTableName() . " SET duration_modified = :duration_modified WHERE id  = :id";
         $bindings = array("id" => $id, "duration_modified" => $duration_modified);
         $stmt = $this->db->prepare($sql);
@@ -31,11 +34,12 @@ class SheetMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function getLastSheetWithStartDateToday($project) {
+    public function getLastSheetWithStartDateToday($project)
+    {
         $sql = "SELECT * FROM " . $this->getTableName() . "  "
-                . "WHERE project = :project "
-                . " AND end IS NULL "
-                . "AND DATE(start) = CURDATE()";
+            . "WHERE project = :project "
+            . " AND end IS NULL "
+            . "AND DATE(start) = CURDATE()";
 
         $bindings = array("project" => $project);
 
@@ -53,7 +57,8 @@ class SheetMapper extends \App\Domain\Mapper {
     /**
      * Table
      */
-    private function getTableSQL($select, $categories) {
+    private function getTableSQL($select, $categories, $billed = null, $payed = null, $customer = null)
+    {
 
         $cat_bindings = array();
         foreach ($categories as $idx => $cat) {
@@ -61,44 +66,75 @@ class SheetMapper extends \App\Domain\Mapper {
         }
 
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
-                . " LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " tcs ON t.id = tcs.sheet"
-                . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
-                . " WHERE t.project = :project "
-                . " AND ("
-                . "     (DATE(t.start) >= :from AND DATE(t.end) <= :to ) OR"
-                . "     (DATE(t.start) >= :from AND DATE(t.start) <= :to AND t.end IS NULL ) OR"
-                . "     (DATE(t.end) >= :from AND DATE(t.end) <= :to AND t.start IS NULL )"
-                . " ) AND ("
-                . "     t.start LIKE :searchQuery OR "
-                . "     t.end LIKE :searchQuery OR "
-                . "     (tcs.sheet IN ( "
-                . "              SELECT tcs2.sheet "
-                . "                 FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs2 "
-                . "                 LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc2 ON tc2.id = tcs2.category "
-                . "                 WHERE tc2.name LIKE :searchQuery "
-                . "             ) "
-                . "     ) "
-                . ")";
-        
+            . " LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " tcs ON t.id = tcs.sheet"
+            . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
+            . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " tcus ON tcus.id = t.customer "
+            . " WHERE t.project = :project "
+            . " AND ("
+            . "     (DATE(t.start) >= :from AND DATE(t.end) <= :to ) OR"
+            . "     (DATE(t.start) >= :from AND DATE(t.start) <= :to AND t.end IS NULL ) OR"
+            . "     (DATE(t.end) >= :from AND DATE(t.end) <= :to AND t.start IS NULL )"
+            . " ) AND ("
+            . "     t.start LIKE :searchQuery OR "
+            . "     t.end LIKE :searchQuery OR "
+            . "     tcus.name LIKE :searchQuery OR "
+            . "     (tcs.sheet IN ( "
+            . "              SELECT tcs2.sheet "
+            . "                 FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs2 "
+            . "                 LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc2 ON tc2.id = tcs2.category "
+            . "                 WHERE tc2.name LIKE :searchQuery "
+            . "             ) "
+            . "     ) "
+            . ")";
+
         if (!empty($cat_bindings)) {
             $sql .= " AND (tcs.sheet IN ( "
-                    . "             SELECT sheet "
-                    . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
-                    . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
-                    . "             GROUP BY sheet "
-                    . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
-                    . ") "
-                    . " OR tcs.category is NULL)";
+                . "             SELECT sheet "
+                . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
+                . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                . "             GROUP BY sheet "
+                . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
+                . ") "
+                . " OR tcs.category is NULL)";
         }
+
+        if (!is_null($billed)) {
+            $sql .= " AND t.is_billed = :billed ";
+        }
+
+        if (!is_null($payed)) {
+            $sql .= " AND t.is_payed = :payed ";
+        }
+
+        if (!is_null($customer)) {
+            $sql .= " AND t.customer = :customer ";
+        }
+
         $sql .= " GROUP BY t.id";
         return [$sql, $cat_bindings];
     }
 
-    public function tableCount($project, $from, $to, $categories, $searchQuery = "%") {
+    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%")
+    {
 
-        $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
+        $bindings = array(
+            "searchQuery" => $searchQuery,
+            "project" => $project,
+            "from" => $from,
+            "to" => $to
+        );
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories);
+        if (!is_null($billed)) {
+            $bindings["billed"] = $billed;
+        }
+        if (!is_null($payed)) {
+            $bindings["payed"] = $payed;
+        }
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+        }
+
+        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $billed, $payed, $customer);
 
         $sql = "SELECT COUNT(t.id) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -112,11 +148,27 @@ class SheetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $categories, $searchQuery = "%", $field = "t.duration") {
+    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%", $field = "t.duration")
+    {
 
-        $bindings = array("searchQuery" => $searchQuery, "project" => $project, "from" => $from, "to" => $to);
+        $bindings = array(
+            "searchQuery" => $searchQuery,
+            "project" => $project,
+            "from" => $from,
+            "to" => $to
+        );
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories);
+        if (!is_null($billed)) {
+            $bindings["billed"] = $billed;
+        }
+        if (!is_null($payed)) {
+            $bindings["payed"] = $payed;
+        }
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+        }
+
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories, $billed, $payed, $customer);
 
         $sql = "SELECT SUM($field) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -130,44 +182,62 @@ class SheetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $categories, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%')
+    {
 
         $bindings = array(
             "searchQuery" => "%" . $searchQuery . "%",
             "project" => $project,
             "from" => $from,
-            "to" => $to);
+            "to" => $to
+        );
+
+        if (!is_null($billed)) {
+            $bindings["billed"] = $billed;
+        }
+        if (!is_null($payed)) {
+            $bindings["payed"] = $payed;
+        }
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+        }
 
         $sort = "id";
         switch ($sortColumn) {
-            case 0:
-                $sort = "IFNULL(DATE(start),DATE(end))";
-                break;
             case 1:
-                $sort = "start";
+                $sort = "IFNULL(DATE(t.start),DATE(t.end))";
                 break;
             case 2:
-                $sort = "end";
+                $sort = "TIME(t.start)";
                 break;
             case 3:
-                $sort = "duration";
+                $sort = "TIME(t.end)";
+                break;
+            case 4:
+                $sort = "t.duration";
+                break;
+            case 5:
+                $sort = "customerName";
                 break;
         }
 
         $select = "DISTINCT "
-                . "t.id, "
-                . "t.createdBy, "
-                . "t.createdOn, "
-                . "t.changedBy, "
-                . "t.changedOn, "
-                . "t.project, "
-                . "t.start, "
-                . "t.end, "
-                . "t.duration, "
-                . "t.duration_modified, "
-                . "GROUP_CONCAT(tc.name SEPARATOR ', ') as categories";
+            . "t.id, "
+            . "t.createdBy, "
+            . "t.createdOn, "
+            . "t.changedBy, "
+            . "t.changedOn, "
+            . "t.project, "
+            . "t.start, "
+            . "t.end, "
+            . "t.duration, "
+            . "t.duration_modified, "
+            . "GROUP_CONCAT(tc.name SEPARATOR ', ') as categories, "
+            . "t.is_billed, "
+            . "t.is_payed, "
+            . "tcus.name as customerName";
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed, $customer);
 
         $sql = $tableSQL;
         $sql .= " ORDER BY {$sort} {$sortDirection}, t.start {$sortDirection}, t.end {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
@@ -188,7 +258,8 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function deleteCategoriesFromSheet($sheet_id) {
+    public function deleteCategoriesFromSheet($sheet_id)
+    {
         $sql = "DELETE FROM " . $this->getTableName("timesheets_sheets_categories") . "  WHERE sheet = :sheet";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -200,7 +271,8 @@ class SheetMapper extends \App\Domain\Mapper {
         return true;
     }
 
-    public function addCategoriesToSheet($sheet_id, $categories = array()) {
+    public function addCategoriesToSheet($sheet_id, $categories = array())
+    {
         $data_array = array();
         $keys_array = array();
         foreach ($categories as $idx => $category) {
@@ -210,7 +282,7 @@ class SheetMapper extends \App\Domain\Mapper {
         }
 
         $sql = "INSERT IGNORE INTO " . $this->getTableName("timesheets_sheets_categories") . " (sheet, category) "
-                . "VALUES " . implode(", ", $keys_array) . "";
+            . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -222,7 +294,8 @@ class SheetMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function getCategoriesFromSheet($sheet_id) {
+    public function getCategoriesFromSheet($sheet_id)
+    {
         $sql = "SELECT category FROM " . $this->getTableName("timesheets_sheets_categories") . " WHERE sheet = :sheet";
 
         $bindings = array("sheet" => $sheet_id);
@@ -237,11 +310,12 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getCategoriesWithNamesFromSheet($sheet_id) {
+    public function getCategoriesWithNamesFromSheet($sheet_id)
+    {
         $sql = "SELECT GROUP_CONCAT(tc.name SEPARATOR ', ') "
-                . "FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs "
-                . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
-                . " WHERE tcs.sheet = :sheet";
+            . "FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs "
+            . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
+            . " WHERE tcs.sheet = :sheet";
 
         $bindings = array("sheet" => $sheet_id);
 
@@ -254,10 +328,29 @@ class SheetMapper extends \App\Domain\Mapper {
         return "";
     }
 
-    public function getTimes() {
+    public function getCustomerNameFromSheet($sheet_id)
+    {
+        $sql = "SELECT c.name "
+            . "FROM " . $this->getTableName("timesheets_sheets") . " s "
+            . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " c ON c.id = s.customer "
+            . " WHERE s.id = :sheet";
+
+        $bindings = array("sheet" => $sheet_id);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchColumn();
+        }
+        return "";
+    }
+
+    public function getTimes()
+    {
         $sql = "SELECT s.project, SUM(s.duration) as sum, SUM(s.duration_modified) as sum_modified "
-                . " FROM " . $this->getTableName() . " s "
-                . " GROUP BY s.project";
+            . " FROM " . $this->getTableName() . " s "
+            . " GROUP BY s.project";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([]);
@@ -269,7 +362,8 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function addCategoriesToSheets($sheets = [], $categories = []) {
+    public function addCategoriesToSheets($sheets = [], $categories = [])
+    {
 
         if (count($sheets) <= 0 || count($categories) <= 0) {
             return;
@@ -279,7 +373,6 @@ class SheetMapper extends \App\Domain\Mapper {
         $data = [];
         foreach ($sheets as $sheet) {
 
-            $sheet_data = [];
             foreach ($categories as $idx => $category) {
                 $bindings["sheet" . $sheet . "_" . $idx] = $sheet;
                 $bindings["category" . $sheet . "_" . $idx] = $category;
@@ -289,7 +382,7 @@ class SheetMapper extends \App\Domain\Mapper {
 
         // IGNORE duplicate keys (do not insert then)
         $sql = "INSERT IGNORE INTO " . $this->getTableName("timesheets_sheets_categories") . " (sheet, category) "
-                . "VALUES " . implode(", ", $data) . "";
+            . "VALUES " . implode(", ", $data) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
@@ -300,7 +393,8 @@ class SheetMapper extends \App\Domain\Mapper {
         return true;
     }
 
-    public function removeCategoriesFromSheets($sheets = [], $categories = []) {
+    public function removeCategoriesFromSheets($sheets = [], $categories = [])
+    {
 
         if (count($sheets) <= 0 || count($categories) <= 0) {
             return;
@@ -310,7 +404,6 @@ class SheetMapper extends \App\Domain\Mapper {
         $data = [];
         foreach ($sheets as $sheet) {
 
-            $sheet_data = [];
             foreach ($categories as $idx => $category) {
                 $bindings["sheet" . $sheet . "_" . $idx] = $sheet;
                 $bindings["category" . $sheet . "_" . $idx] = $category;
@@ -330,14 +423,15 @@ class SheetMapper extends \App\Domain\Mapper {
         return true;
     }
 
-    public function getUsers($id, $only_id = false) {
+    public function getUsers($id, $only_id = false)
+    {
         $sql = "SELECT u.id, u.login "
-                . "FROM " . $this->getTableName("timesheets_projects_users") . " project_user,"
-                . "" .$this->getTableName() ." sheet, "
-                . "" . $this->getTableName("global_users") . " u "
-                . "WHERE sheet.id = :id "
-                . "AND sheet.project = project_user.project "
-                . "AND project_user.user = u.id ";
+            . "FROM " . $this->getTableName("timesheets_projects_users") . " project_user,"
+            . "" . $this->getTableName() . " sheet, "
+            . "" . $this->getTableName("global_users") . " u "
+            . "WHERE sheet.id = :id "
+            . "AND sheet.project = project_user.project "
+            . "AND project_user.user = u.id ";
 
         $bindings = array("id" => $id);
 
@@ -346,16 +440,17 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            if($only_id){
+            if ($only_id) {
                 $results[] = intval($row["id"]);
-            }else{
+            } else {
                 $results[intval($row["id"])] = $row["login"];
             }
         }
         return $results;
     }
 
-    public function getSheetIDsFromProject($id) {
+    public function getSheetIDsFromProject($id)
+    {
         $sql = "SELECT id FROM " . $this->getTableName() . " WHERE project = :id ";
 
         $bindings = array("id" => $id);
@@ -370,4 +465,53 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function setSheetsPayedState($sheets = [], $is_payed = 0)
+    {
+
+        if (count($sheets) <= 0) {
+            return;
+        }
+
+        $bindings = ["is_payed" => $is_payed];
+
+        $sheet_bindings = array();
+        foreach ($sheets as $idx => $sheet) {
+            $sheet_bindings[":sheet_" . $idx] = $sheet;
+        }
+
+        $sql = "UPDATE " . $this->getTableName() . " SET is_payed = :is_payed WHERE id IN  (" . implode(',', array_keys($sheet_bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute(array_merge($bindings, $sheet_bindings));
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
+        }
+        return true;
+    }
+
+    public function setSheetsBilledState($sheets = [], $is_billed = 0)
+    {
+
+        if (count($sheets) <= 0) {
+            return;
+        }
+
+        $bindings = ["is_billed" => $is_billed];
+
+        $sheet_bindings = array();
+        foreach ($sheets as $idx => $sheet) {
+            $sheet_bindings[":sheet_" . $idx] = $sheet;
+        }
+
+        $sql = "UPDATE " . $this->getTableName() . " SET is_billed = :is_billed WHERE id IN  (" . implode(',', array_keys($sheet_bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute(array_merge($bindings, $sheet_bindings));
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
+        }
+        return true;
+    }
 }

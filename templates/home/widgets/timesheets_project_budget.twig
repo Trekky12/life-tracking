@@ -1,8 +1,16 @@
 {% set main_category = null %}
+{% set customer = null %}
 <table class="timesheets_project_budget_widget">
 	<tbody>
 		{% for list_entry in data %}
-			{% if main_category != list_entry["main_category"] %}
+			{% if list_entry["customer"] and customer != list_entry["customer"] %}
+				<tr>
+					<td colspan="2">
+						<h3>{{list_entry["customer_name"]}}</h3>
+					</td>
+				</tr>
+			{% endif %}
+			{% if list_entry["main_category"] and main_category != list_entry["main_category"] %}
 				<tr>
 					<td colspan="2">
 						<h4>{{list_entry["main_category_name"]}}</h4>
@@ -14,11 +22,12 @@
 				<td style="white-space: nowrap">
 					{%if list_entry["categorization"] != 'count' %}
 						{% if list_entry["sum"] %}
-							{{- list_entry["sum"] | splitDateInterval(true) -}}{% else %}00:00
+							{{- list_entry["sum"] | splitDateInterval(true) -}}{% else %}{{- 0 | splitDateInterval(true) -}}
 						{% endif %}/{{- list_entry["value"]| splitDateInterval(true) -}}
 					{% else %}
-						{{- list_entry["sum"] }}/{{ list_entry["value"] -}}
-					{% endif %}, {{ lang["REMAINING"]}}:
+						{{- list_entry["sum"] }}/{{- list_entry["value"] -}}
+					{% endif %},
+					{{ lang["REMAINING"]}}:
 					{% if list_entry["categorization"] != 'count' %}
 						{% if list_entry["diff"] is not null  %}
 							{{- list_entry["diff"]| splitDateInterval(true) -}}
@@ -35,6 +44,7 @@
 				</td>
 			</tr>
 			{% set main_category = list_entry["main_category"] %}
+			{% set customer = list_entry["customer"] %}
 		{% endfor %}
 	</tbody>
 </table>

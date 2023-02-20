@@ -70,7 +70,6 @@ class CrawlerService extends Service {
         if (is_null($from)) {
             $from = (!is_null($lastAccess) && $hide_diff) ? $lastAccess : date('Y-m-d');
         }
-        $this->mapper->updateLastAccess($crawler->id, $this->current_user->getUser()->id);
 
         list($datacount, $rendered_data, $headers) = $this->getDatasets($crawler->id, $filter, $hide_diff, $from, $to);
 
@@ -273,6 +272,20 @@ class CrawlerService extends Service {
         }
 
         return $branch;
+    }
+
+    public function setShown($hash) {
+        $crawler = $this->getFromHash($hash);
+
+        if (!$this->isMember($crawler->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $response_data = ['status' => 'done'];
+
+        $this->mapper->updateLastAccess($crawler->id, $this->current_user->getUser()->id);
+
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
 }

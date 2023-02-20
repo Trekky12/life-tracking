@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block body %}
+
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{% if project.customers_name_plural %}{{project.customers_name_plural}}{% else %}{{lang["TIMESHEETS_CUSTOMERS"]}}{% endif %}
+				|
+				{{ project.name }}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets')}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-turn-up') }}</button>
+				</a>
+				<a href="{{ url_for('timesheets_customers_edit', {'project': project.hash}) }}">
+					<button class="button">{{ fontawesome('fas fa-plus') }}
+						{{lang["ADD"]}}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
+			<table id="project_customers_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for customer in customers %}
+						<tr>
+							<td>{{customer.name}}</td>
+							<td>
+								<a href="{{ url_for('timesheets_customers_edit', {'id' : customer.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('timesheets_customers_delete', {'id' : customer.id, 'project' : project.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}

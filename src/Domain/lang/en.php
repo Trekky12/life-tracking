@@ -503,7 +503,7 @@ $lang["TIMESHEETS_TIME"] = "sum";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "time conversion rate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
-$lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
+$lang["TIMESHEETS_TIME_MODIFICATION"] = "new duration (HH:MM)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "no time calculation modification";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "use the time conversion rate of the project";
 $lang["TIMESHEETS_DURATION_DEFAULT"] = "default duration";
@@ -516,6 +516,26 @@ $lang["MAIN_CATEGORY"] = "main category";
 $lang["ASSIGNED_CATEGORIES"] = "assigned categories";
 $lang["TIMESHEETS_CATEGORYBUDGET_VALUE"] = "threshold";
 $lang["DROPDOWN_NO_MAIN_CATEGORY"] = "- no main category -";
+$lang["TIMESHEETS_BILLED"] = "billed";
+$lang["TIMESHEETS_NOT_BILLED"] = "not billed";
+$lang["TIMESHEETS_PAYED"] = "payed";
+$lang["TIMESHEETS_NOT_PAYED"] = "not payed";
+$lang["TIMESHEETS_APPLY"] = "apply";
+$lang["TIMESHEETS_APPLY_BILLED"] = "mark as billed";
+$lang["TIMESHEETS_APPLY_NOT_BILLED"] = "mark as not billed";
+$lang["TIMESHEETS_APPLY_PAYED"] = "mark as payed";
+$lang["TIMESHEETS_APPLY_NOT_PAYED"] = "mark as not payed";
+$lang["TIMESHEETS_ITEMS_SELECED"] = "item(s) selected";
+$lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "billed and not billed";
+$lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "payed and not payed";
+$lang["TIMESHEETS_SHOW_MONTH_BUTTON"] = "show button for month";
+$lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"] = "show buttons for quarters";
+$lang["TIMESHEETS_QUARTER_1"] = "Q1";
+$lang["TIMESHEETS_QUARTER_2"] = "Q2";
+$lang["TIMESHEETS_QUARTER_3"] = "Q3";
+$lang["TIMESHEETS_QUARTER_4"] = "Q4";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Hide entries without notices";
+$lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Hide fields without content";
 
 $lang["THIS_DEVICE"] = "this device";
 
@@ -580,12 +600,14 @@ $lang["DATAOBJECT_WORKOUTS_BODYPART"] = "body part";
 $lang["DATAOBJECT_WORKOUTS_PLAN"] = "training plan";
 $lang["DATAOBJECT_WORKOUTS_SESSION"] = "training session";
 $lang["DATAOBJECT_RECIPES_COOKBOOK"] = "cookbook";
-$lang["DATAOBJECT_RECIPES_INGREDIENT"] = "ingredient";
+$lang["DATAOBJECT_RECIPES_GROCERY"] = "grocery";
 $lang["DATAOBJECT_RECIPES_RECIPE"] = "recipe";
 $lang["DATAOBJECT_RECIPES_MEALPLAN"] = "mealplan";
+$lang["DATAOBJECT_RECIPES_SHOPPINGLIST"] = "shopping list";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "notice field";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "timsheet project customer";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -724,6 +746,10 @@ $lang["WORKOUTS_LEVEL_BEGINNER"] = "beginner";
 $lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "intermediate";
 $lang["WORKOUTS_LEVEL_ADVANCED"] = "advanced";
 
+$lang["WORKOUTS_PLAN_EXERCISE_ADDED"] = "Exercise added.";
+$lang["WORKOUTS_PLAN_WORKOUTDAY_ADDED"] = "Workout day added.";
+$lang["WORKOUTS_PLAN_SUPERSET_ADDED"] = "Superset added.";
+
 $lang["SAVE_IFTTT_URL"] = "Save IFTTT-URL";
 $lang["DELETE_IFTTT_URL"] = "Delete IFTTT-URL";
 $lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] = "Web Push Notifications are not available. Alternativly the IFTTT-Maker Channel could be used. Therefore insert the URL:";
@@ -742,6 +768,8 @@ $lang["RECIPE"] = "Recipe";
 $lang["RECIPES"] = "Recipes";
 $lang["RECIPES_COOKBOOKS"] = "cookbooks";
 $lang["RECIPES_COOKBOOK"] = "cookbook";
+$lang["RECIPES_GROCERIES"] = "groceries";
+$lang["RECIPES_GROCERY"] = "grocery";
 $lang["RECIPES_INGREDIENTS"] = "ingredients";
 $lang["RECIPES_INGREDIENT"] = "ingredient";
 $lang["RECIPES_MEALPLANS"] = "mealplans";
@@ -758,6 +786,11 @@ $lang["RECIPES_ADD_STEP"] = "Add step";
 $lang["RECIPES_MINUTES"] = "min.";
 $lang["RECIPES_ADD_TO_COOKBOOK"] = "Add to cookbook";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Remove from cookbook";
+
+$lang["RECIPES_SHOPPINGLISTS"] = "shopping lists";
+$lang["RECIPES_SHOPPINGLIST"] = "shopping list";
+$lang["RECIPES_SHOPPINGLIST_ERROR_ADD"] = "Error adding the entry to the list!";
+$lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"] = "New entries found! Please refresh.";
 
 $lang["ADD_NOTICE"] = "Add notice";
 
@@ -784,9 +817,22 @@ $lang["DATATYPE_INITIALIZATION"] = "Initialization (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Add notice";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Edit notice";
 
+$lang["TIMESHEETS_CUSTOMER"] = "customer";
+$lang["TIMESHEETS_CUSTOMERS"] = "customers";
+$lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"] = "Label for customer (singular)";
+$lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Label for customers (plural)";
+
 $lang["PRINT"] = "Print";
 
 $lang["FINANCES_ROUND_UP_SAVINGS"] = "Round up savings";
 $lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"] = "round up savings disabled";
+
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN"] = "Mark all entries as shown";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"] = "The entries were marked as shown.";
+$lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"] = "Error! Couldn't mark the entries as shown.";
+
+$lang["WIDGET_BOARD_CARDS"] = "cards of a board";
+$lang["CARDS_ALL"] = "show all cards";
+$lang["CARDS_DUE"] = "show due cards";
 
 return $lang;

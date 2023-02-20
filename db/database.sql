@@ -897,11 +897,18 @@ CREATE TABLE timesheets_projects (
     default_duration INT(11) NULL,
     password VARCHAR(255) NULL,
     salt VARCHAR(255) NULL,
+    show_month_button INT(1) DEFAULT 1,
+    show_quarters_buttons INT(1) DEFAULT 0,
+    customers_name_singular VARCHAR(255) DEFAULT NULL,
+    customers_name_plural VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/**
+ALTER TABLE `timesheets_projects` ADD `customers_name_singular` VARCHAR(255) NULL DEFAULT NULL AFTER `show_quarters_buttons`, ADD `customers_name_plural` VARCHAR(255) NULL DEFAULT NULL AFTER `customers_name_singular`; 
+*/
 
 DROP TABLE IF EXISTS timesheets_projects_users;
 CREATE TABLE timesheets_projects_users (
@@ -911,6 +918,21 @@ CREATE TABLE timesheets_projects_users (
     UNIQUE(project, user),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS timesheets_customers;
+CREATE TABLE timesheets_customers (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    project INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    changedBy INTEGER unsigned DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS timesheets_sheets;
@@ -932,11 +954,20 @@ CREATE TABLE timesheets_sheets (
     end_lat DECIMAL(17,14) DEFAULT NULL,
     end_lng DECIMAL(17,14) DEFAULT NULL,
     end_acc DECIMAL(10,3) DEFAULT NULL,
+    is_billed int(1) DEFAULT 0,
+    is_payed int(1) DEFAULT 0,
+    customer INTEGER unsigned DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/* 
+ALTER TABLE `timesheets_sheets` ADD `customer` INT UNSIGNED NULL DEFAULT NULL AFTER `is_payed`; 
+ALTER TABLE `timesheets_sheets` ADD CONSTRAINT `timesheets_sheets_ibfk_4` FOREIGN KEY (`customer`) REFERENCES `timesheets_customers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE; 
+*/
 
 DROP TABLE IF EXISTS timesheets_categories;
 CREATE TABLE timesheets_categories (
@@ -971,6 +1002,7 @@ CREATE TABLE timesheets_categorybudgets (
     name varchar(255) DEFAULT NULL,
     categorization ENUM('duration','duration_modified', 'count') default NULL,
     notice TEXT DEFAULT NULL,
+    customer INTEGER unsigned DEFAULT NULL,
     main_category INTEGER unsigned DEFAULT NULL,
     value INT(11) NOT NULL,
     warning1 INT(11) NULL,
@@ -982,8 +1014,14 @@ CREATE TABLE timesheets_categorybudgets (
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(main_category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(main_category) REFERENCES timesheets_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE `timesheets_categorybudgets` ADD `customer` INT UNSIGNED NULL DEFAULT NULL AFTER `notice`; 
+ALTER TABLE `timesheets_categorybudgets` ADD CONSTRAINT `timesheets_categorybudgets_ibfk_4` FOREIGN KEY (`customer`) REFERENCES `timesheets_customers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; 
+*/
 
 DROP TABLE IF EXISTS timesheets_categorybudgets_categories;
 CREATE TABLE timesheets_categorybudgets_categories (
@@ -1215,8 +1253,8 @@ CREATE TABLE recipes_cookbooks_users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS recipes_ingredients;
-CREATE TABLE recipes_ingredients (
+DROP TABLE IF EXISTS recipes_groceries;
+CREATE TABLE recipes_groceries (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changedOn TIMESTAMP NULL,
@@ -1224,10 +1262,16 @@ CREATE TABLE recipes_ingredients (
     changedBy INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     unit varchar(50) DEFAULT NULL,
+    is_food int(1) DEFAULT 0,
     PRIMARY KEY (id),
+    UNIQUE(name),
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE recipes_groceries ADD UNIQUE(name); 
+*/
 
 DROP TABLE IF EXISTS recipes;
 CREATE TABLE recipes (
@@ -1275,12 +1319,17 @@ CREATE TABLE recipes_recipe_ingredients (
     ingredient int(11) unsigned NULL,
     position INT(10) NULL,
     amount VARCHAR(10) NULL,
+    unit varchar(50) DEFAULT NULL,
     notice TEXT,
     PRIMARY KEY (id),
     FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(step) REFERENCES recipes_steps(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(ingredient) REFERENCES recipes_ingredients(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(ingredient) REFERENCES recipes_groceries(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE `recipes_recipe_ingredients` ADD `unit` VARCHAR(50) NULL DEFAULT NULL AFTER `amount`; 
+*/
 
 DROP TABLE IF EXISTS recipes_cookbook_recipes;
 CREATE TABLE recipes_cookbook_recipes (
@@ -1330,4 +1379,44 @@ CREATE TABLE recipes_mealplans_recipes (
     PRIMARY KEY (id),
     FOREIGN KEY(mealplan) REFERENCES recipes_mealplans(id) ON DELETE CASCADE ON UPDATE CASCADE,    
     FOREIGN KEY(recipe) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_shoppinglists;
+CREATE TABLE recipes_shoppinglists (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    user INTEGER unsigned DEFAULT NULL,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(hash),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_shoppinglists_users;
+CREATE TABLE recipes_shoppinglists_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    shoppinglist INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(shoppinglist, user),
+    FOREIGN KEY(shoppinglist) REFERENCES recipes_shoppinglists(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS recipes_shoppinglists_entries;
+CREATE TABLE recipes_shoppinglists_entries (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER unsigned DEFAULT NULL,
+    shoppinglist int(11) unsigned NULL,
+    grocery INTEGER unsigned DEFAULT NULL,
+    amount VARCHAR(10) NULL,
+    unit varchar(50) DEFAULT NULL,
+    position INT(10) NULL,
+    done TIMESTAMP NULL,
+    notice TEXT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(shoppinglist) REFERENCES recipes_shoppinglists(id) ON DELETE CASCADE ON UPDATE CASCADE,    
+    FOREIGN KEY(grocery) REFERENCES recipes_groceries(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

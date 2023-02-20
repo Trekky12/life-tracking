@@ -35,7 +35,7 @@
                             <td>{{entry.lastname}}</td> 
                             <td>{{entry.mail}}</td>
                             <td>{{entry.role}}</td>
-                            <td><a href="{{  url_for('users_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-edit') }}</a></td>
+                            <td><a href="{{  url_for('users_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
                             <td><a href="#" data-url="{{  url_for('users_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
                             <td>{% if entry.mail %}<a href="{{  url_for('users_test_mail', {'user' : entry.id}) }}">{{ fontawesome('fas fa-envelope') }} {{lang["TESTMAIL"]}}</a>{%endif%}</td>
                             <td>

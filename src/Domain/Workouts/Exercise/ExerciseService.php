@@ -131,7 +131,8 @@ class ExerciseService extends Service {
                 }
             }
 
-            $exercises_print[] = ["exercise" => $exercise,
+            $exercises_print[] = [
+                "exercise" => $exercise,
                 "mainBodyPart" => $bodyparts[$exercise->mainBodyPart]->name,
                 "mainMuscle" => $muscles[$exercise->mainMuscle]->name,
                 "primary_muscles" => $primary,

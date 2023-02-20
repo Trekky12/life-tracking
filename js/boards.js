@@ -140,6 +140,7 @@ document.addEventListener('click', function (event) {
             return response.json();
         }).catch(function (error) {
             console.log(error);
+            loadingWindowOverlay.classList.remove("hidden");
 
             window.alert(lang.boards_error_archive);
 
@@ -159,69 +160,85 @@ document.addEventListener('click', function (event) {
 
     let btn_archive_card = event.target.closest('.btn-archive-card');
     if (btn_archive_card) {
-        event.preventDefault();
-        let url = btn_archive_card.dataset.url;
-        let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
-        let stack_id = parseInt(btn_archive_card.dataset.stack);
-        let id = parseInt(btn_archive_card.dataset.id);
+        //event.preventDefault();
 
-        if (archive === 0) {
-            if (!confirm(lang.boards_undo_archive)) {
-                return false;
+        setTimeout(function () {
+
+            let url = btn_archive_card.dataset.url;
+            let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
+            let stack_id = parseInt(btn_archive_card.dataset.stack);
+            let id = parseInt(btn_archive_card.dataset.id);
+
+            let stackIdx = getElementFromID(boardData.stacks, stack_id);
+            let stack = boardData.stacks[stackIdx];
+            let cardIdx = getElementFromID(stack.cards, id);
+            let card = stack.cards[cardIdx]
+
+            let savedCardEl = document.querySelector('.stack-wrapper .stack[data-stack="' + stack_id + '"] .board-card[data-card="' + id + '"]');
+            let cardArchiveCheckbox = savedCardEl.querySelector('.btn-archive-card');
+
+            if (archive === 0) {
+                if (!confirm(lang.boards_undo_archive)) {
+                    cardArchiveCheckbox.checked = true;
+                    return false;
+                }
+            } else {
+                if (!confirm(lang.boards_really_archive)) {
+                    cardArchiveCheckbox.checked = false;
+                    return false;
+                }
             }
-        } else {
-            if (!confirm(lang.boards_really_archive)) {
-                return false;
-            }
-        }
-        let stackIdx = getElementFromID(boardData.stacks, stack_id);
-        let stack = boardData.stacks[stackIdx];
-        let cardIdx = getElementFromID(stack.cards, id);
-        let card = stack.cards[cardIdx]
-
-        let savedCardEl = document.querySelector('.stack-wrapper .stack[data-stack="' + stack_id + '"] .board-card[data-card="' + id + '"]');
-
-        if (archive) {
-            savedCardEl.classList.add("archived");
-        } else {
-            savedCardEl.classList.remove("archived");
-        }
-        card.archive = archive;
-        closeDialog(cardModal, true);
-
-        var data = { 'archive': archive };
-
-        getCSRFToken().then(function (token) {
-            data['csrf_name'] = token.csrf_name;
-            data['csrf_value'] = token.csrf_value;
-
-            return fetch(url, {
-                method: 'POST',
-                credentials: "same-origin",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-        }).then(function (response) {
-            return response.json();
-        }).catch(function (error) {
-            console.log(error);
-
-            window.alert(lang.boards_error_archive);
 
             if (archive) {
-                savedCardEl.classList.remove("archived");
-            } else {
                 savedCardEl.classList.add("archived");
+                cardArchiveCheckbox.checked = true;
+                cardArchiveCheckbox.dataset.archive = 1;
+            } else {
+                savedCardEl.classList.remove("archived");
+                cardArchiveCheckbox.checked = false;
+                cardArchiveCheckbox.dataset.archive = 0;
             }
             card.archive = archive;
+            closeDialog(cardModal, true);
 
-            if (document.body.classList.contains('offline')) {
-                let formData = new URLSearchParams(data).toString();
-                saveDataWhenOffline(url, 'POST', formData);
-            }
-        });
+            var data = { 'archive': archive };
+
+            getCSRFToken().then(function (token) {
+                data['csrf_name'] = token.csrf_name;
+                data['csrf_value'] = token.csrf_value;
+
+                return fetch(url, {
+                    method: 'POST',
+                    credentials: "same-origin",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                console.log(error);
+
+                window.alert(lang.boards_error_archive);
+
+                if (archive) {
+                    savedCardEl.classList.remove("archived");
+                    cardArchiveCheckbox.checked = false;
+                    cardArchiveCheckbox.dataset.archive = 0;
+                } else {
+                    savedCardEl.classList.add("archived");
+                    cardArchiveCheckbox.checked = true;
+                    cardArchiveCheckbox.dataset.archive = 1;
+                }
+                card.archive = archive;
+
+                if (document.body.classList.contains('offline')) {
+                    let formData = new URLSearchParams(data).toString();
+                    saveDataWhenOffline(url, 'POST', formData);
+                }
+            });
+        }, 20);
     }
 
     let btn_delete_stack = event.target.closest('.btn-delete-stack');
@@ -810,6 +827,8 @@ async function saveStack(dialog, url) {
 
     let form = dialog.querySelector('form');
     let formData = formToJSON(form);
+    let formData2 = new URLSearchParams(new FormData(form)).toString();
+
     let stack = createStack(formData);
 
     let stackIdx = getElementFromID(boardData.stacks, formData.id);
@@ -878,8 +897,7 @@ async function saveStack(dialog, url) {
         }
 
         if (document.body.classList.contains('offline')) {
-            let formData = new URLSearchParams(new FormData(form)).toString();
-            saveDataWhenOffline(url + id, 'POST', formData);
+            saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
     }
 }
@@ -891,6 +909,7 @@ async function saveCard(dialog, url) {
 
     let form = dialog.querySelector('form');
     let formData = formToJSON(form);
+    let formData2 = new URLSearchParams(new FormData(form)).toString();
 
     let stackEl = document.querySelector('.stack-wrapper .stack[data-stack="' + formData.stack + '"]');
     let card = createCard(formData);
@@ -952,8 +971,7 @@ async function saveCard(dialog, url) {
         }
 
         if (document.body.classList.contains('offline')) {
-            let formData = new URLSearchParams(new FormData(form)).toString();
-            saveDataWhenOffline(url + id, 'POST', formData);
+            saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
     }
 }
@@ -964,6 +982,7 @@ async function saveLabel(dialog, url) {
     var id = dialog.querySelector('input[name="id"]').value;
 
     let form = dialog.querySelector('form');
+    let formData2 = new URLSearchParams(new FormData(form)).toString();
 
     let data = formToJSON(form);
 
@@ -988,8 +1007,7 @@ async function saveLabel(dialog, url) {
     } catch (error) {
         console.log(error);
         if (document.body.classList.contains('offline')) {
-            let formData = new URLSearchParams(new FormData(form)).toString();
-            saveDataWhenOffline(url + id, 'POST', formData);
+            saveDataWhenOffline(url + id, 'POST', formData2, true);
         }
     }
 }
@@ -1116,7 +1134,7 @@ var sortable = new Sortable(stacksWrapper, {
         name: "stacks",
     },
     draggable: ".stack",
-    handle: isMobile() ? ".handle" : ".stack-header",
+    handle: isTouchEnabled() ? ".handle" : ".stack-header",
     dataIdAttr: 'data-stack',
     filter: '.stack-dummy',
     onEnd: function (evt) {
@@ -1224,6 +1242,9 @@ function createCard(card_data) {
     card_checkbox.dataset.archive = card_data.archive;
     card_checkbox.dataset.stack = card_data.stack;
     card_checkbox.dataset.id = card_data.id;
+    if (card_data.archive == 1) {
+        card_checkbox.checked = true;
+    }
 
     if (card_data.labels) {
         let card_handle = card.querySelector('.card-labels .handle');
@@ -1290,7 +1311,7 @@ function createSortableCards(cardWrapper) {
             name: "cards"
         },
         draggable: ".board-card",
-        handle: isMobile() ? ".handle" : ".board-card",
+        handle: isTouchEnabled() ? ".handle" : ".board-card",
         dataIdAttr: 'data-card',
         ghostClass: 'card-placeholder',
         onUpdate: function (evt) {

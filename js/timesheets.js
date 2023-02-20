@@ -1,5 +1,7 @@
 'use strict';
 
+const selectedItems = document.querySelector('#selected_items');
+
 const projectCategorySelects = document.querySelectorAll('select.category');
 projectCategorySelects.forEach(function (item, idx) {
     new Selectr(item, {
@@ -21,6 +23,7 @@ if (dateTimePickerStart && dateTimePickerEnd) {
     flatpickr(dateTimePickerStart, {
         "altInput": true,
         "altFormat": i18n.dateformatTwig.datetimeShort,
+        "altInputClass": "input form-control",
         "dateFormat": "Y-m-d H:i",
         "locale": i18n.template,
         "enableTime": true,
@@ -34,6 +37,7 @@ if (dateTimePickerStart && dateTimePickerEnd) {
     flatpickr(dateTimePickerEnd, {
         "altInput": true,
         "altFormat": i18n.dateformatTwig.datetimeShort,
+        "altInputClass": "input form-control",
         "dateFormat": "Y-m-d H:i",
         "locale": i18n.template,
         "enableTime": true,
@@ -41,10 +45,10 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "minuteIncrement": 1
     });
     setEndDate();
-    
+
 }
 
-function setEndDate(){
+function setEndDate() {
     if (dateTimePickerEnd.dataset.saved != "1") {
         let default_duration = dateTimePickerEnd.dataset.defaultDuration;
         let selectedDate = dateTimePickerStart._flatpickr.selectedDates[0];
@@ -65,7 +69,12 @@ if (radioDurationCustomModification && radioDurationNoModification && radioDurat
 
         if (radioDurationCustomModification.checked) {
             inputDurationModificationWrapper.classList.remove("hidden");
-            inputDurationModificationWrapper.querySelector('input').disabled = false;
+            let inputDurationCustomModification = inputDurationModificationWrapper.querySelector('input');
+            inputDurationCustomModification.disabled = false;
+            if (!inputDurationCustomModification.classList.contains("html-duration-picker")) {
+                inputDurationCustomModification.classList.add("html-duration-picker");
+            }
+            HtmlDurationPicker.refresh();
         } else {
             inputDurationModificationWrapper.classList.add("hidden");
             inputDurationModificationWrapper.querySelector('input').disabled = true;
@@ -100,14 +109,7 @@ if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
 
         let categories = assignCategories.getValue();
 
-        let sheets = [];
-
-        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
-        checkboxes.forEach(function (checkbox) {
-            if (checkbox.checked) {
-                sheets.push(checkbox.dataset.id);
-            }
-        });
+        let sheets = getSelectedSheets();
 
         setCategories({ 'sheets': sheets, 'categories': categories, 'type': 'assign' });
     });
@@ -116,14 +118,7 @@ if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
 
         let categories = assignCategories.getValue();
 
-        let sheets = [];
-
-        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
-        checkboxes.forEach(function (checkbox) {
-            if (checkbox.checked) {
-                sheets.push(checkbox.dataset.id);
-            }
-        });
+        let sheets = getSelectedSheets();
 
         setCategories({ 'sheets': sheets, 'categories': categories, 'type': 'remove' });
     });
@@ -140,11 +135,29 @@ document.addEventListener('click', function (event) {
                 checkbox.checked = false;
             }
         });
+        selectedItems.innerHTML = getSelectedSheets().length;
+    }
+
+    let checkbox = event.target.closest('#timesheets_sheets_table tbody input[type="checkbox"]');
+    if (checkbox) {
+        selectedItems.innerHTML = getSelectedSheets().length;
     }
 });
 
+function getSelectedSheets() {
+    let sheets = [];
+    let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]:checked');
+    checkboxes.forEach(function (checkbox) {
+        sheets.push(checkbox.dataset.id);
+    });
+    return sheets;
+}
+
 
 function setCategories(data) {
+
+    loadingWindowOverlay.classList.remove("hidden");
+
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
@@ -169,6 +182,7 @@ function setCategories(data) {
             let formData = new URLSearchParams(data).toString();
             saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
         }
+        loadingWindowOverlay.classList.add("hidden");
     });
 }
 
@@ -179,7 +193,7 @@ const radioBudgetDurationModified = document.getElementById('radioCategorization
 if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
 
     radioBudgetDuration.addEventListener('click', function (event) {
-        document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+        document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
             picker.classList.remove("hidden");
         });
         document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -198,7 +212,7 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
     });
 
     radioBudgetDurationModified.addEventListener('click', function (event) {
-        document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+        document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
             picker.classList.remove("hidden");
         });
         document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -217,7 +231,7 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
     });
     radioBudgetCount.addEventListener('click', function (event) {
         if (radioBudgetCount.checked) {
-            document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+            document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
                 picker.classList.add("hidden");
             });
             document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -231,7 +245,7 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
             });
 
         } else {
-            document.querySelectorAll('.html-duration-picker-wrapper').forEach(function (picker) {
+            document.querySelectorAll('.html-duration-picker-input-controls-wrapper').forEach(function (picker) {
                 picker.classList.remove("hidden");
             });
             document.querySelectorAll('input.duration-input').forEach(function (input) {
@@ -254,4 +268,46 @@ if (radioBudgetDuration && radioBudgetDurationModified && radioBudgetCount) {
     });
 }
 
+const applyOptionsBtn = document.querySelector('#apply_options');
+const optionsSelector = document.querySelector('select#applyOptions');
+
+if (applyOptionsBtn) {
+    applyOptionsBtn.addEventListener('click', function (event) {
+
+        let option = optionsSelector.value;
+
+        let sheets = getSelectedSheets();
+
+        let data = { 'sheets': sheets, 'option': option };
+
+        loadingWindowOverlay.classList.remove("hidden");
+
+        return getCSRFToken().then(function (token) {
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
+
+            return fetch(jsObject.timesheets_sheets_set_options, {
+                method: 'POST',
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            allowedReload = true;
+            window.location.reload(true);
+        }).catch(function (error) {
+            console.log(error);
+            if (document.body.classList.contains('offline')) {
+                let formData = new URLSearchParams(data).toString();
+                saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
+            }
+            loadingWindowOverlay.classList.add("hidden");
+        });
+    });
+}
 
