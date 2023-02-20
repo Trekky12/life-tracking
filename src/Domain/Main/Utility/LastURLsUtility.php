@@ -13,7 +13,7 @@ class LastURLsUtility {
         // save new params for this route
         $lastUrls[$identifier] = $queryParams;
         // only save 5 entries
-        if (count($lastUrls) > 10) {
+        if (count($lastUrls) > 1000) {
             array_shift($lastUrls);
         }
         $_SESSION["lastURLS"] = $lastUrls;

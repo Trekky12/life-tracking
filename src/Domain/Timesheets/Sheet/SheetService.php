@@ -127,14 +127,14 @@ class SheetService extends Service
         }
 
         $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, $billed, $payed, $customer, 1, 'DESC', $count);
-        $rendered_data = $this->renderTableRows($project, $data);
+        $rendered_data = $this->renderTableRows($project, $data, false);
         $datacount = $this->getMapper()->tableCount($project->id, $from, $to, $selected_categories, $billed, $payed, $customer);
 
         $totalSeconds = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, $billed, $payed, $customer);
+        $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, $billed, $payed, $customer, "%", "t.duration_modified");
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
-        if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, $billed, $payed, $customer, "%", "t.duration_modified");
+        if ($project->has_duration_modifications > 0 && ($totalSeconds > 0 || $totalSecondsModified > 0)) {
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 
@@ -197,21 +197,21 @@ class SheetService extends Service
         }
 
         $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $payed = array_key_exists('payed', $requestData) && $requestData['payed']!== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        
-        $customer = array_key_exists('customer', $requestData) && $requestData['customer']!== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $payed = array_key_exists('payed', $requestData) && $requestData['payed'] !== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+        $customer = array_key_exists('customer', $requestData) && $requestData['customer'] !== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
         $recordsTotal = $this->mapper->tableCount($project->id, $from, $to, $categories, $billed, $payed, $customer);
         $recordsFiltered = $this->mapper->tableCount($project->id, $from, $to, $categories, $billed, $payed, $customer, $searchQuery);
 
         $data = $this->mapper->getTableData($project->id, $from, $to, $categories, $billed, $payed, $customer, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
-        $rendered_data = $this->renderTableRows($project, $data);
+        $rendered_data = $this->renderTableRows($project, $data, true);
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $categories, $billed, $payed, $customer, $searchQuery);
+        $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $categories, $billed, $payed, $customer, $searchQuery, "t.duration_modified");
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
-        if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-            $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $categories, $billed, $payed, $customer, $searchQuery, "t.duration_modified");
+        if ($project->has_duration_modifications > 0 && ($totalSeconds > 0 || $totalSecondsModified > 0)) {
             $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
         }
 
@@ -225,7 +225,7 @@ class SheetService extends Service
         return $response_data;
     }
 
-    private function renderTableRows($project, array $sheets)
+    private function renderTableRows($project, array $sheets, $filter = false)
     {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -235,6 +235,9 @@ class SheetService extends Service
             return $sheet->id;
         }, $sheets);
         $hasNotices = $this->sheet_notice_mapper->hasNotices($sheet_ids);
+
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id);
 
         $rendered_data = [];
         foreach ($sheets as $sheet) {
@@ -252,8 +255,12 @@ class SheetService extends Service
             $row[] = $start;
             $row[] = $end;
             $row[] = $time;
-            $row[] = $sheet->customerName;
-            $row[] = $sheet->categories;
+            if (!$filter || $customers) {
+                $row[] = $sheet->customerName;
+            }
+            if (!$filter || $project_categories) {
+                $row[] = $sheet->categories;
+            }
 
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
@@ -343,10 +350,12 @@ class SheetService extends Service
         $entry = $this->getLastSheetWithStartDateToday($project->id);
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id);
 
         return new Payload(Payload::$RESULT_HTML, [
             "project" => $project,
             "categories" => $project_categories,
+            "customers" => $customers,
             "entry" => $entry
         ]);
     }

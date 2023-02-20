@@ -69,7 +69,12 @@ if (radioDurationCustomModification && radioDurationNoModification && radioDurat
 
         if (radioDurationCustomModification.checked) {
             inputDurationModificationWrapper.classList.remove("hidden");
-            inputDurationModificationWrapper.querySelector('input').disabled = false;
+            let inputDurationCustomModification = inputDurationModificationWrapper.querySelector('input');
+            inputDurationCustomModification.disabled = false;
+            if (!inputDurationCustomModification.classList.contains("html-duration-picker")) {
+                inputDurationCustomModification.classList.add("html-duration-picker");
+            }
+            HtmlDurationPicker.refresh();
         } else {
             inputDurationModificationWrapper.classList.add("hidden");
             inputDurationModificationWrapper.querySelector('input').disabled = true;
@@ -305,3 +310,4 @@ if (applyOptionsBtn) {
         });
     });
 }
+

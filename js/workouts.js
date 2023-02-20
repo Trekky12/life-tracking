@@ -90,6 +90,7 @@ document.addEventListener('click', function (event) {
         exercisesSelected.appendChild(new_exercise);
 
         //new_exercise.scrollIntoView();
+        showToast(lang.workouts_plan_exercise_added, "blue");
 
         loadSelectedMuscles();
         adjustAvailableExercisesColumnHeight();
@@ -158,6 +159,7 @@ document.addEventListener('click', function (event) {
         exercisesSelected.appendChild(workout_day);
 
         workout_day.scrollIntoView();
+        showToast(lang.workouts_plan_workoutday_added, "blue");
     }
 
     if (add_superset) {
@@ -206,6 +208,7 @@ document.addEventListener('click', function (event) {
         exercisesSelected.appendChild(workout_superset);
 
         workout_superset.scrollIntoView();
+        showToast(lang.workouts_plan_superset_added, "blue");
 
         createSortable(div_exercises);
 

@@ -503,7 +503,7 @@ $lang["TIMESHEETS_TIME"] = "sum";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "time conversion rate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
-$lang["TIMESHEETS_TIME_MODIFICATION"] = "new time (sec.)";
+$lang["TIMESHEETS_TIME_MODIFICATION"] = "new duration (HH:MM)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "no time calculation modification";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "use the time conversion rate of the project";
 $lang["TIMESHEETS_DURATION_DEFAULT"] = "default duration";
@@ -745,6 +745,10 @@ $lang["WORKOUTS_PLAN_CATEGORY_FAT"] = "lose fat";
 $lang["WORKOUTS_LEVEL_BEGINNER"] = "beginner";
 $lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "intermediate";
 $lang["WORKOUTS_LEVEL_ADVANCED"] = "advanced";
+
+$lang["WORKOUTS_PLAN_EXERCISE_ADDED"] = "Exercise added.";
+$lang["WORKOUTS_PLAN_WORKOUTDAY_ADDED"] = "Workout day added.";
+$lang["WORKOUTS_PLAN_SUPERSET_ADDED"] = "Superset added.";
 
 $lang["SAVE_IFTTT_URL"] = "Save IFTTT-URL";
 $lang["DELETE_IFTTT_URL"] = "Delete IFTTT-URL";

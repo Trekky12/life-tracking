@@ -11,6 +11,7 @@
   <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
   <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
   <script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+  <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
   <script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
@@ -91,7 +92,7 @@
 
         {% if customers %}
           <div class="form-group customer">
-            <label for="category">
+            <label for="customer">
               {% if project.customers_name_singular %}
                 {{project.customers_name_singular}}
               {% else %}
@@ -138,7 +139,7 @@
             <br/>
             <div id="inputDurationModificationWrapper" class="form-group {% if ( entry is null ) or (entry is not null and ( entry.getDurationModification(project.time_conversion_rate) == 0 or entry.getDurationModification(project.time_conversion_rate) == 1 ))%}hidden{% endif %}">
               <label for="inputDurationModification">{{lang["TIMESHEETS_TIME_MODIFICATION"]}}</label>
-              <input type="text" class="form-control" id="inputRate" name="duration_modified" value="{% if not entry is null %}{{entry.duration_modified}}{% endif %}">
+              <input type="text" class="form-control {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 2 )%}html-duration-picker{% endif %}" data-hide-seconds id="inputDurationModification" name="set_duration_modified" value="{% if not entry is null %}{{entry.duration_modified | splitDateInterval(true) }}{% endif %}">
             </div>
           </div>
         {% endif %}

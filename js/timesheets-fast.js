@@ -50,6 +50,11 @@ function createTimesheet(button, type) {
         data["category"] = timesheetCategories;
     }
 
+    let customer = document.querySelector("select#customer");
+    if (customer) {
+        data["customer"] = customer.value;
+    }
+
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;

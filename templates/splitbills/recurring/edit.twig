@@ -61,11 +61,11 @@
                     <div class="two-columns">
                         <div class="form-group left">
                             <label for="inputRate">{{lang["EXCHANGE_RATE"]}} ({{ i18n.currency }} => {{ group.currency }}) </label>
-                            <input type="text" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}{{ group.exchange_rate }}{% endif %}">
+                            <input type="number" step="any" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}{{ group.exchange_rate }}{% endif %}">
                         </div>
                         <div class="form-group right">
                             <label for="inputFee">{{lang["EXCHANGE_FEE"]}} (%) </label>
-                            <input type="text" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}{{ group.exchange_fee }}{% endif %}">
+                            <input type="number" step="any" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}{{ group.exchange_fee }}{% endif %}">
                         </div>
                     </div>
                 {% else %}

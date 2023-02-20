@@ -2,6 +2,8 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
+use App\Domain\Main\Utility\DateUtility;
+
 class Sheet extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_TIMESHEETS_SHEET";
@@ -21,6 +23,11 @@ class Sheet extends \App\Domain\DataObject {
         $this->end = $this->exists('end', $data) ? filter_var($data['end'], FILTER_SANITIZE_STRING) : null;
         $this->duration = $this->exists('duration', $data) ? filter_var($data['duration'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->duration_modified = $this->exists('duration_modified', $data) ? filter_var($data['duration_modified'], FILTER_SANITIZE_NUMBER_INT) : null;
+
+        $set_duration_modified = $this->exists('set_duration_modified', $data) ? filter_var($data['set_duration_modified'], FILTER_SANITIZE_STRING) : null;
+        if (!is_null($set_duration_modified)) {
+            $this->duration_modified = DateUtility::getSecondsFromDuration($set_duration_modified);
+        }
 
         $this->start_lat = $this->exists('start_lat', $data) ? filter_var($data['start_lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->start_lng = $this->exists('start_lng', $data) ? filter_var($data['start_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;

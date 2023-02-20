@@ -502,7 +502,7 @@ $lang["TIMESHEETS_TIME"] = "Summe";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "Zeitberechnung anpassbar";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "Zeitumrechnungsrate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "Zeitberechnung anpassen";
-$lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Zeit (sek.)";
+$lang["TIMESHEETS_TIME_MODIFICATION"] = "Neue Dauer (HH:MM)";
 $lang["TIMESHEETS_DURATION_NO_MODIFICATION"] = "keine Anpassung der Zeit";
 $lang["TIMESHEETS_DURATION_USE_PROJECT_RATE"] = "nutze die Zeitumrechnungsrate des Projekts";
 $lang["TIMESHEETS_DURATION_DEFAULT"] = "Standarddauer";
@@ -732,9 +732,9 @@ $lang["WORKOUTS_TEMPLATE_PLANS"] = "Trainingsplan Vorlagen";
 $lang["WORKOUTS_TEMPLATE_USE"] = "Trainingsplan verwenden";
 
 $lang["WORKOUTS_ADD_DAY"] = "Trainingstag hinzufügen";
-$lang["WORKOUTS_ADD_SUPERSET"] = "Superset hinzufügen";
+$lang["WORKOUTS_ADD_SUPERSET"] = "Supersatz hinzufügen";
 
-$lang["WORKOUTS_SUPERSET"] = "Superset";
+$lang["WORKOUTS_SUPERSET"] = "Supersatz";
 $lang["WORKOUTS_DAYS"] = "Trainingstage";
 $lang["WORKOUTS_DAY"] = "Trainingstag";
 
@@ -744,6 +744,10 @@ $lang["WORKOUTS_PLAN_CATEGORY_FAT"] = "Fett abbauen";
 $lang["WORKOUTS_LEVEL_BEGINNER"] = "Anfänger";
 $lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "Fortgeschrittene";
 $lang["WORKOUTS_LEVEL_ADVANCED"] = "Profis";
+
+$lang["WORKOUTS_PLAN_EXERCISE_ADDED"] = "Übung hinzugefügt.";
+$lang["WORKOUTS_PLAN_WORKOUTDAY_ADDED"] = "Trainingstag hinzugefügt.";
+$lang["WORKOUTS_PLAN_SUPERSET_ADDED"] = "Supersatz hinzugefügt.";
 
 $lang["SAVE_IFTTT_URL"] = "IFTTT-URL speichern";
 $lang["DELETE_IFTTT_URL"] = "IFTTT-URL löschen";

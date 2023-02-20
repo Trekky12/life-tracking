@@ -4,7 +4,9 @@
 
 {% block style %}{% endblock %}
 
-{% block javascript %}{% endblock %}
+{% block javascript %}
+	<script src="{{baseURL}}/static/js/workouts-view.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
 
 {% block body %}
 	<div class="inner-content">

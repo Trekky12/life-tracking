@@ -3,74 +3,113 @@
 {% set active = 'timesheets' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/timesheets-fast.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-fast.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
 
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS"]}} | {{project.name|raw}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-    </div>
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS"]}}
+				|
+				{{project.name|raw}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-turn-up') }}</button>
+				</a>
+			</div>
+		</div>
+	</div>
 
-    <div class="grid content-xsmall">
-        <div class="card positive {% if entry is not null %}inactive{% endif %}">
-            <div class="card-content timesheet">
-                <div class="card-header">
-                    <h3><a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">{% if project.is_day_based == 1 %}{{lang["TIMESHEETS_COME_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}{% endif %}</a></h3>
-                </div>
-                <a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">{{ fontawesome('fas fa-right-to-bracket') }}</a>
-            </div>
-        </div>      
-        <div class="card negative {% if entry is null %}inactive{% endif %}">
-            <div class="card-content timesheet">
-                <div class="card-header">
-                    <h3><a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">{% if project.is_day_based == 1 %}{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}{% else %}{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}{% endif %}</a></h3>
-                </div>
-                <a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">{{ fontawesome('fas fa-right-from-bracket') }}</a>
-            </div>
-        </div>          
-    </div>
-    <div class="grid content-xsmall">
-        {% if categories %}
-            <div class="categories-filter form-group timesheet-fast">
-                <select id="category-filter" multiple name="categories[]" class="category">
-                    {% for cat in categories %}
-                        <option value="{{ cat.id }}" {% if cat.id in categories_selected %}selected{% endif %}>{{ cat.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        {% endif %}
+	<div class="grid content-xsmall">
+		<div class="card positive {% if entry is not null %}inactive{% endif %}">
+			<div class="card-content timesheet">
+				<div class="card-header">
+					<h3>
+						<a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">
+							{% if project.is_day_based == 1 %}
+								{{lang["TIMESHEETS_COME_DAY_BASED"]}}
+							{% else %}
+								{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}
+							{% endif %}
+						</a>
+					</h3>
+				</div>
+				<a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">{{ fontawesome('fas fa-right-to-bracket') }}</a>
+			</div>
+		</div>
+		<div class="card negative {% if entry is null %}inactive{% endif %}">
+			<div class="card-content timesheet">
+				<div class="card-header">
+					<h3>
+						<a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">
+							{% if project.is_day_based == 1 %}
+								{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}
+							{% else %}
+								{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}
+							{% endif %}
+						</a>
+					</h3>
+				</div>
+				<a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">{{ fontawesome('fas fa-right-from-bracket') }}</a>
+			</div>
+		</div>
+	</div>
+	<div class="grid content-xsmall">
+		{% if categories %}
+			<div class="categories-filter form-group timesheet-fast">
+				<select id="category-filter" multiple name="categories[]" class="category">
+					{% for cat in categories %}
+						<option value="{{ cat.id }}">{{ cat.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		{% endif %}
+		{% if customers %}
+			<div class="form-group customer">
+				<label for="customer">
+					{% if project.customers_name_singular %}
+						{{project.customers_name_singular}}
+					{% else %}
+						{{lang["TIMESHEETS_CUSTOMER"]}}
+					{% endif %}
+				</label>
+				<select class="form-control" id="customer" name="customer">
+					<option value="" selected>{{ lang["NONE"] }}</option>
+					{% for customer in customers %}
+						<option value="{{customer.id}}">{{customer.name|raw}}</option>
+					{% endfor %}
+				</select>
+			</div>
+		{% endif %}
 
-        <div class="mapWrapper">
-            <input type="hidden" id="geoLat" class="geo-lat" name="lat" value="">
-            <input type="hidden" id="geoLng" class="geo-lng" name="lng" value="">
-            <input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="">
-        </div>
+		<div class="mapWrapper">
+			<input type="hidden" id="geoLat" class="geo-lat" name="lat" value="">
+			<input type="hidden" id="geoLng" class="geo-lng" name="lng" value="">
+			<input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="">
+		</div>
 
-        <div id="alertErrorTimesheetFast" class="alert danger hidden">
-            <span class="closebtn" >&times;</span>
-            <span class="alert-message">
-                <p>{{ lang["ENTRY_ERROR"] }}</p>
-                <p id="alertErrorDetailTimesheetFast"></p>
-            </span>
-        </div>
-        <div id="alertSuccessTimesheetFast" class="alert success hidden">
-            <span class="closebtn" >&times;</span>
-            <span class="alert-message">
-                <p>{{ lang["ENTRY_SUCCESS_ADD"] }}</p>
-            </span>
-        </div>
-    </div>
+		<div id="alertErrorTimesheetFast" class="alert danger hidden">
+			<span class="closebtn">&times;</span>
+			<span class="alert-message">
+				<p>{{ lang["ENTRY_ERROR"] }}</p>
+				<p id="alertErrorDetailTimesheetFast"></p>
+			</span>
+		</div>
+		<div id="alertSuccessTimesheetFast" class="alert success hidden">
+			<span class="closebtn">&times;</span>
+			<span class="alert-message">
+				<p>{{ lang["ENTRY_SUCCESS_ADD"] }}</p>
+			</span>
+		</div>
+	</div>
 
-{% endblock %}        
+{% endblock %}
