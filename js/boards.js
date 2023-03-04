@@ -1072,8 +1072,9 @@ setInterval(async function () {
     var isOpenStack = isVisible(stackModal);
     var isOpenCard = isVisible(cardModal);
     var isOpenLabel = isVisible(labelModal);
+    var isSortableSelect = document.body.classList.contains("sortable-select");
 
-    if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true) {
+    if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true && !isSortableSelect === true) {
         await updateBoard();
     }
 }, 10000);
@@ -1137,7 +1138,13 @@ var sortable = new Sortable(stacksWrapper, {
     handle: isTouchEnabled() ? ".handle" : ".stack-header",
     dataIdAttr: 'data-stack',
     filter: '.stack-dummy',
+    onStart: function (evt) {
+        document.body.classList.add("sortable-select");
+    },
     onEnd: function (evt) {
+
+        document.body.classList.remove("sortable-select");
+
         let stacks = this.toArray();
         var data = { 'stack': stacks };
 
@@ -1314,6 +1321,12 @@ function createSortableCards(cardWrapper) {
         handle: isTouchEnabled() ? ".handle" : ".board-card",
         dataIdAttr: 'data-card',
         ghostClass: 'card-placeholder',
+        onStart: function (evt) {
+            document.body.classList.add("sortable-select");
+        },
+        onEnd: function (evt) {
+            document.body.classList.remove("sortable-select");
+        },
         onUpdate: function (evt) {
             let stack_id = evt.item.closest('.stack').dataset.stack;
             changeCardPosition(stack_id, this.toArray());

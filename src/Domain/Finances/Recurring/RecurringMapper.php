@@ -142,7 +142,8 @@ class RecurringMapper extends \App\Domain\Mapper {
         $where = " WHERE type = :type "
                 . "AND (start <= CURDATE() OR start IS NULL) AND ( end >= CURDATE() OR end IS NULL) "
                 . "AND category IN (" . implode(", ", array_keys($cat_bindings)) . ") "
-                . "AND user = :user ";
+                . "AND user = :user "
+                . "AND is_active > 0";
 
 
         $sql = "SELECT SUM(sum) FROM ( ";

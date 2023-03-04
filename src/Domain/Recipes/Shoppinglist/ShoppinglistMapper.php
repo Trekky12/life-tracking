@@ -71,10 +71,16 @@ class ShoppinglistMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function getShoppingListEntriesCount($shoppinglist_id)
+    public function getShoppingListEntriesCount($shoppinglist_id, $done = null)
     {
 
         $sql = "SELECT COUNT(id) FROM " . $this->getTableName("recipes_shoppinglists_entries") . " WHERE shoppinglist = :shoppinglist";
+
+        if (!is_null($done)) {
+            $sql .= $done ? " AND done IS NOT NULL " : " AND done is NULL ";
+        } else {
+            $sql .= " AND (done IS NULL OR DATEDIFF(NOW(), done) < 1) ";
+        }
 
         $bindings = [
             "shoppinglist" => $shoppinglist_id
