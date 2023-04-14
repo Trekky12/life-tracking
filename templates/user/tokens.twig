@@ -4,40 +4,55 @@
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["LOGIN_TOKENS"]}}</h2> {% if users is not empty %}<a href="{{  url_for('login_tokens_delete_old') }}"><button class="button">{{ fontawesome('fas fa-trash') }} {{lang["LOGIN_TOKENS_CLEAN"]}}</button></a>{% endif %}</div>
-        <div class="page-content">
-            <table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
-                <thead>
-                    <tr>
-                        <th>{{lang["THIS_DEVICE"]}}</th>
-                        <th>{{lang["CHANGED_ON"]}}</th>
-                        <th>{{lang["CREATED_ON"]}}</th>
-                        {% if users is not empty %}
-                        <th>{{lang["LOGIN"]}}</th>
-                        {% endif %}
-                        <th>{{lang["USER_AGENT"]}}</th>
-                        <th>{{lang["IP_ADDRESS"]}}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in list %}
-                        <tr>
-                            <td>{% if user_token == entry.token %}x{% endif %}</td> 
-                            <td>{{entry.changedOn}}</td> 
-                            <td>{{entry.createdOn}}</td> 
-                            {% if users is not empty %}
-                            <td>{{users[entry.user].login}}</td> 
-                            {% endif %}
-                            <td>{{entry.agent}}</td> 
-                            <td>{{entry.ip}}</td> 
-                            <td><a href="#" data-url="{% if users is not empty %}{{  url_for('login_tokens_delete', {'id' : entry.id}) }}{% else %}{{  url_for('users_login_tokens_delete', {'id' : entry.id}) }}{% endif %}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["LOGIN_TOKENS"]}}</h2>
+			{% if users is not empty %}
+				<div class="buttons">
+					<a href="{{ url_for('login_tokens_delete_old') }}">
+						<button class="button">{{ fontawesome('fas fa-trash') }}
+							{{lang["LOGIN_TOKENS_CLEAN"]}}</button>
+					</a>
+				</div>
+			{% endif %}
+		</div>
+		<div class="page-content">
+			<table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
+				<thead>
+					<tr>
+						<th>{{lang["THIS_DEVICE"]}}</th>
+						<th>{{lang["CHANGED_ON"]}}</th>
+						<th>{{lang["CREATED_ON"]}}</th>
+						{% if users is not empty %}
+							<th>{{lang["LOGIN"]}}</th>
+						{% endif %}
+						<th>{{lang["USER_AGENT"]}}</th>
+						<th>{{lang["IP_ADDRESS"]}}</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in list %}
+						<tr>
+							<td>
+								{% if user_token == entry.token %}x
+								{% endif %}
+							</td>
+							<td>{{entry.changedOn}}</td>
+							<td>{{entry.createdOn}}</td>
+							{% if users is not empty %}
+								<td>{{users[entry.user].login}}</td>
+							{% endif %}
+							<td>{{entry.agent}}</td>
+							<td>{{entry.ip}}</td>
+							<td>
+								<a href="#" data-url="{% if users is not empty %}{{ url_for('login_tokens_delete', {'id' : entry.id}) }}{% else %}{{ url_for('users_login_tokens_delete', {'id' : entry.id}) }}{% endif %}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

@@ -1,8 +1,21 @@
-.timesheet-fast.categories-filter {
-    width: 100%;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    margin-top: 2rem;
+.timesheet-fast {
+
+    &.categories-filter,
+    &.customer {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        width: 100%;
+    }
+
+    &.categories-filter {
+        margin-top: 2rem;
+    }
+
+    &.customer {
+        @media screen and (min-width: $size_tablet) {
+            width: auto;
+        }
+    }
 }
 
 #timesheets_sheets_table {

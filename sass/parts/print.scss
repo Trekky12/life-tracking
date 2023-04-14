@@ -31,7 +31,15 @@
     }
 
     // show event description only on first day
-    .trip_event.hidden_description_print .description {
+    .trip_event.hidden_description_print {
+
+        .description,
+        .image_uploaded {
+            display: none;
+        }
+    }
+
+    .trip_buttonrow {
         display: none;
     }
 
@@ -60,7 +68,6 @@
     }
 
     .site-header,
-    a.change_day,
     .trip_event .buttons,
     .description_text {
         display: none !important;

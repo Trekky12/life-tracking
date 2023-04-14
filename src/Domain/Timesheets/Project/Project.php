@@ -32,21 +32,10 @@ class Project extends \App\Domain\DataObject {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
         
-        if ($this->exists('password', $data)) {
-            $this->password = filter_var($data['password'], FILTER_UNSAFE_RAW);
-        }
-        if ($this->exists('salt', $data)) {
-            $this->salt = filter_var($data['salt'], FILTER_UNSAFE_RAW);
-        }
 
         /**
          * Set value from request
          */
-        $set_password = $this->exists('set_password', $data) ? filter_var($data['set_password'], FILTER_UNSAFE_RAW) : null;
-        if (!is_null($set_password)) {
-            $this->password = password_hash($set_password, PASSWORD_DEFAULT);
-            $this->salt = base64_encode(random_bytes(16));
-        }
 
         $set_default_duration = $this->exists('set_default_duration', $data) ? filter_var($data['set_default_duration'], FILTER_UNSAFE_RAW) : null;
         if (!is_null($set_default_duration)) {

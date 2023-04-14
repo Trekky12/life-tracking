@@ -52,7 +52,7 @@
 
 				<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
 				<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
-				<div class="filter-row">
+				<div class="filter-row space-between">
 					<div class="filter-element">
 						<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
 					</div>
@@ -96,7 +96,7 @@
 						</div>
 					</div>
 				{% endif %}
-				
+
 				<div class="filter-grid">
 					{% if customers %}
 						<label for="timesheet_view_customer">
@@ -230,7 +230,7 @@
 					</div>
 				</div>
 				{% if categories %}
-					<div class="filter-row filter-group">
+					<div class="filter-row">
 						<div class="options-element categories-filter">
 							<select id="assignCategoriesSelector" multiple name="categories[]">
 								{% for cat in categories %}
@@ -238,11 +238,13 @@
 								{% endfor %}
 							</select>
 						</div>
-						<div class="filter-element">
-							<button type="button" class="button gray small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
-						</div>
-						<div class="filter-element">
-							<button type="button" class="button gray small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
+						<div class="filter-group">
+							<div class="filter-element">
+								<button type="button" class="button gray small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
+							</div>
+							<div class="filter-element">
+								<button type="button" class="button gray small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
+							</div>
 						</div>
 					</div>
 				{% endif %}

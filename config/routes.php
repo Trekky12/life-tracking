@@ -429,8 +429,6 @@ return function (App $app) {
 
         $group->group('/{project}', function (RouteCollectorProxy $group_project) {
 
-            $group_project->post('/check', \App\Application\Action\Timesheets\Project\ProjectCheckPasswordAction::class)->setName('timesheets_sheets_check_pw');
-
             $group_project->get('/view/', \App\Application\Action\Timesheets\Sheet\SheetViewAction::class)->setName('timesheets_sheets');
             $group_project->get('/table/', \App\Application\Action\Timesheets\Sheet\SheetTableAction::class)->setName('timesheets_sheets_table');
 
@@ -488,6 +486,17 @@ return function (App $app) {
                 $group_customers->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerEditAction::class)->setName('timesheets_customers_edit');
                 $group_customers->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerSaveAction::class)->setName('timesheets_customers_save');
                 $group_customers->delete('/delete/{id}', \App\Application\Action\Timesheets\Customer\CustomerDeleteAction::class)->setName('timesheets_customers_delete');
+            });
+
+
+            $group_project->group('/noticepassword', function (RouteCollectorProxy $group_noticespassword) {
+
+                $group_noticespassword->get('/', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordListAction::class)->setName('timesheets_notice_password');
+                $group_noticespassword->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerEditAction::class)->setName('timesheets_notice_passwordedit');
+                $group_noticespassword->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerSaveAction::class)->setName('timesheets_notice_passwordsave');
+
+                $group_noticespassword->post('/data', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordEncryptionParametersAction::class)->setName('timesheets_notice_params');
+                $group_noticespassword->post('/save', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordEncryptionParametersSaveAction::class)->setName('timesheets_notice_params_save');
             });
         });
     });

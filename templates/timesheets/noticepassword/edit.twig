@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block javascript %}
+	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice-password.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+
+{% block body %}
+
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"]}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets')}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-turn-up') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
+
+			<div id="passwordAlert" class="alert hidden">
+				<span class="closebtn">&times;</span>
+				<span class="alert-message">
+					<p id="alertDetail"></p>
+				</span>
+			</div>
+
+			<form class="form-horizontal">
+
+				<p>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] }}</p>
+
+				<div class="form-group {% if not parameters.test  %}hidden{% endif %}">
+					<label for="inputOldPassword">{{lang["OLD_PASSWORD"]}}</label>
+					<input name="oldpassword" id="inputOldPassword" class="form-control" type="password" required>
+				</div>
+
+				<div class="form-group">
+					<label for="inputNewPassword1">{{lang["NEW_PASSWORD"]}}</label>
+					<input name="newpassword1" id="inputNewPassword1" class="form-control" type="password" required>
+				</div>
+				<div class="form-group">
+					<label for="inputNewPassword2">{{lang["NEW_PASSWORD_REPLY"]}}</label>
+					<input name="newpassword2" id="inputNewPassword2" class="form-control" type="password" required>
+				</div>
+
+				<div class="form-group btn">
+					<button type="submit" class="button" id="save_notice_password">{{lang["SAVE"]}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

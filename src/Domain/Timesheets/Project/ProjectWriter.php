@@ -31,17 +31,6 @@ class ProjectWriter extends ObjectActivityWriter {
         if ($this->project_service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        
-        $set_password = array_key_exists('set_password', $data) ? filter_var($data['set_password'], FILTER_SANITIZE_STRING) : null;
-        $set_password2 = array_key_exists('set_password2', $data) ? filter_var($data['set_password2'], FILTER_SANITIZE_STRING) : null;
-        
-        if ((!empty($set_password) || !empty($set_password2)) && $set_password !== $set_password2) {
-            $this->logger->warning("Set Timesheet Password Failed, Passwords missmatch");
-            $payload = new Payload(Payload::$STATUS_ERROR);
-            $payload->addFlashMessage('additional_flash_message', $this->translation->getTranslatedString("PASSWORDSDONOTMATCH"));
-            $payload->addFlashMessage('additional_flash_message_type', 'danger');
-            return $payload;
-        }
 
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();

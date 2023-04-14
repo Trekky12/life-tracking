@@ -3,122 +3,126 @@
 {% set active = 'timesheets' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice-password.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('timesheets')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('timesheets')}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-turn-up') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
 
-            <form class="form-horizontal" action="{{  url_for('timesheets_projects_save', {'id' : entry.id}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<div id="alertError" class="alert danger hidden">
+				<span class="closebtn">&times;</span>
+				<span class="alert-message">
+					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p id="alertErrorDetail"></p>
+				</span>
+			</div>
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
-                    <input name="hash"  type="hidden" value="{{entry.hash}}">
-                {% endif %}
+			<form class="form-horizontal" action="{{ url_for('timesheets_projects_save', {'id' : entry.id}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+					<input name="hash" type="hidden" value="{{entry.hash}}">
+				{% endif %}
 
 
-                <div class="form-group">
-                    <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputName">{{lang["NAME"]}}</label>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    {% include "main/user-select.twig" with {'entry':entry, 'module': 'timesheets'} only %}
-                </div>
+				<div class="form-group">
+					{% include "main/user-select.twig" with {'entry':entry, 'module': 'timesheets'} only %}
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxIsDayBased">
-                        <input name="is_day_based" type="checkbox" value="1" id="checkboxIsDayBased" {% if entry is not null and entry.is_day_based == 1 %}checked{% endif %}>
-                        {{lang["TIMESHEETS_IS_DAY_BASED"]}}
-                    </label>
-                </div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxIsDayBased">
+						<input name="is_day_based" type="checkbox" value="1" id="checkboxIsDayBased" {% if entry is not null and entry.is_day_based == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_IS_DAY_BASED"]}}
+					</label>
+				</div>
 
-                <div class="form-group">
-                    <label for="defaultView">{{lang["TIMESHEETS_DEFAULT_VIEW"]}}</label>
-                    <select class="form-control" id="defaultView" name="default_view">
-                        <option value="all" {% if (not entry is null and 'all' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_ALL"]}}</option>
-                        <option value="month" {% if (not entry is null and 'month' == entry.default_view) %}selected{% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
-                    </select>
-                </div>
+				<div class="form-group">
+					<label for="defaultView">{{lang["TIMESHEETS_DEFAULT_VIEW"]}}</label>
+					<select class="form-control" id="defaultView" name="default_view">
+						<option value="all" {% if (not entry is null and 'all' == entry.default_view) %} selected {% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_ALL"]}}</option>
+						<option value="month" {% if (not entry is null and 'month' == entry.default_view) %} selected {% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
+					</select>
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxShowMonthButton">
-                        <input name="show_month_button" type="checkbox" value="1" id="checkboxShowMonthButton" {% if entry is not null and entry.show_month_button == 1 %}checked{% endif %}>
-                        {{lang["TIMESHEETS_SHOW_MONTH_BUTTON"]}}
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxShowQuartersButtons">
-                        <input name="show_quarters_buttons" type="checkbox" value="1" id="checkboxShowQuartersButtons" {% if entry is not null and entry.show_quarters_buttons == 1 %}checked{% endif %}>
-                        {{lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"]}}
-                    </label>
-                </div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxShowMonthButton">
+						<input name="show_month_button" type="checkbox" value="1" id="checkboxShowMonthButton" {% if entry is not null and entry.show_month_button == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_SHOW_MONTH_BUTTON"]}}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxShowQuartersButtons">
+						<input name="show_quarters_buttons" type="checkbox" value="1" id="checkboxShowQuartersButtons" {% if entry is not null and entry.show_quarters_buttons == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"]}}
+					</label>
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxHasDurationModifications">
-                        <input name="has_duration_modifications" type="checkbox" value="1" id="checkboxHasDurationModifications" {% if entry is not null and entry.has_duration_modifications == 1 %}checked{% endif %}>
-                        {{lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"]}}
-                    </label>
-                </div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHasDurationModifications">
+						<input name="has_duration_modifications" type="checkbox" value="1" id="checkboxHasDurationModifications" {% if entry is not null and entry.has_duration_modifications == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"]}}
+					</label>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputRate">{{lang["TIMESHEETS_TIME_CONVERSION_RATE"]}}</label>
-                    <input type="text" class="form-control" id="inputRate" name="time_conversion_rate" value="{% if not entry is null %}{{entry.time_conversion_rate}}{% else %}1{% endif %}">
-                </div>
+				<div class="form-group">
+					<label for="inputRate">{{lang["TIMESHEETS_TIME_CONVERSION_RATE"]}}</label>
+					<input type="text" class="form-control" id="inputRate" name="time_conversion_rate" value="{% if not entry is null %}{{entry.time_conversion_rate}}{% else %}1{% endif %}">
+				</div>
 
-                <div class="form-group">
-                    <label for="inputDefaultDuration">{{lang["TIMESHEETS_DURATION_DEFAULT"]}}</label>
-                    <input type="text" class="form-control duration-input html-duration-picker" data-hide-seconds id="inputDefaultDuration" name="set_default_duration" value="{% if not entry is null %}{{entry.default_duration | splitDateInterval(true)}}{% endif %}" />
-                </div>
+				<div class="form-group">
+					<label for="inputDefaultDuration">{{lang["TIMESHEETS_DURATION_DEFAULT"]}}</label>
+					<input type="text" class="form-control duration-input html-duration-picker" data-hide-seconds id="inputDefaultDuration" name="set_default_duration" value="{% if not entry is null %}{{entry.default_duration | splitDateInterval(true)}}{% endif %}"/>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputCustomersNameSingular">{{lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"]}}</label>
-                    <input type="text" class="form-control" id="inputCustomersNameSingular" name="customers_name_singular" {% if not entry is null %}value="{{entry.customers_name_singular|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputCustomersNameSingular">{{lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"]}}</label>
+					<input type="text" class="form-control" id="inputCustomersNameSingular" name="customers_name_singular" {% if not entry is null %} value="{{entry.customers_name_singular|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputCustomersNamePlural">{{lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"]}}</label>
-                    <input type="text" class="form-control" id="inputCustomersNamePlural" name="customers_name_plural" {% if not entry is null %}value="{{entry.customers_name_plural|raw}}"{% endif %}>
-                </div>
-                
-                <h3>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] }}</h3>
-                
-                {% if entry is null or not entry.password  %}
-                    <p>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] }}</p>
-                    <div class="form-group">
-                    <label for="inputSetPassword">{{lang["NEW_PASSWORD"]}}</label>
-                    <input name="set_password" id="inputSetPassword" class="form-control" type="password" >
-                </div>
-                <div class="form-group">
-                    <label for="inputSetPassword2">{{lang["NEW_PASSWORD_REPLY"]}}</label>
-                    <input name="set_password2" id="inputSetPassword2" class="form-control" type="password" >
-                </div>
-                {% else %}
-                        <p>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] }}</p>
-                {% endif %}
+				<div class="form-group">
+					<label for="inputCustomersNamePlural">{{lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"]}}</label>
+					<input type="text" class="form-control" id="inputCustomersNamePlural" name="customers_name_plural" {% if not entry is null %} value="{{entry.customers_name_plural|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group btn">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group btn">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

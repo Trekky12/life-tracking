@@ -7,7 +7,9 @@
 {% block javascript %}
 	<script src="{{baseURL}}/static/assets/js/docxjs.min.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/assets/js/FileSaver.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/timesheets-notice.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice-export.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
@@ -41,9 +43,15 @@
 			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
 				<div class="search-filter">
 					<div class="filter-row">
-						<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
-						<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
-							{{lang["TIMESHEETS_EXPORT"]}}</button>
+						<div class="filter-group">
+							<div class="filter-element">
+								<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
+							</div>
+							<div class="filter-element">
+								<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
+									{{lang["TIMESHEETS_EXPORT"]}}</button>
+							</div>
+						</div>
 					</div>
 					<div class="filter-row">
 						<label id="checkboxHideEmptySheetsLabel" for="checkboxHideEmptySheets">

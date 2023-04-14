@@ -74,16 +74,15 @@
 			</div>
 		{% endif %}
 		{% if customers %}
-			<div class="form-group customer">
-				<label for="customer">
-					{% if project.customers_name_singular %}
-						{{project.customers_name_singular}}
-					{% else %}
-						{{lang["TIMESHEETS_CUSTOMER"]}}
-					{% endif %}
-				</label>
+			<div class="form-group customer timesheet-fast">
 				<select class="form-control" id="customer" name="customer">
-					<option value="" selected>{{ lang["NONE"] }}</option>
+					<option value="" selected>
+						{% if project.customers_name_singular %}
+							{{project.customers_name_singular}}
+						{% else %}
+							{{lang["TIMESHEETS_CUSTOMER"]}}
+						{% endif %}
+					</option>
 					{% for customer in customers %}
 						<option value="{{customer.id}}">{{customer.name|raw}}</option>
 					{% endfor %}

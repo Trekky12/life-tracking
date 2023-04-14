@@ -89,5 +89,4 @@ class MemberTest extends TimesheetTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("timesheets_sheets_table", $body);
     }
-
 }

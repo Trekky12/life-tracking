@@ -90,12 +90,12 @@ class OwnerTest extends TimesheetTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString("<input name=\"hash\"  type=\"hidden\" value=\"" . $result_data["hash"] . "\">", $body);
-        $this->assertStringContainsString("<input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" value=\"" . $data["name"] . "\">", $body);
+        $this->assertStringContainsString("<input name=\"hash\" type=\"hidden\" value=\"" . $result_data["hash"] . "\">", $body);
+        $this->assertStringContainsString("<input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\"  value=\"" . $data["name"] . "\" >", $body);
 
 
         $matches = [];
-        $re = '/<form class="form-horizontal" action="(?<save>[\/a-z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">.*<input name="hash"  type="hidden" value="(?<hash>[a-zA-Z0-9]*)">/s';
+        $re = '/<form class="form-horizontal" action="(?<save>[\/a-z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">.*<input name="hash" type="hidden" value="(?<hash>[a-zA-Z0-9]*)">/s';
         preg_match($re, $body, $matches);
 
         $this->assertArrayHasKey("save", $matches);

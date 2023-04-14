@@ -800,13 +800,12 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM"] = "Summe der Zeiten";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "Summe der Zeiten modifiziert";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "Anzahl Einträge";
 
-$lang["PASSWORDSDONOTMATCH"] = "Die Passwörter stimmen nicht überein!";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Passwort für die Verschlüsselung der Notizen";
-$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "Für die Verschlüsselung der Notizen muss ein Passwort vergeben werden. Das Passwort kann nicht mehr geändert werden!";
-$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_CHANGE"] = "Das Passwort wurde bereits gesetzt und kann nicht geändert werden.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "Für die Verschlüsselung der Notizen muss ein Passwort vergeben werden.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Passwort für die Verschlüsselung eingeben:";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Passwort ist falsch.";
-$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NOT_SET"] = "Es wurde noch kein Passwort für die Verschlüsselung vergeben!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_MATCH"] = "Die Passwörter stimmen nicht überein!";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_SUCCESS"] = "Passwort erfolgreich geändert.";
 
 $lang["TIMESHEETS_NOTICEFIELDS"] = "Felder für Notizen";
 $lang["DATATYPE_TEXTFIELD"] = "Textfeld";
@@ -820,6 +819,8 @@ $lang["TIMESHEETS_CUSTOMER"] = "Kunde";
 $lang["TIMESHEETS_CUSTOMERS"] = "Kunden";
 $lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"] = "Beschreibung für Kunde (Singular)";
 $lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Beschreibung für Kunden (Plural)";
+
+$lang["TIMESHEETS_NOTICE_PASSWORD"] = "Passwort für Notizen";
 
 $lang["PRINT"] = "Drucken";
 

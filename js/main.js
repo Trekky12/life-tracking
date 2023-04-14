@@ -238,7 +238,7 @@ function initialize() {
 flatpickr('#dateSelect', {
     "altInput": true,
     "altFormat": i18n.dateformatTwig.date,
-    "altInputClass": "input form-control",
+    "altInputClass": "datepicker dateSelect",
     "dateFormat": "Y-m-d",
     "locale": i18n.template,
     // reset to default value
@@ -256,7 +256,7 @@ flatpickr('#dateSelect', {
 flatpickr('#dateSelectEnd', {
     "altInput": true,
     "altFormat": i18n.dateformatTwig.date,
-    "altInputClass": "input form-control",
+    "altInputClass": "datepicker dateSelectEnd",
     "dateFormat": "Y-m-d",
     "locale": i18n.template,
     onReady: function (dateObj, dateStr, instance) {

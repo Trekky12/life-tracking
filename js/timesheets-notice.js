@@ -23,7 +23,7 @@ if (!window.crypto || !window.crypto.subtle) {
     }
 }
 
-let aesKey;
+let aesKey, KEK;
 
 checkPassword();
 
@@ -33,35 +33,32 @@ async function checkPassword() {
     if (!aesKey) {
         let pw = window.prompt(lang.timesheets_notice_password);
 
-        var data = { 'password': pw };
+        try {
+            await createAndStoreAESKey(pw);
+            aesKey = await getAESKeyFromStore();
+        } catch (e) {
+            alertErrorDetail.innerHTML = lang.decrypt_error;
+            alertError.classList.remove("hidden");
 
-        let token = await getCSRFToken()
-        data["csrf_name"] = token.csrf_name;
-        data["csrf_value"] = token.csrf_value;
+            loadingIconTimesheetNotice.classList.add("hidden");
 
-        let response = await fetch(jsObject.timesheets_sheets_check_pw, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-        let result = await response.json();
+            return;
+        }
 
-        if (result.status === "success") {
-            const salt = base64_to_buf(result.data);
-            const keyMaterial = await createKeyMaterial(pw);
-            const newAESKey = await createsAESKey(keyMaterial, salt);
+    } else {
+        // Check stored AES key
+        try {
+            let result = await getEncryptionParameters();
+            await decryptTestMessageAndKEK(aesKey, result.data.test, result.data.KEK);
+        } catch (e) {
+            alertErrorDetail.innerHTML = lang.decrypt_error;
+            alertError.classList.remove("hidden");
 
             let store = await getStore();
-            store.add({ 'project': projectID, 'key': newAESKey });
+            let deleteRequest = await store.delete(projectID);
 
-            aesKey = await getAESKeyFromStore();
-        } else if (result.status === "error" && result.reason) {
-            alertErrorDetail.innerHTML = result.reason;
-            alertError.classList.remove("hidden");
             loadingIconTimesheetNotice.classList.add("hidden");
+
             return;
         }
     }
@@ -71,7 +68,16 @@ async function checkPassword() {
     // Sequential
     for (const notice_field of notice_fields) {
         let sheet_id = parseInt(notice_field.dataset.sheet);
-        let notice = await getNotice(sheet_id);
+        let notice;
+
+        try {
+            notice = await getNotice(sheet_id);
+        } catch (e) {
+            alertErrorDetail.innerHTML = lang.encrypt_error;
+            alertError.classList.remove("hidden");
+            document.getElementById("loading-overlay").classList.add("hidden");
+            return;
+        }
 
         if (notice) {
             if (IsJsonString(notice)) {
@@ -144,38 +150,74 @@ async function checkPassword() {
 }
 
 async function getNotice(sheet_id) {
+
+    if (!KEK) {
+        console.error(`KEK missing`);
+        throw "KEK missing";
+    }
+
     let notice_response = await fetch(jsObject.timesheets_sheets_notice_data + '?sheet=' + sheet_id, {
         method: "GET",
         credentials: "same-origin",
     });
     let notice_result = await notice_response.json();
+
     if (notice_result.status !== "error" && notice_result.entry) {
         let notice = notice_result.entry.notice;
+        let encryptedCEK = notice_result.entry.CEK;
+
+        let CEK;
+        try {
+            const decryptedCEK = await decryptData(KEK, encryptedCEK);
+            const rawCEK = base64_to_buf(decryptedCEK);
+            CEK = await createKey(rawCEK);
+        } catch (e) {
+            console.error(`Unable to decrypt CEK - ${e}`);
+            throw e;
+        }
 
         if (notice) {
-            if (!aesKey) {
-                alertErrorDetail.innerHTML = lang.decrypt_error;
-                alertError.classList.remove("hidden");
-                return;
+            try {
+                let decrypted_notice = await decryptData(CEK, notice);
+                return decrypted_notice;
+            } catch (e) {
+                console.error(`Unable to decrypt notice - ${e}`);
+                throw e;
             }
-            let decrypted_notice = await decryptData(notice, sheet_id);
-            return decrypted_notice;
         }
 
     }
     return;
 }
 
+/**
+ * Save Notice
+ */
 if (timesheetNoticeForm) {
     timesheetNoticeForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
+        if (!KEK) {
+            alertErrorDetail.innerHTML = lang.encrypt_error;
+            alertError.classList.remove("hidden");
+            document.getElementById("loading-overlay").classList.add("hidden");
+            return;
+        }
+
         alertError.classList.add("hidden");
         alertErrorDetail.innerHTML = "";
-
         document.getElementById("loading-overlay").classList.remove("hidden");
 
         let data = {};
+
+        // create CEK
+        const rawCEK = window.crypto.getRandomValues(new Uint8Array(32));
+        const CEK = await createKey(rawCEK);
+
+        // encrypt CEK with KEK
+        data["CEK"] = await encryptData(KEK, buff_to_base64(rawCEK));
+
+        // encrypt data with CEK
         let notice_fields = Array.from(timesheetNoticeForm.querySelectorAll('input[type="text"], textarea, select'));
         if (notice_fields.length > 1) {
             let notice = {};
@@ -188,16 +230,18 @@ if (timesheetNoticeForm) {
                     notice[field.name] = field.value;
                 }
             }
-            data["notice"] = await encryptData(JSON.stringify(notice));
+            data["notice"] = await encryptData(CEK, JSON.stringify(notice));
         } else {
-            data["notice"] = await encryptData(notice_fields[0].value);
+            data["notice"] = await encryptData(CEK, notice_fields[0].value);
         }
 
-        getCSRFToken().then(function (token) {
+        try {
+            let token = await getCSRFToken();
+
             data["csrf_name"] = token.csrf_name;
             data["csrf_value"] = token.csrf_value;
 
-            return fetch(timesheetNoticeForm.action, {
+            let response = await fetch(timesheetNoticeForm.action, {
                 method: "POST",
                 credentials: "same-origin",
                 headers: {
@@ -205,10 +249,8 @@ if (timesheetNoticeForm) {
                 },
                 body: JSON.stringify(data),
             });
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            if (data["status"] === "success") {
+            let result = await response.json();
+            if (result["status"] === "success") {
                 allowedReload = true;
                 window.location.reload(true);
             } else {
@@ -216,7 +258,7 @@ if (timesheetNoticeForm) {
                 alertErrorDetail.innerHTML = data["message"];
                 alertError.classList.remove("hidden");
             }
-        }).catch(function (error) {
+        } catch (error) {
             console.log(error);
 
             if (document.body.classList.contains('offline')) {
@@ -228,69 +270,71 @@ if (timesheetNoticeForm) {
                 alertError.classList.remove("hidden");
             }
 
-        });
+        }
     });
 }
 
 
-function createKeyMaterial(password) {
-    let enc = new TextEncoder();
-    return window.crypto.subtle.importKey(
-        "raw",
-        enc.encode(password),
-        { name: "PBKDF2" },
-        false,
-        ["deriveBits", "deriveKey"]
-    );
-}
+async function getEncryptionParameters() {
+    let data = {};
+    let token = await getCSRFToken()
+    data["csrf_name"] = token.csrf_name;
+    data["csrf_value"] = token.csrf_value;
 
-function createsAESKey(keyMaterial, salt) {
-    return window.crypto.subtle.deriveKey(
-        {
-            "name": "PBKDF2",
-            "salt": salt,
-            "iterations": 250000,
-            "hash": "SHA-256"
+    let response = await fetch(jsObject.timesheets_notice_params, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
         },
-        keyMaterial,
-        { "name": "AES-GCM", "length": 256 },
-        true,
-        ["encrypt", "decrypt"]
-    );
-}
-
-async function encryptData(data) {
-    try {
-        const iv = window.crypto.getRandomValues(new Uint8Array(12));
-
-        const encryptedContent = await window.crypto.subtle.encrypt(
-            {
-                name: "AES-GCM",
-                iv: iv,
-            },
-            aesKey,
-            new TextEncoder().encode(data)
-        );
-
-        const encryptedContentArr = new Uint8Array(encryptedContent);
-        let buff = new Uint8Array(iv.byteLength + encryptedContentArr.byteLength);
-        buff.set(iv, 0);
-        buff.set(encryptedContentArr, iv.byteLength);
-        const base64Buff = buff_to_base64(buff);
-        return base64Buff;
-    } catch (e) {
-        console.log(`Error - ${e}`);
-        alertErrorDetail.innerHTML = lang.encrypt_error;
-        alertError.classList.remove("hidden");
-        return "";
+        body: JSON.stringify(data),
+    });
+    let result = await response.json();
+    if (result.status !== "success") {
+        throw "Unable to retrieve parameters";
     }
+    return result;
 }
 
-function buff_to_base64(buff) {
-    return btoa(String.fromCharCode.apply(null, buff));
+async function decryptTestMessageAndKEK(key, encryptedTestMessage, savedEncryptedKEK) {
+    try {
+        const testMessage = await decryptData(key, encryptedTestMessage);
+
+        if (testMessage !== "test") {
+            throw "Wrong message!";
+        }
+    } catch (e) {
+        console.error(`Unable to decrypt test message - ${e}`);
+        throw e;
+    }
+
+    try {
+        const savedKEK = await decryptData(key, savedEncryptedKEK);
+        const rawKEK = base64_to_buf(savedKEK);
+        KEK = await createKey(rawKEK);
+    } catch (e) {
+        console.error(`Unable to decrypt KEK - ${e}`);
+        throw e;
+    }
+
+    return 0;
 }
-function base64_to_buf(b64) {
-    return Uint8Array.from(atob(b64), (c) => c.charCodeAt(null));
+
+async function createAndStoreAESKey(pw) {
+
+    let result = await getEncryptionParameters();
+
+    const iterations = result.data.iterations;
+    const salt = base64_to_buf(result.data.salt);
+    const keyMaterial = await createKeyMaterial(pw);
+    const newAESKey = await deriveAESKey(keyMaterial, salt, iterations);
+
+    await decryptTestMessageAndKEK(newAESKey, result.data.test, result.data.KEK);
+
+    let store = await getStore();
+    store.add({ 'project': projectID, 'key': newAESKey });
+
+    return 0;
 }
 
 async function getStore() {
@@ -326,31 +370,6 @@ async function getAESKeyFromStore() {
     return key;
 }
 
-
-async function decryptData(encryptedData, sheet_id) {
-    try {
-        const encryptedDataBuff = base64_to_buf(encryptedData);
-        const iv = encryptedDataBuff.slice(0, 12);
-        const data = encryptedDataBuff.slice(12);
-
-        const decryptedContent = await window.crypto.subtle.decrypt(
-            {
-                name: "AES-GCM",
-                iv: iv,
-            },
-            aesKey,
-            data
-        );
-        return new TextDecoder().decode(decryptedContent);
-    } catch (e) {
-        console.log(sheet_id);
-        console.log(`Error - ${e}`);
-        alertErrorDetail.innerHTML = lang.decrypt_error;
-        alertError.classList.remove("hidden");
-        return "";
-    }
-}
-
 function IsJsonString(str) {
     try {
         JSON.parse(str);
@@ -359,135 +378,6 @@ function IsJsonString(str) {
     }
     return true;
 }
-
-document.querySelector('#wordExport').addEventListener('click', function (e) {
-    e.preventDefault();
-
-    let filename = timesheetNoticeWrapper.dataset.sheetname ? timesheetNoticeWrapper.dataset.sheetname : timesheetNoticeWrapper.dataset.projectname;
-
-    const word_elements = [];
-
-    let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice-wrapper:not(.hidden)'));
-    for (const notice_field of notice_fields) {
-
-        let customerElement = notice_field.querySelector('.sheet_customer');
-        let customer = customerElement ? customerElement.innerHTML.replace(/&nbsp;/g, ' ') : "";
-
-        let categoriesElement = notice_field.querySelector('.sheet_categories');
-        let categories = categoriesElement ? categoriesElement.innerHTML.replace(/&nbsp;/g, ' ') : "";
-        let title = notice_field.querySelector('.sheet_title').innerHTML;
-
-        const headline = new docx.Paragraph({
-            heading: docx.HeadingLevel.HEADING_1,
-            children: [
-                new docx.TextRun({
-                    text: title,
-                })
-            ]
-        });
-
-        const subheadline = new docx.Paragraph({
-            children: [
-                new docx.TextRun({
-                    text: customer,
-                    italics: true,
-                    size: 24
-                })
-            ],
-            spacing: {
-                after: 200,
-            },
-        });
-
-        const subheadline2 = new docx.Paragraph({
-            children: [
-                new docx.TextRun({
-                    text: categories,
-                    italics: true,
-                    size: 24
-                })
-            ],
-            spacing: {
-                after: 200,
-            },
-        });
-
-        word_elements.push(headline);
-        word_elements.push(subheadline);
-        word_elements.push(subheadline2);
-
-
-        let field_element_wrappers = notice_field.querySelectorAll('.timesheet-notice-field:not(.hidden)');
-
-        field_element_wrappers.forEach(function (field_element_wrapper) {
-
-            field_element_wrapper.querySelectorAll('input[type="text"], textarea, select, p.notice-field').forEach(function (field_element) {
-
-                let notices = [new docx.TextRun({
-                    text: field_element.previousElementSibling.innerHTML,
-                    underline: {}
-                })];
-
-                let content = field_element.tagName.toLowerCase() === "p" ? field_element.innerHTML.replace(/<br ?\/?>/g, "\n").replaceAll("&amp;", "&").replaceAll("&gt;", ">").replaceAll("&lt;", "<") : field_element.value;
-                const textRuns = content.split("\n").map(line => new docx.TextRun({ text: line, break: 1 }));
-                notices.push(...textRuns);
-                const value = new docx.Paragraph({
-                    children: notices,
-                    spacing: {
-                        after: 400,
-                    }
-                });
-
-                word_elements.push(value);
-            });
-        });
-
-        // Page break if not last item
-        if (notice_fields.length - 1 !== notice_fields.indexOf(notice_field)) {
-            word_elements.push(new docx.Paragraph({
-                children: [new docx.PageBreak()]
-            }));
-        }
-    }
-
-    const doc = new docx.Document({
-        styles: {
-            default: {
-                heading1: {
-                    run: {
-                        size: 48,
-                        color: "000000",
-                        font: "Calibri",
-                    },
-                    paragraph: {
-                        spacing: {
-                            after: 120,
-                        },
-                    },
-                },
-            },
-            paragraphStyles: [
-                {
-                    name: 'Normal',
-                    run: {
-                        size: 24,
-                        font: "Calibri",
-                    },
-                },
-            ],
-        },
-        sections: [
-            {
-                properties: {},
-                children: word_elements
-            }
-        ]
-    });
-
-    docx.Packer.toBlob(doc).then((blob) => {
-        saveAs(blob, filename + "_Export.docx");
-    });
-});
 
 
 let checkboxHideEmptySheets = document.getElementById('checkboxHideEmptySheets');

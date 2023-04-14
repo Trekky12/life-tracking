@@ -890,13 +890,15 @@ CREATE TABLE timesheets_projects (
     changedOn TIMESTAMP NULL,
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) DEFAULT NULL,
+    salt VARCHAR(255) NULL,
+    iterations INT(20) DEFAULT 600000,
+    KEK varchar(255) DEFAULT NULL,
+    test VARCHAR(255) DEFAULT NULL,
     is_day_based INT(1) DEFAULT 0,
     default_view varchar(255) DEFAULT 'month',
     has_duration_modifications INT(1) DEFAULT 0,
     time_conversion_rate varchar(100) DEFAULT NULL,
     default_duration INT(11) NULL,
-    password VARCHAR(255) NULL,
-    salt VARCHAR(255) NULL,
     show_month_button INT(1) DEFAULT 1,
     show_quarters_buttons INT(1) DEFAULT 0,
     customers_name_singular VARCHAR(255) DEFAULT NULL,
@@ -908,6 +910,11 @@ CREATE TABLE timesheets_projects (
 
 /**
 ALTER TABLE `timesheets_projects` ADD `customers_name_singular` VARCHAR(255) NULL DEFAULT NULL AFTER `show_quarters_buttons`, ADD `customers_name_plural` VARCHAR(255) NULL DEFAULT NULL AFTER `customers_name_singular`; 
+*/
+
+/*
+ALTER TABLE timesheets_projects MODIFY salt VARCHAR(255) AFTER hash;
+ALTER TABLE timesheets_projects ADD iterations INT(20) DEFAULT 600000 AFTER salt, ADD KEK VARCHAR(255) DEFAULT NULL AFTER iterations, ADD test VARCHAR(255) DEFAULT NULL AFTER KEK; 
 */
 
 DROP TABLE IF EXISTS timesheets_projects_users;
@@ -1041,16 +1048,19 @@ CREATE TABLE timesheets_sheets_notices (
     changedBy INTEGER unsigned DEFAULT NULL,
     sheet INTEGER unsigned DEFAULT NULL,
     notice TEXT DEFAULT NULL,
+    CEK varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(sheet) REFERENCES timesheets_sheets(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 /**
-INSERT INTO timesheets_sheets_notices (sheet, createdOn, changedOn, createdBy, changedBy, notice)
-SELECT id, createdOn, changedOn, createdBy, changedBy, notice
-FROM timesheets_sheets
+
+ALTER TABLE timesheets_sheets_notices ADD CEK VARCHAR(255) DEFAULT NULL AFTER notice; 
+ALTER TABLE timesheets_sheets_notices ADD is_active INT(1) DEFAULT 1 AFTER CEK; 
+
 */
 
 DROP TABLE IF EXISTS timesheets_noticefields;

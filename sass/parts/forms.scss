@@ -2,6 +2,14 @@
 input[type="submit"],
 .button {
 
+    padding: 0.8rem 2.5rem;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+
+    -webkit-appearance: none;
+    border-radius:0;
+
     &,
     &:focus {
         cursor: pointer;
@@ -11,8 +19,7 @@ input[type="submit"],
 
         color: #FFFFFF;
         background-color: $color_blue_light;
-
-        padding: 0.8rem 2.5rem;
+        
         //transition: all 0.3s ease;
 
         outline: none;
@@ -112,6 +119,10 @@ textarea {
     &:focus {
         color: $color_text-input-focus;
     }
+
+    &:disabled{
+        background: $color_gray;
+    }
 }
 
 select {
@@ -140,6 +151,11 @@ label:not(.radio):not(.checkbox) {
     @include font-size(1.4);
     display: inline-block;
     margin-bottom: 5px;
+}
+
+input[type="radio"], input[type="checkbox"]{
+    vertical-align: middle;
+    margin-top: -1px;
 }
 
 input[type=file] {

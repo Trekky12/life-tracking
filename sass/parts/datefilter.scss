@@ -1,5 +1,4 @@
 #location-filter {
-
     box-shadow: 0 10px 5px -5px rgba(0, 0, 0, 0.16);
 
     background-color: $color_background-body;
@@ -15,9 +14,8 @@
         margin-top: -2.5rem;
     }
 
-
     #search-form {
-        transition: height .3s linear;
+        transition: height 0.3s linear;
         overflow: hidden;
         padding: 0;
 
@@ -36,7 +34,6 @@
         input {
             width: 100%;
         }
-
     }
 
     @media screen and (min-width: $size_mobile) {
@@ -45,49 +42,23 @@
     }
 }
 
-
 #tableHeaderFilter {
 
     //padding: 5px 10px;
-
-    @media screen and (min-width: $size_mobile) {
-        .filter-row {
-            display: flex;
-            align-items: start;
-            justify-content: space-between;
-            align-items: center;
-
-
-            //button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
-            input:not([type="checkbox"]):not(.choices__input):not(.selectr-input),
-            select,
-            .flatpickr-input,
-            .choices__inner {
-                min-height: 41px;
-            }
-
-            .flatpickr-input {
-                min-width: 200px;
-            }
-
-        }
-    }
-
     .categories-filter {
         flex-grow: 1;
         flex-basis: 30%;
     }
 }
 
-
-
 #tableFooterFilter {
     border-top: 1px solid $color_gray;
     margin-top: 1rem;
 
-
     .categories-filter {
-        @media screen and (min-width: $size_mobile) {
+        width: 100%;
+
+        @media screen and (min-width: $size_tablet) {
             width: $size_mini;
         }
     }
@@ -105,35 +76,53 @@
 }
 
 .search-filter {
+
     .filter-group {
-        @media screen and (min-width: $size_mobile) {
-            display: flex;
+        margin-top: 1rem;
+        display: flex;
+
+        @media screen and (min-width: $size_tablet) {
+            margin-top: 0;
         }
     }
 
     .filter-row {
         margin-top: 1rem;
 
-        .filter-element {
-            width: 100%;
-            margin-top: 1rem;
-            display: inline-block;
+        @media screen and (min-width: $size_tablet) {
+            display: flex;
+            align-items: center;
 
-            @media screen and (min-width: $size_mobile) {
-                width: auto;
-                display: block;
-                margin-top: 0px;
+            .filter-group:not(:nth-of-type(1)) {
+                margin-left: 1rem;
             }
 
-
-            &:not(:nth-of-type(1)) {
-                @media screen and (min-width: $size_mobile) {
-                    margin-left: 1rem;
-                }
+            &.space-between {
+                justify-content: space-between;
             }
 
-            select {
-                height: 44px;
+            //button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
+            input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(.choices__input):not(.selectr-input),
+            select,
+            .datepicker,
+            .choices__inner {
+                //min-height: 41px;
+            }
+
+            .datepicker {
+                min-width: 200px;
+            }
+        }
+    }
+
+    .filter-element {
+        &:not(:nth-of-type(1)) {
+            margin-left: 1rem;
+        }
+
+        select {
+            @media screen and (min-width: $size_tablet) {
+                //height: 44px;
             }
         }
     }
@@ -152,20 +141,29 @@
         label {
             margin-bottom: 0px;
         }
-
     }
 
     button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
-    input:not([type="checkbox"]):not(.choices__input):not(.selectr-input),
+    input:not(.choices__input):not(.selectr-input),
     label,
     select {
-        width: 100%;
-
         @include font-size(1.2);
 
         @media screen and (min-width: $size_mobile) {
             @include font-size(1.4);
-            width: auto;
         }
     }
+
+    input[type="submit"],
+    button{
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+}
+
+.datepicker{
+    display: block;
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    @include font-size(1.4);
 }

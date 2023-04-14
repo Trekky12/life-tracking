@@ -31,8 +31,8 @@
 
 			<form method="GET" action="{{ url_for('timesheets_sheets_export', {'project' : project.hash}) }}" class="search-filter">
 
-				<div class="filter-content form-group">
-					<div class="d1ate-element">
+				<div class="filter-row">
+					<div class="filter-element">
 						<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
 
 						<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
@@ -41,12 +41,14 @@
 					</div>
 				</div>
 				{% if categories %}
-					<div class="categories-filter form-group">
-						<select id="category-filter" multiple name="categories[]" class="category" autocomplete="off">
-							{% for cat in categories %}
-								<option value="{{ cat.id }}" {% if cat.id in categories_selected %} selected {% endif %}>{{ cat.name }}</option>
-							{% endfor %}
-						</select>
+					<div class="filter-row">
+						<div class="categories-filter filter-element">
+							<select id="category-filter" multiple name="categories[]" class="category" autocomplete="off">
+								{% for cat in categories %}
+									<option value="{{ cat.id }}" {% if cat.id in categories_selected %} selected {% endif %}>{{ cat.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
 					</div>
 				{% endif %}
 				<div class="filter-grid">
