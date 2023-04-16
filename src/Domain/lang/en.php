@@ -537,6 +537,8 @@ $lang["TIMESHEETS_QUARTER_4"] = "Q4";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Hide entries without notices";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Hide fields without content";
 
+$lang["LAST_SAVED"] = "last saved";
+
 $lang["THIS_DEVICE"] = "this device";
 
 $lang["REQUEST_ERROR"] = "A request error occured!";
@@ -549,12 +551,15 @@ $lang["ACTIVITIES"] = "Activities";
 $lang["ACTIVITY_CREATE"] = "%s created %s";
 $lang["ACTIVITY_UPDATE"] = "%s updated %s";
 $lang["ACTIVITY_DELETE"] = "%s deleted %s";
+$lang["ACTIVITY_SAVE"] = "%s saved %s";
 $lang["ACTIVITY_CREATE_ME"] = "You created %s";
 $lang["ACTIVITY_UPDATE_ME"] = "You updated %s";
 $lang["ACTIVITY_DELETE_ME"] = "You deleted %s";
+$lang["ACTIVITY_SAVE_ME"] = "You saved %s";
 $lang["ACTIVITY_CREATE_SYSTEM"] = "%s created";
 $lang["ACTIVITY_UPDATE_SYSTEM"] = "%s updated";
 $lang["ACTIVITY_DELETE_SYSTEM"] = "%s deleted";
+$lang["ACTIVITY_SAVE_SYSTEM"] = "%s saved";
 
 $lang["DATAOBJECT_ACITIVY"] = "activity";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "board";

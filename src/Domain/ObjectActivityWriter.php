@@ -26,9 +26,11 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
 
     protected function insertEntry($entry) {
         $id = parent::insertEntry($entry);
-        $entry_new = $this->getMapper()->get($id);
-        $activity = $this->activity_creator->createActivity("create", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new));
-        $this->activity_creator->saveActivity($activity);
+        if ($id) {
+            $entry_new = $this->getMapper()->get($id);
+            $activity = $this->activity_creator->createActivity("create", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new));
+            $this->activity_creator->saveActivity($activity);
+        }
 
         return $id;
     }
@@ -51,5 +53,4 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
     public function getObjectLink($entry) {
         return ["route" => $this->getObjectViewRoute(), "params" => $this->getObjectViewRouteParams($entry)];
     }
-
 }

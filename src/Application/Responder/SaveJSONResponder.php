@@ -26,13 +26,16 @@ class SaveJSONResponder extends JSONResponder {
         }
 
         $entry = $payload->getEntry();
-        if($entry){
+        if ($entry) {
             $data["entry"] = $entry;
         }
 
         switch ($payload->getStatus()) {
             case Payload::$STATUS_PARSING_ERRORS:
-                $data = ["status" => "error"];
+                $data = ["status" => "error", "error" => $this->translation->getTranslatedString($result->getParsingErrors()[0])];
+                break;
+            case Payload::$STATUS_SAVE_ERROR:
+                $data = ["status" => "error", "error" => $this->translation->getTranslatedString("ENTRY_ERROR_SAVE")];
                 break;
             case Payload::$STATUS_ERROR:
                 $data = ["status" => "error", "error" => $result];
@@ -44,5 +47,4 @@ class SaveJSONResponder extends JSONResponder {
 
         return $response;
     }
-
 }

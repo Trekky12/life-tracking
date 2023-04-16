@@ -78,9 +78,13 @@ class ActivityService extends Service {
                     break;
             }
 
+            // special case since sheet notices are autosaved as new revisions
+            if ($el->object == "App\Domain\Timesheets\SheetNotice\SheetNotice") {
+                $action = "ACTIVITY_SAVE";
+            }
 
-            $object_description = !is_null($el->object_description) ? sprintf("\"%s\"", $el->object_description): $this->translation->getTranslatedString($el->object::$NAME);
-            
+            $object_description = !is_null($el->object_description) ? sprintf("\"%s\"", $el->object_description) : $this->translation->getTranslatedString($el->object::$NAME);
+
             if (is_null($el->user)) {
                 $action = $action . "_SYSTEM";
                 $description = sprintf($this->translation->getTranslatedString($action), $object_description);
@@ -110,5 +114,4 @@ class ActivityService extends Service {
 
         return $rendered_data;
     }
-
 }

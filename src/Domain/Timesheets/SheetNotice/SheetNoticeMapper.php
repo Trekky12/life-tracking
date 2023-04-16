@@ -2,6 +2,8 @@
 
 namespace App\Domain\Timesheets\SheetNotice;
 
+use App\Domain\DataObject;
+
 class SheetNoticeMapper extends \App\Domain\Mapper {
 
     protected $table = "timesheets_sheets_notices";
@@ -10,11 +12,11 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
     protected $insert_user = false;
 
     public function __construct(\PDO $db, \App\Domain\Main\Translator $translation, \App\Domain\Base\CurrentUser $user) {
-        parent::__construct($db, $translation, $user);        
+        parent::__construct($db, $translation, $user);
     }
 
     public function getNotice($sheet_id) {
-        $sql = "SELECT *, notice FROM " . $this->getTableName() . "  WHERE sheet = :sheet";
+        $sql = "SELECT *, notice FROM " . $this->getTableName() . "  WHERE sheet = :sheet AND is_active = 1";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -28,7 +30,7 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
     }
 
     public function hasNotice($sheet_id) {
-        $sql = "SELECT id FROM " . $this->getTableName() . "  WHERE sheet = :sheet";
+        $sql = "SELECT id FROM " . $this->getTableName() . "  WHERE sheet = :sheet AND is_active = 1";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -41,7 +43,7 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
         return null;
     }
 
-    public function hasNotices($sheet_ids = []){
+    public function hasNotices($sheet_ids = []) {
         if (empty($sheet_ids)) {
             return [];
         }
@@ -52,7 +54,7 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
             $notice_bindings[":sheet_" . $idx] = $sheet_id;
         }
 
-        $sql .= " WHERE sheet IN (" . implode(',', array_keys($notice_bindings)) . ")";
+        $sql .= " WHERE sheet IN (" . implode(',', array_keys($notice_bindings)) . ") AND is_active = 1";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($notice_bindings);
@@ -64,4 +66,23 @@ class SheetNoticeMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+    public function insert(DataObject $data) {
+        try {
+            $this->db->beginTransaction();
+
+            $sql = "UPDATE " . $this->getTableName() . " SET is_active = 0 WHERE sheet = :sheet ";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(["sheet" => $data->sheet]);
+
+            $inserted_id = parent::insert($data);
+
+            $this->db->commit();
+
+            return $inserted_id;
+        } catch (\PDOException $e) {
+            $this->db->rollBack();
+        }
+
+        return null;
+    }
 }

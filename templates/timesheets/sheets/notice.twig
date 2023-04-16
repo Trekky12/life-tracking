@@ -47,6 +47,7 @@
 					<div class="timesheet-notice-wrapper">
 
 						<h3 class="sheet_title">{{ sheet_title }}</h3>
+						<small>{{ lang["LAST_SAVED"]}}: <span id="lastSaved"></span></small>
 						{% if sheet_customer %}
 							<h4 class="sheet_customer">
 								{%- if project.customers_name_singular %}

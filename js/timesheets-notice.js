@@ -5,7 +5,7 @@ const timesheetNoticeWrapper = document.querySelector("#timesheetNoticeWrapper")
 const loadingIconTimesheetNotice = document.querySelector("#loadingIconTimesheetNotice");
 
 const timesheetNoticeForm = document.querySelector("#timesheetNoticeForm");
-
+const timesheetLastSaved = document.querySelector("#lastSaved");
 
 const alertError = document.querySelector("#alertError");
 const alertErrorDetail = alertError.querySelector("#alertErrorDetail");
@@ -22,6 +22,8 @@ if (!window.crypto || !window.crypto.subtle) {
         timesheetNoticeForm.querySelector('button[type="submit"]').classList.add("hidden");
     }
 }
+
+let currentNotice;
 
 let aesKey, KEK;
 
@@ -166,6 +168,10 @@ async function getNotice(sheet_id) {
         let notice = notice_result.entry.notice;
         let encryptedCEK = notice_result.entry.CEK;
 
+        if (timesheetLastSaved) {
+            timesheetLastSaved.innerHTML = moment(notice_result.entry.changedOn).format(i18n.dateformatJS.datetime);
+        }
+
         let CEK;
         try {
             const decryptedCEK = await decryptData(KEK, encryptedCEK);
@@ -179,6 +185,11 @@ async function getNotice(sheet_id) {
         if (notice) {
             try {
                 let decrypted_notice = await decryptData(CEK, notice);
+
+                if (timesheetLastSaved) {
+                    currentNotice = decrypted_notice;
+                }
+
                 return decrypted_notice;
             } catch (e) {
                 console.error(`Unable to decrypt notice - ${e}`);
@@ -196,71 +207,102 @@ async function getNotice(sheet_id) {
 if (timesheetNoticeForm) {
     timesheetNoticeForm.addEventListener("submit", async function (e) {
         e.preventDefault();
+        saveNotice(false);
+    });
 
-        if (!KEK) {
-            alertErrorDetail.innerHTML = lang.encrypt_error;
-            alertError.classList.remove("hidden");
-            document.getElementById("loading-overlay").classList.add("hidden");
-            return;
+    /**
+     * Auto Save
+     */
+    setInterval(async function () {
+        saveNotice(true);
+    }, 2*60*1000);
+}
+
+function getNoticeData() {
+    let notice_fields = Array.from(timesheetNoticeForm.querySelectorAll('input[type="text"], textarea, select'));
+    let notice = {};
+    for (const field of notice_fields) {
+        if (field.tagName && field.tagName.toLowerCase() === "select") {
+            if (field.selectedIndex >= 0) {
+                notice[field.name] = field.options[field.selectedIndex].text;
+            }
+        } else {
+            notice[field.name] = field.value;
         }
+    }
+    return JSON.stringify(notice);
+}
 
+async function saveNotice(autoSave = false) {
+    if (!KEK) {
+        alertErrorDetail.innerHTML = lang.encrypt_error;
+        alertError.classList.remove("hidden");
+        document.getElementById("loading-overlay").classList.add("hidden");
+        return;
+    }
+
+    if (!autoSave) {
         alertError.classList.add("hidden");
         alertErrorDetail.innerHTML = "";
         document.getElementById("loading-overlay").classList.remove("hidden");
+    }
 
-        let data = {};
+    let noticeData = getNoticeData();
+    if (autoSave && currentNotice && currentNotice === noticeData) {
+        console.log("No changes, not saving!");
+        return;
+    }
 
-        // create CEK
-        const rawCEK = window.crypto.getRandomValues(new Uint8Array(32));
-        const CEK = await createKey(rawCEK);
+    let data = {};
+    data["is_autosave"] = autoSave ? 1 : 0;
 
-        // encrypt CEK with KEK
-        data["CEK"] = await encryptData(KEK, buff_to_base64(rawCEK));
+    // create CEK
+    const rawCEK = window.crypto.getRandomValues(new Uint8Array(32));
+    const CEK = await createKey(rawCEK);
 
-        // encrypt data with CEK
-        let notice_fields = Array.from(timesheetNoticeForm.querySelectorAll('input[type="text"], textarea, select'));
-        if (notice_fields.length > 1) {
-            let notice = {};
-            for (const field of notice_fields) {
-                if (field.tagName && field.tagName.toLowerCase() === "select") {
-                    if (field.selectedIndex >= 0) {
-                        notice[field.name] = field.options[field.selectedIndex].text;
-                    }
-                } else {
-                    notice[field.name] = field.value;
-                }
+    // encrypt CEK with KEK
+    data["CEK"] = await encryptData(KEK, buff_to_base64(rawCEK));
+
+    // encrypt data with CEK
+    data["notice"] = await encryptData(CEK, noticeData);
+
+    try {
+        let token = await getCSRFToken();
+
+        data["csrf_name"] = token.csrf_name;
+        data["csrf_value"] = token.csrf_value;
+
+        let response = await fetch(timesheetNoticeForm.action, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+        let result = await response.json();
+        if (result["status"] === "success") {
+            // store updated notice for next update
+            currentNotice = noticeData;
+            // update last saved
+            if (timesheetLastSaved) {
+                timesheetLastSaved.innerHTML = moment(result.entry.changedOn).format(i18n.dateformatJS.datetime);
             }
-            data["notice"] = await encryptData(CEK, JSON.stringify(notice));
-        } else {
-            data["notice"] = await encryptData(CEK, notice_fields[0].value);
         }
-
-        try {
-            let token = await getCSRFToken();
-
-            data["csrf_name"] = token.csrf_name;
-            data["csrf_value"] = token.csrf_value;
-
-            let response = await fetch(timesheetNoticeForm.action, {
-                method: "POST",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-            let result = await response.json();
+        if (!autoSave) {
             if (result["status"] === "success") {
                 allowedReload = true;
                 window.location.reload(true);
             } else {
                 document.getElementById("loading-overlay").classList.add("hidden");
-                alertErrorDetail.innerHTML = data["message"];
+                alertErrorDetail.innerHTML = data["error"];
                 alertError.classList.remove("hidden");
             }
-        } catch (error) {
-            console.log(error);
+        }
+    } catch (error) {
+        console.log(error);
 
+        if (!autoSave) {
             if (document.body.classList.contains('offline')) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(timesheetNoticeForm.action, timesheetNoticeForm.method, formData);
@@ -269,11 +311,9 @@ if (timesheetNoticeForm) {
                 alertErrorDetail.innerHTML = error;
                 alertError.classList.remove("hidden");
             }
-
         }
-    });
+    }
 }
-
 
 async function getEncryptionParameters() {
     let data = {};
@@ -397,7 +437,7 @@ if (checkboxHideEmptySheets) {
 let checkboxHideEmptyNoticeFields = document.getElementById('checkboxHideEmptyNoticeFields');
 if (checkboxHideEmptyNoticeFields) {
     checkboxHideEmptyNoticeFields.addEventListener('click', function (event) {
-        document.querySelectorAll('.timesheet-notice-field[data-empty="1"]').forEach(function (el) {
+        document.querySelectorAll('.timesheet-notice-field[data-empty="1"], .timesheet-notice-wrapper[data-empty="1"] .timesheet-notice-field').forEach(function (el) {
             if (checkboxHideEmptyNoticeFields.checked) {
                 el.classList.add("hidden");
             } else {

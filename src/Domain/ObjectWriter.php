@@ -33,9 +33,9 @@ abstract class ObjectWriter {
 
         $user = $this->current_user->getUser();
         $use_user_from_data = is_array($additionalData) && ((array_key_exists("is_bill_based_save", $additionalData) && $additionalData["is_bill_based_save"]) || (array_key_exists("use_user_from_data", $additionalData) && $additionalData["use_user_from_data"]));
-        
+
         // Add user only if not empty (not cron!)
-        if(!is_null($user) && !$use_user_from_data){
+        if (!is_null($user) && !$use_user_from_data) {
             $data['user'] = $user->id;
         }
 
@@ -63,7 +63,7 @@ abstract class ObjectWriter {
     protected function updateEntry($entry) {
         // try to access entry, maybe the user is not authorized, so this throws an exception (not found)
         $oldEntry = $this->getMapper()->get($entry->id);
-        
+
         $elements_changed = $this->getMapper()->update($entry);
 
         $updated = $elements_changed > 0;
@@ -100,27 +100,31 @@ abstract class ObjectWriter {
         // create
         if ($id == null) {
             $id = $this->insertEntry($entry);
-            // get the created entry
-            $entry = $this->getMapper()->get($id);
 
-            $this->logger->notice("Insert Entry " . get_class($entry), array("id" => $entry->id));
+            if (!is_null($id)) {
+                // get the created entry
+                $entry = $this->getMapper()->get($id);
 
-            return new Payload(Payload::$STATUS_NEW, $entry, $data);
-        }
-        // update
-        $update = $this->updateEntry($entry);
-        if ($update) {
-            $this->logger->notice("Update Entry " . get_class($entry), array("id" => $entry->id));
-            // get the updated entry
-            $entry = $this->getMapper()->get($entry->id);
-            return new Payload(Payload::$STATUS_UPDATE, $entry);
+                $this->logger->notice("Insert Entry " . get_class($entry), array("id" => $entry->id));
+
+                return new Payload(Payload::$STATUS_NEW, $entry, $data);
+            }
         } else {
-            $this->logger->notice("No Update of Entry " . get_class($entry), array("id" => $entry->id));
-            return new Payload(Payload::$STATUS_NO_UPDATE, $entry);
+            // update
+            $update = $this->updateEntry($entry);
+            if ($update) {
+                $this->logger->notice("Update Entry " . get_class($entry), array("id" => $entry->id));
+                // get the updated entry
+                $entry = $this->getMapper()->get($entry->id);
+                return new Payload(Payload::$STATUS_UPDATE, $entry);
+            } else {
+                $this->logger->notice("No Update of Entry " . get_class($entry), array("id" => $entry->id));
+                return new Payload(Payload::$STATUS_NO_UPDATE, $entry);
+            }
         }
         $this->logger->error("Error while inserting entry " . get_class($entry), array("entry" => $entry));
 
-        return new Payload(Payload::$STATUS_ERROR, $entry);
+        return new Payload(Payload::$STATUS_SAVE_ERROR, $entry);
     }
 
     public function setHash($entry) {
@@ -133,5 +137,4 @@ abstract class ObjectWriter {
         }
         return $entry->getHash();
     }
-
 }

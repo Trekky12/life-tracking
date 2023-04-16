@@ -1049,6 +1049,8 @@ CREATE TABLE timesheets_sheets_notices (
     sheet INTEGER unsigned DEFAULT NULL,
     notice TEXT DEFAULT NULL,
     CEK varchar(255) DEFAULT NULL,
+    is_active int(1) DEFAULT 1,
+    is_autosave int(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,

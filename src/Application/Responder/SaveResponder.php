@@ -44,6 +44,10 @@ class SaveResponder extends HTMLResponder {
                 $this->flash->addMessage('message_type', 'danger');
                 break;
             case Payload::$STATUS_ERROR:
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR_SAVE"));
+                $this->flash->addMessage('message_type', 'danger');
+                break;
+            case Payload::$STATUS_SAVE_ERROR:
                 $this->flash->addMessage('message', $this->translation->getTranslatedString("ENTRY_ERROR"));
                 $this->flash->addMessage('message_type', 'danger');
                 break;
@@ -79,5 +83,4 @@ class SaveResponder extends HTMLResponder {
         $response = $this->responseFactory->createResponse();
         return $response->withHeader('Location', $this->router->urlFor($payload->getRouteName(), $payload->getRouteParams(), $queryParams))->withStatus(301);
     }
-
 }

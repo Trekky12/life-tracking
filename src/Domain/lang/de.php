@@ -536,6 +536,8 @@ $lang["TIMESHEETS_QUARTER_4"] = "Q4";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Einträge ohne Notizen ausblenden";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Felder ohne Inhalt ausblenden";
 
+$lang["LAST_SAVED"] = "Zuletzt gespeichert";
+
 $lang["THIS_DEVICE"] = "dieses Gerät";
 
 $lang["REQUEST_ERROR"] = "Ein Übertragungsfehler ist aufgetreten!";
@@ -548,12 +550,15 @@ $lang["ACTIVITIES"] = "Aktivitäten";
 $lang["ACTIVITY_CREATE"] = "%s hat %s erstellt";
 $lang["ACTIVITY_UPDATE"] = "%s hat %s aktualisiert";
 $lang["ACTIVITY_DELETE"] = "%s hat %s gelöscht";
+$lang["ACTIVITY_SAVE"] = "%s hat %s gespeichert";
 $lang["ACTIVITY_CREATE_ME"] = "Du hast %s erstellt";
 $lang["ACTIVITY_UPDATE_ME"] = "Du hast %s aktualisiert";
 $lang["ACTIVITY_DELETE_ME"] = "Du hast %s gelöscht";
+$lang["ACTIVITY_SAVE_ME"] = "Du hast %s gespeichert";
 $lang["ACTIVITY_CREATE_SYSTEM"] = "%s wurde erstellt";
 $lang["ACTIVITY_UPDATE_SYSTEM"] = "%s wurde aktualisiert";
 $lang["ACTIVITY_DELETE_SYSTEM"] = "%s wurde gelöscht";
+$lang["ACTIVITY_SAVE_SYSTEM"] = "%s wurde gespeichert";
 
 $lang["DATAOBJECT_ACITIVY"] = "Aktivität";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "Board";

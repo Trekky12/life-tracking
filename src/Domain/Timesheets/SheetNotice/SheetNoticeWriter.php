@@ -48,14 +48,15 @@ class SheetNoticeWriter extends ObjectActivityWriter {
 
         $data['sheet'] = $additionalData["sheet"];
         
-        // get last notice as id 
-        $notice_id = $this->mapper->hasNotice($additionalData["sheet"]);
-        $data["id"] = $notice_id;
+        // get last notice as id for update
+        //$notice_id = $this->mapper->hasNotice($additionalData["sheet"]);
+        //$data["id"] = $notice_id;
 
-        $payload = parent::save($notice_id, $data, $additionalData);
+        $payload = parent::save(null, $data, $additionalData);
+
         $entry = $payload->getResult();
 
-        return $payload;
+        return $payload->withEntry(["changedOn" => $entry->changedOn]);
     }
 
     public function getParentMapper() {

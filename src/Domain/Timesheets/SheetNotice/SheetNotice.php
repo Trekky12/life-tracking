@@ -19,6 +19,8 @@ class SheetNotice extends \App\Domain\DataObject {
         $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
         $this->CEK = $this->exists('CEK', $data) ? trim(filter_var($data['CEK'], FILTER_SANITIZE_STRING)) : null;
 
+
+        $this->is_autosave = $this->exists('is_autosave', $data) ? intval(filter_var($data['is_autosave'], FILTER_SANITIZE_NUMBER_INT)) : 0;
     }
 
     public function getParentID() {
