@@ -510,7 +510,9 @@ return function (App $app) {
         $group->group('/{plan}', function (RouteCollectorProxy $group_plan) {
             $group_plan->get('/view/', \App\Application\Action\Workouts\Plan\PlanViewAction::class)->setName('workouts_plan_view');
 
-            $group_plan->get('/export', \App\Application\Action\Workouts\Plan\PlanExportAction::class)->setName('workouts_plan_export');
+            $group_plan->group('/export', function (RouteCollectorProxy $group_export) {
+                $group_export->get('/download', \App\Application\Action\Workouts\Plan\PlanExportAction::class)->setName('workouts_plan_export');
+            });
 
             $group_plan->group('/sessions', function (RouteCollectorProxy $group_session) {
                 $group_session->get('/', \App\Application\Action\Workouts\Session\SessionListAction::class)->setName('workouts_sessions');

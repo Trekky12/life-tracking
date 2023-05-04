@@ -163,6 +163,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     const req = event.request;
 
+    // do not cache ressources from other servers
     if (!req.url.includes(self.location.hostname)) {
         //console.log('WORKER: fetch event ignored.', event.request.url);
         return;
@@ -173,8 +174,13 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Custom Header to not cache
-    if(req.headers.has('sw-cache') && req.headers.get('sw-cache') === 'none'){
+    // Custom Header to not cache (used for frontpage widgets ajax requests)
+    if (req.headers.has('sw-cache') && req.headers.get('sw-cache') === 'none') {
+        return;
+    }
+
+    // Do not cache /export routes
+    if(/.*(\/export\/download)$/.test(req.url)){
         return;
     }
 
