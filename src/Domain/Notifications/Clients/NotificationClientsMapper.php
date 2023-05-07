@@ -73,7 +73,7 @@ class NotificationClientsMapper extends \App\Domain\Mapper {
         while ($row = $stmt->fetch()) {
             $category = $row["category"];
 
-            $val = $category;
+            $val = sprintf("%s", $category);
             if (!is_null($row["object_id"])) {
                 $val = sprintf("%s_%s", $category, $row["object_id"]);
             }

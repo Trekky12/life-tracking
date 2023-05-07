@@ -177,10 +177,13 @@ class NotificationsService extends Service {
             ]
         ];
 
+        $unseen = $this->mapper->getUnreadNotificationsCountByUser($entry->user);
+
         $notification = [
             "title" => $title,
             "body" => $content,
-            "data" => $data
+            "data" => $data,
+            "unseen" => $unseen
         ];
 
         $this->logger->info('PUSH', array("notification" => $notification));
@@ -275,6 +278,9 @@ class NotificationsService extends Service {
         $entry = $this->client_service->getEntry($entry_id);
 
         $result = $this->sendNotification($entry, $title, $message);
+
+        $notification = new Notification(["title" => $title, "message" => $message, "user" => $entry->user]);
+        $id = $this->mapper->insert($notification);
 
         if ($result) {
             return new Payload(Payload::$STATUS_NOTIFICATION_SUCCESS);

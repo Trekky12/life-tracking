@@ -88,6 +88,7 @@ function getNotifications() {
                 }
 
                 setNotificationCount(data.unseen);
+                setAppBadge();
 
                 data.data.forEach(function (item, idx) {
 

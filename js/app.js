@@ -281,7 +281,9 @@ function initServiceWorker() {
             if (event.data.type === 1) {
                 console.log("Push Notification received");
                 console.log(event.data.type);
-                setNotificationCount();
+                console.log(event.data.data);
+                setNotificationCount(event.data.data);
+                setAppBadge();
             } else if (event.data.type === 2) {
                 console.log("Push Notification Click");
             } else if (event.data.type === 3) {
@@ -362,6 +364,8 @@ function initServiceWorker() {
             });
         });
     }
+
+    setAppBadge();
 
 }
 
@@ -677,6 +681,20 @@ function setNotificationCount(count) {
             badge.classList.remove("has-Notification");
         }
     });
+}
+
+function setAppBadge() {
+    if ('setAppBadge' in navigator) {
+        badges.forEach(function (badge, idx) {
+            let unseenCount = parseInt(badge.dataset.badge);
+            if (unseenCount > 0) {
+                console.log("Set App Badge");
+                navigator.setAppBadge(unseenCount);
+            } else {
+                navigator.clearAppBadge();
+            }
+        });
+    }
 }
 
 function notificationsDisabled(state) {

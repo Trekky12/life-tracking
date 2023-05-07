@@ -336,16 +336,17 @@ function _fetchAndCache(request) {
  * @param {type} message
  * @returns {Promise}
  */
-function _sendMessageToClients(message) {
+function _sendMessageToClients(message, data = null) {
 
-    let data = {
+    let postMessage = {
         type: message,
-        time: new Date().toString()
+        time: new Date().toString(),
+        data: data
     };
 
     return self.clients.matchAll().then(function (clientList) {
         clientList.forEach(function (client) {
-            client.postMessage(data);
+            client.postMessage(postMessage);
         });
     });
 }
@@ -373,7 +374,12 @@ self.addEventListener('push', function (event) {
     // to prevent this the notifications is always send
     const notificationPromise = self.registration.showNotification(title, options);
     event.waitUntil(notificationPromise);
-    event.waitUntil(_sendMessageToClients(1));
+    event.waitUntil(_sendMessageToClients(1, data.unseen + 1));
+
+    if ('setAppBadge' in navigator) {
+        console.log("Set App badge to " + (data.unseen + 1));
+        navigator.setAppBadge(data.unseen + 1);
+    }
 
     //    //@see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#52_when_to_show_notifications
     //    event.waitUntil(

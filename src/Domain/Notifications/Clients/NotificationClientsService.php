@@ -63,7 +63,7 @@ class NotificationClientsService extends Service {
             return $client;
         } catch (\Exception $e) {
             // No Entry found so create one
-            $this->logger->warning('Subscription not on server but on client', $client->endpoint);
+            $this->logger->warning('Subscription not on server but on client', ['endpoint' => $client->endpoint]);
             //$this->mapper->insert($client);
         }
         return null;
