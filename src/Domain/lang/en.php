@@ -757,8 +757,9 @@ $lang["WORKOUTS_PLAN_SUPERSET_ADDED"] = "Superset added.";
 
 $lang["SAVE_IFTTT_URL"] = "Save IFTTT-URL";
 $lang["DELETE_IFTTT_URL"] = "Delete IFTTT-URL";
-$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] = "Web Push Notifications are not available. Alternativly the IFTTT-Maker Channel could be used. Therefore insert the URL:";
-$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "Web Push Nachrichten are not available. A IFTTT-URL has been saved.";
+$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] = "Web Push Notifications are not available. Alternativly the IFTTT-Maker Channel could be used.";
+$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE_DESCRIPTION"] = "Therefore insert the URL:";
+$lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] = "A IFTTT-URL has been saved.";
 
 $lang["HELP"] = "help";
 $lang["TAKE_IDENTITY"] = "take identity";

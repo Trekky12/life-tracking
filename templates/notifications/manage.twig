@@ -3,158 +3,84 @@
 {% set active = 'notifications' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/notifications.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/notifications.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block body %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('notifications')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["NOTIFICATIONS"]}}</h2>
+			<div class="buttons">
+				<a href="{{ url_for_with_last_query_params('notifications')}}">
+					<button class="button">{{lang["BACK"]}}
+						{{ fontawesome('fas fa-turn-up') }}</button>
+				</a>
+			</div>
+		</div>
+		<div class="page-content">
 
-            <div id="notifications_categories_list_user">
-                <form>
-                    <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
-                    {% for cat in categories["internal"] %}
-                        {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
-                            {% if user.hasModule("splitbills") %}
-                                <div class="form-group">
-                                    {{ lang[cat.name] }}
-                                    {% for group in splitbill["user_groups"]  %}
-                                        <div>
-                                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ group }}">
-                                                <input name="user_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ group }}" class="set_notifications_category_user" {% if "%s_%s"|format(cat.id, group) in user_categories %}checked{% endif %}>
-                                                {{splitbill["groups"][group].name}}
-                                            </label>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
-                            {% if user.hasModule("boards") %}
-                                <div class="form-group">
-                                    {{ lang[cat.name] }}
-                                    {% for board in boards["user_boards"]  %}
-                                        <div>
-                                            <label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
-                                                <input name="user_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxUserCategory_{{cat.id}}_{{ board }}" class="set_notifications_category_user" {% if "%s_%s"|format(cat.id, board) in user_categories %}checked{% endif %}>
-                                                {{boards["boards"][board].name}}
-                                            </label>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="form-group">
-                                <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                                    {{lang[cat.name]}}
-                                </label>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    {% if categories["individual"]|length > 0 %}
-                        <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                        {% for cat in categories["individual"] %}
-                            <div class="form-group">
-                                <label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
-                                    <input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_notifications_category_user" {% if cat.id in user_categories %}checked{% endif %}>
-                                    {{cat.name}}
-                                </label>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+			<div id="notifications_categories_list_user">
+				<form>
+					{% include 'notifications/notification_categories.twig' with {'type': 'user'} %}
 
-                </form> 
-            </div>
-        </div>
-    </div>
+				</form>
+			</div>
+		</div>
+	</div>
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["PUSH_NOTIFICATIONS"]}}</h2></div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-header">
+			<h2>{{lang["PUSH_NOTIFICATIONS"]}}</h2>
+		</div>
+		<div class="page-content">
 
-            {% if user_client is null %}
-                <button id="enable_notifications" class="button hidden">
-                    {{lang["ENABLE_NOTIFICATIONS"]}}
-                </button>
-            {% endif %}
+			<button id="enable_notifications" class="button hidden">
+				{{lang["ENABLE_NOTIFICATIONS"]}}
+			</button>
+
+			<p class="hidden" id="ifttt_enable">{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] }}</p>
+
+			<div id="notifications_categories_list" class="hidden">
+				{% include 'notifications/notification_categories.twig' with {'type': 'client'} %}
+			</div>
+			<div class="loading-icon loading-icon-notification-categories centered">
+				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+			</div>
 
 
-            <div id="ifttt_url_wrapper" class="{% if user_client is null %}hidden{% endif %}">
-                <p class="{% if not user_client is null %}hidden{% endif %}" id="ifttt_enable">{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] }}</p>
-                <p class="{% if user_client is null %}hidden{% endif %}" id="ifttt_enabled">{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] }}</p>
+			<div id="ifttt_url_wrapper" class="{% if ifttt_clients|length == 0 %}hidden{% endif %}">
+				<h3>IFTTT</h3>
 
-                <label for="ifttt_url" class="{% if user_client is null %}text{% else %}hidden{% endif %}">IFTTT-URL</label>
-                <input type="{% if user_client is null %}text{% else %}hidden{% endif %}" name="ifttt_url" id="ifttt_url" value="{% if user_client is not null and user_client.type == "ifttt" %}{{ user_client.endpoint }}{% endif %}"/>
-                <button id="ifttt_url_save" class="button {% if not user_client is null %}hidden{% endif %}">{{ lang["SAVE_IFTTT_URL"] }}</button>
-                <button id="ifttt_url_remove" class="button danger {% if user_client is null %}hidden{% endif %}">{{ lang["DELETE_IFTTT_URL"] }}</button>
-            </div>            
+				{% for ifttt_client in ifttt_clients %}
 
-            <div id="loadingIconManageNotifications" class="centered">
-                <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-            </div>
+					<div class="ifttt_client_wrapper">
 
-            <div id="notifications_categories_list" class="hidden">
+						<p>{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] }}</p>
 
-                <h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
-                {% for cat in categories["internal"] %}
-                    {% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
-                        {% if user.hasModule("splitbills") %}
-                            <div class="form-group">
-                                {{ lang[cat.name] }}
-                                {% for group in splitbill["user_groups"]  %}
-                                    <div>
-                                        <label class="checkbox" for="checkboxCategory_{{cat.id}}_{{ group }}">
-                                            <input name="categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" id="checkboxCategory_{{cat.id}}_{{ group }}" class="set_notifications_category">
-                                            {{splitbill["groups"][group].name}}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
-                        {% if user.hasModule("boards") %}
-                            <div class="form-group">
-                                {{ lang[cat.name] }}
-                                {% for board in boards["user_boards"]  %}
-                                    <div>
-                                        <label class="checkbox" for="checkboxCategory_{{cat.id}}_{{ board }}">
-                                            <input name="categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" id="checkboxCategory_{{cat.id}}_{{ board }}" class="set_notifications_category">
-                                            {{boards["boards"][board].name}}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="form-group">
-                            <label class="checkbox" for="checkboxCategory_{{cat.id}}">
-                                <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
-                                {{lang[cat.name]}}
-                            </label>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                {% if categories["individual"]|length > 0 %}
-                    <h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
-                    {% for cat in categories["individual"] %}
-                        <div class="form-group">
-                            <label class="checkbox" for="checkboxCategory_{{cat.id}}">
-                                <input name="categories[]" value="{{cat.id}}" type="checkbox" id="checkboxCategory_{{cat.id}}" class="set_notifications_category">
-                                {{cat.name}}
-                            </label>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
+						<input type="hidden" name="ifttt_url" id="ifttt_url" value="{{ ifttt_client.endpoint }}"/>
+						<button id="ifttt_url_remove" class="button danger small">{{ lang["DELETE_IFTTT_URL"] }}</button>
 
-        </div>
-    </div>
+						<div class="notifications_categories_list_ifttt" class="hidden">
+							{% include 'notifications/notification_categories.twig' with {'type': 'client'} %}
+						</div>
+						<div class="loading-icon loading-icon-notification-categories centered">
+							<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+						</div>
+					</div>
 
-</div>
-{% endblock %}
+				{% endfor %}
+
+				<div class="ifttt_client_wrapper">
+					<p>{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE_DESCRIPTION"] }}</p>
+					<label for="ifttt_url" class="text">IFTTT-URL</label>
+					<input type="text" name="ifttt_url" id="ifttt_url" value=""/>
+					<button id="ifttt_url_save" class="button">{{ lang["SAVE_IFTTT_URL"] }}</button>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</div>{% endblock %}

@@ -236,7 +236,7 @@ class NotificationsService extends Service {
         $categories = $this->cat_service->getUserCategories();
         $user_categories = $this->getCategoriesOfCurrentUser();
 
-        $user_client = $this->client_service->getClientByUserAndType("ifttt");
+        $ifttt_clients = $this->client_service->getClientsByUserAndType("ifttt");
 
         $splitbill_user_groups = $this->splitbill_group_service->getUserElements();
         $splitbill_all_groups = $this->splitbill_group_service->getAll();
@@ -259,7 +259,7 @@ class NotificationsService extends Service {
                 "individual" => $categories_individual
             ],
             "user_categories" => $user_categories,
-            "user_client" => $user_client,
+            "ifttt_clients" => $ifttt_clients,
             "splitbill" => [
                 "groups" => $splitbill_all_groups,
                 "user_groups" => $splitbill_user_groups

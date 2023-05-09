@@ -1,0 +1,50 @@
+<h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
+{% for cat in categories["internal"] %}
+	{% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
+		{% if user.hasModule("splitbills") %}
+			<div class="form-group">
+				{{ lang[cat.name] }}
+				{% for group in splitbill["user_groups"]  %}
+					<div>
+						<label class="checkbox">
+							<input name="{{type}}_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and "%s_%s"|format(cat.id, group) in user_categories %} checked {% endif %}>
+							{{splitbill["groups"][group].name}}
+						</label>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
+		{% if user.hasModule("boards") %}
+			<div class="form-group">
+				{{ lang[cat.name] }}
+				{% for board in boards["user_boards"]  %}
+					<div>
+						<label class="checkbox">
+							<input name="{{type}}_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and "%s_%s"|format(cat.id, board) in user_categories %} checked {% endif %}>
+							{{boards["boards"][board].name}}
+						</label>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% else %}
+		<div class="form-group">
+			<label class="checkbox">
+				<input name="{{type}}_categories[]" value="{{cat.id}}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and cat.id in user_categories %} checked {% endif %}>
+				{{lang[cat.name]}}
+			</label>
+		</div>
+	{% endif %}
+{% endfor %}
+{% if categories["individual"]|length > 0 %}
+	<h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+	{% for cat in categories["individual"] %}
+		<div class="form-group">
+			<label class="checkbox">
+				<input name="{{type}}_categories[]" value="{{cat.id}}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and cat.id in user_categories %} checked {% endif %}>
+				{{cat.name}}
+			</label>
+		</div>
+	{% endfor %}
+{% endif %}

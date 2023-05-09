@@ -344,24 +344,30 @@ function initServiceWorker() {
 
     // Load Entries of Client
     if (iftttUrlWrapper !== null) {
-        let iftttUrl = iftttUrlWrapper.querySelector('input[name="ifttt_url"]');
-        if (iftttUrl.value !== '') {
-            getCategorySubscriptions(iftttUrl.value)
-        }
 
-        let removeBtn = iftttUrlWrapper.querySelector('button#ifttt_url_remove');
-        removeBtn.addEventListener('click', function (event) {
-            let ifttt_url = iftttUrlWrapper.querySelector('input[name="ifttt_url"]').value;
+        let iftttClients = iftttUrlWrapper.querySelectorAll('.ifttt_client_wrapper');
+        iftttClients.forEach(function (ifttt_client) {
+            let iftttUrl = ifttt_client.querySelector('input[name="ifttt_url"]');
+            let iftttNotificationsList = ifttt_client.querySelector('.notifications_categories_list_ifttt');
 
-            let data = {
-                endpoint: ifttt_url,
-                type: "ifttt"
-            };
-            return _sendSubscriptionRequest(data, 'DELETE').then(function (result) {
-                console.log(result);
-            }).then(function (subscription) {
-                window.location.reload();
-            });
+            if (iftttUrl.value !== '') {
+                getCategorySubscriptions(iftttNotificationsList, iftttUrl.value)
+            }
+
+            let removeBtn = ifttt_client.querySelector('button#ifttt_url_remove');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function (event) {
+                    let data = {
+                        endpoint: iftttUrl.value,
+                        type: "ifttt"
+                    };
+                    return _sendSubscriptionRequest(data, 'DELETE').then(function (result) {
+                        console.log(result);
+                    }).then(function (subscription) {
+                        window.location.reload(true);
+                    });
+                });
+            }
         });
     }
 
@@ -401,7 +407,7 @@ function syncSubscription() {
         //bell.classList.remove('disabled');
         return subscription;
     }).then(function (subscription) {
-        return getCategorySubscriptions(subscription.endpoint).then(function () {
+        return getCategorySubscriptions(categoriesList, subscription.endpoint).then(function () {
             return subscription;
         });
     }).catch(function (e) {
@@ -426,7 +432,7 @@ function subscribeUser() {
             return subscription;
         });
     }).then(function (subscription) {
-        return getCategorySubscriptions(subscription.endpoint);
+        return getCategorySubscriptions(categoriesList, subscription.endpoint);
     }).then(function () {
         updateButton('enabled');
     }).catch(function (e) {
@@ -542,11 +548,16 @@ function updateButton(state) {
             pushButton.textContent = lang.no_push_notifications_possible;
             //bell.classList.add('disabled');
 
+            document.querySelector('p#ifttt_enable').classList.remove("hidden");
+
             iftttUrlWrapper.classList.remove("hidden");
 
             let saveBtn = iftttUrlWrapper.querySelector('button#ifttt_url_save');
             saveBtn.addEventListener('click', function (event) {
-                let ifttt_input = iftttUrlWrapper.querySelector('input[name="ifttt_url"]');
+
+                let ifttt_client_wrapper = saveBtn.closest('.ifttt_client_wrapper');
+
+                let ifttt_input = ifttt_client_wrapper.querySelector('input[name="ifttt_url"]');
                 let ifttt_url = ifttt_input.value;
 
                 let data = {
@@ -554,14 +565,7 @@ function updateButton(state) {
                     type: "ifttt"
                 };
                 return _sendSubscriptionRequest(data, 'POST').then(function (result) {
-                    pushButton.classList.add("hidden");
-                    ifttt_input.type = "hidden";
-                    saveBtn.classList.add("hidden");
-                    iftttUrlWrapper.querySelector('button#ifttt_url_remove').classList.remove("hidden");
-                    iftttUrlWrapper.querySelector('p#ifttt_enable').classList.add("hidden");
-                    iftttUrlWrapper.querySelector('p#ifttt_enabled').classList.remove("hidden");
-                }).then(function () {
-                    return getCategorySubscriptions(ifttt_url);
+                    window.location.reload(true);
                 });
             });
 
@@ -573,10 +577,13 @@ function updateButton(state) {
 }
 
 
-function getCategorySubscriptions(endpoint) {
-    if (categoriesList !== null) {
+function getCategorySubscriptions(list, endpoint) {
+    if (list !== null) {
+
+        let loadingIcon = list.nextElementSibling;
+
         let data = { "endpoint": endpoint };
-        loadingIconManage.classList.remove("hidden");
+        loadingIcon.classList.remove("hidden");
         return getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
             data['csrf_value'] = token.csrf_value;
@@ -593,7 +600,9 @@ function getCategorySubscriptions(endpoint) {
         }).then(function (data) {
             if (data.status !== 'error') {
 
-                loadingIconManage.classList.add("hidden");
+                loadingIcon.classList.add("hidden");
+
+                let categoriesElements = list.querySelectorAll('input.set_notifications_category_client');
                 categoriesElements.forEach(function (item, idx) {
                     let val = item.value;
                     if (data.data.indexOf(val) !== -1) {
@@ -614,7 +623,7 @@ function getCategorySubscriptions(endpoint) {
                         }
                     });
                 });
-                categoriesList.classList.remove("hidden");
+                list.classList.remove("hidden");
             }
         }).catch(function (error) {
             console.log(error);
@@ -656,9 +665,10 @@ function hideLoadingShowButton() {
     if (pushButton !== null) {
         pushButton.classList.remove("hidden");
     }
-    if (loadingIconManage !== null) {
-        loadingIconManage.classList.add("hidden");
-    }
+    let loadingIcons = document.querySelectorAll('.loading-icon-notification-categories');
+    loadingIcons.forEach(function (icon) {
+        icon.classList.add("hidden");
+    });
 }
 
 function emptyPromise(val = null) {

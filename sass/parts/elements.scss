@@ -164,6 +164,11 @@ table .fontawesome-icon svg {
     }
 }
 
+.ifttt_client_wrapper{
+    border-top: 1px solid #CCC;
+    padding-top: 1rem;
+}
+
 .small {
     @include font-size(1.2);
     margin: 0;

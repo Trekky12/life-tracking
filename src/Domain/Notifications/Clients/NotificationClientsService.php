@@ -31,9 +31,9 @@ class NotificationClientsService extends Service {
         return $this->mapper->getClientsByCategoryAndUser($category, $user, $object_id);
     }
     
-    public function getClientByUserAndType($type) {
+    public function getClientsByUserAndType($type) {
         $user = $this->current_user->getUser();
-        return $this->mapper->getClientByUserAndType($user->id, $type);
+        return $this->mapper->getClientsByUserAndType($user->id, $type);
     }
 
     private function createNotificationClient($data) {
