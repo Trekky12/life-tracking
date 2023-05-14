@@ -128,7 +128,7 @@ if (navigation && header && navigationOverlay) {
         xStartPosition = firstTouch.clientX;
         yStartPosition = firstTouch.clientY;
 
-        isOpenAllowed = (window.innerWidth - xStartPosition) < threshold_edge && !navigation.classList.contains('toggled');
+        isOpenAllowed = xStartPosition < threshold_edge && !navigation.classList.contains('toggled');
         isCloseAllowed = navigation.classList.contains('toggled'); // && (window.innerWidth - xStartPosition) > navi_width
 
         skip = false;
@@ -169,16 +169,16 @@ if (navigation && header && navigationOverlay) {
          return;
          }*/
 
-        let posUp = window.innerWidth - xMovePosition;
+        let posUp = xMovePosition;
 
-        let swipe_rtl = xStartPosition > xMovePosition;
+        let swipe = xStartPosition < xMovePosition;
 
         // swipe open
-        if (swipe_rtl && isOpenAllowed) {
+        if (swipe && isOpenAllowed) {
             moveNavigationToPosition(posUp);
 
             // swipe from right to left (open) and then go back to right
-            if (xMovePositionPrevious && xMovePositionPrevious < xMovePosition) {
+            if (xMovePositionPrevious && xMovePositionPrevious > xMovePosition) {
 //                console.log("zu lassen?");
 //                console.log(xStartPosition);
 //                console.log(xMovePositionPrevious);
@@ -190,11 +190,11 @@ if (navigation && header && navigationOverlay) {
         }
 
         // swipe close
-        if (!swipe_rtl && isCloseAllowed) {
+        if (!swipe && isCloseAllowed) {
             moveNavigationToPosition(posUp);
 
             // swipe from left to right (close) and then go back to left
-            if (xMovePositionPrevious && xMovePositionPrevious > xMovePosition) {
+            if (xMovePositionPrevious && xMovePositionPrevious < xMovePosition) {
 //                console.log("offen lassen?");
 //                console.log(xStartPosition);
 //                console.log(xMovePositionPrevious);
@@ -219,7 +219,7 @@ if (navigation && header && navigationOverlay) {
 
         navigation.classList.remove("animate");
         //navigation.style.transitionDuration = 0 + 's';
-        navigation.style.transform = 'translateX(' + (navi_width - pos) + 'px)';
+        navigation.style.transform = 'translateX(' + (-navi_width + pos) + 'px)';
 
         currentPos = pos;
 
@@ -276,14 +276,14 @@ if (navigation && header && navigationOverlay) {
         }
         if (!skip) {
             if (!isOpen) {
-                if (xStartPosition > xMovePosition && isOpenAllowed) {
+                if (xMovePosition > xStartPosition && isOpenAllowed) {
                     openMenu();
                 } else {
 //                    console.log("close1");
                     closeMenu();
                 }
             } else {
-                if (xStartPosition < xMovePosition && isCloseAllowed) {
+                if (xMovePosition < xStartPosition && isCloseAllowed) {
 //                    console.log("close2");
                     closeMenu();
                 } else {
