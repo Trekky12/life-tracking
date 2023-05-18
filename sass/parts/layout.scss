@@ -1,18 +1,46 @@
-body{
+body {
     background-color: $color_background-screen;
 }
 
+@media screen and (min-width: $size_mobile_navigation) {
+    body:not(.navigation-drawer-toggled) {
 
+        .site-body,
+        .board-content {
+            margin-left: $size_navigation_drawer;
+        }
 
-.site-content, .header-inner, .footer-inner{
+        .site-header {
+            @media screen and (min-width: $size_mobile_navigation) {
+                padding-left: $size_navigation_drawer;
+            }
+        }
+    }
+}
+
+.site-content,
+.footer-inner {
     max-width: $size_content-width;
     margin: 0 auto;
-    width:100%;
+    width: 100%;
+    padding: 0;
     padding-left: 5px;
     padding-right: 5px;
 
-    @media screen and (min-width: $size_mobile_navigation){
+    @media screen and (min-width: $size_mobile_navigation) {
         padding-left: 20px;
         padding-right: 20px;
     }
+}
+
+// header is fixed
+#masthead {
+    position: fixed;
+    width: 100%;
+    top: 0;
+}
+
+#content {
+    position: relative;
+    margin-top: $header_height + $header_height_margin;
 }

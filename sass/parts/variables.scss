@@ -39,7 +39,8 @@ $color_link-hover: $color_blue_light;
 $color_background-body: #fff;
 $color_background-screen: #fff;
 
-$color_navigation_background: $color_blue;
+$color_app-bar_background: $color_blue;
+$color_navigation_background: #fff;
 $color_navigation_text: #bdd8f5;
 $color_navigation_text_hover: $color_background-screen;
 $color_navigation_divider: $color_navigation_text;
@@ -51,6 +52,6 @@ $color_text-input: #666;
 $color_text-input-focus: #111;
 
 
-$header_height : 55px;
+$header_height : 56px;
 $header_height_margin: 20px;
 $header_height_navigation_offset: 20px;

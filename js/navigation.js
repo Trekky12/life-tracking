@@ -9,6 +9,8 @@ const menuButton = document.getElementById('menu-toggle');
 const navigation = document.getElementById('site-navigation');
 const navigationOverlay = document.getElementById('navigation-overlay');
 
+const wasMobile = isMobile();
+
 if (/^(iPhone|iPad|iPod)/.test(navigator.platform)) {
     body.classList.add("ios");
 }
@@ -24,12 +26,13 @@ if (navigation && header && navigationOverlay) {
     let bar4 = document.querySelector('#menu-toggle .bar:nth-child(4)');
 
     menuButton.addEventListener('click', function (evt) {
-//        console.log("click!");
+        //        console.log("click!");
+
         if (navigation.classList.contains('toggled')) {
-//            console.log("close now");
+            //            console.log("close now");
             closeMenu();
         } else {
-//            console.log("open now");
+            //            console.log("open now");
             openMenu();
         }
     });
@@ -44,15 +47,18 @@ if (navigation && header && navigationOverlay) {
         menuButton.setAttribute('aria-expanded', 'true');
         menuList.setAttribute('aria-expanded', 'true');
         menuButton.classList.add("open");
-        body.classList.add("mobile-navigation-open");
+        body.classList.add("navigation-drawer-toggled");
 
-        navigationOverlay.classList.add("visible");
-        navigationOverlay.style.removeProperty('transition-duration');
-        navigationOverlay.style.opacity = max_opacity;
+        if (isMobile()) {
+            navigationOverlay.classList.add("visible");
+            navigationOverlay.style.removeProperty('transition-duration');
+            navigationOverlay.style.opacity = max_opacity;
+        }
 
         navigation.classList.add("animate");
         //navigation.style.removeProperty('transition-duration');
-        navigation.style.transform = 'translateX(0px)';
+        navigation.style.removeProperty('transform');
+        //navigation.style.transform = 'translateX(0px)';
         navigation.classList.add("toggled");
 
         currentPos = navi_width;
@@ -66,7 +72,7 @@ if (navigation && header && navigationOverlay) {
         menuList.setAttribute('aria-expanded', 'false');
 
         menuButton.classList.remove("open");
-        body.classList.remove("mobile-navigation-open");
+        body.classList.remove("navigation-drawer-toggled");
 
         navigationOverlay.style.removeProperty("transition-duration");
         navigationOverlay.style.opacity = 0;
@@ -106,9 +112,11 @@ if (navigation && header && navigationOverlay) {
 
     // https://stackoverflow.com/a/23230280
     // https://github.com/freetitelu/touch-sidewipe
-    document.addEventListener('touchstart', handleTouchStart, false);
-    document.addEventListener('touchmove', handleTouchMove, false);
-    document.addEventListener('touchend', handleTouchEnd, false);
+    if (isMobile()) {
+        document.addEventListener('touchstart', handleTouchStart, false);
+        document.addEventListener('touchmove', handleTouchMove, false);
+        document.addEventListener('touchend', handleTouchEnd, false);
+    }
 
     let xStartPosition = null;
     let xMovePosition = null;
@@ -132,7 +140,7 @@ if (navigation && header && navigationOverlay) {
         isCloseAllowed = navigation.classList.contains('toggled'); // && (window.innerWidth - xStartPosition) > navi_width
 
         skip = false;
-//        console.log("start");
+        //        console.log("start");
     }
 
     function handleTouchMove(evt) {
@@ -154,7 +162,7 @@ if (navigation && header && navigationOverlay) {
 
         skip = false;
         if (isOpen && xDistance < xMinDistanceClose) {
-//            console.log("skip");
+            //            console.log("skip");
             skip = true;
             return;
         }
@@ -179,10 +187,10 @@ if (navigation && header && navigationOverlay) {
 
             // swipe from right to left (open) and then go back to right
             if (xMovePositionPrevious && xMovePositionPrevious > xMovePosition) {
-//                console.log("zu lassen?");
-//                console.log(xStartPosition);
-//                console.log(xMovePositionPrevious);
-//                console.log(xMovePosition);
+                //                console.log("zu lassen?");
+                //                console.log(xStartPosition);
+                //                console.log(xMovePositionPrevious);
+                //                console.log(xMovePosition);
                 xStartPosition = xMovePositionPrevious;
                 // force close
                 isCloseAllowed = true;
@@ -195,10 +203,10 @@ if (navigation && header && navigationOverlay) {
 
             // swipe from left to right (close) and then go back to left
             if (xMovePositionPrevious && xMovePositionPrevious < xMovePosition) {
-//                console.log("offen lassen?");
-//                console.log(xStartPosition);
-//                console.log(xMovePositionPrevious);
-//                console.log(xMovePosition);
+                //                console.log("offen lassen?");
+                //                console.log(xStartPosition);
+                //                console.log(xMovePositionPrevious);
+                //                console.log(xMovePosition);
                 xStartPosition = xMovePositionPrevious;
                 // force open
                 isOpenAllowed = true;
@@ -267,7 +275,7 @@ if (navigation && header && navigationOverlay) {
         // close/open menu when distance travelled is too small (min distance not reached)
         // and menu is already faded out/in
         if (skip && currentPos > 0) {
-//                console.log("close because distance to small");
+            //                console.log("close because distance to small");
             if (isOpen) {
                 openMenu();
             } else {
@@ -279,12 +287,12 @@ if (navigation && header && navigationOverlay) {
                 if (xMovePosition > xStartPosition && isOpenAllowed) {
                     openMenu();
                 } else {
-//                    console.log("close1");
+                    //                    console.log("close1");
                     closeMenu();
                 }
             } else {
                 if (xMovePosition < xStartPosition && isCloseAllowed) {
-//                    console.log("close2");
+                    //                    console.log("close2");
                     closeMenu();
                 } else {
                     openMenu();
@@ -295,5 +303,14 @@ if (navigation && header && navigationOverlay) {
         isOpenAllowed = null;
         isCloseAllowed = null;
         xMovePosition = null;
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    function handleResize() {
+        if (!wasMobile && isMobile()) {
+            navigation.classList.remove('toggled');
+            body.classList.remove("navigation-drawer-toggled");
+        }
     }
 }

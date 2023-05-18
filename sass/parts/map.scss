@@ -1,78 +1,87 @@
-@media screen and (max-width: $size_mobile){
+@media screen and (max-width: $size_mobile) {
     body.location {
-        .site-header{
+        .site-header {
             box-shadow: none;
 
         }
-        #content{
+
+        #content {
             margin-top: $header_height;
         }
     }
 }
 
-#mapid{
-    position:absolute;
-    top:96px;
-    bottom:0;
-    left:0;
-    right:0;
-    z-index:0;
+#mapid {
+    position: absolute;
+    top: 105px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 0;
 
-    @media screen and (min-width: $size_mobile){
-        top:50px;   
+    @media screen and (min-width: $size_mobile) {
+        top: 50px;
+    }
+
+    @media screen and (min-width: $size_mobile_navigation) {
+        left: $size_navigation_drawer;
     }
 }
 
-#show-filter{
-    display:block;
+#show-filter {
+    display: block;
     @include font-size(4);
-    text-align:center;
-    width:100%;
+    text-align: center;
+    width: 100%;
     line-height: 1;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
     }
 
-    span.angle-up{
-        display:block;
-    }
-    span.angle-down{
-        display:none;
+    span.angle-up {
+        display: block;
     }
 
-    &.hiddenSearch span.angle-up{
-        display:none;
+    span.angle-down {
+        display: none;
     }
-    &.hiddenSearch span.angle-down{
-        display:block;
+
+    &.hiddenSearch span.angle-up {
+        display: none;
+    }
+
+    &.hiddenSearch span.angle-down {
+        display: block;
     }
 }
 
 
-@media screen and (min-width: $size_mobile_navigation){
-    .geo-map.visible ~ .map-btn{
-        display:flex;
+@media screen and (min-width: $size_mobile_navigation) {
+    .geo-map.visible~.map-btn {
+        display: flex;
         justify-content: flex-end;
     }
 }
 
-.geo-map{
-    position:relative;
-    z-index:0;
+.geo-map {
+    position: relative;
+    z-index: 0;
 }
 
-.update-location{
+.update-location {
     margin-right: 5px;
 }
-.update-location, .delete-location{
-    margin-top:1rem;
+
+.update-location,
+.delete-location {
+    margin-top: 1rem;
     @include font-size(1.2);
     padding: 1rem 0.5rem;
-    line-height:1;
+    line-height: 1;
 
-    @media screen and (min-width: $size_mobile_navigation){
-        margin-bottom:2rem;  
+    @media screen and (min-width: $size_mobile_navigation) {
+        margin-bottom: 2rem;
     }
 }
 
@@ -82,6 +91,7 @@
 .marker-cluster {
     background-clip: padding-box;
     border-radius: 20px;
+
     div {
         width: 30px;
         height: 30px;
@@ -91,6 +101,7 @@
         text-align: center;
         border-radius: 15px;
         @include font-size(1.2);
+
         span {
             line-height: 30px;
         }
@@ -98,6 +109,7 @@
 
     &.location {
         background-color: rgba(82, 172, 248, 0.6);
+
         div {
             background-color: rgba(0, 138, 255, 0.6);
         }
@@ -105,6 +117,7 @@
 
     &.finances {
         background-color: rgba(181, 226, 140, 0.6);
+
         div {
             background-color: rgba(110, 204, 57, 0.6);
         }
@@ -112,48 +125,52 @@
 
     &.cars {
         background-color: rgba(241, 211, 87, 0.6);
+
         div {
             background-color: rgba(240, 194, 12, 0.6);
         }
     }
 }
 
-.leaflet-control-layers-expanded{
+.leaflet-control-layers-expanded {
     padding: 6px 6px 6px 6px;
 }
-.leaflet-control-layers-overlays{
 
-    label{
-        display:block!important;
+.leaflet-control-layers-overlays {
+
+    label {
+        display: block !important;
         text-align: center;
-        margin-bottom: 0!important;
+        margin-bottom: 0 !important;
     }
 
-    input[type=checkbox] + span:hover{
-        cursor:pointer;
+    input[type=checkbox]+span:hover {
+        cursor: pointer;
 
     }
-    input[type=checkbox] { 
-        display:none; 
+
+    input[type=checkbox] {
+        display: none;
     }
-    input[type=checkbox] + span  {
-        
-        svg{
+
+    input[type=checkbox]+span {
+
+        svg {
             color: $color_border-input;
             margin-left: 1rem;
-            margin-right:1rem;
-            
-            @include font-size(1.5); 
+            margin-right: 1rem;
+
+            @include font-size(1.5);
 
             @media screen and (min-width: $size_mobile_navigation) {
-                @include font-size(3); 
-                
+                @include font-size(3);
+
             }
         }
     }
 
-    input[type=checkbox]:checked + span  { 
-        svg{
+    input[type=checkbox]:checked+span {
+        svg {
             color: $color_blue;
         }
     }
@@ -162,95 +179,105 @@
 }
 
 
-.leaflet-popup-content{
-    p{
+.leaflet-popup-content {
+    p {
         margin: 0;
     }
 }
 
-.leaflet-routing-alternatives-container{
-    h2, table{
-        display:none;
+.leaflet-routing-alternatives-container {
+
+    h2,
+    table {
+        display: none;
     }
 }
 
 body.location {
-    .alert{
-        display:none;
+    .alert {
+        display: none;
+    }
+
+    .site-body {
+        padding: 0;
     }
 }
 
-body.trips{
-    .leaflet-control-layers-overlays{
-        display:flex;
+body.trips {
+    .leaflet-control-layers-overlays {
+        display: flex;
     }
 }
 
 .leaflet-routing-container {
-    .fontawesome-icon.icon-route{
+    .fontawesome-icon.icon-route {
         display: none;
     }
 }
-.leaflet-routing-container-hide .leaflet-routing-collapse-btn{
+
+.leaflet-routing-container-hide .leaflet-routing-collapse-btn {
     left: 4px;
     top: -8px;
 
-    background-image:none;
-    
-    .fontawesome-icon.icon-route{
+    background-image: none;
+
+    .fontawesome-icon.icon-route {
         display: block;
     }
 
-    svg{
+    svg {
         position: relative;
         color: $color_blue;
         @include font-size(2);
     }
 }
 
-.leaflet-routing-reverse-waypoints, .leaflet-routing-add-waypoint, .leaflet-routing-btn {
+.leaflet-routing-reverse-waypoints,
+.leaflet-routing-add-waypoint,
+.leaflet-routing-btn {
     height: 30px;
     width: 30px;
 }
 
-.leaflet-routing-btn{
-    padding:0;
+.leaflet-routing-btn {
+    padding: 0;
     outline: none;
 
-    &.active{
-        color:$color_blue;
+    &.active {
+        color: $color_blue;
     }
 
-    
-    &.calc{
-        float:left!important;
+
+    &.calc {
+        float: left !important;
     }
 
-    &.save{
-        float:left!important;
+    &.save {
+        float: left !important;
     }
 
-    &.load{
-        float:left!important;
+    &.load {
+        float: left !important;
     }
 }
 
-.leaflet-routing-collapse-btn, .navigation-btn{
+.leaflet-routing-collapse-btn,
+.navigation-btn {
     cursor: pointer;
 }
 
-.leaflet-routing-container{
+.leaflet-routing-container {
     transition: none !important
 }
 
 @media only screen and (max-width: 640px) {
     .leaflet-routing-container {
-        margin-right: 10px!important;
-        margin-top: 10px!important;
-        padding-top: 4px!important;
+        margin-right: 10px !important;
+        margin-top: 10px !important;
+        padding-top: 4px !important;
     }
 }
 
-#trip-map.leaflet-pseudo-fullscreen{
-    z-index:1000;
+#trip-map.leaflet-pseudo-fullscreen {
+    z-index: 1000;
 }

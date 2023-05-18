@@ -52,43 +52,51 @@
                 </div>
             </header>
         {% endif %}
-        <div id="content" class="site-content container">
-            {% if flash() is not empty %}
-                <div class="alert hide-offline {{flash('message_type')|last}} flash-message">
-                    <span class="closebtn" >&times;</span>
-                    <span class="alert-message">
-                        {% for msg in flash('message') %}
-                            <p>{{ msg }}</p>
-                        {% endfor %}
-                    </span>
-                </div>
-            {% endif %}
-            {% if flash("additional_flash_message") is not empty %}
-                {% for msg in flash('additional_flash_message') %}
-                    <div class="alert hide-offline {{flash('additional_flash_message_type')[loop.index-1]}}">
+        
+        {% if not user is null %}
+        <aside>
+            {% include 'main/sidebar.twig' %}
+        </aside>
+        {% endif %}
+        <div class="site-body">
+            <div id="content" class="site-content container">
+                {% if flash() is not empty %}
+                    <div class="alert hide-offline {{flash('message_type')|last}} flash-message">
                         <span class="closebtn" >&times;</span>
                         <span class="alert-message">
-                            <p>{{ msg }}</p>
+                            {% for msg in flash('message') %}
+                                <p>{{ msg }}</p>
+                            {% endfor %}
                         </span>
                     </div>
-                {% endfor %}
-            {% endif %}
-            <div id="offline-alert" class="alert danger hidden">
-                <span class="alert-message">
-                    <p>{{ lang["YOU_ARE_OFFLINE"] }}</p>
-                </span>
+                {% endif %}
+                {% if flash("additional_flash_message") is not empty %}
+                    {% for msg in flash('additional_flash_message') %}
+                        <div class="alert hide-offline {{flash('additional_flash_message_type')[loop.index-1]}}">
+                            <span class="closebtn" >&times;</span>
+                            <span class="alert-message">
+                                <p>{{ msg }}</p>
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <div id="offline-alert" class="alert danger hidden">
+                    <span class="alert-message">
+                        <p>{{ lang["YOU_ARE_OFFLINE"] }}</p>
+                    </span>
+                </div>
+                <div id="offline-entries-alert" class="alert warning hidden">
+                    <span class="alert-message">
+                        <p>{{ lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] }}</p>
+                    </span>
+                </div>
+                <div id="loading-overlay" class="hidden">
+                    <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+                    <span class="hidden">{{ lang["LOADING"] }}</span>
+                </div>
+                {% block body %}
+                {% endblock %}
             </div>
-            <div id="offline-entries-alert" class="alert warning hidden">
-                <span class="alert-message">
-                    <p>{{ lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] }}</p>
-                </span>
-            </div>
-            <div id="loading-overlay" class="hidden">
-                <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-                <span class="hidden">{{ lang["LOADING"] }}</span>
-            </div>
-            {% block body %}
-            {% endblock %}
         </div>
         {% block bottom %}
         {% endblock %}

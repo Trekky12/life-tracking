@@ -305,7 +305,7 @@ body.boards.no-touch-enabled .handle{
         }
     }
 }
-@media screen and (min-width: $size_mobile) {
+@media screen and (min-width: $size_mobile_navigation) {
     // Default Desktop: sidebar visible
     .sidebar{
         width: 200px; 

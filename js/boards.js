@@ -1124,7 +1124,7 @@ function sidebarAdjustments() {
 /* Do not apply sidebar adjustments on fixed header */
 //sidebarAdjustments();
 window.addEventListener('scroll', function () {
-    if (pageBody.classList.contains("mobile-navigation-open")) {
+    if (pageBody.classList.contains("navigation-drawer-toggled")) {
         sidebarAdjustments();
     }
 });
