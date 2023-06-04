@@ -2,84 +2,97 @@
 
 {% set active = 'finances' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('finances_paymethod') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["FINANCES_PAYMETHOD"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["FINANCES_PAYMETHOD"]}}</h2>
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('finances_paymethod') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>  
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-content">
 
-            <form class="form-horizontal" id="financeForm" action="{{  url_for('finances_paymethod_save', {'id' : entry.id}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<form class="form-horizontal" id="financeForm" action="{{ url_for('finances_paymethod_save', {'id' : entry.id}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-                {% endif %}
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
 
-                <div class="form-group">
-                    <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputName">{{lang["NAME"]}}</label>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxDefault">
-                        <input name="is_default" type="checkbox" id="checkboxDefault" value="1" {% if entry is not null and entry.is_default == 1 %}checked{% endif %}>
-                        {{lang["DEFAULT"]}}
-                    </label>
-                </div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxDefault">
+						<input name="is_default" type="checkbox" id="checkboxDefault" value="1" {% if entry is not null and entry.is_default == 1 %} checked {% endif %}>
+						{{lang["DEFAULT"]}}
+					</label>
+				</div>
 
-                <div class="form-group">
-                    <label for="account">{{lang["FINANCES_ACCOUNT"]}}</label>
-                    <select class="form-control" id="account" name="account">
-                        {% for account in accounts %}
-                            <option value="{{account.id}}" {% if not entry is null and account.id == entry.account %}selected{% endif %}>{{account.name|raw}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+				<div class="form-group">
+					<label for="account">{{lang["FINANCES_ACCOUNT"]}}</label>
+					<select class="form-control" id="account" name="account">
+						{% for account in accounts %}
+							<option value="{{account.id}}" {% if not entry is null and account.id == entry.account %} selected {% endif %}>{{account.name|raw}}</option>
+						{% endfor %}
+					</select>
+				</div>
 
-                <h3>{{lang["FINANCES_ROUND_UP_SAVINGS"]}}</h3>
-                <div class="form-group">
-                    <div>
-                        <label class="radio" for="radioDisabled">
-                            <input name="round_up_savings" type="radio" value="0" id="radioDisabled" {% if ( entry is null ) or (entry is not null and entry.round_up_savings == 0 )%}checked="checked"{% endif %}>
-                            {{lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"]}}
-                        </label>                               
-                    </div>
-                    <div>
-                        <label class="radio" for="radio1">
-                            <input name="round_up_savings" type="radio" value="1" id="radio1" {% if (entry is not null and entry.round_up_savings == 1 )%}checked="checked"{% endif %}>
-                            1 {{i18n.currency}}
-                        </label>
-                    </div>
-                    <div>
-                        <label class="radio" for="radio5">
-                            <input name="round_up_savings" type="radio" value="5" id="radio5" {% if (entry is not null and entry.round_up_savings == 5 )%}checked="checked"{% endif %}>
-                            5 {{i18n.currency}}
-                        </label>
-                    </div>
-                </div>
+				<h3>{{lang["FINANCES_ROUND_UP_SAVINGS"]}}</h3>
+				<div class="form-group">
+					<div>
+						<label class="radio" for="radioDisabled">
+							<input name="round_up_savings" type="radio" value="0" id="radioDisabled" {% if ( entry is null ) or (entry is not null and entry.round_up_savings == 0 )%} checked="checked" {% endif %}>
+							{{lang["FINANCES_ROUND_UP_SAVINGS_DISABLED"]}}
+						</label>
+					</div>
+					<div>
+						<label class="radio" for="radio1">
+							<input name="round_up_savings" type="radio" value="1" id="radio1" {% if (entry is not null and entry.round_up_savings == 1 )%} checked="checked" {% endif %}>
+							1
+							{{i18n.currency}}
+						</label>
+					</div>
+					<div>
+						<label class="radio" for="radio5">
+							<input name="round_up_savings" type="radio" value="5" id="radio5" {% if (entry is not null and entry.round_up_savings == 5 )%} checked="checked" {% endif %}>
+							5
+							{{i18n.currency}}
+						</label>
+					</div>
+				</div>
 
-                <div class="form-group">
-                    <label for="round_up_savings_account">{{lang["FINANCES_ACCOUNT"]}}</label>
-                    <select class="form-control" id="round_up_savings_account" name="round_up_savings_account">
-                        {% for account in accounts %}
-                            <option value="{{account.id}}" {% if not entry is null and account.id == entry.round_up_savings_account %}selected{% endif %}>{{account.name|raw}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+				<div class="form-group">
+					<label for="round_up_savings_account">{{lang["FINANCES_ACCOUNT"]}}</label>
+					<select class="form-control" id="round_up_savings_account" name="round_up_savings_account">
+						{% for account in accounts %}
+							<option value="{{account.id}}" {% if not entry is null and account.id == entry.round_up_savings_account %} selected {% endif %}>{{account.name|raw}}</option>
+						{% endfor %}
+					</select>
+				</div>
 
-                <div class="form-group">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

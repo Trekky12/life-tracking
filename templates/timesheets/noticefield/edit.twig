@@ -2,21 +2,21 @@
 
 {% set active = 'timesheets' %}
 
-
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets_noticefields', {'project': project.hash})}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["TIMESHEETS_NOTICEFIELDS"]}}
 				|
 				{{ project.name }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('timesheets_noticefields', {'project': project.hash})}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<form class="form-horizontal" action="{{ url_for('timesheets_noticefields_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">
@@ -33,9 +33,9 @@
 				</div>
 
 				<div class="form-group">
-                    <label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+					<label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
 					<input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %} value="{{entry.description|raw}}" {% endif %}>
-                </div>
+				</div>
 
 				<div class="form-group">
 					<label for="inputPosition">{{lang["POSITION"]}}</label>
@@ -50,28 +50,33 @@
 						{% endfor %}
 					</select>
 					<label for="initialization">{{lang["DATATYPE_INITIALIZATION"]}}</label>
-					<textarea class="form-control" id="initialization" name="initialization">{% if entry %}{{entry.initialization}}{% endif %}</textarea>
-			</div>
+					<textarea class="form-control" id="initialization" name="initialization">
+						{%- if entry -%}
+							{{entry.initialization}}
+						{%- endif -%}
+					</textarea>
+				</div>
 
-			<div class="form-group">
-				<label class="checkbox" for="checkboxDefault">
-					<input name="is_default" type="checkbox" value="1" id="checkboxDefault" {% if entry is not null and entry.is_default == 1 %} checked {% endif %}>
-					{{lang["DEFAULT"]}}
-				</label>
-			</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxDefault">
+						<input name="is_default" type="checkbox" value="1" id="checkboxDefault" {% if entry is not null and entry.is_default == 1 %} checked {% endif %}>
+						{{lang["DEFAULT"]}}
+					</label>
+				</div>
 
-			<div class="form-group btn">
-				<button type="submit" class="button">
+				<div class="form-group btn">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
 					{% if not entry is null %}
-						{{lang["SAVE"]}}
-					{% else %}
-						{{lang["INSERT"]}}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
 					{% endif %}
-				</button>
-				{% if not entry is null %}
-					<button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-				{% endif %}
-			</div>
-		</form>
+				</div>
+			</form>
+		</div>
 	</div>
-</div>{% endblock %}
+{% endblock %}

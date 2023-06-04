@@ -8,8 +8,15 @@ const header = document.getElementById('masthead');
 const menuButton = document.getElementById('menu-toggle');
 const navigation = document.getElementById('site-navigation');
 const navigationOverlay = document.getElementById('navigation-overlay');
+const FBAs = document.querySelectorAll('.button-add-item');
+
+const boardSidebar = document.getElementById('board-sidebar');
 
 const wasMobile = isMobile();
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    scrollToTab(document.querySelector('a.tabbar-tab.active'), true);
+});
 
 if (/^(iPhone|iPad|iPod)/.test(navigator.platform)) {
     body.classList.add("ios");
@@ -20,13 +27,7 @@ if (navigation && header && navigationOverlay) {
     let max_opacity = 0.8;
     let navi_width = 256;
 
-    let bar1 = document.querySelector('#menu-toggle .bar:nth-child(1)');
-    let bar2 = document.querySelector('#menu-toggle .bar:nth-child(2)');
-    let bar3 = document.querySelector('#menu-toggle .bar:nth-child(3)');
-    let bar4 = document.querySelector('#menu-toggle .bar:nth-child(4)');
-
     menuButton.addEventListener('click', function (evt) {
-        //        console.log("click!");
 
         if (navigation.classList.contains('toggled')) {
             //            console.log("close now");
@@ -35,6 +36,17 @@ if (navigation && header && navigationOverlay) {
             //            console.log("open now");
             openMenu();
         }
+
+        // set cookie
+        if (!isMobile()) {
+            if (navigation.classList.contains('toggled')) {
+                setCookie('navigationdrawer_desktophidden', 1);
+            } else {
+                setCookie('navigationdrawer_desktophidden', 0);
+            }
+        } else {
+            setCookie('navigationdrawer_desktophidden', 0);
+        }
     });
 
     navigationOverlay.addEventListener('click', function (evt) {
@@ -42,7 +54,6 @@ if (navigation && header && navigationOverlay) {
     });
 
     function openMenu() {
-        resetCross();
 
         menuButton.setAttribute('aria-expanded', 'true');
         menuList.setAttribute('aria-expanded', 'true');
@@ -66,7 +77,6 @@ if (navigation && header && navigationOverlay) {
 
 
     function closeMenu() {
-        resetCross();
 
         menuButton.setAttribute('aria-expanded', 'false');
         menuList.setAttribute('aria-expanded', 'false');
@@ -88,26 +98,6 @@ if (navigation && header && navigationOverlay) {
         navigation.classList.remove("toggled");
 
         currentPos = 0;
-    }
-
-    // reset manually triggered X animation
-    function resetCross() {
-        /*bar1.style.removeProperty("transition-duration");
-         bar1.style.removeProperty("top");
-         bar1.style.removeProperty("width");
-         bar1.style.removeProperty("left");
-         
-         bar2.style.removeProperty("transition-duration");
-         bar2.style.removeProperty("transform");
-         
-         bar3.style.removeProperty("transition-duration");
-         bar3.style.removeProperty("transform");
-         
-         bar4.style.removeProperty("transition-duration");
-         bar4.style.removeProperty("top");
-         bar4.style.removeProperty("width");
-         bar4.style.removeProperty("left");
-         */
     }
 
     // https://stackoverflow.com/a/23230280
@@ -311,6 +301,160 @@ if (navigation && header && navigationOverlay) {
         if (!wasMobile && isMobile()) {
             navigation.classList.remove('toggled');
             body.classList.remove("navigation-drawer-toggled");
+            setCookie('navigationdrawer_desktophidden', 0);
         }
     }
+
+    /**
+     * Hide header on scroll down
+     * @see https://www.w3schools.com/howto/howto_js_navbar_hide_scroll.asp
+     */
+    let prevScrollpos = window.pageYOffset;
+    document.addEventListener('scroll', function () {
+        var currentScrollPos = window.pageYOffset;
+
+        if (Math.abs(prevScrollpos - currentScrollPos) < 10) {
+            return;
+        }
+
+        let headerHeight = header.offsetHeight;
+        //let hideHeaderValue = (headerHeight * -1) + 'px';
+
+        if (prevScrollpos <= currentScrollPos) {
+
+            header.style.top = -headerHeight + 'px';
+        } else {
+            header.style.removeProperty("top");
+        }
+        header.style.top = (prevScrollpos <= currentScrollPos) ? -headerHeight + 'px' : "0";
+
+        FBAs.forEach(function (fba) {
+            if (prevScrollpos <= currentScrollPos) {
+                fba.style.bottom = "-100px";
+            } else {
+                fba.style.removeProperty("bottom");
+            }
+        });
+
+        if (boardSidebar) {
+            boardSidebar.style.top = (prevScrollpos <= currentScrollPos) ? "0" : headerHeight + 'px';
+        }
+        prevScrollpos = currentScrollPos;
+    });
 }
+
+const rippleIcons = document.querySelectorAll('.icon-ripple-wrapper');
+
+rippleIcons.forEach(function (rippleIcon) {
+
+    if (!isMobile()) {
+        rippleIcon.addEventListener('mousedown', function (evt) {
+            rippleIcon.classList.add("ripple-effect-start");
+        });
+
+        rippleIcon.addEventListener('mouseup', function (evt) {
+            //setTimeout(function () {
+            rippleIcon.classList.remove("ripple-effect-start");
+            //}, 300);
+            rippleIcon.classList.add("ripple-effect-end");
+            setTimeout(function () {
+                rippleIcon.classList.remove("ripple-effect-end");
+            }, 200);
+        });
+    } else {
+        rippleIcon.addEventListener('touchstart', function (evt) {
+            rippleIcon.classList.add("ripple-effect-start");
+            rippleIcon.querySelector(".icon").focus();
+        });
+
+        rippleIcon.addEventListener('touchend', function (evt) {
+            //setTimeout(function () {
+            rippleIcon.classList.remove("ripple-effect-start");
+            //}, 300);
+            rippleIcon.classList.add("ripple-effect-end");
+            setTimeout(function () {
+                rippleIcon.classList.remove("ripple-effect-end");
+            }, 200);
+        });
+    }
+});
+
+/*let scrollBarHeight = computeHorizontalScrollbarHeight();
+
+let tabbarScroller = document.querySelectorAll('.tabbar-scrollarea');
+tabbarScroller.forEach(function (tabbarScroller) {
+    tabbarScroller.style.marginBottom = -scrollBarHeight + 'px';
+});
+*/
+
+const tabbarScrollArea = document.querySelector('.tabbar-scrollarea');
+const tabbarTabs = document.querySelectorAll('a.tabbar-tab');
+
+
+tabbarTabs.forEach(function (tabbarTab) {
+    tabbarTab.addEventListener('click', function (evt) {
+        tabbarTabs.forEach(function (btn) {
+            btn.classList.remove("active");
+        });
+        tabbarTab.classList.add("active");
+        scrollToTab(tabbarTab, false);
+
+        // wait for smooth scroll to tab
+        setTimeout(function () {
+            tabbarScrollArea.parentNode.style.height = 0;
+            body.classList.remove("has-tabbar");
+        }, 200);
+    });
+});
+
+function scrollToTab(tab, initial = false) {
+    if (!tab) {
+        return;
+    }
+    let behaviour = 'smooth';
+    if (initial) {
+        tabbarScrollArea.parentNode.style.height = "50px";
+        body.classList.add("has-tabbar");
+        behaviour = 'instant';
+    }
+
+    //let scrollMax = tabbarScrollArea.scrollWidth - tabbarScrollArea.offsetWidth;
+
+    let tabWidth = tab.offsetWidth;
+    let tabPosition = tab.offsetLeft;
+    let offsetLeft = 0; //tabbarScrollArea.parentNode.offsetLeft;
+
+    let margin = (tabbarScrollArea.offsetWidth - tabWidth) / 2;
+
+
+    //let newPosition = tabPosition - offsetLeft - tabWidth / 2;
+
+    let offset = offsetLeft / 2;
+    if (!isMobile()) {
+        offset = 0;
+    }
+
+    // center to middle of screen
+    let newPosition = tabPosition - margin + offset;
+
+    /*let xMin = tabbarScrollArea.offsetLeft;
+    let xMax = tabbarScrollArea.offsetWidth;
+    console.log(newPosition);
+    console.log(xMin);
+    console.log(xMax);*/
+
+    tabbarScrollArea.scrollTo({ 'left': newPosition, 'behavior': behaviour });
+}
+
+
+const tabbarScrollButtons = document.querySelectorAll('.tabbar-tab-scroll-btn');
+tabbarScrollButtons.forEach(function (tabbarScrollButton) {
+    tabbarScrollButton.addEventListener('click', function (evt) {
+        tabbarScrollArea.style.scrollBehavior = 'smooth';
+        if (tabbarScrollButton.dataset.type == "left") {
+            tabbarScrollArea.scrollLeft -= 50;
+        } else {
+            tabbarScrollArea.scrollLeft += 50;
+        }
+    });
+});

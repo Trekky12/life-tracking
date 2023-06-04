@@ -3,59 +3,75 @@
 {% set active = 'profile' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/weather-icons.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/widgets-edit.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/widgets.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/widgets-edit.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/widgets.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{ lang["WIDGETS"] }}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "profile/profile-tabs.twig" with {'active':'users_profile_frontpage'} only %}
 {% endblock %}
 
 {% block body %}
-    <div id="widget-modal" class="modal">
-        <div class="modal-inner">
-            <div class="modal-header">{{lang["WIDGET_OPTIONS"]}}<span class="edit-bar"></span></div>
-            <form>
-                <div class="modal-content">
-                </div>
-                <div class="modal-footer">
-                    <div class="buttons">
-                        <input id="add-widget-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
-                        <button id="modal-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div id="widget-modal" class="modal">
+		<div class="modal-inner">
+			<div class="modal-header">{{lang["WIDGET_OPTIONS"]}}<span class="edit-bar"></span>
+			</div>
+			<form>
+				<div class="modal-content"></div>
+				<div class="modal-footer">
+					<div class="buttons">
+						<input id="add-widget-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
+						<button id="modal-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 
-    <div class="page-header">
-        <h2>{{ lang["WIDGETS"] }}</h2>
-    </div>
-
-    <div class="grid active">
-        {% for widget in list %}
-            <div class="card" data-widget="{{ widget["id"] }}">
-                <div class="card-content">
-                    <div class="card-header has-buttons">
-                        <h3>{% if widget["url"] is not null %}<a href="{{ widget["url"] }}">{{ widget["title"] | raw }}</a>{% else %}{{ widget["title"] | raw }}{% endif %}</h3>
-                        <div class="buttons">
-                            {% if widget["hasOptions"] %}
-                                <a href="#" class="btn-edit" data-id="{{ widget["id"] }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-                            {% endif %}
-                            <a href="#" data-url="{{ url_for('users_profile_frontpage_widget_delete', {'id' : widget["id"]}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {%  endfor %}
-    </div>
-    <p>
-        <select class="button-height">
-            {% for widget_key, widget in widgets %}
-                <option value="{{ widget_key }}">{{ widget["name"] }}</option>
-            {% endfor %}
-        </select>
-        <a href="#" id="add-widget"><button class="button">{{ lang["ADD"] }}</button></a>
-    </p>
+	<div class="grid active">
+		{% for widget in list %}
+			<div class="card" data-widget="{{ widget["id"] }}">
+				<div class="card-content">
+					<div class="card-header has-buttons">
+						<h3>
+							{% if widget["url"] is not null %}
+								<a href="{{ widget["url"] }}">{{ widget["title"] | raw }}</a>
+							{% else %}
+								{{ widget["title"] | raw }}
+							{% endif %}
+						</h3>
+						<div class="buttons">
+							{% if widget["hasOptions"] %}
+								<a href="#" class="btn-edit" data-id="{{ widget["id"] }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							{% endif %}
+							<a href="#" data-url="{{ url_for('users_profile_frontpage_widget_delete', {'id' : widget["id"]}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		{%  endfor %}
+	</div>
+	<p>
+		<select class="button-height">
+			{% for widget_key, widget in widgets %}
+				<option value="{{ widget_key }}">{{ widget["name"] }}</option>
+			{% endfor %}
+		</select>
+		<a href="#" id="add-widget">
+			<button class="button">{{ lang["ADD"] }}</button>
+		</a>
+	</p>
 {% endblock %}

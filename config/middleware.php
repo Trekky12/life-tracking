@@ -21,6 +21,11 @@ return function (App $app) {
     }
 
     /**
+     * Hide Navigation Drawer on desktop 
+     */
+    $app->add('App\Application\Middleware\NavigationDrawerMiddleware');
+
+    /**
      * Get the unread notifications count
      */
     $app->add('App\Application\Middleware\NotificationsMiddleware');

@@ -2,53 +2,74 @@
 
 {% set active = 'settings' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["USERS"]}}</h2>
+		</div>
+		{% if user.isAdmin() %}
+			<div class="buttons">
+				<a href="{{ url_for('users_edit') }}">
+					<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+						{{lang["ADD"]}}</button>
+				</a>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "main/settings-tabs.twig" with {'active':'users'} only %}
+{% endblock %}
+
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="users_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["LOGIN"]}}</th>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{lang["LASTNAME"]}}</th>
+						<th>{{lang["MAIL"]}}</th>
+						<th>{{lang["ROLE"]}}</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in list %}
+						<tr>
+							<td>{{entry.login}}</td>
+							<td>{{entry.name}}</td>
+							<td>{{entry.lastname}}</td>
+							<td>{{entry.mail}}</td>
+							<td>{{entry.role}}</td>
+							<td>
+								<a href="{{ url_for('users_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('users_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+							<td>
+								{% if entry.mail %}
+									<a href="{{ url_for('users_test_mail', {'user' : entry.id}) }}">{{ fontawesome('fas fa-envelope') }}
+										{{lang["TESTMAIL"]}}</a>
+									{%endif%}</td>
+							</td>
+							<td>
+								{% if user.id != entry.id %}
+									<a href="{{ url_for('users_take_identity', {'user': entry.id}) }}">Identität übernehmen{{lang["1APPLICATION_PASSWORDS"]}}</a>
+								{% endif %}
+							</td>
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["USERS"]}}</h2> 
-                {% if user.isAdmin() %}
-                <div class="buttons">
-                    <a href="{{  url_for('users_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-                </div>
-            {% endif%}
-        </div>
-        <div class="page-content">
-            <table id="users_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["LOGIN"]}}</th>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{lang["LASTNAME"]}}</th>
-                        <th>{{lang["MAIL"]}}</th>
-                        <th>{{lang["ROLE"]}}</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in list %}
-                        <tr>
-                            <td>{{entry.login}}</td> 
-                            <td>{{entry.name}}</td> 
-                            <td>{{entry.lastname}}</td> 
-                            <td>{{entry.mail}}</td>
-                            <td>{{entry.role}}</td>
-                            <td><a href="{{  url_for('users_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
-                            <td><a href="#" data-url="{{  url_for('users_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                            <td>{% if entry.mail %}<a href="{{  url_for('users_test_mail', {'user' : entry.id}) }}">{{ fontawesome('fas fa-envelope') }} {{lang["TESTMAIL"]}}</a>{%endif%}</td>
-                            <td>
-                                {% if user.id != entry.id %}
-                                    <a href="{{  url_for('users_take_identity', {'user': entry.id}) }}">Identität übernehmen{{lang["1APPLICATION_PASSWORDS"]}}</a>
-                                {% endif %}
-                            </td>
-
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

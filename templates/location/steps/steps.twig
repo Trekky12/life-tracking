@@ -3,46 +3,54 @@
 {% set active = 'steps' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/location-steps-stats.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/location-steps-stats.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["STEPS"]}}
+				{{lang["STATS"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "location/location-tabs.twig" with {'active':'steps'} only %}
 {% endblock %}
 
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 
-    <div class="inner-content">
-        <div class="page-header">
-            <h2>{{lang["STEPS"]}} {{lang["STATS"]}}</h2>
-        </div>
+			<canvas id="stepsSummaryChart" data-values="{{data}}" data-labels="{{labels}}" data-label="{{lang["STEPS_AVG"]}}"></canvas>
 
-        <div class="page-content">
-
-            <canvas id="stepsSummaryChart" data-values="{{data}}" data-labels="{{labels}}" data-label="{{lang["STEPS_AVG"]}}"></canvas>
-
-            <table id="steps_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["YEAR"]}}</th>
-                        <th>{{lang["STEPS_AVG"]}}</th>
-                        <th>{{lang["STEPS_MAX"]}}</th>
-                        <th>{{lang["STEPS_SUM"]}}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in stats %}
-                        <tr>
-                            <td data-title="{{lang["YEAR"]}}">{{entry[0]}}</td> 
-                            <td data-title="{{lang["STEPS_AVG"]}}">{{ entry[1]|number_format(0, '', '.')}}</td> 
-                            <td data-title="{{lang["STEPS_MAX"]}}">{{ entry[2]|number_format(0, '', '.')}}</td> 
-                            <td data-title="{{lang["STEPS_SUM"]}}">{{ entry[3]|number_format(0, '', '.')}}</td> 
-                            <td>
-                                <a href="{{  url_for('steps_stats_year', { 'year' : entry[0] }) }}">{{ fontawesome('fas fa-chart-bar') }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+			<table id="steps_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["YEAR"]}}</th>
+						<th>{{lang["STEPS_AVG"]}}</th>
+						<th>{{lang["STEPS_MAX"]}}</th>
+						<th>{{lang["STEPS_SUM"]}}</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in stats %}
+						<tr>
+							<td data-title="{{lang["YEAR"]}}">{{entry[0]}}</td>
+							<td data-title="{{lang["STEPS_AVG"]}}">{{ entry[1]|number_format(0, '', '.')}}</td>
+							<td data-title="{{lang["STEPS_MAX"]}}">{{ entry[2]|number_format(0, '', '.')}}</td>
+							<td data-title="{{lang["STEPS_SUM"]}}">{{ entry[3]|number_format(0, '', '.')}}</td>
+							<td>
+								<a href="{{ url_for('steps_stats_year', { 'year' : entry[0] }) }}">{{ fontawesome('fas fa-chart-bar') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

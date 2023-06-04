@@ -1,32 +1,36 @@
+#loading-overlay {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    background: #000;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    z-index: 1000;
 
-#loading-overlay{
-    position:fixed;
-    left:0;
-    bottom:0;
-    right:0;
-    top:0;
-    background:#000;
-    opacity:0.7;
-    filter:alpha(opacity=70);
-    z-index:1000;
-    i, span, svg{
-        position:absolute;
-        top:50%;
-        left:50%;
+    i,
+    span,
+    svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
         color: #FFFFFF;
 
-        margin-right:0;
-        margin-bottom:0;
+        margin-right: 0;
+        margin-bottom: 0;
     }
 
-    i, svg{
+    i,
+    svg {
         margin-top: -20px;
         margin-left: -20px;
         width: 40px;
         height: 40px;
         font-size: 40px;
     }
-    span{
+
+    span {
         margin-top: -10px;
         margin-left: -10px;
         width: 20px;
@@ -35,138 +39,161 @@
     }
 }
 
-.board-content{
+.board-content {
     margin-bottom: 10px;
 
-    @media screen and (max-width: $size_mobile) {   
+    @media screen and (max-width: $size_mobile) {
         margin-right: 10%;
     }
 
     /* Stack */
 
-    .stack-wrapper{
+    .stack-wrapper {
+
+        padding-left: 5px;
+        padding-right: 5px;
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
         position: relative;
         overflow-x: auto;
 
         @media screen and (min-width: $size_mobile) {
             min-height: calc(100vh - #{$header_height} - 20px - 36px - 20px);
-            display:flex;
+            display: flex;
         }
 
-        &.hide-archived{
-            .board-card.archived, .stack.archived{
+        &.hide-archived {
+
+            .board-card.archived,
+            .stack.archived {
                 display: none;
             }
         }
     }
 
-    .stack, .stack-dummy{
+    .stack,
+    .stack-dummy {
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         flex: 0 0 250px;
 
         padding: 0;
         margin-right: 0.2rem;
         padding-right: 0.2rem;
 
-        &:hover{
-            cursor:pointer;
+        &:hover {
+            cursor: pointer;
         }
 
-        &.stack-border{
+        &.stack-border {
             border-right: 1px solid #aaaaaa;
         }
     }
 
-    .stack-header{
+    .stack-header {
         background: $color_blue_light;
         @include font-size(1.8);
 
         margin: 1rem;
         font-weight: 300;
-        padding:0 1rem 0 1rem;
-        display:flex;
+        padding: 0 1rem 0 1rem;
+        display: flex;
         justify-content: space-between;
 
         -webkit-tap-highlight-color: transparent;
+
+        border-radius: 4px;
 
         @media screen and (max-width: $size_mobile) {
             word-break: break-all;
         }
 
-        &, a{
+        &,
+        a {
             color: $color_background-body;
         }
-        a:hover{
+
+        a:hover {
             color: $color_background-screen;
         }
     }
 
-    .stack-dummy{
+    .stack-dummy {
         border-right: 0;
     }
 
 
-    .card-wrapper, .stack-dummy{
+    .card-wrapper,
+    .stack-dummy {
         // So cards can be dropped on empty stacks
         min-height: 10px;
         position: relative;
     }
 
-    .board-card, .card-placeholder{
-        min-height:50px;
-        margin:0 1rem 1rem 1rem;
+    .board-card,
+    .card-placeholder {
+        min-height: 50px;
+        margin: 0 1rem 1rem 1rem;
     }
 
     /* Card  */
-    .board-card{
+    .board-card {
 
         display: flex;
 
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-        box-sizing: border-box; 
+        box-sizing: border-box;
         background-color: $color_background-body;
         padding: 0.5rem;
-        position:relative;
-        overflow:hidden;
+        position: relative;
+        overflow: hidden;
 
         @include font-size(1.4);
 
         -webkit-tap-highlight-color: transparent;
 
-        &:hover{
-            cursor:pointer;
+        border-radius: 4px;
+
+        box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2),
+            0 1px 1px 0 rgba(0, 0, 0, .14),
+            0 1px 3px 0 rgba(0, 0, 0, .12);
+
+        &:hover {
+            cursor: pointer;
         }
 
-        .check{
+        .check {
             margin-right: 1rem;
         }
 
-        .custom-checkbox{
+        .custom-checkbox {
             display: block;
-            margin-top: 0.3rem;
         }
 
-        .board-card-content{
+        .board-card-content {
             flex-grow: 1;
         }
 
-        .bottom-row{
-            display:flex;
+        .bottom-row {
+            display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .card-members{
-            display:flex;
+        .card-members {
+            display: flex;
             //justify-content: flex-end;
         }
 
-        .card-date{
+        .card-date {
             background: $color_background-screen;
             color: $color_text-main;
 
-            svg{
+            svg {
                 transition: all 250ms;
                 @include font-size(1);
                 margin-right: 5px;
@@ -174,14 +201,14 @@
                 top: -1px;
             }
 
-            &.due{
+            &.due {
                 background: $color_red;
                 color: $color_background-body;
             }
 
         }
 
-        .card-title{
+        .card-title {
             /* Old IE Support */
             -ms-word-break: break-all;
 
@@ -195,29 +222,30 @@
 
         }
 
-        .card-labels{
-            display:flex;
+        .card-labels {
+            display: flex;
             float: right;
-            margin-left:1rem;
+            margin-left: 1rem;
         }
-        .card-label{
+
+        .card-label {
             height: 12px;
-            width:12px;
-            border-radius:4px;
-            margin:0.2rem;
+            width: 12px;
+            border-radius: 4px;
+            margin: 0.2rem;
         }
     }
 
 
-    .board-card-dummy{
-        margin:0 1rem 1rem 1rem;
+    .board-card-dummy {
+        margin: 0 1rem 1rem 1rem;
     }
 
-    .card-placeholder{
+    .card-placeholder {
         border: 1px dashed $color_text-main;
     }
 
-    .handle{
+    .handle {
         display: block;
         margin-left: 10px;
         @include font-size(2);
@@ -228,343 +256,374 @@
     }
 }
 
-body.boards.no-touch-enabled .handle{
+body.boards.no-touch-enabled .handle {
     display: none;
 }
 
 /* inspired by https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
 
-#sidebar-toggle{
+#sidebar-toggle {
     @include font-size(2);
     line-height: 1;
     transition: all 250ms;
-    position:absolute;
-    left:-30px;
+    position: absolute;
+    left: -30px;
     width: 30px;
-    height:30px;
+    height: 30px;
     background-color: $color_background-body;
-    display:flex;
+    display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     border-bottom-left-radius: 3px;
-    box-shadow: -7px 1px 9px 0px rgba(0,0,0,0.16);
+    box-shadow: -7px 1px 9px 0px rgba(0, 0, 0, 0.16);
 
-    &:hover{
+    &:hover {
         cursor: pointer;
     }
 
-    .chevron-left{
-        display:inline-block;
+    .chevron-left {
+        display: inline-block;
     }
-    .chevron-right{
-        display:none;
+
+    .chevron-right {
+        display: none;
     }
 }
 
-.sidebar {
+.board-sidebar {
     height: 100%;
     position: fixed;
-    z-index: 1; 
-    top: 0; 
+    z-index: 1;
+    top: $header_height;
     right: 0;
     background-color: $color_background-body;
-    padding-top: $header_height;
-    transition: 0.2s width;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    transition: width 0.2s, top 0.3s;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 
     // Default Mobile: sidebar hidden
     width: 0px;
+
     // click on toggle: show on mobile
     &.mobile-visible {
         width: 200px;
 
-        #sidebar-toggle{
-            .chevron-left{
-                display:none;
+        #sidebar-toggle {
+            .chevron-left {
+                display: none;
             }
-            .chevron-right{
-                display:inline-block;
+
+            .chevron-right {
+                display: inline-block;
             }
         }
     }
 
-    .sidebar-inner{
+    .board-sidebar-inner {
         width: 200px;
         padding: 1rem;
 
-        h2{
-            margin-top:0;
+        h2 {
+            margin-top: 0;
         }
 
-        label.checkbox, .create-label{
+        label.checkbox,
+        .create-label {
             @include font-size(1.2);
         }
-        #checkboxArchivedItems{
-            position:relative;
-            top:2px;
+
+        #checkboxArchivedItems {
+            position: relative;
+            top: 2px;
         }
     }
 }
+
 @media screen and (min-width: $size_mobile_navigation) {
+
     // Default Desktop: sidebar visible
-    .sidebar{
-        width: 200px; 
+    .board-sidebar {
+        width: 200px;
+
         // click on toggle: hide on desktop
         &.desktop-hidden {
             width: 0px;
-            #sidebar-toggle{                
-                .chevron-left{
-                    display:inline-block;
+
+            #sidebar-toggle {
+                .chevron-left {
+                    display: inline-block;
                 }
-                .chevron-right{
-                    display:none;
+
+                .chevron-right {
+                    display: none;
                 }
             }
         }
     }
-    #sidebar-toggle{
-        .chevron-left{
-            display:none;
+
+    #sidebar-toggle {
+        .chevron-left {
+            display: none;
         }
-        .chevron-right{
-            display:inline-block;
+
+        .chevron-right {
+            display: inline-block;
         }
     }
 
 
 }
 
-.sidebar-box{
+.board-sidebar-box {
     border-bottom: 1px solid $color_background-screen;
     margin-bottom: 1rem;
-    padding-bottom:1rem;
+    padding-bottom: 1rem;
 
-    h4{
-        margin-top:0;
+    h4 {
+        margin-top: 0;
         margin-bottom: 0.2rem;
         @include font-size(1.3);
     }
 
-    .avatar-wrapper{
+    .avatar-wrapper {
         //position:relative;
-        cursor:pointer;
+        cursor: pointer;
 
     }
 
-    .avatar-small{
+    .avatar-small {
         border: 2px solid $color_blue;
     }
 
-    .avatar-name { 
+    .avatar-name {
         display: none;
-        position:absolute;
+        position: absolute;
         background: $color_background-screen;
         padding: 0.5rem 1rem;
-        border:1px solid $color_background-screen;
-        right:0;
+        border: 1px solid $color_background-screen;
+        right: 0;
         margin-right: 1rem;
     }
-    .avatar-wrapper:hover > .avatar-name { 
-        display: block ;
+
+    .avatar-wrapper:hover>.avatar-name {
+        display: block;
     }
 
 }
 
-.avatar, .stack-wrapper, .card-wrapper{
+.avatar,
+.stack-wrapper,
+.card-wrapper {
     // disable selection
     // https://stackoverflow.com/a/5313735
     user-select: none;
 }
 
 /* Avatars */
-.avatar-small, .avatar-mini{
+.avatar-small,
+.avatar-mini {
     border-radius: 50%;
     border: 3px solid #CCC;
     width: 50px;
     height: 50px;
     margin: 0.5rem;
-    display:block;
+    display: block;
 
-    &.selected{
+    &.selected {
         border: 3px solid $color_blue;
     }
 
-    &.avatar-initials{
+    &.avatar-initials {
         padding: 0.5rem;
     }
 }
 
-.avatar-mini{
+.avatar-mini {
     width: 25px;
     height: 25px;
     margin: 0.2rem;
     border: 2px solid $color_blue;
 
-    &.avatar-initials{
+    &.avatar-initials {
         padding: 0.1rem;
     }
 }
-.member-list, .card-label-list{
-    display:flex;
+
+.member-list,
+.card-label-list {
+    display: flex;
     align-items: center;
     flex-wrap: wrap;
-
 }
 
 
 /* General */
-.add-element-text{
+.add-element-text {
     @include font-size(1.4);
     margin: 1rem 1rem 0 1rem;
-    color: #a1a1a1!important;
-    display:block;
+    color: #a1a1a1 !important;
+    display: block;
     -webkit-tap-highlight-color: transparent;
 
-    &:hover{
-        color: $color_text-main!important;
+    &:hover {
+        color: $color_text-main !important;
     }
 }
-.create-card{
-    margin-top:0;
+
+.create-card {
+    margin-top: 0;
 }
-.card-date, .card-label{
+
+.card-date,
+.card-label {
     @include font-size(1.2);
     border-radius: 5px;
     padding: 0.1rem 0.5rem;
     margin: 0.2rem;
 
-    a{
-        cursor:pointer;
+    a {
+        cursor: pointer;
         color: inherit;
 
-        &:hover{
-            color:inherit;
+        &:hover {
+            color: inherit;
         }
     }
 }
 
-.card-dates{
+.card-dates {
     @include font-size(1);
 }
 
-.card-label{
+.card-label {
     //border: 1px solid #000;
-    box-shadow: 0 0 1px rgba(0,0,0,1);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 1);
 }
-.modal-inner{
-    &, .add-element-text, label:not(.radio):not(.checkbox){
-        @include font-size(1.3);
+
+.modal-inner {
+
+    .avatar-small {
+        cursor: pointer;
     }
 
-    .form-group{
-        margin-bottom: 0.5rem;
-    }
-
-    button.cancel, input[type="submit"]{
-        &,&:hover, &:focus{
-            padding: 0.5rem 1rem!important;
-            @include font-size(1.4);
-        }
-    }
-
-    .avatar-small{
-        cursor:pointer;
-    }
-
-    .color-wrapper{
-        background-color:black;
-        height:32px;
-        width:32px;
+    .color-wrapper {
+        background-color: black;
+        height: 32px;
+        width: 32px;
         //border: 1px solid #000;
         border-radius: 5px;
-        box-shadow: 0 0 1px rgba(0,0,0,1);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 1);
 
-        &:hover{
-            cursor:pointer;
+        &:hover {
+            cursor: pointer;
         }
     }
 
-    input[type="color"]{
-        visibility:hidden;
+    input[type="color"] {
+        visibility: hidden;
     }
 
-    .two-columns{
-        align-items:center;
+    .two-columns {
+        align-items: center;
     }
 }
 
-.edit-bar{
-    display:flex;
+.edit-bar {
+    display: flex;
     align-items: center;
     @include font-size(2);
 
-    i, svg{
+    i,
+    svg {
         cursor: pointer;
         margin-left: 10px;
     }
-    &, a{
+
+    &,
+    a {
         color: $color_background-body;
     }
-    a:hover{
+
+    a:hover {
         color: $color_background-screen;
     }
 }
 
-.chosen-container .chosen-results li{
-    cursor:pointer;
-    &.highlighted{
-        background-image:none;
-    }
-    &.result-selected{
+.chosen-container .chosen-results li {
+    cursor: pointer;
 
+    &.highlighted {
+        background-image: none;
     }
+
+    &.result-selected {}
 
 
 }
-.chosen-container-multi .chosen-choices li.search-choice{
-    background:none;
-    border-radius:5px;
-    border:none;
+
+.chosen-container-multi .chosen-choices li.search-choice {
+    background: none;
+    border-radius: 5px;
+    border: none;
     box-shadow: 0 0 1px #000;
 }
 
-.stack.archived{
-    .stack-header{
+.stack.archived {
+    .stack-header {
         background-color: #AAA;
     }
 }
 
-.board-card.archived{
+.board-card.archived {
     background: #ebebeb;
 }
 
-.CodeMirror, .CodeMirror-scroll {
+.CodeMirror,
+.CodeMirror-scroll {
     min-height: 50px;
 }
 
-.editor-toolbar{
-    button{
+.editor-toolbar {
+    button {
         font: normal normal normal 14px/1 FontAwesome;
     }
-    button.active, button:hover {
+
+    button.active,
+    button:hover {
         background: #95a5a6;
     }
 }
 
-.editor-preview-side>p, .editor-preview>p{
+.editor-preview-side>p,
+.editor-preview>p {
     margin-bottom: 0.5rem;
 }
 
 
-body.boards-view{
-    .alert.success{
-        display:none;
+body.boards-view {
+    .alert.success {
+        display: none;
+    }
+
+    .site-content {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .page-header {
+        padding-left: 5px;
+        padding-right: 5px;
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
     }
 }
 
-.editor-toolbar.fullscreen{
+.editor-toolbar.fullscreen {
     top: $header_height;
 }
-.EasyMDEContainer .CodeMirror-fullscreen{
+
+.EasyMDEContainer .CodeMirror-fullscreen {
     top: $header_height+50px;
 }

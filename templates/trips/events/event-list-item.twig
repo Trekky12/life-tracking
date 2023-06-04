@@ -1,5 +1,5 @@
 <div class="trip_event  {% if not date is same as(event.start_date) %}hidden_description_print{% elseif event.notice %}has_notice{%endif %}" data-event="{{ event.id }}" data-title="{{ event.name }}">
-    <div class="icon">
+    <div class="trip-icon">
         {% if event.isAccommodation() %}
             {{ fontawesome('fas fa-bed') }}
         {% elseif event.isTrainride() %}

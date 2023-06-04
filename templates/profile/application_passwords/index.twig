@@ -2,32 +2,45 @@
 
 {% set active = 'profile' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["APPLICATION_PASSWORDS"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('users_application_passwords_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "profile/profile-tabs.twig" with {'active':'users_application_passwords'} only %}
+{% endblock %}
+
 {% block body %}
-
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["APPLICATION_PASSWORDS"]}}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for('users_application_passwords_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="application_passwords_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{ lang["NAME"] }}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for el in list %}
-                        <tr>
-                            <td>{{ el.name }}</td>
-                            <td><a href="#" data-url="{{ url_for('users_application_passwords_delete', {'id' : el.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="application_passwords_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{ lang["NAME"] }}</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for el in list %}
+						<tr>
+							<td>{{ el.name }}</td>
+							<td>
+								<a href="#" data-url="{{ url_for('users_application_passwords_delete', {'id' : el.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 {% endblock %}

@@ -2,39 +2,67 @@
 
 {% set active = 'workouts' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["WORKOUTS_PLANS"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('workouts_sessions_stats_all') }}">
+				<button class="button button-text">{{lang["STATS"]}}</button>
+			</a>
+			<a href="{{ url_for('workouts_plans_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["WORKOUTS_PLANS"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('workouts_sessions_stats_all') }}"><button class="button">{{lang["STATS"]}}</button></a>
-                <a href="{{  url_for('workouts_plans_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="workouts_plans_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{ lang["WORKOUTS_DAYS"] }}</th>
-                        <th>{{ lang["WORKOUTS_EXERCISES"] }}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for plan in plans %}
-                        <tr>
-                            <td><a href="{{  url_for('workouts_plan_view', {'plan' : plan.hash}) }}">{{plan.name|raw}}</a></td> 
-                            <td>{%if plan.days > 0 %}{{ plan.days }}{% endif %}</td> 
-                            <td>{%if plan.exercises > 0 %}{{ plan.exercises }}{% endif %}</td> 
-                            <td><a href="{{  url_for('workouts_plans_edit', {'id' : plan.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
-                            <td><a href="#" data-url="{{  url_for('workouts_plans_delete', {'id' : plan.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block tabbar %}
+	{% include "workouts/workouts-tabs.twig" with {'active':'workouts'} %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="workouts_plans_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{ lang["WORKOUTS_DAYS"] }}</th>
+						<th>{{ lang["WORKOUTS_EXERCISES"] }}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for plan in plans %}
+						<tr>
+							<td>
+								<a href="{{ url_for('workouts_plan_view', {'plan' : plan.hash}) }}">{{plan.name|raw}}</a>
+							</td>
+							<td>
+								{%if plan.days > 0 %}
+									{{ plan.days }}
+								{% endif %}
+							</td>
+							<td>
+								{%if plan.exercises > 0 %}
+									{{ plan.exercises }}
+								{% endif %}
+							</td>
+							<td>
+								<a href="{{ url_for('workouts_plans_edit', {'id' : plan.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('workouts_plans_delete', {'id' : plan.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

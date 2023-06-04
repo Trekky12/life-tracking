@@ -80,7 +80,7 @@ addWidgetBtn.addEventListener("click", function (event) {
     }).then(function (data) {
         if (data.status !== 'error') {
             // show modal
-            if (data.entry) {
+            if (data.entry && data.entry.length > 0) {
 
                 setModalContent(data.entry);
 

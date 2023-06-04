@@ -2,45 +2,57 @@
 
 {% set active = 'recipes' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["RECIPES_GROCERIES"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('recipes_groceries_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["RECIPES_GROCERIES"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('recipes_groceries_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="recipes_groceries_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{lang["UNIT"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for grocery in groceries %}
-                        <tr>
-                            <td>{{grocery.name|raw}}</td> 
-                            <td>{{grocery.unit}}</td> 
-                            <td>
-                                {% if grocery.getOwner() == user.id %}
-                                    <a href="{{  url_for('recipes_groceries_edit', {'id' : grocery.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-                                {% endif %}
-                            </td>
-                                
-                            <td>
-                                {% if grocery.getOwner() == user.id %}
-                                    <a href="#" data-url="{{  url_for('recipes_groceries_delete', {'id' : grocery.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block tabbar %}
+	{% include "recipes/recipes-tabs.twig" with {'active':'recipes_groceries'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="recipes_groceries_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{lang["UNIT"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for grocery in groceries %}
+						<tr>
+							<td>{{grocery.name|raw}}</td>
+							<td>{{grocery.unit}}</td>
+							<td>
+								{% if grocery.getOwner() == user.id %}
+									<a href="{{ url_for('recipes_groceries_edit', {'id' : grocery.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+								{% endif %}
+							</td>
+
+							<td>
+								{% if grocery.getOwner() == user.id %}
+									<a href="#" data-url="{{ url_for('recipes_groceries_delete', {'id' : grocery.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

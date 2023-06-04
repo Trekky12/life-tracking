@@ -2,39 +2,51 @@
 
 {% set active = 'timesheets' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}
+				|
+				{{ project.name }}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('timesheets_project_categories_edit', {'project': project.hash}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}} | {{ project.name }}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('timesheets')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-                <a href="{{  url_for('timesheets_project_categories_edit', {'project': project.hash}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="project_categories_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["NAME"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cat in categories %}
-                        <tr>
-                            <td>{{cat.name}}</td> 
-                            <td>
-                                <a href="{{  url_for('timesheets_project_categories_edit', {'id' : cat.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-                            </td>
-                            <td>
-                                <a href="#" data-url="{{  url_for('timesheets_project_categories_delete', {'id' : cat.id, 'project' : project.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="project_categories_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for cat in categories %}
+						<tr>
+							<td>{{cat.name}}</td>
+							<td>
+								<a href="{{ url_for('timesheets_project_categories_edit', {'id' : cat.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('timesheets_project_categories_delete', {'id' : cat.id, 'project' : project.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

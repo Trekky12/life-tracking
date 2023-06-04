@@ -2,21 +2,26 @@
 
 {% set active = 'timesheets' %}
 
-
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
-			<h2>{% if project.customers_name_singular %}{{project.customers_name_singular}}{% else %}{{lang["TIMESHEETS_CUSTOMER"]}}{% endif %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets_customers', {'project': project.hash})}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>
+				{% if project.customers_name_singular %}
+					{{project.customers_name_singular}}
+				{% else %}
+					{{lang["TIMESHEETS_CUSTOMER"]}}
+				{% endif %}
 				|
 				{{ project.name }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('timesheets_customers', {'project': project.hash})}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<form class="form-horizontal" id="projectCustomersForm" action="{{ url_for('timesheets_customers_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">
@@ -41,7 +46,7 @@
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
 					{% endif %}
 				</div>
 			</form>

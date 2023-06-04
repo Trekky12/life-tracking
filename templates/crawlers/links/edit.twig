@@ -2,59 +2,78 @@
 
 {% set active = 'crawlers' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('crawlers_links', {'crawler' : crawler.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["CRAWLERS"]}}
+				{{lang["LINKLIST"]}}
+				|
+				{{ crawler.name }}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for_with_last_query_params('crawlers_links', {'crawler': crawler.hash}) }}">
+				<button class="button button-text">{{lang["BACK"]}}
+					{{ fontawesome('fas fa-turn-up') }}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["LINKLIST"]}} | {{ crawler.name }}</h2>
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers_links', {'crawler': crawler.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>            
-            </div>
-        </div>
-        <div class="page-content">
+			<form class="form-horizontal" id="crawlerLinksForm" action="{{ url_for('crawlers_links_save', {'id' : entry.id, 'crawler' : crawler.hash}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-            <form class="form-horizontal" id="crawlerLinksForm" action="{{  url_for('crawlers_links_save', {'id' : entry.id, 'crawler' : crawler.hash}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-                {% endif %}
+				<div class="form-group">
+					<label for="inputName">{{lang["NAME"]}}</label>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputLink">{{lang["LINK"]}}</label>
+					<input type="text" class="form-control" id="inputLink" name="link" {% if not entry is null %} value="{{entry.link}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputLink">{{lang["LINK"]}}</label>
-                    <input type="text" class="form-control" id="inputLink" name="link" {% if not entry is null %}value="{{entry.link}}"{% endif %}>
-                </div>
-                
-                <div class="form-group">
-                    <label for="inputParent">{{lang["PARENT_LINK"]}}</label>
-                    <select class="form-control" id="inputParent" name="parent">
-                        <option value="">{{lang["NONE"]}}</option>
-                        {% for link in links %}
-                            {% if entry is null or ( not entry is null and entry.id != link.id) %}
-                                <option value="{{link.id}}" {% if (not entry is null and link.id in entry.parent)  %}selected{% endif %}>{{link.name}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                 <div class="form-group">
-                    <label for="inputPosition">{{lang["POSITION"]}}</label>
-                    <input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %}value="{{entry.position}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputParent">{{lang["PARENT_LINK"]}}</label>
+					<select class="form-control" id="inputParent" name="parent">
+						<option value="">{{lang["NONE"]}}</option>
+						{% for link in links %}
+							{% if entry is null or ( not entry is null and entry.id != link.id) %}
+								<option value="{{link.id}}" {% if (not entry is null and link.id in entry.parent) %} selected {% endif %}>{{link.name}}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</div>
 
-                <div class="form-group btn">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group">
+					<label for="inputPosition">{{lang["POSITION"]}}</label>
+					<input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
+				</div>
+
+				<div class="form-group btn">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

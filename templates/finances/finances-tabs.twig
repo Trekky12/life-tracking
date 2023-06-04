@@ -1,0 +1,14 @@
+<div class="tabbar-scroller">
+	<div class="tabbar-tab-scroll-btn" data-type="left" href="#"><div class="icon-ripple-wrapper">{{ fontawesome('fas fa-chevron-left') }}</div></div>
+	<div class="tabbar-scrollarea">
+		<a class="tabbar-tab {% if active == 'finances' %}active{% endif %}" href="{{ url_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
+		<a class="tabbar-tab {% if active == 'finances_categories' %}active{% endif %}" href="{{ url_for('finances_categories') }}">{{lang["FINANCES_CATEGORIES"]}}</a>
+		<a class="tabbar-tab {% if active == 'finances_categories_assignment' %}active{% endif %}" href="{{ url_for('finances_categories_assignment') }}">{{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a>
+		<a class="tabbar-tab {% if active == 'finances_recurring' %}active{% endif %}" href="{{ url_for('finances_recurring') }}">{{lang["FINANCES_RECURRING"]}}</a>
+		<a class="tabbar-tab {% if active == 'finances_paymethod' %}active{% endif %}" href="{{ url_for('finances_paymethod') }}">{{lang["FINANCES_PAYMETHODS"]}}</a>
+		<a class="tabbar-tab {% if active == 'finances_account' %}active{% endif %}" href="{{ url_for('finances_account') }}">{{lang["FINANCES_ACCOUNTS"]}}</a>
+		<a class="tabbar-tab {% if active == 'finances_budgets' %}active{% endif %}" href="{{ url_for('finances_budgets') }}">{{lang["BUDGET"]}}</a>
+		<a class="tabbar-tab {% if active == 'finances_stats' %}active{% endif %}" href="{{ url_for('finances_stats') }}">{{lang["STATS"]}}</a>
+	</div>
+	<div class="tabbar-tab-scroll-btn" data-type="right" href="#"><div class="icon-ripple-wrapper">{{ fontawesome('fas fa-chevron-right') }}</div></div>
+</div>

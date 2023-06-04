@@ -3,40 +3,47 @@
 {% set active = 'crawlers' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/crawler_saved.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/crawler_saved.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('crawlers_view', {'crawler' : crawler.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["CRAWLERS"]}}
+				{{lang["CRAWLER_DATASET_SAVE_LIST"]}}
+				|
+				{{ crawler.name }}</h2>
+		</div>
+	</div>
 {% endblock %}
 
 {% block body %}
-
-    <div class="inner-content">
-        <div class="page-header">
-            <h2>{{lang["CRAWLERS"]}} {{lang["CRAWLER_DATASET_SAVE_LIST"]}} | {{ crawler.name }}</h2>
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers_view', {'crawler' : crawler.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="crawlers_data_saved_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>{{lang["DATE_CRAWL"]}}</th>
-                            {% for header in headers %}
-                            <th {% if header.sortable == 1 %}data-sortable="true"{% else %}data-sortable="false"{% endif %} {% if not header.sort is null %}data-sort="{{ header.sort }}"{% endif %}>{{header.headline}}</th>
-                            {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in datasets %}
-                        <tr>
-                            {% for column in row %}
-                                <td>{{ column | raw}}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="crawlers_data_saved_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th></th>
+						<th>{{lang["DATE_CRAWL"]}}</th>
+						{% for header in headers %}
+							<th {% if header.sortable == 1 %} data-sortable="true" {% else %} data-sortable="false" {% endif %} {% if not header.sort is null %} data-sort="{{ header.sort }}" {% endif %}>{{header.headline}}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in datasets %}
+						<tr>
+							{% for column in row %}
+								<td>{{ column | raw}}</td>
+							{% endfor %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

@@ -1,29 +1,29 @@
-.grid{
-    display:flex;
+.grid {
+    display: flex;
     flex-wrap: wrap;
-    flex-direction:row;
+    flex-direction: row;
     flex-basis: auto;
     box-sizing: border-box;
 
-    /*margin-right: -.5rem;
+    margin-right: -.5rem;
     margin-left: -.5rem;
-    */
 
-    &.content-small{
+
+    &.content-small {
         max-width: $size_content-width-small;
         margin: 0 auto;
     }
 
-    &.content-xsmall{
+    &.content-xsmall {
         max-width: $size_content-width-xsmall;
         margin: 0 auto;
     }
 
 }
 
-.card{
-    display:flex;
-    flex-grow:1;
+.card {
+    display: flex;
+    flex-grow: 1;
     flex-shrink: 1;
 
     box-sizing: border-box;
@@ -35,79 +35,109 @@
 
     justify-content: center;
 
+
+
     @media screen and (min-width: $size_tablet) {
         flex-basis: (100%/ 4);
     }
 
-    .card-content{
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-        box-sizing: border-box; 
-        text-align:center;
+    .card-content {
+        box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+        box-sizing: border-box;
+        text-align: center;
         background-color: $color_background-body;
-        width:100%;
+        width: 100%;
 
         position: relative;
+        border-radius: 4px;
 
-        .card-header{
-            display:flex;
+        &:hover {
+            //background-color: $color_background-screen;
+        }
+
+        &> :first-child {
+            border-top-left-radius: inherit;
+            border-top-right-radius: inherit;
+        }
+
+        &> :last-child {
+            border-bottom-left-radius: inherit;
+            border-bottom-right-radius: inherit;
+        }
+
+        .card-header {
+            display: flex;
             justify-content: center;
 
-            &.has-buttons{
-                justify-content:space-between;
+            &.has-buttons {
+                justify-content: space-between;
             }
+
+            font-weight: 800;
+            text-transform: uppercase;
 
             background-color: $color_blue;
             color: $color_background-body;
 
-            h3{
-                margin:0;
-                font-weight: 300;
+            h3 {
+                margin: 0;
                 padding: 0.2rem .5rem;
+                width: 100%;
+                @include font-size(1.5);
+
+                a {
+                    color: inherit;
+                    width: 100%;
+                    display: inline-block;
+                    text-align: center;
+                }
             }
 
-            a{
-                color: $color_background-body;
-            }
+            .buttons {
+                display: flex;
+                align-items: center;
 
-            .buttons{
-                display:flex;
-                align-items:center;
-                a{
+                a {
+                    color: inherit;
                     padding: 0.2rem .5rem;
 
-                    &:hover{
+                    &:hover {
                         color: $color_background-screen;
                     }
                 }
             }
         }
 
-        p{
+        p {
             padding: .5rem;
         }
 
-        .spinning svg{
+        .spinning svg {
             @include font-size(4);
         }
 
-        table{
+        table {
             @include font-size(1.2);
             text-align: left;
             padding: .5rem;
         }
 
-        p.big{
+        p.big {
             @include font-size(2.5);
-            margin: 2rem;            
+            margin: 2rem;
         }
 
-        &.timesheet{
-            i, svg{
+        &.timesheet {
+
+            i,
+            svg {
                 @include font-size(5);
                 margin: 2rem;
+
                 @media screen and (min-width: $size_mobile) {
                     @include font-size(7);
                 }
+
                 @media screen and (min-width: $size_tablet) {
                     @include font-size(10);
                 }
@@ -116,16 +146,17 @@
         }
     }
 
-    &.negative .card-header{
+    &.negative .card-header {
         background-color: $color_red;
+        color: $color_background-body;
     }
-    &.positive .card-header{
+
+    &.positive .card-header {
         background-color: $color_green;
+        color: $color_background-body;
     }
-    &.inactive .card-header{
+
+    &.inactive .card-header {
         background-color: $color_blue_light_gray;
     }
 }
-
-
-

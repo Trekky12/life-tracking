@@ -11,13 +11,18 @@
 
 <div id="app-bar" class="size-{{mobile_elements}}">
 	<div id="menu-toggle" aria-controls="primary-menu" aria-expanded="false">
-		{{ fontawesome('fas fa-bars') }}
+		<div class="icon-ripple-wrapper">
+			<a href="#">{{ fontawesome('fas fa-bars') }}</a>
+		</div>
 	</div>
-	<div id="mobile-header-icons">
-		<a href="{{ url_for('index') }}" {% if active == 'index' %} class="active" {% endif %}>{{ fontawesome('fas fa-sitemap') }}</a>
+	<div
+		id="mobile-header-icons">
+		{#<a href="{{ url_for('index') }}" {% if active == 'index' %} class="active" {% endif %}>{{ fontawesome('fas fa-sitemap') }}</a>#}
 		{% if mobile_favorites|length > 0 %}
 			{%  for favorite in mobile_favorites %}
-				<a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %} class="active" {% endif %}>{{ fontawesome(favorite.icon) }}</a>
+				<div class="icon-ripple-wrapper">
+					<a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %} class="active" {% endif %}>{{ fontawesome(favorite.icon) }}</a>
+				</div>
 			{% endfor %}
 		{% else %}
 			{% for module_name, module in modules %}
@@ -27,5 +32,10 @@
 			{% endfor %}
 		{% endif %}
 	</div>
-	<a href="{{ url_for('notifications') }}" class="notifications badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}" id="iconBell">{{ fontawesome('far fa-bell') }}</a>
+
+	<div id="iconBell">
+		<div class="icon-ripple-wrapper">
+			<a href="{{ url_for('notifications') }}" class="notifications badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}">{{ fontawesome('far fa-bell') }}</a>
+		</div>
+	</div>
 </div>

@@ -2,20 +2,32 @@
 
 {% set active = 'profile' %}
 
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
 			<h2>{{lang["LOGIN_TOKENS"]}}</h2>
-			{% if users is not empty %}
-				<div class="buttons">
-					<a href="{{ url_for('login_tokens_delete_old') }}">
-						<button class="button">{{ fontawesome('fas fa-trash') }}
-							{{lang["LOGIN_TOKENS_CLEAN"]}}</button>
-					</a>
-				</div>
-			{% endif %}
 		</div>
+		{% if users is not empty %}
+			<div class="buttons">
+				<a href="{{ url_for('login_tokens_delete_old') }}">
+					<button class="button button-text">{{ fontawesome('fas fa-trash') }}
+						{{lang["LOGIN_TOKENS_CLEAN"]}}</button>
+				</a>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% if users is not empty %}
+		{% include "main/settings-tabs.twig" with {'active':'login_tokens'} only %}
+	{% else %}
+		{% include "profile/profile-tabs.twig" with {'active':'users_login_tokens'} only %}
+	{% endif %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 			<table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
 				<thead>

@@ -1,7 +1,7 @@
 'use strict';
 
 const splitbillsForm = document.getElementById('splitbillsBillsForm');
-const buttons = document.querySelectorAll('.splitbill_btn');
+const splittbillsButtons = document.querySelectorAll('.splitbill_btn');
 const calcButton = document.getElementById('calculateExchangeRate');
 
 if (splitbillsForm) {
@@ -30,12 +30,12 @@ if (splitbillsForm) {
         calculateRemaining(inputs_paid, remaining_paid);
         calculateRemaining(inputs_spend, remaining_spend);
 
-        buttons.forEach(function (btn) {
-            btn.classList.add("gray");
+        splittbillsButtons.forEach(function (btn) {
+            btn.classList.add("button-outlined");
         });
     });
 
-    buttons.forEach(function (item, idx) {
+    splittbillsButtons.forEach(function (item, idx) {
         item.addEventListener('click', function (e) {
             e.preventDefault();
 
@@ -51,12 +51,12 @@ if (splitbillsForm) {
                 let userlist = item.parentNode.nextElementSibling;
                 userlist.classList.add("hidden");
 
-                buttons.forEach(function (btn) {
+                splittbillsButtons.forEach(function (btn) {
                     if (btn.dataset.category == category) {
-                        btn.classList.add("gray");
+                        btn.classList.add("button-outlined");
                     }
                 });
-                item.classList.remove("gray");
+                item.classList.remove("button-outlined");
 
 
                 if (category == "paid") {

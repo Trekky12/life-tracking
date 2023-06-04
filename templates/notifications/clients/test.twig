@@ -2,39 +2,44 @@
 
 {% set active = 'settings' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('notifications_clients')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["NOTIFICATIONS"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2>
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('notifications_clients')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-content">
 
-            <form action="{{  url_for('notifications_clients_test', {'id' : entry.id}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<form action="{{ url_for('notifications_clients_test', {'id' : entry.id}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
 
-                <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
+				<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
 
 
-                <div class="form-group">
-                    <label for="inputTitle">{{lang["TITLE"]}}</label>
-                    <input required type="text" class="form-control" id="inputTitle" name="title"/>
-                </div>
+				<div class="form-group">
+					<label for="inputTitle">{{lang["TITLE"]}}</label>
+					<input required type="text" class="form-control" id="inputTitle" name="title"/>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputContent">{{lang["CONTENT"]}}</label>
-                    <input required type="text" class="form-control" id="inputContent" name="message"/>
-                </div>
+				<div class="form-group">
+					<label for="inputContent">{{lang["CONTENT"]}}</label>
+					<input required type="text" class="form-control" id="inputContent" name="message"/>
+				</div>
 
-                <div class="form-group">
-                    <button type="submit" class="button">{{lang["SEND"]}}</button>
-                    <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group">
+					<button type="submit" class="button">{{lang["SEND"]}}</button>
+					<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

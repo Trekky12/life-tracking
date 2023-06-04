@@ -68,9 +68,9 @@ function changeDay(item) {
             });
         }
         changeDayLinks.forEach(function (el) {
-            el.querySelector('button').classList.add('gray');
+            el.querySelector('button').classList.add('button-outlined');
         });
-        item.querySelector('button').classList.remove('gray');
+        item.querySelector('button').classList.remove('button-outlined');
     });
 }
 
@@ -738,7 +738,7 @@ function createButton(container, type, active = false) {
 tripDays.forEach(function (day) {
     new Sortable(day, {
         draggable: ".trip_event",
-        handle: ".icon",
+        handle: ".trip-icon",
         ghostClass: 'trip_event-placeholder',
         dataIdAttr: 'data-event',
         onUpdate: function (evt) {

@@ -2,41 +2,57 @@
 
 {% set active = 'finances' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('finances_categories_assignment_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "finances/finances-tabs.twig" with {'active':'finances_categories_assignment'} only %}
+{% endblock %}
+
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('finances_categories_assignment_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-
-            <table id="category_assignment_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["DESCRIPTION"]}}</th>
-                        <th>{{lang["CATEGORY"]}}</th>
-                        <th>{{lang["MIN_VALUE"]}}</th>
-                        <th>{{lang["MAX_VALUE"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for assignment in assignments %}
-                        <tr>
-                            <td>{{assignment.description|raw}}</td> 
-                            <td>{{categories[assignment.category].name|raw}}</td> 
-                            <td>{{assignment.min_value}}</td> 
-                            <td>{{assignment.max_value}}</td> 
-                            <td><a href="{{  url_for('finances_categories_assignment_edit', {'id' : assignment.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
-                            <td><a href="#" data-url="{{  url_for('finances_categories_assignment_delete', {'id' : assignment.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+			<table id="category_assignment_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["DESCRIPTION"]}}</th>
+						<th>{{lang["CATEGORY"]}}</th>
+						<th>{{lang["MIN_VALUE"]}}</th>
+						<th>{{lang["MAX_VALUE"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for assignment in assignments %}
+						<tr>
+							<td>{{assignment.description|raw}}</td>
+							<td>{{categories[assignment.category].name|raw}}</td>
+							<td>{{assignment.min_value}}</td>
+							<td>{{assignment.max_value}}</td>
+							<td>
+								<a href="{{ url_for('finances_categories_assignment_edit', {'id' : assignment.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('finances_categories_assignment_delete', {'id' : assignment.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

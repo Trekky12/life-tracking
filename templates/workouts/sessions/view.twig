@@ -8,45 +8,55 @@
 	<script src="{{baseURL}}/static/js/workouts-view.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('workouts_sessions', {'plan':plan.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{plan.name|raw}}
 				|
 				{{ session.date|date(i18n.dateformatTwig.date) }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('workouts_sessions', {'plan':plan.hash}) }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
 
-		<div class="page-content workouts-session-view">
-			{% if not session.notice is null %}
+{% block body %}
+	{% if not session.notice is null %}
+		<div class="inner-content">
+			<div class="page-content">
 				<h4>{{ lang["NOTICE"] }}</h4>
 				<p>{{ session.notice|raw }}</p>
-			{% endif %}
-			<div class="workout-selection view">
-				{% for exercise in exercises %}
-					{% if exercise.type == "exercise" %}
-						{% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}
-					{% elseif exercise.type == "day" %}
-						<h3>{{ exercise.notice }}</h3>
-					{% elseif exercise.type == "superset" %}
-						<h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
-						<div class="workout_superset">
-							<div class="exercises" data-type="superset">
-								{% for child in exercise['children'] %}
-									{% include "workouts/plan/view-single-exercise.twig" with {'exercise':child, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}
-								{% endfor %}
-							</div>
-						</div>
-					{% endif %}
-				{% endfor %}
 			</div>
+		</div>
+	{% endif %}
 
+	<div class="workout-selection view workouts-session-view">
+		{% for exercise in exercises %}
+			<div class="inner-content">
+				{% if exercise.type == "exercise" %}
+					{% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}
+				{% elseif exercise.type == "day" %}
+					<h3>{{ exercise.notice }}</h3>
+				{% elseif exercise.type == "superset" %}
+					<h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
+					<div class="workout_superset">
+						<div class="exercises" data-type="superset">
+							{% for child in exercise['children'] %}
+								{% include "workouts/plan/view-single-exercise.twig" with {'exercise':child, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		{% endfor %}
+
+	</div>
+	<div class="inner-content">
+		<div class="inner-content-header light">
 			<h2>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h2>
+		</div>
+		<div class="page-content">
 			{% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': muscles["primary"], 'secondary': muscles["secondary"], 'small': false}} only %}
 		</div>
 	</div>

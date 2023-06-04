@@ -1,0 +1,6 @@
+<div class="tabbar-scroller no-scroll">
+	<div class="tabbar-scrollarea">
+		<a class="tabbar-tab {% if active == 'location' %}active{% endif %}" href="{{ url_for('location') }}">{{lang["MENU_LOCATION"]}}</a>
+		<a class="tabbar-tab {% if active == 'steps' %}active{% endif %}" href="{{ url_for('steps') }}">{{lang["STEPS"]}}</a>
+	</div>
+</div>

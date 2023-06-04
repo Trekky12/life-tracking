@@ -3,69 +3,82 @@
 {% set active = 'car_service' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}"/>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('cars') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["CARS"]}}</h2>
+		</div>
+	</div>
 {% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CARS"]}}</h2>
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('cars') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>            
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-content">
 
-            <form class="form-horizontal" action="{{  url_for('cars_save', {'id' : entry.id}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<form class="form-horizontal" action="{{ url_for('cars_save', {'id' : entry.id}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-                {% endif %}
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
 
-                <div class="form-group">
-                    <label for="inputName">{{lang["NAME"]}}</label>
-                    <input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputName">{{lang["NAME"]}}</label>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    {% include "main/user-select.twig" with {'entry':entry, 'module': 'cars'} only %}
-                </div>
+				<div class="form-group">
+					{% include "main/user-select.twig" with {'entry':entry, 'module': 'cars'} only %}
+				</div>
 
-                <h3>{{lang["STATS"]}}</h3>
-                <div class="form-group">
-                    <label for="inputMileageYear">{{lang["MILEAGE_PER_YEAR"]}}</label>
-                    <input type="number" class="form-control" id="inputMileageYear" name="mileage_per_year" step="1" placeholder="" {% if not entry is null %}value="{{entry.mileage_per_year}}"{% endif %}>
-                </div>
+				<h3>{{lang["STATS"]}}</h3>
+				<div class="form-group">
+					<label for="inputMileageYear">{{lang["MILEAGE_PER_YEAR"]}}</label>
+					<input type="number" class="form-control" id="inputMileageYear" name="mileage_per_year" step="1" placeholder="" {% if not entry is null %} value="{{entry.mileage_per_year}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputTerm">{{lang["MILEAGE_TERM"]}}</label>
-                    <input type="number" class="form-control" id="inputTerm" name="mileage_term" step="1" placeholder="" {% if not entry is null %}value="{{entry.mileage_term}}"{% endif %}>
-                </div>
-                
-                <div class="form-group">
-                    <label for="dateSelect">{{lang["START"]}} {{lang["DATE"]}}</label>
-                    <input type="text" class="form-control" id="dateSelect"  placeholder="" name="mileage_start_date" value="{% if not entry is null %}{{entry.mileage_start_date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
-                </div>
-                
-                <div class="form-group">
-                    <label for="inputMileageStart">{{lang["MILEAGE_START"]}}</label>
-                    <input type="number" class="form-control" id="inputMileageStart" name="mileage_start" step="1" placeholder="" value="{% if not entry is null %}{{entry.mileage_start}}{% else %}0{% endif %}">
-                </div>
+				<div class="form-group">
+					<label for="inputTerm">{{lang["MILEAGE_TERM"]}}</label>
+					<input type="number" class="form-control" id="inputTerm" name="mileage_term" step="1" placeholder="" {% if not entry is null %} value="{{entry.mileage_term}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group">
+					<label for="dateSelect">{{lang["START"]}}
+						{{lang["DATE"]}}</label>
+					<input type="text" class="form-control" id="dateSelect" placeholder="" name="mileage_start_date" value="{% if not entry is null %}{{entry.mileage_start_date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
+				</div>
+
+				<div class="form-group">
+					<label for="inputMileageStart">{{lang["MILEAGE_START"]}}</label>
+					<input type="number" class="form-control" id="inputMileageStart" name="mileage_start" step="1" placeholder="" value="{% if not entry is null %}{{entry.mileage_start}}{% else %}0{% endif %}">
+				</div>
+
+				<div class="form-group">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

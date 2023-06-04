@@ -2,39 +2,48 @@
 
 {% set active = 'profile' %}
 
-{% block body %}
-
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CHANGE_PASSWORD"]}}</h2></div>
-        <div class="page-content">
-
-            <form action="{{  url_for('users_change_password') }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                
-                <div class="form-group">
-                    <label>{{lang["LOGIN"]}}</label>
-                    <p>{{user.login}}</p>
-                </div>
-                <div class="form-group">
-                    <label for="inputOldPassword">{{lang["OLD_PASSWORD"]}}</label>
-                    <input name="oldpassword" id="inputOldPassword" class="form-control" type="password" >
-                </div>
-                <div class="form-group">
-                    <label for="inputNewPassword1">{{lang["NEW_PASSWORD"]}}</label>
-                    <input name="newpassword1" id="inputNewPassword1" class="form-control" type="password" >
-                </div>
-                <div class="form-group">
-                    <label for="inputNewPassword2">{{lang["NEW_PASSWORD_REPLY"]}}</label>
-                    <input name="newpassword2" id="inputNewPassword2" class="form-control" type="password" >
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="button">{{lang["SAVE"]}}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-</div>
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["CHANGE_PASSWORD"]}}</h2>
+		</div>
+	</div>
 {% endblock %}
+
+{% block tabbar %}
+	{% include "profile/profile-tabs.twig" with {'active':'users_change_password'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<form action="{{ url_for('users_change_password') }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				<div class="form-group">
+					<label>{{lang["LOGIN"]}}</label>
+					<p>{{user.login}}</p>
+				</div>
+				<div class="form-group">
+					<label for="inputOldPassword">{{lang["OLD_PASSWORD"]}}</label>
+					<input name="oldpassword" id="inputOldPassword" class="form-control" type="password">
+				</div>
+				<div class="form-group">
+					<label for="inputNewPassword1">{{lang["NEW_PASSWORD"]}}</label>
+					<input name="newpassword1" id="inputNewPassword1" class="form-control" type="password">
+				</div>
+				<div class="form-group">
+					<label for="inputNewPassword2">{{lang["NEW_PASSWORD_REPLY"]}}</label>
+					<input name="newpassword2" id="inputNewPassword2" class="form-control" type="password">
+				</div>
+
+				<div class="form-group">
+					<button type="submit" class="button">{{lang["SAVE"]}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</div>{% endblock %}

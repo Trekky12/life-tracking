@@ -2,32 +2,42 @@
 
 {% set active = 'crawlers' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('crawlers_headers', {'crawler' : crawler.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["CRAWLERS"]}}
+				{{lang["HEADLINE"]}}
+				({{ crawler.name }})</h2>
+		</div>
+	</div>
+{% endblock %}
 
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINE"]}} ({{ crawler.name }})</h2></div>
-        <div class="page-content">
+			<form class="form-horizontal" id="crawlerHeadersForm" action="{{ url_for('crawlers_headers_cloning', {'crawler' : crawler.hash}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-            <form class="form-horizontal" id="crawlerHeadersForm" action="{{  url_for('crawlers_headers_cloning', {'crawler' : crawler.hash}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+				<div class="form-group">
+					<label for="clone">{{lang["CLONE_CRAWLER_HEADLINES_FROM"]}}</label>
+					<select class="form-control" id="clone" name="clone">
+						{% for cr in crawlers %}
+							{% if cr.user == user.id and cr.id != crawler.id  %}
+								<option value="{{cr.id}}">{{cr.name}}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</div>
 
-                <div class="form-group">
-                    <label for="clone">{{lang["CLONE_CRAWLER_HEADLINES_FROM"]}}</label>
-                    <select class="form-control" id="clone" name="clone">
-                        {% for cr in crawlers %}
-                            {% if cr.user == user.id and cr.id != crawler.id  %}
-                                <option value="{{cr.id}}">{{cr.name}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group btn">
-                    <button type="submit" class="button">{{lang["CLONE"]}}</button>
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group btn">
+					<button type="submit" class="button">{{lang["CLONE"]}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

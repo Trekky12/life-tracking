@@ -2,49 +2,57 @@
 
 {% set active = 'profile' %}
 
-{% block body %}
-
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TWOFACTOR_AUTHENTICATION"]}}</h2></div>
-        <div class="page-content">
-
-
-            {% if not hasSecret %}
-                <form action="{{  url_for('users_twofactorauth_enable') }}" method="POST">
-                    <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                    <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-
-                    <div class="form-group">
-                        <p>{{ lang["TWOFACTOR_TEXT"] }}</p>
-                    </div>
-                    <div class="form-group">
-                        <img src="{{ qr }}"/>
-                        <p class="twofactor-secret">{{ secret }}</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="inputVerificationCode">{{lang["TWOFACTOR_CODE"]}}</label>
-                        <input name="code" id="inputVerificationCode" class="form-control" type="number" >
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="button">{{lang["SAVE"]}}</button>
-                    </div>
-                </form>
-
-            {% else %}
-                <form action="{{  url_for('users_twofactorauth_disable') }}" method="POST">
-                    <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                    <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-
-                    <div class="form-group">
-                        <button type="submit" class="button danger">{{lang["TWOFACTOR_DISABLE"]}}</button>
-                    </div>
-                </form>
-            {% endif %}
-
-        </div>
-    </div>
-
-</div>
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["TWOFACTOR_AUTHENTICATION"]}}</h2>
+		</div>
+	</div>
 {% endblock %}
+
+{% block tabbar %}
+	{% include "profile/profile-tabs.twig" with {'active':'users_twofactorauth'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			{% if not hasSecret %}
+				<form action="{{ url_for('users_twofactorauth_enable') }}" method="POST">
+					<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+					<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+					<div class="form-group">
+						<p>{{ lang["TWOFACTOR_TEXT"] }}</p>
+					</div>
+					<div class="form-group">
+						<img src="{{ qr }}"/>
+						<p class="twofactor-secret">{{ secret }}</p>
+					</div>
+
+					<div class="form-group">
+						<label for="inputVerificationCode">{{lang["TWOFACTOR_CODE"]}}</label>
+						<input name="code" id="inputVerificationCode" class="form-control" type="number">
+					</div>
+
+					<div class="form-group">
+						<button type="submit" class="button">{{lang["SAVE"]}}</button>
+					</div>
+				</form>
+
+			{% else %}
+				<form action="{{ url_for('users_twofactorauth_disable') }}" method="POST">
+					<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+					<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+					<div class="form-group">
+						<button type="submit" class="button button-text">{{lang["TWOFACTOR_DISABLE"]}}</button>
+					</div>
+				</form>
+			{% endif %}
+
+		</div>
+	</div>
+
+</div>{% endblock %}

@@ -3,45 +3,51 @@
 {% set active = 'steps' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/location-steps-stats.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/location-steps-stats.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('steps_stats_year', {'year':year}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["STEPS"]}}
+				{{lang["STATS"]}}
+				{{lang["IN"]}}
+				{{month}}/{{year}}</h2>
+		</div>
+	</div>
 {% endblock %}
 
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 
-    <div class="inner-content">
-        <div class="page-header">
-            <h2>{{lang["STEPS"]}} {{lang["STATS"]}} {{lang["IN"]}} {{month}}/{{year}}</h2>
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('steps_stats_year', {'year':year}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
+			<canvas id="stepsSummaryChart" data-values="{{data}}" data-labels="{{labels}}" data-label="{{lang["STEPS_AVG"]}}"></canvas>
 
-        <div class="page-content">
-
-            <canvas id="stepsSummaryChart" data-values="{{data}}" data-labels="{{labels}}" data-label="{{lang["STEPS_AVG"]}}"></canvas>
-
-            <table id="steps_month_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["DATE"]}}</th>
-                        <th>{{lang["STEPS_SUM"]}}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for year, entry in stats %}
-                        <tr>
-                            <td>{{entry[0]}}</td> 
-                            <td>{{ entry[1]|number_format(0, '', '.')}}</td> 
-                            <td>
-                                <a href="{{  url_for('steps_day_edit', {'date': entry[0] }) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+			<table id="steps_month_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["DATE"]}}</th>
+						<th>{{lang["STEPS_SUM"]}}</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for year, entry in stats %}
+						<tr>
+							<td>{{entry[0]}}</td>
+							<td>{{ entry[1]|number_format(0, '', '.')}}</td>
+							<td>
+								<a href="{{ url_for('steps_day_edit', {'date': entry[0] }) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

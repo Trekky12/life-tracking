@@ -2,19 +2,26 @@
 
 {% set active = 'finances' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["BUDGET"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{url_for('finances_budgets_edit')}}">
+				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
+					{{lang["EDIT"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "finances/finances-tabs.twig" with {'active':'finances_budgets'} only %}
+{% endblock %}
 
 {% block body %}
-
 	<div class="inner-content">
-		<div class="page-header">
-			<h2>{{lang["BUDGET"]}}</h2>
-			<div class="buttons">
-				<a href="{{url_for('finances_budgets_edit')}}">
-					<button class="button">{{ fontawesome('fas fa-plus') }}
-						{{lang["EDIT"]}}</button>
-				</a>
-			</div>
-		</div>
 		<div class="page-content">
 			{% for budget in budgets %}
 				{% if budget.is_hidden == 0 %}

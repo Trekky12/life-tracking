@@ -2,49 +2,62 @@
 
 {% set active = 'crawlers' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('crawlers') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["CRAWLERS"]}}
+				{{lang["LINKLIST"]}}
+				|
+				{{ crawler.name }}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('crawlers_links_edit', {'crawler': crawler.hash}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["LINKLIST"]}} | {{ crawler.name }}</h2>
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>            
-                <a href="{{  url_for('crawlers_links_edit', {'crawler': crawler.hash}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="crawlers_links_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{lang["LINK"]}}</th>
-                        <th>{{lang["PARENT_LINK"]}}</th>
-                        <th>{{lang["POSITION"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for link in links %}
-                        <tr>
-                            <td>{{link.name|raw}}</td> 
-                            <td>{{link.link}}</td> 
-                            <td>{{links[link.parent].name}}</td> 
-                            <td>{{link.position}}</td> 
-                            <td>
-                                {% if crawler.user == user.id %}
-                                    <a href="{{  url_for('crawlers_links_edit', {'id' : link.id, 'crawler' : crawler.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-                                    {% endif %}
-                            </td>
-                            <td>
-                                {% if crawler.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('crawlers_links_delete', {'id' : link.id, 'crawler' : crawler.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                                    {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="crawlers_links_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{lang["LINK"]}}</th>
+						<th>{{lang["PARENT_LINK"]}}</th>
+						<th>{{lang["POSITION"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for link in links %}
+						<tr>
+							<td>{{link.name|raw}}</td>
+							<td>{{link.link}}</td>
+							<td>{{links[link.parent].name}}</td>
+							<td>{{link.position}}</td>
+							<td>
+								{% if crawler.user == user.id %}
+									<a href="{{ url_for('crawlers_links_edit', {'id' : link.id, 'crawler' : crawler.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if crawler.user == user.id %}
+									<a href="#" data-url="{{ url_for('crawlers_links_delete', {'id' : link.id, 'crawler' : crawler.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

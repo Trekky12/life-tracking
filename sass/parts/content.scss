@@ -1,7 +1,43 @@
 .inner-content {
     //background-color: $color_background-body;
     //box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+
+    background-color: $color_background-body;
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2),
+        0 1px 1px 0 rgba(0, 0, 0, .14),
+        0 1px 3px 0 rgba(0, 0, 0, .12);
+
+    border: none;
+    border-radius: 4px;
+
+    &> :first-child {
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+    }
+
+    &> :last-child {
+        border-bottom-left-radius: inherit;
+        border-bottom-right-radius: inherit;
+    }
+
+    .inner-content-header {
+        h2 {
+            @include font-size(1.8);
+        }
+
+        h2,
+        h3 {
+            margin: 0;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        &.light {
+            background-color: $color_blue_lighter_gray;
+        }
+    }
 }
 
 .page-header,
@@ -13,18 +49,9 @@
 
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    //align-items: center;
 
-    border-bottom: 1px solid $color_border;
-
-    &.light {
-        background-color: $color_light_gray;
-        padding: 0.5rem 1rem;
-
-        @media screen and (min-width: $size_tablet) {
-            padding: 0.5rem 3rem;
-        }
-    }
+    //border-bottom: 1px solid $color_border;
 
     &,
     a {
@@ -43,12 +70,11 @@
     }
 
     button {
-        padding: 0.2rem 1rem !important;
+        //padding: 0.2rem 1rem !important;
     }
 }
 
 .page-content,
-.page-header,
 .notification-header,
 .notification-content {
     padding: 0.5rem 1rem;
@@ -67,16 +93,51 @@
     }
 }
 
+.page-content,
+.inner-content-header {
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    @media screen and (min-width: $size_tablet) {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
 .btn-margin-bottom {
     margin-bottom: 2rem;
 }
 
 
 .page-header {
-    flex-direction: column;
 
-    @media screen and (min-width: $size_tablet) {
+    &.multiple-buttons {
+        flex-direction: column;
+
+        @media screen and (min-width: $size_tablet) {
+            flex-direction: row;
+        }
+    }
+
+    .page-headline {
+        display: flex;
         flex-direction: row;
+        align-items: center;
+
+        .back-arrow {
+            @include font-size(2);
+            margin-right: 3rem;
+            color: $color_text-secondary;
+
+            &:hover {
+                color: $color_blue;
+            }
+        }
+
+        h2 {
+            @include font-size(2);
+            color: $color_text-secondary;
+        }
     }
 
     .buttons {
@@ -98,17 +159,17 @@
 
         button {
             @include font-size(1.2);
-            padding-left: 0.5rem !important;
-            padding-right: 0.5rem !important;
+            //padding-left: 0.5rem !important;
+            //padding-right: 0.5rem !important;
 
-            background-color: $color_gray;
+            /*background-color: $color_gray;
             color: $color_text-main;
 
             &:hover {
                 background-color: $color_text-main;
                 color: $color_background-body;
                 border-color: $color_text-main;
-            }
+            }*/
         }
 
 
@@ -122,10 +183,24 @@
 
             button {
                 @include font-size(1.4);
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
+                //padding-left: 1rem !important;
+                //padding-right: 1rem !important;
             }
         }
 
     }
+}
+
+.button-add-item {
+    border-radius: 24px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 18px;
+    padding-right: 18px;
+
+    transition: bottom 0.5s;
 }

@@ -3,156 +3,173 @@
 {% set active = 'finances' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/budget.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/budget.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/selectr.min.css?ver={{CACHEMISS}}"/>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('finances_budgets') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["BUDGET"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="#" id="add_budget">
+				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
 {% endblock %}
 
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["BUDGET"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('finances_budgets') }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-                <a href="#" id="add_budget"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>      
-        </div>
-        <div class="page-content">
+			<div>
+				<h3>{{lang["BUDGET"]}}:
+					<span id="income" data-value="{{income}}">{{income}}</span>
+					{{currency}}
+					({{lang["REMAINING"]}}:
+					<span id="remaining_budget" data-income="{{income}}">{{income-budget_sum}}</span>
+					{{currency}})</h3>
+			</div>
 
-            <div>
-                <h3>{{lang["BUDGET"]}}: <span id="income" data-value="{{income}}">{{income}}</span> {{currency}} ({{lang["REMAINING"]}}: <span id="remaining_budget" data-income="{{income}}">{{income-budget_sum}}</span> {{currency}})</h3>
-            </div>
+			<form class="form-horizontal" id="budgetForm" action="{{ url_for('finances_budgets_save_all') }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-            <form class="form-horizontal" id="budgetForm" action="{{  url_for('finances_budgets_save_all') }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+				{% for budget in budgets %}
+					{% if budget.is_remaining() %}
+						<input type="hidden" name="budget[{{loop.index-1}}][is_remaining]" value="1">
+					{% endif %}
 
-                {% for budget in budgets %}
-                    {% if budget.is_remaining() %}
-                        <input type="hidden" name="budget[{{loop.index-1}}][is_remaining]" value="1">
-                    {% endif %}
+					<div class="budget-entry edit {%if budget.is_remaining() %}remaining{% endif %}">
+						<input type="hidden" name="budget[{{loop.index-1}}][id]" value="{{budget.id}}">
+						<div class="form-group description">
+							<label for="inputDescription_{{loop.index-1}}">{{lang["DESCRIPTION"]}}</label>
+							<input required type="text" class="form-control description" id="inputDescription_{{loop.index-1}}" name="budget[{{loop.index-1}}][description]" value="{{budget.description|raw}}">
+						</div>
 
-                    <div class="budget-entry edit {%if budget.is_remaining() %}remaining{% endif %}">
-                        <input type="hidden" name="budget[{{loop.index-1}}][id]" value="{{budget.id}}">
-                        <div class="form-group description">
-                            <label for="inputDescription_{{loop.index-1}}">{{lang["DESCRIPTION"]}}</label>
-                            <input required type="text" class="form-control description" id="inputDescription_{{loop.index-1}}" name="budget[{{loop.index-1}}][description]" value="{{budget.description|raw}}">
-                        </div>
+						<div class="form-group category">
+							{% if not budget.is_remaining() %}
+								<label for="category_{{loop.index}}">{{lang["CATEGORY"]}}</label>
+								<select required class="form-control category" id="category_{{loop.index}}" name="budget[{{loop.index-1}}][category][]" multiple>
+									{% for cat in categories %}
+										<option value="{{cat.id}}" {% if cat.id in budget_categories[budget.id] %} selected {%endif%}>{{cat.name|raw}}</option>
+									{% endfor %}
+								</select>
+							{% endif %}
+						</div>
 
-                        <div class="form-group category">
-                            {% if not budget.is_remaining() %}
-                                <label for="category_{{loop.index}}">{{lang["CATEGORY"]}}</label>
-                                <select required class="form-control category" id="category_{{loop.index}}" name="budget[{{loop.index-1}}][category][]" multiple>
-                                    {% for cat in categories %}
-                                        <option value="{{cat.id}}" {% if cat.id in budget_categories[budget.id] %}selected{%endif%}>{{cat.name|raw}}</option>
-                                    {% endfor %}
-                                </select>
-                            {% endif %}
-                        </div>  
+						<div class="form-group cat-costs">
+							{% if not budget.is_remaining() %}
+								<h4>{{lang["RECURRING"]}}
+									{{lang["FINANCES_SPENDINGS"]}}</h4>
+								<div class="category_costs">
+									{% for rcat in recurring %}
+										{% if rcat.category == budget.category %}
+											{{rcat.sum}}
+											{{currency}}
+										{%endif %}
+									{% endfor %}
+								</div>
+							{% endif %}
+						</div>
 
-                        <div class="form-group cat-costs">
-                            {% if not budget.is_remaining() %}
-                                <h4>{{lang["RECURRING"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
-                                <div class="category_costs">
-                                    {% for rcat in recurring %}
-                                        {% if rcat.category == budget.category %}
-                                            {{rcat.sum}} {{currency}}
-                                        {%endif %}
-                                    {% endfor %}
-                                </div> 
-                            {% endif %}
-                        </div>
+						<div class="form-group value">
+							<label for="inputValue_{{loop.index-1}}">{{lang["BUDGET"]}}</label>
+							<input required type="number" class="form-control value" id="inputValue_{{loop.index-1}}" name="budget[{{loop.index-1}}][value]" step="any" value="{{budget.value}}">
+						</div>
 
-                        <div class="form-group value">
-                            <label for="inputValue_{{loop.index-1}}">{{lang["BUDGET"]}}</label>
-                            <input required type="number" class="form-control value" id="inputValue_{{loop.index-1}}" name="budget[{{loop.index-1}}][value]" step="any" value="{{budget.value}}">
-                        </div>
+						<div class="form-group is_hidden">
+							{%if not budget.is_remaining() %}
+								<label class="checkbox" for="checkboxHidden_{{loop.index-1}}">
+									<input name="budget[{{loop.index-1}}][is_hidden]" type="checkbox" value="1" id="checkboxHidden_{{loop.index-1}}" {% if budget.is_hidden == 1 %} checked {% endif %}>
+									{{lang["HIDE_ENTRY"]}}
+								</label>
+							{% endif %}
+						</div>
 
-                        <div class="form-group is_hidden">
-                            {%if not budget.is_remaining() %}
-                                <label class="checkbox" for="checkboxHidden_{{loop.index-1}}">
-                                    <input name="budget[{{loop.index-1}}][is_hidden]" type="checkbox" value="1" id="checkboxHidden_{{loop.index-1}}" {% if budget.is_hidden == 1 %}checked{% endif %}>
-                                    {{lang["HIDE_ENTRY"]}}
-                                </label>
-                            {% endif %}
-                        </div>
+						{% if not budget.is_remaining() %}
+							<a href="#" data-url="{{ url_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+						{% endif %}
+					</div>
+				{% endfor %}
 
-                        {% if not budget.is_remaining() %}
-                            <a href="#" data-url="{{  url_for('finances_budgets_delete', {'id' : budget.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                            {% endif %}
-                    </div>
-                {% endfor %}
-
-                {# Add Entry for remaining budget, uncategorized #}
-                {% if not hasRemainsBudget %}
-                    <div class="budget-entry edit remaining">
-                        <input type="hidden" name="budget[{{budgets|length}}][id]" value="{{budget.id}}">
-                        <input type="hidden" name="budget[{{budgets|length}}][is_remaining]" value="1">
-                        <div class="form-group description">
-                            <label for="inputDescription_{{budgets|length}}">{{lang["DESCRIPTION"]}}</label>
-                            <input required type="text" class="form-control description" id="inputDescription_{{budgets|length}}" name="budget[{{budgets|length}}][description]" value="{{lang["REMAINS"]}}">
-                        </div>
-                        <div class="form-group category"></div>
-                        <div class="form-group cat-costs"></div>
-
-
-                        <div class="form-group value">
-                            <label for="inputValue_{{budgets|length}}">{{lang["BUDGET"]}}</label>
-                            <input required type="number" class="form-control value" id="inputValue_{{budgets|length}}" name="budget[{{budgets|length}}][value]" step="any" value="{{budget.value}}">
-                        </div>
-                    </div>
-                {% endif %}
-
-                <div class="form-group submit-btn">
-                    <button type="submit" id="save-budget" class="button">{{lang["SAVE"]}}</button>
-                </div>
-
-            </form>
-
-        </div>
-    </div>
+				{# Add Entry for remaining budget, uncategorized #}
+				{% if not hasRemainsBudget %}
+					<div class="budget-entry edit remaining">
+						<input type="hidden" name="budget[{{budgets|length}}][id]" value="{{budget.id}}">
+						<input type="hidden" name="budget[{{budgets|length}}][is_remaining]" value="1">
+						<div class="form-group description">
+							<label for="inputDescription_{{budgets|length}}">{{lang["DESCRIPTION"]}}</label>
+							<input required type="text" class="form-control description" id="inputDescription_{{budgets|length}}" name="budget[{{budgets|length}}][description]" value="{{lang["REMAINS"]}}">
+						</div>
+						<div class="form-group category"></div>
+						<div class="form-group cat-costs"></div>
 
 
-    <div id="budgetTemplate" class="hidden">
-        <div class="budget-entry-dummy edit">
-            <div class="form-group description">
-                <label for="inputDescription_DUMMY">{{lang["DESCRIPTION"]}}</label>
-                <input required type="text" class="form-control description" id="inputDescription_DUMMY" name="budget[DUMMY][description]" disabled="disabled">
-            </div>
+						<div class="form-group value">
+							<label for="inputValue_{{budgets|length}}">{{lang["BUDGET"]}}</label>
+							<input required type="number" class="form-control value" id="inputValue_{{budgets|length}}" name="budget[{{budgets|length}}][value]" step="any" value="{{budget.value}}">
+						</div>
+					</div>
+				{% endif %}
 
-            <div class="form-group category">
-                <label for="category_DUMMY">{{lang["CATEGORY"]}}</label>
-                <select required class="form-control category" id="category_DUMMY" name="budget[DUMMY][category][]" multiple disabled="disabled">
-                    {% for cat in categories %}
-                        <option value="{{cat.id}}">{{cat.name|raw}}</option>
-                    {% endfor %}
-                </select>
-            </div>  
+				<div class="form-group submit-btn">
+					<button type="submit" id="save-budget" class="button">{{lang["SAVE"]}}</button>
+				</div>
 
-            <div class="form-group cat-costs">
-                <h4>{{lang["RECURRING"]}} {{lang["FINANCES_SPENDINGS"]}}</h4>
-                <div class="category_costs">
-                </div> 
-            </div>
+			</form>
 
-            <div class="form-group value">
-                <label for="inputValue_DUMMY">{{lang["BUDGET"]}}</label>
-                <input type="number" required class="form-control value" id="inputValue_DUMMY" name="budget[DUMMY][value]" step="any" disabled="disabled">
-            </div>
+		</div>
+	</div>
 
-            <div class="form-group is_hidden">
 
-                <label class="checkbox" for="checkboxHidden_DUMMY">
-                    <input name="budget[DUMMY][is_hidden]" type="checkbox" value="1" id="checkboxHidden_DUMMY" disabled="disabled">
-                    {{lang["HIDE_ENTRY"]}}
-                </label>
-            </div>
+	<div id="budgetTemplate" class="hidden">
+		<div class="budget-entry-dummy edit">
+			<div class="form-group description">
+				<label for="inputDescription_DUMMY">{{lang["DESCRIPTION"]}}</label>
+				<input required type="text" class="form-control description" id="inputDescription_DUMMY" name="budget[DUMMY][description]" disabled="disabled">
+			</div>
 
-            <a href="#" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-        </div>
-    </div> 
+			<div class="form-group category">
+				<label for="category_DUMMY">{{lang["CATEGORY"]}}</label>
+				<select required class="form-control category" id="category_DUMMY" name="budget[DUMMY][category][]" multiple disabled="disabled">
+					{% for cat in categories %}
+						<option value="{{cat.id}}">{{cat.name|raw}}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<div class="form-group cat-costs">
+				<h4>{{lang["RECURRING"]}}
+					{{lang["FINANCES_SPENDINGS"]}}</h4>
+				<div class="category_costs"></div>
+			</div>
+
+			<div class="form-group value">
+				<label for="inputValue_DUMMY">{{lang["BUDGET"]}}</label>
+				<input type="number" required class="form-control value" id="inputValue_DUMMY" name="budget[DUMMY][value]" step="any" disabled="disabled">
+			</div>
+
+			<div class="form-group is_hidden">
+
+				<label class="checkbox" for="checkboxHidden_DUMMY">
+					<input name="budget[DUMMY][is_hidden]" type="checkbox" value="1" id="checkboxHidden_DUMMY" disabled="disabled">
+					{{lang["HIDE_ENTRY"]}}
+				</label>
+			</div>
+
+			<a href="#" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+		</div>
+	</div>
 
 {% endblock %}

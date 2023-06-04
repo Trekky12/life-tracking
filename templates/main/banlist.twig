@@ -2,33 +2,45 @@
 
 {% set active = 'settings' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["BANLIST"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["BANLIST"]}}</h2></div>
-        <div class="page-content">
-            <table id="banlist_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["CREATED_ON"]}}</th>
-                        <th>{{lang["IP_ADDRESS"]}}</th>
-                        <th>{{lang["LOGIN"]}}</th>
-                        
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in list %}
-                        <tr>
-                            <td>{{entry.createdOn}}</td> 
-                            <td>{{entry.ip}}</td> 
-                            <td>{{entry.username}}</td> 
-                            <td><a href="#" data-url="{{  url_for('banlist_delete', {'ip' : entry.ip}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block tabbar %}
+	{% include "main/settings-tabs.twig" with {'active':'banlist'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="banlist_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["CREATED_ON"]}}</th>
+						<th>{{lang["IP_ADDRESS"]}}</th>
+						<th>{{lang["LOGIN"]}}</th>
+
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in list %}
+						<tr>
+							<td>{{entry.createdOn}}</td>
+							<td>{{entry.ip}}</td>
+							<td>{{entry.username}}</td>
+							<td>
+								<a href="#" data-url="{{ url_for('banlist_delete', {'ip' : entry.ip}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

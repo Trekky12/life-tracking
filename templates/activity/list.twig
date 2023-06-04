@@ -1,36 +1,38 @@
 {% extends "base.twig" %}
 
-{% set active = 'profile' %}
+{% set active = 'activities' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/activities.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/activities.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["ACTIVITIES"]}}</h2>
+		</div>
+	</div>
 {% endblock %}
 
 {% block body %}
 
-    {% if message is defined %}
-        <div class="alert hide-offline {{message_type}}">
-            <span class="closebtn" >&times;</span>
-            <span class="alert-message">
-                <p>{{message}}</p>
-            </span>
-        </div>
-    {% endif %}
+	{% if message is defined %}
+		<div class="alert hide-offline {{message_type}}">
+			<span class="closebtn">&times;</span>
+			<span class="alert-message">
+				<p>{{message}}</p>
+			</span>
+		</div>
+	{% endif %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["ACTIVITIES"]}}</h2></div>
-    
-    <div class="page-content activities_overview">
-        <div id="activities">
-        </div>
-        <div id="loadingIconActivities" class="centered loading-icon">
-            <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-        </div>
-        <div id="loadMoreActivities" class="centered hidden">
-            <button type="button">{{ lang["LOAD_MORE"] }}</button>
-        </div>
-    </div>
-        </div>
+	<div class="activities_overview">
+		<div id="activities"></div>
+		<div id="loadingIconActivities" class="centered loading-icon">
+			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+		</div>
+		<div id="loadMoreActivities" class="centered hidden">
+			<button type="button">{{ lang["LOAD_MORE"] }}</button>
+		</div>
+	</div>
 
-</div>
-{% endblock %}
+</div>{% endblock %}

@@ -4,6 +4,9 @@ const activitiesList = document.querySelector('#activities');
 const loadingIconActivities = document.querySelector('#loadingIconActivities');
 const loadMoreActivities = document.querySelector('#loadMoreActivities');
 
+let activityDateDiv;
+let activityWrapper;
+
 document.addEventListener("DOMContentLoaded", function () {
     loadMoreActivitiesFunctions();
     getActivities();
@@ -12,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function getActivities() {
     if (activitiesList !== null) {
 
-        let start = activitiesList.querySelectorAll('.activity').length;;
+        let start = activitiesList.querySelectorAll('.activity').length;
         let count = 20;
 
         loadingIconActivities.classList.remove("hidden");
@@ -58,13 +61,28 @@ function getActivities() {
 
                     // create new date headline
                     if (!dates.includes(item["date"])) {
+
+                        activityDateDiv = document.createElement("div");
+                        activityDateDiv.classList = 'inner-content activity-date-wrapper';
+                        activitiesList.appendChild(activityDateDiv);
+
+                        let hDateWrapper = document.createElement("div");
+                        hDateWrapper.classList = 'inner-content-header light';
+                        activityDateDiv.appendChild(hDateWrapper);
+                        
                         let hDate = document.createElement("h2");
                         hDate.classList = 'activity-date';
                         hDate.dataset.date = item["date"];
                         hDate.innerHTML = item["date"];
-                        activitiesList.appendChild(hDate);
+
+                        hDateWrapper.appendChild(hDate)
 
                         dates.push(item["date"]);
+
+                        activityWrapper = document.createElement("div");
+                        activityWrapper.classList = "page-content";
+
+                        activityDateDiv.appendChild(activityWrapper);
                     }
 
 
@@ -99,7 +117,7 @@ function getActivities() {
 
                     div.appendChild(divContent);
 
-                    activitiesList.appendChild(div);
+                    activityWrapper.appendChild(div);
                 });
             }
         }).catch(function (error) {

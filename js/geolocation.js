@@ -48,12 +48,12 @@ function getLocation(index) {
 // automatically get location on new entries
 // and set first index
 if (latField !== null &&
-        lngField !== null &&
-        accField !== null &&
-        idField === null &&
-        latField.value.length === 0 &&
-        lngField.value.length === 0 &&
-        accField.value.length === 0) {
+    lngField !== null &&
+    accField !== null &&
+    idField === null &&
+    latField.value.length === 0 &&
+    lngField.value.length === 0 &&
+    accField.value.length === 0) {
     getLocation(0);
 }
 
@@ -124,29 +124,29 @@ function locationRetrieved(position, index) {
     console.log(position);
 
     if (position.coords.accuracy < lastAccuracy) {
-        
+
         // default
         let latElement = latField;
         let lngElement = lngField;
         let accElement = accField;
-        
+
         let mapContainer = mapContainers[index];
-        
+
         // map is available, so take closest map
-        if(mapContainer){
+        if (mapContainer) {
             latElement = mapContainer.parentNode.querySelector('.geo-lat');
             lngElement = mapContainer.parentNode.querySelector('.geo-lng');
             accElement = mapContainer.parentNode.querySelector('.geo-acc');
         }
-        
+
         latElement.value = position.coords.latitude;
         lngElement.value = position.coords.longitude;
         accElement.value = position.coords.accuracy;
 
         lastAccuracy = position.coords.accuracy;
-        
+
         // draw map if map is available, otherwise only save the position
-        if(mapContainer){
+        if (mapContainer) {
             drawMap(mapContainer, index);
         }
     }
@@ -185,6 +185,7 @@ function drawMap(mapContainer, index) {
         let latElement = mapContainer.parentNode.querySelector('.geo-lat');
         let lngElement = mapContainer.parentNode.querySelector('.geo-lng');
         let accElement = mapContainer.parentNode.querySelector('.geo-acc');
+        let mapBtns = mapContainer.parentNode.querySelector('.map-btn');
         let deleteLoc = mapContainer.parentNode.querySelector('.delete-location');
         let draggableElement = mapContainer.parentNode.querySelector('.geo-draggable');
 
@@ -207,6 +208,7 @@ function drawMap(mapContainer, index) {
         if (map[index] === null) {
             mapContainer.style.height = '300px';
             mapContainer.classList.add("visible");
+            mapBtns.classList.add("map-visible");
             if (deleteLoc) {
                 deleteLoc.classList.remove("hidden");
             }
@@ -226,10 +228,10 @@ function drawMap(mapContainer, index) {
         /**
          * Init Marker
          */
-        map_marker[index] = L.marker([lat, lng], {draggable: isMovable});
+        map_marker[index] = L.marker([lat, lng], { draggable: isMovable });
         map_marker[index].addTo(map[index]);
 
-        if(isMovable){
+        if (isMovable) {
             map_marker[index].on('drag', function (e) {
                 let marker = e.target;
                 let position = marker.getLatLng();
@@ -274,7 +276,7 @@ function drawMap(mapContainer, index) {
             });
 
             map_marker[index].on('mouseout', function (e) {
-                if(map[index].hasLayer(circle)){
+                if (map[index].hasLayer(circle)) {
                     map[index].removeLayer(circle);
                 }
             });
@@ -283,16 +285,16 @@ function drawMap(mapContainer, index) {
                 map_marker[index].off('mouseover');
                 map_marker[index].off('popupopen');
             });
-            
+
             map_marker[index].on('popupopen', function (event) {
                 circle = L.circle(event.target.getLatLng(), {
                     opacity: 0.5,
                     radius: acc
                 }).addTo(map[index]);
             });
-            
+
             map_marker[index].on('popupclose', function (e) {
-                if(map[index].hasLayer(circle)){
+                if (map[index].hasLayer(circle)) {
                     map[index].removeLayer(circle);
                 }
             });
@@ -319,6 +321,9 @@ function removeMap(deleteLoc, mapContainer, index) {
     latElement.value = "";
     lngElement.value = "";
     accElement.value = "";
+
+    let mapBtns = mapContainer.parentNode.querySelector('.map-btn');
+    mapBtns.classList.remove("map-visible");
 
     clearTimeout(timeout);
 }

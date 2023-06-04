@@ -1,0 +1,140 @@
+.ripple,
+.button,
+.tabbar-tab {
+    position: relative;
+    overflow: hidden;
+
+    span.ripple-circle {
+        position: absolute;
+        border-radius: 50%;
+        transform: scale(0.3);
+        animation: ripple 500ms linear;
+        opacity: 0;
+        transition: opacity 15ms;
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    &.button-text,
+    &.button-outlined {
+        span.ripple-circle {
+            background-color: rgba(21, 101, 192, 0.7);
+        }
+    }
+
+}
+
+@keyframes ripple {
+    from {
+        opacity: 0.4;
+    }
+
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.icon-ripple-wrapper {
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+
+    &.ripple-effect-start {
+
+        span.fontawesome-icon {
+            &::after {
+                opacity: 1;
+                transform: scale(3);
+
+                transition: transform 300ms linear;
+            }
+        }
+    }
+
+    &.ripple-effect-end {
+
+        span.fontawesome-icon {
+            &::after {
+                opacity: 0;
+                transform: scale(2);
+                transition: opacity 200ms linear;
+            }
+        }
+    }
+
+    span.icon {
+        position: relative;
+        border-radius: 50%;
+        padding: 0;
+        height: 24px;
+        width: 24px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+
+        &::before,
+        &::after {
+
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            content: "";
+
+            width: 24px;
+            height: 24px;
+            //margin-left: -1px;
+            //margin-top: -1px;
+        }
+
+        &::before {
+            transition: opacity 15ms linear;
+            transform: scale(2);
+            z-index: 1;
+            background-color: $color_blue_light_background;
+        }
+
+        &::after {
+            top: 0;
+            left: 0;
+            transform: scale(1);
+            transform-origin: center center;
+            background-color: rgba(255, 255, 255, 0.2);
+            //background-color: $color_blue_light_background;
+            z-index: 2;
+            opacity: 0;
+            //transition: transform 500ms ease-in-out, background-color 0ms, opacity 0ms;
+        }
+
+        &:hover::before,
+        &:focus::before {
+            opacity: 1;
+            transition: opacity 15ms;
+        }
+
+        &:active::before {
+            opacity: 0;
+            transition-duration: 500ms;
+        }
+
+        i,
+        svg {
+            color: $color_background-body;
+            position: relative;
+            z-index: 20;
+            //@include font-size(2);
+            height: 20px;
+            width: 20px;
+
+            &:hover,
+            &:focus {
+                //color: $color_navigation_text_hover;
+            }
+        }
+    }
+}

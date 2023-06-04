@@ -2,38 +2,56 @@
 
 {% set active = 'finances' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["FINANCES_PAYMETHODS"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('finances_paymethod_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["FINANCES_PAYMETHODS"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('finances_paymethod_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="finances_method_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{lang["DEFAULT"]}}</th>
-                        <th>{{lang["FINANCES_ACCOUNT"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for method in paymethods %}
-                        <tr>
-                            <td>{{method.name|raw}}</td> 
-                            <td>{% if method.is_default == 1%}x{%endif%}</td> 
-                            <td>{{accounts[method.account].name|raw}}</td> 
-                            <td><a href="{{  url_for('finances_paymethod_edit', {'id' : method.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
-                            <td><a href="#" data-url="{{  url_for('finances_paymethod_delete', {'id' : method.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block tabbar %}
+	{% include "finances/finances-tabs.twig" with {'active':'finances_paymethod'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="finances_method_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{lang["DEFAULT"]}}</th>
+						<th>{{lang["FINANCES_ACCOUNT"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for method in paymethods %}
+						<tr>
+							<td>{{method.name|raw}}</td>
+							<td>
+								{% if method.is_default == 1%}x{%endif%}</td>
+							</td>
+							<td>{{accounts[method.account].name|raw}}</td>
+							<td>
+								<a href="{{ url_for('finances_paymethod_edit', {'id' : method.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('finances_paymethod_delete', {'id' : method.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

@@ -10,21 +10,21 @@
 	<script src="{{baseURL}}/static/js/timesheets-notice-export.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["TIMESHEETS"]}}
 				{{ lang["NOTICE"] }}|
 				{{project.name|raw}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
@@ -47,7 +47,9 @@
 					<div class="timesheet-notice-wrapper">
 
 						<h3 class="sheet_title">{{ sheet_title }}</h3>
-						<small>{{ lang["LAST_SAVED"]}}: <span id="lastSaved"></span></small>
+						<small>{{ lang["LAST_SAVED"]}}:
+							<span id="lastSaved"></span>
+						</small>
 						{% if sheet_customer %}
 							<h4 class="sheet_customer">
 								{%- if project.customers_name_singular %}
@@ -103,7 +105,7 @@
 
 					<div class="form-group btn">
 						<button type="submit" class="button">{{lang["SAVE"]}}</button>
-						<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
+						<button type="button" class="button button-outlined" id="wordExport">{{lang["EXPORT_WORD"]}}
 							{{lang["TIMESHEETS_EXPORT"]}}</button>
 					</div>
 				</form>

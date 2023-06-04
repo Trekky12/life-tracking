@@ -3,71 +3,108 @@
 {% set active = 'car_service' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/assets/js/chartjs-adapter-moment.min.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/assets/js/randomColor.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/js/car-stats.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/chart.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/chartjs-adapter-moment.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/randomColor.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/js/car-stats.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["MENU_FUEL"]}}
+				{{lang["STATS"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
 
+{% block tabbar %}
+	{% include "cars/cars-tabs.twig" with {'active':'car_service_stats'} only %}
+{% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MENU_FUEL"]}} {{lang["STATS"]}}</h2></div>
-        <div class="page-content">
-            <canvas id="fuelChart" data-labels="{{labels}}" data-values="{{data|json_encode(constant('JSON_NUMERIC_CHECK'))}}"></canvas>
-        </div>
-    </div>
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MILEAGE_PER_YEAR"]}}</h2></div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-content">
+			<canvas id="fuelChart" data-labels="{{labels}}" data-values="{{data|json_encode(constant('JSON_NUMERIC_CHECK'))}}"></canvas>
+		</div>
+	</div>
+	<div class="page-header page-sub-header">
+		<div class="page-headline">
+			<h2>{{lang["MILEAGE_PER_YEAR"]}}</h2>
+		</div>
+	</div>
+	<div class="inner-content">
+		<div class="page-content">
 
-            <div class="two-columns">
-                <div class="left">
-                    <label class="radio" for="calculation_type_0">
-                        <input class="set_calculation_date" name="calculation_type" data-type="0" type="radio" id="calculation_type_0" {% if mileage_calc_type is not null and mileage_calc_type == 0 %}checked="checked"{% endif %}>
-                        {{lang["START_WITH_STARTDATE"]}}                        
-                    </label>
-                </div>
-                <div class="left">
-                    <label class="radio" for="calculation_type_1">
-                        <input class="set_calculation_date" name="calculation_type" data-type="1" type="radio" id="calculation_type_1" {% if mileage_calc_type is not null and mileage_calc_type == 1 %}checked="checked"{% endif %}>
-                        {{lang["START_WITH_FIRST_ENTRY"]}}
-                    </label>
-                </div>
-                <div class="right">
-                    <label class="radio" for="calculation_type_2">
-                        <input class="set_calculation_date" name="calculation_type" data-type="2" type="radio" id="calculation_type_2" {% if mileage_calc_type is not null and mileage_calc_type == 2 %}checked="checked"{% endif %}>
-                        {{lang["START_WITH_YEAR"]}}
-                    </label>
-                </div>
-            </div>
+			<div class="two-columns">
+				<div class="left">
+					<label class="radio" for="calculation_type_0">
+						<input class="set_calculation_date" name="calculation_type" data-type="0" type="radio" id="calculation_type_0" {% if mileage_calc_type is not null and mileage_calc_type == 0 %} checked="checked" {% endif %}>
+						{{lang["START_WITH_STARTDATE"]}}
+					</label>
+				</div>
+				<div class="left">
+					<label class="radio" for="calculation_type_1">
+						<input class="set_calculation_date" name="calculation_type" data-type="1" type="radio" id="calculation_type_1" {% if mileage_calc_type is not null and mileage_calc_type == 1 %} checked="checked" {% endif %}>
+						{{lang["START_WITH_FIRST_ENTRY"]}}
+					</label>
+				</div>
+				<div class="right">
+					<label class="radio" for="calculation_type_2">
+						<input class="set_calculation_date" name="calculation_type" data-type="2" type="radio" id="calculation_type_2" {% if mileage_calc_type is not null and mileage_calc_type == 2 %} checked="checked" {% endif %}>
+						{{lang["START_WITH_YEAR"]}}
+					</label>
+				</div>
+			</div>
 
-            {% for car, entries in table %}
-                <h2>{{cars[car].name|raw}} {% if totalMileages[car]["diff"] > 0 %}({{totalMileages[car]["diff"]}} {{lang["KM"]}}){% endif %}</h2>
+			{% for car, entries in table %}
+				<h2>{{cars[car].name|raw}}
+					{% if totalMileages[car]["diff"] > 0 %}({{totalMileages[car]["diff"]}}
+						{{lang["KM"]}})
+					{% endif %}
+				</h2>
 
-                {% if car in mileage_year|keys and mileage_year[car] is not null and cars[car].mileage_per_year > 0 and cars[car].mileage_term > 0 %}
+				{% if car in mileage_year|keys and mileage_year[car] is not null and cars[car].mileage_per_year > 0 and cars[car].mileage_term > 0 %}
 
-                    <p class="no-margin-bottom"><strong>{{lang["MILEAGE_TRAVELLED"]}}: {{mileage_year[car]["current"]}} {{lang["KM"]}}, {{lang["STATE_TODAY_MAX"]}}: {{mileage_year[car]["possible"]}} {{lang["KM"]}} ({{mileage_year[car]["remaining"]}} {{lang["KM"]}} {{lang["REMAINING"]}})</strong></p>
-                    <p class="small"><em>{{lang["START"]}}: {{cars[car].mileage_start_date|date(i18n.dateformatTwig.date)}}, {{lang["MILEAGE_PER_YEAR"]}}: {{cars[car].mileage_per_year}}, {{lang["MILEAGE_TERM"]}}: {{cars[car].mileage_term}}</em></p>
-                {% endif %}
-                <table class="mileage_year_table table table-hover small">
-                    <thead>
-                        <tr>
-                            <th>{{lang["DATE"]}}</th>
-                            <th>{{lang["MILEAGE_PER_YEAR"]}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for entry in entries %}
-                            <tr>
-                                <td data-title="{{lang["DATE"]}}">{{entry.start|date(i18n.dateformatTwig.date)}} - {{entry.end|date(i18n.dateformatTwig.date)}}</td> 
-                                <td data-title="{{lang["MILEAGE_PER_YEAR"]}}">{{entry.diff}}</td> 
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endfor %}
-        </div>
-    </div>
+					<p class="no-margin-bottom">
+						<strong>{{lang["MILEAGE_TRAVELLED"]}}:
+							{{mileage_year[car]["current"]}}
+							{{lang["KM"]}},
+							{{lang["STATE_TODAY_MAX"]}}:
+							{{mileage_year[car]["possible"]}}
+							{{lang["KM"]}}
+							({{mileage_year[car]["remaining"]}}
+							{{lang["KM"]}}
+							{{lang["REMAINING"]}})</strong>
+					</p>
+					<p class="small">
+						<em>{{lang["START"]}}:
+							{{cars[car].mileage_start_date|date(i18n.dateformatTwig.date)}},
+							{{lang["MILEAGE_PER_YEAR"]}}:
+							{{cars[car].mileage_per_year}},
+							{{lang["MILEAGE_TERM"]}}:
+							{{cars[car].mileage_term}}</em>
+					</p>
+				{% endif %}
+				<table class="mileage_year_table table table-hover small">
+					<thead>
+						<tr>
+							<th>{{lang["DATE"]}}</th>
+							<th>{{lang["MILEAGE_PER_YEAR"]}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for entry in entries %}
+							<tr>
+								<td data-title="{{lang["DATE"]}}">{{entry.start|date(i18n.dateformatTwig.date)}}
+									-
+									{{entry.end|date(i18n.dateformatTwig.date)}}</td>
+								<td data-title="{{lang["MILEAGE_PER_YEAR"]}}">{{entry.diff}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endfor %}
+		</div>
+	</div>
 {% endblock %}

@@ -8,17 +8,19 @@
 	<script src="{{baseURL}}/static/js/exercises.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('workouts_templates') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["WORKOUTS_TEMPLATE_PLAN"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
+
 {% block body %}
 	<div class="inner-content">
-		<div class="page-header">
-			<h2>{{lang["WORKOUTS_TEMPLATE_PLAN"]}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('workouts_templates') }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
-		</div>
 		<div class="page-content">
 
 			<form class="form-horizontal" action="{{ url_for('workouts_templates_save', {'id' : entry.id}) }}" method="POST">
@@ -55,9 +57,9 @@
 				<div class="form-group">
 					<label for="inputNotice">{{lang["NOTICE"]}}</label>
 					<textarea class="form-control" id="inputNotice" name="notice" rows="3">
-						{% if not entry is null %}
-							{{entry.notice|raw}}
-						{% endif %}
+						{%- if not entry is null -%}
+							{{- entry.notice|raw -}}
+						{%- endif -%}
 					</textarea>
 				</div>
 
@@ -71,8 +73,8 @@
 					<div class="selected_exercises_title">
 						<h2>{{ lang["WORKOUTS_EXERCISES_SELECTED"] }}</h2>
 						<div class="form-group">
-							<button type="button" class="button small gray" id="add_workout_day">{{ lang["WORKOUTS_ADD_DAY"] }}</button>
-							<button type="button" class="button small gray" id="add_superset">{{ lang["WORKOUTS_ADD_SUPERSET"] }}</button>
+							<button type="button" class="button button-outlined small" id="add_workout_day">{{ lang["WORKOUTS_ADD_DAY"] }}</button>
+							<button type="button" class="button button-outlined small" id="add_superset">{{ lang["WORKOUTS_ADD_SUPERSET"] }}</button>
 						</div>
 					</div>
 					<div class="selected_exercises" id="exercises_selected">
@@ -114,7 +116,7 @@
 					<div class="available_exercises_title">
 						<h2>{{ lang["WORKOUTS_EXERCISES_AVAILABLE"] }}</h2>
 						<div class="form-group">
-							<button type="button" class="button small gray" id="hide_exercise_selection">{{ lang["HIDE"] }}</button>
+							<button type="button" class="button button-outlined small" id="hide_exercise_selection">{{ lang["HIDE"] }}</button>
 						</div>
 					</div>
 					<div class="available_exercises">
@@ -153,7 +155,7 @@
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
 					{% endif %}
 				</div>
 			</form>

@@ -13,22 +13,22 @@
 	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/autoComplete.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('recipes_shoppinglists')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["RECIPES_SHOPPINGLIST"]}}
 				|
 				{{ shoppinglist.name|raw }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('recipes_shoppinglists')}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
-		<div class="page-content">
+	</div>
+{% endblock %}
 
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 			<form class="recipes-grocery-shoppinglist-filter">
 				<input type="number" id="addGroceryToList_amount" min="0" max="999" step="any" placeholder="{{ lang["RECIPES_AMOUNT"]}}"/>
 				<input type="text" id="addGroceryToList_unit" placeholder="{{ lang["UNIT"]}}"/>
@@ -37,8 +37,13 @@
 				</div>
 				<input type="text" id="addGroceryToList_notice" placeholder="{{ lang["NOTICE"] }}" autocomplete="off"/>
 				<input type="hidden" id="addGroceryToList_ID"/>
-				<input type="submit" id="addGroceryToList" value="{{ lang["ADD"]}}"/>
+				<input type="submit" id="addGroceryToList" value="{{ lang["ADD"]}}" class="button"/>
 			</form>
+		</div>
+	</div>
+
+	<div class="inner-content">
+		<div class="page-content">
 
 			<div id="new-shoppinglist-entries-alert" class="alert hide-offline info hidden">
 				<span class="closebtn">&times;</span>

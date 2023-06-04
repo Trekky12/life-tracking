@@ -2,91 +2,109 @@
 
 {% set active = 'car_service' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["CAR_REFUEL"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('car_service_edit') }}">
+				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "cars/cars-tabs.twig" with {'active':'car_service'} only %}
+{% endblock %}
+
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CAR_REFUEL"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('car_service_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="fuel_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["DATE"]}}</th>
-                        <th>{{lang["CAR"]}}</th>
-                        <th>{{lang["MILEAGE"]}}</th>
-                        <th>{{lang["PRICE"]}}</th>
-                        <th>{{lang["VOLUME"]}}</th>
-                        <th>{{lang["TOTAL_PRICE"]}}</th>
-                        <th>{{lang["TYPE"]}}</th>
-                        <th>{{lang["CONSUMPTION"]}}</th>
-                        <th>{{lang["LOCATION"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in fuel_table %}
-                        <tr>
-                            <td>{{entry[0]}}</td> 
-                            <td>{{entry[1]|raw}}</td> 
-                            <td>{{entry[2]}}</td> 
-                            <td>{{entry[3]}}</td> 
-                            <td>{{entry[4]}}</td> 
-                            <td>{{entry[5]}}</td> 
-                            <td>{{entry[6]}}</td> 
-                            <td>{{entry[7]}}</td> 
-                            <td>{{entry[8]|raw}}</td> 
-                            <td>{{entry[9]|raw}}</td>
-                            <td>{{entry[10]|raw}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="fuel_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["DATE"]}}</th>
+						<th>{{lang["CAR"]}}</th>
+						<th>{{lang["MILEAGE"]}}</th>
+						<th>{{lang["PRICE"]}}</th>
+						<th>{{lang["VOLUME"]}}</th>
+						<th>{{lang["TOTAL_PRICE"]}}</th>
+						<th>{{lang["TYPE"]}}</th>
+						<th>{{lang["CONSUMPTION"]}}</th>
+						<th>{{lang["LOCATION"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in fuel_table %}
+						<tr>
+							<td>{{entry[0]}}</td>
+							<td>{{entry[1]|raw}}</td>
+							<td>{{entry[2]}}</td>
+							<td>{{entry[3]}}</td>
+							<td>{{entry[4]}}</td>
+							<td>{{entry[5]}}</td>
+							<td>{{entry[6]}}</td>
+							<td>{{entry[7]}}</td>
+							<td>{{entry[8]|raw}}</td>
+							<td>{{entry[9]|raw}}</td>
+							<td>{{entry[10]|raw}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CAR_SERVICE"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('car_service_edit')}}?type=service"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="service_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["DATE"]}}</th>
-                        <th>{{lang["CAR"]}}</th>
-                        <th>{{lang["MILEAGE"]}}</th>
-                        <th>{{lang["CAR_SERVICE_OIL"]}}</th>
-                        <th>{{lang["CAR_SERVICE_WATER_WIPER"]}}</th>
-                        <th>{{lang["CAR_SERVICE_AIR"]}}</th>
-                        <th>{{lang["CAR_SERVICE_TIRE_CHANGE"]}}</th>
-                        <th>{{lang["CAR_SERVICE_GARAGE"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in service_table %}
-                        <tr>
-                            <td>{{entry[0]}}</td> 
-                            <td>{{entry[1]|raw}}</td> 
-                            <td>{{entry[2]}}</td> 
-                            <td>{{entry[3]}}</td> 
-                            <td>{{entry[4]}}</td> 
-                            <td>{{entry[5]}}</td> 
-                            <td>{{entry[6]}}</td> 
-                            <td>{{entry[7]}}</td> 
-                            <td>{{entry[8]|raw}}</td>
-                            <td>{{entry[9]|raw}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="page-header page-sub-header">
+		<div class="page-headline">
+			<h2>{{lang["CAR_SERVICE"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('car_service_edit')}}?type=service">
+				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="service_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["DATE"]}}</th>
+						<th>{{lang["CAR"]}}</th>
+						<th>{{lang["MILEAGE"]}}</th>
+						<th>{{lang["CAR_SERVICE_OIL"]}}</th>
+						<th>{{lang["CAR_SERVICE_WATER_WIPER"]}}</th>
+						<th>{{lang["CAR_SERVICE_AIR"]}}</th>
+						<th>{{lang["CAR_SERVICE_TIRE_CHANGE"]}}</th>
+						<th>{{lang["CAR_SERVICE_GARAGE"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in service_table %}
+						<tr>
+							<td>{{entry[0]}}</td>
+							<td>{{entry[1]|raw}}</td>
+							<td>{{entry[2]}}</td>
+							<td>{{entry[3]}}</td>
+							<td>{{entry[4]}}</td>
+							<td>{{entry[5]}}</td>
+							<td>{{entry[6]}}</td>
+							<td>{{entry[7]}}</td>
+							<td>{{entry[8]|raw}}</td>
+							<td>{{entry[9]|raw}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 {% endblock %}

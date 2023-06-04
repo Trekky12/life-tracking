@@ -69,7 +69,7 @@ class Utility {
             $file = __DIR__ . '/../../../../public/static/assets/svgs/font-awesome/' . $family . '/' . $iconName . '.svg';
 
             if (file_exists($file)) {
-                return '<span class="fontawesome-icon icon-' . $iconName . '">' . file_get_contents($file) . '</span>';
+                return '<span tabindex="-1" class="icon fontawesome-icon icon-' . $iconName . '">' . file_get_contents($file) . '</span>';
             }
         }
         return null;

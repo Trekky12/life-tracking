@@ -9,21 +9,25 @@
 	<script src="{{baseURL}}/static/js/crawler.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
+{% block pageheader %}
+<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('crawlers') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{crawler.name|raw}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}">
+				<button class="button button-outlined">{{ fontawesome('far fa-star') }}
+					{{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
 {% block body %}
 	<div class="inner-content">
-		<div class="page-header">
-			<h2>{{crawler.name|raw}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('crawlers') }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-				<a href="{{ url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}">
-					<button class="button">{{ fontawesome('far fa-star') }}
-						{{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button>
-				</a>
-			</div>
-		</div>
 		<div class="page-content">
 			<form method="GET" id="tableHeaderFilter" class="search-filter">
 				<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
@@ -44,7 +48,7 @@
 				</div>
 				<div class="filter-row">
 					<div class="filter-element">
-						<input type="submit" value="{{lang["SHOW"]}}"/>
+						<input type="submit" class="button" value="{{lang["SHOW"]}}"/>
 					</div>
 				</div>
 			</form>
@@ -72,7 +76,7 @@
 			<div id="tableFooterFilter" class="search-filter">
 				<div class="filter-row">
 					<div class="filter-element">
-						<button type="button" class="button gray small" id="mark_all_as_shown">{{ lang["CRAWLERS_MARK_ALL_AS_SHOWN"] }}</button>
+						<button type="button" class="button button-outlined small" id="mark_all_as_shown">{{ lang["CRAWLERS_MARK_ALL_AS_SHOWN"] }}</button>
 					</div>
 				</div>
 			</div>
@@ -80,10 +84,12 @@
 	</div>
 
 	{% if links  %}
-		<div class="inner-content">
-			<div class="page-header">
+		<div class="page-header page-sub-header">
+			<div class="page-headline">
 				<h2>{{lang["LINKLIST"]}}</h2>
 			</div>
+		</div>
+		<div class="inner-content">
 			<div class="page-content">
 				<ul id="crawler_links">
 					{% include "crawlers/links/menu-links.twig" with {'links':links, 'root': 1} only %}

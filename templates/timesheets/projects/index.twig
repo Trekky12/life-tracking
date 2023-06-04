@@ -2,64 +2,80 @@
 
 {% set active = 'timesheets' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('timesheets_projects_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2> 
-            <div class="buttons">
-                <a href="{{  url_for('timesheets_projects_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="timesheets_projects_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{ lang["NAME"] }}</th>
-                        <th>{{ lang["SUM"] }}</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for project in projects %}
-                        <tr>
-                            <td><a href="{{  url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a></td> 
-                            <td>{{times[project.id]}}</td> 
-                            <td>
-                                <a href="{{  url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
-                            </td>
-                            <td>
-                                <a href="{{  url_for('timesheets_customers', {'project' : project.hash}) }}">{% if project.customers_name_plural %}{{project.customers_name_plural}}{% else %}{{lang["TIMESHEETS_CUSTOMERS"]}}{% endif %}</a>
-                            </td>
-                            <td>
-                                <a href="{{  url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>
-                            </td>
-                            <td>
-                                <a href="{{  url_for('timesheets_notice_password', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICE_PASSWORD"]}}</a>
-                            </td>
-                            <td>
-                                <a href="{{  url_for('timesheets_noticefields', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICEFIELDS"]}}</a>
-                            </td>                            
-                            <td>
-                                {% if project.user == user.id %}
-                                    <a href="{{  url_for('timesheets_projects_edit', {'id' : project.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-                                    {% endif %}
-                            </td>
-                            <td>
-                                {% if project.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('timesheets_projects_delete', {'id' : project.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                                    {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="timesheets_projects_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{ lang["NAME"] }}</th>
+						<th>{{ lang["SUM"] }}</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for project in projects %}
+						<tr>
+							<td>
+								<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a>
+							</td>
+							<td>{{times[project.id]}}</td>
+							<td>
+								<a href="{{ url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
+							</td>
+							<td>
+								<a href="{{ url_for('timesheets_customers', {'project' : project.hash}) }}">
+									{% if project.customers_name_plural %}
+										{{project.customers_name_plural}}
+									{% else %}
+										{{lang["TIMESHEETS_CUSTOMERS"]}}
+									{% endif %}
+								</a>
+							</td>
+							<td>
+								<a href="{{ url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>
+							</td>
+							<td>
+								<a href="{{ url_for('timesheets_notice_password', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICE_PASSWORD"]}}</a>
+							</td>
+							<td>
+								<a href="{{ url_for('timesheets_noticefields', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICEFIELDS"]}}</a>
+							</td>
+							<td>
+								{% if project.user == user.id %}
+									<a href="{{ url_for('timesheets_projects_edit', {'id' : project.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if project.user == user.id %}
+									<a href="#" data-url="{{ url_for('timesheets_projects_delete', {'id' : project.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

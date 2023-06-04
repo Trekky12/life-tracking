@@ -2,99 +2,112 @@
 
 {% set active = 'crawlers' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('crawlers_headers', {'crawler' : crawler.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["CRAWLERS"]}}
+				{{lang["HEADLINE"]}}
+				|
+				{{ crawler.name }}</h2>
+		</div>
+	</div>
+{% endblock %}
 
 {% block body %}
+	<div class="inner-content">
+		<div class="page-content">
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["CRAWLERS"]}} {{lang["HEADLINE"]}} | {{ crawler.name }}</h2>
-            <div class="buttons">
-                <a href="{{  url_for_with_last_query_params('crawlers_headers', {'crawler': crawler.hash}) }}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>            
-            </div>
-        </div>
-        <div class="page-content">
+			<form class="form-horizontal" id="crawlerHeadersForm" action="{{ url_for('crawlers_headers_save', {'id' : entry.id, 'crawler' : crawler.hash}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-            <form class="form-horizontal" id="crawlerHeadersForm" action="{{  url_for('crawlers_headers_save', {'id' : entry.id, 'crawler' : crawler.hash}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-                {% endif %}
+				<div class="form-group">
+					<label for="inputHeadline">{{lang["HEADLINE"]}}</label>
+					<input type="text" class="form-control" id="inputHeadline" name="headline" {% if not entry is null %} value="{{entry.headline|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputHeadline">{{lang["HEADLINE"]}}</label>
-                    <input type="text" class="form-control" id="inputHeadline" name="headline" {% if not entry is null %}value="{{entry.headline|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputFieldName">{{lang["FIELD_NAME"]}}</label>
+					<input type="text" class="form-control" id="inputFieldName" name="field_name" {% if not entry is null %} value="{{entry.field_name}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputFieldName">{{lang["FIELD_NAME"]}}</label>
-                    <input type="text" class="form-control" id="inputFieldName" name="field_name" {% if not entry is null %}value="{{entry.field_name}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputFieldLink">{{lang["FIELD_LINK"]}}</label>
+					<input type="text" class="form-control" id="inputFieldLink" name="field_link" {% if not entry is null %} value="{{entry.field_link}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputFieldLink">{{lang["FIELD_LINK"]}}</label>
-                    <input type="text" class="form-control" id="inputFieldLink" name="field_link" {% if not entry is null %}value="{{entry.field_link}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputFieldContent">{{lang["FIELD_CONTENT"]}}</label>
+					<input type="text" class="form-control" id="inputFieldContent" name="field_content" {% if not entry is null %} value="{{entry.field_content|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputFieldContent">{{lang["FIELD_CONTENT"]}}</label>
-                    <input type="text" class="form-control" id="inputFieldContent" name="field_content" {% if not entry is null %}value="{{entry.field_content|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputPosition">{{lang["POSITION"]}}</label>
+					<input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputPosition">{{lang["POSITION"]}}</label>
-                    <input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %}value="{{entry.position}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxSortable">
+						<input name="sortable" type="checkbox" id="checkboxSortable" value="1" {% if entry is not null and entry.sortable == 1 %} checked {% endif %}>
+						{{lang["SORTABLE"]}}
+					</label>
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxSortable">
-                        <input name="sortable" type="checkbox" id="checkboxSortable" value="1" {% if entry is not null and entry.sortable == 1 %}checked{% endif %}>
-                        {{lang["SORTABLE"]}}
-                    </label>
-                </div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxDiff">
+						<input name="diff" type="checkbox" id="checkboxDiff" value="1" {% if entry is not null and entry.diff == 1 %} checked {% endif %}>
+						{{lang["PREVIOUS_VALUE"]}}
+					</label>
+				</div>
 
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxDiff">
-                        <input name="diff" type="checkbox" id="checkboxDiff" value="1" {% if entry is not null and entry.diff == 1 %}checked{% endif %}>
-                        {{lang["PREVIOUS_VALUE"]}}
-                    </label>
-                </div>
+				<div class="form-group">
+					<label for="inputPrefix">{{lang["PREFIX"]}}</label>
+					<input type="text" class="form-control" id="inputFieldPrefix" name="prefix" {% if not entry is null %} value="{{entry.prefix|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputPrefix">{{lang["PREFIX"]}}</label>
-                    <input type="text" class="form-control" id="inputFieldPrefix" name="prefix" {% if not entry is null %}value="{{entry.prefix|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputSuffix">{{lang["SUFFIX"]}}</label>
+					<input type="text" class="form-control" id="inputSuffix" name="suffix" {% if not entry is null %} value="{{entry.suffix|raw}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputSuffix">{{lang["SUFFIX"]}}</label>
-                    <input type="text" class="form-control" id="inputSuffix" name="suffix" {% if not entry is null %}value="{{entry.suffix|raw}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="sort">{{lang["SORT"]}}</label>
+					<select class="form-control" id="sort" name="sort">
+						{% for key, sort in sortOptions %}
+							<option value="{{key}}" {% if not entry is null and key == entry.sort %} selected {% endif %}>{{lang[sort]}}</option>
+						{% endfor %}
+					</select>
+				</div>
 
-                <div class="form-group">
-                    <label for="sort">{{lang["SORT"]}}</label>
-                    <select class="form-control" id="sort" name="sort">
-                        {% for key, sort in sortOptions %}
-                            <option value="{{key}}" {% if not entry is null and key == entry.sort %}selected{% endif %}>{{lang[sort]}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+				<div class="form-group">
+					<label for="datatype">{{lang["DATA_TYPE"]}}</label>
+					<select class="form-control" id="datatype" name="datatype">
+						{% for key, cast in castOptions %}
+							<option value="{{key}}" {% if not entry is null and key == entry.datatype %} selected {% endif %}>{{lang[cast]}}</option>
+						{% endfor %}
+					</select>
+				</div>
 
-                <div class="form-group">
-                    <label for="datatype">{{lang["DATA_TYPE"]}}</label>
-                    <select class="form-control" id="datatype" name="datatype">
-                        {% for key, cast in castOptions %}
-                            <option value="{{key}}" {% if not entry is null and key == entry.datatype %}selected{% endif %}>{{lang[cast]}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group btn">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group btn">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

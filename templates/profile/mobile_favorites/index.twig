@@ -2,38 +2,54 @@
 
 {% set active = 'profile' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["MOBILE_FAVORITES"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('users_mobile_favorites_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MOBILE_FAVORITES"]}}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for('users_mobile_favorites_edit') }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="mobile_favorites_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{ lang["POSITION"] }}</th>
-                        <th>{{ lang["ICON"] }}</th>
-                        <th>{{ lang["URL"] }}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for el in list %}
-                        <tr>
-                            <td>{{ el.position }}</td> 
-                            <td>{{ fontawesome(el.icon) }}</td> 
-                            <td>{{el.url|raw}}</td> 
-                            <td><a href="{{ url_for('users_mobile_favorites_edit', {'id' : el.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a></td>
-                            <td><a href="#" data-url="{{ url_for('users_mobile_favorites_delete', {'id' : el.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block tabbar %}
+	{% include "profile/profile-tabs.twig" with {'active':'users_mobile_favorites'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="mobile_favorites_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{ lang["POSITION"] }}</th>
+						<th>{{ lang["ICON"] }}</th>
+						<th>{{ lang["URL"] }}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for el in list %}
+						<tr>
+							<td>{{ el.position }}</td>
+							<td>{{ fontawesome(el.icon) }}</td>
+							<td>{{el.url|raw}}</td>
+							<td>
+								<a href="{{ url_for('users_mobile_favorites_edit', {'id' : el.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('users_mobile_favorites_delete', {'id' : el.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

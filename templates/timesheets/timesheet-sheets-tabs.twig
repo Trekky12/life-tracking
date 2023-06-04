@@ -1,0 +1,16 @@
+<div class="tabbar-scroller">
+	<div class="tabbar-scrollarea">
+		<a class="tabbar-tab {% if active == 'timesheets_sheets' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">{{lang["TIMESHEETS"]}}</a>
+		{% if categories %}
+			<a class="tabbar-tab {% if active == 'timesheets_project_categorybudget_view' %}active{% endif %}" href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
+		{% endif %}
+		<a class="tabbar-tab {% if active == 'timesheets_export' %}active{% endif %}" href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">{{lang["TIMESHEETS_EXPORT"]}}</a>
+		<a class="tabbar-tab {% if active == 'timesheets_fast' %}active{% endif %}" href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
+			{% if project.is_day_based == 1 %}
+				{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
+			{% else %}
+				{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}
+			{% endif %}
+		</a>
+	</div>
+</div>

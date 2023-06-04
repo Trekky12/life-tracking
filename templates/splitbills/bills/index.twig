@@ -2,29 +2,29 @@
 
 {% set active = 'splitbills' %}
 
-
-{% block body %}
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header multiple-buttons">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('splitbills')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["SPLITBILLS"]}}
 				|
 				{{group.name|raw}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('splitbills')}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-				<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}">
-					<button class="button">{{ fontawesome('fas fa-plus') }}
-						{{lang["ADD_BILL"]}}</button>
-				</a>
-				<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup">
-					<button class="button">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
-				</a>
-			</div>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD_BILL"]}}</button>
+			</a>
+			<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup">
+				<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
+			</a>
 		</div>
 	</div>
+{% endblock %}
 
+{% block body %}
 	{% if my_balance %}
 		<div class="grid" id="splitbill_overview">
 			<div class="card negative">

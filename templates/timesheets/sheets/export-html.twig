@@ -12,35 +12,36 @@
 	<script src="{{baseURL}}/static/js/timesheets-notice-export.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets_export', {'project' : project.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["TIMESHEETS"]}}
 				|
 				{{project.name|raw}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('timesheets_export', {'project' : project.hash}) }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
-		<div class="page-content">
+	</div>
+{% endblock %}
 
-			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
-				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-			</div>
+{% block body %}
 
-			<div id="alertError" class="alert danger hidden">
-				<span class="closebtn">&times;</span>
-				<span class="alert-message">
-					<p>{{ lang["ENTRY_ERROR"] }}</p>
-					<p id="alertErrorDetail"></p>
-				</span>
-			</div>
+	<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+		<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+	</div>
 
-			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
+	<div id="alertError" class="alert danger hidden">
+		<span class="closebtn">&times;</span>
+		<span class="alert-message">
+			<p>{{ lang["ENTRY_ERROR"] }}</p>
+			<p id="alertErrorDetail"></p>
+		</span>
+	</div>
+
+	<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
+		<div class="inner-content">
+			<div class="page-content">
 				<div class="search-filter">
 					<div class="filter-row">
 						<div class="filter-group">
@@ -48,7 +49,7 @@
 								<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button gray" id="wordExport">{{lang["EXPORT_WORD"]}}
+								<button type="button" class="button button-outlined" id="wordExport">{{lang["EXPORT_WORD"]}}
 									{{lang["TIMESHEETS_EXPORT"]}}</button>
 							</div>
 						</div>
@@ -66,47 +67,49 @@
 						</label>
 					</div>
 				</div>
-
-				{% for sheet in sheets %}
-					<div class="timesheet-notice-wrapper">
-						<h3 class="sheet_title">{{ sheet["title"] }}</h3>
-						{% if sheet["customer"] %}
-							<h4 class="sheet_customer">
-								{%- if project.customers_name_singular %}
-									{{- project.customers_name_singular -}}
-								{% else %}
-									{{- lang["TIMESHEETS_CUSTOMER"] -}}
-								{% endif -%}:&nbsp;
-								{{- sheet["customer"] -}}
-							</h4>
-						{% endif %}
-
-						{% if sheet["categories"] %}
-							<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
-								{{- sheet["categories"] -}}
-							</h4>
-						{% endif %}
-						<h4>{{lang["DIFFERENCE"]}}:
-							{{ sheet["time"] }}</h4>
-
-						<div class="timesheet-notice" data-sheet="{{ sheet["id"] }}">
-							{% if fields %}
-								{% for field in fields %}
-									<div class="timesheet-notice-field">
-										<h4>{{field.description|raw}}:</h4>
-										<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></p>
-									</div>
-								{% endfor %}
-							{% else %}
-								<div class="timesheet-notice-field">
-									<h4>{{ lang["NOTICE"] }}:</h4>
-									<p class="notice-field" data-default="1"></p>
-								</div>
-							{% endif %}
-						</div>
-					</div>
-				{% endfor %}
 			</div>
 		</div>
+
+		{% for sheet in sheets %}
+			<div class="inner-content timesheet-notice-wrapper">
+				<div class="page-content">
+					<h3 class="sheet_title">{{ sheet["title"] }}</h3>
+					{% if sheet["customer"] %}
+						<h4 class="sheet_customer">
+							{%- if project.customers_name_singular %}
+								{{- project.customers_name_singular -}}
+							{% else %}
+								{{- lang["TIMESHEETS_CUSTOMER"] -}}
+							{% endif -%}:&nbsp;
+							{{- sheet["customer"] -}}
+						</h4>
+					{% endif %}
+
+					{% if sheet["categories"] %}
+						<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
+							{{- sheet["categories"] -}}
+						</h4>
+					{% endif %}
+					<h4>{{lang["DIFFERENCE"]}}:
+						{{ sheet["time"] }}</h4>
+
+					<div class="timesheet-notice" data-sheet="{{ sheet["id"] }}">
+						{% if fields %}
+							{% for field in fields %}
+								<div class="timesheet-notice-field">
+									<h4>{{field.description|raw}}:</h4>
+									<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></p>
+								</div>
+							{% endfor %}
+						{% else %}
+							<div class="timesheet-notice-field">
+								<h4>{{ lang["NOTICE"] }}:</h4>
+								<p class="notice-field" data-default="1"></p>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		{% endfor %}
 	</div>
 {% endblock %}

@@ -163,6 +163,15 @@ function initialize() {
         let link = event.target.closest('a');
         let submit = event.target.closest('[type="submit"]');
 
+        let rippleBtn = event.target.closest(".button");
+        if (rippleBtn) {
+            createRipple(rippleBtn, event);
+        }
+        let rippleTab = event.target.closest("a.tabbar-tab");
+        if (rippleTab) {
+            createRipple(rippleTab, event);
+        }
+
         let is_internal_link = (link && !link.getAttribute("href").startsWith('#') && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname));
 
         if (is_internal_link || (submit && !submit.classList.contains("no-loading"))) {
@@ -426,4 +435,32 @@ async function storeQueryParams() {
     } catch (error) {
         console.log(error);
     }
+}
+
+function createRipple(el, event) {
+    console.log("create ripple");
+    const rect = el.getBoundingClientRect();
+
+    const circle = document.createElement("span");
+    const diameter = Math.max(el.clientWidth, el.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+
+    if (event) {
+        circle.style.left = `${event.clientX - rect.left - radius}px`;
+        circle.style.top = `${event.clientY - rect.top - radius}px`;
+    }else{
+        circle.style.left = `${rect.left/2 - radius}px`;
+        circle.style.top = `${rect.top/2 - radius}px`;
+    }
+    circle.classList.add("ripple-circle");
+
+    const ripple = el.getElementsByClassName("ripple-circle")[0];
+
+    if (ripple) {
+        ripple.remove();
+    }
+
+    el.appendChild(circle);
 }

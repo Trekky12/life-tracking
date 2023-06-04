@@ -19,6 +19,7 @@
         label {
             display: block;
         }
+
         .form-group input:not(.selectr-input) {
             width: 100%;
         }
@@ -104,6 +105,7 @@
                 width: auto;
                 margin-bottom: 0;
             }
+
             .ingredient-suggestion-wrapper input {
                 width: 100%;
             }
@@ -119,9 +121,11 @@
 #recipes_steps,
 .mealplan-recipe {
     .icons {
+
         .minus,
         .handle {
             cursor: pointer;
+
             &:hover {
                 color: $color_blue;
             }
@@ -165,6 +169,7 @@
     svg {
         @include font-size(1.6);
         margin-right: 0.5rem;
+
         @media screen and (min-width: $size_mobile) {
             @include font-size(3);
         }
@@ -175,10 +180,12 @@
     }
 
     &.recipe-step-icons {
+
         i,
         span,
         svg {
             @include font-size(1.4);
+
             @media screen and (min-width: $size_mobile) {
                 @include font-size(1.6);
             }
@@ -199,6 +206,7 @@
     .recipe-image {
         flex-grow: 1;
         max-height: 100%;
+
         @media screen and (min-width: $size_mobile_navigation) {
             flex-basis: 40%;
         }
@@ -211,6 +219,7 @@
             margin-left: 1rem;
             margin-top: 0;
         }
+
         flex-basis: 60%;
         padding: 1rem;
         flex-shrink: 1;
@@ -245,6 +254,7 @@
             margin-left: 1rem;
             margin-top: 0;
         }
+
         flex-basis: 30%;
         padding: 1rem;
 
@@ -276,20 +286,35 @@
             color: $color_blue;
         }
     }
+
     &.active,
     &.active :focus {
         color: $color_blue;
     }
 }
 
-#filterSearchRecipes {
-    width: 100%;
+.recipe-filter {
+    padding-bottom: 2rem;
+
+    #filterSearchRecipes {
+        width: 100%;
+    }
 }
 
 .recipe-list .recipe {
     h3 {
         padding: 0.5rem 0;
         margin: 0;
+    }
+
+    .recipe-list-image-description {
+
+        &,
+        a,
+        img {
+            border-bottom-left-radius: inherit;
+
+        }
     }
 
     .recipe-list-image-description {
@@ -310,17 +335,21 @@
 .mealplan-list {
     display: flex;
     flex-direction: column-reverse;
+
     @media screen and (min-width: $size_mobile_navigation) {
         flex-direction: row;
     }
+
     .mealplans {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+
         @media screen and (min-width: $size_mobile_navigation) {
             flex-basis: 50%;
         }
     }
+
     .mealplan-list-settings {
         @media screen and (min-width: $size_mobile_navigation) {
             position: sticky;
@@ -357,6 +386,8 @@
 .mealplan-date {
     h2 {
         //padding: 0.5rem 3rem;
+        padding-top: 0;
+        padding-bottom: 0;
         margin: 0;
     }
 
@@ -385,11 +416,13 @@ body.sortable-select {
     input {
         height: 42px;
     }
+
     input[type="submit"] {
         padding: 0 2.5rem;
+        min-width: auto;
     }
 
-    & > :not(:last-child) {
+    &> :not(:last-child) {
         margin-bottom: 1rem;
         width: 100%;
     }
@@ -401,7 +434,7 @@ body.sortable-select {
     @media screen and (min-width: $size_mobile_navigation) {
         flex-direction: row;
 
-        & > :not(:last-child) {
+        &> :not(:last-child) {
             margin-right: 1rem;
             width: auto;
         }
@@ -431,8 +464,6 @@ body.sortable-select {
 }
 
 .shopping-list-entries {
-
-    margin-top: 2rem;
 
     .shopping-list-entry {
         //padding: 1rem;

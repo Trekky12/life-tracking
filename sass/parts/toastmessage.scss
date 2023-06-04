@@ -5,43 +5,63 @@
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 1rem;
+    padding: 14px 16px;
     position: fixed;
     z-index: 1;
-    left: 50%; 
-    bottom: 30px; 
+    left: 50%;
+    bottom: 30px;
     transform: translate(-50%, 0px);
-    @include font-size(1.2);
+    @include font-size(1.4);
+
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+    border-radius: 4px;
 
     &.show {
         visibility: visible;
         animation: toastfadein 0.5s, toastfadeout 0.5s 2.5s;
     }
 
-    &.red{
+    &.red {
         background-color: $color_red;
         color: $color_background-body;
     }
-    &.green{
+
+    &.green {
         background-color: $color_green;
         color: $color_background-body;
     }
-    &.orange{
+
+    &.orange {
         background-color: $color_orange;
         color: $color_background-body;
     }
-    &.blue{
+
+    &.blue {
         background-color: $color_blue;
         color: $color_background-body;
     }
 }
 
 @keyframes toastfadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @keyframes toastfadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
-} 
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}

@@ -12,21 +12,25 @@
 	<script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			{#<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>#}
 			<h2>{{lang["TIMESHEETS"]}}
 				|
 				{{project.name|raw}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "timesheets/timesheet-sheets-tabs.twig" with {'active':'timesheets_export'} %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<form method="GET" action="{{ url_for('timesheets_sheets_export', {'project' : project.hash}) }}" class="search-filter">
@@ -103,7 +107,7 @@
 				</div>
 
 				<div class="form-group">
-					<input type="submit" class="no-loading" value="{{lang["TIMESHEETS_EXPORT"]}}"/>
+					<input type="submit" class="button no-loading" value="{{lang["TIMESHEETS_EXPORT"]}}"/>
 				</div>
 			</form>
 		</div>

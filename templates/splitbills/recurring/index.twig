@@ -2,77 +2,98 @@
 
 {% set active = 'splitbills' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline multiple-buttons">
+			<a href="{{ url_for_with_last_query_params('splitbills')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["RECURRING"]}}
+				{{lang["SPLITBILLS"]}}
+				|
+				{{group.name|raw}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD_BILL"]}}</button>
+			</a>
+			<a href="{{ url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup">
+				<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["RECURRING"]}} {{lang["SPLITBILLS"]}} | {{group.name|raw}}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('splitbills')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}"><button class="button">{{ fontawesome('fas fa-plus') }} {{lang["ADD_BILL"]}}</button></a>
-                <a href="{{  url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup"><button class="button">{{lang["SPLITBILLS_SETTLE_UP"]}}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <table id="splitbills_bills_recurring_table" class="table table-hover small" data-currency="{{i18n.currency}}">
-                <thead>
-                    <tr>
-                        <th>{{lang["NAME"]}}</th>
-                        <th>{{ lang["RECEIVED"] }}</th>
-                        <th>{{ lang["SPEND"] }}</th>
-                        <th>{{ lang["PAID"] }}</th>
-                        <th>{{ lang["BALANCE"] }}</th>
-                        <th>{{lang["START"]}}</th>
-                        <th>{{lang["END"]}}</th>
-                        <th>{{lang["INTERVAL"]}}</th>
-                        <th>{{lang["LAST_RUN"]}}</th>
-                        <th>{{lang["NEXT_RUN"]}}</th>
-                        <th>{{lang["ACTIVE"]}}</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for bill in bills %}
-                        <tr>
-                            <td>{{ bill.name|raw }}</td>
-                            {% if bill.settleup == 1 %}
-                                <td>{{ bill.spend }}</td> {# received #}
-                                <td></td>
-                                <td>{{ bill.paid }}</td>
-                                <td></td>
-                            {% else %}
-                                <td></td>
-                                <td>{{ bill.spend }}</td>
-                                <td>{{ bill.paid }}</td>
-                                <td>{{ bill.balance }}</td>
-                            {% endif %}
-                            <td>{{bill.start}}</td> 
-                            <td>{{bill.end}}</td> 
-                            <td>{{bill.multiplier}} x {{lang[units[bill.unit]]}}</td> 
-                            <td>{{bill.last_run}}</td> 
-                            <td>{{bill.next_run}}</td> 
-                            <td>{% if bill.is_active > 0 %}x{% endif %}</td> 
-                            <td>
-                                {% if bill.user == user.id %}
-                                    <a href="{{  url_for('splitbill_bill_recurring_trigger', {'id' : bill.id, 'group': group.getHash()}) }}">{{ fontawesome('fas fa-play') }}</a>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if bill.user == user.id %}
-                                    <a href="{{  url_for('splitbill_bill_recurring_edit', {'id' : bill.id, 'group': group.getHash()}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if bill.user == user.id %}
-                                    <a href="#" data-url="{{  url_for('splitbill_bills_recurring_delete', {'id' : bill.id, 'group': group.getHash()}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="splitbills_bills_recurring_table" class="table table-hover small" data-currency="{{i18n.currency}}">
+				<thead>
+					<tr>
+						<th>{{lang["NAME"]}}</th>
+						<th>{{ lang["RECEIVED"] }}</th>
+						<th>{{ lang["SPEND"] }}</th>
+						<th>{{ lang["PAID"] }}</th>
+						<th>{{ lang["BALANCE"] }}</th>
+						<th>{{lang["START"]}}</th>
+						<th>{{lang["END"]}}</th>
+						<th>{{lang["INTERVAL"]}}</th>
+						<th>{{lang["LAST_RUN"]}}</th>
+						<th>{{lang["NEXT_RUN"]}}</th>
+						<th>{{lang["ACTIVE"]}}</th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for bill in bills %}
+						<tr>
+							<td>{{ bill.name|raw }}</td>
+							{% if bill.settleup == 1 %}
+								<td>{{ bill.spend }}</td>
+								{# received #}
+								<td></td>
+								<td>{{ bill.paid }}</td>
+								<td></td>
+							{% else %}
+								<td></td>
+								<td>{{ bill.spend }}</td>
+								<td>{{ bill.paid }}</td>
+								<td>{{ bill.balance }}</td>
+							{% endif %}
+							<td>{{bill.start}}</td>
+							<td>{{bill.end}}</td>
+							<td>{{bill.multiplier}}
+								x
+								{{lang[units[bill.unit]]}}</td>
+							<td>{{bill.last_run}}</td>
+							<td>{{bill.next_run}}</td>
+							<td>
+								{% if bill.is_active > 0 %}x
+								{% endif %}
+							</td>
+							<td>
+								{% if bill.user == user.id %}
+									<a href="{{ url_for('splitbill_bill_recurring_trigger', {'id' : bill.id, 'group': group.getHash()}) }}">{{ fontawesome('fas fa-play') }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if bill.user == user.id %}
+									<a href="{{ url_for('splitbill_bill_recurring_edit', {'id' : bill.id, 'group': group.getHash()}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if bill.user == user.id %}
+									<a href="#" data-url="{{ url_for('splitbill_bills_recurring_delete', {'id' : bill.id, 'group': group.getHash()}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

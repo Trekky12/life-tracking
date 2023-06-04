@@ -12,8 +12,7 @@ use App\Domain\Main\Translator;
 use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Timesheets\Customer\CustomerService;
 
-class ProjectCategoryBudgetService extends Service
-{
+class ProjectCategoryBudgetService extends Service {
 
     private $project_service;
     protected $project_category_service;
@@ -37,8 +36,7 @@ class ProjectCategoryBudgetService extends Service
         $this->customer_service = $customer_service;
     }
 
-    public function index($hash)
-    {
+    public function index($hash) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -49,11 +47,14 @@ class ProjectCategoryBudgetService extends Service
         $categorybudgets = $this->mapper->getFromProject($project->id);
         $customers = $this->customer_service->getCustomersFromProject($project->id);
 
-        return new Payload(Payload::$RESULT_HTML, ['categorybudgets' => $categorybudgets, "project" => $project, 'customers' => $customers]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'categorybudgets' => $categorybudgets,
+            "project" => $project,
+            'customers' => $customers
+        ]);
     }
 
-    public function edit($hash, $entry_id, $use_template = null)
-    {
+    public function edit($hash, $entry_id, $use_template = null) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -86,8 +87,7 @@ class ProjectCategoryBudgetService extends Service
         ]);
     }
 
-    public function view($hash)
-    {
+    public function view($hash) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -114,14 +114,16 @@ class ProjectCategoryBudgetService extends Service
 
         //$test = $this->mapper->getBudgetForCategories($project->id, []);
 
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+
         return new Payload(Payload::$RESULT_HTML, [
             "categorybudgets" => $budgets,
-            "project" => $project
+            "project" => $project,
+            'categories' => $project_categories
         ]);
     }
 
-    public function checkCategoryBudgets($project_id, $categories, $sheet_id)
-    {
+    public function checkCategoryBudgets($project_id, $categories, $sheet_id) {
 
         $results = [];
 

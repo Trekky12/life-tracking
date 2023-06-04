@@ -8,20 +8,21 @@
 	<script src="{{baseURL}}/static/js/recipes_mealplan.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('recipes_mealplans')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["RECIPES_MEALPLAN"]}}
 				|
 				{{ mealplan.name|raw }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('recipes_mealplans')}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 			<form method="GET" id="tableHeaderFilter" action="{{ url_for('recipes_mealplans_view', {'mealplan' : mealplan.hash}) }}" class="search-filter">
 				<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
@@ -33,7 +34,7 @@
 				</div>
 				<div class="filter-row">
 					<div class="filter-element">
-						<input type="submit" value="{{lang["SHOW"]}}"/>
+						<input type="submit" class="button" value="{{lang["SHOW"]}}"/>
 					</div>
 				</div>
 			</form>
@@ -44,33 +45,37 @@
 			{% for date in dates %}
 
 				<div class="inner-content recipe-list">
-					<div class="mealplan-date">
+					<div class="inner-content-header light">
 						<h2>{{ date["full_date"] }}</h2>
-						<div class="recipes-target" data-date="{{ date["date"] }}">
-							{% for recipe_of_day in date["recipes"] %}
-								<div class="mealplan-recipe" data-recipe="{{ recipe_of_day["recipe_id"] }}" data-id="{{ recipe_of_day["id"] }}">
-									<div class="title">
-										<div class="icons">
-											<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
-										</div>
-										<h3>
-											{% if recipe_of_day["recipe_id"] %}
-												<a href="{{ url_for('recipes_recipe_view', {'recipe': recipe_of_day["recipe_hash"]}) }}">{{ recipe_of_day["recipe_name"]|raw }}</a>
-											{% else %}
-												{{ recipe_of_day["notice"] }}
-											{% endif %}
-										</h3>
-									</div>
-									<div class="icons">
-										<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-						<a class="create-notice add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
-							{{lang["ADD_NOTICE"]}}</a>
 					</div>
+					<div class="page-content">
+						<div class="mealplan-date">
+							<div class="recipes-target" data-date="{{ date["date"] }}">
+								{% for recipe_of_day in date["recipes"] %}
+									<div class="mealplan-recipe" data-recipe="{{ recipe_of_day["recipe_id"] }}" data-id="{{ recipe_of_day["id"] }}">
+										<div class="title">
+											<div class="icons">
+												<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
+											</div>
+											<h3>
+												{% if recipe_of_day["recipe_id"] %}
+													<a href="{{ url_for('recipes_recipe_view', {'recipe': recipe_of_day["recipe_hash"]}) }}">{{ recipe_of_day["recipe_name"]|raw }}</a>
+												{% else %}
+													{{ recipe_of_day["notice"] }}
+												{% endif %}
+											</h3>
+										</div>
+										<div class="icons">
+											<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+							<a class="create-notice add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+								{{lang["ADD_NOTICE"]}}</a>
+						</div>
 
+					</div>
 				</div>
 
 			{% endfor %}
@@ -103,7 +108,7 @@
 				<div class="modal-footer">
 					<div class="buttons">
 						<input id="add-notice-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="modal-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
+						<button id="modal-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
 					</div>
 				</div>
 			</form>

@@ -7,11 +7,13 @@ based on the _s wordpress theme
 @import "parts/mixins";
 @import "parts/typography";
 @import "parts/elements";
+@import "parts/ripple";
 @import "parts/forms";
 @import "parts/helper";
 @import "parts/links";
 @import "parts/layout";
-@import "parts/navigation";
+@import "parts/navigation-drawer";
+@import "parts/top-app-bar";
 @import "parts/header";
 @import "parts/content";
 @import "parts/two-columns";

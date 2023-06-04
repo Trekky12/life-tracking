@@ -6,17 +6,26 @@
 	<script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["MENU_FINANCES"]}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('finances_edit') }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "finances/finances-tabs.twig" with {'active':'finances'} only %}
+{% endblock %}
+
 {% block body %}
 	<div class="inner-content">
-		<div class="page-header">
-			<h2>{{lang["MENU_FINANCES"]}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for('finances_edit') }}">
-					<button class="button">{{ fontawesome('fas fa-plus') }}
-						{{lang["ADD"]}}</button>
-				</a>
-			</div>
-		</div>
 		<div class="page-content">
 
 			<form method="GET" id="tableHeaderFilter" class="search-filter">
@@ -29,20 +38,24 @@
 					</div>
 					<div class="filter-group">
 						<div class="filter-element">
-							<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ lang["SHOW_THIS_MONTH"] }}</button>
+							<button type="button" class="button button-text small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ lang["SHOW_THIS_MONTH"] }}</button>
 						</div>
 						<div class="filter-element">
-							<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ lang["SHOW_ALL"] }}</button>
+							<button type="button" class="button button-text small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ lang["SHOW_ALL"] }}</button>
 						</div>
 					</div>
 				</div>
 				<div class="filter-row">
 					<div class="filter-element">
-						<input type="submit" value="{{lang["SHOW"]}}"/>
+						<input type="submit" class="button" value="{{lang["SHOW"]}}"/>
 					</div>
 				</div>
 			</form>
+		</div>
+	</div>
 
+	<div class="inner-content">
+		<div class="page-content">
 			<table id="finance_table" class="table table-hover small">
 				<thead>
 					<tr>

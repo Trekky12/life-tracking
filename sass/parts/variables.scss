@@ -19,17 +19,23 @@ $size_navigation_drawer : 256px;
 
 $color_blue : #1565c0;
 $color_blue_light: #1e88e5;
+$color_blue_light_gray: #9bb0c9;
+$color_blue_light_background: #3c7dc7;
+$color_blue_lighter_background: #8db6e5;
 $color_text-main: #404040;
+$color_text-secondary: #585858;
 
 $color_red: #eb4646;
 $color_red_light: #ec7063;
 $color_orange: #f39c12;
 $color_yellow: #ffd620;
 $color_green: #4CAF50;
-$color_blue_light_gray: #9bb0c9;
+$color_black: #000;
+
 $color_light_gray: #f1f1f1;
 $color_border: #c4c4c4;
 $color_gray: #cccccc;
+$color_blue_lighter_gray: #d9e6f4;
 
 
 $color_link: #404040;
@@ -37,7 +43,7 @@ $color_link-visited: $color_link;
 $color_link-hover: $color_blue_light;
 
 $color_background-body: #fff;
-$color_background-screen: #fff;
+$color_background-screen: $color_light_gray;
 
 $color_app-bar_background: $color_blue;
 $color_navigation_background: #fff;
@@ -54,4 +60,5 @@ $color_text-input-focus: #111;
 
 $header_height : 56px;
 $header_height_margin: 20px;
+$header_height_tabbar: 50px;
 $header_height_navigation_offset: 20px;

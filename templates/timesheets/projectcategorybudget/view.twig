@@ -2,35 +2,36 @@
 
 {% set active = 'timesheets' %}
 
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			{#<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project': project.hash})}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>#}
 			<h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}
 				|
 				{{ project.name }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project': project.hash})}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
 	</div>
+{% endblock %}
 
+{% block tabbar %}
+	{% include "timesheets/timesheet-sheets-tabs.twig" with {'active':'timesheets_project_categorybudget_view'} %}
+{% endblock %}
+
+{% block body %}
 	{% for customer in categorybudgets %}
-
 		<div class="inner-content">
 			{% if customer["name"] %}
-				<div class="page-header">
+				<div class="inner-content-header light">
 					<h2>{{ customer["name"] }}</h2>
 				</div>
 			{% endif %}
 			{% for main_cat in customer["items"] %}
-				{% if main_cat["name"] %}
-					<h3>{{ main_cat["name"] }}</h3>
-				{% endif %}
-				<div class="page-content no-padding-top">
+				<div class="page-content">
+					{% if main_cat["name"] %}
+						<h3>{{ main_cat["name"] }}</h3>
+					{% endif %}
 					{% for budget in main_cat["items"] %}
 						<div class="budget-entry">
 							<h4>{{budget.name|raw}}

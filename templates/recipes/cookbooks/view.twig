@@ -3,32 +3,35 @@
 {% set active = 'recipes' %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/js/recipes-recipe.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/recipes-recipe.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('recipes_cookbooks')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+
+			<h2>{{lang["RECIPES_COOKBOOKS"]}}
+				|
+				{{ cookbook.name|raw }}</h2>
+		</div>
+	</div>
 {% endblock %}
 
 {% block body %}
-
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["RECIPES_COOKBOOKS"]}} | {{ cookbook.name|raw }}</h2> 
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('recipes_cookbooks')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
-            <div class="recipe-filter">
-                <input type="text" id="filterSearchRecipes" placeholder="{{ lang["SEARCHING"] }}"/>
-            </div>
-
-        </div>
-    </div>
-    <div class="content">
-        <div id="recipes_list" data-cookbook="{{ cookbook.hash }}"></div>
-        <div id="loadingIconRecipes" class="centered loading-icon">
-            <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-        </div>
-        <div id="loadMoreRecipes" class="centered hidden">
-            <button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
-        </div>
-    </div>
+	<div class="recipe-filter">
+		<input type="text" id="filterSearchRecipes" placeholder="{{ lang["SEARCHING"] }}"/>
+	</div>
+	<div class="content">
+		<div id="recipes_list" data-cookbook="{{ cookbook.hash }}"></div>
+		<div id="loadingIconRecipes" class="centered loading-icon">
+			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+		</div>
+		<div id="loadMoreRecipes" class="centered hidden">
+			<button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
+		</div>
+	</div>
 
 {% endblock %}

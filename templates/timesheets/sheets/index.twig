@@ -12,40 +12,48 @@
 	<script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header {#multiple-buttons#}">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["TIMESHEETS"]}}
 				|
 				{{project.name|raw}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('timesheets')}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-				{% if categories %}
-					<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
-						<button class="button">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
-					</a>
-				{% endif %}
-				<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
-					<button class="button">{{lang["TIMESHEETS_EXPORT"]}}</button>
-				</a>
-				<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
-					<button class="button">{{ fontawesome('fas fa-right-to-bracket') }}
-						{% if project.is_day_based == 1 %}
-							{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
-						{% else %}
-							{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}
-						{% endif %}
-						{{ fontawesome('fas fa-right-from-bracket') }}</button>
-				</a>
-				<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
-					<button class="button">{{ fontawesome('fas fa-plus') }}
-						{{lang["ADD"]}}</button>
-				</a>
-			</div>
 		</div>
+		<div class="buttons">
+			{#{% if categories %}
+				<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
+					<button class="button button-text">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
+				</a>
+			{% endif %}
+			<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
+				<button class="button button-text">{{lang["TIMESHEETS_EXPORT"]}}</button>
+			</a>
+			<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
+				<button class="button button-text">{{ fontawesome('fas fa-right-to-bracket') }}
+					{% if project.is_day_based == 1 %}
+						{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
+					{% else %}
+						{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}
+					{% endif %}
+					{{ fontawesome('fas fa-right-from-bracket') }}</button>
+			</a>#}
+			<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{lang["ADD"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "timesheets/timesheet-sheets-tabs.twig" with {'active':'timesheets_sheets'} %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<form method="GET" id="tableHeaderFilter" action="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}" class="search-filter">
@@ -59,27 +67,27 @@
 					{% if project.show_quarters_buttons == 1 %}
 						<div class="filter-group">
 							<div class="filter-element">
-								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q1"] }}" data-to="{{ max["q1"] }}">{{ lang["TIMESHEETS_QUARTER_1"] }}/{{ 'now' | date('Y') }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q1"] }}" data-to="{{ max["q1"] }}">{{ lang["TIMESHEETS_QUARTER_1"] }}/{{ 'now' | date('Y') }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q2"] }}" data-to="{{ max["q2"] }}">{{ lang["TIMESHEETS_QUARTER_2"] }}/{{ 'now' | date('Y') }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q2"] }}" data-to="{{ max["q2"] }}">{{ lang["TIMESHEETS_QUARTER_2"] }}/{{ 'now' | date('Y') }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q3"] }}" data-to="{{ max["q3"] }}">{{ lang["TIMESHEETS_QUARTER_3"] }}/{{ 'now' | date('Y') }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q3"] }}" data-to="{{ max["q3"] }}">{{ lang["TIMESHEETS_QUARTER_3"] }}/{{ 'now' | date('Y') }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["q4"] }}" data-to="{{ max["q4"] }}">{{ lang["TIMESHEETS_QUARTER_4"] }}/{{ 'now' | date('Y') }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q4"] }}" data-to="{{ max["q4"] }}">{{ lang["TIMESHEETS_QUARTER_4"] }}/{{ 'now' | date('Y') }}</button>
 							</div>
 						</div>
 					{% endif %}
 					<div class="filter-group">
 						{% if project.show_month_button == 1 %}
 							<div class="filter-element">
-								<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ lang["SHOW_THIS_MONTH"] }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ lang["SHOW_THIS_MONTH"] }}</button>
 							</div>
 						{% endif %}
 						<div class="filter-element">
-							<button type="button" class="button gray small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ lang["SHOW_ALL"] }}</button>
+							<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ lang["SHOW_ALL"] }}</button>
 						</div>
 					</div>
 				</div>
@@ -129,10 +137,15 @@
 
 				<div class="filter-row">
 					<div class="filter-element">
-						<input type="submit" value="{{lang["SHOW"]}}"/>
+						<input type="submit" class="button" value="{{lang["SHOW"]}}"/>
 					</div>
 				</div>
 			</form>
+		</div>
+	</div>
+
+	<div class="inner-content">
+		<div class="page-content">
 
 			<table id="timesheets_sheets_table" class="table table-hover small">
 				<thead>
@@ -226,7 +239,7 @@
 						</select>
 					</div>
 					<div class="filter-element">
-						<button type="button" class="button gray small" id="apply_options">{{ lang["TIMESHEETS_APPLY"] }}</button>
+						<button type="button" class="button button-outlined small" id="apply_options">{{ lang["TIMESHEETS_APPLY"] }}</button>
 					</div>
 				</div>
 				{% if categories %}
@@ -240,10 +253,10 @@
 						</div>
 						<div class="filter-group">
 							<div class="filter-element">
-								<button type="button" class="button gray small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
+								<button type="button" class="button button-outlined small" id="assign_categories">{{ lang["TIMESHEETS_CATEGORY_ASSIGN"] }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button gray small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
+								<button type="button" class="button button-outlined small" id="remove_categories">{{ lang["TIMESHEETS_CATEGORY_REMOVE"] }}</button>
 							</div>
 						</div>
 					</div>

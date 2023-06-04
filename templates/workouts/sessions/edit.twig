@@ -8,20 +8,21 @@
 	<script src="{{baseURL}}/static/js/workouts-session.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('workouts_sessions', {'plan': plan.hash}) }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["WORKOUTS_SESSION"]}}
 				|
 				{{ plan.name }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('workouts_sessions', {'plan': plan.hash}) }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<form class="form-horizontal" action="{{ url_for('workouts_sessions_save', {'id' : entry.id, 'plan' : plan.hash}) }}" method="POST">
@@ -51,7 +52,11 @@
 
 				<div class="form-group">
 					<label for="inputNotice">{{lang["NOTICE"]}}</label>
-					<textarea class="form-control" id="inputNotice" name="notice" rows="2">{% if not entry is null %}{{entry.notice|raw}}{% endif %}</textarea>
+					<textarea class="form-control" id="inputNotice" name="notice" rows="2">
+						{%- if not entry is null -%}
+							{{- entry.notice|raw -}}
+						{%- endif -%}
+					</textarea>
 				</div>
 
 				{% if entry is null and workoutdays|length > 0 %}
@@ -113,7 +118,7 @@
 					</select>
 					<input id="setCount" type="number" min="0" max="999" step="any" size="5" value="3" class="small"/>
 					<label for="setCount">{{ lang["WORKOUTS_SETS"] }}</label>
-					<button type="button" class="button gray small" id="addExercise">{{ lang["ADD"] }}</button>
+					<button type="button" class="button button-outlined small" id="addExercise">{{ lang["ADD"] }}</button>
 				</div>
 
 				<div class="form-group btn">
@@ -125,7 +130,7 @@
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
 					{% endif %}
 				</div>
 			</form>

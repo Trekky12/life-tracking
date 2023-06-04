@@ -2,40 +2,54 @@
 
 {% set active = 'settings' %}
 
-{% block body %}
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["NOTIFICATIONS"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
 
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["NOTIFICATIONS"]}}</h2></div>
-        <div class="page-content">
-            <table id="notifications_table" class="table table-hover small">
-                <thead>
-                    <tr>
-                        <th>{{lang["LOGIN"]}}</th>
-                        <th>{{lang["IP_ADDRESS"]}}</th>
-                        <th>{{lang["USER_AGENT"]}}</th>
-                        <th>{{lang["CREATED_ON"]}}</th>
-                        <th>{{lang["CHANGED_ON"]}}</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in list %}
-                        <tr>
-                            <td>{{users[entry.user].login}}</td> 
-                            <td>{{entry.ip}}</td> 
-                            <td>{{entry.agent}}</td> 
-                            <td>{{entry.createdOn}}</td> 
-                            <td>{{entry.changedOn}}</td>
-                            
-                            
-                            <td><a href="{{  url_for('notifications_clients_test', {'id' : entry.id}) }}">{{ fontawesome('far fa-bell') }}</a></td>
-                            <td><a href="#" data-url="{{  url_for('notifications_clients_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{% block tabbar %}
+	{% include "main/settings-tabs.twig" with {'active':'notifications_clients'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="notifications_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{lang["LOGIN"]}}</th>
+						<th>{{lang["IP_ADDRESS"]}}</th>
+						<th>{{lang["USER_AGENT"]}}</th>
+						<th>{{lang["CREATED_ON"]}}</th>
+						<th>{{lang["CHANGED_ON"]}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in list %}
+						<tr>
+							<td>{{users[entry.user].login}}</td>
+							<td>{{entry.ip}}</td>
+							<td>{{entry.agent}}</td>
+							<td>{{entry.createdOn}}</td>
+							<td>{{entry.changedOn}}</td>
+
+
+							<td>
+								<a href="{{ url_for('notifications_clients_test', {'id' : entry.id}) }}">{{ fontawesome('far fa-bell') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('notifications_clients_delete', {'id' : entry.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 {% endblock %}

@@ -1,0 +1,7 @@
+<div class="tabbar-scroller no-scroll">
+	<div class="tabbar-scrollarea">
+		<a class="tabbar-tab {% if active == 'workouts_plan_view' %}active{% endif %}" href="{{ url_for_with_last_query_params('workouts_plan_view', {'plan': plan.hash}) }}">{{lang["WORKOUTS_PLAN"]}}</a>
+		<a class="tabbar-tab {% if active == 'workouts_sessions' %}active{% endif %}" href="{{ url_for('workouts_sessions', {'plan':plan.hash}) }}">{{lang["WORKOUTS_SESSIONS"]}}</a>
+		<a class="tabbar-tab {% if active == 'workouts_sessions_stats' %}active{% endif %}" href="{{ url_for('workouts_sessions_stats', {'plan':plan.hash}) }}">{{lang["STATS"]}}</a>
+	</div>
+</div>

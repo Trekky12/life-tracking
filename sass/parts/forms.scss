@@ -1,69 +1,69 @@
-//button:not(.fa):not(.selectr-tag-remove):not(.leaflet-routing-reverse-waypoints):not(.leaflet-routing-add-waypoint):not(.leaflet-routing-btn):not(.user-selected-remove):not(.choices__button):not(.selectr-input-clear):not(.scrollStyle), 
+//button:not(.fa):not(.selectr-tag-remove):not(.leaflet-routing-reverse-waypoints):not(.leaflet-routing-add-waypoint):not(.leaflet-routing-btn):not(.user-selected-remove):not(.choices__button):not(.selectr-input-clear):not(.scrollStyle),
 input[type="submit"],
 .button {
-
-    padding: 0.8rem 2.5rem;
     user-select: none;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent;
 
     -webkit-appearance: none;
-    border-radius:0;
+
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    background-position: center;
+    transition: background 0.8s;
+    min-width: 64px;
+    font-weight: 800;
+    text-transform: uppercase;
+    outline: none;
+    cursor: pointer;
+
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 
     &,
     &:focus {
-        cursor: pointer;
-        border-width: 2px;
-        border-style: solid;
-        border-color: transparent;
 
-        color: #FFFFFF;
-        background-color: $color_blue_light;
-        
+        box-sizing: border-box;
+
+        color: $color_background-body;
+        background-color: $color_blue;
+
         //transition: all 0.3s ease;
 
-        outline: none;
     }
 
     @media (hover: hover) {
         &:hover {
-            background: $color_blue;
-            border-width: 2px;
-            border-style: solid;
-            border-color: $color_blue;
-
-            color: $color_background-body;
-
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+                0 1px 10px 0 rgba(0, 0, 0, 0.12);
         }
     }
 
-    &:active {
-        background: $color_blue;
-        border-width: 2px;
-        border-style: solid;
-        border-color: $color_blue;
+    &.button-text,
+    &.button-outlined {
+        background-color: transparent;
+        color: $color_blue;
+        box-shadow: none;
 
-        color: $color_background-body;
-    }
-
-
-    &.gray {
-        background-color: $color_gray;
-        color: $color_text-main;
-
-        @media (hover: hover) {
-            &:hover {
-                background-color: $color_text-main;
-                border-color: $color_text-main;
-                color: $color_background-body;
-            }
-        }
-
+        &:hover,
+        &:focus,
         &:active {
-            background-color: $color_text-main;
-            border-color: $color_text-main;
-            color: $color_background-body;
+            background-color: $color_blue_lighter_gray;
         }
+    }
+
+    &.button-text {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    &.button-outlined {
+        border: 1px solid $color_blue;
     }
 
     &.danger {
@@ -84,15 +84,11 @@ input[type="submit"],
         }
     }
 
-
     &.small {
-        padding: 0.5rem 1rem;
+        //padding: 0.5rem 1rem;
         @include font-size(1.2);
     }
-
-
 }
-
 
 input[type="text"],
 input[type="email"],
@@ -120,7 +116,7 @@ textarea {
         color: $color_text-input-focus;
     }
 
-    &:disabled{
+    &:disabled {
         background: $color_gray;
     }
 }
@@ -133,7 +129,6 @@ select {
 textarea {
     width: 100%;
 }
-
 
 .form-group {
     position: relative;
@@ -153,12 +148,13 @@ label:not(.radio):not(.checkbox) {
     margin-bottom: 5px;
 }
 
-input[type="radio"], input[type="checkbox"]{
+input[type="radio"],
+input[type="checkbox"] {
     vertical-align: middle;
     margin-top: -1px;
 }
 
-input[type=file] {
+input[type="file"] {
     padding: 0;
 }
 
@@ -170,7 +166,6 @@ select:focus:invalid:focus {
 }
 
 form {
-
     &#login.small {
         max-width: $size_content-width-small/3;
         //@include center-block();
@@ -180,12 +175,10 @@ form {
             width: 100%;
         }
     }
-
 }
 
-
 input.read-only:read-only {
-    background: #EEE;
+    background: #eee;
 }
 
 .html-duration-picker-wrapper {
@@ -197,5 +190,4 @@ input.read-only:read-only {
     .controlsDivStyle {
         top: 0px;
     }
-
 }

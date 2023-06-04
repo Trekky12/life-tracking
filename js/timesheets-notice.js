@@ -78,6 +78,8 @@ async function checkPassword() {
             alertErrorDetail.innerHTML = lang.encrypt_error;
             alertError.classList.remove("hidden");
             document.getElementById("loading-overlay").classList.add("hidden");
+
+            loadingIconTimesheetNotice.classList.add("hidden");
             return;
         }
 

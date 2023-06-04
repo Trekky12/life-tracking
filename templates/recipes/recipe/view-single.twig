@@ -8,31 +8,35 @@
 	<script src="{{baseURL}}/static/js/recipes-recipe.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header multiple-buttons">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('recipes') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["RECIPE"]}}
 				-
 				{{ recipe.name|raw }}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('recipes') }}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-				<a href="{{ url_for('recipes_recipe_add_to_cookbook', {'recipe': recipe.hash}) }}" id="add_to_cookbook">
-					<button class="button">{{lang["RECIPES_ADD_TO_COOKBOOK"]}}
-						{{ fontawesome('fas fa-book') }}</button>
-				</a>
-				{% if recipe.getOwner() == user.id %}
-					<a href="{{ url_for('recipes_edit', {'id' : recipe.id}) }}">
-						<button class="button">{{ fontawesome('fas fa-pen-to-square') }}</button>
-					</a>
-					<a href="#" data-url="{{ url_for('recipes_delete', {'id' : recipe.id}) }}" class="btn-delete">
-						<button class="button">{{ fontawesome('fas fa-trash') }}</button>
-					</a>
-				{% endif %}
-			</div>
 		</div>
+		<div class="buttons">
+			<a href="{{ url_for('recipes_recipe_add_to_cookbook', {'recipe': recipe.hash}) }}" id="add_to_cookbook">
+				<button class="button button-outlined">{{lang["RECIPES_ADD_TO_COOKBOOK"]}}
+					{{ fontawesome('fas fa-book') }}</button>
+			</a>
+			{% if recipe.getOwner() == user.id %}
+				<a href="{{ url_for('recipes_edit', {'id' : recipe.id}) }}">
+					<button class="button button-text">{{ fontawesome('fas fa-pen-to-square') }}</button>
+				</a>
+				<a href="#" data-url="{{ url_for('recipes_delete', {'id' : recipe.id}) }}" class="btn-delete">
+					<button class="button button-text">{{ fontawesome('fas fa-trash') }}</button>
+				</a>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<div class="recipe-description">{{recipe.getRecipeDescription()|raw}}</div>
@@ -101,7 +105,7 @@
 	{% for step in steps %}
 		{% set step_idx = loop.index-1 %}
 		<div class="inner-content">
-			<div class="page-header light recipe-step-header">
+			<div class="inner-content-header light recipe-step-header">
 				<h3>{{ step["name"] }}</h3>
 			</div>
 			<div class="page-content">
@@ -129,23 +133,23 @@
 						<div class="recipe-step-ingredients">
 							<div class="recipe-step-ingredients-title">{{ fontawesome('fas fa-pepper-hot') }}
 								{{ lang["RECIPES_INGREDIENTS"] }}</div>
-                                <ul class="recipe-ingredient-entries">
-							{% for ingredient in ingredients[step.id] %}
-								<li class="ingredient-list-entry custom-checkbox">
-									<input type="checkbox" id="ingredient_step_{{ingredient['id']}}" class="ingredient-select" data-id="{{ingredient['id']}}" autocomplete="off"/>
-									<label for="ingredient_step_{{ingredient['id']}}">
-										{{ ingredient["amount"] }}
-										{% if ingredient["unit"] and ingredient["amount"] %}
-											{{ ingredient["unit"]|raw }}
-										{% endif %}
-										<strong>{{ ingredient["name"] }}</strong>
-										{% if ingredient["notice"] %},
-											{{ ingredient["notice"] }}
-										{% endif %}
-									</label>
-								</li>
-							{% endfor %}
-                            </ul>
+							<ul class="recipe-ingredient-entries">
+								{% for ingredient in ingredients[step.id] %}
+									<li class="ingredient-list-entry custom-checkbox">
+										<input type="checkbox" id="ingredient_step_{{ingredient['id']}}" class="ingredient-select" data-id="{{ingredient['id']}}" autocomplete="off"/>
+										<label for="ingredient_step_{{ingredient['id']}}">
+											{{ ingredient["amount"] }}
+											{% if ingredient["unit"] and ingredient["amount"] %}
+												{{ ingredient["unit"]|raw }}
+											{% endif %}
+											<strong>{{ ingredient["name"] }}</strong>
+											{% if ingredient["notice"] %},
+												{{ ingredient["notice"] }}
+											{% endif %}
+										</label>
+									</li>
+								{% endfor %}
+							</ul>
 						</div>
 					{% endif %}
 					<div class="recipe-description">{{step["description"]|raw}}</div>

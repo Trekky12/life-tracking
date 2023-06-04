@@ -3,46 +3,59 @@
 {% set active = 'location' %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}" />
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/MarkerCluster.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/MarkerCluster.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/assets/js/leaflet.markercluster.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/js/location.js?ver={{CACHEMISS}}"></script>
-    <script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.markercluster.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/js/location.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="buttons">
+		<a href="{{ url_for('location_edit') }}">
+			<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+				{{lang["ADD_LOCATION"]}}</button>
+		</a>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "location/location-tabs.twig" with {'active':'location'} only %}
 {% endblock %}
 
 
 {% block body %}
 
-    <div id="location-filter" class="page-content">
-        <form method="GET" id="search-form" class="page-content collapsed">
-            <div class="search-form-inner"> 
-                <div class="filter-content">
-                    <input type="text" id="dateRange" value="{{from}} to {{to}}" />
-                    <input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-                    <input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
-                </div>
-                <input type="submit" value="{{lang["SHOW"]}}"/>
-            </div>
-        </form>       
-        <span id="show-filter" class="hiddenSearch" aria-hidden="true">
-            <span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
-            <span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-        </span>
-    </div>
+	<div id="location-filter" class="page-content">
+		<form method="GET" id="search-form" class="page-content collapsed">
+			<div class="search-form-inner">
+				<div class="filter-content">
+					<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
+					<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+					<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+				</div>
+				<input type="submit" value="{{lang["SHOW"]}}"/>
+			</div>
+		</form>
+		<span id="show-filter" class="hiddenSearch" aria-hidden="true">
+			<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+			<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+		</span>
+	</div>
 
 {% endblock %}
 
 {% block bottom %}
-    <div id="mapid"></div>
-    <div class="hidden">
-        <div id="iconClustering">{{ fontawesome('fas fa-object-group') }}</div>
-        <div id="iconLocation">{{ fontawesome('fas fa-location-arrow') }}</div>
-        <div id="iconFinances">{{ fontawesome('fas fa-money-bill') }}</div>
-        <div id="iconCars">{{ fontawesome('fas fa-road') }}</div>
-        <div id="iconDirections">{{ fontawesome('fas fa-left-right') }}</div>
-    </div>
+	<div id="mapid"></div>
+	<div class="hidden">
+		<div id="iconClustering">{{ fontawesome('fas fa-object-group') }}</div>
+		<div id="iconLocation">{{ fontawesome('fas fa-location-arrow') }}</div>
+		<div id="iconFinances">{{ fontawesome('fas fa-money-bill') }}</div>
+		<div id="iconCars">{{ fontawesome('fas fa-road') }}</div>
+		<div id="iconDirections">{{ fontawesome('fas fa-left-right') }}</div>
+	</div>
 {% endblock %}

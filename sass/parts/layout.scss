@@ -2,12 +2,22 @@ body {
     background-color: $color_background-screen;
 }
 
+.site-body {
+    position: relative;
+    top: $header_height + $header_height_margin;
+    transition: top 200ms ease-in;
+    //margin-top: $header_height + $header_height_margin;
+}
+
 @media screen and (min-width: $size_mobile_navigation) {
     body:not(.navigation-drawer-toggled) {
 
-        .site-body,
-        .board-content {
+        .site-body {
             margin-left: $size_navigation_drawer;
+        }
+
+        &.location #mapid {
+            left: $size_navigation_drawer;
         }
 
         .site-header {
@@ -38,9 +48,13 @@ body {
     position: fixed;
     width: 100%;
     top: 0;
+    transition: top 0.3s;
 }
 
 #content {
     position: relative;
-    margin-top: $header_height + $header_height_margin;
+}
+
+body.has-tabbar .site-body {
+    top: $header_height + $header_height_tabbar + $header_height_margin;
 }

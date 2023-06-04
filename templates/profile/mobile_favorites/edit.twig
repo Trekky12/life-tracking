@@ -2,58 +2,78 @@
 
 {% set active = 'profile' %}
 
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('users_mobile_favorites')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["MOBILE_FAVORITES"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
+
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MOBILE_FAVORITES"]}}</h2>
-            <div class="buttons">
-                <a href="{{ url_for_with_last_query_params('users_mobile_favorites')}}"><button class="button">{{lang["BACK"]}} {{ fontawesome('fas fa-turn-up') }}</button></a>
-            </div>
-        </div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div class="page-content">
 
-            <form class="form-horizontal" id="mobileFavoritesForm" action="{{ url_for('users_mobile_favorites_save', {'id' : entry.id}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<form class="form-horizontal" id="mobileFavoritesForm" action="{{ url_for('users_mobile_favorites_save', {'id' : entry.id}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-                {% endif %}
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
-                <div class="form-group">
-                    <label for="inputPosition">{{lang["POSITION"]}}</label>
-                    <input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %}value="{{entry.position}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputPosition">{{lang["POSITION"]}}</label>
+					<input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputIcon">{{lang["ICON"]}}</label>
-                    <input type="text" class="form-control" id="inputIcon" name="icon" {% if not entry is null %}value="{{entry.icon}}"{% endif %}>
-                </div>
+				<div class="form-group">
+					<label for="inputIcon">{{lang["ICON"]}}</label>
+					<input type="text" class="form-control" id="inputIcon" name="icon" {% if not entry is null %} value="{{entry.icon}}" {% endif %}>
+				</div>
 
-                <div class="form-group">
-                    <label for="inputURL">{{lang["URL"]}}</label>
-                    <input type="text" class="form-control" id="inputURL" name="url" {% if not entry is null %}value="{{entry.url}}"{% endif %}>
-                    <p>
-                        {{ lang["MOBILE_FAVORITES_PLACEHOLDER_INTRO"] }}
-                        <dl>
-                            <dt><code>$day$</code></dt>
-                            <dd>{{ lang["CURRENT_DAY"] }}</dd>
+				<div class="form-group">
+					<label for="inputURL">{{lang["URL"]}}</label>
+					<input type="text" class="form-control" id="inputURL" name="url" {% if not entry is null %} value="{{entry.url}}" {% endif %}>
+					<p>
+						{{ lang["MOBILE_FAVORITES_PLACEHOLDER_INTRO"] }}
+						<dl>
+							<dt>
+								<code>$day$</code>
+							</dt>
+							<dd>{{ lang["CURRENT_DAY"] }}</dd>
 
-                            <dt><code>$month$</code><dt>
-                            <dd>{{ lang["CURRENT_MONTH"] }}</dd>
+							<dt>
+								<code>$month$</code>
+							</dt>
+							<dt></dt>
+							<dd>{{ lang["CURRENT_MONTH"] }}</dd>
 
-                            <dt><code>$year$</code><dt>
-                            <dd>{{ lang["CURRENT_YEAR"] }}</dd>
-                        </dl>
-                    </p>
-                </div>
+							<dt>
+								<code>$year$</code>
+							</dt>
+							<dt></dt>
+							<dd>{{ lang["CURRENT_YEAR"] }}</dd>
+						</dl>
+					</p>
+				</div>
 
-                <div class="form-group">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="form-group">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

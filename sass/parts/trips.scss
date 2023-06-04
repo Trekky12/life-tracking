@@ -1,9 +1,5 @@
 .set_address {
-    margin-top: 1rem;
     margin-bottom: 2rem;
-    @include font-size(1.2);
-    padding: 1rem 0.5rem;
-    line-height: 1;
 }
 
 #trip-map {
@@ -27,7 +23,7 @@ button.trips_overview {
 }
 
 body.trips .inner-content .page-header {
-    margin-bottom: 0;
+    //margin-bottom: 0;
 }
 
 .trip_day {
@@ -107,7 +103,7 @@ body.trips .inner-content .page-header {
         display:flex;
         justify-content: space-between;
 
-        .icon {
+        .trip-icon {
             margin-right: 2rem;
 
             i,
@@ -170,7 +166,7 @@ body.trips .inner-content .page-header {
     //background-color:#CCCCCC;
 }
 
-.trip_day .icon i:hover,
+.trip_day .trip-icon i:hover,
 svg:hover {
     cursor: pointer;
 }

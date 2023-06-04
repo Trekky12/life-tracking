@@ -11,8 +11,8 @@
     background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
 
-    &.visible{
-        display:block;
+    &.visible {
+        display: block;
     }
 }
 
@@ -23,33 +23,73 @@
     outline: 0;
     width: auto;
     margin: 0 10px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.25);
 
-    .modal-header, .modal-content, .modal-footer{
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2),
+        0 1px 1px 0 rgba(0, 0, 0, .14),
+        0 1px 3px 0 rgba(0, 0, 0, .12);
+
+    border-radius: 4px;
+
+    &> :first-child {
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+    }
+
+    &> :last-child {
+        border-bottom-left-radius: inherit;
+        border-bottom-right-radius: inherit;
+    }
+
+    .modal-header,
+    .modal-content,
+    .modal-footer {
         padding: .4em 1em;
-    }    
+    }
 
-    .modal-header{
+    .modal-header {
         color: #FFFFFF;
         font-weight: 600;
         @include font-size(1.6);
         background: $color_blue;
-        display:flex;
+        display: flex;
         justify-content: space-between;
 
-        .modal-close{
+        .modal-close {
             color: #FFFFFF;
             font-weight: 600;
             @include font-size(2);
             cursor: pointer;
         }
     }
-    .modal-footer{
+
+    .modal-footer {
         border-top: 1px solid #dddddd;
-        display:flex;
+        display: flex;
         justify-content: flex-end;
     }
+
+    &,
+    .add-element-text,
+    label:not(.radio):not(.checkbox) {
+        @include font-size(1.3);
+    }
+
+    .form-group {
+        margin-bottom: 0.5rem;
+    }
+
+    button.cancel,
+    input[type="submit"] {
+
+        &,
+        &:hover,
+        &:focus {
+            //padding: 0.5rem 1rem!important;
+            @include font-size(1.4);
+        }
+    }
 }
+
 @media screen and (min-width: $size_mobile) {
     .modal-inner {
         width: $size_mobile;

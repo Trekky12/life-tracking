@@ -5,55 +5,67 @@
 {% set hasMap = not entry.lat is null and not entry.lng is null %}
 
 {% block style %}
-    <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}" />
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-    <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('location') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{lang["MENU_LOCATION"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
 
 {% block body %}
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["MENU_LOCATION"]}}</h2></div>
-        <div class="page-content">
+	<div class="inner-content">
+		<div id="geo-map" class="geo-map"></div>
+		<div class="page-content">
 
-            <form class="form-horizontal" id="locationForm" action="{{  url_for('location_save', {'id' : entry.id}) }}" method="POST">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+			<form class="form-horizontal" id="locationForm" action="{{ url_for('location_save', {'id' : entry.id}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-                {% if not entry is null %}
-                    <input name="id" id="entry_id"  type="hidden" value="{{entry.id}}">
-                {% endif %}
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
 
-                {#
-                <div class="form-group">
-                    <label for="inputIdentifier">{{lang["IDENTIFIER"]}}</label>
-                    <input type="text" class="form-control" id="inputIdentifier" name="identifier" {% if not entry is null %}value="{{entry.identifier}}{% endif %}">
-                </div>
-                #}
+				{#
+																                <div class="form-group">
+																                    <label for="inputIdentifier">{{lang["IDENTIFIER"]}}</label>
+																                    <input type="text" class="form-control" id="inputIdentifier" name="identifier" {% if not entry is null %}value="{{entry.identifier}}{% endif %}">
+																                </div>
+																                #}
 
-                <div class="mapWrapper">
-                    <div id="geo-map" class="geo-map"></div>
-                    <div class="form-group map-btn">
-                        <button id="update-location" class="button update-location gray">{{lang["SET_CURRENT_LOCATION"]}}</button>
-                        <button id="delete-location" class="button delete-location danger {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
-                    </div>
-                    <input type="hidden" id="geoLat" class="geo-lat" name="gps_lat" value="{% if not entry is null %}{{entry.gps_lat}}{% endif %}">
-                    <input type="hidden" id="geoLng" class="geo-lng" name="gps_lng" value="{% if not entry is null %}{{entry.gps_lng}}{% endif %}">
-                    <input type="hidden" id="geoAcc" class="geo-acc" name="gps_acc" value="{% if not entry is null %}{{entry.gps_acc}}{% endif %}">
-                </div>
-
-
-                <div class="form-group">
-                    <button type="submit" class="button">{% if not entry is null %}{{lang["SAVE"]}}{% else %}{{lang["INSERT"]}}{% endif %}</button>
-                    {% if not entry is null %}
-                        <button id="cancel" class="button danger">{{lang["CANCEL"]}}</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="mapWrapper">
+					<div class="form-group map-btn">
+						<button id="update-location" class="update-location button button-outlined">{{lang["SET_CURRENT_LOCATION"]}}</button>
+						<button id="delete-location" class="delete-location button button-text {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+					</div>
+					<input type="hidden" id="geoLat" class="geo-lat" name="gps_lat" value="{% if not entry is null %}{{entry.gps_lat}}{% endif %}">
+					<input type="hidden" id="geoLng" class="geo-lng" name="gps_lng" value="{% if not entry is null %}{{entry.gps_lng}}{% endif %}">
+					<input type="hidden" id="geoAcc" class="geo-acc" name="gps_acc" value="{% if not entry is null %}{{entry.gps_acc}}{% endif %}">
+				</div>
+				<div class="form-group">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}

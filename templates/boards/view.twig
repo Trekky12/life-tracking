@@ -15,20 +15,34 @@
 	<script src="{{baseURL}}/static/js/boards.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
+{% block pageheader %}
 	<div class="page-header">
-		<h2>{{board.name|raw}}</h2>
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('boards') }}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
+			<h2>{{board.name|raw}}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="board-content">
+		<div id="loadingIconBoard" class="centered loading-icon">
+			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+		</div>
+		<div class="stack-wrapper hide-archived"></div>
 	</div>
 {% endblock %}
 
 {% block bottom %}
-	<div id="sidebar" class="sidebar {% if sidebar['mobilevisible'] == 1 %}mobile-visible{% elseif sidebar['desktophidden'] == 1 %}desktop-hidden{% endif %}">
+	<div id="board-sidebar" class="board-sidebar {% if sidebar['mobilevisible'] == 1 %}mobile-visible{% elseif sidebar['desktophidden'] == 1 %}desktop-hidden{% endif %}">
 		<span id="sidebar-toggle" aria-hidden="true">
 			<span class="chevron-left">{{ fontawesome('fas fa-chevron-left') }}</span>
 			<span class="chevron-right">{{ fontawesome('fas fa-chevron-right') }}</span>
 		</span>
-		<div class="sidebar-inner">
-			<div class="sidebar-box">
+		<div class="board-sidebar-inner">
+			<div class="board-sidebar-box">
 				<h4>{{lang["USERS"]}}</h4>
 				<div class="member-list">
 					{% for user in users %}
@@ -47,7 +61,7 @@
 				</div>
 			</div>
 
-			<div class="sidebar-box">
+			<div class="board-sidebar-box">
 				<h4>{{lang["LABELS"]}}</h4>
 				<div class="card-label-list">
 					{% for label in labels %}
@@ -59,21 +73,13 @@
 				<a id="create-label" class="create-label add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
 					{{lang["ADD_LABEL"]}}</a>
 			</div>
-			<div class="sidebar-box">
+			<div class="board-sidebar-box">
 				<label class="checkbox" for="checkboxArchivedItems">
 					<input name="set_archived_items" type="checkbox" id="checkboxArchivedItems" autocomplete="off">
 					{{lang["SHOW_ARCHIVED_ITEMS"]}}
 				</label>
 			</div>
 		</div>
-	</div>
-
-
-	<div class="board-content">
-		<div id="loadingIconBoard" class="centered loading-icon">
-			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-		</div>
-		<div class="stack-wrapper hide-archived"></div>
 	</div>
 
 	<div id="stack-modal" class="modal">
@@ -95,7 +101,7 @@
 				<div class="modal-footer">
 					<div class="buttons">
 						<input id="stack-add-btn" class="button submit-btn no-loading" type="submit" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="stack-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
+						<button id="stack-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
 					</div>
 				</div>
 			</form>
@@ -197,7 +203,7 @@
 				<div class="modal-footer">
 					<div class="buttons">
 						<input id="card-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="card-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
+						<button id="card-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
 					</div>
 				</div>
 			</form>
@@ -236,7 +242,7 @@
 				<div class="modal-footer">
 					<div class="buttons">
 						<input id="label-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="label-close-btn" class="button gray cancel" type="button">{{lang["CANCEL"]}}</button>
+						<button id="label-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
 					</div>
 				</div>
 			</form>

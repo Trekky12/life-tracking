@@ -6,18 +6,19 @@
 	<script src="{{baseURL}}/static/js/notifications.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
-{% block body %}
-
-	<div class="inner-content">
-		<div class="page-header">
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('notifications')}}">
+				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+			</a>
 			<h2>{{lang["NOTIFICATIONS"]}}</h2>
-			<div class="buttons">
-				<a href="{{ url_for_with_last_query_params('notifications')}}">
-					<button class="button">{{lang["BACK"]}}
-						{{ fontawesome('fas fa-turn-up') }}</button>
-				</a>
-			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
 		<div class="page-content">
 
 			<div id="notifications_categories_list_user">
@@ -30,7 +31,7 @@
 	</div>
 
 	<div class="inner-content">
-		<div class="page-header">
+		<div class="inner-content-header light">
 			<h2>{{lang["PUSH_NOTIFICATIONS"]}}</h2>
 		</div>
 		<div class="page-content">
@@ -59,7 +60,7 @@
 						<p>{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] }}</p>
 
 						<input type="hidden" name="ifttt_url" id="ifttt_url" value="{{ ifttt_client.endpoint }}"/>
-						<button id="ifttt_url_remove" class="button danger small">{{ lang["DELETE_IFTTT_URL"] }}</button>
+						<button id="ifttt_url_remove" class="button button-text small">{{ lang["DELETE_IFTTT_URL"] }}</button>
 
 						<div class="notifications_categories_list_ifttt" class="hidden">
 							{% include 'notifications/notification_categories.twig' with {'type': 'client'} %}

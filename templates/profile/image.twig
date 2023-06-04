@@ -2,34 +2,44 @@
 
 {% set active = 'profile' %}
 
-{% block body %}
-
-    <div class="inner-content">
-        <div class="page-header"><h2>{{lang["PROFILE_IMAGE"]}}</h2></div>
-        <div class="page-content">
-
-            <form action="{{  url_for('users_profile_image') }}" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-
-                <h3>{{lang["IMAGE"]}}</h3>
-                <div class="form-group">
-                    {% if not user is null and user.get_thumbnail() != ''%}
-                        <img class="image_uploaded" src="/{{uploads_folder}}/profile/{{user.get_thumbnail()}}"/>
-                    {%endif%}
-                    <input name="image" id="image" class="form-control" type="file">
-                </div>
-                <div class="form-group">
-                    <label class="checkbox" for="checkboxDeleteImage">
-                        <input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
-                        {{lang["DELETE"]}}
-                    </label>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="button">{{lang["SAVE"]}}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<h2>{{lang["PROFILE_IMAGE"]}}</h2>
+		</div>
+	</div>
 {% endblock %}
+
+{% block tabbar %}
+	{% include "profile/profile-tabs.twig" with {'active':'users_profile_image'} only %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<form action="{{ url_for('users_profile_image') }}" method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				<h3>{{lang["IMAGE"]}}</h3>
+				<div class="form-group">
+					{% if not user is null and user.get_thumbnail() != ''%}
+						<img class="image_uploaded" src="/{{uploads_folder}}/profile/{{user.get_thumbnail()}}"/>
+						{%endif%}
+						<input name="image" id="image" class="form-control" type="file">
+					</div>
+					<div class="form-group">
+						<label class="checkbox" for="checkboxDeleteImage">
+							<input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
+							{{lang["DELETE"]}}
+						</label>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="button">{{lang["SAVE"]}}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	{% endblock %}
