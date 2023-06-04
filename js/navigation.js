@@ -365,12 +365,17 @@ rippleIcons.forEach(function (rippleIcon) {
         rippleIcon.addEventListener('touchstart', function (evt) {
             rippleIcon.classList.add("ripple-effect-start");
 
+            // trigger click, so that the timeout causes no delay on ios
+            rippleIcon.click();
+
+            // simulate hover (before element is triggered)
+            rippleIcon.focus();
+
             setTimeout(function () {
                 rippleIcon.classList.remove("ripple-effect-start");
                 rippleIcon.classList.add("ripple-effect-end");
                 setTimeout(function () {
                     rippleIcon.classList.remove("ripple-effect-end");
-                    rippleIcon.focus();
                 }, 200);
             }, 300);
         });
