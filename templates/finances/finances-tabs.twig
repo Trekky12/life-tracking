@@ -1,5 +1,5 @@
 <div class="tabbar-scroller">
-	<div class="tabbar-tab-scroll-btn" data-type="left" href="#"><div class="icon-ripple-wrapper">{{ fontawesome('fas fa-chevron-left') }}</div></div>
+	<div class="tabbar-tab-scroll-btn" data-type="left" href="#"><div tabindex="-1" class="icon-ripple-wrapper" >{{ fontawesome('fas fa-chevron-left') }}</div></div>
 	<div class="tabbar-scrollarea">
 		<a class="tabbar-tab {% if active == 'finances' %}active{% endif %}" href="{{ url_for('finances') }}">{{lang["MENU_FINANCES"]}}</a>
 		<a class="tabbar-tab {% if active == 'finances_categories' %}active{% endif %}" href="{{ url_for('finances_categories') }}">{{lang["FINANCES_CATEGORIES"]}}</a>
@@ -10,5 +10,5 @@
 		<a class="tabbar-tab {% if active == 'finances_budgets' %}active{% endif %}" href="{{ url_for('finances_budgets') }}">{{lang["BUDGET"]}}</a>
 		<a class="tabbar-tab {% if active == 'finances_stats' %}active{% endif %}" href="{{ url_for('finances_stats') }}">{{lang["STATS"]}}</a>
 	</div>
-	<div class="tabbar-tab-scroll-btn" data-type="right" href="#"><div class="icon-ripple-wrapper">{{ fontawesome('fas fa-chevron-right') }}</div></div>
+	<div class="tabbar-tab-scroll-btn" data-type="right" href="#"><div tabindex="-1" class="icon-ripple-wrapper" >{{ fontawesome('fas fa-chevron-right') }}</div></div>
 </div>

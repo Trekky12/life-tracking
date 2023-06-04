@@ -1,5 +1,5 @@
 <div class="tabbar-scroller">
-	<div class="tabbar-tab-scroll-btn" data-type="left" href="#"><div class="icon-ripple-wrapper">{{ fontawesome('fas fa-chevron-left') }}</div></div>
+	<div class="tabbar-tab-scroll-btn" data-type="left" href="#"><div tabindex="-1" class="icon-ripple-wrapper" >{{ fontawesome('fas fa-chevron-left') }}</div></div>
 	<div class="tabbar-scrollarea">
 		<a class="tabbar-tab {% if active == 'users_profile_edit' %}active{% endif %}" href="{{ url_for('users_profile_edit') }}">{{lang["PROFILE"]}}</a>
 		<a class="tabbar-tab {% if active == 'users_change_password' %}active{% endif %}" href="{{ url_for('users_change_password') }}">{{lang["CHANGE_PASSWORD"]}}</a>
@@ -10,5 +10,5 @@
 		<a class="tabbar-tab {% if active == 'users_application_passwords' %}active{% endif %}" href="{{ url_for('users_application_passwords') }}">{{lang["APPLICATION_PASSWORDS"]}}</a>
 		<a class="tabbar-tab {% if active == 'users_twofactorauth' %}active{% endif %}" href="{{ url_for('users_twofactorauth') }}">{{lang["TWOFACTOR_AUTHENTICATION"]}}</a>
 	</div>
-	<div class="tabbar-tab-scroll-btn" data-type="right" href="#"><div class="icon-ripple-wrapper">{{ fontawesome('fas fa-chevron-right') }}</div></div>
+	<div class="tabbar-tab-scroll-btn" data-type="right" href="#"><div tabindex="-1" class="icon-ripple-wrapper" >{{ fontawesome('fas fa-chevron-right') }}</div></div>
 </div>

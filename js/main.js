@@ -450,9 +450,9 @@ function createRipple(el, event) {
     if (event) {
         circle.style.left = `${event.clientX - rect.left - radius}px`;
         circle.style.top = `${event.clientY - rect.top - radius}px`;
-    }else{
-        circle.style.left = `${rect.left/2 - radius}px`;
-        circle.style.top = `${rect.top/2 - radius}px`;
+    } else {
+        circle.style.left = `${rect.left / 2 - radius}px`;
+        circle.style.top = `${rect.top / 2 - radius}px`;
     }
     circle.classList.add("ripple-circle");
 

@@ -62,7 +62,6 @@
         border: none;
         outline: none;
         padding: 0;
-        outline: none;
         padding-left: 6px;
         padding-right: 6px;
 
@@ -72,7 +71,7 @@
     }
 }
 
-a.has-Notification {
+span.notifications.badge.has-Notification {
     position: relative;
 
     &[data-badge]:after {
@@ -136,6 +135,7 @@ a.has-Notification {
             padding-left: 6px;
             padding-right: 6px;
             display: none;
+            -webkit-tap-highlight-color: transparent;
 
             @media screen and (min-width: $size_mobile_navigation) {
                 display: flex;

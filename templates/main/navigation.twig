@@ -11,8 +11,8 @@
 
 <div id="app-bar" class="size-{{mobile_elements}}">
 	<div id="menu-toggle" aria-controls="primary-menu" aria-expanded="false">
-		<div class="icon-ripple-wrapper">
-			<a href="#">{{ fontawesome('fas fa-bars') }}</a>
+		<div tabindex="-1" class="icon-ripple-wrapper">
+			{{ fontawesome('fas fa-bars') }}
 		</div>
 	</div>
 	<div
@@ -20,9 +20,11 @@
 		{#<a href="{{ url_for('index') }}" {% if active == 'index' %} class="active" {% endif %}>{{ fontawesome('fas fa-sitemap') }}</a>#}
 		{% if mobile_favorites|length > 0 %}
 			{%  for favorite in mobile_favorites %}
-				<div class="icon-ripple-wrapper">
-					<a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %} class="active" {% endif %}>{{ fontawesome(favorite.icon) }}</a>
-				</div>
+				<a href="{{ favorite.getURL() }}" {% if currentURL == favorite.getURL() %} class="active" {% endif %}>
+					<div tabindex="-1" class="icon-ripple-wrapper">
+						{{ fontawesome(favorite.icon) }}
+					</div>
+				</a>
 			{% endfor %}
 		{% else %}
 			{% for module_name, module in modules %}
@@ -34,8 +36,10 @@
 	</div>
 
 	<div id="iconBell">
-		<div class="icon-ripple-wrapper">
-			<a href="{{ url_for('notifications') }}" class="notifications badge {% if active == 'notifications' %}active{% endif %} {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}">{{ fontawesome('far fa-bell') }}</a>
-		</div>
+		<a href="{{ url_for('notifications') }}">
+			<div tabindex="-1" class="icon-ripple-wrapper">
+				<span class="notifications badge {% if unread_notifications > 0 %}has-Notification{% endif %}" data-badge="{{ unread_notifications }}">{{ fontawesome('far fa-bell') }}</span>
+			</div>
+		</a>
 	</div>
 </div>

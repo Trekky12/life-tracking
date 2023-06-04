@@ -347,7 +347,7 @@ const rippleIcons = document.querySelectorAll('.icon-ripple-wrapper');
 
 rippleIcons.forEach(function (rippleIcon) {
 
-    if (!isMobile()) {
+    if (!isTouchEnabled()) {
         rippleIcon.addEventListener('mousedown', function (evt) {
             rippleIcon.classList.add("ripple-effect-start");
         });
@@ -364,17 +364,15 @@ rippleIcons.forEach(function (rippleIcon) {
     } else {
         rippleIcon.addEventListener('touchstart', function (evt) {
             rippleIcon.classList.add("ripple-effect-start");
-            rippleIcon.querySelector(".icon").focus();
-        });
 
-        rippleIcon.addEventListener('touchend', function (evt) {
-            //setTimeout(function () {
-            rippleIcon.classList.remove("ripple-effect-start");
-            //}, 300);
-            rippleIcon.classList.add("ripple-effect-end");
             setTimeout(function () {
-                rippleIcon.classList.remove("ripple-effect-end");
-            }, 200);
+                rippleIcon.classList.remove("ripple-effect-start");
+                rippleIcon.classList.add("ripple-effect-end");
+                setTimeout(function () {
+                    rippleIcon.classList.remove("ripple-effect-end");
+                    rippleIcon.focus();
+                }, 200);
+            }, 300);
         });
     }
 });
