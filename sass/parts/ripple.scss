@@ -50,6 +50,7 @@
     &.ripple-effect-start {
 
         span.fontawesome-icon {
+
             &::after {
                 opacity: 1;
                 transform: scale(3);
@@ -72,7 +73,6 @@
 
     &:hover,
     &:focus {
-        outline: none;
 
         span.icon {
             &::before {

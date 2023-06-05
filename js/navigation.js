@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     scrollToTab(document.querySelector('a.tabbar-tab.active'), true);
 });
 
-if (/^(iPhone|iPad|iPod)/.test(navigator.platform)) {
+if (/^(iPhone|iPad|iPod)/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
     body.classList.add("ios");
 }
 if (navigation && header && navigationOverlay) {
@@ -364,12 +364,14 @@ rippleIcons.forEach(function (rippleIcon) {
     } else {
         rippleIcon.addEventListener('touchstart', function (evt) {
             rippleIcon.classList.add("ripple-effect-start");
+            rippleIcon.focus();
+        });
+        rippleIcon.addEventListener('touchend', function (evt) {
 
             // trigger click, so that the timeout causes no delay on ios
-            rippleIcon.click();
-
-            // simulate hover (before element is triggered)
-            rippleIcon.focus();
+            /*if (body.classList.contains("ios")) {
+                rippleIcon.click();
+            }*/
 
             setTimeout(function () {
                 rippleIcon.classList.remove("ripple-effect-start");
