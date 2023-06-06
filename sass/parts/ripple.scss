@@ -21,7 +21,6 @@
             background-color: rgba(21, 101, 192, 0.7);
         }
     }
-
 }
 
 @keyframes ripple {
@@ -48,9 +47,7 @@
     user-select: none;
 
     &.ripple-effect-start {
-
-        span.fontawesome-icon {
-
+        span.icon {
             &::after {
                 opacity: 1;
                 transform: scale(3);
@@ -61,8 +58,7 @@
     }
 
     &.ripple-effect-end {
-
-        span.fontawesome-icon {
+        span.icon {
             &::after {
                 opacity: 0;
                 transform: scale(2);
@@ -73,7 +69,6 @@
 
     &:hover,
     &:focus {
-
         span.icon {
             &::before {
                 opacity: 1;
@@ -103,10 +98,8 @@
         justify-content: center;
         align-items: center;
 
-
         &::before,
         &::after {
-
             position: absolute;
             border: none;
             border-radius: 50%;
@@ -124,7 +117,7 @@
             transition: opacity 15ms linear;
             transform: scale(2);
             z-index: 1;
-            background-color: $color_blue_light_background;
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         &::after {
@@ -143,7 +136,7 @@
         svg {
             color: $color_background-body;
             position: relative;
-            z-index: 20;
+            z-index: 3;
             //@include font-size(2);
             height: 20px;
             width: 20px;
@@ -151,6 +144,23 @@
             &:hover,
             &:focus {
                 //color: $color_navigation_text_hover;
+            }
+        }
+    }
+
+    &.back-arrow {
+        span.icon {
+            &::before {
+                background-color: rgba(88, 88, 88, 0.15);
+            }
+
+            &::after {
+                background-color: rgba(88, 88, 88, 0.2);
+            }
+
+            i,
+            svg {
+                color: $color_text-secondary;
             }
         }
     }

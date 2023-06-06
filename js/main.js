@@ -163,15 +163,6 @@ function initialize() {
         let link = event.target.closest('a');
         let submit = event.target.closest('[type="submit"]');
 
-        let rippleBtn = event.target.closest(".button");
-        if (rippleBtn) {
-            createRipple(rippleBtn, event);
-        }
-        let rippleTab = event.target.closest("a.tabbar-tab");
-        if (rippleTab) {
-            createRipple(rippleTab, event);
-        }
-
         let is_internal_link = (link && !link.getAttribute("href").startsWith('#') && link.getAttribute("target") != '_blank' && !link.classList.contains("no-loading") && link["href"].includes(window.location.hostname));
 
         if (is_internal_link || (submit && !submit.classList.contains("no-loading"))) {
@@ -437,8 +428,33 @@ async function storeQueryParams() {
     }
 }
 
+/**
+ * Add ripple effect to buttons
+ */
+if (!isTouchEnabled()) {
+    document.addEventListener('mousedown', async function (event) {
+        addRipple(event);
+    });
+} else {
+    document.addEventListener('touchstart', async function (event) {
+        const firstTouch = event.touches[0];
+        console.log(firstTouch);
+        addRipple(firstTouch);
+    });
+}
+
+function addRipple(event) {
+    let rippleBtn = event.target.closest(".button");
+    if (rippleBtn) {
+        createRipple(rippleBtn, event);
+    }
+    let rippleTab = event.target.closest("a.tabbar-tab");
+    if (rippleTab) {
+        createRipple(rippleTab, event);
+    }
+}
+
 function createRipple(el, event) {
-    console.log("create ripple");
     const rect = el.getBoundingClientRect();
 
     const circle = document.createElement("span");

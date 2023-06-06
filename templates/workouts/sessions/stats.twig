@@ -18,7 +18,7 @@
 	<div class="page-header">
 		<div class="page-headline">
 			{#<a href="{% if plan is not empty %}{{ url_for_with_last_query_params('workouts_plan_view', {'plan': plan.hash}) }}{% else %}{{ url_for_with_last_query_params('workouts') }}{% endif %}">
-				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+				<div class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>#}
 			<h2>
 				{% if plan is not empty %}

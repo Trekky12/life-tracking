@@ -343,6 +343,9 @@ if (navigation && header && navigationOverlay) {
     });
 }
 
+/**
+ * Add ripple effect to icons
+ */
 const rippleIcons = document.querySelectorAll('.icon-ripple-wrapper');
 
 rippleIcons.forEach(function (rippleIcon) {

@@ -17,7 +17,7 @@
 	<div class="page-header">
 		<div class="page-headline">
 			<a href="{% if not entry is null %}{{ url_for_with_last_query_params('recipes_recipe_view', {'recipe': entry.hash}) }}{% else %}{{ url_for_with_last_query_params('recipes') }}{% endif %}">
-				<span class="back-arrow">{{ fontawesome('fas fa-arrow-left') }}</span>
+				<div class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
 			<h2>{{lang["RECIPE"]}}</h2>
 		</div>

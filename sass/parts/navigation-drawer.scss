@@ -24,7 +24,7 @@ body.navigation-drawer-toggled {
     transition: opacity 100ms linear;
     height: 0;
     will-change: opacity;
-    z-index: 3;
+    z-index: 4;
 
     &.visible {
         height: 100%;
@@ -35,7 +35,7 @@ body.navigation-drawer-toggled {
 #site-navigation {
     height: 100%;
     position: fixed;
-    z-index: 3;
+    z-index: 4;
     top: 0;
     left: 0;
     background-color: $color_navigation_background;
