@@ -9,7 +9,7 @@ use App\Domain\Main\Translator;
 use App\Domain\Base\Settings;
 use App\Domain\Main\Helper;
 use Slim\Routing\RouteParser;
-use App\Domain\MailNotifications\MailNotificationsService;
+use App\Domain\Notifications\NotificationsService;
 
 class CardMailService {
 
@@ -21,7 +21,7 @@ class CardMailService {
     private $translation;
     private $settings;
     private $router;
-    private $mail_notification_service;
+    private $notification_service;
 
     public function __construct(LoggerInterface $logger,
             CardMapper $mapper,
@@ -31,7 +31,7 @@ class CardMailService {
             Settings $settings,
             Helper $helper,
             RouteParser $router,
-            MailNotificationsService $mail_notification_service) {
+            NotificationsService $notification_service) {
         $this->logger = $logger;
         $this->mapper = $mapper;
         $this->helper = $helper;
@@ -40,7 +40,7 @@ class CardMailService {
         $this->translation = $translation;
         $this->settings = $settings;
         $this->router = $router;
-        $this->mail_notification_service = $mail_notification_service;
+        $this->notification_service = $notification_service;
     }
 
     public function sendReminder() {
@@ -108,7 +108,7 @@ class CardMailService {
 
                 if (!empty($mail_content)) {
                     //$this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_CARD_DUE", 'mail/general.twig', $subject, $variables, $board_id);
+                    $this->notification_service->sendMailNotificationToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_CARD_DUE", 'mail/general.twig', $subject, $variables, $board_id);
                 }
             }
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\MailNotifications;
+namespace App\Domain\Notifications;
 
 class MailNotificationCategoryMapper extends \App\Domain\Mapper {
 

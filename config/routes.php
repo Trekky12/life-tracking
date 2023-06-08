@@ -216,8 +216,6 @@ return function (App $app) {
             $group_frontpage->get('/data/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDataAction::class)->setName('frontpage_widget_request');
         });
 
-        $group->get('/mail/manage/', \App\Application\Action\MailNotifications\MailNotificationsManageAction::class)->setName('mail_manage');
-        $group->post('/mail/setCategoryUser', \App\Application\Action\MailNotifications\MailNotificationsSetCategoryAction::class)->setName('mail_notifications_set_category_user');
     });
 
     $app->group('/users', function (RouteCollectorProxy $group) {
@@ -269,6 +267,8 @@ return function (App $app) {
         $group->post('/setCategoryUser', \App\Application\Action\Notifications\Users\NotificationClientsSetCategoryAction::class)->setName('notifications_clients_set_category_user');
 
         $group->post('/getNotifications', \App\Application\Action\Notifications\NotificationsListAction::class)->setName('notifications_get');
+
+        $group->post('/setMailCategoryUser', \App\Application\Action\MailNotifications\MailNotificationsSetCategoryAction::class)->setName('mail_notifications_set_category_user');
     });
 
     $app->group('/boards', function (RouteCollectorProxy $group) {

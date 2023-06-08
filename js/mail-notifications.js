@@ -9,11 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
             let val = item.value;
             console.log(item);
             if (item.checked) {
-                return setCategoryUser(1, val).then(function (data) {
+                return setMailCategoryUser(1, val).then(function (data) {
                     console.log(data);
                 });
             } else {
-                return setCategoryUser(0, val).then(function (data) {
+                return setMailCategoryUser(0, val).then(function (data) {
                     console.log(data);
                 });
             }
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-function setCategoryUser(type, category) {
+function setMailCategoryUser(type, category) {
     let data = {"type": type, "category": category};
 
     return getCSRFToken().then(function (token) {

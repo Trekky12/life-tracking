@@ -12,19 +12,13 @@
 			<h2>{{lang["NOTIFICATIONS"]}}</h2>
 		</div>
 		<div class="buttons">
-			<a href="{{ url_for('mail_manage') }}">
-				<button class="button button-outlined">{{ fontawesome('far fa-envelope') }}
-					{{lang["MAIL_SETTINGS"]}}</button>
-			</a>
 			<a href="{{ url_for('notifications_clients_manage') }}">
-				<button class="button button-text">{{ fontawesome('fas fa-gears') }}
+				<button class="button button-outlined">{{ fontawesome('fas fa-gears') }}
 					{{lang["SETTINGS"]}}</button>
 			</a>
 		</div>
 	</div>
 {% endblock %}
-
-{# todo: tabbar #}
 
 {% block body %}
 	{% if message is defined %}

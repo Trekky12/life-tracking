@@ -24,18 +24,24 @@ class NotificationsService extends Service {
     private $helper;
     private $splitbill_group_service;
     private $boards_service;
+    private $mail_users_mapper;
+    private $mail_cat_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            Translator $translation,
-            Settings $settings,
-            NotificationsMapper $mapper,
-            Users\NotificationUsersService $user_notifications_service,
-            Categories\NotificationCategoryService $cat_service,
-            Clients\NotificationClientsService $client_service,
-            Helper $helper,
-            SplitbillGroupService $splitbill_group_service,
-            BoardService $boards_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        Translator $translation,
+        Settings $settings,
+        NotificationsMapper $mapper,
+        Users\NotificationUsersService $user_notifications_service,
+        Categories\NotificationCategoryService $cat_service,
+        Clients\NotificationClientsService $client_service,
+        Helper $helper,
+        SplitbillGroupService $splitbill_group_service,
+        BoardService $boards_service,
+        MailNotificationUsersMapper $mail_users_mapper,
+        MailNotificationCategoryMapper $mail_cat_mapper
+    ) {
         parent::__construct($logger, $user);
         $this->translation = $translation;
         $this->settings = $settings;
@@ -46,6 +52,9 @@ class NotificationsService extends Service {
         $this->helper = $helper;
         $this->splitbill_group_service = $splitbill_group_service;
         $this->boards_service = $boards_service;
+
+        $this->mail_users_mapper = $mail_users_mapper;
+        $this->mail_cat_mapper = $mail_cat_mapper;
 
         //var_dump(\Minishlink\WebPush\VAPID::createVapidKeys());
     }
@@ -73,7 +82,7 @@ class NotificationsService extends Service {
         $notifications = $this->mapper->getNotificationsByUser($user->id, $limit, $offset);
 
         $categories = $this->cat_service->getAllCategories();
-        array_map(function($cat) {
+        array_map(function ($cat) {
             if ($cat->isInternal()) {
                 $cat->name = $this->translation->getTranslatedString($cat->name);
             }
@@ -88,7 +97,7 @@ class NotificationsService extends Service {
 
         // mark as seen
         if (is_array($notifications) && !empty($notifications)) {
-            $notification_ids = array_map(function($el) {
+            $notification_ids = array_map(function ($el) {
                 return $el->id;
             }, $notifications);
             $this->mapper->markAsSeen($notification_ids);
@@ -164,10 +173,10 @@ class NotificationsService extends Service {
         $settings = $this->settings->getAppSettings()['push'];
 
         $subscription = Subscription::create([
-                    'endpoint' => $entry->endpoint,
-                    'publicKey' => $entry->publicKey,
-                    'authToken' => $entry->authToken,
-                    'contentEncoding' => $entry->contentEncoding
+            'endpoint' => $entry->endpoint,
+            'publicKey' => $entry->publicKey,
+            'authToken' => $entry->authToken,
+            'contentEncoding' => $entry->contentEncoding
         ]);
         $auth = [
             'VAPID' => [
@@ -233,8 +242,16 @@ class NotificationsService extends Service {
     }
 
     public function manage() {
-        $categories = $this->cat_service->getUserCategories();
-        $user_categories = $this->getCategoriesOfCurrentUser();
+        $notification_categories = $this->cat_service->getUserCategories();
+        $notification_categories_internal = array_filter($notification_categories, function ($cat) {
+            return $cat->isInternal();
+        });
+
+        $notification_categories_individual = array_filter($notification_categories, function ($cat) {
+            return !$cat->isInternal();
+        });
+
+        $notification_user_categories = $this->getCategoriesOfCurrentUser();
 
         $ifttt_clients = $this->client_service->getClientsByUserAndType("ifttt");
 
@@ -244,22 +261,24 @@ class NotificationsService extends Service {
         $boards_user_boards = $this->boards_service->getUserElements();
         $boards_all_boards = $this->boards_service->getAll();
 
-        $categories_internal = array_filter($categories, function($cat) {
-            return $cat->isInternal();
-        });
+        $mail_categories = $this->mail_cat_mapper->getAll();
 
-        $categories_individual = array_filter($categories, function($cat) {
-            return !$cat->isInternal();
-        });
-
+        $user = $this->current_user->getUser();
+        $mail_user_categories = $this->mail_users_mapper->getCategoriesByUser($user->id);
 
         return new Payload(Payload::$RESULT_HTML, [
-            "categories" => [
-                "internal" => $categories_internal,
-                "individual" => $categories_individual
+            "mail" => [
+                "categories" => $mail_categories,
+                "user_categories" => $mail_user_categories,
             ],
-            "user_categories" => $user_categories,
-            "ifttt_clients" => $ifttt_clients,
+            "notifications" => [
+                "categories" => [
+                    "internal" => $notification_categories_internal,
+                    "individual" => $notification_categories_individual
+                ],
+                "user_categories" => $notification_user_categories,
+                "ifttt_clients" => $ifttt_clients,
+            ],
             "splitbill" => [
                 "groups" => $splitbill_all_groups,
                 "user_groups" => $splitbill_user_groups
@@ -288,4 +307,40 @@ class NotificationsService extends Service {
         return new Payload(Payload::$STATUS_NOTIFICATION_FAILURE);
     }
 
+    public function setMailNotificationCategoryForUser($data) {
+
+        $cat = array_key_exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_STRING) : "";
+        $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+
+        $category = intval($cat);
+        $object_id = null;
+        if (strpos($cat, "_")) {
+            $cat_and_id = explode("_", $cat);
+            $category = intval($cat_and_id[0]);
+            $object_id = intval($cat_and_id[1]);
+        }
+
+        $user = $this->current_user->getUser();
+
+        if ($type == 1) {
+            $this->mail_users_mapper->addCategory($user->id, $category, $object_id);
+        } else {
+            $this->mail_users_mapper->deleteCategory($user->id, $category, $object_id);
+        }
+        $result = ["status" => "success"];
+        return new Payload(Payload::$RESULT_JSON, $result);
+    }
+
+    public function sendMailNotificationToUserWithCategory($user, $identifier, $template, $subject, $body, $object_id = null) {
+        try {
+            $category = $this->mail_cat_mapper->getCategoryByIdentifier($identifier);
+
+            $user_has_category = $this->mail_users_mapper->doesUserHaveCategory($category->id, $user->id, $object_id);
+            if ($user_has_category) {
+                $this->helper->send_mail($template, $user->mail, $subject, $body);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error("Error with Mail", array("error" => $e->getMessage(), "code" => $e->getCode()));
+        }
+    }
 }

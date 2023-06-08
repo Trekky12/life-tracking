@@ -8,7 +8,7 @@ use App\Domain\Base\Settings;
 use App\Domain\Main\Helper;
 use App\Domain\User\UserService;
 use App\Domain\Finances\FinancesMapper;
-use App\Domain\MailNotifications\MailNotificationsService;
+use App\Domain\Notifications\NotificationsService;
 
 class FinanceStatsMonthlyMailService {
 
@@ -16,8 +16,9 @@ class FinanceStatsMonthlyMailService {
     private $settings;
     private $translation;
     private $finances_mapper;
+    private $helper;
     private $user_service;
-    private $mail_notification_service;
+    private $notification_service;
 
     public function __construct(LoggerInterface $logger, 
             Settings $settings, 
@@ -25,14 +26,14 @@ class FinanceStatsMonthlyMailService {
             FinancesMapper $finances_mapper, 
             Helper $helper, 
             UserService $user_service,
-            MailNotificationsService $mail_notification_service) {
+            NotificationsService $notification_service) {
         $this->logger = $logger;
         $this->settings = $settings;
         $this->translation = $translation;
         $this->finances_mapper = $finances_mapper;
         $this->helper = $helper;
         $this->user_service = $user_service;
-        $this->mail_notification_service = $mail_notification_service;
+        $this->notification_service = $notification_service;
     }
 
     public function sendSummary() {
@@ -84,7 +85,7 @@ class FinanceStatsMonthlyMailService {
                     );
 
                     //$this->helper->send_mail('mail/stats.twig', $user->mail, $subject, $variables);
-                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_FINANCE_STATISTIC", 'mail/stats.twig', $subject, $variables);
+                    $this->notification_service->sendMailNotificationToUserWithCategory($user, "MAIL_CATEGORY_FINANCE_STATISTIC", 'mail/stats.twig', $subject, $variables);
                 }
             }
         }

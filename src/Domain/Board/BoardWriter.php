@@ -11,7 +11,7 @@ use App\Domain\Main\Translator;
 use App\Domain\User\UserService;
 use Slim\Routing\RouteParser;
 use App\Application\Payload\Payload;
-use App\Domain\MailNotifications\MailNotificationsService;
+use App\Domain\Notifications\NotificationsService;
 
 class BoardWriter extends ObjectActivityWriter {
     
@@ -20,7 +20,7 @@ class BoardWriter extends ObjectActivityWriter {
     private $helper;
     private $user_service;
     private $router;
-    private $mail_notification_service;
+    private $notification_service;
 
     public function __construct(LoggerInterface $logger, 
             CurrentUser $user, 
@@ -31,7 +31,7 @@ class BoardWriter extends ObjectActivityWriter {
             Helper $helper, 
             UserService $user_service, 
             RouteParser $router,
-            MailNotificationsService $mail_notification_service) {
+            NotificationsService $notification_service) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->board_service = $board_service;
@@ -39,7 +39,7 @@ class BoardWriter extends ObjectActivityWriter {
         $this->helper = $helper;
         $this->user_service = $user_service;
         $this->router = $router;
-        $this->mail_notification_service = $mail_notification_service;
+        $this->notification_service = $notification_service;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -84,7 +84,7 @@ class BoardWriter extends ObjectActivityWriter {
                     );
 
                     //$this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_ADD", 'mail/general.twig', $subject, $variables);
+                    $this->notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_ADD", 'mail/general.twig', $subject, $variables);
                 }
             }
         }

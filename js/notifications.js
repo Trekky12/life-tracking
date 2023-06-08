@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
         item.addEventListener('click', function () {
             let val = item.value;
             if (item.checked) {
-                return setCategoryUser(1, val).then(function (data) {
+                return setNotificationCategoryUser(1, val).then(function (data) {
                     console.log(data);
                 });
             } else {
-                return setCategoryUser(0, val).then(function (data) {
+                return setNotificationCategoryUser(0, val).then(function (data) {
                     console.log(data);
                 });
             }
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-function setCategoryUser(type, category) {
+function setNotificationCategoryUser(type, category) {
     let data = {"type": type, "category": category};
 
     return getCSRFToken().then(function (token) {

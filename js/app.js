@@ -613,11 +613,11 @@ function getCategorySubscriptions(list, endpoint) {
 
                     item.addEventListener('click', function () {
                         if (item.checked) {
-                            return setCategorySubscriptions(endpoint, 1, val).then(function (data) {
+                            return setNotificationCategorySubscriptions(endpoint, 1, val).then(function (data) {
                                 console.log(data);
                             });
                         } else {
-                            return setCategorySubscriptions(endpoint, 0, val).then(function (data) {
+                            return setNotificationCategorySubscriptions(endpoint, 0, val).then(function (data) {
                                 console.log(data);
                             });
                         }
@@ -633,7 +633,7 @@ function getCategorySubscriptions(list, endpoint) {
     return emptyPromise();
 }
 
-function setCategorySubscriptions(endpoint, type, category) {
+function setNotificationCategorySubscriptions(endpoint, type, category) {
     let data = { "endpoint": endpoint, "category": category, "type": type };
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;

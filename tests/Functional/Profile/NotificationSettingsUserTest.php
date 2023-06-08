@@ -29,7 +29,6 @@ class NotificationSettingsUserTest extends BaseTestCase {
     }
 
     public function testSetUserCategory() {
-
         $data = [
             "category" => $this->TEST_USER_CATEGORY,
             "type" => 1
@@ -56,11 +55,14 @@ class NotificationSettingsUserTest extends BaseTestCase {
 
         $input_fields = $this->getInputFields($body);
 
-        $this->assertArrayHasKey("user_categories", $input_fields);
-        $this->assertArrayHasKey($this->TEST_USER_CATEGORY, $input_fields["user_categories"]);
-        $this->assertEquals(1, $input_fields["user_categories"][$this->TEST_USER_CATEGORY]);
+        $this->assertArrayHasKey("user_notification_categories", $input_fields);
+        $this->assertArrayHasKey($this->TEST_USER_CATEGORY, $input_fields["user_notification_categories"]);
+        $this->assertEquals(1, $input_fields["user_notification_categories"][$this->TEST_USER_CATEGORY]);
     }
 
+    /**
+     * @depends testSettedUserCategory
+     */
     public function testSetUserCategoryBack() {
 
         $data = [
@@ -89,9 +91,9 @@ class NotificationSettingsUserTest extends BaseTestCase {
 
         $input_fields = $this->getInputFields($body);
 
-        $this->assertArrayHasKey("user_categories", $input_fields);
-        $this->assertArrayHasKey($this->TEST_USER_CATEGORY, $input_fields["user_categories"]);
-        $this->assertSame(0, $input_fields["user_categories"][$this->TEST_USER_CATEGORY]);
+        $this->assertArrayHasKey("user_notification_categories", $input_fields);
+        $this->assertArrayHasKey($this->TEST_USER_CATEGORY, $input_fields["user_notification_categories"]);
+        $this->assertSame(0, $input_fields["user_notification_categories"][$this->TEST_USER_CATEGORY]);
     }
 
 }

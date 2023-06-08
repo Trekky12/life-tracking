@@ -16,7 +16,6 @@ use App\Domain\Base\Settings;
 use Slim\Routing\RouteParser;
 use App\Application\Payload\Payload;
 use App\Domain\Notifications\NotificationsService;
-use App\Domain\MailNotifications\MailNotificationsService;
 
 class CardWriter extends ObjectActivityWriter {
 
@@ -30,7 +29,6 @@ class CardWriter extends ObjectActivityWriter {
     private $settings;
     private $router;
     private $notification_service;
-    private $mail_notification_service;
 
     public function __construct(LoggerInterface $logger, 
             CurrentUser $user, 
@@ -45,8 +43,7 @@ class CardWriter extends ObjectActivityWriter {
             Translator $translation,
             Settings $settings,
             RouteParser $router,
-            NotificationsService $notification_service,
-            MailNotificationsService $mail_notification_service) {
+            NotificationsService $notification_service) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->card_service = $card_service;
@@ -59,7 +56,6 @@ class CardWriter extends ObjectActivityWriter {
         $this->settings = $settings;
         $this->router = $router;
         $this->notification_service = $notification_service;
-        $this->mail_notification_service = $mail_notification_service;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -168,7 +164,7 @@ class CardWriter extends ObjectActivityWriter {
                     }
 
                     //$this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                    $this->mail_notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_CARD_ADD", 'mail/general.twig', $subject, $variables, $board->id);
+                    $this->notification_service->sendMailNotificationToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_CARD_ADD", 'mail/general.twig', $subject, $variables, $board->id);
                 }
                 
                 // Notification
