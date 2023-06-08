@@ -31,7 +31,7 @@
 	<div class="page-header">
 		<div class="page-headline">
 			<a href="{{ url_for_with_last_query_params('trips') }}">
-				<div class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
 			<h2>{{trip.name|raw}}</h2>
 		</div>

@@ -438,7 +438,6 @@ if (!isTouchEnabled()) {
 } else {
     document.addEventListener('touchstart', async function (event) {
         const firstTouch = event.touches[0];
-        console.log(firstTouch);
         addRipple(firstTouch);
     });
 }

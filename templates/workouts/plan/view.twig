@@ -13,11 +13,11 @@
 		<div class="page-headline">
 			{% if not plan.is_template %}
 				<a href="{{ url_for_with_last_query_params('workouts') }}">
-					<div class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+					<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 				</a>
 			{% else %}
 				<a href="{{ url_for_with_last_query_params('workouts_templates') }}">
-					<div class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+					<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 				</a>
 			{% endif %}
 			<h2>{{plan.name|raw}}</h2>
