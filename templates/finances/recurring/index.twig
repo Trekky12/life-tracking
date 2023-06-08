@@ -44,21 +44,23 @@
 				<tbody>
 					{% for entry in list%}
 						<tr>
+							{% apply spaceless %}
 							<td>
-								{% if entry.type == 0 %}
-									{{lang["FINANCES_SPENDING"]}}
-								{% else %}
-									{{lang["FINANCES_INCOME"]}}
-								{% endif %}
+								{%- if entry.type == 0 -%}
+									{{- lang["FINANCES_SPENDING"] -}}
+								{%- else -%}
+									{{- lang["FINANCES_INCOME"] -}}
+								{%- endif -%}
 							</td>
+							{% endapply %}
 							<td>{{categories[entry.category].name|raw}}</td>
 							<td>{{entry.description|raw}}</td>
 							<td>{{entry.value}}</td>
 							<td>{{entry.start}}</td>
 							<td>{{entry.end}}</td>
-							<td>{{entry.multiplier}}
-								x
-								{{lang[units[entry.unit]]}}</td>
+							<td>
+								{{ entry.multiplier }}&nbsp;x&nbsp;{{ lang[units[entry.unit]] }}
+							</td>
 							<td>{{entry.last_run}}</td>
 							<td>{{entry.next_run}}</td>
 							<td>

@@ -178,7 +178,7 @@ class AdminTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . $data["login"] . '<\/td>\s*<td>' . $data["name"] . '<\/td>\s*<td>' . $data["lastname"] . '<\/td>\s*<td>' . $data["mail"] . '<\/td>\s*<td>' . $data["role"] . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<td><a href="\/users\/(?<id_mail>[0-9]+)\/testmail">.*? Test Mail<\/a><\/td>\s*<td>\s*<a href="\/users\/(?<id_identity>[0-9]+)\/identity">Identität übernehmen<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . $data["login"] . '<\/td>\s*<td>' . $data["name"] . '<\/td>\s*<td>' . $data["lastname"] . '<\/td>\s*<td>' . $data["mail"] . '<\/td>\s*<td>' . $data["role"] . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/users\/(?<id_mail>[0-9]+)\/testmail">.*?\s*Test Mail<\/a>\s*<\/td>\s*<td>\s*<a href="\/users\/(?<id_identity>[0-9]+)\/identity">Identität übernehmen<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
         
         return $matches;

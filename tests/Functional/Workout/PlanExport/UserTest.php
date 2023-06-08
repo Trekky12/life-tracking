@@ -7,7 +7,7 @@ use Tests\Functional\Base\BaseTestCase;
 class UserTest extends BaseTestCase {
 
     protected $TEST_PLAN_HASH = "ABCabc123";
-    protected $uri_export = "/workouts/HASH/export";
+    protected $uri_export = "/workouts/HASH/export/download";
 
     protected function setUp(): void {
         $this->login("admin", "admin");

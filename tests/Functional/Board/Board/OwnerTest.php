@@ -153,7 +153,7 @@ class OwnerTest extends BoardTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<body class="boards boards-view">', $body);
+        $this->assertStringContainsString('<body class="boards boards-view', $body);
     }
 
     /**

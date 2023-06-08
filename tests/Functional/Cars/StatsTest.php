@@ -21,7 +21,7 @@ class StatsTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<canvas id="fuelChart"', $body);
-        $this->assertStringContainsString('<div class="page-header"><h2>km/Jahr</h2></div>', $body);
+        $this->assertStringContainsString('<h2>km/Jahr</h2>', $body);
     }
 
 }

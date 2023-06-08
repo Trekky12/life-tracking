@@ -169,7 +169,7 @@ class UserTest extends BaseTestCase {
         $default = $data["is_default"] == 1 ? "x" : "";
 
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>' . $default . '<\/td>\s*<td>(.*)?<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>\s*' . $default . '\s*<\/td>\s*<td>(.*)?<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

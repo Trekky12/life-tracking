@@ -14,7 +14,7 @@ class RecipesShoppinglistsTestBase extends BaseTestCase {
 
     protected function getParent($body, $name) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/recipes\/shoppinglists\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a><\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>\s*<a href="\/recipes\/shoppinglists\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
@@ -22,7 +22,7 @@ class RecipesShoppinglistsTestBase extends BaseTestCase {
 
     protected function getParents($body) {
         $matches = [];
-        $re = '/<tr>\s*<td><a href="\/recipes\/shoppinglists\/(?<hash>.*)\/view\/">(?<name>.*)<\/a><\/td>\s*(<td>[\s]*<\/td>\s*)*<\/tr>/';
+        $re = '/<tr>\s*<td>\s*<a href="\/recipes\/shoppinglists\/(?<hash>.*)\/view\/">(?<name>.*)<\/a>\s*<\/td>\s*(<td>[\s]*<\/td>\s*)*<\/tr>/';
         preg_match_all($re, $body, $matches, PREG_SET_ORDER);
 
         return $matches;

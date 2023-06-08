@@ -37,7 +37,7 @@
 						<tr>
 							<td>{{cat.name|raw}}</td>
 							<td>
-								{% if cat.is_default == 1%}x{%endif%}</td>
+								{% if cat.is_default == 1%}x{%endif%}
 							</td>
 							<td>
 								<a href="{{ url_for('finances_categories_edit', {'id' : cat.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>

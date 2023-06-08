@@ -57,7 +57,7 @@
 								{% if entry.mail %}
 									<a href="{{ url_for('users_test_mail', {'user' : entry.id}) }}">{{ fontawesome('fas fa-envelope') }}
 										{{lang["TESTMAIL"]}}</a>
-									{%endif%}</td>
+								{% endif %}
 							</td>
 							<td>
 								{% if user.id != entry.id %}

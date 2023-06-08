@@ -196,7 +196,7 @@ class UserTest extends BaseTestCase {
 
     protected function getIDFromView($body) {
         $matches = [];
-        $re = '/<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">\s*<button class="button">.*?<\/button>\s*<\/a>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">\s*<button class="button">.*?<\/button>\s*<\/a>/';
+        $re = '/<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">\s*<button class="button.*?">.*?<\/button>\s*<\/a>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">\s*<button class="button.*?">.*?<\/button>\s*<\/a>/';
         preg_match($re, $body, $matches);
 
         return $matches;

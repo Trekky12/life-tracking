@@ -107,7 +107,7 @@ class MemberTest extends SplitbillTestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\"  type=\"hidden\" value=\"" . $bill_id . "\">", $body);
+        $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $bill_id . "\">", $body);
 
         $matches = [];
         $re = '/<form class="form-horizontal" id=\"splitbillsBillsForm\" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">/s';
