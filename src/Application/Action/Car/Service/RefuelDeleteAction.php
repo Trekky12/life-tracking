@@ -4,22 +4,23 @@ namespace App\Application\Action\Car\Service;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Domain\Car\Service\CarServiceService;
-use App\Application\Responder\HTMLTemplateResponder;
+use App\Domain\Car\Service\CarRefuelRemover;
+use App\Application\Responder\DeleteResponder;
 
-class ServiceListAction {
+class RefuelDeleteAction {
 
     private $responder;
     private $service;
 
-    public function __construct(HTMLTemplateResponder $responder, CarServiceService $service) {
+    public function __construct(DeleteResponder $responder, CarRefuelRemover $service) {
         $this->responder = $responder;
         $this->service = $service;
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $index = $this->service->indexService();
-        return $this->responder->respond($index->withTemplate('cars/service/index.twig'));
+        $id = $request->getAttribute('id');
+        $payload = $this->service->delete($id);
+        return $this->responder->respond($payload);
     }
 
 }

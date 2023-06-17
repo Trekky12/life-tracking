@@ -12,8 +12,8 @@ use App\Domain\Main\Translator;
 
 class CarServiceWriter extends ObjectActivityWriter {
 
-    private $car_service;
-    private $translation;
+    protected $car_service;
+    protected $translation;
 
     public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, CarServiceMapper $mapper, CarService $car_service, Translator $translation) {
         parent::__construct($logger, $user, $activity);
@@ -37,7 +37,7 @@ class CarServiceWriter extends ObjectActivityWriter {
         return $payload;
     }
 
-    private function calculateFuelConsumption($id) {
+    protected function calculateFuelConsumption($id) {
         $entry = $this->mapper->get($id);
 
 

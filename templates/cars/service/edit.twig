@@ -22,9 +22,7 @@
 			<a href="{{ url_for_with_last_query_params('car_service') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["CAR_REFUEL"]}}
-				&
-				{{lang["CAR_SERVICE"]}}</h2>
+			<h2>{{lang["CAR_SERVICE"]}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -37,6 +35,7 @@
 				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
 				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
+				<input name="type" type="hidden" value="1">
 				{% if not entry is null %}
 					{# Hidden fields for ID to recognize updates and for not available fields so they don't get overwritten with null #}
 					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
@@ -55,21 +54,6 @@
 					</select>
 				</div>
 
-				<div class="form-group two-columns">
-					<div class="left">
-						<label class="radio" for="radioRefuel">
-							<input name="type" type="radio" data-toggle="radio" value="0" id="radioRefuel" class="carServiceType" {% if (entry is null or (not entry is null and entry.type == 0)) and (type is null ) %} checked {% endif %}>
-							{{lang["CAR_REFUEL"]}}
-						</label>
-					</div>
-					<div class="right">
-						<label class="radio" for="radioService">
-							<input name="type" type="radio" data-toggle="radio" value="1" id="radioService" class="carServiceType" {% if (not entry is null and entry.type == 1) or (not type is null and type == 'service') %} checked {% endif %}>
-							{{lang["CAR_SERVICE"]}}
-						</label>
-					</div>
-				</div>
-
 
 				<div class="form-group">
 					<label for="dateSelect">{{lang["DATE"]}}</label>
@@ -80,47 +64,7 @@
 					<input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" placeholder="" {% if not entry is null %} value="{{entry.mileage}}" {% endif %}>
 				</div>
 
-				<div id="carServiceFuel" {% if (not entry is null and entry.type == 1) or (not type is null and type == 'service') %} class="hidden" {% endif %}>
-					<div class="form-group two-columns">
-						<div class="left">
-							<label class="radio" for="radioPart">
-								<input name="fuel_type" type="radio" data-toggle="radio" value="0" id="radioPart" {% if entry is null or (not entry is null and entry.fuel_type == 0) %} checked {% endif %}>
-								{{lang["FUEL_PARTLY"]}}
-							</label>
-						</div>
-						<div class="right">
-							<label class="radio" for="radioFull">
-								<input name="fuel_type" type="radio" data-toggle="radio" value="1" id="radioFull" {% if not entry is null and entry.fuel_type == 1 %} checked {% endif %}>
-								{{lang["FUEL_FULL"]}}
-							</label>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="checkbox" for="checkboxCalcConsumption">
-							<input name="fuel_calc_consumption" type="checkbox" id="checkboxCalcConsumption" value="1" {% if entry is null or entry.fuel_calc_consumption == 1 %} checked {% endif %}>
-							{{lang["CALC_CONSUMPTION"]}}
-						</label>
-					</div>
-					<div class="form-group">
-						<label for="inputGPrice">{{lang["PRICE"]}}/l</label>
-						<input type="number" class="form-control" id="inputGPrice" name="fuel_price" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_price}}" {% endif %}>
-					</div>
-					<div class="form-group">
-						<label for="inputGVol">{{lang["VOLUME"]}}</label>
-						<input type="number" class="form-control" id="inputGVol" name="fuel_volume" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_volume}}" {% endif %}>
-					</div>
-					<div class="form-group">
-						<label for="inputGTotalPrice">{{lang["TOTAL_PRICE"]}}</label>
-						<input type="number" class="form-control" id="inputGTotalPrice" name="fuel_total_price" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_total_price}}" {% endif %}>
-					</div>
-					<div class="form-group">
-						<label for="inputGLocation">{{lang["LOCATION"]}}</label>
-						<input type="text" class="form-control" id="inputGLocation" name="fuel_location" placeholder="" {% if not entry is null %} value="{{entry.fuel_location|raw}}" {% endif %}>
-					</div>
-				</div>
-
-				{# Default hidden #}
-				<div id="carServiceService" {% if (entry is null and type is null) or (not entry is null and entry.type == 0) %} class="hidden" {% endif %}>
+				<div id="carServiceService">
 					<h4>{{lang["CAR_SERVICE_OIL"]}}</h4>
 					<div class="form-group two-columns">
 						<div class="left">

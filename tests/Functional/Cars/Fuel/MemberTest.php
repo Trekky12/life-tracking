@@ -6,10 +6,10 @@ use Tests\Functional\Base\BaseTestCase;
 
 class MemberTest extends BaseTestCase {
 
-    protected $uri_overview = "/cars/service/";
-    protected $uri_edit = "/cars/service/edit/";
-    protected $uri_save = "/cars/service/save/";
-    protected $uri_delete = "/cars/service/delete/";
+    protected $uri_overview = "/cars/refuel/";
+    protected $uri_edit = "/cars/refuel/edit/";
+    protected $uri_save = "/cars/refuel/save/";
+    protected $uri_delete = "/cars/refuel/delete/";
     protected $TEST_CAR = 1;
 
     protected function setUp(): void {
@@ -197,7 +197,7 @@ class MemberTest extends BaseTestCase {
         $type = $data["fuel_type"] == 1 ? "vollgetankt" : "nachgetankt";
 
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["date"]) . '<\/td>\s*<td>' . preg_quote($car_name) . '<\/td>\s*<td>' . preg_quote($data["mileage"]) . '<\/td>\s*<td>' . preg_quote($price) . '<\/td>\s*<td>' . preg_quote($volume) . '<\/td>\s*<td>' . preg_quote($total_price) . '<\/td>\s*<td>' . preg_quote($type) . '<\/td>\s*<td>' . preg_quote($consumption) . '<\/td>\s*<td>' . preg_quote($data["fuel_location"]) . '<\/td>\s*<td><a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a><\/td>\s*<td><a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["date"]) . '<\/td>\s*<td>' . preg_quote($car_name) . '<\/td>\s*<td>' . preg_quote($data["mileage"]) . '<\/td>\s*<td>' . preg_quote($price) . '<\/td>\s*<td>' . preg_quote($volume) . '<\/td>\s*<td>' . preg_quote($total_price) . '<\/td>\s*<td>' . preg_quote($type) . '<\/td>\s*<td>' . preg_quote($consumption) . '<\/td>\s*<td>' . preg_quote($data["fuel_location"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

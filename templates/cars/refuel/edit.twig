@@ -1,0 +1,144 @@
+{% extends "base.twig" %}
+
+{% set active = 'car_service' %}
+
+{% set hasMap = not entry.lat is null and not entry.lng is null %}
+
+{% block style %}
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/nouislider.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
+{% endblock %}
+
+{% block javascript %}
+	<script src="{{baseURL}}/static/assets/js/nouislider.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/car-service.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('car_service_refuel') }}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{lang["CAR_REFUEL"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<form class="form-horizontal" id="gasolineForm" action="{{ url_for('car_service_refuel_save', {'id' : entry.id}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				<input name="type" type="hidden" value="0">
+				{% if not entry is null %}
+					{# Hidden fields for ID to recognize updates and for not available fields so they don't get overwritten with null #}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+					<input name="fuel_distance" type="hidden" value="{{entry.fuel_distance}}">
+					<input name="fuel_consumption" type="hidden" value="{{entry.fuel_consumption}}">
+				{% endif %}
+
+				<div class="form-group">
+					<label for="car">{{lang["CAR"]}}</label>
+					<select class="form-control" id="car" name="car">
+						{% for car in cars %}
+							{% if car.id in user_cars %}
+								<option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %} selected {% endif %}>{{car.name|raw}}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="dateSelect">{{lang["DATE"]}}</label>
+					<input type="text" class="form-control" id="dateSelect" placeholder="" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}">
+				</div>
+				<div class="form-group">
+					<label for="inputGMileage">{{lang["MILEAGE"]}}</label>
+					<input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" placeholder="" {% if not entry is null %} value="{{entry.mileage}}" {% endif %}>
+				</div>
+
+				<div id="carServiceFuel">
+					<div class="form-group two-columns">
+						<div class="left">
+							<label class="radio" for="radioPart">
+								<input name="fuel_type" type="radio" data-toggle="radio" value="0" id="radioPart" {% if entry is null or (not entry is null and entry.fuel_type == 0) %} checked {% endif %}>
+								{{lang["FUEL_PARTLY"]}}
+							</label>
+						</div>
+						<div class="right">
+							<label class="radio" for="radioFull">
+								<input name="fuel_type" type="radio" data-toggle="radio" value="1" id="radioFull" {% if not entry is null and entry.fuel_type == 1 %} checked {% endif %}>
+								{{lang["FUEL_FULL"]}}
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="checkbox" for="checkboxCalcConsumption">
+							<input name="fuel_calc_consumption" type="checkbox" id="checkboxCalcConsumption" value="1" {% if entry is null or entry.fuel_calc_consumption == 1 %} checked {% endif %}>
+							{{lang["CALC_CONSUMPTION"]}}
+						</label>
+					</div>
+					<div class="form-group">
+						<label for="inputGPrice">{{lang["PRICE"]}}/l</label>
+						<input type="number" class="form-control" id="inputGPrice" name="fuel_price" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_price}}" {% endif %}>
+					</div>
+					<div class="form-group">
+						<label for="inputGVol">{{lang["VOLUME"]}}</label>
+						<input type="number" class="form-control" id="inputGVol" name="fuel_volume" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_volume}}" {% endif %}>
+					</div>
+					<div class="form-group">
+						<label for="inputGTotalPrice">{{lang["TOTAL_PRICE"]}}</label>
+						<input type="number" class="form-control" id="inputGTotalPrice" name="fuel_total_price" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_total_price}}" {% endif %}>
+					</div>
+					<div class="form-group">
+						<label for="inputGLocation">{{lang["LOCATION"]}}</label>
+						<input type="text" class="form-control" id="inputGLocation" name="fuel_location" placeholder="" {% if not entry is null %} value="{{entry.fuel_location|raw}}" {% endif %}>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputGNotice">{{lang["NOTICE"]}}</label>
+					<textarea class="form-control" id="inputGNotice" name="notice">
+						{%- if not entry is null -%}
+							{{- entry.notice|raw -}}
+						{%- endif -%}
+					</textarea>
+				</div>
+
+				<div class="mapWrapper">
+					{% if not entry is null %}
+						<h3>{{lang["LOCATION"]}}</h3>
+						<div id="geo-map" class="geo-map"></div>
+						<div class="form-group map-btn">
+							<button id="update-location" class="update-location button button-outlined">{{lang["SET_CURRENT_LOCATION"]}}</button>
+							<button id="delete-location" class="delete-location button button-text {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+						</div>
+					{% endif %}
+					<input type="hidden" id="geoLat" class="geo-lat" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
+					<input type="hidden" id="geoLng" class="geo-lng" name="lng" value="{% if not entry is null %}{{entry.lng}}{% endif %}">
+					<input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="{% if not entry is null %}{{entry.acc}}{% endif %}">
+				</div>
+
+
+				<div class="form-group">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{lang["SAVE"]}}
+						{% else %}
+							{{lang["INSERT"]}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

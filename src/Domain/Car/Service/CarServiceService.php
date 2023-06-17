@@ -17,7 +17,7 @@ class CarServiceService extends Service {
     private $car_service;
     private $router;
     private $translation;
-    
+
     public function __construct(LoggerInterface $logger, CurrentUser $user, CarServiceMapper $mapper, CarService $car_service, RouteParser $router, Translator $translation) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
@@ -26,12 +26,24 @@ class CarServiceService extends Service {
         $this->translation = $translation;
     }
 
-    public function index($count = 20) {
+    public function indexRefuel($count = 20) {
         $user_cars = $this->car_service->getUserCars();
 
         $fuel_list = $this->getMapper()->getTableDataFuel($user_cars, 'date', 'DESC', $count);
         $fuel_table = $this->renderFuelTableRows($fuel_list);
         $fuel_datacount = $this->getMapper()->tableCount($user_cars, 0);
+
+        $cars = $this->car_service->getAllCarsOrderedByName();
+
+        return new Payload(Payload::$RESULT_HTML, [
+            'fuel_table' => $fuel_table,
+            'datacount' => $fuel_datacount,
+            'cars' => $cars,
+        ]);
+    }
+
+    public function indexService($count = 20) {
+        $user_cars = $this->car_service->getUserCars();
 
         $service_list = $this->getMapper()->getTableDataService($user_cars, 'date', 'DESC', $count);
         $service_table = $this->renderServiceTableRows($service_list);
@@ -40,8 +52,6 @@ class CarServiceService extends Service {
         $cars = $this->car_service->getAllCarsOrderedByName();
 
         return new Payload(Payload::$RESULT_HTML, [
-            'fuel_table' => $fuel_table,
-            'datacount' => $fuel_datacount,
             'cars' => $cars,
             'service_table' => $service_table,
             'datacount2' => $service_datacount
@@ -50,16 +60,16 @@ class CarServiceService extends Service {
 
     private function renderFuelTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[9] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[9]]) . '">'.Utility::getFontAwesomeIcon('fas fa-pen-to-square').'</a>';
-            $row[10] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[10]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
+            $row[9] = '<a href="' . $this->router->urlFor('car_service_refuel_edit', ['id' => $row[9]]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
+            $row[10] = '<a href="#" data-url="' . $this->router->urlFor('car_service_refuel_delete', ['id' => $row[10]]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
         }
         return $table;
     }
 
     private function renderServiceTableRows(array $table) {
         foreach ($table as &$row) {
-            $row[8] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[8]]) . '">'.Utility::getFontAwesomeIcon('fas fa-pen-to-square').'</a>';
-            $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
+            $row[8] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[8]]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
+            $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
         }
         return $table;
     }
@@ -143,7 +153,7 @@ class CarServiceService extends Service {
         return $this->mapper->getMarkers($from, $to, $user_cars);
     }
 
-    public function edit($entry_id, $type) {
+    public function edit($entry_id) {
         if (!is_null($entry_id) && !$this->hasAccessToCarOfEntry($entry_id)) {
             throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
         }
@@ -153,7 +163,10 @@ class CarServiceService extends Service {
         $user_cars = $this->car_service->getUserCars();
         $cars = $this->car_service->getAllCarsOrderedByName();
 
-        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'cars' => $cars, 'user_cars' => $user_cars, 'type' => $type]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'entry' => $entry,
+            'cars' => $cars,
+            'user_cars' => $user_cars
+        ]);
     }
-
 }

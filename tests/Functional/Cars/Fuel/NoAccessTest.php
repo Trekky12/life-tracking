@@ -6,10 +6,10 @@ use Tests\Functional\Base\BaseTestCase;
 
 class NoAccessTest extends BaseTestCase {
 
-    protected $uri_overview = "/cars/service/";
-    protected $uri_edit = "/cars/service/edit/";
-    protected $uri_save = "/cars/service/save/";
-    protected $uri_delete = "/cars/service/delete/";
+    protected $uri_overview = "/cars/refuel/";
+    protected $uri_edit = "/cars/refuel/edit/";
+    protected $uri_save = "/cars/refuel/save/";
+    protected $uri_delete = "/cars/refuel/delete/";
     protected $TEST_CAR = 1;
     protected $TEST_FUEL_ENTRY = 1;
 

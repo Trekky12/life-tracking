@@ -15,7 +15,7 @@ class CarServiceEntry extends \App\Domain\DataObject {
         $this->car = $this->exists('car', $data) ? filter_var($data['car'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         // 0 => refuel, 1 => service
-        $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->fuel_price = $this->exists('fuel_price', $data) ? filter_var($data['fuel_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->fuel_volume = $this->exists('fuel_volume', $data) ? filter_var($data['fuel_volume'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;

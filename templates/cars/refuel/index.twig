@@ -5,10 +5,10 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["CAR_SERVICE"]}}</h2>
+			<h2>{{lang["CAR_REFUEL"]}}</h2>
 		</div>
 		<div class="buttons">
-			<a href="{{ url_for('car_service_edit') }}">
+			<a href="{{ url_for('car_service_refuel_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{lang["ADD"]}}</button>
 			</a>
@@ -17,29 +17,30 @@
 {% endblock %}
 
 {% block tabbar %}
-	{% include "cars/cars-tabs.twig" with {'active':'car_service'} only %}
+	{% include "cars/cars-tabs.twig" with {'active':'car_service_refuel'} only %}
 {% endblock %}
 
 {% block body %}
 	<div class="inner-content">
 		<div class="page-content">
-			<table id="service_table" class="table table-hover small">
+			<table id="fuel_table" class="table table-hover small">
 				<thead>
 					<tr>
 						<th>{{lang["DATE"]}}</th>
 						<th>{{lang["CAR"]}}</th>
 						<th>{{lang["MILEAGE"]}}</th>
-						<th>{{lang["CAR_SERVICE_OIL"]}}</th>
-						<th>{{lang["CAR_SERVICE_WATER_WIPER"]}}</th>
-						<th>{{lang["CAR_SERVICE_AIR"]}}</th>
-						<th>{{lang["CAR_SERVICE_TIRE_CHANGE"]}}</th>
-						<th>{{lang["CAR_SERVICE_GARAGE"]}}</th>
+						<th>{{lang["PRICE"]}}</th>
+						<th>{{lang["VOLUME"]}}</th>
+						<th>{{lang["TOTAL_PRICE"]}}</th>
+						<th>{{lang["TYPE"]}}</th>
+						<th>{{lang["CONSUMPTION"]}}</th>
+						<th>{{lang["LOCATION"]}}</th>
 						<th></th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					{% for entry in service_table %}
+					{% for entry in fuel_table %}
 						<tr>
 							<td>{{entry[0]}}</td>
 							<td>{{entry[1]|raw}}</td>
@@ -51,6 +52,7 @@
 							<td>{{entry[7]}}</td>
 							<td>{{entry[8]|raw}}</td>
 							<td>{{entry[9]|raw}}</td>
+							<td>{{entry[10]|raw}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

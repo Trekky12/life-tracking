@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Functional\Cars\Service;
+namespace Tests\Functional\Cars\Fuel;
 
 use Tests\Functional\Base\BaseTestCase;
 
@@ -13,8 +13,8 @@ class TableTest extends BaseTestCase {
     protected function tearDown(): void {
         $this->logout();
     }
-    
-    public function testJSTableService() {
+
+    public function testJSTableFuel() {
 
         $data = [
             "from" => "2020-01-01",
@@ -27,7 +27,7 @@ class TableTest extends BaseTestCase {
             "datatable" => 1
         ];
 
-        $response = $this->request('GET', '/cars/service/table/?'. http_build_query($data));
+        $response = $this->request('GET', '/cars/refuel/table/?'. http_build_query($data));
 
         $this->assertEquals(200, $response->getStatusCode());
 

@@ -40,7 +40,7 @@ class CarsTest extends BaseTestCase {
         $response = $this->request('GET', "/cars/");
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals("/cars/service/", $response->getHeaderLine("Location"));
+        $this->assertEquals("/cars/refuel/", $response->getHeaderLine("Location"));
     }
 
     public function testModuleBoards() {

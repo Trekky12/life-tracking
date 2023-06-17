@@ -15,7 +15,7 @@ class StatsTest extends BaseTestCase {
     }
 
     public function testOverview() {
-        $response = $this->request('GET', '/cars/service/stats/');
+        $response = $this->request('GET', '/cars/stats/');
 
         $this->assertEquals(200, $response->getStatusCode());
 

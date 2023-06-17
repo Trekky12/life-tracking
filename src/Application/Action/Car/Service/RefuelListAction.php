@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Car\Service\CarServiceService;
 use App\Application\Responder\HTMLTemplateResponder;
 
-class ServiceListAction {
+class RefuelListAction {
 
     private $responder;
     private $service;
@@ -18,8 +18,8 @@ class ServiceListAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $index = $this->service->indexService();
-        return $this->responder->respond($index->withTemplate('cars/service/index.twig'));
+        $index = $this->service->indexRefuel();
+        return $this->responder->respond($index->withTemplate('cars/refuel/index.twig'));
     }
 
 }
