@@ -19,7 +19,7 @@
 		<div class="buttons">
 			{% if not entry is null %}
 				<a href="{{ url_for('workouts_plans_edit') }}?template={{ entry.hash }}">
-					<button class="button button-text">{{ fontawesome('fas fa-plus') }}
+					<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
 						{{lang["CLONE"]}}</button>
 				</a>
 			{% endif %}

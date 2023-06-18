@@ -20,7 +20,7 @@
 		</div>
 		<div class="buttons">
 			<a href="#" data-url="{{ url_for('recipes_cookbooks_remove_recipe', {'cookbook' : cookbook.hash}) }}?recipe={{ recipe.id }}" class="btn-delete">
-				<button class="button button-text">{{lang["RECIPES_REMOVE_FROM_COOKBOOK"]}}
+				<button class="button button-outlined">{{lang["RECIPES_REMOVE_FROM_COOKBOOK"]}}
 					{{ fontawesome('fas fa-book') }}</button>
 			</a>
 			{% if recipe.getOwner() == user.id %}

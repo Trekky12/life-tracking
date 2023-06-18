@@ -140,7 +140,7 @@
 						<p>{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] }}</p>
 
 						<input type="hidden" name="ifttt_url" id="ifttt_url" value="{{ ifttt_client.endpoint }}"/>
-						<button id="ifttt_url_remove" class="button button-text small">{{ lang["DELETE_IFTTT_URL"] }}</button>
+						<button id="ifttt_url_remove" class="button button-outlined small">{{ lang["DELETE_IFTTT_URL"] }}</button>
 
 						<div class="notifications_categories_list_ifttt" class="hidden">
 							{% include 'notifications/notification_categories.twig' with {'type': 'client'} %}

@@ -15,8 +15,10 @@
         }
 
         padding: 1rem;
-        //border: 1px solid $color_blue_light_gray;
-        //border-radius: 5px;
+        
+        border: 1px solid $color_blue_light_gray;
+        border-radius: 5px;
+        
         margin: 0.5rem;
 
         //user-select: none;
@@ -268,6 +270,7 @@
     &.view {
         .exercise {
             display: block;
+            border: none;
 
             @media screen and (min-width: $size_mobile) {
                 display: flex;

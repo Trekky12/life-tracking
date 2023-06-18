@@ -17,9 +17,9 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			{#<a href="{% if plan is not empty %}{{ url_for_with_last_query_params('workouts_plan_view', {'plan': plan.hash}) }}{% else %}{{ url_for_with_last_query_params('workouts') }}{% endif %}">
+			<a href="{{ url_for_with_last_query_params('workouts') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
-			</a>#}
+			</a>
 			<h2>
 				{% if plan is not empty %}
 					{{plan.name|raw}}
@@ -32,7 +32,9 @@
 {% endblock %}
 
 {% block tabbar %}
-	{% include "workouts/plan/workouts-plan-tabs.twig" with {'active':'workouts_sessions_stats'} %}
+	{% if plan is not empty %}
+		{% include "workouts/plan/workouts-plan-tabs.twig" with {'active':'workouts_sessions_stats'} %}
+	{% endif %}
 {% endblock %}
 
 {% block body %}
