@@ -361,7 +361,8 @@ class FinancesMapper extends \App\Domain\Mapper {
         $sql = "SELECT f.date, f.time, f.description, fc.name as category, f.value "
                 . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
                 . "WHERE f.category = fc.id "
-                . "AND f.type = :type ";
+                . "AND f.type = :type "
+                . "AND date <= CURRENT_DATE() ";
 
         $bindings = array("type" => 0);
         $this->addSelectFilterForUser($sql, $bindings, "f.");
