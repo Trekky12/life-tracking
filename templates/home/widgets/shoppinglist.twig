@@ -3,10 +3,18 @@
 		<input type="checkbox" id="shoppinglist_entry_{{entry['id']}}" name="{{entry['id']}}" data-id="{{entry['id']}}" {{entry['done'] ? 'checked' : ''}} data-url="{{url_for('recipes_shoppinglistentries_set_state', {'shoppinglist' : data['hash']})}}" autocomplete="off"/>
 		<label class="widget-card-title" for="shoppinglist_entry_{{entry['id']}}">
 			<span class="amount">{{entry["amount"]}}</span>
-			{% if entry["amount"] %}<span class="unit">{{entry["unit"]}}</span>{% endif %}
+			{% if entry["amount"] %}
+				<span class="unit">{{entry["unit"]}}</span>
+			{% endif %}
 			{{entry["grocery"] | raw}}
 			{% if entry["notice"] %}
-			<span class="notice"> ({{entry["notice"]}})</span>{% endif %}
-			</label>
+				<span class="notice">
+					({{entry["notice"]}})</span>
+			{% endif %}
+		</label>
 	</div>
 {% endfor %}
+
+{% if data["entries"]|length == 0 %}
+	<p>{{lang["NO_DATA"]}}</p>
+{% endif %}

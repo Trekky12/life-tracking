@@ -425,6 +425,10 @@ body.sortable-select {
     &> :not(:last-child) {
         margin-bottom: 1rem;
         width: 100%;
+
+        @media screen and (min-width: $size_mobile_navigation) {
+            margin-bottom: 0;
+        }
     }
 
     #addGroceryToList_name {
@@ -433,10 +437,15 @@ body.sortable-select {
 
     @media screen and (min-width: $size_mobile_navigation) {
         flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem; 
 
         &> :not(:last-child) {
-            margin-right: 1rem;
             width: auto;
+        }
+
+        #addGroceryToList_notice{
+            max-width: 150px;
         }
 
         #addGroceryToList_amount {
@@ -446,7 +455,7 @@ body.sortable-select {
         #groceries-suggestion-wrapper {
             flex-grow: 1;
             flex-shrink: 1;
-            flex-basis: 100%;
+            flex-basis: 30%;
         }
 
         #addGroceryToList_unit {
