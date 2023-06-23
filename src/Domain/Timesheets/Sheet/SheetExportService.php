@@ -139,12 +139,12 @@ class SheetExportService extends Service
             }
 
             if (!is_null($timesheet->start)) {
-                $sheet->setCellValue('A' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($start));
+                $sheet->setCellValue('A' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($start->format('Y-m-d')));
 
                 $sheet->setCellValue('B' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($start));
                 $sheet->getStyle('B' . $row)->getNumberFormat()->setFormatCode($excelTime);
             } elseif (!is_null($timesheet->end)) {
-                $sheet->setCellValue('A' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end));
+                $sheet->setCellValue('A' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end->format('Y-m-d')));
 
                 $sheet->setCellValue('C' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end));
                 $sheet->getStyle('C' . $row)->getNumberFormat()->setFormatCode($excelTime);
