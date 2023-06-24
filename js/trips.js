@@ -241,9 +241,24 @@ function drawMarkers(data) {
                 layerEvents.addLayer(end_marker);
             } else if (marker.isTrain) {
                 let trainPolyline = [];
-                trainPolyline[0] = L.polyline(tripLine, { color: 'black', weight: '5' }).bindPopup(popup);
-                trainPolyline[1] = L.polyline(tripLine, { color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0' }).bindPopup(popup);
-                trainPolyline[2] = L.polyline(tripLine, { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);
+                //trainPolyline[0] = L.polyline(tripLine, { color: 'black', weight: '5' }).bindPopup(popup);
+                //trainPolyline[1] = L.polyline(tripLine, { color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0' }).bindPopup(popup);
+                //trainPolyline[2] = L.polyline(tripLine, { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);
+
+                let middle = calculateMidPoint(start_marker, end_marker);
+                trainPolyline[0] = L.curve([
+                    'M', [marker.data.start_lat, marker.data.start_lng],
+                    'Q', middle, [marker.data.end_lat, marker.data.end_lng]
+                ], { color: 'black', weight: '5' }).bindPopup(popup);
+                trainPolyline[1] = L.curve([
+                    'M', [marker.data.start_lat, marker.data.start_lng],
+                    'Q', middle, [marker.data.end_lat, marker.data.end_lng]
+                ], { color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0' }).bindPopup(popup);
+                trainPolyline[2] = L.curve([
+                    'M', [marker.data.start_lat, marker.data.start_lng],
+                    'Q', middle, [marker.data.end_lat, marker.data.end_lng]
+                ], { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);
+
                 layerTrains.addLayer(L.layerGroup(trainPolyline));
 
                 // remove start marker when there is a polyline
@@ -261,15 +276,32 @@ function drawMarkers(data) {
                 layerPlanes.addLayer(planeCuve);
             } else if (marker.isCar) {
                 let streetPolyline = [];
-                streetPolyline[0] = L.polyline(tripLine, { color: 'gray', weight: '5' }).bindPopup(popup);
-                streetPolyline[1] = L.polyline(tripLine, { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+                //streetPolyline[0] = L.polyline(tripLine, { color: 'gray', weight: '5' }).bindPopup(popup);
+                //streetPolyline[1] = L.polyline(tripLine, { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+                
+                let middle = calculateMidPoint(start_marker, end_marker);
+                streetPolyline[0] = L.curve([
+                    'M', [marker.data.start_lat, marker.data.start_lng],
+                    'Q', middle, [marker.data.end_lat, marker.data.end_lng]
+                ], { color: 'gray', weight: '5' }).bindPopup(popup);
+                streetPolyline[1] = L.curve([
+                    'M', [marker.data.start_lat, marker.data.start_lng],
+                    'Q', middle, [marker.data.end_lat, marker.data.end_lng]
+                ], { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+                
                 layerCars.addLayer(L.layerGroup(streetPolyline));
 
                 // remove start marker when there is a polyline
                 layerCars.removeLayer(start_marker);
             } else if (marker.isShip) {
                 let shipPolyline = [];
-                shipPolyline[0] = L.polyline(tripLine, { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+                //shipPolyline[0] = L.polyline(tripLine, { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+                let middle = calculateMidPoint(start_marker, end_marker);
+                shipPolyline[0] = L.curve([
+                    'M', [marker.data.start_lat, marker.data.start_lng],
+                    'Q', middle, [marker.data.end_lat, marker.data.end_lng]
+                ], { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+
                 layerShips.addLayer(L.layerGroup(shipPolyline));
 
                 // remove start marker when there is a polyline
