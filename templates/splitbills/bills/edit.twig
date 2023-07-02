@@ -117,7 +117,7 @@
 					<span id="remaining_paid">{{ 0|number_format(2) }}</span>
 					{{ i18n.currency }}</h4>
 				<div class="form-group splitbill-buttons">
-					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or paid_by != " same"%}button-outlined{% endif %}" data-category="paid" data-type="same">
+					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or paid_by != 'same' %}button-outlined{% endif %}" data-category="paid" data-type="same">
 						{% if isSettleUp %}
 							{{ lang["SPLITBILLS_EQUALLY"] }}
 						{%else %}
@@ -125,7 +125,7 @@
 						{% endif %}
 					</button>
 					{% for user_id in group_users|keys %}
-						<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or paid_by != user_id%}button-outlined{% endif %}" data-category="paid" data-type="person" data-id="{{ user_id }}">
+						<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or paid_by != user_id %}button-outlined{% endif %}" data-category="paid" data-type="person" data-id="{{ user_id }}">
 							{% if isSettleUp %}
 								{{ users[user_id].name }}
 							{%else %}
@@ -133,9 +133,9 @@
 							{% endif %}
 						</button>
 					{% endfor %}
-					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or paid_by != " individual" %}button-outlined{% endif %}" data-category="paid" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
+					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or paid_by != 'individual' %}button-outlined{% endif %}" data-category="paid" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
 				</div>
-				<div class="userlist {% if (entry is null and not settleUpPrefill) or paid_by != " individual" %}hidden{% endif %}">
+				<div class="userlist {% if (entry is null and not settleUpPrefill) or paid_by != 'individual' %}hidden{% endif %}">
 					<div class="user-entry header">
 						<div class="user"></div>
 						{% if foreignCurrency %}
@@ -190,7 +190,7 @@
 					<span id="remaining_spend">{{ 0|number_format(2) }}</span>
 					{{ i18n.currency }}</h4>
 				<div class="form-group splitbill-buttons">
-					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or spend_by != " same" %}button-outlined{% endif %}" data-category="spend" data-type="same">
+					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or spend_by != 'same' %}button-outlined{% endif %}" data-category="spend" data-type="same">
 						{% if isSettleUp %}
 							{{ lang["SPLITBILLS_EQUALLY"] }}
 						{%else %}
@@ -198,7 +198,7 @@
 						{% endif %}
 					</button>
 					{% for user_id in group_users|keys %}
-						<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or spend_by != user_id%}button-outlined{% endif %}" data-category="spend" data-type="person" data-id="{{ user_id }}">
+						<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or spend_by != user_id %}button-outlined{% endif %}" data-category="spend" data-type="person" data-id="{{ user_id }}">
 							{% if isSettleUp %}
 								{{ users[user_id].name }}
 							{%else %}
@@ -206,9 +206,9 @@
 							{% endif %}
 						</button>
 					{% endfor %}
-					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or spend_by != " individual" %}button-outlined{% endif %}" data-category="spend" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
+					<button type="button" class="button splitbill_btn small {% if (entry is null and not settleUpPrefill) or spend_by != 'individual' %}button-outlined{% endif %}" data-category="spend" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
 				</div>
-				<div class="userlist {% if (entry is null and not settleUpPrefill) or spend_by != " individual" %}hidden{% endif %}">
+				<div class="userlist {% if (entry is null and not settleUpPrefill) or spend_by != 'individual' %}hidden{% endif %}">
 					<div class="user-entry header">
 						<div class="user"></div>
 						{% if foreignCurrency %}

@@ -19,6 +19,7 @@ use App\Domain\Finances\Transaction\TransactionRemover;
 use App\Domain\Finances\Transaction\TransactionWriter;
 use App\Domain\Main\Translator;
 use App\Domain\Splitbill\BaseBillWriter;
+use App\Domain\Finances\Paymethod\PaymethodService;
 
 class BillWriter extends BaseBillWriter
 {
@@ -32,6 +33,7 @@ class BillWriter extends BaseBillWriter
     protected $transaction_writer;
     protected $transaction_remover;
     protected $transaction_mapper;
+    protected $paymethod_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -50,7 +52,8 @@ class BillWriter extends BaseBillWriter
         SplitbillBillService $service,
         TransactionWriter $transaction_writer,
         TransactionRemover $transaction_remover,
-        TransactionMapper $transaction_mapper
+        TransactionMapper $transaction_mapper,
+        PaymethodService $paymethod_service,
     ) {
         parent::__construct($logger, $user, $activity, $group_service, $group_mapper, $translation);
         $this->mapper = $mapper;
@@ -64,6 +67,7 @@ class BillWriter extends BaseBillWriter
         $this->transaction_writer = $transaction_writer;
         $this->transaction_remover = $transaction_remover;
         $this->transaction_mapper = $transaction_mapper;
+        $this->paymethod_service = $paymethod_service;
     }
 
     public function save($id, $data, $additionalData = null): Payload
@@ -191,8 +195,10 @@ class BillWriter extends BaseBillWriter
 
     private function createTransaction($balance, $bill){
         $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id);
+        
+        $paymethod = $this->paymethod_service->getPaymethodOfUser($balance["paymethod"], $balance["user"]);
 
-        if ($balance["paid"] > 0) {
+        if ($balance["paid"] > 0 && !is_null($paymethod->account)) {
             $data = [
                 "id" => null,
                 "date" => $bill->date,
@@ -201,7 +207,7 @@ class BillWriter extends BaseBillWriter
                 "value" => $balance["paid"],
                 "user" => $balance["user"],
                 "bill_entry" => $bill->id,
-                "account_from" => $balance["paymethod"],
+                "account_from" => $paymethod->account,
                 "account_to" => null
             ];
 
@@ -209,7 +215,7 @@ class BillWriter extends BaseBillWriter
                 $data["id"] = $transaction_entry->id;
                 $data["description"] = $transaction_entry->description;
             }
-
+            
             $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
         } else {
             if (!is_null($transaction_entry)) {
