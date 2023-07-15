@@ -207,7 +207,7 @@ document.addEventListener('click', function (event) {
                 data['csrf_name'] = token.csrf_name;
                 data['csrf_value'] = token.csrf_value;
 
-                return fetch(url, {
+                return fetch(jsObject.card_archive + id, {
                     method: 'POST',
                     credentials: "same-origin",
                     headers: {
@@ -956,6 +956,7 @@ async function saveCard(dialog, url) {
         }
 
         card.dataset.card = card_data.id;
+        card.querySelector('.btn-archive-card').dataset.id = card_data.id;
 
         //closeDialog(dialog, true);
         //document.getElementById('loading-overlay').classList.add('hidden');
@@ -1245,8 +1246,7 @@ function createCard(card_data) {
 
     let card_checkbox = card.querySelector('.check');
     card_checkbox.classList.add("btn-archive-card");
-    card_checkbox.dataset.url = jsObject.card_archive + card_data.id;
-    card_checkbox.dataset.archive = card_data.archive;
+    card_checkbox.dataset.archive = card_data.archive ? card_data.archive : 0;
     card_checkbox.dataset.stack = card_data.stack;
     card_checkbox.dataset.id = card_data.id;
     if (card_data.archive == 1) {
@@ -1375,6 +1375,12 @@ function createSortableCards(cardWrapper) {
                 card.stack = stack_id_to;
 
                 changeCardPosition(stack_id_to, cardsOnNewStack);
+
+                // Update archive checkbox on dom
+                let savedCardEl = document.querySelector('.stack-wrapper .stack[data-stack="' + stack_id_to + '"] .board-card[data-card="' + card_id + '"]');
+                let cardArchiveCheckbox = savedCardEl.querySelector('.btn-archive-card');
+                cardArchiveCheckbox.dataset.stack = stack_id_to;
+
             }).catch(function (error) {
                 console.log(error);
             });
