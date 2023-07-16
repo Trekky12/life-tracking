@@ -12,7 +12,9 @@ const FBAs = document.querySelectorAll('.button-add-item');
 
 const boardSidebar = document.getElementById('board-sidebar');
 
-const wasMobile = isMobile();
+let wasMobile = isMobile();
+
+const max_opacity = 0.8;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     scrollToTab(document.querySelector('a.tabbar-tab.active'), true);
@@ -24,7 +26,6 @@ if (/^(iPhone|iPad|iPod)/.test(navigator.platform) || (navigator.platform === 'M
 if (navigation && header && navigationOverlay) {
     let menuList = navigation.getElementsByTagName('ul')[0];
 
-    let max_opacity = 0.8;
     let navi_width = 256;
 
     menuButton.addEventListener('click', function (evt) {
@@ -298,11 +299,15 @@ if (navigation && header && navigationOverlay) {
     window.addEventListener('resize', handleResize);
 
     function handleResize() {
-        if (!wasMobile && isMobile()) {
+        if ( (!wasMobile && isMobile()) || (wasMobile && !isMobile())) {
             navigation.classList.remove('toggled');
             body.classList.remove("navigation-drawer-toggled");
             setCookie('navigationdrawer_desktophidden', 0);
+
+            navigationOverlay.style.opacity = 0;
+            navigationOverlay.classList.remove("visible");
         }
+        wasMobile = isMobile();
     }
 
     /**

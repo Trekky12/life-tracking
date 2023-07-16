@@ -128,6 +128,7 @@
             @include font-size(2);
             margin-right: 3rem;
             color: $color_text-secondary;
+            z-index: 1;
 
             &:hover {
                 color: $color_blue;
