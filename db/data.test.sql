@@ -49,7 +49,7 @@ INSERT INTO splitbill_bill (id, sbgroup, user, name, date, time, lat, lng, acc, 
 (2, 3, 1, 'Test', '2021-05-18', '15:00:00', NULL, NULL, NULL, NULL, 0, '40', '1.75', 'individual', 'individual'),
 (3, 2, 2,'Test bill 2', '2022-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL),
 (4, 1, 2,'Test bill 3', '2022-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL);
-INSERT INTO splitbill_bill_users (id, bill, user, paid, spend, paymethod, paid_foreign, spend_foreign) VALUES
+INSERT INTO splitbill_bill_users (id, bill, user, paid, spend, paymethod_spend, paid_foreign, spend_foreign) VALUES
 (1, 1, 1, '10.00', '10.00', NULL, NULL, NULL),
 (2, 2, 1, '2.54', '1.27', 1, '100.00', '50.00'),
 (3, 2, 3, '0.00', '1.27', NULL, '0.00', '50.00'),
@@ -59,7 +59,7 @@ INSERT INTO splitbill_bill_recurring (id, sbgroup, user, name, notice, settleup,
 (1, 1, 1,'Test bill', NULL, 0, '1', '0'),
 (2, 2, 2,'Test bill 2', NULL, 0, '1', '0'),
 (3, 1, 2,'Test bill 3', NULL, 0, '1', '0');
-INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paymethod, paid_foreign, spend_foreign) VALUES
+INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paymethod_spend, paid_foreign, spend_foreign) VALUES
 (1, 1, 1, '10.00', '10.00', NULL, NULL, NULL);
 
 INSERT INTO timesheets_projects (id, user, name, hash) VALUES 

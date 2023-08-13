@@ -15,8 +15,7 @@ use App\Domain\Finances\Transaction\TransactionMapper;
 use App\Domain\Finances\Transaction\TransactionRemover;
 use App\Domain\Main\Translator;
 
-class FinancesWriter extends ObjectActivityWriter
-{
+class FinancesWriter extends ObjectActivityWriter {
 
     private $finances_service;
     private $budget_service;
@@ -50,8 +49,7 @@ class FinancesWriter extends ObjectActivityWriter
         $this->translation = $translation;
     }
 
-    public function save($id, $data, $additionalData = null): Payload
-    {
+    public function save($id, $data, $additionalData = null): Payload {
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
@@ -98,7 +96,8 @@ class FinancesWriter extends ObjectActivityWriter
                     "user" => $entry->user,
                     "finance_entry" => $entry->id,
                     "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
-                    "id" => !is_null($entry->transaction) ? $entry->transaction : null
+                    "id" => !is_null($entry->transaction) ? $entry->transaction : null,
+                    "is_round_up_savings" => 0
                 ];
 
                 if ($entry->type == 0) {
@@ -116,11 +115,11 @@ class FinancesWriter extends ObjectActivityWriter
                  * Round up savings
                  */
                 if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0 && $entry->type == 0) {
-                    
+
                     $value = is_null($entry->bill) ? $entry->value : $entry->bill_paid;
                     $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
-                    
-                    if($saving > 0){
+
+                    if ($saving > 0) {
                         $data2 = [
                             "date" => $entry->date,
                             "time" => $entry->time,
@@ -131,7 +130,8 @@ class FinancesWriter extends ObjectActivityWriter
                             "user" => $entry->user,
                             "finance_entry" => $entry->id,
                             "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
-                            "id" => !is_null($entry->transaction_round_up_savings) ? $entry->transaction_round_up_savings : null
+                            "id" => !is_null($entry->transaction_round_up_savings) ? $entry->transaction_round_up_savings : null,
+                            "is_round_up_savings" => 1
                         ];
 
                         $transaction_round_up_savings_payload = $this->transaction_writer->save($data2["id"], $data2, ["is_finance_entry_based_save" => true]);
@@ -141,18 +141,18 @@ class FinancesWriter extends ObjectActivityWriter
                     }
                 }
             }
-            
-                /**
-                 * If paymethod was changed and the new paymethod doesn't have round up saving, delete the corresponding transaction
-                 */
-                if ($paymethod->round_up_savings == 0 && !is_null($entry->transaction_round_up_savings)) {
-                    $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
-                    $this->getMapper()->set_transaction_round_up_savings($entry->id, null);
-                    $entry->transaction_round_up_savings = null;
-                }
+
+            /**
+             * If paymethod was changed and the new paymethod doesn't have round up saving, delete the corresponding transaction
+             */
+            if ($paymethod->round_up_savings == 0 && !is_null($entry->transaction_round_up_savings)) {
+                $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
+                $this->getMapper()->set_transaction_round_up_savings($entry->id, null);
+                $entry->transaction_round_up_savings = null;
+            }
         }
         // Reset user back to initial!
-        if(!is_null($me)){
+        if (!is_null($me)) {
             $this->current_user->setUser($me);
             $this->transaction_mapper->setUser($me->id);
         }
@@ -161,8 +161,7 @@ class FinancesWriter extends ObjectActivityWriter
         return $payload;
     }
 
-    private function setDefaultOrAssignedCategory($entry)
-    {
+    private function setDefaultOrAssignedCategory($entry) {
         $cat = $this->finances_service->getDefaultOrAssignedCategory($entry);
         if (!is_null($cat)) {
             $this->getMapper()->set_category($entry->id, $cat);
@@ -173,18 +172,15 @@ class FinancesWriter extends ObjectActivityWriter
         return null;
     }
 
-    public function getObjectViewRoute(): string
-    {
+    public function getObjectViewRoute(): string {
         return 'finances_edit';
     }
 
-    public function getObjectViewRouteParams($entry): array
-    {
+    public function getObjectViewRouteParams($entry): array {
         return ["id" => $entry->id];
     }
 
-    public function getModule(): string
-    {
+    public function getModule(): string {
         return "finances";
     }
 }

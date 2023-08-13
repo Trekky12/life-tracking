@@ -169,10 +169,10 @@
 								<input type="number" step="any" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_paid {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][paid]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["paid"]}}{% else %}0{% endif %}">
 							</div>
 							<div class="paymethod-field" data-title="{{lang["FINANCES_PAYMETHOD"]}}">
-								<select class="form-control" name="balance[{{ user_id }}][paymethod]">
+								<select class="form-control" name="balance[{{ user_id }}][paymethod_spend]">
 									<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
 									{% for method in paymethods[user_id] %}
-										<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod"]) or (balance is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+										<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod_spend"]) or (balance is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
 									{% endfor %}
 								</select>
 							</div>
@@ -238,6 +238,16 @@
 							<div class="input-field" data-title="{{lang["VALUE"]}} ({{ i18n.currency }})">
 								<input type="number" step="any" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_spend {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][spend]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["spend"]}}{% else %}0{% endif %}">
 							</div>
+							{% if isSettleUp %}
+								<div class="paymethod-field" data-title="{{lang["FINANCES_PAYMETHOD"]}}">
+									<select class="form-control" name="balance[{{ user_id }}][paymethod_paid]">
+										<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+										{% for method in paymethods[user_id] %}
+											<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod_paid"]) %} selected {% endif %}>{{method.name|raw}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							{% endif %}
 						</div>
 					{% endfor %}
 				</div>

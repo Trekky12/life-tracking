@@ -8,7 +8,7 @@ class TransactionMapper extends \App\Domain\Mapper {
     protected $dataobject = \App\Domain\Finances\Transaction\Transaction::class;
     //protected $select_results_of_user_only = true;
 
-    public function getTransactionsOfAccount($account_id){
+    public function getTransactionsOfAccount($account_id) {
         $bindings = ["account" => $account_id];
 
         $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE  ORDER BY changedOn DESC";
@@ -26,16 +26,16 @@ class TransactionMapper extends \App\Domain\Mapper {
 
     private function getTableSQL($select) {
         $sql = "SELECT {$select} "
-                . " FROM " . $this->getTableName() . " t "
-                . " LEFT JOIN " . $this->getTableName('finances_accounts') . " fa_from ON t.account_from = fa_from.id "
-                . " LEFT JOIN " . $this->getTableName('finances_accounts') . " fa_to ON t.account_to = fa_to.id "
-                . " WHERE (t.account_from = :account OR t.account_to = :account) "
-                . " AND "
-                . " (t.createdOn LIKE :searchQuery OR "
-                . " t.description LIKE :searchQuery OR "
-                . " t.value LIKE :searchQuery OR "
-                . " fa_from.name LIKE :searchQuery OR "
-                . " fa_to.name LIKE :searchQuery)";
+            . " FROM " . $this->getTableName() . " t "
+            . " LEFT JOIN " . $this->getTableName('finances_accounts') . " fa_from ON t.account_from = fa_from.id "
+            . " LEFT JOIN " . $this->getTableName('finances_accounts') . " fa_to ON t.account_to = fa_to.id "
+            . " WHERE (t.account_from = :account OR t.account_to = :account) "
+            . " AND "
+            . " (t.createdOn LIKE :searchQuery OR "
+            . " t.description LIKE :searchQuery OR "
+            . " t.value LIKE :searchQuery OR "
+            . " fa_from.name LIKE :searchQuery OR "
+            . " fa_to.name LIKE :searchQuery)";
         return $sql;
     }
 
@@ -109,11 +109,17 @@ class TransactionMapper extends \App\Domain\Mapper {
     /**
      * Bills
      */
-    public function getEntryFromBill($user, $bill_id) {
+    public function getEntryFromBill($user, $bill_id, $round_up_savings = null) {
 
         $bindings = ["user" => $user, "bill" => $bill_id];
 
         $sql = "SELECT * FROM " . $this->getTableName() . "  WHERE bill_entry = :bill AND user =:user ";
+
+        if (!is_null($round_up_savings)) {
+            $sql .= "AND is_round_up_savings = :round_up_savings";
+            $bindings["round_up_savings"] = $round_up_savings;
+        }
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
@@ -152,5 +158,4 @@ class TransactionMapper extends \App\Domain\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
-
 }

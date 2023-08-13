@@ -49,7 +49,7 @@ class BillNotificationService {
         $me = $this->current_user->getUser();
         $my_user_id = intval($me->id);
         $users_afterSave = $this->mapper->getBillUsers($bill->id);
-        $users_notify = array_merge($users_preSave, $users_afterSave);
+        $users_notify = array_unique(array_merge($users_preSave, $users_afterSave), SORT_REGULAR);
 
         $new_balances = $this->mapper->getBalance($bill->id);
         $billValue = $this->mapper->getBillSpend($bill->id);
@@ -120,6 +120,7 @@ class BillNotificationService {
                 }
 
                 // Notification
+                $this->logger->debug("Send notification to user", ["user_id" => $user->id]);
                 $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $group_path, $sbgroup->id);
             }
         }

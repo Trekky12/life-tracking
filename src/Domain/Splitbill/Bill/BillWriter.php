@@ -21,8 +21,7 @@ use App\Domain\Main\Translator;
 use App\Domain\Splitbill\BaseBillWriter;
 use App\Domain\Finances\Paymethod\PaymethodService;
 
-class BillWriter extends BaseBillWriter
-{
+class BillWriter extends BaseBillWriter {
 
     protected $user_service;
     protected $bill_notification_service;
@@ -70,8 +69,7 @@ class BillWriter extends BaseBillWriter
         $this->paymethod_service = $paymethod_service;
     }
 
-    public function save($id, $data, $additionalData = null): Payload
-    {
+    public function save($id, $data, $additionalData = null): Payload {
 
         $users_preSave = $this->mapper->getBillUsers($id);
 
@@ -127,7 +125,7 @@ class BillWriter extends BaseBillWriter
                             "lng" => $bill->lng,
                             "lat" => $bill->lat,
                             "acc" => $bill->acc,
-                            "paymethod" => $balance["paymethod"]
+                            "paymethod_spend" => $balance["paymethod_spend"]
                         ];
 
                         if (!is_null($finance_entry)) {
@@ -144,17 +142,18 @@ class BillWriter extends BaseBillWriter
                         }
 
                         // Splitted bill was paid by the user but not spend by him? => Create only transaction
-                        $this->createTransaction($balance, $bill);
+                        $this->createTransaction($balance, $bill);                        
                     }
                 } else {
                     // Create settle up transaction
                     $this->createTransaction($balance, $bill);
+                    $this->createSettleUpIncomingTransaction($balance, $bill);
                 }
             }
         }
 
         // Reset user back to initial!
-        if(!is_null($me)){
+        if (!is_null($me)) {
             $this->current_user->setUser($me);
             $this->finance_mapper->setUser($me->id);
             $this->transaction_mapper->setUser($me->id);
@@ -169,18 +168,15 @@ class BillWriter extends BaseBillWriter
         return $payload;
     }
 
-    public function getParentMapper()
-    {
+    public function getParentMapper() {
         return $this->group_mapper;
     }
 
-    public function getObjectViewRoute(): string
-    {
+    public function getObjectViewRoute(): string {
         return 'splitbill_bills';
     }
 
-    public function getObjectViewRouteParams($entry): array
-    {
+    public function getObjectViewRouteParams($entry): array {
         $group = $this->getParentMapper()->get($entry->getParentID());
         return [
             "group" => $group->getHash(),
@@ -188,35 +184,104 @@ class BillWriter extends BaseBillWriter
         ];
     }
 
-    public function getModule(): string
-    {
+    public function getModule(): string {
         return "splitbills";
     }
 
-    private function createTransaction($balance, $bill){
-        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id);
-        
-        $paymethod = $this->paymethod_service->getPaymethodOfUser($balance["paymethod"], $balance["user"]);
+    private function createTransaction($balance, $bill) {
+        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0);
+        $transaction_entry_round_up_savings = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 1);
 
-        if ($balance["paid"] > 0 && !is_null($paymethod->account)) {
+        $paymethod_spend = $this->paymethod_service->getPaymethodOfUser($balance["paymethod_spend"], $balance["user"]);
+        $value = $balance["paid"];
+
+        if ($value > 0 && !is_null($paymethod_spend->account)) {
             $data = [
                 "id" => null,
                 "date" => $bill->date,
                 "time" => $bill->time,
                 "description" => $bill->name,
-                "value" => $balance["paid"],
+                "value" => $value,
                 "user" => $balance["user"],
                 "bill_entry" => $bill->id,
-                "account_from" => $paymethod->account,
-                "account_to" => null
+                "account_from" => $paymethod_spend->account,
+                "account_to" => null,
+                "is_round_up_savings" => 0
             ];
 
             if (!is_null($transaction_entry)) {
                 $data["id"] = $transaction_entry->id;
                 $data["description"] = $transaction_entry->description;
             }
-            
+
             $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
+
+            // Round up savings
+            if (!is_null($paymethod_spend->round_up_savings_account) && $paymethod_spend->round_up_savings > 0) {
+
+                $saving = (ceil($value / $paymethod_spend->round_up_savings) * $paymethod_spend->round_up_savings) - $value;
+    
+                if ($saving > 0) {
+                    $data2 = [
+                        "id" => null,
+                        "date" => $bill->date,
+                        "time" => $bill->time,
+                        "description" => sprintf("%s %s", $this->translation->getTranslatedString("FINANCES_ROUND_UP_SAVINGS"), $bill->name),
+                        "value" => $saving,
+                        "user" => $balance["user"],
+                        "bill_entry" => $bill->id,
+                        "account_from" => $paymethod_spend->account,
+                        "account_to" => $paymethod_spend->round_up_savings_account,
+                        "is_round_up_savings" => 1
+                    ];
+
+                    if (!is_null($transaction_entry_round_up_savings)) {
+                        $data2["id"] = $transaction_entry_round_up_savings->id;
+                        $data2["description"] = $transaction_entry_round_up_savings->description;
+                    }
+    
+                    $this->transaction_writer->save($data2["id"], $data2, ["is_bill_based_save" => true]);
+                }
+            }
+
+        } else {
+            if (!is_null($transaction_entry)) {
+                $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);
+            }
+
+            if (!is_null($transaction_entry_round_up_savings)) {
+                $this->transaction_remover->delete($transaction_entry_round_up_savings->id, ["is_bill_based_delete" => true]);
+            }
+        }
+    }
+
+    private function createSettleUpIncomingTransaction($balance, $bill) {
+        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0);
+
+        $paymethod_paid = $this->paymethod_service->getPaymethodOfUser($balance["paymethod_paid"], $balance["user"]);
+        $value = $balance["spend"];
+
+        if ($value > 0 && !is_null($paymethod_paid->account)) {
+            $data = [
+                "id" => null,
+                "date" => $bill->date,
+                "time" => $bill->time,
+                "description" => $bill->name,
+                "value" => $value,
+                "user" => $balance["user"],
+                "bill_entry" => $bill->id,
+                "account_from" => null,
+                "account_to" => $paymethod_paid->account,
+                "is_round_up_savings" => 0
+            ];
+
+            if (!is_null($transaction_entry)) {
+                $data["id"] = $transaction_entry->id;
+                $data["description"] = $transaction_entry->description;
+            }
+
+            $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
+
         } else {
             if (!is_null($transaction_entry)) {
                 $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);

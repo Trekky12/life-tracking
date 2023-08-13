@@ -211,6 +211,7 @@ CREATE TABLE finances_transactions (
     account_from int(11) UNSIGNED DEFAULT NULL,
     account_to int(11) UNSIGNED DEFAULT NULL,   
     is_confirmed INT(1) DEFAULT 0, 
+    is_round_up_savings INT(1) DEFAULT 0, 
     finance_entry int(11) UNSIGNED DEFAULT NULL,
     bill_entry int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
@@ -218,6 +219,11 @@ CREATE TABLE finances_transactions (
     FOREIGN KEY(account_from) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(account_to) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+
+ALTER TABLE finances_transactions ADD is_round_up_savings INT(1) DEFAULT 0 AFTER is_confirmed; 
+*/
 
 
 DROP TABLE IF EXISTS finances_transactions_recurring;
@@ -693,7 +699,8 @@ CREATE TABLE splitbill_bill_users (
     user INTEGER unsigned DEFAULT NULL,
     paid DECIMAL(10,2) DEFAULT NULL,
     spend DECIMAL(10,2) DEFAULT NULL,
-    paymethod int(11) UNSIGNED DEFAULT NULL,
+    paymethod_spend int(11) UNSIGNED DEFAULT NULL,
+    paymethod_paid int(11) UNSIGNED DEFAULT NULL,
     paid_foreign DECIMAL(10,2) DEFAULT NULL,
     spend_foreign DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
@@ -735,7 +742,8 @@ CREATE TABLE splitbill_bill_recurring_users (
     user INTEGER unsigned DEFAULT NULL,
     paid DECIMAL(10,2) DEFAULT NULL,
     spend DECIMAL(10,2) DEFAULT NULL,
-    paymethod int(11) UNSIGNED DEFAULT NULL,
+    paymethod_spend int(11) UNSIGNED DEFAULT NULL,
+    paymethod_paid int(11) UNSIGNED DEFAULT NULL,
     paid_foreign DECIMAL(10,2) DEFAULT NULL,
     spend_foreign DECIMAL(10,2) DEFAULT NULL,
     PRIMARY KEY (id),
@@ -744,6 +752,14 @@ CREATE TABLE splitbill_bill_recurring_users (
     FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/**
+ALTER TABLE `splitbill_bill_users` CHANGE `paymethod` `paymethod_spend` INT(11) UNSIGNED NULL DEFAULT NULL; 
+ALTER TABLE `splitbill_bill_recurring_users` CHANGE `paymethod` `paymethod_spend` INT(11) UNSIGNED NULL DEFAULT NULL; 
+
+ALTER TABLE `splitbill_bill_users` ADD `paymethod_paid` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `paymethod_spend`; 
+ALTER TABLE `splitbill_bill_recurring_users` ADD `paymethod_paid` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `paymethod_spend`; 
+*/
 
 DROP TABLE IF EXISTS finances;
 CREATE TABLE finances (
