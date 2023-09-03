@@ -33,12 +33,14 @@
 
 	<div class="workout-selection view workouts-session-view">
 		{% for exercise in exercises %}
-			<div class="inner-content">
-				{% if exercise.type == "exercise" %}
+			{% if exercise.type == "exercise" %}
+				<div class="inner-content">
 					{% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}
-				{% elseif exercise.type == "day" %}
-					<h3>{{ exercise.notice }}</h3>
-				{% elseif exercise.type == "superset" %}
+				</div>
+			{% elseif exercise.type == "day" %}
+				<h3>{{ exercise.notice }}</h3>
+			{% elseif exercise.type == "superset" %}
+				<div class="inner-content with-padding">
 					<h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
 					<div class="workout_superset">
 						<div class="exercises" data-type="superset">
@@ -47,8 +49,8 @@
 							{% endfor %}
 						</div>
 					</div>
-				{% endif %}
-			</div>
+				</div>
+			{% endif %}
 		{% endfor %}
 
 	</div>

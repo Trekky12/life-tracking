@@ -21,6 +21,10 @@
         border-bottom-right-radius: inherit;
     }
 
+    &.with-padding{
+        padding: 1rem;
+    }
+
     .inner-content-header {
         h2 {
             @include font-size(1.8);
