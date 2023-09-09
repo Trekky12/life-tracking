@@ -52,7 +52,7 @@ class BillWriter extends BaseBillWriter {
         TransactionWriter $transaction_writer,
         TransactionRemover $transaction_remover,
         TransactionMapper $transaction_mapper,
-        PaymethodService $paymethod_service,
+        PaymethodService $paymethod_service
     ) {
         parent::__construct($logger, $user, $activity, $group_service, $group_mapper, $translation);
         $this->mapper = $mapper;
@@ -256,7 +256,7 @@ class BillWriter extends BaseBillWriter {
     }
 
     private function createSettleUpIncomingTransaction($balance, $bill) {
-        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0);
+        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0, true);
 
         $paymethod_paid = $this->paymethod_service->getPaymethodOfUser($balance["paymethod_paid"], $balance["user"]);
         $value = $balance["spend"];

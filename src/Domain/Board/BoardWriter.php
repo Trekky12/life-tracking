@@ -84,7 +84,7 @@ class BoardWriter extends ObjectActivityWriter {
                     );
 
                     //$this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
-                    $this->notification_service->sendMailToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_ADD", 'mail/general.twig', $subject, $variables);
+                    $this->notification_service->sendMailNotificationToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_ADD", 'mail/general.twig', $subject, $variables);
                 }
             }
         }

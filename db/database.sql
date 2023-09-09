@@ -706,7 +706,8 @@ CREATE TABLE splitbill_bill_users (
     PRIMARY KEY (id),
     FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod_spend) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod_paid) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -749,7 +750,8 @@ CREATE TABLE splitbill_bill_recurring_users (
     PRIMARY KEY (id),
     FOREIGN KEY(bill) REFERENCES splitbill_bill_recurring(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod_spend) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod_paid) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
