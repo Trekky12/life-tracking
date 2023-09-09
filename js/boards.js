@@ -333,7 +333,7 @@ document.addEventListener('click', function (event) {
         });
     }
 
-    let stack_create_btn = event.target.closest("#create-stack")
+    let stack_create_btn = event.target.closest(".create-stack")
     if (stack_create_btn) {
         event.preventDefault();
         openDialog(stackModal);
@@ -1138,7 +1138,6 @@ var sortable = new Sortable(stacksWrapper, {
     draggable: ".stack",
     handle: isTouchEnabled() ? ".handle" : ".stack-header",
     dataIdAttr: 'data-stack',
-    filter: '.stack-dummy',
     onStart: function (evt) {
         document.body.classList.add("sortable-select");
     },
@@ -1199,7 +1198,7 @@ function createStack(stack_data) {
     }
 
     stack.querySelector('.stack-header span.title').innerHTML = stack_data.name;
-    stack.querySelector('a#create-card').dataset.stack = stack_data.id;
+    stack.querySelector('a.create-card').dataset.stack = stack_data.id;
 
     if (stack_data.cards) {
         Object.values(stack_data.cards).forEach(function (card_data) {

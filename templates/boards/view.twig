@@ -28,6 +28,7 @@
 
 {% block body %}
 	<div class="board-content">
+
 		<div id="loadingIconBoard" class="centered loading-icon">
 			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
 		</div>
@@ -261,13 +262,13 @@
 			<div class="card-wrapper"></div>
 
 			<div class="board-card-dummy">
-				<a id="create-card" class="create-card add-element-text" href="#" data-stack="">{{ fontawesome('fas fa-plus') }}
+				<a class="create-card add-element-text" href="#" data-stack="">{{ fontawesome('fas fa-plus') }}
 					{{lang["ADD_CARD"]}}</a>
 			</div>
 		</div>
 
 		<div class="stack-dummy">
-			<a id="create-stack" class="create-stack add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
+			<a class="create-stack add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
 				{{lang["ADD_STACK"]}}</a>
 		</div>
 
