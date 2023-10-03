@@ -43,7 +43,7 @@ class SplittedBillsBalanceWidget implements Widget {
             $balance = array_key_exists($group_id, $balances) ? $balances[$group_id] : null;
 
             if (!is_null($balance)) {
-                $result[$group_id] = ["name" => $group->name, "hash" => $group->getHash(), "balance" => $balance["balance"]];
+                $result[$group_id] = ["name" => $group->name, "hash" => $group->getHash(), "balance" => round($balance["balance"], 2)];
             }
         }
 

@@ -32,7 +32,7 @@ class FinanceMonthBalanceWidget implements Widget {
         $expenses = $this->mapper->statsMailBalance($this->current_user->getUser()->id, $month, $year, 0);
         $income   = $this->mapper->statsMailBalance($this->current_user->getUser()->id, $month, $year, 1);
         
-        return $income - $expenses;
+        return round($income - $expenses, 2);
     }
 
     public function getTitle(WidgetObject $widget = null) {

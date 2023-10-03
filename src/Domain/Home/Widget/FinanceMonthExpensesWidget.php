@@ -29,7 +29,7 @@ class FinanceMonthExpensesWidget implements Widget {
         $year = $dateObj->format("Y");
         $month = $dateObj->format("m");
 
-        return $this->mapper->statsMailBalance($this->current_user->getUser()->id, $month, $year, 0);
+        return round($this->mapper->statsMailBalance($this->current_user->getUser()->id, $month, $year, 0), 2);
     }
 
     public function getTitle(WidgetObject $widget = null) {
