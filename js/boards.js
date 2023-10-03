@@ -19,6 +19,7 @@ const stacksWrapper = document.querySelector('.stack-wrapper');
 const new_stack_element = document.querySelector('#templates .stack-dummy');
 
 let boardData = [];
+let resultPending = false;
 
 document.addEventListener("DOMContentLoaded", async function () {
     loadingIconBoard.classList.remove("hidden");
@@ -97,16 +98,19 @@ document.addEventListener('click', function (event) {
     let btn_archive_stack = event.target.closest('.btn-archive-stack');
     if (btn_archive_stack) {
         event.preventDefault();
+        resultPending = true;
         let url = btn_archive_stack.dataset.url;
         let archive = parseInt(btn_archive_stack.dataset.archive) === 0 ? 1 : 0;
         let id = parseInt(btn_archive_stack.dataset.id);
 
         if (archive === 0) {
             if (!confirm(lang.boards_undo_archive)) {
+                resultPending = false;
                 return false;
             }
         } else {
             if (!confirm(lang.boards_really_archive)) {
+                resultPending = false;
                 return false;
             }
         }
@@ -155,6 +159,8 @@ document.addEventListener('click', function (event) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(url, 'POST', formData);
             }
+        }).finally(function () {
+            resultPending = false;
         });
     }
 
@@ -163,7 +169,7 @@ document.addEventListener('click', function (event) {
         //event.preventDefault();
 
         setTimeout(function () {
-
+            resultPending = true;
             let url = btn_archive_card.dataset.url;
             let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
             let stack_id = parseInt(btn_archive_card.dataset.stack);
@@ -180,11 +186,13 @@ document.addEventListener('click', function (event) {
             if (archive === 0) {
                 if (!confirm(lang.boards_undo_archive)) {
                     cardArchiveCheckbox.checked = true;
+                    resultPending = false;
                     return false;
                 }
             } else {
                 if (!confirm(lang.boards_really_archive)) {
                     cardArchiveCheckbox.checked = false;
+                    resultPending = false;
                     return false;
                 }
             }
@@ -237,6 +245,8 @@ document.addEventListener('click', function (event) {
                     let formData = new URLSearchParams(data).toString();
                     saveDataWhenOffline(url, 'POST', formData);
                 }
+            }).finally(function () {
+                resultPending = false;
             });
         }, 20);
     }
@@ -244,10 +254,13 @@ document.addEventListener('click', function (event) {
     let btn_delete_stack = event.target.closest('.btn-delete-stack');
     if (btn_delete_stack) {
         event.preventDefault();
+
+        resultPending = true;
         let url = btn_delete_stack.dataset.url;
         let id = parseInt(btn_delete_stack.dataset.id);
 
         if (!confirm(lang.boards_really_delete_stack)) {
+            resultPending = false;
             return false;
         }
 
@@ -282,17 +295,21 @@ document.addEventListener('click', function (event) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(url, 'POST', formData);
             }
+        }).finally(function () {
+            resultPending = false;
         });
     }
 
     let btn_delete_card = event.target.closest('.btn-delete-card');
     if (btn_delete_card) {
         event.preventDefault();
+        resultPending = true;
         let url = btn_delete_card.dataset.url;
         let stack_id = parseInt(btn_delete_card.dataset.stack);
         let id = parseInt(btn_delete_card.dataset.id);
 
         if (!confirm(lang.boards_really_delete_card)) {
+            resultPending = false;
             return false;
         }
 
@@ -330,6 +347,8 @@ document.addEventListener('click', function (event) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(url, 'POST', formData);
             }
+        }).finally(function () {
+            resultPending = false;
         });
     }
 
@@ -823,6 +842,7 @@ function formToJSON(elem) {
 async function saveStack(dialog, url) {
     //document.getElementById('loading-overlay').classList.remove('hidden');
 
+    resultPending = true;
     var id = dialog.querySelector('input[name="id"]').value;
 
     let form = dialog.querySelector('form');
@@ -899,12 +919,17 @@ async function saveStack(dialog, url) {
         if (document.body.classList.contains('offline')) {
             saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
+    } finally {
+        resultPending = false;
     }
 }
 
 async function saveCard(dialog, url) {
     //document.getElementById('loading-overlay').classList.remove('hidden');
     cleanURL();
+
+    resultPending = true;
+
     var id = dialog.querySelector('input[name="id"]').value;
 
     let form = dialog.querySelector('form');
@@ -974,12 +999,16 @@ async function saveCard(dialog, url) {
         if (document.body.classList.contains('offline')) {
             saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
+    } finally {
+        resultPending = false;
     }
 }
 
 async function saveLabel(dialog, url) {
     document.getElementById('loading-overlay').classList.remove('hidden');
     cleanURL();
+
+    resultPending = true;
     var id = dialog.querySelector('input[name="id"]').value;
 
     let form = dialog.querySelector('form');
@@ -1010,6 +1039,8 @@ async function saveLabel(dialog, url) {
         if (document.body.classList.contains('offline')) {
             saveDataWhenOffline(url + id, 'POST', formData2, true);
         }
+    } finally {
+        resultPending = false;
     }
 }
 
@@ -1075,7 +1106,7 @@ setInterval(async function () {
     var isOpenLabel = isVisible(labelModal);
     var isSortableSelect = document.body.classList.contains("sortable-select");
 
-    if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true && !isSortableSelect === true) {
+    if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true && !isSortableSelect === true && !resultPending === true) {
         await updateBoard();
     }
 }, 10000);
@@ -1140,6 +1171,7 @@ var sortable = new Sortable(stacksWrapper, {
     dataIdAttr: 'data-stack',
     onStart: function (evt) {
         document.body.classList.add("sortable-select");
+        resultPending = true;
     },
     onEnd: function (evt) {
 
@@ -1170,8 +1202,9 @@ var sortable = new Sortable(stacksWrapper, {
             });
         }).catch(function (error) {
             console.log(error);
+        }).finally(function(){
+            resultPending = false;
         });
-
     }
 });
 
@@ -1283,6 +1316,8 @@ function createCard(card_data) {
 function changeCardPosition(stack_id, cards) {
     var data = { 'card': cards };
 
+    resultPending = true;
+
     return getCSRFToken().then(function (token) {
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
@@ -1308,6 +1343,8 @@ function changeCardPosition(stack_id, cards) {
         });
     }).catch(function (error) {
         console.log(error);
+    }).finally(function(){
+        resultPending = false;
     });
 }
 
@@ -1322,9 +1359,11 @@ function createSortableCards(cardWrapper) {
         ghostClass: 'card-placeholder',
         onStart: function (evt) {
             document.body.classList.add("sortable-select");
+            resultPending = true;
         },
         onEnd: function (evt) {
             document.body.classList.remove("sortable-select");
+            resultPending = false;
         },
         onUpdate: function (evt) {
             let stack_id = evt.item.closest('.stack').dataset.stack;
@@ -1332,6 +1371,9 @@ function createSortableCards(cardWrapper) {
         },
         // Moved card to new stack
         onAdd: function (evt) {
+
+            resultPending = true;
+
             let stack_id_from = evt.from.closest('.stack').dataset.stack;
             let stack_id_to = evt.to.closest('.stack').dataset.stack;
             let card_id = evt.item.dataset.card;
@@ -1382,6 +1424,8 @@ function createSortableCards(cardWrapper) {
 
             }).catch(function (error) {
                 console.log(error);
+            }).finally(function(){
+                resultPending = false;
             });
         }
     });
