@@ -82,7 +82,7 @@
 				<div class="trip_dates">
 					{% for d in range %}
 						{% if d['date'] is null or not d['events'] is empty %}
-							<a class="change_day no-loading" data-date="{% if not d['date'] is null %}{{ d['date']|date('Y-m-d') }}{% endif %}" href="?from={% if not d['date'] is null %}{{ d['date']|date('Y-m-d') }}{% endif %}&to={% if not d['date'] is null %}{{ d['date']|date('y-m-d') }}{% endif %}">
+							<a class="change_day no-loading" data-date="{% if not d['date'] is null %}{{ d['date']|date('Y-m-d') }}{% endif %}" href="?from={% if not d['date'] is null %}{{ d['date']|date('Y-m-d') }}{% endif %}&to={% if not d['date'] is null %}{{ d['date']|date('Y-m-d') }}{% endif %}">
 								<button class="button small trips_overview {% if not d['active'] %}button-outlined{% endif %}">{{ d['display_date'] }}</button>
 							</a>
 						{% endif %}

@@ -118,6 +118,10 @@ class Event extends \App\Domain\DataObject {
         return strcmp($this->type, "SHIP") === 0;
     }
 
+    public function isWithoutDate() {
+        return empty($this->start_date) && empty($this->end_date);
+    }
+
     public function getPosition() {
         $data['isTravel'] = $this->isTravel();
         $data['isCar'] = $this->isDrive();
@@ -128,6 +132,7 @@ class Event extends \App\Domain\DataObject {
         $data['isEvent'] = $this->isEvent();
         $data['isWaypoint'] = $this->isWaypoint();
         $data['isShip'] = $this->isShip();
+        $data['isWithoutDate'] = $this->isWithoutDate();
 
         $data['data'] = $this->get_fields();
 

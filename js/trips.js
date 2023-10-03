@@ -91,7 +91,7 @@ if (routeBtn) {
         event.preventDefault();
         routeControl.setWaypoints([]);
         my_markers.forEach(function (item, idx) {
-            if (!item.data.isPlane) {
+            if (!item.data.isPlane && !item.data.isWithoutDate) {
                 addWaypoint(item);
             }
         });
