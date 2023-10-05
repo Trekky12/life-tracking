@@ -209,6 +209,10 @@ pre {
     float: right;
 }
 
+.fontawesome-icon.icon-rotate svg{
+    transform: rotate(90deg);
+}
+
 .fontawesome-icon svg {
     height: 1em;
     width: 1em;

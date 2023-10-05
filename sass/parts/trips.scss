@@ -27,7 +27,6 @@ body.trips .inner-content .page-header {
 }
 
 .trip_day {
-
     h3 {
         @include font-size(1.8);
         font-weight: 600;
@@ -35,7 +34,6 @@ body.trips .inner-content .page-header {
     }
 
     .trip_event {
-
         padding: 0 0 2rem 0;
 
         h4 {
@@ -50,7 +48,6 @@ body.trips .inner-content .page-header {
         }
 
         .description {
-
             word-break: break-word;
             hyphens: auto;
 
@@ -60,11 +57,9 @@ body.trips .inner-content .page-header {
                 display: none;
                 padding-top: 0.5rem;
                 padding-bottom: 1rem;
-
             }
 
             .description_text {
-
                 span.plus {
                     display: inline-block;
                 }
@@ -94,13 +89,10 @@ body.trips .inner-content .page-header {
                 span.minus {
                     display: inline-block;
                 }
-
             }
-
-
         }
 
-        display:flex;
+        display: flex;
         justify-content: space-between;
 
         .trip-icon {
@@ -115,7 +107,6 @@ body.trips .inner-content .page-header {
                 @media screen and (min-width: $size_tablet) {
                     @include font-size(4);
                     width: 70px;
-
                 }
             }
         }
@@ -172,16 +163,24 @@ svg:hover {
 }
 
 .leaflet-marker-icon.extra-marker {
-
     svg {
         margin-top: 10px;
-        color: #FFFFFF;
+        color: #ffffff;
         width: 1.5em;
         height: 1.5em;
     }
-
 }
 
 .leaflet-container {
     @include font-size(1);
+}
+
+.leaflet-routing-btn {
+    &.add,
+    &.reverse {
+        svg {
+            height: 14px;
+            width: 14px;
+        }
+    }
 }

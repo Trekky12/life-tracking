@@ -23,8 +23,8 @@ class FontAwesomeExtension extends \Twig\Extension\AbstractExtension {
         ];
     }
 
-    public function getIcon($name = null) {
-        return Utility::getFontAwesomeIcon($name);
+    public function getIcon($name = null, $rotate = false) {
+        return Utility::getFontAwesomeIcon($name, $rotate);
     }
 
 }
