@@ -18,8 +18,7 @@ use App\Domain\Main\Translator;
 use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
 use App\Domain\Timesheets\Customer\CustomerService;
 
-class SheetService extends Service
-{
+class SheetService extends Service {
 
     protected $project_service;
     protected $project_category_service;
@@ -56,8 +55,7 @@ class SheetService extends Service
         $this->customer_service = $customer_service;
     }
 
-    public function view($hash, $from, $to, $categories, $billed = null, $payed = null, $customer = null): Payload
-    {
+    public function view($hash, $from, $to, $categories, $billed = null, $payed = null, $customer = null): Payload {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -93,8 +91,7 @@ class SheetService extends Service
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    private function getTableDataIndex($project, $from, $to, $selected_categories = [], $billed = null, $payed = null, $customer = null, $count = 20)
-    {
+    private function getTableDataIndex($project, $from, $to, $selected_categories = [], $billed = null, $payed = null, $customer = null, $count = 20) {
 
         $range = $this->getMapper()->getMinMaxDate("start", "end", $project->id, "project");
         $minTotal = $range["min"];
@@ -165,8 +162,7 @@ class SheetService extends Service
         ];
     }
 
-    public function table($hash, $from, $to, $requestData): Payload
-    {
+    public function table($hash, $from, $to, $requestData): Payload {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -179,8 +175,7 @@ class SheetService extends Service
         return new Payload(Payload::$RESULT_JSON, $table);
     }
 
-    private function getTableData($project, $from, $to, $requestData)
-    {
+    private function getTableData($project, $from, $to, $requestData) {
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -225,8 +220,7 @@ class SheetService extends Service
         return $response_data;
     }
 
-    private function renderTableRows($project, array $sheets, $filter = false)
-    {
+    private function renderTableRows($project, array $sheets, $filter = false) {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
@@ -272,8 +266,7 @@ class SheetService extends Service
         return $rendered_data;
     }
 
-    public function setDuration(Sheet $entry, Project $project, $duration_modification = 0)
-    {
+    public function setDuration(Sheet $entry, Project $project, $duration_modification = 0) {
 
         // get and save duration
         $duration = $entry->calculateDuration();
@@ -294,8 +287,7 @@ class SheetService extends Service
         }
     }
 
-    public function edit($hash, $entry_id)
-    {
+    public function edit($hash, $entry_id) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -338,8 +330,7 @@ class SheetService extends Service
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    public function showfastCheckInCheckOut($hash)
-    {
+    public function showfastCheckInCheckOut($hash) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -360,13 +351,11 @@ class SheetService extends Service
         ]);
     }
 
-    public function getLastSheetWithStartDateToday($project_id)
-    {
+    public function getLastSheetWithStartDateToday($project_id) {
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
     }
 
-    public function showExport($hash, $from, $to, $categories, $billed = null, $payed = null, $customer = null): Payload
-    {
+    public function showExport($hash, $from, $to, $categories, $billed = null, $payed = null, $customer = null): Payload {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
@@ -389,8 +378,7 @@ class SheetService extends Service
         ]);
     }
 
-    public function setCategories($hash, $data)
-    {
+    public function setCategories($hash, $data) {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
@@ -435,8 +423,7 @@ class SheetService extends Service
         return new Payload(Payload::$STATUS_ERROR);
     }
 
-    public function setOptions($hash, $data)
-    {
+    public function setOptions($hash, $data) {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
@@ -474,5 +461,82 @@ class SheetService extends Service
             return new Payload(Payload::$STATUS_NEW);
         }
         return new Payload(Payload::$STATUS_ERROR);
+    }
+
+    public function calendar($hash, $from, $to, $categories, $billed = null, $payed = null, $customer = null): Payload {
+
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id);
+
+        $selected_categories = $categories;
+
+        $response_data = $this->getTableDataIndex($project, $from, $to, $selected_categories, $billed, $payed, $customer);
+
+        $response_data["users"] = $this->user_service->getAll();
+        $response_data["categories"] = $project_categories;
+
+        $response_data["categories_selected"] = $selected_categories;
+
+        $response_data["categories_selected_query"] = ["categories" => $selected_categories];
+
+        $response_data["payed"] = $payed;
+        $response_data["billed"] = $billed;
+
+        $response_data["customers"] = $customers;
+        $response_data["customer"] = $customer;
+
+        $response_data["hasTimesheetCalendar"] = true;
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function events($hash, $requestData): Payload {
+
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+        $end = array_key_exists("end", $requestData) ? filter_var($requestData["end"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+
+
+        $startDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $start);
+        $endDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $end);
+
+        $from = $startDate->format('Y-m-d');
+        $to = $endDate->format('Y-m-d');
+
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, null);
+
+        $events = [];
+
+        foreach ($data as $timesheet) {
+
+            $st = new \DateTime($timesheet->start);
+            $e = new \DateTime($timesheet->end);
+
+            $title = '';
+            if ($timesheet->customerName) {
+                $title .= $timesheet->customerName;
+            }elseif($timesheet->categories){
+                $title .= $timesheet->categories;
+            }
+
+            $events[] = [
+                'title' => $title,
+                'start' => $st->format('Y-m-d H:i:s'),
+                'end' => $e->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        return new Payload(Payload::$RESULT_JSON, $events);
     }
 }

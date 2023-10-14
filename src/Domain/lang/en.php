@@ -491,6 +491,7 @@ $lang["TIMESHEETS_COME_PROJECT_BASED"] = "Start";
 $lang["TIMESHEETS_LEAVE_DAY_BASED"] = "Leave";
 $lang["TIMESHEETS_LEAVE_PROJECT_BASED"] = "End";
 $lang["TIMESHEETS_EXPORT"] = "Export";
+$lang["TIMESHEETS_CALENDAR"] = "Calendar";
 $lang["EXPORT_WORD"] = "Word";
 $lang["EXPORT_EXCEL"] = "Excel";
 $lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (with notices)";

@@ -311,3 +311,15 @@ if (applyOptionsBtn) {
     });
 }
 
+var calendarEl = document.getElementById('timesheets_calendar');
+if (calendarEl) {
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: i18n.template,
+        events: {
+            url: jsObject.timesheets_calendar_events,
+        }
+    });
+    calendar.render();
+}
+

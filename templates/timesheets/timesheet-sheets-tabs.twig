@@ -1,6 +1,7 @@
 <div class="tabbar-scroller">
 	<div class="tabbar-scrollarea">
 		<a class="tabbar-tab {% if active == 'timesheets_sheets' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">{{lang["TIMESHEETS"]}}</a>
+		<a class="tabbar-tab {% if active == 'timesheets_calendar' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}">{{lang["TIMESHEETS_CALENDAR"]}}</a>
 		{% if categories %}
 			<a class="tabbar-tab {% if active == 'timesheets_project_categorybudget_view' %}active{% endif %}" href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
 		{% endif %}

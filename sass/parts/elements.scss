@@ -1,3 +1,12 @@
+:root {
+    --fc-button-bg-color: #{$color_blue};
+    --fc-button-border-color: #{$color_blue};
+    --fc-button-hover-bg-color: #{$color_blue_light};
+    --fc-button-hover-border-color: #{$color_blue_light};;
+    --fc-button-active-bg-color: #{$color_blue};
+    --fc-button-active-border-color: #{$color_blue};
+  }
+
 html {
     box-sizing: border-box;
     overscroll-behavior: none;

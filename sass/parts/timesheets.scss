@@ -1,5 +1,4 @@
 .timesheet-fast {
-
     &.categories-filter,
     &.customer {
         padding-left: 0.5rem;
@@ -29,7 +28,6 @@
 }
 
 .timesheet-notice-wrapper {
-
     h3,
     h4 {
         margin-bottom: 1rem;
@@ -45,7 +43,6 @@
     }
 
     .timesheet-notice {
-
         margin-top: 2rem;
 
         label,
@@ -59,5 +56,11 @@
             margin-top: 0;
             @include font-size(1.6);
         }
+    }
+}
+
+#timesheets_calendar {
+    table {
+        margin-bottom: 0;
     }
 }

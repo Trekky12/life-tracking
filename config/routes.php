@@ -440,6 +440,11 @@ return function (App $app) {
             $group_project->get('/view/', \App\Application\Action\Timesheets\Sheet\SheetViewAction::class)->setName('timesheets_sheets');
             $group_project->get('/table/', \App\Application\Action\Timesheets\Sheet\SheetTableAction::class)->setName('timesheets_sheets_table');
 
+            $group_project->group('/calendar', function (RouteCollectorProxy $group_calendar) {
+                $group_calendar->get('/', \App\Application\Action\Timesheets\Sheet\SheetCalendarAction::class)->setName('timesheets_calendar');
+                $group_calendar->get('/entries', \App\Application\Action\Timesheets\Sheet\SheetCalendarEventsAction::class)->setName('timesheets_calendar_events');
+            });
+
             $group_project->group('/sheets', function (RouteCollectorProxy $group_sheets) {
                 $group_sheets->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetEditAction::class)->setName('timesheets_sheets_edit');
                 $group_sheets->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Sheet\SheetSaveAction::class)->setName('timesheets_sheets_save');
