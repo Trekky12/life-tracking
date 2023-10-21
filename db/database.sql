@@ -910,8 +910,8 @@ CREATE TABLE timesheets_projects (
     hash VARCHAR(255) DEFAULT NULL,
     salt VARCHAR(255) NULL,
     iterations INT(20) DEFAULT 600000,
-    KEK varchar(255) DEFAULT NULL,
-    test VARCHAR(255) DEFAULT NULL,
+    encryptedMasterKey varchar(255) DEFAULT NULL,
+    encryptedTestMessage VARCHAR(255) DEFAULT NULL,
     is_day_based INT(1) DEFAULT 0,
     default_view varchar(255) DEFAULT 'month',
     has_duration_modifications INT(1) DEFAULT 0,
@@ -933,6 +933,11 @@ ALTER TABLE `timesheets_projects` ADD `customers_name_singular` VARCHAR(255) NUL
 /*
 ALTER TABLE timesheets_projects MODIFY salt VARCHAR(255) AFTER hash;
 ALTER TABLE timesheets_projects ADD iterations INT(20) DEFAULT 600000 AFTER salt, ADD KEK VARCHAR(255) DEFAULT NULL AFTER iterations, ADD test VARCHAR(255) DEFAULT NULL AFTER KEK; 
+*/
+
+/**
+ALTER TABLE timesheets_projects CHANGE KEK encryptedMasterKey VARCHAR(255) DEFAULT NULL; 
+ALTER TABLE timesheets_projects CHANGE test encryptedTestMessage VARCHAR(255) DEFAULT NULL; 
 */
 
 DROP TABLE IF EXISTS timesheets_projects_users;
@@ -1066,7 +1071,7 @@ CREATE TABLE timesheets_sheets_notices (
     changedBy INTEGER unsigned DEFAULT NULL,
     sheet INTEGER unsigned DEFAULT NULL,
     notice TEXT DEFAULT NULL,
-    CEK varchar(255) DEFAULT NULL,
+    encryptedCEK varchar(255) DEFAULT NULL,
     is_active int(1) DEFAULT 1,
     is_autosave int(1) DEFAULT 0,
     PRIMARY KEY (id),
@@ -1081,6 +1086,10 @@ CREATE TABLE timesheets_sheets_notices (
 ALTER TABLE timesheets_sheets_notices ADD CEK VARCHAR(255) DEFAULT NULL AFTER notice; 
 ALTER TABLE timesheets_sheets_notices ADD is_active INT(1) DEFAULT 1 AFTER CEK; 
 
+*/
+
+/**
+ALTER TABLE timesheets_sheets_notices CHANGE CEK encryptedCEK VARCHAR(255) DEFAULT NULL; 
 */
 
 DROP TABLE IF EXISTS timesheets_noticefields;

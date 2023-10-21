@@ -33,7 +33,7 @@
 
 				<p>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] }}</p>
 
-				<div class="form-group {% if not parameters.test  %}hidden{% endif %}">
+				<div class="form-group {% if not parameters.encryptedTestMessage  %}hidden{% endif %}">
 					<label for="inputOldPassword">{{lang["OLD_PASSWORD"]}}</label>
 					<input name="oldpassword" id="inputOldPassword" class="form-control" type="password" required>
 				</div>

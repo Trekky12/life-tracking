@@ -75,17 +75,17 @@ async function setPassword() {
     }
 
     const iterations = result.data.iterations;
-    const oldEncryptedTestMessage = result.data.test;
-    let rawKEK;
+    const oldEncryptedTestMessage = result.data.encryptedTestMessage;
+    let newMasterKey;
 
     // update entry
     if (oldEncryptedTestMessage) {
         let oldSalt = base64_to_buf(result.data.salt);
         const oldKeyMaterial = await createKeyMaterial(oldPassword.value);
-        const oldAESKey = await deriveAESKey(oldKeyMaterial, oldSalt, iterations);
+        const oldKEK = await deriveKEK(oldKeyMaterial, oldSalt, iterations);
 
         try {
-            const testMessage = await decryptData(oldAESKey, oldEncryptedTestMessage);
+            const testMessage = await decryptData(oldKEK, oldEncryptedTestMessage);
 
             if (testMessage !== "test") {
                 throw "Wrong message!";
@@ -96,31 +96,31 @@ async function setPassword() {
         }
 
         try {
-            const oldEncryptedKEK = result.data.KEK;
-            const oldKEK = await decryptData(oldAESKey, oldEncryptedKEK);
-            rawKEK = base64_to_buf(oldKEK);
+            const oldEncryptedMasterKey = result.data.encryptedMasterKey;
+            const oldMasterKey = await decryptData(oldKEK, oldEncryptedMasterKey);
+            newMasterKey = base64_to_buf(oldMasterKey);
         } catch (e) {
             console.error(`Unable to decrypt KEK - ${e}`);
             return 1;
         }
 
     } else {
-        rawKEK = window.crypto.getRandomValues(new Uint8Array(32));
+        newMasterKey = window.crypto.getRandomValues(new Uint8Array(32));
     }
 
-    // Create new AES Key
+    // Create new KEK
     let salt = window.crypto.getRandomValues(new Uint8Array(16));
     const keyMaterial = await createKeyMaterial(newPassword1.value);
-    const AESKey = await deriveAESKey(keyMaterial, salt, iterations);
+    const KEK = await deriveKEK(keyMaterial, salt, iterations);
 
-    // Encrypt test message with new key
-    const encryptedTestMessage = await encryptData(AESKey, "test");
+    // Encrypt test message with new KEK
+    const encryptedTestMessage = await encryptData(KEK, "test");
 
-    // Encrypt rawKEY with new key
-    const encryptedKEK = await encryptData(AESKey, buff_to_base64(rawKEK));
+    // Encrypt newMasterKey with new KEK
+    const encryptedKEK = await encryptData(KEK, buff_to_base64(newMasterKey));
 
     // save new data
-    let newData = { 'salt': buff_to_base64(salt), 'iterations': iterations, 'KEK': encryptedKEK, 'test': encryptedTestMessage };
+    let newData = { 'salt': buff_to_base64(salt), 'iterations': iterations, 'encryptedMasterKey': encryptedKEK, 'encryptedTestMessage': encryptedTestMessage };
     let newToken = await getCSRFToken()
     newData["csrf_name"] = newToken.csrf_name;
     newData["csrf_value"] = newToken.csrf_value;

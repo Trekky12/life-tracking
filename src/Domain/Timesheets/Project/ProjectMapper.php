@@ -13,7 +13,7 @@ class ProjectMapper extends \App\Domain\Mapper {
     protected $element_name = "project";
 
     public function getEncryptionParameters($project_id) {
-        $sql = "SELECT salt, iterations, KEK, test FROM " . $this->getTableName() . "  "
+        $sql = "SELECT salt, iterations, encryptedMasterKey, encryptedTestMessage FROM " . $this->getTableName() . "  "
             . "WHERE id = :project ";
 
         $bindings = array("project" => $project_id);
@@ -27,18 +27,18 @@ class ProjectMapper extends \App\Domain\Mapper {
         return null;
     }
 
-    public function setEncryptionParameters($project_id, $salt, $iterations, $test, $KEK) {
+    public function setEncryptionParameters($project_id, $salt, $iterations, $encryptedMasterKey, $encryptedTestMessage) {
 
         $bindings = [
             "project" => $project_id,
             "salt" => $salt,
             "iterations" => $iterations,
-            "test" => $test,
-            "KEK" => $KEK
+            "encryptedMasterKey" => $encryptedMasterKey,
+            "encryptedTestMessage" => $encryptedTestMessage
         ];
 
         $sql = "UPDATE " . $this->getTableName() . " "
-            . " SET salt = :salt, iterations = :iterations, test = :test, KEK = :KEK "
+            . " SET salt = :salt, iterations = :iterations, encryptedMasterKey = :encryptedMasterKey, encryptedTestMessage = :encryptedTestMessage "
             . " WHERE id = :project ";
 
         $stmt = $this->db->prepare($sql);

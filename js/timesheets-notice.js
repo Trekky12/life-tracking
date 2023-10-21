@@ -25,19 +25,19 @@ if (!window.crypto || !window.crypto.subtle) {
 
 let currentNotice;
 
-let aesKey, KEK;
+let KEK, masterKey;
 
 checkPassword();
 
 async function checkPassword() {
-    aesKey = await getAESKeyFromStore();
+    KEK = await getKEKfromStore();
 
-    if (!aesKey) {
+    if (!KEK) {
         let pw = window.prompt(lang.timesheets_notice_password);
 
         try {
-            await createAndStoreAESKey(pw);
-            aesKey = await getAESKeyFromStore();
+            await createAndStoreKEK(pw);
+            KEK = await getKEKfromStore();
         } catch (e) {
             alertErrorDetail.innerHTML = lang.decrypt_error;
             alertError.classList.remove("hidden");
@@ -48,10 +48,10 @@ async function checkPassword() {
         }
 
     } else {
-        // Check stored AES key
+        // Check stored KEK
         try {
             let result = await getEncryptionParameters();
-            await decryptTestMessageAndKEK(aesKey, result.data.test, result.data.KEK);
+            await decryptTestMessageAndMasterKey(KEK, result.data.encryptedTestMessage, result.data.encryptedMasterKey);
         } catch (e) {
             alertErrorDetail.innerHTML = lang.decrypt_error;
             alertError.classList.remove("hidden");
@@ -155,9 +155,9 @@ async function checkPassword() {
 
 async function getNotice(sheet_id) {
 
-    if (!KEK) {
-        console.error(`KEK missing`);
-        throw "KEK missing";
+    if (!masterKey) {
+        console.error(`masterKey missing`);
+        throw "masterKey missing";
     }
 
     let notice_response = await fetch(jsObject.timesheets_sheets_notice_data + '?sheet=' + sheet_id, {
@@ -168,7 +168,7 @@ async function getNotice(sheet_id) {
 
     if (notice_result.status !== "error" && notice_result.entry) {
         let notice = notice_result.entry.notice;
-        let encryptedCEK = notice_result.entry.CEK;
+        let encryptedCEK = notice_result.entry.encryptedCEK;
 
         if (timesheetLastSaved) {
             timesheetLastSaved.innerHTML = moment(notice_result.entry.changedOn).format(i18n.dateformatJS.datetime);
@@ -176,9 +176,9 @@ async function getNotice(sheet_id) {
 
         let CEK;
         try {
-            const decryptedCEK = await decryptData(KEK, encryptedCEK);
+            const decryptedCEK = await decryptData(masterKey, encryptedCEK);
             const rawCEK = base64_to_buf(decryptedCEK);
-            CEK = await createKey(rawCEK);
+            CEK = await createKeyObject(rawCEK);
         } catch (e) {
             console.error(`Unable to decrypt CEK - ${e}`);
             throw e;
@@ -236,7 +236,7 @@ function getNoticeData() {
 }
 
 async function saveNotice(autoSave = false) {
-    if (!KEK) {
+    if (!masterKey) {
         alertErrorDetail.innerHTML = lang.encrypt_error;
         alertError.classList.remove("hidden");
         document.getElementById("loading-overlay").classList.add("hidden");
@@ -260,10 +260,10 @@ async function saveNotice(autoSave = false) {
 
     // create CEK
     const rawCEK = window.crypto.getRandomValues(new Uint8Array(32));
-    const CEK = await createKey(rawCEK);
+    const CEK = await createKeyObject(rawCEK);
 
-    // encrypt CEK with KEK
-    data["CEK"] = await encryptData(KEK, buff_to_base64(rawCEK));
+    // encrypt CEK with masterKey
+    data["encryptedCEK"] = await encryptData(masterKey, buff_to_base64(rawCEK));
 
     // encrypt data with CEK
     data["notice"] = await encryptData(CEK, noticeData);
@@ -338,7 +338,7 @@ async function getEncryptionParameters() {
     return result;
 }
 
-async function decryptTestMessageAndKEK(key, encryptedTestMessage, savedEncryptedKEK) {
+async function decryptTestMessageAndMasterKey(key, encryptedTestMessage, encryptedMasterKey) {
     try {
         const testMessage = await decryptData(key, encryptedTestMessage);
 
@@ -351,30 +351,30 @@ async function decryptTestMessageAndKEK(key, encryptedTestMessage, savedEncrypte
     }
 
     try {
-        const savedKEK = await decryptData(key, savedEncryptedKEK);
-        const rawKEK = base64_to_buf(savedKEK);
-        KEK = await createKey(rawKEK);
+        const savedMasterKey = await decryptData(key, encryptedMasterKey);
+        const rawMasterKey = base64_to_buf(savedMasterKey);
+        masterKey = await createKeyObject(rawMasterKey);
     } catch (e) {
-        console.error(`Unable to decrypt KEK - ${e}`);
+        console.error(`Unable to decrypt masterKey - ${e}`);
         throw e;
     }
 
     return 0;
 }
 
-async function createAndStoreAESKey(pw) {
+async function createAndStoreKEK(pw) {
 
     let result = await getEncryptionParameters();
 
     const iterations = result.data.iterations;
     const salt = base64_to_buf(result.data.salt);
     const keyMaterial = await createKeyMaterial(pw);
-    const newAESKey = await deriveAESKey(keyMaterial, salt, iterations);
+    const newKEK = await deriveKEK(keyMaterial, salt, iterations);
 
-    await decryptTestMessageAndKEK(newAESKey, result.data.test, result.data.KEK);
+    await decryptTestMessageAndMasterKey(newKEK, result.data.encryptedTestMessage, result.data.encryptedMasterKey);
 
     let store = await getStore();
-    store.add({ 'project': projectID, 'key': newAESKey });
+    store.add({ 'project': projectID, 'key': newKEK });
 
     return 0;
 }
@@ -398,7 +398,7 @@ async function getStore() {
     }
 }
 
-async function getAESKeyFromStore() {
+async function getKEKfromStore() {
     let store = await getStore();
     let key = await new Promise(function (resolve, reject) {
         let request = store.get(projectID);

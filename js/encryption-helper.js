@@ -11,7 +11,7 @@ function createKeyMaterial(password) {
     );
 }
 
-function deriveAESKey(keyMaterial, salt, iterations) {
+function deriveKEK(keyMaterial, salt, iterations) {
     return window.crypto.subtle.deriveKey(
         {
             "name": "PBKDF2",
@@ -74,7 +74,7 @@ async function decryptData(key, encryptedData) {
     }
 }
 
-async function createKey(rawKey) {
+async function createKeyObject(rawKey) {
     
     return window.crypto.subtle.importKey("raw", rawKey, "AES-GCM", true, [
         "encrypt",

@@ -75,11 +75,11 @@ class NoticePasswordService extends Service {
 
         $salt = array_key_exists('salt', $data) ? filter_var($data['salt'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
         $iterations = array_key_exists('iterations', $data) ? intval(filter_var($data['iterations'], FILTER_SANITIZE_NUMBER_INT)) : 600000;
-        $test = array_key_exists('test', $data) ? filter_var($data['test'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
-        $KEK = array_key_exists('KEK', $data) ? filter_var($data['KEK'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $encryptedTestMessage = array_key_exists('encryptedTestMessage', $data) ? filter_var($data['encryptedTestMessage'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $encryptedMasterKey = array_key_exists('encryptedMasterKey', $data) ? filter_var($data['encryptedMasterKey'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
-        if (!is_null($salt) && !is_null($iterations) && !is_null($test) && !is_null($KEK)) {
-            $this->getMapper()->setEncryptionParameters($project->id, $salt, $iterations, $test, $KEK);
+        if (!is_null($salt) && !is_null($iterations) && !is_null($encryptedMasterKey) && !is_null($encryptedTestMessage)) {
+            $this->getMapper()->setEncryptionParameters($project->id, $salt, $iterations, $encryptedMasterKey, $encryptedTestMessage);
 
             return new Payload(Payload::$RESULT_JSON, [
                 "status" => "success"
