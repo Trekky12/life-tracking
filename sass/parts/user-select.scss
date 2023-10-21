@@ -19,7 +19,8 @@
         z-index: 1;
 
         li {
-            @include font-size(1.2);
+            @include font-size(1.4);
+            padding: 0.5rem 0;
 
             &:hover {
                 cursor: pointer;
