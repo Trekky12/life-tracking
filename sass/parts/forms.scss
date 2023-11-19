@@ -191,3 +191,21 @@ input.read-only:read-only {
         top: 0px;
     }
 }
+
+// See https://stackoverflow.com/a/11471224
+input[type="color"] {
+    -webkit-appearance: none;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+}

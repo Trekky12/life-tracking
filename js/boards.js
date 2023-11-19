@@ -391,9 +391,7 @@ document.addEventListener('click', function (event) {
                 labelModal.querySelector('input[name="id"]').value = data.entry.id;
                 labelModal.querySelector('input[name="name"]').value = data.entry.name;
                 labelModal.querySelector('input[name="background_color"]').value = data.entry.background_color;
-                labelModal.querySelector('input[name="background_color"]').parentElement.style.backgroundColor = data.entry.background_color;
                 labelModal.querySelector('input[name="text_color"]').value = data.entry.text_color;
-                labelModal.querySelector('input[name="text_color"]').parentElement.style.backgroundColor = data.entry.text_color;
 
                 var edit_bar = "<a href='#' data-url='" + jsObject.label_delete + data.entry.id + "' class='btn-delete' data-confirm='" + lang.boards_really_delete_label + "'>" + document.getElementById('iconTrash').innerHTML + "</a>";
 
@@ -558,14 +556,6 @@ document.addEventListener('keydown', function (event) {
         if (isVisible(cardModal)) {
             closeDialog(cardModal);
         }
-    }
-});
-
-// replace color picker placeholder with chosen color
-document.addEventListener('change', function (event) {
-    let closest = event.target.closest('input[type="color"]');
-    if (closest) {
-        closest.parentElement.style.backgroundColor = closest.value;
     }
 });
 
@@ -736,14 +726,6 @@ function closeDialog(element, force = false) {
     unfreeze();
 
     element.style.display = 'none';
-
-    // for labels
-    if (element === labelModal) {
-        let colorPickers = element.querySelectorAll('.color-wrapper');
-        colorPickers.forEach(function (item, idx) {
-            item.style.backgroundColor = 'black';
-        });
-    }
 
     // for cards
     if (element === cardModal) {

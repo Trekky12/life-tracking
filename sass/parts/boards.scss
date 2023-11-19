@@ -496,23 +496,6 @@ body.boards.no-touch-enabled .handle {
         cursor: pointer;
     }
 
-    .color-wrapper {
-        background-color: black;
-        height: 32px;
-        width: 32px;
-        //border: 1px solid #000;
-        border-radius: 5px;
-        box-shadow: 0 0 1px rgba(0, 0, 0, 1);
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-
-    input[type="color"] {
-        visibility: hidden;
-    }
-
     .two-columns {
         align-items: center;
     }
