@@ -652,7 +652,7 @@ function initMap() {
             },
             routeWhileDragging: false,
             reverseWaypoints: false,
-            addWaypoints: false,
+            addWaypoints: true,
             language: i18n.routing,
             draggableWaypoints: true
         });
