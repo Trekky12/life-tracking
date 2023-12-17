@@ -1,4 +1,5 @@
 .timesheet-fast {
+
     &.categories-filter,
     &.customer {
         padding-left: 0.5rem;
@@ -28,6 +29,7 @@
 }
 
 .timesheet-notice-wrapper {
+
     h3,
     h4 {
         margin-bottom: 1rem;
@@ -60,7 +62,29 @@
 }
 
 #timesheets_calendar {
+    .fc-toolbar-title {
+        @include font-size(1.6);
+
+        @media screen and (min-width: $size_content-width-small) {
+            @include font-size(2);
+        }
+    }
+
     table {
         margin-bottom: 0;
+    }
+
+    .fc-daygrid-event-dot {
+        border-radius: 0;
+    }
+
+    @media screen and (max-width: $size_tablet) {
+        .fc-event {
+
+            .fc-event-time,
+            .fc-event-title {
+                display: none;
+            }
+        }
     }
 }

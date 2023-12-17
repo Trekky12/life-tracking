@@ -2,10 +2,14 @@
     --fc-button-bg-color: #{$color_blue};
     --fc-button-border-color: #{$color_blue};
     --fc-button-hover-bg-color: #{$color_blue_light};
-    --fc-button-hover-border-color: #{$color_blue_light};;
+    --fc-button-hover-border-color: #{$color_blue_light};
     --fc-button-active-bg-color: #{$color_blue};
     --fc-button-active-border-color: #{$color_blue};
-  }
+
+    @media screen and (max-width: $size_tablet) {
+        --fc-daygrid-event-dot-width: 16px
+    }
+}
 
 html {
     box-sizing: border-box;
@@ -218,7 +222,7 @@ pre {
     float: right;
 }
 
-.fontawesome-icon.icon-rotate svg{
+.fontawesome-icon.icon-rotate svg {
     transform: rotate(90deg);
 }
 

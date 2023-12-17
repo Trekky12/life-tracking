@@ -2,16 +2,14 @@
 
 namespace App\Domain\Timesheets\Sheet;
 
-class SheetMapper extends \App\Domain\Mapper
-{
+class SheetMapper extends \App\Domain\Mapper {
 
     protected $table = "timesheets_sheets";
     protected $dataobject = \App\Domain\Timesheets\Sheet\Sheet::class;
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
-    public function set_duration($id, $duration)
-    {
+    public function set_duration($id, $duration) {
         $sql = "UPDATE " . $this->getTableName() . " SET duration = :duration WHERE id  = :id";
         $bindings = array("id" => $id, "duration" => $duration);
         $stmt = $this->db->prepare($sql);
@@ -22,8 +20,7 @@ class SheetMapper extends \App\Domain\Mapper
         }
     }
 
-    public function set_duration_modified($id, $duration_modified)
-    {
+    public function set_duration_modified($id, $duration_modified) {
         $sql = "UPDATE " . $this->getTableName() . " SET duration_modified = :duration_modified WHERE id  = :id";
         $bindings = array("id" => $id, "duration_modified" => $duration_modified);
         $stmt = $this->db->prepare($sql);
@@ -34,8 +31,7 @@ class SheetMapper extends \App\Domain\Mapper
         }
     }
 
-    public function getLastSheetWithStartDateToday($project)
-    {
+    public function getLastSheetWithStartDateToday($project) {
         $sql = "SELECT * FROM " . $this->getTableName() . "  "
             . "WHERE project = :project "
             . " AND end IS NULL "
@@ -57,12 +53,12 @@ class SheetMapper extends \App\Domain\Mapper
     /**
      * Table
      */
-    private function getTableSQL($select, $categories, $billed = null, $payed = null, $customer = null)
-    {
-
+    private function getTableSQL($select, $categories, $billed = null, $payed = null, $customer = null) {
         $cat_bindings = array();
-        foreach ($categories as $idx => $cat) {
-            $cat_bindings[":cat_" . $idx] = $cat;
+        if (!is_null($categories)) {
+            foreach ($categories as $idx => $cat) {
+                $cat_bindings[":cat_" . $idx] = $cat;
+            }
         }
 
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
@@ -114,8 +110,7 @@ class SheetMapper extends \App\Domain\Mapper
         return [$sql, $cat_bindings];
     }
 
-    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%")
-    {
+    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%") {
 
         $bindings = array(
             "searchQuery" => $searchQuery,
@@ -148,8 +143,7 @@ class SheetMapper extends \App\Domain\Mapper
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%", $field = "t.duration")
-    {
+    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%", $field = "t.duration") {
 
         $bindings = array(
             "searchQuery" => $searchQuery,
@@ -182,8 +176,7 @@ class SheetMapper extends \App\Domain\Mapper
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%')
-    {
+    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         $bindings = array(
             "searchQuery" => "%" . $searchQuery . "%",
@@ -258,8 +251,7 @@ class SheetMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function deleteCategoriesFromSheet($sheet_id)
-    {
+    public function deleteCategoriesFromSheet($sheet_id) {
         $sql = "DELETE FROM " . $this->getTableName("timesheets_sheets_categories") . "  WHERE sheet = :sheet";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -271,8 +263,7 @@ class SheetMapper extends \App\Domain\Mapper
         return true;
     }
 
-    public function addCategoriesToSheet($sheet_id, $categories = array())
-    {
+    public function addCategoriesToSheet($sheet_id, $categories = array()) {
         $data_array = array();
         $keys_array = array();
         foreach ($categories as $idx => $category) {
@@ -294,8 +285,7 @@ class SheetMapper extends \App\Domain\Mapper
         }
     }
 
-    public function getCategoriesFromSheet($sheet_id)
-    {
+    public function getCategoriesFromSheet($sheet_id) {
         $sql = "SELECT category FROM " . $this->getTableName("timesheets_sheets_categories") . " WHERE sheet = :sheet";
 
         $bindings = array("sheet" => $sheet_id);
@@ -310,8 +300,7 @@ class SheetMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function getCategoriesWithNamesFromSheet($sheet_id)
-    {
+    public function getCategoriesWithNamesFromSheet($sheet_id) {
         $sql = "SELECT GROUP_CONCAT(tc.name SEPARATOR ', ') "
             . "FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs "
             . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
@@ -328,8 +317,7 @@ class SheetMapper extends \App\Domain\Mapper
         return "";
     }
 
-    public function getCustomerNameFromSheet($sheet_id)
-    {
+    public function getCustomerNameFromSheet($sheet_id) {
         $sql = "SELECT c.name "
             . "FROM " . $this->getTableName("timesheets_sheets") . " s "
             . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " c ON c.id = s.customer "
@@ -346,8 +334,7 @@ class SheetMapper extends \App\Domain\Mapper
         return "";
     }
 
-    public function getTimes()
-    {
+    public function getTimes() {
         $sql = "SELECT s.project, SUM(s.duration) as sum, SUM(s.duration_modified) as sum_modified "
             . " FROM " . $this->getTableName() . " s "
             . " GROUP BY s.project";
@@ -362,8 +349,7 @@ class SheetMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function addCategoriesToSheets($sheets = [], $categories = [])
-    {
+    public function addCategoriesToSheets($sheets = [], $categories = []) {
 
         if (count($sheets) <= 0 || count($categories) <= 0) {
             return;
@@ -393,8 +379,7 @@ class SheetMapper extends \App\Domain\Mapper
         return true;
     }
 
-    public function removeCategoriesFromSheets($sheets = [], $categories = [])
-    {
+    public function removeCategoriesFromSheets($sheets = [], $categories = []) {
 
         if (count($sheets) <= 0 || count($categories) <= 0) {
             return;
@@ -423,8 +408,7 @@ class SheetMapper extends \App\Domain\Mapper
         return true;
     }
 
-    public function getUsers($id, $only_id = false)
-    {
+    public function getUsers($id, $only_id = false) {
         $sql = "SELECT u.id, u.login "
             . "FROM " . $this->getTableName("timesheets_projects_users") . " project_user,"
             . "" . $this->getTableName() . " sheet, "
@@ -449,8 +433,7 @@ class SheetMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function getSheetIDsFromProject($id)
-    {
+    public function getSheetIDsFromProject($id) {
         $sql = "SELECT id FROM " . $this->getTableName() . " WHERE project = :id ";
 
         $bindings = array("id" => $id);
@@ -465,8 +448,7 @@ class SheetMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function setSheetsPayedState($sheets = [], $is_payed = 0)
-    {
+    public function setSheetsPayedState($sheets = [], $is_payed = 0) {
 
         if (count($sheets) <= 0) {
             return;
@@ -490,8 +472,7 @@ class SheetMapper extends \App\Domain\Mapper
         return true;
     }
 
-    public function setSheetsBilledState($sheets = [], $is_billed = 0)
-    {
+    public function setSheetsBilledState($sheets = [], $is_billed = 0) {
 
         if (count($sheets) <= 0) {
             return;

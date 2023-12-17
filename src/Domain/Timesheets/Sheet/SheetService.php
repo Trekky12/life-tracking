@@ -534,6 +534,7 @@ class SheetService extends Service {
                 'title' => $title,
                 'start' => $st->format('Y-m-d H:i:s'),
                 'end' => $e->format('Y-m-d H:i:s'),
+                'url' => $this->router->urlFor('timesheets_sheets_edit', ['id' => $timesheet->id, 'project' => $project->getHash()])
             ];
         }
 
