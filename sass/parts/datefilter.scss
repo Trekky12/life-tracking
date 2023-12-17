@@ -89,7 +89,7 @@
         .filter-element {
             margin-top: 1rem;
 
-            @media screen and (min-width: $size_tablet) {
+            @media screen and (min-width: $size_very_big) {
                 margin-top: 0;
             }
         }
@@ -106,7 +106,7 @@
             margin-top: 0;
         }
 
-        @media screen and (min-width: $size_tablet) {
+        @media screen and (min-width: $size_very_big) {
             display: flex;
             align-items: center;
 
@@ -138,7 +138,7 @@
         }
 
         select {
-            @media screen and (min-width: $size_tablet) {
+            @media screen and (min-width: $size_very_big) {
                 //height: 44px;
             }
         }
