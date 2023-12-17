@@ -68,7 +68,7 @@
 				<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
 				{{ lang["NOTICE"] }}
 			</a>
-            <p class="content"><textarea name="exercises[{{ data["idx"] }}][notice]">{{ data["notice"] }}</textarea></p>
+            <p class="content"><textarea name="exercises[{{ data["idx"] }}][notice]" {% if hidden %}disabled="disabled"{% endif %}>{{ data["notice"] }}</textarea></p>
         </div>
     </div>    
     {% if data["exercise"].get_thumbnail() != ''%}
