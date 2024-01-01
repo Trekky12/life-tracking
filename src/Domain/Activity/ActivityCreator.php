@@ -42,13 +42,13 @@ class ActivityCreator {
             $users = $parent_mapper->getUsers($parent_id);
             $parent = ["object" => $parent_mapper->getDataObject(), "id" => $parent_id, "description" => $parent_entry->getDescription($this->translation, $this->settings)];
         }
-        
+
         return $this->createActivityEntry($activity_type, $module, $object, $parent, $users);
     }
 
     private function createActivityEntry($type, $module, $object = [], $parent = [], $users = []): Activity {
         $data = [];
-        $data["user"] = !is_null($this->current_user->getUser()) ? $this->current_user->getUser()->id: null;
+        $data["user"] = !is_null($this->current_user->getUser()) ? $this->current_user->getUser()->id : null;
         $data["type"] = $type;
         $data["module"] = $module;
         $data["controller"] = null;
@@ -66,4 +66,25 @@ class ActivityCreator {
         return $activity;
     }
 
+    public function createChildActivity($activity_type, $module, $id, $description, $link, $parent_mapper, $parent_id): Activity {
+
+        $entry_link = $this->router->urlFor($link['route'], $link['params']);
+
+        $object = [
+            "object" => null,
+            "id" => $id,
+            "description" => $description,
+            "link" => $entry_link
+        ];
+
+        $parent_entry = $parent_mapper->get($parent_id);
+        $users = $parent_mapper->getUsers($parent_id);
+        $parent = [
+            "object" => $parent_mapper->getDataObject(),
+            "id" => $parent_id,
+            "description" => $parent_entry->getDescription($this->translation, $this->settings)
+        ];
+
+        return $this->createActivityEntry($activity_type, $module, $object, $parent, $users);
+    }
 }

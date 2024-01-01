@@ -5,14 +5,14 @@ namespace App\Application\Action\Recipes\Shoppinglist;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Application\Responder\DeleteResponder;
-use App\Domain\Recipes\Shoppinglist\ShoppinglistService;
+use App\Domain\Recipes\Shoppinglist\ShoppinglistEntryService;
 
 class ShoppinglistDeleteEntryAction {
 
     private $responder;
     private $service;
 
-    public function __construct(DeleteResponder $responder, ShoppinglistService $service) {
+    public function __construct(DeleteResponder $responder, ShoppinglistEntryService $service) {
         $this->responder = $responder;
         $this->service = $service;
     }

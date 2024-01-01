@@ -2,8 +2,7 @@
 
 namespace App\Domain\Recipes\Shoppinglist;
 
-class ShoppinglistMapper extends \App\Domain\Mapper
-{
+class ShoppinglistMapper extends \App\Domain\Mapper {
 
     protected $table = "recipes_shoppinglists";
     protected $dataobject = \App\Domain\Recipes\Shoppinglist\Shoppinglist::class;
@@ -13,8 +12,7 @@ class ShoppinglistMapper extends \App\Domain\Mapper
     protected $user_table = "recipes_shoppinglists_users";
     protected $element_name = "shoppinglist";
 
-    public function addGrocery($shoppinglist_id, $grocery_id, $amount, $unit, $notice, $position)
-    {
+    public function addGrocery($shoppinglist_id, $grocery_id, $amount, $unit, $notice, $position) {
 
         $sql = "INSERT INTO " . $this->getTableName("recipes_shoppinglists_entries") . " 
                     (shoppinglist, grocery, amount, unit, notice, position, createdBy) 
@@ -38,8 +36,7 @@ class ShoppinglistMapper extends \App\Domain\Mapper
         }
     }
 
-    public function getShoppingListEntries($shoppinglist_id, $limit = null, $done = null)
-    {
+    public function getShoppingListEntries($shoppinglist_id, $limit = null, $done = null) {
         $sql = "SELECT se.id, se.amount, se.unit, g.name as grocery, se.notice, se.position, se.done 
                     FROM " . $this->getTableName("recipes_shoppinglists_entries") . " se,  
                          " . $this->getTableName("recipes_groceries") . " g  
@@ -71,8 +68,7 @@ class ShoppinglistMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function getShoppingListEntriesCount($shoppinglist_id, $done = null)
-    {
+    public function getShoppingListEntriesCount($shoppinglist_id, $done = null) {
 
         $sql = "SELECT COUNT(id) FROM " . $this->getTableName("recipes_shoppinglists_entries") . " WHERE shoppinglist = :shoppinglist";
 
@@ -95,8 +91,7 @@ class ShoppinglistMapper extends \App\Domain\Mapper
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function set_state($id, $shoppinglist_id, $state)
-    {
+    public function set_state($id, $shoppinglist_id, $state) {
         $sql = "UPDATE " . $this->getTableName("recipes_shoppinglists_entries") . " SET done = :done WHERE id=:id AND shoppinglist = :shoppinglist";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -110,8 +105,7 @@ class ShoppinglistMapper extends \App\Domain\Mapper
         }
     }
 
-    public function deleteGrocery($shoppinglist_id, $id)
-    {
+    public function deleteGrocery($shoppinglist_id, $id) {
 
         $sql = "DELETE FROM " . $this->getTableName("recipes_shoppinglists_entries") . "  WHERE id = :id AND shoppinglist = :shoppinglist";
 
@@ -125,5 +119,24 @@ class ShoppinglistMapper extends \App\Domain\Mapper
             throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return $stmt->rowCount() > 0;
+    }
+
+    public function getShoppingListEntry($id) {
+        $sql = "SELECT se.id, se.amount, se.unit, g.name as grocery, se.notice, se.position, se.done 
+                    FROM " . $this->getTableName("recipes_shoppinglists_entries") . " se,  
+                         " . $this->getTableName("recipes_groceries") . " g  
+                    WHERE se.id = :id AND se.grocery = g.id";
+
+        $bindings = [
+            "id" => $id
+        ];
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() == 1) {
+            return $stmt->fetch();
+        }
+        return null;
     }
 }

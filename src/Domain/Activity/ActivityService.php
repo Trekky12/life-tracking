@@ -76,6 +76,15 @@ class ActivityService extends Service {
                 case 'delete':
                     $action = "ACTIVITY_DELETE";
                     break;
+                case 'add':
+                    $action = "ACTIVITY_ADD";
+                    break;
+                case 'done':
+                    $action = "ACTIVITY_DONE";
+                    break;
+                case 'undone':
+                    $action = "ACTIVITY_UNDONE";
+                    break;
             }
 
             // special case since sheet notices are autosaved as new revisions
