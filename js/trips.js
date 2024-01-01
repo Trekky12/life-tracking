@@ -278,7 +278,7 @@ function drawMarkers(data) {
                 let streetPolyline = [];
                 //streetPolyline[0] = L.polyline(tripLine, { color: 'gray', weight: '5' }).bindPopup(popup);
                 //streetPolyline[1] = L.polyline(tripLine, { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
-                
+
                 let middle = calculateMidPoint(start_marker, end_marker);
                 streetPolyline[0] = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
@@ -288,7 +288,7 @@ function drawMarkers(data) {
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
                 ], { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
-                
+
                 layerCars.addLayer(L.layerGroup(streetPolyline));
 
                 // remove start marker when there is a polyline
@@ -343,7 +343,11 @@ function addWaypoint(marker) {
 }
 
 function initMap() {
-    mymap = L.map('trip-map', { fullscreenControl: true }).setView([default_location.lat, default_location.lng], default_location.zoom);
+    mymap = L.map('trip-map', {
+        fullscreenControl: {
+            pseudoFullscreen: true
+        }
+    }).setView([default_location.lat, default_location.lng], default_location.zoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
