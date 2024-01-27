@@ -5,16 +5,18 @@ namespace App\Domain\Home\Widget;
 use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Base\CurrentUser;
-use App\Domain\Recipes\Shoppinglist\ShoppinglistService;
+use App\Domain\Recipes\Shoppinglist\ShoppinglistEntryService;
 use App\Domain\Board\Card\CardMapper;
 use Slim\Routing\RouteParser;
 
 class ShoppingListWidget implements Widget
 {
 
+    private $logger;
+    private $current_user;
     private $translation;
     private $router;
-    private $shoppinglist_service;
+    private $shoppinglist_entry_service;
     private $shoppinglists;
 
     public function __construct(
@@ -22,20 +24,20 @@ class ShoppingListWidget implements Widget
         Translator $translation,
         RouteParser $router,
         CurrentUser $user,
-        ShoppinglistService $shoppinglist_service
+        ShoppinglistEntryService $shoppinglist_entry_service
     ) {
         $this->logger = $logger;
         $this->translation = $translation;
         $this->router = $router;
         $this->current_user = $user;
-        $this->shoppinglist_service = $shoppinglist_service;
+        $this->shoppinglist_entry_service = $shoppinglist_entry_service;
 
         $this->shoppinglists = $this->createList();
     }
 
     private function createList()
     {
-        $shoppinglists = $this->shoppinglist_service->getAll();
+        $shoppinglists = $this->shoppinglist_entry_service->getAll();
 
         $result = [];
         foreach ($shoppinglists as $shoppinglist) {
@@ -54,7 +56,7 @@ class ShoppingListWidget implements Widget
     {
         $id = $widget->getOptions()["shoppinglist"];
 
-        $entries = $this->shoppinglist_service->retrieveShoppingListEntries($id, null, null);
+        $entries = $this->shoppinglist_entry_service->retrieveShoppingListEntries($id, null, null);
 
         return ["hash" => $this->shoppinglists[$id]["hash"], "entries" => $entries];
     }
