@@ -2,8 +2,7 @@
 
 namespace App\Domain\Board\Card;
 
-class CardMapper extends \App\Domain\Mapper
-{
+class CardMapper extends \App\Domain\Mapper {
 
     protected $table = "boards_cards";
     protected $dataobject = \App\Domain\Board\Card\Card::class;
@@ -13,8 +12,7 @@ class CardMapper extends \App\Domain\Mapper
     protected $user_table = "boards_cards_user";
     protected $element_name = "card";
 
-    public function getUserCards($id)
-    {
+    public function getUserCards($id) {
         $sql = "SELECT ca.id FROM " . $this->getTableName("boards_user") . " ub, " . $this->getTableName("boards_stacks") . " st, " . $this->getTableName("boards_cards") . " ca "
             . " WHERE ub.user = :id "
             . " AND st.board = ub.board "
@@ -32,8 +30,7 @@ class CardMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function getCardsFromStack($stack, $card_users, $card_labels, $archive = 0)
-    {
+    public function getCardsFromStack($stack, $card_users, $card_labels, $archive = 0) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE stack = :stack ";
 
         $bindings = ["stack" => $stack];
@@ -61,8 +58,7 @@ class CardMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function updatePosition($id, $position, $user)
-    {
+    public function updatePosition($id, $position, $user) {
         $sql = "UPDATE " . $this->getTableName() . " SET position=:position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -76,8 +72,7 @@ class CardMapper extends \App\Domain\Mapper
         }
     }
 
-    public function moveCard($id, $stack, $position, $user)
-    {
+    public function moveCard($id, $stack, $position, $user) {
         $sql = "UPDATE " . $this->getTableName() . " SET stack=:stack, position = :position, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -92,8 +87,7 @@ class CardMapper extends \App\Domain\Mapper
         }
     }
 
-    public function setArchive($id, $archive, $user)
-    {
+    public function setArchive($id, $archive, $user) {
         $sql = "UPDATE " . $this->getTableName() . " SET archive=:archive, changedOn =:changedOn, changedBy =:changedBy WHERE id=:id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -108,8 +102,22 @@ class CardMapper extends \App\Domain\Mapper
         return true;
     }
 
-    public function getCardsUser()
-    {
+    public function setArchiveByStack($stack_id, $archive, $user) {
+        $sql = "UPDATE " . $this->getTableName() . " SET archive=:archive, changedOn =:changedOn, changedBy =:changedBy WHERE stack=:stack_id";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "archive" => $archive,
+            "stack_id" => $stack_id,
+            "changedOn" => date('Y-m-d H:i:s'),
+            "changedBy" => $user
+        ]);
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+        return true;
+    }
+
+    public function getCardsUser() {
         $sql = "SELECT card, user FROM " . $this->getTableName($this->user_table) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -126,8 +134,7 @@ class CardMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function getCardBoard($id)
-    {
+    public function getCardBoard($id) {
         $sql = "SELECT st.board FROM " . $this->getTableName() . " ca, " . $this->getTableName("boards_stacks") . " st WHERE ca.id = :id AND ca.stack = st.id";
 
         $stmt = $this->db->prepare($sql);
@@ -141,8 +148,7 @@ class CardMapper extends \App\Domain\Mapper
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getCardReminder()
-    {
+    public function getCardReminder() {
         $sql = "SELECT cu.user as user, c.id, c.date, c.time, c.title, c.date = CURDATE() as today, b.name as board_name, b.hash, b.id as board_id, s.name as stack "
             . "FROM " . $this->getTableName() . " c, "
             . "     " . $this->getTableName("boards_stacks") . " s,  "
@@ -203,8 +209,7 @@ class CardMapper extends \App\Domain\Mapper
         return $results;
     }
 
-    public function getCardsWidget($stack, $due = false, $archive = 0)
-    {
+    public function getCardsWidget($stack, $due = false, $archive = 0) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE stack = :stack ";
 
         $bindings = ["stack" => $stack];

@@ -221,6 +221,8 @@ $lang["ADD_DATE"] = "Add Date";
 $lang["ADD_TIME"] = "Add Time";
 $lang["ADD_DESCRIPTION"] = "Add Description";
 
+$lang["ARCHIVE"] = "Archiving";
+$lang["ARCHIVE_WITH_CARDS"] = "Archive with cards";
 $lang["REALLY_ARCHIVE"] = "Do you really want to archive the entry?";
 $lang["UPDATE"] = "Update";
 

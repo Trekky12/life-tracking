@@ -6,16 +6,19 @@ use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Board\BoardService;
+use App\Domain\Board\Card\CardMapper;
 use App\Application\Payload\Payload;
 
 class StackService extends Service {
 
     private $board_service;
+    private $card_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, StackMapper $mapper, BoardService $board_service) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, StackMapper $mapper, BoardService $board_service, CardMapper $card_mapper) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->board_service = $board_service;
+        $this->card_mapper = $card_mapper;
     }
 
     public function hasAccess($id, $data = []) {
@@ -45,6 +48,12 @@ class StackService extends Service {
 
             $user = $this->current_user->getUser()->id;
             $is_archived = $this->mapper->setArchive($entry_id, $data["archive"], $user);
+
+            if (array_key_exists("cards", $data) && in_array($data["cards"], array(0, 1))) {
+                $is_archived_cards = $this->card_mapper->setArchiveByStack($entry_id, $data["archive"], $user);
+
+                $is_archived = $is_archived && $is_archived_cards;
+            }
 
             $response_data = ['is_archived' => $is_archived];
             return new Payload(Payload::$RESULT_JSON, $response_data);
@@ -85,5 +94,4 @@ class StackService extends Service {
     public function getAll() {
         return $this->mapper->getAll();
     }
-
 }

@@ -65,11 +65,26 @@ function loadBoard() {
 }
 
 document.addEventListener('click', function (event) {
-    let stack_header = event.target.closest('.stack-header');
+    let submenus = document.querySelectorAll('.stack-menu');
+    submenus.forEach(function (submenu) {
+        submenu.style.display = 'none';
+    });
+
+    let stack_header = event.target.closest('.stack-header .stack-menu-button');
     if (stack_header) {
         event.preventDefault();
 
-        let stack_id = stack_header.closest('.stack').dataset.stack;
+        let submenu = stack_header.parentElement.querySelector('.stack-menu');
+        submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
+
+    }
+
+
+    let stack_edit = event.target.closest('.stack-header .stack-edit');
+    if (stack_edit) {
+        event.preventDefault();
+
+        let stack_id = stack_edit.closest('.stack').dataset.stack;
 
         if (!stack_id) {
             window.alert(lang.boards_error_open_stack);
@@ -101,6 +116,7 @@ document.addEventListener('click', function (event) {
         resultPending = true;
         let url = btn_archive_stack.dataset.url;
         let archive = parseInt(btn_archive_stack.dataset.archive) === 0 ? 1 : 0;
+        let cards = parseInt(btn_archive_stack.dataset.cards) === 1 ? 1 : 0;
         let id = parseInt(btn_archive_stack.dataset.id);
 
         if (archive === 0) {
@@ -123,10 +139,31 @@ document.addEventListener('click', function (event) {
         } else {
             savedStackEl.classList.remove("archived");
         }
+        const archiveButtons = savedStackEl.querySelectorAll('.stack-header .btn-archive-stack');
+        archiveButtons.forEach(function (archiveBtn) {
+            archiveBtn.dataset.archive = archive;
+        });
         stack.archive = archive;
+
+        if (cards == 1) {
+            stack.cards.forEach(function (card) {
+                card.archive = archive;
+            });
+            savedStackEl.querySelectorAll('.board-card').forEach(function (cardEl) {
+                if (archive) {
+                    cardEl.classList.add("archived");
+                } else {
+                    cardEl.classList.remove("archived");
+                }
+
+                let card_checkbox = cardEl.querySelector(".btn-archive-card");
+                card_checkbox.dataset.archive = archive;
+                card_checkbox.checked = archive == 1 ? true : false;
+            });
+        }
         closeDialog(stackModal, true);
 
-        var data = { 'archive': archive };
+        var data = { 'archive': archive, 'cards': cards };
 
         getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
@@ -148,12 +185,35 @@ document.addEventListener('click', function (event) {
 
             window.alert(lang.boards_error_archive);
 
+            let archive_undo = archive == 0 ? 1 : 0;
+
             if (archive) {
                 savedStackEl.classList.remove("archived");
             } else {
                 savedStackEl.classList.add("archived");
             }
-            stack.archive = archive;
+            const archiveButtons = savedStackEl.querySelectorAll('.stack-header .btn-archive-stack');
+            archiveButtons.forEach(function (archiveBtn) {
+                archiveBtn.dataset.archive = archive_undo;
+            });
+            stack.archive = archive_undo;
+
+            if (cards == 1) {
+                stack.cards.forEach(function (card) {
+                    card.archive = archive_undo;
+                });
+                savedStackEl.querySelectorAll('.board-card').forEach(function (cardEl) {
+                    if (archive) {
+                        cardEl.classList.remove("archived");
+                    } else {
+                        cardEl.classList.add("archived");
+                    }
+
+                    let card_checkbox = cardEl.querySelector(".btn-archive-card");
+                    card_checkbox.dataset.archive = archive_undo;
+                    card_checkbox.checked = archive_undo == 1 ? true : false;
+                });
+            }
 
             if (document.body.classList.contains('offline')) {
                 let formData = new URLSearchParams(data).toString();
@@ -1091,7 +1151,7 @@ setInterval(async function () {
     if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true && !isSortableSelect === true && !resultPending === true) {
         await updateBoard();
     }
-}, 10000);
+}, 30000);
 
 async function updateBoard() {
     let newData = await loadBoard();
@@ -1184,7 +1244,7 @@ var sortable = new Sortable(stacksWrapper, {
             });
         }).catch(function (error) {
             console.log(error);
-        }).finally(function(){
+        }).finally(function () {
             resultPending = false;
         });
     }
@@ -1214,6 +1274,13 @@ function createStack(stack_data) {
 
     stack.querySelector('.stack-header span.title').innerHTML = stack_data.name;
     stack.querySelector('a.create-card').dataset.stack = stack_data.id;
+
+    const archiveButtons = stack.querySelectorAll('.stack-header .btn-archive-stack');
+    archiveButtons.forEach(function (archiveBtn) {
+        archiveBtn.dataset.id = stack_data.id;
+        archiveBtn.dataset.archive = stack_data.archive;
+        archiveBtn.dataset.url = jsObject.stack_archive + stack_data.id;
+    });
 
     if (stack_data.cards) {
         Object.values(stack_data.cards).forEach(function (card_data) {
@@ -1325,7 +1392,7 @@ function changeCardPosition(stack_id, cards) {
         });
     }).catch(function (error) {
         console.log(error);
-    }).finally(function(){
+    }).finally(function () {
         resultPending = false;
     });
 }
@@ -1406,7 +1473,7 @@ function createSortableCards(cardWrapper) {
 
             }).catch(function (error) {
                 console.log(error);
-            }).finally(function(){
+            }).finally(function () {
                 resultPending = false;
             });
         }

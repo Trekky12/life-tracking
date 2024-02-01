@@ -221,6 +221,8 @@ $lang["ADD_DATE"] = "Datum hinzufügen";
 $lang["ADD_TIME"] = "Uhrzeit hinzufügen";
 $lang["ADD_DESCRIPTION"] = "Beschreibung hinzufügen";
 
+$lang["ARCHIVE"] = "Archivieren";
+$lang["ARCHIVE_WITH_CARDS"] = "Mit Karten archivieren";
 $lang["REALLY_ARCHIVE"] = "Soll der Eintrag wirklich archiviert werden?";
 $lang["UPDATE"] = "Aktualisieren";
 

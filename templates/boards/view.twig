@@ -250,8 +250,19 @@
 			<div class="stack-header">
 				<span class="title"></span>
 				<span class="edit-bar">
-					{{ fontawesome('fas fa-pencil') }}
 					<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
+					<span class="stack-menu-button">{{ fontawesome('fas fa-ellipsis-vertical') }}</span>
+					<ul class="stack-menu">
+						<li>
+							<a href="#" class="stack-edit">{{lang["EDIT"]}}</a>
+						</li>
+						<li>
+							<a href="#" class="btn-archive-stack">{{lang["ARCHIVE"]}}</a>
+						</li>
+						<li>
+							<a href="#" class="btn-archive-stack" data-cards="1">{{lang["ARCHIVE_WITH_CARDS"]}}</a>
+						</li>
+					</ul>
 				</span>
 			</div>
 
