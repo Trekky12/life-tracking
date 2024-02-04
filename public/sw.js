@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const version = '20230217';
+const version = '20240204';
 
 const cacheName = 'pwa-life-tracking-v' + version;
 
@@ -180,12 +180,19 @@ self.addEventListener('fetch', event => {
     }
 
     // Do not cache /export routes
-    if(/.*(\/export\/download)$/.test(req.url)){
+    if (/.*(\/export\/download)($|\?)/.test(req.url)) {
+        //console.log("Not cached please: " + req.url);
         return;
     }
 
     if (/.*(\/static\/).*/.test(req.url) || /.*(\/uploads\/).*/.test(req.url)) {
-        return event.respondWith(cacheFirst(req));
+        //console.log("Return from Cache: " + req.url);
+        event.respondWith(cacheFirst(req));
+
+        // update cache from network asynchron
+        event.waitUntil(_fetchAndCache(req));
+
+
         //    } else if (/.*(\/pwa)/.test(req.url)) {
         //        // load new version into cache
         //        _fetchAndCache(req.clone());
@@ -195,7 +202,8 @@ self.addEventListener('fetch', event => {
         //self.clients.matchAll().then(function (clientList) {
         //    console.log("clients", clientList);
         //});
-        return event.respondWith(networkFirst(req));
+        //console.log("Return from Network: " + req.url);
+        event.respondWith(networkFirst(req));
     }
 
 });
@@ -215,6 +223,9 @@ function networkFirst(req) {
         }).catch(function (result) {
             //console.log('no network and nothing in cache found', req);
             return _notifyCache(req).then(function () {
+                /**
+                 * for a html page return the main page "/" instead
+                 */
                 if (req.headers.get('accept').includes('text/html')) {
                     return _fromCache('/');
                 }
@@ -323,11 +334,12 @@ function _fetchAndCache(request) {
          * save new fetched result in cache (asynchron)
          */
         if (request.url.includes(self.location.hostname)) {
+            const cacheResponse = response.clone();
             caches.open(cacheName).then(function (cache) {
-                cache.put(request, response);
+                cache.put(request, cacheResponse);
             });
         }
-        return response.clone();
+        return response;
     });
 }
 
