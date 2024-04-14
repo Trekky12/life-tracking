@@ -853,4 +853,7 @@ $lang["WIDGET_BOARD_CARDS"] = "Karten eines Boards";
 $lang["CARDS_ALL"] = "zeige alle Karten";
 $lang["CARDS_DUE"] = "zeige fällige Karten";
 
+$lang["YES"] = "Ja";
+$lang["NO"] = "Nein";
+
 return $lang;

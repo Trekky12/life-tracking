@@ -88,6 +88,10 @@
             @include font-size(1.4);
         }
     }
+
+    button.cancel{
+        margin-left: 1rem;
+    }
 }
 
 @media screen and (min-width: $size_mobile) {

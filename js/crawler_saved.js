@@ -3,11 +3,11 @@
 function add_save_dataset_function() {
     let crawlerFavorite = document.querySelectorAll('span.save_crawler_dataset');
     crawlerFavorite.forEach(function (item, idx) {
-        item.addEventListener('click', function (event) {
+        item.addEventListener('click', async function (event) {
 
             var data = {'state': item.classList.contains("is_saved") ? 0 : 1, 'dataset': item.dataset.id};
 
-            if (item.classList.contains("is_saved") && !confirm(lang.really_unsave_dataset)) {
+            if (item.classList.contains("is_saved") && !await confirmDialog(lang.really_unsave_dataset)) {
                 return false;
             }
 

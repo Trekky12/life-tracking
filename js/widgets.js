@@ -40,17 +40,17 @@ document.addEventListener('click', async function (event) {
     if (btn_archive_card) {
         //event.preventDefault();
 
-        setTimeout(function () {
+        setTimeout(async function () {
             let url = btn_archive_card.dataset.url;
             let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
 
             if (archive === 0) {
-                if (!confirm(lang.boards_undo_archive)) {
+                if (!await confirmDialog(lang.boards_undo_archive)) {
                     btn_archive_card.checked = true;
                     return false;
                 }
             } else {
-                if (!confirm(lang.boards_really_archive)) {
+                if (!await confirmDialog(lang.boards_really_archive)) {
                     btn_archive_card.checked = false;
                     return false;
                 }
@@ -75,6 +75,7 @@ document.addEventListener('click', async function (event) {
             }).then(function (data) {
                 //allowedReload = true;
                 //window.location.reload();
+                btn_archive_card.dataset.archive = archive;
             }).catch(function (error) {
                 console.log(error);
             });

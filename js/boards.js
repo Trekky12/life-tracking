@@ -64,7 +64,7 @@ function loadBoard() {
     });
 }
 
-document.addEventListener('click', function (event) {
+document.addEventListener('click', async function (event) {
     let submenus = document.querySelectorAll('.stack-menu');
     submenus.forEach(function (submenu) {
         submenu.style.display = 'none';
@@ -120,12 +120,12 @@ document.addEventListener('click', function (event) {
         let id = parseInt(btn_archive_stack.dataset.id);
 
         if (archive === 0) {
-            if (!confirm(lang.boards_undo_archive)) {
+            if (!await confirmDialog(lang.boards_undo_archive)) {
                 resultPending = false;
                 return false;
             }
         } else {
-            if (!confirm(lang.boards_really_archive)) {
+            if (!await confirmDialog(lang.boards_really_archive)) {
                 resultPending = false;
                 return false;
             }
@@ -228,7 +228,7 @@ document.addEventListener('click', function (event) {
     if (btn_archive_card) {
         //event.preventDefault();
 
-        setTimeout(function () {
+        setTimeout(async function () {
             resultPending = true;
             let url = btn_archive_card.dataset.url;
             let archive = parseInt(btn_archive_card.dataset.archive) === 0 ? 1 : 0;
@@ -244,13 +244,13 @@ document.addEventListener('click', function (event) {
             let cardArchiveCheckbox = savedCardEl.querySelector('.btn-archive-card');
 
             if (archive === 0) {
-                if (!confirm(lang.boards_undo_archive)) {
+                if (!await confirmDialog(lang.boards_undo_archive)) {
                     cardArchiveCheckbox.checked = true;
                     resultPending = false;
                     return false;
                 }
             } else {
-                if (!confirm(lang.boards_really_archive)) {
+                if (!await confirmDialog(lang.boards_really_archive)) {
                     cardArchiveCheckbox.checked = false;
                     resultPending = false;
                     return false;
@@ -319,7 +319,7 @@ document.addEventListener('click', function (event) {
         let url = btn_delete_stack.dataset.url;
         let id = parseInt(btn_delete_stack.dataset.id);
 
-        if (!confirm(lang.boards_really_delete_stack)) {
+        if (!await confirmDialog(lang.boards_really_delete_stack)) {
             resultPending = false;
             return false;
         }
@@ -368,7 +368,7 @@ document.addEventListener('click', function (event) {
         let stack_id = parseInt(btn_delete_card.dataset.stack);
         let id = parseInt(btn_delete_card.dataset.id);
 
-        if (!confirm(lang.boards_really_delete_card)) {
+        if (!await confirmDialog(lang.boards_really_delete_card)) {
             resultPending = false;
             return false;
         }
@@ -761,7 +761,8 @@ function openDialog(element) {
         }
     }
 }
-function closeDialog(element, force = false) {
+
+async function closeDialog(element, force = false) {
 
     let new_data = formToJSON(element.querySelector('form'));
 
@@ -778,7 +779,7 @@ function closeDialog(element, force = false) {
     }
 
     if (JSON.stringify(openedDialogData) !== JSON.stringify(new_data) && !force) {
-        if (!confirm(confirm_text)) {
+        if (!await confirmDialog(confirm_text)) {
             return false;
         }
     }

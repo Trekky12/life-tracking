@@ -48,14 +48,83 @@ function getNewTokens(token) {
     });
 }
 
-function deleteObject(url, custom_confirm_text) {
+function createConfirmDialog(message, callback) {
+    var confirmModal = document.createElement('div');
+    confirmModal.id = 'confirm-modal';
+    confirmModal.classList.add('modal');
+
+    var modalInner = document.createElement('div');
+    modalInner.classList.add('modal-inner');
+
+    var form = document.createElement('form');
+
+    var modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+    var messageParagraph = document.createElement('p');
+    messageParagraph.textContent = message;
+    modalContent.appendChild(messageParagraph);
+
+    var modalFooter = document.createElement('div');
+    modalFooter.classList.add('modal-footer');
+
+    var buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('buttons');
+
+    var confirmButton = document.createElement('button');
+    confirmButton.type = 'button';
+    confirmButton.classList.add('button');
+    confirmButton.textContent = lang.yes;
+
+    var cancelButton = document.createElement('button');
+    cancelButton.classList.add('button', 'button-text', 'cancel');
+    cancelButton.type = 'button';
+    cancelButton.textContent = lang.no;
+
+    buttonsDiv.appendChild(confirmButton);
+    buttonsDiv.appendChild(cancelButton);
+
+    modalFooter.appendChild(buttonsDiv);
+
+    form.appendChild(modalContent);
+    form.appendChild(modalFooter);
+
+    modalInner.appendChild(form);
+
+    confirmModal.appendChild(modalInner);
+
+    document.body.appendChild(confirmModal);
+
+    confirmModal.style.display = "block";
+
+    confirmButton.onclick = function () {
+        confirmModal.remove();
+        callback(true);
+    };
+
+    cancelButton.onclick = function () {
+        confirmModal.remove();
+        callback(false);
+    };
+}
+
+// resolve acts as a callback
+// When the user interacts with the confirm dialog and the callback function 
+// within createConfirmDialog is called with either true or false, 
+// it resolves the promise with that value.
+function confirmDialog(message) {
+    return new Promise((resolve, reject) => {
+        createConfirmDialog(message, resolve);
+    });
+}
+
+async function deleteObject(url, custom_confirm_text) {
 
     let confirm_text = lang.really_delete;
     if (custom_confirm_text !== "default") {
         confirm_text = custom_confirm_text;
     }
 
-    if (!confirm(confirm_text)) {
+    if (!await confirmDialog(confirm_text)) {
         loadingWindowOverlay.classList.add("hidden");
         return false;
     }
