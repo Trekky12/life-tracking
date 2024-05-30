@@ -65,18 +65,17 @@ function loadBoard() {
 }
 
 document.addEventListener('click', async function (event) {
-    let submenus = document.querySelectorAll('.stack-menu');
-    submenus.forEach(function (submenu) {
-        submenu.style.display = 'none';
-    });
-
     let stack_header = event.target.closest('.stack-header .stack-menu-button');
     if (stack_header) {
         event.preventDefault();
 
         let submenu = stack_header.parentElement.querySelector('.stack-menu');
         submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
-
+    } else {
+        let submenus = document.querySelectorAll('.stack-menu');
+        submenus.forEach(function (submenu) {
+            submenu.style.display = 'none';
+        });
     }
 
 
@@ -1148,8 +1147,9 @@ setInterval(async function () {
     var isOpenCard = isVisible(cardModal);
     var isOpenLabel = isVisible(labelModal);
     var isSortableSelect = document.body.classList.contains("sortable-select");
+    let isOpenStackMenu = isVisibleOnPage('.stack-wrapper .stack-menu');
 
-    if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true && !isSortableSelect === true && !resultPending === true) {
+    if (!isOpenStack === true && !isOpenCard === true && !isOpenLabel === true && !isSortableSelect === true && !resultPending === true && !isOpenStackMenu === true) {
         await updateBoard();
     }
 }, 30000);

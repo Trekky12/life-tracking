@@ -472,6 +472,17 @@ function isVisible(element) {
     return getDisplay(element) !== 'none';
 }
 
+function isVisibleOnPage(selector) {
+    let elements = Array.from(document.querySelectorAll(selector));
+    console.log(elements);
+    for (const element of elements) {
+        if (isVisible(element)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function getDisplay(element) {
     return element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
 }
