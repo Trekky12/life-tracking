@@ -152,7 +152,7 @@ span.notifications.badge.has-Notification {
             justify-content: flex-start;
             flex-basis: 100%;
 
-            @media screen and (min-width: $size_mobile_navigation) {
+            @media screen and (min-width: $size_big) {
                 overflow: hidden;
             }
 
