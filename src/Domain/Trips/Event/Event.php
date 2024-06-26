@@ -9,7 +9,7 @@ class Event extends \App\Domain\DataObject {
     static $NAME = "DATAOBJECT_TRIPS_EVENT";
 
     public function parseData(array $data) {
-        
+
         // new dataset --> save createdBy 
         if (!$this->exists('id', $data)) {
             $this->createdBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -36,7 +36,7 @@ class Event extends \App\Domain\DataObject {
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : null;
-        
+
         if (!in_array($this->type, \App\Domain\Trips\Event\TripEventService::getEventTypes())) {
             $this->type = null;
         }
@@ -113,7 +113,7 @@ class Event extends \App\Domain\DataObject {
     public function isWaypoint() {
         return strcmp($this->type, "WAYPOINT") === 0;
     }
-    
+
     public function isShip() {
         return strcmp($this->type, "SHIP") === 0;
     }
@@ -203,12 +203,19 @@ class Event extends \App\Domain\DataObject {
 
         $popup = ""; //"<h4>{$this->name}</h4>";
         if (!empty($start1) && !empty($end1) && strcmp($start1, $end1) !== 0) {
-            $popup .= "{$from} {$start1}<br/>";
-            $popup .= "{$to} {$end1}<br/>";
+            if (!empty($end)) {
+                $popup .= "{$from} ";
+            }
+            $popup .= "{$start1}<br/>";
+            if (!empty($end)) {
+                $popup .= "{$to} ";
+            }
+            $popup .= "{$end1}<br/>";
         } else if (!empty($start1)) {
             // there is only a start date or start and end date are the same
             $popup .= "{$start1}<br/>";
-        }if (empty($start1) && !empty($end1)) {
+        }
+        if (empty($start1) && !empty($end1)) {
             // end date without start date
             $popup .= "{$end1}<br/>";
         }
@@ -246,5 +253,4 @@ class Event extends \App\Domain\DataObject {
         }
         return null;
     }
-
 }

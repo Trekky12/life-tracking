@@ -134,8 +134,17 @@ function drawMarkers(data) {
     for (marker_idx in data) {
 
         let marker = data[marker_idx];
+        console.log(marker);
 
-        // ignore markers without start data
+        // markers with end but not start position are changed
+        if (marker.data.start_lat === null && marker.data.end_lat !== null) {
+            marker.data.start_lat = marker.data.end_lat;
+        }
+        if (marker.data.start_lng === null && !marker.data.end_lng !== null) {
+            marker.data.start_lng = marker.data.end_lng;
+        }
+
+        // ignore markers without start position
         if (marker.data.start_lat === null || marker.data.start_lng === null) {
             continue;
         }
