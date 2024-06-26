@@ -75,9 +75,9 @@ class RecurringFinanceEntryCreator {
         // Notification
         $subject = $this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_SUBJECT');
         $content = sprintf($this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT'), $mentry->description);
-        $entry_path = $this->router->relativeUrlFor('finances_edit', array('id' => $entry->id));
-        
-        $this->notification_service->sendNotificationsToUserWithCategory($mentry->user, "NOTIFICATION_CATEGORY_FINANCES_RECURRING", $subject, $content, $entry_path);
+        //$path = $this->router->relativeUrlFor('finances_edit', array('id' => $entry->id));
+        $path = null;
+        $this->notification_service->sendNotificationsToUserWithCategory($mentry->user, "NOTIFICATION_CATEGORY_FINANCES_RECURRING", $subject, $content, $path);
 
         return $entry->id;
     }
