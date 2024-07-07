@@ -122,6 +122,8 @@ addGroceryToList_name.addEventListener('keydown', function (event) {
 
 async function addEntryToList() {
 
+    document.activeElement.blur();
+
     document.querySelector('#groceries-suggestion-list').classList.add('hidden');
 
     document.querySelectorAll('.alert.flash-message').forEach(function (alert) {
