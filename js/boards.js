@@ -414,7 +414,7 @@ document.addEventListener('click', async function (event) {
     let stack_create_btn = event.target.closest(".create-stack")
     if (stack_create_btn) {
         event.preventDefault();
-        openDialog(stackModal);
+        openDialog(stackModal, true);
     }
 
     let stack_close_btn = event.target.closest("#stack-close-btn")
@@ -425,7 +425,7 @@ document.addEventListener('click', async function (event) {
     let label_create_btn = event.target.closest("#create-label")
     if (label_create_btn) {
         event.preventDefault();
-        openDialog(labelModal);
+        openDialog(labelModal, true);
     }
 
     let label_close_btn = event.target.closest("#label-close-btn")
@@ -473,7 +473,7 @@ document.addEventListener('click', async function (event) {
         event.preventDefault();
         var stack_id = create_card_link.dataset.stack;
         cardModal.querySelector('input[name="stack"]').value = stack_id;
-        openDialog(cardModal);
+        openDialog(cardModal, true);
     }
 
     let card_close_btn = event.target.closest("#card-close-btn")
@@ -727,14 +727,14 @@ siblings.forEach(function (sibling, idx) {
 
 
 
-function openDialog(element) {
+function openDialog(element, isNew = false) {
     openedDialogData = formToJSON(element.querySelector('form'));
 
     freeze();
 
     element.style.display = 'block';
 
-    if (!isMobile()) {
+    if (!isMobile() && isNew) {
         element.querySelector('input[type="text"]').focus();
     }
 
