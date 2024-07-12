@@ -85,6 +85,12 @@ class ActivityService extends Service {
                 case 'undone':
                     $action = "ACTIVITY_UNDONE";
                     break;
+                case 'archived':
+                    $action = "ACTIVITY_ARCHIVED";
+                    break;
+                case 'unarchived':
+                    $action = "ACTIVITY_UNARCHIVED";
+                    break;
             }
 
             // special case since sheet notices are autosaved as new revisions

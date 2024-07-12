@@ -10,6 +10,7 @@ use App\Domain\Board\Stack\StackService;
 use App\Domain\Board\Label\LabelService;
 use App\Domain\User\UserService;
 use App\Application\Payload\Payload;
+use App\Domain\Activity\ActivityCreator;
 
 class CardService extends Service {
 
@@ -17,9 +18,20 @@ class CardService extends Service {
     private $stack_service;
     private $label_service;
     private $user_service;
+    private $activity_creator;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, CardMapper $mapper, BoardMapper $board_mapper, StackService $stack_service, LabelService $label_service, UserService $user_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity_creator,
+        CardMapper $mapper,
+        BoardMapper $board_mapper,
+        StackService $stack_service,
+        LabelService $label_service,
+        UserService $user_service
+    ) {
         parent::__construct($logger, $user);
+        $this->activity_creator = $activity_creator;
         $this->mapper = $mapper;
         $this->board_mapper = $board_mapper;
         $this->stack_service = $stack_service;
@@ -54,6 +66,20 @@ class CardService extends Service {
 
             $user = $this->current_user->getUser()->id;
             $is_archived = $this->mapper->setArchive($entry_id, $data["archive"], $user);
+
+            if ($is_archived) {
+                $entry = $this->mapper->get($entry_id);
+
+                $board_id = $this->mapper->getCardBoard($entry_id);
+                $board = $this->board_mapper->get($board_id);
+                $link = [
+                    'route' => 'boards_view',
+                    'params' => ['hash' => $board->getHash()]
+                ];
+                $type = $data["archive"] == 0 ? 'unarchived' : 'archived';
+                $activity = $this->activity_creator->createChildActivity($type, "boards", $entry_id, $entry->title, $link, $this->board_mapper, $board->id);
+                $this->activity_creator->saveActivity($activity);
+            }
 
             $response_data = ['is_archived' => $is_archived];
             return new Payload(Payload::$RESULT_JSON, $response_data);
@@ -112,5 +138,4 @@ class CardService extends Service {
     public function getCardsUser() {
         return $this->mapper->getCardsUser();
     }
-
 }

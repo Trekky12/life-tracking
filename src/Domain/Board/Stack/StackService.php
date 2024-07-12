@@ -6,17 +6,32 @@ use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Domain\Board\BoardService;
+use App\Domain\Board\BoardMapper;
 use App\Domain\Board\Card\CardMapper;
 use App\Application\Payload\Payload;
+
+use App\Domain\Activity\ActivityCreator;
 
 class StackService extends Service {
 
     private $board_service;
+    private $board_mapper;
     private $card_mapper;
+    private $activity_creator;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, StackMapper $mapper, BoardService $board_service, CardMapper $card_mapper) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity_creator,
+        StackMapper $mapper,
+        BoardService $board_service,
+        BoardMapper $board_mapper,
+        CardMapper $card_mapper
+    ) {
         parent::__construct($logger, $user);
+        $this->activity_creator = $activity_creator;
         $this->mapper = $mapper;
+        $this->board_mapper = $board_mapper;
         $this->board_service = $board_service;
         $this->card_mapper = $card_mapper;
     }
@@ -49,10 +64,32 @@ class StackService extends Service {
             $user = $this->current_user->getUser()->id;
             $is_archived = $this->mapper->setArchive($entry_id, $data["archive"], $user);
 
+
+            $entry = $this->mapper->get($entry_id);
+            $board = $this->board_mapper->get($entry->board);
+            $link = [
+                'route' => 'boards_view',
+                'params' => ['hash' => $board->getHash()]
+            ];
+            $type = $data["archive"] == 0 ? 'unarchived' : 'archived';
+
             if (array_key_exists("cards", $data) && in_array($data["cards"], array(0, 1))) {
                 $is_archived_cards = $this->card_mapper->setArchiveByStack($entry_id, $data["archive"], $user);
 
                 $is_archived = $is_archived && $is_archived_cards;
+
+                if ($is_archived_cards) {
+                    $cards = $this->card_mapper->getCardIDsFromStack($entry_id);
+                    foreach ($cards as $card) {
+                        $activity = $this->activity_creator->createChildActivity($type, "boards", $card["id"], $card["title"], $link, $this->board_mapper, $board->id);
+                        $this->activity_creator->saveActivity($activity);
+                    }
+                }
+            }
+
+            if ($is_archived) {
+                $activity = $this->activity_creator->createChildActivity($type, "boards", $entry_id, $entry->name, $link, $this->board_mapper, $board->id);
+                $this->activity_creator->saveActivity($activity);
             }
 
             $response_data = ['is_archived' => $is_archived];

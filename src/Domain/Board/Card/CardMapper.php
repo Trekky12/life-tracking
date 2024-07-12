@@ -30,7 +30,7 @@ class CardMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getCardsFromStack($stack, $card_users, $card_labels, $archive = 0) {
+    public function getCardsFromStack($stack, $card_users = [], $card_labels = [], $archive = 0) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE stack = :stack ";
 
         $bindings = ["stack" => $stack];
@@ -54,6 +54,21 @@ class CardMapper extends \App\Domain\Mapper {
             $card->labels = array_key_exists($card_id, $card_labels) ? $card_labels[$card_id] : [];
 
             $results[] = $card;
+        }
+        return $results;
+    }
+
+    public function getCardIDsFromStack($stack) {
+        $sql = "SELECT id, title FROM " . $this->getTableName() . " WHERE stack = :stack ";
+
+        $bindings = ["stack" => $stack];
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[] = $row;
         }
         return $results;
     }
