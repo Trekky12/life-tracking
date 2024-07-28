@@ -121,8 +121,7 @@ class BillNotificationService {
 
                 // Notification
                 $this->logger->debug("Send notification to user", ["user_id" => $user->id]);
-                //$path = $group_path;
-                $path = null;
+                $path = $group_path;
                 $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_SPLITTED_BILLS", $subject, $content, $path, $sbgroup->id);
             }
         }

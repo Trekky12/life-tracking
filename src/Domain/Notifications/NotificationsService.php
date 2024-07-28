@@ -157,7 +157,8 @@ class NotificationsService extends Service {
 
         $data = [
             "url" => $this->helper->getBaseURL(),
-            "path" => !is_null($path) ? $path : "/notifications/",
+            //"path" => !is_null($path) ? $path : "/notifications/",
+            "path" => "/notifications/",
             "id" => !is_null($id) ? $id : -1
         ];
 

@@ -169,8 +169,7 @@ class CardWriter extends ObjectActivityWriter {
                 
                 // Notification
                 $content = sprintf($this->translation->getTranslatedString('NOTIFICATION_ADDED_TO_CARD'), $board->name, $stack->name, $card->title);
-                //$path = $this->router->urlFor('boards_view', array('hash' => $board->getHash()));
-                $path = null;
+                $path = $this->router->urlFor('boards_view', array('hash' => $board->getHash()));
                 $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_BOARDS_CARD_ADD", $subject, $content, $path, $board->id);
             }
         }
