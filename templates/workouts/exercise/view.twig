@@ -24,12 +24,14 @@
 		<div class="page-content">
 
 			<div class="exercise-filter">
-				<select id="filterBodyParts">
-					<option value="-1">{{ lang["ALL"] }}</option>
-					{% for bodypart in bodyparts %}
-						<option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
-					{% endfor %}
-				</select>
+				<div class="select-wrapper">
+					<select id="filterBodyParts">
+						<option value="-1">{{ lang["ALL"] }}</option>
+						{% for bodypart in bodyparts %}
+							<option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
+						{% endfor %}
+					</select>
+				</div>
 				<input type="text" id="filterSearchExercises"/>
 			</div>
 		</div>

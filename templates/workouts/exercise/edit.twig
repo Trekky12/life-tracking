@@ -41,56 +41,66 @@
 
 				<div class="form-group">
 					<label for="inputLevel">{{lang["WORKOUTS_LEVEL"]}}</label>
-					<input type="number" class="form-control" id="inputLevel" name="level" step="1" placeholder="" {% if not entry is null %} value="{{entry.level}}" {% endif %}>
+					<input type="number" class="form-control" id="inputLevel" name="level" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.level}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
 					<label for="inputRating">{{lang["WORKOUTS_RATING"]}}</label>
-					<input type="number" class="form-control" id="inputRating" name="rating" step="1" placeholder="" {% if not entry is null %} value="{{entry.rating}}" {% endif %}>
+					<input type="number" class="form-control" id="inputRating" name="rating" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.rating}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
 					<label for="category">{{lang["WORKOUTS_CATEGORY"]}}</label>
-					<select class="form-control" id="category" name="category">
-						{% for cat in categories %}
-							<option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.category) %} selected {% endif %}>{{lang[cat.name]}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="category" name="category">
+							{% for cat in categories %}
+								<option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.category) %} selected {% endif %}>{{lang[cat.name]}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="mainMuscle">{{lang["WORKOUTS_MAIN_MUSCLE"]}}</label>
-					<select class="form-control" id="mainMuscle" name="mainMuscle">
-						{% for muscle in muscles %}
-							<option value="{{muscle.id}}" {% if (not entry is null and muscle.id == entry.mainMuscle) %} selected {% endif %}>{{muscle.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="mainMuscle" name="mainMuscle">
+							{% for muscle in muscles %}
+								<option value="{{muscle.id}}" {% if (not entry is null and muscle.id == entry.mainMuscle) %} selected {% endif %}>{{muscle.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="muscle_groups_primary">{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</label>
-					<select class="form-control" id="muscle_groups_primary" name="muscle_groups_primary[]" multiple="true">
-						{% for muscle in muscles %}
-							<option value="{{muscle.id}}" {% if (not entry is null and muscle.id in muscle_groups_primary) %} selected {% endif %}>{{muscle.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="muscle_groups_primary" name="muscle_groups_primary[]" multiple="true">
+							{% for muscle in muscles %}
+								<option value="{{muscle.id}}" {% if (not entry is null and muscle.id in muscle_groups_primary) %} selected {% endif %}>{{muscle.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="muscle_groups_secondary">{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</label>
-					<select class="form-control" id="muscle_groups_secondary" name="muscle_groups_secondary[]" multiple="true">
-						{% for muscle in muscles %}
-							<option value="{{muscle.id}}" {% if (not entry is null and muscle.id in muscle_groups_secondary) %} selected {% endif %}>{{muscle.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="muscle_groups_secondary" name="muscle_groups_secondary[]" multiple="true">
+							{% for muscle in muscles %}
+								<option value="{{muscle.id}}" {% if (not entry is null and muscle.id in muscle_groups_secondary) %} selected {% endif %}>{{muscle.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="mainBodyPart">{{lang["WORKOUTS_MAIN_BODYPART"]}}</label>
-					<select class="form-control" id="mainBodyPart" name="mainBodyPart">
-						{% for bodypart in bodyparts %}
-							<option value="{{bodypart.id}}" {% if (not entry is null and bodypart.id == entry.mainBodyPart) %} selected {% endif %}>{{bodypart.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="mainBodyPart" name="mainBodyPart">
+							{% for bodypart in bodyparts %}
+								<option value="{{bodypart.id}}" {% if (not entry is null and bodypart.id == entry.mainBodyPart) %} selected {% endif %}>{{bodypart.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<h3>{{lang["IMAGE"]}}</h3>

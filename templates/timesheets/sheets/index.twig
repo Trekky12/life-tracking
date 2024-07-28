@@ -115,25 +115,31 @@
 								{{lang["TIMESHEETS_CUSTOMER"]}}
 							{% endif %}:</label>
 
-						<select class="regular" id="timesheet_view_customer" name="customer">
-							<option value="" {% if customer is null %} selected {% endif %}>{{ lang["ALL"] }}</option>
-							{% for c in customers %}
-								<option value="{{c.id}}" {% if c.id == customer %} selected {% endif %}>{{c.name|raw}}</option>
-							{% endfor %}
-						</select>
+						<div class="select-wrapper">
+							<select class="regular" id="timesheet_view_customer" name="customer">
+								<option value="" {% if customer is null %} selected {% endif %}>{{ lang["ALL"] }}</option>
+								{% for c in customers %}
+									<option value="{{c.id}}" {% if c.id == customer %} selected {% endif %}>{{c.name|raw}}</option>
+								{% endfor %}
+							</select>
+						</div>
 					{% endif %}
 					<label for="timesheet_view_billed">{{lang["TIMESHEETS_BILLED"]}}:</label>
-					<select name="billed" id="timesheet_view_billed" class="regular">
-						<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_BILLED_AND_NOT_BILLED"]}}</option>
-						<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_BILLED"]}}</option>
-						<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_BILLED"]}}</option>
-					</select>
+					<div class="select-wrapper">
+						<select name="billed" id="timesheet_view_billed" class="regular">
+							<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_BILLED_AND_NOT_BILLED"]}}</option>
+							<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_BILLED"]}}</option>
+							<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_BILLED"]}}</option>
+						</select>
+					</div>
 					<label for="timesheet_view_payed">{{lang["TIMESHEETS_PAYED"]}}:</label>
-					<select name="payed" id="timesheet_view_payed" class="regular">
-						<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PAYED_AND_NOT_PAYED"]}}</option>
-						<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_PAYED"]}}</option>
-						<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_PAYED"]}}</option>
-					</select>
+					<div class="select-wrapper">
+						<select name="payed" id="timesheet_view_payed" class="regular">
+							<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PAYED_AND_NOT_PAYED"]}}</option>
+							<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_PAYED"]}}</option>
+							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_PAYED"]}}</option>
+						</select>
+					</div>
 				</div>
 
 				<div class="filter-row">
@@ -232,12 +238,14 @@
 				</div>
 				<div class="filter-row filter-group">
 					<div class="options-element">
-						<select id="applyOptions" name="options">
-							<option value="billed">{{ lang["TIMESHEETS_APPLY_BILLED"] }}</option>
-							<option value="not_billed">{{ lang["TIMESHEETS_APPLY_NOT_BILLED"] }}</option>
-							<option value="payed">{{ lang["TIMESHEETS_APPLY_PAYED"] }}</option>
-							<option value="not_payed">{{ lang["TIMESHEETS_APPLY_NOT_PAYED"] }}</option>
-						</select>
+						<div class="select-wrapper">
+							<select id="applyOptions" name="options">
+								<option value="billed">{{ lang["TIMESHEETS_APPLY_BILLED"] }}</option>
+								<option value="not_billed">{{ lang["TIMESHEETS_APPLY_NOT_BILLED"] }}</option>
+								<option value="payed">{{ lang["TIMESHEETS_APPLY_PAYED"] }}</option>
+								<option value="not_payed">{{ lang["TIMESHEETS_APPLY_NOT_PAYED"] }}</option>
+							</select>
+						</div>
 					</div>
 					<div class="filter-element">
 						<button type="button" class="button button-outlined small" id="apply_options">{{ lang["TIMESHEETS_APPLY"] }}</button>

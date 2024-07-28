@@ -62,26 +62,30 @@
 
 				<div class="form-group">
 					<label for="inputValue">{{lang["VALUE"]}}</label>
-					<input type="number" class="form-control" id="inputValue" name="value" step="any" value="{% if not entry is null %}{{entry.value}}{% else %}0{% endif %}"/>
+					<input type="number" class="form-control" id="inputValue" name="value" step="any" inputmode="decimal" value="{% if not entry is null %}{{entry.value}}{% else %}0{% endif %}"/>
 				</div>
 
 				<div class="form-group">
 					<label for="account_from">{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</label>
-					<select class="form-control" id="account_from" name="account_from" value="{% if not entry is null %}{{entry.account_from}}{% endif %}">
-						<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
-						{% for account in accounts %}
-							<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_from) %} selected {% endif %}>{{account.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="account_from" name="account_from" value="{% if not entry is null %}{{entry.account_from}}{% endif %}">
+							<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+							{% for account in accounts %}
+								<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_from) %} selected {% endif %}>{{account.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="account_to">{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</label>
-					<select class="form-control" id="account_to" name="account_to" value="{% if not entry is null %}{{entry.account_to}}{% endif %}">
-						<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
-						{% for account in accounts %}
-							<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_to) %} selected {% endif %}>{{account.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="account_to" name="account_to" value="{% if not entry is null %}{{entry.account_to}}{% endif %}">
+							<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+							{% for account in accounts %}
+								<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_to) %} selected {% endif %}>{{account.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">

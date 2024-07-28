@@ -30,7 +30,7 @@
 	<div class="inner-content">
 		<div class="page-content">
 			<form class="recipes-grocery-shoppinglist-filter">
-				<input type="number" id="addGroceryToList_amount" min="0" max="999" step="any" placeholder="{{ lang["RECIPES_AMOUNT"]}}"/>
+				<input type="number" id="addGroceryToList_amount" min="0" max="999" step="any" inputmode="decimal" placeholder="{{ lang["RECIPES_AMOUNT"]}}"/>
 				<input type="text" id="addGroceryToList_unit" placeholder="{{ lang["UNIT"]}}"/>
 				<div id="groceries-suggestion-wrapper">
 					<input type="text" id="addGroceryToList_name" placeholder="{{ lang["RECIPES_GROCERY"] }}" autocomplete="off"/>
@@ -42,23 +42,23 @@
 		</div>
 	</div>
 
+	<div id="new-shoppinglist-entries-alert" class="alert hide-offline info hidden">
+		<span class="closebtn">&times;</span>
+		<span class="alert-message">
+			<p>{{lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"]}}</p>
+		</span>
+		<a href="javascript:window.location.reload();">
+			<button class="button white" type="button">{{ lang["RELOAD_PAGE"] }}</button>
+		</a>
+	</div>
+
 	<div class="inner-content">
-		<div class="page-content">
-
-			<div id="new-shoppinglist-entries-alert" class="alert hide-offline info hidden">
-				<span class="closebtn">&times;</span>
-				<span class="alert-message">
-					<p>{{lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"]}}</p>
-				</span>
-			</div>
-
-			<ul class="shopping-list-entries"></ul>
-			<div id="loadingIconShoppingListEntries" class="centered loading-icon">
-				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-			</div>
-			<div id="loadMoreShoppingListEntries" class="centered hidden">
-				<button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
-			</div>
+		<div id="loadingIconShoppingListEntries" class="centered loading-icon">
+			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+		</div>
+		<ul class="shopping-list-entries"></ul>
+		<div id="loadMoreShoppingListEntries" class="centered hidden">
+			<button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
 		</div>
 	</div>
 	<div class="hidden">

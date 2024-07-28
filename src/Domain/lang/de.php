@@ -333,6 +333,7 @@ $lang["TABLE_INFO"] = "Zeige {start} bis {end} von {rows} Elementen";
 $lang["TABLE_INFOFILTERED"] = "Zeige {start} bis {end} von {rows} Elemente (gefiltert von {rowsTotal} Elementen)";
 
 $lang["YOU_ARE_OFFLINE"] = "Sie sind derzeit offline!";
+$lang["RELOAD_PAGE"] = "Seite neuladen";
 
 $lang["SET_CURRENT_LOCATION"] = "Aktuellen Standort setzen";
 $lang["REMOVE_LOCATION"] = "Standort entfernen";

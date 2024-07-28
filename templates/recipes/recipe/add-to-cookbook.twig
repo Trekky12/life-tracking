@@ -27,11 +27,13 @@
 
 				<div class="form-group">
 					<label for="cookbook">{{lang["RECIPES_COOKBOOK"]}}</label>
-					<select class="form-control" id="cookbook" name="cookbook">
-						{% for cookbook in cookbooks %}
-							<option value="{{cookbook.id}}">{{cookbook.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="cookbook" name="cookbook">
+							{% for cookbook in cookbooks %}
+								<option value="{{cookbook.id}}">{{cookbook.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 				<div class="form-group">
 					<button type="submit" class="button">

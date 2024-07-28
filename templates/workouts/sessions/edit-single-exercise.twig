@@ -6,23 +6,25 @@
                 <div class="set set-dummy hidden">
                     <span class="set-nr"></span>. {{ lang["WORKOUTS_SET"] }}:
                     {% if data["exercise"].isCategoryReps() or data["exercise"].isCategoryRepsWeight() %}
-                        <input type="number" min="0" max="999" step="1" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][repeats]" disabled="disabled"/>
+                        <input type="number" min="0" max="999" step="1" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][repeats]" disabled="disabled"/>
                         <label>{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
                     {% endif %}
                     {% if data["exercise"].isCategoryRepsWeight() %}
-                        <input type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][weight]" disabled="disabled"/>
+                        <input type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][weight]" disabled="disabled"/>
                         <label>{{ lang["WORKOUTS_KG"] }}</label>
                     {% endif %}
 
                     {% if data["exercise"].isCategoryTime() or data["exercise"].isCategoryDistanceTime() %}
-                        <input type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][time]" disabled="disabled"/>
-                         <select name="exercises[{{ data["idx"] }}][sets][dummy][time_type]" disabled="disabled">
-                            <option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
-                            <option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
-                        </select>
+                        <input type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][time]" disabled="disabled"/>
+                        <div class="select-wrapper">
+                            <select name="exercises[{{ data["idx"] }}][sets][dummy][time_type]" disabled="disabled">
+                                <option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
+                                <option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
+                            </select>
+                        </div>
                     {% endif %}
                     {% if data["exercise"].isCategoryDistanceTime() %}
-                        <input type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][distance]" disabled="disabled"/>
+                        <input type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][dummy][distance]" disabled="disabled"/>
                         <label>{{ lang["WORKOUTS_KM"] }}</label>
                     {% endif %}
                 </div>
@@ -31,23 +33,25 @@
                         {{ loop.index }}. {{ lang["WORKOUTS_SET"] }}:
 
                         {% if data["exercise"].isCategoryReps() or data["exercise"].isCategoryRepsWeight() %}
-                            <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
+                            <input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][repeats]"  value="{{ set["repeats"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
                             <label for="repeats_{{ loop.index-1 }}">{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
                         {% endif %}
                         {% if data["exercise"].isCategoryRepsWeight() %}
-                            <input id="weights_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
+                            <input id="weights_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][weight]"  value="{{ set["weight"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
                             <label for="weights_{{ loop.index-1 }}">{{ lang["WORKOUTS_KG"] }}</label>
                         {% endif %}
 
                         {% if data["exercise"].isCategoryTime() or data["exercise"].isCategoryDistanceTime() %}
-                            <input id="time_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
-                             <select name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time_type]" {% if hidden %}disabled="disabled"{% endif %}>
-                                <option value="sec" {% if set["time_type"] == "sec" %}selected="true"{% endif %}>{{ lang["WORKOUTS_SECONDS"] }}</option>
-                                <option value="min" {% if set["time_type"] == "min" %}selected="true"{% endif %}>{{ lang["WORKOUTS_MINUTES"] }}</option>
-                            </select>
+                            <input id="time_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time]"  value="{{ set["time"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
+                            <div class="select-wrapper">
+                                <select name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][time_type]" {% if hidden %}disabled="disabled"{% endif %}>
+                                    <option value="sec" {% if set["time_type"] == "sec" %}selected="true"{% endif %}>{{ lang["WORKOUTS_SECONDS"] }}</option>
+                                    <option value="min" {% if set["time_type"] == "min" %}selected="true"{% endif %}>{{ lang["WORKOUTS_MINUTES"] }}</option>
+                                </select>
+                            </div>
                         {% endif %}
                         {% if data["exercise"].isCategoryDistanceTime() %}
-                            <input id="distance_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
+                            <input id="distance_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data["idx"] }}][sets][{{ loop.index-1 }}][distance]"  value="{{ set["distance"] }}" {% if hidden %}disabled="disabled"{% endif %}/>
                             <label for="distance_{{ loop.index-1 }}">{{ lang["WORKOUTS_KM"] }}</label>
                         {% endif %}
                     </div>

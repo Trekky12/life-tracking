@@ -61,7 +61,8 @@ table .fontawesome-icon svg {
 
 .alert {
     width: 100%;
-    padding: 20px;
+    padding: 2rem;
+    padding-right: 4rem;
     margin-bottom: 15px;
     color: $color_text-main;
     border-radius: 4px;
@@ -95,17 +96,34 @@ table .fontawesome-icon svg {
     }
 }
 
+#offline-alert,
+#new-shoppinglist-entries-alert {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    align-items: center;
+
+    @media screen and (min-width: $size_mobile) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
 .alert,
 .notification {
+    position: relative;
+
     p {
         margin: 0;
     }
 
     .closebtn {
-        margin-left: 15px;
+        position: absolute;
+        right: 15px;
+        top: 15px;
         color: #ffffff;
         font-weight: 600;
-        float: right;
         font-size: 22px;
         line-height: 20px;
         cursor: pointer;
@@ -210,7 +228,7 @@ table .fontawesome-icon svg {
 }
 
 select.button-height {
-    height: 44px;
+    height: 36px;
 }
 
 pre {

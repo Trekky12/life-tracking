@@ -32,21 +32,23 @@
 
 				<div class="form-group">
 					<label for="category">{{lang["CATEGORY"]}}</label>
-					<select class="form-control" id="category" name="category">
-						{% for cat in categories %}
-							<option value="{{cat.id}}" {% if not entry is null and cat.id == entry.category %} selected {% endif %}>{{cat.name|raw}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="category" name="category">
+							{% for cat in categories %}
+								<option value="{{cat.id}}" {% if not entry is null and cat.id == entry.category %} selected {% endif %}>{{cat.name|raw}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="inputMinValue">{{lang["MIN_VALUE"]}}</label>
-					<input type="number" class="form-control" id="inputMinValue" name="min_value" step="any" value="{% if not entry is null %}{{entry.min_value}}{% endif %}">
+					<input type="number" class="form-control" id="inputMinValue" name="min_value" step="any" inputmode="decimal" value="{% if not entry is null %}{{entry.min_value}}{% endif %}">
 				</div>
 
 				<div class="form-group">
 					<label for="inputMaxValue">{{lang["MAX_VALUE"]}}</label>
-					<input type="number" class="form-control" id="inputMaxValue" name="max_value" step="any" value="{% if not entry is null %}{{entry.max_value}}{% endif %}">
+					<input type="number" class="form-control" id="inputMaxValue" name="max_value" step="any" inputmode="decimal" value="{% if not entry is null %}{{entry.max_value}}{% endif %}">
 				</div>
 
 				<div class="form-group">

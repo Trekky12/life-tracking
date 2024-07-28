@@ -51,10 +51,12 @@
 
 				<div class="form-group">
 					<label for="inputFilter">{{lang["DEFAULT_FILTER"]}}</label>
-					<select class="form-control" id="inputFilter" name="filter">
-						<option value="createdOn" {% if entry is null or (not entry is null and entry.filter == "createdOn") %} selected {% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
-						<option value="changedOn" {% if (not entry is null and entry.filter == "changedOn") %} selected {% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="inputFilter" name="filter">
+							<option value="createdOn" {% if entry is null or (not entry is null and entry.filter == "createdOn") %} selected {% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
+							<option value="changedOn" {% if (not entry is null and entry.filter == "changedOn") %} selected {% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">

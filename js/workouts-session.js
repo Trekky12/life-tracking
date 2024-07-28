@@ -2,7 +2,7 @@
 
 const exercisesSession = document.querySelector('#workoutExercises .content');
 const addExerciseBtn = document.querySelector('#addExercise');
-const addExerciseSelect = document.querySelector('#addExerciseToSession');
+const addExerciseSelect = document.querySelector('#addExerciseToSession select');
 const addExerciseSetNr = document.querySelector('#setCount');
 addExerciseBtn.addEventListener('click', function (event) {
     let exercise = addExerciseSelect.value;

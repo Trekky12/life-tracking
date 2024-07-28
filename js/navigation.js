@@ -73,6 +73,8 @@ if (navigation && header && navigationOverlay) {
         //navigation.style.transform = 'translateX(0px)';
         navigation.classList.add("toggled");
 
+        document.activeElement.blur();
+
         currentPos = navi_width;
     }
 
@@ -115,9 +117,9 @@ if (navigation && header && navigationOverlay) {
     let yMovePosition = null;
     let isOpenAllowed = null;
     let isCloseAllowed = null;
-    let threshold_edge = 20;
+    let threshold_edge = 100;
     let xMinDistanceClose = 50;
-    let xMinDistanceOpen = 20;
+    let xMinDistanceOpen = 50;
     let yMinDistance = 50;
     let currentPos = null;
     let skip = false;
@@ -299,7 +301,7 @@ if (navigation && header && navigationOverlay) {
     window.addEventListener('resize', handleResize);
 
     function handleResize() {
-        if ( (!wasMobile && isMobile()) || (wasMobile && !isMobile())) {
+        if ((!wasMobile && isMobile()) || (wasMobile && !isMobile())) {
             navigation.classList.remove('toggled');
             body.classList.remove("navigation-drawer-toggled");
             setCookie('navigationdrawer_desktophidden', 0);

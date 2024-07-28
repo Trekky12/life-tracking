@@ -438,13 +438,13 @@ body.sortable-select {
     @media screen and (min-width: $size_mobile_navigation) {
         flex-direction: row;
         flex-wrap: wrap;
-        gap: 1rem; 
+        gap: 1rem;
 
         &> :not(:last-child) {
             width: auto;
         }
 
-        #addGroceryToList_notice{
+        #addGroceryToList_notice {
             max-width: 150px;
         }
 
@@ -470,44 +470,44 @@ body.sortable-select {
     margin: 0;
     background: #ffffff;
     padding: 0;
+
+    border-radius: inherit;
+}
+
+#loadingIconShoppingListEntries,
+#loadMoreShoppingListEntries {
+    padding: 2rem;
 }
 
 .shopping-list-entries {
 
     .shopping-list-entry {
-        //padding: 1rem;
+        padding: 1rem;
         //border: 1px solid $color_blue_light_gray;
         //border-radius: 5px;
-        margin: 0.5rem;
+        //margin: 0.5rem;
 
         position: relative;
 
-        &:after {
+        border-bottom: 1px solid $color_blue_lighter_gray;
+
+        /*&:after {
             position: absolute;
             content: "";
-            border-bottom: 1px dotted $color_background-body;
+            border-bottom: 1px dotted $color_blue_light_gray;
             bottom: -2px;
             left: 20px;
             right: 0;
-        }
+        }*/
 
         label {
-            @include font-size(1.6);
+            @include font-size(1.4);
+            margin-left: 1rem;
+            text-align: left;
         }
 
         .btn-delete {
-            display: none;
-        }
-
-        &:hover,
-        &:focus {
-            .btn-delete {
-                display: block;
-            }
-
-            &:after {
-                border-bottom-color: $color_blue_light_gray;
-            }
+            display: block;
         }
     }
 }

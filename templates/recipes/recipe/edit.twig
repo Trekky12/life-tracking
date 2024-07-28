@@ -54,20 +54,20 @@
 					<div class="left">
 						<div class="form-group">
 							<label for="inputPreparationTime">{{lang["RECIPES_PREPARATION_TIME"]}}</label>
-							<input type="number" class="form-control" id="inputPreparationTime" name="preparation_time" step="1" placeholder="" {% if not entry is null %} value="{{entry.preparation_time}}" {% endif %}>
+							<input type="number" class="form-control" id="inputPreparationTime" name="preparation_time" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.preparation_time}}" {% endif %}>
 						</div>
 					</div>
 					<div class="right">
 						<div class="form-group">
 							<label for="inputWaitingTime">{{lang["RECIPES_WAITING_TIME"]}}</label>
-							<input type="number" class="form-control" id="inputWaitingTime" name="waiting_time" step="1" placeholder="" {% if not entry is null %} value="{{entry.waiting_time}}" {% endif %}>
+							<input type="number" class="form-control" id="inputWaitingTime" name="waiting_time" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.waiting_time}}" {% endif %}>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="inputServings">{{lang["RECIPES_SERVINGS"]}}</label>
-					<input type="number" class="form-control" id="inputServings" name="servings" step="1" placeholder="" {% if not entry is null %} value="{{entry.servings}}" {% endif %}>
+					<input type="number" class="form-control" id="inputServings" name="servings" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.servings}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
@@ -107,13 +107,13 @@
 										<div class="left">
 											<div class="form-group">
 												<label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
-												<input type="number" step="1" name="steps[{{ step_idx }}][preparation_time]" value="{{ step["preparation_time"] }}">
+												<input type="number" step="1" pattern="\d*" name="steps[{{ step_idx }}][preparation_time]" value="{{ step["preparation_time"] }}">
 											</div>
 										</div>
 										<div class="right">
 											<div class="form-group">
 												<label>{{lang["RECIPES_WAITING_TIME"]}}</label>
-												<input type="number" step="1" name="steps[{{ step_idx }}][waiting_time]" value="{{ step["waiting_time"] }}">
+												<input type="number" step="1" pattern="\d*" name="steps[{{ step_idx }}][waiting_time]" value="{{ step["waiting_time"] }}">
 											</div>
 										</div>
 									</div>
@@ -128,7 +128,7 @@
 											{% for ingredient in ingredients[step.id] %}
 												<div class="step-ingredient">
 													<span class="ingredient-handle handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
-													<input type="number" step="any" class="step-ingredient-amount" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}" value="{{ ingredient["amount"] }}"/>
+													<input type="number" step="any" inputmode="decimal" class="step-ingredient-amount" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}" value="{{ ingredient["amount"] }}"/>
 													<input type="text" class="step-ingredient-unit" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][unit]" placeholder="{{ lang["UNIT"] }}" value="{{ ingredient["unit"] }}"/>
 													<div id="ingredient-suggestion-wrapper-{{step_idx}}-{{loop.index-1}}" class="ingredient-suggestion-wrapper">
 														<input type="hidden" id="step-ingredient-id-{{step_idx}}-{{loop.index-1}}" class="step-ingredient-id" name="steps[{{ step_idx }}][ingredients][{{ loop.index-1 }}][id]" value="{{ ingredient["ingredient"]}}"/>
@@ -195,13 +195,13 @@
 					<div class="left">
 						<div class="form-group">
 							<label>{{lang["RECIPES_PREPARATION_TIME"]}}</label>
-							<input type="number" disabled="disabled" step="1" name="steps[dummy][preparation_time]">
+							<input type="number" disabled="disabled" step="1" pattern="\d*" name="steps[dummy][preparation_time]">
 						</div>
 					</div>
 					<div class="right">
 						<div class="form-group">
 							<label>{{lang["RECIPES_WAITING_TIME"]}}</label>
-							<input type="number" disabled="disabled" step="1" name="steps[dummy][waiting_time]">
+							<input type="number" disabled="disabled" step="1" pattern="\d*" name="steps[dummy][waiting_time]">
 						</div>
 					</div>
 				</div>
@@ -224,7 +224,7 @@
 		</div>
 		<div class="step-ingredient step-ingredient-dummy">
 			<span class="ingredient-handle handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
-			<input type="number" step="any" class="step-ingredient-amount" name="steps[dummy_step][ingredients][dummy_ingredient][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}"/>
+			<input type="number" step="any" inputmode="decimal" class="step-ingredient-amount" name="steps[dummy_step][ingredients][dummy_ingredient][amount]" placeholder="{{ lang["RECIPES_AMOUNT"] }}"/>
 			<input type="text" class="step-ingredient-unit" name="steps[dummy_step][ingredients][dummy_ingredient][unit]" placeholder="{{ lang["UNIT"] }}"/>
 			<div id="ingredient-suggestion-wrapper" class="ingredient-suggestion-wrapper">
 				<input type="hidden" id="step-ingredient-id" class="step-ingredient-id" name="steps[dummy_step][ingredients][dummy_ingredient][id]"/>

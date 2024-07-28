@@ -334,6 +334,7 @@ $lang["TABLE_INFO"] = "show {start} to {end} of {rows} elements";
 $lang["TABLE_INFOFILTERED"] = "show {start} to {end} of {rows} elements (filtered from {rowsTotal} elements)";
 
 $lang["YOU_ARE_OFFLINE"] = "You are currently offline!";
+$lang["RELOAD_PAGE"] = "Reload page";
 
 $lang["SET_CURRENT_LOCATION"] = "Set current location";
 $lang["REMOVE_LOCATION"] = "Remove location";

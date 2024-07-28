@@ -25,13 +25,15 @@
 
 				<div class="form-group">
 					<label for="clone">{{lang["CLONE_CRAWLER_HEADLINES_FROM"]}}</label>
-					<select class="form-control" id="clone" name="clone">
-						{% for cr in crawlers %}
-							{% if cr.user == user.id and cr.id != crawler.id  %}
-								<option value="{{cr.id}}">{{cr.name}}</option>
-							{% endif %}
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="clone" name="clone">
+							{% for cr in crawlers %}
+								{% if cr.user == user.id and cr.id != crawler.id  %}
+									<option value="{{cr.id}}">{{cr.name}}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group btn">

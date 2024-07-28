@@ -73,12 +73,12 @@
 						<div class="form-group left">
 							<label for="inputValueForeign">{{lang["VALUE"]}}
 								({{ group.currency }})</label>
-							<input type="number" step="any" class="form-control" id="inputValueForeign" name="foreignValue" value="{{totalValueForeign}}">
+							<input type="number" step="any" inputmode="decimal" class="form-control" id="inputValueForeign" name="foreignValue" value="{{totalValueForeign}}">
 						</div>
 						<div class="form-group right">
 							<label for="inputValue">{{lang["VALUE"]}}
 								({{ i18n.currency }})</label>
-							<input type="number" step="any" readonly="readonly" class="form-control read-only" id="inputValue" name="value" value="{{totalValue}}">
+							<input type="number" step="any" inputmode="decimal" readonly="readonly" class="form-control read-only" id="inputValue" name="value" value="{{totalValue}}">
 						</div>
 					</div>
 
@@ -89,20 +89,20 @@
 								=>
 								{{ group.currency }})
 							</label>
-							<input type="number" step="any" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}{{ group.exchange_rate }}{% endif %}">
+							<input type="number" step="any" inputmode="decimal" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}{{ group.exchange_rate }}{% endif %}">
 						</div>
 						<div class="form-group right">
 							<label for="inputFee">{{lang["EXCHANGE_FEE"]}}
 								(%)
 							</label>
-							<input type="number" step="any" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}{{ group.exchange_fee }}{% endif %}">
+							<input type="number" step="any" inputmode="decimal" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}{{ group.exchange_fee }}{% endif %}">
 						</div>
 					</div>
 				{% else %}
 					<div class="form-group">
 						<label for="inputValue">{{lang["VALUE"]}}
 							({{ i18n.currency }})</label>
-						<input type="number" step="any" class="form-control" id="inputValue" name="value" value="{{totalValue}}">
+						<input type="number" step="any" inputmode="decimal" class="form-control" id="inputValue" name="value" value="{{totalValue}}">
 					</div>
 				{% endif %}
 
@@ -162,19 +162,21 @@
 							</div>
 							{% if foreignCurrency %}
 								<div class="input-field" data-title="{{lang["VALUE"]}} ({{ group.currency }})">
-									<input type="number" step="any" class="form-control balance_paid_foreign" name="balance[{{ user_id }}][paid_foreign]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["paid_foreign"]}}{% else %}0{% endif %}">
+									<input type="number" step="any" inputmode="decimal" class="form-control balance_paid_foreign" name="balance[{{ user_id }}][paid_foreign]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["paid_foreign"]}}{% else %}0{% endif %}">
 								</div>
 							{% endif %}
 							<div class="input-field" data-title="{{lang["VALUE"]}} ({{ i18n.currency }})">
-								<input type="number" step="any" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_paid {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][paid]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["paid"]}}{% else %}0{% endif %}">
+								<input type="number" step="any" inputmode="decimal" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_paid {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][paid]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["paid"]}}{% else %}0{% endif %}">
 							</div>
 							<div class="paymethod-field" data-title="{{lang["FINANCES_PAYMETHOD"]}}">
-								<select class="form-control" name="balance[{{ user_id }}][paymethod_spend]">
-									<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
-									{% for method in paymethods[user_id] %}
-										<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod_spend"]) or (balance is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
-									{% endfor %}
-								</select>
+								<div class="select-wrapper form-control">
+									<select name="balance[{{ user_id }}][paymethod_spend]">
+										<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+										{% for method in paymethods[user_id] %}
+											<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod_spend"]) or (balance is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+										{% endfor %}
+									</select>
+								</div>
 							</div>
 						</div>
 					{% endfor %}
@@ -232,20 +234,22 @@
 							</div>
 							{% if foreignCurrency %}
 								<div class="input-field" data-title="{{lang["VALUE"]}} ({{ group.currency }})">
-									<input type="number" step="any" class="form-control balance_spend_foreign" name="balance[{{ user_id }}][spend_foreign]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["spend_foreign"]}}{% else %}0{% endif %}">
+									<input type="number" step="any" inputmode="decimal" class="form-control balance_spend_foreign" name="balance[{{ user_id }}][spend_foreign]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["spend_foreign"]}}{% else %}0{% endif %}">
 								</div>
 							{% endif %}
 							<div class="input-field" data-title="{{lang["VALUE"]}} ({{ i18n.currency }})">
-								<input type="number" step="any" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_spend {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][spend]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["spend"]}}{% else %}0{% endif %}">
+								<input type="number" step="any" inputmode="decimal" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_spend {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][spend]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["spend"]}}{% else %}0{% endif %}">
 							</div>
 							{% if isSettleUp %}
 								<div class="paymethod-field" data-title="{{lang["FINANCES_PAYMETHOD"]}}">
-									<select class="form-control" name="balance[{{ user_id }}][paymethod_paid]">
-										<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
-										{% for method in paymethods[user_id] %}
-											<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod_paid"]) %} selected {% endif %}>{{method.name|raw}}</option>
-										{% endfor %}
-									</select>
+									<div class="select-wrapper form-control">
+										<select name="balance[{{ user_id }}][paymethod_paid]">
+											<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+											{% for method in paymethods[user_id] %}
+												<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod_paid"]) %} selected {% endif %}>{{method.name|raw}}</option>
+											{% endfor %}
+										</select>
+									</div>
 								</div>
 							{% endif %}
 						</div>

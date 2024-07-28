@@ -71,11 +71,11 @@
     .button,
     select {
         @include font-size(1.2);
-        min-height: 35px;
+        min-height: 31px;
     }
 
     select {
-        height: 35px;
+        height: 31px;
     }
 }
 

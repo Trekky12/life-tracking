@@ -97,11 +97,13 @@
 
 				<div class="form-group">
 					<label for="eventType">{{lang["TYPE"]}}</label>
-					<select class="form-control" id="eventType" name="type">
-						{% for type in types %}
-							<option value="{{type}}" {% if not entry is null and type == entry.type %} selected {% endif %}>{{lang["EVENT_TYPE_%s"|format(type)]}}</option>
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="eventType" name="type">
+							{% for type in types %}
+								<option value="{{type}}" {% if not entry is null and type == entry.type %} selected {% endif %}>{{lang["EVENT_TYPE_%s"|format(type)]}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">

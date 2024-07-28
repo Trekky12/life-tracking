@@ -39,10 +39,12 @@
 					</div>
 					<div class="filter-group">
 						<div class="filter-element">
-							<select class="form-control" id="filterCrawlerDatasets">
-								<option value="createdOn" {% if filter =="createdOn" %} selected {% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
-								<option value="changedOn" {% if filter =="changedOn" %} selected {% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
-							</select>
+							<div class="select-wrapper form-control">
+								<select id="filterCrawlerDatasets">
+									<option value="createdOn" {% if filter =="createdOn" %} selected {% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
+									<option value="changedOn" {% if filter =="changedOn" %} selected {% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
+								</select>
+							</div>
 						</div>
 					</div>
 				</div>

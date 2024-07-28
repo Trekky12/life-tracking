@@ -100,19 +100,21 @@
 								{{lang["TIMESHEETS_CUSTOMER"]}}
 							{% endif %}
 						</label>
-						<select class="form-control" id="customer" name="customer">
-							<option value="" {% if entry is null %} selected {% endif %}>{{ lang["NONE"] }}</option>
-							{% for customer in customers %}
-								<option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %} selected {% endif %}>{{customer.name|raw}}</option>
-							{% endfor %}
-						</select>
+						<div class="select-wrapper form-control">
+							<select id="customer" name="customer">
+								<option value="" {% if entry is null %} selected {% endif %}>{{ lang["NONE"] }}</option>
+								{% for customer in customers %}
+									<option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %} selected {% endif %}>{{customer.name|raw}}</option>
+								{% endfor %}
+							</select>
+						</div>
 					</div>
 				{% endif %}
 
 				{% if categories %}
 					<div class="form-group category">
 						<label for="projectCategory">{{lang["CATEGORIES"]}}</label>
-						<select class="form-control category" id="projectCategory" name="category[]" multiple>
+						<select class="category form-control" id="projectCategory" name="category[]" multiple>
 							{% for cat in categories %}
 								<option value="{{cat.id}}" {% if cat.id in sheet_categories %} selected {%endif%}>{{cat.name|raw}}</option>
 							{% endfor %}

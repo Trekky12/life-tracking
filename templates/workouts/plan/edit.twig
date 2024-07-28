@@ -102,12 +102,14 @@
 					</div>
 					<div class="available_exercises">
 						<div class="exercise-filter">
-							<select id="filterBodyParts">
-								<option value="-1">{{ lang["ALL"] }}</option>
-								{% for bodypart in bodyparts %}
-									<option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
-								{% endfor %}
-							</select>
+							<div class="select-wrapper">
+								<select id="filterBodyParts">
+									<option value="-1">{{ lang["ALL"] }}</option>
+									{% for bodypart in bodyparts %}
+										<option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
+									{% endfor %}
+								</select>
+							</div>
 							<input type="text" id="filterSearchExercises"/>
 						</div>
 						<div class="content" id="exercises_available" data-edit="1">
@@ -123,7 +125,7 @@
 				</div>
 
 				<div class="form-group">
-					<input id="defaultSetCount" type="number" min="0" max="999" step="any" size="5" value="3" class="small"/>
+					<input id="defaultSetCount" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="3" class="small"/>
 					<label for="defaultSetCount">{{ lang["WORKOUTS_SETS"] }}</label>
 				</div>
 

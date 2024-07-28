@@ -65,11 +65,13 @@
 		{%  endfor %}
 	</div>
 	<p>
-		<select class="button-height">
-			{% for widget_key, widget in widgets %}
-				<option value="{{ widget_key }}">{{ widget["name"] }}</option>
-			{% endfor %}
-		</select>
+	<div class="select-wrapper">
+			<select class="button-height">
+				{% for widget_key, widget in widgets %}
+					<option value="{{ widget_key }}">{{ widget["name"] }}</option>
+				{% endfor %}
+			</select>
+		</div>
 		<a href="#" id="add-widget">
 			<button class="button">{{ lang["ADD"] }}</button>
 		</a>

@@ -60,7 +60,7 @@
 						<div class="form-group category">
 							{% if not budget.is_remaining() %}
 								<label for="category_{{loop.index}}">{{lang["CATEGORY"]}}</label>
-								<select required class="form-control category" id="category_{{loop.index}}" name="budget[{{loop.index-1}}][category][]" multiple>
+								<select required class="category form-control" id="category_{{loop.index}}" name="budget[{{loop.index-1}}][category][]" multiple>
 									{% for cat in categories %}
 										<option value="{{cat.id}}" {% if cat.id in budget_categories[budget.id] %} selected {%endif%}>{{cat.name|raw}}</option>
 									{% endfor %}
@@ -85,7 +85,7 @@
 
 						<div class="form-group value">
 							<label for="inputValue_{{loop.index-1}}">{{lang["BUDGET"]}}</label>
-							<input required type="number" class="form-control value" id="inputValue_{{loop.index-1}}" name="budget[{{loop.index-1}}][value]" step="any" value="{{budget.value}}">
+							<input required type="number" class="form-control value" id="inputValue_{{loop.index-1}}" name="budget[{{loop.index-1}}][value]" step="any" inputmode="decimal" value="{{budget.value}}">
 						</div>
 
 						<div class="form-group is_hidden">
@@ -118,7 +118,7 @@
 
 						<div class="form-group value">
 							<label for="inputValue_{{budgets|length}}">{{lang["BUDGET"]}}</label>
-							<input required type="number" class="form-control value" id="inputValue_{{budgets|length}}" name="budget[{{budgets|length}}][value]" step="any" value="{{budget.value}}">
+							<input required type="number" class="form-control value" id="inputValue_{{budgets|length}}" name="budget[{{budgets|length}}][value]" step="any" inputmode="decimal" value="{{budget.value}}">
 						</div>
 					</div>
 				{% endif %}
@@ -142,7 +142,7 @@
 
 			<div class="form-group category">
 				<label for="category_DUMMY">{{lang["CATEGORY"]}}</label>
-				<select required class="form-control category" id="category_DUMMY" name="budget[DUMMY][category][]" multiple disabled="disabled">
+				<select required class="category form-control" id="category_DUMMY" name="budget[DUMMY][category][]" multiple disabled="disabled">
 					{% for cat in categories %}
 						<option value="{{cat.id}}">{{cat.name|raw}}</option>
 					{% endfor %}
@@ -157,7 +157,7 @@
 
 			<div class="form-group value">
 				<label for="inputValue_DUMMY">{{lang["BUDGET"]}}</label>
-				<input type="number" required class="form-control value" id="inputValue_DUMMY" name="budget[DUMMY][value]" step="any" disabled="disabled">
+				<input type="number" required class="form-control value" id="inputValue_DUMMY" name="budget[DUMMY][value]" step="any" inputmode="decimal" disabled="disabled">
 			</div>
 
 			<div class="form-group is_hidden">

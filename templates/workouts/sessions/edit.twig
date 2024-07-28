@@ -62,12 +62,14 @@
 				{% if entry is null and workoutdays|length > 0 %}
 					<div class="form-group">
 						<label for="workoutsDaySelect">{{lang["WORKOUTS_DAY"]}}</label>
-						<select id="workoutsDaySelect">
-							<option value="-1" selected>{{ lang["CHOOSE"] }}</option>
-							{% for id, day in workoutdays %}
-								<option value="{{ id }}">{{ day }}</option>
-							{% endfor %}
-						</select>
+						<div class="select-wrapper">
+							<select id="workoutsDaySelect">
+								<option value="-1" selected>{{ lang["CHOOSE"] }}</option>
+								{% for id, day in workoutdays %}
+									<option value="{{ id }}">{{ day }}</option>
+								{% endfor %}
+							</select>
+						</div>
 					</div>
 				{% endif %}
 
@@ -114,12 +116,14 @@
 				</div>
 				<h3>{{ lang["WORKOUTS_ADD_EXERCISE"] }}</h3>
 				<div class="form-group">
-					<select id="addExerciseToSession">
-						{% for exercise in exercisesList %}
-							<option value="{{ exercise.id }}">{{ exercise.name|raw }}</option>
-						{% endfor %}
-					</select>
-					<input id="setCount" type="number" min="0" max="999" step="any" size="5" value="3" class="small"/>
+					<div class="select-wrapper" id="addExerciseToSession">
+						<select>
+							{% for exercise in exercisesList %}
+								<option value="{{ exercise.id }}">{{ exercise.name|raw }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<input id="setCount" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="3" class="small"/>
 					<label for="setCount">{{ lang["WORKOUTS_SETS"] }}</label>
 					<button type="button" class="button button-outlined small" id="addExercise">{{ lang["ADD"] }}</button>
 				</div>

@@ -45,13 +45,15 @@
 
 				<div class="form-group">
 					<label for="car">{{lang["CAR"]}}</label>
-					<select class="form-control" id="car" name="car">
-						{% for car in cars %}
-							{% if car.id in user_cars %}
-								<option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %} selected {% endif %}>{{car.name|raw}}</option>
-							{% endif %}
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="car" name="car">
+							{% for car in cars %}
+								{% if car.id in user_cars %}
+									<option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %} selected {% endif %}>{{car.name|raw}}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">
@@ -60,7 +62,7 @@
 				</div>
 				<div class="form-group">
 					<label for="inputGMileage">{{lang["MILEAGE"]}}</label>
-					<input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" placeholder="" {% if not entry is null %} value="{{entry.mileage}}" {% endif %}>
+					<input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.mileage}}" {% endif %}>
 				</div>
 
 				<div id="carServiceFuel">
@@ -86,15 +88,15 @@
 					</div>
 					<div class="form-group">
 						<label for="inputGPrice">{{lang["PRICE"]}}/l</label>
-						<input type="number" class="form-control" id="inputGPrice" name="fuel_price" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_price}}" {% endif %}>
+						<input type="number" class="form-control" id="inputGPrice" name="fuel_price" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.fuel_price}}" {% endif %}>
 					</div>
 					<div class="form-group">
 						<label for="inputGVol">{{lang["VOLUME"]}}</label>
-						<input type="number" class="form-control" id="inputGVol" name="fuel_volume" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_volume}}" {% endif %}>
+						<input type="number" class="form-control" id="inputGVol" name="fuel_volume" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.fuel_volume}}" {% endif %}>
 					</div>
 					<div class="form-group">
 						<label for="inputGTotalPrice">{{lang["TOTAL_PRICE"]}}</label>
-						<input type="number" class="form-control" id="inputGTotalPrice" name="fuel_total_price" step="any" placeholder="" {% if not entry is null %} value="{{entry.fuel_total_price}}" {% endif %}>
+						<input type="number" class="form-control" id="inputGTotalPrice" name="fuel_total_price" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.fuel_total_price}}" {% endif %}>
 					</div>
 					<div class="form-group">
 						<label for="inputGLocation">{{lang["LOCATION"]}}</label>

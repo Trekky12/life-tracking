@@ -45,13 +45,15 @@
 
 				<div class="form-group">
 					<label for="car">{{lang["CAR"]}}</label>
-					<select class="form-control" id="car" name="car">
-						{% for car in cars %}
-							{% if car.id in user_cars %}
-								<option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %} selected {% endif %}>{{car.name|raw}}</option>
-							{% endif %}
-						{% endfor %}
-					</select>
+					<div class="select-wrapper form-control">
+						<select id="car" name="car">
+							{% for car in cars %}
+								{% if car.id in user_cars %}
+									<option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %} selected {% endif %}>{{car.name|raw}}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 
 
@@ -61,7 +63,7 @@
 				</div>
 				<div class="form-group">
 					<label for="inputGMileage">{{lang["MILEAGE"]}}</label>
-					<input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" placeholder="" {% if not entry is null %} value="{{entry.mileage}}" {% endif %}>
+					<input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.mileage}}" {% endif %}>
 				</div>
 
 				<div id="carServiceService">
@@ -114,18 +116,18 @@
 									<div class="left">
 										<label for="inputServiceAirFrontLeftBefore">{{lang["CAR_FRONT"]}}
 											{{lang["LEFT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirFrontLeftBefore" name="service_air_front_left_before" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_left_before}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirFrontLeftBefore" name="service_air_front_left_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_left_before}}" {% endif %}>
 										<label for="inputServiceAirBackLeftBefore">{{lang["CAR_BACK"]}}
 											{{lang["LEFT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirBackLeftBefore" name="service_air_back_left_before" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_left_before}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirBackLeftBefore" name="service_air_back_left_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_left_before}}" {% endif %}>
 									</div>
 									<div class="right">
 										<label for="inputServiceAirFrontRightBefore">{{lang["CAR_FRONT"]}}
 											{{lang["RIGHT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirFrontRightBefore" name="service_air_front_right_before" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_right_before}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirFrontRightBefore" name="service_air_front_right_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_right_before}}" {% endif %}>
 										<label for="inputServiceAirBackRightBefore">{{lang["CAR_BACK"]}}
 											{{lang["RIGHT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirBackRightBefore" name="service_air_back_right_before" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_right_before}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirBackRightBefore" name="service_air_back_right_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_right_before}}" {% endif %}>
 									</div>
 								</div>
 							</div>
@@ -137,18 +139,18 @@
 									<div class="left">
 										<label for="inputServiceAirFrontLeftAfter">{{lang["CAR_FRONT"]}}
 											{{lang["LEFT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirFrontLeftAfter" name="service_air_front_left_after" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_left_after}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirFrontLeftAfter" name="service_air_front_left_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_left_after}}" {% endif %}>
 										<label for="inputServiceAirBackLeftAfter">{{lang["CAR_BACK"]}}
 											{{lang["LEFT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirBackLeftAfter" name="service_air_back_left_after" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_left_after}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirBackLeftAfter" name="service_air_back_left_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_left_after}}" {% endif %}>
 									</div>
 									<div class="right">
 										<label for="inputServiceAirFrontRightAfter">{{lang["CAR_FRONT"]}}
 											{{lang["RIGHT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirFrontRightAfter" name="service_air_front_right_after" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_right_after}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirFrontRightAfter" name="service_air_front_right_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_right_after}}" {% endif %}>
 										<label for="inputServiceAirBackRightAfter">{{lang["CAR_BACK"]}}
 											{{lang["RIGHT"]}}</label>
-										<input type="number" class="form-control" id="inputServiceAirBackRightAfter" name="service_air_back_right_after" step="any" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_right_after}}" {% endif %}>
+										<input type="number" class="form-control" id="inputServiceAirBackRightAfter" name="service_air_back_right_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_right_after}}" {% endif %}>
 									</div>
 								</div>
 							</div>

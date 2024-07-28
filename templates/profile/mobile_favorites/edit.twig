@@ -27,7 +27,7 @@
 
 				<div class="form-group">
 					<label for="inputPosition">{{lang["POSITION"]}}</label>
-					<input type="number" class="form-control" id="inputPosition" name="position" step="1" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
+					<input type="number" class="form-control" id="inputPosition" name="position" step="1" pattern="\d*" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
 				</div>
 
 				<div class="form-group">

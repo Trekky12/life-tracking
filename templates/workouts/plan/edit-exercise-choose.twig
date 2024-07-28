@@ -70,23 +70,25 @@
 						<span class="set-nr"></span>.
 						{{ lang["WORKOUTS_SET"] }}:
 						{% if exercise['exercise'].isCategoryReps() or exercise['exercise'].isCategoryRepsWeight() %}
-							<input type="number" min="0" max="999" step="1" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][repeats]" disabled="disabled"/>
+							<input type="number" min="0" max="999" step="1" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][repeats]" disabled="disabled"/>
 							<label>{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
 						{% endif %}
 						{% if exercise['exercise'].isCategoryRepsWeight() %}
-							<input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][weight]" disabled="disabled"/>
+							<input type="number" step="any" min="0" max="999" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][weight]" disabled="disabled"/>
 							<label>{{ lang["WORKOUTS_KG"] }}</label>
 						{% endif %}
 
 						{% if exercise['exercise'].isCategoryTime() or exercise['exercise'].isCategoryDistanceTime() %}
-							<input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
-							<select name="exercises[{{ exercise_idx }}][sets][dummy][time_type]" disabled="disabled">
-								<option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
-								<option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
-							</select>
+							<input type="number" step="any" min="0" max="999" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
+							<div class="select-wrapper">
+								<select name="exercises[{{ exercise_idx }}][sets][dummy][time_type]" disabled="disabled">
+									<option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
+									<option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
+								</select>
+							</div>
 						{% endif %}
 						{% if exercise['exercise'].isCategoryDistanceTime() %}
-							<input type="number" step="any" min="0" max="999" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
+							<input type="number" step="any" min="0" max="999" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
 							<label>{{ lang["WORKOUTS_KM"] }}</label>
 						{% endif %}
 					</div>
