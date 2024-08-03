@@ -141,6 +141,8 @@ return function (App $app) {
                 $group_steps_date->post('/save/', \App\Application\Action\Location\Steps\StepsSaveAction::class)->setName('steps_save');
             });
         });
+
+        $group->get('/last', \App\Application\Action\Location\LocationLastTimeAction::class)->setName('location_last');
     });
 
     $app->group('/cars', function (RouteCollectorProxy $group) {

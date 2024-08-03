@@ -14,8 +14,14 @@
 
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/open-sans.css?ver={{CACHEMISS}}" />
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/normalize.min.css?ver={{CACHEMISS}}" />
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/flatpickr.min.css?ver={{CACHEMISS}}" />
-        <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css?ver={{CACHEMISS}}" />
+        
+        {% if not user is null %}
+            <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/flatpickr.min.css?ver={{CACHEMISS}}" />
+            <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/jstable.css?ver={{CACHEMISS}}" />
+
+            <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
+        {% endif %}
+        
         {% block style %}
         {% endblock %}
         <link rel="stylesheet" type="text/css" href="{{baseURL}}/static/style.css?ver={{CACHEMISS}}" />
@@ -172,6 +178,8 @@
                 'splitbill_table': '{{url_for('splitbill_bills_table', {'group': group.hash})}}',
 {% endif %}
                 'get_location_of_address': '{{ url_for("get_location_of_address") }}',
+                'location_record': '{{ url_for("location_record") }}',
+                'location_last': '{{ url_for("location_last") }}',
 {% if not isTrips is null %}
                 'trip_markers_url': '{{url_for('trips_markers', {'trip': trip.hash})}}',
                 'trip_event_position_url': '{{  url_for('trips_event_position', {'trip' : trip.hash})}}',
@@ -314,21 +322,23 @@
                     var tokens = {{ csrf_js|json_encode()|raw }};
         </script>
 
-        <script src="{{baseURL}}/static/assets/js/flatpickr.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/assets/js/i18n/{{i18n.template}}.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/assets/js/moment-with-locales.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>          
-        <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>  
-
-        <script src="{{baseURL}}/static/js/main.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/js/navigation.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-        <script src="{{baseURL}}/static/js/tables.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-
-
         {% if not user is null %}
+            <script src="{{baseURL}}/static/assets/js/flatpickr.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+            <script src="{{baseURL}}/static/assets/js/i18n/{{i18n.template}}.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+            <script src="{{baseURL}}/static/assets/js/moment-with-locales.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>          
+            <script src="{{baseURL}}/static/assets/js/jstable.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>  
+
+            <script src="{{baseURL}}/static/js/main.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+            <script src="{{baseURL}}/static/js/navigation.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+            <script src="{{baseURL}}/static/js/tables.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+
             <script src="{{baseURL}}/static/js/app.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+            
+            <script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+            <script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
         {% endif %}
 
         {% block javascript %}
-        {% endblock %}
+        {% endblock %}    
     </body>
 </html>

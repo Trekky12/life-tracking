@@ -2,13 +2,7 @@
 
 {% set active = 'trips' %}
 
-{% block style %}
-	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
-{% endblock %}
-
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
-	<script src="{{baseURL}}/static/js/geolocation.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/trips_edit.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 

@@ -3,12 +3,10 @@
 {% set active = 'location' %}
 
 {% block style %}
-	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.min.css?ver={{CACHEMISS}}"/>
 	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/MarkerCluster.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/leaflet.js?ver={{CACHEMISS}}" type="text/javascript"></script>
 	<script src="{{baseURL}}/static/assets/js/leaflet.markercluster.js?ver={{CACHEMISS}}" type="text/javascript"></script>
 	<script src="{{baseURL}}/static/js/location.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>

@@ -18,13 +18,15 @@ class LocationService extends Service {
     private $car_service;
     private $car_service_service;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            Helper $helper,
-            LocationMapper $mapper,
-            FinancesService $finances_service,
-            CarService $car_service,
-            CarServiceService $car_service_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        Helper $helper,
+        LocationMapper $mapper,
+        FinancesService $finances_service,
+        CarService $car_service,
+        CarServiceService $car_service_service
+    ) {
         parent::__construct($logger, $user);
         $this->helper = $helper;
         $this->mapper = $mapper;
@@ -62,12 +64,12 @@ class LocationService extends Service {
 
     public function getMarkers($from, $to) {
         $locations = $this->mapper->getMarkers($from, $to);
-        $location_markers = array_map(function($loc) {
+        $location_markers = array_map(function ($loc) {
             return $loc->getPosition();
         }, $locations);
 
         $finance_locations = $this->finances_service->getMarkers($from, $to);
-        $finance_markers = array_map(function($loc) {
+        $finance_markers = array_map(function ($loc) {
             return $loc->getPosition();
         }, $finance_locations);
 
@@ -75,13 +77,23 @@ class LocationService extends Service {
 
 
         $carservice_locations = $this->car_service_service->getMarkers($from, $to, $user_cars);
-        $carservice_markers = array_map(function($loc) {
+        $carservice_markers = array_map(function ($loc) {
             return $loc->getPosition();
         }, $carservice_locations);
 
         $response_data = array_merge($location_markers, $finance_markers, $carservice_markers);
 
         return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    public function getLastLocationTime() {
+        if ($this->current_user->getUser()->hasModule('location')) {
+            $last_time = $this->mapper->getLastTime();
+            $date = new \DateTime($last_time);
+
+            return new Payload(Payload::$RESULT_JSON, ["status" => "success", "ts" => $date->getTimestamp()]);
+        }
+        return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
     }
 
     public function getAddress($data) {
@@ -114,5 +126,4 @@ class LocationService extends Service {
         $entry = $this->getEntry($entry_id);
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
-
 }

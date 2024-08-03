@@ -108,10 +108,7 @@ class RecipeMapper extends \App\Domain\Mapper
     public function getRecipeIngredients($recipe_id)
     {
         $sql = "SELECT ri.id, ri.step, ri.ingredient, ri.position, ri.amount, "
-            . "CASE "
-            . " WHEN ri.unit IS NOT NULL THEN ri.unit "
-            . " ELSE i.unit "
-            . "END as unit, "
+            . "ri.unit, "
             . "ri.notice, i.name "
             . "FROM " . $this->getTableName("recipes_recipe_ingredients") . " ri, " . $this->getTableName("recipes_groceries") . " i "
             . "WHERE ri.ingredient = i.id AND recipe = :recipe ORDER BY ri.step, position";

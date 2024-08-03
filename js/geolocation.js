@@ -55,6 +55,18 @@ if (latField !== null &&
     lngField.value.length === 0 &&
     accField.value.length === 0) {
     getLocation(0);
+} else {
+    // automatically store location on all other pages
+    getLastLocationTime().then(function (lastTime) {
+        let currentTime = Math.round(Date.now() / 1000);
+
+        if (currentTime >= lastTime + 5 * 60) {
+            getLocation(-1);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
+
 }
 
 if (updateLocButtons !== null) {
@@ -123,7 +135,7 @@ if (getAdressButtons !== null) {
 function locationRetrieved(position, index) {
     console.log(position);
 
-    if (position.coords.accuracy < lastAccuracy) {
+    if (position.coords.accuracy < lastAccuracy && index >= 0) {
 
         // default
         let latElement = latField;
@@ -150,14 +162,27 @@ function locationRetrieved(position, index) {
             drawMap(mapContainer, index);
         }
     }
+
     if (position.coords.accuracy > 50) {
         console.log("Accuracy not exact");
         timeout = setTimeout(function () {
-            getLocation();
+            getLocation(index);
         }, 5000);
 
     } else {
         console.log("Accuracy reached");
+        // Store location
+        // but first check last store
+        getLastLocationTime().then(function (lastTime) {
+            let currentTime = Math.round(Date.now() / 1000);
+
+            if (currentTime >= lastTime + 5 * 60) {
+                storeLocation(position);
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
     }
 }
 
@@ -328,3 +353,45 @@ function removeMap(deleteLoc, mapContainer, index) {
     clearTimeout(timeout);
 }
 
+function getLastLocationTime() {
+    return fetch(jsObject.location_last, {
+        method: 'GET',
+        credentials: "same-origin",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        if (data.status == "success") {
+            return data.ts;
+        }
+        throw "Error";
+    });
+}
+
+function storeLocation(position) {
+
+    let data = { "gps_loc": position.coords.latitude + "," + position.coords.longitude, "gps_acc": position.coords.accuracy };
+
+    return getCSRFToken().then(function (token) {
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
+        return fetch(jsObject.location_record, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        console.log(data);
+    }).catch(function (error) {
+        console.log(error);
+    });
+
+}
