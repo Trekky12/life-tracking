@@ -77,6 +77,7 @@ function renderShoppingListEntries(data) {
             //shoppingListEntries.insertAdjacentHTML('beforeend', data["data"]);
         } else {
             let nothing_found = document.createElement('p');
+            nothing_found.classList.add("shopping-list-entry");
             nothing_found.innerHTML = lang.nothing_found;
             shoppingListEntries.innerHTML = '';
 
