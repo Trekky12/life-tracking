@@ -274,32 +274,36 @@ function showToast(message, color) {
 function initServiceWorker() {
     if ('serviceWorker' in navigator) {
 
-        navigator.serviceWorker.addEventListener('message', function (event) {
-            console.log('Received a message from service worker');
-            //alert('received message from sw');
-            //alert(event.data.type);
-            if (event.data.type === 1) {
-                console.log("Push Notification received");
-                console.log(event.data.type);
-                console.log(event.data.data);
-                setNotificationCount(event.data.data);
-                setAppBadge();
-            } else if (event.data.type === 2) {
-                console.log("Push Notification Click");
-            } else if (event.data.type === 3) {
-                console.log("Loaded content from cache instead of network!");
-                // after loading the response from cache the cache is loaded
-                // afterwards possible variables are no longer available
-                // so save the info that the page is from cache in the localStorage
-                localStorage.setItem('isCached', true);
-            } else if (event.data.type === 4) {
-                console.log("Push Notification dismissed");
-            } else {
-                alert(event.data.type);
-            }
-        });
         navigator.serviceWorker.register('/sw.js').then(function (registration) {
             console.log('Service worker successfully registered on scope', registration.scope);
+
+            registration.active.postMessage("Hello");              
+
+            navigator.serviceWorker.addEventListener('message', function (event) {
+                console.log('Received a message from service worker');
+                //alert('received message from sw');
+                //alert(event.data.type);
+                if (event.data.type === 1) {
+                    console.log("Push Notification received");
+                    console.log(event.data.type);
+                    console.log(event.data.data);
+                    setNotificationCount(event.data.data);
+                    setAppBadge();
+                } else if (event.data.type === 2) {
+                    console.log("Push Notification Click");
+                } else if (event.data.type === 3) {
+                    console.log("Loaded content from cache instead of network!");
+                    // after loading the response from cache the cache is loaded
+                    // afterwards possible variables are no longer available
+                    // so save the info that the page is from cache in the localStorage
+                    localStorage.setItem('isCached', true);
+                } else if (event.data.type === 4) {
+                    console.log("Push Notification dismissed");
+                } else {
+                    alert(event.data.type);
+                }
+            });
+
             // only on notifications pages
             /*if (pushButton === null && notificationsList === null) {
              return;

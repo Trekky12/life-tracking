@@ -474,7 +474,6 @@ function isVisible(element) {
 
 function isVisibleOnPage(selector) {
     let elements = Array.from(document.querySelectorAll(selector));
-    console.log(elements);
     for (const element of elements) {
         if (isVisible(element)) {
             return true;

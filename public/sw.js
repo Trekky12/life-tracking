@@ -9,7 +9,7 @@
  * https://medium.com/progressive-web-apps/pwa-create-a-new-update-available-notification-using-service-workers-18be9168d717
  */
 
-const version = '20240204';
+const version = '20240728';
 
 const cacheName = 'pwa-life-tracking-v' + version;
 
@@ -89,7 +89,6 @@ const staticAssets = [
     '/static/assets/js/Sortable.min.js?ver=' + version,
     '/static/assets/js/autoComplete.min.js?ver=' + version,
     '/static/assets/js/chart.min.js?ver=' + version,
-    '/static/assets/js/choices.min.js?ver=' + version,
     '/static/assets/js/flatpickr.min.js?ver=' + version,
     '/static/assets/js/jstable.min.js?ver=' + version,
     '/static/assets/js/leaflet-easyPrint.min.js?ver=' + version,
@@ -108,7 +107,6 @@ const staticAssets = [
     '/static/assets/css/L.Control.Locate.min.css?ver=' + version,
     '/static/assets/css/MarkerCluster.css?ver=' + version,
     '/static/assets/css/autoComplete.min.css?ver=' + version,
-    '/static/assets/css/choices.min.css?ver=' + version,
     '/static/assets/css/flatpickr.min.css?ver=' + version,
     '/static/assets/css/jstable.css?ver=' + version,
     '/static/assets/css/leaflet-routing-machine.min.css?ver=' + version,
@@ -356,7 +354,7 @@ function _sendMessageToClients(message, data = null) {
         data: data
     };
 
-    return self.clients.matchAll().then(function (clientList) {
+    return self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(function (clientList) {
         clientList.forEach(function (client) {
             client.postMessage(postMessage);
         });
@@ -424,6 +422,7 @@ self.addEventListener('push', function (event) {
 });
 
 self.addEventListener('notificationclick', function (event) {
+    event.preventDefault();
     console.log('[Service Worker] Notification click Received.');
 
     const data = event.notification.data;
@@ -440,7 +439,7 @@ self.addEventListener('notificationclick', function (event) {
     // @see https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#2_using_the_notifications_api
     // @see https://github.com/google-developer-training/pwa-training-labs/blob/master/push-notification-lab/
     event.waitUntil(
-        clients.matchAll().then(clis => {
+        self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(clis => {
 
             // get visible or focused client and open the path
             const client = clis.find(c => {
@@ -453,7 +452,7 @@ self.addEventListener('notificationclick', function (event) {
                 client.focus();
             } else {
                 // there are no visible windows. Open one.
-                clients.openWindow(data.path);
+                self.clients.openWindow(data.path);
             }
         })
     );
@@ -488,4 +487,9 @@ self.addEventListener('notificationclose', function (event) {
     console.log(dismissedNotification);
 
     event.waitUntil(_sendMessageToClients(4));
+});
+
+
+self.addEventListener("message", (event) => {
+    console.log(`The client sent me a message: ${event.data}`);
 });
