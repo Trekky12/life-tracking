@@ -104,7 +104,24 @@ function createConfirmDialog(message, callback) {
     cancelButton.onclick = function () {
         confirmModal.remove();
         callback(false);
+        document.removeEventListener('keydown', confirmKeyEvent);
     };
+
+    document.addEventListener('keydown', confirmKeyEvent);
+
+    function confirmKeyEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            confirmModal.remove();
+            callback(true);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        } else if (event.key === 'Escape' || event.keyCode === 27) {
+            event.preventDefault();
+            confirmModal.remove();
+            callback(false);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        }
+    }
 }
 
 // resolve acts as a callback
@@ -466,7 +483,6 @@ function isMobile() {
 
 function isTouchEnabled() {
     return ('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0) ||
         (navigator.msMaxTouchPoints > 0);
 }
 
