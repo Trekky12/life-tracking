@@ -2,15 +2,14 @@
     .step {
         display: flex;
         flex-direction: column;
-
-        @media screen and (min-width: $size_mobile) {
-            flex-direction: row;
-        }
-
         padding: 1rem;
         border: 1px solid $color_blue_light_gray;
         border-radius: 5px;
         margin: 0.5rem;
+
+        @media screen and (min-width: $size_mobile) {
+            flex-direction: row;
+        }
 
         .step-content {
             flex-basis: 100%;
@@ -146,13 +145,12 @@
 .recipe-description {
     margin: 1rem;
     flex-grow: 1;
+    font-style: italic;
+    font-weight: 400;
 
     @media screen and (min-width: $size_mobile_navigation) {
         margin-top: 0;
     }
-
-    font-style: italic;
-    font-weight: 400;
 }
 
 .recipe-link {
@@ -214,17 +212,16 @@
 
     .recipe-ingredients {
         margin-top: 1rem;
-
-        @media screen and (min-width: $size_mobile_navigation) {
-            margin-left: 1rem;
-            margin-top: 0;
-        }
-
         flex-basis: 60%;
         padding: 1rem;
         flex-shrink: 1;
         flex-grow: 1;
         height: 100%;
+        
+        @media screen and (min-width: $size_mobile_navigation) {
+            margin-left: 1rem;
+            margin-top: 0;
+        }
 
         .recipe-ingredients-title {
             @include font-size(1.8);
@@ -249,22 +246,20 @@
 
     .recipe-step-ingredients {
         margin-top: 1rem;
-
+        flex-basis: 30%;
+        padding: 1rem;
+        border: 1px solid $color_blue_light_gray;
+        border-radius: 5px;
+        
         @media screen and (min-width: $size_mobile_navigation) {
             margin-left: 1rem;
             margin-top: 0;
         }
 
-        flex-basis: 30%;
-        padding: 1rem;
-
         .recipe-step-ingredients-title {
             @include font-size(1.6);
             font-weight: 600;
         }
-
-        border: 1px solid $color_blue_light_gray;
-        border-radius: 5px;
     }
 
     .recipe-description {

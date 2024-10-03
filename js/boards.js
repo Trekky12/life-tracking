@@ -508,7 +508,7 @@ document.addEventListener('click', async function (event) {
         cardModal.querySelector('input[name="archive"]').value = card.archive;
 
         if (card.date) {
-            var datefield = cardModal.querySelector('input[name="date"]');
+            var datefield = cardModal.querySelector('input[name="date"]').parentElement;
             datefield.value = card.date;
 
             // update flatpickr
@@ -710,7 +710,7 @@ siblings.forEach(function (sibling, idx) {
             }
 
             // Open Datepicker
-            let datefield = cardModal.querySelector('input[name="date"]');
+            let datefield = cardModal.querySelector('input[name="date"]').parentElement;
             if (input === datefield) {
                 datefield._flatpickr.open();
             }

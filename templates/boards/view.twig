@@ -128,7 +128,8 @@
 						(<span id="createdOn"></span>)
 					</div>
 					<div class="form-group hidden">
-						<select id="users" name="users[]" multiple="true">
+						<select
+							id="users" name="users[]" multiple="true">
 							{# not using "if user.id in board_user" so users removed and readded to the board are still on assigned cards #}
 							{% for user in users %}
 								<option value="{{user.id}}">{{user.login}}</option>
@@ -176,9 +177,18 @@
 							<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
 								{{lang["ADD_DATE"]}}</a>
 							<div class="hidden-field hidden">
-								<label for="dateSelect">{{lang["DATE"]}}</label>
-								<input type="text" class="form-control date-display" id="dateSelect" name="date">
+								<label for="dateSelectField">{{lang["DATE"]}}</label>
+								<div class="flatpickr-group" id="dateSelect">
+									<input type="text" class="form-control date-display" id="dateSelectField" name="date" data-input/>
 
+									<a class="flatpickr-input-button" title="toggle" data-toggle>
+										{{ fontawesome('fas fa-calendar-days') }}
+									</a>
+
+									<a class="flatpickr-input-button" title="clear" data-clear>
+										{{ fontawesome('fas fa-xmark') }}
+									</a>
+								</div>
 							</div>
 						</div>
 						<div class="form-group right">

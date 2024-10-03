@@ -249,7 +249,7 @@ select:focus:invalid:focus {
 
 form {
     &#login.small {
-        max-width: $size_content-width-small/3;
+        max-width: math.div($size_content-width-small, 3);
         //@include center-block();
         width: 100%;
 

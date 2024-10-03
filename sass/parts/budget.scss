@@ -1,21 +1,36 @@
 .budget-entry{
+    margin-bottom: 1rem;
+    
     @media screen and (min-width: $size_mobile){
 
-        @include grid-container;
+        &::after {
+            clear: both;
+            content: "";
+            display: block;
+        }
 
         .form-group{
 
             &.category{   
-                @include grid-column(2);
+                width: calc(16.66667% - 23.33333px);
+                float: left;
+                margin-left: 20px;
             }
             &.description{
-                @include grid-column(3);
+                width: calc(25% - 25px);
+                float: left;
+                margin-left: 20px;
             }
             &.value{
-                @include grid-column(2);
+                width: calc(16.66667% - 23.33333px);
+                float: left;
+                margin-left: 20px;
             }
             &.cat-costs{
-                @include grid-column(2);
+                width: calc(16.66667% - 23.33333px);
+                float: left;
+                margin-left: 20px;
+
                 h4{
                     margin-top:2px;
                 }
@@ -25,13 +40,17 @@
             }
             
             &.is_hidden{
-                @include grid-column(2);
+                width: calc(16.66667% - 23.33333px);
+                float: left;
+                margin-left: 20px;
                 margin-top: 3rem;
             }
         }
 
         .btn-delete{
-            @include grid-column(1);
+            width: calc(8.33333% - 21.66667px);
+            float: left;
+            margin-left: 20px;
             text-align:right;
         }
 
@@ -40,7 +59,6 @@
     &.edit{
         border-bottom: 1px solid $color_text-main;
     }
-    margin-bottom: 1rem;
 
     @media screen and (max-width: $size_mobile) {
         .btn-delete{

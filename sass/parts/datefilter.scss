@@ -1,5 +1,8 @@
 #location-filter {
-    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+    box-shadow:
+        0 2px 1px -1px rgba(0, 0, 0, 0.2),
+        0 1px 1px 0 rgba(0, 0, 0, 0.14),
+        0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
     background-color: $color_background-body;
 
@@ -45,7 +48,6 @@
 
 #tableHeaderFilter,
 .search-filter {
-
     //padding: 5px 10px;
     .categories-filter {
         flex-grow: 1;
@@ -80,9 +82,7 @@
 }
 
 .search-filter {
-
     .filter-group {
-
         display: flex;
         flex-wrap: wrap;
 
@@ -98,11 +98,11 @@
     .filter-row {
         margin-top: 1rem;
 
-        .options-element{
+        .options-element {
             margin-right: 1rem;
         }
 
-        .options-element~.filter-element{
+        .options-element ~ .filter-element {
             margin-top: 0;
         }
 
@@ -119,7 +119,9 @@
             }
 
             //button:not(.choices__button):not(.selectr-tag-remove):not(.selectr-input-clear),
-            input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(.choices__input):not(.selectr-input),
+            input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(.choices__input):not(
+                    .selectr-input
+                ),
             select,
             .datepicker,
             .choices__inner {
@@ -183,4 +185,19 @@
     width: 100%;
     padding: 0.8rem 1.2rem;
     @include font-size(1.4);
+}
+
+.flatpickr-group {
+    display: flex;
+
+    a.flatpickr-input-button {
+        text-decoration: none;
+        border: 1px solid #ccc;
+        border-left: 0;
+        display: flex;
+        padding: 0 12px;
+        cursor: pointer;
+        align-items: center;
+        height: 39px;
+    }
 }

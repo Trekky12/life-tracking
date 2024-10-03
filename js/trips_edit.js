@@ -75,22 +75,25 @@ if (deleteImage) {
 // set end date to same date like start date
 const datepickerStartEvent = document.getElementById('inputStartEvent');
 const datepickerEndEvent = document.getElementById('inputEndEvent');
+const datepickerEndEventField = document.getElementById('inputEndEventField');
 
 if (datepickerStartEvent && datepickerEndEvent) {
     flatpickr(datepickerStartEvent, {
+        "wrap": true,
         "altInput": true,
         "altFormat": i18n.dateformatTwig.date,
         "altInputClass": "datepicker inputStartEvent",
         "dateFormat": "Y-m-d",
         "locale": i18n.template, 
         "onValueUpdate": function (selectedDates) {
-            if(datepickerEndEvent.value.length == 0){
+            if(datepickerEndEventField.value.length == 0){
                 datepickerEndEvent._flatpickr.setDate(selectedDates[0]);
             }
         }
     });
     
     flatpickr(datepickerEndEvent, {
+        "wrap": true,
         "altInput": true,
         "altFormat": i18n.dateformatTwig.date,
         "altInputClass": "datepicker inputEndEvent",

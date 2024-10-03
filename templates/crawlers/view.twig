@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block pageheader %}
-<div class="page-header">
+	<div class="page-header">
 		<div class="page-headline">
 			<a href="{{ url_for_with_last_query_params('crawlers') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
@@ -35,7 +35,17 @@
 
 				<div class="filter-row">
 					<div class="filter-element">
-						<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
+						<div class="flatpickr-group" id="dateRange">
+							<input type="text" value="{{from}} to {{to}}" data-input/>
+
+							<a class="flatpickr-input-button" title="toggle" data-toggle>
+								{{ fontawesome('fas fa-calendar-days') }}
+							</a>
+
+							<a class="flatpickr-input-button" title="clear" data-clear>
+								{{ fontawesome('fas fa-xmark') }}
+							</a>
+						</div>
 					</div>
 					<div class="filter-group">
 						<div class="filter-element">

@@ -1,10 +1,11 @@
 .image-gallery {
     width: 100%;
+    justify-content: center;
+    
     @media screen and (min-width: $size_mobile) {
         display: grid;
         grid-template-columns: repeat(auto-fill,minmax(33%, 1fr));
     }
-    justify-content: center;
 
     .image {
         flex-basis: 33%;

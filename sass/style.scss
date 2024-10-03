@@ -2,7 +2,7 @@
 Life-Tracking Style
 based on the _s wordpress theme
 */
-@import "neat";
+@use "sass:math";
 @import "parts/variables";
 @import "parts/mixins";
 @import "parts/typography";

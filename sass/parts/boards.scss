@@ -51,14 +51,14 @@
     .stack-wrapper {
         padding-left: 5px;
         padding-right: 5px;
+        
+        position: relative;
+        overflow-x: auto;
 
         @media screen and (min-width: $size_mobile_navigation) {
             padding-left: 20px;
             padding-right: 20px;
         }
-
-        position: relative;
-        overflow-x: auto;
 
         @media screen and (min-width: $size_mobile) {
             min-height: calc(100vh - #{$header_height} - 20px - 36px - 20px);

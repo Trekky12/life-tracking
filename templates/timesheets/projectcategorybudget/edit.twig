@@ -136,7 +136,17 @@
 
 				<div class="form-group">
 					<label for="dateRange">{{lang["FROM"]}}/{{ lang["TO"] }}</label>
-					<input type="text" id="dateRange" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %} to {% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
+					<div class="flatpickr-group" id="dateRange">
+						<input type="text" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %} to {% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}" data-input/>
+
+						<a class="flatpickr-input-button" title="toggle" data-toggle>
+							{{ fontawesome('fas fa-calendar-days') }}
+						</a>
+
+						<a class="flatpickr-input-button" title="clear" data-clear>
+							{{ fontawesome('fas fa-xmark') }}
+						</a>
+					</div>
 					<input type="hidden" id="inputStart" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}"/>
 					<input type="hidden" id="inputEnd" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}"/>
 				</div>

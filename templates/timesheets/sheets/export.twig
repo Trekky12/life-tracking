@@ -37,7 +37,17 @@
 
 				<div class="filter-row">
 					<div class="filter-element">
-						<input type="text" id="dateRange" value="{{from}} to {{to}}"/>
+						<div class="flatpickr-group" id="dateRange">
+							<input type="text" value="{{from}} to {{to}}" data-input/>
+
+							<a class="flatpickr-input-button" title="toggle" data-toggle>
+								{{ fontawesome('fas fa-calendar-days') }}
+							</a>
+
+							<a class="flatpickr-input-button" title="clear" data-clear>
+								{{ fontawesome('fas fa-xmark') }}
+							</a>
+						</div>
 
 						<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
 						<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>

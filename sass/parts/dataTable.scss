@@ -19,6 +19,9 @@
     .dt-bottom {
         flex-direction: column;
 
+        padding-left: 0px;
+        padding-right: 0px;
+
         &>* {
             margin-bottom: 1rem;
         }
@@ -31,8 +34,6 @@
             }
         }
 
-        padding-left: 0px;
-        padding-right: 0px;
     }
 
     .dt-table tbody tr:nth-child(odd) {

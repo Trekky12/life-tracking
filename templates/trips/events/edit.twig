@@ -44,8 +44,19 @@
 				<h3>{{lang["START"]}}</h3>
 				<div class="two-columns mobile form-group">
 					<div class="left">
-						<label for="inputStartEvent">{{lang["DATE"]}}</label>
-						<input type="text" class="form-control" id="inputStartEvent" placeholder="" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date}}{% elseif entry is null %}{{ from }}{% endif %}">
+						<label for="inputStartEventField">{{lang["DATE"]}}</label>
+
+						<div class="flatpickr-group" id="inputStartEvent">
+							<input type="text" class="form-control" id="inputStartEventField" placeholder="" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date}}{% elseif entry is null %}{{ from }}{% endif %}" data-input/>
+
+							<a class="flatpickr-input-button" title="toggle" data-toggle>
+								{{ fontawesome('fas fa-calendar-days') }}
+							</a>
+
+							<a class="flatpickr-input-button" title="clear" data-clear>
+								{{ fontawesome('fas fa-xmark') }}
+							</a>
+						</div>
 					</div>
 					<div class="right">
 						<label for="timeEnd">{{lang["TIME"]}}</label>
@@ -68,8 +79,20 @@
 				<h3>{{lang["END"]}}</h3>
 				<div class="two-columns mobile form-group">
 					<div class="left">
-						<label for="inputEndEvent">{{lang["DATE"]}}</label>
-						<input type="text" class="form-control" id="inputEndEvent" placeholder="" name="end_date" value="{% if not entry is null and not entry.end_date is null %}{{entry.end_date}}{% elseif entry is null %}{{ to }}{% endif %}">
+						<label for="inputEndEventField">{{lang["DATE"]}}</label>
+
+						<div class="flatpickr-group" id="inputEndEvent">
+							<input type="text" class="form-control" id="inputEndEventField" placeholder="" name="end_date" value="{% if not entry is null and not entry.end_date is null %}{{entry.end_date}}{% elseif entry is null %}{{ to }}{% endif %}" data-input/>
+
+							<a class="flatpickr-input-button" title="toggle" data-toggle>
+								{{ fontawesome('fas fa-calendar-days') }}
+							</a>
+
+							<a class="flatpickr-input-button" title="clear" data-clear>
+								{{ fontawesome('fas fa-xmark') }}
+							</a>
+						</div>
+
 					</div>
 					<div class="right">
 						<label for="timeEnd">{{lang["TIME"]}}</label>

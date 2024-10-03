@@ -39,20 +39,30 @@
             }
         }
         @media screen and (min-width: $size_mobile+1px) {
-            @include grid-container();
+            &::after {
+                clear: both;
+                content: "";
+                display: block;
+            }
 
             &.header{
                 display:block; 
             }
 
             .user{
-                @include grid-column(2);
+                width: calc(16.66667% - 23.33333px);
+                float: left;
+                margin-left: 20px;
             }
             .input-field{
-                @include grid-column(3);
+                width: calc(25% - 25px);
+                float: left;
+                margin-left: 20px;
             }
             .paymethod-field{
-                @include grid-column(3);
+                width: calc(25% - 25px);
+                float: left;
+                margin-left: 20px;
             }
         }
 
@@ -82,17 +92,17 @@
 #splitbill_overview{
     @media screen and (max-width: $size_mobile_navigation) {
         //flex-direction:column;
-        flex-basis: (100%/ 2);
+        flex-basis: math.div(100%, 2);
     }
 
     .card{
 
         p{
             @include font-size(2);
+            margin:0;
             @media screen and (min-width: $size_mobile_navigation) {
                 @include font-size(4);
             }
-            margin:0;
         }
     }
 }

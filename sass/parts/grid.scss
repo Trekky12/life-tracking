@@ -31,14 +31,14 @@
     padding-right: .5rem;
     padding-left: .5rem;
     padding-bottom: 1rem;
-    flex-basis: (100%/ 2);
+    flex-basis: math.div(100%, 2);
 
     justify-content: center;
 
 
 
     @media screen and (min-width: $size_tablet) {
-        flex-basis: (100%/ 4);
+        flex-basis: math.div(100%, 4);
     }
 
     .card-content {

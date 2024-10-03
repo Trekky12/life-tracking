@@ -43,11 +43,7 @@ body.navigation-drawer-toggled {
     overflow-y: hidden;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     overscroll-behavior: none;
-
-    @media screen and (min-width: $size_mobile_navigation) {
-        box-shadow: none;
-        border-right: 1px solid $color_gray;
-    }
+    display: flex;
 
     width: $size_navigation_drawer;
 
@@ -55,6 +51,11 @@ body.navigation-drawer-toggled {
 
     // Default Mobile: hidden
     transform: translateX(-($size_navigation_drawer + 10));
+
+    @media screen and (min-width: $size_mobile_navigation) {
+        box-shadow: none;
+        border-right: 1px solid $color_gray;
+    }
 
     // click on toggle: show on mobile
     &.toggled {
@@ -82,8 +83,6 @@ body.navigation-drawer-toggled {
         transition-timing-function: linear;
         //transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
-
-    display: flex;
 
     ul {
         display: block;

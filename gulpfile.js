@@ -1,13 +1,11 @@
 const gulp = require( 'gulp' );
-const sass = require( 'gulp-sass' )(require('node-sass'));
+const sass = require( 'gulp-sass' )(require('sass'));
 const livereload = require( 'gulp-livereload' );
 const rename = require( 'gulp-rename' );
 const less = require( 'gulp-less' );
 const minifyCSS = require( 'gulp-clean-css' );
 const terser = require( 'gulp-terser' );
 const autoprefixer = require( 'gulp-autoprefixer' );
-const bourbon = require( 'bourbon' ).includePaths;
-const neat = require( 'bourbon-neat' ).includePaths;
 const replace = require('gulp-replace');
 const concat = require('gulp-concat');
 
@@ -17,7 +15,11 @@ const concat = require('gulp-concat');
  */
 function sassTask(cb) {
     return gulp.src( 'sass/style.scss' )
-        .pipe( sass( { outputStyle: 'compressed', includePaths: [ 'sass' ].concat( [ bourbon, neat ] ) } ))
+        .pipe( sass( { 
+            outputStyle: 'compressed', 
+            includePaths: [ 'sass' ],
+            silenceDeprecations: ['legacy-js-api']
+        } ))
         //.on( 'error', printError ) )
         .pipe( autoprefixer() )
         .pipe( gulp.dest( 'public/static' ) )

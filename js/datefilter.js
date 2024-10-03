@@ -6,6 +6,7 @@ var datepickerStart = document.getElementById('inputStart');
 var datepickerEnd = document.getElementById('inputEnd');
 if (datepickerRange && datepickerStart && datepickerEnd) {
     flatpickr(datepickerRange, {
+        "wrap": true,
         "altInput": true,
         "altFormat": i18n.dateformatTwig.date,
         "altInputClass": "datepicker dateRange",
