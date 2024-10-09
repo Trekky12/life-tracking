@@ -150,6 +150,14 @@
 							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_PAYED"]}}</option>
 						</select>
 					</div>
+					<label for="timesheet_view_planned">{{lang["TIMESHEETS_PLANNED"]}}:</label>
+					<div class="select-wrapper">
+						<select name="planned" id="timesheet_view_planned" class="regular">
+							<option value="" {% if planned is null or planned is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED_AND_HAPPENED"]}}</option>
+							<option value="1" {% if planned is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED"]}}</option>
+							<option value="0" {% if planned is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_HAPPENED"]}}</option>
+						</select>
+					</div>
 				</div>
 
 				<div class="filter-row">
@@ -203,7 +211,7 @@
 				</thead>
 				<tbody>
 					{% for sheet in sheets %}
-						<tr data-billed="{{sheet["attributes"]["data-billed"]}}" data-payed="{{sheet["attributes"]["data-payed"]}}">
+						<tr data-billed="{{sheet["attributes"]["data-billed"]}}" data-payed="{{sheet["attributes"]["data-payed"]}}" data-planned="{{sheet["attributes"]["data-planned"]}}">
 							<td>{{ sheet["data"][0]| raw }}</td>
 							<td>{{ sheet["data"][1] }}</td>
 							<td>{{ sheet["data"][2] }}</td>
@@ -254,6 +262,8 @@
 								<option value="not_billed">{{ lang["TIMESHEETS_APPLY_NOT_BILLED"] }}</option>
 								<option value="payed">{{ lang["TIMESHEETS_APPLY_PAYED"] }}</option>
 								<option value="not_payed">{{ lang["TIMESHEETS_APPLY_NOT_PAYED"] }}</option>
+								<option value="planned">{{ lang["TIMESHEETS_APPLY_PLANNED"] }}</option>
+								<option value="happened">{{ lang["TIMESHEETS_APPLY_HAPPENED"] }}</option>
 							</select>
 						</div>
 					</div>

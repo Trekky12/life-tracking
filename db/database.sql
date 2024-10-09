@@ -986,6 +986,7 @@ CREATE TABLE timesheets_sheets (
     end_acc DECIMAL(10,3) DEFAULT NULL,
     is_billed int(1) DEFAULT 0,
     is_payed int(1) DEFAULT 0,
+    is_planned int(1) DEFAULT 0,
     customer INTEGER unsigned DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -997,6 +998,8 @@ CREATE TABLE timesheets_sheets (
 /* 
 ALTER TABLE `timesheets_sheets` ADD `customer` INT UNSIGNED NULL DEFAULT NULL AFTER `is_payed`; 
 ALTER TABLE `timesheets_sheets` ADD CONSTRAINT `timesheets_sheets_ibfk_4` FOREIGN KEY (`customer`) REFERENCES `timesheets_customers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE; 
+
+ALTER TABLE `timesheets_sheets` ADD `is_planned` int(1) DEFAULT 0 AFTER `is_payed`; 
 */
 
 DROP TABLE IF EXISTS timesheets_categories;

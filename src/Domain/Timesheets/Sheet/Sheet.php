@@ -42,6 +42,7 @@ class Sheet extends \App\Domain\DataObject {
 
         $this->is_billed = $this->exists('is_billed', $data) ? filter_var($data['is_billed'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->is_payed = $this->exists('is_payed', $data) ? filter_var($data['is_payed'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->is_planned = $this->exists('is_planned', $data) ? filter_var($data['is_planned'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->customer = $this->exists('customer', $data) ? filter_var($data['customer'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->customerName = $this->exists('customerName', $data) ? filter_var($data['customerName'], FILTER_SANITIZE_STRING) : null;

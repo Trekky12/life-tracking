@@ -53,7 +53,7 @@ class SheetMapper extends \App\Domain\Mapper {
     /**
      * Table
      */
-    private function getTableSQL($select, $categories, $billed = null, $payed = null, $customer = null) {
+    private function getTableSQL($select, $categories, $billed = null, $payed = null, $planned = null, $customer = null) {
         $cat_bindings = array();
         if (!is_null($categories)) {
             foreach ($categories as $idx => $cat) {
@@ -102,6 +102,10 @@ class SheetMapper extends \App\Domain\Mapper {
             $sql .= " AND t.is_payed = :payed ";
         }
 
+        if (!is_null($planned)) {
+            $sql .= " AND t.is_planned = :planned ";
+        }
+
         if (!is_null($customer)) {
             $sql .= " AND t.customer = :customer ";
         }
@@ -110,7 +114,7 @@ class SheetMapper extends \App\Domain\Mapper {
         return [$sql, $cat_bindings];
     }
 
-    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%") {
+    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null, $searchQuery = "%") {
 
         $bindings = array(
             "searchQuery" => $searchQuery,
@@ -125,11 +129,14 @@ class SheetMapper extends \App\Domain\Mapper {
         if (!is_null($payed)) {
             $bindings["payed"] = $payed;
         }
+        if (!is_null($planned)) {
+            $bindings["planned"] = $planned;
+        }
         if (!is_null($customer)) {
             $bindings["customer"] = $customer;
         }
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $billed, $payed, $customer);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $billed, $payed, $planned, $customer);
 
         $sql = "SELECT COUNT(t.id) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -143,7 +150,7 @@ class SheetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $searchQuery = "%", $field = "t.duration") {
+    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null, $searchQuery = "%", $field = "t.duration") {
 
         $bindings = array(
             "searchQuery" => $searchQuery,
@@ -158,11 +165,14 @@ class SheetMapper extends \App\Domain\Mapper {
         if (!is_null($payed)) {
             $bindings["payed"] = $payed;
         }
+        if (!is_null($planned)) {
+            $bindings["planned"] = $planned;
+        }
         if (!is_null($customer)) {
             $bindings["customer"] = $customer;
         }
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories, $billed, $payed, $customer);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories, $billed, $payed, $planned, $customer);
 
         $sql = "SELECT SUM($field) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -176,7 +186,7 @@ class SheetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         $bindings = array(
             "searchQuery" => "%" . $searchQuery . "%",
@@ -190,6 +200,9 @@ class SheetMapper extends \App\Domain\Mapper {
         }
         if (!is_null($payed)) {
             $bindings["payed"] = $payed;
+        }
+        if (!is_null($planned)) {
+            $bindings["planned"] = $planned;
         }
         if (!is_null($customer)) {
             $bindings["customer"] = $customer;
@@ -228,9 +241,10 @@ class SheetMapper extends \App\Domain\Mapper {
             . "GROUP_CONCAT(tc.name SEPARATOR ', ') as categories, "
             . "t.is_billed, "
             . "t.is_payed, "
+            . "t.is_planned, "
             . "tcus.name as customerName";
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed, $customer);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed, $planned, $customer);
 
         $sql = $tableSQL;
         $sql .= " ORDER BY {$sort} {$sortDirection}, t.start {$sortDirection}, t.end {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
@@ -486,6 +500,30 @@ class SheetMapper extends \App\Domain\Mapper {
         }
 
         $sql = "UPDATE " . $this->getTableName() . " SET is_billed = :is_billed WHERE id IN  (" . implode(',', array_keys($sheet_bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute(array_merge($bindings, $sheet_bindings));
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
+        }
+        return true;
+    }
+
+    public function setSheetsPlannedState($sheets = [], $is_planned = 0) {
+
+        if (count($sheets) <= 0) {
+            return;
+        }
+
+        $bindings = ["is_planned" => $is_planned];
+
+        $sheet_bindings = array();
+        foreach ($sheets as $idx => $sheet) {
+            $sheet_bindings[":sheet_" . $idx] = $sheet;
+        }
+
+        $sql = "UPDATE " . $this->getTableName() . " SET is_planned = :is_planned WHERE id IN  (" . implode(',', array_keys($sheet_bindings)) . ")";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute(array_merge($bindings, $sheet_bindings));

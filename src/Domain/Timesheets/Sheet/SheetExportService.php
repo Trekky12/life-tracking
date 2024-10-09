@@ -41,7 +41,7 @@ class SheetExportService extends Service
         $this->notice_fields_service = $notice_fields_service;
     }
 
-    public function export($hash, $type, $from, $to, $categories, $billed, $payed, $customer)
+    public function export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer)
     {
 
         $project = $this->project_service->getFromHash($hash);
@@ -51,20 +51,20 @@ class SheetExportService extends Service
         }
 
         if (strcmp($type, "word") == 0) {
-            return $this->exportWord($project, $from, $to, $categories, $billed, $payed, $customer);
+            return $this->exportWord($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
         }
         if (strcmp($type, "excel") == 0) {
-            return $this->exportExcel($project, $from, $to, $categories, $billed, $payed, $customer);
+            return $this->exportExcel($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
         }
 
-        return $this->exportHTML($project, $from, $to, $categories, $billed, $payed, $customer);
+        return $this->exportHTML($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
     }
 
-    private function exportExcel($project, $from, $to, $categories, $billed, $payed, $customer)
+    private function exportExcel($project, $from, $to, $categories, $billed, $payed, $planned, $customer)
     {
 
         // get Data
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $customer, 1, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
         //$rendered_data = $this->renderTableRows($project, $data);
         //$totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
@@ -185,7 +185,7 @@ class SheetExportService extends Service
         $sumRow = ($idx + 1 + $offset);
 
         if ($project->has_duration_modifications > 0) {
-            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $categories, $billed, $payed, $customer, "%", "t.duration_modified");
+            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified);
 
             $sheet->setCellValue('D' . $sumRow, $sum);
@@ -256,10 +256,10 @@ class SheetExportService extends Service
         return new Payload(Payload::$RESULT_EXCEL, $body);
     }
 
-    private function exportWord($project, $from, $to, $categories, $billed, $payed, $customer)
+    private function exportWord($project, $from, $to, $categories, $billed, $payed, $planned, $customer)
     {
         // get Data
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $customer, 1, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -347,7 +347,7 @@ class SheetExportService extends Service
         return new Payload(Payload::$RESULT_WORD, $body);
     }
 
-    private function exportHTML($project, $from, $to, $categories, $billed, $payed, $customer)
+    private function exportHTML($project, $from, $to, $categories, $billed, $payed, $planned, $customer)
     {
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
@@ -356,7 +356,7 @@ class SheetExportService extends Service
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
         // get Data
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $customer, 1, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
 
         $sheets = [];
 

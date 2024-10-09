@@ -43,14 +43,15 @@ class TimesheetsSumWidget implements Widget {
             $categories = [];
             $billed = null;
             $payed = null;
+            $planned = null;
             $customer = null;
 
             $range = $this->sheet_mapper->getMinMaxDate("start", "end", $project_id, "project");
-            $totalSeconds = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories, $billed, $payed, $customer);
+            $totalSeconds = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories, $billed, $payed, $planned, $customer);
 
             $sum = DateUtility::splitDateInterval($totalSeconds);
             if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-                $totalSecondsModified = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories, $billed, $payed, $customer, "%", "t.duration_modified");
+                $totalSecondsModified = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories, $billed, $payed, $planned, $customer, "%", "t.duration_modified");
                 $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
             }
             

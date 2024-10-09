@@ -26,6 +26,10 @@
     tr[data-payed="1"] {
         color: $color_green;
     }
+
+    tr[data-planned="1"] {
+        color: $color_blue;
+    }
 }
 
 .timesheet-notice-wrapper {

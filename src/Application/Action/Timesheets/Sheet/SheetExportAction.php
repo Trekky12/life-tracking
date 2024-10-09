@@ -30,10 +30,11 @@ class SheetExportAction {
 
         $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $payed = array_key_exists('payed', $requestData) && $requestData['payed']!== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $planned = array_key_exists('planned', $requestData) && $requestData['planned']!== '' ? intval(filter_var($requestData['planned'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
         $customer = array_key_exists('customer', $requestData) && $requestData['customer']!== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
-        $payload = $this->service->export($hash, $type, $from, $to, $categories, $billed, $payed, $customer);
+        $payload = $this->service->export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer);
         
         return $this->responder->respond($payload->withTemplate('timesheets/sheets/export-html.twig'));
     }
