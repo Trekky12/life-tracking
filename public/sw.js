@@ -123,6 +123,7 @@ const staticAssets = [
 
 const NETWORK_TIMEOUT = 5000;
 
+// const broadcast = new BroadcastChannel('sw-notify-channel');
 
 self.addEventListener('install', event => {
     console.log('Attempting to install service worker and cache static assets');
@@ -350,9 +351,11 @@ function _sendMessageToClients(message, data = null) {
 
     let postMessage = {
         type: message,
-        time: new Date().toString(),
-        data: data
+        date: new Date().toString(),
+        time: new Date().getTime() * 1000
     };
+
+    // return broadcast.postMessage(postMessage);
 
     return self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(function (clientList) {
         clientList.forEach(function (client) {

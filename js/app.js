@@ -277,31 +277,22 @@ function initServiceWorker() {
         navigator.serviceWorker.register('/sw.js').then(function (registration) {
             console.log('Service worker successfully registered on scope', registration.scope);
 
-            registration.active.postMessage("Hello");              
+            // Test message to service worker
+            //registration.active.postMessage("Message from app to service worker");
+
+            // Test broadcast channel
+            // const broadcast = new BroadcastChannel('sw-notify-channel');
+
+            // broadcast.onmessage = (event) => {
+            //     console.log("Received a message from service worker at broadcast channel");
+            //     handleMessage(event.data);
+            // };
 
             navigator.serviceWorker.addEventListener('message', function (event) {
                 console.log('Received a message from service worker');
                 //alert('received message from sw');
                 //alert(event.data.type);
-                if (event.data.type === 1) {
-                    console.log("Push Notification received");
-                    console.log(event.data.type);
-                    console.log(event.data.data);
-                    setNotificationCount(event.data.data);
-                    setAppBadge();
-                } else if (event.data.type === 2) {
-                    console.log("Push Notification Click");
-                } else if (event.data.type === 3) {
-                    console.log("Loaded content from cache instead of network!");
-                    // after loading the response from cache the cache is loaded
-                    // afterwards possible variables are no longer available
-                    // so save the info that the page is from cache in the localStorage
-                    localStorage.setItem('isCached', true);
-                } else if (event.data.type === 4) {
-                    console.log("Push Notification dismissed");
-                } else {
-                    alert(event.data.type);
-                }
+                handleMessage(event.data);
             });
 
             // only on notifications pages
@@ -718,3 +709,27 @@ function notificationsDisabled(state) {
     //redirect();
     hideLoadingShowButton();
 }
+
+function handleMessage(data) {
+    if (data.type === 1) {
+        console.log("Push Notification received");
+        console.log(data.type);
+        console.log(data.data);
+        setNotificationCount(data.data);
+        setAppBadge();
+    } else if (data.type === 2) {
+        console.log("Push Notification Click");
+    } else if (data.type === 3) {
+        console.log("Loaded content from cache instead of network!");
+        // after loading the response from cache the cache is loaded
+        // afterwards possible variables are no longer available
+        // so save the info that the page is from cache in the localStorage
+        localStorage.setItem('isCached', true);
+    } else if (data.type === 4) {
+        console.log("Push Notification dismissed");
+    } else {
+        alert(data.type);
+    }
+}
+
+
