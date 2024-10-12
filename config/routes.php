@@ -279,6 +279,9 @@ return function (App $app) {
         $group->post('/getNotifications', \App\Application\Action\Notifications\NotificationsListAction::class)->setName('notifications_get');
 
         $group->post('/setMailCategoryUser', \App\Application\Action\MailNotifications\MailNotificationsSetCategoryAction::class)->setName('mail_notifications_set_category_user');
+
+        $group->get('/getUnreadNotifications', \App\Application\Action\Notifications\NotificationsUnreadAction::class)->setName('notifications_unread');
+
     });
 
     $app->group('/boards', function (RouteCollectorProxy $group) {

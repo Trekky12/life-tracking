@@ -72,6 +72,13 @@ class NotificationsService extends Service {
         return 0;
     }
 
+    public function getUnreadNotifications(){
+        $result = [];
+        $result["unseen"] = $this->getUnreadNotificationsCountByUser();
+
+        return new Payload(Payload::$RESULT_JSON, $result);
+    }
+
     public function getNotifications($data) {
 
         //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;

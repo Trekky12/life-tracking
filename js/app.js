@@ -21,6 +21,9 @@ const appLoadingWindowOverlay = document.getElementById('loading-overlay');
 let isSubscribed = false;
 var isCached = false;
 
+let isAppResumed = false;
+let isInBackground = false;
+
 window.addEventListener("online", handleNetworkChange);
 window.addEventListener("offline", handleNetworkChange);
 //handleNetworkChange();
@@ -732,4 +735,30 @@ function handleMessage(data) {
     }
 }
 
+window.addEventListener('blur', function () {
+    isAppResumed = false;
+    isInBackground = true;
+});
 
+window.addEventListener('focus', function () {
+    if (isInBackground && !isAppResumed) {
+        isAppResumed = true;
+        isInBackground = false;
+        getUnreadNotifications();
+    }
+});
+
+async function getUnreadNotifications() {
+    const response = await fetch(jsObject.notifications_unread, {
+        method: 'GET',
+        credentials: "same-origin",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    if (data.status !== 'error') {
+        setNotificationCount(data.unseen);
+        setAppBadge();
+    }
+}
