@@ -101,6 +101,7 @@ if (navigation && header && navigationOverlay) {
         navigation.classList.remove("toggled");
 
         currentPos = 0;
+        reset();
     }
 
     // https://stackoverflow.com/a/23230280
@@ -137,6 +138,12 @@ if (navigation && header && navigationOverlay) {
     }
 
     function handleTouchMove(evt) {
+        // First touch after app is resumed is ignored to not trigger navigation drawer
+        if (isAppResumed) {
+            isAppResumed = false;
+            return;
+        }
+
         if (!xStartPosition) {
             return;
         }
@@ -258,6 +265,11 @@ if (navigation && header && navigationOverlay) {
     }
 
     function handleTouchEnd(evt) {
+        // First touch after app is resumed is ignored to not trigger navigation drawer
+        if (isAppResumed) {
+            isAppResumed = false;
+            return;
+        }
 
         if (!xStartPosition || !xMovePosition) {
             return;
@@ -292,6 +304,10 @@ if (navigation && header && navigationOverlay) {
                 }
             }
         }
+        reset();
+    }
+
+    function reset() {
         xStartPosition = null;
         isOpenAllowed = null;
         isCloseAllowed = null;
