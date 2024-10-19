@@ -122,10 +122,16 @@ if (navigation && header && navigationOverlay) {
     let xMinDistanceClose = 50;
     let xMinDistanceOpen = 50;
     let yMinDistance = 50;
-    let currentPos = null;
+    let currentPos = 0;
     let skip = false;
+    let isMultitouchMove = false;
 
     function handleTouchStart(evt) {
+        // open navigation only with single touch
+        if (evt.touches.length > 1) {
+            return;
+        }
+
         const firstTouch = evt.touches[0];
         xStartPosition = firstTouch.clientX;
         yStartPosition = firstTouch.clientY;
@@ -134,6 +140,7 @@ if (navigation && header && navigationOverlay) {
         isCloseAllowed = navigation.classList.contains('toggled'); // && (window.innerWidth - xStartPosition) > navi_width
 
         skip = false;
+        isMultitouchMove = false;
         //        console.log("start");
     }
 
@@ -145,6 +152,12 @@ if (navigation && header && navigationOverlay) {
         }
 
         if (!xStartPosition) {
+            return;
+        }
+
+        // open navigation only with single touch
+        if (evt.touches.length > 1) {
+            isMultitouchMove = true;
             return;
         }
 
@@ -272,6 +285,13 @@ if (navigation && header && navigationOverlay) {
         }
 
         if (!xStartPosition || !xMovePosition) {
+            return;
+        }
+
+        // if multiple touches were detected on move 
+        // and the navigation drawer is not moved 
+        // skip the rest
+        if (isMultitouchMove && currentPos == 0) {
             return;
         }
 
