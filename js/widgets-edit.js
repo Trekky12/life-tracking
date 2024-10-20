@@ -6,7 +6,7 @@ new Sortable(document.querySelector('.grid'), {
         name: "widget"
     },
     draggable: ".card",
-    handle: "h3",
+    handle: isTouchEnabled() ? ".handle" : ".card-headline",
     dataIdAttr: 'data-widget',
     onUpdate: function (evt) {
         var data = { 'widgets': this.toArray() };

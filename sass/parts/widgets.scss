@@ -122,3 +122,18 @@ table.timesheets_project_budget_widget {
         text-align: left;
     }
 }
+
+body.profile {
+    .card-header .handle {
+        display: block;
+        margin-left: 10px;
+        @include font-size(2);
+        cursor: pointer;
+    }
+
+    &.no-touch-enabled {
+        .card-header .handle {
+            display: none;
+        }
+    }
+}
