@@ -123,14 +123,21 @@ class EFAWidget implements Widget
                     $delay = $calculatedDelay;
                 }
 
+                $cancelled = false;
+                if(array_key_exists("realtimeStatus", $departure) && str_contains($departure["realtimeStatus"], "CANCELLED")){
+                    $cancelled = true;
+                }
+                if(array_key_exists("realtimeTripStatus", $departure) && str_contains($departure["realtimeTripStatus"], "CANCELLED")){
+                    $cancelled = true;
+                }
+
 
                 $departures[] = [
                     "line" => $departure["servingLine"]["number"],
                     "direction" => $departure["servingLine"]["direction"],
                     "time" => $time,
                     "delay" => $delay,
-                    "realtimeStatus" => array_key_exists("realtimeStatus", $departure) ? $departure["realtimeStatus"] : null,
-                    "realtimeTripStatus" => array_key_exists("realtimeTripStatus", $departure) ? $departure["realtimeTripStatus"] : null,
+                    "cancelled" => $cancelled ? "CANCELLED" : ""
                 ];
             }
         }
