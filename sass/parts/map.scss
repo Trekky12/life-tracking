@@ -206,7 +206,7 @@ body.has-tabbar.location #mapid{
 
 body.location {
     .alert {
-        display: none;
+        display: none !important;
     }
 
     .site-body {

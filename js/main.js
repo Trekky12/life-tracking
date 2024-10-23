@@ -232,6 +232,15 @@ function initialize() {
         });
     }
 
+    let reloadBtn = document.querySelector('#reload');
+    if (reloadBtn !== null) {
+        reloadBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            loadingWindowOverlay.classList.remove("hidden");
+            window.location.reload();
+        });
+    }
+
     if (document.body.classList.contains("login")) {
         // Delete IndexedDBs
         if (!('indexedDB' in window)) {
