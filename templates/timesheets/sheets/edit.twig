@@ -123,7 +123,9 @@
 							<select id="customer" name="customer">
 								<option value="" {% if entry is null %} selected {% endif %}>{{ lang["NONE"] }}</option>
 								{% for customer in customers %}
-									<option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %} selected {% endif %}>{{customer.name|raw}}</option>
+									{% if (entry is not null or customer.archive != 1) %}
+										<option value="{{customer.id}}" {% if (not entry is null and customer.id == entry.customer) %} selected {% endif %}>{{customer.name|raw}}</option>
+									{% endif %}
 								{% endfor %}
 							</select>
 						</div>

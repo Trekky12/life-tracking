@@ -50,8 +50,8 @@ class CustomerService extends Service {
         ]);
     }
 
-    public function getCustomersFromProject($project_id){
-        return $this->mapper->getFromProject($project_id);
+    public function getCustomersFromProject($project_id, $archive = null){
+        return $this->mapper->getFromProject($project_id, 'name', $archive);
     }
 
 }

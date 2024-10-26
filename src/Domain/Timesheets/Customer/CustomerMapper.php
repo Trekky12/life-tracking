@@ -9,10 +9,15 @@ class CustomerMapper extends \App\Domain\Mapper {
     protected $select_results_of_user_only = false;
     protected $insert_user = false; // do not use "user" field but "createdBy"
 
-    public function getFromProject($id, $order = 'name') {
+    public function getFromProject($id, $order = 'name', $archive = null) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE project = :id ";
 
         $bindings = array("id" => $id);
+
+        if (!is_null($archive)) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
+        }
 
         if (!is_null($order)) {
             $sql .= " ORDER BY {$order}";
@@ -28,5 +33,4 @@ class CustomerMapper extends \App\Domain\Mapper {
         }
         return $results;
     }
-
 }

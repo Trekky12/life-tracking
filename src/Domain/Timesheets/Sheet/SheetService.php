@@ -64,7 +64,7 @@ class SheetService extends Service {
         }
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
-        $customers = $this->customer_service->getCustomersFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id, 0);
 
         $selected_categories = $categories;
         /* if (empty($categories)) {
@@ -367,7 +367,7 @@ class SheetService extends Service {
         $entry = $this->getLastSheetWithStartDateToday($project->id);
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
-        $customers = $this->customer_service->getCustomersFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id, 0);
 
         return new Payload(Payload::$RESULT_HTML, [
             "project" => $project,
@@ -389,7 +389,7 @@ class SheetService extends Service {
         }
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
-        $customers = $this->customer_service->getCustomersFromProject($project->id);
+        $customers = $this->customer_service->getCustomersFromProject($project->id, 0);
 
         return new Payload(Payload::$RESULT_HTML, [
             "project" => $project,

@@ -561,6 +561,7 @@ $lang["TIMESHEETS_IS_PART_OF_SERIES"] = "The entry is part of a series.";
 $lang["TIMESHEETS_SERIES_COUNT"] = "repeats";
 $lang["DELETE_THIS_AND_FOLLOWING"] = "Delete this and all following entries";
 $lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES"] = "Following entries";
+$lang["ARCHIVED"] = "Archived";
 
 $lang["LAST_SAVED"] = "last saved";
 

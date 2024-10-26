@@ -37,6 +37,13 @@
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
 				</div>
 
+				<div class="form-group">
+					<label class="checkbox" for="checkboxArchived">
+						<input name="archive" type="checkbox" value="1" id="checkboxArchived" {% if entry is not null and entry.archive == 1 %} checked {% endif %}>
+						{{lang["ARCHIVED"]}}
+					</label>
+				</div>
+
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}

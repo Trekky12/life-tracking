@@ -978,11 +978,16 @@ CREATE TABLE timesheets_customers (
     createdBy INTEGER unsigned DEFAULT NULL,
     changedBy INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
+    archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*
+ALTER TABLE `timesheets_customers` ADD `archive` INT(1) DEFAULT 0 AFTER `name`; 
+*/
+
 
 DROP TABLE IF EXISTS timesheets_sheets;
 CREATE TABLE timesheets_sheets (

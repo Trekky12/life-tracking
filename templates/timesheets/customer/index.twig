@@ -33,6 +33,7 @@
 				<thead>
 					<tr>
 						<th>{{lang["NAME"]}}</th>
+						<th>{{lang["ARCHIVED"]}}</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -41,6 +42,7 @@
 					{% for customer in customers %}
 						<tr>
 							<td>{{customer.name}}</td>
+							<td>{{customer.archive}}</td>
 							<td>
 								<a href="{{ url_for('timesheets_customers_edit', {'id' : customer.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 							</td>
