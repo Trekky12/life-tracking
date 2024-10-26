@@ -7,10 +7,7 @@ html {
 html, body {
     margin: 0;
     padding: 0;
-
 }
-
-
 
 body,
 button,
@@ -24,7 +21,7 @@ textarea {
     font-weight: 400;
 
     @include font-size(1.4);
-    @media screen and (min-width: $size_mini) {
+    @media screen and (min-width: $size_mini), print{
         @include font-size(1.6);
     }
 }

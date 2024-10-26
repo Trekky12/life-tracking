@@ -921,6 +921,18 @@ CREATE TABLE timesheets_projects (
     show_quarters_buttons INT(1) DEFAULT 0,
     customers_name_singular VARCHAR(255) DEFAULT NULL,
     customers_name_plural VARCHAR(255) DEFAULT NULL,
+    slot_min_time VARCHAR(255) DEFAULT "00:00:00",
+    slot_max_time VARCHAR(255) DEFAULT "24:00:00",
+    hide_monday int(1) DEFAULT 0,
+    hide_tuesday int(1) DEFAULT 0,
+    hide_wednesday int(1) DEFAULT 0,
+    hide_thursday int(1) DEFAULT 0,
+    hide_friday int(1) DEFAULT 0,
+    hide_saturday int(1) DEFAULT 0,
+    hide_sunday int(1) DEFAULT 0,
+    repeat_count int(5) DEFAULT 0,
+    repeat_unit varchar(255) DEFAULT 'week',
+    repeat_multiplier int(5) DEFAULT 1,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -938,6 +950,13 @@ ALTER TABLE timesheets_projects ADD iterations INT(20) DEFAULT 600000 AFTER salt
 /**
 ALTER TABLE timesheets_projects CHANGE KEK encryptedMasterKey VARCHAR(255) DEFAULT NULL; 
 ALTER TABLE timesheets_projects CHANGE test encryptedTestMessage VARCHAR(255) DEFAULT NULL; 
+*/
+
+/**
+
+ALTER TABLE `timesheets_projects` ADD `slot_min_time` VARCHAR(255) DEFAULT '00:00:00' AFTER `customers_name_plural`, ADD `slot_max_time` VARCHAR(255) DEFAULT '24:00:00' AFTER `slot_min_time`, ADD `repeat_count` INT(5) DEFAULT 0 AFTER `slot_max_time`, ADD `repeat_unit` VARCHAR(255) DEFAULT 'week' AFTER `repeat_count`, ADD `repeat_multiplier` INT(5) DEFAULT 1 AFTER `repeat_unit`; 
+
+ALTER TABLE `timesheets_projects` ADD `hide_monday` INT(1) NOT NULL DEFAULT '0' AFTER `slot_max_time`, ADD `hide_tuesday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_monday`, ADD `hide_wednesday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_tuesday`, ADD `hide_thursday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_wednesday`, ADD `hide_friday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_thursday`, ADD `hide_saturday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_friday`, ADD `hide_sunday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_saturday`; 
 */
 
 DROP TABLE IF EXISTS timesheets_projects_users;
@@ -987,12 +1006,14 @@ CREATE TABLE timesheets_sheets (
     is_billed int(1) DEFAULT 0,
     is_payed int(1) DEFAULT 0,
     is_planned int(1) DEFAULT 0,
+    reference_sheet int(11) unsigned DEFAULT NULL,
     customer INTEGER unsigned DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(reference_sheet) REFERENCES timesheets_sheets(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /* 
@@ -1000,6 +1021,10 @@ ALTER TABLE `timesheets_sheets` ADD `customer` INT UNSIGNED NULL DEFAULT NULL AF
 ALTER TABLE `timesheets_sheets` ADD CONSTRAINT `timesheets_sheets_ibfk_4` FOREIGN KEY (`customer`) REFERENCES `timesheets_customers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE; 
 
 ALTER TABLE `timesheets_sheets` ADD `is_planned` int(1) DEFAULT 0 AFTER `is_payed`; 
+
+ALTER TABLE `timesheets_sheets` ADD reference_sheet int(11) unsigned DEFAULT NULL AFTER `is_planned`; 
+ALTER TABLE `timesheets_sheets` ADD CONSTRAINT `timesheets_sheets_ibfk_5` FOREIGN KEY (`reference_sheet`) REFERENCES `timesheets_sheets`(`id`) ON DELETE SET NULL ON UPDATE CASCADE; 
+
 */
 
 DROP TABLE IF EXISTS timesheets_categories;

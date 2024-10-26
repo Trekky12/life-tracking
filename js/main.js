@@ -134,7 +134,10 @@ function confirmDialog(message) {
     });
 }
 
-async function deleteObject(url, custom_confirm_text) {
+async function deleteObject(dataset) {
+
+    let url = dataset.url;
+    let custom_confirm_text = dataset.confirm ? dataset.confirm : "default";
 
     let confirm_text = lang.really_delete;
     if (custom_confirm_text !== "default") {
@@ -146,14 +149,20 @@ async function deleteObject(url, custom_confirm_text) {
         return false;
     }
 
+    let data = dataset;
+
     getCSRFToken(true).then(function (token) {
+
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
         return fetch(url, {
             method: 'DELETE',
             credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(token)
+            body: JSON.stringify(data)
         });
     }).then(function (response) {
         return response.json();
@@ -285,8 +294,7 @@ function initialize() {
             event.preventDefault();
             let url = deleteBtn.dataset.url;
             if (url) {
-                let confirm = deleteBtn.dataset.confirm ? deleteBtn.dataset.confirm : "default";
-                deleteObject(url, confirm);
+                deleteObject(deleteBtn.dataset);
             } else {
                 deleteBtn.parentNode.remove();
             }

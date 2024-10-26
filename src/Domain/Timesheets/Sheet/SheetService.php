@@ -289,7 +289,7 @@ class SheetService extends Service {
         }
     }
 
-    public function edit($hash, $entry_id) {
+    public function edit($hash, $entry_id, $requestData) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -308,15 +308,35 @@ class SheetService extends Service {
         $sheet_categories = !is_null($entry) ? $this->mapper->getCategoriesFromSheet($entry->id) : [];
         $customers = $this->customer_service->getCustomersFromProject($project->id);
 
+        $start_date = new \DateTime();
+        $start = $start_date->format('Y-m-d H:i');
+        $startParam = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+        if ($startParam != null) {
+            $startParamDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $startParam);
+            $start = $startParamDate->format('Y-m-d H:i');
+        }
+
         $end = null;
+        $endParam = array_key_exists("end", $requestData) ? filter_var($requestData["end"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
+        if ($endParam != null) {
+            $endParamDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $endParam);
+            $end = $endParamDate->format('Y-m-d H:i');
+        }
+
+        $series = [];
         if ($entry) {
+            $start = $entry->start;
             $end = $entry->end;
             $default_duration = $project->default_duration;
             if (is_null($entry) && !is_null($default_duration)) {
                 $end_date = new \DateTime('+' . $default_duration . ' seconds');
                 $end = $end_date->format('Y-m-d H:i');
             }
+
+            $series = $this->getMapper()->getSeriesSheets($project->id, $entry->id);
         }
+
+        $view = array_key_exists("view", $requestData) ? filter_var($requestData["view"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
         $response_data = [
             'entry' => $entry,
@@ -326,7 +346,11 @@ class SheetService extends Service {
             'categories' => $project_categories,
             'sheet_categories' => $sheet_categories,
             'customers' => $customers,
-            'end' => $end
+            'start' => $start,
+            'end' => $end,
+            'units' => Project::getUnits(),
+            'series' => $series,
+            'view' => $view
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
@@ -457,7 +481,7 @@ class SheetService extends Service {
                 $result = $this->mapper->setSheetsPayedState($sheets, 1);
             } elseif ($option == "not_payed") {
                 $result = $this->mapper->setSheetsPayedState($sheets, 0);
-            }elseif ($option == "planned") {
+            } elseif ($option == "planned") {
                 $result = $this->mapper->setSheetsPlannedState($sheets, 1);
             } elseif ($option == "happened") {
                 $result = $this->mapper->setSheetsPlannedState($sheets, 0);
@@ -501,6 +525,9 @@ class SheetService extends Service {
 
         $response_data["hasTimesheetCalendar"] = true;
 
+        $response_data["slot_min_time"] = $project->slot_min_time;
+        $response_data["slot_max_time"] = $project->slot_max_time;
+
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
@@ -512,9 +539,11 @@ class SheetService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
         $end = array_key_exists("end", $requestData) ? filter_var($requestData["end"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
-
 
         $startDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $start);
         $endDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $end);
@@ -534,15 +563,57 @@ class SheetService extends Service {
             $title = '';
             if ($timesheet->customerName) {
                 $title .= $timesheet->customerName;
-            }elseif($timesheet->categories){
+            } elseif ($timesheet->categories) {
                 $title .= $timesheet->categories;
+            }
+
+            list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+
+            $series = $this->getMapper()->getSeriesSheets($project->id, $timesheet->id);
+            $series_ids = array_keys(
+                array_map(function ($sheet) {
+                    return $sheet->id;
+                }, $series)
+            );
+
+            $remaining = [];
+
+            if (count($series) > 0) {
+                $index = array_search($timesheet->id, $series_ids);
+
+                if ($index !== false) {
+                    $remaining_sheets = array_slice($series, $index + 1);
+                } else {
+                    // base sheet is not part of the series
+                    $remaining_sheets = $series_ids;
+                }
+
+
+                $remaining = array_map(function ($sheet) use ($language, $dateFormatPHP) {
+                    list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+                    return sprintf("%s: %s - %s", $date, $start, $end);
+                }, $remaining_sheets);
             }
 
             $events[] = [
                 'title' => $title,
                 'start' => $st->format('Y-m-d H:i:s'),
                 'end' => $e->format('Y-m-d H:i:s'),
-                'url' => $this->router->urlFor('timesheets_sheets_edit', ['id' => $timesheet->id, 'project' => $project->getHash()])
+                'extendedProps' => [
+                    'edit' => $this->router->urlFor('timesheets_sheets_edit', ['id' => $timesheet->id, 'project' => $project->getHash()]),
+                    'delete' => $this->router->urlFor('timesheets_sheets_delete', ['id' => $timesheet->id, 'project' => $project->getHash()]),
+                    'start' => $st->format('Y-m-d H:i:s'),
+                    'end' => $e->format('Y-m-d H:i:s'),
+                    'date' => sprintf("%s %s - %s", $date, $start, $end),
+                    'customer' => $timesheet->customerName ? $timesheet->customerName : '',
+                    'categories' => $timesheet->categories ? $timesheet->categories : '',
+                    'is_planned' => $timesheet->is_planned,
+                    'is_billed' => $timesheet->is_billed,
+                    'is_payed' => $timesheet->is_payed,
+                    'reference_sheet' => $timesheet->reference_sheet,
+                    'series' => $series_ids,
+                    'remaining' => $remaining
+                ]
             ];
         }
 

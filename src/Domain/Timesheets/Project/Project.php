@@ -15,7 +15,7 @@ class Project extends \App\Domain\DataObject {
 
         $this->is_day_based = $this->exists('is_day_based', $data) ? filter_var($data['is_day_based'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->default_view = $this->exists('default_view', $data) ? filter_var($data['default_view'], FILTER_UNSAFE_RAW) : "month";
-        
+
         $this->has_duration_modifications = $this->exists('has_duration_modifications', $data) ? filter_var($data['has_duration_modifications'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->time_conversion_rate = $this->exists('time_conversion_rate', $data) ? filter_var($data['time_conversion_rate'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 1;
 
@@ -27,11 +27,25 @@ class Project extends \App\Domain\DataObject {
         $this->customers_name_singular = $this->exists('customers_name_singular', $data) ? filter_var($data['customers_name_singular'], FILTER_UNSAFE_RAW) : null;
         $this->customers_name_plural = $this->exists('customers_name_plural', $data) ? filter_var($data['customers_name_plural'], FILTER_UNSAFE_RAW) : null;
 
+        $this->slot_min_time = $this->exists('slot_min_time', $data) ? filter_var($data['slot_min_time'], FILTER_SANITIZE_SPECIAL_CHARS) : "00:00:00";
+        $this->slot_max_time = $this->exists('slot_max_time', $data) ? filter_var($data['slot_max_time'], FILTER_SANITIZE_SPECIAL_CHARS) : "24:00:00";
+
+        $this->repeat_count = $this->exists('repeat_count', $data) ? filter_var($data['repeat_count'], FILTER_SANITIZE_NUMBER_INT) : 1;
+        $this->repeat_unit = $this->exists('repeat_unit', $data) ? filter_var($data['repeat_unit'], FILTER_SANITIZE_STRING) : 'month';
+        $this->repeat_multiplier = $this->exists('repeat_multiplier', $data) ? filter_var($data['repeat_multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
+
+        $this->hide_monday = $this->exists('hide_monday', $data) ? filter_var($data['hide_monday'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->hide_tuesday = $this->exists('hide_tuesday', $data) ? filter_var($data['hide_tuesday'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->hide_wednesday = $this->exists('hide_wednesday', $data) ? filter_var($data['hide_wednesday'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->hide_thursday = $this->exists('hide_thursday', $data) ? filter_var($data['hide_thursday'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->hide_friday = $this->exists('hide_friday', $data) ? filter_var($data['hide_friday'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->hide_saturday = $this->exists('hide_saturday', $data) ? filter_var($data['hide_saturday'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->hide_sunday = $this->exists('hide_sunday', $data) ? filter_var($data['hide_sunday'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
-        
+
 
         /**
          * Set value from request
@@ -47,4 +61,35 @@ class Project extends \App\Domain\DataObject {
         return $this->name;
     }
 
+    public static function getUnits() {
+        return array("day" => "DAY", "week" => "WEEK", "month" => "MONTH", "year" => "YEAR");
+    }
+
+    public function getHiddenDays() {
+        $hidden_days = [];
+
+        if ($this->hide_monday) {
+            $hidden_days[] = 1;
+        }
+        if ($this->hide_tuesday) {
+            $hidden_days[] = 2;
+        }
+        if ($this->hide_wednesday) {
+            $hidden_days[] = 3;
+        }
+        if ($this->hide_thursday) {
+            $hidden_days[] = 4;
+        }
+        if ($this->hide_friday) {
+            $hidden_days[] = 5;
+        }
+        if ($this->hide_saturday) {
+            $hidden_days[] = 6;
+        }
+        if ($this->hide_sunday) {
+            $hidden_days[] = 0;
+        }
+
+        return $hidden_days;
+    }
 }

@@ -1,6 +1,6 @@
 @media print {
     @page {
-        size: A4;
+        size: auto;
         margin: 10mm;
     }
 
@@ -8,6 +8,15 @@
         -webkit-print-color-adjust: exact !important;
         printer-colors: exact !important;
         color-adjust: exact !important;
+    }
+
+    .site-body {
+        top: 0px !important;
+        margin-left: 0px !important;
+    }
+
+    #site-navigation {
+        display: none;
     }
 
     .trip_day h3 {
@@ -67,7 +76,10 @@
         color: #000000;
     }
 
-    .site-header,
+    .site-header {
+        display: none !important;
+    }
+
     .trip_event .buttons,
     .description_text {
         display: none !important;
@@ -106,6 +118,25 @@
     #wordExport,
     #checkboxHideEmptySheetsLabel,
     #checkboxHideEmptyNoticeFieldsLabel {
+        display: none;
+    }
+
+    .fc-button {
+        display: none !important;
+    }
+
+    :root {
+        --fc-event-bg-color: white;
+        --fc-event-border-color: black;
+        --fc-event-text-color: black;
+        --fc-today-bg-color: none;
+    }
+
+    .fc-scrollgrid {
+        width: auto !important;
+    }
+
+    .fc-timegrid-now-indicator-container{
         display: none;
     }
 

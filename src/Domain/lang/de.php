@@ -544,6 +544,22 @@ $lang["TIMESHEETS_QUARTER_3"] = "Q3";
 $lang["TIMESHEETS_QUARTER_4"] = "Q4";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Einträge ohne Notizen ausblenden";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Felder ohne Inhalt ausblenden";
+$lang["TIMESHEETS_SLOT_MIN_TIME"] = "früheste Zeit im Kalender";
+$lang["TIMESHEETS_SLOT_MAX_TIME"] = "späteste Zeit im Kalender";
+$lang["TIMESHEETS_REPEAT_COUNT"] = "Anzahl Wiederholungen";
+$lang["TIMESHEETS_STATE"] = "Status";
+$lang["TIMESHEETS_REPEAT"] = "Wiederholen";
+$lang["TIMESHEETS_HIDE_MONDAY"] = "Montag ausblenden";
+$lang["TIMESHEETS_HIDE_TUESDAY"] = "Dienstag ausblenden";
+$lang["TIMESHEETS_HIDE_WEDNESDAY"] = "Mittwoch ausblenden";
+$lang["TIMESHEETS_HIDE_THURSDAY"] = "Donnerstag ausblenden";
+$lang["TIMESHEETS_HIDE_FRIDAY"] = "Freitag ausblenden";
+$lang["TIMESHEETS_HIDE_SATURDAY"] = "Samstag ausblenden";
+$lang["TIMESHEETS_HIDE_SUNDAY"] = "Sonntag ausblenden";
+$lang["TIMESHEETS_IS_PART_OF_SERIES"] = "Der Eintrag ist Teil einer Serie.";
+$lang["TIMESHEETS_SERIES_COUNT"] = "Wiederholungen";
+$lang["DELETE_THIS_AND_FOLLOWING"] = "Diesen und nachfolgende Einträge löschen";
+$lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES"] = "Nachfolgende Einträge";
 
 $lang["LAST_SAVED"] = "Zuletzt gespeichert";
 
@@ -697,6 +713,7 @@ $lang["WIDGET_TITLE"] = "Titel";
 $lang["WIDGET_CURRENTWEATHER"] = "aktuelles Wetter";
 $lang["WIDGET_WEATHERFORECAST"] = "Wettervorhersage";
 $lang["WIDGET_TIMESHEETS_FAST_CREATE"] = "Schnellerfassung von Zeiten";
+$lang["WIDGET_TIMESHEETS_CALENDAR"] = "Kalender";
 
 $lang["WORKOUTS"] = "Workouts";
 $lang["WORKOUTS_EXERCISES"] = "Übungen";

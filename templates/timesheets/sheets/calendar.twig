@@ -24,7 +24,7 @@
 				{{project.name|raw}}</h2>
 		</div>
 		<div class="buttons">
-			<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
+			<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}?view=calendar">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{lang["ADD"]}}</button>
 			</a>
@@ -39,7 +39,59 @@
 {% block body %}
 	<div class="inner-content">
 		<div class="page-content">
-			<div id="timesheets_calendar"></div>
+			<div id="timesheets_calendar" data-min="{{slot_min_time}}" data-max="{{slot_max_time}}" data-hiddendays="{{project.getHiddenDays()|json_encode}}" data-project="{{project.id}}" data-edit="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}?view=calendar"></div>
+		</div>
+	</div>
+	<div id="event-modal" class="modal">
+		<div class="modal-inner">
+			<div class="modal-header">{{lang["DATAOBJECT_TIMESHEETS_SHEET"]}}<span class="modal-close" id="modal-close-btn">&times;</span>
+			</div>
+			<div class="modal-content">
+				<h2 class="date"></h2>
+
+				<div class="customer">
+					<h3>
+						{% if project.customers_name_singular %}
+							{{project.customers_name_singular}}
+						{% else %}
+							{{lang["TIMESHEETS_CUSTOMER"]}}
+						{% endif %}
+					</h3>
+					<p class="customerName"></p>
+				</div>
+
+				<div class="categories">
+					<h3>
+						{{lang["CATEGORIES"]}}
+					</h3>
+					<p class="categoriesName"></p>
+				</div>
+
+				<div class="state">
+					<h3>{{lang["TIMESHEETS_STATE"]}}</h3>
+					<p class="billed hidden">{{lang["TIMESHEETS_BILLED"]}}</p>
+					<p class="payed hidden">{{lang["TIMESHEETS_PAYED"]}}</p>
+					<p class="planned hidden">{{lang["TIMESHEETS_PLANNED"]}}</p>
+					<p class="series hidden">{{lang["TIMESHEETS_IS_PART_OF_SERIES"]}}
+						(<span class="count"></span>
+						{{lang["TIMESHEETS_SERIES_COUNT"]}})</p>
+				</div>
+
+
+				<div class="following hidden">
+					<h3>{{lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES"]}}</h3>
+					<ul></ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="buttons">
+					<a href="" class="btn-edit">
+						<button class="button" type="button">{{lang["EDIT"]}}</button>
+					</a>
+					<button class="button danger btn-delete" type="button">{{lang["DELETE"]}}</button>
+					<button class="button danger btn-delete btn-deletefollowing hidden" type="button" data-deletefollowing="1">{{lang["DELETE_THIS_AND_FOLLOWING"]}}</button>
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}

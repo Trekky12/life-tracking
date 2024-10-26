@@ -19,16 +19,17 @@
 }
 
 #timesheets_sheets_table {
+
+    tr[data-planned="1"] {
+        color: $color_blue;
+    }
+
     tr[data-billed="1"] {
         color: $color_orange;
     }
 
     tr[data-payed="1"] {
         color: $color_green;
-    }
-
-    tr[data-planned="1"] {
-        color: $color_blue;
     }
 }
 
@@ -82,13 +83,35 @@
         border-radius: 0;
     }
 
-    @media screen and (max-width: $size_tablet) {
-        .fc-event {
+    .fc-event:hover {
+        cursor: pointer;
+    }
 
-            .fc-event-time,
-            .fc-event-title {
-                display: none;
+    .fc-button {
+
+        &:focus,
+        &.fc-button-active {
+            background-color: var(--fc-button-hover-bg-color);
+            border-color: var(--fc-button-hover-border-color);
+            color: var(--fc-button-text-color);
+            box-shadow: none;
+        }
+    }
+
+    @media screen and (max-width: $size_tablet) {
+        .fc-dayGridMonth-view {
+            .fc-event {
+
+                .fc-event-time,
+                .fc-event-title {
+                    display: none;
+                }
             }
+        }
+
+        .fc-header-toolbar {
+            flex-direction: column;
+            row-gap: 10px;
         }
     }
 }

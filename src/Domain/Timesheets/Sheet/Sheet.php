@@ -47,6 +47,8 @@ class Sheet extends \App\Domain\DataObject {
         $this->customer = $this->exists('customer', $data) ? filter_var($data['customer'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->customerName = $this->exists('customerName', $data) ? filter_var($data['customerName'], FILTER_SANITIZE_STRING) : null;
 
+        $this->reference_sheet = $this->exists('reference_sheet', $data) ? filter_var($data['reference_sheet'], FILTER_SANITIZE_NUMBER_INT) : null;
+
         /* if (empty($this->name) && $this->settleup == 0) {
           $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
           } */

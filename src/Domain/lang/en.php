@@ -545,6 +545,22 @@ $lang["TIMESHEETS_QUARTER_3"] = "Q3";
 $lang["TIMESHEETS_QUARTER_4"] = "Q4";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"] = "Hide entries without notices";
 $lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"] = "Hide fields without content";
+$lang["TIMESHEETS_SLOT_MIN_TIME"] = "earliest time in calendar";
+$lang["TIMESHEETS_SLOT_MAX_TIME"] = "latest time in calendar";
+$lang["TIMESHEETS_REPEAT_COUNT"] = "number of repeats";
+$lang["TIMESHEETS_STATE"] = "state";
+$lang["TIMESHEETS_REPEAT"] = "repeat";
+$lang["TIMESHEETS_HIDE_MONDAY"] = "hide monday";
+$lang["TIMESHEETS_HIDE_TUESDAY"] = "hide tuesday";
+$lang["TIMESHEETS_HIDE_WEDNESDAY"] = "hide wednesday";
+$lang["TIMESHEETS_HIDE_THURSDAY"] = "hide thursday";
+$lang["TIMESHEETS_HIDE_FRIDAY"] = "hide friday";
+$lang["TIMESHEETS_HIDE_SATURDAY"] = "hide saturday";
+$lang["TIMESHEETS_HIDE_SUNDAY"] = "hide sunday";
+$lang["TIMESHEETS_IS_PART_OF_SERIES"] = "The entry is part of a series.";
+$lang["TIMESHEETS_SERIES_COUNT"] = "repeats";
+$lang["DELETE_THIS_AND_FOLLOWING"] = "Delete this and all following entries";
+$lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES"] = "Following entries";
 
 $lang["LAST_SAVED"] = "last saved";
 
@@ -678,13 +694,13 @@ $lang["TRIPS_ROUTES"] = "Routes";
 
 $lang["TRIPS_WAYPOINT_SAVE"] = "Save";
 
-$lang["TWOFACTOR_ERROR"]= "Two Factor Authentication could not be enabled!";
-$lang["TWOFACTOR_SUCCESS"]= "Two Factor Authentication was successfully enabled.";
-$lang["TWOFACTOR_SUCCESS_DELETE"]= "Two Factor Authentication was successfully disabled.";
-$lang["TWOFACTOR_DISABLE"]= "disable";
+$lang["TWOFACTOR_ERROR"] = "Two Factor Authentication could not be enabled!";
+$lang["TWOFACTOR_SUCCESS"] = "Two Factor Authentication was successfully enabled.";
+$lang["TWOFACTOR_SUCCESS_DELETE"] = "Two Factor Authentication was successfully disabled.";
+$lang["TWOFACTOR_DISABLE"] = "disable";
 $lang["TWOFACTOR_TEXT"] = "Please scan the QR-Code or insert the secret in the Two Factor Authentication App.";
-$lang["TWOFACTOR_CODE"]= "Code";
-$lang["TWOFACTOR_AUTHENTICATION"]= "Two Factor Authentication";
+$lang["TWOFACTOR_CODE"] = "Code";
+$lang["TWOFACTOR_AUTHENTICATION"] = "Two Factor Authentication";
 
 $lang["REMEMBER_LOGIN"] = "Remember login";
 
@@ -698,6 +714,7 @@ $lang["WIDGET_TITLE"] = "title";
 $lang["WIDGET_CURRENTWEATHER"] = "current weather";
 $lang["WIDGET_WEATHERFORECAST"] = "weather forecast";
 $lang["WIDGET_TIMESHEETS_FAST_CREATE"] = "fast creation of times";
+$lang["WIDGET_TIMESHEETS_CALENDAR"] = "calendar";
 
 $lang["WORKOUTS"] = "workouts";
 $lang["WORKOUTS_EXERCISES"] = "exercises";

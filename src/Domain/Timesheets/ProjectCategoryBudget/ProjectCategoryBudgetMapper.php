@@ -270,6 +270,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
             $sql .= " and sheet.customer = :customer";
         }
 
+        $sql .= " and sheet.is_planned = 0";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute(array_merge($bindings, $cat_bindings));

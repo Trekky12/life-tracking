@@ -22,8 +22,6 @@ class SheetCalendarEventsAction {
 
         $requestData = $request->getQueryParams();
 
-        $requestData = $request->getQueryParams();
-        
         $payload = $this->service->events($hash, $requestData);
 
         return $this->responder->respond($payload);

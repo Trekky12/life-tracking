@@ -34,6 +34,61 @@ class SheetRemover extends ObjectActivityRemover {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
+        try {
+            $series = $this->getMapper()->getSeriesSheets($project->id, $id);
+            $series_ids = array_keys(
+                array_map(function ($sheet) {
+                    return $sheet->id;
+                }, $series)
+            );
+
+            if (count($series) > 0) {
+
+                // delete following
+                $is_deletefollowing = is_array($additionalData) && array_key_exists("is_deletefollowing", $additionalData) && ($additionalData["is_deletefollowing"] == 1);
+
+                if ($is_deletefollowing) {
+
+                    $remaining_ids = $series_ids;
+                    $index = array_search($id, $series_ids);
+
+                    if ($index !== false) {
+                        $remaining_ids = array_slice($series_ids, $index + 1);
+                    }
+
+                    // delete remainings
+                    foreach ($remaining_ids as $following_id) {
+                        $payload = parent::delete($following_id, $additionalData);
+                        if (in_array($payload->getStatus(), [Payload::$STATUS_ERROR, Payload::$STATUS_DELETE_ERROR])) {
+                            $this->logger->error("Delete of following entry failed " . $this->getMapper()->getDataObject(), array("id" => $id));
+                            return new Payload(Payload::$STATUS_DELETE_ERROR, "ERROR");
+                        }
+                    }
+                } else {
+                    $entry = $this->getMapper()->get($id);
+
+                    // if this is the base entry set the next entry 
+                    // as reference for all following entries!
+                    // also remove the reference of the first following entry
+                    // as this is the new base
+                    if ($entry->reference_sheet == null) {
+
+                        // remove this entry from the series
+                        $following_entries = array_values(array_diff($series_ids, [$entry->id]));
+
+                        $update_reference = $this->getMapper()->updateReferenceSheet($id, $following_entries);
+                        if ($update_reference) {
+                            return parent::delete($id, $additionalData);
+                        }
+
+                        return new Payload(Payload::$STATUS_DELETE_ERROR, "ERROR");
+                    }
+                }
+            }
+        } catch (\Exception $ex) {
+            return new Payload(Payload::$STATUS_ERROR, $ex->getMessage());
+        }
+
         return parent::delete($id, $additionalData);
     }
 
@@ -56,5 +111,4 @@ class SheetRemover extends ObjectActivityRemover {
     public function getModule(): string {
         return "timesheets";
     }
-
 }

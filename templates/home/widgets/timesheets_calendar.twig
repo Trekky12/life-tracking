@@ -1,0 +1,18 @@
+<h4>{{'now'|date(i18n.dateformatTwig.date)}}</h4>
+{% if data|length == 0 %}
+	<p>{{lang["NO_DATA"]}}</p>
+{% else %}
+	<table>
+		<tbody>
+			{% for sheet in data %}
+				<tr>
+					{% set time = sheet.getDateStartEnd(i18n.php, i18n.dateformatPHP.date, i18n.dateformatPHP.datetime, i18n.dateformatPHP.time) %}
+					<td>{{ time[1] }}
+						-
+						{{ time[2] }}</td>
+					<td>{{ sheet.customerName }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endif %}

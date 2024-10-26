@@ -242,6 +242,7 @@ class SheetMapper extends \App\Domain\Mapper {
             . "t.is_billed, "
             . "t.is_payed, "
             . "t.is_planned, "
+            . "t.reference_sheet, "
             . "tcus.name as customerName";
 
         list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed, $planned, $customer);
@@ -351,6 +352,7 @@ class SheetMapper extends \App\Domain\Mapper {
     public function getTimes() {
         $sql = "SELECT s.project, SUM(s.duration) as sum, SUM(s.duration_modified) as sum_modified "
             . " FROM " . $this->getTableName() . " s "
+            . " WHERE s.is_planned = 0 "
             . " GROUP BY s.project";
 
         $stmt = $this->db->prepare($sql);
@@ -532,5 +534,112 @@ class SheetMapper extends \App\Domain\Mapper {
             throw new \Exception($this->translation->getTranslatedString('SAVE_NOT_POSSIBLE'));
         }
         return true;
+    }
+
+    public function getSeriesSheets($project, $sheet) {
+        $sql = "SELECT * FROM " . $this->getTableName() . "  "
+            . "WHERE project = :project "
+            . " AND ( "
+            . " reference_sheet = (SELECT reference_sheet FROM timesheets_sheets WHERE ID = :sheet)"
+            . " OR reference_sheet = :sheet "
+            . " OR (id = :sheet AND "
+            . "  EXISTS ( "
+            . "   SELECT 1 "
+            . "   FROM timesheets_sheets "
+            . "   WHERE reference_sheet = :sheet "
+            . " ) "
+            . ")"
+            . ")";
+
+        $bindings = array("project" => $project, "sheet" => $sheet);
+
+        $sql .= " ORDER BY start, id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
+    public function updateReferenceSheet($old_sheet, $sheets) {
+
+        $error = false;
+        try {
+            $this->db->beginTransaction();
+
+            $sql = "UPDATE " . $this->getTableName() . " 
+                    SET reference_sheet = :new_sheet 
+                    WHERE reference_sheet = :old_sheet 
+                    AND reference_sheet != :new_sheet 
+                    AND id != :old_sheet";
+            $bindings = array("new_sheet" => $sheets[0], "old_sheet" => $old_sheet);
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute($bindings);
+
+            if (!$result) {
+                throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+            }
+
+            $sql2 = "UPDATE " . $this->getTableName() . " SET reference_sheet = null WHERE id = :sheet_id";
+            $bindings2 = array("sheet_id" => $sheets[0]);
+            $stmt2 = $this->db->prepare($sql2);
+            $result2 = $stmt2->execute($bindings2);
+
+            if (!$result2) {
+                throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+            }
+
+            $updated1 = $stmt->rowCount();
+            $updated2 = $stmt2->rowCount();
+
+            $this->db->commit();
+
+            if ($updated1 == count($sheets) && $updated2 == 1) {
+                return true;
+            }
+
+            $error = true;
+        } catch (\Exception $e) {
+            $error = true;
+        }
+        if ($error && $this->db->inTransaction()) {
+            $this->db->rollBack();
+        }
+
+        return false;
+    }
+
+    public function getSheetForWidget($project_id, $start, $end) {
+        $sql = "SELECT t.*, tcus.name as customerName "
+            . " FROM " . $this->getTableName() . " t "
+            . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " tcus ON tcus.id = t.customer "
+            . " WHERE t.project = :project_id"
+            . " AND ("
+            . "     (t.start >= :start AND t.end <= :end ) OR"
+            . "     (t.start >= :start AND t.start <= :end AND t.end IS NULL ) OR"
+            . "     (t.end >= :start AND t.end <= :end AND t.start IS NULL )"
+            . " )"
+            ." ORDER BY t.start";
+
+        $bindings = [
+            "project_id" => $project_id,
+            "start" => $start,
+            "end" => $end
+        ];
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
     }
 }

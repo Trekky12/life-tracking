@@ -18,7 +18,7 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<a href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">
+			<a href="{% if view =="calendar" %}{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}{% else %}{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}{% endif %}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
 			<h2>{{lang["TIMESHEETS"]}}
@@ -32,12 +32,13 @@
 	<div class="inner-content">
 		<div class="page-content">
 
-			<form class="form-horizontal" action="{{ url_for('timesheets_sheets_save', {'id' : entry.id, 'project': project.hash}) }}" method="POST">
+			<form class="form-horizontal" action="{{ url_for('timesheets_sheets_save', {'id' : entry.id, 'project': project.hash}) }}{% if view %}?view={{view}}{% endif %}" method="POST">
 				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
 				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
 				{% if not entry is null %}
 					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+					<input name="reference_sheet" id="reference_sheet" type="hidden" value="{{entry.reference_sheet}}">
 				{% endif %}
 
 				<div class="form-group">
@@ -49,7 +50,7 @@
 						{% endif %}
 					</label>
 					<div class="flatpickr-group" id="datetimePickerStart">
-						<input type="text" class="form-control" id="datetimePickerStartField" placeholder="" name="start" value="{% if not entry is null %}{{entry.start}}{% else %}{{ "now"|date("Y-m-d H:i") }}{% endif %}" data-input/>
+						<input type="text" class="form-control" id="datetimePickerStartField" placeholder="" name="start" value="{{start}}" data-input/>
 
 						<a class="flatpickr-input-button" title="toggle" data-toggle>
 							{{ fontawesome('fas fa-calendar-days') }}
@@ -185,6 +186,44 @@
 						{{lang["TIMESHEETS_PLANNED"]}}
 					</label>
 				</div>
+
+				{% if entry is null %}
+					<div class="form-group">
+						<label class="checkbox" for="checkBoxRepeat">
+							<input name="set_repeats" type="checkbox" id="checkBoxRepeat" value="1">
+							{{lang["TIMESHEETS_REPEAT"]}}
+						</label>
+					</div>
+					<div class="repeats-content hidden">
+						<h3>{{lang["TIMESHEETS_REPEAT"]}}</h3>
+						<div class="form-group">
+							<label for="inputCount">{{lang["TIMESHEETS_REPEAT_COUNT"]}}</label>
+							<input type="number" class="form-control" id="inputCount" name="repeat_count" step="1" pattern="\d*" value="{% if entry is null %}{{project.repeat_count}}{% endif %}">
+						</div>
+						<div class="form-group">
+							<label for="inputUnit">{{lang["UNIT"]}}</label>
+							<div class="select-wrapper form-control">
+								<select id="inputUnit" name="repeat_unit">
+									{% for unit, unitName in units %}
+										<option value="{{unit}}" {% if (not entry is null and unit == entry.repeat_unit) or (entry is null and unit == project.repeat_unit) %} selected {% endif %}>{{lang[unitName]}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputMultiplier">{{lang["MULTIPLIER"]}}</label>
+							<input type="number" class="form-control" id="inputMultiplier" name="repeat_multiplier" step="1" pattern="\d*" value="{% if entry is null %}{{project.repeat_multiplier}}{% endif %}">
+						</div>
+					</div>
+				{% endif %}
+
+				{% if series | length > 0 %}
+					<div class="form-group">
+						<p class="series">{{lang["TIMESHEETS_IS_PART_OF_SERIES"]}}
+							(<span class="count">{{series | length}}</span>
+							{{lang["TIMESHEETS_SERIES_COUNT"]}})</p>
+					</div>
+				{% endif %}
 
 				<div class="form-group btn">
 					<button type="submit" class="button">

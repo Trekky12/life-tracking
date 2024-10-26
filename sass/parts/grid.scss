@@ -127,6 +127,11 @@
             margin: 2rem;
         }
 
+        p.icon {
+            @include font-size(8);
+            margin: 0rem;
+        }
+
         &.timesheet {
 
             i,

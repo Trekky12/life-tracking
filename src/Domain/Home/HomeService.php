@@ -17,6 +17,7 @@ use App\Domain\Home\Widget\SplittedBillsBalanceWidget;
 use App\Domain\Home\Widget\TimesheetsSumWidget;
 use App\Domain\Home\Widget\TimesheetsProjectBudgetWidget;
 use App\Domain\Home\Widget\TimesheetsFastCreateWidget;
+use App\Domain\Home\Widget\TimesheetsCalendarWidget;
 use App\Domain\Home\Widget\BoardsCardsWidget;
 use App\Domain\Home\Widget\ShoppingListWidget;
 use App\Domain\Home\Widget\WidgetMapper;
@@ -28,8 +29,7 @@ use App\Domain\Home\Widget\CurrentWeatherWidget;
 use App\Domain\Home\Widget\WeatherForecastWidget;
 use Slim\Routing\RouteParser;
 
-class HomeService extends Service
-{
+class HomeService extends Service {
 
     private $translation;
     private $settings;
@@ -45,6 +45,7 @@ class HomeService extends Service
     private $timesheets_sum_widget;
     private $timesheets_project_budget_widget;
     private $timesheets_fast_create_widget;
+    private $timesheets_calendar_widget;
     private $efa_widget;
     private $currentweather_widget;
     private $weatherforecast_widget;
@@ -70,6 +71,7 @@ class HomeService extends Service
         TimesheetsSumWidget $timesheets_sum_widget,
         TimesheetsProjectBudgetWidget $timesheets_project_budget_widget,
         TimesheetsFastCreateWidget $timesheets_fast_create_widget,
+        TimesheetsCalendarWidget $timesheets_calendar_widget,
         EFAWidget $efa_widget,
         CurrentWeatherWidget $currentweather_widget,
         WeatherForecastWidget $weatherforecast_widget,
@@ -94,6 +96,7 @@ class HomeService extends Service
         $this->timesheets_sum_widget = $timesheets_sum_widget;
         $this->timesheets_project_budget_widget = $timesheets_project_budget_widget;
         $this->timesheets_fast_create_widget = $timesheets_fast_create_widget;
+        $this->timesheets_calendar_widget = $timesheets_calendar_widget;
         $this->efa_widget = $efa_widget;
         $this->currentweather_widget = $currentweather_widget;
         $this->weatherforecast_widget = $weatherforecast_widget;
@@ -105,8 +108,7 @@ class HomeService extends Service
         $this->router = $router;
     }
 
-    public function getPWAStartPage()
-    {
+    public function getPWAStartPage() {
         $user = $this->current_user->getUser();
         if (!is_null($user) && !empty($user->start_url)) {
             return new Payload(Payload::$RESULT_HTML, ["url" => $user->start_url]);
@@ -114,8 +116,7 @@ class HomeService extends Service
         return new Payload(Payload::$RESULT_HTML, ["url" => $this->router->urlFor('index')]);
     }
 
-    public function getUserStartPage()
-    {
+    public function getUserStartPage() {
         $widgets = $this->widget_mapper->getAll('position');
         $list = [];
         if (count($widgets) > 0) {
@@ -164,8 +165,7 @@ class HomeService extends Service
         return new Payload(Payload::$RESULT_HTML, ["list" => $list]);
     }
 
-    public function getUserFrontpageEdit()
-    {
+    public function getUserFrontpageEdit() {
 
         $widgets = $this->widget_mapper->getAll('position');
         $list = [];
@@ -195,6 +195,7 @@ class HomeService extends Service
             $available_widgets["timesheets_sum"] = ["name" => $this->translation->getTranslatedString("TIMESHEETS")];
             $available_widgets["timesheets_project_budget"] = ["name" => $this->translation->getTranslatedString("TIMESHEETS_PROJECT_CATEGORY_BUDGET")];
             $available_widgets["timesheets_fast_create"] = ["name" => $this->translation->getTranslatedString("WIDGET_TIMESHEETS_FAST_CREATE")];
+            $available_widgets["timesheets_calendar"] = ["name" => $this->translation->getTranslatedString("WIDGET_TIMESHEETS_CALENDAR")];
         }
         if ($this->current_user->getUser()->hasModule('boards')) {
             $available_widgets["boards_cards"] = ["name" => $this->translation->getTranslatedString("WIDGET_BOARD_CARDS")];
@@ -213,8 +214,7 @@ class HomeService extends Service
         ]);
     }
 
-    private function getWidget($widget_type): Widget\Widget
-    {
+    private function getWidget($widget_type): Widget\Widget {
         switch ($widget_type) {
             case "last_finance_entries":
                 return $this->last_finance_entries_widget;
@@ -238,6 +238,8 @@ class HomeService extends Service
                 return $this->timesheets_project_budget_widget;
             case "timesheets_fast_create":
                 return $this->timesheets_fast_create_widget;
+            case "timesheets_calendar":
+                return $this->timesheets_calendar_widget;
             case "efa":
                 return $this->efa_widget;
             case "currentweather":
@@ -251,8 +253,7 @@ class HomeService extends Service
         }
     }
 
-    public function getWidgetOptions($widget_type, $id)
-    {
+    public function getWidgetOptions($widget_type, $id) {
 
         $widget_object = $this->widget_mapper->getWidget($id);
         if (is_null($widget_type) && !is_null($widget_object)) {
@@ -267,8 +268,7 @@ class HomeService extends Service
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    private function getWidgetForFrontend(Widget\WidgetObject $widget_object, $content = null)
-    {
+    private function getWidgetForFrontend(Widget\WidgetObject $widget_object, $content = null) {
 
         $options = $widget_object->getOptions();
 
@@ -282,28 +282,33 @@ class HomeService extends Service
         ];
 
         $widget = $this->getWidget($widget_object->name);
-        $list["title"] = $widget->getTitle($widget_object);
-        $list["url"] = $widget->getLink($widget_object);
+        try {
+            $list["title"] = $widget->getTitle($widget_object);
+            $list["url"] = $widget->getLink($widget_object);
 
-        switch ($widget_object->name) {
-            case "efa":
-                $list["reload"] = 60;
-                break;
-            case "currentweather":
-                $list["reload"] = 3600;
-                break;
-            case "weatherforecast":
-                $list["reload"] = 3600;
-                break;
-            case "shoppinglist":
-                $list["reload"] = 60;
-                break;
+            switch ($widget_object->name) {
+                case "efa":
+                    $list["reload"] = 60;
+                    break;
+                case "currentweather":
+                    $list["reload"] = 3600;
+                    break;
+                case "weatherforecast":
+                    $list["reload"] = 3600;
+                    break;
+                case "shoppinglist":
+                    $list["reload"] = 60;
+                    break;
+            }
+        } catch (\Exception $e) {
+            $this->logger->error("Error with the widget", array("error" => $e->getMessage()));
+            $list["title"] = "";
+            $list["url"] = "";
         }
         return $list;
     }
 
-    public function updatePosition($data)
-    {
+    public function updatePosition($data) {
 
         if (array_key_exists("widgets", $data) && !empty($data["widgets"])) {
             $widgets = filter_var_array($data["widgets"], FILTER_SANITIZE_NUMBER_INT);
@@ -317,12 +322,14 @@ class HomeService extends Service
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function getWidgetData($id, $widget = null, $options = [])
-    {
+    public function getWidgetData($id, $widget = null, $options = []) {
 
         $response_data = [];
 
         if (!is_null($id)) {
+            /**
+             * @var Widget\WidgetObject $widget_object
+             */
             $widget_object = $this->widget_mapper->get($id);
         } else {
             $widget_object = new Widget\WidgetObject(["name" => $widget, "options" => $options]);

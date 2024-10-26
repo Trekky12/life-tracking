@@ -127,26 +127,6 @@ if (assignCategoriesSelector && assignCategoriesBtn && removeCategoriesBtn) {
     });
 }
 
-document.addEventListener('click', function (event) {
-    let checkAllRowsInput = event.target.closest('#checkAllRows');
-    if (checkAllRowsInput) {
-        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
-        checkboxes.forEach(function (checkbox) {
-            if (checkAllRowsInput.checked) {
-                checkbox.checked = true;
-            } else {
-                checkbox.checked = false;
-            }
-        });
-        selectedItems.innerHTML = getSelectedSheets().length;
-    }
-
-    let checkbox = event.target.closest('#timesheets_sheets_table tbody input[type="checkbox"]');
-    if (checkbox) {
-        selectedItems.innerHTML = getSelectedSheets().length;
-    }
-});
-
 function getSelectedSheets() {
     let sheets = [];
     let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]:checked');
@@ -315,14 +295,219 @@ if (applyOptionsBtn) {
 }
 
 var calendarEl = document.getElementById('timesheets_calendar');
+
+const eventModal = document.getElementById("event-modal");
+
 if (calendarEl) {
+
+    let min = calendarEl.dataset.min;
+    let max = calendarEl.dataset.max;
+    let hiddendays = calendarEl.dataset.hiddendays;
+
+    let projectID = calendarEl.dataset.project;
+    let editURL = calendarEl.dataset.edit;
+
+    let savedView = localStorage.getItem('calendarView_' + projectID) || 'timeGridWeek';
+    let savedDate = localStorage.getItem('calendarDate_' + projectID) || new Date();
+
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
+        initialView: savedView,
+        initialDate: savedDate,
         locale: i18n.template,
         events: {
             url: jsObject.timesheets_calendar_events,
+        },
+        headerToolbar: {
+            left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+            center: 'title',
+            right: 'today prev,next'
+        },
+        views: {
+            timeGridWeek: {
+                allDaySlot: false,
+                nowIndicator: true,
+                slotMinTime: min,
+                slotMaxTime: max,
+                hiddenDays: hiddendays
+            },
+            timeGridDay: {
+                allDaySlot: false,
+                nowIndicator: true,
+                slotMinTime: min,
+                slotMaxTime: max,
+                hiddenDays: hiddendays
+            }
+        },
+        datesSet: function (info) {
+            localStorage.setItem('calendarView_' + projectID, info.view.type);
+            localStorage.setItem('calendarDate_' + projectID, info.startStr);
+        },
+        contentHeight: "auto",
+        selectable: true,
+        select: function (info) {
+            loadingWindowOverlay.classList.remove("hidden");
+            window.location.href = `${editURL}&start=${encodeURIComponent(info.startStr)}`;
+        },
+        eventClick: function (info) {
+            //alert('Event: ' + info.event.title);
+            console.log(info.event.extendedProps);
+            let dateContent = eventModal.querySelector(".date");
+            dateContent.textContent = info.event.extendedProps.date;
+
+            let customer = eventModal.querySelector(".customer");
+            let customerName = customer.querySelector(".customerName");
+            if (info.event.extendedProps.customer) {
+                customerName.textContent = info.event.extendedProps.customer;
+            } else {
+                customerName.textContent = "";
+                customer.classList.add("hidden");
+            }
+
+            let categories = eventModal.querySelector(".categories");
+            let categoriesName = categories.querySelector(".categoriesName");
+            if (info.event.extendedProps.categories) {
+                categoriesName.textContent = info.event.extendedProps.categories;
+            } else {
+                categoriesName.textContent = "";
+                categories.classList.add("hidden");
+            }
+
+            let is_part_of_series = info.event.extendedProps.reference_sheet != null || info.event.extendedProps.series.length > 0;
+
+            let state = eventModal.querySelector(".state");
+            if (info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_planned == 0 && !is_part_of_series) {
+                state.classList.add("hidden");
+            } else {
+                state.classList.remove("hidden");
+
+                let billed = eventModal.querySelector(".billed");
+                if (info.event.extendedProps.is_billed == 1) {
+                    billed.classList.remove("hidden");
+                } else {
+                    billed.classList.add("hidden");
+                }
+
+                let payed = eventModal.querySelector(".payed");
+                if (info.event.extendedProps.is_payed == 1) {
+                    payed.classList.remove("hidden");
+                } else {
+                    payed.classList.add("hidden");
+                }
+
+                let planned = eventModal.querySelector(".planned");
+                if (info.event.extendedProps.is_planned == 1) {
+                    planned.classList.remove("hidden");
+                } else {
+                    planned.classList.add("hidden");
+                }
+
+                let series = eventModal.querySelector(".series");
+                let following = eventModal.querySelector('.following');
+
+                let following_list = following.querySelector('ul');
+                following_list.innerHTML = "";
+
+                let following_delete_btn = eventModal.querySelector('.btn-deletefollowing');
+
+                if (is_part_of_series) {
+                    series.classList.remove("hidden");
+                    series.querySelector('.count').innerHTML = info.event.extendedProps.series.length;
+
+                    if (info.event.extendedProps.remaining.length > 0) {
+                        following.classList.remove("hidden");
+                        info.event.extendedProps.remaining.forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = item;
+                            following_list.appendChild(li);
+                        });
+
+                        following_delete_btn.classList.remove("hidden");
+                    } else {
+                        following.classList.add("hidden");
+                        following_delete_btn.classList.add("hidden");
+                    }
+
+                } else {
+                    series.classList.add("hidden");
+                    series.querySelector('.count').innerHTML = "";
+
+                    following.classList.add("hidden");
+                    following_delete_btn.classList.add("hidden");
+                }
+            }
+
+            let editButton = eventModal.querySelector(".btn-edit");
+            editButton.href = info.event.extendedProps.edit;
+
+            let deleteButtons = eventModal.querySelectorAll(".btn-delete");
+            deleteButtons.forEach(deleteButton => {
+                deleteButton.dataset.url = info.event.extendedProps.delete;
+            });
+
+            eventModal.classList.add('visible');
         }
     });
     calendar.render();
+
+    document.getElementById("modal-close-btn").addEventListener('click', function (e) {
+        eventModal.classList.remove('visible');
+    });
+
+    window.addEventListener('beforeprint', function() {
+        console.log("print dialog opened");
+        // Update fullcalender sizes
+        //calendar.setOption('handleWindowResize', false);
+        //calendar.destroy();
+        calendar.setOption("height", 500);
+        setTimeout(function(t){
+            console.log("test");
+            calendar.render();
+
+        }, 1000);
+    });
 }
 
+
+const checkBoxRepeat = document.querySelector('#checkBoxRepeat');
+const repeatsContent = document.querySelector(".repeats-content");
+
+if (checkBoxRepeat && repeatsContent) {
+    checkBoxRepeat.addEventListener('click', function (event) {
+
+        if (checkBoxRepeat.checked) {
+            repeatsContent.classList.remove("hidden");
+        } else {
+            repeatsContent.classList.add("hidden");
+        }
+    });
+
+}
+
+
+
+document.addEventListener('click', function (event) {
+    let checkAllRowsInput = event.target.closest('#checkAllRows');
+    if (checkAllRowsInput) {
+        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            if (checkAllRowsInput.checked) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+        });
+        selectedItems.innerHTML = getSelectedSheets().length;
+    }
+
+    let checkbox = event.target.closest('#timesheets_sheets_table tbody input[type="checkbox"]');
+    if (checkbox) {
+        selectedItems.innerHTML = getSelectedSheets().length;
+    }
+
+    let editButton = event.target.closest('.btn-edit');
+    if (editButton) {
+        if (eventModal) {
+            eventModal.classList.add("hidden");
+        }
+    }
+});

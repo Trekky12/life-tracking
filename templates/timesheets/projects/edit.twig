@@ -113,6 +113,80 @@
 					<input type="text" class="form-control" id="inputCustomersNamePlural" name="customers_name_plural" {% if not entry is null %} value="{{entry.customers_name_plural|raw}}" {% endif %}>
 				</div>
 
+				<h3>{{lang["TIMESHEETS_CALENDAR"]}}</h3>
+				<div class="form-group">
+					<label for="inputSlotMinTime">{{lang["TIMESHEETS_SLOT_MIN_TIME"]}}</label>
+					<input type="text" class="form-control duration-input html-duration-picker" id="inputSlotMinTime" name="slot_min_time" value="{% if not entry is null %}{{entry.slot_min_time}}{% endif %}"/>
+				</div>
+
+				<div class="form-group">
+					<label for="inputSlotMaxTime">{{lang["TIMESHEETS_SLOT_MAX_TIME"]}}</label>
+					<input type="text" class="form-control duration-input html-duration-picker" id="inputSlotMaxTime" name="slot_max_time" value="{% if not entry is null %}{{entry.slot_max_time}}{% endif %}"/>
+				</div>
+
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHideMonday">
+						<input name="hide_monday" type="checkbox" value="1" id="checkboxHideMonday" {% if entry is not null and entry.hide_monday == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HIDE_MONDAY"]}}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHideTuesday">
+						<input name="hide_tuesday" type="checkbox" value="1" id="checkboxHideTuesday" {% if entry is not null and entry.hide_tuesday == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HIDE_TUESDAY"]}}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHideWednesday">
+						<input name="hide_wednesday" type="checkbox" value="1" id="checkboxHideWednesday" {% if entry is not null and entry.hide_wednesday == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HIDE_WEDNESDAY"]}}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHideThursday">
+						<input name="hide_thursday" type="checkbox" value="1" id="checkboxHideThursday" {% if entry is not null and entry.hide_thursday == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HIDE_THURSDAY"]}}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHideFriday">
+						<input name="hide_friday" type="checkbox" value="1" id="checkboxHideFriday" {% if entry is not null and entry.hide_friday == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HIDE_FRIDAY"]}}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHideSaturday">
+						<input name="hide_saturday" type="checkbox" value="1" id="checkboxHideSaturday" {% if entry is not null and entry.hide_saturday == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HIDE_SATURDAY"]}}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHideSunday">
+						<input name="hide_sunday" type="checkbox" value="1" id="checkboxHideSunday" {% if entry is not null and entry.hide_sunday == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_HIDE_SUNDAY"]}}
+					</label>
+				</div>
+
+				<h3>{{lang["TIMESHEETS_REPEAT"]}}</h3>
+				<div class="form-group">
+					<label for="inputCount">{{lang["TIMESHEETS_REPEAT_COUNT"]}}</label>
+					<input type="number" class="form-control" id="inputCount" name="repeat_count" step="1" pattern="\d*" value="{% if not entry is null %}{{entry.repeat_count}}{% else %}0{% endif %}">
+				</div>
+				<div class="form-group">
+					<label for="inputUnit">{{lang["UNIT"]}}</label>
+					<div class="select-wrapper form-control">
+						<select id="inputUnit" name="repeat_unit">
+							{% for unit, unitName in units %}
+								<option value="{{unit}}" {% if (not entry is null and unit == entry.repeat_unit) or (entry is null and unit == 'week') %} selected {% endif %}>{{lang[unitName]}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inputMultiplier">{{lang["MULTIPLIER"]}}</label>
+					<input type="number" class="form-control" id="inputMultiplier" name="repeat_multiplier" step="1" pattern="\d*" value="{% if not entry is null %}{{entry.repeat_multiplier}}{% else %}1{% endif %}">
+				</div>
+
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}

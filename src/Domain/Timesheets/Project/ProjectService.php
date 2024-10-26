@@ -61,7 +61,8 @@ class ProjectService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, [
             'entry' => $entry,
-            'isTimesheetProject' => true
+            'isTimesheetProject' => true,
+            'units' => Project::getUnits()
         ]);
     }
 
