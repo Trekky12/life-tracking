@@ -74,12 +74,14 @@ class StackService extends Service {
             $type = $data["archive"] == 0 ? 'unarchived' : 'archived';
 
             if (array_key_exists("cards", $data) && in_array($data["cards"], array(0, 1))) {
+
+                $cards = $this->card_mapper->getCardIDsFromStack($entry_id, $data["archive"] == 0 ? 1 : 0);
+
                 $is_archived_cards = $this->card_mapper->setArchiveByStack($entry_id, $data["archive"], $user);
 
                 $is_archived = $is_archived && $is_archived_cards;
 
                 if ($is_archived_cards) {
-                    $cards = $this->card_mapper->getCardIDsFromStack($entry_id);
                     foreach ($cards as $card) {
                         $activity = $this->activity_creator->createChildActivity($type, "boards", $card["id"], $card["title"], $link, $this->board_mapper, $board->id);
                         $this->activity_creator->saveActivity($activity);

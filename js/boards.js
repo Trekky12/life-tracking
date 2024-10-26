@@ -16,6 +16,7 @@ if (res !== null && res.length > 1) {
 
 const loadingIconBoard = document.querySelector('#loadingIconBoard');
 const stacksWrapper = document.querySelector('.stack-wrapper');
+const boardID = stacksWrapper.dataset.board;
 const new_stack_element = document.querySelector('#templates .stack-dummy');
 
 let boardData = [];
@@ -1128,16 +1129,29 @@ sidebarToggle.addEventListener('click', function (event) {
 /**
  * Show archived items?
  */
-let checkBoxArchivedItems = document.getElementById('checkboxArchivedItems');
-checkBoxArchivedItems.addEventListener('click', function (event) {
 
+function setArchived() {
     if (checkBoxArchivedItems.checked) {
         stacksWrapper.classList.remove("hide-archived");
+        setCookie('board_' + boardID + '_show-archived', 1);
     } else {
         stacksWrapper.classList.add("hide-archived");
+        setCookie('board_' + boardID + '_show-archived', 0);
     }
+}
+
+let checkBoxArchivedItems = document.getElementById('checkboxArchivedItems');
+checkBoxArchivedItems.addEventListener('click', function (event) {
+    setArchived();
+
     return;
 });
+
+let showArchived = parseInt(getCookie('board_' + boardID + '_show-archived', 10)) == 1;
+checkBoxArchivedItems.checked = showArchived;
+setArchived();
+
+
 
 /**
  * Auto Update page

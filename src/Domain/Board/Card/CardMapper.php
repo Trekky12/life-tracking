@@ -58,10 +58,15 @@ class CardMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getCardIDsFromStack($stack) {
-        $sql = "SELECT id, title FROM " . $this->getTableName() . " WHERE stack = :stack ";
+    public function getCardIDsFromStack($stack, $archive = null) {
+        $sql = "SELECT id, title, archive FROM " . $this->getTableName() . " WHERE stack = :stack ";
 
         $bindings = ["stack" => $stack];
+
+        if (!is_null($archive)) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
