@@ -25,7 +25,7 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
         $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
 
         $this->main_category = $this->exists('main_category', $data) ? filter_var($data['main_category'], FILTER_SANITIZE_NUMBER_INT) : null;
-        
+
         $this->customer = $this->exists('customer', $data) ? filter_var($data['customer'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->start = $this->exists('start', $data) ? $data['start'] : null;
@@ -47,7 +47,7 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
          */
         $set_value = $this->exists('set_value', $data) ? filter_var($data['set_value'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($set_value)) {
-            $this->value = $this->categorization != "count" ?DateUtility::getSecondsFromDuration($set_value): intval($set_value);
+            $this->value = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_value) : intval($set_value);
         }
 
         $set_warning1 = $this->exists('set_warning1', $data) ? filter_var($data['set_warning1'], FILTER_SANITIZE_STRING) : null;
@@ -56,11 +56,11 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
         }
         $set_warning2 = $this->exists('set_warning2', $data) ? filter_var($data['set_warning2'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($set_warning2)) {
-            $this->warning2 = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_warning2): intval($set_warning2);
+            $this->warning2 = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_warning2) : intval($set_warning2);
         }
         $set_warning3 = $this->exists('set_warning3', $data) ? filter_var($data['set_warning3'], FILTER_SANITIZE_STRING) : null;
         if (!is_null($set_warning3)) {
-            $this->warning3 = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_warning3): intval($set_warning3);
+            $this->warning3 = $this->categorization != "count" ? DateUtility::getSecondsFromDuration($set_warning3) : intval($set_warning3);
         }
     }
 
@@ -75,5 +75,4 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
     public function getTimeValue() {
         return DateUtility::splitDateInterval($this->value, true);
     }
-
 }

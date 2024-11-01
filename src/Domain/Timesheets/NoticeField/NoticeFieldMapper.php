@@ -9,10 +9,15 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
     protected $select_results_of_user_only = false;
     protected $insert_user = true;
 
-    public function getFromProject($id, $order = 'position ASC') {
+    public function getFromProject($id, $type = null, $order = 'position ASC') {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE project = :id ";
 
         $bindings = array("id" => $id);
+
+        if (!is_null($type)) {
+            $sql .= " AND type = :type";
+            $bindings["type"] = $type;
+        }
 
         if (!is_null($order)) {
             $sql .= " ORDER BY {$order}";
@@ -29,9 +34,9 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function set_default($default) {
-        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id = :id";
-        $bindings = array("id" => $default, "is_default" => 1);
+    public function set_default($default, $type = 'sheet') {
+        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id = :id AND type = :type";
+        $bindings = array("id" => $default, "is_default" => 1, "type" => $type);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -40,9 +45,9 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function unset_default($default) {
-        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id != :id";
-        $bindings = array("id" => $default, "is_default" => 0);
+    public function unset_default($default, $type = 'sheet') {
+        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id != :id AND type = :type";
+        $bindings = array("id" => $default, "is_default" => 0, "type" => $type);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -51,10 +56,10 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function get_default() {
-        $sql = "SELECT id FROM " . $this->getTableName() . " WHERE is_default = :is_default";
+    public function get_default($type = 'sheet') {
+        $sql = "SELECT id FROM " . $this->getTableName() . " WHERE is_default = :is_default AND type = :type";
 
-        $bindings = array("is_default" => 1);
+        $bindings = array("is_default" => 1, "type" => $type);
         $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " LIMIT 1";

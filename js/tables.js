@@ -1057,7 +1057,7 @@ var timesheetsCustomersTable = new JSTable("#project_customers_table", {
             sort: "asc"
         },
         {
-            select: [2, 3],
+            select: [2, 3, 4],
             sortable: false,
             searchable: false
         }

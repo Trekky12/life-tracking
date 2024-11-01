@@ -281,7 +281,6 @@ return function (App $app) {
         $group->post('/setMailCategoryUser', \App\Application\Action\MailNotifications\MailNotificationsSetCategoryAction::class)->setName('mail_notifications_set_category_user');
 
         $group->get('/getUnreadNotifications', \App\Application\Action\Notifications\NotificationsUnreadAction::class)->setName('notifications_unread');
-
     });
 
     $app->group('/boards', function (RouteCollectorProxy $group) {
@@ -462,6 +461,7 @@ return function (App $app) {
                 $group_sheets->group('/notice/{sheet:[0-9]+}', function (RouteCollectorProxy $group_notice) {
                     $group_notice->get('/edit/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeEditAction::class)->setName('timesheets_sheets_notice_edit');
                     $group_notice->post('/save/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeSaveAction::class)->setName('timesheets_sheets_notice_save');
+                    $group_notice->get('/view/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeViewAction::class)->setName('timesheets_sheets_notice_view');
                 });
             });
 
@@ -504,6 +504,13 @@ return function (App $app) {
                 $group_customers->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerEditAction::class)->setName('timesheets_customers_edit');
                 $group_customers->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerSaveAction::class)->setName('timesheets_customers_save');
                 $group_customers->delete('/delete/{id}', \App\Application\Action\Timesheets\Customer\CustomerDeleteAction::class)->setName('timesheets_customers_delete');
+
+                $group_customers->get('/notice/', \App\Application\Action\Timesheets\CustomerNotice\CustomerNoticeDataAction::class)->setName('timesheets_customers_notice_data');
+                $group_customers->group('/notice/{customer:[0-9]+}', function (RouteCollectorProxy $group_notice) {
+                    $group_notice->get('/edit/', \App\Application\Action\Timesheets\CustomerNotice\CustomerNoticeEditAction::class)->setName('timesheets_customers_notice_edit');
+                    $group_notice->post('/save/', \App\Application\Action\Timesheets\CustomerNotice\CustomerNoticeSaveAction::class)->setName('timesheets_customers_notice_save');
+                    $group_notice->get('/view/', \App\Application\Action\Timesheets\CustomerNotice\CustomerNoticeViewAction::class)->setName('timesheets_customers_notice_view');
+                });
             });
 
 

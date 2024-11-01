@@ -633,6 +633,7 @@ $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "timesheets project";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "timesheets sheet";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "timesheets category";
 $lang["DATAOBJECT_TIMESHEETS_SHEET_NOTICE"] = "notice to timesheets sheet";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER_NOTICE"] = "notice to customer";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "trip event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "trip";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "route";

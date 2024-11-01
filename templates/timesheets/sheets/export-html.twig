@@ -93,20 +93,8 @@
 					<h4>{{lang["DIFFERENCE"]}}:
 						{{ sheet["time"] }}</h4>
 
-					<div class="timesheet-notice" data-sheet="{{ sheet["id"] }}">
-						{% if fields %}
-							{% for field in fields %}
-								<div class="timesheet-notice-field">
-									<h4>{{field.description|raw}}:</h4>
-									<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></p>
-								</div>
-							{% endfor %}
-						{% else %}
-							<div class="timesheet-notice-field">
-								<h4>{{ lang["NOTICE"] }}:</h4>
-								<p class="notice-field" data-default="1"></p>
-							</div>
-						{% endif %}
+					<div class="timesheet-notice" data-id="{{ sheet["id"] }}" data-type="sheet">
+						{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
 					</div>
 				</div>
 			</div>

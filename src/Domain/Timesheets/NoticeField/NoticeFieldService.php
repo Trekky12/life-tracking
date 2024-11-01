@@ -62,8 +62,8 @@ class NoticeFieldService extends Service {
         ];
     }
 
-    public function getNoticeFields($project){
-        return $this->mapper->getFromProject($project);
+    public function getNoticeFields($project, $type = 'sheet'){
+        return $this->mapper->getFromProject($project, $type);
     }
 
 }

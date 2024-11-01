@@ -243,7 +243,8 @@ class SheetMapper extends \App\Domain\Mapper {
             . "t.is_payed, "
             . "t.is_planned, "
             . "t.reference_sheet, "
-            . "tcus.name as customerName";
+            . "tcus.name as customerName, "
+            . "tcus.id as customer";
 
         list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed, $planned, $customer);
 

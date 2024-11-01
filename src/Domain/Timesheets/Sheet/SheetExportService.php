@@ -13,8 +13,7 @@ use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 
-class SheetExportService extends Service
-{
+class SheetExportService extends Service {
 
     private $translation;
     private $project_service;
@@ -41,8 +40,7 @@ class SheetExportService extends Service
         $this->notice_fields_service = $notice_fields_service;
     }
 
-    public function export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer)
-    {
+    public function export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -60,8 +58,7 @@ class SheetExportService extends Service
         return $this->exportHTML($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
     }
 
-    private function exportExcel($project, $from, $to, $categories, $billed, $payed, $planned, $customer)
-    {
+    private function exportExcel($project, $from, $to, $categories, $billed, $payed, $planned, $customer) {
 
         // get Data
         $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
@@ -102,7 +99,7 @@ class SheetExportService extends Service
             $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE"));
         }
 
-        $customerDescription = $project->customer_name_singular ? $project->customer_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+        $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
         $sheet->setCellValue('F4', $customerDescription);
         $sheet->setCellValue('G4', $this->translation->getTranslatedString("CATEGORIES"));
         $sheet->getStyle('A4:G4')->applyFromArray(
@@ -256,8 +253,7 @@ class SheetExportService extends Service
         return new Payload(Payload::$RESULT_EXCEL, $body);
     }
 
-    private function exportWord($project, $from, $to, $categories, $billed, $payed, $planned, $customer)
-    {
+    private function exportWord($project, $from, $to, $categories, $billed, $payed, $planned, $customer) {
         // get Data
         $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
 
@@ -293,7 +289,7 @@ class SheetExportService extends Service
             }
 
             if (!is_null($timesheet->customerName)) {
-                $customerDescription = $project->customer_name_singular ? $project->customer_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+                $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
                 $section->addText(sprintf("%s: %s", $customerDescription, $timesheet->customerName));
             }
 
@@ -347,8 +343,7 @@ class SheetExportService extends Service
         return new Payload(Payload::$RESULT_WORD, $body);
     }
 
-    private function exportHTML($project, $from, $to, $categories, $billed, $payed, $planned, $customer)
-    {
+    private function exportHTML($project, $from, $to, $categories, $billed, $payed, $planned, $customer) {
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -395,7 +390,7 @@ class SheetExportService extends Service
             "project" => $project,
             "hasTimesheetNotice" => true,
             "sheets" => $sheets,
-            "fields" => $this->notice_fields_service->getNoticeFields($project->id)
+            "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet')
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);

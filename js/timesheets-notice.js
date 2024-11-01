@@ -5,12 +5,15 @@ const timesheetNoticeWrapper = document.querySelector("#timesheetNoticeWrapper")
 const loadingIconTimesheetNotice = document.querySelector("#loadingIconTimesheetNotice");
 
 const timesheetNoticeForm = document.querySelector("#timesheetNoticeForm");
+const timesheetLastSavedWrapper = document.querySelector("#lastSavedWrapper");
 const timesheetLastSaved = document.querySelector("#lastSaved");
 
 const alertError = document.querySelector("#alertError");
 const alertErrorDetail = alertError.querySelector("#alertErrorDetail");
 
 const projectID = parseInt(timesheetNoticeWrapper.dataset.project);
+
+let checkboxHideEmptyNoticeFields = document.getElementById('checkboxHideEmptyNoticeFields');
 
 if (!window.crypto || !window.crypto.subtle) {
     alertErrorDetail.innerHTML = lang.decrypt_error;
@@ -23,7 +26,7 @@ if (!window.crypto || !window.crypto.subtle) {
     }
 }
 
-let currentNotice;
+let currentNotice = getNoticeData();
 
 let KEK, masterKey;
 
@@ -39,6 +42,7 @@ async function checkPassword() {
             await createAndStoreKEK(pw);
             KEK = await getKEKfromStore();
         } catch (e) {
+            console.log(e);
             alertErrorDetail.innerHTML = lang.decrypt_error;
             alertError.classList.remove("hidden");
 
@@ -69,13 +73,12 @@ async function checkPassword() {
 
     // Sequential
     for (const notice_field of notice_fields) {
-        let sheet_id = parseInt(notice_field.dataset.sheet);
         let notice;
 
         try {
-            notice = await getNotice(sheet_id);
+            notice = await getNotice(notice_field.dataset);
         } catch (e) {
-            alertErrorDetail.innerHTML = lang.encrypt_error;
+            alertErrorDetail.innerHTML = lang.decrypt_error;
             alertError.classList.remove("hidden");
             document.getElementById("loading-overlay").classList.add("hidden");
 
@@ -108,7 +111,6 @@ async function checkPassword() {
 
                     }
 
-
                 }
 
             } else {
@@ -134,6 +136,13 @@ async function checkPassword() {
         } else {
             notice_field.closest('.timesheet-notice-wrapper').dataset.empty = 1;
         }
+
+        // Hide empty fields 
+        if (checkboxHideEmptyNoticeFields && checkboxHideEmptyNoticeFields.checked) {
+            document.querySelectorAll('.timesheet-notice-field[data-empty="1"], .timesheet-notice-wrapper[data-empty="1"] .timesheet-notice-field').forEach(function (el) {
+                el.classList.add("hidden");
+            });
+        }
     }
 
     // Parallel
@@ -153,14 +162,24 @@ async function checkPassword() {
     timesheetNoticeWrapper.classList.remove("hidden");
 }
 
-async function getNotice(sheet_id) {
+async function getNotice(dataset) {
 
     if (!masterKey) {
         console.error(`masterKey missing`);
         throw "masterKey missing";
     }
 
-    let notice_response = await fetch(jsObject.timesheets_sheets_notice_data + '?sheet=' + sheet_id, {
+    let parent_id = dataset.id;
+    let type = dataset.type
+
+    let url = "";
+    if (type == "sheet") {
+        url = jsObject.timesheets_sheets_notice_data;
+    } else if (type == "customer") {
+        url = jsObject.timesheets_customers_notice_data;
+    }
+
+    let notice_response = await fetch(url + '?id=' + parent_id, {
         method: "GET",
         credentials: "same-origin",
     });
@@ -170,8 +189,13 @@ async function getNotice(sheet_id) {
         let notice = notice_result.entry.notice;
         let encryptedCEK = notice_result.entry.encryptedCEK;
 
-        if (timesheetLastSaved) {
-            timesheetLastSaved.innerHTML = moment(notice_result.entry.changedOn).format(i18n.dateformatJS.datetime);
+        if (timesheetLastSavedWrapper) {
+            if (timesheetLastSaved) {
+                timesheetLastSaved.innerHTML = moment(notice_result.entry.changedOn).format(i18n.dateformatJS.datetime);
+                timesheetLastSavedWrapper.classList.remove("hidden");
+            } else {
+                timesheetLastSavedWrapper.classList.add("hidden");
+            }
         }
 
         let CEK;
@@ -217,10 +241,13 @@ if (timesheetNoticeForm) {
      */
     setInterval(async function () {
         saveNotice(true);
-    }, 2*60*1000);
+    }, 2 * 60 * 1000);
 }
 
 function getNoticeData() {
+    if (!timesheetNoticeForm) {
+        return;
+    }
     let notice_fields = Array.from(timesheetNoticeForm.querySelectorAll('input[type="text"], textarea, select'));
     let notice = {};
     for (const field of notice_fields) {
@@ -287,8 +314,14 @@ async function saveNotice(autoSave = false) {
             // store updated notice for next update
             currentNotice = noticeData;
             // update last saved
-            if (timesheetLastSaved) {
-                timesheetLastSaved.innerHTML = moment(result.entry.changedOn).format(i18n.dateformatJS.datetime);
+
+            if (timesheetLastSavedWrapper) {
+                if (timesheetLastSaved) {
+                    timesheetLastSaved.innerHTML = moment(result.entry.changedOn).format(i18n.dateformatJS.datetime);
+                    timesheetLastSavedWrapper.classList.remove("hidden");
+                } else {
+                    timesheetLastSavedWrapper.classList.add("hidden");
+                }
             }
         }
         if (!autoSave) {
@@ -436,7 +469,7 @@ if (checkboxHideEmptySheets) {
     });
 }
 
-let checkboxHideEmptyNoticeFields = document.getElementById('checkboxHideEmptyNoticeFields');
+
 if (checkboxHideEmptyNoticeFields) {
     checkboxHideEmptyNoticeFields.addEventListener('click', function (event) {
         document.querySelectorAll('.timesheet-notice-field[data-empty="1"], .timesheet-notice-wrapper[data-empty="1"] .timesheet-notice-field').forEach(function (el) {

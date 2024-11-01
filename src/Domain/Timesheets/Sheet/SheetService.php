@@ -588,7 +588,6 @@ class SheetService extends Service {
                     $remaining_sheets = $series_ids;
                 }
 
-
                 $remaining = array_map(function ($sheet) use ($language, $dateFormatPHP) {
                     list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
                     return sprintf("%s: %s - %s", $date, $start, $end);
@@ -600,7 +599,7 @@ class SheetService extends Service {
                 'start' => $st->format('Y-m-d H:i:s'),
                 'end' => $e->format('Y-m-d H:i:s'),
                 'extendedProps' => [
-                    'edit' => $this->router->urlFor('timesheets_sheets_edit', ['id' => $timesheet->id, 'project' => $project->getHash()]),
+                    'edit' => $this->router->urlFor('timesheets_sheets_edit', ['id' => $timesheet->id, 'project' => $project->getHash()]) . "?view=calendar",
                     'delete' => $this->router->urlFor('timesheets_sheets_delete', ['id' => $timesheet->id, 'project' => $project->getHash()]),
                     'start' => $st->format('Y-m-d H:i:s'),
                     'end' => $e->format('Y-m-d H:i:s'),
@@ -612,7 +611,9 @@ class SheetService extends Service {
                     'is_payed' => $timesheet->is_payed,
                     'reference_sheet' => $timesheet->reference_sheet,
                     'series' => $series_ids,
-                    'remaining' => $remaining
+                    'remaining' => $remaining,
+                    'sheet_notice' => $timesheet->id ? $this->router->urlFor('timesheets_sheets_notice_view', ['sheet' => $timesheet->id, 'project' => $project->getHash()]) . "?view=calendar" : null,
+                    'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null
                 ]
             ];
         }

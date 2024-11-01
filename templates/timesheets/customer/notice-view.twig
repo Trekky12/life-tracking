@@ -1,0 +1,81 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block javascript %}
+	<script src="{{baseURL}}/static/assets/js/docxjs.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/FileSaver.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice-export.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{% if view =="calendar" %}{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}{% else %}{{ url_for_with_last_query_params('timesheets_customers', {'project' : project.hash}) }}{% endif %}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{lang["TIMESHEETS"]}}
+				{{ lang["NOTICE"] }}|
+				{{project.name|raw}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('timesheets_customers_notice_edit', {'customer': customer.id, 'project': project.getHash()}) }}{% if view %}?view={{view}}{% endif %}">
+				<button class="button button-outlined">{{lang["EDIT"]}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+
+	<div class="inner-content">
+		<div class="page-content">
+			<div class="search-filter">
+				<div class="filter-row">
+					<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
+						<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields" checked="checked">
+						{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"]}}
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="inner-content">
+		<div class="page-content">
+
+			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+			</div>
+
+			<div id="alertError" class="alert danger hidden">
+				<span class="closebtn">&times;</span>
+				<span class="alert-message">
+					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p id="alertErrorDetail"></p>
+				</span>
+			</div>
+			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden" data-name="{{customer.name}}" data-projectname="{{project.name}}">
+
+				<div class="timesheet-notice-wrapper">
+
+					<h3 class="sheet_title">{{ customer.name }}</h3>
+					<small id="lastSavedWrapper" class="hidden">{{ lang["LAST_SAVED"]}}:
+						<span id="lastSaved"></span>
+					</small>
+
+					<div class="timesheet-notice" data-id="{{ customer.id }}" data-type="customer">
+						{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
+					</div>
+				</div>
+
+				<div class="form-group btn">
+					<button type="button" class="button button-outlined" id="wordExport">{{lang["EXPORT_WORD"]}}
+						{{lang["TIMESHEETS_EXPORT"]}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

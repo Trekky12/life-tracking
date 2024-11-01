@@ -33,6 +33,18 @@
 				</div>
 
 				<div class="form-group">
+					<label class="checkbox" for="radioTypeSheet">
+						<input name="type" type="radio" value="sheet" id="radioTypeSheet" {% if (entry is null) or (entry is not null and entry.type == "sheet" )%} checked="checked" {% endif %}>
+						{{lang["DATAOBJECT_TIMESHEETS_SHEET"]}}
+					</label>
+					<br/>
+					<label class="checkbox" for="radioTypeCustomer">
+						<input name="type" type="radio" value="customer" id="radioTypeCustomer" {% if (entry is not null and entry.type == "customer" )%} checked="checked" {% endif %}>
+						{{lang["TIMESHEETS_CUSTOMER"]}}
+					</label>
+				</div>
+
+				<div class="form-group">
 					<label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
 					<input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %} value="{{entry.description|raw}}" {% endif %}>
 				</div>
@@ -43,7 +55,7 @@
 				</div>
 
 				<div class="form-group">
-					<label for="datatype">{{lang["DATA_TYPE"]}}</label>#
+					<label for="datatype">{{lang["DATA_TYPE"]}}</label>
 					<div class="select-wrapper form-control">
 						<select id="datatype" name="datatype">
 							{% for key, name in dataTypes %}

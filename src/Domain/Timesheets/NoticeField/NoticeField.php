@@ -17,8 +17,14 @@ class NoticeField extends \App\Domain\DataObject {
 
         $this->description = $this->exists('description', $data) ? filter_var($data['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
+        $this->type = $this->exists('type', $data) ? trim(filter_var($data['type'], FILTER_SANITIZE_STRING)) : null;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
+        }
+
+        if (!in_array($this->type, array("sheet", "customer"))) {
+            $this->type = "customer";
         }
     }
 

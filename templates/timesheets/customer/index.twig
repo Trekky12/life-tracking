@@ -36,6 +36,7 @@
 						<th>{{lang["ARCHIVED"]}}</th>
 						<th></th>
 						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -43,6 +44,15 @@
 						<tr>
 							<td>{{customer.name}}</td>
 							<td>{{customer.archive}}</td>
+							<td>
+								<a href="{{ url_for('timesheets_customers_notice_edit', {'customer' : customer.id, 'project' : project.hash}) }}">
+									{% if customer.id in hasNotices %}
+										{{lang["TIMESHEETS_NOTICE_EDIT"]}}
+									{% else %}
+										{{ lang["TIMESHEETS_NOTICE_ADD"] }}
+									{% endif %}
+								</a>
+							</td>
 							<td>
 								<a href="{{ url_for('timesheets_customers_edit', {'id' : customer.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 							</td>

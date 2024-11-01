@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Timesheets\SheetNotice\SheetNoticeService;
 use App\Application\Responder\HTMLTemplateResponder;
 
-class SheetNoticeEditAction {
+class SheetNoticeViewAction {
 
     private $responder;
     private $service;
@@ -22,7 +22,7 @@ class SheetNoticeEditAction {
         $sheet_id = $request->getAttribute('sheet');
         $requestData = $request->getQueryParams();     
         $data = $this->service->edit($project_hash, $sheet_id, $requestData);
-        return $this->responder->respond($data->withTemplate('timesheets/sheets/notice.twig'));
+        return $this->responder->respond($data->withTemplate('timesheets/sheets/notice-view.twig'));
     }
 
 }

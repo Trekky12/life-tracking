@@ -5,7 +5,7 @@ const wrapper = document.querySelector("#timesheetNoticeWrapper");
 document.querySelector('#wordExport').addEventListener('click', function (e) {
     e.preventDefault();
 
-    let filename = wrapper.dataset.sheetname ? wrapper.dataset.sheetname : wrapper.dataset.projectname;
+    let filename = wrapper.dataset.name ? wrapper.dataset.name : wrapper.dataset.projectname;
 
     const word_elements = [];
 
@@ -55,8 +55,12 @@ document.querySelector('#wordExport').addEventListener('click', function (e) {
         });
 
         word_elements.push(headline);
-        word_elements.push(subheadline);
-        word_elements.push(subheadline2);
+        if (customerElement) {
+            word_elements.push(subheadline);
+        }
+        if (categoriesElement) {
+            word_elements.push(subheadline2);
+        }
 
 
         let field_element_wrappers = notice_field.querySelectorAll('.timesheet-notice-field:not(.hidden)');

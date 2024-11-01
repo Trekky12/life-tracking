@@ -632,6 +632,7 @@ $lang["DATAOBJECT_TIMESHEETS_PROJECT"] = "Zeiterfassungsprojekt";
 $lang["DATAOBJECT_TIMESHEETS_SHEET"] = "Zeiterfassungseintrag";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "Kategorie";
 $lang["DATAOBJECT_TIMESHEETS_SHEET_NOTICE"] = "Notiz zum Zeiterfassungseintrag";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER_NOTICE"] = "Notiz zum Kunden";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "Reise-Event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "Reise";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "Route";

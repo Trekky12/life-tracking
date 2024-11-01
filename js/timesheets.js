@@ -358,9 +358,18 @@ if (calendarEl) {
             let customerName = customer.querySelector(".customerName");
             if (info.event.extendedProps.customer) {
                 customerName.textContent = info.event.extendedProps.customer;
+                customer.classList.remove("hidden");
             } else {
                 customerName.textContent = "";
                 customer.classList.add("hidden");
+            }
+
+            let customerNoticeButton = customer.querySelector(".customer-notice-btn");
+            if (info.event.extendedProps.customer_notice) {
+                customerNoticeButton.href = info.event.extendedProps.customer_notice;
+                customerNoticeButton.classList.remove("hidden");
+            } else {
+                customerNoticeButton.classList.add("hidden");
             }
 
             let categories = eventModal.querySelector(".categories");
@@ -436,6 +445,14 @@ if (calendarEl) {
                 }
             }
 
+            let sheetNoticeButton = eventModal.querySelector(".sheet-notice-btn");
+            if (info.event.extendedProps.sheet_notice) {
+                sheetNoticeButton.href = info.event.extendedProps.sheet_notice;
+                sheetNoticeButton.classList.remove("hidden");
+            } else {
+                sheetNoticeButton.classList.add("hidden");
+            }
+
             let editButton = eventModal.querySelector(".btn-edit");
             editButton.href = info.event.extendedProps.edit;
 
@@ -451,19 +468,6 @@ if (calendarEl) {
 
     document.getElementById("modal-close-btn").addEventListener('click', function (e) {
         eventModal.classList.remove('visible');
-    });
-
-    window.addEventListener('beforeprint', function() {
-        console.log("print dialog opened");
-        // Update fullcalender sizes
-        //calendar.setOption('handleWindowResize', false);
-        //calendar.destroy();
-        calendar.setOption("height", 500);
-        setTimeout(function(t){
-            console.log("test");
-            calendar.render();
-
-        }, 1000);
     });
 }
 
@@ -504,10 +508,11 @@ document.addEventListener('click', function (event) {
         selectedItems.innerHTML = getSelectedSheets().length;
     }
 
-    let editButton = event.target.closest('.btn-edit');
-    if (editButton) {
+    // Hide modal when any link on the modal is clicked
+    let modalButtons = event.target.closest('#event-modal a');
+    if (modalButtons) {
         if (eventModal) {
-            eventModal.classList.add("hidden");
+            eventModal.classList.remove('visible');
         }
     }
 });

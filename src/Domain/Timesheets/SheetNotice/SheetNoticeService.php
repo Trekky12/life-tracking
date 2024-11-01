@@ -39,7 +39,7 @@ class SheetNoticeService extends Service {
         $this->settings = $settings;
     }
 
-    public function edit($hash, $sheet_id) {
+    public function edit($hash, $sheet_id, $requestData) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -67,7 +67,9 @@ class SheetNoticeService extends Service {
 
         $sheet_customer = $this->sheet_mapper->getCustomerNameFromSheet($sheet->id);
 
-        $fields = $this->noticefield_service->getNoticeFields($project->id);
+        $fields = $this->noticefield_service->getNoticeFields($project->id, 'sheet');
+
+        $view = array_key_exists("view", $requestData) ? filter_var($requestData["view"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
         $response_data = [
             'sheet' => $sheet,
@@ -77,7 +79,8 @@ class SheetNoticeService extends Service {
             'sheet_title_formatted' => $sheet_title_formatted,
             'project' => $project,
             'hasTimesheetNotice' => true,
-            'fields' => $fields
+            'fields' => $fields,
+            'view' => $view
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);

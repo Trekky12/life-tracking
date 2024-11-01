@@ -13,7 +13,7 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<a href="{% if view =="calendar" %}{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}{% else %}{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}{% endif %}">
+			<a href="{% if view =="calendar" %}{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}{% else %}{{ url_for_with_last_query_params('timesheets_customers', {'project' : project.hash}) }}{% endif %}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
 			<h2>{{lang["TIMESHEETS"]}}
@@ -38,35 +38,20 @@
 					<p id="alertErrorDetail"></p>
 				</span>
 			</div>
-			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden" data-name="{{sheet_title_formatted}}" data-projectname="{{project.name}}">
+			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden" data-name="{{customer.name}}" data-projectname="{{project.name}}">
 
-				<form id="timesheetNoticeForm" class="form-horizontal" action="{{ url_for('timesheets_sheets_notice_save', {'sheet': sheet.id, 'project': project.hash}) }}" method="POST">
+				<form id="timesheetNoticeForm" class="form-horizontal" action="{{ url_for('timesheets_customers_notice_save', {'customer': customer.id, 'project': project.hash}) }}" method="POST">
 					<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
 					<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
 					<div class="timesheet-notice-wrapper">
 
-						<h3 class="sheet_title">{{ sheet_title }}</h3>
+						<h3 class="sheet_title">{{ customer.name }}</h3>
 						<small id="lastSavedWrapper" class="hidden">{{ lang["LAST_SAVED"]}}:
 							<span id="lastSaved"></span>
 						</small>
-						{% if sheet_customer %}
-							<h4 class="sheet_customer">
-								{%- if project.customers_name_singular %}
-									{{- project.customers_name_singular -}}
-								{% else %}
-									{{- lang["TIMESHEETS_CUSTOMER"] -}}
-								{% endif -%}:&nbsp;
-								{{- sheet_customer -}}
-							</h4>
-						{% endif %}
-						{% if sheet_categories %}
-							<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
-								{{- sheet_categories -}}
-							</h4>
-						{% endif %}
 
-						<div class="timesheet-notice" data-id="{{ sheet.id }}" data-type="sheet">
+						<div class="timesheet-notice" data-id="{{ customer.id }}" data-type="customer">
 							{% include "timesheets/noticefield/fields-edit.twig" with {fields} only %}
 						</div>
 					</div>

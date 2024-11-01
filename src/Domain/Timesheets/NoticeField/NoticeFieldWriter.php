@@ -67,17 +67,17 @@ class NoticeFieldWriter extends ObjectActivityWriter {
     }
 
     private function setDefaultCategoryWhenNotSet($id) {
-        $cat = $this->mapper->get($id);
+        $cat = $this->getMapper()->get($id);
 
         // Set all other non-default, since there can only be one default category
         if ($cat->is_default == 1) {
-            $this->mapper->unset_default($id);
+            $this->getMapper()->unset_default($id, $cat->type);
         }
 
         // when there is no default make this the default
-        $default = $this->mapper->get_default();
+        $default = $this->getMapper()->get_default($cat->type);
         if (is_null($default)) {
-            $this->mapper->set_default($id);
+            $this->getMapper()->set_default($id, $cat->type);
         }
     }
 
