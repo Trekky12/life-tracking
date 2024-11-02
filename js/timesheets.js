@@ -341,7 +341,47 @@ if (calendarEl) {
         datesSet: function (info) {
             localStorage.setItem('calendarView_' + projectID, info.view.type);
             localStorage.setItem('calendarDate_' + projectID, info.startStr);
+
+            if (info.view.type !== 'dayGridMonth') {
+                calendar.setOption('eventContent', function (arg) {
+                    let date = document.createElement('div');
+                    date.classList.add('fc-event-time');
+                    date.innerText = arg.timeText;
+
+                    let container = document.createElement('div');
+                    container.classList.add('fc-event-title-container');
+
+                    let titleEl = document.createElement('div');
+                    titleEl.classList.add('fc-event-title');
+
+                    let title = arg.event.title;
+                    if (arg.event.extendedProps.has_sheet_notice) {
+                        title = document.getElementById('iconNotice').innerHTML + arg.event.title;
+                    } else {
+                        title = arg.event.title;
+                    }
+
+                    if (arg.event.extendedProps.categories) {
+                        if (arg.event.title) {
+                            title += " | ";
+                        }
+                        title += arg.event.extendedProps.categories;
+                    }
+
+                    titleEl.innerHTML = title;
+
+                    container.appendChild(titleEl);
+
+                    return { domNodes: [date, container] };
+                });
+            } else {
+                // Reset eventContent to default for other views
+                calendar.setOption('eventContent', null);
+            }
         },
+        //eventContent: function(arg){
+        //    console.log(arg);
+        //},
         contentHeight: "auto",
         selectable: true,
         select: function (info) {

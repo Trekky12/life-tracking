@@ -98,6 +98,13 @@
         }
     }
 
+    .fc-event-title {
+        .icon {
+            @include font-size(0.8);
+            margin-right: 1rem;
+        }
+    }
+
     @media screen and (max-width: $size_tablet) {
         .fc-dayGridMonth-view {
             .fc-event {
