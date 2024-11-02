@@ -887,5 +887,6 @@ $lang["CARDS_DUE"] = "zeige fällige Karten";
 
 $lang["YES"] = "Ja";
 $lang["NO"] = "Nein";
+$lang["OK"] = "Ok";
 
 return $lang;

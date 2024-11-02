@@ -888,5 +888,6 @@ $lang["CARDS_DUE"] = "show due cards";
 
 $lang["YES"] = "Yes";
 $lang["NO"] = "No";
+$lang["OK"] = "Ok";
 
 return $lang;

@@ -36,7 +36,14 @@ async function checkPassword() {
     KEK = await getKEKfromStore();
 
     if (!KEK) {
-        let pw = window.prompt(lang.timesheets_notice_password);
+        //let pw = window.prompt(lang.timesheets_notice_password);
+        let pw = await inputDialog(lang.timesheets_notice_password);
+
+        if (pw === false) {
+            alertError.classList.remove("hidden");
+            loadingIconTimesheetNotice.classList.add("hidden");
+            return;
+        }
 
         try {
             await createAndStoreKEK(pw);
@@ -480,5 +487,95 @@ if (checkboxHideEmptyNoticeFields) {
             }
         });
         return;
+    });
+}
+
+function createInputDialog(label, callback) {
+    var inputModal = document.createElement('div');
+    inputModal.id = 'input-modal';
+    inputModal.classList.add('modal');
+    inputModal.classList.add('vertical-centered');
+
+    var modalInner = document.createElement('div');
+    modalInner.classList.add('modal-inner');
+
+    var form = document.createElement('form');
+
+    var modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+    var labelParagraph = document.createElement('p');
+    labelParagraph.textContent = label;
+    modalContent.appendChild(labelParagraph);
+
+    var inputField = document.createElement('input');
+    inputField.type = "text";
+    inputField.classList.add("form-control");
+    modalContent.appendChild(inputField);
+
+    var modalFooter = document.createElement('div');
+    modalFooter.classList.add('modal-footer');
+
+    var buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('buttons');
+
+    var confirmButton = document.createElement('button');
+    confirmButton.type = 'button';
+    confirmButton.classList.add('button');
+    confirmButton.textContent = lang.ok;
+
+    var cancelButton = document.createElement('button');
+    cancelButton.classList.add('button', 'button-text', 'cancel');
+    cancelButton.type = 'button';
+    cancelButton.textContent = lang.cancel;
+
+    buttonsDiv.appendChild(confirmButton);
+    buttonsDiv.appendChild(cancelButton);
+
+    modalFooter.appendChild(buttonsDiv);
+
+    form.appendChild(modalContent);
+    form.appendChild(modalFooter);
+
+    modalInner.appendChild(form);
+
+    inputModal.appendChild(modalInner);
+
+    document.body.appendChild(inputModal);
+
+    inputModal.style.display = "block";
+
+    inputField.focus();
+
+    confirmButton.onclick = function () {
+        inputModal.remove();
+        callback(inputField.value);
+    };
+
+    cancelButton.onclick = function () {
+        inputModal.remove();
+        callback(false);
+        document.removeEventListener('keydown', confirmKeyEvent);
+    };
+
+    document.addEventListener('keydown', confirmKeyEvent);
+
+    function confirmKeyEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            inputModal.remove();
+            callback(inputField.value);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        } else if (event.key === 'Escape' || event.keyCode === 27) {
+            event.preventDefault();
+            inputModal.remove();
+            callback(false);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        }
+    }
+}
+
+function inputDialog(label) {
+    return new Promise((resolve, reject) => {
+        createInputDialog(label, resolve);
     });
 }
