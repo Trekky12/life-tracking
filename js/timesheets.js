@@ -14,7 +14,6 @@ projectCategorySelects.forEach(function (item, idx) {
     });
 });
 
-
 const dateTimePickerStart = document.querySelector('#datetimePickerStart');
 const dateTimePickerEnd = document.querySelector('#datetimePickerEnd');
 const dateTimePickerEndField = document.querySelector('#datetimePickerEndField');
@@ -47,19 +46,19 @@ if (dateTimePickerStart && dateTimePickerEnd) {
         "time_24hr": true,
         "minuteIncrement": 1
     });
-    setEndDate();
+    if (dateTimePickerEndField.dataset.saved != "1") {
+        setEndDate();
+    }
 
 }
 
 function setEndDate() {
-    if (dateTimePickerEndField.dataset.saved != "1") {
-        let default_duration = dateTimePickerEndField.dataset.defaultDuration;
-        let selectedDate = dateTimePickerStart._flatpickr.selectedDates[0];
-        if (default_duration > 0) {
-            selectedDate.setSeconds(selectedDate.getSeconds() + default_duration);
-        }
-        dateTimePickerEnd._flatpickr.setDate(selectedDate);
+    let default_duration = dateTimePickerEndField.dataset.defaultDuration;
+    let selectedDate = dateTimePickerStart._flatpickr.selectedDates[0];
+    if (default_duration > 0) {
+        selectedDate.setSeconds(selectedDate.getSeconds() + default_duration);
     }
+    dateTimePickerEnd._flatpickr.setDate(selectedDate);
 }
 
 const radioDurationCustomModification = document.getElementById('radioDurationCustom');
