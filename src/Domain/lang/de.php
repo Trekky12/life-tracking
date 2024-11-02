@@ -863,6 +863,7 @@ $lang["DATATYPE_SELECT"] = "Dropdown";
 $lang["DATATYPE_INITIALIZATION"] = "Initialisierung (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Bemerkung hinzufügen";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Bemerkung bearbeiten";
+$lang["TIMESHEETS_SHEET_DELETE_WARNING_NOTICE"] = "Achtung: Zugehörige Notizen werden ebenfalls gelöscht!";
 
 $lang["TIMESHEETS_CUSTOMER"] = "Kunde";
 $lang["TIMESHEETS_CUSTOMERS"] = "Kunden";

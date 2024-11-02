@@ -606,7 +606,7 @@ const selector = new Selectr("select#card-label-list", {
 var editor = null;
 
 document.addEventListener('keydown', function (event) {
-    if (event.keyCode === 27) {
+    if (event.key === 'Escape' || event.keyCode === 27) {
         if (isVisible(stackModal)) {
             closeDialog(stackModal);
         }
@@ -732,8 +732,7 @@ function openDialog(element, isNew = false) {
     openedDialogData = formToJSON(element.querySelector('form'));
 
     freeze();
-
-    element.style.display = 'block';
+    element.classList.add('visible');
 
     if (!isMobile() && isNew) {
         element.querySelector('input[type="text"]').focus();
@@ -785,8 +784,7 @@ async function closeDialog(element, force = false) {
     }
 
     unfreeze();
-
-    element.style.display = 'none';
+    element.classList.remove('visible');
 
     // for cards
     if (element === cardModal) {

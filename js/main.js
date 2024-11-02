@@ -48,10 +48,12 @@ function getNewTokens(token) {
     });
 }
 
-function createConfirmDialog(message, callback) {
+function createConfirmDialog(message, warning, callback) {
     var confirmModal = document.createElement('div');
     confirmModal.id = 'confirm-modal';
     confirmModal.classList.add('modal');
+    confirmModal.classList.add('vertical-centered');
+    confirmModal.classList.add('small');
 
     var modalInner = document.createElement('div');
     modalInner.classList.add('modal-inner');
@@ -63,6 +65,13 @@ function createConfirmDialog(message, callback) {
     var messageParagraph = document.createElement('p');
     messageParagraph.textContent = message;
     modalContent.appendChild(messageParagraph);
+
+    if (warning && warning != "") {
+        var messageWarning = document.createElement('p');
+        messageWarning.classList.add('alert', 'danger');
+        messageWarning.textContent = warning;
+        modalContent.appendChild(messageWarning);
+    }
 
     var modalFooter = document.createElement('div');
     modalFooter.classList.add('modal-footer');
@@ -94,7 +103,7 @@ function createConfirmDialog(message, callback) {
 
     document.body.appendChild(confirmModal);
 
-    confirmModal.style.display = "block";
+    confirmModal.classList.add('visible');
 
     confirmButton.onclick = function () {
         confirmModal.remove();
@@ -128,9 +137,9 @@ function createConfirmDialog(message, callback) {
 // When the user interacts with the confirm dialog and the callback function 
 // within createConfirmDialog is called with either true or false, 
 // it resolves the promise with that value.
-function confirmDialog(message) {
+function confirmDialog(message, warning = "") {
     return new Promise((resolve, reject) => {
-        createConfirmDialog(message, resolve);
+        createConfirmDialog(message, warning, resolve);
     });
 }
 
@@ -144,7 +153,9 @@ async function deleteObject(dataset) {
         confirm_text = custom_confirm_text;
     }
 
-    if (!await confirmDialog(confirm_text)) {
+    let warning = dataset.warning ? dataset.warning : null;
+
+    if (!await confirmDialog(confirm_text, warning)) {
         loadingWindowOverlay.classList.add("hidden");
         return false;
     }
@@ -480,18 +491,11 @@ function fetchWithTimeout(url, options, timeout = 3000) {
 
 // https://stackoverflow.com/a/29188066
 function freeze() {
-    var top = window.scrollY;
-
     document.body.style.overflow = 'hidden';
-
-    /*window.onscroll = function () {
-        window.scroll(0, top);
-    }*/
 }
 
 function unfreeze() {
     document.body.style.overflow = '';
-    window.onscroll = null;
 }
 
 function isMobile() {

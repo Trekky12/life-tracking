@@ -864,6 +864,7 @@ $lang["DATATYPE_SELECT"] = "dropdown";
 $lang["DATATYPE_INITIALIZATION"] = "Initialization (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Add notice";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Edit notice";
+$lang["TIMESHEETS_SHEET_DELETE_WARNING_NOTICE"] = "Attention: Associated notices are also getting deleted!";
 
 $lang["TIMESHEETS_CUSTOMER"] = "customer";
 $lang["TIMESHEETS_CUSTOMERS"] = "customers";

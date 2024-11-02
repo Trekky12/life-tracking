@@ -459,15 +459,29 @@ if (calendarEl) {
             let deleteButtons = eventModal.querySelectorAll(".btn-delete");
             deleteButtons.forEach(deleteButton => {
                 deleteButton.dataset.url = info.event.extendedProps.delete;
+
+                if (info.event.extendedProps.has_sheet_notice) {
+                    deleteButton.dataset.warning = lang.timesheets_sheets_delete_warning_notice;
+                } else {
+                    deleteButton.dataset.warning = "";
+                }
+
             });
 
+            freeze();
             eventModal.classList.add('visible');
         }
     });
     calendar.render();
 
     document.getElementById("modal-close-btn").addEventListener('click', function (e) {
-        eventModal.classList.remove('visible');
+        hideEventModal();
+    });
+    // Hide when clicking outside of modal
+    eventModal.addEventListener('click', function (e) {
+        if (e.target === eventModal) {
+            hideEventModal();
+        }
     });
 }
 
@@ -511,8 +525,19 @@ document.addEventListener('click', function (event) {
     // Hide modal when any link on the modal is clicked
     let modalButtons = event.target.closest('#event-modal a');
     if (modalButtons) {
-        if (eventModal) {
-            eventModal.classList.remove('visible');
-        }
+        hideEventModal();
     }
 });
+
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' || event.keyCode === 27) {
+        hideEventModal();
+    }
+});
+
+function hideEventModal() {
+    unfreeze();
+    if (eventModal) {
+        eventModal.classList.remove('visible');
+    }
+}

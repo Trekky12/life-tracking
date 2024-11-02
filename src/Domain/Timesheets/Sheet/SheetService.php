@@ -260,7 +260,7 @@ class SheetService extends Service {
 
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
-            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
+            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" data-warning="' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_SHEET_DELETE_WARNING_NOTICE") : "") . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 
             $rendered_data[] = ["data" => $row, "attributes" => ["data-billed" => $sheet->is_billed, "data-payed" => $sheet->is_payed, "data-planned" => $sheet->is_planned]];
         }
@@ -551,11 +551,17 @@ class SheetService extends Service {
         $from = $startDate->format('Y-m-d');
         $to = $endDate->format('Y-m-d');
 
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, null);
+        $sheets = $this->getMapper()->getTableData($project->id, $from, $to, null);
+
+        // get information about notices
+        $sheet_ids = array_map(function ($sheet) {
+            return $sheet->id;
+        }, $sheets);
+        $hasNotices = $this->sheet_notice_mapper->hasNotices($sheet_ids);
 
         $events = [];
 
-        foreach ($data as $timesheet) {
+        foreach ($sheets as $timesheet) {
 
             $st = new \DateTime($timesheet->start);
             $e = new \DateTime($timesheet->end);
@@ -613,6 +619,7 @@ class SheetService extends Service {
                     'series' => $series_ids,
                     'remaining' => $remaining,
                     'sheet_notice' => $timesheet->id ? $this->router->urlFor('timesheets_sheets_notice_view', ['sheet' => $timesheet->id, 'project' => $project->getHash()]) . "?view=calendar" : null,
+                    'has_sheet_notice' => in_array($timesheet->id, $hasNotices),
                     'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null
                 ]
             ];
