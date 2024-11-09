@@ -14,6 +14,18 @@ projectCategorySelects.forEach(function (item, idx) {
     });
 });
 
+const projectNoticefieldsSelects = document.querySelectorAll('select.noticefield');
+projectNoticefieldsSelects.forEach(function (item, idx) {
+    new Selectr(item, {
+        searchable: true,
+        placeholder: lang.timesheets_noticefield,
+        messages: {
+            noResults: lang.nothing_found,
+            noOptions: lang.no_options
+        }
+    });
+});
+
 const dateTimePickerStart = document.querySelector('#datetimePickerStart');
 const dateTimePickerEnd = document.querySelector('#datetimePickerEnd');
 const dateTimePickerEndField = document.querySelector('#datetimePickerEndField');
@@ -580,3 +592,22 @@ function hideEventModal() {
         eventModal.classList.remove('visible');
     }
 }
+
+const noticeFieldsFilter = document.getElementById('noticefieldsfilter');
+if (noticeFieldsFilter) {
+    document.querySelectorAll('.search-filter input[name="type"]').forEach(function (input) {
+        setNoticeFieldFilter(input);
+        input.addEventListener('click', function (e) {
+            setNoticeFieldFilter(input);
+        });
+    });
+
+    function setNoticeFieldFilter(input) {
+        if (input.checked && input.value === 'html-overview') {
+            noticeFieldsFilter.classList.remove('hidden');
+        } else {
+            noticeFieldsFilter.classList.add('hidden');
+        }
+    }
+}
+

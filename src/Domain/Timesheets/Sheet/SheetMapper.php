@@ -53,7 +53,7 @@ class SheetMapper extends \App\Domain\Mapper {
     /**
      * Table
      */
-    private function getTableSQL($select, $categories, $billed = null, $payed = null, $planned = null, $customer = null) {
+    private function getTableSQL($select, $categories, $include_empty_categories = true, $billed = null, $payed = null, $planned = null, $customer = null, $group_by = 't.id') {
         $cat_bindings = array();
         if (!is_null($categories)) {
             foreach ($categories as $idx => $cat) {
@@ -90,8 +90,14 @@ class SheetMapper extends \App\Domain\Mapper {
                 . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
                 . "             GROUP BY sheet "
                 . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
-                . ") "
-                . " OR tcs.category is NULL)";
+                . ") ";
+
+                if($include_empty_categories){
+                    $sql .= " OR tcs.category is NULL";
+                }
+
+                $sql .= " )";
+                
         }
 
         if (!is_null($billed)) {
@@ -110,11 +116,11 @@ class SheetMapper extends \App\Domain\Mapper {
             $sql .= " AND t.customer = :customer ";
         }
 
-        $sql .= " GROUP BY t.id";
+        $sql .= " GROUP BY {$group_by}";
         return [$sql, $cat_bindings];
     }
 
-    public function tableCount($project, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null, $searchQuery = "%") {
+    public function tableCount($project, $from, $to, $categories, $include_empty_categories = true, $billed = null, $payed = null, $planned = null, $customer = null, $searchQuery = "%") {
 
         $bindings = array(
             "searchQuery" => $searchQuery,
@@ -136,7 +142,7 @@ class SheetMapper extends \App\Domain\Mapper {
             $bindings["customer"] = $customer;
         }
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $billed, $payed, $planned, $customer);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $include_empty_categories, $billed, $payed, $planned, $customer);
 
         $sql = "SELECT COUNT(t.id) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -150,7 +156,7 @@ class SheetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function tableSum($project, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null, $searchQuery = "%", $field = "t.duration") {
+    public function tableSum($project, $from, $to, $categories, $include_empty_categories = true, $billed = null, $payed = null, $planned = null, $customer = null, $searchQuery = "%", $field = "t.duration") {
 
         $bindings = array(
             "searchQuery" => $searchQuery,
@@ -172,7 +178,7 @@ class SheetMapper extends \App\Domain\Mapper {
             $bindings["customer"] = $customer;
         }
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories, $billed, $payed, $planned, $customer);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($field, $categories, $include_empty_categories, $billed, $payed, $planned, $customer);
 
         $sql = "SELECT SUM($field) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -186,7 +192,7 @@ class SheetMapper extends \App\Domain\Mapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($project, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableData($project, $from, $to, $categories, $include_empty_categories = true, $billed = null, $payed = null, $planned = null, $customer = null, $sortColumn = 1, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         $bindings = array(
             "searchQuery" => "%" . $searchQuery . "%",
@@ -246,7 +252,7 @@ class SheetMapper extends \App\Domain\Mapper {
             . "tcus.name as customerName, "
             . "tcus.id as customer";
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $billed, $payed, $planned, $customer);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $include_empty_categories, $billed, $payed, $planned, $customer);
 
         $sql = $tableSQL;
         $sql .= " ORDER BY {$sort} {$sortDirection}, t.start {$sortDirection}, t.end {$sortDirection}, t.createdOn {$sortDirection}, t.id {$sortDirection}";
@@ -625,7 +631,7 @@ class SheetMapper extends \App\Domain\Mapper {
             . "     (t.start >= :start AND t.start <= :end AND t.end IS NULL ) OR"
             . "     (t.end >= :start AND t.end <= :end AND t.start IS NULL )"
             . " )"
-            ." ORDER BY t.start";
+            . " ORDER BY t.start";
 
         $bindings = [
             "project_id" => $project_id,
@@ -640,6 +646,45 @@ class SheetMapper extends \App\Domain\Mapper {
         while ($row = $stmt->fetch()) {
             $key = reset($row);
             $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
+    public function getOverview($project, $from, $to, $categories, $include_empty_categories = true, $billed = null, $payed = null, $planned = null, $customer = null) {
+
+        $bindings = [
+           "searchQuery" => "%",
+            "project" => $project,
+            "from" => $from,
+            "to" => $to
+        ];
+
+        if (!is_null($billed)) {
+            $bindings["billed"] = $billed;
+        }
+        if (!is_null($payed)) {
+            $bindings["payed"] = $payed;
+        }
+        if (!is_null($planned)) {
+            $bindings["planned"] = $planned;
+        }
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+        }
+
+        $select = "COUNT(t.id) as count, tcus.name as customerName, tcus.id as customer";
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $include_empty_categories, $billed, $payed, $planned, $customer, 'tcus.id');
+
+        $sql = $tableSQL;
+        $sql .= " ORDER BY customerName";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute(array_merge($bindings, $cat_bindings));
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $results[] = $row;
         }
         return $results;
     }

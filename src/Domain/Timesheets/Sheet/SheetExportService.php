@@ -40,7 +40,7 @@ class SheetExportService extends Service {
         $this->notice_fields_service = $notice_fields_service;
     }
 
-    public function export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer) {
+    public function export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer, $noticefields = []) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -55,13 +55,18 @@ class SheetExportService extends Service {
             return $this->exportExcel($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
         }
 
+        if (strcmp($type, "html-overview") == 0) {
+            return $this->exportHTMLOverview($project, $from, $to, $categories, $billed, $payed, $planned, $customer, $noticefields);
+        }
+
         return $this->exportHTML($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
     }
 
     private function exportExcel($project, $from, $to, $categories, $billed, $payed, $planned, $customer) {
 
+        $include_empty_categories = true;
         // get Data
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
         //$rendered_data = $this->renderTableRows($project, $data);
         //$totalSeconds = $this->mapper->tableSum($project->id, $from, $to);
 
@@ -166,10 +171,10 @@ class SheetExportService extends Service {
             }
 
             /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
-              if (!is_null($notice)) {
-              $sheet->setCellValue('G' . $row, htmlspecialchars_decode($notice->getNotice()));
-              $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
-              } */
+                    if (!is_null($notice)) {
+                    $sheet->setCellValue('G' . $row, htmlspecialchars_decode($notice->getNotice()));
+                    $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
+                    } */
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
             $sheet->getStyle('A' . $row . ':G' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
@@ -182,7 +187,7 @@ class SheetExportService extends Service {
         $sumRow = ($idx + 1 + $offset);
 
         if ($project->has_duration_modifications > 0) {
-            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, "%", "t.duration_modified");
+            $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $planned, $customer, "%", "t.duration_modified");
             $sum = DateUtility::splitDateInterval($totalSecondsModified);
 
             $sheet->setCellValue('D' . $sumRow, $sum);
@@ -244,9 +249,9 @@ class SheetExportService extends Service {
          * @see https://stackoverflow.com/a/51675156
          */
         /*
-         * $stream = fopen($excelFileName, 'r+');
-         * $response->withBody(new \Slim\Http\Stream($stream))->...
-         */
+                    * $stream = fopen($excelFileName, 'r+');
+                    * $response->withBody(new \Slim\Http\Stream($stream))->...
+                    */
         $body = file_get_contents($excelFileName);
         unlink($excelFileName);
 
@@ -254,8 +259,10 @@ class SheetExportService extends Service {
     }
 
     private function exportWord($project, $from, $to, $categories, $billed, $payed, $planned, $customer) {
+        
+        $include_empty_categories = true;
         // get Data
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -298,16 +305,16 @@ class SheetExportService extends Service {
             }
 
             /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
-              if (!is_null($notice)) {
-
-              $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
-
-              $notice = explode("\n", $notice->getNotice());
-
-              foreach ($notice as $line) {
-              $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
-              }
-              } */
+                        if (!is_null($notice)) {
+                        
+                        $section->addText($this->translation->getTranslatedString("NOTICE") . ":");
+                        
+                        $notice = explode("\n", $notice->getNotice());
+                        
+                        foreach ($notice as $line) {
+                        $section->addText(htmlspecialchars(htmlspecialchars_decode($line)));
+                        }
+                        } */
 
 
             if (next($data) == true) {
@@ -334,9 +341,9 @@ class SheetExportService extends Service {
          * @see https://stackoverflow.com/a/51675156
          */
         /*
-         * $stream = fopen($excelFileName, 'r+');
-         * $response->withBody(new \Slim\Http\Stream($stream))->...
-         */
+                    * $stream = fopen($excelFileName, 'r+');
+                    * $response->withBody(new \Slim\Http\Stream($stream))->...
+                    */
         $body = file_get_contents($wordFileName);
         unlink($wordFileName);
 
@@ -350,8 +357,10 @@ class SheetExportService extends Service {
         $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
+        $include_empty_categories = true;
+
         // get Data
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
 
         $sheets = [];
 
@@ -391,6 +400,38 @@ class SheetExportService extends Service {
             "hasTimesheetNotice" => true,
             "sheets" => $sheets,
             "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet')
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response);
+    }
+
+    private function exportHTMLOverview($project, $from, $to, $categories, $billed, $payed, $planned, $customer, $noticefields = []) {
+
+        $include_empty_categories = false;
+        $data = $this->getMapper()->getOverview($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $planned, $customer);
+
+        $fields = $this->notice_fields_service->getNoticeFields($project->id, 'customer');
+
+        // filter all not selected fields
+        $selected_fields = array_filter($fields, function ($field) use ($noticefields) {
+            return in_array($field->id, $noticefields);
+        });
+
+        // Order by noticefields order
+        $sorted_fields = array_map(function($id) use ($selected_fields) {
+            return $selected_fields[$id];
+        }, $noticefields);
+
+        $sum = array_sum(array_column($data, 'count')); 
+
+        $response = [
+            "project" => $project,
+            "hasTimesheetNotice" => true,
+            "data" => $data,
+            "fields" => $sorted_fields,
+            "from" => $from,
+            "to" => $to,
+            "sum" => $sum
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);

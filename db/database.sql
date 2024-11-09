@@ -933,6 +933,7 @@ CREATE TABLE timesheets_projects (
     repeat_count int(5) DEFAULT 0,
     repeat_unit varchar(255) DEFAULT 'week',
     repeat_multiplier int(5) DEFAULT 1,
+    report_headline VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -957,6 +958,11 @@ ALTER TABLE timesheets_projects CHANGE test encryptedTestMessage VARCHAR(255) DE
 ALTER TABLE `timesheets_projects` ADD `slot_min_time` VARCHAR(255) DEFAULT '00:00:00' AFTER `customers_name_plural`, ADD `slot_max_time` VARCHAR(255) DEFAULT '24:00:00' AFTER `slot_min_time`, ADD `repeat_count` INT(5) DEFAULT 0 AFTER `slot_max_time`, ADD `repeat_unit` VARCHAR(255) DEFAULT 'week' AFTER `repeat_count`, ADD `repeat_multiplier` INT(5) DEFAULT 1 AFTER `repeat_unit`; 
 
 ALTER TABLE `timesheets_projects` ADD `hide_monday` INT(1) NOT NULL DEFAULT '0' AFTER `slot_max_time`, ADD `hide_tuesday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_monday`, ADD `hide_wednesday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_tuesday`, ADD `hide_thursday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_wednesday`, ADD `hide_friday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_thursday`, ADD `hide_saturday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_friday`, ADD `hide_sunday` INT(1) NOT NULL DEFAULT '0' AFTER `hide_saturday`; 
+*/
+
+/**
+ALTER TABLE timesheets_projects ADD report_headline VARCHAR(255) DEFAULT NULL AFTER repeat_multiplier; 
+
 */
 
 DROP TABLE IF EXISTS timesheets_projects_users;

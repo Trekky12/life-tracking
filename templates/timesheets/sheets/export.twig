@@ -127,6 +127,30 @@
 							{{lang["EXPORT_HTML_WITH_NOTICES"]}}
 						</label>
 					</div>
+					{% if customers %}
+						<div>
+							<label class="radio" for="radioHTMLOverview">
+								<input name="type" type="radio" value="html-overview" id="radioHTMLOverview">
+								{{lang["EXPORT_HTML_TABLE_OVERVIEW"]}}
+								{% if project.customers_name_plural %}
+									{{project.customers_name_plural}}
+								{% else %}
+									{{lang["TIMESHEETS_CUSTOMERS"]}}
+								{% endif %}
+							</label>
+						</div>
+					{% endif %}
+				</div>
+				<div class="form-group hidden" id="noticefieldsfilter">
+					<div class="filter-row">
+						<div class="categories-filter filter-element">
+							<select id="noticefields-filter" multiple name="noticefields[]" class="noticefield" autocomplete="off">
+								{% for field in customer_fields %}
+									<option value="{{ field.id }}">{{ field.description | raw }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
 				</div>
 
 				<div class="form-group">

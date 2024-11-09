@@ -50,7 +50,10 @@
     }
 
     .timesheet-notice {
-        margin-top: 2rem;
+
+        &:not(.is-table) {
+            margin-top: 2rem;
+        }
 
         label,
         h4 {

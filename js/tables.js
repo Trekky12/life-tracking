@@ -1296,7 +1296,7 @@ var noticefieldsTable = new JSTable("#noticefields_table", {
             sort: "asc"
         },
         {
-            select: [1, 2],
+            select: [4, 5],
             sortable: false,
             searchable: false
         }

@@ -104,6 +104,8 @@ async function checkPassword() {
 
                     if (field_element) {
 
+                        field_element.dataset.saved = 1;
+
                         if (field_element.tagName && (field_element.tagName.toLowerCase() === "textarea" || field_element.tagName.toLowerCase() === "input" || field_element.tagName.toLowerCase() === "select")) {
                             field_element.value = field_value;
                         } else {
@@ -119,6 +121,11 @@ async function checkPassword() {
                     }
 
                 }
+
+                // "new" fields which where not saved previously are empty
+                notice_field.querySelectorAll('[data-saved="0"]').forEach(function (el) {
+                    el.parentElement.dataset.empty = 1;
+                });
 
             } else {
 
@@ -141,6 +148,7 @@ async function checkPassword() {
                 }
             }
         } else {
+            // no notice saved
             notice_field.closest('.timesheet-notice-wrapper').dataset.empty = 1;
         }
 

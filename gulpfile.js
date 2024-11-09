@@ -111,6 +111,7 @@ function copyJSTask(cb) {
             './node_modules/hammerjs/hammer.min.js',
             './node_modules/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js',
             './node_modules/file-saver/dist/FileSaver.min.js',
+            './node_modules/write-excel-file/bundle/write-excel-file.min.js',
             './node_modules/@jstable/jstable/dist/jstable.min.js'
             ] )
         // remove source maps

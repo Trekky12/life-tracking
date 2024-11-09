@@ -42,6 +42,8 @@ class Project extends \App\Domain\DataObject {
         $this->hide_saturday = $this->exists('hide_saturday', $data) ? filter_var($data['hide_saturday'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->hide_sunday = $this->exists('hide_sunday', $data) ? filter_var($data['hide_sunday'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
+        $this->report_headline = $this->exists('report_headline', $data) ? filter_var($data['report_headline'], FILTER_UNSAFE_RAW) : null;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }

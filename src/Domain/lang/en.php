@@ -498,6 +498,7 @@ $lang["TIMESHEETS_CALENDAR"] = "Calendar";
 $lang["EXPORT_WORD"] = "Word";
 $lang["EXPORT_EXCEL"] = "Excel";
 $lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (with notices)";
+$lang["EXPORT_HTML_TABLE_OVERVIEW"] = "overview";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
@@ -562,6 +563,7 @@ $lang["TIMESHEETS_SERIES_COUNT"] = "repeats";
 $lang["DELETE_THIS_AND_FOLLOWING"] = "Delete this and all following entries";
 $lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES"] = "Following entries";
 $lang["ARCHIVED"] = "Archived";
+$lang["TIMESHEETS_REPORT_HEADLINE"] = "Export Headline";
 
 $lang["LAST_SAVED"] = "last saved";
 

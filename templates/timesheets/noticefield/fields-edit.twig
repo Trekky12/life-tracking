@@ -4,18 +4,18 @@
 			{% if field.datatype == 'textfield' %}
 				<div class="form-group">
 					<label for="input_{{field.id}}">{{field.description|raw}}</label>
-					<input type="text" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"/>
+					<input type="text" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}" data-saved="0"/>
 				</div>
 			{% elseif field.datatype == 'textarea' %}
 				<div class="form-group">
 					<label for="input_{{field.id}}">{{field.description|raw}}</label>
-					<textarea rows="{% if field.initialization %}{{field.initialization}}{% else %}15{% endif %}" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}"></textarea>
+					<textarea rows="{% if field.initialization %}{{field.initialization}}{% else %}15{% endif %}" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}" data-saved="0"></textarea>
 				</div>
 			{% elseif field.datatype == 'select' %}
 				<div class="form-group">
 					<label for="input_{{field.id}}">{{field.description|raw}}</label>
 					<div class="select-wrapper form-control">
-						<select id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}">
+						<select id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}" data-saved="0">
 							<option></option>
 							{% for field_option in field.initialization|split('\r\n') %}
 								<option>{{ field_option }}</option>
@@ -30,7 +30,7 @@
 	<div class="timesheet-notice-field">
 		<div class="form-group">
 			<label for="inputNotice">{{lang["NOTICE"]}}</label>
-			<textarea rows="15" class="form-control" id="inputNotice" name="notice" data-name="notice" data-default="1"></textarea>
+			<textarea rows="15" class="form-control" id="inputNotice" name="notice" data-name="notice" data-default="1" data-saved="0"></textarea>
 		</div>
 	</div>
 {% endif %}

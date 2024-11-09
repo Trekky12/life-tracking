@@ -28,7 +28,9 @@
 				<thead>
 					<tr>
 						<th>{{lang["NAME"]}}</th>
-						<th></th>
+						<th>{{lang["TYPE"]}}</th>
+						<th>{{lang["DEFAULT"]}}</th>
+						<th>{{lang["POSITION"]}}</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -36,6 +38,17 @@
 					{% for field in fields %}
 						<tr>
 							<td>{{field.name}}</td>
+							<td>
+								{%- if field.type == "sheet" -%}
+									{{- lang["DATAOBJECT_TIMESHEETS_SHEET"] -}}
+								{%- elseif field.type == "customer" -%}
+									{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{%- endif -%}
+							</td>
+							<td>
+								{% if field.is_default == 1 %}x{% endif %}
+							</td>
+							<td>{{field.position}}</td>
 							<td>
 								<a href="{{ url_for('timesheets_noticefields_edit', {'id' : field.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 							</td>

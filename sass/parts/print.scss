@@ -136,7 +136,11 @@
         width: auto !important;
     }
 
-    .fc-timegrid-now-indicator-container{
+    .fc-timegrid-now-indicator-container {
+        display: none;
+    }
+
+    .search-filter {
         display: none;
     }
 

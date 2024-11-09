@@ -2,12 +2,12 @@
 	{% for field in fields %}
 		<div class="timesheet-notice-field">
 			<h4>{{field.description|raw}}:</h4>
-			<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></p>
+			<p class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}" data-saved="0"></p>
 		</div>
 	{% endfor %}
 {% else %}
 	<div class="timesheet-notice-field">
 		<h4>{{ lang["NOTICE"] }}:</h4>
-		<p class="notice-field" data-name="notice" data-default="1"></p>
+		<p class="notice-field" data-name="notice" data-default="1" data-saved="0"></p>
 	</div>
 {% endif %}

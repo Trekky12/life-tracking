@@ -5,11 +5,10 @@
 {% block style %}{% endblock %}
 
 {% block javascript %}
-	<script src="{{baseURL}}/static/assets/js/docxjs.min.js?ver={{CACHEMISS}}"></script>
-	<script src="{{baseURL}}/static/assets/js/FileSaver.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/assets/js/write-excel-file.min.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/timesheets-notice.js?ver={{CACHEMISS}}"></script>
-	<script src="{{baseURL}}/static/js/timesheets-notice-export-word.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice-export-excel.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block pageheader %}
@@ -42,6 +41,8 @@
 	<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
 		<div class="inner-content">
 			<div class="page-content">
+				<h2 id="reportHeadline">{{ project.report_headline | raw}}</h2>
+				<h3 id="excelHeaderTime" data-from="{{ from }}" data-to="{{ to }}">{{- from|date(i18n.dateformatTwig.date) -}}&nbsp;-&nbsp;{{- to|date(i18n.dateformatTwig.date) -}}</h3>
 				<div class="search-filter">
 					<div class="filter-row">
 						<div class="filter-group">
@@ -49,55 +50,67 @@
 								<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button button-outlined" id="wordExport">{{lang["EXPORT_WORD"]}}
+								<button type="button" class="button button-outlined" id="excelExport">{{lang["EXPORT_EXCEL"]}}
 									{{lang["TIMESHEETS_EXPORT"]}}</button>
 							</div>
 						</div>
-					</div>
-					<div class="filter-row">
-						<label id="checkboxHideEmptySheetsLabel" for="checkboxHideEmptySheets">
-							<input type="checkbox" value="1" id="checkboxHideEmptySheets">
-							{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"]}}
-						</label>
-					</div>
-					<div class="filter-row">
-						<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
-							<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields">
-							{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"]}}
-						</label>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		{% for sheet in sheets %}
-			<div class="inner-content timesheet-notice-wrapper">
-				<div class="page-content">
-					<h3 class="sheet_title">{{ sheet["title"] }}</h3>
-					{% if sheet["customer"] %}
-						<h4 class="sheet_customer">
+		<div class="inner-content timesheet-notice-wrapper dt-container dt-wrapper">
+
+			<table id="overviewTable" class="table table-hover small dt-table">
+				<thead>
+					<tr>
+						<th>
 							{%- if project.customers_name_singular %}
 								{{- project.customers_name_singular -}}
 							{% else %}
 								{{- lang["TIMESHEETS_CUSTOMER"] -}}
-							{% endif -%}:&nbsp;
-							{{- sheet["customer"] -}}
-						</h4>
-					{% endif %}
-
-					{% if sheet["categories"] %}
-						<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
-							{{- sheet["categories"] -}}
-						</h4>
-					{% endif %}
-					<h4>{{lang["DIFFERENCE"]}}:
-						{{ sheet["time"] }}</h4>
-
-					<div class="timesheet-notice" data-id="{{ sheet["id"] }}" data-type="sheet">
-						{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
-					</div>
-				</div>
-			</div>
-		{% endfor %}
+							{% endif -%}
+						</th>
+						<th>{{lang["COUNT"]}}</th>
+						{% for field in fields %}
+							<th>{{field.description | raw}}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in data %}
+						<tr>
+							<td>{{ row["customerName"] }}</td>
+							<td>{{ row["count"] }}</td>
+							{% for field in fields %}
+								<td>
+									{% if row["customer"] %}
+										<div class="timesheet-notice is-table" data-id="{{ row["customer"] }}" data-type="customer">
+											<span class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></span>
+										</div>
+									{% endif %}
+								</td>
+							{% endfor %}
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>
+							{{data|length}}&nbsp;
+							{%- if project.customers_name_plural %}
+								{{- project.customers_name_plural -}}
+							{% else %}
+								{{- lang["TIMESHEETS_CUSTOMERS"] -}}
+							{% endif -%}
+						</th>
+						<th>{{sum}}</th>
+						{% for field in fields %}
+							<th></th>
+						{% endfor %}
+					</tr>
+				</tfoot>
+			</table>
+		</div>
 	</div>
 {% endblock %}
