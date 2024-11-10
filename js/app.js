@@ -177,7 +177,7 @@ initServiceWorker();
 document.addEventListener("DOMContentLoaded", function () {
     let timestamp = Math.round(document.querySelector("meta[name='timestamp']").getAttribute("content"));
     let currentTime = Math.round(Date.now() / 1000);
-    let offset = 15;
+    let offset = 30;
     if (localStorage.getItem('isCached') || (timestamp + offset <= currentTime)) {
         localStorage.removeItem('isCached');
         console.log('this is cached!');
