@@ -197,8 +197,19 @@ if (splitbillsForm) {
     if (input_total_foreign) {
         input_total_foreign.addEventListener('input', function (e) {
             input_total.value = getValueInLocalCurrency();
+
+            inputs_paid.forEach(function (input) {
+                input.value = 0;
+            });
+            inputs_spend.forEach(function (input) {
+                input.value = 0;
+            });
             calculateRemaining(inputs_paid, remaining_paid);
             calculateRemaining(inputs_spend, remaining_spend);
+
+            splittbillsButtons.forEach(function (btn) {
+                btn.classList.add("button-outlined");
+            });
         });
         inputs_paid_foreign.forEach(function (input, idx) {
             input.addEventListener('input', function (e) {
