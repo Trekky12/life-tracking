@@ -6,6 +6,10 @@
     --fc-button-active-bg-color: #{$color_blue};
     --fc-button-active-border-color: #{$color_blue};
 
+    --fc-event-bg-color: white;
+    --fc-event-border-color: black;
+    --fc-event-text-color: black;
+
     @media screen and (max-width: $size_tablet) {
         --fc-daygrid-event-dot-width: 16px
     }

@@ -44,6 +44,19 @@
 					</label>
 				</div>
 
+				<div class="two-columns form-group">
+					<div class="left">
+						<h4>{{lang["BACKGROUND"]}}
+							{{lang["COLOR"]}}</h4>
+						<input class="form-control" id="inputBackgroundColor" name="background_color" type="color" value="{% if not entry is null and not entry.background_color is null %}{{entry.background_color}}{% else %}#FFFFFF{% endif %}">
+					</div>
+					<div class="right">
+						<h4>{{lang["TEXT"]}}
+							{{lang["COLOR"]}}</h4>
+						<input class="form-control" id="inputTextColor" name="text_color" type="color"  value="{% if not entry is null and not entry.text_color is null%}{{entry.text_color}}{% else %}#000000{% endif %}">
+					</div>
+				</div>
+
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}

@@ -985,6 +985,8 @@ CREATE TABLE timesheets_customers (
     changedBy INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
     archive INT(1) DEFAULT 0,
+    background_color VARCHAR(255) DEFAULT NULL,
+    text_color VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -994,6 +996,9 @@ CREATE TABLE timesheets_customers (
 ALTER TABLE `timesheets_customers` ADD `archive` INT(1) DEFAULT 0 AFTER `name`; 
 */
 
+/**
+ALTER TABLE timesheets_customers ADD background_color VARCHAR(255) DEFAULT NULL, ADD text_color VARCHAR(255) DEFAULT NULL;
+*/
 
 DROP TABLE IF EXISTS timesheets_sheets;
 CREATE TABLE timesheets_sheets (

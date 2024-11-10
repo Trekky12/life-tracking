@@ -86,6 +86,10 @@
         border-radius: 0;
     }
 
+    .fc-event-main {
+        overflow: hidden;
+    }
+
     .fc-event:hover {
         cursor: pointer;
     }

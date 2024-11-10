@@ -572,6 +572,8 @@ class SheetService extends Service {
         }, $sheets);
         $hasNotices = $this->sheet_notice_mapper->hasNotices($sheet_ids);
 
+        $customers = $this->customer_service->getCustomersFromProject($project->id, 0);
+
         $events = [];
 
         foreach ($sheets as $timesheet) {
@@ -613,7 +615,7 @@ class SheetService extends Service {
                 }, $remaining_sheets);
             }
 
-            $events[] = [
+            $event = [
                 'title' => $title,
                 'start' => $st->format('Y-m-d H:i:s'),
                 'end' => $e->format('Y-m-d H:i:s'),
@@ -636,6 +638,19 @@ class SheetService extends Service {
                     'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null
                 ]
             ];
+
+            if (array_key_exists($timesheet->customer, $customers)) {
+                $customer = $customers[$timesheet->customer];
+                if (!is_null($customer->background_color)) {
+                    $event['backgroundColor'] = $customer->background_color;
+                    $event['borderColor'] = $customer->background_color;
+                }
+                if (!is_null($customer->text_color)) {
+                    $event['textColor'] = $customer->text_color;
+                }
+            }
+
+            $events[] = $event;
         }
 
         return new Payload(Payload::$RESULT_JSON, $events);
