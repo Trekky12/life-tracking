@@ -515,13 +515,12 @@ return function (App $app) {
 
 
             $group_project->group('/noticepassword', function (RouteCollectorProxy $group_noticespassword) {
-
                 $group_noticespassword->get('/', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordListAction::class)->setName('timesheets_notice_password');
-                $group_noticespassword->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerEditAction::class)->setName('timesheets_notice_passwordedit');
-                $group_noticespassword->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Customer\CustomerSaveAction::class)->setName('timesheets_notice_passwordsave');
-
                 $group_noticespassword->post('/data', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordEncryptionParametersAction::class)->setName('timesheets_notice_params');
                 $group_noticespassword->post('/save', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordEncryptionParametersSaveAction::class)->setName('timesheets_notice_params_save');
+
+                $group_noticespassword->get('/recovery', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordShowRecoveryAction::class)->setName('timesheets_notice_recovery_show');
+
             });
         });
     });

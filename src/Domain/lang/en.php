@@ -855,9 +855,16 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "number of entries"
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Password for the sheet notice encryption";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "To encrypt the sheet notices a password is neeeded.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Insert the encryption password:";
-$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "The inserted password is wrong.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "The inserted password or recovery code is wrong.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_MATCH"] = "The passwords do not match!";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_SUCCESS"] = "Password changed successfully.";
+$lang["TIMESHEETS_RECOVERY_KEY"] = "Recovery Key";
+$lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_1"] = "If the password is forgotten, the data can only be restored with this key.";
+$lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_2"] = "The key is not stored anywhere. Save this key of 24 words in a safe place.";
+$lang["TIMESHEETS_NO_PASSWORD_SET"] = "There is no password set.";
+$lang["TIMESHEETS_FORGOT_PASSWORD"] = "Forgot password?";
+$lang["TIMESHEETS_INSERT_PASSWORD_OR_RECOVERY"] = "Insert old password or recovery code.";
+$lang["TIMESHEETS_RECOVERY_WRONG_SIZE"] = "The recovery code has 24 words. Please insert all.";
 
 $lang["TIMESHEETS_NOTICEFIELDS"] = "Notice fields";
 $lang["DATATYPE_TEXTFIELD"] = "textfield";

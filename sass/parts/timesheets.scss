@@ -1,5 +1,4 @@
 .timesheet-fast {
-
     &.categories-filter,
     &.customer {
         padding-left: 0.5rem;
@@ -19,7 +18,6 @@
 }
 
 #timesheets_sheets_table {
-
     tr[data-planned="1"] {
         color: $color_blue;
     }
@@ -34,7 +32,6 @@
 }
 
 .timesheet-notice-wrapper {
-
     h3,
     h4 {
         margin-bottom: 1rem;
@@ -50,7 +47,6 @@
     }
 
     .timesheet-notice {
-
         &:not(.is-table) {
             margin-top: 2rem;
         }
@@ -95,7 +91,6 @@
     }
 
     .fc-button {
-
         &:focus,
         &.fc-button-active {
             background-color: var(--fc-button-hover-bg-color);
@@ -115,7 +110,6 @@
     @media screen and (max-width: $size_tablet) {
         .fc-dayGridMonth-view {
             .fc-event {
-
                 .fc-event-time,
                 .fc-event-title {
                     display: none;
@@ -127,5 +121,15 @@
             flex-direction: column;
             row-gap: 10px;
         }
+    }
+}
+
+#recoveryKeyWrapper {
+    code {
+        display: block;
+        background-color: $color_light_gray;
+        max-width: 500px;
+        padding: 1rem;
+        margin: 0 auto;
     }
 }

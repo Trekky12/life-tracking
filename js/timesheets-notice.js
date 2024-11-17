@@ -18,6 +18,7 @@ let checkboxHideEmptyNoticeFields = document.getElementById('checkboxHideEmptyNo
 if (!window.crypto || !window.crypto.subtle) {
     alertErrorDetail.innerHTML = lang.decrypt_error;
     alertError.classList.remove("hidden");
+    loadingIconTimesheetNotice.classList.add("hidden");
     if (timesheetNoticeForm) {
         timesheetNoticeForm.querySelectorAll('textarea, select, input').forEach(function (element) {
             element.disabled = true;
@@ -28,52 +29,29 @@ if (!window.crypto || !window.crypto.subtle) {
 
 let currentNotice = getNoticeData();
 
-let KEK, masterKey;
+let masterKey;
 
-checkPassword();
+loadData();
 
-async function checkPassword() {
-    KEK = await getKEKfromStore();
+async function loadData() {
 
-    if (!KEK) {
-        //let pw = window.prompt(lang.timesheets_notice_password);
-        let pw = await inputDialog(lang.timesheets_notice_password);
+    const parameters = await getEncryptionParameters();
+    const testMessageEncryptedWithKEK = parameters.data.testMessageEncryptedWithKEK;
+    
+    if (!testMessageEncryptedWithKEK) {
+        alertErrorDetail.innerHTML = lang.timesheets_no_password_set;
+        alertError.classList.remove("hidden");
+        loadingIconTimesheetNotice.classList.add("hidden");
+        return;
+    }
 
-        if (pw === false) {
-            alertError.classList.remove("hidden");
-            loadingIconTimesheetNotice.classList.add("hidden");
-            return;
-        }
+    masterKey = await getMasterKeyFromStoreOrInput(projectID, parameters);
 
-        try {
-            await createAndStoreKEK(pw);
-            KEK = await getKEKfromStore();
-        } catch (e) {
-            console.log(e);
-            alertErrorDetail.innerHTML = lang.decrypt_error;
-            alertError.classList.remove("hidden");
-
-            loadingIconTimesheetNotice.classList.add("hidden");
-
-            return;
-        }
-
-    } else {
-        // Check stored KEK
-        try {
-            let result = await getEncryptionParameters();
-            await decryptTestMessageAndMasterKey(KEK, result.data.encryptedTestMessage, result.data.encryptedMasterKey);
-        } catch (e) {
-            alertErrorDetail.innerHTML = lang.decrypt_error;
-            alertError.classList.remove("hidden");
-
-            let store = await getStore();
-            let deleteRequest = await store.delete(projectID);
-
-            loadingIconTimesheetNotice.classList.add("hidden");
-
-            return;
-        }
+    if (masterKey === false) {
+        alertErrorDetail.innerHTML = lang.decrypt_error;
+        alertError.classList.remove("hidden");
+        loadingIconTimesheetNotice.classList.add("hidden");
+        return;
     }
 
     let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice'));
@@ -365,111 +343,6 @@ async function saveNotice(autoSave = false) {
     }
 }
 
-async function getEncryptionParameters() {
-    let data = {};
-    let token = await getCSRFToken()
-    data["csrf_name"] = token.csrf_name;
-    data["csrf_value"] = token.csrf_value;
-
-    let response = await fetch(jsObject.timesheets_notice_params, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-    let result = await response.json();
-    if (result.status !== "success") {
-        throw "Unable to retrieve parameters";
-    }
-    return result;
-}
-
-async function decryptTestMessageAndMasterKey(key, encryptedTestMessage, encryptedMasterKey) {
-    try {
-        const testMessage = await decryptData(key, encryptedTestMessage);
-
-        if (testMessage !== "test") {
-            throw "Wrong message!";
-        }
-    } catch (e) {
-        console.error(`Unable to decrypt test message - ${e}`);
-        throw e;
-    }
-
-    try {
-        const savedMasterKey = await decryptData(key, encryptedMasterKey);
-        const rawMasterKey = base64_to_buf(savedMasterKey);
-        masterKey = await createKeyObject(rawMasterKey);
-    } catch (e) {
-        console.error(`Unable to decrypt masterKey - ${e}`);
-        throw e;
-    }
-
-    return 0;
-}
-
-async function createAndStoreKEK(pw) {
-
-    let result = await getEncryptionParameters();
-
-    const iterations = result.data.iterations;
-    const salt = base64_to_buf(result.data.salt);
-    const keyMaterial = await createKeyMaterial(pw);
-    const newKEK = await deriveKEK(keyMaterial, salt, iterations);
-
-    await decryptTestMessageAndMasterKey(newKEK, result.data.encryptedTestMessage, result.data.encryptedMasterKey);
-
-    let store = await getStore();
-    store.add({ 'project': projectID, 'key': newKEK });
-
-    return 0;
-}
-
-async function getStore() {
-    if ('indexedDB' in window) {
-        let openRequest = indexedDB.open('lifeTrackingData', 2);
-
-        return new Promise(function (resolve, reject) {
-
-            openRequest.onsuccess = function () {
-                let db = openRequest.result;
-                var transation = db.transaction("keys", "readwrite");
-                var store = transation.objectStore("keys");
-
-                resolve(store);
-            };
-        });
-
-
-    }
-}
-
-async function getKEKfromStore() {
-    let store = await getStore();
-    let key = await new Promise(function (resolve, reject) {
-        let request = store.get(projectID);
-        request.onsuccess = function (e) {
-            if (request.result) {
-                resolve(request.result.key);
-            }
-            resolve(null);
-        };
-    });
-    return key;
-}
-
-function IsJsonString(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
-
-
 let checkboxHideEmptySheets = document.getElementById('checkboxHideEmptySheets');
 if (checkboxHideEmptySheets) {
     checkboxHideEmptySheets.addEventListener('click', function (event) {
@@ -495,95 +368,5 @@ if (checkboxHideEmptyNoticeFields) {
             }
         });
         return;
-    });
-}
-
-function createInputDialog(label, callback) {
-    var inputModal = document.createElement('div');
-    inputModal.id = 'input-modal';
-    inputModal.classList.add('modal');
-    inputModal.classList.add('vertical-centered');
-
-    var modalInner = document.createElement('div');
-    modalInner.classList.add('modal-inner');
-
-    var form = document.createElement('form');
-
-    var modalContent = document.createElement('div');
-    modalContent.classList.add('modal-content');
-    var labelParagraph = document.createElement('p');
-    labelParagraph.textContent = label;
-    modalContent.appendChild(labelParagraph);
-
-    var inputField = document.createElement('input');
-    inputField.type = "text";
-    inputField.classList.add("form-control");
-    modalContent.appendChild(inputField);
-
-    var modalFooter = document.createElement('div');
-    modalFooter.classList.add('modal-footer');
-
-    var buttonsDiv = document.createElement('div');
-    buttonsDiv.classList.add('buttons');
-
-    var confirmButton = document.createElement('button');
-    confirmButton.type = 'button';
-    confirmButton.classList.add('button');
-    confirmButton.textContent = lang.ok;
-
-    var cancelButton = document.createElement('button');
-    cancelButton.classList.add('button', 'button-text', 'cancel');
-    cancelButton.type = 'button';
-    cancelButton.textContent = lang.cancel;
-
-    buttonsDiv.appendChild(confirmButton);
-    buttonsDiv.appendChild(cancelButton);
-
-    modalFooter.appendChild(buttonsDiv);
-
-    form.appendChild(modalContent);
-    form.appendChild(modalFooter);
-
-    modalInner.appendChild(form);
-
-    inputModal.appendChild(modalInner);
-
-    document.body.appendChild(inputModal);
-
-    inputModal.style.display = "block";
-
-    inputField.focus();
-
-    confirmButton.onclick = function () {
-        inputModal.remove();
-        callback(inputField.value);
-    };
-
-    cancelButton.onclick = function () {
-        inputModal.remove();
-        callback(false);
-        document.removeEventListener('keydown', confirmKeyEvent);
-    };
-
-    document.addEventListener('keydown', confirmKeyEvent);
-
-    function confirmKeyEvent(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            inputModal.remove();
-            callback(inputField.value);
-            document.removeEventListener('keydown', confirmKeyEvent);
-        } else if (event.key === 'Escape' || event.keyCode === 27) {
-            event.preventDefault();
-            inputModal.remove();
-            callback(false);
-            document.removeEventListener('keydown', confirmKeyEvent);
-        }
-    }
-}
-
-function inputDialog(label) {
-    return new Promise((resolve, reject) => {
-        createInputDialog(label, resolve);
     });
 }

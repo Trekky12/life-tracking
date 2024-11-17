@@ -910,8 +910,11 @@ CREATE TABLE timesheets_projects (
     hash VARCHAR(255) DEFAULT NULL,
     salt VARCHAR(255) NULL,
     iterations INT(20) DEFAULT 600000,
-    encryptedMasterKey varchar(255) DEFAULT NULL,
-    encryptedTestMessage VARCHAR(255) DEFAULT NULL,
+    masterKeyEncryptedWithKEK varchar(255) DEFAULT NULL,
+    testMessageEncryptedWithKEK VARCHAR(255) DEFAULT NULL,
+    masterKeyEncryptedWithRecoveryKey VARCHAR(255) DEFAULT NULL,
+    recoveryKeyEncryptedWithMasterKey VARCHAR(255) DEFAULT NULL,
+    testMessageEncryptedWithRecoveryKey VARCHAR(255) DEFAULT NULL,
     is_day_based INT(1) DEFAULT 0,
     default_view varchar(255) DEFAULT 'month',
     has_duration_modifications INT(1) DEFAULT 0,
@@ -963,6 +966,12 @@ ALTER TABLE `timesheets_projects` ADD `hide_monday` INT(1) NOT NULL DEFAULT '0' 
 /**
 ALTER TABLE timesheets_projects ADD report_headline VARCHAR(255) DEFAULT NULL AFTER repeat_multiplier; 
 
+*/
+
+/**
+ALTER TABLE timesheets_projects CHANGE encryptedMasterKey masterKeyEncryptedWithKEK VARCHAR(255) DEFAULT NULL; 
+ALTER TABLE timesheets_projects CHANGE encryptedTestMessage testMessageEncryptedWithKEK VARCHAR(255) DEFAULT NULL; 
+ALTER TABLE timesheets_projects ADD masterKeyEncryptedWithRecoveryKey VARCHAR(255) DEFAULT NULL AFTER testMessageEncryptedWithKEK, ADD recoveryKeyEncryptedWithMasterKey VARCHAR(255) DEFAULT NULL AFTER masterKeyEncryptedWithRecoveryKey, ADD testMessageEncryptedWithRecoveryKey VARCHAR(255) DEFAULT NULL AFTER recoveryKeyEncryptedWithMasterKey; 
 */
 
 DROP TABLE IF EXISTS timesheets_projects_users;

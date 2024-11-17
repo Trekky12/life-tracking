@@ -5,33 +5,18 @@ namespace App\Domain\Timesheets\NoticePassword;
 use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
-use App\Domain\User\UserService;
-use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Domain\Timesheets\Project\ProjectMapper;
-use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
-use App\Domain\Main\Utility\DateUtility;
 
 class NoticePasswordService extends Service {
-
-    private $user_service;
-    private $sheet_mapper;
-    private $translation;
 
     public function __construct(
         LoggerInterface $logger,
         CurrentUser $user,
-        ProjectMapper $mapper,
-        UserService $user_service,
-        SheetMapper $sheet_mapper,
-        Translator $translation
+        ProjectMapper $mapper
     ) {
         parent::__construct($logger, $user);
-
         $this->mapper = $mapper;
-        $this->user_service = $user_service;
-        $this->sheet_mapper = $sheet_mapper;
-        $this->translation = $translation;
     }
 
     public function index($hash) {
@@ -75,11 +60,14 @@ class NoticePasswordService extends Service {
 
         $salt = array_key_exists('salt', $data) ? filter_var($data['salt'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
         $iterations = array_key_exists('iterations', $data) ? intval(filter_var($data['iterations'], FILTER_SANITIZE_NUMBER_INT)) : 600000;
-        $encryptedTestMessage = array_key_exists('encryptedTestMessage', $data) ? filter_var($data['encryptedTestMessage'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
-        $encryptedMasterKey = array_key_exists('encryptedMasterKey', $data) ? filter_var($data['encryptedMasterKey'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $testMessageEncryptedWithKEK = array_key_exists('testMessageEncryptedWithKEK', $data) ? filter_var($data['testMessageEncryptedWithKEK'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $masterKeyEncryptedWithKEK = array_key_exists('masterKeyEncryptedWithKEK', $data) ? filter_var($data['masterKeyEncryptedWithKEK'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $masterKeyEncryptedWithRecoveryKey = array_key_exists('masterKeyEncryptedWithRecoveryKey', $data) ? filter_var($data['masterKeyEncryptedWithRecoveryKey'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $recoveryKeyEncryptedWithMasterKey = array_key_exists('recoveryKeyEncryptedWithMasterKey', $data) ? filter_var($data['recoveryKeyEncryptedWithMasterKey'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $testMessageEncryptedWithRecoveryKey = array_key_exists('testMessageEncryptedWithRecoveryKey', $data) ? filter_var($data['testMessageEncryptedWithRecoveryKey'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
-        if (!is_null($salt) && !is_null($iterations) && !is_null($encryptedMasterKey) && !is_null($encryptedTestMessage)) {
-            $this->getMapper()->setEncryptionParameters($project->id, $salt, $iterations, $encryptedMasterKey, $encryptedTestMessage);
+        if (!is_null($salt) && !is_null($iterations) && !is_null($masterKeyEncryptedWithKEK) && !is_null($testMessageEncryptedWithKEK)) {
+            $this->getMapper()->setEncryptionParameters($project->id, $salt, $iterations, $masterKeyEncryptedWithKEK, $testMessageEncryptedWithKEK, $masterKeyEncryptedWithRecoveryKey, $recoveryKeyEncryptedWithMasterKey, $testMessageEncryptedWithRecoveryKey);
 
             return new Payload(Payload::$RESULT_JSON, [
                 "status" => "success"

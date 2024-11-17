@@ -8,6 +8,10 @@ const oldPassword = document.querySelector('input#inputOldPassword');
 const newPassword1 = document.querySelector('input#inputNewPassword1');
 const newPassword2 = document.querySelector('input#inputNewPassword2');
 
+const forgotPassword = document.querySelector("a#forgotPassword");
+const recoveryCodeWrapper = document.querySelector("#recoveryCodeWrapper");
+const recoveryCodeInput = document.querySelector('textarea#inputRecoveryCode');
+
 if (!window.crypto || !window.crypto.subtle) {
     alertDetail.innerHTML = lang.decrypt_error;
     alert.classList.remove("hidden");
@@ -24,26 +28,46 @@ saveBtn.addEventListener('click', async function (e) {
     alert.classList.remove("danger");
     alert.classList.remove("success");
 
+    // Check if old password or recovery key are inserted
+    if (!oldPassword.getAttribute("disabled") && oldPassword.value == '' && recoveryCodeInput.value == '') {
+        alertDetail.innerHTML = lang.timesheets_insert_password_or_recovery;
+        alert.classList.remove("hidden");
+        alert.classList.add("danger");
+        alert.classList.remove("success");
+    }
+    // Check recovery key length = 24 
+    else if (recoveryCodeInput.value != '' && recoveryCodeInput.value.split(" ").length != 24) {
+        alertDetail.innerHTML = lang.timesheets_recovery_wrong_size;
+        alert.classList.remove("hidden");
+        alert.classList.add("danger");
+        alert.classList.remove("success");
+    }
     // Check if passwords are equal
-    if (newPassword1.value == '' || newPassword2.value == '' || newPassword1.value !== newPassword2.value) {
+    else if (newPassword1.value == '' || newPassword2.value == '' || newPassword1.value !== newPassword2.value) {
         alertDetail.innerHTML = lang.timesheets_notice_password_no_match;
         alert.classList.remove("hidden");
         alert.classList.add("danger");
         alert.classList.remove("success");
     } else {
-        const result = await setPassword();
-        if (result > 0) {
-            alertDetail.innerHTML = lang.timesheets_notice_password_wrong;
-            alert.classList.remove("hidden");
-            alert.classList.add("danger");
-            alert.classList.remove("success");
-        } else {
+        try {
+            await setPassword();
             alertDetail.innerHTML = lang.timesheets_notice_password_success;
             alert.classList.remove("hidden");
             alert.classList.remove("danger");
             alert.classList.add("success");
 
             oldPassword.parentElement.classList.remove("hidden");
+            oldPassword.removeAttribute("disabled")
+
+            recoveryCodeWrapper.classList.add("hidden");
+            forgotPassword.classList.remove("hidden");
+
+        } catch (e) {
+            console.log(e);
+            alertDetail.innerHTML = lang.timesheets_notice_password_wrong;
+            alert.classList.remove("hidden");
+            alert.classList.add("danger");
+            alert.classList.remove("success");
         }
     }
 
@@ -52,75 +76,97 @@ saveBtn.addEventListener('click', async function (e) {
 });
 
 
-async function setPassword() {
-    let data = {};
+forgotPassword.addEventListener('click', async function (e) {
+    e.preventDefault();
 
-    let token = await getCSRFToken()
-    data["csrf_name"] = token.csrf_name;
-    data["csrf_value"] = token.csrf_value;
+    recoveryCodeWrapper.classList.toggle("hidden");
 
-    let response = await fetch(jsObject.timesheets_notice_params, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-    let result = await response.json();
-
-    if (result.status !== "success") {
-        console.error(`Unable to retrieve parameters`);
-        return 1;
+    if (!oldPassword.getAttribute("disabled")) {
+        oldPassword.setAttribute("disabled", true);
+    } else {
+        oldPassword.removeAttribute("disabled");
     }
+});
 
-    const iterations = result.data.iterations;
-    const oldEncryptedTestMessage = result.data.encryptedTestMessage;
-    let newMasterKey;
+
+async function setPassword() {
+
+    let parameters = await getEncryptionParameters();
+
+    const iterations = parameters.data.iterations;
+    const oldTestMessageEncryptedWithKEK = parameters.data.testMessageEncryptedWithKEK;
+    const oldTestMessageEncryptedWithRecoveryKey = parameters.data.testMessageEncryptedWithRecoveryKey;
+
+    let rawMasterKey;
+    let masterKey;
 
     // update entry
-    if (oldEncryptedTestMessage) {
-        let oldSalt = base64_to_buf(result.data.salt);
+    if (oldPassword.value != "" && oldTestMessageEncryptedWithKEK) {
+        console.log("Update password from old password");
+        let oldSalt = base64_to_buf(parameters.data.salt);
         const oldKeyMaterial = await createKeyMaterial(oldPassword.value);
         const oldKEK = await deriveKEK(oldKeyMaterial, oldSalt, iterations);
 
-        try {
-            const testMessage = await decryptData(oldKEK, oldEncryptedTestMessage);
+        rawMasterKey = await getRawMasterKeyFromKEK(oldKEK, parameters.data.testMessageEncryptedWithKEK, parameters.data.masterKeyEncryptedWithKEK);
+    }
+    else if (recoveryCodeInput.value != "" && recoveryCodeInput.value.split(" ").length == 24 && oldTestMessageEncryptedWithRecoveryKey) {
+        console.log("update password from recovery code");
 
-            if (testMessage !== "test") {
-                throw "Wrong message!";
-            }
-        } catch (e) {
-            console.error(`Unable to decrypt test message - ${e}`);
-            return 1;
-        }
+        const recoveryKeyHex = bip39.mnemonicToEntropy(recoveryCodeInput.value);
+        const rawRecoveryKey = fromHexString(recoveryKeyHex);
+        const recoveryKey = await createKeyObject(rawRecoveryKey);
 
-        try {
-            const oldEncryptedMasterKey = result.data.encryptedMasterKey;
-            const oldMasterKey = await decryptData(oldKEK, oldEncryptedMasterKey);
-            newMasterKey = base64_to_buf(oldMasterKey);
-        } catch (e) {
-            console.error(`Unable to decrypt KEK - ${e}`);
-            return 1;
-        }
+        const masterKeyEncryptedWithRecoveryKey = parameters.data.masterKeyEncryptedWithRecoveryKey;
+        const masterKey = await decryptData(recoveryKey, masterKeyEncryptedWithRecoveryKey);
+        rawMasterKey = base64_to_buf(masterKey);
+    }
+    // no testmessage => no masterkey => create new entry
+    else if (!oldTestMessageEncryptedWithKEK) {
+        console.log("No password set so set new password");
+        rawMasterKey = window.crypto.getRandomValues(new Uint8Array(32));
+    }
+    else {
+        throw "Unknown error";
+    }
 
-    } else {
-        newMasterKey = window.crypto.getRandomValues(new Uint8Array(32));
+    masterKey = await createKeyObject(rawMasterKey)
+
+
+    let newData = {};
+
+    // Create new Recovery Key (complete new entries and "old" entries without recovery key)
+    if (!oldTestMessageEncryptedWithRecoveryKey) {
+
+        let rawRecoveryKey = window.crypto.getRandomValues(new Uint8Array(32));
+        let recoveryKey = await createKeyObject(rawRecoveryKey)
+
+        let masterKeyEncryptedWithRecoveryKey = await encryptData(recoveryKey, buff_to_base64(rawMasterKey));
+        newData['masterKeyEncryptedWithRecoveryKey'] = masterKeyEncryptedWithRecoveryKey;
+
+        let recoveryKeyEncryptedWithMasterKey = await encryptData(masterKey, buff_to_base64(rawRecoveryKey));
+        newData['recoveryKeyEncryptedWithMasterKey'] = recoveryKeyEncryptedWithMasterKey;
+
+        const testMessageEncryptedWithRecoveryKey = await encryptData(recoveryKey, "test");
+        newData['testMessageEncryptedWithRecoveryKey'] = testMessageEncryptedWithRecoveryKey;
     }
 
     // Create new KEK
-    let salt = window.crypto.getRandomValues(new Uint8Array(16));
+    let newSalt = window.crypto.getRandomValues(new Uint8Array(16));
+    newData['salt'] = buff_to_base64(newSalt);
     const keyMaterial = await createKeyMaterial(newPassword1.value);
-    const KEK = await deriveKEK(keyMaterial, salt, iterations);
+    // no change in iterations (but possible here)
+    let newIterations = iterations;
+    newData['iterations'] = newIterations;
+    const KEK = await deriveKEK(keyMaterial, newSalt, newIterations);
 
     // Encrypt test message with new KEK
-    const encryptedTestMessage = await encryptData(KEK, "test");
+    const testMessageEncryptedWithKEK = await encryptData(KEK, "test");
+    newData['testMessageEncryptedWithKEK'] = testMessageEncryptedWithKEK;
 
-    // Encrypt newMasterKey with new KEK
-    const encryptedKEK = await encryptData(KEK, buff_to_base64(newMasterKey));
+    // Encrypt rawMasterKey with new KEK
+    const masterKeyEncryptedWithKEK = await encryptData(KEK, buff_to_base64(rawMasterKey));
+    newData['masterKeyEncryptedWithKEK'] = masterKeyEncryptedWithKEK;
 
-    // save new data
-    let newData = { 'salt': buff_to_base64(salt), 'iterations': iterations, 'encryptedMasterKey': encryptedKEK, 'encryptedTestMessage': encryptedTestMessage };
     let newToken = await getCSRFToken()
     newData["csrf_name"] = newToken.csrf_name;
     newData["csrf_value"] = newToken.csrf_value;
@@ -137,8 +183,8 @@ async function setPassword() {
 
     if (newResult.status !== "success") {
         console.error(`Unable to save parameters`);
-        return 1;
+        throw "Error saving parameters";
     }
 
-    return 0;
+    return true;
 }

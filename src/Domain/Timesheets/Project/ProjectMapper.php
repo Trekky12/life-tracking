@@ -13,7 +13,7 @@ class ProjectMapper extends \App\Domain\Mapper {
     protected $element_name = "project";
 
     public function getEncryptionParameters($project_id) {
-        $sql = "SELECT salt, iterations, encryptedMasterKey, encryptedTestMessage FROM " . $this->getTableName() . "  "
+        $sql = "SELECT salt, iterations, masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithRecoveryKey, recoveryKeyEncryptedWithMasterKey, testMessageEncryptedWithRecoveryKey FROM " . $this->getTableName() . "  "
             . "WHERE id = :project ";
 
         $bindings = array("project" => $project_id);
@@ -27,19 +27,34 @@ class ProjectMapper extends \App\Domain\Mapper {
         return null;
     }
 
-    public function setEncryptionParameters($project_id, $salt, $iterations, $encryptedMasterKey, $encryptedTestMessage) {
+    public function setEncryptionParameters($project_id, $salt, $iterations, $masterKeyEncryptedWithKEK, $testMessageEncryptedWithKEK, $masterKeyEncryptedWithRecoveryKey = null, $recoveryKeyEncryptedWithMasterKey = null, $testMessageEncryptedWithRecoveryKey = null) {
 
         $bindings = [
             "project" => $project_id,
             "salt" => $salt,
             "iterations" => $iterations,
-            "encryptedMasterKey" => $encryptedMasterKey,
-            "encryptedTestMessage" => $encryptedTestMessage
+            "masterKeyEncryptedWithKEK" => $masterKeyEncryptedWithKEK,
+            "testMessageEncryptedWithKEK" => $testMessageEncryptedWithKEK
         ];
 
-        $sql = "UPDATE " . $this->getTableName() . " "
-            . " SET salt = :salt, iterations = :iterations, encryptedMasterKey = :encryptedMasterKey, encryptedTestMessage = :encryptedTestMessage "
-            . " WHERE id = :project ";
+        $sql = "UPDATE " . $this->getTableName() . " ";
+        $sql .= " SET salt = :salt, iterations = :iterations, masterKeyEncryptedWithKEK = :masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK = :testMessageEncryptedWithKEK ";
+           
+        if(!is_null($masterKeyEncryptedWithRecoveryKey)){
+            $bindings["masterKeyEncryptedWithRecoveryKey"] = $masterKeyEncryptedWithRecoveryKey;
+            $sql .= ", masterKeyEncryptedWithRecoveryKey = :masterKeyEncryptedWithRecoveryKey ";
+        }
+        if(!is_null($recoveryKeyEncryptedWithMasterKey)){
+            $bindings["recoveryKeyEncryptedWithMasterKey"] = $recoveryKeyEncryptedWithMasterKey;
+            $sql .= ", recoveryKeyEncryptedWithMasterKey = :recoveryKeyEncryptedWithMasterKey ";
+        }
+
+        if(!is_null($testMessageEncryptedWithRecoveryKey)){
+            $bindings["testMessageEncryptedWithRecoveryKey"] = $testMessageEncryptedWithRecoveryKey;
+            $sql .= ", testMessageEncryptedWithRecoveryKey = :testMessageEncryptedWithRecoveryKey ";
+        }
+
+        $sql .=  " WHERE id = :project ";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);

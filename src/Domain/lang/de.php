@@ -854,9 +854,16 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "Anzahl Einträge";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Passwort für die Verschlüsselung der Notizen";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "Für die Verschlüsselung der Notizen muss ein Passwort vergeben werden.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"] = "Passwort für die Verschlüsselung eingeben:";
-$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Passwort ist falsch.";
+$lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"] = "Das eingegebene Passwort oder der Wiederherstellungsschlüssel ist falsch.";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_MATCH"] = "Die Passwörter stimmen nicht überein!";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_SUCCESS"] = "Passwort erfolgreich geändert.";
+$lang["TIMESHEETS_RECOVERY_KEY"] = "Wiederherstellungsschlüssel";
+$lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_1"] = "Sollte das Passwort vergessen werden können die Daten ausschließlich mit diesem Schlüssel wiederhergestellt werden.";
+$lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_2"] = "Der Schlüssel ist nirgends gespeichert. Speichere diesen Schlüssel aus 24 Wörtern an einem sicheren Ort.";
+$lang["TIMESHEETS_NO_PASSWORD_SET"] = "Es wurde noch kein Passwort vergeben.";
+$lang["TIMESHEETS_FORGOT_PASSWORD"] = "Passwort vergessen?";
+$lang["TIMESHEETS_INSERT_PASSWORD_OR_RECOVERY"] = "Altes Passwort oder Wiederherstellungsschlüssel eingeben.";
+$lang["TIMESHEETS_RECOVERY_WRONG_SIZE"] = "Der Wiederherstellungsschlüssel besteht aus 24 Wörtern. Bitte alle eingeben.";
 
 $lang["TIMESHEETS_NOTICEFIELDS"] = "Felder für Notizen";
 $lang["DATATYPE_TEXTFIELD"] = "Textfeld";

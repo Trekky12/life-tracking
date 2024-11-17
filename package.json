@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-free": "^6.3.0",
     "@jstable/jstable": "^1.6.5",
     "@tarekraafat/autocomplete.js": "^10.2.7",
+    "bip39": "^3.1.0",
     "chart.js": "^4.2.1",
     "chartjs-adapter-moment": "^1.0.1",
     "chartjs-plugin-annotation": "^2.1.2",
@@ -55,6 +56,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-replace": "^1.1.4",
     "gulp-sass": "^5.1.0",
+    "gulp-shell": "^0.8.0",
     "gulp-terser": "^2.1.0",
     "puppeteer": "^19.7.2",
     "sass": "^1.79.4"

@@ -1,0 +1,46 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block javascript %}
+	<script src="{{baseURL}}/static/assets/js/bip39.browser.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice-recovery.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets_notice_password', {'project': project.getHash()}) }}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{lang["TIMESHEETS_RECOVERY_KEY"]}}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+			</div>
+
+			<div id="alertError" class="alert danger hidden">
+				<span class="closebtn">&times;</span>
+				<span class="alert-message">
+					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p id="alertErrorDetail"></p>
+				</span>
+			</div>
+
+			<div id="recoveryKeyWrapper" data-project="{{ project.id }}" class="hidden">
+				<p>{{ lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_1"] }}</p>
+				<code></code>
+				<p>{{ lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_2"] }}</p>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}

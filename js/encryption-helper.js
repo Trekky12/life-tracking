@@ -75,8 +75,8 @@ async function decryptData(key, encryptedData) {
 }
 
 async function createKeyObject(rawKey) {
-    
-    return window.crypto.subtle.importKey("raw", rawKey, "AES-GCM", true, [
+
+    return window.crypto.subtle.importKey("raw", rawKey, "AES-GCM", false, [
         "encrypt",
         "decrypt",
     ]);
@@ -88,4 +88,236 @@ function buff_to_base64(buff) {
 
 function base64_to_buf(b64) {
     return Uint8Array.from(atob(b64), (c) => c.charCodeAt(null));
+}
+
+function fromHexString(hexString) {
+    return Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+}
+
+async function getEncryptionParameters() {
+    let data = {};
+    let token = await getCSRFToken()
+    data["csrf_name"] = token.csrf_name;
+    data["csrf_value"] = token.csrf_value;
+
+    let response = await fetch(jsObject.timesheets_notice_params, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+    let result = await response.json();
+    if (result.status !== "success") {
+        throw "Unable to retrieve parameters";
+    }
+    return result;
+}
+
+async function getRawMasterKeyFromKEK(KEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithKEK) {
+    try {
+        const testMessage = await decryptData(KEK, testMessageEncryptedWithKEK);
+
+        if (testMessage !== "test") {
+            throw "Wrong message!";
+        }
+    } catch (e) {
+        console.error(`Unable to decrypt test message - ${e}`);
+        throw e;
+    }
+
+    let rawMasterKey;
+
+    try {
+        const savedMasterKey = await decryptData(KEK, masterKeyEncryptedWithKEK);
+        rawMasterKey = base64_to_buf(savedMasterKey);
+    } catch (e) {
+        console.error(`Unable to decrypt masterKey - ${e}`);
+        throw e;
+    }
+
+    return rawMasterKey;
+}
+
+async function getStore() {
+    if ('indexedDB' in window) {
+        let openRequest = indexedDB.open('lifeTrackingData', 2);
+
+        return new Promise(function (resolve, reject) {
+
+            openRequest.onsuccess = function () {
+                let db = openRequest.result;
+                var transation = db.transaction("keys", "readwrite");
+                var store = transation.objectStore("keys");
+
+                resolve(store);
+            };
+        });
+
+    }
+}
+
+async function getMasterKeyFromPW(pw, parameters, storeKEK = true) {
+
+    const iterations = parameters.iterations;
+    const salt = base64_to_buf(parameters.salt);
+    const keyMaterial = await createKeyMaterial(pw);
+    const newKEK = await deriveKEK(keyMaterial, salt, iterations);
+
+    let rawMasterKey = await getRawMasterKeyFromKEK(newKEK, parameters.testMessageEncryptedWithKEK, parameters.masterKeyEncryptedWithKEK);
+
+    if (storeKEK) {
+        let store = await getStore();
+        store.add({ 'project': projectID, 'key': newKEK });
+    }
+
+    return rawMasterKey;
+}
+
+async function getKEKfromStore() {
+    let store = await getStore();
+    let key = await new Promise(function (resolve, reject) {
+        let request = store.get(projectID);
+        request.onsuccess = function (e) {
+            if (request.result) {
+                resolve(request.result.key);
+            }
+            resolve(null);
+        };
+    });
+    return key;
+}
+
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+async function getMasterKeyFromStoreOrInput(projectID, parameters) {
+    let rawMasterKey;
+
+    let KEK = await getKEKfromStore();
+
+    if (!KEK) {
+        //let pw = window.prompt(lang.timesheets_notice_password);
+        let pw = await inputDialog(lang.timesheets_notice_password);
+
+        if (pw === false) {
+            return false;
+        }
+
+        try {
+            rawMasterKey = await getMasterKeyFromPW(pw, parameters.data, true);
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
+
+    } else {
+        // Check stored KEK
+        try {
+            rawMasterKey = await getRawMasterKeyFromKEK(KEK, parameters.data.testMessageEncryptedWithKEK, parameters.data.masterKeyEncryptedWithKEK);
+        } catch (e) {
+            // delete saved KEK
+            let store = await getStore();
+            let deleteRequest = await store.delete(projectID);
+            return false;
+        }
+    }
+    return await createKeyObject(rawMasterKey);
+}
+
+function createInputDialog(label, callback) {
+    var inputModal = document.createElement('div');
+    inputModal.id = 'input-modal';
+    inputModal.classList.add('modal');
+    inputModal.classList.add('vertical-centered');
+
+    var modalInner = document.createElement('div');
+    modalInner.classList.add('modal-inner');
+
+    var form = document.createElement('form');
+
+    var modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+    var labelParagraph = document.createElement('p');
+    labelParagraph.textContent = label;
+    modalContent.appendChild(labelParagraph);
+
+    var inputField = document.createElement('input');
+    inputField.type = "text";
+    inputField.classList.add("form-control");
+    modalContent.appendChild(inputField);
+
+    var modalFooter = document.createElement('div');
+    modalFooter.classList.add('modal-footer');
+
+    var buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('buttons');
+
+    var confirmButton = document.createElement('button');
+    confirmButton.type = 'button';
+    confirmButton.classList.add('button');
+    confirmButton.textContent = lang.ok;
+
+    var cancelButton = document.createElement('button');
+    cancelButton.classList.add('button', 'button-text', 'cancel');
+    cancelButton.type = 'button';
+    cancelButton.textContent = lang.cancel;
+
+    buttonsDiv.appendChild(confirmButton);
+    buttonsDiv.appendChild(cancelButton);
+
+    modalFooter.appendChild(buttonsDiv);
+
+    form.appendChild(modalContent);
+    form.appendChild(modalFooter);
+
+    modalInner.appendChild(form);
+
+    inputModal.appendChild(modalInner);
+
+    document.body.appendChild(inputModal);
+
+    inputModal.style.display = "block";
+
+    inputField.focus();
+
+    confirmButton.onclick = function () {
+        inputModal.remove();
+        callback(inputField.value);
+    };
+
+    cancelButton.onclick = function () {
+        inputModal.remove();
+        callback(false);
+        document.removeEventListener('keydown', confirmKeyEvent);
+    };
+
+    document.addEventListener('keydown', confirmKeyEvent);
+
+    function confirmKeyEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            inputModal.remove();
+            callback(inputField.value);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        } else if (event.key === 'Escape' || event.keyCode === 27) {
+            event.preventDefault();
+            inputModal.remove();
+            callback(false);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        }
+    }
+}
+
+function inputDialog(label) {
+    return new Promise((resolve, reject) => {
+        createInputDialog(label, resolve);
+    });
 }
