@@ -25,6 +25,10 @@
 	</div>
 {% endblock %}
 
+{% block tabbar %}
+	{% include "timesheets/timesheet-sheets-tabs.twig" with {'active':'timesheets_export'} %}
+{% endblock %}
+
 {% block body %}
 
 	<div id="loadingIconTimesheetNotice" class="centered loading-icon">

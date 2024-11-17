@@ -12,6 +12,7 @@ use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Main\Utility\DateUtility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
+use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 
 class SheetExportService extends Service {
 
@@ -20,6 +21,7 @@ class SheetExportService extends Service {
     private $settings;
     private $sheet_notice_mapper;
     private $notice_fields_service;
+    private $project_category_budget_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -29,7 +31,8 @@ class SheetExportService extends Service {
         SheetNoticeMapper $sheet_notice_mapper,
         NoticeFieldService $notice_fields_service,
         Settings $settings,
-        Translator $translation
+        Translator $translation,
+        ProjectCategoryBudgetService $project_category_budget_service
     ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
@@ -38,6 +41,7 @@ class SheetExportService extends Service {
         $this->translation = $translation;
         $this->sheet_notice_mapper = $sheet_notice_mapper;
         $this->notice_fields_service = $notice_fields_service;
+        $this->project_category_budget_service = $project_category_budget_service;
     }
 
     public function export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer, $noticefields = []) {
@@ -399,7 +403,8 @@ class SheetExportService extends Service {
             "project" => $project,
             "hasTimesheetNotice" => true,
             "sheets" => $sheets,
-            "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet')
+            "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet'),
+            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);
@@ -431,7 +436,8 @@ class SheetExportService extends Service {
             "fields" => $sorted_fields,
             "from" => $from,
             "to" => $to,
-            "sum" => $sum
+            "sum" => $sum,
+            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);

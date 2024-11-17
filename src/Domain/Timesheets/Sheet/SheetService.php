@@ -18,6 +18,7 @@ use App\Domain\Main\Translator;
 use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
 use App\Domain\Timesheets\Customer\CustomerService;
 use App\Domain\Timesheets\NoticeField\NoticeFieldService;
+use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 
 class SheetService extends Service {
 
@@ -30,6 +31,7 @@ class SheetService extends Service {
     protected $sheet_notice_mapper;
     protected $customer_service;
     protected $noticefield_service;
+    protected $project_category_budget_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -43,7 +45,8 @@ class SheetService extends Service {
         Translator $translation,
         SheetNoticeMapper $sheet_notice_mapper,
         CustomerService $customer_service,
-        NoticeFieldService $noticefield_service
+        NoticeFieldService $noticefield_service,
+        ProjectCategoryBudgetService $project_category_budget_service
     ) {
         parent::__construct($logger, $user);
 
@@ -57,6 +60,7 @@ class SheetService extends Service {
         $this->sheet_notice_mapper = $sheet_notice_mapper;
         $this->customer_service = $customer_service;
         $this->noticefield_service = $noticefield_service;
+        $this->project_category_budget_service = $project_category_budget_service;
     }
 
     public function view($hash, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null): Payload {
@@ -93,6 +97,8 @@ class SheetService extends Service {
 
         $response_data["customers"] = $customers;
         $response_data["customer"] = $customer;
+
+        $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
@@ -382,7 +388,8 @@ class SheetService extends Service {
             "project" => $project,
             "categories" => $project_categories,
             "customers" => $customers,
-            "entry" => $entry
+            "entry" => $entry,
+            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
         ]);
     }
 
@@ -413,7 +420,8 @@ class SheetService extends Service {
             "planned" => $planned,
             "customers" => $customers,
             "customer" => $customer,
-            "customer_fields" => $customer_fields
+            "customer_fields" => $customer_fields,
+            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
         ]);
     }
 
@@ -540,6 +548,8 @@ class SheetService extends Service {
 
         $response_data["slot_min_time"] = $project->slot_min_time;
         $response_data["slot_max_time"] = $project->slot_max_time;
+
+        $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
