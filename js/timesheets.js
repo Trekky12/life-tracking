@@ -357,7 +357,15 @@ if (calendarEl) {
                 calendar.setOption('eventContent', function (arg) {
                     let date = document.createElement('div');
                     date.classList.add('fc-event-time');
-                    date.innerText = arg.timeText;
+
+                    let timeText = arg.timeText;
+                    if (arg.event.extendedProps.is_planned == "0") {
+                        timeText = document.getElementById('iconCheck').innerHTML + arg.timeText;
+                    } else {
+                        timeText = arg.timeText;
+                    }
+
+                    date.innerHTML = timeText;
 
                     let container = document.createElement('div');
                     container.classList.add('fc-event-title-container');
