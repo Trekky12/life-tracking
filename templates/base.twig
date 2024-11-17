@@ -196,6 +196,7 @@
 {% if not hasTimesheetNotice is null %}
                 'timesheets_sheets_notice_data': '{{url_for('timesheets_sheets_notice_data', {'project': project.hash})}}',
                 'timesheets_customers_notice_data': '{{url_for('timesheets_customers_notice_data', {'project': project.hash})}}',
+                'timesheets_project_notice_data': '{{url_for('timesheets_project_notice_data', {'project': project.hash})}}',
                 'timesheets_notice_params': '{{url_for('timesheets_notice_params', {'project': project.hash})}}',
                 'timesheets_notice_params_save': '{{url_for('timesheets_notice_params_save', {'project': project.hash})}}',
 {% endif %}

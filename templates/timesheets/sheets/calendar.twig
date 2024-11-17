@@ -11,6 +11,8 @@
 	<script src="{{baseURL}}/static/assets/js/selectr.min.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/assets/js/fullcalendar.min.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/timesheets.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/timesheets-notice.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block pageheader %}
@@ -40,6 +42,29 @@
 	<div class="inner-content">
 		<div class="page-content">
 			<div id="timesheets_calendar" data-min="{{slot_min_time}}" data-max="{{slot_max_time}}" data-hiddendays="{{project.getHiddenDays()|json_encode}}" data-project="{{project.id}}" data-edit="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}?view=calendar"></div>
+
+
+			{% if has_legend %}
+				<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+					<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+				</div>
+
+				<div id="alertError" class="alert danger hidden">
+					<span class="closebtn">&times;</span>
+					<span class="alert-message">
+						<p>{{ lang["ENTRY_ERROR"] }}</p>
+						<p id="alertErrorDetail"></p>
+					</span>
+				</div>
+				<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden">
+					<div class="timesheet-notice-wrapper">
+						<div class="timesheet-notice" data-id="{{ project.id }}" data-type="project">
+							<p class="notice-field" data-name="legend"></p>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
 		</div>
 	</div>
 	<div id="event-modal" class="modal">
@@ -86,7 +111,9 @@
 					<ul></ul>
 				</div>
 				<div class="following-last hidden">
-					<p><b>{{lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES_LAST"]}}</b></p>
+					<p>
+						<b>{{lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES_LAST"]}}</b>
+					</p>
 				</div>
 
 				<a href="#" class="sheet-notice-btn">

@@ -444,6 +444,13 @@ return function (App $app) {
             $group_project->get('/view/', \App\Application\Action\Timesheets\Sheet\SheetViewAction::class)->setName('timesheets_sheets');
             $group_project->get('/table/', \App\Application\Action\Timesheets\Sheet\SheetTableAction::class)->setName('timesheets_sheets_table');
 
+            $group_project->group('/notice', function (RouteCollectorProxy $group_notice) {
+                $group_notice->get('/', \App\Application\Action\Timesheets\ProjectNotice\ProjectNoticeDataAction::class)->setName('timesheets_project_notice_data');
+                $group_notice->get('/edit/', \App\Application\Action\Timesheets\ProjectNotice\ProjectNoticeEditAction::class)->setName('timesheets_project_notice_edit');
+                $group_notice->post('/save/', \App\Application\Action\Timesheets\ProjectNotice\ProjectNoticeSaveAction::class)->setName('timesheets_project_notice_save');
+                $group_notice->get('/view/', \App\Application\Action\Timesheets\ProjectNotice\ProjectNoticeViewAction::class)->setName('timesheets_project_notice_view');
+            });
+
             $group_project->group('/calendar', function (RouteCollectorProxy $group_calendar) {
                 $group_calendar->get('/', \App\Application\Action\Timesheets\Sheet\SheetCalendarAction::class)->setName('timesheets_calendar');
                 $group_calendar->get('/entries', \App\Application\Action\Timesheets\Sheet\SheetCalendarEventsAction::class)->setName('timesheets_calendar_events');
@@ -520,7 +527,6 @@ return function (App $app) {
                 $group_noticespassword->post('/save', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordEncryptionParametersSaveAction::class)->setName('timesheets_notice_params_save');
 
                 $group_noticespassword->get('/recovery', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordShowRecoveryAction::class)->setName('timesheets_notice_recovery_show');
-
             });
         });
     });

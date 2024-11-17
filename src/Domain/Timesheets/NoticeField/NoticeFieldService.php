@@ -58,7 +58,8 @@ class NoticeFieldService extends Service {
         return [
             'textfield' => 'DATATYPE_TEXTFIELD',
             'textarea' => 'DATATYPE_TEXTAREA',
-            'select' => 'DATATYPE_SELECT'
+            'select' => 'DATATYPE_SELECT',
+            'html' => 'DATATYPE_HTML'
         ];
     }
 

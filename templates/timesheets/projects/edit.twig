@@ -6,8 +6,6 @@
 	<script src="{{baseURL}}/static/assets/js/autoComplete.min.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/user-select.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/assets/js/html-duration-picker.min.js?ver={{CACHEMISS}}"></script>
-	<script src="{{baseURL}}/static/js/encryption-helper.js?ver={{CACHEMISS}}"></script>
-	<script src="{{baseURL}}/static/js/timesheets-notice-password.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
 
 {% block style %}
@@ -22,6 +20,13 @@
 			</a>
 			<h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
 		</div>
+		{% if not entry is null %}
+		<div class="buttons">
+			<a href="{{ url_for('timesheets_project_notice_edit', {'project': entry.getHash()}) }}">
+				<button class="button button-outlined">{{lang["NOTICE"]}}</button>
+			</a>
+		</div>
+		{% endif %}
 	</div>
 {% endblock %}
 

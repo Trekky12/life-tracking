@@ -1,36 +1,31 @@
 <?php
 
-namespace App\Domain\Timesheets\CustomerNotice;
+namespace App\Domain\Timesheets\ProjectNotice;
 
 use App\Domain\ObjectActivityWriter;
 use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
-use App\Domain\Timesheets\Customer\CustomerMapper;
 use App\Domain\Timesheets\Project\ProjectMapper;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Customer\CustomerService;
 
-class CustomerNoticeWriter extends ObjectActivityWriter {
+class ProjectNoticeWriter extends ObjectActivityWriter {
 
-    private $service;
-    private $customer_mapper;
     private $project_service;
     private $project_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            ActivityCreator $activity,
-            CustomerService $service,
-            CustomerNoticeMapper $mapper,
-            CustomerMapper $customer_mapper,
-            ProjectMapper $project_mapper,
-            ProjectService $project_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        ProjectNoticeMapper $mapper,
+        ProjectMapper $project_mapper,
+        ProjectService $project_service
+    ) {
         parent::__construct($logger, $user, $activity);
-        $this->service = $service;
         $this->mapper = $mapper;
-        $this->customer_mapper = $customer_mapper;
         $this->project_mapper = $project_mapper;
         $this->project_service = $project_service;
     }
@@ -43,11 +38,7 @@ class CustomerNoticeWriter extends ObjectActivityWriter {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        if (!$this->service->isChildOf($project->id, $additionalData["customer"])) {
-            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
-        }
-
-        $data['customer'] = $additionalData["customer"];
+        $data['project'] = $project->id;
 
         $payload = parent::save(null, $data, $additionalData);
 
@@ -57,25 +48,21 @@ class CustomerNoticeWriter extends ObjectActivityWriter {
     }
 
     public function getParentMapper() {
-        return $this->customer_mapper;
+        return $this->project_mapper;
     }
 
     public function getObjectViewRoute(): string {
-        return 'timesheets_customers_notice_view';
+        return 'timesheets_project_notice_view';
     }
 
     public function getObjectViewRouteParams($entry): array {
-        $customer = $this->getParentMapper()->get($entry->getParentID());
-        $project = $this->project_mapper->get($customer->getParentID());
+        $project = $this->getParentMapper()->get($entry->getParentID());
         return [
-            "project" => $project->getHash(),
-            "customer" => $customer->id,
-            "id" => $entry->id
+            "project" => $project->getHash()
         ];
     }
 
     public function getModule(): string {
         return "timesheets";
     }
-
 }

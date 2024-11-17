@@ -23,8 +23,8 @@ class NoticeField extends \App\Domain\DataObject {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
 
-        if (!in_array($this->type, array("sheet", "customer"))) {
-            $this->type = "customer";
+        if (!in_array($this->type, array("sheet", "customer", "project"))) {
+            $this->type = "sheet";
         }
     }
 

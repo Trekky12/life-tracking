@@ -42,6 +42,11 @@
 						<input name="type" type="radio" value="customer" id="radioTypeCustomer" {% if (entry is not null and entry.type == "customer" )%} checked="checked" {% endif %}>
 						{{lang["TIMESHEETS_CUSTOMER"]}}
 					</label>
+					<br/>
+					<label class="checkbox" for="radioTypeProject">
+						<input name="type" type="radio" value="project" id="radioTypeProject" {% if (entry is not null and entry.type == "project" )%} checked="checked" {% endif %}>
+						{{lang["DATAOBJECT_TIMESHEETS_PROJECT"]}}
+					</label>
 				</div>
 
 				<div class="form-group">

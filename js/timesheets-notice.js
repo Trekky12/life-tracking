@@ -2,6 +2,9 @@
 
 
 const timesheetNoticeWrapper = document.querySelector("#timesheetNoticeWrapper");
+if(!timesheetNoticeWrapper){
+    throw "No notices here";
+}
 const loadingIconTimesheetNotice = document.querySelector("#loadingIconTimesheetNotice");
 
 const timesheetNoticeForm = document.querySelector("#timesheetNoticeForm");
@@ -37,7 +40,7 @@ async function loadData() {
 
     const parameters = await getEncryptionParameters();
     const testMessageEncryptedWithKEK = parameters.data.testMessageEncryptedWithKEK;
-    
+
     if (!testMessageEncryptedWithKEK) {
         alertErrorDetail.innerHTML = lang.timesheets_no_password_set;
         alertError.classList.remove("hidden");
@@ -170,6 +173,8 @@ async function getNotice(dataset) {
         url = jsObject.timesheets_sheets_notice_data;
     } else if (type == "customer") {
         url = jsObject.timesheets_customers_notice_data;
+    } else if (type == "project") {
+        url = jsObject.timesheets_project_notice_data;
     }
 
     let notice_response = await fetch(url + '?id=' + parent_id, {

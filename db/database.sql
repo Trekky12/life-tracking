@@ -1124,6 +1124,7 @@ CREATE TABLE timesheets_sheets_notices (
     changedBy INTEGER unsigned DEFAULT NULL,
     sheet INTEGER unsigned DEFAULT NULL,
     customer INTEGER unsigned DEFAULT NULL,
+    project INTEGER unsigned DEFAULT NULL,
     notice TEXT DEFAULT NULL,
     encryptedCEK varchar(255) DEFAULT NULL,
     is_active int(1) DEFAULT 1,
@@ -1132,7 +1133,8 @@ CREATE TABLE timesheets_sheets_notices (
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(changedBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(sheet) REFERENCES timesheets_sheets(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -1155,6 +1157,11 @@ ALTER TABLE timesheets_sheets_notices ADD CONSTRAINT timesheets_sheets_notices_i
 ALTER TABLE timesheets_sheets_notices DROP FOREIGN KEY timesheets_sheets_notices_ibfk_3; ALTER TABLE timesheets_sheets_notices ADD CONSTRAINT timesheets_sheets_notices_ibfk_3 FOREIGN KEY (sheet) REFERENCES timesheets_sheets(id) ON DELETE SET NULL ON UPDATE CASCADE; 
 */
 
+/**
+ALTER TABLE timesheets_sheets_notices ADD project INTEGER unsigned DEFAULT NULL AFTER customer; 
+ALTER TABLE timesheets_sheets_notices ADD CONSTRAINT timesheets_sheets_notices_ibfk_5 FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE SET NULL ON UPDATE CASCADE; 
+*/
+
 DROP TABLE IF EXISTS timesheets_noticefields;
 CREATE TABLE timesheets_noticefields (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -1168,13 +1175,16 @@ CREATE TABLE timesheets_noticefields (
     initialization TEXT DEFAULT NULL,
     position INT(10) NULL,
     is_default int(1) DEFAULT 0,
-    type ENUM('sheet','customer') default NULL,
+    type ENUM('sheet','customer', 'project') DEFAULT 'sheet',
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*
 ALTER TABLE timesheets_noticefields ADD type ENUM('sheet','customer') default 'sheet'; 
+*/
+/**
+ALTER TABLE timesheets_noticefields CHANGE type type ENUM('sheet','customer','project') DEFAULT 'sheet'; 
 */
 
 DROP TABLE IF EXISTS activities;

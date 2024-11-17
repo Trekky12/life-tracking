@@ -43,10 +43,13 @@
 									{{- lang["DATAOBJECT_TIMESHEETS_SHEET"] -}}
 								{%- elseif field.type == "customer" -%}
 									{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{%- elseif field.type == "project" -%}
+									{{- lang["DATAOBJECT_TIMESHEETS_PROJECT"] -}}
 								{%- endif -%}
 							</td>
 							<td>
-								{% if field.is_default == 1 %}x{% endif %}
+								{% if field.is_default == 1 %}x
+								{% endif %}
 							</td>
 							<td>{{field.position}}</td>
 							<td>

@@ -64,7 +64,7 @@ class SheetNoticeWriter extends ObjectActivityWriter {
     }
 
     public function getObjectViewRoute(): string {
-        return 'timesheets_sheets_notice_edit';
+        return 'timesheets_sheets_notice_view';
     }
 
     public function getObjectViewRouteParams($entry): array {

@@ -6,7 +6,7 @@
 					<label for="input_{{field.id}}">{{field.description|raw}}</label>
 					<input type="text" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}" data-saved="0"/>
 				</div>
-			{% elseif field.datatype == 'textarea' %}
+			{% elseif field.datatype == 'textarea' or field.datatype == 'html' %}
 				<div class="form-group">
 					<label for="input_{{field.id}}">{{field.description|raw}}</label>
 					<textarea rows="{% if field.initialization %}{{field.initialization}}{% else %}15{% endif %}" class="form-control" id="input_{{field.id}}" name="{{field.name}}" data-name="{{field.name}}" data-default="{{field.is_default}}" data-saved="0"></textarea>
