@@ -232,7 +232,7 @@ async function getMasterKeyFromStoreOrInput(projectID, parameters) {
     return await createKeyObject(rawMasterKey);
 }
 
-function createInputDialog(label, callback) {
+function createInputDialog(message, callback) {
     var inputModal = document.createElement('div');
     inputModal.id = 'input-modal';
     inputModal.classList.add('modal');
@@ -246,13 +246,40 @@ function createInputDialog(label, callback) {
     var modalContent = document.createElement('div');
     modalContent.classList.add('modal-content');
     var labelParagraph = document.createElement('p');
-    labelParagraph.textContent = label;
+    labelParagraph.textContent = message;
     modalContent.appendChild(labelParagraph);
 
+    let inputGroup = document.createElement('div');
+    inputGroup.classList.add("form-group");
     var inputField = document.createElement('input');
-    inputField.type = "text";
+    inputField.type = "password";
     inputField.classList.add("form-control");
-    modalContent.appendChild(inputField);
+
+    inputGroup.appendChild(inputField);
+    modalContent.appendChild(inputGroup);
+
+    let labelGroup = document.createElement('div');
+    labelGroup.classList.add("form-group");
+
+    let label = document.createElement('label');
+    label.classList.add("form-control");
+    var inputCheckbox = document.createElement('input');
+    inputCheckbox.type = "checkbox";
+
+    inputCheckbox.onclick = function () {
+        if (inputField.type === "password") {
+            inputField.type = "text";
+        } else {
+            inputField.type = "password";
+        }
+    };
+
+    label.appendChild(inputCheckbox);
+
+    label.appendChild(document.createTextNode(" Show password"));
+    labelGroup.appendChild(label);
+
+    modalContent.appendChild(labelGroup);
 
     var modalFooter = document.createElement('div');
     modalFooter.classList.add('modal-footer');
@@ -316,8 +343,8 @@ function createInputDialog(label, callback) {
     }
 }
 
-function inputDialog(label) {
+function inputDialog(message) {
     return new Promise((resolve, reject) => {
-        createInputDialog(label, resolve);
+        createInputDialog(message, resolve);
     });
 }
