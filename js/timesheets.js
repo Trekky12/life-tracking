@@ -471,6 +471,7 @@ if (calendarEl) {
 
                 let series = eventModal.querySelector(".series");
                 let following = eventModal.querySelector('.following');
+                let following_last = eventModal.querySelector('.following-last');
 
                 let following_list = following.querySelector('ul');
                 following_list.innerHTML = "";
@@ -482,6 +483,7 @@ if (calendarEl) {
                     series.querySelector('.count').innerHTML = info.event.extendedProps.series.length;
 
                     if (info.event.extendedProps.remaining.length > 0) {
+                        following_last.classList.add("hidden");
                         following.classList.remove("hidden");
                         info.event.extendedProps.remaining.forEach(item => {
                             const li = document.createElement('li');
@@ -491,6 +493,7 @@ if (calendarEl) {
 
                         following_delete_btn.classList.remove("hidden");
                     } else {
+                        following_last.classList.remove("hidden");
                         following.classList.add("hidden");
                         following_delete_btn.classList.add("hidden");
                     }
