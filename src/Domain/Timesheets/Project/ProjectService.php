@@ -74,4 +74,8 @@ class ProjectService extends Service {
     public function getProjects() {
         return $this->mapper->getAll();
     }
+
+    public function getProject($id) {
+        return $this->mapper->get($id);
+    }
 }

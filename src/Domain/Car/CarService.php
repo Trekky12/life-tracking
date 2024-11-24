@@ -10,6 +10,8 @@ use App\Application\Payload\Payload;
 
 class CarService extends Service {
 
+    private $user_service;
+
     public function __construct(LoggerInterface $logger, CurrentUser $user, CarMapper $mapper, UserService $user_service) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
@@ -23,6 +25,10 @@ class CarService extends Service {
 
     public function getAllCarsOrderedByName() {
         return $this->mapper->getAll('name');
+    }
+
+    public function getCar($id) {
+        return $this->mapper->get($id);
     }
 
     public function index() {

@@ -2,18 +2,15 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 
 class EFAWidget implements Widget
 {
 
-    private $logger;
     private $translation;
 
-    public function __construct(LoggerInterface $logger, Translator $translation)
+    public function __construct(Translator $translation)
     {
-        $this->logger = $logger;
         $this->translation = $translation;
     }
 

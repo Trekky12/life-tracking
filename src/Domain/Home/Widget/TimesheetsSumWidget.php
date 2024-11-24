@@ -2,9 +2,7 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
-use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Domain\Main\Utility\DateUtility;
@@ -12,19 +10,15 @@ use Slim\Routing\RouteParser;
 
 class TimesheetsSumWidget implements Widget {
 
-    private $logger;
     private $translation;
     private $router;
-    private $current_user;
     private $project_service;
     private $sheet_mapper;
     private $projects = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, ProjectService $project_service, SheetMapper $sheet_mapper) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation, RouteParser $router,  ProjectService $project_service, SheetMapper $sheet_mapper) {
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->project_service = $project_service;
         $this->sheet_mapper = $sheet_mapper;
 
@@ -39,23 +33,7 @@ class TimesheetsSumWidget implements Widget {
         $result = [];
         foreach ($user_projects as $project_id) {
             $project = $projects[$project_id];
-            
-            $categories = [];
-            $billed = null;
-            $payed = null;
-            $planned = null;
-            $customer = null;
-
-            $range = $this->sheet_mapper->getMinMaxDate("start", "end", $project_id, "project");
-            $totalSeconds = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories, $billed, $payed, $planned, $customer);
-
-            $sum = DateUtility::splitDateInterval($totalSeconds);
-            if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
-                $totalSecondsModified = $this->sheet_mapper->tableSum($project->id, $range["min"], $range["max"], $categories, $billed, $payed, $planned, $customer, "%", "t.duration_modified");
-                $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
-            }
-            
-            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "sum" => $sum];
+            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash()];
         }
 
         return $result;
@@ -68,7 +46,23 @@ class TimesheetsSumWidget implements Widget {
     public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
 
-        $sum = $this->projects[$id]["sum"];
+        $project = $this->project_service->getProject($id);
+
+        $categories = [];
+        $billed = null;
+        $payed = null;
+        $planned = null;
+        $customer = null;
+
+        $range = $this->sheet_mapper->getMinMaxDate("start", "end", $id, "project");
+        $totalSeconds = $this->sheet_mapper->tableSum($id, $range["min"], $range["max"], $categories, $billed, $payed, $planned, $customer);
+
+        $sum = DateUtility::splitDateInterval($totalSeconds);
+        if ($project->has_duration_modifications > 0 && $totalSeconds > 0) {
+            $totalSecondsModified = $this->sheet_mapper->tableSum($id, $range["min"], $range["max"], $categories, $billed, $payed, $planned, $customer, "%", "t.duration_modified");
+            $sum = DateUtility::splitDateInterval($totalSecondsModified) . ' (' . $sum . ')';
+        }
+
         return !empty($sum) ? $sum : "00:00:00";
     }
 
@@ -93,5 +87,4 @@ class TimesheetsSumWidget implements Widget {
         $id = $widget->getOptions()["project"];
         return $this->router->urlFor('timesheets_sheets', ["project" => $this->projects[$id]["hash"]]);
     }
-
 }

@@ -2,29 +2,22 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
-use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Sheet\SheetMapper;
-use App\Domain\Main\Utility\DateUtility;
 use Slim\Routing\RouteParser;
 
 class TimesheetsCalendarWidget implements Widget {
 
-    private $logger;
     private $translation;
     private $router;
-    private $current_user;
     private $project_service;
     private $sheet_mapper;
     private $projects = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, ProjectService $project_service, SheetMapper $sheet_mapper) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation, RouteParser $router, ProjectService $project_service, SheetMapper $sheet_mapper) {
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->project_service = $project_service;
         $this->sheet_mapper = $sheet_mapper;
 

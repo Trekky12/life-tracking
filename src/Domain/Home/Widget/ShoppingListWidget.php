@@ -2,34 +2,25 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
-use App\Domain\Base\CurrentUser;
 use App\Domain\Recipes\Shoppinglist\ShoppinglistEntryService;
-use App\Domain\Board\Card\CardMapper;
 use Slim\Routing\RouteParser;
 
 class ShoppingListWidget implements Widget
 {
 
-    private $logger;
-    private $current_user;
     private $translation;
     private $router;
     private $shoppinglist_entry_service;
     private $shoppinglists;
 
     public function __construct(
-        LoggerInterface $logger,
         Translator $translation,
         RouteParser $router,
-        CurrentUser $user,
         ShoppinglistEntryService $shoppinglist_entry_service
     ) {
-        $this->logger = $logger;
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->shoppinglist_entry_service = $shoppinglist_entry_service;
 
         $this->shoppinglists = $this->createList();

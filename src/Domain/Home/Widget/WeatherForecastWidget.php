@@ -2,19 +2,15 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Main\Utility\WeatherUtility;
 
 class WeatherForecastWidget implements Widget {
 
-    private $logger;
     private $translation;
 
-    public function __construct(LoggerInterface $logger, Translator $translation) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation) {
         $this->translation = $translation;
-
     }
 
     public function getContent(WidgetObject $widget = null) {

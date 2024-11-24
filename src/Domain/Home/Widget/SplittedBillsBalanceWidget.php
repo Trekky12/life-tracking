@@ -2,28 +2,22 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
-use App\Domain\Base\CurrentUser;
 use App\Domain\Splitbill\Bill\BillMapper;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use Slim\Routing\RouteParser;
 
 class SplittedBillsBalanceWidget implements Widget {
 
-    private $logger;
     private $translation;
     private $router;
-    private $current_user;
     private $group_service;
     private $bill_mapper;
     private $groups = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, SplitbillGroupService $group_service, BillMapper $bill_mapper) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation, RouteParser $router, SplitbillGroupService $group_service, BillMapper $bill_mapper) {
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->group_service = $group_service;
         $this->bill_mapper = $bill_mapper;
 
@@ -35,16 +29,12 @@ class SplittedBillsBalanceWidget implements Widget {
 
         $groups = $this->group_service->getAll();
 
-        $balances = $this->bill_mapper->getBalances();
         $result = [];
 
         foreach ($user_groups as $group_id) {
             $group = $groups[$group_id];
-            $balance = array_key_exists($group_id, $balances) ? $balances[$group_id] : null;
 
-            if (!is_null($balance)) {
-                $result[$group_id] = ["name" => $group->name, "hash" => $group->getHash(), "balance" => round($balance["balance"], 2)];
-            }
+            $result[$group_id] = ["name" => $group->name, "hash" => $group->getHash()];
         }
 
         return $result;
@@ -56,7 +46,14 @@ class SplittedBillsBalanceWidget implements Widget {
 
     public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["group"];
-        return $this->groups[$id]["balance"];
+
+        $balances = $this->bill_mapper->getBalances();
+        $balance = array_key_exists($id, $balances) ? $balances[$id] : null;
+
+        if (!is_null($balance)) {
+            return round($balance["balance"], 2);
+        }
+        return 0;
     }
 
     public function getTitle(WidgetObject $widget = null) {
@@ -80,5 +77,4 @@ class SplittedBillsBalanceWidget implements Widget {
         $id = $widget->getOptions()["group"];
         return $this->router->urlFor('splitbill_bills', ["group" => $this->groups[$id]["hash"]]);
     }
-
 }

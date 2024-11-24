@@ -11,21 +11,15 @@ use Slim\Routing\RouteParser;
 
 class TimesheetsFastCreateWidget implements Widget {
 
-    private $logger;
     private $translation;
     private $router;
-    private $current_user;
     private $project_service;
-    private $project_budget_mapper;
     private $projects = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, ProjectService $project_service, ProjectCategoryBudgetMapper $project_budget_mapper) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation, RouteParser $router, ProjectService $project_service) {
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->project_service = $project_service;
-        $this->project_budget_mapper = $project_budget_mapper;
 
         $this->projects = $this->createList();
     }

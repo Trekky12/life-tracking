@@ -2,28 +2,22 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
-use App\Domain\Base\CurrentUser;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetMapper;
 use Slim\Routing\RouteParser;
 
 class TimesheetsProjectBudgetWidget implements Widget {
 
-    private $logger;
     private $translation;
     private $router;
-    private $current_user;
     private $project_service;
     private $project_budget_mapper;
     private $projects = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, ProjectService $project_service, ProjectCategoryBudgetMapper $project_budget_mapper) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation, RouteParser $router, ProjectService $project_service, ProjectCategoryBudgetMapper $project_budget_mapper) {
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->project_service = $project_service;
         $this->project_budget_mapper = $project_budget_mapper;
 
@@ -38,10 +32,7 @@ class TimesheetsProjectBudgetWidget implements Widget {
         $result = [];
         foreach ($user_projects as $project_id) {
             $project = $projects[$project_id];
-            
-            $list = $this->project_budget_mapper->getBudgetForCategories($project->id);
-            
-            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash(), "list" => $list ];
+            $result[$project_id] = ["name" => $project->name, "hash" => $project->getHash() ];
         }
 
         return $result;
@@ -53,7 +44,8 @@ class TimesheetsProjectBudgetWidget implements Widget {
 
     public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
-        return $this->projects[$id]["list"];
+
+        return $this->project_budget_mapper->getBudgetForCategories($id);
     }
 
     public function getTitle(WidgetObject $widget = null) {

@@ -12,22 +12,16 @@ use Slim\Routing\RouteParser;
 
 class CarLastRefuelWidget implements Widget {
 
-    private $logger;
     private $translation;
     private $router;
-    private $current_user;
     private $car_service;
-    private $service;
     private $carservice_mapper;
     private $cars = [];
 
-    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, CarService $car_service, CarServiceStatsService $service, CarServiceMapper $carservice_mapper) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation, RouteParser $router, CarService $car_service, CarServiceMapper $carservice_mapper) {
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->car_service = $car_service;
-        $this->service = $service;
         $this->carservice_mapper = $carservice_mapper;
 
         $this->cars = $this->createList();
@@ -40,8 +34,7 @@ class CarLastRefuelWidget implements Widget {
 
         $result = [];
         foreach ($user_cars as $car_id) {
-            $list = $this->carservice_mapper->getTableDataFuel([$car_id], "mileage", "DESC", 2);
-            $result[$car_id] = ["name" => $cars[$car_id]->name, "list" => $list];
+            $result[$car_id] = ["name" => $cars[$car_id]->name];
         }
 
         return $result;
@@ -53,7 +46,7 @@ class CarLastRefuelWidget implements Widget {
 
     public function getContent(WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
-        return $this->cars[$id]["list"];
+        return $this->carservice_mapper->getTableDataFuel([$id], "mileage", "DESC", 2);
     }
 
     public function getTitle(WidgetObject $widget = null) {

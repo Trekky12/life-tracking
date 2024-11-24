@@ -2,9 +2,7 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
-use App\Domain\Base\CurrentUser;
 use App\Domain\Board\BoardService;
 use App\Domain\Board\Card\CardMapper;
 use Slim\Routing\RouteParser;
@@ -16,19 +14,16 @@ class BoardsCardsWidget implements Widget
     private $router;
     private $board_service;
     private $card_mapper;
+    private $boards;
 
     public function __construct(
-        LoggerInterface $logger,
         Translator $translation,
         RouteParser $router,
-        CurrentUser $user,
         BoardService $board_service,
         CardMapper $card_mapper
     ) {
-        $this->logger = $logger;
         $this->translation = $translation;
         $this->router = $router;
-        $this->current_user = $user;
         $this->board_service = $board_service;
         $this->card_mapper = $card_mapper;
 

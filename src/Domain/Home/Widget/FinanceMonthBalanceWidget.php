@@ -2,7 +2,6 @@
 
 namespace App\Domain\Home\Widget;
 
-use Psr\Log\LoggerInterface;
 use App\Domain\Main\Translator;
 use App\Domain\Finances\FinancesMapper;
 use App\Domain\Base\CurrentUser;
@@ -10,14 +9,12 @@ use Slim\Routing\RouteParser;
 
 class FinanceMonthBalanceWidget implements Widget {
 
-    private $logger;
     private $translation;
     private $router;
     private $current_user;
     private $mapper;
 
-    public function __construct(LoggerInterface $logger, Translator $translation, RouteParser $router, CurrentUser $user, FinancesMapper $mapper) {
-        $this->logger = $logger;
+    public function __construct(Translator $translation, RouteParser $router, CurrentUser $user, FinancesMapper $mapper) {
         $this->translation = $translation;
         $this->router = $router;
         $this->current_user = $user;
