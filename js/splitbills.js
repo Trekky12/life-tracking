@@ -184,12 +184,32 @@ if (splitbillsForm) {
     if (exchange_rate) {
         exchange_rate.addEventListener('input', function (e) {
             calculateValueInLocalCurrency();
+
+            inputs_paid.forEach(function (input) {
+                input.value = 0;
+            });
+            inputs_spend.forEach(function (input) {
+                input.value = 0;
+            });
+            splittbillsButtons.forEach(function (btn) {
+                btn.classList.add("button-outlined");
+            });
         });
     }
 
     if (exchange_fee) {
         exchange_fee.addEventListener('input', function (e) {
             calculateValueInLocalCurrency();
+
+            inputs_paid.forEach(function (input) {
+                input.value = 0;
+            });
+            inputs_spend.forEach(function (input) {
+                input.value = 0;
+            });
+            splittbillsButtons.forEach(function (btn) {
+                btn.classList.add("button-outlined");
+            });
         });
     }
 
