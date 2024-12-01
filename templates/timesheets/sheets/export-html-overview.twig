@@ -65,7 +65,7 @@
 
 		<div class="inner-content timesheet-notice-wrapper dt-container dt-wrapper">
 
-			<table id="overviewTable" class="table table-hover small dt-table">
+			<table id="overviewTable" class="table table-hover small dt-table" data-fields="{{fields|length}}">
 				<thead>
 					<tr>
 						<th>
@@ -75,17 +75,16 @@
 								{{- lang["TIMESHEETS_CUSTOMER"] -}}
 							{% endif -%}
 						</th>
-						<th>{{lang["COUNT"]}}</th>
 						{% for field in fields %}
 							<th>{{field.description | raw}}</th>
 						{% endfor %}
+						<th>{{lang["COUNT"]}}</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for row in data %}
 						<tr>
 							<td>{{ row["customerName"] }}</td>
-							<td>{{ row["count"] }}</td>
 							{% for field in fields %}
 								<td>
 									{% if row["customer"] %}
@@ -95,6 +94,7 @@
 									{% endif %}
 								</td>
 							{% endfor %}
+							<td>{{ row["count"] }}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -108,10 +108,10 @@
 								{{- lang["TIMESHEETS_CUSTOMERS"] -}}
 							{% endif -%}
 						</th>
-						<th>{{sum}}</th>
 						{% for field in fields %}
 							<th></th>
 						{% endfor %}
+						<th>{{sum}}</th>
 					</tr>
 				</tfoot>
 			</table>

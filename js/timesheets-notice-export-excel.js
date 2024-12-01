@@ -7,6 +7,7 @@ document.querySelector('#excelExport').addEventListener('click', function (e) {
 
     let filename = wrapper.dataset.name ? wrapper.dataset.name : wrapper.dataset.projectname;
 
+    let fieldsCount = parseInt(document.querySelector("#overviewTable").dataset.fields);
     let maxColumnWidths = [];
 
     const headerText = document.getElementById("reportHeadline").textContent;
@@ -54,8 +55,8 @@ document.querySelector('#excelExport').addEventListener('click', function (e) {
             maxColumnWidths[index] = Math.max(maxColumnWidths[index] || 0, content.length);
 
             return {
-                value: index === 1 ? parseInt(content) : content,
-                type: index === 1 ? Number : String,
+                value: index === (fieldsCount + 1) ? parseInt(content) : content,
+                type: index === (fieldsCount + 1) ? Number : String,
             };
         })
     );
@@ -66,8 +67,8 @@ document.querySelector('#excelExport').addEventListener('click', function (e) {
         maxColumnWidths[index] = Math.max(maxColumnWidths[index] || 0, content.length);
 
         return {
-            value: index === 1 ? parseInt(content) : content,
-            type: index === 1 ? Number : String,
+            value: index === (fieldsCount + 1) ? parseInt(content) : content,
+            type: index === (fieldsCount + 1) ? Number : String,
             fontWeight: 'bold',
             topBorderStyle: 'thin'
         };
