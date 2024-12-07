@@ -36,7 +36,7 @@ class ProjectCategoryBudgetService extends Service {
         $this->customer_service = $customer_service;
     }
 
-    public function index($hash) {
+    public function index($hash, $view) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -50,7 +50,8 @@ class ProjectCategoryBudgetService extends Service {
         return new Payload(Payload::$RESULT_HTML, [
             'categorybudgets' => $categorybudgets,
             "project" => $project,
-            'customers' => $customers
+            'customers' => $customers,
+            "view" => $view
         ]);
     }
 
@@ -120,7 +121,8 @@ class ProjectCategoryBudgetService extends Service {
             "categorybudgets" => $budgets,
             "project" => $project,
             'categories' => $project_categories,
-            "has_category_budgets" => $this->hasCategoryBudgets($project->id)
+            "has_category_budgets" => $this->hasCategoryBudgets($project->id),
+            "view" => "overview"
         ]);
     }
 

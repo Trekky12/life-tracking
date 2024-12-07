@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Timesheets\ProjectCategoryBudget;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 use App\Application\Responder\HTMLTemplateResponder;
@@ -19,7 +19,10 @@ class ProjectCategoryBudgetListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $project_hash = $request->getAttribute('project');
-        $index = $this->service->index($project_hash);
+        
+        $view = $request->getQueryParam('view');
+
+        $index = $this->service->index($project_hash, $view);
         return $this->responder->respond($index->withTemplate('timesheets/projectcategorybudget/index.twig'));
     }
 

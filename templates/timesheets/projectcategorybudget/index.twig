@@ -5,7 +5,7 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<a href="{{ url_for_with_last_query_params('timesheets', {'project' : project.hash}) }}">
+			<a href="{% if view == "overview" %}{{ url_for_with_last_query_params('timesheets_project_categorybudget_view', {'project': project.hash}) }}{% else %}{{ url_for('timesheets', {'project': project.hash}) }}{% endif %}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
 			<h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}
