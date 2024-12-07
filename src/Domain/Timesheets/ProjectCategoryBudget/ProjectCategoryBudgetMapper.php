@@ -51,7 +51,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
         }
 
         $sql = "INSERT INTO " . $this->getTableName("timesheets_categorybudgets_categories") . " (categorybudget, category) "
-                . "VALUES " . implode(", ", $keys_array) . "";
+            . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -179,13 +179,13 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
 
         if (!empty($cat_bindings)) {
             $sql .= " AND (bc.categorybudget IN ( "
-                    . "             SELECT categorybudget "
-                    . "             FROM " . $this->getTableName("timesheets_categorybudgets_categories") . " "
-                    . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
-                    . "             GROUP BY categorybudget "
-                    . "             HAVING COUNT(categorybudget) <= " . count($cat_bindings) . ""
-                    . "             ) "
-                    . ")";
+                . "             SELECT categorybudget "
+                . "             FROM " . $this->getTableName("timesheets_categorybudgets_categories") . " "
+                . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                . "             GROUP BY categorybudget "
+                . "             HAVING COUNT(categorybudget) <= " . count($cat_bindings) . ""
+                . "             ) "
+                . ")";
         }
         $sql .= " GROUP BY b.id";
         $sql .= " ORDER BY customer_name, main_category_name, b.name";
@@ -199,7 +199,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
         while ($row = $stmt->fetch()) {
             $budget = $row;
 
-            $categories = explode(",", $budget["category_ids"]);
+            $categories = !is_null($budget["category_ids"]) ? explode(",", $budget["category_ids"]) : [];
 
             $data = $this->getBudget($project_id, $budget, $categories, $sheet_id);
 
@@ -245,24 +245,24 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                     WHERE sheet.project = :project ";
 
         if ($budget["start"] && $budget["end"]) {
-            
+
             $bindings["start"] = $budget["start"];
             $bindings["end"] = $budget["end"];
-            
+
             $sql .= " AND ("
-                    . "     (DATE(sheet.start) >= :start AND DATE(sheet.end) <= :end ) OR"
-                    . "     (DATE(sheet.start) >= :start AND DATE(sheet.start) <= :end AND sheet.end IS NULL ) OR"
-                    . "     (DATE(sheet.end) >= :start AND DATE(sheet.end) <= :end AND sheet.start IS NULL )) ";
+                . "     (DATE(sheet.start) >= :start AND DATE(sheet.end) <= :end ) OR"
+                . "     (DATE(sheet.start) >= :start AND DATE(sheet.start) <= :end AND sheet.end IS NULL ) OR"
+                . "     (DATE(sheet.end) >= :start AND DATE(sheet.end) <= :end AND sheet.start IS NULL )) ";
         }
 
         if (!empty($cat_bindings)) {
             $sql .= " AND sheet.id IN ( "
-                    . "             SELECT sheet "
-                    . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
-                    . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
-                    . "             GROUP BY sheet "
-                    . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
-                    . ") ";
+                . "             SELECT sheet "
+                . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
+                . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                . "             GROUP BY sheet "
+                . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
+                . ") ";
         }
 
         if ($budget["customer"]) {
@@ -277,5 +277,4 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
 
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
-
 }
