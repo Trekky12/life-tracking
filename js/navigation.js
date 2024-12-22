@@ -281,6 +281,8 @@ if (navigation && header && navigationOverlay) {
         // First touch after app is resumed is ignored to not trigger navigation drawer
         if (isAppResumed) {
             isAppResumed = false;
+            xStartPosition = null;
+            xMovePosition = null;
             return;
         }
 
