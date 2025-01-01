@@ -559,10 +559,12 @@ $lang["TIMESHEETS_HIDE_FRIDAY"] = "hide friday";
 $lang["TIMESHEETS_HIDE_SATURDAY"] = "hide saturday";
 $lang["TIMESHEETS_HIDE_SUNDAY"] = "hide sunday";
 $lang["TIMESHEETS_IS_PART_OF_SERIES"] = "The entry is part of a series.";
-$lang["TIMESHEETS_SERIES_COUNT"] = "repeats";
+$lang["TIMESHEETS_SERIES_COUNT"] = "entries";
 $lang["DELETE_THIS_AND_FOLLOWING"] = "Delete this and all following entries";
+$lang["TIMESHEETS_SERIES_PREVIOUS_ENTRIES"] = "Previous entries";
 $lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES"] = "Following entries";
 $lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES_LAST"] = "This is the last entry of this series.";
+$lang["TIMESHEETS_UPDATE_THIS_AND_FOLLOWING"] = "Update this and all following entries";
 $lang["ARCHIVED"] = "Archived";
 $lang["TIMESHEETS_REPORT_HEADLINE"] = "Export Headline";
 

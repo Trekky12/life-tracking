@@ -319,7 +319,7 @@ if (calendarEl) {
     let editURL = calendarEl.dataset.edit;
 
     let savedView = localStorage.getItem('calendarView_' + projectID) || 'timeGridWeek';
-    let savedDate = localStorage.getItem('calendarDate_' + projectID) || new Date();
+    let savedDate = new Date(localStorage.getItem('calendarDate_' + projectID)) || new Date();
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: savedView,
@@ -351,7 +351,7 @@ if (calendarEl) {
         },
         datesSet: function (info) {
             localStorage.setItem('calendarView_' + projectID, info.view.type);
-            localStorage.setItem('calendarDate_' + projectID, info.startStr);
+            localStorage.setItem('calendarDate_' + projectID, info.view.currentStart);
 
             if (info.view.type !== 'dayGridMonth') {
                 calendar.setOption('eventContent', function (arg) {
@@ -470,8 +470,12 @@ if (calendarEl) {
                 }
 
                 let series = eventModal.querySelector(".series");
+                let previous = eventModal.querySelector('.previous');
                 let following = eventModal.querySelector('.following');
                 let following_last = eventModal.querySelector('.following-last');
+
+                let previous_list = previous.querySelector('ul');
+                previous_list.innerHTML = "";
 
                 let following_list = following.querySelector('ul');
                 following_list.innerHTML = "";
@@ -481,6 +485,17 @@ if (calendarEl) {
                 if (is_part_of_series) {
                     series.classList.remove("hidden");
                     series.querySelector('.count').innerHTML = info.event.extendedProps.series.length;
+
+                    if (info.event.extendedProps.previous.length > 0) {
+                        previous.classList.remove("hidden");
+                        info.event.extendedProps.previous.forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = item;
+                            previous_list.appendChild(li);
+                        });
+                    } else {
+                        previous.classList.add("hidden");
+                    }
 
                     if (info.event.extendedProps.remaining.length > 0) {
                         following_last.classList.add("hidden");
@@ -501,6 +516,8 @@ if (calendarEl) {
                 } else {
                     series.classList.add("hidden");
                     series.querySelector('.count').innerHTML = "";
+
+                    previous.classList.add("hidden");
 
                     following.classList.add("hidden");
                     following_delete_btn.classList.add("hidden");

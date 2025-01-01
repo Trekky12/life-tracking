@@ -1033,6 +1033,8 @@ CREATE TABLE timesheets_sheets (
     is_planned int(1) DEFAULT 0,
     reference_sheet int(11) unsigned DEFAULT NULL,
     customer INTEGER unsigned DEFAULT NULL,
+    repeat_unit varchar(255) DEFAULT NULL,
+    repeat_multiplier int(5) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -1050,6 +1052,7 @@ ALTER TABLE `timesheets_sheets` ADD `is_planned` int(1) DEFAULT 0 AFTER `is_paye
 ALTER TABLE `timesheets_sheets` ADD reference_sheet int(11) unsigned DEFAULT NULL AFTER `is_planned`; 
 ALTER TABLE `timesheets_sheets` ADD CONSTRAINT `timesheets_sheets_ibfk_5` FOREIGN KEY (`reference_sheet`) REFERENCES `timesheets_sheets`(`id`) ON DELETE SET NULL ON UPDATE CASCADE; 
 
+ALTER TABLE `timesheets_sheets` ADD `repeat_unit` VARCHAR(255) DEFAULT NULL AFTER `customer`, ADD `repeat_multiplier` INT(5) DEFAULT NULL AFTER `repeat_unit`; 
 */
 
 DROP TABLE IF EXISTS timesheets_categories;

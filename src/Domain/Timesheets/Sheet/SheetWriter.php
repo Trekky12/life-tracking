@@ -84,14 +84,10 @@ class SheetWriter extends ObjectActivityWriter {
         if (
             array_key_exists("set_repeats", $data) && !empty($data["set_repeats"])
             && array_key_exists("repeat_count", $data) && !empty($data["repeat_count"])
-            && array_key_exists("repeat_unit", $data) && !empty($data["repeat_unit"])
-            && array_key_exists("repeat_multiplier", $data) && !empty($data["repeat_multiplier"])
         ) {
-            $updated_entry = $this->service->getEntry($entry->id);
-
             $repeat_count = intval(filter_var($data["repeat_count"], FILTER_SANITIZE_NUMBER_INT));
-            $repeat_multiplier = intval(filter_var($data["repeat_multiplier"], FILTER_SANITIZE_NUMBER_INT));
-            $repeat_unit = filter_var($data["repeat_unit"], FILTER_SANITIZE_STRING);
+
+            $updated_entry = $this->service->getEntry($entry->id);
 
             $start_date = new \DateTime($updated_entry->start);
             $end_date = new \DateTime($updated_entry->end);
@@ -99,12 +95,12 @@ class SheetWriter extends ObjectActivityWriter {
             for ($i = 1; $i <= $repeat_count; $i++) {
                 $new_entry = clone $updated_entry;
                 $new_entry->id = null;
-                $new_entry->reference_sheet = $entry->id;
+                $new_entry->reference_sheet = !is_null($entry->reference_sheet) ? $entry->reference_sheet : $entry->id;
 
                 $new_start_date = clone $start_date;
                 $new_end_date = clone $end_date;
 
-                $interval = "P" . ($repeat_multiplier * $i) . strtoupper(substr($repeat_unit, 0, 1));
+                $interval = "P" . (intval($new_entry->repeat_multiplier) * $i) . strtoupper(substr($new_entry->repeat_unit, 0, 1));
 
                 $new_start_date->add(new \DateInterval($interval));
                 $new_end_date->add(new \DateInterval($interval));
@@ -112,7 +108,73 @@ class SheetWriter extends ObjectActivityWriter {
                 $new_entry->start = $new_start_date->format('Y-m-d H:i:s');
                 $new_entry->end = $new_end_date->format('Y-m-d H:i:s');
 
-                $id = $this->insertEntry($new_entry);
+                // Check if this sheet already exists and create only appended items
+                $sheet_exists = $this->mapper->hasEqualSheet($new_entry);
+
+                if (!$sheet_exists) {
+                    $id = $this->insertEntry($new_entry);
+                }
+            }
+        }
+
+        /**
+         * Update remaining sheets?
+         */
+
+        if (array_key_exists("action", $data) && !empty($data["action"])) {
+
+            $action = filter_var($data["action"], FILTER_SANITIZE_STRING);
+
+            if ($action == "update_following") {
+
+                $series = $this->getMapper()->getSeriesSheets($project->id, $id);
+                $series_ids = array_keys(
+                    array_map(function ($sheet) {
+                        return $sheet->id;
+                    }, $series)
+                );
+                $remaining_sheets = $series;
+                $index = array_search($id, $series_ids);
+                if ($index !== false) {
+                    $remaining_sheets = array_slice($series, $index + 1);
+                }
+
+                // Update remainings
+                $updated_entry = $this->service->getEntry($entry->id);
+
+                $start_date = new \DateTime($updated_entry->start);
+                $end_date = new \DateTime($updated_entry->end);
+                $repeat_unit = $updated_entry->repeat_unit;
+                $repeat_multiplier = $updated_entry->repeat_multiplier;
+
+                foreach ($remaining_sheets as $sheet) {
+                    $this->logger->error("Updating the following entry " . $this->getMapper()->getDataObject(), array("id" => $id));
+
+                    $interval = "P" . (intval($repeat_multiplier)) . strtoupper(substr($repeat_unit, 0, 1));
+
+                    $start_date->add(new \DateInterval($interval));
+                    $end_date->add(new \DateInterval($interval));
+
+                    $sheet->start = $start_date->format('Y-m-d H:i:s');
+                    $sheet->end = $end_date->format('Y-m-d H:i:s');
+                    $sheet->duration =  $updated_entry->duration;
+                    $sheet->duration_modified =  $updated_entry->duration_modified;
+                    $sheet->start_lat =  $updated_entry->start_lat;
+                    $sheet->start_lng =  $updated_entry->start_lng;
+                    $sheet->start_acc =  $updated_entry->start_acc;
+                    $sheet->end_lat =  $updated_entry->end_lat;
+                    $sheet->end_lng =  $updated_entry->end_lng;
+                    $sheet->end_acc =  $updated_entry->end_acc;
+                    $sheet->is_billed =  $updated_entry->is_billed;
+                    $sheet->is_payed =  $updated_entry->is_payed;
+                    $sheet->is_planned =  $updated_entry->is_planned;
+                    $sheet->customer =  $updated_entry->customer;
+
+                    $update = $this->updateEntry($sheet);
+
+                    $repeat_unit = $sheet->repeat_unit;
+                    $repeat_multiplier = $sheet->repeat_multiplier;
+                }
             }
         }
 

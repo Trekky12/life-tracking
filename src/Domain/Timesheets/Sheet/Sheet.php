@@ -37,7 +37,6 @@ class Sheet extends \App\Domain\DataObject {
         $this->end_lng = $this->exists('end_lng', $data) ? filter_var($data['end_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->end_acc = $this->exists('end_acc', $data) ? filter_var($data['end_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-
         $this->categories = $this->exists('categories', $data) ? filter_var($data['categories'], FILTER_SANITIZE_STRING) : null;
 
         $this->is_billed = $this->exists('is_billed', $data) ? filter_var($data['is_billed'], FILTER_SANITIZE_NUMBER_INT) : 0;
@@ -48,6 +47,9 @@ class Sheet extends \App\Domain\DataObject {
         $this->customerName = $this->exists('customerName', $data) ? filter_var($data['customerName'], FILTER_SANITIZE_STRING) : null;
 
         $this->reference_sheet = $this->exists('reference_sheet', $data) ? filter_var($data['reference_sheet'], FILTER_SANITIZE_NUMBER_INT) : null;
+
+        $this->repeat_unit = $this->exists('repeat_unit', $data) ? filter_var($data['repeat_unit'], FILTER_SANITIZE_STRING) : null;
+        $this->repeat_multiplier = $this->exists('repeat_multiplier', $data) ? filter_var($data['repeat_multiplier'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         /* if (empty($this->name) && $this->settleup == 0) {
           $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";

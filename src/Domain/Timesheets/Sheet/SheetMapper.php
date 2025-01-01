@@ -92,12 +92,11 @@ class SheetMapper extends \App\Domain\Mapper {
                 . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
                 . ") ";
 
-                if($include_empty_categories){
-                    $sql .= " OR tcs.category is NULL";
-                }
+            if ($include_empty_categories) {
+                $sql .= " OR tcs.category is NULL";
+            }
 
-                $sql .= " )";
-                
+            $sql .= " )";
         }
 
         if (!is_null($billed)) {
@@ -549,6 +548,7 @@ class SheetMapper extends \App\Domain\Mapper {
             . " AND ( "
             . " reference_sheet = (SELECT reference_sheet FROM timesheets_sheets WHERE ID = :sheet)"
             . " OR reference_sheet = :sheet "
+            . " OR id = (SELECT reference_sheet FROM timesheets_sheets WHERE ID = :sheet)"
             . " OR (id = :sheet AND "
             . "  EXISTS ( "
             . "   SELECT 1 "
@@ -653,7 +653,7 @@ class SheetMapper extends \App\Domain\Mapper {
     public function getOverview($project, $from, $to, $categories, $include_empty_categories = true, $billed = null, $payed = null, $planned = null, $customer = null) {
 
         $bindings = [
-           "searchQuery" => "%",
+            "searchQuery" => "%",
             "project" => $project,
             "from" => $from,
             "to" => $to
@@ -687,5 +687,61 @@ class SheetMapper extends \App\Domain\Mapper {
             $results[] = $row;
         }
         return $results;
+    }
+
+    public function hasEqualSheet(Sheet $sheet) {
+        $sql = "SELECT * FROM " . $this->getTableName() . "  "
+            . " WHERE "
+            . " (project = :project OR (project IS NULL AND :project IS NULL)) AND "
+            . " (start = :start OR (start IS NULL AND :start IS NULL)) AND "
+            . " (end = :end OR (end IS NULL AND :end IS NULL)) AND "
+            . " (duration = :duration OR (duration IS NULL AND :duration IS NULL)) AND "
+            . " (duration_modified = :duration_modified OR (duration_modified IS NULL AND :duration_modified IS NULL)) AND "
+            . " (start_lat = :start_lat OR (start_lat IS NULL AND :start_lat IS NULL)) AND "
+            . " (start_lng = :start_lng OR (start_lng IS NULL AND :start_lng IS NULL)) AND "
+            . " (start_acc = :start_acc OR (start_acc IS NULL AND :start_acc IS NULL)) AND "
+            . " (end_lat = :end_lat OR (end_lat IS NULL AND :end_lat IS NULL)) AND "
+            . " (end_lng = :end_lng OR (end_lng IS NULL AND :end_lng IS NULL)) AND "
+            . " (end_acc = :end_acc OR (end_acc IS NULL AND :end_acc IS NULL)) AND "
+            . " (is_billed = :is_billed OR (is_billed IS NULL AND :is_billed IS NULL)) AND "
+            . " (is_payed = :is_payed OR (is_payed IS NULL AND :is_payed IS NULL)) AND "
+            . " (is_planned = :is_planned OR (is_planned IS NULL AND :is_planned IS NULL)) AND "
+            . " (reference_sheet = :reference_sheet OR (reference_sheet IS NULL AND :reference_sheet IS NULL)) AND"
+            . " (customer = :customer OR (customer IS NULL AND :customer IS NULL))"
+            . " ";
+
+        $bindings = [
+            "project" => $sheet->project,
+            "start" => $sheet->start,
+            "end" => $sheet->end,
+            "duration" => $sheet->duration,
+            "duration_modified" => $sheet->duration_modified,
+            "start_lat" => $sheet->start_lat,
+            "start_lng" => $sheet->start_lng,
+            "start_acc" => $sheet->start_acc,
+            "end_lat" => $sheet->end_lat,
+            "end_lng" => $sheet->end_lng,
+            "end_acc" => $sheet->end_acc,
+            "is_billed" => $sheet->is_billed,
+            "is_payed" => $sheet->is_payed,
+            "is_planned" => $sheet->is_planned,
+            "reference_sheet" => $sheet->reference_sheet,
+            "customer" => $sheet->customer
+        ];
+
+        var_dump($sheet->reference_sheet);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            var_dump($row);
+        }
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
     }
 }

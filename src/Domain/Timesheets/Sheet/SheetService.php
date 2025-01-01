@@ -328,6 +328,9 @@ class SheetService extends Service {
         $startParam = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
         if ($startParam != null) {
             $startParamDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $startParam);
+            if (!$startParamDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startParam)) {
+                $startParamDate = \DateTime::createFromFormat('Y-m-d', $startParam);
+            }
             $start = $startParamDate->format('Y-m-d H:i');
         }
 
@@ -335,6 +338,9 @@ class SheetService extends Service {
         $endParam = array_key_exists("end", $requestData) ? filter_var($requestData["end"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
         if ($endParam != null) {
             $endParamDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $endParam);
+            if (!$endParamDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startParam)) {
+                $endParamDate = \DateTime::createFromFormat('Y-m-d', $endParamDate);
+            }
             $end = $endParamDate->format('Y-m-d H:i');
         }
 
@@ -349,6 +355,28 @@ class SheetService extends Service {
             }
 
             $series = $this->getMapper()->getSeriesSheets($project->id, $entry->id);
+            $series_ids = array_keys(
+                array_map(function ($sheet) {
+                    return $sheet->id;
+                }, $series)
+            );
+
+            $language = $this->settings->getAppSettings()['i18n']['php'];
+            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+
+            $series = array_map(function ($sheet) use ($language, $dateFormatPHP) {
+                list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+                return sprintf("%s: %s - %s", $date, $start, $end);
+            }, $series);
+
+            $remaining_sheets = $series;
+            $previous_sheets = [];
+
+            $index = array_search($entry->id, $series_ids);
+            if ($index !== false) {
+                $remaining_sheets = array_slice($series, $index + 1);
+                $previous_sheets = array_slice($series, 0, $index);
+            }
         }
 
         $view = array_key_exists("view", $requestData) ? filter_var($requestData["view"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
@@ -365,6 +393,8 @@ class SheetService extends Service {
             'end' => $end,
             'units' => Project::getUnits(),
             'series' => $series,
+            'previous_sheets' => $previous_sheets,
+            'remaining_sheets' => $remaining_sheets,
             'view' => $view
         ];
 
@@ -616,22 +646,18 @@ class SheetService extends Service {
                 }, $series)
             );
 
-            $remaining = [];
+            $series = array_map(function ($sheet) use ($language, $dateFormatPHP) {
+                list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+                return sprintf("%s: %s - %s", $date, $start, $end);
+            }, $series);
 
-            if (count($series) > 0) {
-                $index = array_search($timesheet->id, $series_ids);
+            $remaining_sheets = $series;
+            $previous_sheets = [];
 
-                if ($index !== false) {
-                    $remaining_sheets = array_slice($series, $index + 1);
-                } else {
-                    // base sheet is not part of the series
-                    $remaining_sheets = $series_ids;
-                }
-
-                $remaining = array_map(function ($sheet) use ($language, $dateFormatPHP) {
-                    list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
-                    return sprintf("%s: %s - %s", $date, $start, $end);
-                }, $remaining_sheets);
+            $index = array_search($timesheet->id, $series_ids);
+            if ($index !== false) {
+                $remaining_sheets = array_slice($series, $index + 1);
+                $previous_sheets = array_slice($series, 0, $index);
             }
 
             $event = [
@@ -651,7 +677,8 @@ class SheetService extends Service {
                     'is_payed' => $timesheet->is_payed,
                     'reference_sheet' => $timesheet->reference_sheet,
                     'series' => $series_ids,
-                    'remaining' => $remaining,
+                    'previous' => $previous_sheets,
+                    'remaining' => $remaining_sheets,
                     'sheet_notice' => $timesheet->id ? $this->router->urlFor('timesheets_sheets_notice_view', ['sheet' => $timesheet->id, 'project' => $project->getHash()]) . "?view=calendar" : null,
                     'has_sheet_notice' => in_array($timesheet->id, $hasNotices),
                     'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null
