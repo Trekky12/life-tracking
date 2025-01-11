@@ -9,6 +9,20 @@ class SettingsMapper extends \App\Domain\Mapper {
     protected $select_results_of_user_only = false;
     protected $insert_user = false;
 
+    public function exists() {
+        $sql = "SHOW TABLES LIKE :table";
+
+        $bindings = array("table" => $this->getTableName());
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
     public function getSetting($name) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE name = :name";
 

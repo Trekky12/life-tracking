@@ -12,13 +12,6 @@ return function (App $app) {
      * this file defines the middlewares registered
      * (The last middleware layer added is the first to be executed)
      */
-    /**
-     * CSRF Protection
-     */
-    $settings = $container->get(Settings::class);
-    if ($settings->all()['CSRF']['enabled']) {
-        $app->add($container->get(CSRF::class));
-    }
 
     /**
      * Hide Navigation Drawer on desktop 
@@ -69,6 +62,19 @@ return function (App $app) {
      * Save Base URL for Links in E-Mail
      */
     $app->add('App\Application\Middleware\BaseURLMiddleware');
+
+    /**
+     * Check if initial setup is done
+     */
+    $app->add('App\Application\Middleware\InitialSetupMiddleware');
+
+    /**
+     * CSRF Protection
+     */
+    $settings = $container->get(Settings::class);
+    if ($settings->all()['CSRF']['enabled']) {
+        $app->add($container->get(CSRF::class));
+    }
 
     /**
      * Routing

@@ -19,6 +19,11 @@ return function (App $app) {
         $group->get('/cron', \App\Application\Action\Main\CronAction::class)->setName('cron');
         $group->get('/help', \App\Application\Action\Main\HelpAction::class)->setName('help');
 
+        $group->group('/setup', function (RouteCollectorProxy $group_setup) {
+            $group_setup->get('', \App\Application\Action\Main\SetupViewAction::class)->setName('setup');
+            $group_setup->post('', \App\Application\Action\Main\SetupRunAction::class)->setName('setup_run');
+        })->add('App\Application\Middleware\AdminMiddleware');
+
         $group->group('/logfile', function (RouteCollectorProxy $group_logfile) {
             $group_logfile->get('', \App\Application\Action\Main\LogfileAction::class)->setName('logfile');
             $group_logfile->get('/data', \App\Application\Action\Main\LogfileDataAction::class)->setName('logfile_get');

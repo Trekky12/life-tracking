@@ -904,4 +904,8 @@ $lang["YES"] = "Yes";
 $lang["NO"] = "No";
 $lang["OK"] = "Ok";
 
+$lang["SETUP_START_UPGRADE"] = "Start Upgrade";
+$lang["SETUP_NOTHING_TODO"] = "Nothing to do";
+$lang["SETUP_GO_TO_MAIN"] = "Go to the frontpage...";
+
 return $lang;
