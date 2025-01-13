@@ -43,7 +43,7 @@ class OtherUserTest extends BaseTestCase {
         $body = (string) $response->getBody();
 
         $matches = [];
-        $re = '/<input required type=\"number\" class=\"form-control value\" id=\"inputValue_[0-9]+\" name="budget\[[0-9]+\]\[value\]" step="any" value="">/';
+        $re = '/<input required type=\"number\" class=\"form-control value\" id=\"inputValue_[0-9]+\" name="budget\[[0-9]+\]\[value\]" step="any" inputmode="decimal" value="">/';
         preg_match($re, $body, $matches);
 
         $this->assertFalse(empty($matches));

@@ -27,7 +27,7 @@ class Customer extends \App\Domain\DataObject {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
 
-        if (!preg_match("/^#[a-f0-9]{6}$/i", $this->background_color) || !preg_match("/^#[a-f0-9]{6}$/i", $this->text_color)) {
+        if ((!empty($this->background_color) && !preg_match("/^#[a-f0-9]{6}$/i", $this->background_color)) || (!empty($this->text_color) && !preg_match("/^#[a-f0-9]{6}$/i", $this->text_color))) {
             $this->parsing_errors[] = "WRONG_COLOR_TYPE";
         }
 

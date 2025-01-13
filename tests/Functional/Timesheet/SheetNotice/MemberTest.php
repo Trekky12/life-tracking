@@ -57,7 +57,7 @@ class MemberTest extends TimesheetTestBase {
      */
     public function testGetChildData($data) {
 
-        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH) . '?sheet=' . $this->TEST_SHEET_ID);
+        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH) . '?id=' . $this->TEST_SHEET_ID);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);

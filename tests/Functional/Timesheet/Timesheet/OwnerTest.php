@@ -84,7 +84,7 @@ class OwnerTest extends TimesheetTestBase {
         $this->assertStringContainsString("<input name=\"id\" id=\"entry_id\" type=\"hidden\" value=\"" . $timesheet_id . "\">", $body);
 
         $matches = [];
-        $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" .* type="hidden" value="(?<id>[0-9]*)">/s';
+        $re = '/<form class="form-horizontal" action="(?<save>[\/a-zA-Z0-9]*)" method="POST">.*<input name="id" id="entry_id" type="hidden" value="(?<id>[0-9]*)">/s';
         preg_match($re, $body, $matches);
 
         $this->assertArrayHasKey("save", $matches);

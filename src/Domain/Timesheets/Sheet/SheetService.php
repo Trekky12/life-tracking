@@ -345,6 +345,9 @@ class SheetService extends Service {
         }
 
         $series = [];
+        $previous_sheets = [];
+        $remaining_sheets = [];
+        
         if ($entry) {
             $start = $entry->start;
             $end = $entry->end;
@@ -370,7 +373,6 @@ class SheetService extends Service {
             }, $series);
 
             $remaining_sheets = $series;
-            $previous_sheets = [];
 
             $index = array_search($entry->id, $series_ids);
             if ($index !== false) {
