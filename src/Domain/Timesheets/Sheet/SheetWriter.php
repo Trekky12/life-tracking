@@ -186,7 +186,7 @@ class SheetWriter extends ObjectActivityWriter {
     }
 
     public function getObjectViewRoute(): string {
-        return 'timesheets_sheets';
+        return 'timesheets_sheets_edit';
     }
 
     public function getObjectViewRouteParams($entry): array {

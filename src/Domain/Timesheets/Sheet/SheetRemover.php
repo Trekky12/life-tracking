@@ -97,7 +97,7 @@ class SheetRemover extends ObjectActivityRemover {
     }
 
     public function getObjectViewRoute(): string {
-        return 'timesheets_sheets';
+        return 'timesheets_sheets_edit';
     }
 
     public function getObjectViewRouteParams($entry): array {
