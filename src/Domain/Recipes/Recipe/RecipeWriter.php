@@ -7,9 +7,10 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 use App\Domain\Recipes\Grocery\GroceryService;
 use App\Domain\Recipes\Grocery\GroceryWriter;
+use App\Domain\Main\Utility\Utility;
 
 class RecipeWriter extends ObjectActivityWriter
 {
@@ -62,7 +63,10 @@ class RecipeWriter extends ObjectActivityWriter
                 /**
                  * Create Thumbnail
                  */
-                $img = Image::make($complete_file_name . '.' . $file_extension);
+                $manager = new ImageManager(
+                    new \Intervention\Image\Drivers\Gd\Driver()
+                );
+                $img = $manager->read($complete_file_name . '.' . $file_extension);
                 $img->resize(400, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -126,8 +130,8 @@ class RecipeWriter extends ObjectActivityWriter
 
     private function getStepData($step_data, $idx)
     {
-        $name = array_key_exists("name", $step_data) && !empty($step_data["name"]) ? filter_var($step_data["name"], FILTER_SANITIZE_STRING) : null;
-        $description = array_key_exists("description", $step_data) && !empty($step_data["description"]) ? filter_var($step_data["description"], FILTER_SANITIZE_STRING) : null;
+        $name = array_key_exists("name", $step_data) && !empty($step_data["name"]) ? Utility::filter_string_polyfill($step_data["name"]) : null;
+        $description = array_key_exists("description", $step_data) && !empty($step_data["description"]) ? Utility::filter_string_polyfill($step_data["description"]) : null;
         $preparation_time = array_key_exists("preparation_time", $step_data) && !empty($step_data["preparation_time"]) ? intval(filter_var($step_data["preparation_time"], FILTER_SANITIZE_NUMBER_INT)) : null;
         $waiting_time = array_key_exists("waiting_time", $step_data) && !empty($step_data["waiting_time"]) ? intval(filter_var($step_data["waiting_time"], FILTER_SANITIZE_NUMBER_INT)) : null;
 
@@ -142,10 +146,10 @@ class RecipeWriter extends ObjectActivityWriter
         if (array_key_exists("ingredients", $step_data) && is_array($step_data["ingredients"])) {
             foreach ($step_data["ingredients"] as $idx => $ingredient_data) {
 
-                $grocery_input = array_key_exists("ingredient", $ingredient_data) && !empty($ingredient_data["ingredient"]) ? trim(filter_var($ingredient_data["ingredient"], FILTER_SANITIZE_STRING)) : null;
+                $grocery_input = array_key_exists("ingredient", $ingredient_data) && !empty($ingredient_data["ingredient"]) ? trim(Utility::filter_string_polyfill($ingredient_data["ingredient"])) : null;
                 $amount = array_key_exists("amount", $ingredient_data) && !empty($ingredient_data["amount"]) ? filter_var($ingredient_data["amount"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
                 $unit = array_key_exists("unit", $ingredient_data) && !empty($ingredient_data["unit"]) ? filter_var($ingredient_data["unit"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
-                $notice = array_key_exists("notice", $ingredient_data) && !empty($ingredient_data["notice"]) ? filter_var($ingredient_data["notice"], FILTER_SANITIZE_STRING) : null;
+                $notice = array_key_exists("notice", $ingredient_data) && !empty($ingredient_data["notice"]) ? Utility::filter_string_polyfill($ingredient_data["notice"]) : null;
 
                 $grocery_id = array_key_exists("id", $ingredient_data) && !empty($ingredient_data["id"]) ? intval(filter_var($ingredient_data["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
 

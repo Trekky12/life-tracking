@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Profile;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class MobileFavoritesTest extends BaseTestCase {
@@ -37,9 +38,8 @@ class MobileFavoritesTest extends BaseTestCase {
         $this->assertStringContainsString('<form class="form-horizontal" id="mobileFavoritesForm" action="' . $this->uri_save . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -56,9 +56,7 @@ class MobileFavoritesTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -73,10 +71,10 @@ class MobileFavoritesTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Edit created element
-     * @depends testAddedElement
      */
+    #[Depends('testAddedElement')]
     public function testGetElementCreatedEdit(int $favorite_id) {
 
         $response = $this->request('GET', $this->uri_edit . $favorite_id);
@@ -97,10 +95,7 @@ class MobileFavoritesTest extends BaseTestCase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetElementCreatedEdit
-     */
+    #[Depends('testGetElementCreatedEdit')]
     public function testPostElementCreatedSave(int $favorite_id) {
 
         $data = [
@@ -118,10 +113,7 @@ class MobileFavoritesTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * Is the element updated?
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testPostElementCreatedSave')]
     public function testGetElementUpdated(array $result_data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -137,9 +129,7 @@ class MobileFavoritesTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     */
+    #[Depends('testGetElementUpdated')]
     public function testDeleteElement(int $favorite_id) {
         $response = $this->request('DELETE', $this->uri_delete . $favorite_id);
 
@@ -151,11 +141,10 @@ class MobileFavoritesTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $iconName = preg_quote(str_replace("fas fa-", "", $data["icon"]));
-        $re = '/<tr>\s*<td>' . $data["position"] . '<\/td>\s*<td><span class="icon fontawesome-icon icon-'. $iconName .' ">.*?<\/span><\/td>\s*<td>' . str_replace('/', "\/", $data["url"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $iconName = preg_quote(str_replace("fas fa-", "", $data["icon"] ?? ''));
+        $re = '/<tr>\s*<td>' . $data["position"] . '<\/td>\s*<td><span class="icon fontawesome-icon icon-' . $iconName . ' ">.*?<\/span><\/td>\s*<td>' . str_replace('/', "\/", $data["url"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-        
+
         return $matches;
     }
-
 }

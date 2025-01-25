@@ -17,7 +17,7 @@ class OwnerNoViewTest extends RecipesCookbooksTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * View Project (owner -> has no access to view)
      */
     public function testGetViewParentOwner() {
@@ -28,8 +28,8 @@ class OwnerNoViewTest extends RecipesCookbooksTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-    
-    /**
+
+    /** 
      * View recipe of cookbook
      */
     public function testGetViewRecipe() {
@@ -40,5 +40,4 @@ class OwnerNoViewTest extends RecipesCookbooksTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

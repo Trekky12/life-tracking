@@ -27,21 +27,20 @@ class TableTest extends BaseTestCase {
             "datatable" => 1
         ];
 
-        $response = $this->request('GET', '/finances/table/?'. http_build_query($data));
+        $response = $this->request('GET', '/finances/table/?' . http_build_query($data));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertIsArray($json);
-        
+
         $this->assertArrayHasKey("recordsTotal", $json);
         $this->assertArrayHasKey("recordsFiltered", $json);
         $this->assertArrayHasKey("sum", $json);
         $this->assertArrayHasKey("data", $json);
         $this->assertIsArray($json["data"]);
     }
-
 }

@@ -17,7 +17,7 @@ class NoAccessTest extends TripTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Create the Route
      */
     public function testPostRouteAdd() {
@@ -27,7 +27,8 @@ class NoAccessTest extends TripTestBase {
             "end_date" => date('Y-m-d'),
             "waypoints" => [
                 [
-                    "latLng" => ["lat" => 1,
+                    "latLng" => [
+                        "lat" => 1,
                         "lng" => 2
                     ],
                     "name" => "Waypoint 1"
@@ -57,7 +58,7 @@ class NoAccessTest extends TripTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Get the created route
      */
     public function testGetCreatedRoute() {
@@ -74,9 +75,8 @@ class NoAccessTest extends TripTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Get route waypoints
-     * @de1pends testGetCreatedRoute
      */
     public function testGetRouteWaypoints() {
         $response = $this->request('GET', $this->getURIRouteWaypoints($this->TEST_TRIP_HASH) . "?route=" . $this->TEST_ROUTE_ID);
@@ -92,7 +92,7 @@ class NoAccessTest extends TripTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Delete Route
      */
     public function testDeleteRoute() {
@@ -108,5 +108,4 @@ class NoAccessTest extends TripTestBase {
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

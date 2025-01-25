@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Recipes\Recipe;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class UserTest extends BaseTestCase {
@@ -10,7 +11,7 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/recipes/edit/";
     protected $uri_save = "/recipes/save/";
     protected $uri_delete = "/recipes/delete/";
-    
+
     protected $uri_view = "/recipes/HASH/view";
 
     protected function setUp(): void {
@@ -39,9 +40,8 @@ class UserTest extends BaseTestCase {
         $this->assertStringContainsString('<form class="form-horizontal" action="' . $this->uri_save . '" method="POST"', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -84,9 +84,7 @@ class UserTest extends BaseTestCase {
         return ["data" => $data, "hash" => $matches["hash"]];
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($result) {
         $response = $this->request('GET', str_replace("HASH", $result["hash"], $this->uri_view));
 
@@ -101,11 +99,11 @@ class UserTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Edit created element
-     * @depends testAddedElement
-     * @depends testPostAddElement
      */
+    #[Depends('testAddedElement')]
+    #[Depends('testPostAddElement')]
     public function testGetElementCreatedEdit(int $entry_id, array $result) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
@@ -128,10 +126,7 @@ class UserTest extends BaseTestCase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetElementCreatedEdit
-     */
+    #[Depends('testGetElementCreatedEdit')]
     public function testPostElementCreatedSave(int $entry_id) {
 
         $data = [
@@ -169,22 +164,18 @@ class UserTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testGetElementCreatedEdit
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testGetElementCreatedEdit')]
+    #[Depends('testPostElementCreatedSave')]
     public function testChanges(int $entry_id, $data) {
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
         $body = (string) $response->getBody();
         $this->compareInputFields($body, $data);
-        
+
         return $entry_id;
     }
 
-    /**
-     * @depends testChanges
-     */
+    #[Depends('testChanges')]
     public function testDeleteElement(int $entry_id) {
         $response = $this->request('DELETE', $this->uri_delete . $entry_id);
 
@@ -201,5 +192,4 @@ class UserTest extends BaseTestCase {
 
         return $matches;
     }
-
 }

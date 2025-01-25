@@ -13,15 +13,15 @@ class CurrentWeatherWidget implements Widget {
         $this->translation = $translation;
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         return null;
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         return $widget->getOptions()["title"];
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_TITLE"),
@@ -38,7 +38,7 @@ class CurrentWeatherWidget implements Widget {
         ];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         return null;
     }
 

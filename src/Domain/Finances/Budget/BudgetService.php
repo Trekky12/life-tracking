@@ -104,7 +104,7 @@ class BudgetService extends Service {
     public function checkBudget(FinancesEntry $entry) {
         $results = array();
 
-        $date = new \DateTime($entry->date);
+        $date = new \DateTime($entry->date ?? '');
         $now = new \DateTime('now');
 
         if (($date->format('m') == $now->format('m')) && $entry->type == 0) {

@@ -53,7 +53,7 @@ class LocationService extends Service {
         $hide_clusters = false;
 
         if (!is_null($hide)) {
-            $hidden_markers = filter_var_array($hide, FILTER_SANITIZE_STRING);
+            $hidden_markers = filter_var_array($hide, FILTER_UNSAFE_RAW);
 
             if (in_array("clusters", $hidden_markers)) {
                 $hide_clusters = true;

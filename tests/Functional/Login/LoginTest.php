@@ -2,13 +2,11 @@
 
 namespace Tests\Functional\Login;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class LoginTest extends BaseTestCase {
 
-    /**
-     * 
-     */
     public function testGetHomepageWithoutLogin() {
         $response = $this->request('GET', '/');
 
@@ -16,7 +14,7 @@ class LoginTest extends BaseTestCase {
         $this->assertEquals("/login", $response->getHeaderLine("Location"));
     }
 
-    /**
+    /** 
      * Test Login
      */
     public function testLoginCSRFFail() {
@@ -33,10 +31,10 @@ class LoginTest extends BaseTestCase {
         return $this->extractFormCSRF($response);
     }
 
-    /**
+    /** 
      * Test Login
-     * @depends testLoginPage
      */
+    #[Depends('testLoginPage')]
     public function testLogin(array $csrf_data) {
         $data = [
             "username" => "admin",
@@ -48,9 +46,7 @@ class LoginTest extends BaseTestCase {
         $this->assertEquals("/", $response->getHeaderLine("Location"));
     }
 
-    /**
-     * @depends testLogin
-     */
+    #[Depends('testLogin')]
     public function testGetHomepageAfterLogin() {
 
         $response = $this->request('GET', '/');
@@ -58,9 +54,7 @@ class LoginTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testLogin
-     */
+    #[Depends('testLogin')]
     public function testLogout() {
 
         $response = $this->request('GET', '/logout');
@@ -71,7 +65,7 @@ class LoginTest extends BaseTestCase {
     }
 
     /**
-     * @depends testLoginPage
+     * #[Depends('testLoginPage')]
      */
     /*public function testLoginWithSameCSRFToken(array $csrf_data) {
         $data = [
@@ -83,5 +77,4 @@ class LoginTest extends BaseTestCase {
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('Failed CSRF check!', (string) $response->getBody());
     }*/
-
 }

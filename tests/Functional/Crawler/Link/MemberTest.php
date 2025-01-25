@@ -37,9 +37,8 @@ class MemberTest extends CrawlerTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -52,14 +51,13 @@ class MemberTest extends CrawlerTestBase {
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH), $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-
     }
 
-    /**
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -73,15 +71,15 @@ class MemberTest extends CrawlerTestBase {
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_LINK_ID, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     */
+
+
     public function testDeleteElement() {
-        
+
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_LINK_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -97,5 +95,4 @@ class MemberTest extends CrawlerTestBase {
     protected function getURIChildOverview($hash) {
         return str_replace("HASH", $hash, $this->uri_child_overview);
     }
-
 }

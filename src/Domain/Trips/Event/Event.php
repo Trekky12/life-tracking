@@ -17,25 +17,25 @@ class Event extends \App\Domain\DataObject {
 
         $this->trip = $this->exists('trip', $data) ? filter_var($data['trip'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
-        $this->start_date = $this->exists('start_date', $data) ? filter_var($data['start_date'], FILTER_SANITIZE_STRING) : null;
-        $this->start_time = $this->exists('start_time', $data) ? filter_var($data['start_time'], FILTER_SANITIZE_STRING) : null;
-        $this->start_address = $this->exists('start_address', $data) ? filter_var($data['start_address'], FILTER_SANITIZE_STRING) : null;
+        $this->start_date = $this->exists('start_date', $data) ? Utility::filter_string_polyfill($data['start_date']) : null;
+        $this->start_time = $this->exists('start_time', $data) ? Utility::filter_string_polyfill($data['start_time']) : null;
+        $this->start_address = $this->exists('start_address', $data) ? Utility::filter_string_polyfill($data['start_address']) : null;
         $this->start_lat = $this->exists('start_lat', $data) ? filter_var($data['start_lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->start_lng = $this->exists('start_lng', $data) ? filter_var($data['start_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-        $this->end_date = $this->exists('end_date', $data) ? filter_var($data['end_date'], FILTER_SANITIZE_STRING) : null;
-        $this->end_time = $this->exists('end_time', $data) ? filter_var($data['end_time'], FILTER_SANITIZE_STRING) : null;
-        $this->end_address = $this->exists('end_address', $data) ? filter_var($data['end_address'], FILTER_SANITIZE_STRING) : null;
+        $this->end_date = $this->exists('end_date', $data) ? Utility::filter_string_polyfill($data['end_date']) : null;
+        $this->end_time = $this->exists('end_time', $data) ? Utility::filter_string_polyfill($data['end_time']) : null;
+        $this->end_address = $this->exists('end_address', $data) ? Utility::filter_string_polyfill($data['end_address']) : null;
         $this->end_lat = $this->exists('end_lat', $data) ? filter_var($data['end_lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->end_lng = $this->exists('end_lng', $data) ? filter_var($data['end_lng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-        $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
+        $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
-        $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : null;
+        $this->type = $this->exists('type', $data) ? Utility::filter_string_polyfill($data['type']) : null;
 
         if (!in_array($this->type, \App\Domain\Trips\Event\TripEventService::getEventTypes())) {
             $this->type = null;
@@ -44,16 +44,16 @@ class Event extends \App\Domain\DataObject {
         /**
          * Clean date/time
          */
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->start_date)) {
+        if (!is_null($this->start_date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->start_date)) {
             $this->start_date = null;
         }
-        if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->start_time)) {
+        if (!is_null($this->start_time) && !preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->start_time)) {
             $this->start_time = null;
         }
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->end_date)) {
+        if (!is_null($this->end_date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->end_date)) {
             $this->end_date = null;
         }
-        if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->end_time)) {
+        if (!is_null($this->end_time) && !preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->end_time)) {
             $this->end_time = null;
         }
 
@@ -74,7 +74,7 @@ class Event extends \App\Domain\DataObject {
         }
 
         if ($this->exists('image', $data)) {
-            $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
+            $this->image = Utility::filter_string_polyfill($data['image']);
         }
 
         /* if (empty($this->name)) {
@@ -83,27 +83,27 @@ class Event extends \App\Domain\DataObject {
     }
 
     public function isFlight() {
-        return strcmp($this->type, "FLIGHT") === 0;
+        return strcmp($this->type ?? '', "FLIGHT") === 0;
     }
 
     public function isDrive() {
-        return strcmp($this->type, "DRIVE") === 0;
+        return strcmp($this->type ?? '', "DRIVE") === 0;
     }
 
     public function isTrainride() {
-        return strcmp($this->type, "TRAINRIDE") === 0;
+        return strcmp($this->type ?? '', "TRAINRIDE") === 0;
     }
 
     public function isAccommodation() {
-        return strcmp($this->type, "HOTEL") === 0;
+        return strcmp($this->type ?? '', "HOTEL") === 0;
     }
 
     public function isCarrental() {
-        return strcmp($this->type, "CARRENTAL") === 0;
+        return strcmp($this->type ?? '', "CARRENTAL") === 0;
     }
 
     public function isEvent() {
-        return strcmp($this->type, "EVENT") === 0;
+        return strcmp($this->type ?? '', "EVENT") === 0;
     }
 
     public function isTravel() {
@@ -111,11 +111,11 @@ class Event extends \App\Domain\DataObject {
     }
 
     public function isWaypoint() {
-        return strcmp($this->type, "WAYPOINT") === 0;
+        return strcmp($this->type ?? '', "WAYPOINT") === 0;
     }
 
     public function isShip() {
-        return strcmp($this->type, "SHIP") === 0;
+        return strcmp($this->type ?? '', "SHIP") === 0;
     }
 
     public function isWithoutDate() {
@@ -165,7 +165,7 @@ class Event extends \App\Domain\DataObject {
         }
 
         // same day but different end time, so remove day format 
-        if (!is_null($start) && !is_null($end) && strcmp($this->start_date, $this->end_date) === 0 && strcmp($this->start_time, $this->end_time) !== 0) {
+        if (!is_null($start) && !is_null($end) && strcmp($this->start_date ?? '', $this->end_date ?? '') === 0 && strcmp($this->start_time ?? '', $this->end_time ?? '') !== 0) {
             if (!is_null($this->end_time)) {
                 $d = new \DateTime($this->end_time);
                 $end = $timeFormatter->format($d);
@@ -191,7 +191,7 @@ class Event extends \App\Domain\DataObject {
         }
 
         // same start and end date? hide end date
-        if (strcmp($start, $end) === 0) {
+        if (strcmp($start ?? '', $end ?? '') === 0) {
             $end = null;
         }
 
@@ -202,7 +202,7 @@ class Event extends \App\Domain\DataObject {
         $end1 = "{$end}{$end_sep}{$end_address}";
 
         $popup = ""; //"<h4>{$this->name}</h4>";
-        if (!empty($start1) && !empty($end1) && strcmp($start1, $end1) !== 0) {
+        if (!empty($start1) && !empty($end1) && strcmp($start1 ?? '', $end1 ?? '') !== 0) {
             if (!empty($end)) {
                 $popup .= "{$from} ";
             }

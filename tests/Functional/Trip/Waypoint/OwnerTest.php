@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Trip\Waypoint;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Trip\TripTestBase;
 
 class OwnerTest extends TripTestBase {
@@ -16,7 +17,7 @@ class OwnerTest extends TripTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Create the Waypoint
      */
     public function testPostWaypointAdd() {
@@ -45,10 +46,10 @@ class OwnerTest extends TripTestBase {
         return intval($json["id"]);
     }
 
-    /**
+    /** 
      * Delete Waypoint
-     * @depends testPostWaypointAdd
      */
+    #[Depends('testPostWaypointAdd')]
     public function testDeleteWaypoint(int $waypoint_id) {
         $response = $this->request('DELETE', $this->getURIWaypointDelete($this->TEST_TRIP_HASH) . '?id=' . $waypoint_id);
 
@@ -60,5 +61,4 @@ class OwnerTest extends TripTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

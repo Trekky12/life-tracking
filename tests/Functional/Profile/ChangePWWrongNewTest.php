@@ -26,9 +26,8 @@ class ChangePWWrongNewTest extends BaseTestCase {
         $this->assertStringContainsString('<form action="/profile/changepassword" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testChangePasswordWrongNew1() {
 
         $data = [
@@ -45,9 +44,8 @@ class ChangePWWrongNewTest extends BaseTestCase {
         $this->assertStringContainsString("Beide neuen Passwörter müssen übereinstimmen", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testChangePasswordWrongNew2() {
 
         $data = [
@@ -63,5 +61,4 @@ class ChangePWWrongNewTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Beide neuen Passwörter müssen übereinstimmen", $body);
     }
-
 }

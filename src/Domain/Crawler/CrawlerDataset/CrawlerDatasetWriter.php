@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Crawler\CrawlerService;
+use App\Domain\Main\Utility\Utility;
 
 class CrawlerDatasetWriter extends ObjectWriter {
 
@@ -22,7 +23,7 @@ class CrawlerDatasetWriter extends ObjectWriter {
 
     public function save($id, $data, $additionalData = null): Payload {
 
-        $identifier = array_key_exists("identifier", $data) ? filter_var($data["identifier"], FILTER_SANITIZE_STRING) : null;
+        $identifier = array_key_exists("identifier", $data) ? Utility::filter_string_polyfill($data["identifier"]) : null;
 
         $crawler = $this->crawler_service->getFromHash($additionalData["crawler"]);
 

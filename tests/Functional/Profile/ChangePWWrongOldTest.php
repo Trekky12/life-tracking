@@ -26,8 +26,8 @@ class ChangePWWrongOldTest extends BaseTestCase {
         $this->assertStringContainsString('<form action="/profile/changepassword" method="POST">', $body);
     }
 
-    /**
-     */
+
+
     public function testChangePasswordWrongOld() {
 
         $data = [
@@ -43,5 +43,4 @@ class ChangePWWrongOldTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Altes Passwort ist falsch", $body);
     }
-
 }

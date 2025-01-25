@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Profile;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class ApplicationPasswordsTest extends BaseTestCase {
@@ -37,9 +38,8 @@ class ApplicationPasswordsTest extends BaseTestCase {
         $this->assertStringContainsString('<form class="form-horizontal" id="applicationPasswordsForm" action="' . $this->uri_save . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -55,9 +55,7 @@ class ApplicationPasswordsTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -71,9 +69,7 @@ class ApplicationPasswordsTest extends BaseTestCase {
         return intval($row["id_delete"]);
     }
 
-    /**
-     * @depends testAddedElement
-     */
+    #[Depends('testAddedElement')]
     public function testDeleteElement(int $application_password_id) {
         $response = $this->request('DELETE', $this->uri_delete . $application_password_id);
 
@@ -90,5 +86,4 @@ class ApplicationPasswordsTest extends BaseTestCase {
 
         return $matches;
     }
-
 }

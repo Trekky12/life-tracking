@@ -45,5 +45,4 @@ class TableTest extends TimesheetTestBase {
         $this->assertArrayHasKey("data", $json);
         $this->assertIsArray($json["data"]);
     }
-
 }

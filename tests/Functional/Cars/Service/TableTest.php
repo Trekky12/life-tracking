@@ -13,7 +13,7 @@ class TableTest extends BaseTestCase {
     protected function tearDown(): void {
         $this->logout();
     }
-    
+
     public function testJSTableService() {
 
         $data = [
@@ -27,20 +27,19 @@ class TableTest extends BaseTestCase {
             "datatable" => 1
         ];
 
-        $response = $this->request('GET', '/cars/service/table/?'. http_build_query($data));
+        $response = $this->request('GET', '/cars/service/table/?' . http_build_query($data));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertIsArray($json);
-        
+
         $this->assertArrayHasKey("recordsTotal", $json);
         $this->assertArrayHasKey("recordsFiltered", $json);
         $this->assertArrayHasKey("data", $json);
         $this->assertIsArray($json["data"]);
     }
-
 }

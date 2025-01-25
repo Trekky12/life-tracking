@@ -26,7 +26,7 @@ class TimesheetTestBase extends BaseTestCase {
 
     protected function getParent($body, $name) {
         $matches = [];
-        $re = '/<tr>\s*<td>\s*<a href="\/timesheets\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a>\s*<\/td>\s*(<td(.*)?>.*?|\s*<\/td>\s*)*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categorybudget\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/customers\/\">(.*?|\s*)*<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categories\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/noticepassword\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/noticefields\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>\s*<a href="\/timesheets\/(?<hash>.*)\/view\/">' . preg_quote($name ?? '') . '<\/a>\s*<\/td>\s*(<td(.*)?>.*?|\s*<\/td>\s*)*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categorybudget\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/customers\/\">(.*?|\s*)*<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/categories\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/noticepassword\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/timesheets\/([0-9a-zA-Z]+)\/noticefields\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
@@ -37,26 +37,26 @@ class TimesheetTestBase extends BaseTestCase {
         $language = $this->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate = new \IntlDateFormatter($language);
         $fmtDate->setPattern($dateFormatPHP['date']);
 
-        $fmtDateTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDateTime = new \IntlDateFormatter($language);
         $fmtDateTime->setPattern($dateFormatPHP['datetimeShort']);
 
-        $fmtTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtTime = new \IntlDateFormatter($language);
         $fmtTime->setPattern($dateFormatPHP['time']);
 
-        $start = new \DateTime($data["start"]);
-        $end = new \DateTime($data["end"]);
+        $start = new \DateTime($data["start"] ?? '');
+        $end = new \DateTime($data["end"] ?? '');
 
         $dateTD = !is_null($data["start"]) ? $fmtDate->format($start) : (!is_null($data["end"]) ? $fmtDate->format($end) : "");
         $startTD = !is_null($data["start"]) ? $fmtTime->format($start) : "";
         $endTD = !is_null($data["end"]) ? $fmtTime->format($end) : "";
 
         $matches = [];
-        $re = '/<tr data-billed="0" data-payed="0" data-planned="0">\s*<td><input type="checkbox" name="check_row" data-id="(?<id>[0-9]*)"><\/td>\s*<td>' . preg_quote($dateTD) . '<\/td>\s*<td>' . preg_quote($startTD) . '<\/td>\s*<td>' . preg_quote($endTD) . '<\/td>\s*<td>' . preg_quote($data["diff"]) . '<\/td>\s*<td>\s*<\/td>\s*<td>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURINoticeEdit($hash)) . '">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" data-warning="" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr data-billed="0" data-payed="0" data-planned="0">\s*<td><input type="checkbox" name="check_row" data-id="(?<id>[0-9]*)"><\/td>\s*<td>' . preg_quote($dateTD ?? '') . '<\/td>\s*<td>' . preg_quote($startTD ?? '') . '<\/td>\s*<td>' . preg_quote($endTD ?? '') . '<\/td>\s*<td>' . preg_quote($data["diff"] ?? '') . '<\/td>\s*<td>\s*<\/td>\s*<td>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURINoticeEdit($hash)) . '">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" data-warning="" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-                
+
         return $matches;
     }
 
@@ -92,7 +92,7 @@ class TimesheetTestBase extends BaseTestCase {
 
     protected function getCustomerElementInTable($body, $data, $hash) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>.*?<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURICustomerNoticeEdit($hash)) . '">\s*(.*)\s*<\/a>\s*<\/td>\s*\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"] ?? '') . '<\/td>\s*<td>.*?<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURICustomerNoticeEdit($hash)) . '">\s*(.*)\s*<\/a>\s*<\/td>\s*\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
@@ -100,7 +100,7 @@ class TimesheetTestBase extends BaseTestCase {
 
     protected function getNoticeFieldElementInTable($body, $data, $hash) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>.*?<\/td>\s*<td>\s*(.*)\s*<\/td>\s*<td>.*?<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"] ?? '') . '<\/td>\s*<td>.*?<\/td>\s*<td>\s*(.*)\s*<\/td>\s*<td>.*?<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

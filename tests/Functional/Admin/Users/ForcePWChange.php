@@ -22,14 +22,14 @@ class ForcePWChange extends BaseTestCase {
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
     }
-    
+
     public function testProfile() {
         $response = $this->request('GET', "/profile/activity");
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
     }
-    
+
     public function testNotifications() {
         $response = $this->request('GET', "/notifications/");
 
@@ -92,5 +92,4 @@ class ForcePWChange extends BaseTestCase {
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Profile;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class ImageTest extends BaseTestCase {
@@ -42,13 +43,11 @@ class ImageTest extends BaseTestCase {
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
-        
+
         return ["filename" => $filename, "extension" => $file_extension];
     }
 
-    /**
-     * @depends testImageUpload
-     */
+    #[Depends('testImageUpload')]
     public function testImageAvailable($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -66,10 +65,8 @@ class ImageTest extends BaseTestCase {
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
     }
-    
-    /**
-     * @depends testdeleteImageUpload
-     */
+
+    #[Depends('testdeleteImageUpload')]
     public function testImageNotAvailable() {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -78,5 +75,4 @@ class ImageTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertDoesNotMatchRegularExpression('/<img class="image_uploaded" src="\/uploads\/(.*)"\/>/', $body);
     }
-
 }

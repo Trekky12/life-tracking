@@ -27,13 +27,13 @@ class MemberTest extends SplitbillTestBase {
 
         // search for all elements
         $matches = $this->getParents($body);
-        $hashs = array_map(function($match) {
+        $hashs = array_map(function ($match) {
             return $match["hash"];
         }, $matches);
         $this->assertContains($this->TEST_GROUP_HASH, $hashs);
     }
 
-    /**
+    /** 
      * Edit group
      */
     public function testGetParentEdit() {
@@ -45,9 +45,8 @@ class MemberTest extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_GROUP_ID,
@@ -61,7 +60,7 @@ class MemberTest extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -73,7 +72,7 @@ class MemberTest extends SplitbillTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View group (members can access)
      */
     public function testGetViewParent() {
@@ -84,5 +83,4 @@ class MemberTest extends SplitbillTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("splitbills_bills_table", $body);
     }
-
 }

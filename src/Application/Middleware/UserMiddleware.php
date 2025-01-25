@@ -73,7 +73,7 @@ class UserMiddleware {
             $username = null;
             $password = null;
 
-            if (isset($server_params["HTTP_AUTHORIZATION"])) {
+            if (isset($server_params["HTTP_AUTHORIZATION"]) && !is_null($server_params["HTTP_AUTHORIZATION"])) {
                 if (preg_match("/Basic\s+(.*)$/i", $server_params["HTTP_AUTHORIZATION"], $matches)) {
                     list($username, $password) = explode(":", base64_decode($matches[1]), 2);
                 }

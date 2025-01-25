@@ -35,7 +35,7 @@ class NoAccessTest extends TripTestBase {
         }
     }
 
-    /**
+    /** 
      * Edit trip
      */
     public function testGetParentEdit() {
@@ -49,9 +49,8 @@ class NoAccessTest extends TripTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_TRIP_ID,
@@ -65,7 +64,7 @@ class NoAccessTest extends TripTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -78,7 +77,7 @@ class NoAccessTest extends TripTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View Trip
      */
     public function testGetViewParent() {
@@ -89,5 +88,4 @@ class NoAccessTest extends TripTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

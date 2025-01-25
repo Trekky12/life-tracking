@@ -35,7 +35,7 @@ class NoAccessTest extends SplitbillTestBase {
         }
     }
 
-    /**
+    /** 
      * Edit group
      */
     public function testGetParentEdit() {
@@ -48,9 +48,8 @@ class NoAccessTest extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
 
         $data = [
@@ -65,7 +64,7 @@ class NoAccessTest extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -77,7 +76,7 @@ class NoAccessTest extends SplitbillTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View Group (member)
      */
     public function testGetViewParent() {
@@ -89,7 +88,7 @@ class NoAccessTest extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * View Group (owner -> has no access to view)
      */
     public function testGetViewParentOwner() {
@@ -100,5 +99,4 @@ class NoAccessTest extends SplitbillTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

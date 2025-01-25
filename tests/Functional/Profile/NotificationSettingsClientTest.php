@@ -61,7 +61,7 @@ class NotificationSettingsClientTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertIsArray($json);
 
         $this->assertArrayHasKey("status", $json);
@@ -92,7 +92,7 @@ class NotificationSettingsClientTest extends BaseTestCase {
         $this->assertArrayHasKey("status", $json);
         $this->assertSame("success", $json["status"]);
     }
-    
+
     public function testGetClientCategoriesBack() {
 
         $data = [
@@ -115,5 +115,4 @@ class NotificationSettingsClientTest extends BaseTestCase {
         $this->assertIsArray($json["data"]);
         $this->assertNotContains($this->TEST_CLIENT_CATEGORY, $json["data"]);
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Board\Card;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Board\BoardTestBase;
 
 class OwnerTest extends BoardTestBase {
@@ -63,8 +64,8 @@ class OwnerTest extends BoardTestBase {
 
     /**
      * Is the created card visible?
-     * @depends testPostChildSave
      */
+    #[Depends('testPostChildSave')]
     public function testGetChildCreated(array $data) {
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
@@ -77,16 +78,16 @@ class OwnerTest extends BoardTestBase {
         $this->assertIsArray($json["stacks"]);
 
         $this_card = null;
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
 
-            foreach($stack["cards"] as $card){
+            foreach ($stack["cards"] as $card) {
                 $this->assertIsArray($card);
                 $this->assertArrayHasKey("id", $card);
                 $this->assertArrayHasKey("title", $card);
 
-                if($card["title"] == $data["title"]){
+                if ($card["title"] == $data["title"]) {
                     $this_card = $card;
                     break;
                 }
@@ -108,8 +109,8 @@ class OwnerTest extends BoardTestBase {
 
     /**
      * Update / Check Update
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testPostChildUpdate(int $card_id) {
         $data = [
             "title" => "Test Card 2 Updated",
@@ -139,9 +140,9 @@ class OwnerTest extends BoardTestBase {
 
     /**
      * Get updated data
-     * @depends testPostChildUpdate
-     * @depends testGetChildCreated
      */
+    #[Depends('testPostChildUpdate')]
+    #[Depends('testGetChildCreated')]
     public function testGetChildDataUpdated(array $data, int $card_id) {
 
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
@@ -150,16 +151,16 @@ class OwnerTest extends BoardTestBase {
         $json = json_decode($body, true);
 
         $this_card = null;
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
 
-            foreach($stack["cards"] as $card){
+            foreach ($stack["cards"] as $card) {
                 $this->assertIsArray($card);
                 $this->assertArrayHasKey("id", $card);
                 $this->assertArrayHasKey("title", $card);
 
-                if($card["id"] == $card_id){
+                if ($card["id"] == $card_id) {
                     $this_card = $card;
                     break;
                 }
@@ -179,8 +180,8 @@ class OwnerTest extends BoardTestBase {
 
     /**
      * Delete stack
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testDeleteChild(int $card_id) {
         $response = $this->request('DELETE', $this->uri_delete . $card_id);
 
@@ -192,5 +193,4 @@ class OwnerTest extends BoardTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

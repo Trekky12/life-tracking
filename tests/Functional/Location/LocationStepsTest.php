@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Location;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class LocationStepsTest extends BaseTestCase {
@@ -54,9 +55,7 @@ class LocationStepsTest extends BaseTestCase {
         return ["year" => $year, "month" => $month, "date" => $date, "element" => $element];
     }
 
-    /**
-     * @depends testMonthOverview
-     */
+    #[Depends('testMonthOverview')]
     public function testGetStepsEdit($steps_data) {
         $response = $this->request('GET', '/location/steps/' . $steps_data["date"] . '/edit/');
 
@@ -66,10 +65,7 @@ class LocationStepsTest extends BaseTestCase {
         $this->assertStringContainsString('<form class="form-horizontal" id="locationForm" action="/location/steps/' . $steps_data["date"] . '/save/" method="POST">', $body);
     }
 
-    /**
-     * 
-     * @depends testMonthOverview
-     */
+    #[Depends('testMonthOverview')]
     public function testPostStepsEdit($steps_data) {
         $data = ["steps" => rand(0, 10000)];
         $response = $this->request('POST', '/location/steps/' . $steps_data["date"] . '/save/', $data);
@@ -80,11 +76,8 @@ class LocationStepsTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * 
-     * @depends testMonthOverview
-     * @depends testPostStepsEdit
-     */
+    #[Depends('testMonthOverview')]
+    #[Depends('testPostStepsEdit')]
     public function testEditedSteps($steps_data, $edited_steps_data) {
 
         $response = $this->request('GET', "/location/steps/" . $steps_data["year"] . "/" . $steps_data["month"] . "/");
@@ -106,10 +99,9 @@ class LocationStepsTest extends BaseTestCase {
 
     protected function getElement($body, $date) {
         $matches = [];
-        $re = '/<tr>\s*<td>(?<date>' . preg_quote($date) . ')<\/td>\s*<td>(?<steps>[0-9.]+)<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIEdit($date)) . '">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>(?<date>' . preg_quote($date ?? '') . ')<\/td>\s*<td>(?<steps>[0-9.]+)<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIEdit($date)) . '">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
     }
-
 }

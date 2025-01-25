@@ -14,7 +14,7 @@ class OwnerDeleteRecursiveTest extends TripTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Delete parent with childs
      */
     public function testDeleteParentWithChilds() {
@@ -23,7 +23,7 @@ class OwnerDeleteRecursiveTest extends TripTestBase {
         $this->request('POST', $this->uri_save, $data1);
 
         // get Hash/ID from Overview
-        $response3 = $this->request('GET', $this->uri_overview );
+        $response3 = $this->request('GET', $this->uri_overview);
         $row = $this->getParent((string) $response3->getBody(), $data1["name"]);
 
         $parent_hash = $row["hash"];
@@ -47,5 +47,4 @@ class OwnerDeleteRecursiveTest extends TripTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

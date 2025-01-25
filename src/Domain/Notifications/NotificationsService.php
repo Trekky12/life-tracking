@@ -13,6 +13,7 @@ use Minishlink\WebPush\Subscription;
 use App\Application\Payload\Payload;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Board\BoardService;
+use App\Domain\Main\Utility\Utility;
 
 class NotificationsService extends Service {
 
@@ -81,7 +82,7 @@ class NotificationsService extends Service {
 
     public function getNotifications($data) {
 
-        //$endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+        //$endpoint = array_key_exists('endpoint', $data) ? Utility::filter_string_polyfill($data['endpoint']) : null;
         $limit = array_key_exists('count', $data) ? filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT) : 5;
         $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
@@ -140,8 +141,8 @@ class NotificationsService extends Service {
         try {
             $category = $this->cat_service->getCategoryByIdentifier($identifier);
 
-            $title = filter_var($title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $message = filter_var($message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $title = filter_var($title, FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $message = filter_var($message, FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // Push Notifications
             $clients = $this->client_service->getClientsByCategoryAndUser($category->id, $user_id, $object_id);
@@ -238,9 +239,9 @@ class NotificationsService extends Service {
     }
 
     public function notifyByCategory($requestData) {
-        $category = array_key_exists("type", $requestData) ? filter_var($requestData["type"], FILTER_SANITIZE_STRING) : "";
-        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
-        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
+        $category = array_key_exists("type", $requestData) ? Utility::filter_string_polyfill($requestData["type"]) : "";
+        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
+        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
 
         $this->sendNotificationsToUsersWithCategory($category, $title, $message);
 
@@ -299,8 +300,8 @@ class NotificationsService extends Service {
     }
 
     public function sendTestNotification($entry_id, $data) {
-        $title = array_key_exists('title', $data) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
-        $message = array_key_exists('message', $data) ? filter_var($data['message'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $title = array_key_exists('title', $data) ? filter_var($data['title'], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $message = array_key_exists('message', $data) ? filter_var($data['message'], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
 
         $entry = $this->client_service->getEntry($entry_id);
 
@@ -317,7 +318,7 @@ class NotificationsService extends Service {
 
     public function setMailNotificationCategoryForUser($data) {
 
-        $cat = array_key_exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_STRING) : "";
+        $cat = array_key_exists('category', $data) ? Utility::filter_string_polyfill($data['category']) : "";
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
         $category = intval($cat);

@@ -27,15 +27,14 @@ class MemberTest extends RecipesCookbooksTestBase {
 
         // search for all elements
         $matches = $this->getParents($body);
-        $hashs = array_map(function($match) {
+        $hashs = array_map(function ($match) {
             return $match["hash"];
         }, $matches);
         $this->assertContains($this->TEST_COOKBOOK_HASH, $hashs);
     }
 
-    /**
+    /** 
      * Edit trip
-     * 
      */
     public function testGetParentEdit() {
         $response = $this->request('GET', $this->uri_edit . $this->TEST_COOKBOOK_ID);
@@ -59,7 +58,7 @@ class MemberTest extends RecipesCookbooksTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -71,7 +70,7 @@ class MemberTest extends RecipesCookbooksTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View (members can access)
      */
     public function testGetViewParent() {
@@ -82,8 +81,8 @@ class MemberTest extends RecipesCookbooksTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<div id="recipes_list" data-cookbook=', $body);
     }
-    
-    /**
+
+    /** 
      * View recipe of cookbook (members can access)
      */
     public function testGetViewRecipe() {
@@ -94,5 +93,4 @@ class MemberTest extends RecipesCookbooksTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<div class="recipe-description">', $body);
     }
-
 }

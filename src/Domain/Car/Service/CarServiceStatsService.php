@@ -144,7 +144,7 @@ class CarServiceStatsService extends Service {
 
     public function getAllowedMileage($car, $current_mileage_year) {
         $current_date = new \DateTime('now');
-        $year_start = new \DateTime($car->mileage_start_date);
+        $year_start = new \DateTime($car->mileage_start_date ?? '');
         $year_end = clone $year_start;
         if (!is_null($car->mileage_term)) {
             $year_end->add(new \DateInterval('P' . $car->mileage_term . 'Y'));

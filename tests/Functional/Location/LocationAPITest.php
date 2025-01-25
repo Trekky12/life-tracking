@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Location;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class LocationAPITest extends BaseTestCase {
@@ -45,7 +46,7 @@ class LocationAPITest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $json = json_decode($body, true);
 
         $this->assertIsArray($json);
@@ -55,9 +56,7 @@ class LocationAPITest extends BaseTestCase {
         return $location_data;
     }
 
-    /**
-     * @depends testAPI
-     */
+    #[Depends('testAPI')]
     public function testgetMarkers($location_data) {
         $this->login("admin", "admin");
 
@@ -83,9 +82,7 @@ class LocationAPITest extends BaseTestCase {
         $this->logout();
     }
 
-    /**
-     * @depends testAPI
-     */
+    #[Depends('testAPI')]
     public function testNoAccessToMarkersOfAnotherUser($location_data) {
         $this->login("user", "user");
 
@@ -110,5 +107,4 @@ class LocationAPITest extends BaseTestCase {
 
         $this->logout();
     }
-
 }

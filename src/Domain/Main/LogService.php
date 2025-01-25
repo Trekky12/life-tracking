@@ -77,7 +77,7 @@ class LogService extends Service {
     }
 
     private function parseLogLine($log, $days, $pattern) {
-        if (!is_string($log) || strlen($log) === 0) {
+        if (!is_string($log) || strlen($log) === 0 || is_null($log)) {
             return array();
         }
 

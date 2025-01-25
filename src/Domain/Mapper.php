@@ -2,6 +2,8 @@
 
 namespace App\Domain;
 
+use App\Domain\User\User;
+
 abstract class Mapper {
 
     protected $db;
@@ -401,7 +403,7 @@ abstract class Mapper {
         $this->user_id = $user_id;
     }
 
-    public function setSelectFilterForUser(\App\Domain\User\User $user = null) {
+    public function setSelectFilterForUser(?User $user = null) {
         if (!is_null($user)) {
             $this->select_results_of_user_only = true;
             $this->user_id = $user->id;

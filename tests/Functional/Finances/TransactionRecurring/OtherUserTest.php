@@ -5,14 +5,14 @@ namespace Tests\Functional\Finances\TransactionRecurring;
 use Tests\Functional\Base\BaseTestCase;
 
 class OtherUserTest extends BaseTestCase {
-    
+
     protected $uri_overview = "/finances/transactions/recurring/";
     protected $uri_edit = "/finances/transactions/recurring/edit/";
     protected $uri_save = "/finances/transactions/recurring/save/";
     protected $uri_delete = "/finances/transactions/recurring/delete/";
-    
+
     protected $TEST_FINANCE_TRANSACTION_RECURRING_ID = 1;
-    
+
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -35,8 +35,8 @@ class OtherUserTest extends BaseTestCase {
 
         $this->assertFalse(empty($matches));
     }
-    
-     /**
+
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -47,12 +47,11 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-    
-    /**
-     * 
-     */
+
+
+
     public function testPostElementCreatedSave() {
-        
+
         $data = [
             "id" => $this->TEST_FINANCE_TRANSACTION_RECURRING_ID,
             "description" => "Test Transaction 2 Update",
@@ -73,7 +72,7 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-    
+
     public function testDeleteElement() {
         $response = $this->request('DELETE', $this->uri_delete . $this->TEST_FINANCE_TRANSACTION_RECURRING_ID);
 
@@ -86,6 +85,4 @@ class OtherUserTest extends BaseTestCase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Element nicht gefunden", $json["error"]);
     }
-    
-
 }

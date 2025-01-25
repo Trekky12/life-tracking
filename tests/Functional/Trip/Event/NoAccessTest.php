@@ -17,7 +17,7 @@ class NoAccessTest extends TripTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Add new Event
      */
     public function testGetChildEdit() {
@@ -28,18 +28,18 @@ class NoAccessTest extends TripTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Access specific Event
      */
     public function testGetChildEditID() {
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH).$this->TEST_TRIP_EVENT_ID);
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH) . $this->TEST_TRIP_EVENT_ID);
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Create the event
      */
     public function testPostChildSave() {
@@ -54,7 +54,7 @@ class NoAccessTest extends TripTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-     /**
+    /** 
      * Update specific event
      */
     public function testPostChildSaveID() {
@@ -63,14 +63,14 @@ class NoAccessTest extends TripTestBase {
             "id" => $this->TEST_TRIP_EVENT_ID,
             "name" => "Test",
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH). $this->TEST_TRIP_EVENT_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_TRIP_HASH) . $this->TEST_TRIP_EVENT_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete event
      */
     public function testDeleteChild() {
@@ -80,5 +80,4 @@ class NoAccessTest extends TripTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
-
 }

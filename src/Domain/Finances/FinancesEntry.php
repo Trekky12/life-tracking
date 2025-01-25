@@ -2,6 +2,8 @@
 
 namespace App\Domain\Finances;
 
+use App\Domain\Main\Utility\Utility;
+
 class FinancesEntry extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_FINANCES_ENTRY";
@@ -9,13 +11,13 @@ class FinancesEntry extends \App\Domain\DataObject {
     public function parseData(array $data) {
 
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : date('Y-m-d');
-        $this->time = $this->exists('time', $data) ? filter_var($data['time'], FILTER_SANITIZE_STRING) : date('H:i:s');
+        $this->date = $this->exists('date', $data) ? Utility::filter_string_polyfill($data['date']) : date('Y-m-d');
+        $this->time = $this->exists('time', $data) ? Utility::filter_string_polyfill($data['time']) : date('H:i:s');
         // Default category 1 => not categorized, otherwise the statistics is not that easy
         $this->category = $this->exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->description = $this->exists('description', $data) ? trim(filter_var($data['description'], FILTER_SANITIZE_STRING)) : null;
+        $this->description = $this->exists('description', $data) ? trim(Utility::filter_string_polyfill($data['description'])) : null;
         $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
+        $this->notice = $this->exists('notice', $data) ? trim(Utility::filter_string_polyfill($data['notice'])) : null;
 
         $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
@@ -39,11 +41,11 @@ class FinancesEntry extends \App\Domain\DataObject {
             /**
              * Clean date/time
              */
-            if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
+            if (!is_null($this->date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
                 $this->date = date('Y-m-d');
             }
 
-            if (!preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->time)) {
+            if (!is_null($this->time) && !preg_match("/^[0-9]{2}:[0-9]{2}(:[0-9]{2})?$/", $this->time)) {
                 $this->time = date('H:i:s');
             }
 

@@ -18,19 +18,19 @@ class LastFinanceEntriesWidget implements Widget {
         $this->mapper = $mapper;
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         return $this->mapper->statsLastExpenses(5);
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         return $this->translation->getTranslatedString("LAST_5_EXPENSES");
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         return $this->router->urlFor('finances');
     }
 

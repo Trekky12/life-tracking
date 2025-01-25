@@ -10,14 +10,14 @@ class Trip extends \App\Domain\DataObject {
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
-        $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
+        $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
 
-        $this->min_date = $this->exists('min_date', $data) ? filter_var($data['min_date'], FILTER_SANITIZE_STRING) : null;
+        $this->min_date = $this->exists('min_date', $data) ? Utility::filter_string_polyfill($data['min_date']) : null;
 
-        $this->max_date = $this->exists('max_date', $data) ? filter_var($data['max_date'], FILTER_SANITIZE_STRING) : null;
+        $this->max_date = $this->exists('max_date', $data) ? Utility::filter_string_polyfill($data['max_date']) : null;
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";

@@ -7,8 +7,7 @@ use App\Domain\Board\BoardService;
 use App\Domain\Board\Card\CardMapper;
 use Slim\Routing\RouteParser;
 
-class BoardsCardsWidget implements Widget
-{
+class BoardsCardsWidget implements Widget {
 
     private $translation;
     private $router;
@@ -30,8 +29,7 @@ class BoardsCardsWidget implements Widget
         $this->boards = $this->createList();
     }
 
-    private function createList()
-    {
+    private function createList() {
         $boards = $this->board_service->getAllOrderedByName();
 
         $result = [];
@@ -42,13 +40,11 @@ class BoardsCardsWidget implements Widget
         return $result;
     }
 
-    public function getListItems()
-    {
+    public function getListItems() {
         return array_keys($this->boards);
     }
 
-    public function getContent(WidgetObject $widget = null)
-    {
+    public function getContent(?WidgetObject $widget = null) {
         $stack_id = $widget->getOptions()["stack"];
         $due = $widget->getOptions()["card_type"] == "due";
 
@@ -57,15 +53,13 @@ class BoardsCardsWidget implements Widget
         return $cards;
     }
 
-    public function getTitle(WidgetObject $widget = null)
-    {
+    public function getTitle(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["board"];
 
         return sprintf("%s", $this->boards[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null)
-    {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("BOARD"),
@@ -92,8 +86,7 @@ class BoardsCardsWidget implements Widget
         ];
     }
 
-    public function getLink(WidgetObject $widget = null)
-    {
+    public function getLink(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["board"];
         return $this->router->urlFor('boards_view', ["hash" => $this->boards[$id]["hash"]]);
     }

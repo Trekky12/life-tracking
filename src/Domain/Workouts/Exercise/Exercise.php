@@ -20,9 +20,9 @@ class Exercise extends \App\Domain\DataObject {
         }
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
-        $this->instructions = $this->exists('instructions', $data) ? filter_var($data['instructions'], FILTER_SANITIZE_STRING) : null;
+        $this->instructions = $this->exists('instructions', $data) ? Utility::filter_string_polyfill($data['instructions']) : null;
 
         $this->category = $this->exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->level = $this->exists('level', $data) ? filter_var($data['level'], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -41,10 +41,10 @@ class Exercise extends \App\Domain\DataObject {
     private function setImage($data) {
         // image from database
         if ($this->exists('image', $data)) {
-            $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
+            $this->image = Utility::filter_string_polyfill($data['image']);
         }
         // update image
-        $image = $this->exists('set_image', $data) ? filter_var($data['set_image'], FILTER_SANITIZE_STRING) : null;
+        $image = $this->exists('set_image', $data) ? Utility::filter_string_polyfill($data['set_image']) : null;
         if (!is_null($image)) {
             $this->image = $image;
         }
@@ -57,10 +57,10 @@ class Exercise extends \App\Domain\DataObject {
     private function setThumbnail($data) {
         // image from database
         if ($this->exists('thumbnail', $data)) {
-            $this->thumbnail = filter_var($data['thumbnail'], FILTER_SANITIZE_STRING);
+            $this->thumbnail = Utility::filter_string_polyfill($data['thumbnail']);
         }
         // update image
-        $image = $this->exists('set_thumbnail', $data) ? filter_var($data['set_thumbnail'], FILTER_SANITIZE_STRING) : null;
+        $image = $this->exists('set_thumbnail', $data) ? Utility::filter_string_polyfill($data['set_thumbnail']) : null;
         if (!is_null($image)) {
             $this->thumbnail = $image;
         }
@@ -111,6 +111,6 @@ class Exercise extends \App\Domain\DataObject {
     }
     
     public function getInstructions(){
-        return Utility::replaceLinks(nl2br($this->instructions));
+        return Utility::replaceLinks(nl2br($this->instructions?? ''));
     }
 }

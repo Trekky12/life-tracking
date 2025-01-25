@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Finances\CategoryAssignment;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class UserTest extends BaseTestCase {
@@ -10,7 +11,7 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/finances/categories/assignment/edit/";
     protected $uri_save = "/finances/categories/assignment/save/";
     protected $uri_delete = "/finances/categories/assignment/delete/";
-    
+
     protected $TEST_CATEGORY_ID = 1;
 
     protected function setUp(): void {
@@ -39,9 +40,8 @@ class UserTest extends BaseTestCase {
         $this->assertStringContainsString('<form class="form-horizontal" id="financeForm" action="' . $this->uri_save . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -59,9 +59,7 @@ class UserTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -76,11 +74,11 @@ class UserTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Edit created element
-     * @depends testAddedElement
-     * @depends testPostAddElement
      */
+    #[Depends('testAddedElement')]
+    #[Depends('testPostAddElement')]
     public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
@@ -97,16 +95,13 @@ class UserTest extends BaseTestCase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
-        
+
         $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetElementCreatedEdit
-     */
+    #[Depends('testGetElementCreatedEdit')]
     public function testPostElementCreatedSave(int $entry_id) {
 
         $data = [
@@ -125,10 +120,7 @@ class UserTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * Is the element updated?
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testPostElementCreatedSave')]
     public function testGetElementUpdated(array $result_data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -144,10 +136,8 @@ class UserTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetElementCreatedEdit
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testGetElementCreatedEdit')]
+    #[Depends('testPostElementCreatedSave')]
     public function testChanges(int $entry_id, $data) {
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
@@ -155,9 +145,7 @@ class UserTest extends BaseTestCase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     */
+    #[Depends('testGetElementUpdated')]
     public function testDeleteElement(int $entry_id) {
         $response = $this->request('DELETE', $this->uri_delete . $entry_id);
 
@@ -172,10 +160,9 @@ class UserTest extends BaseTestCase {
         $max_value = !is_null($data["max_value"]) ? number_format($data["max_value"], 2) : "";
 
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["description"]) . '<\/td>\s*<td>' . preg_quote($category_name) . '<\/td>\s*<td>' . $min_value . '<\/td>\s*<td>' . $max_value . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["description"] ?? '') . '<\/td>\s*<td>' . preg_quote($category_name ?? '') . '<\/td>\s*<td>' . $min_value . '<\/td>\s*<td>' . $max_value . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
     }
-
 }

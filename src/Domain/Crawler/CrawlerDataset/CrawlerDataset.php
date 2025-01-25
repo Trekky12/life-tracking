@@ -2,6 +2,8 @@
 
 namespace App\Domain\Crawler\CrawlerDataset;
 
+use App\Domain\Main\Utility\Utility;
+
 class CrawlerDataset extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_CRAWLERS_DATASET";
@@ -14,7 +16,7 @@ class CrawlerDataset extends \App\Domain\DataObject {
         }
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->identifier = $this->exists('identifier', $data) ? filter_var($data['identifier'], FILTER_SANITIZE_STRING) : null;
+        $this->identifier = $this->exists('identifier', $data) ? Utility::filter_string_polyfill($data['identifier']) : null;
         $this->crawler = $this->exists('crawler', $data) ? filter_var($data['crawler'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->data = $this->exists('data', $data) ? $data['data'] : null;

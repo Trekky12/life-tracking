@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Trip\Event;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Trip\TripTestBase;
 
 class MemberTest extends TripTestBase {
@@ -16,7 +17,7 @@ class MemberTest extends TripTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Add new event
      */
     public function testGetChildEdit() {
@@ -27,7 +28,7 @@ class MemberTest extends TripTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->getURIChildSave($this->TEST_TRIP_HASH) . "\" method=\"POST\">", $body);
     }
 
-    /**
+    /** 
      * Create the event
      */
     public function testPostChildSave() {
@@ -54,10 +55,10 @@ class MemberTest extends TripTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the created event
-     * @depends testPostChildSave
      */
+    #[Depends('testPostChildSave')]
     public function testGetChildCreated(array $data) {
         $response = $this->request('GET', $this->getURIView($this->TEST_TRIP_HASH));
 
@@ -72,15 +73,15 @@ class MemberTest extends TripTestBase {
         return intval($row["id"]);
     }
 
-    /**
+    /** 
      * Update Event
      */
 
-    /**
+    /** 
      * Edit Event
-     * @depends testGetChildCreated
-     * @depends testPostChildSave
      */
+    #[Depends('testGetChildCreated')]
+    #[Depends('testPostChildSave')]
     public function testGetChildCreatedEdit(int $child_id, $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH) . $child_id);
@@ -103,10 +104,7 @@ class MemberTest extends TripTestBase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetChildCreatedEdit
-     */
+    #[Depends('testGetChildCreatedEdit')]
     public function testPostChildCreatedSave(int $child_id) {
         $data = [
             "id" => $child_id,
@@ -132,10 +130,10 @@ class MemberTest extends TripTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the event data updated?
-     * @depends testPostChildCreatedSave
      */
+    #[Depends('testPostChildCreatedSave')]
     public function testGetChildUpdated(array $data) {
 
         $response = $this->request('GET', $this->getURIView($this->TEST_TRIP_HASH));
@@ -151,10 +149,8 @@ class MemberTest extends TripTestBase {
         return intval($row["id"]);
     }
 
-    /**
-     * @depends testGetChildUpdated
-     * @depends testPostChildCreatedSave
-     */
+    #[Depends('testGetChildUpdated')]
+    #[Depends('testPostChildCreatedSave')]
     public function testChanges(int $child_id, $data) {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_TRIP_HASH) . $child_id);
 
@@ -162,10 +158,10 @@ class MemberTest extends TripTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
+    /** 
      * Delete event
-     * @depends testGetChildUpdated
      */
+    #[Depends('testGetChildUpdated')]
     public function testDeleteChild(int $child_id) {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_TRIP_HASH) . $child_id);
@@ -178,5 +174,4 @@ class MemberTest extends TripTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

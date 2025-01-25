@@ -12,7 +12,7 @@ class CrawlerTestBase extends BaseTestCase {
     protected $uri_delete = "/crawlers/delete/";
     protected $uri_view = "/crawlers/HASH/view/";
     protected $uri_dataset_save = "/crawlers/HASH/save/";
-    
+
     protected $TEST_CRAWLER_ID = 1;
     protected $TEST_CRAWLER_HASH = "ABCabc123";
     protected $TEST_CRAWLER_LINK_ID = 1;
@@ -20,7 +20,7 @@ class CrawlerTestBase extends BaseTestCase {
 
     protected function getParent($body, $name) {
         $matches = [];
-        $re = '/<tr>\s*<td>\s*<a href="\/crawlers\/(?<hash>[0-9a-zA-Z]+)\/view\/">' . preg_quote($name) . '<\/a>\s*<\/td>\s*<td>\s*<a href="\/crawlers\/([0-9a-zA-Z]+)\/headers\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/crawlers\/([0-9a-zA-Z]+)\/links\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/crawlers\/edit\/(?<id_edit>[0-9]+)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="\/crawlers\/delete\/(?<id_delete>[0-9]+)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>\s*<a href="\/crawlers\/(?<hash>[0-9a-zA-Z]+)\/view\/">' . preg_quote($name ?? '') . '<\/a>\s*<\/td>\s*<td>\s*<a href="\/crawlers\/([0-9a-zA-Z]+)\/headers\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/crawlers\/([0-9a-zA-Z]+)\/links\/\">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/crawlers\/edit\/(?<id_edit>[0-9]+)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="\/crawlers\/delete\/(?<id_delete>[0-9]+)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
@@ -41,9 +41,8 @@ class CrawlerTestBase extends BaseTestCase {
 
         return $matches;
     }
-    
+
     protected function getURIDatasetSave($hash) {
         return str_replace("HASH", $hash, $this->uri_dataset_save);
     }
-
 }

@@ -28,7 +28,7 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -40,9 +40,8 @@ class OtherUserTest extends BaseTestCase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -65,5 +64,4 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
-
 }

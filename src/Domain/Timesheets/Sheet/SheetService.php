@@ -193,13 +193,13 @@ class SheetService extends Service {
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $search = array_key_exists("searchQuery", $requestData) ? filter_var($requestData["searchQuery"], FILTER_SANITIZE_STRING) : null;
+        $search = array_key_exists("searchQuery", $requestData) ? Utility::filter_string_polyfill($requestData["searchQuery"]) : null;
         $searchQuery = empty($search) || $search === "null" ? "%" : "%" . $search . "%";
 
         $sortColumnIndex = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
-        $sortDirection = array_key_exists("sortDirection", $requestData) ? filter_var($requestData["sortDirection"], FILTER_SANITIZE_STRING) : null;
+        $sortDirection = array_key_exists("sortDirection", $requestData) ? Utility::filter_string_polyfill($requestData["sortDirection"]) : null;
 
-        $categoriesList = array_key_exists("categories", $requestData) ? filter_var($requestData["categories"], FILTER_SANITIZE_STRING) : null;
+        $categoriesList = array_key_exists("categories", $requestData) ? Utility::filter_string_polyfill($requestData["categories"]) : null;
         $categories = [];
         if (!empty($categoriesList)) {
             $categories = explode(",", $categoriesList);
@@ -328,7 +328,7 @@ class SheetService extends Service {
         $startParam = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
         if ($startParam != null) {
             $startParamDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $startParam);
-            if (!$startParamDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startParam)) {
+            if (!$startParamDate && !is_null($startParam) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startParam)) {
                 $startParamDate = \DateTime::createFromFormat('Y-m-d', $startParam);
             }
             $start = $startParamDate->format('Y-m-d H:i');
@@ -338,7 +338,7 @@ class SheetService extends Service {
         $endParam = array_key_exists("end", $requestData) ? filter_var($requestData["end"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
         if ($endParam != null) {
             $endParamDate = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $endParam);
-            if (!$endParamDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startParam)) {
+            if (!$endParamDate && !is_null($startParam) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startParam)) {
                 $endParamDate = \DateTime::createFromFormat('Y-m-d', $endParamDate);
             }
             $end = $endParamDate->format('Y-m-d H:i');
@@ -347,7 +347,7 @@ class SheetService extends Service {
         $series = [];
         $previous_sheets = [];
         $remaining_sheets = [];
-        
+
         if ($entry) {
             $start = $entry->start;
             $end = $entry->end;
@@ -464,7 +464,7 @@ class SheetService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $type = array_key_exists("type", $data) && !empty($data["type"]) ? filter_var($data["type"], FILTER_SANITIZE_STRING) : null;
+        $type = array_key_exists("type", $data) && !empty($data["type"]) ? Utility::filter_string_polyfill($data["type"]) : null;
         if (!in_array($type, ["assign", "remove"])) {
             return new Payload(Payload::$STATUS_ERROR, "WRONG_TYPE");
         }
@@ -509,7 +509,7 @@ class SheetService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $option = array_key_exists("option", $data) && !empty($data["option"]) ? filter_var($data["option"], FILTER_SANITIZE_STRING) : null;
+        $option = array_key_exists("option", $data) && !empty($data["option"]) ? Utility::filter_string_polyfill($data["option"]) : null;
         if (!in_array($option, ["billed", "not_billed", "payed", "not_payed", "planned", "happened"])) {
             return new Payload(Payload::$STATUS_ERROR, "WRONG_TYPE");
         }
@@ -629,8 +629,8 @@ class SheetService extends Service {
 
         foreach ($sheets as $timesheet) {
 
-            $st = new \DateTime($timesheet->start);
-            $e = new \DateTime($timesheet->end);
+            $st = new \DateTime($timesheet->start ?? '');
+            $e = new \DateTime($timesheet->end ?? '');
 
             $title = '';
             if ($timesheet->customerName) {

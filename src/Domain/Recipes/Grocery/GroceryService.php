@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
+use App\Domain\Main\Utility\Utility;
 
 class GroceryService extends Service
 {
@@ -64,7 +65,7 @@ class GroceryService extends Service
     {
         $response_data = ["data" => [], "status" => "success"];
 
-        $query = array_key_exists('query', $data) ? filter_var($data['query'], FILTER_SANITIZE_STRING) : "";
+        $query = array_key_exists('query', $data) ? Utility::filter_string_polyfill($data['query']) : "";
         $is_food = array_key_exists('food', $data) ? intval(filter_var($data['food'], FILTER_SANITIZE_NUMBER_INT)) > 0 : null;
 
         $all_groceries = $this->mapper->getGroceriesFromInput($query, $is_food);

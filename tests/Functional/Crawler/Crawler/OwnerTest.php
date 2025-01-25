@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Crawler\Crawler;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Crawler\CrawlerTestBase;
 
 class OwnerTest extends CrawlerTestBase {
@@ -32,9 +33,8 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertStringContainsString('<form class="form-horizontal" id="crawlerForm" action="' . $this->uri_save . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
         $data = [
             "name" => "Test Crawler 2",
@@ -49,9 +49,7 @@ class OwnerTest extends CrawlerTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostParentSave
-     */
+    #[Depends('testPostParentSave')]
     public function testGetParentCreated($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -72,11 +70,11 @@ class OwnerTest extends CrawlerTestBase {
         return $result;
     }
 
-    /**
+    /** 
      * Edit
-     * @depends testPostParentSave
-     * @depends testGetParentCreated
      */
+    #[Depends('testPostParentSave')]
+    #[Depends('testGetParentCreated')]
     public function testGetParentCreatedEdit($data, array $result_data) {
 
         $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
@@ -95,7 +93,7 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
         $this->assertArrayHasKey("hash", $matches);
-        
+
         $this->compareInputFields($body, $data);
 
         $result = [];
@@ -105,10 +103,7 @@ class OwnerTest extends CrawlerTestBase {
         return $result;
     }
 
-    /**
-     * 
-     * @depends testGetParentCreatedEdit
-     */
+    #[Depends('testGetParentCreatedEdit')]
     public function testPostParentCreatedSave(array $result_data) {
         $data = [
             "id" => $result_data["id"],
@@ -120,15 +115,15 @@ class OwnerTest extends CrawlerTestBase {
 
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
-        
+
         return $data;
     }
 
-    /**
-     * View 
-     * @depends testGetParentCreated
-     */
-    public function testGetViewParent(array $result_data) {
+    /** 
+     * View    
+     */    
+    #[Depends('testGetParentCreated')]
+     public function testGetViewParent(array $result_data) {
         $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -136,11 +131,9 @@ class OwnerTest extends CrawlerTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<table id="crawlers_data_table"', $body);
     }
-    
-    /**
-     * @depends testGetParentCreatedEdit
-     * @depends testPostParentCreatedSave
-     */
+
+    #[Depends('testGetParentCreatedEdit')]
+    #[Depends('testPostParentCreatedSave')]
     public function testChanges(array $result_data, array $data) {
         $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
 
@@ -148,10 +141,10 @@ class OwnerTest extends CrawlerTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
+    /** 
      * Delete
-     * @depends testGetParentCreated
      */
+    #[Depends('testGetParentCreated')]
     public function testDeleteParent(array $result_data) {
         $response = $this->request('DELETE', $this->uri_delete . $result_data["id"]);
 
@@ -163,5 +156,4 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

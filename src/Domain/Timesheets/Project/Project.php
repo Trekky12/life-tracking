@@ -3,6 +3,7 @@
 namespace App\Domain\Timesheets\Project;
 
 use App\Domain\Main\Utility\DateUtility;
+use App\Domain\Main\Utility\Utility;
 
 class Project extends \App\Domain\DataObject {
 
@@ -31,7 +32,7 @@ class Project extends \App\Domain\DataObject {
         $this->slot_max_time = $this->exists('slot_max_time', $data) ? filter_var($data['slot_max_time'], FILTER_SANITIZE_SPECIAL_CHARS) : "24:00:00";
 
         $this->repeat_count = $this->exists('repeat_count', $data) ? filter_var($data['repeat_count'], FILTER_SANITIZE_NUMBER_INT) : 1;
-        $this->repeat_unit = $this->exists('repeat_unit', $data) ? filter_var($data['repeat_unit'], FILTER_SANITIZE_STRING) : 'month';
+        $this->repeat_unit = $this->exists('repeat_unit', $data) ? Utility::filter_string_polyfill($data['repeat_unit']) : 'month';
         $this->repeat_multiplier = $this->exists('repeat_multiplier', $data) ? filter_var($data['repeat_multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
 
         $this->hide_monday = $this->exists('hide_monday', $data) ? filter_var($data['hide_monday'], FILTER_SANITIZE_NUMBER_INT) : 0;

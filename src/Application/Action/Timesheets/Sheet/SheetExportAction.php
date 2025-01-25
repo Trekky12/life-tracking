@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Timesheets\Sheet\SheetExportService;
 use App\Application\Responder\Download\DownloadResponder;
 use App\Domain\Main\Utility\DateUtility;
+use App\Domain\Main\Utility\Utility;
 
 class SheetExportAction {
 
@@ -23,7 +24,7 @@ class SheetExportAction {
 
         $requestData = $request->getQueryParams();
 
-        $type = array_key_exists("type", $requestData) ? filter_var($requestData["type"], FILTER_SANITIZE_STRING) : null;
+        $type = array_key_exists("type", $requestData) ? Utility::filter_string_polyfill($requestData["type"]) : null;
 
         list($from, $to) = DateUtility::getDateRange($requestData);
         $categories = array_key_exists("categories", $requestData) ? filter_var_array($requestData["categories"], FILTER_SANITIZE_NUMBER_INT) : [];
@@ -39,7 +40,7 @@ class SheetExportAction {
         $payload = $this->service->export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer, $noticefields);
 
         $template = 'timesheets/sheets/export-html.twig';
-        if (strcmp($type, "html-overview") == 0) {
+        if (strcmp($type ?? '', "html-overview") == 0) {
             $template = 'timesheets/sheets/export-html-overview.twig';
         }
         return $this->responder->respond($payload->withTemplate($template));

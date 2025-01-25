@@ -20,7 +20,7 @@ class NoAccessTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * View Board
      */
     public function testGetViewBoard() {
@@ -32,7 +32,7 @@ class NoAccessTest extends BoardTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
+    /** 
      * Create the card
      */
     public function testPostChildSave() {
@@ -56,7 +56,7 @@ class NoAccessTest extends BoardTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * Get card data
      */
     public function testGetChildData() {
@@ -72,7 +72,7 @@ class NoAccessTest extends BoardTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Update / Check Update
      */
     public function testPostChildUpdate() {
@@ -101,7 +101,7 @@ class NoAccessTest extends BoardTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Delete card
      */
     public function testDeleteChild() {
@@ -118,5 +118,4 @@ class NoAccessTest extends BoardTestBase {
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

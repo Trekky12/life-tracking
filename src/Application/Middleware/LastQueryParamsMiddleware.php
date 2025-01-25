@@ -9,6 +9,7 @@ use Slim\Routing\RouteContext;
 use App\Domain\Main\Utility\LastURLsUtility;
 use Slim\Routing\RouteResolver;
 use Slim\Routing\RouteCollector;
+use App\Domain\Main\Utility\Utility;
 
 class LastQueryParamsMiddleware
 {
@@ -33,8 +34,8 @@ class LastQueryParamsMiddleware
         $params = $request->getQueryParams();
         if ($route->getName() === "store_query_params") {
             $data = $request->getParsedBody();
-            $path = array_key_exists('path', $data) ? filter_var($data['path'], FILTER_SANITIZE_STRING) : null;
-            $query_params = array_key_exists('params', $data) ? filter_var($data['params'], FILTER_SANITIZE_STRING) : null;
+            $path = array_key_exists('path', $data) ? Utility::filter_string_polyfill($data['path']) : null;
+            $query_params = array_key_exists('params', $data) ? Utility::filter_string_polyfill($data['params']) : null;
 
             if (!is_null($path)) {
                 $res = $this->resolver->computeRoutingResults($path, "GET");

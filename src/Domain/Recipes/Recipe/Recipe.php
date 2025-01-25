@@ -17,23 +17,23 @@ class Recipe extends \App\Domain\DataObject {
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         $this->description = $this->exists('description', $data) ? filter_var($data['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
         $this->preparation_time = $this->exists('preparation_time', $data) ? filter_var($data['preparation_time'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->waiting_time = $this->exists('waiting_time', $data) ? filter_var($data['waiting_time'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->servings = $this->exists('servings', $data) ? filter_var($data['servings'], FILTER_SANITIZE_NUMBER_INT) : 1;
 
-        $this->link = $this->exists('link', $data) ? filter_var($data['link'], FILTER_SANITIZE_STRING) : null;
+        $this->link = $this->exists('link', $data) ? Utility::filter_string_polyfill($data['link']) : null;
 
         $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
         // image from database
         if ($this->exists('image', $data)) {
-            $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
+            $this->image = Utility::filter_string_polyfill($data['image']);
         }
         // update image
-        $image = $this->exists('set_image', $data) ? filter_var($data['set_image'], FILTER_SANITIZE_STRING) : null;
+        $image = $this->exists('set_image', $data) ? Utility::filter_string_polyfill($data['set_image']) : null;
         if (!is_null($image)) {
             $this->image = $image;
         }
@@ -68,7 +68,7 @@ class Recipe extends \App\Domain\DataObject {
     }
 
     public function getRecipeDescription() {
-        return Utility::replaceLinks(nl2br($this->description));
+        return Utility::replaceLinks(nl2br($this->description ?? ''));
     }
 
 }

@@ -32,7 +32,7 @@ class MemberTest extends CrawlerTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('{"status":"success"}', $body);
     }
-    
+
     public function testDatasetUnSave() {
         $response = $this->request('POST', $this->getURIDatasetSave($this->TEST_CRAWLER_HASH), ["dataset" => $this->TEST_DATASET_ID, "state" => 0]);
 
@@ -40,5 +40,4 @@ class MemberTest extends CrawlerTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('{"status":"success"}', $body);
     }
-
 }

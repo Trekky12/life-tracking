@@ -26,9 +26,8 @@ class ActivityTest extends BaseTestCase {
         $this->assertStringContainsString('<div id="activities">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testLoadMore() {
 
         $data = [
@@ -41,17 +40,16 @@ class ActivityTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertIsArray($json);
         $this->assertArrayHasKey("data", $json);
         $this->assertIsArray($json["data"]);
         $this->assertSame($data["count"], count($json["data"]));
-        
+
         $this->assertArrayHasKey("status", $json);
         $this->assertSame("success", $json["status"]);
-        
+
         $this->assertArrayHasKey("count", $json);
         $this->assertIsInt($json["count"]);
     }
-
 }

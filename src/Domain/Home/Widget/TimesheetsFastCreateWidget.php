@@ -43,21 +43,21 @@ class TimesheetsFastCreateWidget implements Widget {
         return array_keys($this->projects);
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         
         $project = $this->project_service->getEntry($id);
         return $project;
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         $project = $this->project_service->getEntry($id);
         
         return sprintf("%s | %s", $project->is_day_based ? $this->translation->getTranslatedString("TIMESHEETS_FAST_DAY_BASED"):$this->translation->getTranslatedString("TIMESHEETS_FAST_PROJECT_BASED"), $this->projects[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("TIMESHEETS_PROJECTS"),
@@ -69,7 +69,7 @@ class TimesheetsFastCreateWidget implements Widget {
         ];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         return $this->router->urlFor('timesheets_fast', ["project" => $this->projects[$id]["hash"]]);
     }

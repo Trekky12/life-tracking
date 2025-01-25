@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Trip\Route;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Trip\TripTestBase;
 
 class MemberTest extends TripTestBase {
@@ -16,7 +17,7 @@ class MemberTest extends TripTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Create the Route
      */
     public function testPostRouteAdd() {
@@ -26,7 +27,8 @@ class MemberTest extends TripTestBase {
             "end_date" => date('Y-m-d'),
             "waypoints" => [
                 [
-                    "latLng" => ["lat" => 1,
+                    "latLng" => [
+                        "lat" => 1,
                         "lng" => 2
                     ],
                     "name" => "Waypoint 1"
@@ -56,10 +58,10 @@ class MemberTest extends TripTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Get the created route
-     * @depends testPostRouteAdd
      */
+    #[Depends('testPostRouteAdd')]
     public function testGetCreatedRoute(array $data) {
         $response = $this->request('GET', $this->getURIRouteList($this->TEST_TRIP_HASH));
 
@@ -79,10 +81,10 @@ class MemberTest extends TripTestBase {
         $this->fail("Route not found!");
     }
 
-    /**
+    /** 
      * Get route waypoints
-     * @depends testGetCreatedRoute
      */
+    #[Depends('testGetCreatedRoute')]
     public function testGetRouteWaypoints(int $route_id) {
         $response = $this->request('GET', $this->getURIRouteWaypoints($this->TEST_TRIP_HASH) . "?route=" . $route_id);
         $this->assertEquals(200, $response->getStatusCode());
@@ -92,10 +94,10 @@ class MemberTest extends TripTestBase {
         $this->assertIsArray($json);
     }
 
-    /**
+    /** 
      * Delete Route
-     * @depends testGetCreatedRoute
      */
+    #[Depends('testGetCreatedRoute')]
     public function testDeleteRoute(int $route_id) {
         $response = $this->request('DELETE', $this->getURIRouteDelete($this->TEST_TRIP_HASH) . $route_id);
 
@@ -107,5 +109,4 @@ class MemberTest extends TripTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

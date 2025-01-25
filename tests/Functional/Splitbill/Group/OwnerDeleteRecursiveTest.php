@@ -14,7 +14,7 @@ class OwnerDeleteRecursiveTest extends SplitbillTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Delete parent with childs
      */
     public function testDeleteParentWithChilds() {

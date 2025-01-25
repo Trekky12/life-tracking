@@ -43,7 +43,7 @@ class TimesheetsCalendarWidget implements Widget {
         return array_keys($this->projects);
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
 
         $from = (new \DateTime())->format('Y-m-d H:i:s');
@@ -54,12 +54,12 @@ class TimesheetsCalendarWidget implements Widget {
         return $sheets;
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         return sprintf("%s ", $this->projects[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("TIMESHEETS_PROJECTS"),
@@ -71,7 +71,7 @@ class TimesheetsCalendarWidget implements Widget {
         ];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         return $this->router->urlFor('timesheets_calendar', ["project" => $this->projects[$id]["hash"]]);
     }

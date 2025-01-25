@@ -2,40 +2,42 @@
 
 namespace App\Domain\User;
 
+use App\Domain\Main\Utility\Utility;
+
 class User extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_USER";
 
     public function parseData(array $data) {
 
-        $this->login = $this->exists('login', $data) ? filter_var($data['login'], FILTER_SANITIZE_STRING) : null;
-        $this->lastname = $this->exists('lastname', $data) ? filter_var($data['lastname'], FILTER_SANITIZE_STRING) : null;
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->login = $this->exists('login', $data) ? Utility::filter_string_polyfill($data['login']) : null;
+        $this->lastname = $this->exists('lastname', $data) ? Utility::filter_string_polyfill($data['lastname']) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         $this->mail = $this->exists('mail', $data) ? filter_var($data['mail'], FILTER_SANITIZE_EMAIL) : null;
-        $this->role = $this->exists('role', $data) ? filter_var($data['role'], FILTER_SANITIZE_STRING) : null;
-        $this->start_url = $this->exists('start_url', $data) ? filter_var($data['start_url'], FILTER_SANITIZE_STRING) : null;
+        $this->role = $this->exists('role', $data) ? Utility::filter_string_polyfill($data['role']) : null;
+        $this->start_url = $this->exists('start_url', $data) ? Utility::filter_string_polyfill($data['start_url']) : null;
 
         /**
          * No default value for password, otherwise it will be deleted 
          */
         if ($this->exists('password', $data)) {
-            $this->password = filter_var($data['password'], FILTER_SANITIZE_STRING);
+            $this->password = Utility::filter_string_polyfill($data['password']);
         }
 
         /**
          * Set Password only from request
          */
-        $password = $this->exists('set_password', $data) ? filter_var($data['set_password'], FILTER_SANITIZE_STRING) : null;
+        $password = $this->exists('set_password', $data) ? Utility::filter_string_polyfill($data['set_password']) : null;
         if (!is_null($password)) {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
         }
 
         if ($this->exists('image', $data)) {
-            $this->image = filter_var($data['image'], FILTER_SANITIZE_STRING);
+            $this->image = Utility::filter_string_polyfill($data['image']);
         }
 
         if ($this->exists('secret', $data)) {
-            $this->secret = filter_var($data['secret'], FILTER_SANITIZE_STRING);
+            $this->secret = Utility::filter_string_polyfill($data['secret']);
         }
 
         $this->module_location = $this->exists('module_location', $data) ? filter_var($data['module_location'], FILTER_SANITIZE_NUMBER_INT) : 0;

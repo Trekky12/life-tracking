@@ -2,10 +2,11 @@
 
 namespace Tests\Functional\Timesheet\Customer;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
 class MemberTest extends TimesheetTestBase {
-    
+
     protected $TEST_PROJECT_HASH = "ABCabc123";
 
     protected $uri_child_overview = "/timesheets/HASH/customers/";
@@ -39,9 +40,8 @@ class MemberTest extends TimesheetTestBase {
         $this->assertStringContainsString('<form class="form-horizontal" id="projectCustomersForm" action="' . $this->getURIChildSave($this->TEST_PROJECT_HASH) . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -56,9 +56,7 @@ class MemberTest extends TimesheetTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $response = $this->request('GET', $this->getURIChildOverview($this->TEST_PROJECT_HASH));
 
@@ -73,11 +71,11 @@ class MemberTest extends TimesheetTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Edit created element
-     * @depends testAddedElement
-     * @depends testPostAddElement
      */
+    #[Depends('testAddedElement')]
+    #[Depends('testPostAddElement')]
     public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $entry_id);
@@ -100,10 +98,7 @@ class MemberTest extends TimesheetTestBase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetElementCreatedEdit
-     */
+    #[Depends('testGetElementCreatedEdit')]
     public function testPostElementCreatedSave(int $entry_id) {
         $data = [
             "id" => $entry_id,
@@ -118,10 +113,7 @@ class MemberTest extends TimesheetTestBase {
         return $data;
     }
 
-    /**
-     * Is the element updated?
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testPostElementCreatedSave')]
     public function testGetElementUpdated(array $result_data) {
         $response = $this->request('GET', $this->getURIChildOverview($this->TEST_PROJECT_HASH));
 
@@ -137,10 +129,8 @@ class MemberTest extends TimesheetTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testGetElementUpdated')]
+    #[Depends('testPostElementCreatedSave')]
     public function testChanges(int $child_id, $data) {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $child_id);
 
@@ -148,9 +138,7 @@ class MemberTest extends TimesheetTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     */
+    #[Depends('testGetElementUpdated')]
     public function testDeleteElement(int $entry_id) {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $entry_id);
@@ -164,5 +152,4 @@ class MemberTest extends TimesheetTestBase {
     protected function getURIChildOverview($hash) {
         return str_replace("HASH", $hash, $this->uri_child_overview);
     }
-
 }

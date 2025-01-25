@@ -34,7 +34,7 @@ class OtherUserTest extends BaseTestCase {
         $this->assertFalse(empty($matches));
     }
 
-    /**
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -46,9 +46,8 @@ class OtherUserTest extends BaseTestCase {
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -79,5 +78,4 @@ class OtherUserTest extends BaseTestCase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Element nicht gefunden", $json["error"]);
     }
-
 }

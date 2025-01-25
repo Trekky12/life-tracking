@@ -42,5 +42,4 @@ class TableTest extends CrawlerTestBase {
         $this->assertArrayHasKey("data", $json);
         $this->assertIsArray($json["data"]);
     }
-
 }

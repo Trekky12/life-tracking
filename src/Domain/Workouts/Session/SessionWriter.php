@@ -9,6 +9,7 @@ use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Workouts\Plan\PlanService;
 use App\Domain\Workouts\Plan\PlanMapper;
+use App\Domain\Main\Utility\Utility;
 
 class SessionWriter extends ObjectActivityWriter {
 
@@ -55,8 +56,8 @@ class SessionWriter extends ObjectActivityWriter {
             foreach ($data["exercises"] as $idx => $exercise) {
 
                 $exercise_id = array_key_exists("id", $exercise) && !empty($exercise["id"]) ? intval(filter_var($exercise["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
-                $type = array_key_exists("type", $exercise) && !empty($exercise["type"]) ? filter_var($exercise["type"], FILTER_SANITIZE_STRING) : 'exercise';
-                $notice = array_key_exists("notice", $exercise) && !empty($exercise["notice"]) ? filter_var($exercise["notice"], FILTER_SANITIZE_STRING) : null;
+                $type = array_key_exists("type", $exercise) && !empty($exercise["type"]) ? Utility::filter_string_polyfill($exercise["type"]) : 'exercise';
+                $notice = array_key_exists("notice", $exercise) && !empty($exercise["notice"]) ? Utility::filter_string_polyfill($exercise["notice"]) : null;
                 $is_child = array_key_exists("is_child", $exercise) && !empty($exercise["is_child"]) ? intval(filter_var($exercise["is_child"], FILTER_SANITIZE_NUMBER_INT)) : 0;           
 
                 $sets = [];
@@ -65,7 +66,7 @@ class SessionWriter extends ObjectActivityWriter {
                         $repeats = array_key_exists("repeats", $set) && !empty($set["repeats"]) ? intval(filter_var($set["repeats"], FILTER_SANITIZE_NUMBER_INT)) : null;
                         $weight = array_key_exists("weight", $set) && !empty($set["weight"]) ? floatval(filter_var($set["weight"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
                         $time = array_key_exists("time", $set) && !empty($set["time"]) ? floatval(filter_var($set["time"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
-                        $time_type = array_key_exists("time_type", $set) && !empty($set["time_type"]) ? filter_var($set["time_type"], FILTER_SANITIZE_STRING) : null;
+                        $time_type = array_key_exists("time_type", $set) && !empty($set["time_type"]) ? Utility::filter_string_polyfill($set["time_type"]) : null;
                         $distance = array_key_exists("distance", $set) && !empty($set["distance"]) ? floatval(filter_var($set["distance"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
 
                         if(!is_null($time) && !in_array($time_type, ["min", "sec"])){

@@ -29,9 +29,8 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -48,7 +47,7 @@ class NoAccessTest extends TimesheetTestBase {
 
     public function testGetChildData() {
 
-        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH).'?sheet='. $this->TEST_SHEET_ID);
+        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH) . '?sheet=' . $this->TEST_SHEET_ID);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -58,5 +57,4 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

@@ -10,7 +10,7 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/notifications/categories/edit/";
     protected $uri_save = "/notifications/categories/save/";
     protected $uri_delete = "/notifications/categories/delete/";
-    
+
     protected $TEST_CATEGORY = 2;
 
     protected function setUp(): void {
@@ -39,8 +39,6 @@ class UserTest extends BaseTestCase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     */
     public function testPostAddElement() {
 
         $data = [
@@ -51,14 +49,13 @@ class UserTest extends BaseTestCase {
         $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-    
-    
+
     public function testPostElementCreatedSave() {
-        
+
         $data = [
             "id" => $this->TEST_CATEGORY,
             "name" => "Test Notification Category 2",
@@ -68,7 +65,7 @@ class UserTest extends BaseTestCase {
         $response = $this->request('POST', $this->uri_save . $this->TEST_CATEGORY, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
@@ -82,6 +79,4 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-
-
 }

@@ -16,8 +16,8 @@ class OwnerNoViewTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
-     * View Project (owner -> has no access to view)
+    /** 
+     * View board (owner -> has no access to view)
      */
     public function testGetViewParentOwner() {
         $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
@@ -27,5 +27,4 @@ class OwnerNoViewTest extends BoardTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

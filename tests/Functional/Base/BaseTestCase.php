@@ -14,6 +14,7 @@ use Dflydev\FigCookies\SetCookies;
 use Dflydev\FigCookies\Cookie;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
+use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
 
 /**
@@ -32,14 +33,14 @@ date_default_timezone_set('Europe/Berlin');
 
 class BaseTestCase extends TestCase {
 
-    /**
+    /** 
      * Use middleware when running application?
      *
      * @var bool
      */
     protected $withMiddleware = true;
 
-    /**
+    /** 
      * Variables
      */
     protected $USE_GUZZLE = false;
@@ -47,14 +48,14 @@ class BaseTestCase extends TestCase {
     //protected $LOCAL_IP = '127.0.0.1';
     protected $USER_AGENT = 'PHPUnit Test';
 
-    /**
+    /** 
      * save login token
      * @var string
      */
     protected static $LOGIN_TOKEN = null;
     protected static $SESSION = null;
 
-    /**
+    /** 
      * Routes
      */
     protected $uri_overview = "";
@@ -65,8 +66,12 @@ class BaseTestCase extends TestCase {
     protected $uri_childs_edit = "";
     protected $uri_childs_save = "";
     protected $uri_childs_delete = "";
+    protected $uri_child_overview = "";
+    protected $uri_child_edit = "";
+    protected $uri_child_save = "";
+    protected $uri_child_delete = "";
 
-    /**
+    /** 
      * CSRF Tokens
      */
     private $tokens = [];
@@ -167,7 +172,7 @@ class BaseTestCase extends TestCase {
         return $response;
     }
 
-    /**
+    /** 
      * Process the application given a request method and URI
      *
      * @param string $requestMethod the request method (e.g. GET, POST, etc.)
@@ -254,7 +259,7 @@ class BaseTestCase extends TestCase {
         return $settings['app'];
     }
 
-    /**
+    /** 
      * Helper functions for login/logout on other tests
      */
     public function login($user, $password, $secret = null) {
@@ -266,7 +271,7 @@ class BaseTestCase extends TestCase {
             "password" => $password
         ];
         if (!is_null($secret)) {
-            $tfa = new TwoFactorAuth();
+            $tfa = new TwoFactorAuth(new EndroidQrCodeProvider());
             $data["code"] = $tfa->getCode($secret);
         }
         $this->request('POST', '/login', array_merge($data, $csrf_token));
@@ -280,7 +285,7 @@ class BaseTestCase extends TestCase {
         $this->request('GET', '/logout');
     }
 
-    /**
+    /** 
      * Replace HASH in routes
      */
     protected function getURIView($hash) {
@@ -310,11 +315,11 @@ class BaseTestCase extends TestCase {
         return str_replace("ID", $id, str_replace("HASH", $hash, $uri));
     }
 
-    /**
+    /** 
      * CSRF Tokens
      */
     protected function extractFormCSRF($response) {
-        /**
+        /** 
           <input type="hidden" name="csrf_name" value="csrf5c94b1958ed33">
           <input type="hidden" name="csrf_value" value="1a083321a891731ed2747360f572c934">
          */
@@ -330,7 +335,7 @@ class BaseTestCase extends TestCase {
     }
 
     protected function extractJSCSRF($response) {
-        /**
+        /** 
           <script type='text/javascript' >
           var allowedReload = false;
           ...
@@ -353,7 +358,7 @@ class BaseTestCase extends TestCase {
         return [];
     }
 
-    /**
+    /** 
      * Get new tokens from endpoint /tokens
      */
     protected function getCSRFTokens($csrf_token, $count = 10) {
@@ -379,7 +384,7 @@ class BaseTestCase extends TestCase {
         return $this->getToken();
     }
 
-    /**
+    /** 
      * Extract input fields from page
      * @see https://stackoverflow.com/a/1274074
      */
@@ -419,7 +424,7 @@ class BaseTestCase extends TestCase {
     private function extractArray($xpath, $node, &$input_fields) {
         $name = $node->getAttribute('name');
 
-        /**
+        /** 
          * Get the node value
          */
         $value = $node->getAttribute('value');

@@ -1,4 +1,10 @@
-<phpunit bootstrap="vendor/autoload.php">
+<phpunit bootstrap="vendor/autoload.php"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnPhpunitDeprecations="true">
+
   <testsuites>
     <testsuite name="lifetracking">
       <directory>tests</directory>

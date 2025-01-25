@@ -40,5 +40,4 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('{"status":"success"}', $body);
     }
-
 }

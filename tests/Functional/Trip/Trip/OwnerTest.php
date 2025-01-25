@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Trip\Trip;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Trip\TripTestBase;
 
 class OwnerTest extends TripTestBase {
@@ -32,9 +33,8 @@ class OwnerTest extends TripTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->uri_save . "\" method=\"POST\">", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
         $data = [
             "name" => "Testtrip",
@@ -48,11 +48,9 @@ class OwnerTest extends TripTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostParentSave
-     */
+    #[Depends('testPostParentSave')]
     public function testGetParentCreated($data) {
-        $response = $this->request('GET', $this->uri_overview );
+        $response = $this->request('GET', $this->uri_overview);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -71,11 +69,11 @@ class OwnerTest extends TripTestBase {
         return $result;
     }
 
-    /**
+    /** 
      * Edit trip
-     * @depends testPostParentSave
-     * @depends testGetParentCreated
      */
+    #[Depends('testPostParentSave')]
+    #[Depends('testGetParentCreated')]
     public function testGetParentCreatedEdit($data, array $result_data) {
 
         $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
@@ -104,10 +102,7 @@ class OwnerTest extends TripTestBase {
         return $result;
     }
 
-    /**
-     * 
-     * @depends testGetParentCreatedEdit
-     */
+    #[Depends('testGetParentCreatedEdit')]
     public function testPostParentCreatedSave(array $result_data) {
         $data = ["id" => $result_data["id"], "hash" => $result_data["hash"], "name" => "Testtrip Updated", "users" => [1, 3]];
         $response = $this->request('POST', $this->uri_save . $result_data["id"], $data);
@@ -118,10 +113,8 @@ class OwnerTest extends TripTestBase {
         return $data;
     }
 
-    /**
-     * @depends testGetParentCreatedEdit
-     * @depends testPostParentCreatedSave
-     */
+    #[Depends('testGetParentCreatedEdit')]
+    #[Depends('testPostParentCreatedSave')]
     public function testChanges(array $result_data, $data) {
         $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
 
@@ -129,10 +122,10 @@ class OwnerTest extends TripTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
+    /** 
      * View Trip
-     * @depends testGetParentCreated
      */
+    #[Depends('testGetParentCreated')]
     public function testGetViewParent(array $result_data) {
         $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
@@ -142,10 +135,10 @@ class OwnerTest extends TripTestBase {
         $this->assertStringContainsString("<div id=\"trip-map\">", $body);
     }
 
-    /**
+    /** 
      * Delete / clean
-     * @depends testGetParentCreated
      */
+    #[Depends('testGetParentCreated')]
     public function testDeleteParent(array $result_data) {
         $response = $this->request('DELETE', $this->uri_delete . $result_data["id"]);
 
@@ -157,5 +150,4 @@ class OwnerTest extends TripTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

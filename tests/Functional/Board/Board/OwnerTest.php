@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Board\Board;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Board\BoardTestBase;
 
 class OwnerTest extends BoardTestBase {
@@ -32,25 +33,20 @@ class OwnerTest extends BoardTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->uri_save . "\" method=\"POST\">", $body);
     }
 
-    /**
-     * 
-     */
     public function testPostParentSave() {
         $data = [
             "name" => "Test Board 2",
             "users" => [1]
         ];
         $response = $this->request('POST', $this->uri_save, $data);
-        
+
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
 
         return $data;
     }
 
-    /**
-     * @depends testPostParentSave
-     */
+    #[Depends('testPostParentSave')]
     public function testGetParentCreated($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -71,11 +67,8 @@ class OwnerTest extends BoardTestBase {
         return $result;
     }
 
-    /**
-     * Edit board
-     * @depends testPostParentSave
-     * @depends testGetParentCreated
-     */
+    #[Depends('testPostParentSave')]
+    #[Depends('testGetParentCreated')]
     public function testGetParentCreatedEdit($data, array $result_data) {
 
         $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
@@ -102,9 +95,7 @@ class OwnerTest extends BoardTestBase {
         return $result;
     }
 
-    /**
-     * @depends testGetParentCreatedEdit
-     */
+    #[Depends('testGetParentCreatedEdit')]
     public function testPostParentCreatedSave(array $result_data) {
         $data = [
             "id" => $result_data["id"],
@@ -120,9 +111,7 @@ class OwnerTest extends BoardTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostParentCreatedSave
-     */
+    #[Depends('testPostParentCreatedSave')]
     public function testGetParentUpdated($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -143,10 +132,7 @@ class OwnerTest extends BoardTestBase {
         return $result;
     }
 
-    /**
-     * View Board
-     * @depends testGetParentUpdated
-     */
+    #[Depends('testGetParentUpdated')]
     public function testGetViewParent(array $result_data) {
         $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
@@ -156,10 +142,7 @@ class OwnerTest extends BoardTestBase {
         $this->assertStringContainsString('<body class="boards boards-view', $body);
     }
 
-    /**
-     * Delete
-     * @depends testGetParentUpdated
-     */
+    #[Depends('testGetParentUpdated')]
     public function testDeleteParent(array $result_data) {
         $response = $this->request('DELETE', $this->uri_delete . $result_data["id"]);
 
@@ -171,5 +154,4 @@ class OwnerTest extends BoardTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

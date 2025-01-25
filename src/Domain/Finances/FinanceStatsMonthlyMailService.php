@@ -43,7 +43,7 @@ class FinanceStatsMonthlyMailService {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
+        $fmt = new \IntlDateFormatter($language);
         $fmt->setPattern($dateFormatPHP["month_name"]);
         $dateObj = new \DateTime('first day of last month');
         $month = $dateObj->format("m");

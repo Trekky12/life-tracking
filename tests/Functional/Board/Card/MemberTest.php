@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Board\Card;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Board\BoardTestBase;
 
 class MemberTest extends BoardTestBase {
@@ -19,9 +20,6 @@ class MemberTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
-     * View Board
-     */
     public function testGetViewBoard() {
         $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
 
@@ -31,9 +29,6 @@ class MemberTest extends BoardTestBase {
         $this->assertStringContainsString('<body class="boards boards-view', $body);
     }
 
-    /**
-     * Create the card
-     */
     public function testPostChildSave() {
         $data = [
             "title" => "Test Card 2",
@@ -44,7 +39,7 @@ class MemberTest extends BoardTestBase {
             "time" => date('H:i:s'),
             "description" => "Test description",
             "archive" => '0',
-            "users" => [1,2],
+            "users" => [1, 2],
             "labels" => [1]
         ];
         $response = $this->request('POST', $this->uri_save, $data);
@@ -61,10 +56,11 @@ class MemberTest extends BoardTestBase {
         return $data;
     }
 
-    /**
+
+    /** 
      * Is the created card visible?
-     * @depends testPostChildSave
      */
+    #[Depends('testPostChildSave')]
     public function testGetChildCreated(array $data) {
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
@@ -77,16 +73,16 @@ class MemberTest extends BoardTestBase {
         $this->assertIsArray($json["stacks"]);
 
         $this_card = null;
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
 
-            foreach($stack["cards"] as $card){
+            foreach ($stack["cards"] as $card) {
                 $this->assertIsArray($card);
                 $this->assertArrayHasKey("id", $card);
                 $this->assertArrayHasKey("title", $card);
 
-                if($card["title"] == $data["title"]){
+                if ($card["title"] == $data["title"]) {
                     $this_card = $card;
                     break;
                 }
@@ -106,10 +102,11 @@ class MemberTest extends BoardTestBase {
         return intval($this_card["id"]);
     }
 
-    /**
+
+    /** 
      * Update / Check Update
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testPostChildUpdate(int $child_id) {
         $data = [
             "title" => "Test Card 2 Updated",
@@ -120,7 +117,7 @@ class MemberTest extends BoardTestBase {
             "time" => date('H:i:s'),
             "description" => "Test description",
             "archive" => '0',
-            "users" => [1,2],
+            "users" => [1, 2],
             "labels" => [1]
         ];
         $response = $this->request('POST', $this->uri_save . $child_id, $data);
@@ -137,11 +134,11 @@ class MemberTest extends BoardTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Get updated data
-     * @depends testPostChildUpdate
-     * @depends testGetChildCreated
      */
+    #[Depends('testPostChildUpdate')]
+    #[Depends('testGetChildCreated')]
     public function testGetChildDataUpdated(array $data, int $card_id) {
 
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
@@ -150,16 +147,16 @@ class MemberTest extends BoardTestBase {
         $json = json_decode($body, true);
 
         $this_card = null;
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
 
-            foreach($stack["cards"] as $card){
+            foreach ($stack["cards"] as $card) {
                 $this->assertIsArray($card);
                 $this->assertArrayHasKey("id", $card);
                 $this->assertArrayHasKey("title", $card);
 
-                if($card["id"] == $card_id){
+                if ($card["id"] == $card_id) {
                     $this_card = $card;
                     break;
                 }
@@ -177,12 +174,12 @@ class MemberTest extends BoardTestBase {
         $this->assertSame($data["labels"], $this_card["labels"]);
     }
 
-    /**
+    /** 
      * Delete card
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testDeleteChild(int $child_id) {
-        
+
         $response = $this->request('DELETE', $this->uri_delete . $child_id);
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -193,6 +190,4 @@ class MemberTest extends BoardTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
-
 }

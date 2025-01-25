@@ -20,7 +20,7 @@ class OwnerTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Archive
      */
     public function testArchive() {
@@ -40,7 +40,7 @@ class OwnerTest extends BoardTestBase {
         $this->assertTrue($json["is_archived"]);
     }
 
-    /**
+    /** 
      * Look for archived item
      */
     public function testArchivedItem() {
@@ -53,17 +53,17 @@ class OwnerTest extends BoardTestBase {
         $this->assertArrayHasKey("stacks", $json);
         $this->assertIsArray($json["stacks"]);
 
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
 
-            if($stack["name"] == $this->TEST_STACK_NAME){
+            if ($stack["name"] == $this->TEST_STACK_NAME) {
                 $this->assertEquals(1, $stack["archive"]);
             }
         }
     }
 
-    /**
+    /** 
      * Unarchive
      */
     public function testUnArchive() {
@@ -83,7 +83,7 @@ class OwnerTest extends BoardTestBase {
         $this->assertTrue($json["is_archived"]);
     }
 
-    /**
+    /** 
      * Look for unarchived item
      */
     public function testUnArchivedItem() {
@@ -96,14 +96,13 @@ class OwnerTest extends BoardTestBase {
         $this->assertArrayHasKey("stacks", $json);
         $this->assertIsArray($json["stacks"]);
 
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
 
-            if($stack["name"] == $this->TEST_STACK_NAME){
+            if ($stack["name"] == $this->TEST_STACK_NAME) {
                 $this->assertEquals(0, $stack["archive"]);
             }
         }
     }
-
 }

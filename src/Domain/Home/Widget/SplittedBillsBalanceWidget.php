@@ -44,7 +44,7 @@ class SplittedBillsBalanceWidget implements Widget {
         return array_keys($this->groups);
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["group"];
 
         $balances = $this->bill_mapper->getBalances();
@@ -56,12 +56,12 @@ class SplittedBillsBalanceWidget implements Widget {
         return 0;
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["group"];
         return sprintf("%s | %s", $this->translation->getTranslatedString("SPLITBILLS"), $this->groups[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("SPLITBILL_GROUPS"),
@@ -73,7 +73,7 @@ class SplittedBillsBalanceWidget implements Widget {
         ];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["group"];
         return $this->router->urlFor('splitbill_bills', ["group" => $this->groups[$id]["hash"]]);
     }

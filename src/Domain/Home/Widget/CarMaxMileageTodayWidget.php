@@ -48,7 +48,7 @@ class CarMaxMileageTodayWidget implements Widget {
         return array_keys($this->cars);
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
         $totalMileagesWithStartDate = $this->carservice_mapper->getTotalMileage(true);
         $current_mileage_year = array_key_exists($id, $totalMileagesWithStartDate) ? $totalMileagesWithStartDate[$id]["diff"] : null;
@@ -61,12 +61,12 @@ class CarMaxMileageTodayWidget implements Widget {
         return "";
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
         return sprintf("%s | %s", $this->translation->getTranslatedString("REMAINING_KM"), $this->cars[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("CAR"),
@@ -78,7 +78,7 @@ class CarMaxMileageTodayWidget implements Widget {
         ];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         return $this->router->urlFor('car_service_stats');
     }
 }

@@ -17,7 +17,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Access a specific child
      */
     public function testGetChildEditID() {
@@ -28,7 +28,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Update the sheet
      */
     public function testPostChildSaveID() {
@@ -38,14 +38,14 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
             "start" => date('Y-m-d') . " 12:00",
             "end" => date('Y-m-d') . " 14:10"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH). $this->TEST_SHEET_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_SHEET_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete sheet
      */
     public function testDeleteChild() {
@@ -55,6 +55,4 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
-
-
 }

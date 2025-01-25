@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Profile;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class ChangePWTest extends BaseTestCase {
@@ -22,9 +23,8 @@ class ChangePWTest extends BaseTestCase {
         $this->logout();
     }
 
-    /**
-     * 
-     */
+
+
     public function testChangePassword() {
 
         $this->login("user", "user");
@@ -45,9 +45,7 @@ class ChangePWTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testChangePassword
-     */
+    #[Depends('testChangePassword')]
     public function testChangedPassword($data) {
 
         $this->login("user", $data["newpassword1"]);
@@ -62,9 +60,7 @@ class ChangePWTest extends BaseTestCase {
         $this->logout();
     }
 
-    /**
-     * @depends testChangedPassword
-     */
+    #[Depends('testChangedPassword')]
     public function testChangePasswordBack() {
 
         $this->login("user", "user_new");
@@ -85,9 +81,7 @@ class ChangePWTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testChangePasswordBack
-     */
+    #[Depends('testChangePasswordBack')]
     public function testChangedPasswordBack($data) {
 
         $this->login("user", $data["newpassword1"]);
@@ -101,5 +95,4 @@ class ChangePWTest extends BaseTestCase {
 
         $this->logout();
     }
-
 }

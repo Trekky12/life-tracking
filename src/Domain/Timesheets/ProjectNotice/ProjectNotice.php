@@ -2,6 +2,8 @@
 
 namespace App\Domain\Timesheets\ProjectNotice;
 
+use App\Domain\Main\Utility\Utility;
+
 class ProjectNotice extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_TIMESHEETS_PROJECT_NOTICE";
@@ -16,8 +18,8 @@ class ProjectNotice extends \App\Domain\DataObject {
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->project = $this->exists('project', $data) ? filter_var($data['project'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->notice = $this->exists('notice', $data) ? trim(filter_var($data['notice'], FILTER_SANITIZE_STRING)) : null;
-        $this->encryptedCEK = $this->exists('encryptedCEK', $data) ? trim(filter_var($data['encryptedCEK'], FILTER_SANITIZE_STRING)) : null;
+        $this->notice = $this->exists('notice', $data) ? trim(Utility::filter_string_polyfill($data['notice'])) : null;
+        $this->encryptedCEK = $this->exists('encryptedCEK', $data) ? trim(Utility::filter_string_polyfill($data['encryptedCEK'])) : null;
 
 
         $this->is_autosave = $this->exists('is_autosave', $data) ? intval(filter_var($data['is_autosave'], FILTER_SANITIZE_NUMBER_INT)) : 0;

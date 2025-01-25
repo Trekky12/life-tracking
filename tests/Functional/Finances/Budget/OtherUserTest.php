@@ -49,9 +49,8 @@ class OtherUserTest extends BaseTestCase {
         $this->assertFalse(empty($matches));
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -93,5 +92,4 @@ class OtherUserTest extends BaseTestCase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Element nicht gefunden", $json["error"]);
     }
-
 }

@@ -54,7 +54,7 @@ class CardMailService {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
+        $fmt = new \IntlDateFormatter($language);
         $fmt->setPattern($dateFormatPHP['month_name_full']);
 
 
@@ -91,7 +91,7 @@ class CardMailService {
                             $mail_content .= implode('', array_map(function($c) use ($fmt, $today) {
                                         $output = '<li>' . $c["title"];
                                         if ($today != 1) {
-                                            $dateObj = new \DateTime($c["date"]);
+                                            $dateObj = new \DateTime($c["date"] ?? '');
                                             $output .= ' (' . $fmt->format($dateObj) . ')';
                                         }
                                         $output .= '</li>';

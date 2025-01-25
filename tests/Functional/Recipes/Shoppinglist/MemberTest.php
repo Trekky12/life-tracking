@@ -26,15 +26,14 @@ class MemberTest extends RecipesShoppinglistsTestBase {
 
         // search for all elements
         $matches = $this->getParents($body);
-        $hashs = array_map(function($match) {
+        $hashs = array_map(function ($match) {
             return $match["hash"];
         }, $matches);
         $this->assertContains($this->TEST_SHOPPINGLIST_HASH, $hashs);
     }
 
-    /**
+    /** 
      * Edit trip
-     * 
      */
     public function testGetParentEdit() {
         $response = $this->request('GET', $this->uri_edit . $this->TEST_SHOPPINGLIST_ID);
@@ -58,7 +57,7 @@ class MemberTest extends RecipesShoppinglistsTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -70,7 +69,7 @@ class MemberTest extends RecipesShoppinglistsTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View (members can access)
      */
     public function testGetViewParent() {
@@ -81,5 +80,4 @@ class MemberTest extends RecipesShoppinglistsTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<ul class="shopping-list-entries"', $body);
     }
-
 }

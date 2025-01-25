@@ -17,7 +17,7 @@ class NoAccessTest extends TimesheetTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Add new Sheet
      */
     public function testGetChildEdit() {
@@ -28,7 +28,7 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Access a specific child
      */
     public function testGetChildEditID() {
@@ -39,7 +39,7 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Create the sheet
      */
     public function testPostChildSave() {
@@ -55,7 +55,7 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Update the sheet
      */
     public function testPostChildSaveID() {
@@ -64,14 +64,14 @@ class NoAccessTest extends TimesheetTestBase {
             "start" => date('Y-m-d') . " 12:00",
             "end" => date('Y-m-d') . " 14:10"
         ];
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH). $this->TEST_SHEET_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_SHEET_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete sheet
      */
     public function testDeleteChild() {
@@ -81,6 +81,4 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
-
-
 }

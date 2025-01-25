@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Splitbill\Recurring;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Splitbill\SplitbillTestBase;
 
 class MemberTest extends SplitbillTestBase {
@@ -25,7 +26,7 @@ class MemberTest extends SplitbillTestBase {
         $this->assertStringContainsString('<table id="splitbills_bills_recurring_table"', $body);
     }
 
-    /**
+    /** 
      * Add new recurring bill
      */
     public function testGetRecurringEdit() {
@@ -36,7 +37,7 @@ class MemberTest extends SplitbillTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" id=\"splitbillsBillsForm\" action=\"" . $this->getURIRecurringSave($this->TEST_GROUP_HASH) . "\" method=\"POST\">", $body);
     }
 
-    /**
+    /** 
      * Create the Bill
      */
     public function testPostRecurringSave() {
@@ -70,10 +71,10 @@ class MemberTest extends SplitbillTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the created bill available?
-     * @depends testPostRecurringSave
      */
+    #[Depends('testPostRecurringSave')]
     public function testGetRecurringCreated(array $data) {
 
         $response = $this->request('GET', $this->getURIRecurringView($this->TEST_GROUP_HASH));
@@ -81,7 +82,7 @@ class MemberTest extends SplitbillTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        
+
         $row = $this->getRecurring($body, $data, $this->TEST_GROUP_HASH, 2);
 
         $this->assertArrayHasKey("id_edit", $row);
@@ -90,15 +91,15 @@ class MemberTest extends SplitbillTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Update Bills
      */
 
-    /**
+    /** 
      * Edit Bill
-     * @depends testGetRecurringCreated
-     * @depends testPostRecurringSave
      */
+    #[Depends('testGetRecurringCreated')]
+    #[Depends('testPostRecurringSave')]
     public function testGetRecurringCreatedEdit(int $bill_id, $data) {
 
         $response = $this->request('GET', $this->getURIRecurringEdit($this->TEST_GROUP_HASH) . $bill_id);
@@ -121,10 +122,7 @@ class MemberTest extends SplitbillTestBase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetRecurringCreatedEdit
-     */
+    #[Depends('testGetRecurringCreatedEdit')]
     public function testPostRecurringCreatedSave(int $bill_id) {
 
         $data = [
@@ -157,10 +155,10 @@ class MemberTest extends SplitbillTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the bill data updated?
-     * @depends testPostRecurringCreatedSave
      */
+    #[Depends('testPostRecurringCreatedSave')]
     public function testGetRecurringUpdated(array $data) {
 
         $response = $this->request('GET', $this->getURIRecurringView($this->TEST_GROUP_HASH));
@@ -177,10 +175,8 @@ class MemberTest extends SplitbillTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetRecurringUpdated
-     * @depends testPostRecurringCreatedSave
-     */
+    #[Depends('testGetRecurringUpdated')]
+    #[Depends('testPostRecurringCreatedSave')]
     public function testChanges(int $child_id, $data) {
         $response = $this->request('GET', $this->getURIRecurringEdit($this->TEST_GROUP_HASH) . $child_id);
 
@@ -188,10 +184,10 @@ class MemberTest extends SplitbillTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
+    /** 
      * Delete Bill
-     * @depends testGetRecurringUpdated
      */
+    #[Depends('testGetRecurringUpdated')]
     public function testDeleteRecurring(int $bill_id) {
 
         $response = $this->request('DELETE', $this->getURIRecurringDelete($this->TEST_GROUP_HASH) . $bill_id);
@@ -204,5 +200,4 @@ class MemberTest extends SplitbillTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

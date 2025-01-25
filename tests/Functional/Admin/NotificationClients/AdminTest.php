@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Admin\NotificationClients;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class AdminTest extends BaseTestCase {
@@ -57,16 +58,14 @@ class AdminTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertIsArray($json);
 
         $this->assertArrayHasKey("status", $json);
         $this->assertSame("success", $json["status"]);
     }
 
-    /**
-     * @depends testSubscribe
-     */
+    #[Depends('testSubscribe')]
     public function testSubscribed() {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -79,7 +78,7 @@ class AdminTest extends BaseTestCase {
             "user_agent" => $this->USE_GUZZLE ? $this->USER_AGENT : "",
             "ip" => $this->USE_GUZZLE ? $this->LOCAL_IP : ""
         ];
-        
+
         $rows = $this->getElementsInTable($body, $data);
 
         $this->assertFalse(empty($rows));
@@ -88,10 +87,8 @@ class AdminTest extends BaseTestCase {
         return intval($rows[0]["id_delete"]);
     }
 
-    /**
-     * @depends testSubscribed
-     */
-    public function testTestNotification(int $client_id) {        
+    #[Depends('testSubscribed')]
+    public function testTestNotification(int $client_id) {
 
         $data = [
             "title" => "test",
@@ -99,17 +96,15 @@ class AdminTest extends BaseTestCase {
         ];
 
         $response = $this->request('POST', $this->uri_test . $client_id, $data);
-        
+
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->uri_overview, $response->getHeaderLine("Location"));
     }
 
-    /**
-     * @depends testSubscribed
-     */
+    #[Depends('testSubscribed')]
     public function testDelete(int $client_id) {
         $response = $this->request('DELETE', $this->uri_delete . $client_id);
-    
+
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
@@ -121,9 +116,7 @@ class AdminTest extends BaseTestCase {
         $this->assertTrue($json["is_deleted"]);
     }
 
-    /**
-     * @depends testDelete
-     */
+    #[Depends('testDelete')]
     public function testDeleted() {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -144,10 +137,9 @@ class AdminTest extends BaseTestCase {
 
     protected function getElementsInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["user"]) . '<\/td>\s*<td>' . preg_quote($data["ip"]) . '<\/td>\s*<td>' . preg_quote($data["user_agent"]) . '<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_test) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["user"] ?? '') . '<\/td>\s*<td>' . preg_quote($data["ip"] ?? '') . '<\/td>\s*<td>' . preg_quote($data["user_agent"] ?? '') . '<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td>([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_test) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match_all($re, $body, $matches, PREG_SET_ORDER);
 
         return $matches;
     }
-
 }

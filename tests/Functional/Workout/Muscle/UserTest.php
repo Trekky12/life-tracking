@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Functional\Workouts\Muscle;
+namespace Tests\Functional\Workout\Muscle;
 
 use Tests\Functional\Base\BaseTestCase;
 
@@ -10,7 +10,7 @@ class UserTest extends BaseTestCase {
     protected $uri_edit = "/workouts/muscles/edit/";
     protected $uri_save = "/workouts/muscles/save/";
     protected $uri_delete = "/workouts/muscles/delete/";
-    
+
     protected $TEST_MUSCLE = 1;
 
     protected function setUp(): void {
@@ -39,9 +39,8 @@ class UserTest extends BaseTestCase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -51,14 +50,14 @@ class UserTest extends BaseTestCase {
         $response = $this->request('POST', $this->uri_save, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-    
-    
+
+
     public function testPostElementCreatedSave() {
-        
+
         $data = [
             "id" => $this->TEST_MUSCLE,
             "name" => "Test Muscle 1 Update"
@@ -67,7 +66,7 @@ class UserTest extends BaseTestCase {
         $response = $this->request('POST', $this->uri_save . $this->TEST_MUSCLE, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
@@ -80,6 +79,4 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-
-
 }

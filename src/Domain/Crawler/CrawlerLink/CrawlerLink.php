@@ -2,6 +2,8 @@
 
 namespace App\Domain\Crawler\CrawlerLink;
 
+use App\Domain\Main\Utility\Utility;
+
 class CrawlerLink extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_CRAWLERS_LINK";
@@ -17,8 +19,8 @@ class CrawlerLink extends \App\Domain\DataObject {
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
-        $this->link = $this->exists('link', $data) ? filter_var($data['link'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
+        $this->link = $this->exists('link', $data) ? Utility::filter_string_polyfill($data['link']) : null;
         $this->parent = $this->exists('parent', $data) ? filter_var($data['parent'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;

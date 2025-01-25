@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Recipes\Shoppinglist;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Recipes\RecipesShoppinglistsTestBase;
 
 class OwnerTest extends RecipesShoppinglistsTestBase {
@@ -33,9 +34,8 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->uri_save . "\" method=\"POST\">", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
         $data = [
             "name" => "Test Shoppinglist",
@@ -49,9 +49,7 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostParentSave
-     */
+    #[Depends('testPostParentSave')]
     public function testGetParentCreated($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -72,11 +70,11 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         return $result;
     }
 
-    /**
+    /** 
      * Edit project
-     * @depends testPostParentSave
-     * @depends testGetParentCreated
      */
+    #[Depends('testPostParentSave')]
+    #[Depends('testGetParentCreated')]
     public function testGetParentCreatedEdit($data, array $result_data) {
 
         $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
@@ -105,10 +103,7 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         return $result;
     }
 
-    /**
-     * 
-     * @depends testGetParentCreatedEdit
-     */
+    #[Depends('testGetParentCreatedEdit')]
     public function testPostParentCreatedSave(array $result_data) {
         $data = [
             "id" => $result_data["id"],
@@ -124,10 +119,8 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         return $data;
     }
 
-    /**
-     * @depends testGetParentCreatedEdit
-     * @depends testPostParentCreatedSave
-     */
+    #[Depends('testGetParentCreatedEdit')]
+    #[Depends('testPostParentCreatedSave')]
     public function testChanges(array $result_data, $data) {
         $response = $this->request('GET', $this->uri_edit . $result_data["id"]);
 
@@ -135,10 +128,10 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
+    /** 
      * View
-     * @depends testGetParentCreated
      */
+    #[Depends('testGetParentCreated')]
     public function testGetViewParent(array $result_data) {
         $response = $this->request('GET', $this->getURIView($result_data["hash"]));
 
@@ -147,12 +140,12 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<ul class="shopping-list-entries"', $body);
     }
-    
 
-    /**
+
+    /** 
      * Delete / clean
-     * @depends testGetParentCreated
      */
+    #[Depends('testGetParentCreated')]
     public function testDeleteParent(array $result_data) {
         $response = $this->request('DELETE', $this->uri_delete . $result_data["id"]);
 
@@ -164,7 +157,4 @@ class OwnerTest extends RecipesShoppinglistsTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-    
-    
-
 }

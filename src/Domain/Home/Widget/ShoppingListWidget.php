@@ -43,7 +43,7 @@ class ShoppingListWidget implements Widget
         return array_keys($this->shoppinglists);
     }
 
-    public function getContent(WidgetObject $widget = null)
+    public function getContent(?WidgetObject $widget = null)
     {
         $id = $widget->getOptions()["shoppinglist"];
 
@@ -52,14 +52,14 @@ class ShoppingListWidget implements Widget
         return ["hash" => $this->shoppinglists[$id]["hash"], "entries" => $entries];
     }
 
-    public function getTitle(WidgetObject $widget = null)
+    public function getTitle(?WidgetObject $widget = null)
     {
         $id = $widget->getOptions()["shoppinglist"];
 
         return sprintf("%s", $this->shoppinglists[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null)
+    public function getOptions(?WidgetObject $widget = null)
     {
         return [
             [
@@ -72,7 +72,7 @@ class ShoppingListWidget implements Widget
         ];
     }
 
-    public function getLink(WidgetObject $widget = null)
+    public function getLink(?WidgetObject $widget = null)
     {
         $id = $widget->getOptions()["shoppinglist"];
         return $this->router->urlFor('recipes_shoppinglists_view', ["shoppinglist" => $this->shoppinglists[$id]["hash"]]);

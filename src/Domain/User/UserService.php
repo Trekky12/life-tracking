@@ -8,6 +8,7 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\Main\Helper;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\Utility;
 
 class UserService extends Service {
 
@@ -131,8 +132,8 @@ class UserService extends Service {
     public function getData($data) {
         
         $response_data = ["data" => [], "status" => "success"];
-        $query = array_key_exists('query', $data) ? filter_var($data['query'], FILTER_SANITIZE_STRING) : "";
-        $module = array_key_exists('module', $data) ? filter_var($data['module'], FILTER_SANITIZE_STRING) : null;
+        $query = array_key_exists('query', $data) ? Utility::filter_string_polyfill($data['query']) : "";
+        $module = array_key_exists('module', $data) ? Utility::filter_string_polyfill($data['module']) : null;
         $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
         
         $response_data["data"] = $this->mapper->getUsersWithModule($query, $module, $users);

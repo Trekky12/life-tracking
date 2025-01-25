@@ -21,7 +21,7 @@ class FinanceMonthExpensesWidget implements Widget {
         $this->mapper = $mapper;
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $dateObj = new \DateTime('today');
         $year = $dateObj->format("Y");
         $month = $dateObj->format("m");
@@ -29,15 +29,15 @@ class FinanceMonthExpensesWidget implements Widget {
         return round($this->mapper->statsMailBalance($this->current_user->getUser()->id, $month, $year, 0), 2);
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         return $this->translation->getTranslatedString("EXPENSES_THIS_MONTH");
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         return $this->router->urlFor('finances');
     }
 

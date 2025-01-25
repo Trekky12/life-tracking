@@ -98,7 +98,7 @@ class CookbookService extends Service {
     }
 
     public function getCookbook($cookbook_id) {
-        return $this->getEntry($entry_id);
+        return $this->getEntry($cookbook_id);
     }
     
     public function getCookbookRecipes($cookbook_id){

@@ -10,6 +10,7 @@ use App\Domain\Base\Settings;
 use App\Domain\Workouts\Muscle\MuscleMapper;
 use App\Domain\Workouts\Bodypart\BodypartMapper;
 use App\Domain\Settings\SettingsMapper;
+use App\Domain\Main\Utility\Utility;
 
 class ExerciseService extends Service {
 
@@ -102,7 +103,7 @@ class ExerciseService extends Service {
         $limit = sprintf("%s,%s", $offset, $count);
 
         $bodypart = array_key_exists('bodypart', $data) ? intval(filter_var($data['bodypart'], FILTER_SANITIZE_NUMBER_INT)) : -1;
-        $query = array_key_exists('query', $data) ? filter_var($data['query'], FILTER_SANITIZE_STRING) : '';
+        $query = array_key_exists('query', $data) ? Utility::filter_string_polyfill($data['query']) : '';
 
         $exercises = $this->mapper->getExercisesWithBodyPart("name ASC", $limit, $bodypart, $query);
         $bodyparts = $this->bodypart_mapper->getAll();

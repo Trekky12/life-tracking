@@ -16,10 +16,9 @@ class NoAccessWithWrongParentTest extends TripTestBase {
     protected function tearDown(): void {
         $this->logout();
     }
-    
-    /**
+
+    /** 
      * Get route waypoints
-     * @de1pends testGetCreatedRoute
      */
     public function testGetRouteWaypoints() {
         $response = $this->request('GET', $this->getURIRouteWaypoints($this->TEST_TRIP_HASH) . "?route=" . $this->TEST_ROUTE_ID);
@@ -35,7 +34,7 @@ class NoAccessWithWrongParentTest extends TripTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Delete Route
      */
     public function testDeleteRoute() {
@@ -51,5 +50,4 @@ class NoAccessWithWrongParentTest extends TripTestBase {
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

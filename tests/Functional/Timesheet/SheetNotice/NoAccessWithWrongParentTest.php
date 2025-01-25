@@ -8,7 +8,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
     protected $TEST_SHEET_ID = 3;
-    
+
     protected $uri_child_edit = "/timesheets/HASH/sheets/notice/ID/edit/";
     protected $uri_child_save = "/timesheets/HASH/sheets/notice/ID/save/";
     protected $uri_child_data = "/timesheets/HASH/sheets/notice/";
@@ -30,9 +30,8 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -49,7 +48,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     public function testGetChildData() {
 
-        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH).'?id='. $this->TEST_SHEET_ID);
+        $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH) . '?id=' . $this->TEST_SHEET_ID);
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
@@ -59,5 +58,4 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

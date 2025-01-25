@@ -2,6 +2,8 @@
 
 namespace App\Domain\Workouts\Bodypart;
 
+use App\Domain\Main\Utility\Utility;
+
 class Bodypart extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_WORKOUTS_BODYPART";
@@ -14,7 +16,7 @@ class Bodypart extends \App\Domain\DataObject {
         }
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";

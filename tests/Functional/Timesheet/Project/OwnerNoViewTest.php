@@ -16,7 +16,7 @@ class OwnerNoViewTest extends TimesheetTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * View Project (owner -> has no access to view)
      */
     public function testGetViewParentOwner() {
@@ -27,5 +27,4 @@ class OwnerNoViewTest extends TimesheetTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

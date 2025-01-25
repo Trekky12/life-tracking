@@ -2,14 +2,16 @@
 
 namespace App\Domain\User\MobileFavorites;
 
+use App\Domain\Main\Utility\Utility;
+
 class MobileFavorite extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_MOBILEFAVORITE";
 
     public function parseData(array $data) {
 
-        $this->url = $this->exists('url', $data) ? filter_var($data['url'], FILTER_SANITIZE_STRING) : null;
-        $this->icon = $this->exists('icon', $data) ? filter_var($data['icon'], FILTER_SANITIZE_STRING) : null;
+        $this->url = $this->exists('url', $data) ? Utility::filter_string_polyfill($data['url']) : null;
+        $this->icon = $this->exists('icon', $data) ? Utility::filter_string_polyfill($data['icon']) : null;
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
     }
 

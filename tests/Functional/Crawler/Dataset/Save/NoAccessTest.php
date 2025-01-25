@@ -23,5 +23,4 @@ class NoAccessTest extends CrawlerTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-
 }

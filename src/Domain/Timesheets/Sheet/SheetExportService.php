@@ -52,14 +52,14 @@ class SheetExportService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        if (strcmp($type, "word") == 0) {
+        if (strcmp($type ?? '', "word") == 0) {
             return $this->exportWord($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
         }
-        if (strcmp($type, "excel") == 0) {
+        if (strcmp($type ?? '', "excel") == 0) {
             return $this->exportExcel($project, $from, $to, $categories, $billed, $payed, $planned, $customer);
         }
 
-        if (strcmp($type, "html-overview") == 0) {
+        if (strcmp($type ?? '', "html-overview") == 0) {
             return $this->exportHTMLOverview($project, $from, $to, $categories, $billed, $payed, $planned, $customer, $noticefields);
         }
 
@@ -76,11 +76,11 @@ class SheetExportService extends Service {
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate = new \IntlDateFormatter($language);
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
-        $fromDate = new \DateTime($from);
-        $toDate = new \DateTime($to);
+        $fromDate = new \DateTime($from ?? '');
+        $toDate = new \DateTime($to ?? '');
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -263,18 +263,18 @@ class SheetExportService extends Service {
     }
 
     private function exportWord($project, $from, $to, $categories, $billed, $payed, $planned, $customer) {
-        
+
         $include_empty_categories = true;
         // get Data
         $data = $this->getMapper()->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $planned, $customer, 1, 'ASC', null);
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate = new \IntlDateFormatter($language);
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
-        $fromDate = new \DateTime($from);
-        $toDate = new \DateTime($to);
+        $fromDate = new \DateTime($from ?? '');
+        $toDate = new \DateTime($to ?? '');
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $phpWord->addTitleStyle(1, array('name' => 'Arial', 'size' => 16, 'color' => '000000'));
@@ -358,7 +358,7 @@ class SheetExportService extends Service {
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate = new \IntlDateFormatter($language);
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
         $include_empty_categories = true;
@@ -423,11 +423,11 @@ class SheetExportService extends Service {
         });
 
         // Order by noticefields order
-        $sorted_fields = array_map(function($id) use ($selected_fields) {
+        $sorted_fields = array_map(function ($id) use ($selected_fields) {
             return $selected_fields[$id];
         }, $noticefields);
 
-        $sum = array_sum(array_column($data, 'count')); 
+        $sum = array_sum(array_column($data, 'count'));
 
         $response = [
             "project" => $project,

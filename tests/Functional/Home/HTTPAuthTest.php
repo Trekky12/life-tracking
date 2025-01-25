@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Functional\API;
+namespace Tests\Functional\Home;
 
 use Tests\Functional\Base\BaseTestCase;
 
@@ -13,5 +13,4 @@ class HTTPAuthTest extends BaseTestCase {
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals("/login", $response->getHeaderLine("Location"));
     }
-
 }

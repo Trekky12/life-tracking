@@ -43,7 +43,7 @@ class TimesheetsSumWidget implements Widget {
         return array_keys($this->projects);
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
 
         $project = $this->project_service->getProject($id);
@@ -66,12 +66,12 @@ class TimesheetsSumWidget implements Widget {
         return !empty($sum) ? $sum : "00:00:00";
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         return sprintf("%s | %s", $this->translation->getTranslatedString("TIMESHEETS"), $this->projects[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("TIMESHEETS_PROJECTS"),
@@ -83,7 +83,7 @@ class TimesheetsSumWidget implements Widget {
         ];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         return $this->router->urlFor('timesheets_sheets', ["project" => $this->projects[$id]["hash"]]);
     }

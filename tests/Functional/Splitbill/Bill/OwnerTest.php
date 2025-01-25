@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Splitbill\Bill;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Splitbill\SplitbillTestBase;
 
 class OwnerTest extends SplitbillTestBase {
@@ -16,7 +17,7 @@ class OwnerTest extends SplitbillTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Add new Bill
      */
     public function testGetChildEdit() {
@@ -27,7 +28,7 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" id=\"splitbillsBillsForm\" action=\"" . $this->getURIChildSave($this->TEST_GROUP_HASH) . "\" method=\"POST\">", $body);
     }
 
-    /**
+    /** 
      * Create the Bill
      */
     public function testPostChildSave() {
@@ -58,10 +59,10 @@ class OwnerTest extends SplitbillTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the created bill available?
-     * @depends testPostChildSave
      */
+    #[Depends('testPostChildSave')]
     public function testGetChildCreated(array $data) {
 
         $response = $this->request('GET', $this->getURIView($this->TEST_GROUP_HASH));
@@ -78,15 +79,15 @@ class OwnerTest extends SplitbillTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Update Bills
      */
 
-    /**
+    /** 
      * Edit Bill
-     * @depends testGetChildCreated
-     * @depends testPostChildSave
      */
+    #[Depends('testGetChildCreated')]
+    #[Depends('testPostChildSave')]
     public function testGetChildCreatedEdit(int $bill_id, $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $bill_id);
@@ -109,10 +110,7 @@ class OwnerTest extends SplitbillTestBase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetChildCreatedEdit
-     */
+    #[Depends('testGetChildCreatedEdit')]
     public function testPostChildCreatedSave(int $bill_id) {
 
         $data = [
@@ -142,10 +140,10 @@ class OwnerTest extends SplitbillTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the bill data updated?
-     * @depends testPostChildCreatedSave
      */
+    #[Depends('testPostChildCreatedSave')]
     public function testGetChildUpdated(array $data) {
 
         $response = $this->request('GET', $this->getURIView($this->TEST_GROUP_HASH));
@@ -153,7 +151,7 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        
+
         $row = $this->getChild($body, $data, $this->TEST_GROUP_HASH, 1);
 
         $this->assertArrayHasKey("id_edit", $row);
@@ -162,10 +160,8 @@ class OwnerTest extends SplitbillTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetChildUpdated
-     * @depends testPostChildCreatedSave
-     */
+    #[Depends('testGetChildUpdated')]
+    #[Depends('testPostChildCreatedSave')]
     public function testChanges(int $child_id, $data) {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_GROUP_HASH) . $child_id);
 
@@ -173,10 +169,10 @@ class OwnerTest extends SplitbillTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
+    /** 
      * Delete Bill
-     * @depends testGetChildUpdated
      */
+    #[Depends('testGetChildUpdated')]
     public function testDeleteChild(int $bill_id) {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_GROUP_HASH) . $bill_id);
@@ -189,5 +185,4 @@ class OwnerTest extends SplitbillTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

@@ -37,7 +37,7 @@ class NoAccessTest extends RecipesMealplansTestBase {
         }
     }
 
-    /**
+    /** 
      * Edit project
      */
     public function testGetParentEdit() {
@@ -49,9 +49,8 @@ class NoAccessTest extends RecipesMealplansTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
 
         $data = [
@@ -66,7 +65,7 @@ class NoAccessTest extends RecipesMealplansTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -78,7 +77,7 @@ class NoAccessTest extends RecipesMealplansTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View Project
      */
     public function testGetViewParent() {
@@ -89,5 +88,4 @@ class NoAccessTest extends RecipesMealplansTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

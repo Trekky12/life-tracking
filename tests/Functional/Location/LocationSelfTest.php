@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Location;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class LocationSelfTest extends BaseTestCase {
@@ -32,15 +33,14 @@ class LocationSelfTest extends BaseTestCase {
         $this->assertStringContainsString('<form class="form-horizontal" id="locationForm" action="/location/save/" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
-            "gps_lat" => rand(0,10),
-            "gps_lng" => rand(0,5),
-            "gps_acc" => rand(0,1000)
+            "gps_lat" => rand(0, 10),
+            "gps_lng" => rand(0, 5),
+            "gps_acc" => rand(0, 1000)
         ];
 
         $response = $this->request('POST', '/location/save/', $data);
@@ -51,9 +51,7 @@ class LocationSelfTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($location_data) {
         $response = $this->request('GET', '/location/markers');
 
@@ -77,9 +75,7 @@ class LocationSelfTest extends BaseTestCase {
         return $my_marker_id;
     }
 
-    /**
-     * @depends testAddedElement
-     */
+    #[Depends('testAddedElement')]
     public function testDeleteElement($marker_id) {
         $response = $this->request('DELETE', '/location/delete/' . $marker_id);
 
@@ -88,5 +84,4 @@ class LocationSelfTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('{"is_deleted":true,"error":""}', $body);
     }
-
 }

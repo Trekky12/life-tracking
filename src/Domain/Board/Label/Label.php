@@ -2,25 +2,27 @@
 
 namespace App\Domain\Board\Label;
 
+use App\Domain\Main\Utility\Utility;
+
 class Label extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_BOARDS_LABEL";
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
         $this->board = $this->exists('board', $data) ? filter_var($data['board'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->background_color = $this->exists('background_color', $data) ? filter_var($data['background_color'], FILTER_SANITIZE_STRING) : null;
-        $this->text_color = $this->exists('text_color', $data) ? filter_var($data['text_color'], FILTER_SANITIZE_STRING) : null;
+        $this->background_color = $this->exists('background_color', $data) ? Utility::filter_string_polyfill($data['background_color']) : null;
+        $this->text_color = $this->exists('text_color', $data) ? Utility::filter_string_polyfill($data['text_color']) : null;
 
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
 
-        if (!preg_match("/^#[a-f0-9]{6}$/i", $this->background_color) || !preg_match("/^#[a-f0-9]{6}$/i", $this->text_color)) {
+        if ((!is_null($this->background_color) && !preg_match("/^#[a-f0-9]{6}$/i", $this->background_color)) || (!is_null($this->text_color) && !preg_match("/^#[a-f0-9]{6}$/i", $this->text_color))) {
             $this->parsing_errors[] = "WRONG_COLOR_TYPE";
         }
     }

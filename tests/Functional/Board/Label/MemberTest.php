@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Board\Label;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Board\BoardTestBase;
 
 class MemberTest extends BoardTestBase {
@@ -32,7 +33,7 @@ class MemberTest extends BoardTestBase {
         $this->assertStringContainsString('<body class="boards boards-view', $body);
     }
 
-    /**
+    /** 
      * Create the label
      */
     public function testPostChildSave() {
@@ -48,7 +49,7 @@ class MemberTest extends BoardTestBase {
         $body = (string) $response->getBody();
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $json = json_decode($body, true);
 
         $this->assertIsArray($json);
@@ -58,10 +59,10 @@ class MemberTest extends BoardTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the created label visible?
-     * @depends testPostChildSave
      */
+    #[Depends('testPostChildSave')]
     public function testGetChildCreated(array $data) {
         $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
 
@@ -76,11 +77,11 @@ class MemberTest extends BoardTestBase {
         return intval($row["id"]);
     }
 
-    /**
+    /** 
      * Get Label data
-     * @depends testPostChildSave
-     * @depends testGetChildCreated
      */
+    #[Depends('testPostChildSave')]
+    #[Depends('testGetChildCreated')]
     public function testGetChildData(array $data, int $label_id) {
 
         $response = $this->request('GET', $this->uri_edit . $label_id);
@@ -97,10 +98,10 @@ class MemberTest extends BoardTestBase {
         $this->assertSame($label_id, intval($json["entry"]["id"]));
     }
 
-    /**
+    /** 
      * Update / Check Update
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testPostChildUpdate(int $label_id) {
         $data = [
             "name" => "Test Label 2 Updated",
@@ -123,11 +124,11 @@ class MemberTest extends BoardTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Get Label data Updated
-     * @depends testPostChildUpdate
-     * @depends testGetChildCreated
      */
+    #[Depends('testPostChildUpdate')]
+    #[Depends('testGetChildCreated')]
     public function testGetChildDataUpdated(array $data, int $label_id) {
 
         $response = $this->request('GET', $this->uri_edit . $label_id);
@@ -144,10 +145,10 @@ class MemberTest extends BoardTestBase {
         $this->assertSame($label_id, intval($json["entry"]["id"]));
     }
 
-    /**
+    /** 
      * Delete label
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testDeleteChild(int $label_id) {
         $response = $this->request('DELETE', $this->uri_delete . $label_id);
 
@@ -159,5 +160,4 @@ class MemberTest extends BoardTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

@@ -38,24 +38,23 @@ class NotificationsTest extends BaseTestCase {
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertIsArray($json);
-        
+
         $this->assertArrayHasKey("data", $json);
         $this->assertIsArray($json["data"]);
-        
+
         $this->assertArrayHasKey("status", $json);
         $this->assertSame("success", $json["status"]);
-        
+
         $this->assertArrayHasKey("count", $json);
         $this->assertIsInt($json["count"]);
         $this->assertSame($data["count"], count($json["data"]));
-        
+
         $this->assertArrayHasKey("unseen", $json);
         $this->assertIsInt($json["unseen"]);
-        
+
         $this->assertArrayHasKey("categories", $json);
         $this->assertIsArray($json["categories"]);
     }
-
 }

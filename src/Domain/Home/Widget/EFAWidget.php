@@ -4,28 +4,23 @@ namespace App\Domain\Home\Widget;
 
 use App\Domain\Main\Translator;
 
-class EFAWidget implements Widget
-{
+class EFAWidget implements Widget {
 
     private $translation;
 
-    public function __construct(Translator $translation)
-    {
+    public function __construct(Translator $translation) {
         $this->translation = $translation;
     }
 
-    public function getContent(WidgetObject $widget = null)
-    {
+    public function getContent(?WidgetObject $widget = null) {
         return null;
     }
 
-    public function getTitle(WidgetObject $widget = null)
-    {
+    public function getTitle(?WidgetObject $widget = null) {
         return $widget->getOptions()["title"];
     }
 
-    public function getOptions(WidgetObject $widget = null)
-    {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("WIDGET_TITLE"),
@@ -42,13 +37,11 @@ class EFAWidget implements Widget
         ];
     }
 
-    public function getLink(WidgetObject $widget = null)
-    {
+    public function getLink(?WidgetObject $widget = null) {
         return null;
     }
 
-    public static function formatEFARequestData($status, $result)
-    {
+    public static function formatEFARequestData($status, $result) {
 
         $departures = [];
 
@@ -121,10 +114,10 @@ class EFAWidget implements Widget
                 }
 
                 $cancelled = false;
-                if(array_key_exists("realtimeStatus", $departure) && str_contains($departure["realtimeStatus"], "CANCELLED")){
+                if (array_key_exists("realtimeStatus", $departure) && str_contains($departure["realtimeStatus"], "CANCELLED")) {
                     $cancelled = true;
                 }
-                if(array_key_exists("realtimeTripStatus", $departure) && str_contains($departure["realtimeTripStatus"], "CANCELLED")){
+                if (array_key_exists("realtimeTripStatus", $departure) && str_contains($departure["realtimeTripStatus"], "CANCELLED")) {
                     $cancelled = true;
                 }
 

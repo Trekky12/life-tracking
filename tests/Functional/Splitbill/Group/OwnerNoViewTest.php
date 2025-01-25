@@ -16,7 +16,7 @@ class OwnerNoViewTest extends SplitbillTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * View Group (owner -> has no access to view)
      */
     public function testGetViewParentOwner() {
@@ -27,5 +27,4 @@ class OwnerNoViewTest extends SplitbillTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

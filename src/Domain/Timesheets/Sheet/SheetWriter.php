@@ -10,6 +10,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Project\ProjectMapper;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
+use App\Domain\Main\Utility\Utility;
 
 class SheetWriter extends ObjectActivityWriter {
 
@@ -89,8 +90,8 @@ class SheetWriter extends ObjectActivityWriter {
 
             $updated_entry = $this->service->getEntry($entry->id);
 
-            $start_date = new \DateTime($updated_entry->start);
-            $end_date = new \DateTime($updated_entry->end);
+            $start_date = new \DateTime($updated_entry->start ?? '');
+            $end_date = new \DateTime($updated_entry->end ?? '');
 
             for ($i = 1; $i <= $repeat_count; $i++) {
                 $new_entry = clone $updated_entry;
@@ -123,7 +124,7 @@ class SheetWriter extends ObjectActivityWriter {
 
         if (array_key_exists("action", $data) && !empty($data["action"])) {
 
-            $action = filter_var($data["action"], FILTER_SANITIZE_STRING);
+            $action = Utility::filter_string_polyfill($data["action"]);
 
             if ($action == "update_following") {
 
@@ -142,8 +143,8 @@ class SheetWriter extends ObjectActivityWriter {
                 // Update remainings
                 $updated_entry = $this->service->getEntry($entry->id);
 
-                $start_date = new \DateTime($updated_entry->start);
-                $end_date = new \DateTime($updated_entry->end);
+                $start_date = new \DateTime($updated_entry->start ?? '');
+                $end_date = new \DateTime($updated_entry->end ?? '');
                 $repeat_unit = $updated_entry->repeat_unit;
                 $repeat_multiplier = $updated_entry->repeat_multiplier;
 

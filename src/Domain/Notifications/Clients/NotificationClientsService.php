@@ -82,15 +82,15 @@ class NotificationClientsService extends Service {
 
     public function getCategoriesFromEndpoint($data) {
         $result = ["data" => [], "status" => "success"];
-        $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
+        $endpoint = array_key_exists('endpoint', $data) ? Utility::filter_string_polyfill($data['endpoint']) : null;
         $result["data"] = $this->mapper->getCategoriesFromEndpoint($endpoint);
         
         return new Payload(Payload::$RESULT_JSON, $result);
     }
 
     public function setCategoryOfEndpoint($data) {
-        $endpoint = array_key_exists('endpoint', $data) ? filter_var($data['endpoint'], FILTER_SANITIZE_STRING) : null;
-        $cat = array_key_exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_STRING) : "";
+        $endpoint = array_key_exists('endpoint', $data) ? Utility::filter_string_polyfill($data['endpoint']) : null;
+        $cat = array_key_exists('category', $data) ? Utility::filter_string_polyfill($data['category']) : "";
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
         
         $category = intval($cat);

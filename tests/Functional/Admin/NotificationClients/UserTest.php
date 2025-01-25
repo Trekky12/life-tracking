@@ -27,7 +27,7 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-    
+
     public function testTestNotification() {
         $response = $this->request('POST', $this->uri_test . $this->TEST_CLIENT_ID);
 
@@ -45,5 +45,4 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-
 }

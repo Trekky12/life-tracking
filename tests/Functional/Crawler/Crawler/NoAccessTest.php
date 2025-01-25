@@ -14,7 +14,7 @@ class NoAccessTest extends CrawlerTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * View 
      */
     public function testGetViewParent() {
@@ -26,7 +26,7 @@ class NoAccessTest extends CrawlerTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
+    /** 
      * Edit
      */
     public function testGetParentCreatedEdit() {
@@ -39,9 +39,8 @@ class NoAccessTest extends CrawlerTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentCreatedSave() {
         $data = [
             "id" => $this->TEST_CRAWLER_ID,
@@ -56,7 +55,7 @@ class NoAccessTest extends CrawlerTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -72,5 +71,4 @@ class NoAccessTest extends CrawlerTestBase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Trip\Waypoint;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Trip\TripTestBase;
 
 class NoAccessTest extends TripTestBase {
@@ -17,7 +18,7 @@ class NoAccessTest extends TripTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Create the Waypoint
      */
     public function testPostWaypointAdd() {
@@ -41,10 +42,10 @@ class NoAccessTest extends TripTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Delete Waypoint
-     * @depends testPostWaypointAdd
      */
+    #[Depends('testPostWaypointAdd')]
     public function testDeleteWaypoint() {
         $response = $this->request('DELETE', $this->getURIWaypointDelete($this->TEST_TRIP_HASH) . '?id=' . $this->TEST_TRIP_EVENT_ID);
 
@@ -58,5 +59,4 @@ class NoAccessTest extends TripTestBase {
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

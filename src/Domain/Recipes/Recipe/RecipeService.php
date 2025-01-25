@@ -8,6 +8,7 @@ use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Base\Settings;
 use App\Domain\Recipes\Cookbook\CookbookService;
+use App\Domain\Main\Utility\Utility;
 
 class RecipeService extends Service {
 
@@ -136,7 +137,7 @@ class RecipeService extends Service {
         $offset = array_key_exists('start', $data) ? filter_var($data['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $limit = sprintf("%s,%s", $offset, $count);
 
-        $query = array_key_exists('query', $data) ? filter_var($data['query'], FILTER_SANITIZE_STRING) : '';
+        $query = array_key_exists('query', $data) ? Utility::filter_string_polyfill($data['query']) : '';
 
         $cookbook_hash = array_key_exists('cookbook', $data) ? filter_var($data['cookbook'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 

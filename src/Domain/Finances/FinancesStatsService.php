@@ -13,10 +13,10 @@ use App\Application\Payload\Payload;
 
 class FinancesStatsService extends Service {
 
+    private $settings;
     protected $mapper;
     private $cat_service;
     private $budget_service;
-    private $date_utility;
     static $GROUP_CATEGORIES_BUDGET_CHART = 5;
 
     public function __construct(LoggerInterface $logger,
@@ -24,15 +24,13 @@ class FinancesStatsService extends Service {
             Settings $settings,
             FinancesMapper $mapper,
             CategoryService $cat_service,
-            BudgetService $budget_service,
-            DateUtility $date_utility) {
+            BudgetService $budget_service) {
         parent::__construct($logger, $user);
 
         $this->settings = $settings;
         $this->mapper = $mapper;
         $this->cat_service = $cat_service;
         $this->budget_service = $budget_service;
-        $this->date_utility = $date_utility;
     }
 
     public function statsTotal() {

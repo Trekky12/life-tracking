@@ -26,15 +26,14 @@ class MemberTest extends TripTestBase {
 
         // search for all elements
         $matches = $this->getParents($body);
-        $hashs = array_map(function($match) {
+        $hashs = array_map(function ($match) {
             return $match["hash"];
         }, $matches);
         $this->assertContains($this->TEST_TRIP_HASH, $hashs);
     }
 
-    /**
+    /** 
      * Edit trip
-     * 
      */
     public function testGetParentEdit() {
         $response = $this->request('GET', $this->uri_edit . $this->TEST_TRIP_ID);
@@ -58,7 +57,7 @@ class MemberTest extends TripTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -70,7 +69,7 @@ class MemberTest extends TripTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View trip (members can access)
      */
     public function testGetViewParent() {
@@ -81,5 +80,4 @@ class MemberTest extends TripTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<div id=\"trip-map\">", $body);
     }
-
 }

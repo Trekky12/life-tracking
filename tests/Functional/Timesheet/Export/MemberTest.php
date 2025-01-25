@@ -25,7 +25,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertStringContainsString($this->getURISheetsExport($this->TEST_PROJECT_HASH), $body);
     }
 
-    /**
+    /** 
      * Test Exporting 
      */
     public function testTimesheetsSheetsExportExcel() {
@@ -47,5 +47,4 @@ class MemberTest extends TimesheetTestBase {
         $this->assertEquals("attachment; filename=\"" . date('Y-m-d') . "_Export.docx\"", $response->getHeaderLine("Content-Disposition"));
         $this->assertEquals("max-age=0", $response->getHeaderLine("Cache-Control"));
     }
-
 }

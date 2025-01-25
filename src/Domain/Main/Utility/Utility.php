@@ -9,11 +9,11 @@ class Utility {
     }
 
     public static function getURI() {
-        return filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING);
+        return filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_UNSAFE_RAW);
     }
 
     public static function getAgent() {
-        return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_STRING);
+        return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_UNSAFE_RAW);
     }
 
     public static function getRequestURI(\Psr\Http\Message\RequestInterface $request) {
@@ -73,5 +73,13 @@ class Utility {
             }
         }
         return null;
+    }
+
+    /**
+     * @see https://stackoverflow.com/questions/69207368/constant-filter-sanitize-string-is-deprecated
+     */
+    public static function filter_string_polyfill(string $string): string {
+        $str = preg_replace('/\x00|<[^>]*>?/', '', $string);
+        return str_replace(["'", '"'], ['&#39;', '&#34;'], $str);
     }
 }

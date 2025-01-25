@@ -44,5 +44,4 @@ class TableTest extends SplitbillTestBase {
         $this->assertArrayHasKey("data", $json);
         $this->assertIsArray($json["data"]);
     }
-
 }

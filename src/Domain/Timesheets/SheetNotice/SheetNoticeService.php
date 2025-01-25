@@ -54,7 +54,7 @@ class SheetNoticeService extends Service {
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate = new \IntlDateFormatter($language);
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
         list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);

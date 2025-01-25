@@ -54,17 +54,17 @@ class TripEventService extends Service {
             $dateMax->add(new \DateInterval('P1D'));
 
             $dateInterval = new \DatePeriod(
-                    new \DateTime($min),
-                    new \DateInterval('P1D'),
-                    $dateMax
+                new \DateTime($min),
+                new \DateInterval('P1D'),
+                $dateMax
             );
         }
 
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
-        $fmt2 = new \IntlDateFormatter($language, NULL, NULL);
+        $fmt = new \IntlDateFormatter($language);
+        $fmt2 = new \IntlDateFormatter($language);
         $fmt->setPattern($dateFormatPHP["trips_buttons"]);
         $fmt2->setPattern($dateFormatPHP["trips_list"]);
 
@@ -84,9 +84,9 @@ class TripEventService extends Service {
         }
 
 
-        $dateFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $timeFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $datetimeFormatter = new \IntlDateFormatter($language, NULL, NULL);
+        $dateFormatter = new \IntlDateFormatter($language);
+        $timeFormatter = new \IntlDateFormatter($language);
+        $datetimeFormatter = new \IntlDateFormatter($language);
         $dateFormatter->setPattern($dateFormatPHP['date']);
         $timeFormatter->setPattern($dateFormatPHP['time']);
         $datetimeFormatter->setPattern($dateFormatPHP['datetime']);
@@ -95,7 +95,7 @@ class TripEventService extends Service {
         $toTranslation = $this->translation->getTranslatedString("TO");
 
         foreach ($events as $ev) {
-            
+
             // create Popup
             $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
 
@@ -105,13 +105,13 @@ class TripEventService extends Service {
             }
 
             $end_date = !empty($ev->end_date) ? $ev->end_date : $ev->start_date;
-            $end = new \DateTime($end_date);
+            $end = new \DateTime($end_date ?? '');
             $end->add(new \DateInterval('P1D'));
 
             $interval = new \DatePeriod(
-                    new \DateTime($ev->start_date),
-                    new \DateInterval('P1D'),
-                    $end
+                new \DateTime($ev->start_date ?? ''),
+                new \DateInterval('P1D'),
+                $end
             );
 
             foreach ($interval as $event_date) {
@@ -147,9 +147,9 @@ class TripEventService extends Service {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $dateFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $timeFormatter = new \IntlDateFormatter($language, NULL, NULL);
-        $datetimeFormatter = new \IntlDateFormatter($language, NULL, NULL);
+        $dateFormatter = new \IntlDateFormatter($language);
+        $timeFormatter = new \IntlDateFormatter($language);
+        $datetimeFormatter = new \IntlDateFormatter($language);
         $dateFormatter->setPattern($dateFormatPHP['date']);
         $timeFormatter->setPattern($dateFormatPHP['time']);
         $datetimeFormatter->setPattern($dateFormatPHP['datetime']);
@@ -254,5 +254,4 @@ class TripEventService extends Service {
         $response_data = ['status' => 'error'];
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
-
 }

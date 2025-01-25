@@ -2,13 +2,15 @@
 
 namespace App\Domain\Home\Widget;
 
+use App\Domain\Main\Utility\Utility;
+
 class WidgetObject extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_WIDGET_ENTRY";
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? trim(filter_var($data['name'], FILTER_SANITIZE_STRING)) : null;
+        $this->name = $this->exists('name', $data) ? trim(Utility::filter_string_polyfill($data['name'])) : null;
         
         $this->options = $this->exists('options', $data) ? $data['options'] : null;
         
@@ -21,7 +23,10 @@ class WidgetObject extends \App\Domain\DataObject {
     }
     
     public function getOptions() {
-        return json_decode($this->options, true);
+        if(!is_null($this->options)){
+            return json_decode($this->options, true);
+        }
+        return [];
     }
 
     public function get_fields($remove_user_element = false, $insert = true, $update = false) {

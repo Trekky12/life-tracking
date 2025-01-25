@@ -37,9 +37,8 @@ class NoAccessTest extends RecipesCookbooksTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->uri_save_to_cookbook . "\" method=\"POST\">", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddToCookbook() {
         $data = [
             "cookbook" => $this->TEST_COOKBOOK_ID,
@@ -53,7 +52,7 @@ class NoAccessTest extends RecipesCookbooksTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * @depends1 testPostAddToCookbook
      */
     public function testGetCookbookRecipes() {
@@ -87,5 +86,4 @@ class NoAccessTest extends RecipesCookbooksTestBase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

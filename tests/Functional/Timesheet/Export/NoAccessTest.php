@@ -24,7 +24,7 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Test Exporting 
      */
     public function testTimesheetsSheetsExportExcel() {
@@ -42,5 +42,4 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

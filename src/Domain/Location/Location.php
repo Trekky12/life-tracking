@@ -2,7 +2,7 @@
 
 namespace App\Domain\Location;
 
-//class Location implements \JsonSerializable {
+use App\Domain\Main\Utility\Utility;
 
 class Location extends \App\Domain\DataObject {
 
@@ -10,10 +10,10 @@ class Location extends \App\Domain\DataObject {
 
     public function parseData(array $data) {
 
-        $this->identifier = $this->exists('identifier', $data) ? filter_var($data['identifier'], FILTER_SANITIZE_STRING) : null;
-        $this->device = $this->exists('device', $data, ["%DEVID"]) ? filter_var($data['device'], FILTER_SANITIZE_STRING) : null;
-        $this->date = $this->exists('date', $data, ["%DATE"]) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : null;
-        $this->time = $this->exists('time', $data, ["%TIME"]) ? filter_var($data['time'], FILTER_SANITIZE_STRING) : null;
+        $this->identifier = $this->exists('identifier', $data) ? Utility::filter_string_polyfill($data['identifier']) : null;
+        $this->device = $this->exists('device', $data, ["%DEVID"]) ? Utility::filter_string_polyfill($data['device']) : null;
+        $this->date = $this->exists('date', $data, ["%DATE"]) ? Utility::filter_string_polyfill($data['date']) : null;
+        $this->time = $this->exists('time', $data, ["%TIME"]) ? Utility::filter_string_polyfill($data['time']) : null;
         $this->times = $this->exists('times', $data, ["%TIMES"]) ? filter_var($data['times'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->ups = $this->exists('ups', $data, ["%UPS"]) ? filter_var($data['ups'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->batt = $this->exists('batt', $data, ["%BATT"]) ? filter_var($data['batt'], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -43,16 +43,16 @@ class Location extends \App\Domain\DataObject {
         $this->net_acc = $this->exists('net_acc', $data, ["%LOCNACC"]) ? filter_var($data['net_acc'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->net_tms = $this->exists('net_tms', $data, ["%LOCNTMS"]) ? filter_var($data['net_tms'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->cell_id = $this->exists('cell_id', $data, ["%CELLID"]) ? filter_var($data['cell_id'], FILTER_SANITIZE_STRING) : null;
-        $this->cell_sig = $this->exists('cell_sig', $data, ["%CELLSIG"]) ? filter_var($data['cell_sig'], FILTER_SANITIZE_STRING) : null;
-        $this->cell_srv = $this->exists('cell_srv', $data, ["%CELLSRV"]) ? filter_var($data['cell_srv'], FILTER_SANITIZE_STRING) : null;
+        $this->cell_id = $this->exists('cell_id', $data, ["%CELLID"]) ? Utility::filter_string_polyfill($data['cell_id']) : null;
+        $this->cell_sig = $this->exists('cell_sig', $data, ["%CELLSIG"]) ? Utility::filter_string_polyfill($data['cell_sig']) : null;
+        $this->cell_srv = $this->exists('cell_srv', $data, ["%CELLSRV"]) ? Utility::filter_string_polyfill($data['cell_srv']) : null;
 
         $this->steps = $this->exists('steps', $data, ["%STEPS"]) ? filter_var($data['steps'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->processAdditionalTaskerData($data);
 
         if ($this->exists('createdOn', $data)) {
-            $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
+            $this->createdOn = Utility::filter_string_polyfill($data['createdOn']);
         }
     }
 
@@ -61,24 +61,24 @@ class Location extends \App\Domain\DataObject {
      */
     private function processAdditionalTaskerData($data) {
 
-        $wifi_state = $this->exists('wifi_state', $data, ["%WIFI"]) ? filter_var($data['wifi_state'], FILTER_SANITIZE_STRING) : null;
+        $wifi_state = $this->exists('wifi_state', $data, ["%WIFI"]) ? Utility::filter_string_polyfill($data['wifi_state']) : null;
         if (in_array($wifi_state, array('on', 'off'))) {
             $this->wifi = $wifi_state === 'on' ? 1 : 0;
         }
 
-        $gps_state = $this->exists('gps_state', $data, ["%GPS"]) ? filter_var($data['gps_state'], FILTER_SANITIZE_STRING) : null;
+        $gps_state = $this->exists('gps_state', $data, ["%GPS"]) ? Utility::filter_string_polyfill($data['gps_state']) : null;
         if (in_array($gps_state, array('on', 'off'))) {
             $this->gps = $gps_state === 'on' ? 1 : 0;
         }
 
-        $screen_state = $this->exists('screen_state', $data, ["%SCREEN"]) ? filter_var($data['screen_state'], FILTER_SANITIZE_STRING) : null;
+        $screen_state = $this->exists('screen_state', $data, ["%SCREEN"]) ? Utility::filter_string_polyfill($data['screen_state']) : null;
         if (in_array($screen_state, array('on', 'off'))) {
             $this->screen = $screen_state === 'on' ? 1 : 0;
         }
 
 
         if ($this->exists('gps_loc', $data, ["%LOC", "%gl_coordinates"])) {
-            if (preg_match("/^[0-9.]+,[0-9.]+$/", $data['gps_loc'])) {
+            if (!is_null($data['gps_loc']) && preg_match("/^[0-9.]+,[0-9.]+$/", $data['gps_loc'])) {
                 $gps_loc = explode(",", $data['gps_loc']);
                 if (is_array($gps_loc) && count($gps_loc) == 2) {
                     $this->gps_lat = filter_var($gps_loc[0], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
@@ -88,7 +88,7 @@ class Location extends \App\Domain\DataObject {
         }
 
         if ($this->exists('net_loc', $data, ["%LOCN"])) {
-            if (preg_match("/^[0-9.]+,[0-9.]+$/", $data['net_loc'])) {
+            if (!is_null($data['net_loc']) && preg_match("/^[0-9.]+,[0-9.]+$/", $data['net_loc'])) {
                 $net_loc = explode(",", $data['net_loc']);
                 if (is_array($net_loc) && count($net_loc) == 2) {
                     $this->net_lat = filter_var($net_loc[0], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);

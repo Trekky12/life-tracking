@@ -137,5 +137,4 @@ class StatsTest extends BaseTestCase {
         $this->assertStringContainsString('<canvas id="financeDetailChart"', $body);
         $this->assertStringContainsString('<table id="stats_budget_table"', $body);
     }
-
 }

@@ -2,15 +2,17 @@
 
 namespace App\Domain\Settings;
 
+use App\Domain\Main\Utility\Utility;
+
 class Setting extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_SETTING";
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
-        $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_STRING) : null;
-        $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : "String";
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
+        $this->value = $this->exists('value', $data) ? Utility::filter_string_polyfill($data['value']) : null;
+        $this->type = $this->exists('type', $data) ? Utility::filter_string_polyfill($data['type']) : "String";
 
         if (!in_array($this->type, array("String", "Integer", "Boolean", "Date"))) {
             $this->parsing_errors[] = "WRONG_TYPE";

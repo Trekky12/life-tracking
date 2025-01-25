@@ -8,7 +8,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
     protected $TEST_CATEGORY_BUDGET_ID = 3;
-    
+
     protected $uri_child_edit = "/timesheets/HASH/categorybudget/edit/";
     protected $uri_child_save = "/timesheets/HASH/categorybudget/save/";
     protected $uri_child_delete = "/timesheets/HASH/categorybudget/delete/";
@@ -21,7 +21,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Access a specific child
      */
     public function testGetChildEditID() {
@@ -32,9 +32,8 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-
     /**
-    * Update the specific child
+     * Update the specific child
      */
     public function testPostChildSaveID() {
 
@@ -44,15 +43,15 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
             "value" => 10
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH). $this->TEST_CATEGORY_BUDGET_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_CATEGORY_BUDGET_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     */
+
+
     public function testDeleteElement() {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_CATEGORY_BUDGET_ID);
@@ -66,5 +65,4 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

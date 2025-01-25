@@ -12,14 +12,13 @@ class LoginHTTPTest extends BaseTestCase {
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals("/login", $response->getHeaderLine("Location"));
     }
-    
+
     public function testGetAPIHTTP() {
         $response = $this->request('GET', '/api', [], ['user' => 'admin', 'pass' => 'admin']);
 
         $body = (string) $response->getBody();
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<!DOCTYPE html>", $body);
     }
-
 }

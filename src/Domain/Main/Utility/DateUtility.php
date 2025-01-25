@@ -10,7 +10,7 @@ class DateUtility {
         $language = $settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
+        $fmt = new \IntlDateFormatter($language);
         $fmt->setPattern($dateFormatPHP['month_name']);
 
         $dateObj = \DateTime::createFromFormat('!m', $month);
@@ -21,7 +21,7 @@ class DateUtility {
         $language = $settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
+        $fmt = new \IntlDateFormatter($language);
         $fmt->setPattern($dateFormatPHP['date']);
 
         $dateObj = $d = new \DateTime($date);
@@ -30,24 +30,24 @@ class DateUtility {
 
     public static function getDateRange($data, $defaultFrom = 'today', $defaultTo = 'today') {
 
-        if (strcmp($defaultFrom, 'today') === 0) {
+        if (strcmp($defaultFrom ?? '', 'today') === 0) {
             $defaultFrom = date('Y-m-d');
         }
-        if (strcmp($defaultTo, 'today') === 0) {
+        if (strcmp($defaultTo ?? '', 'today') === 0) {
             $defaultTo = date('Y-m-d');
         }
 
-        $from = array_key_exists('from', $data) && !empty($data['from']) ? filter_var($data['from'], FILTER_SANITIZE_STRING) : $defaultFrom;
-        $to = array_key_exists('to', $data) && !empty($data['to']) ? filter_var($data['to'], FILTER_SANITIZE_STRING) : $defaultTo;
+        $from = array_key_exists('from', $data) && !empty($data['from']) ? Utility::filter_string_polyfill($data['from']) : $defaultFrom;
+        $to = array_key_exists('to', $data) && !empty($data['to']) ? Utility::filter_string_polyfill($data['to']) : $defaultTo;
 
         /**
          * Clean dates
          */
         $dateRegex = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/";
-        if (!preg_match($dateRegex, $from) || !preg_match($dateRegex, $to)) {
+        if ((!is_null($from) && !preg_match($dateRegex, $from)) || (!is_null($to) && !preg_match($dateRegex, $to))) {
 
-            $from = preg_match($dateRegex, $from) ? $from : $defaultFrom;
-            $to = preg_match($dateRegex, $to) ? $to : $defaultTo;
+            $from = !is_null($from) && preg_match($dateRegex, $from) ? $from : $defaultFrom;
+            $to = !is_null($to) && preg_match($dateRegex, $to) ? $to : $defaultTo;
         }
 
         return array($from, $to);
@@ -72,6 +72,9 @@ class DateUtility {
     }
 
     public static function getSecondsFromDuration($value) {
+        if (is_null($value)) {
+            return null;
+        }
         $matches = [];
         preg_match("/([0-9]+):([0-9]{2})/", $value, $matches);
         if (count($matches) == 3) {
@@ -80,5 +83,4 @@ class DateUtility {
 
         return intval($value);
     }
-
 }

@@ -51,10 +51,10 @@ class ActivityService extends Service {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtDate = new \IntlDateFormatter($language);
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
-        $fmtTime = new \IntlDateFormatter($language, NULL, NULL);
+        $fmtTime = new \IntlDateFormatter($language);
         $fmtTime->setPattern($dateFormatPHP["time"]);
 
         $modules = $this->settings->getAppSettings()['modules'];

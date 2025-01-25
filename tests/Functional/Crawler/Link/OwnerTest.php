@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Crawler\Link;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Crawler\CrawlerTestBase;
 
 class OwnerTest extends CrawlerTestBase {
@@ -37,9 +38,7 @@ class OwnerTest extends CrawlerTestBase {
         $this->assertStringContainsString('<form class="form-horizontal" id="crawlerLinksForm" action="' . $this->getURIChildSave($this->TEST_CRAWLER_HASH) . '" method="POST">', $body);
     }
 
-    /**
-     * @depends testGetAddElement
-     */
+    #[Depends('testGetAddElement')]
     public function testPostAddElement() {
 
         $data = [
@@ -57,9 +56,7 @@ class OwnerTest extends CrawlerTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $response = $this->request('GET', $this->getURIChildOverview($this->TEST_CRAWLER_HASH));
 
@@ -74,11 +71,11 @@ class OwnerTest extends CrawlerTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Edit created element
-     * @depends testAddedElement
-     * @depends testPostAddElement
      */
+    #[Depends('testAddedElement')]
+    #[Depends('testPostAddElement')]
     public function testGetElementCreatedEdit(int $entry_id, array $data) {
 
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH) . $entry_id);
@@ -101,10 +98,7 @@ class OwnerTest extends CrawlerTestBase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetElementCreatedEdit
-     */
+    #[Depends('testGetElementCreatedEdit')]
     public function testPostElementCreatedSave(int $entry_id) {
 
         $data = [
@@ -123,10 +117,7 @@ class OwnerTest extends CrawlerTestBase {
         return $data;
     }
 
-    /**
-     * Is the element updated?
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testPostElementCreatedSave')]
     public function testGetElementUpdated(array $result_data) {
         $response = $this->request('GET', $this->getURIChildOverview($this->TEST_CRAWLER_HASH));
 
@@ -142,10 +133,8 @@ class OwnerTest extends CrawlerTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testGetElementUpdated')]
+    #[Depends('testPostElementCreatedSave')]
     public function testChanges(int $child_id, $data) {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH) . $child_id);
 
@@ -153,9 +142,7 @@ class OwnerTest extends CrawlerTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     */
+    #[Depends('testGetElementUpdated')]
     public function testDeleteElement(int $entry_id) {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_CRAWLER_HASH) . $entry_id);
@@ -170,7 +157,7 @@ class OwnerTest extends CrawlerTestBase {
         $parent_link = "";
 
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>' . str_replace('/', "\/", $data["link"]) . '<\/td>\s*<td>' . str_replace('/', "\/", $parent_link) . '<\/td>\s*<td>' . preg_quote($data["position"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"] ?? '') . '<\/td>\s*<td>' . str_replace('/', "\/", $data["link"]) . '<\/td>\s*<td>' . str_replace('/', "\/", $parent_link) . '<\/td>\s*<td>' . preg_quote($data["position"] ?? '') . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
         return $matches;
     }
@@ -178,5 +165,4 @@ class OwnerTest extends CrawlerTestBase {
     protected function getURIChildOverview($hash) {
         return str_replace("HASH", $hash, $this->uri_child_overview);
     }
-
 }

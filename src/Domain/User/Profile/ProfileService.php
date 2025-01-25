@@ -7,10 +7,13 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
 use App\Domain\Base\CurrentUser;
 use App\Domain\User\UserService;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 use App\Application\Payload\Payload;
 use RobThree\Auth\TwoFactorAuth;
+use RobThree\Auth\Algorithm;
+use RobThree\Auth\Providers\Qr\EndroidQrCodeWithLogoProvider;
 use App\Domain\Main\Utility\SessionUtility;
+use App\Domain\Main\Utility\Utility;
 
 class ProfileService extends Service {
 
@@ -61,17 +64,26 @@ class ProfileService extends Service {
             /**
              * Create Thumbnail
              */
-            $img = Image::make($complete_file_name . '.' . $file_extension);
+            $manager = new ImageManager(
+                new \Intervention\Image\Drivers\Gd\Driver()
+            );
+            $img = $manager->read($complete_file_name . '.' . $file_extension);
             /**
              * @link http://image.intervention.io/api/resize
              */
             /* $img->resize( 100, null, function ($constraint) {
               $constraint->aspectRatio();
               } ); */
-            $img->fit(100, 100);
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->crop(100, 100);
             $img->save($complete_file_name . '-small.' . $file_extension);
 
-            $img->fit(50, 50);
+            $img->resize(50, 50, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->crop(50, 50);
             $img->save($complete_file_name . '-mini.' . $file_extension);
 
             $this->user_service->updateImage($user->id, $file_name . '.' . $file_extension);
@@ -87,9 +99,9 @@ class ProfileService extends Service {
     }
 
     public function changePassword($data): Payload {
-        $old_password = array_key_exists('oldpassword', $data) ? filter_var($data['oldpassword'], FILTER_SANITIZE_STRING) : null;
-        $new_password1 = array_key_exists('newpassword1', $data) ? filter_var($data['newpassword1'], FILTER_SANITIZE_STRING) : null;
-        $new_password2 = array_key_exists('newpassword2', $data) ? filter_var($data['newpassword2'], FILTER_SANITIZE_STRING) : null;
+        $old_password = array_key_exists('oldpassword', $data) ? Utility::filter_string_polyfill($data['oldpassword']) : null;
+        $new_password1 = array_key_exists('newpassword1', $data) ? Utility::filter_string_polyfill($data['newpassword1']) : null;
+        $new_password2 = array_key_exists('newpassword2', $data) ? Utility::filter_string_polyfill($data['newpassword2']) : null;
 
         if (!$this->user_service->comparePasswords($old_password, $new_password1, $new_password2)) {
             $this->logger->warning("Update Password Failed, Passwords missmatch");
@@ -173,8 +185,7 @@ class ProfileService extends Service {
         ];
 
         if (!$hasSecret) {
-            $mp = new QRCodeProvider();
-            $tfa = new TwoFactorAuth(null, 6, 30, 'sha1', $mp);
+            $tfa = new TwoFactorAuth(new EndroidQrCodeWithLogoProvider(), null, 6, 30, Algorithm::Sha1);
             $secret = $tfa->createSecret(160);
 
             $response_data['secret'] = chunk_split($secret, 4, " ");
@@ -198,7 +209,7 @@ class ProfileService extends Service {
         $secret = SessionUtility::getSessionVar("secret");
         SessionUtility::deleteSessionVar("secret");
 
-        $tfa = new TwoFactorAuth(null, 6, 30, 'sha1');
+        $tfa = new TwoFactorAuth(new EndroidQrCodeWithLogoProvider());
         $result = $tfa->verifyCode($secret, $code);
 
         if ($result) {
@@ -215,5 +226,4 @@ class ProfileService extends Service {
         $this->user_service->setTwoFactorAuthSecret(null);
         return new Payload(Payload::$STATUS_TWOFACTOR_DELETE_SUCCESS);
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Board\Stack;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Board\BoardTestBase;
 
 class MemberTest extends BoardTestBase {
@@ -19,7 +20,7 @@ class MemberTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * View Board
      */
     public function testGetViewBoard() {
@@ -31,10 +32,10 @@ class MemberTest extends BoardTestBase {
         $this->assertStringContainsString('<body class="boards boards-view', $body);
     }
 
-    /**
+    /** 
      * Create the stack
-     * @depends testGetViewBoard
      */
+    #[Depends('testGetViewBoard')]
     public function testPostChildSave() {
         $data = [
             "name" => "Test Stack 2",
@@ -56,10 +57,10 @@ class MemberTest extends BoardTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the created stack visible?
-     * @depends testPostChildSave
      */
+    #[Depends('testPostChildSave')]
     public function testGetChildCreated(array $data) {
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
 
@@ -72,11 +73,11 @@ class MemberTest extends BoardTestBase {
         $this->assertIsArray($json["stacks"]);
 
         $this_stack = null;
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("name", $stack);
-            
-            if($stack["name"] == $data["name"]){
+
+            if ($stack["name"] == $data["name"]) {
                 $this_stack = $stack;
                 break;
             }
@@ -88,10 +89,10 @@ class MemberTest extends BoardTestBase {
         return intval($this_stack["id"]);
     }
 
-    /**
+    /** 
      * Update / Check Update
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testPostChildUpdate(int $stack_id) {
         $data = [
             "name" => "Test Stack 2 Updated",
@@ -113,11 +114,11 @@ class MemberTest extends BoardTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Get updated data
-     * @depends testPostChildUpdate
-     * @depends testGetChildCreated
      */
+    #[Depends('testPostChildUpdate')]
+    #[Depends('testGetChildCreated')]
     public function testGetChildDataUpdated(array $data, int $stack_id) {
 
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
@@ -129,23 +130,23 @@ class MemberTest extends BoardTestBase {
         $this->assertIsArray($json["stacks"]);
 
         $this_stack = null;
-        foreach($json["stacks"] as $stack){
-            if($stack["id"] == $stack_id){
+        foreach ($json["stacks"] as $stack) {
+            if ($stack["id"] == $stack_id) {
                 $this_stack = $stack;
                 break;
             }
         }
         $this->assertNotNull($this_stack);
-    
+
         $this->assertSame($data["name"], $this_stack["name"]);
         $this->assertSame($data["position"], $this_stack["position"]);
         $this->assertSame($stack_id, intval($this_stack["id"]));
     }
 
-    /**
+    /** 
      * Delete stack
-     * @depends testGetChildCreated
      */
+    #[Depends('testGetChildCreated')]
     public function testDeleteChild(int $stack_id) {
         $response = $this->request('DELETE', $this->uri_delete . $stack_id);
 
@@ -157,5 +158,4 @@ class MemberTest extends BoardTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

@@ -28,14 +28,14 @@ class UserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        
+
         $row = $this->getElementInTable($body, ["name" => "Test workout template plan"]);
 
         $this->assertArrayHasKey("hash", $row);
         $this->assertEquals($row["hash"], $this->TEST_TEMPLATE_HASH);
     }
 
-    /**
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -47,9 +47,8 @@ class UserTest extends BaseTestCase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -82,12 +81,12 @@ class UserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
-    
-    /**
+
+    /** 
      * View Plan
      */
     public function testGetView() {
@@ -98,13 +97,12 @@ class UserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<div class=\"workout-selection view\">", $body);
     }
-    
+
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>\s*<a href="\/workouts\/templates\/(?<hash>.*)\/view\/">' . preg_quote($data["name"]) . '<\/a>\s*<\/td>\s*<td>[0-9\s]*<\/td>\s*<td>[0-9\s]*<\/td>\s*<td><\/td>\s*<td><\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>\s*<a href="\/workouts\/templates\/(?<hash>.*)\/view\/">' . preg_quote($data["name"] ?? '') . '<\/a>\s*<\/td>\s*<td>[0-9\s]*<\/td>\s*<td>[0-9\s]*<\/td>\s*<td><\/td>\s*<td><\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
     }
-
 }

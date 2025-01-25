@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Timesheet\FastCheckInOut;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
 class OwnerTest extends TimesheetTestBase {
@@ -26,9 +27,8 @@ class OwnerTest extends TimesheetTestBase {
         $this->assertStringContainsString("<div class=\"grid content-xsmall\">", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostTimesheetsFastCheckin() {
         $data = [];
         $response = $this->request('POST', $this->getURISheetsFastCheckin($this->TEST_PROJECT_HASH), $data);
@@ -47,10 +47,10 @@ class OwnerTest extends TimesheetTestBase {
         return $return_data;
     }
 
-    /**
+    /** 
      * Check in result
-     * @depends testPostTimesheetsFastCheckin
      */
+    #[Depends('testPostTimesheetsFastCheckin')]
     public function testGetTimesheetsFastCheckedIn(array $data) {
         $response = $this->request('GET', $this->getURIView($this->TEST_PROJECT_HASH));
 
@@ -62,13 +62,11 @@ class OwnerTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-        
+
         return intval($row["id_delete"]);
     }
 
-    /**
-     * @depends testGetTimesheetsFastCheckedIn
-     */
+    #[Depends('testGetTimesheetsFastCheckedIn')]
     public function testPostTimesheetsFastCheckoutAfterCheckIn() {
         $data = [];
         $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), $data);
@@ -87,10 +85,10 @@ class OwnerTest extends TimesheetTestBase {
         return $return_data;
     }
 
-    /**
+    /** 
      * Check out after Check In result
-     * @depends testPostTimesheetsFastCheckoutAfterCheckIn
      */
+    #[Depends('testPostTimesheetsFastCheckoutAfterCheckIn')]
     public function testGetTimesheetsFastCheckedOutAfterCheckIn(array $data) {
 
         $response = $this->request('GET', $this->getURIView($this->TEST_PROJECT_HASH));
@@ -103,14 +101,14 @@ class OwnerTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-        
+
         return intval($row["id_delete"]);
     }
 
-    /**
+    /** 
      * Check out without Check in
-     * @depends testGetTimesheetsFastCheckedOutAfterCheckIn
      */
+    #[Depends('testGetTimesheetsFastCheckedOutAfterCheckIn')]
     public function testPostTimesheetsFastCheckoutWithoutCheckIn() {
         $data = [];
         $response = $this->request('POST', $this->getURISheetsFastCheckout($this->TEST_PROJECT_HASH), $data);
@@ -129,10 +127,10 @@ class OwnerTest extends TimesheetTestBase {
         return $return_data;
     }
 
-    /**
+    /** 
      * Check out wihtout Check In result
-     * @depends testPostTimesheetsFastCheckoutWithoutCheckIn
      */
+    #[Depends('testPostTimesheetsFastCheckoutWithoutCheckIn')]
     public function testGetTimesheetsFastCheckedOutWithoutCheckIn(array $data) {
         $response = $this->request('GET', $this->getURIView($this->TEST_PROJECT_HASH));
 
@@ -144,14 +142,14 @@ class OwnerTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("id_edit", $row);
         $this->assertArrayHasKey("id_delete", $row);
-        
+
         return intval($row["id_delete"]);
     }
 
-    /**
+    /** 
      * clean
-     * @depends testGetTimesheetsFastCheckedOutWithoutCheckIn
      */
+    #[Depends('testGetTimesheetsFastCheckedOutWithoutCheckIn')]
     public function testDeleteTimesheet1(int $timesheet_id) {
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $timesheet_id);
 
@@ -164,10 +162,7 @@ class OwnerTest extends TimesheetTestBase {
         $this->assertTrue($json["is_deleted"]);
     }
 
-    /**
-     * 
-     * @depends testGetTimesheetsFastCheckedOutAfterCheckIn
-     */
+    #[Depends('testGetTimesheetsFastCheckedOutAfterCheckIn')]
     public function testDeleteTimesheet2(int $timesheet_id) {
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $timesheet_id);
 
@@ -179,5 +174,4 @@ class OwnerTest extends TimesheetTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

@@ -34,9 +34,6 @@ class NoAccessTest extends BoardTestBase {
         }
     }
 
-    /**
-     * Edit board
-     */
     public function testGetParentEdit() {
 
         $response = $this->request('GET', $this->uri_edit . $this->TEST_BOARD_ID);
@@ -48,9 +45,6 @@ class NoAccessTest extends BoardTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
     public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_BOARD_ID,
@@ -64,9 +58,6 @@ class NoAccessTest extends BoardTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * Delete
-     */
     public function testDeleteParent() {
 
         $response = $this->request('DELETE', $this->uri_delete . $this->TEST_BOARD_ID);
@@ -77,9 +68,6 @@ class NoAccessTest extends BoardTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
-     * View Trip
-     */
     public function testGetViewParent() {
         $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
 
@@ -88,5 +76,4 @@ class NoAccessTest extends BoardTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
-
 }

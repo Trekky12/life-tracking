@@ -2,6 +2,8 @@
 
 namespace App\Domain\Trips\Route;
 
+use App\Domain\Main\Utility\Utility;
+
 class Route extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_TRIPS_ROUTE";
@@ -15,22 +17,22 @@ class Route extends \App\Domain\DataObject {
 
         $this->trip = $this->exists('trip', $data) ? filter_var($data['trip'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
-        $this->start_date = $this->exists('start_date', $data) ? filter_var($data['start_date'], FILTER_SANITIZE_STRING) : null;
-        $this->end_date = $this->exists('end_date', $data) ? filter_var($data['end_date'], FILTER_SANITIZE_STRING) : null;
+        $this->start_date = $this->exists('start_date', $data) ? Utility::filter_string_polyfill($data['start_date']) : null;
+        $this->end_date = $this->exists('end_date', $data) ? Utility::filter_string_polyfill($data['end_date']) : null;
 
         $this->waypoints = $this->exists('waypoints', $data) ? $data['waypoints'] : null;
-        
-        $this->profile = $this->exists('profile', $data) ? filter_var($data['profile'], FILTER_SANITIZE_STRING) : null;
+
+        $this->profile = $this->exists('profile', $data) ? Utility::filter_string_polyfill($data['profile']) : null;
 
         /**
          * Clean date/time
          */
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->start_date)) {
+        if (!is_null($this->start_date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->start_date)) {
             $this->start_date = null;
         }
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->end_date)) {
+        if (!is_null($this->end_date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->end_date)) {
             $this->end_date = null;
         }
 
@@ -41,8 +43,8 @@ class Route extends \App\Domain\DataObject {
 
         // if start date is greater than end date swap both
         if (!empty($this->start_date) && !empty($this->end_date)) {
-            $start = new \DateTime($this->start_date);
-            $end = new \DateTime($this->end_date);
+            $start = new \DateTime($this->start_date ?? '');
+            $end = new \DateTime($this->end_date ?? '');
 
             if ($start > $end) {
                 $this->start_date = $end->format('Y-m-d');
@@ -76,5 +78,4 @@ class Route extends \App\Domain\DataObject {
 
         return $temp;
     }
-
 }

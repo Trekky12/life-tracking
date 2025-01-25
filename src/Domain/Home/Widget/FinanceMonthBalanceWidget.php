@@ -21,7 +21,7 @@ class FinanceMonthBalanceWidget implements Widget {
         $this->mapper = $mapper;
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $dateObj = new \DateTime('today');
         $year = $dateObj->format("Y");
         $month = $dateObj->format("m");
@@ -32,15 +32,15 @@ class FinanceMonthBalanceWidget implements Widget {
         return round($income - $expenses, 2);
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         return $this->translation->getTranslatedString("BALANCE_THIS_MONTH");
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         return $this->router->urlFor('finances');
     }
 

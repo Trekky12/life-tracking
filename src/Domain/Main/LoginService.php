@@ -14,6 +14,7 @@ use App\Domain\User\UserService;
 use App\Domain\User\Token\TokenService;
 use App\Domain\User\ApplicationPasswords\ApplicationPasswordMapper;
 use RobThree\Auth\TwoFactorAuth;
+use RobThree\Auth\Providers\Qr\EndroidQrCodeWithLogoProvider;
 use App\Application\Payload\Payload;
 
 class LoginService {
@@ -164,9 +165,9 @@ class LoginService {
     }
 
     public function login($data) {
-        $username = array_key_exists('username', $data) ? filter_var($data['username'], FILTER_SANITIZE_STRING) : null;
-        $password = array_key_exists('password', $data) ? filter_var($data['password'], FILTER_SANITIZE_STRING) : null;
-        $code = array_key_exists('code', $data) ? filter_var($data['code'], FILTER_SANITIZE_STRING) : null;
+        $username = array_key_exists('username', $data) ? Utility::filter_string_polyfill($data['username']) : null;
+        $password = array_key_exists('password', $data) ? Utility::filter_string_polyfill($data['password']) : null;
+        $code = array_key_exists('code', $data) ? Utility::filter_string_polyfill($data['code']) : null;
         $remember = array_key_exists('remember', $data) ? intval(filter_var($data['remember'], FILTER_SANITIZE_NUMBER_INT)) > 0 : false;
 
         if ($this->checkLogin($username, $password, $code)) {
@@ -196,7 +197,7 @@ class LoginService {
                 return false;
             }
             
-            $tfa = new TwoFactorAuth();
+            $tfa = new TwoFactorAuth(new EndroidQrCodeWithLogoProvider());
             return $tfa->verifyCode($user->secret, $code);
         }
         return true;

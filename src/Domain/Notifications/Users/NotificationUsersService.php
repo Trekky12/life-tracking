@@ -6,6 +6,7 @@ use App\Domain\Service;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\Utility;
 
 class NotificationUsersService extends Service {
 
@@ -24,7 +25,7 @@ class NotificationUsersService extends Service {
 
     public function setCategoryForUser($data) {
 
-        $cat = array_key_exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_STRING) : "";
+        $cat = array_key_exists('category', $data) ? Utility::filter_string_polyfill($data['category']) : "";
         $type = array_key_exists('type', $data) ? intval(filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
         $category = intval($cat);

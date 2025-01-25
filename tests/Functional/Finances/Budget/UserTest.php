@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Finances\Budget;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class UserTest extends BaseTestCase {
@@ -38,9 +39,8 @@ class UserTest extends BaseTestCase {
         $this->assertStringContainsString('<h2>Budget</h2>', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElements() {
 
         $data = [
@@ -70,9 +70,7 @@ class UserTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElements
-     */
+    #[Depends('testPostAddElements')]
     public function testAddedElements($data) {
 
         $response = $this->request('GET', $this->uri_overview);
@@ -90,9 +88,7 @@ class UserTest extends BaseTestCase {
         return $result;
     }
 
-    /**
-     * @depends testAddedElements
-     */
+    #[Depends('testAddedElements')]
     public function testPostUpdateElements($result_data) {
 
         $data = [
@@ -123,9 +119,7 @@ class UserTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostUpdateElements
-     */
+    #[Depends('testPostUpdateElements')]
     public function testChanges(array $data) {
         $response = $this->request('GET', $this->uri_edit);
 
@@ -133,9 +127,7 @@ class UserTest extends BaseTestCase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
-     * @depends testPostUpdateElements
-     */
+    #[Depends('testPostUpdateElements')]
     public function testGetElementsUpdated(array $data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -152,9 +144,7 @@ class UserTest extends BaseTestCase {
         return $result;
     }
 
-    /**
-     * @depends testGetElementsUpdated
-     */
+    #[Depends('testGetElementsUpdated')]
     public function testDeleteElement1($result_data) {
         $response = $this->request('DELETE', $this->uri_delete . $result_data["id_regular"]);
 
@@ -164,10 +154,9 @@ class UserTest extends BaseTestCase {
         $this->assertStringContainsString('{"is_deleted":true,"error":""}', $body);
     }
 
-    /**
-     * @depends testGetElementsUpdated
+    #[Depends('testGetElementsUpdated')]
 
-     */
+
     public function testDeleteElement2($result_data) {
         $response = $this->request('DELETE', $this->uri_delete . $result_data["id_rest"]);
 
@@ -187,7 +176,7 @@ class UserTest extends BaseTestCase {
 
     private function checkBudget($body, $data) {
         $rows = $this->getElementsInTable($body);
-        
+
         $this->assertEquals(2, count($rows));
 
         // check first (regular) entry
@@ -214,5 +203,4 @@ class UserTest extends BaseTestCase {
 
         return $rows;
     }
-
 }

@@ -10,26 +10,26 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=8.4",
         "slim/slim": "4.*",
         "slim/psr7": "^1.1.0",
         "slim/http": "^1.0",
         "slim/twig-view": "^3.0.0",
         "slim/csrf": "^1.3",
         "slim/flash": "^0.4.0",
-        "php-di/php-di": "^6.0",
+        "php-di/php-di": "^7.0",
         "dflydev/fig-cookies": "^3.0",
         "twig/twig": "^3.0",
-        "monolog/monolog": "^2.1",
+        "monolog/monolog": "^3.8",
         "phpmailer/phpmailer": "^6.1",
-        "intervention/image": "^2.5",
+        "intervention/image": "^3.10",
         "michelf/php-markdown": "^2.0",
-        "hashids/hashids": "^4.0",
-        "phpoffice/phpspreadsheet": "^1.9",
-        "symfony/console": "^5.1",
-        "robthree/twofactorauth": "^1.7",
-        "endroid/qr-code": "^4.1",
-        "minishlink/web-push": "^7.0",
+        "hashids/hashids": "^5.0",
+        "phpoffice/phpspreadsheet": "^3.7",
+        "symfony/console": "^7.2",
+        "robthree/twofactorauth": "^3.0",
+        "endroid/qr-code": "^6.0",
+        "minishlink/web-push": "^9.0",
         "phpoffice/phpword": "^1.0"
     },
     "autoload": {
@@ -38,8 +38,8 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^9",
-        "guzzlehttp/guzzle": "^7.2"
+        "guzzlehttp/guzzle": "^7.2",
+        "phpunit/phpunit": "^11.5"
     },
     "autoload-dev": {
         "psr-4": {

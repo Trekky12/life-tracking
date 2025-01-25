@@ -354,7 +354,7 @@ class HomeService extends Service {
             $language = $this->settings->getAppSettings()['i18n']['php'];
             $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-            $fmtDate = new \IntlDateFormatter($language, NULL, NULL);
+            $fmtDate = new \IntlDateFormatter($language);
             $fmtDate->setPattern($dateFormatPHP["weekday"]);
 
             $content = Widget\WeatherForecastWidget::formatWeatherForecastRequestData($status, $result, $fmtDate);

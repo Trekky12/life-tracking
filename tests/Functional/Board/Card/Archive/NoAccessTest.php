@@ -19,7 +19,7 @@ class NoAccessTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Archive
      */
     public function testArchive() {
@@ -40,7 +40,7 @@ class NoAccessTest extends BoardTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Unarchive
      */
     public function testUnArchive() {

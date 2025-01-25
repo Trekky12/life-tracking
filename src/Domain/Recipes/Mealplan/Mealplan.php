@@ -2,13 +2,15 @@
 
 namespace App\Domain\Recipes\Mealplan;
 
+use App\Domain\Main\Utility\Utility;
+
 class Mealplan extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_RECIPES_MEALPLAN";
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
         if (empty($this->name)) {

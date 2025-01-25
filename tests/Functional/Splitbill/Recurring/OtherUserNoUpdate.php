@@ -18,7 +18,7 @@ class OtherUserNoUpdate extends SplitbillTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Add new Bill
      */
     public function testGetRecurringEdit() {
@@ -30,7 +30,7 @@ class OtherUserNoUpdate extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Create the Bill
      */
     public function testPostRecurringSave() {
@@ -45,7 +45,7 @@ class OtherUserNoUpdate extends SplitbillTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete Bill
      */
     public function testDeleteRecurring() {
@@ -56,5 +56,4 @@ class OtherUserNoUpdate extends SplitbillTestBase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
-
 }

@@ -35,7 +35,7 @@ class NoAccessTest extends BaseTestCase {
         $this->assertFalse(empty($matches));
     }
 
-    /**
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -47,9 +47,8 @@ class NoAccessTest extends BaseTestCase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -98,5 +97,4 @@ class NoAccessTest extends BaseTestCase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

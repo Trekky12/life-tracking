@@ -8,7 +8,7 @@ class NoAccessTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
     protected $TEST_CUSTOMER_ID = 1;
-    
+
     protected $uri_child_overview = "/timesheets/HASH/customers/";
     protected $uri_child_edit = "/timesheets/HASH/customers/edit/";
     protected $uri_child_save = "/timesheets/HASH/customers/save/";
@@ -40,7 +40,7 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
+    /** 
      * Access a specific child
      */
     public function testGetChildEditID() {
@@ -51,9 +51,8 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -63,14 +62,14 @@ class NoAccessTest extends TimesheetTestBase {
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
-
     }
 
-    /**
-    * Update the specific child
+
+    /** 
+     * Update the specific child
      */
     public function testPostChildSaveID() {
 
@@ -79,17 +78,17 @@ class NoAccessTest extends TimesheetTestBase {
             "name" => "Test Customer"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH). $this->TEST_CUSTOMER_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_CUSTOMER_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     */
+
+
     public function testPostElementCreatedSave() {
- 
+
         $data = [
             "id" => $this->TEST_CUSTOMER_ID,
             "name" => "Test Customer Updated"
@@ -98,13 +97,13 @@ class NoAccessTest extends TimesheetTestBase {
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_CUSTOMER_ID, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     */
+
+
     public function testDeleteElement() {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_CUSTOMER_ID);
@@ -122,5 +121,4 @@ class NoAccessTest extends TimesheetTestBase {
     protected function getURIChildOverview($hash) {
         return str_replace("HASH", $hash, $this->uri_child_overview);
     }
-
 }

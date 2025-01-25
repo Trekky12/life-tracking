@@ -31,7 +31,7 @@ class OtherUserTest extends BaseTestCase {
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
 
-    /**
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -43,9 +43,8 @@ class OtherUserTest extends BaseTestCase {
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -83,5 +82,4 @@ class OtherUserTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-
 }

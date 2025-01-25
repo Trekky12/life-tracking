@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Recipes\CookbookRecipes;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Recipes\RecipesCookbooksTestBase;
 
 class MemberTest extends RecipesCookbooksTestBase {
@@ -37,9 +38,8 @@ class MemberTest extends RecipesCookbooksTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->uri_save_to_cookbook . "\" method=\"POST\">", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddToCookbook() {
         $data = [
             "cookbook" => $this->TEST_COOKBOOK_ID,
@@ -51,9 +51,7 @@ class MemberTest extends RecipesCookbooksTestBase {
         $this->assertEquals('/recipes/', $response->getHeaderLine("Location"));
     }
 
-    /**
-     * @depends testPostAddToCookbook
-     */
+    #[Depends('testPostAddToCookbook')]
     public function testGetCookbookRecipes() {
         $response = $this->request('GET', $this->getURICookbookRecipes($this->TEST_COOKBOOK_HASH));
 
@@ -72,10 +70,10 @@ class MemberTest extends RecipesCookbooksTestBase {
         $this->assertStringNotContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * Delete
-     * @depends testGetCookbookRecipes
      */
+    #[Depends('testGetCookbookRecipes')]
     public function testRemoveRecipeFromCookbook() {
         $response = $this->request('DELETE', $this->getURIRecipeRemoveFromCookbook($this->TEST_COOKBOOK_HASH) . "?recipe=" . $this->TEST_RECIPE_ID);
 
@@ -99,5 +97,4 @@ class MemberTest extends RecipesCookbooksTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertFalse($json["is_deleted"]);
     }
-
 }

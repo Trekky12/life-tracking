@@ -2,13 +2,15 @@
 
 namespace App\Domain\Finances\Budget;
 
+use App\Domain\Main\Utility\Utility;
+
 class Budget extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_FINANCES_BUDGET_ENTRY";
 
     public function parseData(array $data) {
 
-        $this->description = $this->exists('description', $data) ? filter_var($data['description'], FILTER_SANITIZE_STRING) : null;
+        $this->description = $this->exists('description', $data) ? Utility::filter_string_polyfill($data['description']) : null;
 
         $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Crawler\Dataset;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Crawler\CrawlerTestBase;
 
 class OwnerTest extends CrawlerTestBase {
@@ -9,23 +10,21 @@ class OwnerTest extends CrawlerTestBase {
     protected $uri_child_record = "/api/crawlers/record";
 
     protected function setUp(): void {
-        
     }
 
     protected function tearDown(): void {
-        
     }
 
     public function testList() {
         $this->login("admin", "admin");
-        
+
         $response = $this->request('GET', $this->getURIView($this->TEST_CRAWLER_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<table id="crawlers_data_table"', $body);
-        
+
         $this->logout();
     }
 
@@ -51,12 +50,10 @@ class OwnerTest extends CrawlerTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $this->login("admin", "admin");
-        
+
         $response = $this->request('GET', $this->getURIView($this->TEST_CRAWLER_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -65,15 +62,12 @@ class OwnerTest extends CrawlerTestBase {
         $row = $this->getElementInTable($body, $data);
 
         $this->assertArrayHasKey("date", $row);
-        
+
         $this->logout();
     }
 
-    /**
-     * 
-     * @depends testPostAddElement
-     * @depends testAddedElement
-     */
+    #[Depends('testPostAddElement')]
+    #[Depends('testAddedElement')]
     public function testPostElementUpdate(array $initial_data) {
 
         $data = [
@@ -96,13 +90,10 @@ class OwnerTest extends CrawlerTestBase {
         return $data;
     }
 
-    /**
-     * Is the element updated?
-     * @depends testPostElementUpdate
-     */
+    #[Depends('testPostElementUpdate')]
     public function testGetElementUpdated(array $result_data) {
         $this->login("admin", "admin");
-        
+
         $response = $this->request('GET', $this->getURIView($this->TEST_CRAWLER_HASH));
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -112,16 +103,15 @@ class OwnerTest extends CrawlerTestBase {
         $row = $this->getElementInTable($body, $result_data);
 
         $this->assertArrayHasKey("date", $row);
-        
+
         $this->logout();
     }
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td><span class="save_crawler_dataset " data-id="([0-9]*)">.*?<\/td>\s*<td>(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td><a href="' . str_replace('/', "\/", $data["data"]["link"]) . '" target="_blank">' . preg_quote($data["data"]["title"]) . '<\/a><\/td>\s*<td>' . preg_quote($data["data"]["value"]) . '<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td><span class="save_crawler_dataset " data-id="([0-9]*)">.*?<\/td>\s*<td>(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})<\/td>\s*<td><a href="' . str_replace('/', "\/", $data["data"]["link"]) . '" target="_blank">' . preg_quote($data["data"]["title"] ?? '') . '<\/a><\/td>\s*<td>' . preg_quote($data["data"]["value"] ?? '') . '<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-        
+
         return $matches;
     }
-
 }

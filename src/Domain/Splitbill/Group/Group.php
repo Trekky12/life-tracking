@@ -2,13 +2,15 @@
 
 namespace App\Domain\Splitbill\Group;
 
+use App\Domain\Main\Utility\Utility;
+
 class Group extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_SPLITBILLS_GROUP";
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
         $this->add_finances = $this->exists('add_finances', $data) ? filter_var($data['add_finances'], FILTER_SANITIZE_NUMBER_INT) : 0;

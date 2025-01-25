@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Profile;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class NotificationSettingsUserTest extends BaseTestCase {
@@ -46,9 +47,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
         $this->assertSame("success", $json["status"]);
     }
 
-    /**
-     * @depends testSetUserCategory
-     */
+    #[Depends('testSetUserCategory')]
     public function testSettedUserCategory() {
         $response = $this->request('GET', $this->uri_overview);
         $body = (string) $response->getBody();
@@ -60,9 +59,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
         $this->assertEquals(1, $input_fields["user_notification_categories"][$this->TEST_USER_CATEGORY]);
     }
 
-    /**
-     * @depends testSettedUserCategory
-     */
+    #[Depends('testSettedUserCategory')]
     public function testSetUserCategoryBack() {
 
         $data = [
@@ -82,9 +79,7 @@ class NotificationSettingsUserTest extends BaseTestCase {
         $this->assertSame("success", $json["status"]);
     }
 
-    /**
-     * @depends testSetUserCategoryBack
-     */
+    #[Depends('testSetUserCategoryBack')]
     public function testSettedUserCategoryBack() {
         $response = $this->request('GET', $this->uri_overview);
         $body = (string) $response->getBody();
@@ -95,5 +90,4 @@ class NotificationSettingsUserTest extends BaseTestCase {
         $this->assertArrayHasKey($this->TEST_USER_CATEGORY, $input_fields["user_notification_categories"]);
         $this->assertSame(0, $input_fields["user_notification_categories"][$this->TEST_USER_CATEGORY]);
     }
-
 }

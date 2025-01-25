@@ -83,7 +83,7 @@ class RecipesTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-    
+
     public function testModuleWorkouts() {
         $response = $this->request('GET', "/workouts/");
 
@@ -91,7 +91,7 @@ class RecipesTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-    
+
     public function testModuleRecipes() {
         $response = $this->request('GET', "/recipes/");
 
@@ -99,5 +99,4 @@ class RecipesTest extends BaseTestCase {
         $body = (string) $response->getBody();
         $this->assertStringNotContainsString('Kein Zugriff erlaubt', $body);
     }
-
 }

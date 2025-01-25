@@ -30,20 +30,22 @@ class CardWriter extends ObjectActivityWriter {
     private $router;
     private $notification_service;
 
-    public function __construct(LoggerInterface $logger, 
-            CurrentUser $user, 
-            ActivityCreator $activity,
-            CardMapper $mapper, 
-            CardService $card_service, 
-            StackService $stack_service, 
-            LabelService $label_service, 
-            BoardMapper $board_mapper,
-            UserService $user_service,
-            Helper $helper,
-            Translator $translation,
-            Settings $settings,
-            RouteParser $router,
-            NotificationsService $notification_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        CardMapper $mapper,
+        CardService $card_service,
+        StackService $stack_service,
+        LabelService $label_service,
+        BoardMapper $board_mapper,
+        UserService $user_service,
+        Helper $helper,
+        Translator $translation,
+        Settings $settings,
+        RouteParser $router,
+        NotificationsService $notification_service
+    ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->card_service = $card_service;
@@ -62,9 +64,9 @@ class CardWriter extends ObjectActivityWriter {
         if (!$this->card_service->hasAccess($id, $data)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        
+
         $users_preSave = $this->mapper->getUsers($id);
-        
+
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
@@ -97,12 +99,12 @@ class CardWriter extends ObjectActivityWriter {
         try {
             // check if label is on this board
             $board_labels = $this->label_service->getLabelsFromBoard($board_id);
-            $board_labels_ids = array_map(function($label) {
+            $board_labels_ids = array_map(function ($label) {
                 return $label->id;
             }, $board_labels);
 
             // Only add labels of this board
-            $filtered_labels = array_filter($labels, function($label) use($board_labels_ids) {
+            $filtered_labels = array_filter($labels, function ($label) use ($board_labels_ids) {
                 return in_array($label, $board_labels_ids);
             });
 
@@ -111,7 +113,7 @@ class CardWriter extends ObjectActivityWriter {
             $this->logger->error("After Card Save", array("data" => $id, "error" => $e->getMessage()));
         }
     }
-    
+
     private function notifyUsers($card, $users_preSave) {
 
         $board_id = $this->mapper->getCardBoard($card->id);
@@ -153,10 +155,10 @@ class CardWriter extends ObjectActivityWriter {
                         $language = $this->settings->getAppSettings()['i18n']['php'];
                         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-                        $fmt = new \IntlDateFormatter($language, NULL, NULL);
+                        $fmt = new \IntlDateFormatter($language);
                         $fmt->setPattern($dateFormatPHP['month_name_full']);
 
-                        $dateObj = new \DateTime($card->date);
+                        $dateObj = new \DateTime($card->date ?? '');
                         $variables["extra"] .= '<h2>' . $this->translation->getTranslatedString('DATE') . ':</h2>' . $fmt->format($dateObj) . '';
                     }
                     if ($card->time) {
@@ -166,7 +168,7 @@ class CardWriter extends ObjectActivityWriter {
                     //$this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
                     $this->notification_service->sendMailNotificationToUserWithCategory($user, "MAIL_CATEGORY_BOARDS_CARD_ADD", 'mail/general.twig', $subject, $variables, $board->id);
                 }
-                
+
                 // Notification
                 $content = sprintf($this->translation->getTranslatedString('NOTIFICATION_ADDED_TO_CARD'), $board->name, $stack->name, $card->title);
                 $path = $this->router->urlFor('boards_view', array('hash' => $board->getHash()));
@@ -178,7 +180,7 @@ class CardWriter extends ObjectActivityWriter {
     public function getParentMapper() {
         return $this->board_mapper;
     }
-    
+
     public function getParentID($entry): int {
         return $this->mapper->getCardBoard($entry->id);
     }
@@ -196,5 +198,4 @@ class CardWriter extends ObjectActivityWriter {
     public function getModule(): string {
         return "boards";
     }
-
 }

@@ -2,6 +2,8 @@
 
 namespace App\Domain\Workouts\Session;
 
+use App\Domain\Main\Utility\Utility;
+
 class Session extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_WORKOUTS_SESSION";
@@ -10,17 +12,17 @@ class Session extends \App\Domain\DataObject {
 
         $this->plan = $this->exists('plan', $data) ? filter_var($data['plan'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : null;
-        $this->start_time = $this->exists('start_time', $data) ? filter_var($data['start_time'], FILTER_SANITIZE_STRING) : null;
-        $this->end_time = $this->exists('end_time', $data) ? filter_var($data['end_time'], FILTER_SANITIZE_STRING) : null;
+        $this->date = $this->exists('date', $data) ? Utility::filter_string_polyfill($data['date']) : null;
+        $this->start_time = $this->exists('start_time', $data) ? Utility::filter_string_polyfill($data['start_time']) : null;
+        $this->end_time = $this->exists('end_time', $data) ? Utility::filter_string_polyfill($data['end_time']) : null;
 
-        $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
+        $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
 
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
+        if (!is_null($this->date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->date)) {
             $this->date = date('Y-m-d');
         }
         
-        $this->days = $this->exists('days', $data) ? filter_var($data['days'], FILTER_SANITIZE_STRING) : null;
+        $this->days = $this->exists('days', $data) ? Utility::filter_string_polyfill($data['days']) : null;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

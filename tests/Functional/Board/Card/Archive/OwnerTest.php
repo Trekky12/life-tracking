@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Board\Card\Archive;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Board\BoardTestBase;
 
 class OwnerTest extends BoardTestBase {
@@ -20,7 +21,7 @@ class OwnerTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Archive
      */
     public function testArchive() {
@@ -40,10 +41,7 @@ class OwnerTest extends BoardTestBase {
         $this->assertTrue($json["is_archived"]);
     }
 
-    /**
-     * Look for archived item
-     * @depends testArchive
-     */
+    #[Depends('testArchive')]
     public function testArchivedItem() {
 
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
@@ -54,23 +52,23 @@ class OwnerTest extends BoardTestBase {
         $this->assertArrayHasKey("stacks", $json);
         $this->assertIsArray($json["stacks"]);
 
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("cards", $stack);
 
-            foreach($stack["cards"] as $card){
+            foreach ($stack["cards"] as $card) {
                 $this->assertIsArray($card);
                 $this->assertArrayHasKey("id", $card);
                 $this->assertArrayHasKey("title", $card);
 
-                if($card["title"] == $this->TEST_CARD_TITLE){
+                if ($card["title"] == $this->TEST_CARD_TITLE) {
                     $this->assertEquals(1, $card["archive"]);
                 }
             }
         }
     }
 
-    /**
+    /** 
      * Unarchive
      */
     public function testUnArchive() {
@@ -89,10 +87,10 @@ class OwnerTest extends BoardTestBase {
         $this->assertTrue($json["is_archived"]);
     }
 
-    /**
+    /** 
      * Look for unarchived item
-     * @depends testUnArchive
      */
+    #[Depends('testUnArchive')]
     public function testUnArchivedItem() {
 
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
@@ -103,20 +101,19 @@ class OwnerTest extends BoardTestBase {
         $this->assertArrayHasKey("stacks", $json);
         $this->assertIsArray($json["stacks"]);
 
-        foreach($json["stacks"] as $stack){
+        foreach ($json["stacks"] as $stack) {
             $this->assertIsArray($stack);
             $this->assertArrayHasKey("cards", $stack);
 
-            foreach($stack["cards"] as $card){
+            foreach ($stack["cards"] as $card) {
                 $this->assertIsArray($card);
                 $this->assertArrayHasKey("id", $card);
                 $this->assertArrayHasKey("title", $card);
 
-                if($card["title"] == $this->TEST_CARD_TITLE){
+                if ($card["title"] == $this->TEST_CARD_TITLE) {
                     $this->assertEquals(0, $card["archive"]);
                 }
             }
         }
     }
-
 }

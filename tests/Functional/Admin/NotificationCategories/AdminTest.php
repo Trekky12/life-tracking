@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Admin\NotificationCategories;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class AdminTest extends BaseTestCase {
@@ -37,9 +38,6 @@ class AdminTest extends BaseTestCase {
         $this->assertStringContainsString('<form class="form-horizontal" action="' . $this->uri_save . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
     public function testPostAddElement() {
 
         $data = [
@@ -57,9 +55,7 @@ class AdminTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -74,10 +70,10 @@ class AdminTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Edit created element
-     * @depends testAddedElement
      */
+    #[Depends('testAddedElement')]
     public function testGetElementCreatedEdit(int $entry_id) {
 
         $response = $this->request('GET', $this->uri_edit . $entry_id);
@@ -98,10 +94,7 @@ class AdminTest extends BaseTestCase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetElementCreatedEdit
-     */
+    #[Depends('testGetElementCreatedEdit')]
     public function testPostElementCreatedSave(int $entry_id) {
 
         $data = [
@@ -118,10 +111,10 @@ class AdminTest extends BaseTestCase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the element updated?
-     * @depends testPostElementCreatedSave
      */
+    #[Depends('testPostElementCreatedSave')]
     public function testGetElementUpdated(array $result_data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -137,9 +130,7 @@ class AdminTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     */
+    #[Depends('testGetElementUpdated')]
     public function testDeleteElement(int $entry_id) {
         $response = $this->request('DELETE', $this->uri_delete . $entry_id);
 
@@ -151,10 +142,9 @@ class AdminTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["name"]) . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"] ?? '') . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
     }
-
 }

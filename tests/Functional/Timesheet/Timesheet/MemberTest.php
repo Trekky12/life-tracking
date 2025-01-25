@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Timesheet\Timesheet;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
 class MemberTest extends TimesheetTestBase {
@@ -17,7 +18,7 @@ class MemberTest extends TimesheetTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Add new Sheet
      */
     public function testGetChildEdit() {
@@ -28,7 +29,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertStringContainsString("<form class=\"form-horizontal\" action=\"" . $this->getURIChildSave($this->TEST_PROJECT_HASH) . "\" method=\"POST\">", $body);
     }
 
-    /**
+    /** 
      * Create the sheet
      */
     public function testPostChildSave() {
@@ -37,7 +38,7 @@ class MemberTest extends TimesheetTestBase {
             "end" => date('Y-m-d') . " 14:10:00"
         ];
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
-        
+
         $this->assertEquals(301, $response->getStatusCode());
         $this->assertEquals($this->getURIView($this->TEST_PROJECT_HASH), $response->getHeaderLine("Location"));
 
@@ -46,10 +47,10 @@ class MemberTest extends TimesheetTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the created sheet now in the table?
-     * @depends testPostChildSave
      */
+    #[Depends('testPostChildSave')]
     public function testGetChildCreated(array $data) {
         $response = $this->request('GET', $this->getURIView($this->TEST_PROJECT_HASH));
 
@@ -65,15 +66,15 @@ class MemberTest extends TimesheetTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
+    /** 
      * Update sheet
      */
 
-    /**
+    /** 
      * Edit Sheet
-     * @depends testGetChildCreated
-     * @depends testPostChildSave
      */
+    #[Depends('testGetChildCreated')]
+    #[Depends('testPostChildSave')]
     public function testGetChildCreatedEdit(int $timesheet_id, $data) {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $timesheet_id);
 
@@ -89,17 +90,14 @@ class MemberTest extends TimesheetTestBase {
 
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
-        
+
         unset($data["diff"]);
         $this->compareInputFields($body, $data);
 
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetChildCreatedEdit
-     */
+    #[Depends('testGetChildCreatedEdit')]
     public function testPostChildCreatedSave(int $timesheet_id) {
         $data = [
             "id" => $timesheet_id,
@@ -116,10 +114,10 @@ class MemberTest extends TimesheetTestBase {
         return $data;
     }
 
-    /**
+    /** 
      * Is the sheet data updated in the table?
-     * @depends testPostChildCreatedSave
      */
+    #[Depends('testPostChildCreatedSave')]
     public function testGetChildUpdated(array $data) {
         $response = $this->request('GET', $this->getURIView($this->TEST_PROJECT_HASH));
 
@@ -135,10 +133,8 @@ class MemberTest extends TimesheetTestBase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetChildUpdated
-     * @depends testPostChildCreatedSave
-     */
+    #[Depends('testGetChildUpdated')]
+    #[Depends('testPostChildCreatedSave')]
     public function testChanges(int $timesheet_id, $data) {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $timesheet_id);
 
@@ -147,10 +143,10 @@ class MemberTest extends TimesheetTestBase {
         $this->compareInputFields($body, $data);
     }
 
-    /**
+    /** 
      * Delete sheet
-     * @depends testGetChildUpdated
      */
+    #[Depends('testGetChildUpdated')]
     public function testDeleteChild(int $timesheet_id) {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $timesheet_id);
@@ -163,5 +159,4 @@ class MemberTest extends TimesheetTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

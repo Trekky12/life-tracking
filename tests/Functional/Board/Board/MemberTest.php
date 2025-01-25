@@ -27,16 +27,12 @@ class MemberTest extends BoardTestBase {
 
         // search for all elements
         $matches = $this->getParents($body);
-        $hashs = array_map(function($match) {
+        $hashs = array_map(function ($match) {
             return $match["hash"];
         }, $matches);
         $this->assertContains($this->TEST_BOARD_HASH, $hashs);
     }
 
-    /**
-     * Edit trip
-     * 
-     */
     public function testGetParentEdit() {
         $response = $this->request('GET', $this->uri_edit . $this->TEST_BOARD_ID);
 
@@ -46,9 +42,6 @@ class MemberTest extends BoardTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
     public function testPostParentSave() {
         $data = [
             "id" => $this->TEST_BOARD_ID,
@@ -62,9 +55,6 @@ class MemberTest extends BoardTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * Delete
-     */
     public function testDeleteParent() {
         $response = $this->request('DELETE', $this->uri_delete . $this->TEST_BOARD_ID);
 
@@ -74,8 +64,8 @@ class MemberTest extends BoardTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
-     * View trip (members can access)
+    /** 
+     * View board (members can access)
      */
     public function testGetViewParent() {
         $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
@@ -85,5 +75,4 @@ class MemberTest extends BoardTestBase {
         $body = (string) $response->getBody();
         $this->assertStringContainsString('<body class="boards boards-view', $body);
     }
-
 }

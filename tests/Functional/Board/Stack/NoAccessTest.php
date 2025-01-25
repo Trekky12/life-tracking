@@ -20,9 +20,9 @@ class NoAccessTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
-     * View Board
-     */
+   /** 
+    * View Board
+    */
     public function testGetViewBoard() {
         $response = $this->request('GET', $this->getURIView($this->TEST_BOARD_HASH));
 
@@ -32,9 +32,9 @@ class NoAccessTest extends BoardTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     * Create the stack
-     */
+   /** 
+    * Create the stack
+    */
     public function testPostChildSave() {
         $data = [
             "name" => "Test Stack 2",
@@ -50,9 +50,9 @@ class NoAccessTest extends BoardTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
-     * Get stack data
-     */
+   /** 
+    * Get stack data
+    */
     public function testGetChildData() {
 
         $response = $this->request('GET', $this->getURIData($this->TEST_BOARD_HASH));
@@ -68,9 +68,9 @@ class NoAccessTest extends BoardTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
-     * Update / Check Update
-     */
+   /** 
+    * Update / Check Update
+    */
     public function testPostChildUpdate() {
         $data = [
             "name" => "Test Stack 2 Updated",
@@ -91,9 +91,9 @@ class NoAccessTest extends BoardTestBase {
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
-     * Delete stack
-     */
+   /** 
+    * Delete stack
+    */
     public function testDeleteChild() {
 
         $response = $this->request('DELETE', $this->uri_delete . $this->TEST_STACK_ID);

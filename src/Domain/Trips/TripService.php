@@ -11,12 +11,11 @@ use App\Application\Payload\Payload;
 
 class TripService extends Service {
 
-    private $event_mapper;
+    private $user_service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, TripMapper $mapper, EventMapper $event_mapper, UserService $user_service) {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, TripMapper $mapper, UserService $user_service) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
-        $this->event_mapper = $event_mapper;
         $this->user_service = $user_service;
     }
 

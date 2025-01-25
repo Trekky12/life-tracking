@@ -9,7 +9,7 @@ class NotificationsSubscribeTest extends BaseTestCase {
     protected $uri_overview = "/notifications/";
     protected $uri_subscribe = "/notifications/subscribe/";
     protected $TEST_ENDPOINT = "test_endpoint";
-    
+
     protected function setUp(): void {
         $this->login("user", "user");
     }
@@ -83,5 +83,4 @@ class NotificationsSubscribeTest extends BaseTestCase {
         $this->assertArrayHasKey("status", $json);
         $this->assertSame("success", $json["status"]);
     }
-
 }

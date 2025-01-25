@@ -2,6 +2,8 @@
 
 namespace App\Domain\Recipes\Grocery;
 
+use App\Domain\Main\Utility\Utility;
+
 class Grocery extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_RECIPES_GROCERY";
@@ -14,9 +16,9 @@ class Grocery extends \App\Domain\DataObject {
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
-        $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : null;
+        $this->unit = $this->exists('unit', $data) ? Utility::filter_string_polyfill($data['unit']) : null;
 
         $this->is_food = $this->exists('is_food', $data) ? filter_var($data['is_food'], FILTER_SANITIZE_NUMBER_INT) : 0;
 

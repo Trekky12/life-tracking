@@ -2,16 +2,18 @@
 
 namespace App\Domain\Car\Service;
 
+use App\Domain\Main\Utility\Utility;
+
 class CarServiceEntry extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_CARS_SERVICE_ENTRY";
 
     public function parseData(array $data) {
 
-        $this->date = $this->exists('date', $data) ? filter_var($data['date'], FILTER_SANITIZE_STRING) : date('Y-m-d');
+        $this->date = $this->exists('date', $data) ? Utility::filter_string_polyfill($data['date']) : date('Y-m-d');
         $this->mileage = $this->exists('mileage', $data) ? filter_var($data['mileage'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
+        $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
         $this->car = $this->exists('car', $data) ? filter_var($data['car'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         // 0 => refuel, 1 => service
@@ -20,7 +22,7 @@ class CarServiceEntry extends \App\Domain\DataObject {
         $this->fuel_price = $this->exists('fuel_price', $data) ? filter_var($data['fuel_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->fuel_volume = $this->exists('fuel_volume', $data) ? filter_var($data['fuel_volume'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $this->fuel_total_price = $this->exists('fuel_total_price', $data) ? filter_var($data['fuel_total_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->fuel_location = $this->exists('fuel_location', $data) ? filter_var($data['fuel_location'], FILTER_SANITIZE_STRING) : null;
+        $this->fuel_location = $this->exists('fuel_location', $data) ? Utility::filter_string_polyfill($data['fuel_location']) : null;
 
         // 0=>full, 1 => partly
         $this->fuel_type = $this->exists('fuel_type', $data) ? filter_var($data['fuel_type'], FILTER_SANITIZE_NUMBER_INT) : null;

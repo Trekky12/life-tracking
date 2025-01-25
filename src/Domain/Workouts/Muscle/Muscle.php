@@ -2,6 +2,8 @@
 
 namespace App\Domain\Workouts\Muscle;
 
+use App\Domain\Main\Utility\Utility;
+
 class Muscle extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_WORKOUTS_MUSCLE";
@@ -14,7 +16,7 @@ class Muscle extends \App\Domain\DataObject {
         }
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
         $this->setImagePrimary($data);
         $this->setImageSecondary($data);
@@ -31,10 +33,10 @@ class Muscle extends \App\Domain\DataObject {
     private function setImagePrimary($data) {
         // image from database
         if ($this->exists('image_primary', $data)) {
-            $this->image_primary = filter_var($data['image_primary'], FILTER_SANITIZE_STRING);
+            $this->image_primary = Utility::filter_string_polyfill($data['image_primary']);
         }
         // update image
-        $image = $this->exists('set_image_primary', $data) ? filter_var($data['set_image_primary'], FILTER_SANITIZE_STRING) : null;
+        $image = $this->exists('set_image_primary', $data) ? Utility::filter_string_polyfill($data['set_image_primary']) : null;
         if (!is_null($image)) {
             $this->image_primary = $image;
         }
@@ -47,10 +49,10 @@ class Muscle extends \App\Domain\DataObject {
     private function setImageSecondary($data) {
         // image from database
         if ($this->exists('image_secondary', $data)) {
-            $this->image_secondary = filter_var($data['image_secondary'], FILTER_SANITIZE_STRING);
+            $this->image_secondary = Utility::filter_string_polyfill($data['image_secondary']);
         }
         // update image
-        $image = $this->exists('set_image_secondary', $data) ? filter_var($data['set_image_secondary'], FILTER_SANITIZE_STRING) : null;
+        $image = $this->exists('set_image_secondary', $data) ? Utility::filter_string_polyfill($data['set_image_secondary']) : null;
         if (!is_null($image)) {
             $this->image_secondary = $image;
         }

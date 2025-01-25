@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Timesheet\SheetNotice;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
 class MemberTest extends TimesheetTestBase {
@@ -29,9 +30,8 @@ class MemberTest extends TimesheetTestBase {
         $this->assertStringContainsString('<form id="timesheetNoticeForm" class="form-horizontal" action="' . $this->getURIWithHashAndID($this->uri_child_save, $this->TEST_PROJECT_HASH, $this->TEST_SHEET_ID) . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostAddElement() {
 
         $data = [
@@ -52,9 +52,7 @@ class MemberTest extends TimesheetTestBase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testGetChildData($data) {
 
         $response = $this->request('GET', $this->getURIWithHash($this->uri_child_data, $this->TEST_PROJECT_HASH) . '?id=' . $this->TEST_SHEET_ID);
@@ -67,5 +65,4 @@ class MemberTest extends TimesheetTestBase {
         $this->assertSame($this->TEST_SHEET_ID, intval($json["entry"]["sheet"]));
         $this->assertArrayHasKey("notice", $json["entry"]);
     }
-
 }

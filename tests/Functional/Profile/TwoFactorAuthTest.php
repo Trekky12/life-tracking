@@ -2,6 +2,8 @@
 
 namespace Tests\Functional\Profile;
 
+use PHPUnit\Framework\Attributes\Depends;
+use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
 use Tests\Functional\Base\BaseTestCase;
 use RobThree\Auth\TwoFactorAuth;
 
@@ -34,14 +36,12 @@ class TwoFactorAuthTest extends BaseTestCase {
         return $secret;
     }
 
-    /**
-     * @depends testOverview
-     */
+    #[Depends('testOverview')]
     public function testEnable($secret) {
 
         $this->login("user", "user");
 
-        $tfa = new TwoFactorAuth();
+        $tfa = new TwoFactorAuth(new EndroidQrCodeProvider());
         $code = $tfa->getCode($secret);
 
         $data = [
@@ -59,9 +59,7 @@ class TwoFactorAuthTest extends BaseTestCase {
         return $secret;
     }
 
-    /**
-     * @depends testEnable
-     */
+    #[Depends('testEnable')]
     public function testEnabled($secret) {
         $this->login("user", "user", $secret);
 
@@ -77,9 +75,7 @@ class TwoFactorAuthTest extends BaseTestCase {
         return $secret;
     }
 
-    /**
-     * @depends testEnabled
-     */
+    #[Depends('testEnabled')]
     public function testDisable($secret) {
 
         $this->login("user", "user", $secret);
@@ -97,9 +93,7 @@ class TwoFactorAuthTest extends BaseTestCase {
         $this->logout();
     }
 
-    /**
-     * @depends testDisable
-     */
+    #[Depends('testDisable')]
     public function testDisabled() {
         $this->login("user", "user");
 
@@ -112,5 +106,4 @@ class TwoFactorAuthTest extends BaseTestCase {
 
         $this->logout();
     }
-
 }

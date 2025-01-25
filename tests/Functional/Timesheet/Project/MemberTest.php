@@ -37,7 +37,7 @@ class MemberTest extends TimesheetTestBase {
         }
     }
 
-    /**
+    /** 
      * Edit project
      */
     public function testGetParentEdit() {
@@ -49,9 +49,8 @@ class MemberTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testPostParentSave() {
 
         $data = [
@@ -66,7 +65,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 
-    /**
+    /** 
      * Delete
      */
     public function testDeleteParent() {
@@ -78,7 +77,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
     }
 
-    /**
+    /** 
      * View Project (members can access)
      */
     public function testGetViewParent() {

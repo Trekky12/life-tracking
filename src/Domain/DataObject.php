@@ -2,6 +2,8 @@
 
 namespace App\Domain;
 
+use App\Domain\Main\Utility\Utility;
+
 class DataObject implements \JsonSerializable {
 
     static $NAME = "";
@@ -28,7 +30,7 @@ class DataObject implements \JsonSerializable {
         // Always save these values
         $this->user = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->changedOn = $this->exists('changedOn', $data) ? $data['changedOn'] : date('Y-m-d H:i:s');
-        
+
         /**
          * Add users (for m:n)
          */
@@ -47,13 +49,13 @@ class DataObject implements \JsonSerializable {
             $this->createdBy = filter_var($data['createdBy'], FILTER_SANITIZE_NUMBER_INT);
         }
         if ($this->exists('createdOn', $data)) {
-            $this->createdOn = filter_var($data['createdOn'], FILTER_SANITIZE_STRING);
+            $this->createdOn = Utility::filter_string_polyfill($data['createdOn']);
         }
         if ($this->exists('changedBy', $data)) {
             $this->changedBy = filter_var($data['changedBy'], FILTER_SANITIZE_NUMBER_INT);
         }
         if ($this->exists('hash', $data)) {
-            $this->hash = filter_var($data['hash'], FILTER_SANITIZE_STRING);
+            $this->hash = Utility::filter_string_polyfill($data['hash']);
         }
     }
 
@@ -134,7 +136,7 @@ class DataObject implements \JsonSerializable {
         return $this->users;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): mixed {
         $fields = $this->get_fields(true, false, false);
         if (!empty($this->users)) {
             $fields["users"] = $this->getUserIDs();
@@ -168,7 +170,7 @@ class DataObject implements \JsonSerializable {
         return null;
     }
 
-    public function copy(){
+    public function copy() {
         $temp = array();
         foreach ($this->fields as $k => $v) {
             $temp[$k] = $v;
@@ -176,5 +178,4 @@ class DataObject implements \JsonSerializable {
         unset($temp["id"]);
         return $temp;
     }
-
 }

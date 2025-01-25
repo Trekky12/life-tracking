@@ -18,7 +18,7 @@ class StepsTodayWidget implements Widget {
         $this->mapper = $mapper;
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $dateObj = new \DateTime('today');
         $date = $dateObj->format("Y-m-d");
         
@@ -27,15 +27,15 @@ class StepsTodayWidget implements Widget {
         return $steps_of_day ? $steps_of_day : 0 ;
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         return $this->translation->getTranslatedString("STEPS_TODAY");
     }
     
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         return $this->router->urlFor('steps');
     }
 

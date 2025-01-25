@@ -2,6 +2,8 @@
 
 namespace App\Domain\Finances\Recurring;
 
+use App\Domain\Main\Utility\Utility;
+
 class FinancesEntryRecurring extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_FINANCES_ENTRY_RECURRING";
@@ -10,9 +12,9 @@ class FinancesEntryRecurring extends \App\Domain\DataObject {
 
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->category = $this->exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->description = $this->exists('description', $data) ? filter_var($data['description'], FILTER_SANITIZE_STRING) : null;
+        $this->description = $this->exists('description', $data) ? Utility::filter_string_polyfill($data['description']) : null;
         $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->notice = $this->exists('notice', $data) ? filter_var($data['notice'], FILTER_SANITIZE_STRING) : null;
+        $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
 
         $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
@@ -21,11 +23,11 @@ class FinancesEntryRecurring extends \App\Domain\DataObject {
 
         $this->start = $this->exists('start', $data) ? $data['start'] : null;
         $this->end = $this->exists('end', $data) ? $data['end'] : null;
-        $this->last_run = $this->exists('last_run', $data) ? filter_var($data['last_run'], FILTER_SANITIZE_STRING) : null;
-        $this->unit = $this->exists('unit', $data) ? filter_var($data['unit'], FILTER_SANITIZE_STRING) : 'month';
+        $this->last_run = $this->exists('last_run', $data) ? Utility::filter_string_polyfill($data['last_run']) : null;
+        $this->unit = $this->exists('unit', $data) ? Utility::filter_string_polyfill($data['unit']) : 'month';
         $this->multiplier = $this->exists('multiplier', $data) ? filter_var($data['multiplier'], FILTER_SANITIZE_NUMBER_INT) : 1;
         $this->is_active = $this->exists('is_active', $data) ? filter_var($data['is_active'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        $this->next_run = $this->exists('next_run', $data) ? filter_var($data['next_run'], FILTER_SANITIZE_STRING) : null;
+        $this->next_run = $this->exists('next_run', $data) ? Utility::filter_string_polyfill($data['next_run']) : null;
 
         /**
          * Parsing Errors

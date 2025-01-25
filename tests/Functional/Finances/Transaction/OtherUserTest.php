@@ -5,14 +5,14 @@ namespace Tests\Functional\Finances\Transaction;
 use Tests\Functional\Base\BaseTestCase;
 
 class OtherUserTest extends BaseTestCase {
-    
+
     protected $uri_overview = "/finances/accounts/ABCabc123/view/";
     protected $uri_edit = "/finances/transactions/edit/";
     protected $uri_save = "/finances/transactions/save/";
     protected $uri_delete = "/finances/transactions/delete/";
-    
+
     protected $TEST_FINANCE_TRANSACTION_ID = 1;
-    
+
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -28,12 +28,12 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        
+
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString("Element nicht gefunden", $body);      
+        $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-    
-     /**
+
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -44,12 +44,11 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-    
-    /**
-     * 
-     */
+
+
+
     public function testPostElementCreatedSave() {
-        
+
         $data = [
             "id" => $this->TEST_FINANCE_TRANSACTION_ID,
             "description" => "Test Transaction 2 Update",
@@ -67,7 +66,7 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-    
+
     public function testDeleteElement() {
         $response = $this->request('DELETE', $this->uri_delete . $this->TEST_FINANCE_TRANSACTION_ID);
 
@@ -80,6 +79,4 @@ class OtherUserTest extends BaseTestCase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Element nicht gefunden", $json["error"]);
     }
-    
-
 }

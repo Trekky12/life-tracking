@@ -8,13 +8,20 @@ use App\Domain\Base\CurrentUser;
 use App\Domain\Base\Settings;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Utility\Utility;
 
 class MealplanService extends Service {
 
     private $settings;
     private $translation;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, MealplanMapper $mapper, Settings $settings, Translator $translation) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        MealplanMapper $mapper,
+        Settings $settings,
+        Translator $translation
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->settings = $settings;
@@ -61,9 +68,9 @@ class MealplanService extends Service {
             $dateMax->add(new \DateInterval('P1D'));
 
             $dateInterval = new \DatePeriod(
-                    new \DateTime($from),
-                    new \DateInterval('P1D'),
-                    $dateMax
+                new \DateTime($from),
+                new \DateInterval('P1D'),
+                $dateMax
             );
         }
 
@@ -72,7 +79,7 @@ class MealplanService extends Service {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
-        $fmt = new \IntlDateFormatter($language, NULL, NULL);
+        $fmt = new \IntlDateFormatter($language);
         $fmt->setPattern($dateFormatPHP["mealplan_list"]);
 
         $dateRange = [];
@@ -104,14 +111,14 @@ class MealplanService extends Service {
         }
 
         $recipe = array_key_exists("recipe", $data) && !empty($data["recipe"]) ? intval(filter_var($data["recipe"], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $date = array_key_exists("date", $data) && !empty($data["date"]) ? filter_var($data["date"], FILTER_SANITIZE_STRING) : date('Y-m-d');
+        $date = array_key_exists("date", $data) && !empty($data["date"]) ? Utility::filter_string_polyfill($data["date"]) : date('Y-m-d');
         $position = array_key_exists("position", $data) && !empty($data["position"]) ? intval(filter_var($data["position"], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
         $mealplan_recipe_id = array_key_exists("id", $data) && !empty($data["id"]) ? intval(filter_var($data["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
 
-        $notice = array_key_exists("notice", $data) && !empty($data["notice"]) ? filter_var($data["notice"], FILTER_SANITIZE_STRING) : null;
+        $notice = array_key_exists("notice", $data) && !empty($data["notice"]) ? Utility::filter_string_polyfill($data["notice"]) : null;
 
-        if (!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $date)) {
+        if (!is_null($date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $date)) {
             $date = date('Y-m-d');
         }
 
@@ -157,24 +164,4 @@ class MealplanService extends Service {
 
         return new Payload(Payload::$STATUS_DELETE_ERROR);
     }
-
-    public function addRecipe($data) {
-
-        $stack = array_key_exists("stack", $data) && !empty($data["stack"]) ? filter_var($data['stack'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $card = array_key_exists("card", $data) && !empty($data["card"]) ? filter_var($data['card'], FILTER_SANITIZE_NUMBER_INT) : null;
-
-        $user = $this->current_user->getUser()->id;
-        $user_cards = $this->mapper->getUserCards($user);
-        $user_stacks = $this->stack_service->getUserStacks($user);
-
-        $response_data = ['status' => 'error'];
-        if (!is_null($stack) && !is_null($card) && in_array($stack, $user_stacks) && in_array($card, $user_cards)) {
-            $this->mapper->moveCard($card, $stack, $user);
-
-            $response_data = ['status' => 'success'];
-        }
-
-        return new Payload(Payload::$RESULT_JSON, $response_data);
-    }
-
 }

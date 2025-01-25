@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Profile;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class EditTest extends BaseTestCase {
@@ -26,9 +27,8 @@ class EditTest extends BaseTestCase {
         $this->assertStringContainsString('<form action="/profile/edit" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
+
+
     public function testUpdate() {
 
         $data = [
@@ -56,9 +56,7 @@ class EditTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testUpdate
-     */
+    #[Depends('testUpdate')]
     public function testChanges($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -93,14 +91,11 @@ class EditTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testUpdateBack
-     */
+    #[Depends('testUpdateBack')]
     public function testChangesBack($data) {
         $response = $this->request('GET', $this->uri_overview);
 
         $body = (string) $response->getBody();
         $this->compareInputFields($body, $data);
     }
-
 }

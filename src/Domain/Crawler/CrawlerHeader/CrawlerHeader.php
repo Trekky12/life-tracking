@@ -2,6 +2,8 @@
 
 namespace App\Domain\Crawler\CrawlerHeader;
 
+use App\Domain\Main\Utility\Utility;
+
 class CrawlerHeader extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_CRAWLERS_HEADER";
@@ -16,9 +18,9 @@ class CrawlerHeader extends \App\Domain\DataObject {
         $this->crawler = $this->exists('crawler', $data) ? filter_var($data['crawler'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->changedBy = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->headline = $this->exists('headline', $data) ? filter_var($data['headline'], FILTER_SANITIZE_STRING) : null;
-        $this->field_name = $this->exists('field_name', $data) ? filter_var($data['field_name'], FILTER_SANITIZE_STRING) : null;
-        $this->field_link = $this->exists('field_link', $data) ? filter_var($data['field_link'], FILTER_SANITIZE_STRING) : null;
+        $this->headline = $this->exists('headline', $data) ? Utility::filter_string_polyfill($data['headline']) : null;
+        $this->field_name = $this->exists('field_name', $data) ? Utility::filter_string_polyfill($data['field_name']) : null;
+        $this->field_link = $this->exists('field_link', $data) ? Utility::filter_string_polyfill($data['field_link']) : null;
         $this->field_content = $this->exists('field_content', $data) ? filter_var($data['field_content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
         $this->sortable = $this->exists('sortable', $data) ? filter_var($data['sortable'], FILTER_SANITIZE_NUMBER_INT) : 0;
@@ -29,8 +31,8 @@ class CrawlerHeader extends \App\Domain\DataObject {
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
-        $this->sort = $this->exists('sort', $data) ? filter_var($data['sort'], FILTER_SANITIZE_STRING) : null;
-        $this->datatype = $this->exists('datatype', $data) ? filter_var($data['datatype'], FILTER_SANITIZE_STRING) : null;
+        $this->sort = $this->exists('sort', $data) ? Utility::filter_string_polyfill($data['sort']) : null;
+        $this->datatype = $this->exists('datatype', $data) ? Utility::filter_string_polyfill($data['datatype']) : null;
 
 
         if (!in_array($this->datatype, array(null, "BINARY", "CHAR", "DATE", "DATETIME", "DECIMAL", "SIGNED", "TIME", "UNSIGNED"))) {

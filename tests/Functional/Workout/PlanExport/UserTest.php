@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Functional\Workouts\PlanExport;
+namespace Tests\Functional\Workout\PlanExport;
 
 use Tests\Functional\Base\BaseTestCase;
 
@@ -30,5 +30,4 @@ class UserTest extends BaseTestCase {
     protected function getURIExport($hash) {
         return str_replace("HASH", $hash, $this->uri_export);
     }
-
 }

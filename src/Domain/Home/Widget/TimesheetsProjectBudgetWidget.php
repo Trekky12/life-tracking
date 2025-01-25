@@ -42,18 +42,18 @@ class TimesheetsProjectBudgetWidget implements Widget {
         return array_keys($this->projects);
     }
 
-    public function getContent(WidgetObject $widget = null) {
+    public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
 
         return $this->project_budget_mapper->getBudgetForCategories($id);
     }
 
-    public function getTitle(WidgetObject $widget = null) {
+    public function getTitle(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         return sprintf("%s | %s", $this->translation->getTranslatedString("TIMESHEETS_PROJECT_CATEGORY_BUDGET"), $this->projects[$id]["name"]);
     }
 
-    public function getOptions(WidgetObject $widget = null) {
+    public function getOptions(?WidgetObject $widget = null) {
         return [
             [
                 "label" => $this->translation->getTranslatedString("TIMESHEETS_PROJECTS"),
@@ -65,7 +65,7 @@ class TimesheetsProjectBudgetWidget implements Widget {
         ];
     }
 
-    public function getLink(WidgetObject $widget = null) {
+    public function getLink(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["project"];
         return $this->router->urlFor('timesheets_project_categorybudget_view', ["project" => $this->projects[$id]["hash"]]);
     }

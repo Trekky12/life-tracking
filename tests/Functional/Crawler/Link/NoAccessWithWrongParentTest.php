@@ -23,7 +23,7 @@ class NoAccessWithWrongParentTest extends CrawlerTestBase {
 
 
     public function testGetAddElementID() {
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH).$this->TEST_CRAWLER_LINK_ID);
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_LINK_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -31,8 +31,8 @@ class NoAccessWithWrongParentTest extends CrawlerTestBase {
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     */
+
+
     public function testPostElementCreatedSave() {
 
         $data = [
@@ -46,13 +46,13 @@ class NoAccessWithWrongParentTest extends CrawlerTestBase {
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_LINK_ID, $data);
 
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $body = (string) $response->getBody();
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
 
-    /**
-     */
+
+
     public function testDeleteElement() {
 
         $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_CRAWLER_HASH) . $this->TEST_CRAWLER_LINK_ID);
@@ -66,5 +66,4 @@ class NoAccessWithWrongParentTest extends CrawlerTestBase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

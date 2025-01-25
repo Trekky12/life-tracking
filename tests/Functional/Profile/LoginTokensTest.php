@@ -58,5 +58,4 @@ class LoginTokensTest extends BaseTestCase {
 
         return $matches;
     }
-
 }

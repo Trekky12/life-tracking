@@ -23,9 +23,8 @@ class MemberTest extends CrawlerTestBase {
         $response = $this->request('POST', $this->uri_child_record, $data, ['user' => 'user', 'pass' => 'application']);
 
         $body = (string) $response->getBody();
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('Kein Zugriff erlaubt', $body);
     }
-
 }

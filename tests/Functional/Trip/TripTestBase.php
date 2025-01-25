@@ -23,7 +23,7 @@ class TripTestBase extends BaseTestCase {
 
     protected function getParent($body, $name) {
         $matches = [];
-        $re = '/<tr>\s*<td>\s*<a href="\/trips\/(?<hash>.*)\/view\/">' . preg_quote($name) . '<\/a>\s*<\/td>\s*(<td>\s*<\/td>\s*)*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>\s*<a href="\/trips\/(?<hash>.*)\/view\/">' . preg_quote($name ?? '') . '<\/a>\s*<\/td>\s*(<td>\s*<\/td>\s*)*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;
@@ -41,7 +41,7 @@ class TripTestBase extends BaseTestCase {
         $matches = [];
         $re = '/<div class="trip_event\s*(has_notice)?" data-event="(?<id>[0-9]*)" data-title="' . $name . '">/';
         preg_match($re, $body, $matches);
-        
+
         return $matches;
     }
 
@@ -60,13 +60,12 @@ class TripTestBase extends BaseTestCase {
     protected function getURIRouteDelete($hash) {
         return str_replace("HASH", $hash, $this->uri_route_delete);
     }
-    
+
     protected function getURIRouteList($hash) {
         return str_replace("HASH", $hash, $this->uri_route_list);
     }
-    
+
     protected function getURIRouteWaypoints($hash) {
         return str_replace("HASH", $hash, $this->uri_route_waypoints);
     }
-
 }

@@ -1,20 +1,21 @@
 <?php
 
-namespace Tests\Functional\Profile;
+namespace Tests\Functional\Login;
 
+use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
 use Tests\Functional\Base\BaseTestCase;
 use RobThree\Auth\TwoFactorAuth;
 
 class LoginTwoFactorTest extends BaseTestCase {
 
     protected $uri_login = "/login";
-    
+
     private $SECRET = "ZONTUSYMICAFZZBMDZQXGSCXWSEPTKGW";
 
     public function testLoginWithoutSecret() {
         $response1 = $this->request('GET', '/login');
         $csrf_token = $this->extractFormCSRF($response1);
-        
+
         $data = [
             "username" => "user2fa",
             "password" => "user2fa"
@@ -24,15 +25,15 @@ class LoginTwoFactorTest extends BaseTestCase {
         $this->assertEquals(302, $response2->getStatusCode());
         $this->assertEquals("/login", $response2->getHeaderLine("Location"));
     }
-    
-    
+
+
     public function testLoginWitSecret() {
         $response1 = $this->request('GET', '/login');
         $csrf_token = $this->extractFormCSRF($response1);
-        
-        $tfa = new TwoFactorAuth();
+
+        $tfa = new TwoFactorAuth(new EndroidQrCodeProvider());
         $code = $tfa->getCode($this->SECRET);
-                
+
         $data = [
             "username" => "user2fa",
             "password" => "user2fa",
@@ -42,9 +43,7 @@ class LoginTwoFactorTest extends BaseTestCase {
 
         $this->assertEquals(301, $response2->getStatusCode());
         $this->assertEquals("/", $response2->getHeaderLine("Location"));
-        
+
         $this->logout();
     }
-
-    
 }

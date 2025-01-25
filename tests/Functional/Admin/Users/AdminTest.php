@@ -2,6 +2,7 @@
 
 namespace Tests\Functional\Admin\Users;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Functional\Base\BaseTestCase;
 
 class AdminTest extends BaseTestCase {
@@ -37,9 +38,6 @@ class AdminTest extends BaseTestCase {
         $this->assertStringContainsString('<form action="' . $this->uri_save . '" method="POST">', $body);
     }
 
-    /**
-     * 
-     */
     public function testPostAddElement() {
 
         $data = [
@@ -69,9 +67,7 @@ class AdminTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * @depends testPostAddElement
-     */
+    #[Depends('testPostAddElement')]
     public function testAddedElement($data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -86,10 +82,7 @@ class AdminTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * Edit created element
-     * @depends testAddedElement
-     */
+    #[Depends('testAddedElement')]
     public function testGetElementCreatedEdit(int $user_id) {
 
         $response = $this->request('GET', $this->uri_edit . $user_id);
@@ -110,10 +103,7 @@ class AdminTest extends BaseTestCase {
         return intval($matches["id"]);
     }
 
-    /**
-     * 
-     * @depends testGetElementCreatedEdit
-     */
+    #[Depends('testGetElementCreatedEdit')]
     public function testPostElementCreatedSave(int $user_id) {
 
         $data = [
@@ -144,10 +134,7 @@ class AdminTest extends BaseTestCase {
         return $data;
     }
 
-    /**
-     * Is the element updated?
-     * @depends testPostElementCreatedSave
-     */
+    #[Depends('testPostElementCreatedSave')]
     public function testGetElementUpdated(array $result_data) {
         $response = $this->request('GET', $this->uri_overview);
 
@@ -163,9 +150,7 @@ class AdminTest extends BaseTestCase {
         return intval($row["id_edit"]);
     }
 
-    /**
-     * @depends testGetElementUpdated
-     */
+    #[Depends('testGetElementUpdated')]
     public function testDeleteElement(int $user_id) {
 
         $response = $this->request('DELETE', $this->uri_delete . $user_id);
@@ -180,8 +165,7 @@ class AdminTest extends BaseTestCase {
         $matches = [];
         $re = '/<tr>\s*<td>' . $data["login"] . '<\/td>\s*<td>' . $data["name"] . '<\/td>\s*<td>' . $data["lastname"] . '<\/td>\s*<td>' . $data["mail"] . '<\/td>\s*<td>' . $data["role"] . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->uri_edit) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->uri_delete) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="\/users\/(?<id_mail>[0-9]+)\/testmail">.*?\s*Test Mail<\/a>\s*<\/td>\s*<td>\s*<a href="\/users\/(?<id_identity>[0-9]+)\/identity">Identität übernehmen<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
-        
+
         return $matches;
     }
-
 }

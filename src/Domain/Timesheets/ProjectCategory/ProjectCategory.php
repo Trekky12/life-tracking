@@ -2,13 +2,15 @@
 
 namespace App\Domain\Timesheets\ProjectCategory;
 
+use App\Domain\Main\Utility\Utility;
+
 class ProjectCategory extends \App\Domain\DataObject {
 
     static $NAME = "DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY";
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
 
         $this->project = $this->exists('project', $data) ? filter_var($data['project'], FILTER_SANITIZE_NUMBER_INT) : null;
 

@@ -20,7 +20,7 @@ class NoAccessTest extends BoardTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Archive
      */
     public function testArchive() {
@@ -35,14 +35,14 @@ class NoAccessTest extends BoardTestBase {
 
         $body = (string) $response->getBody();
         $json = json_decode($body, true);
-        
+
         $this->assertArrayHasKey("status", $json);
         $this->assertSame("error", $json["status"]);
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
 
-    /**
+    /** 
      * Unarchive
      */
     public function testUnArchive() {
@@ -62,5 +62,4 @@ class NoAccessTest extends BoardTestBase {
         $this->assertArrayHasKey("error", $json);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
     }
-
 }

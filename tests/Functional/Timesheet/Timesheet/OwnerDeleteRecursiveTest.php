@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Functional\Timesheet\Timesheet\Owner;
+namespace Tests\Functional\Timesheet\Timesheet;
 
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
@@ -14,7 +14,7 @@ class OwnerDeleteRecursiveTest extends TimesheetTestBase {
         $this->logout();
     }
 
-    /**
+    /** 
      * Delete parent with childs
      */
     public function testDeleteParentWithChilds() {
@@ -47,5 +47,4 @@ class OwnerDeleteRecursiveTest extends TimesheetTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertTrue($json["is_deleted"]);
     }
-
 }

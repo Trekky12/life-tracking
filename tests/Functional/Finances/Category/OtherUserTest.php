@@ -5,14 +5,14 @@ namespace Tests\Functional\Finances\Category;
 use Tests\Functional\Base\BaseTestCase;
 
 class OtherUserTest extends BaseTestCase {
-    
+
     protected $uri_overview = "/finances/categories/";
     protected $uri_edit = "/finances/categories/edit/";
     protected $uri_save = "/finances/categories/save/";
     protected $uri_delete = "/finances/categories/delete/";
-    
+
     protected $TEST_FINANCE_CATEGORY_ID = 1;
-    
+
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -28,15 +28,15 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        
+
         $matches = [];
         $re = '/<tbody>\s*<\/tbody>/';
         preg_match($re, $body, $matches);
 
-        $this->assertFalse(empty($matches));        
+        $this->assertFalse(empty($matches));
     }
-    
-     /**
+
+    /** 
      * Edit created element
      */
     public function testGetElementCreatedEdit() {
@@ -47,12 +47,11 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-    
-    /**
-     * 
-     */
+
+
+
     public function testPostElementCreatedSave() {
-        
+
         $data = [
             "id" => $this->TEST_FINANCE_CATEGORY_ID,
             "name" => "Test Category Updated",
@@ -66,7 +65,7 @@ class OtherUserTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString("Element nicht gefunden", $body);
     }
-    
+
     public function testDeleteElement() {
         $response = $this->request('DELETE', $this->uri_delete . $this->TEST_FINANCE_CATEGORY_ID);
 
@@ -79,6 +78,4 @@ class OtherUserTest extends BaseTestCase {
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Element nicht gefunden", $json["error"]);
     }
-    
-
 }
