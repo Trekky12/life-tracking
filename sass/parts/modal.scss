@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 .modal {
     z-index: 1001;
     display: none;
@@ -20,15 +23,15 @@
 
         min-height: calc(100% - (.5rem * 2));
 
-        @media screen and (min-width: $size_mobile) {
+        @media screen and (min-width: variables.$size_mobile) {
             min-height: calc(100% - (1.75rem * 2));
         }
     }
 
     &.small {
         .modal-inner {
-            @media screen and (min-width: $size_content-width-xsmall) {
-                width: $size_content-width-xsmall;
+            @media screen and (min-width: variables.$size_content-width-xsmall) {
+                width: variables.$size_content-width-xsmall;
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -50,8 +53,8 @@
 
     border-radius: 4px;
 
-    @media screen and (min-width: $size_mobile) {
-        width: $size_mobile;
+    @media screen and (min-width: variables.$size_mobile) {
+        width: variables.$size_mobile;
         margin: 1.75rem auto;
     }
 
@@ -74,15 +77,15 @@
     .modal-header {
         color: #FFFFFF;
         font-weight: 600;
-        @include font-size(1.6);
-        background: $color_blue;
+        @include mixins.font-size(1.6);
+        background: variables.$color_blue;
         display: flex;
         justify-content: space-between;
 
         .modal-close {
             color: #FFFFFF;
             font-weight: 600;
-            @include font-size(2);
+            @include mixins.font-size(2);
             cursor: pointer;
         }
     }
@@ -96,7 +99,7 @@
     &,
     .add-element-text,
     label:not(.radio):not(.checkbox) {
-        @include font-size(1.3);
+        @include mixins.font-size(1.3);
     }
 
     .form-group {
@@ -110,7 +113,7 @@
         &:hover,
         &:focus {
             //padding: 0.5rem 1rem!important;
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
         }
     }
 

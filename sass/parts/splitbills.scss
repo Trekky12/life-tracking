@@ -1,9 +1,13 @@
+@use "mixins";
+@use "variables";
+@use 'sass:math';
+
 #splitbills_bills_table, #splitbills_bills_recurring_table{
     td span.negative{
-        color:$color_red;
+        color:variables.$color_red;
     }
     td span.positive{
-        color:$color_green;
+        color:variables.$color_green;
     }
 }
 
@@ -11,7 +15,7 @@
     .userlist .user-entry{
 
         &.header{
-            @include font-size(1.2);
+            @include mixins.font-size(1.2);
             display:none;
         }
 
@@ -19,7 +23,7 @@
             padding-bottom:1rem;
         }
 
-        @media screen and (max-width: $size_mobile) {
+        @media screen and (max-width: variables.$size_mobile) {
 
             .paymethod-field, .input-field{
                 padding-left: 40%; 
@@ -32,13 +36,13 @@
                     width: 40%; 
                     position: absolute;
                     content:attr(data-title);
-                    @include font-size(1.2);
+                    @include mixins.font-size(1.2);
                     text-align:left;
                     word-break: break-all;
                 }
             }
         }
-        @media screen and (min-width: $size_mobile+1px) {
+        @media screen and (min-width: (variables.$size_mobile+1px)) {
             &::after {
                 clear: both;
                 content: "";
@@ -90,7 +94,7 @@
 }
 
 #splitbill_overview{
-    @media screen and (max-width: $size_mobile_navigation) {
+    @media screen and (max-width: variables.$size_mobile_navigation) {
         //flex-direction:column;
         flex-basis: math.div(100%, 2);
     }
@@ -98,10 +102,10 @@
     .card{
 
         p{
-            @include font-size(2);
+            @include mixins.font-size(2);
             margin:0;
-            @media screen and (min-width: $size_mobile_navigation) {
-                @include font-size(4);
+            @media screen and (min-width: variables.$size_mobile_navigation) {
+                @include mixins.font-size(4);
             }
         }
     }
@@ -115,9 +119,9 @@
     }
 
     p.negative{
-        color: $color_red;
+        color: variables.$color_red;
     }
     p.positive{
-        color: $color_green;
+        color: variables.$color_green;
     }
 }

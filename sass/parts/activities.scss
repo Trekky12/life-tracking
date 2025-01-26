@@ -1,3 +1,5 @@
+@use "mixins";
+
 #activities{
     
     .activity-date{
@@ -11,14 +13,14 @@
 
 
         i.fa{
-            @include font-size(3);
+            @include mixins.font-size(3);
             width:40px;
         }
 
         .content{
             margin-left:2rem;
             .time{
-                @include font-size(1.2);
+                @include mixins.font-size(1.2);
             }
             p{
 

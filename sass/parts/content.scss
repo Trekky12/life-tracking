@@ -1,9 +1,12 @@
+@use "mixins";
+@use "variables";
+
 .inner-content {
     //background-color: $color_background-body;
     //box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
     margin-bottom: 1rem;
 
-    background-color: $color_background-body;
+    background-color: variables.$color_background-body;
     box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2),
         0 1px 1px 0 rgba(0, 0, 0, .14),
         0 1px 3px 0 rgba(0, 0, 0, .12);
@@ -27,7 +30,7 @@
 
     .inner-content-header {
         h2 {
-            @include font-size(1.8);
+            @include mixins.font-size(1.8);
         }
 
         h2,
@@ -39,7 +42,7 @@
         }
 
         &.light {
-            background-color: $color_blue_lighter_gray;
+            background-color: variables.$color_blue_lighter_gray;
         }
     }
 }
@@ -59,7 +62,7 @@
 
     &,
     a {
-        color: $color_text-main;
+        color: variables.$color_text-main;
     }
 
     h1,
@@ -83,7 +86,7 @@
 .notification-content {
     padding: 0.5rem 1rem;
 
-    @media screen and (min-width: $size_tablet) {
+    @media screen and (min-width: variables.$size_tablet) {
         padding: 1rem 0;
     }
 }
@@ -102,7 +105,7 @@
     padding-left: 1rem;
     padding-right: 1rem;
 
-    @media screen and (min-width: $size_tablet) {
+    @media screen and (min-width: variables.$size_tablet) {
         padding-left: 2rem;
         padding-right: 2rem;
     }
@@ -118,7 +121,7 @@
     &.multiple-buttons {
         flex-direction: column;
 
-        @media screen and (min-width: $size_tablet) {
+        @media screen and (min-width: variables.$size_tablet) {
             flex-direction: row;
         }
     }
@@ -129,19 +132,19 @@
         align-items: center;
 
         .back-arrow {
-            @include font-size(2);
+            @include mixins.font-size(2);
             margin-right: 3rem;
-            color: $color_text-secondary;
+            color: variables.$color_text-secondary;
             z-index: 1;
 
             &:hover {
-                color: $color_blue;
+                color: variables.$color_blue;
             }
         }
 
         h2 {
-            @include font-size(2);
-            color: $color_text-secondary;
+            @include mixins.font-size(2);
+            color: variables.$color_text-secondary;
         }
     }
 
@@ -163,7 +166,7 @@
         }
 
         button {
-            @include font-size(1.2);
+            @include mixins.font-size(1.2);
             //padding-left: 0.5rem !important;
             //padding-right: 0.5rem !important;
 
@@ -178,7 +181,7 @@
         }
 
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             margin-left: 1rem;
             margin-top: 0;
 
@@ -187,7 +190,7 @@
             }
 
             button {
-                @include font-size(1.4);
+                @include mixins.font-size(1.4);
                 //padding-left: 1rem !important;
                 //padding-right: 1rem !important;
             }

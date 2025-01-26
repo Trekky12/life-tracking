@@ -2,10 +2,10 @@ const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 const livereload = require('gulp-livereload');
 const rename = require('gulp-rename');
-const less = require('gulp-less');
 const minifyCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
-const autoprefixer = require('gulp-autoprefixer');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
 const replace = require('gulp-replace');
 const concat = require('gulp-concat');
 const shell = require('gulp-shell');
@@ -19,11 +19,9 @@ function sassTask(cb) {
             outputStyle: 'compressed',
             includePaths: ['sass'],
             silenceDeprecations: ['legacy-js-api']
-        }))
-        //.on( 'error', printError ) )
-        .pipe(autoprefixer())
-        .pipe(gulp.dest('public/static'))
-        .pipe(livereload());
+        }).on('error', sass.logError))
+        .pipe(postcss([autoprefixer()]))
+        .pipe(gulp.dest('public/static'));
 }
 
 /**
@@ -31,7 +29,7 @@ function sassTask(cb) {
  */
 function uglifyTask(cb) {
     return gulp.src(['js/*.js', '!js/*.min.js'])
-        .pipe( terser() )
+        .pipe(terser())
         .on('error', printError)
         //.pipe( rename( {
         //    suffix: '.min'
@@ -102,14 +100,12 @@ function copyJSTask(cb) {
             './node_modules/easymde/dist/easymde.min.js',
             './node_modules/sortablejs/Sortable.min.js',
             './node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.min.js',
-            './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.min.js',
             './node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.min.js',
             './node_modules/html-duration-picker/dist/html-duration-picker.min.js',
             './node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
             './node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js',
             './node_modules/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js',
             './node_modules/hammerjs/hammer.min.js',
-            './node_modules/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js',
             './node_modules/file-saver/dist/FileSaver.min.js',
             './node_modules/write-excel-file/bundle/write-excel-file.min.js',
             './node_modules/@jstable/jstable/dist/jstable.min.js'
@@ -122,7 +118,8 @@ function copyJSTask(cb) {
 function copyAndMinifyJS(cb) {
     return gulp
         .src([
-            './node_modules/randomcolor/randomColor.js'
+            './node_modules/randomcolor/randomColor.js',
+            './node_modules/leaflet-control-geocoder/dist/Control.Geocoder.js',
         ])
         .pipe(terser())
         .pipe(rename({
@@ -228,12 +225,12 @@ function replaceLeafletFullscreenIcon(cb) {
 }
 
 function copyLeafletFullscreenIcons(cb) {
-    return gulp.src('./node_modules/leaflet-fullscreen/dist/*.png',)
+    return gulp.src('./node_modules/leaflet-fullscreen/dist/*.png', { encoding: false })
         .pipe(gulp.dest('public/static/assets/images/leaflet-fullscreen'));
 }
 
 function copyLeafletExtraMarkersIcons(cb) {
-    return gulp.src('./node_modules/leaflet-extra-markers/dist/img/*.png',)
+    return gulp.src('./node_modules/leaflet-extra-markers/dist/img/*.png', { encoding: false })
         .pipe(gulp.dest('public/static/assets/images/leaflet-extra-markers'));
 }
 
@@ -250,7 +247,7 @@ function replaceLeafletExtraMarkersIconCSS(cb) {
 }
 
 function copyLeafletIcons(cb) {
-    return gulp.src('./node_modules/leaflet/dist/images/*.png',)
+    return gulp.src('./node_modules/leaflet/dist/images/*.png', { encoding: false })
         .pipe(gulp.dest('public/static/assets/images/leaflet'));
 }
 
@@ -271,7 +268,7 @@ function replaceLeafletIconCSS(cb) {
 
 
 function copyLeafletRoutingIcons(cb) {
-    return gulp.src('./node_modules/leaflet-routing-machine/dist/*.png',)
+    return gulp.src('./node_modules/leaflet-routing-machine/dist/*.png', { encoding: false })
         .pipe(gulp.dest('public/static/assets/images/leaflet-routing-machine'));
 }
 
@@ -290,7 +287,7 @@ function replaceLeafletRoutingIconCSS(cb) {
 }
 
 function copyFontsWeatherIconsTask(cb) {
-    return gulp.src('./node_modules/weather-icons/font/**.*')
+    return gulp.src('./node_modules/weather-icons/font/**.*', { encoding: false })
         .pipe(gulp.dest('public/static/assets/fonts/weather-icons'));
 }
 
@@ -322,7 +319,7 @@ function replaceAutocompleteIcons(cb) {
 function copyDOCXJS(cb) {
     return gulp
         .src([
-            './node_modules/docx/build/index.js'
+            './node_modules/docx/dist/index.umd.cjs'
         ])
         // remove source map
         //.pipe(replace(/\/\/# sourceMappingURL=(.?)*\.js\.map/g, ""))

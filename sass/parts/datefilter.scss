@@ -1,10 +1,13 @@
+@use "mixins";
+@use "variables";
+
 #location-filter {
     box-shadow:
         0 2px 1px -1px rgba(0, 0, 0, 0.2),
         0 1px 1px 0 rgba(0, 0, 0, 0.14),
         0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
-    background-color: $color_background-body;
+    background-color: variables.$color_background-body;
 
     margin-left: -5px;
     margin-right: -5px;
@@ -14,7 +17,7 @@
     z-index: 1;
     border-radius: 4px;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         margin-top: -2.5rem;
     }
 
@@ -40,8 +43,8 @@
         }
     }
 
-    @media screen and (min-width: $size_mobile) {
-        max-width: $size_content-width-xsmall;
+    @media screen and (min-width: variables.$size_mobile) {
+        max-width: variables.$size_content-width-xsmall;
         margin: 0 auto;
     }
 }
@@ -58,21 +61,21 @@
 }
 
 #tableFooterFilter {
-    border-top: 1px solid $color_gray;
+    border-top: 1px solid variables.$color_gray;
     margin-top: 1rem;
 
     .categories-filter {
         width: 100%;
 
-        @media screen and (min-width: $size_tablet) {
-            width: $size_mini;
+        @media screen and (min-width: variables.$size_tablet) {
+            width: variables.$size_mini;
         }
     }
 
     .selectr-selected,
     .button,
     select {
-        @include font-size(1.2);
+        @include mixins.font-size(1.2);
         min-height: 31px;
     }
 
@@ -89,7 +92,7 @@
         .filter-element {
             margin-top: 1rem;
 
-            @media screen and (min-width: $size_very_big) {
+            @media screen and (min-width: variables.$size_very_big) {
                 margin-top: 0;
             }
         }
@@ -106,7 +109,7 @@
             margin-top: 0;
         }
 
-        @media screen and (min-width: $size_very_big) {
+        @media screen and (min-width: variables.$size_very_big) {
             display: flex;
             align-items: center;
 
@@ -140,7 +143,7 @@
         }
 
         select {
-            @media screen and (min-width: $size_very_big) {
+            @media screen and (min-width: variables.$size_very_big) {
                 //height: 44px;
             }
         }
@@ -153,7 +156,7 @@
         grid-gap: 1rem;
         grid-template-columns: min-content auto;
 
-        @media screen and (min-width: $size_mobile) {
+        @media screen and (min-width: variables.$size_mobile) {
             grid-template-columns: min-content min-content;
         }
 
@@ -166,10 +169,10 @@
     input:not(.choices__input):not(.selectr-input),
     label,
     select {
-        @include font-size(1.2);
+        @include mixins.font-size(1.2);
 
-        @media screen and (min-width: $size_mobile) {
-            @include font-size(1.4);
+        @media screen and (min-width: variables.$size_mobile) {
+            @include mixins.font-size(1.4);
         }
     }
 
@@ -184,7 +187,7 @@
     display: block;
     width: 100%;
     padding: 0.8rem 1.2rem;
-    @include font-size(1.4);
+    @include mixins.font-size(1.4);
 }
 
 .flatpickr-group {

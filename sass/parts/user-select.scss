@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 #users_collection-wrapper,
 #groceries-suggestion-wrapper,
 .ingredient-suggestion-wrapper {
@@ -11,7 +14,7 @@
         margin: 0;
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 
-        background-color: $color_background-body;
+        background-color: variables.$color_background-body;
 
         list-style: none;
 
@@ -19,12 +22,12 @@
         z-index: 1;
 
         li {
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
             padding: 0.5rem 0;
 
             &:hover {
                 cursor: pointer;
-                color: $color_blue;
+                color: variables.$color_blue;
             }
         }
     }
@@ -48,7 +51,7 @@
         margin-right: 5px;
 
         .remove {
-            @include font-size(2);
+            @include mixins.font-size(2);
             margin-left: 1rem;
             cursor: pointer;
         }

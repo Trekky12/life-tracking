@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 /*!
  * DataTables
  */
@@ -8,10 +11,10 @@
     select,
     label,
     input {
-        @include font-size(1.2);
+        @include mixins.font-size(1.2);
 
-        @media screen and (min-width: $size_mobile) {
-            @include font-size(1.4);
+        @media screen and (min-width: variables.$size_mobile) {
+            @include mixins.font-size(1.4);
         }
     }
 
@@ -26,7 +29,7 @@
             margin-bottom: 1rem;
         }
 
-        @media screen and (min-width: $size_mobile) {
+        @media screen and (min-width: variables.$size_mobile) {
             flex-direction: row;
 
             &>* {
@@ -37,7 +40,7 @@
     }
 
     .dt-table tbody tr:nth-child(odd) {
-        background-color: $color_light_gray;
+        background-color: variables.$color_light_gray;
     }
 
     .dt-info {

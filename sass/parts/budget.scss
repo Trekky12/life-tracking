@@ -1,7 +1,10 @@
+@use "mixins";
+@use "variables";
+
 .budget-entry{
     margin-bottom: 1rem;
     
-    @media screen and (min-width: $size_mobile){
+    @media screen and (min-width: variables.$size_mobile){
 
         &::after {
             clear: both;
@@ -57,10 +60,10 @@
     }
 
     &.edit{
-        border-bottom: 1px solid $color_text-main;
+        border-bottom: 1px solid variables.$color_text-main;
     }
 
-    @media screen and (max-width: $size_mobile) {
+    @media screen and (max-width: variables.$size_mobile) {
         .btn-delete{
             margin-bottom: 1rem;
             display:block;
@@ -75,26 +78,26 @@
     .values{
         display:flex;
         justify-content: space-between;
-        @include font-size(1.2);
+        @include mixins.font-size(1.2);
         font-weight: 600;
 
         .red{
-            color: $color_red;
+            color: variables.$color_red;
         }
         .green{
-            color: $color_green;
+            color: variables.$color_green;
         }
         .orange{
-            color: $color_orange;
+            color: variables.$color_orange;
         }
         .yellow{
-            color: $color_yellow;
+            color: variables.$color_yellow;
         }
     }
 
     .progress-bar{
         display:flex;
-        border: 1px solid $color_border-input ;
+        border: 1px solid variables.$color_border-input ;
         overflow:hidden;
         position:relative;
 
@@ -104,27 +107,27 @@
             display:flex;
             justify-content: center;
             align-items:center;
-            color: $color_text-main;
+            color: variables.$color_text-main;
             font-weight: 600;
 
-            @include font-size(1.2);
+            @include mixins.font-size(1.2);
             max-width: 100%;
 
             &.red{
-                background-color: $color_red;
-                color: $color_background-body;
+                background-color: variables.$color_red;
+                color: variables.$color_background-body;
             }
             &.green{
-                background-color: $color_green;
-                color: $color_background-body;
+                background-color: variables.$color_green;
+                color: variables.$color_background-body;
             }
             &.orange{
-                background-color: $color_orange;
-                color: $color_background-body;
+                background-color: variables.$color_orange;
+                color: variables.$color_background-body;
             }
             &.yellow{
-                background-color: $color_yellow;
-                color: $color_text-main;
+                background-color: variables.$color_yellow;
+                color: variables.$color_text-main;
             }
         }
         
@@ -139,13 +142,13 @@
         
         .state{
             position: absolute;
-            border-right: 2px dashed $color_text-main;
+            border-right: 2px dashed variables.$color_text-main;
             z-index:1;
             height:24px;
         }
     }
     
     .categories-list{
-        @include font-size(1.1);
+        @include mixins.font-size(1.1);
     }
 }

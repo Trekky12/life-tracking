@@ -1,13 +1,16 @@
+@use "mixins";
+@use "variables";
+
 #recipes_steps {
     .step {
         display: flex;
         flex-direction: column;
         padding: 1rem;
-        border: 1px solid $color_blue_light_gray;
+        border: 1px solid variables.$color_blue_light_gray;
         border-radius: 5px;
         margin: 0.5rem;
 
-        @media screen and (min-width: $size_mobile) {
+        @media screen and (min-width: variables.$size_mobile) {
             flex-direction: row;
         }
 
@@ -27,7 +30,7 @@
             display: flex;
             justify-content: flex-end;
 
-            @media screen and (min-width: $size_mobile) {
+            @media screen and (min-width: variables.$size_mobile) {
                 //margin-top: 2.8rem;
                 margin-right: 1rem;
                 margin-left: 1rem;
@@ -40,7 +43,7 @@
     }
 
     .step-drag {
-        border: 1px dashed $color_text-main;
+        border: 1px dashed variables.$color_text-main;
     }
 
     .add-ingredient-btn-wrapper {
@@ -57,10 +60,10 @@
 
         input {
             padding: 8px 12px;
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
             margin-bottom: 1rem;
             width: 100%;
-            border: 1px solid $color_gray;
+            border: 1px solid variables.$color_gray;
             border-radius: 0px;
         }
 
@@ -75,7 +78,7 @@
         }
 
         .selectr-options-container {
-            border-color: $color_gray;
+            border-color: variables.$color_gray;
             border-radius: 0px;
         }
 
@@ -97,7 +100,7 @@
             }
         }*/
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             flex-direction: row;
 
             input {
@@ -126,7 +129,7 @@
             cursor: pointer;
 
             &:hover {
-                color: $color_blue;
+                color: variables.$color_blue;
             }
         }
 
@@ -148,7 +151,7 @@
     font-style: italic;
     font-weight: 400;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         margin-top: 0;
     }
 }
@@ -165,11 +168,11 @@
     i,
     span,
     svg {
-        @include font-size(1.6);
+        @include mixins.font-size(1.6);
         margin-right: 0.5rem;
 
-        @media screen and (min-width: $size_mobile) {
-            @include font-size(3);
+        @media screen and (min-width: variables.$size_mobile) {
+            @include mixins.font-size(3);
         }
     }
 
@@ -182,10 +185,10 @@
         i,
         span,
         svg {
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
 
-            @media screen and (min-width: $size_mobile) {
-                @include font-size(1.6);
+            @media screen and (min-width: variables.$size_mobile) {
+                @include mixins.font-size(1.6);
             }
         }
     }
@@ -196,7 +199,7 @@
     justify-content: space-between;
     flex-direction: column;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         flex-direction: row;
         align-items: flex-start;
     }
@@ -205,7 +208,7 @@
         flex-grow: 1;
         max-height: 100%;
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             flex-basis: 40%;
         }
     }
@@ -218,19 +221,19 @@
         flex-grow: 1;
         height: 100%;
         
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             margin-left: 1rem;
             margin-top: 0;
         }
 
         .recipe-ingredients-title {
-            @include font-size(1.8);
+            @include mixins.font-size(1.8);
         }
     }
 
     img,
     .recipe-ingredients {
-        border: 1px solid $color_blue_light_gray;
+        border: 1px solid variables.$color_blue_light_gray;
         border-radius: 5px;
     }
 }
@@ -240,7 +243,7 @@
     justify-content: space-between;
     flex-direction: column;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         flex-direction: row;
     }
 
@@ -248,16 +251,16 @@
         margin-top: 1rem;
         flex-basis: 30%;
         padding: 1rem;
-        border: 1px solid $color_blue_light_gray;
+        border: 1px solid variables.$color_blue_light_gray;
         border-radius: 5px;
         
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             margin-left: 1rem;
             margin-top: 0;
         }
 
         .recipe-step-ingredients-title {
-            @include font-size(1.6);
+            @include mixins.font-size(1.6);
             font-weight: 600;
         }
     }
@@ -273,18 +276,18 @@
     cursor: pointer;
 
     &:focus {
-        color: $color_text-main;
+        color: variables.$color_text-main;
     }
 
     @media (hover: hover) {
         &:hover {
-            color: $color_blue;
+            color: variables.$color_blue;
         }
     }
 
     &.active,
     &.active :focus {
-        color: $color_blue;
+        color: variables.$color_blue;
     }
 }
 
@@ -317,7 +320,7 @@
         justify-content: space-between;
         flex-direction: column;
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             flex-direction: row;
         }
     }
@@ -331,7 +334,7 @@
     display: flex;
     flex-direction: column-reverse;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         flex-direction: row;
     }
 
@@ -340,15 +343,15 @@
         flex-direction: column;
         flex-grow: 1;
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             flex-basis: 50%;
         }
     }
 
     .mealplan-list-settings {
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             position: sticky;
-            top: $header_height + $header_height_margin;
+            top: variables.$header_height + variables.$header_height_margin;
             align-self: flex-start;
             flex-basis: 50%;
 
@@ -362,7 +365,7 @@
     justify-content: space-between;
     align-items: center;
 
-    border: 1px solid $color_blue_light_gray;
+    border: 1px solid variables.$color_blue_light_gray;
     margin-top: 1rem;
     margin-bottom: 1rem;
     padding: 0.5rem;
@@ -421,7 +424,7 @@ body.sortable-select {
         margin-bottom: 1rem;
         width: 100%;
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             margin-bottom: 0;
         }
     }
@@ -430,7 +433,7 @@ body.sortable-select {
         width: 100%;
     }
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         flex-direction: row;
         flex-wrap: wrap;
         gap: 1rem;
@@ -484,7 +487,7 @@ body.sortable-select {
 
         position: relative;
 
-        border-bottom: 1px solid $color_blue_lighter_gray;
+        border-bottom: 1px solid variables.$color_blue_lighter_gray;
 
         /*&:after {
             position: absolute;
@@ -496,7 +499,7 @@ body.sortable-select {
         }*/
 
         label {
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
             margin-left: 1rem;
             text-align: left;
         }

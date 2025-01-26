@@ -1,3 +1,5 @@
+@use "variables";
+
 .two-columns{
     display:block;
 
@@ -26,7 +28,7 @@
     }
 }
 
-@media screen and (min-width: $size_mobile){
+@media screen and (min-width: variables.$size_mobile){
     .two-columns{
         display:flex;
 

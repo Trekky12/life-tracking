@@ -1,15 +1,17 @@
+@use "variables";
+
 #app-bar {
     display: flex;
     //justify-content: flex-start;
     align-items: center;
-    height: $header_height;
+    height: variables.$header_height;
     overflow: hidden;
 
     #mobile-header-icons,
     #iconBell {
         display: flex;
         align-items: center;
-        height: $header_height;
+        height: variables.$header_height;
     }
 
     #mobile-header-icons {
@@ -20,7 +22,7 @@
         overflow: hidden;
         position: relative;
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             display: none;
         }
     }
@@ -46,7 +48,7 @@
 
         i,
         svg {
-            color: $color_border-input;
+            color: variables.$color_border-input;
         }
     }
 
@@ -79,8 +81,8 @@ span.notifications.badge.has-Notification {
         position: absolute;
         z-index: 100;
         font-size: 10px;
-        background: $color_red;
-        color: $color_background-body;
+        background: variables.$color_red;
+        color: variables.$color_background-body;
         width: 15px;
         height: 15px;
         text-align: center;
@@ -113,7 +115,7 @@ span.notifications.badge.has-Notification {
         transition: height 200ms ease-in;
 
         .tabbar-tab {
-            color: $color_blue_light_gray;
+            color: variables.$color_blue_light_gray;
             font-weight: 800;
             padding-left: 12px;
             padding-right: 12px;
@@ -123,11 +125,11 @@ span.notifications.badge.has-Notification {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: $header_height_tabbar;
+            height: variables.$header_height_tabbar;
             cursor: pointer;
 
             &:hover {
-                color: $color_background-body;
+                color: variables.$color_background-body;
             }
         }
 
@@ -137,7 +139,7 @@ span.notifications.badge.has-Notification {
             display: none;
             -webkit-tap-highlight-color: transparent;
 
-            @media screen and (min-width: $size_mobile_navigation) {
+            @media screen and (min-width: variables.$size_mobile_navigation) {
                 display: flex;
             }
         }
@@ -152,7 +154,7 @@ span.notifications.badge.has-Notification {
             justify-content: flex-start;
             flex-basis: 100%;
 
-            @media screen and (min-width: $size_big) {
+            @media screen and (min-width: variables.$size_big) {
                 overflow: hidden;
             }
 
@@ -176,14 +178,14 @@ span.notifications.badge.has-Notification {
 
                 &:hover,
                 &.active {
-                    color: $color_background-body;
-                    border-bottom-color: $color_background-body;
+                    color: variables.$color_background-body;
+                    border-bottom-color: variables.$color_background-body;
                 }
             }
 
             &:hover .tabbar-tab.active:not(:hover) {
                 border-bottom-color: transparent;
-                color: $color_blue_light_gray;
+                color: variables.$color_blue_light_gray;
             }
 
         }

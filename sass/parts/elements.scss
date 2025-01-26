@@ -1,16 +1,19 @@
+@use "mixins";
+@use "variables";
+
 :root {
-    --fc-button-bg-color: #{$color_blue};
-    --fc-button-border-color: #{$color_blue};
-    --fc-button-hover-bg-color: #{$color_blue_light};
-    --fc-button-hover-border-color: #{$color_blue_light};
-    --fc-button-active-bg-color: #{$color_blue};
-    --fc-button-active-border-color: #{$color_blue};
+    --fc-button-bg-color: #{variables.$color_blue};
+    --fc-button-border-color: #{variables.$color_blue};
+    --fc-button-hover-bg-color: #{variables.$color_blue_light};
+    --fc-button-hover-border-color: #{variables.$color_blue_light};
+    --fc-button-active-bg-color: #{variables.$color_blue};
+    --fc-button-active-border-color: #{variables.$color_blue};
 
     --fc-event-bg-color: white;
     --fc-event-border-color: black;
     --fc-event-text-color: black;
 
-    @media screen and (max-width: $size_tablet) {
+    @media screen and (max-width: variables.$size_tablet) {
         --fc-daygrid-event-dot-width: 16px
     }
 }
@@ -68,35 +71,35 @@ table .fontawesome-icon svg {
     padding: 2rem;
     padding-right: 4rem;
     margin-bottom: 15px;
-    color: $color_text-main;
+    color: variables.$color_text-main;
     border-radius: 4px;
     box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
 
     &.danger,
     &.warning3 {
-        background-color: $color_red;
-        color: $color_background-body;
+        background-color: variables.$color_red;
+        color: variables.$color_background-body;
     }
 
     &.success {
-        background-color: $color_green;
-        color: $color_background-body;
+        background-color: variables.$color_green;
+        color: variables.$color_background-body;
     }
 
     &.warning,
     &.warning2 {
-        background-color: $color_orange;
-        color: $color_background-body;
+        background-color: variables.$color_orange;
+        color: variables.$color_background-body;
     }
 
     &.info {
-        background-color: $color_blue;
-        color: $color_background-body;
+        background-color: variables.$color_blue;
+        color: variables.$color_background-body;
     }
 
     &.warning1 {
-        background-color: $color_yellow;
-        color: $color_text-main;
+        background-color: variables.$color_yellow;
+        color: variables.$color_text-main;
     }
 }
 
@@ -107,7 +110,7 @@ table .fontawesome-icon svg {
     row-gap: 2rem;
     align-items: center;
 
-    @media screen and (min-width: $size_mobile) {
+    @media screen and (min-width: variables.$size_mobile) {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
@@ -140,11 +143,11 @@ table .fontawesome-icon svg {
 }
 
 .notification {
-    background-color: $color_background-body;
+    background-color: variables.$color_background-body;
     box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
     border-radius: 4px;
 
-    max-width: $size_content-width-small;
+    max-width: variables.$size_content-width-small;
     margin: 0 auto;
 
     margin-bottom: 15px;
@@ -163,7 +166,7 @@ table .fontawesome-icon svg {
     .notification-content {
         padding: 0.5rem 1rem;
 
-        @media screen and (min-width: $size_tablet) {
+        @media screen and (min-width: variables.$size_tablet) {
             padding: 0.5rem 3rem;
         }
     }
@@ -173,45 +176,45 @@ table .fontawesome-icon svg {
         //box-shadow: 0 0 6px #f8b9b7;
 
         .notification-header {
-            background-color: $color_blue_lighter_gray;
+            background-color: variables.$color_blue_lighter_gray;
 
             &,
             a {
-                color: $color_text-input;
+                color: variables.$color_text-input;
             }
         }
     }
 
     .notification-header {
-        background-color: $color_blue;
+        background-color: variables.$color_blue;
 
         &,
         a {
-            color: $color_background-body;
+            color: variables.$color_background-body;
         }
 
         h2 {
             margin: 0;
             overflow: hidden;
 
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
 
-            @media screen and (min-width: $size_tablet) {
-                @include font-size(1.8);
+            @media screen and (min-width: variables.$size_tablet) {
+                @include mixins.font-size(1.8);
             }
         }
 
         span {
-            @include font-size(1.2);
+            @include mixins.font-size(1.2);
 
-            @media screen and (min-width: $size_tablet) {
-                @include font-size(1.4);
+            @media screen and (min-width: variables.$size_tablet) {
+                @include mixins.font-size(1.4);
             }
         }
     }
 
     .createdOn {
-        @include font-size(1.2);
+        @include mixins.font-size(1.2);
         font-style: italic;
         margin-top: 1rem;
     }
@@ -223,12 +226,12 @@ table .fontawesome-icon svg {
 }
 
 .small {
-    @include font-size(1.2);
+    @include mixins.font-size(1.2);
     margin: 0;
 }
 
 .loading-icon {
-    @include font-size(4);
+    @include mixins.font-size(4);
 }
 
 select.button-height {

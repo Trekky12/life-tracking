@@ -143,5 +143,5 @@ if (financeDetailChart) {
         },
         plugins: [htmlLegendPlugin]
     });
-    financeDetailChart.before(fdChart.generateLegend());
+    //financeDetailChart.before(fdChart.generateLegend());
 }

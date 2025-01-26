@@ -1,44 +1,47 @@
+@use "mixins";
+@use "variables";
+
 #logviewer{
     height:calc(100vh - 150px);
     background: #FFFFFF;
     padding: 1rem;
     font-family:monospace;
-    @include font-size(1.1);
+    @include mixins.font-size(1.1);
     overflow-y: auto;
     overflow-x: hidden;
 
-    @media screen and (min-width: $size_mobile_navigation){
+    @media screen and (min-width: variables.$size_mobile_navigation){
         overflow-x: auto;
         height:calc(100vh - 120px);
     }
 
     .log-entry{
         word-wrap:break-word;
-        @media screen and (min-width: $size_mobile_navigation){
+        @media screen and (min-width: variables.$size_mobile_navigation){
             white-space: nowrap;
         }
         &.INFO, &.NOTICE{
-            color: $color_blue;
+            color: variables.$color_blue;
         }
         &.ERROR, &.EMERGENCY, &.ALERT, &.CRITICAL{
-            color: $color_red;
+            color: variables.$color_red;
         }
         &.WARNING{
-            color: $color_orange;
+            color: variables.$color_orange;
         }
         &.DEBUG{
             //color: $color_green;
-            color: $color_blue_light
+            color: variables.$color_blue_light
         }
     }
 }
 
 #logviewer-filter{
-    @media screen and (min-width: $size_mobile_navigation){
+    @media screen and (min-width: variables.$size_mobile_navigation){
         display:flex;
         justify-content:space-between;
     }
     label{
-        @include font-size(1.1);
+        @include mixins.font-size(1.1);
     }
 }

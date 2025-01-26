@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 #crawler_links{
 
     margin:0;
@@ -11,9 +14,9 @@
 
         & > a{
             display:block;
-            background-color: $color_blue_light;
+            background-color: variables.$color_blue_light;
             padding: 0.5rem 1rem;
-            color: $color_background-body;
+            color: variables.$color_background-body;
 
             display: flex;
             justify-content: space-between;
@@ -22,8 +25,8 @@
             svg{
                 float: right;
                 transition: all 250ms;
-                @include font-size(1.6);
-                color: $color_background-body;
+                @include mixins.font-size(1.6);
+                color: variables.$color_background-body;
                 position: relative;
             }
 

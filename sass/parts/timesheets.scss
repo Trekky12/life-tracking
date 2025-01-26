@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 .timesheet-fast {
     &.categories-filter,
     &.customer {
@@ -11,7 +14,7 @@
     }
 
     &.customer {
-        @media screen and (min-width: $size_tablet) {
+        @media screen and (min-width: variables.$size_tablet) {
             width: auto;
         }
     }
@@ -19,15 +22,15 @@
 
 #timesheets_sheets_table {
     tr[data-planned="1"] {
-        color: $color_blue;
+        color: variables.$color_blue;
     }
 
     tr[data-billed="1"] {
-        color: $color_orange;
+        color: variables.$color_orange;
     }
 
     tr[data-payed="1"] {
-        color: $color_green;
+        color: variables.$color_green;
     }
 }
 
@@ -43,7 +46,7 @@
     }
 
     h4 {
-        @include font-size(1.6);
+        @include mixins.font-size(1.6);
     }
 
     .timesheet-notice {
@@ -54,23 +57,23 @@
         label,
         h4 {
             text-decoration: underline;
-            @include font-size(1.6);
+            @include mixins.font-size(1.6);
             margin-bottom: 0.5rem;
         }
 
         p {
             margin-top: 0;
-            @include font-size(1.6);
+            @include mixins.font-size(1.6);
         }
     }
 }
 
 #timesheets_calendar {
     .fc-toolbar-title {
-        @include font-size(1.6);
+        @include mixins.font-size(1.6);
 
-        @media screen and (min-width: $size_content-width-small) {
-            @include font-size(2);
+        @media screen and (min-width: variables.$size_content-width-small) {
+            @include mixins.font-size(2);
         }
     }
 
@@ -102,19 +105,19 @@
 
     .fc-event-title {
         .icon {
-            @include font-size(0.8);
+            @include mixins.font-size(0.8);
             margin-right: 1rem;
         }
     }
 
     .fc-event-time {
         .icon {
-            @include font-size(0.7);
+            @include mixins.font-size(0.7);
             margin-right: 0.5rem;
         }
     }
 
-    @media screen and (max-width: $size_tablet) {
+    @media screen and (max-width: variables.$size_tablet) {
         .fc-dayGridMonth-view {
             .fc-event {
                 .fc-event-time,
@@ -134,7 +137,7 @@
 #recoveryKeyWrapper {
     code {
         display: block;
-        background-color: $color_light_gray;
+        background-color: variables.$color_light_gray;
         max-width: 500px;
         padding: 1rem;
         margin: 0 auto;

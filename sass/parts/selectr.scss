@@ -1,3 +1,5 @@
+@use "variables";
+
 .selectr-boards{
 
     .selectr-tag{
@@ -16,7 +18,7 @@
         &.selected{
             .select-option-label{
                 background-color: #ddd !important;
-                color: $color_text-main !important;
+                color: variables.$color_text-main !important;
             }
         }
     }

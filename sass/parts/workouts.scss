@@ -1,9 +1,12 @@
+@use "mixins";
+@use "variables";
+
 .workout-selection {
     margin-bottom: 2rem;
 
     h2 {
         margin: 1rem 0;
-        @include font-size(1.6);
+        @include mixins.font-size(1.6);
     }
 
     .exercise {
@@ -11,20 +14,20 @@
         flex-direction: column;
         padding: 1rem;
         
-        border: 1px solid $color_blue_light_gray;
+        border: 1px solid variables.$color_blue_light_gray;
         border-radius: 5px;
         
         margin: 0.5rem;
 
         //user-select: none;
 
-        @media screen and (min-width: $size_mobile) {
+        @media screen and (min-width: variables.$size_mobile) {
             flex-direction: row;
         }
 
         &.sortable-ghost,
         &.sortable-fallback {
-            background-color: $color_background-body;
+            background-color: variables.$color_background-body;
         }
 
         .thumbnail {
@@ -41,7 +44,7 @@
             justify-content: flex-end;
             order: 1;
 
-            @media screen and (min-width: $size_mobile) {
+            @media screen and (min-width: variables.$size_mobile) {
                 //margin-top: 2.8rem;
                 margin-right: 1rem;
                 margin-left: 1rem;
@@ -55,7 +58,7 @@
                 cursor: pointer;
 
                 &:hover {
-                    color: $color_blue;
+                    color: variables.$color_blue;
                 }
             }
 
@@ -70,11 +73,11 @@
             order: 2;
 
             .bodypart {
-                @include font-size(1.2);
+                @include mixins.font-size(1.2);
             }
 
             .title {
-                @include font-size(1.6);
+                @include mixins.font-size(1.6);
                 margin: 0;
                 margin-bottom: 0.5rem;
             }
@@ -85,7 +88,7 @@
             .notices,
             .view-notices,
             .muscles {
-                @include font-size(1.4);
+                @include mixins.font-size(1.4);
 
                 word-break: break-word;
                 hyphens: auto;
@@ -110,8 +113,8 @@
 
                     svg {
                         transition: all 250ms;
-                        @include font-size(1.4);
-                        color: $color_text-main;
+                        @include mixins.font-size(1.4);
+                        color: variables.$color_text-main;
                         position: relative;
                         margin-right: 5px;
                     }
@@ -137,7 +140,7 @@
 
                 input {
                     padding: 0.2rem;
-                    @include font-size(1.2);
+                    @include mixins.font-size(1.2);
 
                     &[type="number"] {
                         max-width: 50px;
@@ -146,7 +149,7 @@
 
                 select {
                     padding: 0.2rem;
-                    @include font-size(1.2);
+                    @include mixins.font-size(1.2);
                 }
             }
 
@@ -165,14 +168,14 @@
             flex-direction: column;
             justify-content: space-between;
 
-            @media screen and (min-width: $size_mobile) {
+            @media screen and (min-width: variables.$size_mobile) {
                 flex-direction: row;
             }
 
             .thumbnail {
                 display: none;
 
-                @media screen and (min-width: $size_mobile) {
+                @media screen and (min-width: variables.$size_mobile) {
                     display: block;
                     flex-basis: 15%;
                 }
@@ -207,7 +210,7 @@
         p {
             margin-top: 0;
             margin-bottom: 0.5rem;
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
         }
     }
 
@@ -215,7 +218,7 @@
         .thumbnail {
             display: none;
 
-            @media screen and (min-width: $size_mobile) {
+            @media screen and (min-width: variables.$size_mobile) {
                 display: block;
             }
         }
@@ -224,7 +227,7 @@
     .workout_day_split,
     .workout_superset {
         padding: 1rem;
-        border: 1px solid $color_blue_light_gray;
+        border: 1px solid variables.$color_blue_light_gray;
         border-radius: 5px;
         margin: 0.5rem;
 
@@ -237,7 +240,7 @@
             display: flex;
             justify-content: flex-end;
 
-            @media screen and (min-width: $size_mobile) {
+            @media screen and (min-width: variables.$size_mobile) {
                 margin-right: 1rem;
             }
 
@@ -256,7 +259,7 @@
 
             .exercises {
                 min-height: 50px;
-                border: 1px dotted $color_text-main;
+                border: 1px dotted variables.$color_text-main;
                 border-radius: 2px;
             }
         }
@@ -271,7 +274,7 @@
             display: block;
             border: none;
 
-            @media screen and (min-width: $size_mobile) {
+            @media screen and (min-width: variables.$size_mobile) {
                 display: flex;
             }
 
@@ -321,7 +324,7 @@
 
 #setCount {
     padding: 0.2rem;
-    @include font-size(1.6);
+    @include mixins.font-size(1.6);
     max-width: 50px;
 }
 
@@ -335,7 +338,7 @@
 
 .workout_superset_child {
     padding: 1rem;
-    border: 1px dotted $color_text-main;
+    border: 1px dotted variables.$color_text-main;
     border-radius: 2px;
     margin: 0.5rem;
 }
@@ -372,7 +375,7 @@
         "available_exercises_title"
         "available_exercises";
 
-    @media screen and (min-width: $size_mobile) {
+    @media screen and (min-width: variables.$size_mobile) {
         grid-template-columns: 1fr 1fr;
         grid-template-areas:
             "selected_exercises_title available_exercises_title"
@@ -400,7 +403,7 @@
             overflow: auto;
             max-height: calc(500px - 40px);
 
-            @media screen and (min-width: $size_mobile) {
+            @media screen and (min-width: variables.$size_mobile) {
                 max-height: calc(100% - 40px);
             }
         }

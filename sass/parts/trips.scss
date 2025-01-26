@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 .set_address {
     margin-bottom: 2rem;
 }
@@ -8,7 +11,7 @@
     position: relative;
     z-index: 0;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         height: 500px;
     }
 
@@ -28,9 +31,9 @@ body.trips .inner-content .page-header {
 
 .trip_day {
     h3 {
-        @include font-size(1.8);
+        @include mixins.font-size(1.8);
         font-weight: 600;
-        border-bottom: 1px solid $color_text-main;
+        border-bottom: 1px solid variables.$color_text-main;
     }
 
     .trip_event {
@@ -39,7 +42,7 @@ body.trips .inner-content .page-header {
         h4 {
             margin-top: 0;
             margin-bottom: 1rem;
-            @include font-size(1.6);
+            @include mixins.font-size(1.6);
             font-weight: 600;
         }
 
@@ -51,7 +54,7 @@ body.trips .inner-content .page-header {
             word-break: break-word;
             hyphens: auto;
 
-            @include font-size(1.4);
+            @include mixins.font-size(1.4);
 
             .description_full {
                 display: none;
@@ -70,8 +73,8 @@ body.trips .inner-content .page-header {
 
                 svg {
                     transition: all 250ms;
-                    @include font-size(1.4);
-                    color: $color_text-main;
+                    @include mixins.font-size(1.4);
+                    color: variables.$color_text-main;
                     position: relative;
                     margin-right: 5px;
                 }
@@ -101,11 +104,11 @@ body.trips .inner-content .page-header {
             i,
             svg {
                 margin-top: 5px;
-                @include font-size(2);
+                @include mixins.font-size(2);
                 width: 20px;
 
-                @media screen and (min-width: $size_tablet) {
-                    @include font-size(4);
+                @media screen and (min-width: variables.$size_tablet) {
+                    @include mixins.font-size(4);
                     width: 70px;
                 }
             }
@@ -119,7 +122,7 @@ body.trips .inner-content .page-header {
             display: flex;
             flex-direction: column;
 
-            @media screen and (min-width: $size_tablet) {
+            @media screen and (min-width: variables.$size_tablet) {
                 flex-direction: row;
             }
 
@@ -138,7 +141,7 @@ body.trips .inner-content .page-header {
     display: flex;
     flex-direction: column-reverse;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         flex-direction: row;
         justify-content: space-between;
     }
@@ -146,7 +149,7 @@ body.trips .inner-content .page-header {
     #createRoute button {
         margin-bottom: 1rem;
 
-        @media screen and (min-width: $size_mobile_navigation) {
+        @media screen and (min-width: variables.$size_mobile_navigation) {
             margin-bottom: 0;
         }
     }
@@ -172,7 +175,7 @@ svg:hover {
 }
 
 .leaflet-container {
-    @include font-size(1);
+    @include mixins.font-size(1);
 }
 
 .leaflet-routing-btn {

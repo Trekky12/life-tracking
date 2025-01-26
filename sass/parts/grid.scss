@@ -1,3 +1,7 @@
+@use "mixins";
+@use "variables";
+@use 'sass:math';
+
 .grid {
     display: flex;
     flex-wrap: wrap;
@@ -10,12 +14,12 @@
 
 
     &.content-small {
-        max-width: $size_content-width-small;
+        max-width: variables.$size_content-width-small;
         margin: 0 auto;
     }
 
     &.content-xsmall {
-        max-width: $size_content-width-xsmall;
+        max-width: variables.$size_content-width-xsmall;
         margin: 0 auto;
     }
 
@@ -37,7 +41,7 @@
 
 
 
-    @media screen and (min-width: $size_tablet) {
+    @media screen and (min-width: variables.$size_tablet) {
         flex-basis: math.div(100%, 4);
     }
 
@@ -45,7 +49,7 @@
         box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
         box-sizing: border-box;
         text-align: center;
-        background-color: $color_background-body;
+        background-color: variables.$color_background-body;
         width: 100%;
 
         position: relative;
@@ -76,14 +80,14 @@
             font-weight: 800;
             text-transform: uppercase;
 
-            background-color: $color_blue;
-            color: $color_background-body;
+            background-color: variables.$color_blue;
+            color: variables.$color_background-body;
 
             h3 {
                 margin: 0;
                 padding: 0.2rem .5rem;
                 width: 100%;
-                @include font-size(1.5);
+                @include mixins.font-size(1.5);
 
                 a {
                     color: inherit;
@@ -102,7 +106,7 @@
                     padding: 0.2rem .5rem;
 
                     &:hover {
-                        color: $color_background-screen;
+                        color: variables.$color_background-screen;
                     }
                 }
             }
@@ -113,22 +117,22 @@
         }
 
         .spinning svg {
-            @include font-size(4);
+            @include mixins.font-size(4);
         }
 
         table {
-            @include font-size(1.2);
+            @include mixins.font-size(1.2);
             text-align: left;
             padding: .5rem;
         }
 
         p.big {
-            @include font-size(2.5);
+            @include mixins.font-size(2.5);
             margin: 2rem;
         }
 
         p.icon {
-            @include font-size(8);
+            @include mixins.font-size(8);
             margin: 0rem;
         }
 
@@ -136,15 +140,15 @@
 
             i,
             svg {
-                @include font-size(5);
+                @include mixins.font-size(5);
                 margin: 2rem;
 
-                @media screen and (min-width: $size_mobile) {
-                    @include font-size(7);
+                @media screen and (min-width: variables.$size_mobile) {
+                    @include mixins.font-size(7);
                 }
 
-                @media screen and (min-width: $size_tablet) {
-                    @include font-size(10);
+                @media screen and (min-width: variables.$size_tablet) {
+                    @include mixins.font-size(10);
                 }
 
             }
@@ -152,16 +156,16 @@
     }
 
     &.negative .card-header {
-        background-color: $color_red;
-        color: $color_background-body;
+        background-color: variables.$color_red;
+        color: variables.$color_background-body;
     }
 
     &.positive .card-header {
-        background-color: $color_green;
-        color: $color_background-body;
+        background-color: variables.$color_green;
+        color: variables.$color_background-body;
     }
 
     &.inactive .card-header {
-        background-color: $color_blue_light_gray;
+        background-color: variables.$color_blue_light_gray;
     }
 }

@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 #toastmessage {
     visibility: hidden;
     min-width: 250px;
@@ -11,7 +14,7 @@
     left: 50%;
     bottom: 30px;
     transform: translate(-50%, 0px);
-    @include font-size(1.4);
+    @include mixins.font-size(1.4);
 
     box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
     border-radius: 4px;
@@ -22,23 +25,23 @@
     }
 
     &.red {
-        background-color: $color_red;
-        color: $color_background-body;
+        background-color: variables.$color_red;
+        color: variables.$color_background-body;
     }
 
     &.green {
-        background-color: $color_green;
-        color: $color_background-body;
+        background-color: variables.$color_green;
+        color: variables.$color_background-body;
     }
 
     &.orange {
-        background-color: $color_orange;
-        color: $color_background-body;
+        background-color: variables.$color_orange;
+        color: variables.$color_background-body;
     }
 
     &.blue {
-        background-color: $color_blue;
-        color: $color_background-body;
+        background-color: variables.$color_blue;
+        color: variables.$color_background-body;
     }
 }
 

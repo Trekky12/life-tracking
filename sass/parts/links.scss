@@ -1,5 +1,7 @@
+@use "variables";
+
 a {
-    color: $color_link;
+    color: variables.$color_link;
     text-decoration:none;
     word-wrap: break-word;
 
@@ -8,16 +10,16 @@ a {
     -webkit-tap-highlight-color: transparent;
 
     &:visited {
-        color: $color_link-visited;
+        color: variables.$color_link-visited;
     }
     @media (hover: hover) {
         &:hover {
-            color: $color_link-hover;
+            color: variables.$color_link-hover;
         }
     }
     &:focus,
         &:active {
-        color: $color_link-hover;
+        color: variables.$color_link-hover;
     }
     &:focus {
         //outline: thin dotted;

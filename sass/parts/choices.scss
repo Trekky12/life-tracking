@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 input.choices__input{
     border: 0;
     height: initial;
@@ -17,8 +20,8 @@ input.choices__input{
     min-height: 37px;
     //padding: 5px 12px;
     padding: 5px 12px 3px 12px;
-    border: 1px solid $color_gray;
-    @include font-size(1.4);
+    border: 1px solid variables.$color_gray;
+    @include mixins.font-size(1.4);
 
     .choices__list{
         padding: 0;
@@ -26,8 +29,8 @@ input.choices__input{
 
     .choices__list--multiple .choices__item{
         &, &.is-highlighted{
-            background-color: $color_blue;
-            border: 1px solid $color_blue_light;
+            background-color: variables.$color_blue;
+            border: 1px solid variables.$color_blue_light;
             //margin-bottom: 0;
         }
     }

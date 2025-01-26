@@ -1,3 +1,6 @@
+@use "mixins";
+@use "variables";
+
 tr.departures__departure[data-cancelled*="CANCELLED"] {
     text-decoration: line-through;
 }
@@ -29,7 +32,7 @@ tr.departures__departure[data-cancelled*="CANCELLED"] {
     font-weight: normal;
     min-width: 20px;
 
-    @include font-size(1.1);
+    @include mixins.font-size(1.1);
 }
 
 .departures__delay__time {
@@ -49,7 +52,7 @@ tr.departures__departure[data-cancelled*="CANCELLED"] {
 
 .request_widget {
     .large {
-        @include font-size(4);
+        @include mixins.font-size(4);
     }
 
     &+.loading-icon {
@@ -59,19 +62,19 @@ tr.departures__departure[data-cancelled*="CANCELLED"] {
 
 table.timesheets_project_budget_widget {
     .red {
-        color: $color_red;
+        color: variables.$color_red;
     }
 
     .green {
-        color: $color_green;
+        color: variables.$color_green;
     }
 
     .orange {
-        color: $color_orange;
+        color: variables.$color_orange;
     }
 
     .yellow {
-        color: $color_yellow;
+        color: variables.$color_yellow;
     }
 
     margin-bottom: 0;
@@ -80,7 +83,7 @@ table.timesheets_project_budget_widget {
 .card[data-widget-name="timesheets_project_budget"] {
     flex-basis: 100%;
 
-    @media screen and (min-width: $size_tablet) {
+    @media screen and (min-width: variables.$size_tablet) {
         flex-basis: 50%;
     }
 
@@ -114,7 +117,7 @@ table.timesheets_project_budget_widget {
     padding: 1rem;
 
     &:not(:last-child) {
-        border-bottom: 1px solid $color_blue_lighter_gray;
+        border-bottom: 1px solid variables.$color_blue_lighter_gray;
     }
 
     .widget-card-title {
@@ -127,7 +130,7 @@ body.profile {
     .card-header .handle {
         display: block;
         margin-left: 10px;
-        @include font-size(2);
+        @include mixins.font-size(2);
         cursor: pointer;
     }
 

@@ -1,4 +1,7 @@
-@media screen and (max-width: $size_mobile) {
+@use "mixins";
+@use "variables";
+
+@media screen and (max-width: variables.$size_mobile) {
     body.location {
         .site-header {
             box-shadow: none;
@@ -6,39 +9,39 @@
         }
 
         .site-body {
-            top: $header_height;
+            top: variables.$header_height;
         }
         &.has-tabbar .site-body{
-            top: $header_height + $header_height_tabbar;
+            top: variables.$header_height + variables.$header_height_tabbar;
         }
     }
 }
 
 #mapid {
     position: absolute;
-    top: $header_height + 50;
+    top: variables.$header_height + 50;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 0;
     transition: top 200ms ease-in;
 
-    @media screen and (min-width: $size_mobile) {
-        top: $header_height;
+    @media screen and (min-width: variables.$size_mobile) {
+        top: variables.$header_height;
     }
 }
 
 body.has-tabbar.location #mapid{
-    top: $header_height + $header_height_tabbar + 50;
+    top: variables.$header_height + variables.$header_height_tabbar + 50;
 
-    @media screen and (min-width: $size_mobile) {
-        top: $header_height + $header_height_tabbar;
+    @media screen and (min-width: variables.$size_mobile) {
+        top: variables.$header_height + variables.$header_height_tabbar;
     }
 }
 
 #show-filter {
     display: block;
-    @include font-size(4);
+    @include mixins.font-size(4);
     text-align: center;
     width: 100%;
     line-height: 1;
@@ -65,7 +68,7 @@ body.has-tabbar.location #mapid{
 }
 
 
-@media screen and (min-width: $size_mobile_navigation) {
+@media screen and (min-width: variables.$size_mobile_navigation) {
 
     //.geo-map.visible~.map-btn {
     .map-btn.map-visible {
@@ -87,11 +90,11 @@ body.has-tabbar.location #mapid{
 .delete-location,
 .set_address {
     margin-top: 1rem;
-    @include font-size(1.2);
+    @include mixins.font-size(1.2);
     //padding: 1rem 0.5rem;
     //line-height: 1;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         margin-bottom: 2rem;
     }
 }
@@ -111,7 +114,7 @@ body.has-tabbar.location #mapid{
 
         text-align: center;
         border-radius: 15px;
-        @include font-size(1.2);
+        @include mixins.font-size(1.2);
 
         span {
             line-height: 30px;
@@ -167,14 +170,14 @@ body.has-tabbar.location #mapid{
     input[type=checkbox]+span {
 
         svg {
-            color: $color_border-input;
+            color: variables.$color_border-input;
             margin-left: 1rem;
             margin-right: 1rem;
 
-            @include font-size(1.5);
+            @include mixins.font-size(1.5);
 
-            @media screen and (min-width: $size_mobile_navigation) {
-                @include font-size(3);
+            @media screen and (min-width: variables.$size_mobile_navigation) {
+                @include mixins.font-size(3);
 
             }
         }
@@ -182,7 +185,7 @@ body.has-tabbar.location #mapid{
 
     input[type=checkbox]:checked+span {
         svg {
-            color: $color_blue;
+            color: variables.$color_blue;
         }
     }
 
@@ -238,8 +241,8 @@ body.trips {
 
     svg {
         position: relative;
-        color: $color_blue;
-        @include font-size(2);
+        color: variables.$color_blue;
+        @include mixins.font-size(2);
     }
 }
 
@@ -255,7 +258,7 @@ body.trips {
     outline: none;
 
     &.active {
-        color: $color_blue;
+        color: variables.$color_blue;
     }
 
 

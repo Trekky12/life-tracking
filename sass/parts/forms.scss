@@ -1,3 +1,7 @@
+@use "mixins";
+@use "variables";
+@use 'sass:math';
+
 //button:not(.fa):not(.selectr-tag-remove):not(.leaflet-routing-reverse-waypoints):not(.leaflet-routing-add-waypoint):not(.leaflet-routing-btn):not(.user-selected-remove):not(.choices__button):not(.selectr-input-clear):not(.scrollStyle),
 input[type="submit"],
 .button {
@@ -30,8 +34,8 @@ input[type="submit"],
 
         box-sizing: border-box;
 
-        color: $color_background-body;
-        background-color: $color_blue;
+        color: variables.$color_background-body;
+        background-color: variables.$color_blue;
 
         //transition: all 0.3s ease;
 
@@ -47,13 +51,13 @@ input[type="submit"],
     &.button-text,
     &.button-outlined {
         background-color: transparent;
-        color: $color_blue;
+        color: variables.$color_blue;
         box-shadow: none;
 
         &:hover,
         &:focus,
         &:active {
-            background-color: $color_blue_lighter_gray;
+            background-color: variables.$color_blue_lighter_gray;
         }
     }
 
@@ -63,42 +67,42 @@ input[type="submit"],
     }
 
     &.button-outlined {
-        border: 1px solid $color_blue;
+        border: 1px solid variables.$color_blue;
     }
 
     &.white {
-        background-color: $color_background-body;
-        color: $color_blue;
+        background-color: variables.$color_background-body;
+        color: variables.$color_blue;
         box-shadow: none;
 
         &:hover,
         &:focus,
         &:active {
-            background-color: $color_blue_lighter_gray;
+            background-color: variables.$color_blue_lighter_gray;
         }
     }
 
     &.danger {
-        background-color: $color_red_light;
+        background-color: variables.$color_red_light;
 
         @media (hover: hover) {
             &:hover {
-                background-color: $color_red;
-                border-color: $color_red;
-                color: $color_background-body;
+                background-color: variables.$color_red;
+                border-color: variables.$color_red;
+                color: variables.$color_background-body;
             }
         }
 
         &:active {
-            background-color: $color_red;
-            border-color: $color_red;
-            color: $color_background-body;
+            background-color: variables.$color_red;
+            border-color: variables.$color_red;
+            color: variables.$color_background-body;
         }
     }
 
     &.small {
         //padding: 0.5rem 1rem;
-        @include font-size(1.2);
+        @include mixins.font-size(1.2);
     }
 }
 
@@ -118,23 +122,23 @@ input[type="datetime"],
 input[type="datetime-local"],
 input[type="color"],
 textarea {
-    color: $color_text-input;
-    border: 1px solid $color_border-input;
+    color: variables.$color_text-input;
+    border: 1px solid variables.$color_border-input;
     border-radius: 0px;
     padding: 0.8rem 1.2rem;
-    @include font-size(1.4);
+    @include mixins.font-size(1.4);
     max-width: 100%;
 
     &:focus {
-        color: $color_text-input-focus;
+        color: variables.$color_text-input-focus;
     }
 
     &:disabled {
-        background: $color_gray;
+        background: variables.$color_gray;
     }
 }
 
-@media screen and (max-width: $size_mobile) {
+@media screen and (max-width: variables.$size_mobile) {
 
     input[type="date"],
     input[type="time"],
@@ -142,7 +146,7 @@ textarea {
     input[type="datetime-local"] {
         appearance: none;
 
-        background-color: $color_light_gray;
+        background-color: variables.$color_light_gray;
         min-height: 36px;
 
         // https://github.com/ionic-team/ionic-framework/pull/24213
@@ -159,9 +163,9 @@ textarea {
     // https://css-tricks.com/fighting-the-space-between-inline-block-elements/
     font-size: 0;
 
-    @media screen and (max-width: $size_mobile) {
-        background-color: $color_light_gray;
-        border: 1px solid $color_border-input;
+    @media screen and (max-width: variables.$size_mobile) {
+        background-color: variables.$color_light_gray;
+        border: 1px solid variables.$color_border-input;
 
         padding-right: 20px;
 
@@ -195,7 +199,7 @@ textarea {
 }
 
 select {
-    border: 1px solid $color_border-input;
+    border: 1px solid variables.$color_border-input;
     border-radius: 0px;
 }
 
@@ -212,7 +216,7 @@ textarea {
     display: block;
     width: 100%;
 
-    @include font-size(1.4);
+    @include mixins.font-size(1.4);
 
     &.select-wrapper {
         padding: 0;
@@ -225,7 +229,7 @@ textarea {
 }
 
 label:not(.radio):not(.checkbox) {
-    @include font-size(1.4);
+    @include mixins.font-size(1.4);
     display: inline-block;
     margin-bottom: 5px;
 }
@@ -249,7 +253,7 @@ select:focus:invalid:focus {
 
 form {
     &#login.small {
-        max-width: math.div($size_content-width-small, 3);
+        max-width: math.div(variables.$size_content-width-small, 3);
         //@include center-block();
         width: 100%;
 

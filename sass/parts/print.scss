@@ -1,3 +1,5 @@
+@use "variables";
+
 @media print {
     @page {
         size: auto;
@@ -7,7 +9,7 @@
     * {
         -webkit-print-color-adjust: exact !important;
         printer-colors: exact !important;
-        color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     .site-body {
@@ -72,7 +74,7 @@
 
     body,
     .page-header {
-        background-color: $color_background-body;
+        background-color: variables.$color_background-body;
         color: #000000;
     }
 

@@ -1,7 +1,9 @@
+@use "variables";
+
 #finance_table, #timesheets_sheets_table{
     tfoot th{
         &.negative{
-            color: $color_red;
+            color: variables.$color_red;
         }
     }
 }
@@ -31,9 +33,9 @@
 
 #finance_transaction_table {
     tr[data-confirmed="1"]{
-        color: $color_green;
+        color: variables.$color_green;
     }
     tr[data-confirmed="0"]{
-        color: $color_orange;
+        color: variables.$color_orange;
     }
 }

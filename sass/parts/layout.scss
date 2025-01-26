@@ -1,28 +1,30 @@
+@use "variables";
+
 body {
-    background-color: $color_background-screen;
+    background-color: variables.$color_background-screen;
 }
 
 .site-body {
     position: relative;
-    top: $header_height + $header_height_margin;
+    top: variables.$header_height + variables.$header_height_margin;
     transition: top 200ms ease-in;
     //margin-top: $header_height + $header_height_margin;
 }
 
-@media screen and (min-width: $size_mobile_navigation) {
+@media screen and (min-width: variables.$size_mobile_navigation) {
     body:not(.navigation-drawer-toggled) {
 
         .site-body {
-            margin-left: $size_navigation_drawer;
+            margin-left: variables.$size_navigation_drawer;
         }
 
         &.location #mapid {
-            left: $size_navigation_drawer;
+            left: variables.$size_navigation_drawer;
         }
 
         .site-header {
-            @media screen and (min-width: $size_mobile_navigation) {
-                padding-left: $size_navigation_drawer;
+            @media screen and (min-width: variables.$size_mobile_navigation) {
+                padding-left: variables.$size_navigation_drawer;
             }
         }
     }
@@ -30,14 +32,14 @@ body {
 
 .site-content,
 .footer-inner {
-    max-width: $size_content-width;
+    max-width: variables.$size_content-width;
     margin: 0 auto;
     width: 100%;
     padding: 0;
     padding-left: 5px;
     padding-right: 5px;
 
-    @media screen and (min-width: $size_mobile_navigation) {
+    @media screen and (min-width: variables.$size_mobile_navigation) {
         padding-left: 20px;
         padding-right: 20px;
     }
@@ -60,5 +62,5 @@ body {
 }
 
 body.has-tabbar .site-body {
-    top: $header_height + $header_height_tabbar + $header_height_margin;
+    top: variables.$header_height + variables.$header_height_tabbar + variables.$header_height_margin;
 }

@@ -2020,61 +2020,61 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 },{}],4:[function(require,module,exports){
 "use strict";
+/**
+ * Assertion helpers
+ * @module
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isBytes = isBytes;
-exports.number = number;
-exports.bool = bool;
-exports.bytes = bytes;
-exports.hash = hash;
-exports.exists = exists;
-exports.output = output;
-function number(n) {
+exports.anumber = anumber;
+exports.abytes = abytes;
+exports.ahash = ahash;
+exports.aexists = aexists;
+exports.aoutput = aoutput;
+function anumber(n) {
     if (!Number.isSafeInteger(n) || n < 0)
-        throw new Error(`positive integer expected, not ${n}`);
-}
-function bool(b) {
-    if (typeof b !== 'boolean')
-        throw new Error(`boolean expected, not ${b}`);
+        throw new Error('positive integer expected, got ' + n);
 }
 // copied from utils
 function isBytes(a) {
-    return (a instanceof Uint8Array ||
-        (a != null && typeof a === 'object' && a.constructor.name === 'Uint8Array'));
+    return a instanceof Uint8Array || (ArrayBuffer.isView(a) && a.constructor.name === 'Uint8Array');
 }
-function bytes(b, ...lengths) {
+function abytes(b, ...lengths) {
     if (!isBytes(b))
         throw new Error('Uint8Array expected');
     if (lengths.length > 0 && !lengths.includes(b.length))
-        throw new Error(`Uint8Array expected of length ${lengths}, not of length=${b.length}`);
+        throw new Error('Uint8Array expected of length ' + lengths + ', got length=' + b.length);
 }
-function hash(h) {
+function ahash(h) {
     if (typeof h !== 'function' || typeof h.create !== 'function')
         throw new Error('Hash should be wrapped by utils.wrapConstructor');
-    number(h.outputLen);
-    number(h.blockLen);
+    anumber(h.outputLen);
+    anumber(h.blockLen);
 }
-function exists(instance, checkFinished = true) {
+function aexists(instance, checkFinished = true) {
     if (instance.destroyed)
         throw new Error('Hash instance has been destroyed');
     if (checkFinished && instance.finished)
         throw new Error('Hash#digest() has already been called');
 }
-function output(out, instance) {
-    bytes(out);
+function aoutput(out, instance) {
+    abytes(out);
     const min = instance.outputLen;
     if (out.length < min) {
-        throw new Error(`digestInto() expects output buffer of length at least ${min}`);
+        throw new Error('digestInto() expects output buffer of length at least ' + min);
     }
 }
-const assert = { number, bool, bytes, hash, exists, output };
-exports.default = assert;
 
 },{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HashMD = exports.Maj = exports.Chi = void 0;
+exports.setBigUint64 = setBigUint64;
 const _assert_js_1 = require("./_assert.js");
 const utils_js_1 = require("./utils.js");
+/**
+ * Merkle-Damgard hash utils.
+ * @module
+ */
 /**
  * Polyfill for Safari 14
  */
@@ -2119,7 +2119,7 @@ class HashMD extends utils_js_1.Hash {
         this.view = (0, utils_js_1.createView)(this.buffer);
     }
     update(data) {
-        (0, _assert_js_1.exists)(this);
+        (0, _assert_js_1.aexists)(this);
         const { view, buffer, blockLen } = this;
         data = (0, utils_js_1.toBytes)(data);
         const len = data.length;
@@ -2145,8 +2145,8 @@ class HashMD extends utils_js_1.Hash {
         return this;
     }
     digestInto(out) {
-        (0, _assert_js_1.exists)(this);
-        (0, _assert_js_1.output)(out, this);
+        (0, _assert_js_1.aexists)(this);
+        (0, _assert_js_1.aoutput)(out, this);
         this.finished = true;
         // Padding
         // We can avoid allocation of buffer for padding completely if it
@@ -2213,7 +2213,11 @@ exports.split = split;
 exports.add = add;
 const U32_MASK64 = /* @__PURE__ */ BigInt(2 ** 32 - 1);
 const _32n = /* @__PURE__ */ BigInt(32);
-// We are not using BigUint64Array, because they are extremely slow as per 2022
+/**
+ * BigUint64Array is too slow as per 2024, so we implement it using Uint32Array.
+ * @todo re-check https://issues.chromium.org/issues/42212588
+ * @module
+ */
 function fromBig(n, le = false) {
     if (le)
         return { h: Number(n & U32_MASK64), l: Number((n >> _32n) & U32_MASK64) };
@@ -2302,13 +2306,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.hmac = exports.HMAC = void 0;
 const _assert_js_1 = require("./_assert.js");
 const utils_js_1 = require("./utils.js");
-// HMAC (RFC 2104)
+/**
+ * HMAC: RFC2104 message authentication code.
+ * @module
+ */
 class HMAC extends utils_js_1.Hash {
     constructor(hash, _key) {
         super();
         this.finished = false;
         this.destroyed = false;
-        (0, _assert_js_1.hash)(hash);
+        (0, _assert_js_1.ahash)(hash);
         const key = (0, utils_js_1.toBytes)(_key);
         this.iHash = hash.create();
         if (typeof this.iHash.update !== 'function')
@@ -2331,13 +2338,13 @@ class HMAC extends utils_js_1.Hash {
         pad.fill(0);
     }
     update(buf) {
-        (0, _assert_js_1.exists)(this);
+        (0, _assert_js_1.aexists)(this);
         this.iHash.update(buf);
         return this;
     }
     digestInto(out) {
-        (0, _assert_js_1.exists)(this);
-        (0, _assert_js_1.bytes)(out, this.outputLen);
+        (0, _assert_js_1.aexists)(this);
+        (0, _assert_js_1.abytes)(out, this.outputLen);
         this.finished = true;
         this.iHash.digestInto(out);
         this.oHash.update(out);
@@ -2393,12 +2400,12 @@ const hmac_js_1 = require("./hmac.js");
 const utils_js_1 = require("./utils.js");
 // Common prologue and epilogue for sync/async functions
 function pbkdf2Init(hash, _password, _salt, _opts) {
-    (0, _assert_js_1.hash)(hash);
+    (0, _assert_js_1.ahash)(hash);
     const opts = (0, utils_js_1.checkOpts)({ dkLen: 32, asyncTick: 10 }, _opts);
     const { c, dkLen, asyncTick } = opts;
-    (0, _assert_js_1.number)(c);
-    (0, _assert_js_1.number)(dkLen);
-    (0, _assert_js_1.number)(asyncTick);
+    (0, _assert_js_1.anumber)(c);
+    (0, _assert_js_1.anumber)(dkLen);
+    (0, _assert_js_1.anumber)(asyncTick);
     if (c < 1)
         throw new Error('PBKDF2: iterations (c) should be >= 1');
     const password = (0, utils_js_1.toBytes)(_password);
@@ -2424,6 +2431,8 @@ function pbkdf2Output(PRF, PRFSalt, DK, prfW, u) {
  * @param password - password from which a derived key is generated
  * @param salt - cryptographic salt
  * @param opts - {c, dkLen} where c is work factor and dkLen is output message size
+ * @example
+ * const key = pbkdf2(sha256, 'password', 'salt', { dkLen: 32, c: 2 ** 18 });
  */
 function pbkdf2(hash, password, salt, opts) {
     const { c, dkLen, DK, PRF, PRFSalt } = pbkdf2Init(hash, password, salt, opts);
@@ -2449,6 +2458,11 @@ function pbkdf2(hash, password, salt, opts) {
     }
     return pbkdf2Output(PRF, PRFSalt, DK, prfW, u);
 }
+/**
+ * PBKDF2-HMAC: RFC 2898 key derivation function. Async version.
+ * @example
+ * await pbkdf2Async(sha256, 'password', 'salt', { dkLen: 32, c: 500_000 });
+ */
 async function pbkdf2Async(hash, password, salt, opts) {
     const { c, dkLen, asyncTick, DK, PRF, PRFSalt } = pbkdf2Init(hash, password, salt, opts);
     let prfW; // Working copy
@@ -2480,10 +2494,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sha224 = exports.sha256 = exports.SHA256 = void 0;
 const _md_js_1 = require("./_md.js");
 const utils_js_1 = require("./utils.js");
-// SHA2-256 need to try 2^128 hashes to execute birthday attack.
-// BTC network is doing 2^67 hashes/sec as per early 2023.
-// Round constants:
-// first 32 bits of the fractional parts of the cube roots of the first 64 primes 2..311)
+/**
+ * SHA2-256 a.k.a. sha256. In JS, it is the fastest hash, even faster than Blake3.
+ *
+ * To break sha256 using birthday attack, attackers need to try 2^128 hashes.
+ * BTC network is doing 2^70 hashes/sec (2^95 hashes/year) as per 2025.
+ *
+ * Check out [FIPS 180-4](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf).
+ * @module
+ */
+/** Round constants: first 32 bits of fractional parts of the cube roots of the first 64 primes 2..311). */
 // prettier-ignore
 const SHA256_K = /* @__PURE__ */ new Uint32Array([
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -2495,14 +2515,15 @@ const SHA256_K = /* @__PURE__ */ new Uint32Array([
     0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 ]);
-// Initial state:
-// first 32 bits of the fractional parts of the square roots of the first 8 primes 2..19
+/** Initial state: first 32 bits of fractional parts of the square roots of the first 8 primes 2..19. */
 // prettier-ignore
 const SHA256_IV = /* @__PURE__ */ new Uint32Array([
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 ]);
-// Temporary buffer, not used to store anything between runs
-// Named this way because it matches specification.
+/**
+ * Temporary buffer, not used to store anything between runs.
+ * Named this way because it matches specification.
+ */
 const SHA256_W = /* @__PURE__ */ new Uint32Array(64);
 class SHA256 extends _md_js_1.HashMD {
     constructor() {
@@ -2580,7 +2601,9 @@ class SHA256 extends _md_js_1.HashMD {
     }
 }
 exports.SHA256 = SHA256;
-// Constants from https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+/**
+ * Constants taken from https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf.
+ */
 class SHA224 extends SHA256 {
     constructor() {
         super();
@@ -2595,14 +2618,9 @@ class SHA224 extends SHA256 {
         this.outputLen = 28;
     }
 }
-/**
- * SHA2-256 hash function
- * @param message - data that would be hashed
- */
+/** SHA2-256 hash function */
 exports.sha256 = (0, utils_js_1.wrapConstructor)(() => new SHA256());
-/**
- * SHA2-224 hash function
- */
+/** SHA2-224 hash function */
 exports.sha224 = (0, utils_js_1.wrapConstructor)(() => new SHA224());
 
 },{"./_md.js":5,"./utils.js":12}],11:[function(require,module,exports){
@@ -2612,6 +2630,13 @@ exports.sha384 = exports.sha512_256 = exports.sha512_224 = exports.sha512 = expo
 const _md_js_1 = require("./_md.js");
 const _u64_js_1 = require("./_u64.js");
 const utils_js_1 = require("./utils.js");
+/**
+ * SHA2-512 a.k.a. sha512 and sha384. It is slower than sha256 in js because u64 operations are slow.
+ *
+ * Check out [RFC 4634](https://datatracker.ietf.org/doc/html/rfc4634) and
+ * [the paper on truncated SHA512/256](https://eprint.iacr.org/2010/548.pdf).
+ * @module
+ */
 // Round contants (first 32 bits of the fractional parts of the cube roots of the first 80 primes 2..409):
 // prettier-ignore
 const [SHA512_Kh, SHA512_Kl] = /* @__PURE__ */ (() => _u64_js_1.default.split([
@@ -2839,9 +2864,13 @@ class SHA384 extends SHA512 {
     }
 }
 exports.SHA384 = SHA384;
+/** SHA2-512 hash function. */
 exports.sha512 = (0, utils_js_1.wrapConstructor)(() => new SHA512());
+/** SHA2-512/224 "truncated" hash function, with improved resistance to length extension attacks. */
 exports.sha512_224 = (0, utils_js_1.wrapConstructor)(() => new SHA512_224());
+/** SHA2-512/256 "truncated" hash function, with improved resistance to length extension attacks. */
 exports.sha512_256 = (0, utils_js_1.wrapConstructor)(() => new SHA512_256());
+/** SHA2-384 hash function. */
 exports.sha384 = (0, utils_js_1.wrapConstructor)(() => new SHA384());
 
 },{"./_md.js":5,"./_u64.js":6,"./utils.js":12}],12:[function(require,module,exports){
@@ -2862,6 +2891,10 @@ exports.wrapConstructor = wrapConstructor;
 exports.wrapConstructorWithOpts = wrapConstructorWithOpts;
 exports.wrapXOFConstructorWithOpts = wrapXOFConstructorWithOpts;
 exports.randomBytes = randomBytes;
+/**
+ * Utilities for hex, bytes, CSPRNG.
+ * @module
+ */
 // We use WebCrypto aka globalThis.crypto, which exists in browsers and node.js 16+.
 // node.js versions earlier than v19 don't declare it in global scope.
 // For node.js, package.json#exports field mapping rewrites import
@@ -2873,8 +2906,7 @@ const _assert_js_1 = require("./_assert.js");
 // export { isBytes } from './_assert.js';
 // We can't reuse isBytes from _assert, because somehow this causes huge perf issues
 function isBytes(a) {
-    return (a instanceof Uint8Array ||
-        (a != null && typeof a === 'object' && a.constructor.name === 'Uint8Array'));
+    return a instanceof Uint8Array || (ArrayBuffer.isView(a) && a.constructor.name === 'Uint8Array');
 }
 // Cast array to different type
 const u8 = (arr) => new Uint8Array(arr.buffer, arr.byteOffset, arr.byteLength);
@@ -2884,22 +2916,25 @@ exports.u32 = u32;
 // Cast array to view
 const createView = (arr) => new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
 exports.createView = createView;
-// The rotate right (circular right shift) operation for uint32
+/** The rotate right (circular right shift) operation for uint32 */
 const rotr = (word, shift) => (word << (32 - shift)) | (word >>> shift);
 exports.rotr = rotr;
-// The rotate left (circular left shift) operation for uint32
+/** The rotate left (circular left shift) operation for uint32 */
 const rotl = (word, shift) => (word << shift) | ((word >>> (32 - shift)) >>> 0);
 exports.rotl = rotl;
-exports.isLE = new Uint8Array(new Uint32Array([0x11223344]).buffer)[0] === 0x44;
+/** Is current platform little-endian? Most are. Big-Endian platform: IBM */
+exports.isLE = (() => new Uint8Array(new Uint32Array([0x11223344]).buffer)[0] === 0x44)();
 // The byte swap operation for uint32
 const byteSwap = (word) => ((word << 24) & 0xff000000) |
     ((word << 8) & 0xff0000) |
     ((word >>> 8) & 0xff00) |
     ((word >>> 24) & 0xff);
 exports.byteSwap = byteSwap;
-// Conditionally byte swap if on a big-endian platform
-exports.byteSwapIfBE = exports.isLE ? (n) => n : (n) => (0, exports.byteSwap)(n);
-// In place byte swap for Uint32Array
+/** Conditionally byte swap if on a big-endian platform */
+exports.byteSwapIfBE = exports.isLE
+    ? (n) => n
+    : (n) => (0, exports.byteSwap)(n);
+/** In place byte swap for Uint32Array */
 function byteSwap32(arr) {
     for (let i = 0; i < arr.length; i++) {
         arr[i] = (0, exports.byteSwap)(arr[i]);
@@ -2908,10 +2943,11 @@ function byteSwap32(arr) {
 // Array where index 0xf0 (240) is mapped to string 'f0'
 const hexes = /* @__PURE__ */ Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, '0'));
 /**
+ * Convert byte array to hex string.
  * @example bytesToHex(Uint8Array.from([0xca, 0xfe, 0x01, 0x23])) // 'cafe0123'
  */
 function bytesToHex(bytes) {
-    (0, _assert_js_1.bytes)(bytes);
+    (0, _assert_js_1.abytes)(bytes);
     // pre-caching improves the speed 6x
     let hex = '';
     for (let i = 0; i < bytes.length; i++) {
@@ -2920,17 +2956,18 @@ function bytesToHex(bytes) {
     return hex;
 }
 // We use optimized technique to convert hex string to byte array
-const asciis = { _0: 48, _9: 57, _A: 65, _F: 70, _a: 97, _f: 102 };
-function asciiToBase16(char) {
-    if (char >= asciis._0 && char <= asciis._9)
-        return char - asciis._0;
-    if (char >= asciis._A && char <= asciis._F)
-        return char - (asciis._A - 10);
-    if (char >= asciis._a && char <= asciis._f)
-        return char - (asciis._a - 10);
+const asciis = { _0: 48, _9: 57, A: 65, F: 70, a: 97, f: 102 };
+function asciiToBase16(ch) {
+    if (ch >= asciis._0 && ch <= asciis._9)
+        return ch - asciis._0; // '2' => 50-48
+    if (ch >= asciis.A && ch <= asciis.F)
+        return ch - (asciis.A - 10); // 'B' => 66-(65-10)
+    if (ch >= asciis.a && ch <= asciis.f)
+        return ch - (asciis.a - 10); // 'b' => 98-(97-10)
     return;
 }
 /**
+ * Convert hex string to byte array.
  * @example hexToBytes('cafe0123') // Uint8Array.from([0xca, 0xfe, 0x01, 0x23])
  */
 function hexToBytes(hex) {
@@ -2939,7 +2976,7 @@ function hexToBytes(hex) {
     const hl = hex.length;
     const al = hl / 2;
     if (hl % 2)
-        throw new Error('padded hex string expected, got unpadded hex of length ' + hl);
+        throw new Error('hex string expected, got unpadded hex of length ' + hl);
     const array = new Uint8Array(al);
     for (let ai = 0, hi = 0; ai < al; ai++, hi += 2) {
         const n1 = asciiToBase16(hex.charCodeAt(hi));
@@ -2948,7 +2985,7 @@ function hexToBytes(hex) {
             const char = hex[hi] + hex[hi + 1];
             throw new Error('hex string expected, got non-hex character "' + char + '" at index ' + hi);
         }
-        array[ai] = n1 * 16 + n2;
+        array[ai] = n1 * 16 + n2; // multiply first octet, e.g. 'a3' => 10*16+3 => 160 + 3 => 163
     }
     return array;
 }
@@ -2971,11 +3008,12 @@ async function asyncLoop(iters, tick, cb) {
     }
 }
 /**
+ * Convert JS string to byte array.
  * @example utf8ToBytes('abc') // new Uint8Array([97, 98, 99])
  */
 function utf8ToBytes(str) {
     if (typeof str !== 'string')
-        throw new Error(`utf8ToBytes expected string, got ${typeof str}`);
+        throw new Error('utf8ToBytes expected string, got ' + typeof str);
     return new Uint8Array(new TextEncoder().encode(str)); // https://bugzil.la/1681809
 }
 /**
@@ -2986,7 +3024,7 @@ function utf8ToBytes(str) {
 function toBytes(data) {
     if (typeof data === 'string')
         data = utf8ToBytes(data);
-    (0, _assert_js_1.bytes)(data);
+    (0, _assert_js_1.abytes)(data);
     return data;
 }
 /**
@@ -2996,7 +3034,7 @@ function concatBytes(...arrays) {
     let sum = 0;
     for (let i = 0; i < arrays.length; i++) {
         const a = arrays[i];
-        (0, _assert_js_1.bytes)(a);
+        (0, _assert_js_1.abytes)(a);
         sum += a.length;
     }
     const res = new Uint8Array(sum);
@@ -3015,9 +3053,8 @@ class Hash {
     }
 }
 exports.Hash = Hash;
-const toStr = {}.toString;
 function checkOpts(defaults, opts) {
-    if (opts !== undefined && toStr.call(opts) !== '[object Object]')
+    if (opts !== undefined && {}.toString.call(opts) !== '[object Object]')
         throw new Error('Options should be object or undefined');
     const merged = Object.assign(defaults, opts);
     return merged;

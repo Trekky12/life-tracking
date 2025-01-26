@@ -1,3 +1,5 @@
+@use "variables";
+
 .ripple,
 .button,
 .tabbar-tab {
@@ -135,7 +137,7 @@
 
         i,
         svg {
-            color: $color_background-body;
+            color: variables.$color_background-body;
             position: relative;
             z-index: 3;
             //@include font-size(2);
@@ -161,7 +163,7 @@
 
             i,
             svg {
-                color: $color_text-secondary;
+                color: variables.$color_text-secondary;
             }
         }
     }
