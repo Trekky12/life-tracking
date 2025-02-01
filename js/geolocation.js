@@ -345,7 +345,9 @@ function removeMap(deleteLoc, mapContainer, index) {
     let accElement = mapContainer.parentNode.querySelector('.geo-acc');
     latElement.value = "";
     lngElement.value = "";
-    accElement.value = "";
+    if (accElement) {
+        accElement.value = "";
+    }
 
     let mapBtns = mapContainer.parentNode.querySelector('.map-btn');
     mapBtns.classList.remove("map-visible");
