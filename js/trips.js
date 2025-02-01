@@ -233,7 +233,7 @@ function drawMarkers(data) {
         /**
          * End Marker
          */
-        if (marker.data.end_lat !== null && marker.data.end_lat !== null) {
+        if (marker.data.end_lat !== null && marker.data.end_lng !== null && marker.data.start_lat !== marker.data.end_lat && marker.data.start_lng !== marker.data.end_lng) {
             let end_marker = L.marker([marker.data.end_lat, marker.data.end_lng], options);
             end_marker.data = marker;
             end_marker.name = marker.data.name;
