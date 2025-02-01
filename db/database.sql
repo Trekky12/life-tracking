@@ -1026,7 +1026,6 @@ CREATE TABLE IF NOT EXISTS activities (
     user INTEGER unsigned DEFAULT NULL,
     type varchar(255) NULL,
     module varchar(255) NULL,
-    controller varchar(255) NULL,
     object varchar(255) NULL,
     object_id int(11) NULL,
     object_description TEXT NULL,
@@ -1034,6 +1033,7 @@ CREATE TABLE IF NOT EXISTS activities (
     parent_object_id int(11) NULL,
     parent_object_description TEXT NULL,
     link varchar(255) NULL,
+    additional_information varchar(255) NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

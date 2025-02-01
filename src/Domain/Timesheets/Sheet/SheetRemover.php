@@ -7,21 +7,37 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Translator;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Project\ProjectMapper;
+use App\Domain\Timesheets\Customer\CustomerMapper;
 
 class SheetRemover extends ObjectActivityRemover {
 
     private $service;
     private $project_service;
     private $project_mapper;
+    private $translation;
+    private $customer_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SheetService $service, SheetMapper $mapper, ProjectService $project_service, ProjectMapper $project_mapper) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        SheetService $service,
+        SheetMapper $mapper,
+        ProjectService $project_service,
+        ProjectMapper $project_mapper,
+        Translator $translation,
+        CustomerMapper $customer_mapper
+    ) {
         parent::__construct($logger, $user, $activity);
         $this->service = $service;
         $this->mapper = $mapper;
         $this->project_service = $project_service;
         $this->project_mapper = $project_mapper;
+        $this->translation = $translation;
+        $this->customer_mapper = $customer_mapper;
     }
 
     public function delete($id, $additionalData = null): Payload {
@@ -110,5 +126,17 @@ class SheetRemover extends ObjectActivityRemover {
 
     public function getModule(): string {
         return "timesheets";
+    }
+
+    protected function getAdditionalInformation($entry): ?string {
+        if ($entry->customer) {
+            $project = $this->getParentMapper()->get($entry->getParentID());
+            $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+
+            $customer = $this->customer_mapper->get($entry->customer);
+
+            return sprintf("%s: %s", $customerDescription, $customer->name);
+        }
+        return parent::getAdditionalInformation($entry);
     }
 }

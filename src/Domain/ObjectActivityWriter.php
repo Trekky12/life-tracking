@@ -24,21 +24,21 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
         return $entry->getParentID();
     }
 
-    protected function insertEntry($entry) {
+    protected function insertEntry($entry) : int{
         $id = parent::insertEntry($entry);
         if ($id) {
             $entry_new = $this->getMapper()->get($id);
-            $activity = $this->activity_creator->createActivity("create", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new));
+            $activity = $this->activity_creator->createActivity("create", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new), $this->getAdditionalInformation($entry_new));
             $this->activity_creator->saveActivity($activity);
         }
 
         return $id;
     }
 
-    protected function updateEntry($entry) {
+    protected function updateEntry($entry) : bool {
         $updated = parent::updateEntry($entry);
         $entry_new = $this->getMapper()->get($entry->id);
-        $activity = $this->activity_creator->createActivity("update", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new));
+        $activity = $this->activity_creator->createActivity("update", $this->getModule(), $entry_new->id, $this->getMapper(), $this->getObjectLink($entry_new), $this->getParentMapper(), $this->getParentID($entry_new), $this->getAdditionalInformation($entry_new));
         $this->activity_creator->saveActivity($activity);
 
         return $updated;
@@ -50,7 +50,11 @@ abstract class ObjectActivityWriter extends ObjectWriter implements ObjectActivi
 
     abstract function getObjectViewRouteParams($entry): array;
 
-    public function getObjectLink($entry) {
+    public function getObjectLink($entry): array {
         return ["route" => $this->getObjectViewRoute(), "params" => $this->getObjectViewRouteParams($entry)];
+    }
+
+    protected function getAdditionalInformation($entry): ?string {
+        return null;
     }
 }

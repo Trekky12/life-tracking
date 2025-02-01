@@ -91,6 +91,24 @@ class ActivityService extends Service {
                 case 'unarchived':
                     $action = "ACTIVITY_UNARCHIVED";
                     break;
+                case 'billed':
+                    $action = "ACTIVITY_BILLED";
+                    break;
+                case 'not_billed':
+                    $action = "ACTIVITY_NOTBILLED";
+                    break;
+                case 'payed':
+                    $action = "ACTIVITY_PAYED";
+                    break;
+                case 'not_payed':
+                    $action = "ACTIVITY_NOTPAYED";
+                    break;
+                case 'planned':
+                    $action = "ACTIVITY_PLANNED";
+                    break;
+                case 'happened':
+                    $action = "ACTIVITY_HAPPENED";
+                    break;
             }
 
             // special case since sheet notices are autosaved as new revisions
@@ -123,6 +141,7 @@ class ActivityService extends Service {
             $row["icon"] = array_key_exists($el->module, $modules) ? Utility::getFontAwesomeIcon($modules[$el->module]['icon']) : Utility::getFontAwesomeIcon("fas fa-toolbox");
             $row["description"] = $description;
             $row["link"] = $el->type !== 'delete' ? $el->link : null;
+            $row["additional_information"] = $el->additional_information;
 
             $rendered_data[] = $row;
         }

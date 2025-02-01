@@ -7,10 +7,12 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
+use App\Domain\Main\Translator;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Project\ProjectMapper;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 use App\Domain\Main\Utility\Utility;
+use App\Domain\Timesheets\Customer\CustomerMapper;
 
 class SheetWriter extends ObjectActivityWriter {
 
@@ -18,6 +20,8 @@ class SheetWriter extends ObjectActivityWriter {
     private $project_service;
     private $project_mapper;
     private $categorybudget_service;
+    private $translation;
+    private $customer_mapper;
 
     public function __construct(
         LoggerInterface $logger,
@@ -27,7 +31,9 @@ class SheetWriter extends ObjectActivityWriter {
         SheetService $service,
         ProjectService $project_service,
         ProjectMapper $project_mapper,
-        ProjectCategoryBudgetService $categorybudget_service
+        ProjectCategoryBudgetService $categorybudget_service,
+        Translator $translation,
+        CustomerMapper $customer_mapper
     ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
@@ -35,6 +41,8 @@ class SheetWriter extends ObjectActivityWriter {
         $this->project_service = $project_service;
         $this->project_mapper = $project_mapper;
         $this->categorybudget_service = $categorybudget_service;
+        $this->translation = $translation;
+        $this->customer_mapper = $customer_mapper;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -200,5 +208,17 @@ class SheetWriter extends ObjectActivityWriter {
 
     public function getModule(): string {
         return "timesheets";
+    }
+
+    protected function getAdditionalInformation($entry): ?string {
+        if ($entry->customer) {
+            $project = $this->getParentMapper()->get($entry->getParentID());
+            $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+
+            $customer = $this->customer_mapper->get($entry->customer);
+
+            return sprintf("%s: %s", $customerDescription, $customer->name);
+        }
+        return parent::getAdditionalInformation($entry);
     }
 }

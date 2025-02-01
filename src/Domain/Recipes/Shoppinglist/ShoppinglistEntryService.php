@@ -117,7 +117,7 @@ class ShoppinglistEntryService extends Service {
                     'route' => 'recipes_shoppinglists_view',
                     'params' => ['shoppinglist' => $shoppinglist->getHash()]
                 ];
-                $activity = $this->activity_creator->createChildActivity("add", "recipes", $entry_id, $description, $link, $this->mapper, $shoppinglist->id);
+                $activity = $this->activity_creator->createChildActivity("add", "recipes", $entry_id, $description, $link, $this->mapper, $shoppinglist->id, \App\Domain\Recipes\Grocery\Grocery::class);
                 $this->activity_creator->saveActivity($activity);
 
                 $payload = new Payload(Payload::$STATUS_NEW, ["id" => $entry_id]);
@@ -153,7 +153,7 @@ class ShoppinglistEntryService extends Service {
                 'params' => ['shoppinglist' => $shoppinglist->getHash()]
             ];
             $type = $state == 0 ? 'undone' : 'done';
-            $activity = $this->activity_creator->createChildActivity($type, "recipes", $dataset, $description, $link, $this->mapper, $shoppinglist->id);
+            $activity = $this->activity_creator->createChildActivity($type, "recipes", $dataset, $description, $link, $this->mapper, $shoppinglist->id, \App\Domain\Recipes\Grocery\Grocery::class);
             $this->activity_creator->saveActivity($activity);
 
             $response_data = ['status' => 'success'];
@@ -183,7 +183,7 @@ class ShoppinglistEntryService extends Service {
                     'route' => 'recipes_shoppinglists_view',
                     'params' => ['shoppinglist' => $shoppinglist->getHash()]
                 ];
-                $activity = $this->activity_creator->createChildActivity("delete", "recipes", $id, $description, $link, $this->mapper, $shoppinglist->id);
+                $activity = $this->activity_creator->createChildActivity("delete", "recipes", $id, $description, $link, $this->mapper, $shoppinglist->id, \App\Domain\Recipes\Grocery\Grocery::class);
                 $this->activity_creator->saveActivity($activity);
 
                 return new Payload(Payload::$STATUS_DELETE_SUCCESS, $error);

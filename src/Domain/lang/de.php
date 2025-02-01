@@ -578,6 +578,7 @@ $lang["DECRYPT_ERROR"] = "Ein Fehler bei der Entschlüsselung ist aufgetreten!";
 $lang["BANLIST"] = "gesperrte IP-Adressen";
 
 $lang["ACTIVITIES"] = "Aktivitäten";
+
 $lang["ACTIVITY_CREATE"] = "%s hat %s erstellt";
 $lang["ACTIVITY_UPDATE"] = "%s hat %s aktualisiert";
 $lang["ACTIVITY_DELETE"] = "%s hat %s gelöscht";
@@ -587,6 +588,13 @@ $lang["ACTIVITY_ADD"] = "%s hat %s hinzugefügt";
 $lang["ACTIVITY_UNDONE"] = "%s hat %s als nicht erledigt markiert";
 $lang["ACTIVITY_ARCHIVED"] = "%s hat %s archiviert";
 $lang["ACTIVITY_UNARCHIVED"] = "%s hat die Archivierung von %s aufgehoben";
+$lang["ACTIVITY_BILLED"] = "%s hat %s als berechnet markiert";
+$lang["ACTIVITY_NOTBILLED"] = "%s hat %s als nicht berechnet markiert";
+$lang["ACTIVITY_PAYED"] = "%s hat %s als bezahlt markiert";
+$lang["ACTIVITY_NOTPAYED"] = "%s hat %s als nicht bezahlt markiert";
+$lang["ACTIVITY_PLANNED"] = "%s hat %s als geplant markiert";
+$lang["ACTIVITY_HAPPENED"] = "%s hat %s als durchgeführt markiert";
+
 $lang["ACTIVITY_CREATE_ME"] = "Du hast %s erstellt";
 $lang["ACTIVITY_UPDATE_ME"] = "Du hast %s aktualisiert";
 $lang["ACTIVITY_DELETE_ME"] = "Du hast %s gelöscht";
@@ -596,6 +604,13 @@ $lang["ACTIVITY_DONE_ME"] = "Du hast %s als erledigt markiert";
 $lang["ACTIVITY_UNDONE_ME"] = "Du hast %s als nicht erledigt markiert";
 $lang["ACTIVITY_ARCHIVED_ME"] = "Du hast %s archiviert";
 $lang["ACTIVITY_UNARCHIVED_ME"] = "Du hast die Archivierung von %s aufgehoben";
+$lang["ACTIVITY_BILLED_ME"] = "Du hast %s als berechnet markiert";
+$lang["ACTIVITY_NOTBILLED_ME"] = "Du hast %s als nicht berechnet markiert";
+$lang["ACTIVITY_PAYED_ME"] = "Du hast %s als bezahlt markiert";
+$lang["ACTIVITY_NOTPAYED_ME"] = "Du hast %s als nicht bezahlt markiert";
+$lang["ACTIVITY_PLANNED_ME"] = "Du hast %s als geplant markiert";
+$lang["ACTIVITY_HAPPENED_ME"] = "Du hast %s als durchgeführt markiert";
+
 $lang["ACTIVITY_CREATE_SYSTEM"] = "%s wurde erstellt";
 $lang["ACTIVITY_UPDATE_SYSTEM"] = "%s wurde aktualisiert";
 $lang["ACTIVITY_DELETE_SYSTEM"] = "%s wurde gelöscht";
@@ -605,6 +620,12 @@ $lang["ACTIVITY_DONE_SYSTEM"] = "%s wurde als erledigt markiert";
 $lang["ACTIVITY_UNDONE_SYSTEM"] = "%s wurde als nicht erledigt markiert";
 $lang["ACTIVITY_ARCHIVED_SYSTEM"] = "%s wurde archiviert";
 $lang["ACTIVITY_UNARCHIVED_SYSTEM"] = "Die Archivierung von %s wurde aufgehoben";
+$lang["ACTIVITY_BILLED_SYSTEM"] = "%s wurde als berechnet markiert";
+$lang["ACTIVITY_NOTBILLED_SYSTEM"] = "%s wurde als nicht berechnet markiert";
+$lang["ACTIVITY_PAYED_SYSTEM"] = "%s wurde als bezahlt markiert";
+$lang["ACTIVITY_NOTPAYED_SYSTEM"] = "%s wurde als nicht bezahlt markiert";
+$lang["ACTIVITY_PLANNED_SYSTEM"] = "%s wurde als geplant markiert";
+$lang["ACTIVITY_HAPPENED_SYSTEM"] = "%s wurde als durchgeführt markiert";
 
 $lang["DATAOBJECT_ACITIVY"] = "Aktivität";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "Board";

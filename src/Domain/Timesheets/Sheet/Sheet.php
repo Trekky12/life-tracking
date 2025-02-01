@@ -114,14 +114,12 @@ class Sheet extends \App\Domain\DataObject {
         $fmtDateTime = new \IntlDateFormatter($language);
         $fmtDateTime->setPattern($dateFormatPHP['datetime']);
 
-
+        $type = null;
         if (!is_null($this->start) && !is_null($this->end)) {
-            $type = $translator->getTranslatedString('TIMESHEETS_FAST_PROJECT_BASED');
+            //$type = $translator->getTranslatedString('TIMESHEETS_FAST_PROJECT_BASED');
+            list($date, $start, $end) = $this->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
-            $start = $fmtDateTime->format($this->getStartDateTime());
-            $end = $fmtDateTime->format($this->getEndDateTime());
-
-            $date = sprintf("%s - %s", $start, $end);
+            $date = sprintf("%s %s - %s", $date, $start, $end);
         } elseif (!is_null($this->start)) {
             $date = $fmtDateTime->format($this->getStartDateTime());
             $type = $translator->getTranslatedString('TIMESHEETS_COME_PROJECT_BASED');
@@ -130,7 +128,7 @@ class Sheet extends \App\Domain\DataObject {
             $type = $translator->getTranslatedString('TIMESHEETS_LEAVE_PROJECT_BASED');
         }
 
-        return sprintf("%s (%s)", $date, $type);
+        return !is_null($type) ? sprintf("%s (%s)", $date, $type) : $date;
     }
 
     public function getParentID() {

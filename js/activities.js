@@ -21,7 +21,7 @@ function getActivities() {
         loadingIconActivities.classList.remove("hidden");
         loadMoreActivities.classList.add("hidden");
 
-        let data = {"count": count, "start": start};
+        let data = { "count": count, "start": start };
 
         return getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
@@ -69,7 +69,7 @@ function getActivities() {
                         let hDateWrapper = document.createElement("div");
                         hDateWrapper.classList = 'inner-content-header light';
                         activityDateDiv.appendChild(hDateWrapper);
-                        
+
                         let hDate = document.createElement("h2");
                         hDate.classList = 'activity-date';
                         hDate.dataset.date = item["date"];
@@ -111,6 +111,13 @@ function getActivities() {
                         pMessage.appendChild(aMessage);
                     } else {
                         pMessage.innerHTML = item["description"];
+                    }
+
+                    if (item["additional_information"]) {
+                        let spanAdditionalInformation = document.createElement("div");
+                        spanAdditionalInformation.classList = "additional";
+                        spanAdditionalInformation.innerHTML = item["additional_information"];
+                        pMessage.appendChild(spanAdditionalInformation);
                     }
 
                     divContent.appendChild(pMessage);

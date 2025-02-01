@@ -77,7 +77,7 @@ class CardService extends Service {
                     'params' => ['hash' => $board->getHash()]
                 ];
                 $type = $data["archive"] == 0 ? 'unarchived' : 'archived';
-                $activity = $this->activity_creator->createChildActivity($type, "boards", $entry_id, $entry->title, $link, $this->board_mapper, $board->id);
+                $activity = $this->activity_creator->createChildActivity($type, "boards", $entry_id, $entry->title, $link, $this->board_mapper, $board->id, \App\Domain\Board\Card\Card::class);
                 $this->activity_creator->saveActivity($activity);
             }
 

@@ -19,6 +19,8 @@ use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
 use App\Domain\Timesheets\Customer\CustomerService;
 use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
+use App\Domain\Activity\ActivityCreator;
+use App\Domain\Timesheets\Project\ProjectMapper;
 
 class SheetService extends Service {
 
@@ -32,6 +34,8 @@ class SheetService extends Service {
     protected $customer_service;
     protected $noticefield_service;
     protected $project_category_budget_service;
+    protected $activity_creator;
+    protected $project_mapper;
 
     public function __construct(
         LoggerInterface $logger,
@@ -46,7 +50,9 @@ class SheetService extends Service {
         SheetNoticeMapper $sheet_notice_mapper,
         CustomerService $customer_service,
         NoticeFieldService $noticefield_service,
-        ProjectCategoryBudgetService $project_category_budget_service
+        ProjectCategoryBudgetService $project_category_budget_service,
+        ActivityCreator $activity_creator,
+        ProjectMapper $project_mapper
     ) {
         parent::__construct($logger, $user);
 
@@ -61,6 +67,9 @@ class SheetService extends Service {
         $this->customer_service = $customer_service;
         $this->noticefield_service = $noticefield_service;
         $this->project_category_budget_service = $project_category_budget_service;
+
+        $this->activity_creator = $activity_creator;
+        $this->project_mapper = $project_mapper;
     }
 
     public function view($hash, $from, $to, $categories, $billed = null, $payed = null, $planned = null, $customer = null): Payload {
@@ -537,6 +546,25 @@ class SheetService extends Service {
                 $result = $this->mapper->setSheetsPlannedState($sheets, 1);
             } elseif ($option == "happened") {
                 $result = $this->mapper->setSheetsPlannedState($sheets, 0);
+            }
+            /**
+             * Create Activity Entries
+             */
+            $timesheets = $this->getMapper()->getSheetsFromIDs($project->id, $sheets);
+            $customers = $this->customer_service->getCustomersFromProject($project->id, 0);
+            foreach ($timesheets as $timesheet) {
+                $link = [
+                    'route' => 'timesheets_sheets_edit',
+                    'params' => ['id' => $timesheet->id, 'project' => $project->getHash()]
+                ];
+
+                $additionalInformation = null;
+                if ($timesheet->customer && array_key_exists($timesheet->customer, $customers)) {
+                    $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+                    $additionalInformation =  sprintf("%s: %s", $customerDescription, $customers[$timesheet->customer]->name);
+                }
+                $activity = $this->activity_creator->createChildActivity($option, "timesheets", $timesheet->id, $timesheet->getDescription($this->translation, $this->settings), $link, $this->project_mapper, $project->id, \App\Domain\Timesheets\Sheet\Sheet::class, $additionalInformation);
+                $this->activity_creator->saveActivity($activity);
             }
         }
 

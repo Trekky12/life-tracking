@@ -83,14 +83,14 @@ class StackService extends Service {
 
                 if ($is_archived_cards) {
                     foreach ($cards as $card) {
-                        $activity = $this->activity_creator->createChildActivity($type, "boards", $card["id"], $card["title"], $link, $this->board_mapper, $board->id);
+                        $activity = $this->activity_creator->createChildActivity($type, "boards", $card["id"], $card["title"], $link, $this->board_mapper, $board->id, \App\Domain\Board\Card\Card::class);
                         $this->activity_creator->saveActivity($activity);
                     }
                 }
             }
 
             if ($is_archived) {
-                $activity = $this->activity_creator->createChildActivity($type, "boards", $entry_id, $entry->name, $link, $this->board_mapper, $board->id);
+                $activity = $this->activity_creator->createChildActivity($type, "boards", $entry_id, $entry->name, $link, $this->board_mapper, $board->id, \App\Domain\Board\Card\Card::class);
                 $this->activity_creator->saveActivity($activity);
             }
 

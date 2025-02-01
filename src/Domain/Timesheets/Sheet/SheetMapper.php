@@ -729,19 +729,38 @@ class SheetMapper extends \App\Domain\Mapper {
             "customer" => $sheet->customer
         ];
 
-        var_dump($sheet->reference_sheet);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    public function getSheetsFromIDs($project_id, $sheet_ids = []) {
+        if (empty($sheet_ids)) {
+            return [];
+        }
+        $sql = "SELECT * FROM " . $this->getTableName();
+
+        $bindings = [
+            "project" => $project_id
+        ];
+        foreach ($sheet_ids as $idx => $sheet_id) {
+            $bindings[":sheet" . $idx] = $sheet_id;
+        }
+
+        $sql .= " WHERE project = :project AND id IN (" . implode(',', array_keys($bindings)) . ")";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            var_dump($row);
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
         }
-
-        if ($stmt->rowCount() > 0) {
-            return true;
-        }
-        return false;
+        return $results;
     }
 }

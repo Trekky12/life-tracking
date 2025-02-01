@@ -579,6 +579,7 @@ $lang["DECRYPT_ERROR"] = "An error occured while decrypting!";
 $lang["BANLIST"] = "banned IP-addresses";
 
 $lang["ACTIVITIES"] = "Activities";
+
 $lang["ACTIVITY_CREATE"] = "%s created %s";
 $lang["ACTIVITY_UPDATE"] = "%s updated %s";
 $lang["ACTIVITY_DELETE"] = "%s deleted %s";
@@ -586,17 +587,31 @@ $lang["ACTIVITY_SAVE"] = "%s saved %s";
 $lang["ACTIVITY_ADD"] = "%s added %s";
 $lang["ACTIVITY_DONE"] = "%s marked %s as done";
 $lang["ACTIVITY_UNDONE"] = "%s marked %s as not done";
-$lang["ACTIVITY_ARCHIVED_ME"] = "%s archived %s";
-$lang["ACTIVITY_UNARCHIVED_ME"] = "%s unarchived %s";
+$lang["ACTIVITY_ARCHIVED"] = "%s archived %s";
+$lang["ACTIVITY_UNARCHIVED"] = "%s unarchived %s";
+$lang["ACTIVITY_BILLED"] = "%s marked %s as billed";
+$lang["ACTIVITY_NOTBILLED"] = "%s marked %s as not billed";
+$lang["ACTIVITY_PAYED"] = "%s marked %s as payed";
+$lang["ACTIVITY_NOTPAYED"] = "%s marked %s as not payed";
+$lang["ACTIVITY_PLANNED"] = "%s marked %s as planned";
+$lang["ACTIVITY_HAPPENED"] = "%s marked %s as happened";
+
 $lang["ACTIVITY_CREATE_ME"] = "You created %s";
 $lang["ACTIVITY_UPDATE_ME"] = "You updated %s";
 $lang["ACTIVITY_DELETE_ME"] = "You deleted %s";
 $lang["ACTIVITY_SAVE_ME"] = "You saved %s";
 $lang["ACTIVITY_ADD_ME"] = "You added %s";
 $lang["ACTIVITY_DONE_ME"] = "You marked %s as done";
-$lang["ACTIVITY_UNDONE_ME"] = "You marked %s als not done";
-$lang["ACTIVITY_ARCHIVED"] = "You archived %s";
-$lang["ACTIVITY_UNARCHIVED"] = "You unarchived %s";
+$lang["ACTIVITY_UNDONE_ME"] = "You marked %s as not done";
+$lang["ACTIVITY_ARCHIVED_ME"] = "You archived %s";
+$lang["ACTIVITY_UNARCHIVED_ME"] = "You unarchived %s";
+$lang["ACTIVITY_BILLED_ME"] = "You marked %s as billed";
+$lang["ACTIVITY_NOTBILLED_ME"] = "You marked %s as not billed";
+$lang["ACTIVITY_PAYED_ME"] = "You marked %s as payed";
+$lang["ACTIVITY_NOTPAYED_ME"] = "You marked %s as not payed";
+$lang["ACTIVITY_PLANNED_ME"] = "You marked %s as planned";
+$lang["ACTIVITY_HAPPENED_ME"] = "You marked %s as happened";
+
 $lang["ACTIVITY_CREATE_SYSTEM"] = "%s created";
 $lang["ACTIVITY_UPDATE_SYSTEM"] = "%s updated";
 $lang["ACTIVITY_DELETE_SYSTEM"] = "%s deleted";
@@ -606,6 +621,12 @@ $lang["ACTIVITY_DONE_SYSTEM"] = "%s was marked as done";
 $lang["ACTIVITY_UNDONE_SYSTEM"] = "%s was marked as not done";
 $lang["ACTIVITY_ARCHIVED_SYSTEM"] = "%s was archived";
 $lang["ACTIVITY_UNARCHIVED_SYSTEM"] = "%s was unarchived";
+$lang["ACTIVITY_BILLED_SYSTEM"] = "%s was marked as billed";
+$lang["ACTIVITY_NOTBILLED_SYSTEM"] = "%s was marked as not billed";
+$lang["ACTIVITY_PAYED_SYSTEM"] = "%s was marked as not billed";
+$lang["ACTIVITY_NOTPAYED_SYSTEM"] = "%s was marked as not payed";
+$lang["ACTIVITY_PLANNED_SYSTEM"] = "%s was marked as planned";
+$lang["ACTIVITY_HAPPENED_SYSTEM"] = "%s was marked as happened";
 
 $lang["DATAOBJECT_ACITIVY"] = "activity";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "board";
