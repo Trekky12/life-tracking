@@ -41,7 +41,7 @@
 {% block body %}
 	<div class="inner-content">
 		<div class="page-content">
-			<div id="timesheets_calendar" data-min="{{slot_min_time}}" data-max="{{slot_max_time}}" data-hiddendays="{{project.getHiddenDays()|json_encode}}" data-project="{{project.id}}" data-edit="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}?view=calendar"></div>
+			<div id="timesheets_calendar" data-min="{{slot_min_time}}" data-max="{{slot_max_time}}" data-hiddendays="{{project.getHiddenDays()|json_encode}}" data-project="{{project.id}}" data-edit="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}?view=calendar" data-from="{{ from }}" data-to="{{ to }}"></div>
 
 
 			{% if has_legend %}

@@ -554,43 +554,22 @@ class SheetService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
-        $customers = $this->customer_service->getCustomersFromProject($project->id);
-
         $project_notice_fields = $this->noticefield_service->getNoticeFields($project->id, 'project');
         $project_notice_fields_names = array_map(function ($noticefield) {
             return $noticefield->name;
         }, $project_notice_fields);
         $has_legend = in_array("legend", $project_notice_fields_names);
 
-        $selected_categories = $categories;
-        $include_empty_categories = true;
+        $response_data = [];
 
-        $response_data = $this->getTableDataIndex($project, $from, $to, $selected_categories, $include_empty_categories, $billed, $payed, $planned, $customer);
-
-        $response_data["users"] = $this->user_service->getAll();
-        $response_data["categories"] = $project_categories;
-
-        $response_data["categories_selected"] = $selected_categories;
-
-        $response_data["categories_selected_query"] = ["categories" => $selected_categories];
-
-        $response_data["payed"] = $payed;
-        $response_data["billed"] = $billed;
-        $response_data["planned"] = $planned;
-
-        $response_data["customers"] = $customers;
-        $response_data["customer"] = $customer;
-
+        $response_data["project"] = $project;
         $response_data["hasTimesheetCalendar"] = true;
-
         $response_data["slot_min_time"] = $project->slot_min_time;
         $response_data["slot_max_time"] = $project->slot_max_time;
-
-        $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
-
         $response_data["has_legend"] = $has_legend;
         $response_data["hasTimesheetNotice"] = $has_legend;
+        $response_data["from"] = $from;
+        $response_data["to"] = $to;
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }

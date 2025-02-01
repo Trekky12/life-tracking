@@ -7,7 +7,7 @@ use Tests\Functional\Timesheet\TimesheetTestBase;
 class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
-    protected $TEST_NOTICEFIELD_ID = 2;
+    protected $TEST_NOTICEFIELD_ID = 5;
 
     protected $uri_child_edit = "/timesheets/HASH/noticefields/edit/";
     protected $uri_child_save = "/timesheets/HASH/noticefields/save/";

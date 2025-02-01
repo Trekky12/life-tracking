@@ -10,6 +10,13 @@ initialize();
 const loadingWindowOverlay = document.getElementById('loading-overlay');
 
 function getCSRFToken() {
+    // no token available? hopefully a request is running
+    if (tokens.length == 0) {
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(getCSRFToken()), 1000); // Wait 1 second and retry
+        });
+    }
+
     // take available token
     if (tokens.length > 1) {
         return new Promise(function (resolve, reject) {

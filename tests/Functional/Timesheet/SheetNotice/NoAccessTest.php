@@ -7,7 +7,7 @@ use Tests\Functional\Timesheet\TimesheetTestBase;
 class NoAccessTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
-    protected $TEST_SHEET_ID = 1;
+    protected $TEST_SHEET_ID = 5;
     protected $uri_child_edit = "/timesheets/HASH/sheets/notice/ID/edit/";
     protected $uri_child_save = "/timesheets/HASH/sheets/notice/ID/save/";
     protected $uri_child_data = "/timesheets/HASH/sheets/notice/";

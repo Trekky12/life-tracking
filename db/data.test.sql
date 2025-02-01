@@ -62,22 +62,29 @@ INSERT INTO splitbill_bill_recurring (id, sbgroup, user, name, notice, settleup,
 INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paymethod_spend, paid_foreign, spend_foreign) VALUES
 (1, 1, 1, '10.00', '10.00', NULL, NULL, NULL);
 
+INSERT INTO timesheets_projects (id, user, name, hash, salt, iterations, masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithRecoveryKey,  recoveryKeyEncryptedWithMasterKey, testMessageEncryptedWithRecoveryKey, slot_min_time, slot_max_time) VALUES 
+(1, 1, 'Test timesheets project 1', 'ABCabc123', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00'),
+(3, 1, 'Test timesheets project 2', 'GHIghi789', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00');
+
 INSERT INTO timesheets_projects (id, user, name, hash) VALUES 
-(1, 1, 'Test timesheets project', 'ABCabc123'),
-(2, 1, 'Test timesheets project (no access to owner)', 'DEFdef456'); 
+(2, 1, 'Test timesheets project (no access to owner)', 'DEFdef456'),
+(4, 1, 'Test timesheets project 3', 'JKLjkl012');
 INSERT INTO timesheets_projects_users (project, user) VALUES 
 (1, 1),
-(1, 2);
-INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, duration) VALUES
-(1, 1, 1, 1, '2020-01-01 09:00:00', '2020-01-01 12:00:00', 10800),
-(2, 1, 1, 1, '2021-09-13 09:00:00', '2021-09-13 12:00:00', 10800),
-(3, 2, 1, 1, '2021-09-14 09:00:00', '2021-09-14 12:00:00', 10800);
+(1, 2),
+(4, 1),
+(3, 1);
+
 INSERT INTO timesheets_categories (id, project, name) VALUES 
 (1, 1, 'Test timesheets project category 1'),
 (2, 1, 'Test timesheets project category 2'),
 (3, 2, 'Test timesheets project category 3');
-INSERT INTO timesheets_sheets_categories (sheet, category) VALUES 
-(2, 1);
+
+INSERT INTO timesheets_customers (id, project, name) VALUES 
+(1, 1, 'Test timesheets customer 1'),
+(2, 1, 'Test timesheets customer 2'),
+(3, 2, 'Test timesheets customer 3');
+
 INSERT INTO timesheets_categorybudgets (id, project, name, categorization, main_category, value, warning1, warning2, warning3) VALUES 
 (1, 1, 'Test timesheets project category budget 1', 'count', 1, 5, 2, 3, 4),
 (2, 1, 'Test timesheets project category budget 2', 'duration', 2, 10800, 4200, 8400, 9600),
@@ -85,16 +92,31 @@ INSERT INTO timesheets_categorybudgets (id, project, name, categorization, main_
 INSERT INTO timesheets_categorybudgets_categories (categorybudget, category) VALUES 
 (1, 1),
 (2, 2);
-INSERT INTO timesheets_sheets_notices (id, sheet) VALUES
+
+INSERT INTO timesheets_noticefields (id, project, user, name, description, datatype, initialization, position, is_default, type) VALUES
+(1, 1, 1, 'noticefield', 'Test timesheets notice field 1', 'textarea', NULL, 999, 1, 'sheet'),
+(2, 1, 1, 'name', 'Test timesheets customer notice field 1', 'textfield', NULL, 999, 1, 'customer'),
+(3, 1, 1, 'legend', 'Insert HTML code for the calendar legend', 'html', NULL, 999, 1, 'project'),
+(4, 1, 1, 'important', 'Test timesheets customer notice field 2', 'textfield', NULL, 999, 0, 'sheet'),
+(5, 2, 2, 'test', 'Test timesheets notice field 3', 'textarea', NULL, 999, 1, 'sheet');
+
+
+INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, duration, duration_modified, notice, start_lat, start_lng, start_acc, end_lat, end_lng, end_acc, is_billed, is_payed, is_planned, reference_sheet, customer, repeat_unit, repeat_multiplier) VALUES
+(1, 1, 1, 1, '2020-01-01 09:00:00', '2020-01-01 12:00:00', 10800, 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, 1, 'week', 1),
+(2, 1, 1, 1, '2020-01-08 09:00:00', '2020-01-08 12:00:00', 10800, 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 1, 'week', 1),
+(3, 1, 1, 1, '2020-01-15 09:00:00', '2020-01-15 12:00:00', 10800, 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 1, 'week', 1),
+(4, 1, 1, 1, '2020-01-22 09:00:00', '2020-01-22 12:00:00', 10800, 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 1, 'week', 1),
+(5, 1, 1, 1, '2021-09-13 09:00:00', '2021-09-13 12:00:00', 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL),
+(6, 3, 1, 1, '2021-09-14 09:00:00', '2021-09-14 12:00:00', 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL);
+
+INSERT INTO timesheets_sheets_categories (sheet, category) VALUES 
 (1, 1),
-(2, 3);
-INSERT INTO timesheets_noticefields (id, project, name) VALUES 
-(1, 1, 'Test timesheets notice field 1'),
-(2, 2, 'Test timesheets notice field 3');
-INSERT INTO timesheets_customers (id, project, name) VALUES 
-(1, 1, 'Test timesheets customer 1'),
-(2, 1, 'Test timesheets customer 2'),
-(3, 2, 'Test timesheets customer 3');
+(2, 1);
+
+INSERT INTO timesheets_sheets_notices (id, createdBy, changedBy, sheet, customer, project, notice, encryptedCEK, is_active, is_autosave) VALUES
+(1, 1, 1, 1, NULL, NULL, 'Hq2YqmwJuw81uRXc0tim06f60gvIqZeAiXcNc2dtNR4OmUZMKfeXBARTxHCHJAfBB7gP25id9W3NaLbf5GiBEpm8cZiWId6pdIqo2W1F4RgX19whlu/jEd01hcx2XQENy+JBPCPCfWTSnb9gSUjjkIX/wh0kHmwvpR2M1xtmZp5PVnHETt/Wm48y89Nxu0oyhlMd+yPtiZPX5WRPvKznHnpDH3EdNKmabzIz8Zsu6ovB7SjyQn09iDxLgGny0Ok7FlvYJNbB8enXaaZyyrYtptC+dBg/M7WFmp+qkslKlT/qJmYT5UQ2bkfWBpUShVfsJYpE4Hf4DcVAgTs/8cSAl1LXSEWGj6SEDAH13hxlAx8CwlXcA5J6hS4f0ua8hgA6Bb46h3iqke6kO+nKYSTxg2OJ5IZRPQ4ZhfJlu3l/9LZbEY3DgWSKKEhmoOcqYU4Xn1j+0qrIgO9GyBZQe9OY6h9skwnaaNy36gSDtPwMU6uVCafTEnWbL3E4yoRA0ZFAbqSWKXkdzrK247CCMz8wFc/GSOokoiGKWOKsy995weRdVO8e3eFS5CVxJiC1v04LfslmDUElfFY8jtif+H/XyqVBXDHKhyMpsS1y3kliZj+x1eJoDkU5/N42k3IoRdNqVwcPNSws4VZsdq9HDGalBk5U3dhL4m8wLVAbenrWrlSadmtF7gT6vMAh2cY11dniQms+vomraV/YZFMn9fbQeltdnsTHmC1EH5sT6AEhJgiOZNvXEo3mA84mQG7RHE7UFlzOmz43h9rXIj7v7ESJnHVFmfAXKde7fgz289aewnnZlZ0Ho/d6SzNZXUSjEoCUzHUsnXaqArGZ0/+2Y/Ys2zn86H0or5tLROG3PChhXtq2syuRfG+OLc+Srw==', '+tKsDSL2fMKT9CJqpKGgfAZSfaC3lmnHztknNhelrKzB6fpwQdwNrvJKDvUHU2nI7hEEmkpj/VofUxyGpLNw4i21Ld/8AcC1/kVLVg==', 1, 0),
+(2, 1, 1, NULL, 1, NULL, 'I1XB3V9JGDNgl+nHaOQOPSqHxaetSiXJ7+0WAu6JzYH3Fabv9SZ3Tck46ucD/5c2TxbKfZHPu8m31BWe1GrHQL126zKCF/Y=', 'UWP3DZPrzX2wPPuEDROfa/YozTRhRgIizZJLOuy0AQdD4/c4iffMxwekzZ7KBBAiWqA1AUJRriIqfmKTHm82ThnYa1AXJ7IVIZGPkQ==', 1, 0),
+(3, 1, 1, NULL, NULL, 1, 'RDYoI2trIJkeaMd7j6AoiJ6+0zUlpctL9XcupYKXrn0QMlA3Gl8QaZa72jFUX+NF9gSxRrW0pTX9gRdCHZKGZMSdITspkezIoZOp1tV9', 'BsMkxp9O1Vj7tVzJCOW9hgNR5BljwPBES3XL/QVY1b4Lk+ITJu2LjTYAjiAz5QpqLVdO5RmrMF7ZgBO9oavW1QGuRNlq7u3R/b/E5w==', 1, 0);
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 
@@ -102,9 +124,17 @@ INSERT INTO trips (id, user, name, hash, notice) VALUES
 INSERT INTO trips_user (trip, user) VALUES 
 (1, 1),
 (1, 2);
+
 INSERT INTO trips_event (id, trip, createdBy, changedBy, name, start_date, start_time, start_address, start_lat, start_lng, end_date, end_time, end_address, end_lat, end_lng, type, notice, image, position) VALUES
-(1, 1, 3, 3, 'Test Event', '2020-01-01', NULL, NULL, NULL, NULL, '2020-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 999),
-(2, 2, NULL, NULL, 'Test Event 2', '2021-01-01', NULL, NULL, NULL, NULL, '2021-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 999);
+(1, 1, 3, 1, 'Test Event', '2020-01-01', NULL, 'Berlin, Alexanderplatz', '52.52198140000000', '13.41363571744829', '2020-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 0),
+(2, 2, NULL, NULL, 'Test Event 2', '2021-01-01', NULL, NULL, NULL, NULL, '2021-01-02', NULL, NULL, NULL, NULL, 'EVENT', NULL, NULL, 999),
+(3, 1, 1, 1, 'Hotel', '2020-01-01', '15:00:00', 'Berlin, Park Inn', '52.52284000000000', '13.41278924568777', '2020-01-02', '10:00:00', NULL, NULL, NULL, 'HOTEL', NULL, NULL, 1),
+(4, 1, 1, 1, 'Arrival', '2020-01-01', '10:00:00', 'Munich', '48.13710790000000', '11.57538220000000', '2020-01-01', NULL, 'Berlin, Alexanderplatz', '52.52198140000000', '13.41363571744829', 'DRIVE', NULL, NULL, 2),
+(5, 1, 1, 1, 'Car rental', '2020-01-03', NULL, 'Amsterdam Flughafen', '52.32698005000000', '4.74150530038293', '2020-01-05', NULL, 'Rotterdam', '51.92444240000000', '4.47775000000000', 'CARRENTAL', NULL, NULL, 999),
+(6, 1, 1, 1, 'Train', '2020-01-02', NULL, 'Berlin Hauptbahnhof', '52.52501750000000', '13.36944797918009', '2020-01-02', NULL, 'Hamburg Flughafen', '53.63636215000000', '9.99455013468418', 'TRAINRIDE', NULL, NULL, 999),
+(7, 1, 1, 1, 'Flight', '2020-01-03', NULL, 'Hamburg Flughafen', '53.63636215000000', '9.99455013468418', '2020-01-03', NULL, 'Amsterdam Flughafen', '52.32698005000000', '4.74150530038293', 'FLIGHT', NULL, NULL, 999),
+(8, 1, 1, 1, 'Ship', '2020-01-05', NULL, 'Rotterdam', '51.92444240000000', '4.47775000000000', '2020-01-05', NULL, 'Hull', '53.76238625000000', '-0.33012137553277', 'SHIP', NULL, NULL, 999);
+
 INSERT INTO trips_route (id, trip) VALUES
 (1, 1),
 (2, 2);
@@ -186,6 +216,7 @@ INSERT INTO notifications_categories (id, name, identifier, internal) VALUES
 
 
 INSERT INTO notifications_categories_user (category, user) VALUES 
+(1, 1),
 (2, 1);
 
 INSERT INTO notifications_clients (id, user, endpoint, authToken, publicKey, contentEncoding, ip, agent, type) VALUES 
@@ -322,6 +353,9 @@ INSERT INTO recipes_shoppinglists (id, user, name, hash) VALUES
 INSERT INTO recipes_shoppinglists_users (shoppinglist, user) VALUES 
 (1, 1),
 (1, 2);
+INSERT INTO recipes_shoppinglists_entries (id, createdBy, shoppinglist, grocery, amount, unit, position, done, notice) VALUES
+(1, 1, 1, 1, '1', 'g', 0, NULL, 'Test'),
+(2, 1, 1, 2, NULL, NULL, 0, NULL, NULL);
 
 INSERT INTO global_widgets (id, user, name, options, position) VALUES
 (1, 2, 'last_finance_entries', '[]', 999),

@@ -7,7 +7,7 @@ use Tests\Functional\Timesheet\TimesheetTestBase;
 class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
-    protected $TEST_SHEET_ID = 3;
+    protected $TEST_SHEET_ID = 6;
 
     protected function setUp(): void {
         $this->login("user", "user");

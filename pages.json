@@ -43,11 +43,7 @@
     {
         "name": "2_notifications",
         "url": "http://tracking.localhost/notifications/",
-        "height": 1700
-    },
-    {
-        "name": "2_notifications-3",
-        "url": "http://tracking.localhost/notifications/manage/"
+        "height": 1300
     },
     {
         "name": "2_notifications-5",
@@ -215,7 +211,7 @@
     },
     {
         "name": "5_cars",
-        "url": "http://tracking.localhost/cars/service/"
+        "url": "http://tracking.localhost/cars/refuel/"
     },
     {
         "name": "5_cars-1",
@@ -228,17 +224,17 @@
     },
     {
         "name": "5_cars-3",
-        "url": "http://tracking.localhost/cars/service/edit/",
+        "url": "http://tracking.localhost/cars/refuel/edit/",
         "height": 1200
     },
     {
         "name": "5_cars-4",
-        "url": "http://tracking.localhost/cars/service/edit/?type=service",
+        "url": "http://tracking.localhost/cars/service/edit/",
         "height": 1500
     },
     {
         "name": "5_cars-5",
-        "url": "http://tracking.localhost/cars/service/edit/1",
+        "url": "http://tracking.localhost/cars/refuel/edit/1",
         "height": 1700
     },
     {
@@ -248,7 +244,7 @@
     },
     {
         "name": "5_cars-7",
-        "url": "http://tracking.localhost/cars/service/stats/",
+        "url": "http://tracking.localhost/cars/stats/",
         "height": 1500
     },
     {
@@ -348,7 +344,7 @@
     {
         "name": "9_trips-3",
         "url": "http://tracking.localhost/trips/ABCabc123/view/",
-        "height": 1200
+        "height": 2300
     },
     {
         "name": "9_trips-4",
@@ -366,7 +362,8 @@
     },
     {
         "name": "10_timesheets-1",
-        "url": "http://tracking.localhost/timesheets/projects/edit/"
+        "url": "http://tracking.localhost/timesheets/projects/edit/",
+        "height": 1200
     },
     {
         "name": "10_timesheets-2",
@@ -378,11 +375,12 @@
     },
     {
         "name": "10_timesheets-4",
-        "url": "http://tracking.localhost/timesheets/ABCabc123/view/"
+        "url": "http://tracking.localhost/timesheets/ABCabc123/view/",
+        "height": 1000
     },
     {
         "name": "10_timesheets-5",
-        "url": "http://tracking.localhost/timesheets/ABCabc123/sheets/edit/1",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/sheets/edit/5",
         "height": 1000
     },
     {
@@ -400,12 +398,49 @@
     {
         "name": "10_timesheets-10",
         "url": "http://tracking.localhost/timesheets/ABCabc123/categorybudget/edit/1",
-        "height": 1100
+        "height": 1500
     },
     {
         "name": "10_timesheets-11",
         "url": "http://tracking.localhost/timesheets/ABCabc123/categorybudget/edit/2",
-        "height": 1100
+        "height": 1500
+    },
+    {
+        "name": "10_timesheets-12",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/noticefields/"
+    },
+    {
+        "name": "10_timesheets-13",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/noticefields/edit/1"
+    },
+    {
+        "name": "10_timesheets-14",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/noticefields/edit/"
+    },
+    {
+        "name": "10_timesheets-15",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/customers/"
+    },
+    {
+        "name": "10_timesheets-16",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/customers/edit/1"
+    },
+    {
+        "name": "10_timesheets-17",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/customers/edit/"
+    },
+    {
+        "name": "10_timesheets-18",
+        "url": "http://tracking.localhost/timesheets/JKLjkl012/noticepassword/"
+    },
+    {
+        "name": "10_timesheets-19",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/noticepassword/"
+    },
+    {
+        "name": "10_timesheets-30",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/sheets/edit/2",
+        "height": 1300
     },
     {
         "name": "11_workouts",
@@ -497,10 +532,6 @@
         "height": 1200
     },
     {
-        "name": "101_notifications-mails",
-        "url": "http://tracking.localhost/profile/mail/manage/"
-    },
-    {
         "name": "12_recipes-2",
         "url": "http://tracking.localhost/recipes/ABCabc123/view"
     },
@@ -527,11 +558,11 @@
     },
     {
         "name": "12_recipes-9",
-        "url": "http://tracking.localhost/recipes/ingredients/"
+        "url": "http://tracking.localhost/recipes/groceries/"
     },
     {
         "name": "12_recipes-10",
-        "url": "http://tracking.localhost/recipes/ingredients/edit/1"
+        "url": "http://tracking.localhost/recipes/groceries/edit/1"
     },
     {
         "name": "12_recipes-11",
@@ -540,5 +571,73 @@
     {
         "name": "12_recipes-12",
         "url": "http://tracking.localhost/recipes/mealplans/edit/1"
+    },
+    {
+        "name": "12_recipes-15",
+        "url": "http://tracking.localhost/recipes/shoppinglists/"
+    },
+    {
+        "name": "11_workouts-24",
+        "url": "http://tracking.localhost/workouts/stats",
+        "height": 2000
+    },
+    {
+        "name": "11_workouts-25",
+        "url": "http://tracking.localhost/workouts/ABCabc123/sessions/stats",
+        "height": 2000
+    },
+    {
+        "name": "11_workouts-26",
+        "url": "http://tracking.localhost/workouts/ABCabc123/sessions/view/1"
+    },
+    {
+        "name": "4_finances-25",
+        "url": "http://tracking.localhost/finances/accounts/"
+    },
+    {
+        "name": "4_finances-31",
+        "url": "http://tracking.localhost/finances/accounts/edit/"
+    },
+    {
+        "name": "4_finances-26",
+        "url": "http://tracking.localhost/finances/accounts/ABCabc123/view/"
+    },
+    {
+        "name": "4_finances-32",
+        "url": "http://tracking.localhost/finances/transactions/view/1"
+    },
+    {
+        "name": "4_finances-33",
+        "url": "http://tracking.localhost/finances/transactions/edit/1"
+    },
+    {
+        "name": "4_finances-27",
+        "url": "http://tracking.localhost/finances/transactions/edit/"
+    },
+    {
+        "name": "4_finances-28",
+        "url": "http://tracking.localhost/finances/transactions/recurring/"
+    },
+    {
+        "name": "4_finances-29",
+        "url": "http://tracking.localhost/finances/transactions/recurring/edit/1",
+        "height": 1000
+    },
+    {
+        "name": "4_finances-30",
+        "url": "http://tracking.localhost/finances/transactions/recurring/edit/",
+        "height": 1000
+    },
+    {
+        "name": "10_timesheets-15",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/customers/"
+    },
+    {
+        "name": "10_timesheets-16",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/customers/edit/1"
+    },
+    {
+        "name": "10_timesheets-17",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/customers/edit/"
     }
 ]

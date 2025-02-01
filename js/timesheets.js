@@ -318,12 +318,16 @@ if (calendarEl) {
     let projectID = calendarEl.dataset.project;
     let editURL = calendarEl.dataset.edit;
 
-    let savedView = localStorage.getItem('calendarView_' + projectID) || 'timeGridWeek';
-    let savedDate = new Date(localStorage.getItem('calendarDate_' + projectID)) || new Date();
+    let from = calendarEl.dataset.from;
+    let to = calendarEl.dataset.to;
+
+    let initialView = localStorage.getItem('calendarView_' + projectID) || 'timeGridWeek';
+    let savedDate = localStorage.getItem('calendarDate_' + projectID);
+    let initialDate = savedDate ? new Date(savedDate) : from ? new Date(from) : new Date();
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: savedView,
-        initialDate: savedDate,
+        initialView: initialView,
+        initialDate: initialDate,
         locale: i18n.template,
         events: {
             url: jsObject.timesheets_calendar_events,
