@@ -8,17 +8,17 @@
 			<h2>{{lang["FINANCES_ACCOUNTS"]}}</h2>
 		</div>
 		<div class="buttons">
-			<a href="{{ url_for('finances_account_edit') }}">
+			<a href="{{ url_for('finances_transaction_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{lang["FINANCES_TRANSACTION_ADD"]}}</button>
 			</a>
 			<a href="{{ url_for('finances_transaction_recurring') }}">
 				<button class="button button-text">{{ fontawesome('fas fa-calendar-days') }}
 					{{lang["FINANCES_TRANSACTIONS_RECURRING"]}}</button>
 			</a>
-			<a href="{{ url_for('finances_transaction_edit') }}">
+			<a href="{{ url_for('finances_account_edit') }}">
 				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
-					{{lang["FINANCES_TRANSACTION_ADD"]}}</button>
+					{{lang["ADD"]}}</button>
 			</a>
 		</div>
 	</div>
