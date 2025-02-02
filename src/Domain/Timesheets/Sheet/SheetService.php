@@ -124,17 +124,7 @@ class SheetService extends Service {
         $d2 = new \DateTime('last day of this month');
         $maxMonth = $d2->format('Y-m-d');
 
-        $q1Start = (new \DateTime('first day of january'))->format('Y-m-d');
-        $q1End = (new \DateTime('last day of march'))->format('Y-m-d');
-
-        $q2Start = (new \DateTime('first day of april'))->format('Y-m-d');
-        $q2End = (new \DateTime('last day of june'))->format('Y-m-d');
-
-        $q3Start = (new \DateTime('first day of july'))->format('Y-m-d');
-        $q3End = (new \DateTime('last day of september'))->format('Y-m-d');
-
-        $q4Start = (new \DateTime('first day of october'))->format('Y-m-d');
-        $q4End = (new \DateTime('last day of december'))->format('Y-m-d');
+        $quarters = $this->getQuarterDates();
 
         if ($project->default_view == "month") {
             $from = !is_null($from) ? $from : $minMonth;
@@ -169,19 +159,12 @@ class SheetService extends Service {
             "min" => [
                 "total" => $minTotal,
                 "month" => $minMonth,
-                "q1" => $q1Start,
-                "q2" => $q2Start,
-                "q3" => $q3Start,
-                "q4" => $q4Start,
             ],
             "max" => [
                 "total" => $maxTotal,
                 "month" => $maxMonth,
-                "q1" => $q1End,
-                "q2" => $q2End,
-                "q3" => $q3End,
-                "q4" => $q4End,
             ],
+            "quarters" => $quarters
         ];
     }
 
@@ -709,5 +692,40 @@ class SheetService extends Service {
         }
 
         return new Payload(Payload::$RESULT_JSON, $events);
+    }
+
+    private function getQuarterDates($date = 'today') {
+        $currentDate = new \DateTime($date);
+        $year = (int) $currentDate->format('Y');
+        $month = (int) $currentDate->format('n');
+
+        $currentQuarter = (int) ceil($month / 3);
+
+        $lastQuarter = $currentQuarter === 1 ? 4 : $currentQuarter - 1;
+        $lastYear = $currentQuarter === 1 ? $year - 1 : $year;
+
+        $nextQuarter = $currentQuarter === 4 ? 1 : $currentQuarter + 1;
+        $nextYear = $currentQuarter === 4 ? $year + 1 : $year;
+
+        $quarters = [
+            1 => ['start' => 'January', 'end' => 'March'],
+            2 => ['start' => 'April', 'end' => 'June'],
+            3 => ['start' => 'July', 'end' => 'September'],
+            4 => ['start' => 'October', 'end' => 'December']
+        ];
+
+        return [
+            'last' => $this->getQuarterStartEnd($lastYear, $lastQuarter, $quarters),
+            'current' => $this->getQuarterStartEnd($year, $currentQuarter, $quarters),
+            'next' => $this->getQuarterStartEnd($nextYear, $nextQuarter, $quarters),
+        ];
+    }
+
+    private function getQuarterStartEnd($year, $quarter, $quarters) {
+        return [
+            'start' => (new \DateTime("first day of {$quarters[$quarter]['start']} $year"))->format('Y-m-d'),
+            'end' => (new \DateTime("last day of {$quarters[$quarter]['end']} $year"))->format('Y-m-d'),
+            'name' => sprintf("Q%s/%s", $quarter, $year)
+        ];
     }
 }

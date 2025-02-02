@@ -78,16 +78,13 @@
 					{% if project.show_quarters_buttons == 1 %}
 						<div class="filter-group">
 							<div class="filter-element">
-								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q1"] }}" data-to="{{ max["q1"] }}">{{ lang["TIMESHEETS_QUARTER_1"] }}/{{ 'now' | date('Y') }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ quarters["last"]["start"] }}" data-to="{{ quarters["last"]["end"] }}">{{ quarters["last"]["name"] }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q2"] }}" data-to="{{ max["q2"] }}">{{ lang["TIMESHEETS_QUARTER_2"] }}/{{ 'now' | date('Y') }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ quarters["current"]["start"] }}" data-to="{{ quarters["current"]["end"] }}">{{ quarters["current"]["name"] }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q3"] }}" data-to="{{ max["q3"] }}">{{ lang["TIMESHEETS_QUARTER_3"] }}/{{ 'now' | date('Y') }}</button>
-							</div>
-							<div class="filter-element">
-								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["q4"] }}" data-to="{{ max["q4"] }}">{{ lang["TIMESHEETS_QUARTER_4"] }}/{{ 'now' | date('Y') }}</button>
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ quarters["next"]["start"] }}" data-to="{{ quarters["next"]["end"] }}">{{ quarters["next"]["name"] }}</button>
 							</div>
 						</div>
 					{% endif %}
