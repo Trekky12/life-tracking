@@ -195,7 +195,7 @@ class BillWriter extends BaseBillWriter {
         $paymethod_spend = $this->paymethod_service->getPaymethodOfUser($balance["paymethod_spend"], $balance["user"]);
         $value = $balance["paid"];
 
-        if ($value > 0 && !is_null($paymethod_spend->account)) {
+        if ($value > 0 && !is_null($paymethod_spend) && !is_null($paymethod_spend->account)) {
             $data = [
                 "id" => null,
                 "date" => $bill->date,

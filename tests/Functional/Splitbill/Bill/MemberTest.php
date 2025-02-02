@@ -41,12 +41,11 @@ class MemberTest extends SplitbillTestBase {
                 1 => [
                     "paid" => "50.00",
                     "spend" => "0.00",
-                    "paymethod_spend" => 1
                 ],
                 2 => [
                     "paid" => "0.00",
                     "spend" => "50.00",
-                    "paymethod_spend" => null
+                    "paymethod_spend" => 2
                 ]
             ],
             "notice" => "Test"
@@ -123,7 +122,6 @@ class MemberTest extends SplitbillTestBase {
                 1 => [
                     "paid" => "20.00",
                     "spend" => "40.00",
-                    "paymethod_spend" => 1
                 ],
                 2 => [
                     "paid" => "30.00",

@@ -1,43 +1,45 @@
 @use "mixins";
 @use "variables";
-@use 'sass:math';
+@use "sass:math";
 
-#splitbills_bills_table, #splitbills_bills_recurring_table{
-    td span.negative{
-        color:variables.$color_red;
+#splitbills_bills_table,
+#splitbills_bills_recurring_table {
+    td span.negative {
+        color: variables.$color_red;
     }
-    td span.positive{
-        color:variables.$color_green;
+    td span.positive {
+        color: variables.$color_green;
     }
 }
 
-#splitbillsBillsForm{
-    .userlist .user-entry{
-
-        &.header{
+#splitbillsBillsForm {
+    .userlist .user-entry {
+        &.header {
             @include mixins.font-size(1.2);
-            display:none;
+            display: none;
         }
 
-        .user, .input-field, .paymethod-field{
-            padding-bottom:1rem;
+        .user,
+        .input-field,
+        .paymethod-field {
+            padding-bottom: 1rem;
         }
 
         @media screen and (max-width: variables.$size_mobile) {
-
-            .paymethod-field, .input-field{
-                padding-left: 40%; 
+            .paymethod-field,
+            .input-field {
+                padding-left: 40%;
                 position: relative;
                 white-space: normal;
 
-                &[data-title]:before{
+                &[data-title]:before {
                     top: 10px;
                     left: 0;
-                    width: 40%; 
+                    width: 40%;
                     position: absolute;
-                    content:attr(data-title);
+                    content: attr(data-title);
                     @include mixins.font-size(1.2);
-                    text-align:left;
+                    text-align: left;
                     word-break: break-all;
                 }
             }
@@ -49,61 +51,58 @@
                 display: block;
             }
 
-            &.header{
-                display:block; 
+            &.header {
+                display: block;
             }
 
-            .user{
-                width: calc(16.66667% - 23.33333px);
+            .user {
+                width: calc(16% - 20px);
                 float: left;
                 margin-left: 20px;
             }
-            .input-field{
+            .input-field {
+                width: calc(42% - 20px);
+                float: left;
+                margin-left: 20px;
+            }
+            /*.paymethod-field {
                 width: calc(25% - 25px);
                 float: left;
                 margin-left: 20px;
-            }
-            .paymethod-field{
-                width: calc(25% - 25px);
-                float: left;
-                margin-left: 20px;
-            }
+            }*/
         }
-
     }
 
-    .splitbill_btn{
-        margin-bottom:0.5rem;
-        margin-right:0.5rem;
+    .splitbill_btn {
+        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
     }
 
-    h3#splitbill_headline{
-        margin-bottom:0;
+    h3#splitbill_headline {
+        margin-bottom: 0;
 
-        & ~ h4{
-            margin-top:0;
+        & ~ h4 {
+            margin-top: 0;
             margin-bottom: 1rem;
         }
     }
 
-    input.read-only:read-only{
-        background: #EEE;
-        pointer-events:none;
+    input.read-only:read-only {
+        background: #eee;
+        pointer-events: none;
     }
-
 }
 
-#splitbill_overview{
+#splitbill_overview {
     @media screen and (max-width: variables.$size_mobile_navigation) {
         //flex-direction:column;
         flex-basis: math.div(100%, 2);
     }
 
-    .card{
-
-        p{
+    .card {
+        p {
             @include mixins.font-size(2);
-            margin:0;
+            margin: 0;
             @media screen and (min-width: variables.$size_mobile_navigation) {
                 @include mixins.font-size(4);
             }
@@ -111,17 +110,17 @@
     }
 }
 
-.splitbill_total{
-    margin-bottom: 1rem;
-
-    p{
+.splitbill_total .card .card-content {
+    p {
         text-align: left;
+        margin: 0;
+        padding: 1rem 2rem;
     }
 
-    p.negative{
+    p.negative {
         color: variables.$color_red;
     }
-    p.positive{
+    p.positive {
         color: variables.$color_green;
     }
 }

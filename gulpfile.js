@@ -16,11 +16,10 @@ const shell = require('gulp-shell');
 function sassTask(cb) {
     return gulp.src('sass/style.scss')
         .pipe(sass({
-            outputStyle: 'compressed',
+            style: 'compressed',
             includePaths: ['sass'],
             silenceDeprecations: ['legacy-js-api']
         }).on('error', sass.logError))
-        .pipe(postcss([autoprefixer()]))
         .pipe(gulp.dest('public/static'));
 }
 

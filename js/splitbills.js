@@ -21,18 +21,27 @@ if (splitbillsForm) {
     let exchange_fee = splitbillsForm.querySelector('#inputFee');
 
     input_total.addEventListener('input', function (e) {
-        inputs_paid.forEach(function (input) {
-            input.value = 0;
-        });
-        inputs_spend.forEach(function (input) {
-            input.value = 0;
-        });
-        calculateRemaining(inputs_paid, remaining_paid);
-        calculateRemaining(inputs_spend, remaining_spend);
+        if (inputs_paid.length > 1 && inputs_paid.length > 1) {
+            inputs_paid.forEach(function (input) {
+                input.value = 0;
+            });
+            inputs_spend.forEach(function (input) {
+                input.value = 0;
+            });
+            calculateRemaining(inputs_paid, remaining_paid);
+            calculateRemaining(inputs_spend, remaining_spend);
 
-        splittbillsButtons.forEach(function (btn) {
-            btn.classList.add("button-outlined");
-        });
+            splittbillsButtons.forEach(function (btn) {
+                btn.classList.add("button-outlined");
+            });
+        } else {
+            inputs_paid.forEach(function (input) {
+                input.value = input_total.value;
+            });
+            inputs_spend.forEach(function (input) {
+                input.value = input_total.value;
+            });
+        }
     });
 
     splittbillsButtons.forEach(function (item, idx) {
@@ -174,7 +183,9 @@ if (splitbillsForm) {
     function calculateRemaining(inputs, remaining) {
         let sum = getSum(inputs);
         let totalValue = getTotal();
-        remaining.innerHTML = (totalValue - sum).toFixed(2);
+        if (remaining) {
+            remaining.innerHTML = (totalValue - sum).toFixed(2);
+        }
     }
 
 
@@ -185,12 +196,6 @@ if (splitbillsForm) {
         exchange_rate.addEventListener('input', function (e) {
             calculateValueInLocalCurrency();
 
-            inputs_paid.forEach(function (input) {
-                input.value = 0;
-            });
-            inputs_spend.forEach(function (input) {
-                input.value = 0;
-            });
             splittbillsButtons.forEach(function (btn) {
                 btn.classList.add("button-outlined");
             });
@@ -201,12 +206,6 @@ if (splitbillsForm) {
         exchange_fee.addEventListener('input', function (e) {
             calculateValueInLocalCurrency();
 
-            inputs_paid.forEach(function (input) {
-                input.value = 0;
-            });
-            inputs_spend.forEach(function (input) {
-                input.value = 0;
-            });
             splittbillsButtons.forEach(function (btn) {
                 btn.classList.add("button-outlined");
             });
@@ -216,39 +215,56 @@ if (splitbillsForm) {
     // convert values
     if (input_total_foreign) {
         input_total_foreign.addEventListener('input', function (e) {
-            input_total.value = getValueInLocalCurrency();
+            input_total.value = getValueInLocalCurrency(input_total_foreign);
 
-            inputs_paid.forEach(function (input) {
-                input.value = 0;
-            });
-            inputs_spend.forEach(function (input) {
-                input.value = 0;
-            });
-            calculateRemaining(inputs_paid, remaining_paid);
-            calculateRemaining(inputs_spend, remaining_spend);
+            if (inputs_paid_foreign.length > 1 && inputs_spend_foreign.length > 1) {
+                inputs_paid_foreign.forEach(function (input) {
+                    input.value = 0;
+                });
+                inputs_spend_foreign.forEach(function (input) {
+                    input.value = 0;
+                });
+                inputs_paid.forEach(function (input) {
+                    input.value = 0;
+                });
+                inputs_spend.forEach(function (input) {
+                    input.value = 0;
+                });
+                calculateRemaining(inputs_paid, remaining_paid);
+                calculateRemaining(inputs_spend, remaining_spend);
 
-            splittbillsButtons.forEach(function (btn) {
-                btn.classList.add("button-outlined");
-            });
+                splittbillsButtons.forEach(function (btn) {
+                    btn.classList.add("button-outlined");
+                });
+            } else {
+                inputs_paid_foreign.forEach(function (input, idx) {
+                    input.value = input_total_foreign.value;
+                    inputs_paid[idx].value = getValueInLocalCurrency(input);
+                });
+                inputs_spend_foreign.forEach(function (input, idx) {
+                    input.value = input_total_foreign.value;
+                    inputs_spend[idx].value = getValueInLocalCurrency(input);
+                });
+            }
         });
         inputs_paid_foreign.forEach(function (input, idx) {
             input.addEventListener('input', function (e) {
-                inputs_paid[idx].value = (input.value / getExchangeRateWithFee()).toFixed(2);
+                inputs_paid[idx].value = getValueInLocalCurrency(input);
                 calculateRemaining(inputs_paid, remaining_paid);
                 calculateRemaining(inputs_spend, remaining_spend);
             });
         });
         inputs_spend_foreign.forEach(function (input, idx) {
             input.addEventListener('input', function (e) {
-                inputs_spend[idx].value = (input.value / getExchangeRateWithFee()).toFixed(2);
+                inputs_spend[idx].value = getValueInLocalCurrency(input);
                 calculateRemaining(inputs_paid, remaining_paid);
                 calculateRemaining(inputs_spend, remaining_spend);
             });
         });
     }
 
-    function getValueInLocalCurrency() {
-        let value = (input_total_foreign.value / exchange_rate.value);
+    function getValueInLocalCurrency(input) {
+        let value = (input.value / exchange_rate.value);
         value = value + value * (parseFloat(exchange_fee.value) / 100);
         return value.toFixed(2)
     }
@@ -258,22 +274,22 @@ if (splitbillsForm) {
     }
 
     function calculateValueInLocalCurrency() {
-        input_total.value = getValueInLocalCurrency();
+        input_total.value = getValueInLocalCurrency(input_total_foreign);
 
+        //if (inputs_paid_foreign.length > 1 && inputs_spend_foreign > 1) {
         inputs_paid_foreign.forEach(function (input, idx) {
-            input.value = 0;
+            inputs_paid[idx].value = getValueInLocalCurrency(input);
+            calculateRemaining(inputs_paid, remaining_paid);
+            calculateRemaining(inputs_spend, remaining_spend);
         });
         inputs_spend_foreign.forEach(function (input, idx) {
-            input.value = 0;
-        });
-        inputs_paid.forEach(function (input, idx) {
-            input.value = 0;
-        });
-        inputs_spend.forEach(function (input, idx) {
-            input.value = 0;
+            inputs_spend[idx].value = getValueInLocalCurrency(input);
+            calculateRemaining(inputs_paid, remaining_paid);
+            calculateRemaining(inputs_spend, remaining_spend);
         });
         calculateRemaining(inputs_paid, remaining_paid);
         calculateRemaining(inputs_spend, remaining_spend);
+        //}
     }
 
 }

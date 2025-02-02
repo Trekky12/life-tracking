@@ -699,12 +699,8 @@ var splitbillsGroupsTable = new JSTable("#splitbills_groups_table", {
 });
 
 const splitbillsBillsTableContainer = document.getElementById('splitbills_bills_table');
-var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
-    perPage: 20,
-    perPageSelect: [10, 20, 50, 100, 200],
-    labels: tableLabels,
-    layout: layout,
-    columns: [
+if (splitbillsBillsTableContainer) {
+    let columns = [
         {
             select: 0,
             sort: "desc",
@@ -744,19 +740,53 @@ var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
             sortable: false,
             searchable: false
         }
-    ],
-    deferLoading: jsObject.datacount,
-    serverSide: true,
-    ajax: jsObject.splitbill_table
-});
+    ];
+
+    if (splitbillsBillsTableContainer.dataset.members < 2) {
+        columns = [
+            {
+                select: 0,
+                sort: "desc",
+                sortable: true,
+                render: function (cell, idx) {
+                    let data = cell.innerHTML;
+                    return moment(data).format(i18n.dateformatJS.date);
+                }
+            },
+            {
+                select: [3],
+                render: function (cell, idx) {
+                    let data = cell.innerHTML;
+                    if (data === "") {
+                        return "";
+                    }
+                    return data + " " + splitbillsBillsTableContainer.dataset.currency;
+                }
+            },
+            {
+                select: [4, 5],
+                sortable: false,
+                searchable: false
+            }
+        ];
+    }
+
+    var splitbillsBillsTable = new JSTable(splitbillsBillsTableContainer, {
+        perPage: 20,
+        perPageSelect: [10, 20, 50, 100, 200],
+        labels: tableLabels,
+        layout: layout,
+        columns: columns,
+        deferLoading: jsObject.datacount,
+        serverSide: true,
+        ajax: jsObject.splitbill_table
+    });
+}
 
 const splitbillsBillsRecurringTableContainer = document.getElementById('splitbills_bills_recurring_table');
-var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableContainer, {
-    perPage: 20,
-    perPageSelect: [10, 20, 50, 100, 200],
-    labels: tableLabels,
-    layout: layout,
-    columns: [
+if (splitbillsBillsRecurringTableContainer) {
+
+    let columns = [
         {
             select: [1, 2, 3],
             render: function (cell, idx) {
@@ -801,8 +831,51 @@ var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableCon
             sortable: false,
             searchable: false
         }
-    ]
-});
+    ];
+
+    if (splitbillsBillsRecurringTableContainer.dataset.members < 2) {
+        columns = [
+            {
+                select: [1],
+                render: function (cell, idx) {
+                    let data = cell.innerHTML;
+                    if (data === "") {
+                        return "";
+                    }
+                    return data + " " + splitbillsBillsRecurringTableContainer.dataset.currency;
+                }
+            },
+            {
+                select: [2, 3],
+                render: function (cell, idx) {
+                    let data = cell.innerHTML;
+                    return data ? moment(data).format(i18n.dateformatJS.date) : "";
+                }
+            },
+            {
+                select: [5, 6],
+                render: function (cell, idx) {
+                    let data = cell.innerHTML;
+                    return data ? moment(data).format(i18n.dateformatJS.datetime) : "";
+                }
+            },
+            {
+                select: [8, 9, 10],
+                sortable: false,
+                searchable: false
+            }
+        ];
+
+    }
+
+    var splitbillsBillsRecurringTable = new JSTable(splitbillsBillsRecurringTableContainer, {
+        perPage: 20,
+        perPageSelect: [10, 20, 50, 100, 200],
+        labels: tableLabels,
+        layout: layout,
+        columns: columns
+    });
+}
 
 var tripsTable = new JSTable("#trips_table", {
     perPage: 20,

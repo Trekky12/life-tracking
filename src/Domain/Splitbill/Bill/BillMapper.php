@@ -9,14 +9,14 @@ class BillMapper extends BaseBillMapper {
     protected $table = "splitbill_bill";
     protected $dataobject = \App\Domain\Splitbill\Bill\Bill::class;
     protected $bill_balance_table = "splitbill_bill_users";
-    
+
     public function getTotalBalance($group) {
         $sql = "SELECT bb.user, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTableName() . " b "
-                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
-                . " ON b.id = bb.bill "
-                . " WHERE b.sbgroup = :group "
-                . " GROUP BY bb.user"
-                . " ORDER by balance, paid DESC, spend DESC";
+            . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
+            . " ON b.id = bb.bill "
+            . " WHERE b.sbgroup = :group "
+            . " GROUP BY bb.user"
+            . " ORDER by balance, paid DESC, spend DESC";
 
         $bindings = array("group" => $group);
 
@@ -38,10 +38,10 @@ class BillMapper extends BaseBillMapper {
 
     public function getSettledUpSpendings($group, $settleup = 1) {
         $sql = "SELECT bb.user, SUM(bb.spend) as spend FROM " . $this->getTableName() . " b "
-                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
-                . " ON b.id = bb.bill "
-                . " WHERE b.sbgroup = :group AND b.settleup = :settleup "
-                . " GROUP BY bb.user";
+            . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
+            . " ON b.id = bb.bill "
+            . " WHERE b.sbgroup = :group AND b.settleup = :settleup "
+            . " GROUP BY bb.user";
 
         $bindings = array("group" => $group, "settleup" => $settleup);
 
@@ -57,10 +57,10 @@ class BillMapper extends BaseBillMapper {
 
     public function getBalances() {
         $sql = "SELECT b.sbgroup, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTableName() . " b "
-                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
-                . " ON b.id = bb.bill "
-                . " WHERE bb.user = :user "
-                . " GROUP BY b.sbgroup";
+            . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
+            . " ON b.id = bb.bill "
+            . " WHERE bb.user = :user "
+            . " GROUP BY b.sbgroup";
 
         $bindings = array("user" => $this->user_id);
 
@@ -98,13 +98,13 @@ class BillMapper extends BaseBillMapper {
      */
     private function getTableSQL($select) {
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " b "
-                . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
-                . " ON b.id = bb.bill AND bb.user = :user "
-                . " WHERE b.sbgroup = :group "
-                . " AND "
-                . " ( b.name LIKE :searchQuery OR "
-                . " bb.paid LIKE :searchQuery OR "
-                . " bb.spend LIKE :searchQuery )";
+            . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
+            . " ON b.id = bb.bill AND bb.user = :user "
+            . " WHERE b.sbgroup = :group "
+            . " AND "
+            . " ( b.name LIKE :searchQuery OR "
+            . " bb.paid LIKE :searchQuery OR "
+            . " bb.spend LIKE :searchQuery )";
         return $sql;
     }
 
@@ -123,7 +123,7 @@ class BillMapper extends BaseBillMapper {
         throw new \Exception($this->translation->getTranslatedString('NO_DATA'));
     }
 
-    public function getTableData($group, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
+    public function getTableData($group, $group_users, $sortColumn = 0, $sortDirection = "DESC", $limit = null, $start = 0, $searchQuery = '%') {
 
         $bindings = array("searchQuery" => "%" . $searchQuery . "%", "user" => $this->user_id, "group" => $group);
 
@@ -148,6 +148,13 @@ class BillMapper extends BaseBillMapper {
                 $sort = "balance";
                 break;
         }
+        if ($group_users < 2) {
+            switch ($sortColumn) {
+                case 3:
+                    $sort = "bb.paid";
+                    break;
+            }
+        }
 
         $select = "b.*, bb.spend, bb.paid, bb.paid-bb.spend as balance";
         $sql = $this->getTableSQL($select);
@@ -169,5 +176,4 @@ class BillMapper extends BaseBillMapper {
         }
         return $results;
     }
-
 }

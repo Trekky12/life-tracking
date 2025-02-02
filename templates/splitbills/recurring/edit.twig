@@ -90,131 +90,152 @@
 					</div>
 				{% endif %}
 
-				<h3 id="splitbill_headline">
-					{% if settleUp %}
-						{{lang["SPLITBILLS_SETTLE_UP_SENDER"]}}
-					{%else %}
-						{{lang["PAID"]}}
-					{% endif %}
-				</h3>
-				<h4>{{ lang["REMAINING"] }}:
-					<span id="remaining_paid">{{ 0|number_format(2) }}</span>
-					{{ i18n.currency }}</h4>
-				<div class="form-group splitbill-buttons">
-					<button type="button" class="button splitbill_btn small {% if entry is null or entry.paid_by != " same"%}button-outlined{% endif %}" data-category="paid" data-type="same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
-					{% for user_id in group_users|keys %}
-						<button type="button" class="button splitbill_btn small {% if entry is null or entry.paid_by != user_id%}button-outlined{% endif %}" data-category="paid" data-type="person" data-id="{{ user_id }}">
-							{% if settleUp %}
-								{{ users[user_id].name }}
-							{%else %}
-								{{ lang["SPLITBILLS_BY_PERSON"]|format(users[user_id].name) }}
+				{% if group_users|length > 1 %}
+					<h3 id="splitbill_headline">
+						{% if settleUp %}
+							{{lang["SPLITBILLS_SETTLE_UP_SENDER"]}}
+						{%else %}
+							{{lang["PAID"]}}
+						{% endif %}
+					</h3>
+					<h4>{{ lang["REMAINING"] }}:
+						<span id="remaining_paid">{{ 0|number_format(2) }}</span>
+						{{ i18n.currency }}</h4>
+					<div class="form-group splitbill-buttons">
+						<button type="button" class="button splitbill_btn small {% if entry is null or entry.paid_by != " same"%}button-outlined{% endif %}" data-category="paid" data-type="same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
+						{% for user_id in group_users|keys %}
+							<button type="button" class="button splitbill_btn small {% if entry is null or entry.paid_by != user_id%}button-outlined{% endif %}" data-category="paid" data-type="person" data-id="{{ user_id }}">
+								{% if settleUp %}
+									{{ users[user_id].name }}
+								{%else %}
+									{{ lang["SPLITBILLS_BY_PERSON"]|format(users[user_id].name) }}
+								{% endif %}
+							</button>
+						{% endfor %}
+						<button type="button" class="button splitbill_btn small {% if entry is null or entry.paid_by != " individual" %}button-outlined{% endif %}" data-category="paid" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
+					</div>
+					<div class="userlist {% if entry is null or entry.paid_by != " individual" %}hidden{% endif %}">
+						<div class="user-entry header">
+							<div class="user"></div>
+							{% if foreignCurrency %}
+								<div class="input-field">
+									{{lang["VALUE"]}}
+									({{ group.currency }})
+								</div>
 							{% endif %}
-						</button>
-					{% endfor %}
-					<button type="button" class="button splitbill_btn small {% if entry is null or entry.paid_by != " individual" %}button-outlined{% endif %}" data-category="paid" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
-				</div>
-				<div class="userlist {% if entry is null or entry.paid_by != " individual" %}hidden{% endif %}">
-					<div class="user-entry header">
-						<div class="user"></div>
-						{% if foreignCurrency %}
 							<div class="input-field">
 								{{lang["VALUE"]}}
-								({{ group.currency }})
+								({{ i18n.currency }})
 							</div>
-						{% endif %}
-						<div class="input-field">
-							{{lang["VALUE"]}}
-							({{ i18n.currency }})
+							<div class="paymethod-field">
+								{{lang["FINANCES_PAYMETHOD"]}}
+							</div>
 						</div>
-						<div class="paymethod-field">
-							{{lang["FINANCES_PAYMETHOD"]}}
-						</div>
-					</div>
-					{% for user_id in group_users|keys %}
-						<div class="form-group user-entry">
-							<div class="user">
-								{% if not settleUp %}
-									{{lang["SPLITBILLY_PAID_SPEND_BY_PERSON"]}}
+						{% for user_id in group_users|keys %}
+							<div class="form-group user-entry">
+								<div class="user">
+									{% if not settleUp %}
+										{{lang["SPLITBILLY_PAID_SPEND_BY_PERSON"]}}
+									{% endif %}
+									{{ users[user_id].name }}
+								</div>
+								{% if foreignCurrency %}
+									<div class="input-field" data-title="{{lang["VALUE"]}} ({{ group.currency }})">
+										<input type="number" step="any" inputmode="decimal" class="form-control balance_paid_foreign" name="balance[{{ user_id }}][paid_foreign]" value="{% if not balance is empty and user_id in balance|keys %}{{balance[user_id]["paid_foreign"]}}{% else %}0{% endif %}">
+									</div>
 								{% endif %}
-								{{ users[user_id].name }}
+								<div class="input-field" data-title="{{lang["VALUE"]}} ({{ i18n.currency }})">
+									<input type="number" step="any" inputmode="decimal" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_paid {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][paid]" value="{% if not balance is empty and user_id in balance|keys %}{{balance[user_id]["paid"]}}{% else %}0{% endif %}">
+								</div>
+								<div class="paymethod-field" data-title="{{lang["FINANCES_PAYMETHOD"]}}">
+									<div class="select-wrapper form-control">
+										<select name="balance[{{ user_id }}][paymethod_spend]">
+											<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+											{% for method in paymethods[user_id] %}
+												<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[user_id]["paymethod_spend"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+											{% endfor %}
+										</select>
+									</div>
+								</div>
 							</div>
+						{% endfor %}
+					</div>
+					<h3 id="splitbill_headline">
+						{% if settleUp %}
+							{{lang["SPLITBILLS_SETTLE_UP_RECEIVER"]}}
+						{%else %}
+							{{lang["SPEND"]}}
+						{% endif %}
+					</h3>
+					<h4>{{ lang["REMAINING"] }}:
+						<span id="remaining_spend">{{ 0|number_format(2) }}</span>
+						{{ i18n.currency }}</h4>
+					<div class="form-group splitbill-buttons">
+						<button type="button" class="button splitbill_btn small {% if entry is null or entry.spend_by != " same"%}button-outlined{% endif %}" data-category="spend" data-type="same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
+						{% for user_id in group_users|keys %}
+							<button type="button" class="button splitbill_btn small {% if entry is null or entry.spend_by != user_id%}button-outlined{% endif %}" data-category="spend" data-type="person" data-id="{{ user_id }}">
+								{% if settleUp %}
+									{{ users[user_id].name }}
+								{%else %}
+									{{ lang["SPLITBILLS_ONLY_PERSON"]|format(users[user_id].name) }}
+								{% endif %}
+							</button>
+						{% endfor %}
+						<button type="button" type="button" class="button splitbill_btn small {% if entry is null or entry.spend_by != " individual" %}button-outlined{% endif %}" data-category="spend" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
+					</div>
+					<div class="userlist {% if entry is null or entry.spend_by != " individual" %}hidden{% endif %}">
+						<div class="user-entry header">
+							<div class="user"></div>
 							{% if foreignCurrency %}
-								<div class="input-field" data-title="{{lang["VALUE"]}} ({{ group.currency }})">
-									<input type="number" step="any" inputmode="decimal" class="form-control balance_paid_foreign" name="balance[{{ user_id }}][paid_foreign]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["paid_foreign"]}}{% else %}0{% endif %}">
+								<div class="input-field">
+									{{lang["VALUE"]}}
+									({{ group.currency }})
 								</div>
 							{% endif %}
-							<div class="input-field" data-title="{{lang["VALUE"]}} ({{ i18n.currency }})">
-								<input type="number" step="any" inputmode="decimal" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_paid {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][paid]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["paid"]}}{% else %}0{% endif %}">
-							</div>
-							<div class="paymethod-field" data-title="{{lang["FINANCES_PAYMETHOD"]}}">
-								<div class="select-wrapper form-control">
-									<select name="balance[{{ user_id }}][paymethod_spend]">
-										<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
-										{% for method in paymethods[user_id] %}
-											<option value="{{method.id}}" {% if (not balance is null and method.id == balance[user_id]["paymethod_spend"]) or (balance is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
-										{% endfor %}
-									</select>
-								</div>
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-				<h3 id="splitbill_headline">
-					{% if settleUp %}
-						{{lang["SPLITBILLS_SETTLE_UP_RECEIVER"]}}
-					{%else %}
-						{{lang["SPEND"]}}
-					{% endif %}
-				</h3>
-				<h4>{{ lang["REMAINING"] }}:
-					<span id="remaining_spend">{{ 0|number_format(2) }}</span>
-					{{ i18n.currency }}</h4>
-				<div class="form-group splitbill-buttons">
-					<button type="button" class="button splitbill_btn small {% if entry is null or entry.spend_by != " same"%}button-outlined{% endif %}" data-category="spend" data-type="same">{{ lang["SPLITBILLS_EQUALLY"] }}</button>
-					{% for user_id in group_users|keys %}
-						<button type="button" class="button splitbill_btn small {% if entry is null or entry.spend_by != user_id%}button-outlined{% endif %}" data-category="spend" data-type="person" data-id="{{ user_id }}">
-							{% if settleUp %}
-								{{ users[user_id].name }}
-							{%else %}
-								{{ lang["SPLITBILLS_ONLY_PERSON"]|format(users[user_id].name) }}
-							{% endif %}
-						</button>
-					{% endfor %}
-					<button type="button" type="button" class="button splitbill_btn small {% if entry is null or entry.spend_by != " individual" %}button-outlined{% endif %}" data-category="spend" data-type="individual">{{ lang["SPLITBILLS_INDIVIDUAL"] }}</button>
-				</div>
-				<div class="userlist {% if entry is null or entry.spend_by != " individual" %}hidden{% endif %}">
-					<div class="user-entry header">
-						<div class="user"></div>
-						{% if foreignCurrency %}
 							<div class="input-field">
 								{{lang["VALUE"]}}
-								({{ group.currency }})
+								({{ i18n.currency }})
 							</div>
-						{% endif %}
-						<div class="input-field">
-							{{lang["VALUE"]}}
-							({{ i18n.currency }})
+						</div>
+						{% for user_id in group_users|keys %}
+							<div class="form-group user-entry">
+								<div class="user">
+									{% if not settleUp %}
+										{{lang["SPLITBILLY_PAID_SPEND_BY_PERSON"]}}
+									{% endif %}
+									{{ users[user_id].name }}
+								</div>
+								{% if foreignCurrency %}
+									<div class="input-field" data-title="{{lang["VALUE"]}} ({{ group.currency }})">
+										<input type="number" step="any" inputmode="decimal" class="form-control balance_spend_foreign" name="balance[{{ user_id }}][spend_foreign]" value="{% if not balance is empty and user_id in balance|keys %}{{balance[user_id]["spend_foreign"]}}{% else %}0{% endif %}">
+									</div>
+								{% endif %}
+								<div class="input-field" data-title="{{lang["VALUE"]}} ({{ i18n.currency }})">
+									<input type="number" step="any" inputmode="decimal" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_spend {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][spend]" value="{% if not balance is empty and user_id in balance|keys %}{{balance[user_id]["spend"]}}{% else %}0{% endif %}">
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% else %}
+
+					<div class="form-group">
+						<label for="inputValue">{{lang["FINANCES_PAYMETHOD"]}}</label>
+						<div class="select-wrapper form-control">
+							<select name="balance[{{ me }}][paymethod_spend]">
+								<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+								{% for method in paymethods[me] %}
+									<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod_spend"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% endfor %}
+							</select>
 						</div>
 					</div>
-					{% for user_id in group_users|keys %}
-						<div class="form-group user-entry">
-							<div class="user">
-								{% if not settleUp %}
-									{{lang["SPLITBILLY_PAID_SPEND_BY_PERSON"]}}
-								{% endif %}
-								{{ users[user_id].name }}
-							</div>
-							{% if foreignCurrency %}
-								<div class="input-field" data-title="{{lang["VALUE"]}} ({{ group.currency }})">
-									<input type="number" step="any" inputmode="decimal" class="form-control balance_spend_foreign" name="balance[{{ user_id }}][spend_foreign]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["spend_foreign"]}}{% else %}0{% endif %}">
-								</div>
-							{% endif %}
-							<div class="input-field" data-title="{{lang["VALUE"]}} ({{ i18n.currency }})">
-								<input type="number" step="any" inputmode="decimal" {% if foreignCurrency %} readonly="readonly" {% endif %} class="form-control balance_spend {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ user_id }}][spend]" value="{% if not balance is null and user_id in balance|keys %}{{balance[user_id]["spend"]}}{% else %}0{% endif %}">
-							</div>
-						</div>
-					{% endfor %}
-				</div>
+
+					<input type="hidden" class="balance_spend_foreign" name="balance[{{ me }}][spend_foreign]" value="{% if not balance is empty and me in balance|keys %}{{balance[me]["spend_foreign"]}}{% else %}0{% endif %}">
+					<input type="hidden" {% if foreignCurrency %} readonly="readonly" {% endif %} class="balance_spend {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ me }}][spend]" value="{% if not balance is empty and me in balance|keys %}{{balance[me]["spend"]}}{% else %}0{% endif %}">
+					<input type="hidden" class="balance_paid_foreign" name="balance[{{ me }}][paid_foreign]" value="{% if not balance is empty and me in balance|keys %}{{balance[me]["paid_foreign"]}}{% else %}0{% endif %}">
+					<input type="hidden" {% if foreignCurrency %} readonly="readonly" {% endif %} class="balance_paid {% if foreignCurrency %}read-only{% endif %}" name="balance[{{ me }}][paid]" value="{% if not balance is empty and me in balance|keys %}{{balance[me]["paid"]}}{% else %}0{% endif %}">
+
+				{% endif %}
 
 				<div class="form-group">
 					<label for="inputNotice">{{lang["NOTICE"]}}</label>
@@ -239,7 +260,7 @@
 				<div class="form-group">
 					<label for="dateSelectEndField">{{lang["END"]}}</label>
 					<div class="flatpickr-group" id="dateSelectEnd">
-					<input type="text" class="form-control" id="dateSelectEndField" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}" data-input />
+						<input type="text" class="form-control" id="dateSelectEndField" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}" data-input/>
 
 						<a class="flatpickr-input-button" title="toggle" data-toggle>
 							{{ fontawesome('fas fa-calendar-days') }}

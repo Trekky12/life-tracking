@@ -39,7 +39,8 @@ class SplitbillBillService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $table = $this->getTableDataIndex($group);
+        $group_users = $this->group_service->getUsers($group->id);
+        $table = $this->getTableDataIndex($group, $group_users);
 
         return new Payload(Payload::$RESULT_HTML, $table);
     }
@@ -52,7 +53,8 @@ class SplitbillBillService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $table = $this->getTableData($group, $requestData);
+        $group_users = $this->group_service->getUsers($group->id);
+        $table = $this->getTableData($group, $group_users, $requestData);
 
         return new Payload(Payload::$RESULT_JSON, $table);
     }
@@ -64,7 +66,7 @@ class SplitbillBillService extends Service {
         if (!$this->group_service->isMember($group->id) || $this->isOwner($entry_id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        if(!$this->isChildOf($group->id, $entry_id)){
+        if (!$this->isChildOf($group->id, $entry_id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
@@ -82,14 +84,14 @@ class SplitbillBillService extends Service {
         if ($type == 'settleup' || (!is_null($entry) && $entry->settleup == 1)) {
             $isSettleUp = true;
         }
-        
+
         $paid_by = !is_null($entry) ? $entry->paid_by : "";
         $spend_by = !is_null($entry) ? $entry->spend_by : "";
-        
+
         // Prefill on new settle up
         $settleUpPrefill = false;
         if ($type == 'settleup' && is_null($entry) && $myTotalBalance["balance"] < 0) {
-            
+
             $settleUpPrefill = true;
 
             $totalValue = -1 * $myTotalBalance["balance"];
@@ -102,14 +104,14 @@ class SplitbillBillService extends Service {
             foreach ($totalBalance as $user => $tBalance) {
                 $balance[$user]["paid"] = 0;
                 $balance[$user]["spend"] = $tBalance["owe"];
-                
+
                 $spend_by = $user;
             }
-            
-            if(count($totalBalance) > 1){
+
+            if (count($totalBalance) > 1) {
                 $spend_by = "individual";
             }
-            
+
             $paid_by = $me;
         }
 
@@ -126,16 +128,16 @@ class SplitbillBillService extends Service {
             'isSettleUp' => $isSettleUp,
             'paid_by' => $paid_by,
             'spend_by' => $spend_by,
-            'settleUpPrefill' => $settleUpPrefill
+            'settleUpPrefill' => $settleUpPrefill,
+            'me' => $this->current_user->getUser()->id,
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    private function getTableDataIndex($group, $count = 20) {
-
-        $list = $this->getMapper()->getTableData($group->id, 0, 'DESC', $count);
-        $table = $this->renderTableRows($group, $list);
+    private function getTableDataIndex($group, $group_users, $count = 20) {
+        $list = $this->getMapper()->getTableData($group->id, count($group_users), 0, 'DESC', $count);
+        $table = $this->renderTableRows($group, count($group_users), $list);
         $datacount = $this->getMapper()->tableCount($group->id);
 
         $users = $this->user_service->getAll();
@@ -150,11 +152,13 @@ class SplitbillBillService extends Service {
             "my_balance" => $my_balance,
             "hasSplitbillTable" => true,
             "currency" => $this->settings->getAppSettings()['i18n']['currency'],
-            "users" => $users
+            "users" => $users,
+            'group_users' => $group_users,
+            'me' => $this->current_user->getUser()->id,
         ];
     }
 
-    private function getTableData($group, $requestData) {
+    private function getTableData($group, $group_users, $requestData) {
 
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -168,8 +172,8 @@ class SplitbillBillService extends Service {
         $recordsTotal = $this->mapper->tableCount($group->id);
         $recordsFiltered = $this->mapper->tableCount($group->id, $searchQuery);
 
-        $data = $this->mapper->getTableData($group->id, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
-        $rendered_data = $this->renderTableRows($group, $data);
+        $data = $this->mapper->getTableData($group->id, count($group_users), $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
+        $rendered_data = $this->renderTableRows($group, count($group_users), $data);
 
         $response_data = [
             "recordsTotal" => intval($recordsTotal),
@@ -189,7 +193,7 @@ class SplitbillBillService extends Service {
         return [$balance, $totalValue, $totalValueForeign];
     }
 
-    private function renderTableRows($group, array $bills) {
+    private function renderTableRows($group, $group_members, array $bills) {
         $user = $this->current_user->getUser()->id;
 
         $rendered_data = [];
@@ -198,21 +202,26 @@ class SplitbillBillService extends Service {
             $row[] = $bill->date;
             $row[] = $bill->time;
             $row[] = $bill->name;
-            if ($bill->settleup == 1) {
-                $row[] = $bill->spend; // received
-                $row[] = null;
-                $row[] = $bill->paid;
-                $row[] = null;
+
+            if ($group_members > 1) {
+                if ($bill->settleup == 1) {
+                    $row[] = $bill->spend; // received
+                    $row[] = null;
+                    $row[] = $bill->paid;
+                    $row[] = null;
+                } else {
+                    $row[] = null;
+                    $row[] = $bill->spend;
+                    $row[] = $bill->paid;
+                    $row[] = $bill->balance;
+                }
             } else {
-                $row[] = null;
                 $row[] = $bill->spend;
-                $row[] = $bill->paid;
-                $row[] = $bill->balance;
             }
 
             if ($bill->user == $user) {
-                $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '">'.Utility::getFontAwesomeIcon('fas fa-pen-to-square').'</a>';
-                $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</a>';
+                $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
+                $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
             }
 
             $rendered_data[] = $row;
@@ -274,14 +283,14 @@ class SplitbillBillService extends Service {
             }
         }
 
-        $filtered = array_filter($balance, function($b) use ($me) {
+        $filtered = array_filter($balance, function ($b) use ($me) {
             return $b["user"] != $me && ($b['balance'] != 0 or $b['owe'] != 0);
         });
         /**
          * Resort Balances
          * Big credits on top, big debits on top 
          */
-        uasort($filtered, function($a, $b) {
+        uasort($filtered, function ($a, $b) {
             if ($b['owe'] > 0) {
                 return $b['owe'] - $a['owe'];
             }
@@ -291,5 +300,4 @@ class SplitbillBillService extends Service {
         $my_balance_overview = array_key_exists($me, $balance) ? $balance[$me] : null;
         return array($filtered, $my_balance_overview);
     }
-
 }

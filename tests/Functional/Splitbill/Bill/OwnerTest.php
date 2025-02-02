@@ -46,7 +46,6 @@ class OwnerTest extends SplitbillTestBase {
                 2 => [
                     "paid" => "0.00",
                     "spend" => "50.00",
-                    "paymethod_spend" => null
                 ]
             ],
             "notice" => "Test"
@@ -128,7 +127,6 @@ class OwnerTest extends SplitbillTestBase {
                 2 => [
                     "paid" => "30.00",
                     "spend" => "10.00",
-                    "paymethod_spend" => null
                 ]
             ],
         ];

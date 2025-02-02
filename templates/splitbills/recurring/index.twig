@@ -18,9 +18,11 @@
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{lang["ADD_BILL"]}}</button>
 			</a>
-			<a href="{{ url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup">
-				<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
-			</a>
+			{% if group_users|length > 1 %}
+				<a href="{{ url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup">
+					<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
+				</a>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}
@@ -28,14 +30,18 @@
 {% block body %}
 	<div class="inner-content">
 		<div class="page-content">
-			<table id="splitbills_bills_recurring_table" class="table table-hover small" data-currency="{{i18n.currency}}">
+			<table id="splitbills_bills_recurring_table" class="table table-hover small" data-currency="{{i18n.currency}}" data-members="{{ group_users|length }}">
 				<thead>
 					<tr>
 						<th>{{lang["NAME"]}}</th>
-						<th>{{ lang["RECEIVED"] }}</th>
-						<th>{{ lang["SPEND"] }}</th>
-						<th>{{ lang["PAID"] }}</th>
-						<th>{{ lang["BALANCE"] }}</th>
+						{% if group_users|length > 1 %}
+							<th>{{ lang["RECEIVED"] }}</th>
+							<th>{{ lang["SPEND"] }}</th>
+							<th>{{ lang["PAID"] }}</th>
+							<th>{{ lang["BALANCE"] }}</th>
+						{% else %}
+							<th>{{ lang["SPEND"] }}</th>
+						{% endif %}
 						<th>{{lang["START"]}}</th>
 						<th>{{lang["END"]}}</th>
 						<th>{{lang["INTERVAL"]}}</th>
@@ -51,17 +57,21 @@
 					{% for bill in bills %}
 						<tr>
 							<td>{{ bill.name|raw }}</td>
-							{% if bill.settleup == 1 %}
-								<td>{{ bill.spend }}</td>
-								{# received #}
-								<td></td>
-								<td>{{ bill.paid }}</td>
-								<td></td>
+							{% if group_users|length > 1 %}
+								{% if bill.settleup == 1 %}
+									<td>{{ bill.spend }}</td>
+									{# received #}
+									<td></td>
+									<td>{{ bill.paid }}</td>
+									<td></td>
+								{% else %}
+									<td></td>
+									<td>{{ bill.spend }}</td>
+									<td>{{ bill.paid }}</td>
+									<td>{{ bill.balance }}</td>
+								{% endif %}
 							{% else %}
-								<td></td>
 								<td>{{ bill.spend }}</td>
-								<td>{{ bill.paid }}</td>
-								<td>{{ bill.balance }}</td>
 							{% endif %}
 							<td>{{bill.start}}</td>
 							<td>{{bill.end}}</td>

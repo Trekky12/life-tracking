@@ -38,13 +38,15 @@ class RecurringBillService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
+        $group_users = $this->group_service->getUsers($group->id);
         $list = $this->mapper->getRecurringBills($group->id);
 
         $data = [
             "bills" => $list,
             "group" => $group,
             "currency" => $this->settings->getAppSettings()['i18n']['currency'],
-            'units' => RecurringBill::getUnits()
+            'units' => RecurringBill::getUnits(),
+            "group_users" => $group_users
         ];
 
         return new Payload(Payload::$RESULT_HTML, $data);
@@ -57,7 +59,7 @@ class RecurringBillService extends Service {
         if (!$this->group_service->isMember($group->id) || $this->isOwner($entry_id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        if(!$this->isChildOf($group->id, $entry_id)){
+        if (!$this->isChildOf($group->id, $entry_id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
@@ -79,7 +81,8 @@ class RecurringBillService extends Service {
             'type' => $type,
             'paymethods' => $paymethods,
             'totalValueForeign' => $totalValueForeign,
-            'units' => RecurringBill::getUnits()
+            'units' => RecurringBill::getUnits(),
+            'me' => $this->current_user->getUser()->id,
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
@@ -93,5 +96,4 @@ class RecurringBillService extends Service {
 
         return [$balance, $totalValue, $totalValueForeign];
     }
-
 }

@@ -17,15 +17,17 @@
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{lang["ADD_BILL"]}}</button>
 			</a>
-			<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup">
-				<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
-			</a>
+			{% if group_users|length > 1 %}
+				<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup">
+					<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
+				</a>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}
 
 {% block body %}
-	{% if my_balance %}
+	{% if group_users|length > 1 and my_balance %}
 		<div class="grid" id="splitbill_overview">
 			<div class="card negative">
 				<div class="card-content">
@@ -66,7 +68,7 @@
 		</div>
 	{% endif %}
 
-	{% if balance|length  > 0 %}
+	{% if group_users|length > 1 and balance|length  > 0 %}
 		<div class="grid splitbill_total">
 			<div class="card">
 				<div class="card-content">
@@ -85,7 +87,7 @@
 						{% if b["owe"] < 0 %}
 							<p class="negative">{{ lang["PERSON_OWES_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }}
 								{{ total }}</p>
-						{% else %}
+						{% elseif b["owe"] > 0 %}
 							<p class="positive">{{ lang["PERSON_RECEIVES_BY_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }}
 								{{ total }}</p>
 						{% endif %}
@@ -97,16 +99,20 @@
 
 	<div class="inner-content">
 		<div class="page-content">
-			<table id="splitbills_bills_table" class="table table-hover small" data-currency="{{i18n.currency}}">
+			<table id="splitbills_bills_table" class="table table-hover small" data-currency="{{i18n.currency}}" data-members="{{ group_users|length }}">
 				<thead>
 					<tr>
 						<th>{{lang["DATE"]}}</th>
 						<th>{{lang["TIME"]}}</th>
 						<th>{{lang["NAME"]}}</th>
-						<th>{{ lang["RECEIVED"] }}</th>
-						<th>{{ lang["SPEND"] }}</th>
-						<th>{{ lang["PAID"] }}</th>
-						<th>{{ lang["BALANCE"] }}</th>
+						{% if group_users|length > 1 %}
+							<th>{{ lang["RECEIVED"] }}</th>
+							<th>{{ lang["SPEND"] }}</th>
+							<th>{{ lang["PAID"] }}</th>
+							<th>{{ lang["BALANCE"] }}</th>
+						{% else %}
+							<th>{{ lang["SPEND"] }}</th>
+						{% endif %}
 						<th></th>
 						<th></th>
 					</tr>
@@ -117,12 +123,19 @@
 							<td>{{ bill[0] }}</td>
 							<td>{{ bill[1] }}</td>
 							<td>{{ bill[2]|raw }}</td>
-							<td>{{ bill[3] }}</td>
-							<td>{{ bill[4] }}</td>
-							<td>{{ bill[5] }}</td>
-							<td>{{ bill[6] }}</td>
-							<td>{{ bill[7]|raw }}</td>
-							<td>{{ bill[8]|raw }}</td>
+							{% if group_users|length > 1 %}
+								<td>{{ bill[3] }}</td>
+								<td>{{ bill[4] }}</td>
+								<td>{{ bill[5] }}</td>
+								<td>{{ bill[6] }}</td>
+								<td>{{ bill[7]|raw }}</td>
+								<td>{{ bill[8]|raw }}</td>
+							{% else %}
+								<td>{{ bill[3] }}</td>
+								<td>{{ bill[4]|raw }}</td>
+								<td>{{ bill[5]|raw }}</td>
+							{% endif %}
+
 						</tr>
 					{% endfor %}
 				</tbody>
