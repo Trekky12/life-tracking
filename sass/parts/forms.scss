@@ -138,7 +138,7 @@ textarea {
     }
 }
 
-@media screen and (max-width: variables.$size_mobile) {
+@media screen and (max-width: variables.$size_mobile_navigation) {
 
     input[type="date"],
     input[type="time"],
@@ -163,7 +163,7 @@ textarea {
     // https://css-tricks.com/fighting-the-space-between-inline-block-elements/
     font-size: 0;
 
-    @media screen and (max-width: variables.$size_mobile) {
+    @media screen and (max-width: variables.$size_mobile_navigation) {
         background-color: variables.$color_light_gray;
         border: 1px solid variables.$color_border-input;
 
