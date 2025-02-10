@@ -958,6 +958,7 @@ CREATE TABLE IF NOT EXISTS timesheets_categorybudgets (
     notice TEXT DEFAULT NULL,
     customer INTEGER unsigned DEFAULT NULL,
     main_category INTEGER unsigned DEFAULT NULL,
+    no_category INT(1) DEFAULT 0,
     value INT(11) NOT NULL,
     warning1 INT(11) NULL,
     warning2 INT(11) NULL,

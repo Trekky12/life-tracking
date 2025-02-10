@@ -40,7 +40,7 @@
 
 				<div class="form-group">
 					<label for="inputName">{{lang["NAME"]}}</label>
-					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %} required="required">
 				</div>
 
 				<div class="form-group">
@@ -91,6 +91,12 @@
 							<option value="{{cat.id}}" {% if cat.id in categorybudget_categories %} selected {%endif%}>{{cat.name|raw}}</option>
 						{% endfor %}
 					</select>
+				</div>
+				<div class="form-group">
+					<label class="checkbox" for="checkboxIncludeSheetsWithoutCategory">
+						<input name="no_category" type="checkbox" value="1" id="checkboxIncludeSheetsWithoutCategory" {% if not entry is null and entry.no_category == 1 %} checked {% endif %}>
+						{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_INCLUDE_ENTRIES_WITHOUT_CATEGORY"]}}
+					</label>
 				</div>
 
 				<div class="form-group">

@@ -1111,7 +1111,11 @@ var timesheetsCategoryBudgetTable = new JSTable("#project_categorybudgets_table"
             sort: "asc"
         },
         {
-            select: [1, 2, 3],
+            select: 1,
+            sortable: true
+        },
+        {
+            select: [2, 3, 4],
             sortable: false,
             searchable: false
         }

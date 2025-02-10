@@ -110,6 +110,15 @@ class ProjectCategoryBudgetService extends Service {
             if (!array_key_exists($main_category, $budgets[$customer]["items"])) {
                 $budgets[$customer]["items"][$main_category] = ["name" => $cat_budget["main_category_name"], "items" => []];
             }
+
+            if ($cat_budget["no_category"] == 1) {
+                if (strlen($cat_budget["category_names"]) > 0) {
+                    $cat_budget["category_names"] = sprintf("%s, %s", $cat_budget["category_names"], $this->translation->getTranslatedString("TIMESHEETS_PROJECT_CATEGORY_BUDGET_ENTRIES_WITHOUT_CATEGORY"));
+                } else {
+                    $cat_budget["category_names"] = $this->translation->getTranslatedString("TIMESHEETS_PROJECT_CATEGORY_BUDGET_ENTRIES_WITHOUT_CATEGORY");
+                }
+            }
+
             $budgets[$customer]["items"][$main_category]["items"][] = $cat_budget;
         }
 
@@ -157,7 +166,7 @@ class ProjectCategoryBudgetService extends Service {
         return $results;
     }
 
-    public function hasCategoryBudgets($project){
+    public function hasCategoryBudgets($project) {
         return count($this->mapper->getFromProject($project)) > 0;
     }
 }

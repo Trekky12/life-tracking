@@ -255,14 +255,34 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                 . "     (DATE(sheet.end) >= :start AND DATE(sheet.end) <= :end AND sheet.start IS NULL )) ";
         }
 
-        if (!empty($cat_bindings)) {
-            $sql .= " AND sheet.id IN ( "
-                . "             SELECT sheet "
-                . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
-                . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
-                . "             GROUP BY sheet "
-                . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
-                . ") ";
+        if (!empty($cat_bindings) || $budget["no_category"] == 1) {
+            $sql .= " AND ( ";
+
+            if (!empty($cat_bindings)) {
+                $sql .= "  sheet.id IN ( "
+                    . "     SELECT sheet "
+                    . "     FROM " . $this->getTableName("timesheets_sheets_categories") . " "
+                    . "     WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                    . "     GROUP BY sheet "
+                    . "     HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
+                    . "   ) ";
+            }
+
+
+            if ($budget["no_category"] == 1) {
+                if (!empty($cat_bindings)) {
+                    $sql .= " OR ";
+                }
+                $sql .= "  sheet.id IN ( "
+                    . "      SELECT s.id "
+                    . "      FROM " . $this->getTableName("timesheets_sheets") . " s"
+                    . "      LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " sc ON sc.sheet = s.id"
+                    . "      WHERE s.project = :project "
+                    . "      AND sc.category IS NULL "
+                    . "    ) ";
+            }
+
+            $sql .= ") ";
         }
 
         if ($budget["customer"]) {

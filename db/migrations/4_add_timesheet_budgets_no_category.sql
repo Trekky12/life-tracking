@@ -1,0 +1,1 @@
+ALTER TABLE timesheets_categorybudgets ADD no_category  INT(1) DEFAULT 0 AFTER main_category; 

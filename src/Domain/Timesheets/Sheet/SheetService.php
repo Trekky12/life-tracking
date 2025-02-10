@@ -581,6 +581,7 @@ class SheetService extends Service {
         $response_data["hasTimesheetNotice"] = $has_legend;
         $response_data["from"] = $from;
         $response_data["to"] = $to;
+         $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }

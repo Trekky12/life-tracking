@@ -136,7 +136,7 @@ class DataObject implements \JsonSerializable {
         return $this->users;
     }
 
-    public function jsonSerialize(): mixed {
+    public function jsonSerialize(): array {
         $fields = $this->get_fields(true, false, false);
         if (!empty($this->users)) {
             $fields["users"] = $this->getUserIDs();
