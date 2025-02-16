@@ -25,22 +25,22 @@
 		<div
 			class="buttons">
 			{#{% if categories %}
-							<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
-								<button class="button button-text">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
-							</a>
-						{% endif %}
-						<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
-							<button class="button button-text">{{lang["TIMESHEETS_EXPORT"]}}</button>
-						</a>
-						<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
-							<button class="button button-text">{{ fontawesome('fas fa-right-to-bracket') }}
-								{% if project.is_day_based == 1 %}
-									{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
-								{% else %}
-									{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}
-								{% endif %}
-								{{ fontawesome('fas fa-right-from-bracket') }}</button>
-						</a>#}
+										<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
+											<button class="button button-text">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
+										</a>
+									{% endif %}
+									<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
+										<button class="button button-text">{{lang["TIMESHEETS_EXPORT"]}}</button>
+									</a>
+									<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
+										<button class="button button-text">{{ fontawesome('fas fa-right-to-bracket') }}
+											{% if project.is_day_based == 1 %}
+												{{lang["TIMESHEETS_FAST_DAY_BASED"]}}
+											{% else %}
+												{{lang["TIMESHEETS_FAST_PROJECT_BASED"]}}
+											{% endif %}
+											{{ fontawesome('fas fa-right-from-bracket') }}</button>
+									</a>#}
 			<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{lang["ADD"]}}</button>
@@ -255,6 +255,7 @@
 					<div class="options-element">
 						<div class="select-wrapper">
 							<select id="applyOptions" name="options">
+								<option value="">{{ lang["TIMESHEETS_OPTIONS_CHOOSE"]}}</option>
 								<option value="billed">{{ lang["TIMESHEETS_APPLY_BILLED"] }}</option>
 								<option value="not_billed">{{ lang["TIMESHEETS_APPLY_NOT_BILLED"] }}</option>
 								<option value="payed">{{ lang["TIMESHEETS_APPLY_PAYED"] }}</option>

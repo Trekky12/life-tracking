@@ -528,6 +528,7 @@ $lang["TIMESHEETS_NOT_PAYED"] = "not payed";
 $lang["TIMESHEETS_PLANNED"] = "planned";
 $lang["TIMESHEETS_HAPPENED"] = "happened";
 $lang["TIMESHEETS_APPLY"] = "apply";
+$lang["TIMESHEETS_OPTIONS_CHOOSE"] = "- Choose an option -";
 $lang["TIMESHEETS_APPLY_BILLED"] = "mark as billed";
 $lang["TIMESHEETS_APPLY_NOT_BILLED"] = "mark as not billed";
 $lang["TIMESHEETS_APPLY_PAYED"] = "mark as payed";

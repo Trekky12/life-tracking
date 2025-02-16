@@ -11,6 +11,8 @@ use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Domain\Timesheets\Project\ProjectMapper;
 use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Sheet\SheetService;
+use App\Domain\Main\Translator;
+use App\Domain\Timesheets\Customer\CustomerMapper;
 
 class SheetNoticeWriter extends ObjectActivityWriter {
 
@@ -18,21 +20,29 @@ class SheetNoticeWriter extends ObjectActivityWriter {
     private $sheet_mapper;
     private $project_service;
     private $project_mapper;
+    private $translation;
+    private $customer_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            ActivityCreator $activity,
-            SheetService $service,
-            SheetNoticeMapper $mapper,
-            SheetMapper $sheet_mapper,
-            ProjectMapper $project_mapper,
-            ProjectService $project_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        SheetService $service,
+        SheetNoticeMapper $mapper,
+        SheetMapper $sheet_mapper,
+        ProjectMapper $project_mapper,
+        ProjectService $project_service,
+        Translator $translation,
+        CustomerMapper $customer_mapper
+    ) {
         parent::__construct($logger, $user, $activity);
         $this->service = $service;
         $this->mapper = $mapper;
         $this->sheet_mapper = $sheet_mapper;
         $this->project_mapper = $project_mapper;
         $this->project_service = $project_service;
+        $this->translation = $translation;
+        $this->customer_mapper = $customer_mapper;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -47,7 +57,7 @@ class SheetNoticeWriter extends ObjectActivityWriter {
         }
 
         $data['sheet'] = $additionalData["sheet"];
-        
+
         // get last notice as id for update
         //$notice_id = $this->mapper->hasNotice($additionalData["sheet"]);
         //$data["id"] = $notice_id;
@@ -81,4 +91,16 @@ class SheetNoticeWriter extends ObjectActivityWriter {
         return "timesheets";
     }
 
+    protected function getAdditionalInformation($entry): ?string {
+        $sheet = $this->getParentMapper()->get($entry->getParentID());
+        if ($sheet->customer) {
+            $project = $this->project_mapper->get($sheet->getParentID());
+            $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
+
+            $customer = $this->customer_mapper->get($sheet->customer);
+
+            return sprintf("%s: %s", $customerDescription, $customer->name);
+        }
+        return parent::getAdditionalInformation($entry);
+    }
 }
