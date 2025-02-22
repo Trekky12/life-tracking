@@ -104,7 +104,7 @@ return [
             'publicKey' => 'BHTdRzN90bnvOXiBtxHe1HaOL12EPW2m7sPa9q2EyDnsTjxe8ANhX07St_c1ZfOBlKDwsNrlWeZWBmAWr8hPJio',
             'privateKey' => '9bjcsaIxn1Zaf19N_oxKRBqYQfb_GnAubsd2gAnp4wI',
             'subject' => '',
-            'TTL' => 3600,
+            'TTL' => 86400,
             'urgency' => 'normal',
         ],
         'mapbox_token' => '',
