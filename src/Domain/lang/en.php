@@ -879,6 +879,7 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "sum of durations modified
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "number of entries";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_INCLUDE_ENTRIES_WITHOUT_CATEGORY"] = "Include entries with no assigned categories";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_ENTRIES_WITHOUT_CATEGORY"] = "entries with no assigned categories";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_EXACT_MATCH"] = "Include only entries with exact the selected categories";
 
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Password for the sheet notice encryption";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "To encrypt the sheet notices a password is neeeded.";

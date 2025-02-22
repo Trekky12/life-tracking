@@ -262,12 +262,18 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                 $sql .= "  sheet.id IN ( "
                     . "     SELECT sheet "
                     . "     FROM " . $this->getTableName("timesheets_sheets_categories") . " "
-                    . "     WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
                     . "     GROUP BY sheet "
-                    . "     HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
-                    . "   ) ";
-            }
+                    // The `CASE` checks if a category is in the selected list, and `COUNT(DISTINCT ...)` counts how many selected categories are present which should match the number of selected categories
+                    . "     HAVING COUNT(DISTINCT CASE WHEN category IN (" . implode(',', array_keys($cat_bindings)) . ") THEN category END) = " . count($cat_bindings);
 
+                if (!empty($budget["exact_match"])) {
+                    // Exact match: No extra categories allowed
+                    $sql .= " AND COUNT(DISTINCT category) = " . count($cat_bindings);
+                } else {
+                    $sql .= " AND COUNT(DISTINCT category) >= " . count($cat_bindings);
+                }
+                $sql  .= "   ) ";
+            }
 
             if ($budget["no_category"] == 1) {
                 if (!empty($cat_bindings)) {

@@ -35,7 +35,9 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
         $this->is_hidden = $this->exists('is_hidden', $data) ? filter_var($data['is_hidden'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->no_category = $this->exists('no_category', $data) ? filter_var($data['no_category'], FILTER_SANITIZE_NUMBER_INT) : 0;
-        
+
+        $this->exact_match = $this->exists('exact_match', $data) ? filter_var($data['exact_match'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }

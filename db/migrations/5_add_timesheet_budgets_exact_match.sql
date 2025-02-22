@@ -1,0 +1,1 @@
+ALTER TABLE timesheets_categorybudgets ADD exact_match INT(1) DEFAULT 0 AFTER no_category; 

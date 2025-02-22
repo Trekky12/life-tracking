@@ -878,6 +878,7 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_SUM_MOD"] = "Summe der Zeiten modifizi
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "Anzahl Einträge";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_INCLUDE_ENTRIES_WITHOUT_CATEGORY"] = "Einträge ohne zugeordnete Kategorien einbeziehen";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_ENTRIES_WITHOUT_CATEGORY"] = "Einträge ohne zugeordnete Kategorien";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_EXACT_MATCH"] = "Nur Einträge mit exakt den gewählten Kategorien einbeziehen";
 
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Passwort für die Verschlüsselung der Notizen";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "Für die Verschlüsselung der Notizen muss ein Passwort vergeben werden.";
