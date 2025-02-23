@@ -1,0 +1,1 @@
+ALTER TABLE timesheets_categorybudgets ADD position INT(10) NULL DEFAULT 999 AFTER is_hidden; 

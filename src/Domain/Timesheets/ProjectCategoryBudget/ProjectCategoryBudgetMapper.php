@@ -188,7 +188,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                 . ")";
         }
         $sql .= " GROUP BY b.id";
-        $sql .= " ORDER BY customer_name, main_category_name, b.name";
+        $sql .= " ORDER BY customer_name, main_category_name, b.position, b.name";
 
         $bindings = ["project" => $project_id];
 

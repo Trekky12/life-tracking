@@ -967,6 +967,7 @@ CREATE TABLE IF NOT EXISTS timesheets_categorybudgets (
     start DATE DEFAULT NULL,
     end DATE DEFAULT NULL,
     is_hidden INT(1) DEFAULT 0,
+    position INT(10) NULL DEFAULT 999,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,

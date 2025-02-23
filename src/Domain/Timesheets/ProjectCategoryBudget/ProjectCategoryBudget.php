@@ -38,6 +38,8 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
 
         $this->exact_match = $this->exists('exact_match', $data) ? filter_var($data['exact_match'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
+        $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
