@@ -623,11 +623,12 @@ class SheetService extends Service {
             $st = new \DateTime($timesheet->start ?? '');
             $e = new \DateTime($timesheet->end ?? '');
 
-            $title = '';
+            $title = [];
             if ($timesheet->customerName) {
-                $title .= $timesheet->customerName;
-            } elseif ($timesheet->categories) {
-                $title .= $timesheet->categories;
+                $title[] = $timesheet->customerName;
+            }
+            if($timesheet->categories) {
+                $title[] = $timesheet->categories;
             }
 
             list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
@@ -654,7 +655,7 @@ class SheetService extends Service {
             }
 
             $event = [
-                'title' => $title,
+                'title' => implode(" | ", $title),
                 'start' => $st->format('Y-m-d H:i:s'),
                 'end' => $e->format('Y-m-d H:i:s'),
                 'extendedProps' => [

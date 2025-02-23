@@ -384,13 +384,6 @@ if (calendarEl) {
                         title = arg.event.title;
                     }
 
-                    if (arg.event.extendedProps.categories) {
-                        if (arg.event.title) {
-                            title += " | ";
-                        }
-                        title += arg.event.extendedProps.categories;
-                    }
-
                     titleEl.innerHTML = title;
 
                     container.appendChild(titleEl);
