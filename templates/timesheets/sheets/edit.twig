@@ -163,7 +163,7 @@
 						<br/>
 						<div id="inputDurationModificationWrapper" class="form-group {% if ( entry is null ) or (entry is not null and ( entry.getDurationModification(project.time_conversion_rate) == 0 or entry.getDurationModification(project.time_conversion_rate) == 1 ))%}hidden{% endif %}">
 							<label for="inputDurationModification">{{lang["TIMESHEETS_TIME_MODIFICATION"]}}</label>
-							<input type="text" class="form-control {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 2 )%}html-duration-picker{% endif %}" data-hide-seconds id="inputDurationModification" name="set_duration_modified" value="{% if not entry is null %}{{entry.duration_modified | splitDateInterval(true) }}{% endif %}">
+							<input type="text" class="form-control {% if (entry is not null and entry.getDurationModification(project.time_conversion_rate) == 2 )%}html-duration-picker{% endif %}" data-hide-seconds data-duration-max="999:59" id="inputDurationModification" name="set_duration_modified" value="{% if not entry is null %}{{entry.duration_modified | splitDateInterval(true) }}{% endif %}">
 						</div>
 					</div>
 				{% endif %}

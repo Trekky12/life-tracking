@@ -124,25 +124,25 @@
 
 				<div class="form-group">
 					<label for="inputValueDuration">{{lang["TIMESHEETS_CATEGORYBUDGET_VALUE"]}}</label>
-					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputValueDuration" name="set_value" value="{% if not entry is null %}{{entry.value | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds data-duration-max="999:59" id="inputValueDuration" name="set_value" value="{% if not entry is null %}{{entry.value | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
 					<input type="number" step="1" pattern="\d*" class="form-control count-input {% if (entry is not null and entry.categorization != 'count' )%}hidden{% endif %}" id="inputValue" name="set_value" value="{% if not entry is null %}{{entry.value}}{% else %}0{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
 				</div>
 
 				<div class="form-group">
 					<label for="inputWarning1">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_1_YELLOW"]}}</label>
-					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning1" name="set_warning1" value="{% if not entry is null %}{{entry.warning1 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds data-duration-max="999:59" id="inputWarning1" name="set_warning1" value="{% if not entry is null %}{{entry.warning1 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
 					<input type="number" step="1" pattern="\d*" class="form-control count-input {% if (entry is not null and entry.categorization != 'count' )%}hidden{% endif %}" name="set_warning1" value="{% if not entry is null %}{{entry.warning1}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
 				</div>
 
 				<div class="form-group">
 					<label for="inputWarning2">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_2_ORANGE"]}}</label>
-					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning2" name="set_warning2" value="{% if not entry is null %}{{entry.warning2 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds data-duration-max="999:59" id="inputWarning2" name="set_warning2" value="{% if not entry is null %}{{entry.warning2 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
 					<input type="number" step="1" pattern="\d*" class="form-control count-input {% if (entry is not null and entry.categorization != 'count' )%}hidden{% endif %}" name="set_warning2" value="{% if not entry is null %}{{entry.warning2}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
 				</div>
 
 				<div class="form-group">
 					<label for="inputWarning3">{{lang["TIMESHEETS_CATEGORYBUDGET_WARNING_3_RED"]}}</label>
-					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds id="inputWarning3" name="set_warning3" value="{% if not entry is null and entry.warning3 %}{{entry.warning3 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
+					<input type="text" class="form-control duration-input {% if (entry is null) or (entry is not null and entry.categorization == 'count' )%}hidden{%else %} html-duration-picker{% endif %}" data-hide-seconds data-duration-max="999:59" id="inputWarning3" name="set_warning3" value="{% if not entry is null and entry.warning3 %}{{entry.warning3 | splitDateInterval(true)}}{% endif %}" {% if (entry is null) or (entry is not null and entry.categorization == "count" )%} disabled="disabled" {% endif %}/>
 					<input type="number" step="1" pattern="\d*" class="form-control count-input {% if (entry is not null and entry.categorization != 'count' )%}hidden{% endif %}" name="set_warning3" value="{% if not entry is null %}{{entry.warning3}}{% else %}{% endif %}" {% if (entry is not null and entry.categorization != "count" )%} disabled="disabled" {% endif %}/>
 				</div>
 
