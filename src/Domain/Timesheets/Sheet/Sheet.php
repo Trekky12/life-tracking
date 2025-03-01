@@ -149,7 +149,7 @@ class Sheet extends \App\Domain\DataObject {
             return 0;
         }
 
-        if ($this->duration * $project_conversion_rate == $this->duration_modified) {
+        if (round($this->duration * $project_conversion_rate) == $this->duration_modified) {
             return 1;
         }
 
