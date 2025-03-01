@@ -8,23 +8,25 @@
 
 	{% if output or (migrations is not empty and migrations < 0) %}
 
-		<div class="output">
-			{% for line in output %}
-				{{line}}<br>
-			{% endfor %}
+		<div class="inner-content">
+			<div class="page-content">
+				<p class="output">
+					{% for line in output %}
+						{{line}}<br>
+					{% endfor %}
+				</p>
+
+				{% if migrations < 0 %}
+					<p>{{lang["SETUP_NOTHING_TODO"]}}</p>
+				{% endif %}
+
+				<a href="/">
+					<button class="button">{{ lang["SETUP_GO_TO_MAIN"]}}</button>
+				</a>
+			</div>
 		</div>
 
-		{% if migrations < 0 %}
-			<p>{{lang["SETUP_NOTHING_TODO"]}}</p>
-		{% endif %}
-
-		<a href="/">
-			<button class="button">{{ lang["SETUP_GO_TO_MAIN"]}}</button>
-		</a>
-
 	{% else %}
-
-		<h1></h1>
 
 		<form class="form-horizontal" action="{{ url_for('setup_run') }}" method="POST">
 			<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">

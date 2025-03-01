@@ -210,6 +210,10 @@ textarea {
 .form-group {
     position: relative;
     margin-bottom: 2rem;
+
+    &.btn button{
+        margin-bottom: 2rem;
+    }
 }
 
 .form-control {
