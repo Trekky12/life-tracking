@@ -20,7 +20,7 @@
                                             {{expense.description}}
                                         </td>
                                         <td  class="mcnTextContent" style="text-align: right; padding-left: 3px; min-width: 80px; white-space: nowrap; color: #f30" valign="top">
-                                            {{expense.value}} {{currency}}
+                                            {{expense.value|number_format(2, '.', '')}} {{currency}}
                                         </td>
                                     </tr>
                                 {% endfor %}
