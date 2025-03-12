@@ -116,7 +116,7 @@
 						<select name="balance[{{ me }}][paymethod_spend]">
 							<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
 							{% for method in paymethods[me] %}
-								<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod_spend"]) or (balence is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod_spend"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
 							{% endfor %}
 						</select>
 					</div>

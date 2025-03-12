@@ -125,7 +125,7 @@ class BillWriter extends BaseBillWriter {
                             "lng" => $bill->lng,
                             "lat" => $bill->lat,
                             "acc" => $bill->acc,
-                            "paymethod_spend" => $balance["paymethod_spend"]
+                            "paymethod" => $balance["paymethod_spend"]
                         ];
 
                         if (!is_null($finance_entry)) {
