@@ -142,7 +142,7 @@ class BillWriter extends BaseBillWriter {
                         }
 
                         // Splitted bill was paid by the user but not spend by him? => Create only transaction
-                        $this->createTransaction($balance, $bill);                        
+                        $this->createTransaction($balance, $bill);
                     }
                 } else {
                     // Create settle up transaction
@@ -220,7 +220,7 @@ class BillWriter extends BaseBillWriter {
             if (!is_null($paymethod_spend->round_up_savings_account) && $paymethod_spend->round_up_savings > 0) {
 
                 $saving = (ceil($value / $paymethod_spend->round_up_savings) * $paymethod_spend->round_up_savings) - $value;
-    
+
                 if ($saving > 0) {
                     $data2 = [
                         "id" => null,
@@ -239,11 +239,15 @@ class BillWriter extends BaseBillWriter {
                         $data2["id"] = $transaction_entry_round_up_savings->id;
                         $data2["description"] = $transaction_entry_round_up_savings->description;
                     }
-    
+
                     $this->transaction_writer->save($data2["id"], $data2, ["is_bill_based_save" => true]);
                 }
+            } else {
+                // If the entry was updated and the "new" paymethod has no round up savings delete old round up savings
+                if (!is_null($transaction_entry_round_up_savings)) {
+                    $this->transaction_remover->delete($transaction_entry_round_up_savings->id, ["is_bill_based_delete" => true]);
+                }
             }
-
         } else {
             if (!is_null($transaction_entry)) {
                 $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);
@@ -281,7 +285,6 @@ class BillWriter extends BaseBillWriter {
             }
 
             $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
-
         } else {
             if (!is_null($transaction_entry)) {
                 $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);
