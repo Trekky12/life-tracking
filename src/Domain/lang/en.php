@@ -933,4 +933,7 @@ $lang["SETUP_START_UPGRADE"] = "Start Upgrade";
 $lang["SETUP_NOTHING_TODO"] = "Nothing to do";
 $lang["SETUP_GO_TO_MAIN"] = "Go to the frontpage...";
 
+$lang["INSERT_ADDITIONAL_VALUES"] = "Add additional elements";
+$lang["TOTAL"] = "Total";
+
 return $lang;

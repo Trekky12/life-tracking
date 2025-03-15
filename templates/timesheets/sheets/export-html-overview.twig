@@ -99,7 +99,7 @@
 					{% endfor %}
 				</tbody>
 				<tfoot>
-					<tr>
+					<tr class="body-sum-row">
 						<th>
 							{{data|length}}&nbsp;
 							{%- if project.customers_name_plural %}
@@ -111,7 +111,21 @@
 						{% for field in fields %}
 							<th></th>
 						{% endfor %}
-						<th>{{sum}}</th>
+						<th data-type="sum-body" class="body-sum">{{sum}}</th>
+					</tr>
+					<tr>
+						<th><input type="text" placeholder="{{ lang['INSERT_ADDITIONAL_VALUES'] }}" class="form-control"/></th>
+						{% for field in fields %}
+							<th><input type="text" class="form-control"/></th>
+						{% endfor %}
+						<th><input type="number" class="form-control additional-field" step="1"/></th>
+					</tr>
+					<tr>
+						<th>{{lang["TOTAL"]}}</th>
+						{% for field in fields %}
+							<th></th>
+						{% endfor %}
+						<th data-type="sum-foot" class="total-value">{{sum}}</th>
 					</tr>
 				</tfoot>
 			</table>
