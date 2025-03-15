@@ -697,7 +697,8 @@ function initMap() {
         },
         showAlternatives: false,
         routeWhileDragging: false,
-        plan: plan
+        plan: plan,
+        attachResultsToContainer: true
     }).addTo(mymap);
 
     routeControl.on('routingerror', function (e) {
