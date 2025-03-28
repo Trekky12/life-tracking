@@ -672,7 +672,7 @@ class SheetMapper extends \App\Domain\Mapper {
             $bindings["customer"] = $customer;
         }
 
-        $select = "COUNT(t.id) as count, tcus.name as customerName, tcus.id as customer";
+        $select = "COUNT(DISTINCT t.id) as count, tcus.name as customerName, tcus.id as customer";
         list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $include_empty_categories, $billed, $payed, $planned, $customer, 'tcus.id');
 
         $sql = $tableSQL;
