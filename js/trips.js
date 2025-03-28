@@ -351,6 +351,28 @@ function addWaypoint(marker) {
     return pos;
 }
 
+/**
+ * Fix Geocoder using Promises
+ * @see https://github.com/perliedman/leaflet-control-geocoder/issues/362#issuecomment-2717417710
+ */
+function RoutingMachineGeocoder(geocoder) {
+    /*const geocode = geocoder.geocode;
+    if ('AsyncFunction' === geocode[Symbol.toStringTag]) {
+        geocoder.geocode = function (query, callback, context) {
+            geocode.apply(this, [query]).then(callback.bind(context));
+        };
+    }*/
+
+    const reverse = geocoder.reverse;
+    if ('AsyncFunction' === reverse[Symbol.toStringTag]) {
+        geocoder.reverse = function (location, scale, callback, context) {
+            reverse.apply(this, [location, scale]).then(callback.bind(context));
+        };
+    }
+
+    return geocoder;
+}
+
 function initMap() {
     mymap = L.map('trip-map', {
         fullscreenControl: {
@@ -635,12 +657,12 @@ function initMap() {
         {
             //geocoder: new L.Control.Geocoder.Nominatim(),
             //geocoder: new L.Control.Geocoder.LatLng(),
-            geocoder: new L.Control.Geocoder.Mapbox({
+            geocoder: RoutingMachineGeocoder(new L.Control.Geocoder.Mapbox({
                 reverseQueryParams: {
                     language: i18n.routing
                 },
                 apiKey: mapbox_token
-            }),
+            })),
             createMarker: function (i, wp) {
                 // has already saved marker
                 if (wp.options.saved) {
