@@ -264,7 +264,7 @@ async function captureScreenshots() {
             height: 1300
         });
         await page.goto("http://tracking.localhost/timesheets/ABCabc123/sheets/edit/5");
-        await page.click('#checkboxPlanned');
+        await page.click('#checkboxHappened');
         await page.click('#checkBoxRepeat');
         await page.focus('#inputCount');
         await page.keyboard.down('Control');

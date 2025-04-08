@@ -363,7 +363,7 @@ if (calendarEl) {
                     date.classList.add('fc-event-time');
 
                     let timeText = arg.timeText;
-                    if (arg.event.extendedProps.is_planned == "0") {
+                    if (arg.event.extendedProps.is_happened == "1") {
                         timeText = document.getElementById('iconCheck').innerHTML + arg.timeText;
                     } else {
                         timeText = arg.timeText;
@@ -440,7 +440,7 @@ if (calendarEl) {
             let is_part_of_series = info.event.extendedProps.reference_sheet != null || info.event.extendedProps.series.length > 0;
 
             let state = eventModal.querySelector(".state");
-            if (info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_planned == 0 && !is_part_of_series) {
+            if (info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_happened == 1 && !is_part_of_series) {
                 state.classList.add("hidden");
             } else {
                 state.classList.remove("hidden");
@@ -459,11 +459,11 @@ if (calendarEl) {
                     payed.classList.add("hidden");
                 }
 
-                let planned = eventModal.querySelector(".planned");
-                if (info.event.extendedProps.is_planned == 1) {
-                    planned.classList.remove("hidden");
+                let happened = eventModal.querySelector(".happened");
+                if (info.event.extendedProps.is_happened == 1) {
+                    happened.classList.remove("hidden");
                 } else {
-                    planned.classList.add("hidden");
+                    happened.classList.add("hidden");
                 }
 
                 let series = eventModal.querySelector(".series");

@@ -101,7 +101,7 @@ INSERT INTO timesheets_noticefields (id, project, user, name, description, datat
 (5, 2, 2, 'test', 'Test timesheets notice field 3', 'textarea', NULL, 999, 1, 'sheet');
 
 
-INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, duration, duration_modified, notice, start_lat, start_lng, start_acc, end_lat, end_lng, end_acc, is_billed, is_payed, is_planned, reference_sheet, customer, repeat_unit, repeat_multiplier) VALUES
+INSERT INTO timesheets_sheets (id, project, createdBy, changedBy, start, end, duration, duration_modified, notice, start_lat, start_lng, start_acc, end_lat, end_lng, end_acc, is_billed, is_payed, is_happened, reference_sheet, customer, repeat_unit, repeat_multiplier) VALUES
 (1, 1, 1, 1, '2020-01-01 09:00:00', '2020-01-01 12:00:00', 10800, 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, 1, 'week', 1),
 (2, 1, 1, 1, '2020-01-08 09:00:00', '2020-01-08 12:00:00', 10800, 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 1, 'week', 1),
 (3, 1, 1, 1, '2020-01-15 09:00:00', '2020-01-15 12:00:00', 10800, 10800, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 1, 'week', 1),

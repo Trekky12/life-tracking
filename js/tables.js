@@ -1037,7 +1037,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
 const timesheetCategories = document.querySelector("#selected_categories");
 const timesheetBilled = document.querySelector("#timesheet_view_billed");
 const timesheetPayed = document.querySelector("#timesheet_view_payed");
-const timesheetPlanned = document.querySelector("#timesheet_view_planned");
+const timesheetHappened = document.querySelector("#timesheet_view_happened");
 const timesheetCustomer = document.querySelector("#timesheet_view_customer");
 
 var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
@@ -1066,7 +1066,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
         "categories": timesheetCategories ? timesheetCategories.value : [],
         "billed": timesheetBilled ? timesheetBilled.value : '',
         "payed": timesheetPayed ? timesheetPayed.value : '',
-        "planned": timesheetPlanned ? timesheetPlanned.value : '',
+        "happened": timesheetHappened ? timesheetHappened.value : '',
         "customer": timesheetCustomer ? timesheetCustomer.value : '',
     }
 });

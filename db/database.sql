@@ -913,7 +913,7 @@ CREATE TABLE IF NOT EXISTS timesheets_sheets (
     end_acc DECIMAL(10,3) DEFAULT NULL,
     is_billed int(1) DEFAULT 0,
     is_payed int(1) DEFAULT 0,
-    is_planned int(1) DEFAULT 0,
+    is_happened int(1) DEFAULT 0,
     reference_sheet int(11) unsigned DEFAULT NULL,
     customer INTEGER unsigned DEFAULT NULL,
     repeat_unit varchar(255) DEFAULT NULL,

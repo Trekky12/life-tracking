@@ -31,13 +31,13 @@ class SheetExportAction {
 
         $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $payed = array_key_exists('payed', $requestData) && $requestData['payed'] !== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $planned = array_key_exists('planned', $requestData) && $requestData['planned'] !== '' ? intval(filter_var($requestData['planned'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $happened = array_key_exists('happened', $requestData) && $requestData['happened'] !== '' ? intval(filter_var($requestData['happened'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
         $customer = array_key_exists('customer', $requestData) && $requestData['customer'] !== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
         $noticefields = array_key_exists("noticefields", $requestData) ? filter_var_array($requestData["noticefields"], FILTER_SANITIZE_NUMBER_INT) : [];
 
-        $payload = $this->service->export($hash, $type, $from, $to, $categories, $billed, $payed, $planned, $customer, $noticefields);
+        $payload = $this->service->export($hash, $type, $from, $to, $categories, $billed, $payed, $happened, $customer, $noticefields);
 
         $template = 'timesheets/sheets/export-html.twig';
         if (strcmp($type ?? '', "html-overview") == 0) {

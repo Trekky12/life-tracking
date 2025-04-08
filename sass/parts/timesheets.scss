@@ -21,7 +21,7 @@
 }
 
 #timesheets_sheets_table {
-    tr[data-planned="1"] {
+    tr[data-happened="1"] {
         color: variables.$color_blue;
     }
 

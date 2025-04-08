@@ -176,7 +176,7 @@ class SheetWriter extends ObjectActivityWriter {
                     $sheet->end_acc =  $updated_entry->end_acc;
                     $sheet->is_billed =  $updated_entry->is_billed;
                     $sheet->is_payed =  $updated_entry->is_payed;
-                    $sheet->is_planned =  $updated_entry->is_planned;
+                    $sheet->is_happened =  $updated_entry->is_happened;
                     $sheet->customer =  $updated_entry->customer;
 
                     $update = $this->updateEntry($sheet);
