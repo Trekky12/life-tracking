@@ -69,14 +69,14 @@ class SetupService extends Service {
             }
 
             $sql = file_get_contents($migrationFile);
-            $migrations[] = ["version" => $version, "sql" => $sql];
+            $migrations[] = ["version" => $version, "sql" => $sql, "name" => $migrationName];
         }
 
         foreach ($migrations as $migration) {
 
             $ret = $this->setup_mapper->runMigration($migration["sql"]);
 
-            $output[] = "Applied migration: $migrationName " . ($ret ? "successfully" : "failed");
+            $output[] = "Applied migration: " . $migration["name"] . " " . ($ret ? "successfully" : "failed");
 
             $current_version = $migration["version"];
         }
