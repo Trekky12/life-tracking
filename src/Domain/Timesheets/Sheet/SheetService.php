@@ -72,7 +72,7 @@ class SheetService extends Service {
         $this->project_mapper = $project_mapper;
     }
 
-    public function view($hash, $from, $to, $categories, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
+    public function view($hash, $from, $to, $categories, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -91,7 +91,7 @@ class SheetService extends Service {
           } */
         $include_empty_categories = true;
 
-        $response_data = $this->getTableDataIndex($project, $from, $to, $selected_categories, $include_empty_categories, $billed, $payed, $happened, $customer);
+        $response_data = $this->getTableDataIndex($project, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
 
         $response_data["users"] = $this->user_service->getAll();
         $response_data["categories"] = $project_categories;
@@ -100,8 +100,9 @@ class SheetService extends Service {
 
         $response_data["categories_selected_query"] = ["categories" => $selected_categories];
 
-        $response_data["payed"] = $payed;
+        $response_data["invoiced"] = $invoiced;
         $response_data["billed"] = $billed;
+        $response_data["payed"] = $payed;
         $response_data["happened"] = $happened;
 
         $response_data["customers"] = $customers;
@@ -112,7 +113,7 @@ class SheetService extends Service {
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    private function getTableDataIndex($project, $from, $to, $selected_categories = [], $include_empty_categories = true, $billed = null, $payed = null, $happened = null, $customer = null, $count = 20) {
+    private function getTableDataIndex($project, $from, $to, $selected_categories = [], $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null, $count = 20) {
 
         $range = $this->getMapper()->getMinMaxDate("start", "end", $project->id, "project");
         $minTotal = $range["min"];
@@ -136,12 +137,12 @@ class SheetService extends Service {
 
         $include_empty_categories = true;
 
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, $include_empty_categories, $billed, $payed, $happened, $customer, 1, 'DESC', $count);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, 1, 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data, false);
-        $datacount = $this->getMapper()->tableCount($project->id, $from, $to, $selected_categories, $include_empty_categories, $billed, $payed, $happened, $customer);
+        $datacount = $this->getMapper()->tableCount($project->id, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
 
-        $totalSeconds = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, $include_empty_categories, $billed, $payed, $happened, $customer);
-        $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, $include_empty_categories, $billed, $payed, $happened, $customer, "%", "t.duration_modified");
+        $totalSeconds = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
+        $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, "%", "t.duration_modified");
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_duration_modifications > 0 && ($totalSeconds > 0 || $totalSecondsModified > 0)) {
@@ -199,20 +200,21 @@ class SheetService extends Service {
 
         $include_empty_categories = true;
 
+        $invoiced = array_key_exists('invoiced', $requestData) && $requestData['invoiced'] !== '' ? intval(filter_var($requestData['invoiced'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $payed = array_key_exists('payed', $requestData) && $requestData['payed'] !== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
         $happened = array_key_exists('happened', $requestData) && $requestData['happened'] !== '' ? intval(filter_var($requestData['happened'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
         $customer = array_key_exists('customer', $requestData) && $requestData['customer'] !== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
-        $recordsTotal = $this->mapper->tableCount($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $happened, $customer);
-        $recordsFiltered = $this->mapper->tableCount($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $happened, $customer, $searchQuery);
+        $recordsTotal = $this->mapper->tableCount($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
+        $recordsFiltered = $this->mapper->tableCount($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $searchQuery);
 
-        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $happened, $customer, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
         $rendered_data = $this->renderTableRows($project, $data, true);
 
-        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $happened, $customer, $searchQuery);
-        $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $categories, $include_empty_categories, $billed, $payed, $happened, $customer, $searchQuery, "t.duration_modified");
+        $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $searchQuery);
+        $totalSecondsModified = $this->mapper->tableSum($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $searchQuery, "t.duration_modified");
 
         $sum = DateUtility::splitDateInterval($totalSeconds);
         if ($project->has_duration_modifications > 0 && ($totalSeconds > 0 || $totalSecondsModified > 0)) {
@@ -269,7 +271,7 @@ class SheetService extends Service {
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
             $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" data-warning="' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_SHEET_DELETE_WARNING_NOTICE") : "") . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 
-            $rendered_data[] = ["data" => $row, "attributes" => ["data-billed" => $sheet->is_billed, "data-payed" => $sheet->is_payed, "data-happened" => $sheet->is_happened]];
+            $rendered_data[] = ["data" => $row, "attributes" => ["data-invoiced" => $sheet->is_invoiced, "data-billed" => $sheet->is_billed, "data-payed" => $sheet->is_payed, "data-happened" => $sheet->is_happened]];
         }
 
         return $rendered_data;
@@ -421,7 +423,7 @@ class SheetService extends Service {
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
     }
 
-    public function showExport($hash, $from, $to, $categories, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
+    public function showExport($hash, $from, $to, $categories, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
@@ -439,6 +441,7 @@ class SheetService extends Service {
             "from" => $from,
             "to" => $to,
             "categories_selected" => $categories,
+            "invoiced" => $invoiced,
             "billed" => $billed,
             "payed" => $payed,
             "happened" => $happened,
@@ -502,7 +505,7 @@ class SheetService extends Service {
         }
 
         $option = array_key_exists("option", $data) && !empty($data["option"]) ? Utility::filter_string_polyfill($data["option"]) : null;
-        if (!in_array($option, ["billed", "not_billed", "payed", "not_payed", "planned", "happened"])) {
+        if (!in_array($option, ["invoiced", "not_invoiced", "billed", "not_billed",  "payed", "not_payed", "planned", "happened"])) {
             return new Payload(Payload::$STATUS_ERROR, "WRONG_TYPE");
         }
 
@@ -517,7 +520,11 @@ class SheetService extends Service {
 
         $result = false;
         if (count($sheets) > 0) {
-            if ($option == "billed") {
+            if ($option == "invoiced") {
+                $result = $this->mapper->setSheetsInvoicedState($sheets, 1);
+            } elseif ($option == "not_invoiced") {
+                $result = $this->mapper->setSheetsInvoicedState($sheets, 0);
+            } elseif ($option == "billed") {
                 $result = $this->mapper->setSheetsBilledState($sheets, 1);
             } elseif ($option == "not_billed") {
                 $result = $this->mapper->setSheetsBilledState($sheets, 0);
@@ -557,7 +564,7 @@ class SheetService extends Service {
         return new Payload(Payload::$STATUS_ERROR);
     }
 
-    public function calendar($hash, $from, $to, $categories, $billed = null, $payed = null, $happened = null,  $customer = null): Payload {
+    public function calendar($hash, $from, $to, $categories, $invoiced = null, $billed = null, $payed = null, $happened = null,  $customer = null): Payload {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -581,7 +588,7 @@ class SheetService extends Service {
         $response_data["hasTimesheetNotice"] = $has_legend;
         $response_data["from"] = $from;
         $response_data["to"] = $to;
-         $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
+        $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
@@ -627,7 +634,7 @@ class SheetService extends Service {
             if ($timesheet->customerName) {
                 $title[] = $timesheet->customerName;
             }
-            if($timesheet->categories) {
+            if ($timesheet->categories) {
                 $title[] = $timesheet->categories;
             }
 
@@ -667,6 +674,7 @@ class SheetService extends Service {
                     'customer' => $timesheet->customerName ? $timesheet->customerName : '',
                     'categories' => $timesheet->categories ? $timesheet->categories : '',
                     'is_happened' => $timesheet->is_happened,
+                    'is_invoiced' => $timesheet->is_invoiced,
                     'is_billed' => $timesheet->is_billed,
                     'is_payed' => $timesheet->is_payed,
                     'reference_sheet' => $timesheet->reference_sheet,

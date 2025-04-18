@@ -5,7 +5,7 @@
 		{% if has_category_budgets %}
 			<a class="tabbar-tab {% if active == 'timesheets_project_categorybudget_view' %}active{% endif %}" href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
 		{% endif %}
-		<a class="tabbar-tab {% if active == 'timesheets_export' %}active{% endif %}" href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&happened={{ happened }}&customer={{ customer }}">{{lang["TIMESHEETS_EXPORT"]}}</a>
+		<a class="tabbar-tab {% if active == 'timesheets_export' %}active{% endif %}" href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&invoiced={{ invoiced }}&billed={{ billed }}&payed={{ payed }}&happened={{ happened }}&customer={{ customer }}">{{lang["TIMESHEETS_EXPORT"]}}</a>
 		<a class="tabbar-tab {% if active == 'timesheets_fast' %}active{% endif %}" href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
 			{% if project.is_day_based == 1 %}
 				{{lang["TIMESHEETS_FAST_DAY_BASED"]}}

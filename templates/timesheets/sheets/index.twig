@@ -29,7 +29,7 @@
 											<button class="button button-text">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</button>
 										</a>
 									{% endif %}
-									<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
+									<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&invoiced={{ invoiced }}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
 										<button class="button button-text">{{lang["TIMESHEETS_EXPORT"]}}</button>
 									</a>
 									<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
@@ -131,6 +131,22 @@
 							</select>
 						</div>
 					{% endif %}
+					<label for="timesheet_view_happened">{{lang["TIMESHEETS_HAPPENED"]}}:</label>
+					<div class="select-wrapper">
+						<select name="happened" id="timesheet_view_happened" class="regular">
+							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED_AND_HAPPENED"]}}</option>
+							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED"]}}</option>
+							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_HAPPENED"]}}</option>
+						</select>
+					</div>
+					<label for="timesheet_view_invoiced">{{lang["TIMESHEETS_INVOICED"]}}:</label>
+					<div class="select-wrapper">
+						<select name="invoiced" id="timesheet_view_invoiced" class="regular">
+							<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_INVOICED_AND_NOT_INVOICED"]}}</option>
+							<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_INVOICED"]}}</option>
+							<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_INVOICED"]}}</option>
+						</select>
+					</div>
 					<label for="timesheet_view_billed">{{lang["TIMESHEETS_BILLED"]}}:</label>
 					<div class="select-wrapper">
 						<select name="billed" id="timesheet_view_billed" class="regular">
@@ -145,14 +161,6 @@
 							<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PAYED_AND_NOT_PAYED"]}}</option>
 							<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_PAYED"]}}</option>
 							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_PAYED"]}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_happened">{{lang["TIMESHEETS_HAPPENED"]}}:</label>
-					<div class="select-wrapper">
-						<select name="happened" id="timesheet_view_happened" class="regular">
-							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED_AND_HAPPENED"]}}</option>
-							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED"]}}</option>
-							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_HAPPENED"]}}</option>
 						</select>
 					</div>
 				</div>
@@ -208,7 +216,7 @@
 				</thead>
 				<tbody>
 					{% for sheet in sheets %}
-						<tr data-billed="{{sheet["attributes"]["data-billed"]}}" data-payed="{{sheet["attributes"]["data-payed"]}}" data-happened="{{sheet["attributes"]["data-happened"]}}">
+						<tr data-invoiced="{{sheet["attributes"]["data-invoiced"]}}" data-billed="{{sheet["attributes"]["data-billed"]}}" data-payed="{{sheet["attributes"]["data-payed"]}}" data-happened="{{sheet["attributes"]["data-happened"]}}">
 							<td>{{ sheet["data"][0]| raw }}</td>
 							<td>{{ sheet["data"][1] }}</td>
 							<td>{{ sheet["data"][2] }}</td>
@@ -256,12 +264,14 @@
 						<div class="select-wrapper">
 							<select id="applyOptions" name="options">
 								<option value="">{{ lang["TIMESHEETS_OPTIONS_CHOOSE"]}}</option>
+								<option value="planned">{{ lang["TIMESHEETS_APPLY_PLANNED"] }}</option>
+								<option value="happened">{{ lang["TIMESHEETS_APPLY_HAPPENED"] }}</option>
+								<option value="invoiced">{{ lang["TIMESHEETS_APPLY_INVOICED"] }}</option>
+								<option value="not_invoiced">{{ lang["TIMESHEETS_APPLY_NOT_INVOICED"] }}</option>
 								<option value="billed">{{ lang["TIMESHEETS_APPLY_BILLED"] }}</option>
 								<option value="not_billed">{{ lang["TIMESHEETS_APPLY_NOT_BILLED"] }}</option>
 								<option value="payed">{{ lang["TIMESHEETS_APPLY_PAYED"] }}</option>
 								<option value="not_payed">{{ lang["TIMESHEETS_APPLY_NOT_PAYED"] }}</option>
-								<option value="planned">{{ lang["TIMESHEETS_APPLY_PLANNED"] }}</option>
-								<option value="happened">{{ lang["TIMESHEETS_APPLY_HAPPENED"] }}</option>
 							</select>
 						</div>
 					</div>

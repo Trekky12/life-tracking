@@ -912,6 +912,7 @@ CREATE TABLE IF NOT EXISTS timesheets_sheets (
     end_lng DECIMAL(17,14) DEFAULT NULL,
     end_acc DECIMAL(10,3) DEFAULT NULL,
     is_billed int(1) DEFAULT 0,
+    is_invoiced int(1) DEFAULT 0,
     is_payed int(1) DEFAULT 0,
     is_happened int(1) DEFAULT 0,
     reference_sheet int(11) unsigned DEFAULT NULL,

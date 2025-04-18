@@ -1,0 +1,1 @@
+ALTER TABLE timesheets_sheets ADD is_invoiced int(1) DEFAULT 0 AFTER is_billed;

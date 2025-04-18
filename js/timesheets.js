@@ -440,10 +440,17 @@ if (calendarEl) {
             let is_part_of_series = info.event.extendedProps.reference_sheet != null || info.event.extendedProps.series.length > 0;
 
             let state = eventModal.querySelector(".state");
-            if (info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_happened == 1 && !is_part_of_series) {
+            if (info.event.extendedProps.is_invoiced == 0 && info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_happened == 0 && !is_part_of_series) {
                 state.classList.add("hidden");
             } else {
                 state.classList.remove("hidden");
+
+                let invoiced = eventModal.querySelector(".invoiced");
+                if (info.event.extendedProps.is_invoiced == 1) {
+                    invoiced.classList.remove("hidden");
+                } else {
+                    invoiced.classList.add("hidden");
+                }
 
                 let billed = eventModal.querySelector(".billed");
                 if (info.event.extendedProps.is_billed == 1) {

@@ -157,11 +157,19 @@
         grid-template-columns: min-content auto;
 
         @media screen and (min-width: variables.$size_mobile) {
-            grid-template-columns: min-content min-content;
+            grid-template-columns: max-content max-content;
         }
 
         label {
             margin-bottom: 0px;
+        }
+
+        .select-wrapper{
+            width: 100%;
+
+            select{
+                width: 100%;
+            }
         }
     }
 

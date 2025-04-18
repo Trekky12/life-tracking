@@ -91,17 +91,23 @@ class ActivityService extends Service {
                 case 'unarchived':
                     $action = "ACTIVITY_UNARCHIVED";
                     break;
+                case 'invoiced':
+                    $action = "ACTIVITY_INVOICED";
+                    break;
+                case 'not_invoiced':
+                    $action = "ACTIVITY_NOT_INVOICED";
+                    break;
                 case 'billed':
                     $action = "ACTIVITY_BILLED";
                     break;
                 case 'not_billed':
-                    $action = "ACTIVITY_NOTBILLED";
+                    $action = "ACTIVITY_NOT_BILLED";
                     break;
                 case 'payed':
                     $action = "ACTIVITY_PAYED";
                     break;
                 case 'not_payed':
-                    $action = "ACTIVITY_NOTPAYED";
+                    $action = "ACTIVITY_NOT_PAYED";
                     break;
                 case 'planned':
                     $action = "ACTIVITY_PLANNED";

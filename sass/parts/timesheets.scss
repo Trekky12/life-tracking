@@ -25,6 +25,10 @@
         color: variables.$color_blue;
     }
 
+    tr[data-invoiced="1"] {
+        color: variables.$color_red_light;
+    }
+
     tr[data-billed="1"] {
         color: variables.$color_orange;
     }

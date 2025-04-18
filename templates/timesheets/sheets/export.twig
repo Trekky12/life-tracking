@@ -82,6 +82,22 @@
 							</select>
 						</div>
 					{% endif %}
+					<label for="timesheet_view_happened">{{lang["TIMESHEETS_HAPPENED"]}}:</label>
+					<div class="select-wrapper">
+						<select name="happened" id="timesheet_view_happened" class="regular">
+							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED_AND_HAPPENED"]}}</option>
+							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED"]}}</option>
+							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_HAPPENED"]}}</option>
+						</select>
+					</div>
+					<label for="timesheet_view_invoiced">{{lang["TIMESHEETS_INVOICED"]}}:</label>
+					<div class="select-wrapper">
+						<select name="invoiced" id="timesheet_view_invoiced" class="regular">
+							<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_INVOICED_AND_NOT_INVOICED"]}}</option>
+							<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_INVOICED"]}}</option>
+							<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_INVOICED"]}}</option>
+						</select>
+					</div>
 					<label for="timesheet_view_billed">{{lang["TIMESHEETS_BILLED"]}}:</label>
 					<div class="select-wrapper">
 						<select name="billed" id="timesheet_view_billed" class="regular">
@@ -96,14 +112,6 @@
 							<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PAYED_AND_NOT_PAYED"]}}</option>
 							<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_PAYED"]}}</option>
 							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_PAYED"]}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_happened">{{lang["TIMESHEETS_HAPPENED"]}}:</label>
-					<div class="select-wrapper">
-						<select name="happened" id="timesheet_view_happened" class="regular">
-							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED_AND_HAPPENED"]}}</option>
-							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED"]}}</option>
-							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_HAPPENED"]}}</option>
 						</select>
 					</div>
 				</div>

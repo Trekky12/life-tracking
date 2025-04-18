@@ -40,6 +40,7 @@ class Sheet extends \App\Domain\DataObject {
 
         $this->categories = $this->exists('categories', $data) ? Utility::filter_string_polyfill($data['categories']) : null;
 
+        $this->is_invoiced = $this->exists('is_invoiced', $data) ? filter_var($data['is_invoiced'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->is_billed = $this->exists('is_billed', $data) ? filter_var($data['is_billed'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->is_payed = $this->exists('is_payed', $data) ? filter_var($data['is_payed'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->is_happened = $this->exists('is_happened', $data) ? filter_var($data['is_happened'], FILTER_SANITIZE_NUMBER_INT) : 0;

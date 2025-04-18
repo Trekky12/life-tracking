@@ -1035,6 +1035,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
 });
 
 const timesheetCategories = document.querySelector("#selected_categories");
+const timesheetInvoiced = document.querySelector("#timesheet_view_invoiced");
 const timesheetBilled = document.querySelector("#timesheet_view_billed");
 const timesheetPayed = document.querySelector("#timesheet_view_payed");
 const timesheetHappened = document.querySelector("#timesheet_view_happened");
@@ -1064,6 +1065,7 @@ var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
         "from": jsObject.dateFrom,
         "to": jsObject.dateTo,
         "categories": timesheetCategories ? timesheetCategories.value : [],
+        "invoiced": timesheetInvoiced ? timesheetInvoiced.value : '',
         "billed": timesheetBilled ? timesheetBilled.value : '',
         "payed": timesheetPayed ? timesheetPayed.value : '',
         "happened": timesheetHappened ? timesheetHappened.value : '',

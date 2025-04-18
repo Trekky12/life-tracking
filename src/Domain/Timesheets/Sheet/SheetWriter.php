@@ -174,6 +174,7 @@ class SheetWriter extends ObjectActivityWriter {
                     $sheet->end_lat =  $updated_entry->end_lat;
                     $sheet->end_lng =  $updated_entry->end_lng;
                     $sheet->end_acc =  $updated_entry->end_acc;
+                    $sheet->is_invoiced =  $updated_entry->is_invoiced;
                     $sheet->is_billed =  $updated_entry->is_billed;
                     $sheet->is_payed =  $updated_entry->is_payed;
                     $sheet->is_happened =  $updated_entry->is_happened;
