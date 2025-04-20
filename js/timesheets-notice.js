@@ -2,7 +2,7 @@
 
 
 const timesheetNoticeWrapper = document.querySelector("#timesheetNoticeWrapper");
-if(!timesheetNoticeWrapper){
+if (!timesheetNoticeWrapper) {
     throw "No notices here";
 }
 const loadingIconTimesheetNotice = document.querySelector("#loadingIconTimesheetNotice");
@@ -75,9 +75,22 @@ async function loadData() {
         }
 
         if (notice) {
-            if (IsJsonString(notice)) {
+            // default no fields
+            let hasFields = false;
 
+            if (IsJsonString(notice)) {
                 notice = JSON.parse(notice);
+
+                // only one field named "notice"?
+                if ("notice" in notice && notice.length == 1) {
+                    hasFields = false;
+                    notice = notice["notice"];
+                } else {
+                    hasFields = true;
+                }
+            }
+
+            if (hasFields) {
 
                 for (const [field_name, field_value] of Object.entries(notice)) {
                     let field_value = notice[field_name];
@@ -98,6 +111,29 @@ async function loadData() {
                                 field_element.parentElement.dataset.empty = 1;
                             }
                         }
+
+                    } else {
+                        console.log(field_name + " not found, appending manually!");
+
+                        const formGroup = document.createElement('div');
+                        formGroup.className = 'form-group';
+
+                        const label = document.createElement('label');
+                        label.setAttribute('for', `input_${field_name}`);
+                        label.innerHTML = field_name;
+
+                        const textarea = document.createElement('textarea');
+                        textarea.className = 'form-control';
+                        textarea.id = `input_${field_name}`;
+                        textarea.name = field_name;
+                        textarea.dataset.name = field_name;
+                        textarea.dataset.default = 0;
+                        textarea.dataset.saved = 1;
+                        textarea.value = field_value;
+
+                        formGroup.appendChild(label);
+                        formGroup.appendChild(textarea);
+                        notice_field.appendChild(formGroup);
 
                     }
 
