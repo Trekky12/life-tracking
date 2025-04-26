@@ -36,7 +36,7 @@
 		<div class="buttons">
 			<a href="{{ url_for('trips_event_edit', {'trip':trip.hash}) }}" id="new-event-btn">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD_EVENT"]}}</button>
+					{{"ADD_EVENT"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -48,14 +48,14 @@
 		<div id="trip-map">
 			<div id="route-modal" class="modal">
 				<div class="modal-inner">
-					<div class="modal-header">{{lang["TRIPS_ROUTES"]}}<span class="modal-close" id="modal-close-btn">&times;</span>
+					<div class="modal-header">{{"TRIPS_ROUTES"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
 					</div>
 					<div class="modal-content">
 						<table>
 							<thead>
 								<tr>
-									<th>{{ lang["NAME"] }}</th>
-									<th>{{ lang["DATE"] }}</th>
+									<th>{{ "NAME"|trans }}</th>
+									<th>{{ "DATE"|trans }}</th>
 									<th></th>
 									<th></th>
 								</tr>
@@ -69,7 +69,7 @@
 		<div class="page-content" id="trip_overview">
 
 			{% if not trip.notice is empty %}
-				<h3>{{ lang["NOTICE"]}}:</h3>
+				<h3>{{ "NOTICE"|trans}}:</h3>
 				<p>{{trip.getNotice()|raw|nl2br}}</p>
 			{% endif %}
 
@@ -87,7 +87,7 @@
 					{% endfor %}
 				</div>
 				<a id="createRoute" href="#">
-					<button class="button small trips_overview blue">{{ lang["CREATE_ROUTE"] }}</button>
+					<button class="button small trips_overview blue">{{ "CREATE_ROUTE"|trans }}</button>
 				</a>
 			</div>
 
@@ -98,7 +98,7 @@
 							{% if not item['date'] is null %}
 								{{ item['full_date'] }}
 							{% else %}
-								{{ lang['WITHOUT_DATE'] }}
+								{{ "WITHOUT_DATE"|trans }}
 							{% endif %}
 						</h3>
 						{% for event in item['events'] %}

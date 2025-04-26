@@ -126,13 +126,13 @@ class ActivityService extends Service {
 
             if (is_null($el->user)) {
                 $action = $action . "_SYSTEM";
-                $description = sprintf($this->translation->getTranslatedString($action), $object_description);
+                $description = $this->translation->getTranslatedString($action, ['%element%' => $object_description]);
             } elseif ($el->user === $me) {
                 $action = $action . "_ME";
-                $description = sprintf($this->translation->getTranslatedString($action), $object_description);
+                $description = $this->translation->getTranslatedString($action, ['%element%' => $object_description]);
             } else {
                 $user = $users[$el->user]->name;
-                $description = sprintf($this->translation->getTranslatedString($action), $user, $object_description);
+                $description = $this->translation->getTranslatedString($action, ['%user%' => $user, '%element%' => $object_description]);
             }
 
 

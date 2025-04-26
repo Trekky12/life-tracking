@@ -3,13 +3,13 @@
 		<div class="tabbar-tab-scroll-btn" data-type="left" href="#"><div tabindex="-1" class="icon-ripple-wrapper" >{{ fontawesome('fas fa-chevron-left') }}</div></div>
 	{% endif %}
 	<div class="tabbar-scrollarea">
-		<a class="tabbar-tab {% if active == 'workouts' %}active{% endif %}" href="{{ url_for('workouts') }}">{{lang["WORKOUTS"]}}</a>
-		<a class="tabbar-tab {% if active == 'workouts_exercises_view' %}active{% endif %}" href="{{ url_for('workouts_exercises_view') }}">{{lang["WORKOUTS_EXERCISES"]}}</a>
-		<a class="tabbar-tab {% if active == 'workouts_templates' %}active{% endif %}" href="{{ url_for('workouts_templates') }}">{{lang["WORKOUTS_TEMPLATE_PLANS"]}}</a>
+		<a class="tabbar-tab {% if active == 'workouts' %}active{% endif %}" href="{{ url_for('workouts') }}">{{"WORKOUTS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'workouts_exercises_view' %}active{% endif %}" href="{{ url_for('workouts_exercises_view') }}">{{"WORKOUTS_EXERCISES"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'workouts_templates' %}active{% endif %}" href="{{ url_for('workouts_templates') }}">{{"WORKOUTS_TEMPLATE_PLANS"|trans}}</a>
 		{% if user.isAdmin() %}
-			<a class="tabbar-tab {% if active == 'workouts_exercises' %}active{% endif %}" href="{{ url_for('workouts_exercises') }}">{{lang["WORKOUTS_EXERCISES_MANAGE"]}}</a>
-			<a class="tabbar-tab {% if active == 'workouts_muscles' %}active{% endif %}" href="{{ url_for('workouts_muscles') }}">{{lang["WORKOUTS_MUSCLES"]}}</a>
-			<a class="tabbar-tab {% if active == 'workouts_bodyparts' %}active{% endif %}" href="{{ url_for('workouts_bodyparts') }}">{{lang["WORKOUTS_BODYPARTS"]}}</a>
+			<a class="tabbar-tab {% if active == 'workouts_exercises' %}active{% endif %}" href="{{ url_for('workouts_exercises') }}">{{"WORKOUTS_EXERCISES_MANAGE"|trans}}</a>
+			<a class="tabbar-tab {% if active == 'workouts_muscles' %}active{% endif %}" href="{{ url_for('workouts_muscles') }}">{{"WORKOUTS_MUSCLES"|trans}}</a>
+			<a class="tabbar-tab {% if active == 'workouts_bodyparts' %}active{% endif %}" href="{{ url_for('workouts_bodyparts') }}">{{"WORKOUTS_BODYPARTS"|trans}}</a>
 		{% endif %}
 	</div>
 	{% if user.isAdmin() %}

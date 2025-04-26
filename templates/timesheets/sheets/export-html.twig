@@ -18,7 +18,7 @@
 			<a href="{{ url_for_with_last_query_params('timesheets_export', {'project' : project.hash}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS"]}}
+			<h2>{{"TIMESHEETS"|trans}}
 				|
 				{{project.name|raw}}</h2>
 		</div>
@@ -38,7 +38,7 @@
 	<div id="alertError" class="alert danger hidden">
 		<span class="closebtn">&times;</span>
 		<span class="alert-message">
-			<p>{{ lang["ENTRY_ERROR"] }}</p>
+			<p>{{ "ENTRY_ERROR"|trans }}</p>
 			<p id="alertErrorDetail"></p>
 		</span>
 	</div>
@@ -50,24 +50,24 @@
 					<div class="filter-row">
 						<div class="filter-group">
 							<div class="filter-element">
-								<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
+								<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button button-outlined" id="wordExport">{{lang["EXPORT_WORD"]}}
-									{{lang["TIMESHEETS_EXPORT"]}}</button>
+								<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
+									{{"TIMESHEETS_EXPORT"|trans}}</button>
 							</div>
 						</div>
 					</div>
 					<div class="filter-row">
 						<label id="checkboxHideEmptySheetsLabel" for="checkboxHideEmptySheets">
 							<input type="checkbox" value="1" id="checkboxHideEmptySheets">
-							{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"]}}
+							{{"TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"|trans}}
 						</label>
 					</div>
 					<div class="filter-row">
 						<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
 							<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields">
-							{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"]}}
+							{{"TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"|trans}}
 						</label>
 					</div>
 				</div>
@@ -83,18 +83,18 @@
 							{%- if project.customers_name_singular %}
 								{{- project.customers_name_singular -}}
 							{% else %}
-								{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{{- "TIMESHEETS_CUSTOMER"|trans -}}
 							{% endif -%}:&nbsp;
 							{{- sheet["customer"] -}}
 						</h4>
 					{% endif %}
 
 					{% if sheet["categories"] %}
-						<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
+						<h4 class="sheet_categories">{{- "CATEGORIES"|trans -}}:&nbsp;
 							{{- sheet["categories"] -}}
 						</h4>
 					{% endif %}
-					<h4>{{lang["DIFFERENCE"]}}:
+					<h4>{{"DIFFERENCE"|trans}}:
 						{{ sheet["time"] }}</h4>
 
 					<div class="timesheet-notice" data-id="{{ sheet["id"] }}" data-type="sheet">

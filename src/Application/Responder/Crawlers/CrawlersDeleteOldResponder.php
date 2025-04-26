@@ -32,7 +32,7 @@ class CrawlersDeleteOldResponder extends Responder {
                 $this->flash->addMessage('message_type', 'danger');
                 break;
             default:
-                $this->flash->addMessage('message', sprintf($this->translation->getTranslatedString("CRAWLER_DATASETS_DELETED"), $data["count"]));
+                $this->flash->addMessage('message', $this->translation->getTranslatedString("CRAWLER_DATASETS_DELETED", ['%count%' => $data["count"]]));
                 $this->flash->addMessage('message_type', 'success');
         }
         return $response->withHeader('Location', $this->router->urlFor('crawlers_view', ["crawler" => $data["crawler"]]))->withStatus(301);

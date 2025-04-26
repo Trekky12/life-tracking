@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=8.4",
+        "php": ">=8.3",
         "slim/slim": "4.*",
         "slim/psr7": "^1.1.0",
         "slim/http": "^1.0",
@@ -30,7 +30,9 @@
         "robthree/twofactorauth": "^3.0",
         "endroid/qr-code": "^6.0",
         "minishlink/web-push": "^9.0",
-        "phpoffice/phpword": "^1.0"
+        "phpoffice/phpword": "^1.0",
+        "symfony/twig-bridge": "^7.2",
+        "symfony/translation": "^7.2"
     },
     "autoload": {
         "psr-4": {

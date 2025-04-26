@@ -9,25 +9,25 @@
             <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 
             <div class="form-group">
-                <label for="inputUsername" class="control-label hidden">{{lang["LOGIN"]}}</label>
-                <input name="username" class="form-control" id="inputUsername" placeholder="{{lang["LOGIN"]}}" value="" autofocus="" required="" type="text">
+                <label for="inputUsername" class="control-label hidden">{{"LOGIN"|trans}}</label>
+                <input name="username" class="form-control" id="inputUsername" placeholder="{{"LOGIN"|trans}}" value="" autofocus="" required="" type="text">
             </div>
             <div class="form-group">
-                <label for="inputPassword" class="control-label hidden">{{lang["PASSWORD"]}}</label>
-                <input name="password" class="form-control" id="inputPassword" placeholder="{{lang["PASSWORD"]}}" required="" type="password">
+                <label for="inputPassword" class="control-label hidden">{{"PASSWORD"|trans}}</label>
+                <input name="password" class="form-control" id="inputPassword" placeholder="{{"PASSWORD"|trans}}" required="" type="password">
             </div>
             <div class="form-group">
-                <label for="inputCode" class="control-label hidden">{{lang["TWOFACTOR_CODE"]}}</label>
-                <input name="code" class="form-control" id="inputCode" placeholder="{{lang["TWOFACTOR_CODE"]}}" type="text">
+                <label for="inputCode" class="control-label hidden">{{"TWOFACTOR_CODE"|trans}}</label>
+                <input name="code" class="form-control" id="inputCode" placeholder="{{"TWOFACTOR_CODE"|trans}}" type="text">
             </div>
             <div class="form-group">
                 <label class="checkbox" for="remember">
                     <input name="remember" type="checkbox" value="1" id="remember">
-                        {{lang["REMEMBER_LOGIN"]}}
+                        {{"REMEMBER_LOGIN"|trans}}
                 </label>
             </div>
             <div class="form-group">
-                <button type="submit" id="submit" class="button">{{lang["DO_LOGIN"]}}</button>
+                <button type="submit" id="submit" class="button">{{"DO_LOGIN"|trans}}</button>
             </div>
         </form>
     </div>

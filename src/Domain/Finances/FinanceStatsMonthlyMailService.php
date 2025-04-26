@@ -20,13 +20,15 @@ class FinanceStatsMonthlyMailService {
     private $user_service;
     private $notification_service;
 
-    public function __construct(LoggerInterface $logger, 
-            Settings $settings, 
-            Translator $translation, 
-            FinancesMapper $finances_mapper, 
-            Helper $helper, 
-            UserService $user_service,
-            NotificationsService $notification_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        Settings $settings,
+        Translator $translation,
+        FinancesMapper $finances_mapper,
+        Helper $helper,
+        UserService $user_service,
+        NotificationsService $notification_service
+    ) {
         $this->logger = $logger;
         $this->settings = $settings;
         $this->translation = $translation;
@@ -72,8 +74,8 @@ class FinanceStatsMonthlyMailService {
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
-                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('YOUR_MONTHLY_STATISTIC'), $fmt->format($dateObj)),
+                        'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%' => $user->name]),
+                        'content' => $this->translation->getTranslatedString('YOUR_MONTHLY_STATISTIC', ['%month%' => $fmt->format($dateObj)]),
                         'LANG_YOUR_BALANCE' => $this->translation->getTranslatedString('YOUR_BALANCE'),
                         'LANG_YOUR_BIGGEST_EXPENSES' => $this->translation->getTranslatedString('YOUR_BIGGEST_EXPENSES'),
                         'LANG_INCOMES' => $this->translation->getTranslatedString('FINANCES_INCOMES'),
@@ -90,5 +92,4 @@ class FinanceStatsMonthlyMailService {
             }
         }
     }
-
 }

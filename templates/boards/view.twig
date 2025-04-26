@@ -44,7 +44,7 @@
 		</span>
 		<div class="board-sidebar-inner">
 			<div class="board-sidebar-box">
-				<h4>{{lang["USERS"]}}</h4>
+				<h4>{{"USERS"|trans}}</h4>
 				<div class="member-list">
 					{% for user in users %}
 						<div class="avatar-wrapper">
@@ -63,7 +63,7 @@
 			</div>
 
 			<div class="board-sidebar-box">
-				<h4>{{lang["LABELS"]}}</h4>
+				<h4>{{"LABELS"|trans}}</h4>
 				<div class="card-label-list">
 					{% for label in labels %}
 						<span class="card-label" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">
@@ -72,12 +72,12 @@
 					{% endfor %}
 				</div>
 				<a id="create-label" class="create-label add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD_LABEL"]}}</a>
+					{{"ADD_LABEL"|trans}}</a>
 			</div>
 			<div class="board-sidebar-box">
 				<label class="checkbox" for="checkboxArchivedItems">
 					<input name="set_archived_items" type="checkbox" id="checkboxArchivedItems" autocomplete="off">
-					{{lang["SHOW_ARCHIVED_ITEMS"]}}
+					{{"SHOW_ARCHIVED_ITEMS"|trans}}
 				</label>
 			</div>
 		</div>
@@ -85,7 +85,7 @@
 
 	<div id="stack-modal" class="modal">
 		<div class="modal-inner">
-			<div class="modal-header">{{lang["STACK"]}}<span class="edit-bar"></span>
+			<div class="modal-header">{{"STACK"|trans}}<span class="edit-bar"></span>
 			</div>
 			<form>
 				<div class="modal-content">
@@ -95,14 +95,14 @@
 					<input name="id" type="hidden" value="" class="reset-field">
 					<input name="position" type="hidden" value="" class="reset-field">
 					<div class="form-group">
-						<label for="inputName">{{lang["NAME"]}}</label>
+						<label for="inputName">{{"NAME"|trans}}</label>
 						<input class="form-control" id="inputName" name="name" type="text">
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="buttons">
-						<input id="stack-add-btn" class="button submit-btn no-loading" type="submit" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="stack-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
+						<input id="stack-add-btn" class="button submit-btn no-loading" type="submit" tabindex="-1" value="{{"ADD"|trans}}"/>
+						<button id="stack-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
 					</div>
 				</div>
 			</form>
@@ -111,7 +111,7 @@
 
 	<div id="card-modal" class="modal">
 		<div class="modal-inner">
-			<div class="modal-header">{{lang["CARD"]}}<span class="edit-bar"></span>
+			<div class="modal-header">{{"CARD"|trans}}<span class="edit-bar"></span>
 			</div>
 			<form>
 				<div class="modal-content">
@@ -120,10 +120,10 @@
 					<input name="position" type="hidden" value="" class="reset-field"/>
 					<input name="archive" type="hidden" value="" class="reset-field"/>
 					<div class="form-group card-dates hidden">
-						<span>{{lang["CHANGED_BY"]}}:</span>
+						<span>{{"CHANGED_BY"|trans}}:</span>
 						<span id="changedBy"></span>
 						(<span id="changedOn"></span>) |
-						<span>{{lang["CREATED_BY"]}}:</span>
+						<span>{{"CREATED_BY"|trans}}:</span>
 						<span id="createdBy"></span>
 						(<span id="createdOn"></span>)
 					</div>
@@ -137,12 +137,12 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="inputTitle">{{lang["TITLE"]}}</label>
+						<label for="inputTitle">{{"TITLE"|trans}}</label>
 						<input class="form-control" id="inputTitle" name="title" type="text"/>
 					</div>
 					<div class="two-columns">
 						<div class="form-group left">
-							<label>{{lang["USERS"]}}</label>
+							<label>{{"USERS"|trans}}</label>
 							<div class="member-list">
 								{% for user in users %}
 									{% if user.get_thumbnail() != '' %}
@@ -156,7 +156,7 @@
 							</div>
 						</div>
 						<div class="form-group right">
-							<label>{{lang["LABELS"]}}</label>
+							<label>{{"LABELS"|trans}}</label>
 							<select id="card-label-list" name="labels[]" multiple="true">
 								{% for label in labels %}
 									<option value="{{label.id}}" data-background-color="{{label.background_color}}" data-text-color="{{label.getTextColor()}}" style="background-color:{{label.background_color}}; color:{{label.getTextColor()}}">{{label.name}}</option>
@@ -166,18 +166,18 @@
 					</div>
 					<div class="form-group">
 						<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
-							{{lang["ADD_DESCRIPTION"]}}</a>
+							{{"ADD_DESCRIPTION"|trans}}</a>
 						<div class="hidden-field hidden">
-							<label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+							<label for="inputDescription">{{"DESCRIPTION"|trans}}</label>
 							<textarea class="form-control" id="inputDescription" name="description"></textarea>
 						</div>
 					</div>
 					<div class="two-columns">
 						<div class="form-group left">
 							<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
-								{{lang["ADD_DATE"]}}</a>
+								{{"ADD_DATE"|trans}}</a>
 							<div class="hidden-field hidden">
-								<label for="dateSelectField">{{lang["DATE"]}}</label>
+								<label for="dateSelectField">{{"DATE"|trans}}</label>
 								<div class="flatpickr-group" id="dateSelect">
 									<input type="text" class="form-control date-display" id="dateSelectField" name="date" data-input/>
 
@@ -193,27 +193,27 @@
 						</div>
 						<div class="form-group right">
 							<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
-								{{lang["ADD_TIME"]}}</a>
+								{{"ADD_TIME"|trans}}</a>
 							<div class="hidden-field hidden">
-								<label for="inputTime">{{lang["TIME"]}}</label>
+								<label for="inputTime">{{"TIME"|trans}}</label>
 								<input type="time" step="1" class="form-control" id="inputTime" name="time"/>
 							</div>
 						</div>
 					</div>
 					<div class="form-group hidden">
 						<a class="show-sibling add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
-							{{lang["ADD_COMMENT"]}}</a>
+							{{"ADD_COMMENT"|trans}}</a>
 						<div class="hidden-field hidden">
-							<label for="inputComment">{{lang["COMMENT"]}}</label>
+							<label for="inputComment">{{"COMMENT"|trans}}</label>
 							<textarea class="form-control" id="inputComment" name="comment"></textarea>
-							<button id="addComment" class="button">{{lang["ADD_COMMENT"]}}</button>
+							<button id="addComment" class="button">{{"ADD_COMMENT"|trans}}</button>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="buttons">
-						<input id="card-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="card-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
+						<input id="card-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{"ADD"|trans}}"/>
+						<button id="card-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
 					</div>
 				</div>
 			</form>
@@ -222,33 +222,33 @@
 
 	<div id="label-modal" class="modal">
 		<div class="modal-inner">
-			<div class="modal-header">{{lang["LABEL"]}}<span class="edit-bar"></span>
+			<div class="modal-header">{{"LABEL"|trans}}<span class="edit-bar"></span>
 			</div>
 			<form>
 				<div class="modal-content">
 					<input name="board" type="hidden" value="{{board.id}}"/>
 					<input name="id" type="hidden" value="" class="reset-field"/>
 					<div class="form-group">
-						<label for="inputName">{{lang["NAME"]}}</label>
+						<label for="inputName">{{"NAME"|trans}}</label>
 						<input class="form-control" id="inputName" name="name" type="text"/>
 					</div>
 					<div class="two-columns form-group">
 						<div class="left">
-							<h4>{{lang["BACKGROUND"]}}
-								{{lang["COLOR"]}}</h4>
+							<h4>{{"BACKGROUND"|trans}}
+								{{"COLOR"|trans}}</h4>
 							<input class="form-control" id="inputBackgroundColor" name="background_color" type="color"/>
 						</div>
 						<div class="right">
-							<h4>{{lang["TEXT"]}}
-								{{lang["COLOR"]}}</h4>
+							<h4>{{"TEXT"|trans}}
+								{{"COLOR"|trans}}</h4>
 							<input class="form-control" id="inputTextColor" name="text_color" type="color"/>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="buttons">
-						<input id="label-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="label-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
+						<input id="label-add-btn" type="submit" class="button submit-btn no-loading" tabindex="-1" value="{{"ADD"|trans}}"/>
+						<button id="label-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
 					</div>
 				</div>
 			</form>
@@ -263,13 +263,13 @@
 					<span class="stack-menu-button">{{ fontawesome('fas fa-ellipsis-vertical') }}</span>
 					<ul class="stack-menu">
 						<li>
-							<a href="#" class="stack-edit">{{lang["EDIT"]}}</a>
+							<a href="#" class="stack-edit">{{"EDIT"|trans}}</a>
 						</li>
 						<li>
-							<a href="#" class="btn-archive-stack">{{lang["ARCHIVE"]}}</a>
+							<a href="#" class="btn-archive-stack">{{"ARCHIVE"|trans}}</a>
 						</li>
 						<li>
-							<a href="#" class="btn-archive-stack" data-cards="1">{{lang["ARCHIVE_WITH_CARDS"]}}</a>
+							<a href="#" class="btn-archive-stack" data-cards="1">{{"ARCHIVE_WITH_CARDS"|trans}}</a>
 						</li>
 					</ul>
 				</span>
@@ -279,13 +279,13 @@
 
 			<div class="board-card-dummy">
 				<a class="create-card add-element-text" href="#" data-stack="">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD_CARD"]}}</a>
+					{{"ADD_CARD"|trans}}</a>
 			</div>
 		</div>
 
 		<div class="stack-dummy">
 			<a class="create-stack add-element-text" href="#">{{ fontawesome('fas fa-plus') }}
-				{{lang["ADD_STACK"]}}</a>
+				{{"ADD_STACK"|trans}}</a>
 		</div>
 
 		<div class="board-card" data-card="">

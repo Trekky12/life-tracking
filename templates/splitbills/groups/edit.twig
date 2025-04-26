@@ -17,7 +17,7 @@
 			<a href="{{ url_for_with_last_query_params('splitbills')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["SPLITBILL_GROUPS"]}}</h2>
+			<h2>{{"SPLITBILL_GROUPS"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -37,29 +37,29 @@
 
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputCurrency">{{lang["CURRENCY"]}}</label>
+					<label for="inputCurrency">{{"CURRENCY"|trans}}</label>
 					<input type="text" class="form-control" id="inputCurrency" name="currency" value="{% if not entry is null %}{{entry.currency}}{% else %}{{ i18n.currency }}{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputRate">{{lang["EXCHANGE_RATE"]}}</label>
+					<label for="inputRate">{{"EXCHANGE_RATE"|trans}}</label>
 					<input type="number" step="any" inputmode="decimal" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}1{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputFee">{{lang["EXCHANGE_FEE"]}}</label>
+					<label for="inputFee">{{"EXCHANGE_FEE"|trans}}</label>
 					<input type="number" step="any" inputmode="decimal" class="form-control" id="inputFee" name="exchange_fee" value="{% if not entry is null %}{{entry.exchange_fee}}{% else %}0{% endif %}">
 				</div>
 
 				<div class="form-group">
 					<label class="checkbox" for="checkboxAddFinances">
 						<input name="add_finances" type="checkbox" value="1" id="checkboxAddFinances" {% if entry is not null and entry.add_finances == 1 %} checked {% endif %}>
-						{{lang["SPLITBILLS_ADD_FINANCES"]}}
+						{{"SPLITBILLS_ADD_FINANCES"|trans}}
 					</label>
 				</div>
 
@@ -70,13 +70,13 @@
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

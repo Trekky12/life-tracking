@@ -15,7 +15,7 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{ lang["WIDGETS"] }}</h2>
+			<h2>{{ "WIDGETS"|trans }}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -27,14 +27,14 @@
 {% block body %}
 	<div id="widget-modal" class="modal">
 		<div class="modal-inner">
-			<div class="modal-header">{{lang["WIDGET_OPTIONS"]}}<span class="edit-bar"></span>
+			<div class="modal-header">{{"WIDGET_OPTIONS"|trans}}<span class="edit-bar"></span>
 			</div>
 			<form>
 				<div class="modal-content"></div>
 				<div class="modal-footer">
 					<div class="buttons">
-						<input id="add-widget-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{lang["ADD"]}}"/>
-						<button id="modal-close-btn" class="button button-text cancel" type="button">{{lang["CANCEL"]}}</button>
+						<input id="add-widget-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{"ADD"|trans}}"/>
+						<button id="modal-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
 					</div>
 				</div>
 			</form>
@@ -70,7 +70,7 @@
 			</select>
 		</div>
 		<a href="#" id="add-widget">
-			<button class="button">{{ lang["ADD"] }}</button>
+			<button class="button">{{ "ADD"|trans }}</button>
 		</a>
 	</div>
 {% endblock %}

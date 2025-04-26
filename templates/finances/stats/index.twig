@@ -11,8 +11,8 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["MENU_FINANCES"]}}
-				{{lang["STATS"]}}</h2>
+			<h2>{{"MENU_FINANCES"|trans}}
+				{{"STATS"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -25,29 +25,29 @@
 	<div class="inner-content">
 		<div class="page-content">
 
-			<canvas id="financeSummaryChart" data-values1="{{data1}}" data-values2="{{data2}}" data-labels="{{labels}}" data-label1="{{lang["FINANCES_SPENDINGS"]}}" data-label2="{{lang["FINANCES_INCOMES"]}}"></canvas>
+			<canvas id="financeSummaryChart" data-values1="{{data1}}" data-values2="{{data2}}" data-labels="{{labels}}" data-label1="{{"FINANCES_SPENDINGS"|trans}}" data-label2="{{"FINANCES_INCOMES"|trans}}"></canvas>
 
 			<table id="stats_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["YEAR"]}}</th>
-						<th>{{lang["FINANCES_INCOMES"]}}</th>
-						<th>{{lang["FINANCES_SPENDINGS"]}}</th>
-						<th>{{lang["DIFFERENCE"]}}</th>
+						<th>{{"YEAR"|trans}}</th>
+						<th>{{"FINANCES_INCOMES"|trans}}</th>
+						<th>{{"FINANCES_SPENDINGS"|trans}}</th>
+						<th>{{"DIFFERENCE"|trans}}</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for year, entry in stats %}
 						<tr>
-							<td data-title="{{lang["YEAR"]}}">{{year}}</td>
-							<td data-title="{{lang["FINANCES_INCOMES"]}}">
+							<td data-title="{{"YEAR"|trans}}">{{year}}</td>
+							<td data-title="{{"FINANCES_INCOMES"|trans}}">
 								<a href="{{ url_for('finances_stats_category', { 'year' : year, 'type' :1 }) }}">{{entry[1]}}</a>
 							</td>
-							<td data-title="{{lang["FINANCES_SPENDINGS"]}}">
+							<td data-title="{{"FINANCES_SPENDINGS"|trans}}">
 								<a href="{{ url_for('finances_stats_category', { 'year' : year, 'type' :0 }) }}">{{entry[0]}}</a>
 							</td>
-							<td data-title="{{lang["DIFFERENCE"]}}">{{ (entry[1] - entry[0])|number_format(2, '.', '')}}</td>
+							<td data-title="{{"DIFFERENCE"|trans}}">{{ (entry[1] - entry[0])|number_format(2, '.', '')}}</td>
 							<td>
 								<a href="{{ url_for('finances_stats_year', { 'year' : year }) }}">{{ fontawesome('fas fa-chart-bar') }}</a>
 							</td>

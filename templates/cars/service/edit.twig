@@ -19,7 +19,7 @@
 			<a href="{{ url_for_with_last_query_params('car_service') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["CAR_SERVICE"]}}</h2>
+			<h2>{{"CAR_SERVICE"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -41,7 +41,7 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="car">{{lang["CAR"]}}</label>
+					<label for="car">{{"CAR"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="car" name="car">
 							{% for car in cars %}
@@ -55,7 +55,7 @@
 
 
 				<div class="form-group">
-					<label for="dateSelect">{{lang["DATE"]}}</label>
+					<label for="dateSelect">{{"DATE"|trans}}</label>
 					<div class="flatpickr-group" id="dateSelect">
 						<input type="text" class="form-control" id="dateSelectField" placeholder="" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" data-input/>
 
@@ -69,16 +69,16 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inputGMileage">{{lang["MILEAGE"]}}</label>
+					<label for="inputGMileage">{{"MILEAGE"|trans}}</label>
 					<input type="number" class="form-control" id="inputGMileage" name="mileage" step="any" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.mileage}}" {% endif %}>
 				</div>
 
 				<div id="carServiceService">
-					<h4>{{lang["CAR_SERVICE_OIL"]}}</h4>
+					<h4>{{"CAR_SERVICE_OIL"|trans}}</h4>
 					<div class="form-group two-columns">
 						<div class="left">
 							<div class="form-group">
-								<h4>{{lang["BEFORE"]}}</h4>
+								<h4>{{"BEFORE"|trans}}</h4>
 								<div class="slider-wrapper">
 									<input type="hidden" class="slider-value form-control" name="service_oil_before" {% if not entry is null %} value="{{entry.service_oil_before}}" {% endif %}>
 									<div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_oil_before}}{% else %}0{% endif %}"></div>
@@ -87,7 +87,7 @@
 						</div>
 						<div class="right">
 							<div class="form-group">
-								<h4>{{lang["AFTER"]}}</h4>
+								<h4>{{"AFTER"|trans}}</h4>
 								<div class="slider-wrapper">
 									<input type="hidden" class="slider-value form-control" name="service_oil_after" {% if not entry is null %} value="{{entry.service_oil_after}}" {% endif %}>
 									<div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_oil_after}}{% else %}0{% endif %}"></div>
@@ -95,10 +95,10 @@
 							</div>
 						</div>
 					</div>
-					<h4>{{lang["CAR_SERVICE_WATER_WIPER"]}}</h4>
+					<h4>{{"CAR_SERVICE_WATER_WIPER"|trans}}</h4>
 					<div class="form-group two-columns">
 						<div class="left">
-							<h4>{{lang["BEFORE"]}}</h4>
+							<h4>{{"BEFORE"|trans}}</h4>
 							<div class="slider-wrapper">
 								<input type="hidden" class="slider-value form-control" name="service_water_wiper_before" {% if not entry is null %} value="{{entry.service_water_wiper_before}}" {% endif %}>
 								<div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_water_wiper_before}}{% else %}0{% endif %}"></div>
@@ -106,7 +106,7 @@
 						</div>
 						<div class="right">
 							<div class="form-group">
-								<h4>{{lang["AFTER"]}}</h4>
+								<h4>{{"AFTER"|trans}}</h4>
 								<div class="slider-wrapper">
 									<input type="hidden" class="slider-value form-control" name="service_water_wiper_after" {% if not entry is null %} value="{{entry.service_water_wiper_after}}" {% endif %}>
 									<div class="slider" data-min="0" data-max="100" data-level="{% if not entry is null %}{{entry.service_water_wiper_after}}{% else %}0{% endif %}"></div>
@@ -114,49 +114,49 @@
 							</div>
 						</div>
 					</div>
-					<h4>{{lang["CAR_SERVICE_AIR"]}}</h4>
+					<h4>{{"CAR_SERVICE_AIR"|trans}}</h4>
 					<div class="form-group two-columns">
 						<div class="left">
-							<h4>{{lang["BEFORE"]}}</h4>
+							<h4>{{"BEFORE"|trans}}</h4>
 							<div class="form-group">
 								<div class="two-columns">
 									<div class="left">
-										<label for="inputServiceAirFrontLeftBefore">{{lang["CAR_FRONT"]}}
-											{{lang["LEFT"]}}</label>
+										<label for="inputServiceAirFrontLeftBefore">{{"CAR_FRONT"|trans}}
+											{{"LEFT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirFrontLeftBefore" name="service_air_front_left_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_left_before}}" {% endif %}>
-										<label for="inputServiceAirBackLeftBefore">{{lang["CAR_BACK"]}}
-											{{lang["LEFT"]}}</label>
+										<label for="inputServiceAirBackLeftBefore">{{"CAR_BACK"|trans}}
+											{{"LEFT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirBackLeftBefore" name="service_air_back_left_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_left_before}}" {% endif %}>
 									</div>
 									<div class="right">
-										<label for="inputServiceAirFrontRightBefore">{{lang["CAR_FRONT"]}}
-											{{lang["RIGHT"]}}</label>
+										<label for="inputServiceAirFrontRightBefore">{{"CAR_FRONT"|trans}}
+											{{"RIGHT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirFrontRightBefore" name="service_air_front_right_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_right_before}}" {% endif %}>
-										<label for="inputServiceAirBackRightBefore">{{lang["CAR_BACK"]}}
-											{{lang["RIGHT"]}}</label>
+										<label for="inputServiceAirBackRightBefore">{{"CAR_BACK"|trans}}
+											{{"RIGHT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirBackRightBefore" name="service_air_back_right_before" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_right_before}}" {% endif %}>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="right">
-							<h4>{{lang["AFTER"]}}</h4>
+							<h4>{{"AFTER"|trans}}</h4>
 							<div class="form-group">
 								<div class="two-columns">
 									<div class="left">
-										<label for="inputServiceAirFrontLeftAfter">{{lang["CAR_FRONT"]}}
-											{{lang["LEFT"]}}</label>
+										<label for="inputServiceAirFrontLeftAfter">{{"CAR_FRONT"|trans}}
+											{{"LEFT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirFrontLeftAfter" name="service_air_front_left_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_left_after}}" {% endif %}>
-										<label for="inputServiceAirBackLeftAfter">{{lang["CAR_BACK"]}}
-											{{lang["LEFT"]}}</label>
+										<label for="inputServiceAirBackLeftAfter">{{"CAR_BACK"|trans}}
+											{{"LEFT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirBackLeftAfter" name="service_air_back_left_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_left_after}}" {% endif %}>
 									</div>
 									<div class="right">
-										<label for="inputServiceAirFrontRightAfter">{{lang["CAR_FRONT"]}}
-											{{lang["RIGHT"]}}</label>
+										<label for="inputServiceAirFrontRightAfter">{{"CAR_FRONT"|trans}}
+											{{"RIGHT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirFrontRightAfter" name="service_air_front_right_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_front_right_after}}" {% endif %}>
-										<label for="inputServiceAirBackRightAfter">{{lang["CAR_BACK"]}}
-											{{lang["RIGHT"]}}</label>
+										<label for="inputServiceAirBackRightAfter">{{"CAR_BACK"|trans}}
+											{{"RIGHT"|trans}}</label>
 										<input type="number" class="form-control" id="inputServiceAirBackRightAfter" name="service_air_back_right_after" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.service_air_back_right_after}}" {% endif %}>
 									</div>
 								</div>
@@ -166,19 +166,19 @@
 					<div class="form-group">
 						<label class="checkbox" for="checkboxTireChange">
 							<input name="service_tire_change" type="checkbox" id="checkboxTireChange" value="1" {% if not entry is null and entry.service_tire_change == 1 %} checked {% endif %}>
-							{{lang["CAR_SERVICE_TIRE_CHANGE"]}}
+							{{"CAR_SERVICE_TIRE_CHANGE"|trans}}
 						</label>
 					</div>
 					<div class="form-group">
 						<label class="checkbox" for="checkboxGarage">
 							<input name="service_garage" type="checkbox" id="checkboxGarage" value="1" {% if not entry is null and entry.service_garage == 1 %} checked {% endif %}>
-							{{lang["CAR_SERVICE_GARAGE"]}}
+							{{"CAR_SERVICE_GARAGE"|trans}}
 						</label>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="inputGNotice">{{lang["NOTICE"]}}</label>
+					<label for="inputGNotice">{{"NOTICE"|trans}}</label>
 					<textarea class="form-control" id="inputGNotice" name="notice">
 						{%- if not entry is null -%}
 							{{- entry.notice|raw -}}
@@ -188,11 +188,11 @@
 
 				<div class="mapWrapper">
 					{% if not entry is null %}
-						<h3>{{lang["LOCATION"]}}</h3>
+						<h3>{{"LOCATION"|trans}}</h3>
 						<div id="geo-map" class="geo-map"></div>
 						<div class="form-group map-btn">
-							<button id="update-location" class="update-location button button-outlined">{{lang["SET_CURRENT_LOCATION"]}}</button>
-							<button id="delete-location" class="delete-location button button-text {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+							<button id="update-location" class="update-location button button-outlined">{{"SET_CURRENT_LOCATION"|trans}}</button>
+							<button id="delete-location" class="delete-location button button-text {% if not hasMap %}hidden{% endif %}">{{"REMOVE_LOCATION"|trans}}</button>
 						</div>
 					{% endif %}
 					<input type="hidden" id="geoLat" class="geo-lat" name="lat" value="{% if not entry is null %}{{entry.lat}}{% endif %}">
@@ -204,13 +204,13 @@
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

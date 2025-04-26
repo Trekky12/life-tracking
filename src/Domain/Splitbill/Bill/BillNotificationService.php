@@ -60,36 +60,32 @@ class BillNotificationService {
         if ($bill->settleup === 0) {
 
             if ($type == "edit") {
-                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_SUBJECT');
-                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_DETAIL');
+                $subject = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_SUBJECT', ['%expense%' => $bill->name]);
+                $content = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_ADDED_DETAIL', ['%user%' => $me->name, '%expense%' => $bill->name, '%value%' => $billValue, '%currency%' => $sbgroup->currency, '%url%'=> $group_url, '%group%' => $sbgroup->name]);
                 if (!$is_new_bill) {
-                    $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_SUBJECT');
-                    $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_DETAIL');
+                    $subject = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_SUBJECT',['%expense%' => $bill->name]);
+                    $content = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_UPDATE_DETAIL', ['%user%' => $me->name, '%expense%' => $bill->name, '%value%' => $billValue, '%currency%' => $sbgroup->currency, '%url%'=> $group_url, '%group%' => $sbgroup->name]);
                 }
             } else {
-                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_SUBJECT');
-                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_DETAIL');
+                $subject = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_SUBJECT', ['%expense%' => $bill->name]);
+                $content = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_DELETED_DETAIL', ['%user%' => $me->name, '%expense%' => $bill->name, '%value%' => $billValue, '%currency%' => $sbgroup->currency, '%url%'=> $group_url, '%group%' => $sbgroup->name]);
             }
 
-            $subject = sprintf($subject1, $bill->name);
-            $content = sprintf($content1, $me->name, $bill->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
             $lang_spend = $this->translation->getTranslatedString('SPEND');
             $lang_paid = $this->translation->getTranslatedString('PAID');
         } else {
             if ($type == "edit") {
-                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT');
-                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DETAIL');
+                $subject = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT', ['%user%' => $me->name]);
+                $content = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DETAIL', ['%user%' => $me->name, '%value%' => $billValue, '%currency%' => $sbgroup->currency, '%url%'=> $group_url, '%group%' => $sbgroup->name]);
                 if (!$is_new_bill) {
-                    $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT');
-                    $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL');
+                    $subject = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT', ['%user%' => $me->name]);
+                    $content = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL', ['%user%' => $me->name, '%value%' => $billValue, '%currency%' => $sbgroup->currency, '%url%'=> $group_url, '%group%' => $sbgroup->name]);
                 }
             } else {
-                $subject1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT');
-                $content1 = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL');
+                $subject = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT', ['%user%' => $me->name]);
+                $content = $this->translation->getTranslatedString('MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL', ['%user%' => $me->name, '%value%' => $billValue, '%currency%' => $sbgroup->currency, '%url%'=> $group_url, '%group%' => $sbgroup->name]);
             }
 
-            $subject = sprintf($subject1, $me->name);
-            $content = sprintf($content1, $me->name, $billValue, $sbgroup->currency, $group_url, $sbgroup->name);
             $lang_spend = $this->translation->getTranslatedString('SPLITBILLS_SETTLE_UP_SENDER');
             $lang_paid = $this->translation->getTranslatedString('SPLITBILLS_SETTLE_UP_RECEIVER');
         }
@@ -106,7 +102,7 @@ class BillNotificationService {
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
-                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
+                        'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%' => $user->name]),
                         'content' => $content,
                         'currency' => $sbgroup->currency,
                         'balances' => $new_balances,

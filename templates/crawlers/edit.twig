@@ -17,13 +17,13 @@
 			<a href="{{ url_for_with_last_query_params('crawlers') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["CRAWLERS"]}}</h2>
+			<h2>{{"CRAWLERS"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			{% if not entry is null %}
 				<a href="{{ url_for('crawlers_dataset_delete_old', {'id' : entry.id}) }}">
 					<button class="button button-outlined">{{ fontawesome('fas fa-trash') }}
-						{{lang["CRAWLER_DATASETS_CLEAN"]}}</button>
+						{{"CRAWLER_DATASETS_CLEAN"|trans}}</button>
 				</a>
 			{% endif %}
 		</div>
@@ -45,16 +45,16 @@
 
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputFilter">{{lang["DEFAULT_FILTER"]}}</label>
+					<label for="inputFilter">{{"DEFAULT_FILTER"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="inputFilter" name="filter">
-							<option value="createdOn" {% if entry is null or (not entry is null and entry.filter == "createdOn") %} selected {% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
-							<option value="changedOn" {% if (not entry is null and entry.filter == "changedOn") %} selected {% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
+							<option value="createdOn" {% if entry is null or (not entry is null and entry.filter == "createdOn") %} selected {% endif %}>{{"SHOW_ONLY_NEW_ENTRIES"|trans}}</option>
+							<option value="changedOn" {% if (not entry is null and entry.filter == "changedOn") %} selected {% endif %}>{{"SHOW_NEW_UPDATED_ENTRIES"|trans}}</option>
 						</select>
 					</div>
 				</div>
@@ -66,13 +66,13 @@
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

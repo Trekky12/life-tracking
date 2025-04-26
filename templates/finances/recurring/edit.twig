@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('finances_recurring') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["FINANCES_RECURRING"]}}</h2>
+			<h2>{{"FINANCES_RECURRING"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -31,18 +31,18 @@
 					<div class="left">
 						<label class="radio" for="radioSpending">
 							<input name="type" type="radio" data-toggle="radio" value="0" id="radioSpending" {% if entry is null or (not entry is null and entry.type == 0) %} checked {% endif %}>
-							{{lang["FINANCES_SPENDING"]}}
+							{{"FINANCES_SPENDING"|trans}}
 						</label>
 					</div>
 					<div class="right">
 						<label class="radio" for="radioIncome">
 							<input name="type" type="radio" data-toggle="radio" value="1" id="radioIncome" {% if not entry is null and entry.type == 1 %} checked {% endif %}>
-							{{lang["FINANCES_INCOME"]}}
+							{{"FINANCES_INCOME"|trans}}
 						</label>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="category">{{lang["CATEGORY"]}}</label>
+					<label for="category">{{"CATEGORY"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="category" name="category">
 							{% for cat in categories %}
@@ -52,19 +52,19 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+					<label for="inputDescription">{{"DESCRIPTION"|trans}}</label>
 					<input type="text" class="form-control" id="inputDescription" required name="description" value="{% if not entry is null %}{{entry.description|raw}}{% endif %}">
 				</div>
 				<div class="form-group">
-					<label for="inputValue">{{lang["VALUE"]}}</label>
+					<label for="inputValue">{{"VALUE"|trans}}</label>
 					<input type="number" class="form-control" id="inputValue" required name="value" step="any" inputmode="decimal" value="{% if not entry is null %}{{entry.value}}{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="paymethod">{{lang["FINANCES_PAYMETHOD"]}}</label>
+					<label for="paymethod">{{"FINANCES_PAYMETHOD"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="paymethod" name="paymethod">
-							<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods %}
 								<option value="{{method.id}}" {% if (not entry is null and method.id == entry.paymethod) or (entry is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
 							{% endfor %}
@@ -75,21 +75,21 @@
 				<div class="form-group">
 					<label class="checkbox" for="checkboxCommon">
 						<input name="common" type="checkbox" id="checkboxCommon" value="1" {% if entry is not null and entry.common == 1 %} checked {% endif %}>
-						{{lang["COMMON"]}}
+						{{"COMMON"|trans}}
 					</label>
 				</div>
 				<div class="form-group {% if entry is null or (entry is not null and entry.common == 0) %}hidden{% endif %}" id="commonValue">
-					<label for="inputCommonValue">{{lang["COMMON_VALUE"]}}</label>
+					<label for="inputCommonValue">{{"COMMON_VALUE"|trans}}</label>
 					<input type="number" class="form-control" id="inputCommonValue" name="common_value" step="any" inputmode="decimal" value="{% if not entry is null %}{{entry.common_value}}{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputNotice">{{lang["NOTICE"]}}</label>
+					<label for="inputNotice">{{"NOTICE"|trans}}</label>
 					<input type="text" class="form-control" id="inputNotice" name="notice" value="{% if not entry is null %}{{entry.notice|raw}}{% endif %}">
 				</div>
-				<h3>{{lang["INTERVAL"]}}</h3>
+				<h3>{{"INTERVAL"|trans}}</h3>
 				<div class="form-group">
-					<label for="dateSelectField">{{lang["START"]}}</label>
+					<label for="dateSelectField">{{"START"|trans}}</label>
 					<div class="flatpickr-group" id="dateSelect">
 						<input type="text" class="form-control" id="dateSelectField" name="start" value="{% if not entry is null and not entry.start is null %}{{entry.start|date('Y-m-d')}}{% endif %}" data-input/>
 
@@ -104,7 +104,7 @@
 
 				</div>
 				<div class="form-group">
-					<label for="dateSelectEndField">{{lang["END"]}}</label>
+					<label for="dateSelectEndField">{{"END"|trans}}</label>
 					<div class="flatpickr-group" id="dateSelectEnd">
 						<input type="text" class="form-control" id="dateSelectEndField" name="end" value="{% if not entry is null and not entry.end is null%}{{entry.end|date('Y-m-d')}}{% endif %}" data-input/>
 
@@ -118,37 +118,37 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inputUnit">{{lang["UNIT"]}}</label>
+					<label for="inputUnit">{{"UNIT"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="inputUnit" name="unit">
 							{% for unit, unitName in units %}
-								<option value="{{unit}}" {% if (not entry is null and unit == entry.unit) or (entry is null and unit == 'month') %} selected {% endif %}>{{lang[unitName]}}</option>
+								<option value="{{unit}}" {% if (not entry is null and unit == entry.unit) or (entry is null and unit == 'month') %} selected {% endif %}>{{unitName|trans}}</option>
 							{% endfor %}
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inputMultiplier">{{lang["MULTIPLIER"]}}</label>
+					<label for="inputMultiplier">{{"MULTIPLIER"|trans}}</label>
 					<input type="number" class="form-control" id="inputMultiplier" name="multiplier" step="1" pattern="\d*" value="{% if not entry is null %}{{entry.multiplier}}{% else %}1{% endif %}">
 				</div>
 
 				<div class="form-group">
 					<label class="checkbox" for="checkboxActive">
 						<input name="is_active" type="checkbox" value="1" id="checkboxActive" {% if entry is not null and entry.is_active == 1 %} checked {% endif %}>
-						{{lang["ACTIVE"]}}
+						{{"ACTIVE"|trans}}
 					</label>
 				</div>
 
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

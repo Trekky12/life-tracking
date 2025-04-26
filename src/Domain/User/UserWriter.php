@@ -11,7 +11,7 @@ use App\Domain\Main\Helper;
 use App\Domain\Main\Translator;
 
 class UserWriter extends ObjectActivityWriter {
-    
+
     private $helper;
     private $translation;
 
@@ -34,23 +34,23 @@ class UserWriter extends ObjectActivityWriter {
         }
         return $payload;
     }
-    
+
     private function sendNewUserNotificationMail($user, $data) {
         if ($user->mail && array_key_exists("notify_creation", $data)) {
 
-            $subject = sprintf($this->translation->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT'), $this->helper->getBaseURL());
+            $subject = $this->translation->getTranslatedString('MAIL_YOUR_USER_ACCOUNT_AT', ['%url%' =>  $this->helper->getBaseURL()]);
 
             $variables = array(
                 'header' => '',
                 'subject' => $subject,
-                'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                'content' => sprintf($this->translation->getTranslatedString('MAIL_USER_ACCOUNT_CREATED'), $this->helper->getBaseURL(), $this->helper->getBaseURL())
-                . '<br/>&nbsp;<br/>&nbsp;'
-                . sprintf($this->translation->getTranslatedString('MAIL_YOUR_USERNAME'), $user->login)
+                'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%' => $user->name]),
+                'content' => $this->translation->getTranslatedString('MAIL_USER_ACCOUNT_CREATED', ['%url%' =>  $this->helper->getBaseURL()])
+                    . '<br/>&nbsp;<br/>&nbsp;'
+                    . $this->translation->getTranslatedString('MAIL_YOUR_USERNAME', ['%username%' => $user->login])
             );
 
             if (array_key_exists("set_password", $data)) {
-                $variables["content"] .= '<br/>&nbsp;' . sprintf($this->translation->getTranslatedString('MAIL_YOUR_PASSWORD'), $data["set_password"]);
+                $variables["content"] .= '<br/>&nbsp;' . $this->translation->getTranslatedString('MAIL_YOUR_PASSWORD', ['%password%' => $data["set_password"]]);
             }
 
             if ($user->force_pw_change == 1) {
@@ -73,5 +73,4 @@ class UserWriter extends ObjectActivityWriter {
     public function getModule(): string {
         return "general";
     }
-
 }

@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('users_mobile_favorites')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["MOBILE_FAVORITES"]}}</h2>
+			<h2>{{"MOBILE_FAVORITES"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -26,37 +26,37 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="inputPosition">{{lang["POSITION"]}}</label>
+					<label for="inputPosition">{{"POSITION"|trans}}</label>
 					<input type="number" class="form-control" id="inputPosition" name="position" step="1" pattern="\d*" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputIcon">{{lang["ICON"]}}</label>
+					<label for="inputIcon">{{"ICON"|trans}}</label>
 					<input type="text" class="form-control" id="inputIcon" name="icon" {% if not entry is null %} value="{{entry.icon}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputURL">{{lang["URL"]}}</label>
+					<label for="inputURL">{{"URL"|trans}}</label>
 					<input type="text" class="form-control" id="inputURL" name="url" {% if not entry is null %} value="{{entry.url}}" {% endif %}>
 					<p>
-						{{ lang["MOBILE_FAVORITES_PLACEHOLDER_INTRO"] }}
+						{{ "MOBILE_FAVORITES_PLACEHOLDER_INTRO"|trans }}
 						<dl>
 							<dt>
 								<code>$day$</code>
 							</dt>
-							<dd>{{ lang["CURRENT_DAY"] }}</dd>
+							<dd>{{ "CURRENT_DAY"|trans }}</dd>
 
 							<dt>
 								<code>$month$</code>
 							</dt>
 							<dt></dt>
-							<dd>{{ lang["CURRENT_MONTH"] }}</dd>
+							<dd>{{ "CURRENT_MONTH"|trans }}</dd>
 
 							<dt>
 								<code>$year$</code>
 							</dt>
 							<dt></dt>
-							<dd>{{ lang["CURRENT_YEAR"] }}</dd>
+							<dd>{{ "CURRENT_YEAR"|trans }}</dd>
 						</dl>
 					</p>
 				</div>
@@ -64,13 +64,13 @@
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

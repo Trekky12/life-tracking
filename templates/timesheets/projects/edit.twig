@@ -18,12 +18,12 @@
 			<a href="{{ url_for_with_last_query_params('timesheets')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
+			<h2>{{"TIMESHEETS_PROJECTS"|trans}}</h2>
 		</div>
 		{% if not entry is null %}
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_project_notice_edit', {'project': entry.getHash()}) }}">
-				<button class="button button-outlined">{{lang["NOTICE"]}}</button>
+				<button class="button button-outlined">{{"NOTICE"|trans}}</button>
 			</a>
 		</div>
 		{% endif %}
@@ -37,7 +37,7 @@
 			<div id="alertError" class="alert danger hidden">
 				<span class="closebtn">&times;</span>
 				<span class="alert-message">
-					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p>{{ "ENTRY_ERROR"|trans }}</p>
 					<p id="alertErrorDetail"></p>
 				</span>
 			</div>
@@ -53,7 +53,7 @@
 
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
 				</div>
 
@@ -64,16 +64,16 @@
 				<div class="form-group">
 					<label class="checkbox" for="checkboxIsDayBased">
 						<input name="is_day_based" type="checkbox" value="1" id="checkboxIsDayBased" {% if entry is not null and entry.is_day_based == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_IS_DAY_BASED"]}}
+						{{"TIMESHEETS_IS_DAY_BASED"|trans}}
 					</label>
 				</div>
 
 				<div class="form-group">
-					<label for="defaultView">{{lang["TIMESHEETS_DEFAULT_VIEW"]}}</label>
+					<label for="defaultView">{{"TIMESHEETS_DEFAULT_VIEW"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="defaultView" name="default_view">
-							<option value="all" {% if (not entry is null and 'all' == entry.default_view) %} selected {% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_ALL"]}}</option>
-							<option value="month" {% if (not entry is null and 'month' == entry.default_view) %} selected {% endif %}>{{lang["TIMESHEETS_DEFAULT_VIEW_MONTH"]}}</option>
+							<option value="all" {% if (not entry is null and 'all' == entry.default_view) %} selected {% endif %}>{{"TIMESHEETS_DEFAULT_VIEW_ALL"|trans}}</option>
+							<option value="month" {% if (not entry is null and 'month' == entry.default_view) %} selected {% endif %}>{{"TIMESHEETS_DEFAULT_VIEW_MONTH"|trans}}</option>
 						</select>
 					</div>
 				</div>
@@ -81,132 +81,132 @@
 				<div class="form-group">
 					<label class="checkbox" for="checkboxShowMonthButton">
 						<input name="show_month_button" type="checkbox" value="1" id="checkboxShowMonthButton" {% if entry is not null and entry.show_month_button == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_SHOW_MONTH_BUTTON"]}}
+						{{"TIMESHEETS_SHOW_MONTH_BUTTON"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxShowQuartersButtons">
 						<input name="show_quarters_buttons" type="checkbox" value="1" id="checkboxShowQuartersButtons" {% if entry is not null and entry.show_quarters_buttons == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"]}}
+						{{"TIMESHEETS_SHOW_QUARTERS_BUTTONS"|trans}}
 					</label>
 				</div>
 
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHasDurationModifications">
 						<input name="has_duration_modifications" type="checkbox" value="1" id="checkboxHasDurationModifications" {% if entry is not null and entry.has_duration_modifications == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"]}}
+						{{"TIMESHEETS_HAS_DURATION_MODIFICATIONS"|trans}}
 					</label>
 				</div>
 
 				<div class="form-group">
-					<label for="inputRate">{{lang["TIMESHEETS_TIME_CONVERSION_RATE"]}}</label>
+					<label for="inputRate">{{"TIMESHEETS_TIME_CONVERSION_RATE"|trans}}</label>
 					<input type="text" class="form-control" id="inputRate" name="time_conversion_rate" value="{% if not entry is null %}{{entry.time_conversion_rate}}{% else %}1{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputDefaultDuration">{{lang["TIMESHEETS_DURATION_DEFAULT"]}}</label>
+					<label for="inputDefaultDuration">{{"TIMESHEETS_DURATION_DEFAULT"|trans}}</label>
 					<input type="text" class="form-control duration-input html-duration-picker" data-hide-seconds data-duration-max="999:59" id="inputDefaultDuration" name="set_default_duration" value="{% if not entry is null %}{{entry.default_duration | splitDateInterval(true)}}{% endif %}"/>
 				</div>
 
 				<div class="form-group">
-					<label for="inputCustomersNameSingular">{{lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"]}}</label>
+					<label for="inputCustomersNameSingular">{{"TIMESHEETS_CUSTOMERS_NAME_SINGULAR"|trans}}</label>
 					<input type="text" class="form-control" id="inputCustomersNameSingular" name="customers_name_singular" {% if not entry is null %} value="{{entry.customers_name_singular|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputCustomersNamePlural">{{lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"]}}</label>
+					<label for="inputCustomersNamePlural">{{"TIMESHEETS_CUSTOMERS_NAME_PLURAL"|trans}}</label>
 					<input type="text" class="form-control" id="inputCustomersNamePlural" name="customers_name_plural" {% if not entry is null %} value="{{entry.customers_name_plural|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputReportHeadline">{{lang["TIMESHEETS_REPORT_HEADLINE"]}}</label>
+					<label for="inputReportHeadline">{{"TIMESHEETS_REPORT_HEADLINE"|trans}}</label>
 					<input type="text" class="form-control" id="inputReportHeadline" name="report_headline" {% if not entry is null %} value="{{entry.report_headline|raw}}" {% endif %}>
 				</div>
 
-				<h3>{{lang["TIMESHEETS_CALENDAR"]}}</h3>
+				<h3>{{"TIMESHEETS_CALENDAR"|trans}}</h3>
 				<div class="form-group">
-					<label for="inputSlotMinTime">{{lang["TIMESHEETS_SLOT_MIN_TIME"]}}</label>
+					<label for="inputSlotMinTime">{{"TIMESHEETS_SLOT_MIN_TIME"|trans}}</label>
 					<input type="text" class="form-control duration-input html-duration-picker" id="inputSlotMinTime" name="slot_min_time" value="{% if not entry is null %}{{entry.slot_min_time}}{% endif %}"/>
 				</div>
 
 				<div class="form-group">
-					<label for="inputSlotMaxTime">{{lang["TIMESHEETS_SLOT_MAX_TIME"]}}</label>
+					<label for="inputSlotMaxTime">{{"TIMESHEETS_SLOT_MAX_TIME"|trans}}</label>
 					<input type="text" class="form-control duration-input html-duration-picker" id="inputSlotMaxTime" name="slot_max_time" value="{% if not entry is null %}{{entry.slot_max_time}}{% endif %}"/>
 				</div>
 
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHideMonday">
 						<input name="hide_monday" type="checkbox" value="1" id="checkboxHideMonday" {% if entry is not null and entry.hide_monday == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HIDE_MONDAY"]}}
+						{{"TIMESHEETS_HIDE_MONDAY"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHideTuesday">
 						<input name="hide_tuesday" type="checkbox" value="1" id="checkboxHideTuesday" {% if entry is not null and entry.hide_tuesday == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HIDE_TUESDAY"]}}
+						{{"TIMESHEETS_HIDE_TUESDAY"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHideWednesday">
 						<input name="hide_wednesday" type="checkbox" value="1" id="checkboxHideWednesday" {% if entry is not null and entry.hide_wednesday == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HIDE_WEDNESDAY"]}}
+						{{"TIMESHEETS_HIDE_WEDNESDAY"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHideThursday">
 						<input name="hide_thursday" type="checkbox" value="1" id="checkboxHideThursday" {% if entry is not null and entry.hide_thursday == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HIDE_THURSDAY"]}}
+						{{"TIMESHEETS_HIDE_THURSDAY"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHideFriday">
 						<input name="hide_friday" type="checkbox" value="1" id="checkboxHideFriday" {% if entry is not null and entry.hide_friday == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HIDE_FRIDAY"]}}
+						{{"TIMESHEETS_HIDE_FRIDAY"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHideSaturday">
 						<input name="hide_saturday" type="checkbox" value="1" id="checkboxHideSaturday" {% if entry is not null and entry.hide_saturday == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HIDE_SATURDAY"]}}
+						{{"TIMESHEETS_HIDE_SATURDAY"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxHideSunday">
 						<input name="hide_sunday" type="checkbox" value="1" id="checkboxHideSunday" {% if entry is not null and entry.hide_sunday == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS_HIDE_SUNDAY"]}}
+						{{"TIMESHEETS_HIDE_SUNDAY"|trans}}
 					</label>
 				</div>
 
-				<h3>{{lang["TIMESHEETS_REPEAT"]}}</h3>
+				<h3>{{"TIMESHEETS_REPEAT"|trans}}</h3>
 				<div class="form-group">
-					<label for="inputCount">{{lang["TIMESHEETS_REPEAT_COUNT"]}}</label>
+					<label for="inputCount">{{"TIMESHEETS_REPEAT_COUNT"|trans}}</label>
 					<input type="number" class="form-control" id="inputCount" name="repeat_count" step="1" pattern="\d*" value="{% if not entry is null %}{{entry.repeat_count}}{% else %}0{% endif %}">
 				</div>
 				<div class="form-group">
-					<label for="inputUnit">{{lang["UNIT"]}}</label>
+					<label for="inputUnit">{{"UNIT"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="inputUnit" name="repeat_unit">
 							{% for unit, unitName in units %}
-								<option value="{{unit}}" {% if (not entry is null and unit == entry.repeat_unit) or (entry is null and unit == 'week') %} selected {% endif %}>{{lang[unitName]}}</option>
+								<option value="{{unit}}" {% if (not entry is null and unit == entry.repeat_unit) or (entry is null and unit == 'week') %} selected {% endif %}>{{unitName|trans}}</option>
 							{% endfor %}
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inputMultiplier">{{lang["MULTIPLIER"]}}</label>
+					<label for="inputMultiplier">{{"MULTIPLIER"|trans}}</label>
 					<input type="number" class="form-control" id="inputMultiplier" name="repeat_multiplier" step="1" pattern="\d*" value="{% if not entry is null %}{{entry.repeat_multiplier}}{% else %}1{% endif %}">
 				</div>
 
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

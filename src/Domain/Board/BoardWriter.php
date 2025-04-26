@@ -14,7 +14,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Notifications\NotificationsService;
 
 class BoardWriter extends ObjectActivityWriter {
-    
+
     private $board_service;
     private $translation;
     private $helper;
@@ -22,16 +22,18 @@ class BoardWriter extends ObjectActivityWriter {
     private $router;
     private $notification_service;
 
-    public function __construct(LoggerInterface $logger, 
-            CurrentUser $user, 
-            ActivityCreator $activity, 
-            BoardMapper $mapper, 
-            BoardService $board_service, 
-            Translator $translation, 
-            Helper $helper, 
-            UserService $user_service, 
-            RouteParser $router,
-            NotificationsService $notification_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        BoardMapper $mapper,
+        BoardService $board_service,
+        Translator $translation,
+        Helper $helper,
+        UserService $user_service,
+        RouteParser $router,
+        NotificationsService $notification_service
+    ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->board_service = $board_service;
@@ -43,21 +45,21 @@ class BoardWriter extends ObjectActivityWriter {
     }
 
     public function save($id, $data, $additionalData = null): Payload {
-        
+
         $users_preSave = $this->board_service->getUsers($id);
         if ($this->board_service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-       
+
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
         $this->setHash($entry);
         $this->notifyUsers($entry, $users_preSave);
-        
+
         return $payload;
     }
-    
+
     private function notifyUsers($entry, $users_preSave) {
         /**
          * Notify new users
@@ -65,7 +67,7 @@ class BoardWriter extends ObjectActivityWriter {
         $my_user_id = intval($this->current_user->getUser()->id);
         $users_afterSave = $this->board_service->getUsers($entry->id);
         $new_users = array_diff($users_afterSave, $users_preSave);
-        
+
         $subject = $this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD');
 
         foreach ($new_users as $nu => $login) {
@@ -79,8 +81,8 @@ class BoardWriter extends ObjectActivityWriter {
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
-                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $entry->getHash())), $entry->name)
+                        'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%' => $user->name]),
+                        'content' => $this->translation->getTranslatedString('MAIL_ADDED_TO_BOARD_DETAIL', ['%url%' => $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $entry->getHash())), '%board%' => $entry->name])
                     );
 
                     //$this->helper->send_mail('mail/general.twig', $user->mail, $subject, $variables);
@@ -101,5 +103,4 @@ class BoardWriter extends ObjectActivityWriter {
     public function getModule(): string {
         return "boards";
     }
-
 }

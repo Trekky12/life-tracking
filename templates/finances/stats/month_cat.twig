@@ -16,14 +16,14 @@
 			</a>
 			<h2>
 				{% if type == 0 %}
-					{{lang["FINANCES_SPENDINGS"]}}
+					{{"FINANCES_SPENDINGS"|trans}}
 				{% else %}
-					{{lang["FINANCES_INCOMES"]}}
+					{{"FINANCES_INCOMES"|trans}}
 				{% endif %}
-				{{lang["IN"]}}
+				{{"IN"|trans}}
 				{{month}}/{{year}}
-				{{lang["FOR"]}}
-				{{lang["CATEGORY"]}}
+				{{"FOR"|trans}}
+				{{"CATEGORY"|trans}}
 				{{category|raw}}
 			</h2>
 		</div>
@@ -40,10 +40,10 @@
 			<table id="stats_cat_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["DATE"]}}</th>
-						<th>{{lang["TIME"]}}</th>
-						<th>{{lang["DESCRIPTION"]}}</th>
-						<th>{{lang["VALUE"]}}</th>
+						<th>{{"DATE"|trans}}</th>
+						<th>{{"TIME"|trans}}</th>
+						<th>{{"DESCRIPTION"|trans}}</th>
+						<th>{{"VALUE"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -51,10 +51,10 @@
 				<tbody>
 					{% for entry in stats %}
 						<tr>
-							<td data-title="{{lang["DATE"]}}">{{entry.date}}</td>
-							<td data-title="{{lang["TIME"]}}">{{entry.time}}</td>
-							<td data-title="{{lang["DESCRIPTION"]}}">{{entry.description|raw}}</td>
-							<td data-title="{{lang["VALUE"]}}">{{entry.value}}</td>
+							<td data-title="{{"DATE"|trans}}">{{entry.date}}</td>
+							<td data-title="{{"TIME"|trans}}">{{entry.time}}</td>
+							<td data-title="{{"DESCRIPTION"|trans}}">{{entry.description|raw}}</td>
+							<td data-title="{{"VALUE"|trans}}">{{entry.value}}</td>
 							<td>
 								<a href="{{ url_for('finances_edit', {'id' : entry.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 							</td>

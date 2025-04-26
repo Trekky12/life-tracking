@@ -9,13 +9,13 @@
 				<a href="#" class="headline">
 					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
 					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-					{{ lang["WORKOUTS_INSTRUCTIONS"] }}
+					{{ "WORKOUTS_INSTRUCTIONS"|trans }}
 				</a>
 				<p class="content">{{ exercise['exercise'].getInstructions()|raw }}</p>
 			</div>
 		{% endif %}
 		{% if exercise['primary_muscles']|length > 0 %}
-			<h4>{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</h4>
+			<h4>{{"WORKOUTS_MUSCLES_PRIMARY"|trans}}</h4>
 			<p>
 				{% for muscle in exercise['primary_muscles'] %}
 					{{ muscle.name }}
@@ -26,7 +26,7 @@
 		{% endif %}
 
 		{% if exercise['secondary_muscles']|length > 0 %}
-			<h4>{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</h4>
+			<h4>{{"WORKOUTS_MUSCLES_SECONDARY"|trans}}</h4>
 			<p>
 				{% for muscle in exercise['secondary_muscles'] %}
 					{{ muscle.name }}

@@ -17,12 +17,12 @@
 			<a href="{{ url_for_with_last_query_params('finances_budgets') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["BUDGET"]}}</h2>
+			<h2>{{"BUDGET"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="#" id="add_budget">
 				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -33,10 +33,10 @@
 		<div class="page-content">
 
 			<div>
-				<h3>{{lang["BUDGET"]}}:
+				<h3>{{"BUDGET"|trans}}:
 					<span id="income" data-value="{{income}}">{{income}}</span>
 					{{currency}}
-					({{lang["REMAINING"]}}:
+					({{"REMAINING"|trans}}:
 					<span id="remaining_budget" data-income="{{income}}">{{income-budget_sum}}</span>
 					{{currency}})</h3>
 			</div>
@@ -53,13 +53,13 @@
 					<div class="budget-entry edit {%if budget.is_remaining() %}remaining{% endif %}">
 						<input type="hidden" name="budget[{{loop.index-1}}][id]" value="{{budget.id}}">
 						<div class="form-group description">
-							<label for="inputDescription_{{loop.index-1}}">{{lang["DESCRIPTION"]}}</label>
+							<label for="inputDescription_{{loop.index-1}}">{{"DESCRIPTION"|trans}}</label>
 							<input required type="text" class="form-control description" id="inputDescription_{{loop.index-1}}" name="budget[{{loop.index-1}}][description]" value="{{budget.description|raw}}">
 						</div>
 
 						<div class="form-group category">
 							{% if not budget.is_remaining() %}
-								<label for="category_{{loop.index}}">{{lang["CATEGORY"]}}</label>
+								<label for="category_{{loop.index}}">{{"CATEGORY"|trans}}</label>
 								<select required class="category form-control" id="category_{{loop.index}}" name="budget[{{loop.index-1}}][category][]" multiple>
 									{% for cat in categories %}
 										<option value="{{cat.id}}" {% if cat.id in budget_categories[budget.id] %} selected {%endif%}>{{cat.name|raw}}</option>
@@ -70,8 +70,8 @@
 
 						<div class="form-group cat-costs">
 							{% if not budget.is_remaining() %}
-								<h4>{{lang["RECURRING"]}}
-									{{lang["FINANCES_SPENDINGS"]}}</h4>
+								<h4>{{"RECURRING"|trans}}
+									{{"FINANCES_SPENDINGS"|trans}}</h4>
 								<div class="category_costs">
 									{% for rcat in recurring %}
 										{% if rcat.category == budget.category %}
@@ -84,7 +84,7 @@
 						</div>
 
 						<div class="form-group value">
-							<label for="inputValue_{{loop.index-1}}">{{lang["BUDGET"]}}</label>
+							<label for="inputValue_{{loop.index-1}}">{{"BUDGET"|trans}}</label>
 							<input required type="number" class="form-control value" id="inputValue_{{loop.index-1}}" name="budget[{{loop.index-1}}][value]" step="any" inputmode="decimal" value="{{budget.value}}">
 						</div>
 
@@ -92,7 +92,7 @@
 							{%if not budget.is_remaining() %}
 								<label class="checkbox" for="checkboxHidden_{{loop.index-1}}">
 									<input name="budget[{{loop.index-1}}][is_hidden]" type="checkbox" value="1" id="checkboxHidden_{{loop.index-1}}" {% if budget.is_hidden == 1 %} checked {% endif %}>
-									{{lang["HIDE_ENTRY"]}}
+									{{"HIDE_ENTRY"|trans}}
 								</label>
 							{% endif %}
 						</div>
@@ -109,22 +109,22 @@
 						<input type="hidden" name="budget[{{budgets|length}}][id]" value="{{budget.id}}">
 						<input type="hidden" name="budget[{{budgets|length}}][is_remaining]" value="1">
 						<div class="form-group description">
-							<label for="inputDescription_{{budgets|length}}">{{lang["DESCRIPTION"]}}</label>
-							<input required type="text" class="form-control description" id="inputDescription_{{budgets|length}}" name="budget[{{budgets|length}}][description]" value="{{lang["REMAINS"]}}">
+							<label for="inputDescription_{{budgets|length}}">{{"DESCRIPTION"|trans}}</label>
+							<input required type="text" class="form-control description" id="inputDescription_{{budgets|length}}" name="budget[{{budgets|length}}][description]" value="{{"REMAINS"|trans}}">
 						</div>
 						<div class="form-group category"></div>
 						<div class="form-group cat-costs"></div>
 
 
 						<div class="form-group value">
-							<label for="inputValue_{{budgets|length}}">{{lang["BUDGET"]}}</label>
+							<label for="inputValue_{{budgets|length}}">{{"BUDGET"|trans}}</label>
 							<input required type="number" class="form-control value" id="inputValue_{{budgets|length}}" name="budget[{{budgets|length}}][value]" step="any" inputmode="decimal" value="{{budget.value}}">
 						</div>
 					</div>
 				{% endif %}
 
 				<div class="form-group submit-btn">
-					<button type="submit" id="save-budget" class="button">{{lang["SAVE"]}}</button>
+					<button type="submit" id="save-budget" class="button">{{"SAVE"|trans}}</button>
 				</div>
 
 			</form>
@@ -136,12 +136,12 @@
 	<div id="budgetTemplate" class="hidden">
 		<div class="budget-entry-dummy edit">
 			<div class="form-group description">
-				<label for="inputDescription_DUMMY">{{lang["DESCRIPTION"]}}</label>
+				<label for="inputDescription_DUMMY">{{"DESCRIPTION"|trans}}</label>
 				<input required type="text" class="form-control description" id="inputDescription_DUMMY" name="budget[DUMMY][description]" disabled="disabled">
 			</div>
 
 			<div class="form-group category">
-				<label for="category_DUMMY">{{lang["CATEGORY"]}}</label>
+				<label for="category_DUMMY">{{"CATEGORY"|trans}}</label>
 				<select required class="category form-control" id="category_DUMMY" name="budget[DUMMY][category][]" multiple disabled="disabled">
 					{% for cat in categories %}
 						<option value="{{cat.id}}">{{cat.name|raw}}</option>
@@ -150,13 +150,13 @@
 			</div>
 
 			<div class="form-group cat-costs">
-				<h4>{{lang["RECURRING"]}}
-					{{lang["FINANCES_SPENDINGS"]}}</h4>
+				<h4>{{"RECURRING"|trans}}
+					{{"FINANCES_SPENDINGS"|trans}}</h4>
 				<div class="category_costs"></div>
 			</div>
 
 			<div class="form-group value">
-				<label for="inputValue_DUMMY">{{lang["BUDGET"]}}</label>
+				<label for="inputValue_DUMMY">{{"BUDGET"|trans}}</label>
 				<input type="number" required class="form-control value" id="inputValue_DUMMY" name="budget[DUMMY][value]" step="any" inputmode="decimal" disabled="disabled">
 			</div>
 
@@ -164,7 +164,7 @@
 
 				<label class="checkbox" for="checkboxHidden_DUMMY">
 					<input name="budget[DUMMY][is_hidden]" type="checkbox" value="1" id="checkboxHidden_DUMMY" disabled="disabled">
-					{{lang["HIDE_ENTRY"]}}
+					{{"HIDE_ENTRY"|trans}}
 				</label>
 			</div>
 

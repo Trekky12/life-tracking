@@ -8,14 +8,14 @@
 			<a href="{{ url_for_with_last_query_params('workouts') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["WORKOUTS_SESSIONS"]}}
+			<h2>{{"WORKOUTS_SESSIONS"|trans}}
 				|
 				{{plan.name|raw}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('workouts_sessions_edit', {'plan':plan.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -31,8 +31,8 @@
 			<table id="workouts_sessions_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
-						<th>{{ lang["WORKOUTS_DAYS"] }}</th>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{ "WORKOUTS_DAYS"|trans }}</th>
 						<th></th>
 						<th></th>
 					</tr>

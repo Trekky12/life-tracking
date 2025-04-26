@@ -27,7 +27,7 @@
 					{% else %}
 						{{- list_entry["sum"] }}/{{- list_entry["value"] -}}
 					{% endif %},
-					{{ lang["REMAINING"]}}:
+					{{ "REMAINING"|trans}}:
 					{% if list_entry["categorization"] != 'count' %}
 						{% if list_entry["diff"] is not null  %}
 							{{- list_entry["diff"]| splitDateInterval(true) -}}

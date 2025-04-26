@@ -15,7 +15,7 @@
 			<a href="{{ url_for_with_last_query_params('trips_view', {'trip':trip.hash}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TRIPS_EVENT"]}}
+			<h2>{{"TRIPS_EVENT"|trans}}
 				|
 				{{trip.name|raw}}
 			</h2>
@@ -37,14 +37,14 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
 				</div>
 
-				<h3>{{lang["START"]}}</h3>
+				<h3>{{"START"|trans}}</h3>
 				<div class="two-columns mobile form-group">
 					<div class="left">
-						<label for="inputStartEventField">{{lang["DATE"]}}</label>
+						<label for="inputStartEventField">{{"DATE"|trans}}</label>
 
 						<div class="flatpickr-group" id="inputStartEvent">
 							<input type="text" class="form-control" id="inputStartEventField" placeholder="" name="start_date" value="{% if not entry is null and not entry.start_date is null %}{{entry.start_date}}{% elseif entry is null %}{{ from }}{% endif %}" data-input/>
@@ -59,27 +59,27 @@
 						</div>
 					</div>
 					<div class="right">
-						<label for="timeEnd">{{lang["TIME"]}}</label>
+						<label for="timeEnd">{{"TIME"|trans}}</label>
 						<input type="time" step="1" class="form-control" id="timeStart" name="start_time" value="{% if not entry is null %}{{entry.start_time}}{% endif %}">
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="inputStartAddress">{{lang["ADDRESS"]}}</label>
+					<label for="inputStartAddress">{{"ADDRESS"|trans}}</label>
 					<input type="text" class="form-control" id="inputStartAddress" name="start_address" value="{% if not entry is null %}{{entry.start_address}}{% endif %}">
-					<button class="button button-outlined set_address">{{lang["SEARCH_ADDRESS"]}}</button>
+					<button class="button button-outlined set_address">{{"SEARCH_ADDRESS"|trans}}</button>
 					<div id="geo-map" class="geo-map"></div>
 					<div class="form-group map-btn">
-						<button class="delete-location button button-text {% if not hasMap_start %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+						<button class="delete-location button button-text {% if not hasMap_start %}hidden{% endif %}">{{"REMOVE_LOCATION"|trans}}</button>
 					</div>
 					<input type="hidden" class="geo-lat" name="start_lat" value="{% if not entry is null %}{{entry.start_lat}}{% endif %}">
 					<input type="hidden" class="geo-lng" name="start_lng" value="{% if not entry is null %}{{entry.start_lng}}{% endif %}">
 				</div>
 
-				<h3>{{lang["END"]}}</h3>
+				<h3>{{"END"|trans}}</h3>
 				<div class="two-columns mobile form-group">
 					<div class="left">
-						<label for="inputEndEventField">{{lang["DATE"]}}</label>
+						<label for="inputEndEventField">{{"DATE"|trans}}</label>
 
 						<div class="flatpickr-group" id="inputEndEvent">
 							<input type="text" class="form-control" id="inputEndEventField" placeholder="" name="end_date" value="{% if not entry is null and not entry.end_date is null %}{{entry.end_date}}{% elseif entry is null %}{{ to }}{% endif %}" data-input/>
@@ -95,36 +95,36 @@
 
 					</div>
 					<div class="right">
-						<label for="timeEnd">{{lang["TIME"]}}</label>
+						<label for="timeEnd">{{"TIME"|trans}}</label>
 						<input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% endif %}">
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="inputEndAddress">{{lang["ADDRESS"]}}</label>
+					<label for="inputEndAddress">{{"ADDRESS"|trans}}</label>
 					<input type="text" class="form-control" id="inputEndAddress" name="end_address" value="{% if not entry is null %}{{entry.end_address}}{% endif %}">
-					<button class="button button-outlined set_address">{{lang["SEARCH_ADDRESS"]}}</button>
+					<button class="button button-outlined set_address">{{"SEARCH_ADDRESS"|trans}}</button>
 					<div id="geo-map2" class="geo-map"></div>
 					<div class="form-group map-btn">
-						<button class="delete-location button button-text {% if not hasMap_end %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+						<button class="delete-location button button-text {% if not hasMap_end %}hidden{% endif %}">{{"REMOVE_LOCATION"|trans}}</button>
 					</div>
 					<input type="hidden" class="geo-lat" name="end_lat" value="{% if not entry is null %}{{entry.end_lat}}{% endif %}">
 					<input type="hidden" class="geo-lng" name="end_lng" value="{% if not entry is null %}{{entry.end_lng}}{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="eventType">{{lang["TYPE"]}}</label>
+					<label for="eventType">{{"TYPE"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="eventType" name="type">
 							{% for type in types %}
-								<option value="{{type}}" {% if not entry is null and type == entry.type %} selected {% endif %}>{{lang["EVENT_TYPE_%s"|format(type)]}}</option>
+								<option value="{{type}}" {% if not entry is null and type == entry.type %} selected {% endif %}>{{"EVENT_TYPE_%s"|format(type)|trans}}</option>
 							{% endfor %}
 						</select>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="inputNotice">{{lang["NOTICE"]}}</label>
+					<label for="inputNotice">{{"NOTICE"|trans}}</label>
 					<textarea class="form-control" id="inputNotice" name="notice" rows="10">
 						{%- if not entry is null -%}
 							{{- entry.notice|raw -}}
@@ -133,13 +133,13 @@
 				</div>
 
 				{% if not entry is null %}
-					<h3>{{lang["TRIPS_EVENT_IMAGE"]}}</h3>
+					<h3>{{"TRIPS_EVENT_IMAGE"|trans}}</h3>
 					<div class="form-group">
 						<div id="loadingIconImageUpload" class="hidden loading-icon">
 							<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
 						</div>
 						<img class="image_uploaded {% if entry.get_thumbnail() == ''%}hidden{% endif %}" id="event_image" src="{% if entry.get_thumbnail() != ''%}/{{uploads_folder}}/trips/{{entry.get_thumbnail()}}{% endif %}"/>
-						<button type="button" id="delete_image" class="button button-text {% if entry.get_thumbnail() == ''%}hidden{% endif %}">{{lang["DELETE"]}}</button>
+						<button type="button" id="delete_image" class="button button-text {% if entry.get_thumbnail() == ''%}hidden{% endif %}">{{"DELETE"|trans}}</button>
 					</div>
 					<div class="form-group">
 						<input name="image" id="image" class="form-control" type="file">
@@ -149,13 +149,13 @@
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

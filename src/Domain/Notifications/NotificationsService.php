@@ -198,8 +198,8 @@ class NotificationsService extends Service {
         $unseen = $this->mapper->getUnreadNotificationsCountByUser($entry->user);
 
         $notification = [
-            "title" => $title,
-            "body" => $content,
+            "title" => strip_tags($title),
+            "body" => strip_tags($content),
             "data" => $data,
             "unseen" => $unseen
         ];

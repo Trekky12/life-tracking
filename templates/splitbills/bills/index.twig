@@ -8,18 +8,18 @@
 			<a href="{{ url_for_with_last_query_params('splitbills')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["SPLITBILLS"]}}
+			<h2>{{"SPLITBILLS"|trans}}
 				|
 				{{group.name|raw}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD_BILL"]}}</button>
+					{{"ADD_BILL"|trans}}</button>
 			</a>
 			{% if group_users|length > 1 %}
 				<a href="{{ url_for('splitbill_bills_edit', {'group':group.hash}) }}?type=settleup">
-					<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
+					<button class="button button-outlined">{{"SPLITBILLS_SETTLE_UP"|trans}}</button>
 				</a>
 			{% endif %}
 		</div>
@@ -32,7 +32,7 @@
 			<div class="card negative">
 				<div class="card-content">
 					<div class="card-header">
-						<h3>{{ lang["SPEND"] }}</h3>
+						<h3>{{ "SPEND"|trans }}</h3>
 					</div>
 					<p>{{ my_balance["spend"] - my_balance["settled"] }}
 						{{i18n.currency}}</p>
@@ -41,7 +41,7 @@
 			<div class="card positive">
 				<div class="card-content">
 					<div class="card-header">
-						<h3>{{ lang["PAID"] }}</h3>
+						<h3>{{ "PAID"|trans }}</h3>
 					</div>
 					<p>{{ my_balance["paid"] }}
 						{{i18n.currency}}</p>
@@ -50,7 +50,7 @@
 			<div class="card positive">
 				<div class="card-content">
 					<div class="card-header">
-						<h3>{{ lang["RECEIVED"] }}</h3>
+						<h3>{{ "RECEIVED"|trans }}</h3>
 					</div>
 					<p>{{ my_balance["settled"] }}
 						{{i18n.currency}}</p>
@@ -59,7 +59,7 @@
 			<div class="card {% if my_balance[" balance"] >= 0 %}positive{% else %}negative{% endif %}">
 				<div class="card-content">
 					<div class="card-header">
-						<h3>{{ lang["BALANCE"] }}</h3>
+						<h3>{{ "BALANCE"|trans }}</h3>
 					</div>
 					<p>{{ my_balance["balance"] }}
 						{{i18n.currency}}</p>
@@ -77,18 +77,18 @@
 						{% set total = '' %}
 						{% if balance|length  > 2 %}
 							{% if  b['balance'] > 0 %}
-								{% set total = lang['PERSON_RECEIVES_TOTAL']| format(b['balance']|abs, i18n.currency) %}
+								{% set total = "PERSON_RECEIVES_TOTAL"|trans({"%value%": b["balance"]|abs, "%currency%": i18n.currency}) %}
 							{% else %}
-								{% set total = lang['PERSON_OWES_TOTAL']| format(b['balance']|abs, i18n.currency) %}
+								{% set total = "PERSON_OWES_TOTAL"|trans({"%value%": b["balance"]|abs, "%currency%": i18n.currency}) %}
 							{% endif %}
 
 						{% endif %}
 
 						{% if b["owe"] < 0 %}
-							<p class="negative">{{ lang["PERSON_OWES_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }}
+							<p class="negative">{{ "PERSON_OWES_ME"|trans({"%user%": users[b["user"]].name, "%value%": b["owe"]|abs, "%currency%": i18n.currency}) }}
 								{{ total }}</p>
 						{% elseif b["owe"] > 0 %}
-							<p class="positive">{{ lang["PERSON_RECEIVES_BY_ME"]|format( users[b["user"]].name, b["owe"]|abs, i18n.currency) }}
+							<p class="positive">{{ "PERSON_RECEIVES_BY_ME"|trans({"%user%": users[b["user"]].name, "%value%": b["owe"]|abs, "%currency%": i18n.currency}) }}
 								{{ total }}</p>
 						{% endif %}
 					{% endfor %}
@@ -102,16 +102,16 @@
 			<table id="splitbills_bills_table" class="table table-hover small" data-currency="{{i18n.currency}}" data-members="{{ group_users|length }}">
 				<thead>
 					<tr>
-						<th>{{lang["DATE"]}}</th>
-						<th>{{lang["TIME"]}}</th>
-						<th>{{lang["NAME"]}}</th>
+						<th>{{"DATE"|trans}}</th>
+						<th>{{"TIME"|trans}}</th>
+						<th>{{"NAME"|trans}}</th>
 						{% if group_users|length > 1 %}
-							<th>{{ lang["RECEIVED"] }}</th>
-							<th>{{ lang["SPEND"] }}</th>
-							<th>{{ lang["PAID"] }}</th>
-							<th>{{ lang["BALANCE"] }}</th>
+							<th>{{ "RECEIVED"|trans }}</th>
+							<th>{{ "SPEND"|trans }}</th>
+							<th>{{ "PAID"|trans }}</th>
+							<th>{{ "BALANCE"|trans }}</th>
 						{% else %}
-							<th>{{ lang["SPEND"] }}</th>
+							<th>{{ "SPEND"|trans }}</th>
 						{% endif %}
 						<th></th>
 						<th></th>

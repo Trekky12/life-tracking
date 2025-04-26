@@ -1,9 +1,9 @@
 <div class="tabbar-scroller">
 	<div class="tabbar-scrollarea">
-		<a class="tabbar-tab {% if active == 'users' %}active{% endif %}" href="{{ url_for('users') }}">{{lang["USERS"]}}</a>
-		<a class="tabbar-tab {% if active == 'notifications_clients' %}active{% endif %}" href="{{ url_for('notifications_clients') }}">{{lang["NOTIFICATIONS"]}}</a>
-		<a class="tabbar-tab {% if active == 'notifications_categories' %}active{% endif %}" href="{{ url_for('notifications_categories') }}">{{lang["CATEGORIES"]}}</a>
-		<a class="tabbar-tab {% if active == 'login_tokens' %}active{% endif %}" href="{{ url_for('login_tokens') }}">{{lang["LOGIN_TOKENS"]}}</a>
-		<a class="tabbar-tab {% if active == 'banlist' %}active{% endif %}" href="{{ url_for('banlist') }}">{{lang["BANLIST"]}}</a>
+		<a class="tabbar-tab {% if active == 'users' %}active{% endif %}" href="{{ url_for('users') }}">{{"USERS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'notifications_clients' %}active{% endif %}" href="{{ url_for('notifications_clients') }}">{{"NOTIFICATIONS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'notifications_categories' %}active{% endif %}" href="{{ url_for('notifications_categories') }}">{{"CATEGORIES"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'login_tokens' %}active{% endif %}" href="{{ url_for('login_tokens') }}">{{"LOGIN_TOKENS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'banlist' %}active{% endif %}" href="{{ url_for('banlist') }}">{{"BANLIST"|trans}}</a>
 	</div>
 </div>

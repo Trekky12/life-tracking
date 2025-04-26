@@ -5,16 +5,16 @@
 			{{ exercise['mainMuscle'] }}</small>
 		<h3 class="title">{{ exercise['exercise'].name }}</h3>
 		<div class="instructions">
-			<a href="#" class="headline">{{ lang["WORKOUTS_INSTRUCTIONS"] }}</a>
+			<a href="#" class="headline">{{ "WORKOUTS_INSTRUCTIONS"|trans }}</a>
 			<p class="content">{{ exercise['exercise'].getInstructions()|raw }}</p>
 		</div>
 		<div class="sets">
-			<a href="#" class="headline">{{ lang["WORKOUTS_SETS"] }}</a>
+			<a href="#" class="headline">{{ "WORKOUTS_SETS"|trans }}</a>
 			<div class="content">
 				{% for set in exercise['set_description'] %}
 					<div class="set">
 						{{ loop.index }}.
-						{{ lang["WORKOUTS_SET"] }}:
+						{{ "WORKOUTS_SET"|trans }}:
 						{{ set }}
 					</div>
 				{% endfor %}

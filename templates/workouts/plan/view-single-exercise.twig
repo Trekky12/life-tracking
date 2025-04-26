@@ -9,7 +9,7 @@
 				<a href="#" class="headline">
 					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
 					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-					{{ lang["WORKOUTS_INSTRUCTIONS"] }}
+					{{ "WORKOUTS_INSTRUCTIONS"|trans }}
 				</a>
 				<p class="content">{{ exercise['exercise'].getInstructions()|raw }}</p>
 			</div>
@@ -19,11 +19,11 @@
 				<a href="#" class="headline">
 					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
 					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-					{{ lang["WORKOUTS_MUSCLES"] }}
+					{{ "WORKOUTS_MUSCLES"|trans }}
 				</a>
 				<div class="content">
 					{% if exercise['primary_muscles']|length > 0  %}
-						<h4>{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</h4>
+						<h4>{{"WORKOUTS_MUSCLES_PRIMARY"|trans}}</h4>
 						<p>
 							{% for muscle in exercise['primary_muscles'] %}
 								{{ muscle.name }}
@@ -34,7 +34,7 @@
 					{% endif %}
 
 					{% if exercise['secondary_muscles']|length > 0 %}
-						<h4>{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</h4>
+						<h4>{{"WORKOUTS_MUSCLES_SECONDARY"|trans}}</h4>
 						<p>
 							{% for muscle in exercise['secondary_muscles'] %}
 								{{ muscle.name }}
@@ -50,17 +50,17 @@
 		{% endif %}
 		{% if exercise['notice'] %}
 			<div class="view-notices">
-				<h4>{{ lang["NOTICE"] }}</h4>
+				<h4>{{ "NOTICE"|trans }}</h4>
 				<p class="content">{{ exercise['notice']|nl2br|raw }}</p>
 			</div>
 		{% endif %}
 		<div class="sets-description">
-			<h4>{{ lang["WORKOUTS_SETS"] }}</h4>
+			<h4>{{ "WORKOUTS_SETS"|trans }}</h4>
 			<div class="content">
 				{% for set in exercise['set_description'] %}
 					<div class="set">
 						{{ loop.index }}.
-						{{ lang["WORKOUTS_SET"] }}:
+						{{ "WORKOUTS_SET"|trans }}:
 						{{ set }}
 					</div>
 				{% endfor %}

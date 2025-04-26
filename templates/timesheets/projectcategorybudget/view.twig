@@ -8,13 +8,13 @@
 			<a href="{{ url_for_with_last_query_params('timesheets')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}
+			<h2>{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}
 				|
 				{{ project.name }}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}{% if view %}?view={{view}}{% endif %}">
-				<button class="button button-outlined">{{lang["EDIT"]}}</button>
+				<button class="button button-outlined">{{"EDIT"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -47,7 +47,7 @@
 							</h4>
 							{% if budget.category_names | length > 0 %}
 								<div class="categories-list">
-									{{lang["CATEGORIES"]}}:
+									{{"CATEGORIES"|trans}}:
 									{{budget.category_names|raw}}
 								</div>
 							{% endif %}
@@ -84,7 +84,7 @@
 
 								{% if budget.diff is not null %}
 									<div class="remaining">
-										{{lang["REMAINING"]}}:
+										{{"REMAINING"|trans}}:
 										{%if budget.categorization != 'count' %}
 											{{budget.diff | splitDateInterval(true)}}
 										{% else %}

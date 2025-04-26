@@ -5,12 +5,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["CAR_REFUEL"]}}</h2>
+			<h2>{{"CAR_REFUEL"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('car_service_refuel_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -26,15 +26,15 @@
 			<table id="fuel_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["DATE"]}}</th>
-						<th>{{lang["CAR"]}}</th>
-						<th>{{lang["MILEAGE"]}}</th>
-						<th>{{lang["PRICE"]}}</th>
-						<th>{{lang["VOLUME"]}}</th>
-						<th>{{lang["TOTAL_PRICE"]}}</th>
-						<th>{{lang["TYPE"]}}</th>
-						<th>{{lang["CONSUMPTION"]}}</th>
-						<th>{{lang["LOCATION"]}}</th>
+						<th>{{"DATE"|trans}}</th>
+						<th>{{"CAR"|trans}}</th>
+						<th>{{"MILEAGE"|trans}}</th>
+						<th>{{"PRICE"|trans}}</th>
+						<th>{{"VOLUME"|trans}}</th>
+						<th>{{"TOTAL_PRICE"|trans}}</th>
+						<th>{{"TYPE"|trans}}</th>
+						<th>{{"CONSUMPTION"|trans}}</th>
+						<th>{{"LOCATION"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>

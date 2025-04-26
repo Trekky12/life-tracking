@@ -16,8 +16,8 @@
 			<a href="{{ url_for_with_last_query_params('timesheets_projects_edit', {'id' : project.id}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS"]}}
-				{{ lang["NOTICE"] }}|
+			<h2>{{"TIMESHEETS"|trans}}
+				{{ "NOTICE"|trans }}|
 				{{project.name|raw}}</h2>
 		</div>
 	</div>
@@ -34,7 +34,7 @@
 			<div id="alertError" class="alert danger hidden">
 				<span class="closebtn">&times;</span>
 				<span class="alert-message">
-					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p>{{ "ENTRY_ERROR"|trans }}</p>
 					<p id="alertErrorDetail"></p>
 				</span>
 			</div>
@@ -47,7 +47,7 @@
 					<div class="timesheet-notice-wrapper">
 
 						<h3 class="sheet_title">{{ project.name }}</h3>
-						<small id="lastSavedWrapper" class="hidden">{{ lang["LAST_SAVED"]}}:
+						<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
 							<span id="lastSaved"></span>
 						</small>
 
@@ -57,9 +57,9 @@
 					</div>
 
 					<div class="form-group btn">
-						<button type="submit" class="button">{{lang["SAVE"]}}</button>
-						<button type="button" class="button button-outlined" id="wordExport">{{lang["EXPORT_WORD"]}}
-							{{lang["TIMESHEETS_EXPORT"]}}</button>
+						<button type="submit" class="button">{{"SAVE"|trans}}</button>
+						<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
+							{{"TIMESHEETS_EXPORT"|trans}}</button>
 					</div>
 				</form>
 			</div>

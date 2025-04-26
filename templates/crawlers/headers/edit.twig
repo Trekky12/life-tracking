@@ -8,8 +8,8 @@
 			<a href="{{ url_for_with_last_query_params('crawlers_headers', {'crawler' : crawler.hash}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["CRAWLERS"]}}
-				{{lang["HEADLINE"]}}
+			<h2>{{"CRAWLERS"|trans}}
+				{{"HEADLINE"|trans}}
 				|
 				{{ crawler.name }}</h2>
 		</div>
@@ -29,71 +29,71 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="inputHeadline">{{lang["HEADLINE"]}}</label>
+					<label for="inputHeadline">{{"HEADLINE"|trans}}</label>
 					<input type="text" class="form-control" id="inputHeadline" name="headline" {% if not entry is null %} value="{{entry.headline|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputFieldName">{{lang["FIELD_NAME"]}}</label>
+					<label for="inputFieldName">{{"FIELD_NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputFieldName" name="field_name" {% if not entry is null %} value="{{entry.field_name}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputFieldLink">{{lang["FIELD_LINK"]}}</label>
+					<label for="inputFieldLink">{{"FIELD_LINK"|trans}}</label>
 					<input type="text" class="form-control" id="inputFieldLink" name="field_link" {% if not entry is null %} value="{{entry.field_link}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputFieldContent">{{lang["FIELD_CONTENT"]}}</label>
+					<label for="inputFieldContent">{{"FIELD_CONTENT"|trans}}</label>
 					<input type="text" class="form-control" id="inputFieldContent" name="field_content" {% if not entry is null %} value="{{entry.field_content|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputPosition">{{lang["POSITION"]}}</label>
+					<label for="inputPosition">{{"POSITION"|trans}}</label>
 					<input type="number" class="form-control" id="inputPosition" name="position" step="1" pattern="\d*" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
 					<label class="checkbox" for="checkboxSortable">
 						<input name="sortable" type="checkbox" id="checkboxSortable" value="1" {% if entry is not null and entry.sortable == 1 %} checked {% endif %}>
-						{{lang["SORTABLE"]}}
+						{{"SORTABLE"|trans}}
 					</label>
 				</div>
 
 				<div class="form-group">
 					<label class="checkbox" for="checkboxDiff">
 						<input name="diff" type="checkbox" id="checkboxDiff" value="1" {% if entry is not null and entry.diff == 1 %} checked {% endif %}>
-						{{lang["PREVIOUS_VALUE"]}}
+						{{"PREVIOUS_VALUE"|trans}}
 					</label>
 				</div>
 
 				<div class="form-group">
-					<label for="inputPrefix">{{lang["PREFIX"]}}</label>
+					<label for="inputPrefix">{{"PREFIX"|trans}}</label>
 					<input type="text" class="form-control" id="inputFieldPrefix" name="prefix" {% if not entry is null %} value="{{entry.prefix|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputSuffix">{{lang["SUFFIX"]}}</label>
+					<label for="inputSuffix">{{"SUFFIX"|trans}}</label>
 					<input type="text" class="form-control" id="inputSuffix" name="suffix" {% if not entry is null %} value="{{entry.suffix|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="sort">{{lang["SORT"]}}</label>
+					<label for="sort">{{"SORT"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="sort" name="sort">
 							{% for key, sort in sortOptions %}
-								<option value="{{key}}" {% if not entry is null and key == entry.sort %} selected {% endif %}>{{lang[sort]}}</option>
+								<option value="{{key}}" {% if not entry is null and key == entry.sort %} selected {% endif %}>{{sort|trans}}</option>
 							{% endfor %}
 						</select>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="datatype">{{lang["DATA_TYPE"]}}</label>
+					<label for="datatype">{{"DATA_TYPE"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="datatype" name="datatype">
 							{% for key, cast in castOptions %}
-								<option value="{{key}}" {% if not entry is null and key == entry.datatype %} selected {% endif %}>{{lang[cast]}}</option>
+								<option value="{{key}}" {% if not entry is null and key == entry.datatype %} selected {% endif %}>{{cast|trans}}</option>
 							{% endfor %}
 						</select>
 					</div>
@@ -102,13 +102,13 @@
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

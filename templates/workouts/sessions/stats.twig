@@ -24,7 +24,7 @@
 				{% if plan is not empty %}
 					{{plan.name|raw}}
 				{% else %}
-					{{lang["WORKOUTS_SESSIONS"]}}
+					{{"WORKOUTS_SESSIONS"|trans}}
 				{% endif %}
 			</h2>
 		</div>
@@ -51,19 +51,19 @@
 					</div>
 				{% endif %}
 				{% if (exercise['exercise'].isCategoryReps() or exercise['exercise'].isCategoryRepsWeight()) and exercise['data']['repeats'] is not null %}
-					<h3>{{ lang["WORKOUTS_CATEGORY_REPS"] }}</h3>
+					<h3>{{ "WORKOUTS_CATEGORY_REPS"|trans }}</h3>
 					<canvas data-values="{{exercise['data']['repeats']|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
 				{% endif %}
 				{% if exercise['exercise'].isCategoryRepsWeight() and exercise['data']['weight'] is not null %}
-					<h3>{{ lang["WORKOUTS_WEIGHT"] }}</h3>
+					<h3>{{ "WORKOUTS_WEIGHT"|trans }}</h3>
 					<canvas data-values="{{exercise['data']['weight']|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
 				{% endif %}
 				{% if (exercise['exercise'].isCategoryTime() or exercise['exercise'].isCategoryDistanceTime()) and exercise['data']['time'] is not null %}
-					<h3>{{ lang["WORKOUTS_CATEGORY_TIME"] }}</h3>
+					<h3>{{ "WORKOUTS_CATEGORY_TIME"|trans }}</h3>
 					<canvas data-values="{{exercise['data']['time']|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
 				{% endif %}
 				{% if exercise['exercise'].isCategoryDistanceTime() and exercise['data']['distance'] is not null %}
-					<h3>{{ lang["WORKOUTS_DISTANCE"] }}</h3>
+					<h3>{{ "WORKOUTS_DISTANCE"|trans }}</h3>
 					<canvas data-values="{{exercise['data']['distance']|json_encode(constant('JSON_NUMERIC_CHECK'))}}" data-min="{{start}}" data-max="{{end}}" data-dates="{{dates|json_encode()}}" class="workoutChart chart"></canvas>
 				{% endif %}
 			</div>

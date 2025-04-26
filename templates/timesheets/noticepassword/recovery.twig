@@ -14,7 +14,7 @@
 			<a href="{{ url_for_with_last_query_params('timesheets_notice_password', {'project': project.getHash()}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS_RECOVERY_KEY"]}}</h2>
+			<h2>{{"TIMESHEETS_RECOVERY_KEY"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -30,15 +30,15 @@
 			<div id="alertError" class="alert danger hidden">
 				<span class="closebtn">&times;</span>
 				<span class="alert-message">
-					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p>{{ "ENTRY_ERROR"|trans }}</p>
 					<p id="alertErrorDetail"></p>
 				</span>
 			</div>
 
 			<div id="recoveryKeyWrapper" data-project="{{ project.id }}" class="hidden">
-				<p>{{ lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_1"] }}</p>
+				<p>{{ "TIMESHEETS_RECOVERY_KEY_DESCRIPTION_1"|trans }}</p>
 				<code></code>
-				<p>{{ lang["TIMESHEETS_RECOVERY_KEY_DESCRIPTION_2"] }}</p>
+				<p>{{ "TIMESHEETS_RECOVERY_KEY_DESCRIPTION_2"|trans }}</p>
 			</div>
 
 		</div>

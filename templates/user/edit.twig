@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('users') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["USERS"]}}</h2>
+			<h2>{{"USERS"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -27,27 +27,27 @@
 
 
 				<div class="form-group">
-					<label for="inputLogin">{{lang["LOGIN"]}}</label>
+					<label for="inputLogin">{{"LOGIN"|trans}}</label>
 					<input type="text" class="form-control" id="inputLogin" name="login" {% if not entry is null %} value="{{entry.login}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputLastName">{{lang["LASTNAME"]}}</label>
+					<label for="inputLastName">{{"LASTNAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputLastName" name="lastname" {% if not entry is null %} value="{{entry.lastname}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputMail">{{lang["MAIL"]}}</label>
+					<label for="inputMail">{{"MAIL"|trans}}</label>
 					<input type="email" class="form-control" id="inputMail" name="mail" {% if not entry is null %} value="{{entry.mail}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputRole">{{lang["ROLE"]}}</label>
+					<label for="inputRole">{{"ROLE"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select name="role" id="inputRole">
 							{% for role in roles %}
@@ -58,100 +58,100 @@
 				</div>
 
 				<div class="form-group">
-					<label for="inputPassword">{{lang["PASSWORD"]}}</label>
+					<label for="inputPassword">{{"PASSWORD"|trans}}</label>
 					<input name="set_password" id="inputPassword" class="form-control" type="password">
 				</div>
 
-				<h3>{{lang["MODULES"]}}</h3>
+				<h3>{{"MODULES"|trans}}</h3>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxLocationModule">
 						<input name="module_location" type="checkbox" value="1" id="checkboxLocationModule" {% if entry is null or entry.module_location == 1 %} checked {% endif %}>
-						{{lang["MENU_LOCATION"]}}
+						{{"MENU_LOCATION"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxFinanceModule">
 						<input name="module_finance" type="checkbox" value="1" id="checkboxFinanceModule" {% if entry is null or entry.module_finance == 1 %} checked {% endif %}>
-						{{lang["MENU_FINANCES"]}}
+						{{"MENU_FINANCES"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxCarsModule">
 						<input name="module_cars" type="checkbox" value="1" id="checkboxCarsModule" {% if entry is null or entry.module_cars == 1 %} checked {% endif %}>
-						{{lang["CARS"]}}
+						{{"CARS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxBoardsModule">
 						<input name="module_boards" type="checkbox" value="1" id="checkboxBoardsModule" {% if entry is null or entry.module_boards == 1 %} checked {% endif %}>
-						{{lang["BOARDS"]}}
+						{{"BOARDS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxCrawlersModule">
 						<input name="module_crawlers" type="checkbox" value="1" id="checkboxCrawlersModule" {% if entry is null or entry.module_crawlers == 1 %} checked {% endif %}>
-						{{lang["CRAWLERS"]}}
+						{{"CRAWLERS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxSplitbillsModule">
 						<input name="module_splitbills" type="checkbox" value="1" id="checkboxSplitbillsModule" {% if entry is null or entry.module_splitbills == 1 %} checked {% endif %}>
-						{{lang["SPLITBILLS"]}}
+						{{"SPLITBILLS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxTripsModule">
 						<input name="module_trips" type="checkbox" value="1" id="checkboxTripsModule" {% if entry is null or entry.module_trips == 1 %} checked {% endif %}>
-						{{lang["TRIPS"]}}
+						{{"TRIPS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxTimesheetsModule">
 						<input name="module_timesheets" type="checkbox" value="1" id="checkboxTimesheetsModule" {% if entry is null or entry.module_timesheets == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS"]}}
+						{{"TIMESHEETS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxRecipesModule">
 						<input name="module_recipes" type="checkbox" value="1" id="checkboxRecipesModule" {% if user.module_recipes == 1 %} checked {% endif %}>
-						{{lang["RECIPES"]}}
+						{{"RECIPES"|trans}}
 					</label>
 				</div>
 
-				<h3>{{lang["OTHER_SETTINGS"]}}</h3>
+				<h3>{{"OTHER_SETTINGS"|trans}}</h3>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxForcePWChange">
 						<input name="force_pw_change" type="checkbox" value="1" id="checkboxForcePWChange" {% if entry is null or entry.force_pw_change == 1 %} checked {% endif %}>
-						{{lang["FORCE_PW_CHANGE"]}}
+						{{"FORCE_PW_CHANGE"|trans}}
 					</label>
 				</div>
 
 				{% if entry is null %}
-					<h3>{{lang["MAIL_SETTINGS"]}}</h3>
+					<h3>{{"MAIL_SETTINGS"|trans}}</h3>
 					<div class="form-group">
 						<label class="checkbox" for="checkboxNotifyCreation">
 							<input name="notify_creation" type="checkbox" value="1" id="checkboxNotifyCreation">
-							{{lang["MAIL_NOTIFY_USER_CREATION"]}}
+							{{"MAIL_NOTIFY_USER_CREATION"|trans}}
 						</label>
 					</div>
 				{% endif %}
 
-				<h3>{{lang["PWA_SETTINGS"]}}</h3>
+				<h3>{{"PWA_SETTINGS"|trans}}</h3>
 				<div class="form-group">
-					<label for="inputStartURL">{{lang["START_URL"]}}</label>
+					<label for="inputStartURL">{{"START_URL"|trans}}</label>
 					<input type="text" class="form-control" id="inputStartURL" name="start_url" {% if not entry is null %} value="{{entry.start_url}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

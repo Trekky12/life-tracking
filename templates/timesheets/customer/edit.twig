@@ -12,7 +12,7 @@
 				{% if project.customers_name_singular %}
 					{{project.customers_name_singular}}
 				{% else %}
-					{{lang["TIMESHEETS_CUSTOMER"]}}
+					{{"TIMESHEETS_CUSTOMER"|trans}}
 				{% endif %}
 				|
 				{{ project.name }}</h2>
@@ -33,26 +33,26 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
 					<label class="checkbox" for="checkboxArchived">
 						<input name="archive" type="checkbox" value="1" id="checkboxArchived" {% if entry is not null and entry.archive == 1 %} checked {% endif %}>
-						{{lang["ARCHIVED"]}}
+						{{"ARCHIVED"|trans}}
 					</label>
 				</div>
 
 				<div class="two-columns form-group">
 					<div class="left">
-						<h4>{{lang["BACKGROUND"]}}
-							{{lang["COLOR"]}}</h4>
+						<h4>{{"BACKGROUND"|trans}}
+							{{"COLOR"|trans}}</h4>
 						<input class="form-control" id="inputBackgroundColor" name="background_color" type="color" value="{% if not entry is null and not entry.background_color is null %}{{entry.background_color}}{% else %}#FFFFFF{% endif %}">
 					</div>
 					<div class="right">
-						<h4>{{lang["TEXT"]}}
-							{{lang["COLOR"]}}</h4>
+						<h4>{{"TEXT"|trans}}
+							{{"COLOR"|trans}}</h4>
 						<input class="form-control" id="inputTextColor" name="text_color" type="color"  value="{% if not entry is null and not entry.text_color is null%}{{entry.text_color}}{% else %}#000000{% endif %}">
 					</div>
 				</div>
@@ -60,13 +60,13 @@
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

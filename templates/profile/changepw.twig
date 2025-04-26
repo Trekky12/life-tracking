@@ -5,7 +5,7 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["CHANGE_PASSWORD"]}}</h2>
+			<h2>{{"CHANGE_PASSWORD"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -23,24 +23,24 @@
 				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
 				<div class="form-group">
-					<label>{{lang["LOGIN"]}}</label>
+					<label>{{"LOGIN"|trans}}</label>
 					<p>{{user.login}}</p>
 				</div>
 				<div class="form-group">
-					<label for="inputOldPassword">{{lang["OLD_PASSWORD"]}}</label>
+					<label for="inputOldPassword">{{"OLD_PASSWORD"|trans}}</label>
 					<input name="oldpassword" id="inputOldPassword" class="form-control" type="password">
 				</div>
 				<div class="form-group">
-					<label for="inputNewPassword1">{{lang["NEW_PASSWORD"]}}</label>
+					<label for="inputNewPassword1">{{"NEW_PASSWORD"|trans}}</label>
 					<input name="newpassword1" id="inputNewPassword1" class="form-control" type="password">
 				</div>
 				<div class="form-group">
-					<label for="inputNewPassword2">{{lang["NEW_PASSWORD_REPLY"]}}</label>
+					<label for="inputNewPassword2">{{"NEW_PASSWORD_REPLY"|trans}}</label>
 					<input name="newpassword2" id="inputNewPassword2" class="form-control" type="password">
 				</div>
 
 				<div class="form-group">
-					<button type="submit" class="button">{{lang["SAVE"]}}</button>
+					<button type="submit" class="button">{{"SAVE"|trans}}</button>
 				</div>
 			</form>
 		</div>

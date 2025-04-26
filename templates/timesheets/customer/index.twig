@@ -12,7 +12,7 @@
 				{% if project.customers_name_plural %}
 					{{project.customers_name_plural}}
 				{% else %}
-					{{lang["TIMESHEETS_CUSTOMERS"]}}
+					{{"TIMESHEETS_CUSTOMERS"|trans}}
 				{% endif %}
 				|
 				{{ project.name }}</h2>
@@ -20,7 +20,7 @@
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_customers_edit', {'project': project.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -32,8 +32,8 @@
 			<table id="project_customers_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
-						<th>{{lang["ARCHIVED"]}}</th>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{"ARCHIVED"|trans}}</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -47,9 +47,9 @@
 							<td>
 								<a href="{{ url_for('timesheets_customers_notice_edit', {'customer' : customer.id, 'project' : project.hash}) }}">
 									{% if customer.id in hasNotices %}
-										{{lang["TIMESHEETS_NOTICE_EDIT"]}}
+										{{"TIMESHEETS_NOTICE_EDIT"|trans}}
 									{% else %}
-										{{ lang["TIMESHEETS_NOTICE_ADD"] }}
+										{{ "TIMESHEETS_NOTICE_ADD"|trans }}
 									{% endif %}
 								</a>
 							</td>

@@ -16,7 +16,7 @@
 	<div class="buttons">
 		<a href="{{ url_for('location_edit') }}">
 			<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-				{{lang["ADD_LOCATION"]}}</button>
+				{{"ADD_LOCATION"|trans}}</button>
 		</a>
 	</div>
 {% endblock %}
@@ -46,7 +46,7 @@
 					<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
 					<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
 				</div>
-				<input type="submit" value="{{lang["SHOW"]}}"/>
+				<input type="submit" value="{{"SHOW"|trans}}"/>
 			</div>
 		</form>
 		<span id="show-filter" class="hiddenSearch" aria-hidden="true">

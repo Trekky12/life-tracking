@@ -5,12 +5,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["TIMESHEETS_PROJECTS"]}}</h2>
+			<h2>{{"TIMESHEETS_PROJECTS"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_projects_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -22,8 +22,8 @@
 			<table id="timesheets_projects_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{ lang["NAME"] }}</th>
-						<th>{{ lang["SUM"] }}</th>
+						<th>{{ "NAME"|trans }}</th>
+						<th>{{ "SUM"|trans }}</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -41,25 +41,25 @@
 							</td>
 							<td>{{times[project.id]}}</td>
 							<td>
-								<a href="{{ url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}</a>
+								<a href="{{ url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</a>
 							</td>
 							<td>
 								<a href="{{ url_for('timesheets_customers', {'project' : project.hash}) }}">
 									{% if project.customers_name_plural %}
 										{{project.customers_name_plural}}
 									{% else %}
-										{{lang["TIMESHEETS_CUSTOMERS"]}}
+										{{"TIMESHEETS_CUSTOMERS"|trans}}
 									{% endif %}
 								</a>
 							</td>
 							<td>
-								<a href="{{ url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{lang["TIMESHEETS_PROJECT_CATEGORIES"]}}</a>
+								<a href="{{ url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{"TIMESHEETS_PROJECT_CATEGORIES"|trans}}</a>
 							</td>
 							<td>
-								<a href="{{ url_for('timesheets_notice_password', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICE_PASSWORD"]}}</a>
+								<a href="{{ url_for('timesheets_notice_password', {'project' : project.hash}) }}">{{"TIMESHEETS_NOTICE_PASSWORD"|trans}}</a>
 							</td>
 							<td>
-								<a href="{{ url_for('timesheets_noticefields', {'project' : project.hash}) }}">{{lang["TIMESHEETS_NOTICEFIELDS"]}}</a>
+								<a href="{{ url_for('timesheets_noticefields', {'project' : project.hash}) }}">{{"TIMESHEETS_NOTICEFIELDS"|trans}}</a>
 							</td>
 							<td>
 								{% if project.user == user.id %}

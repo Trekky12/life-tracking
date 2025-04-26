@@ -99,7 +99,7 @@ class UserService extends Service {
             $variables = array(
                 'header' => '',
                 'subject' => $subject,
-                'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $entry->name),
+                'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%', $entry->name]),
                 'content' => $this->translation->getTranslatedString('THISISATESTEMAIL')
             );
 

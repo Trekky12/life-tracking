@@ -3,24 +3,36 @@
 namespace App\Domain\Main;
 
 use App\Domain\Base\Settings;
+use Symfony\Component\Translation\Translator as SymfonyTranslator;
+use Symfony\Component\Translation\Loader\ArrayLoader;
 
 class Translator {
 
     protected $settings;
+    protected $translator;
 
     public function __construct(Settings $settings) {
         $this->settings = $settings;
+
+        $selectedLanguage = $this->settings->getAppSettings()['i18n']['template'];
+
+        $this->translator = new SymfonyTranslator($selectedLanguage);
+        $this->translator->addLoader('array', new ArrayLoader());
+
+        $langFile = __DIR__ . '/../lang/' . $selectedLanguage . '.php';
+        if (file_exists($langFile)) {
+            $translations = require $langFile;
+            $this->translator->addResource('array', $translations, $selectedLanguage);
+        }
+
     }
 
-    public function getLanguage() {
-        $selected_language = $this->settings->getAppSettings()['i18n']['template'];
-        $lang = require __DIR__ . '/../lang/' . $selected_language . '.php';
-        return $lang;
+    public function getTranslatedString(string $key, array $parameters = []): string {
+        return $this->translator->trans($key, $parameters);
     }
 
-    public function getTranslatedString($key) {
-        $lang = $this->getLanguage();
-        return array_key_exists($key, $lang) ? $lang[$key] : $key;
+    public function getSymfonyTranslator(): SymfonyTranslator {
+        return $this->translator;
     }
 
 }

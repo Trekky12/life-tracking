@@ -5,12 +5,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["FINANCES_CATEGORIES"]}}</h2>
+			<h2>{{"FINANCES_CATEGORIES"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('finances_categories_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -26,8 +26,8 @@
 			<table id="category_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
-						<th>{{lang["DEFAULT"]}}</th>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{"DEFAULT"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>

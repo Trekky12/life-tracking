@@ -14,7 +14,7 @@
 			<a href="{{ url_for_with_last_query_params('workouts_sessions', {'plan': plan.hash}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["WORKOUTS_SESSION"]}}
+			<h2>{{"WORKOUTS_SESSION"|trans}}
 				|
 				{{ plan.name }}</h2>
 		</div>
@@ -34,7 +34,7 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="dateSelect">{{lang["DATE"]}}</label>
+					<label for="dateSelect">{{"DATE"|trans}}</label>
 					<div class="flatpickr-group" id="dateSelect">
 						<input type="text" class="form-control" id="dateSelectField" placeholder="" name="date" value="{% if not entry is null and not entry.date is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" data-input/>
 
@@ -49,19 +49,19 @@
 				</div>
 
 				<div class="form-group">
-					<label for="timeEnd">{{ lang["START"] }}
-						{{lang["TIME"]}}</label>
+					<label for="timeEnd">{{ "START"|trans }}
+						{{"TIME"|trans}}</label>
 					<input type="time" step="1" class="form-control" id="timeStart" name="start_time" value="{% if not entry is null %}{{entry.start_time}}{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="timeEnd">{{ lang["END"] }}
-						{{lang["TIME"]}}</label>
+					<label for="timeEnd">{{ "END"|trans }}
+						{{"TIME"|trans}}</label>
 					<input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputNotice">{{lang["NOTICE"]}}</label>
+					<label for="inputNotice">{{"NOTICE"|trans}}</label>
 					<textarea class="form-control" id="inputNotice" name="notice" rows="2">
 						{%- if not entry is null -%}
 							{{- entry.notice|raw -}}
@@ -71,10 +71,10 @@
 
 				{% if entry is null and workoutdays|length > 0 %}
 					<div class="form-group">
-						<label for="workoutsDaySelect">{{lang["WORKOUTS_DAY"]}}</label>
+						<label for="workoutsDaySelect">{{"WORKOUTS_DAY"|trans}}</label>
 						<div class="select-wrapper">
 							<select id="workoutsDaySelect">
-								<option value="-1" selected>{{ lang["CHOOSE"] }}</option>
+								<option value="-1" selected>{{ "CHOOSE"|trans }}</option>
 								{% for id, day in workoutdays %}
 									<option value="{{ id }}">{{ day }}</option>
 								{% endfor %}
@@ -103,7 +103,7 @@
 							{% elseif exercise.type == "superset" %}
 								<div class="workout_superset {% if entry is null and workoutdays|length > 0%}hidden{% endif %}" data-type="workout-element" data-category="superset">
 									<div class="content">
-										<h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
+										<h3>{{"WORKOUTS_SUPERSET"|trans}}</h3>
 										<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="superset" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
 										<div class="exercises" data-type="superset">
 											{% for child in exercise['children'] %}
@@ -122,9 +122,9 @@
 				</div>
 
 				<div class="form-group">
-					<button type="button" class="button button-outlined small" id="add_superset">{{ lang["WORKOUTS_ADD_SUPERSET"] }}</button>
+					<button type="button" class="button button-outlined small" id="add_superset">{{ "WORKOUTS_ADD_SUPERSET"|trans }}</button>
 				</div>
-				<h3>{{ lang["WORKOUTS_ADD_EXERCISE"] }}</h3>
+				<h3>{{ "WORKOUTS_ADD_EXERCISE"|trans }}</h3>
 				<div class="form-group">
 					<div class="select-wrapper" id="addExerciseToSession">
 						<select>
@@ -134,20 +134,20 @@
 						</select>
 					</div>
 					<input id="setCount" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="3" class="small"/>
-					<label for="setCount">{{ lang["WORKOUTS_SETS"] }}</label>
-					<button type="button" class="button button-outlined small" id="addExercise">{{ lang["ADD"] }}</button>
+					<label for="setCount">{{ "WORKOUTS_SETS"|trans }}</label>
+					<button type="button" class="button button-outlined small" id="addExercise">{{ "ADD"|trans }}</button>
 				</div>
 
 				<div class="form-group btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

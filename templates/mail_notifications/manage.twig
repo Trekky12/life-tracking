@@ -12,7 +12,7 @@
 			<a href="{{ url_for_with_last_query_params('notifications')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["MAIL_SETTINGS"]}}</h2>
+			<h2>{{"MAIL_SETTINGS"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -29,7 +29,7 @@
 						{% if cat.identifier == 'MAIL_CATEGORY_SPLITTED_BILLS' %}
 							{% if user.hasModule("splitbills") %}
 								<div class="form-group">
-									{{ lang[cat.name] }}
+									{{ cat.name|trans }}
 									{% for group in splitbill["user_groups"]  %}
 										<div>
 											<label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ group }}">
@@ -43,7 +43,7 @@
 						{% elseif cat.identifier == 'MAIL_CATEGORY_BOARDS_CARD_ADD' %}
 							{% if user.hasModule("boards") %}
 								<div class="form-group">
-									{{ lang[cat.name] }}
+									{{ cat.name|trans }}
 									{% for board in boards["user_boards"]  %}
 										<div>
 											<label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
@@ -57,7 +57,7 @@
 						{% elseif cat.identifier == 'MAIL_CATEGORY_BOARDS_CARD_DUE' %}
 							{% if user.hasModule("boards") %}
 								<div class="form-group">
-									{{ lang[cat.name] }}
+									{{ cat.name|trans }}
 									{% for board in boards["user_boards"]  %}
 										<div>
 											<label class="checkbox" for="checkboxUserCategory_{{cat.id}}_{{ board }}">
@@ -73,7 +73,7 @@
 								<div class="form-group">
 									<label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
 										<input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_mail_category_user" {% if cat.id in user_categories %} checked {% endif %}>
-										{{lang[cat.name]}}
+										{{cat.name|trans}}
 									</label>
 								</div>
 							{% endif %}
@@ -82,7 +82,7 @@
 								<div class="form-group">
 									<label class="checkbox" for="checkboxUserCategory_{{cat.id}}">
 										<input name="user_categories[]" value="{{cat.id}}" type="checkbox" id="checkboxUserCategory_{{cat.id}}" class="set_mail_category_user" {% if cat.id in user_categories %} checked {% endif %}>
-										{{lang[cat.name]}}
+										{{cat.name|trans}}
 									</label>
 								</div>
 							{% endif %}

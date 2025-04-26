@@ -5,12 +5,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["MOBILE_FAVORITES"]}}</h2>
+			<h2>{{"MOBILE_FAVORITES"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('users_mobile_favorites_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -26,9 +26,9 @@
 			<table id="mobile_favorites_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{ lang["POSITION"] }}</th>
-						<th>{{ lang["ICON"] }}</th>
-						<th>{{ lang["URL"] }}</th>
+						<th>{{ "POSITION"|trans }}</th>
+						<th>{{ "ICON"|trans }}</th>
+						<th>{{ "URL"|trans }}</th>
 						<th></th>
 						<th></th>
 					</tr>

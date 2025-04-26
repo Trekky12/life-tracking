@@ -20,7 +20,7 @@
 		<div class="buttons">
 			<a href="{{ url_for('crawler_dataset_saved_list', {'crawler': crawler.hash}) }}">
 				<button class="button button-outlined">{{ fontawesome('far fa-star') }}
-					{{lang["CRAWLER_DATASET_SAVE_LIST"]}}</button>
+					{{"CRAWLER_DATASET_SAVE_LIST"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -51,8 +51,8 @@
 						<div class="filter-element">
 							<div class="select-wrapper form-control">
 								<select id="filterCrawlerDatasets">
-									<option value="createdOn" {% if filter =="createdOn" %} selected {% endif %}>{{lang["SHOW_ONLY_NEW_ENTRIES"]}}</option>
-									<option value="changedOn" {% if filter =="changedOn" %} selected {% endif %}>{{lang["SHOW_NEW_UPDATED_ENTRIES"]}}</option>
+									<option value="createdOn" {% if filter =="createdOn" %} selected {% endif %}>{{"SHOW_ONLY_NEW_ENTRIES"|trans}}</option>
+									<option value="changedOn" {% if filter =="changedOn" %} selected {% endif %}>{{"SHOW_NEW_UPDATED_ENTRIES"|trans}}</option>
 								</select>
 							</div>
 						</div>
@@ -60,7 +60,7 @@
 				</div>
 				<div class="filter-row">
 					<div class="filter-element">
-						<input type="submit" class="button" value="{{lang["SHOW"]}}"/>
+						<input type="submit" class="button" value="{{"SHOW"|trans}}"/>
 					</div>
 				</div>
 			</form>
@@ -69,7 +69,7 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th>{{lang["DATE_CRAWL"]}}</th>
+						<th>{{"DATE_CRAWL"|trans}}</th>
 						{% for header in headers %}
 							<th {% if header.sortable == 1 %} data-sortable="true" {% else %} data-sortable="false" {% endif %} {% if not header.sort is null %} data-sort="{{ header.sort }}" {% endif %}>{{header.headline}}</th>
 						{% endfor %}
@@ -88,7 +88,7 @@
 			<div id="tableFooterFilter" class="search-filter">
 				<div class="filter-row">
 					<div class="filter-element">
-						<button type="button" class="button button-outlined small" id="mark_all_as_shown">{{ lang["CRAWLERS_MARK_ALL_AS_SHOWN"] }}</button>
+						<button type="button" class="button button-outlined small" id="mark_all_as_shown">{{ "CRAWLERS_MARK_ALL_AS_SHOWN"|trans }}</button>
 					</div>
 				</div>
 			</div>
@@ -98,7 +98,7 @@
 	{% if links  %}
 		<div class="page-header page-sub-header">
 			<div class="page-headline">
-				<h2>{{lang["LINKLIST"]}}</h2>
+				<h2>{{"LINKLIST"|trans}}</h2>
 			</div>
 		</div>
 		<div class="inner-content">

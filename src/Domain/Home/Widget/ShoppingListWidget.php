@@ -56,7 +56,7 @@ class ShoppingListWidget implements Widget
     {
         $id = $widget->getOptions()["shoppinglist"];
 
-        return sprintf("%s", $this->shoppinglists[$id]["name"]);
+        return $this->shoppinglists[$id]["name"];
     }
 
     public function getOptions(?WidgetObject $widget = null)

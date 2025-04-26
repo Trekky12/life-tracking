@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('recipes_recipe_view', {'recipe': recipe.hash}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["RECIPE"]}}
+			<h2>{{"RECIPE"|trans}}
 				-
 				{{ recipe.name|raw }}</h2>
 		</div>
@@ -26,7 +26,7 @@
 				<input type="hidden" name="recipe" value="{{recipe.id}}">
 
 				<div class="form-group">
-					<label for="cookbook">{{lang["RECIPES_COOKBOOK"]}}</label>
+					<label for="cookbook">{{"RECIPES_COOKBOOK"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="cookbook" name="cookbook">
 							{% for cookbook in cookbooks %}
@@ -38,13 +38,13 @@
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

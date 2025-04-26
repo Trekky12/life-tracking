@@ -9,12 +9,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["MENU_FINANCES"]}}</h2>
+			<h2>{{"MENU_FINANCES"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('finances_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -48,16 +48,16 @@
 					</div>
 					<div class="filter-group">
 						<div class="filter-element">
-							<button type="button" class="button button-text small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ lang["SHOW_THIS_MONTH"] }}</button>
+							<button type="button" class="button button-text small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ "SHOW_THIS_MONTH"|trans }}</button>
 						</div>
 						<div class="filter-element">
-							<button type="button" class="button button-text small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ lang["SHOW_ALL"] }}</button>
+							<button type="button" class="button button-text small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ "SHOW_ALL"|trans }}</button>
 						</div>
 					</div>
 				</div>
 				<div class="filter-row">
 					<div class="filter-element">
-						<button type="submit" class="button">{{lang["SHOW"]}}</button>
+						<button type="submit" class="button">{{"SHOW"|trans}}</button>
 					</div>
 				</div>
 			</form>
@@ -69,12 +69,12 @@
 			<table id="finance_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["DATE"]}}</th>
-						<th>{{lang["TIME"]}}</th>
-						<th>{{lang["TYPE"]}}</th>
-						<th>{{lang["CATEGORY"]}}</th>
-						<th>{{lang["DESCRIPTION"]}}</th>
-						<th>{{lang["VALUE"]}}</th>
+						<th>{{"DATE"|trans}}</th>
+						<th>{{"TIME"|trans}}</th>
+						<th>{{"TYPE"|trans}}</th>
+						<th>{{"CATEGORY"|trans}}</th>
+						<th>{{"DESCRIPTION"|trans}}</th>
+						<th>{{"VALUE"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>

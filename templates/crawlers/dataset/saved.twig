@@ -12,8 +12,8 @@
 			<a href="{{ url_for_with_last_query_params('crawlers_view', {'crawler' : crawler.hash}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["CRAWLERS"]}}
-				{{lang["CRAWLER_DATASET_SAVE_LIST"]}}
+			<h2>{{"CRAWLERS"|trans}}
+				{{"CRAWLER_DATASET_SAVE_LIST"|trans}}
 				|
 				{{ crawler.name }}</h2>
 		</div>
@@ -27,7 +27,7 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th>{{lang["DATE_CRAWL"]}}</th>
+						<th>{{"DATE_CRAWL"|trans}}</th>
 						{% for header in headers %}
 							<th {% if header.sortable == 1 %} data-sortable="true" {% else %} data-sortable="false" {% endif %} {% if not header.sort is null %} data-sort="{{ header.sort }}" {% endif %}>{{header.headline}}</th>
 						{% endfor %}

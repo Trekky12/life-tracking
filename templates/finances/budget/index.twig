@@ -5,12 +5,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["BUDGET"]}}</h2>
+			<h2>{{"BUDGET"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{url_for('finances_budgets_edit')}}">
 				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
-					{{lang["EDIT"]}}</button>
+					{{"EDIT"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -32,9 +32,9 @@
 						{% if budget.id in budget_categories|keys %}
 							<div class="categories-list">
 								{% if budget_categories[budget.id]|length > 1 %}
-									{{lang["CATEGORIES"]}}:
+									{{"CATEGORIES"|trans}}:
 								{% else %}
-									{{lang["CATEGORY"]}}:
+									{{"CATEGORY"|trans}}:
 								{% endif %}
 								{% for cat in budget_categories[budget.id] %}
 									{{categories[cat].name|raw}}
@@ -63,7 +63,7 @@
 								</div>
 
 								<div class="remaining">
-									{{lang["REMAINING"]}}:
+									{{"REMAINING"|trans}}:
 									{{budget.diff}}
 									{{currency}}
 								</div>

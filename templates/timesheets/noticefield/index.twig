@@ -8,14 +8,14 @@
 			<a href="{{ url_for_with_last_query_params('timesheets')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS_NOTICEFIELDS"]}}
+			<h2>{{"TIMESHEETS_NOTICEFIELDS"|trans}}
 				|
 				{{ project.name }}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_noticefields_edit', {'project': project.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -27,10 +27,11 @@
 			<table id="noticefields_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
-						<th>{{lang["TYPE"]}}</th>
-						<th>{{lang["DEFAULT"]}}</th>
-						<th>{{lang["POSITION"]}}</th>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{"TYPE"|trans}}</th>
+						<th>{{"DEFAULT"|trans}}</th>
+						<th>{{"POSITION"|trans}}</th>
+						<th></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -40,11 +41,11 @@
 							<td>{{field.name}}</td>
 							<td>
 								{%- if field.type == "sheet" -%}
-									{{- lang["DATAOBJECT_TIMESHEETS_SHEET"] -}}
+									{{- "DATAOBJECT_TIMESHEETS_SHEET"|trans -}}
 								{%- elseif field.type == "customer" -%}
-									{{- lang["TIMESHEETS_CUSTOMER"] -}}
+									{{- "TIMESHEETS_CUSTOMER"|trans -}}
 								{%- elseif field.type == "project" -%}
-									{{- lang["DATAOBJECT_TIMESHEETS_PROJECT"] -}}
+									{{- "DATAOBJECT_TIMESHEETS_PROJECT"|trans -}}
 								{%- endif -%}
 							</td>
 							<td>

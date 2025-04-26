@@ -5,20 +5,20 @@
 {% block pageheader %}
 	<div class="page-header multiple-buttons">
 		<div class="page-headline">
-			<h2>{{lang["FINANCES_ACCOUNTS"]}}</h2>
+			<h2>{{"FINANCES_ACCOUNTS"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('finances_transaction_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["FINANCES_TRANSACTION_ADD"]}}</button>
+					{{"FINANCES_TRANSACTION_ADD"|trans}}</button>
 			</a>
 			<a href="{{ url_for('finances_transaction_recurring') }}">
 				<button class="button button-text">{{ fontawesome('fas fa-calendar-days') }}
-					{{lang["FINANCES_TRANSACTIONS_RECURRING"]}}</button>
+					{{"FINANCES_TRANSACTIONS_RECURRING"|trans}}</button>
 			</a>
 			<a href="{{ url_for('finances_account_edit') }}">
 				<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -34,8 +34,8 @@
 			<table id="finances_account_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
-						<th>{{lang["VALUE"]}}</th>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{"VALUE"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>

@@ -1,9 +1,9 @@
-<h3>{{lang["NOTIFICATIONS_CATEGORIES_INTERNAL"]}}</h3>
+<h3>{{"NOTIFICATIONS_CATEGORIES_INTERNAL"|trans}}</h3>
 {% for cat in notifications["categories"]["internal"] %}
 	{% if cat.identifier == 'NOTIFICATION_CATEGORY_SPLITTED_BILLS' %}
 		{% if user.hasModule("splitbills") %}
 			<div class="form-group">
-				{{ lang[cat.name] }}
+				{{ cat.name|trans }}
 				{% for group in splitbill["user_groups"]  %}
 					<div>
 						<label class="checkbox">
@@ -17,7 +17,7 @@
 	{% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
 		{% if user.hasModule("boards") %}
 			<div class="form-group">
-				{{ lang[cat.name] }}
+				{{ cat.name|trans }}
 				{% for board in boards["user_boards"]  %}
 					<div>
 						<label class="checkbox">
@@ -32,14 +32,14 @@
 		<div class="form-group">
 			<label class="checkbox">
 				<input name="{{type}}_notification_categories[]" value="{{cat.id}}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and cat.id in notifications["user_categories"] %} checked {% endif %}>
-				{{lang[cat.name]}}
+				{{cat.name|trans}}
 			</label>
 		</div>
 	{% endif %}
 {% endfor %}
 
 {% if notifications["categories"]["individual"]|length > 0 %}
-	<h3>{{lang["NOTIFICATIONS_CATEGORIES"]}}</h3>
+	<h3>{{"NOTIFICATIONS_CATEGORIES"|trans}}</h3>
 	{% for cat in notifications["categories"]["individual"] %}
 		<div class="form-group">
 			<label class="checkbox">

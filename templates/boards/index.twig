@@ -5,12 +5,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["BOARDS"]}}</h2>
+			<h2>{{"BOARDS"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('boards_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -22,7 +22,7 @@
 			<table id="boards_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
+						<th>{{"NAME"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -40,7 +40,7 @@
 							</td>
 							<td>
 								{% if board.user == user.id %}
-									<a href="#" data-url="{{ url_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-confirm="{{ lang["REALLY_DELETE_BOARD"]}}">{{ fontawesome('fas fa-trash') }}</a>
+									<a href="#" data-url="{{ url_for('boards_delete', {'id' : board.id}) }}" class="btn-delete" data-confirm="{{ "REALLY_DELETE_BOARD"|trans}}">{{ fontawesome('fas fa-trash') }}</a>
 								{% endif %}
 							</td>
 						</tr>

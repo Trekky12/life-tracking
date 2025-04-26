@@ -8,7 +8,7 @@
 			<a href="{% if not account is null %}{{ url_for_with_last_query_params('finances_transaction', {'account': account.getHash()}) }}{% else %}{{ url_for_with_last_query_params('finances_account') }}{% endif %}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["FINANCES_TRANSACTION"]}}</h2>
+			<h2>{{"FINANCES_TRANSACTION"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -19,7 +19,7 @@
 		<div class="alert warning">
 			<span class="closebtn">&times;</span>
 			<span class="alert-message">
-				<p>{{ lang["FINANCES_TRANSACTION_UPDATE_HAS_ENTRY"]|raw }}</p>
+				<p>{{ "FINANCES_TRANSACTION_UPDATE_HAS_ENTRY"|trans|raw }}</p>
 			</span>
 		</div>
 	{% endif %}
@@ -27,7 +27,7 @@
 		<div class="alert warning">
 			<span class="closebtn">&times;</span>
 			<span class="alert-message">
-				<p>{{ lang["FINANCES_TRANSACTION_UPDATE_HAS_SPLITTED_BILL"]|raw }}</p>
+				<p>{{ "FINANCES_TRANSACTION_UPDATE_HAS_SPLITTED_BILL"|trans|raw }}</p>
 			</span>
 		</div>
 	{% endif %}
@@ -47,12 +47,12 @@
 
 
 				<div class="form-group">
-					<label for="inputDescription">{{lang["DESCRIPTION"]}}</label>
+					<label for="inputDescription">{{"DESCRIPTION"|trans}}</label>
 					<input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %} value="{{entry.description|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="dateSelect">{{lang["DATE"]}}</label>
+					<label for="dateSelect">{{"DATE"|trans}}</label>
 					<div class="flatpickr-group" id="dateSelect">
 						<input type="text" class="form-control" id="dateSelectField" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" data-input/>
 
@@ -66,20 +66,20 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inputTime">{{lang["TIME"]}}</label>
+					<label for="inputTime">{{"TIME"|trans}}</label>
 					<input type="time" step="1" class="form-control" id="inputTime" name="time" value="{% if not entry is null %}{{entry.time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputValue">{{lang["VALUE"]}}</label>
+					<label for="inputValue">{{"VALUE"|trans}}</label>
 					<input type="number" class="form-control" id="inputValue" name="value" step="any" inputmode="decimal" value="{% if not entry is null %}{{entry.value}}{% else %}0{% endif %}"/>
 				</div>
 
 				<div class="form-group">
-					<label for="account_from">{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</label>
+					<label for="account_from">{{"FINANCES_TRANSACTION_ACCOUNT_FROM"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="account_from" name="account_from" value="{% if not entry is null %}{{entry.account_from}}{% endif %}">
-							<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for account in accounts %}
 								<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_from) %} selected {% endif %}>{{account.name|raw}}</option>
 							{% endfor %}
@@ -87,10 +87,10 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="account_to">{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</label>
+					<label for="account_to">{{"FINANCES_TRANSACTION_ACCOUNT_TO"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="account_to" name="account_to" value="{% if not entry is null %}{{entry.account_to}}{% endif %}">
-							<option value="">{{lang["DROPDOWN_NO_PAYMETHOD"]}}</option>
+							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for account in accounts %}
 								<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_to) %} selected {% endif %}>{{account.name|raw}}</option>
 							{% endfor %}
@@ -101,13 +101,13 @@
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

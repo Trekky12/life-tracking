@@ -2,7 +2,7 @@
 <html lang="{{i18n.template}}">
     <head>
         <meta charset="utf-8">
-        <title>{{lang["PAGE_TITLE"]}}</title>
+        <title>{{"PAGE_TITLE"|trans}}</title>
         <meta name="description" content="Life Tracking"/>
         <meta name="date" content="{{ "now"|date("Y-m-d") }}"/>
         <meta name="robots" content="noindex,nofollow">
@@ -92,7 +92,7 @@
         {% elseif active == 'help' %}
             <header id="masthead" class="site-header">
                 <div class="header-inner">
-                    <h2 class="page-title">{{ lang["PAGE_TITLE"] }} - {{ lang["HELP"] }}</h2>
+                    <h2 class="page-title">{{ "PAGE_TITLE"|trans }} - {{ "HELP"|trans }}</h2>
                 </div>
             </header>
         {% endif %}
@@ -126,18 +126,18 @@
                 {% endif %}
                 <div id="offline-alert" class="alert danger hidden">
                     <span class="alert-message">
-                        <p>{{ lang["YOU_ARE_OFFLINE"] }}</p>
+                        <p>{{ "YOU_ARE_OFFLINE"|trans }}</p>
                     </span>
-                    <button id="reload" class="button white" type="button">{{ lang["RELOAD_PAGE"] }}</button>
+                    <button id="reload" class="button white" type="button">{{ "RELOAD_PAGE"|trans }}</button>
                 </div>
                 <div id="offline-entries-alert" class="alert warning hidden">
                     <span class="alert-message">
-                        <p>{{ lang["THERE_ARE_LOCALLY_SAVED_ENTRIES"] }}</p>
+                        <p>{{ "THERE_ARE_LOCALLY_SAVED_ENTRIES"|trans }}</p>
                     </span>
                 </div>
                 <div id="loading-overlay" class="hidden">
                     <span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-                    <span class="hidden">{{ lang["LOADING"] }}</span>
+                    <span class="hidden">{{ "LOADING"|trans }}</span>
                 </div>
                 {% block pageheader %}
                 {% endblock %}
@@ -272,91 +272,91 @@
                     var default_location = {'lat': '{{location.lat}}', 'lng': '{{location.lng}}', 'zoom': '{{location.zoom}}'};
                     var i18n = {{i18n|json_encode()|raw}};
                     var lang = {
-                        "really_delete": '{{lang["REALLY_DELETE"]}}',
-                        'address': '{{lang["ADDRESS"]}}',
-                        'delete_text': '{{lang["DELETE"]}}',
-                        'accuracy': '{{lang["ACCURACY"]}}',
-                        'consumption': '{{lang["CONSUMPTION"]}}',
-                        'add': '{{lang["ADD"]}}',
-                        'cancel': '{{lang["CANCEL"]}}',
-                        'update': '{{lang["UPDATE"]}}',
-                        'categories': '{{lang["CATEGORIES"]}}',
-                        'no_options': '{{lang["NO_OPTIONS"]}}',
-                        'nothing_found': '{{lang["NOTHING_FOUND"]}}',
-                        'loading': '{{lang["LOADING"]}}',
-                        'searching': '{{lang["SEARCHING"]}}',
-                        'table_perpage': '{{lang["TABLE_PERPAGE"]}}',
-                        'table_info': '{{lang["TABLE_INFO"]}}',
-                        'table_infofiltered': '{{lang["TABLE_INFOFILTERED"]}}',
-                        'enable_push_notifications': '{{lang["ENABLE_PUSH_NOTIFICATIONS"]}}',
-                        'disable_push_notifications': '{{lang["DISABLE_PUSH_NOTIFICATIONS"]}}',
-                        'no_push_notifications_possible': '{{lang["NO_PUSH_NOTIFICATIONS_POSSIBLE"]}}',
-                        "set_current_location": '{{lang["SET_CURRENT_LOCATION"]}}',
-                        "remove_location": '{{lang["REMOVE_LOCATION"]}}',
-                        "car_refuel": '{{lang["CAR_REFUEL"]}}',
-                        "car_service": '{{lang["CAR_SERVICE"]}}',
-                        "category": '{{lang["CATEGORY"]}}',
-                        "splitbills_numbers_wrong": '{{lang["SPLITBILLS_NUMBERS_WRONG"]}}',
-                        "from": '{{lang["FROM"]}}',
-                        "to": '{{lang["TO"]}}',
-                        "steps": '{{lang["STEPS"]}}',
-                        "request_error": '{{lang["REQUEST_ERROR"]}}',
-                        "encrypt_error": '{{lang["ENCRYPT_ERROR"]}}',
-                        "decrypt_error": '{{lang["DECRYPT_ERROR"]}}',
-                        "routing_add_to_route": '{{lang["ADD_TO_ROUTE"]}}',
-                        "routing_error": '{{lang["ROUTING_ERROR"]}}',
-                        "routing_error_too_many_requests": '{{lang["ROUTING_ERROR_TOO_MANY_REQUESTS"]}}',
-                        "really_unsave_dataset": '{{lang["CRAWLER_DATASET_UNSAVE"]}}',
-                        "entry_saved_locally": '{{lang["ENTRY_SAVED_LOCALLY"]}}',
-                        "entry_saved_locally_error": '{{lang["ENTRY_SAVED_LOCALLY_ERROR"]}}',
-                        "locally_saved_entries_submitted": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED"]}}',
-                        "locally_saved_entries_submitted_success": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"]}}',
-                        "locally_saved_entries_submitted_error": '{{lang["LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"]}}',
-                        "trips_route_name_prompt": '{{lang["TRIPS_ROUTE_NAME_PROMPT"]}}',
-                        "trips_route_saved_successfully": '{{lang["TRIPS_ROUTE_SAVED_SUCCESSFULLY"]}}',
-                        "trips_route_saved_error": '{{lang["TRIPS_ROUTE_SAVED_ERROR"]}}',
-                        "trips_waypoint_save": '{{lang["TRIPS_WAYPOINT_SAVE"]}}',
-                        "workouts_superset": '{{lang["WORKOUTS_SUPERSET"]}}',
-                        "workouts_set": '{{lang["WORKOUTS_SET"]}}',
-                        "show": '{{lang["SHOW"]}}',
-                        "hide": '{{lang["HIDE"]}}',
-                        "ingredient": '{{lang["RECIPES_INGREDIENT"]}}',
-                        "timesheets_notice_password": '{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"]}}',
-                        'timesheets_notice_password_no_match': '{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_MATCH"]}}',
-                        'timesheets_notice_password_wrong': '{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"]}}',
-                        'timesheets_notice_password_success': '{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_SUCCESS"]}}',
-                        "boards_error_open_stack": '{{lang["BOARD_UNSAVED_STACK"]}}',
-                        "boards_error_open_card": '{{lang["BOARD_UNSAVED_CARD"]}}',
-                        "boards_error_save_stack": '{{lang["BOARD_SAVE_ERROR_STACK"]}}',
-                        "boards_error_save_card": '{{lang["BOARD_SAVE_ERROR_CARD"]}}',
-                        "boards_error_archive": '{{lang["BOARD_ARCHIVE_ERROR"]}}',
-                        "boards_error_delete": '{{lang["BOARD_DELETE_ERROR"]}}',
-                        "boards_really_close_stack": '{{lang["REALLY_CLOSE_STACK"]}}',
-                        "boards_really_close_card": '{{lang["REALLY_CLOSE_CARD"]}}',
-                        "boards_really_close_label": '{{lang["REALLY_CLOSE_LABEL"]}}',
-                        "boards_really_close_page": '{{lang["REALLY_CLOSE_PAGE"]}}',
-                        'boards_really_archive': '{{lang["REALLY_ARCHIVE"]}}',
-                        'boards_undo_archive': '{{lang["UNDO_ARCHIVE"]}}',
-                        "boards_really_delete_stack": '{{lang["REALLY_DELETE_STACK"]}}',
-                        "boards_really_delete_card": '{{lang["REALLY_DELETE_CARD"]}}',
-                        "boards_really_delete_label": '{{lang["REALLY_DELETE_LABEL"]}}',
-                        'boards_labels': '{{lang["LABELS"]}}',
-                        'transaction_delete_has_entry': '{{lang["FINANCES_TRANSACTION_DELETE_HAS_ENTRY"]}}',
-                        'transaction_delete_has_splitted_bill': '{{lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"]}}',
-                        'crawlers_mark_all_as_shown_success':'{{lang["CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"]}}',
-                        'crawlers_mark_all_as_shown_error':'{{lang["CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"]}}',
-                        'recipes_shoppinglist_error_add':'{{lang["RECIPES_SHOPPINGLIST_ERROR_ADD"]}}',
-                        'workouts_plan_exercise_added': '{{lang["WORKOUTS_PLAN_EXERCISE_ADDED"]}}',
-                        'workouts_plan_workoutday_added': '{{lang["WORKOUTS_PLAN_WORKOUTDAY_ADDED"]}}',
-                        'workouts_plan_superset_added': '{{lang["WORKOUTS_PLAN_SUPERSET_ADDED"]}}',
-                        'yes': '{{lang["YES"]}}',
-                        'no': '{{lang["NO"]}}',
-                        'ok': '{{lang["OK"]}}',
-                        'timesheets_sheets_delete_warning_notice': '{{lang["TIMESHEETS_SHEET_DELETE_WARNING_NOTICE"]}}',
-                        'timesheets_noticefield': '{{lang["TIMESHEETS_NOTICEFIELDS"]}}',
-                        'timesheets_no_password_set': '{{ lang["TIMESHEETS_NO_PASSWORD_SET"]}}',
-                        'timesheets_insert_password_or_recovery': '{{ lang["TIMESHEETS_INSERT_PASSWORD_OR_RECOVERY"] }}',
-                        'timesheets_recovery_wrong_size': '{{ lang["TIMESHEETS_RECOVERY_WRONG_SIZE"] }}'
+                        "really_delete": '{{"REALLY_DELETE"|trans}}',
+                        'address': '{{"ADDRESS"|trans}}',
+                        'delete_text': '{{"DELETE"|trans}}',
+                        'accuracy': '{{"ACCURACY"|trans}}',
+                        'consumption': '{{"CONSUMPTION"|trans}}',
+                        'add': '{{"ADD"|trans}}',
+                        'cancel': '{{"CANCEL"|trans}}',
+                        'update': '{{"UPDATE"|trans}}',
+                        'categories': '{{"CATEGORIES"|trans}}',
+                        'no_options': '{{"NO_OPTIONS"|trans}}',
+                        'nothing_found': '{{"NOTHING_FOUND"|trans}}',
+                        'loading': '{{"LOADING"|trans}}',
+                        'searching': '{{"SEARCHING"|trans}}',
+                        'table_perpage': '{{"TABLE_PERPAGE"|trans}}',
+                        'table_info': '{{"TABLE_INFO"|trans}}',
+                        'table_infofiltered': '{{"TABLE_INFOFILTERED"|trans}}',
+                        'enable_push_notifications': '{{"ENABLE_PUSH_NOTIFICATIONS"|trans}}',
+                        'disable_push_notifications': '{{"DISABLE_PUSH_NOTIFICATIONS"|trans}}',
+                        'no_push_notifications_possible': '{{"NO_PUSH_NOTIFICATIONS_POSSIBLE"|trans}}',
+                        "set_current_location": '{{"SET_CURRENT_LOCATION"|trans}}',
+                        "remove_location": '{{"REMOVE_LOCATION"|trans}}',
+                        "car_refuel": '{{"CAR_REFUEL"|trans}}',
+                        "car_service": '{{"CAR_SERVICE"|trans}}',
+                        "category": '{{"CATEGORY"|trans}}',
+                        "splitbills_numbers_wrong": '{{"SPLITBILLS_NUMBERS_WRONG"|trans}}',
+                        "from": '{{"FROM"|trans}}',
+                        "to": '{{"TO"|trans}}',
+                        "steps": '{{"STEPS"|trans}}',
+                        "request_error": '{{"REQUEST_ERROR"|trans}}',
+                        "encrypt_error": '{{"ENCRYPT_ERROR"|trans}}',
+                        "decrypt_error": '{{"DECRYPT_ERROR"|trans}}',
+                        "routing_add_to_route": '{{"ADD_TO_ROUTE"|trans}}',
+                        "routing_error": '{{"ROUTING_ERROR"|trans}}',
+                        "routing_error_too_many_requests": '{{"ROUTING_ERROR_TOO_MANY_REQUESTS"|trans}}',
+                        "really_unsave_dataset": '{{"CRAWLER_DATASET_UNSAVE"|trans}}',
+                        "entry_saved_locally": '{{"ENTRY_SAVED_LOCALLY"|trans}}',
+                        "entry_saved_locally_error": '{{"ENTRY_SAVED_LOCALLY_ERROR"|trans}}',
+                        "locally_saved_entries_submitted": '{{"LOCALLY_SAVED_ENTRIES_SUBMITTED"|trans}}',
+                        "locally_saved_entries_submitted_success": '{{"LOCALLY_SAVED_ENTRIES_SUBMITTED_SUCCESS"|trans}}',
+                        "locally_saved_entries_submitted_error": '{{"LOCALLY_SAVED_ENTRIES_SUBMITTED_ERROR"|trans}}',
+                        "trips_route_name_prompt": '{{"TRIPS_ROUTE_NAME_PROMPT"|trans}}',
+                        "trips_route_saved_successfully": '{{"TRIPS_ROUTE_SAVED_SUCCESSFULLY"|trans}}',
+                        "trips_route_saved_error": '{{"TRIPS_ROUTE_SAVED_ERROR"|trans}}',
+                        "trips_waypoint_save": '{{"TRIPS_WAYPOINT_SAVE"|trans}}',
+                        "workouts_superset": '{{"WORKOUTS_SUPERSET"|trans}}',
+                        "workouts_set": '{{"WORKOUTS_SET"|trans}}',
+                        "show": '{{"SHOW"|trans}}',
+                        "hide": '{{"HIDE"|trans}}',
+                        "ingredient": '{{"RECIPES_INGREDIENT"|trans}}',
+                        "timesheets_notice_password": '{{"TIMESHEETS_PROJECT_PASSWORD_SHEETS_INSERT"|trans}}',
+                        'timesheets_notice_password_no_match': '{{"TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_NO_MATCH"|trans}}',
+                        'timesheets_notice_password_wrong': '{{"TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_WRONG"|trans}}',
+                        'timesheets_notice_password_success': '{{"TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_SUCCESS"|trans}}',
+                        "boards_error_open_stack": '{{"BOARD_UNSAVED_STACK"|trans}}',
+                        "boards_error_open_card": '{{"BOARD_UNSAVED_CARD"|trans}}',
+                        "boards_error_save_stack": '{{"BOARD_SAVE_ERROR_STACK"|trans}}',
+                        "boards_error_save_card": '{{"BOARD_SAVE_ERROR_CARD"|trans}}',
+                        "boards_error_archive": '{{"BOARD_ARCHIVE_ERROR"|trans}}',
+                        "boards_error_delete": '{{"BOARD_DELETE_ERROR"|trans}}',
+                        "boards_really_close_stack": '{{"REALLY_CLOSE_STACK"|trans}}',
+                        "boards_really_close_card": '{{"REALLY_CLOSE_CARD"|trans}}',
+                        "boards_really_close_label": '{{"REALLY_CLOSE_LABEL"|trans}}',
+                        "boards_really_close_page": '{{"REALLY_CLOSE_PAGE"|trans}}',
+                        'boards_really_archive': '{{"REALLY_ARCHIVE"|trans}}',
+                        'boards_undo_archive': '{{"UNDO_ARCHIVE"|trans}}',
+                        "boards_really_delete_stack": '{{"REALLY_DELETE_STACK"|trans}}',
+                        "boards_really_delete_card": '{{"REALLY_DELETE_CARD"|trans}}',
+                        "boards_really_delete_label": '{{"REALLY_DELETE_LABEL"|trans}}',
+                        'boards_labels': '{{"LABELS"|trans}}',
+                        'transaction_delete_has_entry': '{{"FINANCES_TRANSACTION_DELETE_HAS_ENTRY"|trans}}',
+                        'transaction_delete_has_splitted_bill': '{{"FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"|trans}}',
+                        'crawlers_mark_all_as_shown_success':'{{"CRAWLERS_MARK_ALL_AS_SHOWN_SUCCESS"|trans}}',
+                        'crawlers_mark_all_as_shown_error':'{{"CRAWLERS_MARK_ALL_AS_SHOWN_ERROR"|trans}}',
+                        'recipes_shoppinglist_error_add':'{{"RECIPES_SHOPPINGLIST_ERROR_ADD"|trans}}',
+                        'workouts_plan_exercise_added': '{{"WORKOUTS_PLAN_EXERCISE_ADDED"|trans}}',
+                        'workouts_plan_workoutday_added': '{{"WORKOUTS_PLAN_WORKOUTDAY_ADDED"|trans}}',
+                        'workouts_plan_superset_added': '{{"WORKOUTS_PLAN_SUPERSET_ADDED"|trans}}',
+                        'yes': '{{"YES"|trans}}',
+                        'no': '{{"NO"|trans}}',
+                        'ok': '{{"OK"|trans}}',
+                        'timesheets_sheets_delete_warning_notice': '{{"TIMESHEETS_SHEET_DELETE_WARNING_NOTICE"|trans}}',
+                        'timesheets_noticefield': '{{"TIMESHEETS_NOTICEFIELDS"|trans}}',
+                        'timesheets_no_password_set': '{{ "TIMESHEETS_NO_PASSWORD_SET"|trans}}',
+                        'timesheets_insert_password_or_recovery': '{{ "TIMESHEETS_INSERT_PASSWORD_OR_RECOVERY"|trans }}',
+                        'timesheets_recovery_wrong_size': '{{ "TIMESHEETS_RECOVERY_WRONG_SIZE"|trans }}'
                     };
                     var tokens = {{ csrf_js|json_encode()|raw }};
         </script>

@@ -139,8 +139,8 @@ class CardWriter extends ObjectActivityWriter {
                     $variables = array(
                         'header' => '',
                         'subject' => $subject,
-                        'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
-                        'content' => sprintf($this->translation->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL'), $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), $board->name, $stack->name, $card->title),
+                        'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%' => $user->name]),
+                        'content' => $this->translation->getTranslatedString('MAIL_ADDED_TO_CARD_DETAIL', ['%url%' => $this->helper->getBaseURL() . $this->router->urlFor('boards_view', array('hash' => $board->getHash())), '%board%' => $board->name, '%stack%' => $stack->name, '%card%' => $card->title]),
                         'extra' => ''
                     );
 
@@ -170,7 +170,7 @@ class CardWriter extends ObjectActivityWriter {
                 }
 
                 // Notification
-                $content = sprintf($this->translation->getTranslatedString('NOTIFICATION_ADDED_TO_CARD'), $board->name, $stack->name, $card->title);
+                $content = $this->translation->getTranslatedString('NOTIFICATION_ADDED_TO_CARD', ['%board%' => $board->name, '%stack%' => $stack->name, '%card%' => $card->title]);
                 $path = $this->router->urlFor('boards_view', array('hash' => $board->getHash()));
                 $this->notification_service->sendNotificationsToUserWithCategory($user->id, "NOTIFICATION_CATEGORY_BOARDS_CARD_ADD", $subject, $content, $path, $board->id);
             }

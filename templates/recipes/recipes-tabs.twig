@@ -1,9 +1,9 @@
 <div class="tabbar-scroller">
 	<div class="tabbar-scrollarea">
-		<a class="tabbar-tab {% if active == 'recipes' %}active{% endif %}" href="{{ url_for('recipes') }}">{{lang["RECIPES"]}}</a>
-		<a class="tabbar-tab {% if active == 'recipes_cookbooks' %}active{% endif %}" href="{{ url_for('recipes_cookbooks') }}">{{lang["RECIPES_COOKBOOKS"]}}</a>
-		<a class="tabbar-tab {% if active == 'recipes_mealplans' %}active{% endif %}" href="{{ url_for('recipes_mealplans') }}">{{lang["RECIPES_MEALPLANS"]}}</a>
-		<a class="tabbar-tab {% if active == 'recipes_shoppinglists' %}active{% endif %}" href="{{ url_for('recipes_shoppinglists') }}">{{lang["RECIPES_SHOPPINGLISTS"]}}</a>
-		<a class="tabbar-tab {% if active == 'recipes_groceries' %}active{% endif %}" href="{{ url_for('recipes_groceries') }}">{{lang["RECIPES_GROCERIES"]}}</a>
+		<a class="tabbar-tab {% if active == 'recipes' %}active{% endif %}" href="{{ url_for('recipes') }}">{{"RECIPES"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'recipes_cookbooks' %}active{% endif %}" href="{{ url_for('recipes_cookbooks') }}">{{"RECIPES_COOKBOOKS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'recipes_mealplans' %}active{% endif %}" href="{{ url_for('recipes_mealplans') }}">{{"RECIPES_MEALPLANS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'recipes_shoppinglists' %}active{% endif %}" href="{{ url_for('recipes_shoppinglists') }}">{{"RECIPES_SHOPPINGLISTS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'recipes_groceries' %}active{% endif %}" href="{{ url_for('recipes_groceries') }}">{{"RECIPES_GROCERIES"|trans}}</a>
 	</div>
 </div>

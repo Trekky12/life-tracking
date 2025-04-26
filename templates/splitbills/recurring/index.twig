@@ -8,19 +8,19 @@
 			<a href="{{ url_for_with_last_query_params('splitbills')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["RECURRING"]}}
-				{{lang["SPLITBILLS"]}}
+			<h2>{{"RECURRING"|trans}}
+				{{"SPLITBILLS"|trans}}
 				|
 				{{group.name|raw}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD_BILL"]}}</button>
+					{{"ADD_BILL"|trans}}</button>
 			</a>
 			{% if group_users|length > 1 %}
 				<a href="{{ url_for('splitbill_bill_recurring_edit', {'group': group.getHash()}) }}?type=settleup">
-					<button class="button button-outlined">{{lang["SPLITBILLS_SETTLE_UP"]}}</button>
+					<button class="button button-outlined">{{"SPLITBILLS_SETTLE_UP"|trans}}</button>
 				</a>
 			{% endif %}
 		</div>
@@ -33,21 +33,21 @@
 			<table id="splitbills_bills_recurring_table" class="table table-hover small" data-currency="{{i18n.currency}}" data-members="{{ group_users|length }}">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
+						<th>{{"NAME"|trans}}</th>
 						{% if group_users|length > 1 %}
-							<th>{{ lang["RECEIVED"] }}</th>
-							<th>{{ lang["SPEND"] }}</th>
-							<th>{{ lang["PAID"] }}</th>
-							<th>{{ lang["BALANCE"] }}</th>
+							<th>{{ "RECEIVED"|trans }}</th>
+							<th>{{ "SPEND"|trans }}</th>
+							<th>{{ "PAID"|trans }}</th>
+							<th>{{ "BALANCE"|trans }}</th>
 						{% else %}
-							<th>{{ lang["SPEND"] }}</th>
+							<th>{{ "SPEND"|trans }}</th>
 						{% endif %}
-						<th>{{lang["START"]}}</th>
-						<th>{{lang["END"]}}</th>
-						<th>{{lang["INTERVAL"]}}</th>
-						<th>{{lang["LAST_RUN"]}}</th>
-						<th>{{lang["NEXT_RUN"]}}</th>
-						<th>{{lang["ACTIVE"]}}</th>
+						<th>{{"START"|trans}}</th>
+						<th>{{"END"|trans}}</th>
+						<th>{{"INTERVAL"|trans}}</th>
+						<th>{{"LAST_RUN"|trans}}</th>
+						<th>{{"NEXT_RUN"|trans}}</th>
+						<th>{{"ACTIVE"|trans}}</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -75,7 +75,7 @@
 							{% endif %}
 							<td>{{bill.start}}</td>
 							<td>{{bill.end}}</td>
-							<td>{{bill.multiplier}}&nbsp;x&nbsp;{{lang[units[bill.unit]]}}</td>
+							<td>{{bill.multiplier}}&nbsp;x&nbsp;{{units[bill.unit]|trans}}</td>
 							<td>{{bill.last_run}}</td>
 							<td>{{bill.next_run}}</td>
 							<td>

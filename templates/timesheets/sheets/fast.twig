@@ -17,7 +17,7 @@
 			<a href="{{ url_for_with_last_query_params('timesheets')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS"]}}
+			<h2>{{"TIMESHEETS"|trans}}
 				|
 				{{project.name|raw}}</h2>
 		</div>
@@ -36,9 +36,9 @@
 					<h3>
 						<a href="#" class="timesheet-fast-come-btn" data-url="{{url_for('timesheets_fast_checkin', {'project' : project.hash})}}">
 							{% if project.is_day_based == 1 %}
-								{{lang["TIMESHEETS_COME_DAY_BASED"]}}
+								{{"TIMESHEETS_COME_DAY_BASED"|trans}}
 							{% else %}
-								{{lang["TIMESHEETS_COME_PROJECT_BASED"]}}
+								{{"TIMESHEETS_COME_PROJECT_BASED"|trans}}
 							{% endif %}
 						</a>
 					</h3>
@@ -52,9 +52,9 @@
 					<h3>
 						<a href="#" class="timesheet-fast-leave-btn" data-url="{{url_for('timesheets_fast_checkout', {'project' : project.hash})}}">
 							{% if project.is_day_based == 1 %}
-								{{lang["TIMESHEETS_LEAVE_DAY_BASED"]}}
+								{{"TIMESHEETS_LEAVE_DAY_BASED"|trans}}
 							{% else %}
-								{{lang["TIMESHEETS_LEAVE_PROJECT_BASED"]}}
+								{{"TIMESHEETS_LEAVE_PROJECT_BASED"|trans}}
 							{% endif %}
 						</a>
 					</h3>
@@ -81,7 +81,7 @@
 							{% if project.customers_name_singular %}
 								{{project.customers_name_singular}}
 							{% else %}
-								{{lang["TIMESHEETS_CUSTOMER"]}}
+								{{"TIMESHEETS_CUSTOMER"|trans}}
 							{% endif %}
 						</option>
 						{% for customer in customers %}
@@ -101,14 +101,14 @@
 		<div id="alertErrorTimesheetFast" class="alert danger hidden">
 			<span class="closebtn">&times;</span>
 			<span class="alert-message">
-				<p>{{ lang["ENTRY_ERROR"] }}</p>
+				<p>{{ "ENTRY_ERROR"|trans }}</p>
 				<p id="alertErrorDetailTimesheetFast"></p>
 			</span>
 		</div>
 		<div id="alertSuccessTimesheetFast" class="alert success hidden">
 			<span class="closebtn">&times;</span>
 			<span class="alert-message">
-				<p>{{ lang["ENTRY_SUCCESS_ADD"] }}</p>
+				<p>{{ "ENTRY_SUCCESS_ADD"|trans }}</p>
 			</span>
 		</div>
 	</div>

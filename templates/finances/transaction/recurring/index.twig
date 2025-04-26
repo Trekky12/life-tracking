@@ -8,12 +8,12 @@
 			<a href="{{ url_for_with_last_query_params('finances_account') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["FINANCES_TRANSACTIONS_RECURRING"]}}</h2>
+			<h2>{{"FINANCES_TRANSACTIONS_RECURRING"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('finances_transaction_recurring_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -25,16 +25,16 @@
 			<table id="transaction_recurring_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["DESCRIPTION"]}}</th>
-						<th>{{lang["VALUE"]}}</th>
-						<th>{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</th>
-						<th>{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</th>
-						<th>{{lang["START"]}}</th>
-						<th>{{lang["END"]}}</th>
-						<th>{{lang["INTERVAL"]}}</th>
-						<th>{{lang["LAST_RUN"]}}</th>
-						<th>{{lang["NEXT_RUN"]}}</th>
-						<th>{{lang["ACTIVE"]}}</th>
+						<th>{{"DESCRIPTION"|trans}}</th>
+						<th>{{"VALUE"|trans}}</th>
+						<th>{{"FINANCES_TRANSACTION_ACCOUNT_FROM"|trans}}</th>
+						<th>{{"FINANCES_TRANSACTION_ACCOUNT_TO"|trans}}</th>
+						<th>{{"START"|trans}}</th>
+						<th>{{"END"|trans}}</th>
+						<th>{{"INTERVAL"|trans}}</th>
+						<th>{{"LAST_RUN"|trans}}</th>
+						<th>{{"NEXT_RUN"|trans}}</th>
+						<th>{{"ACTIVE"|trans}}</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -49,7 +49,7 @@
 							<td>{{accounts[entry.account_to].name|raw}}</td>
 							<td>{{entry.start}}</td>
 							<td>{{entry.end}}</td>
-							<td>{{entry.multiplier}}&nbsp;x&nbsp;{{lang[units[entry.unit]]}}</td>
+							<td>{{entry.multiplier}}&nbsp;x&nbsp;{{units[entry.unit]|trans}}</td>
 							<td>{{entry.last_run}}</td>
 							<td>{{entry.next_run}}</td>
 							<td>

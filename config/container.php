@@ -27,6 +27,7 @@ use App\Domain\Main\Utility\Utility;
 use App\Application\Error\CSRFException;
 use Slim\Routing\RouteResolver;
 use Slim\Routing\RouteCollector;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
 return [
     Settings::class => function () {
@@ -61,7 +62,7 @@ return [
         /**
          * Include Translation
          */
-        $twig->getEnvironment()->addGlobal('lang', $translation->getLanguage());
+        $twig->addExtension(new TranslationExtension($translation->getSymfonyTranslator()));
 
         /**
          * Include Default Location

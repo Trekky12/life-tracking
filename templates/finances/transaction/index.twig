@@ -12,12 +12,12 @@
 			<a href="{{ url_for_with_last_query_params('finances_account') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["FINANCES_TRANSACTIONS"]}}</h2>
+			<h2>{{"FINANCES_TRANSACTIONS"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('finances_transaction_edit') }}?account={{account.getHash()}}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["FINANCES_TRANSACTION_ADD"]}}</button>
+					{{"FINANCES_TRANSACTION_ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -30,12 +30,12 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th>{{lang["DATE"]}}</th>
-						<th>{{lang["TIME"]}}</th>
-						<th>{{lang["DESCRIPTION"]}}</th>
-						<th>{{lang["VALUE"]}}</th>
-						<th>{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</th>
-						<th>{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</th>
+						<th>{{"DATE"|trans}}</th>
+						<th>{{"TIME"|trans}}</th>
+						<th>{{"DESCRIPTION"|trans}}</th>
+						<th>{{"VALUE"|trans}}</th>
+						<th>{{"FINANCES_TRANSACTION_ACCOUNT_FROM"|trans}}</th>
+						<th>{{"FINANCES_TRANSACTION_ACCOUNT_TO"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>

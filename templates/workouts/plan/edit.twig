@@ -14,13 +14,13 @@
 			<a href="{{ url_for_with_last_query_params('workouts') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["WORKOUTS_PLAN"]}}</h2>
+			<h2>{{"WORKOUTS_PLAN"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			{% if not entry is null %}
 				<a href="{{ url_for('workouts_plans_edit') }}?template={{ entry.hash }}">
 					<button class="button button-outlined">{{ fontawesome('fas fa-plus') }}
-						{{lang["CLONE"]}}</button>
+						{{"CLONE"|trans}}</button>
 				</a>
 			{% endif %}
 		</div>
@@ -40,7 +40,7 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
 				</div>
 
@@ -52,10 +52,10 @@
 
 				<div class="workout-selection" id="workoutExerciseSelection">
 					<div class="selected_exercises_title">
-						<h2>{{ lang["WORKOUTS_EXERCISES_SELECTED"] }}</h2>
+						<h2>{{ "WORKOUTS_EXERCISES_SELECTED"|trans }}</h2>
 						<div class="form-group">
-							<button type="button" class="button button-outlined small" id="add_workout_day">{{ lang["WORKOUTS_ADD_DAY"] }}</button>
-							<button type="button" class="button button-outlined small" id="add_superset">{{ lang["WORKOUTS_ADD_SUPERSET"] }}</button>
+							<button type="button" class="button button-outlined small" id="add_workout_day">{{ "WORKOUTS_ADD_DAY"|trans }}</button>
+							<button type="button" class="button button-outlined small" id="add_superset">{{ "WORKOUTS_ADD_SUPERSET"|trans }}</button>
 						</div>
 					</div>
 					<div class="selected_exercises" id="exercises_selected">
@@ -77,7 +77,7 @@
 								{% elseif exercise.type == "superset" %}
 									<div class="workout_superset" data-type="workout-element" data-category="superset">
 										<div class="content">
-											<h2>{{lang["WORKOUTS_SUPERSET"]}}</h2>
+											<h2>{{"WORKOUTS_SUPERSET"|trans}}</h2>
 											<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="superset"/>
 											<div class="exercises" data-type="superset">
 												{% for child in exercise['children'] %}
@@ -95,16 +95,16 @@
 						</div>
 					</div>
 					<div class="available_exercises_title">
-						<h2>{{ lang["WORKOUTS_EXERCISES_AVAILABLE"] }}</h2>
+						<h2>{{ "WORKOUTS_EXERCISES_AVAILABLE"|trans }}</h2>
 						<div class="form-group">
-							<button type="button" class="button button-outlined small" id="hide_exercise_selection">{{ lang["HIDE"] }}</button>
+							<button type="button" class="button button-outlined small" id="hide_exercise_selection">{{ "HIDE"|trans }}</button>
 						</div>
 					</div>
 					<div class="available_exercises">
 						<div class="exercise-filter">
 							<div class="select-wrapper">
 								<select id="filterBodyParts">
-									<option value="-1">{{ lang["ALL"] }}</option>
+									<option value="-1">{{ "ALL"|trans }}</option>
 									{% for bodypart in bodyparts %}
 										<option value="{{ bodypart.id }}">{{ bodypart.name }}</option>
 									{% endfor %}
@@ -118,7 +118,7 @@
 								<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
 							</div>
 							<div id="loadMoreExercises" class="centered hidden">
-								<button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
+								<button type="button" class="button">{{ "LOAD_MORE"|trans }}</button>
 							</div>
 						</div>
 					</div>
@@ -126,19 +126,19 @@
 
 				<div class="form-group">
 					<input id="defaultSetCount" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="3" class="small"/>
-					<label for="defaultSetCount">{{ lang["WORKOUTS_SETS"] }}</label>
+					<label for="defaultSetCount">{{ "WORKOUTS_SETS"|trans }}</label>
 				</div>
 
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

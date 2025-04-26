@@ -5,12 +5,12 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["CRAWLERS"]}}</h2>
+			<h2>{{"CRAWLERS"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('crawlers_edit') }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -22,7 +22,7 @@
 			<table id="crawlers_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
+						<th>{{"NAME"|trans}}</th>
 						<th></th>
 						<th></th>
 						<th></th>

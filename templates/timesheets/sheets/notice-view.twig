@@ -16,13 +16,13 @@
 			<a href="{% if view =="calendar" %}{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}{% else %}{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}{% endif %}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS"]}}
-				{{ lang["NOTICE"] }}|
+			<h2>{{"TIMESHEETS"|trans}}
+				{{ "NOTICE"|trans }}|
 				{{project.name|raw}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_sheets_notice_edit', {'sheet': sheet.id, 'project': project.getHash()}) }}{% if view %}?view={{view}}{% endif %}">
-				<button class="button button-outlined">{{lang["EDIT"]}}</button>
+				<button class="button button-outlined">{{"EDIT"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -36,7 +36,7 @@
 				<div class="filter-row">
 					<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
 						<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields" checked="checked">
-						{{lang["TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"]}}
+						{{"TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"|trans}}
 					</label>
 				</div>
 			</div>
@@ -53,7 +53,7 @@
 			<div id="alertError" class="alert danger hidden">
 				<span class="closebtn">&times;</span>
 				<span class="alert-message">
-					<p>{{ lang["ENTRY_ERROR"] }}</p>
+					<p>{{ "ENTRY_ERROR"|trans }}</p>
 					<p id="alertErrorDetail"></p>
 				</span>
 			</div>
@@ -62,7 +62,7 @@
 				<div class="timesheet-notice-wrapper">
 
 					<h3 class="sheet_title">{{ sheet_title }}</h3>
-					<small id="lastSavedWrapper" class="hidden">{{ lang["LAST_SAVED"]}}:
+					<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
 						<span id="lastSaved"></span>
 					</small>
 					{% if sheet_customer %}
@@ -70,13 +70,13 @@
 							{%- if project.customers_name_singular %}
 								{{- project.customers_name_singular -}}
 							{% else %}
-								{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{{- "TIMESHEETS_CUSTOMER"|trans -}}
 							{% endif -%}:&nbsp;
 							{{- sheet_customer -}}
 						</h4>
 					{% endif %}
 					{% if sheet_categories %}
-						<h4 class="sheet_categories">{{- lang["CATEGORIES"] -}}:&nbsp;
+						<h4 class="sheet_categories">{{- "CATEGORIES"|trans -}}:&nbsp;
 							{{- sheet_categories -}}
 						</h4>
 					{% endif %}
@@ -87,8 +87,8 @@
 				</div>
 
 				<div class="form-group btn">
-					<button type="button" class="button button-outlined" id="wordExport">{{lang["EXPORT_WORD"]}}
-						{{lang["TIMESHEETS_EXPORT"]}}</button>
+					<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
+						{{"TIMESHEETS_EXPORT"|trans}}</button>
 				</div>
 			</div>
 		</div>

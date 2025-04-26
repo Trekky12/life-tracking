@@ -5,13 +5,13 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["WORKOUTS_TEMPLATE_PLANS"]}}</h2>
+			<h2>{{"WORKOUTS_TEMPLATE_PLANS"|trans}}</h2>
 		</div>
 		{% if user.isAdmin() %}
 			<div class="buttons">
 				<a href="{{ url_for('workouts_templates_edit') }}">
 					<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-						{{lang["ADD"]}}</button>
+						{{"ADD"|trans}}</button>
 				</a>
 			</div>
 		{% endif %}
@@ -28,9 +28,9 @@
 			<table id="workouts_templates_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["NAME"]}}</th>
-						<th>{{ lang["WORKOUTS_DAYS"] }}</th>
-						<th>{{ lang["WORKOUTS_EXERCISES"] }}</th>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{ "WORKOUTS_DAYS"|trans }}</th>
+						<th>{{ "WORKOUTS_EXERCISES"|trans }}</th>
 						<th></th>
 						<th></th>
 					</tr>

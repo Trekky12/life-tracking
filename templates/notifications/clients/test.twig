@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('notifications_clients')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["NOTIFICATIONS"]}}</h2>
+			<h2>{{"NOTIFICATIONS"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -26,18 +26,18 @@
 
 
 				<div class="form-group">
-					<label for="inputTitle">{{lang["TITLE"]}}</label>
+					<label for="inputTitle">{{"TITLE"|trans}}</label>
 					<input required type="text" class="form-control" id="inputTitle" name="title"/>
 				</div>
 
 				<div class="form-group">
-					<label for="inputContent">{{lang["CONTENT"]}}</label>
+					<label for="inputContent">{{"CONTENT"|trans}}</label>
 					<input required type="text" class="form-control" id="inputContent" name="message"/>
 				</div>
 
 				<div class="form-group">
-					<button type="submit" class="button">{{lang["SEND"]}}</button>
-					<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+					<button type="submit" class="button">{{"SEND"|trans}}</button>
+					<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 				</div>
 			</form>
 		</div>

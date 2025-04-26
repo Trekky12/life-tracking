@@ -38,7 +38,7 @@ class RecurringFinanceEntryCreator {
                 $this->createElement($mentry);
             }
 
-            $mentry_ids = array_map(function($el) {
+            $mentry_ids = array_map(function ($el) {
                 return $el->id;
             }, $mentries);
             $this->mapper->updateLastRun($mentry_ids);
@@ -51,7 +51,7 @@ class RecurringFinanceEntryCreator {
         $mentry = $this->mapper->get($id);
 
         $entry_id = $this->createElement($mentry);
-        
+
         return new Payload(Payload::$STATUS_NEW, $mentry);
     }
 
@@ -71,14 +71,13 @@ class RecurringFinanceEntryCreator {
 
         $payload = $this->finances_entry_writer->save(null, $data);
         $entry = $payload->getResult();
-        
+
         // Notification
         $subject = $this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_SUBJECT');
-        $content = sprintf($this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT'), $mentry->description);
+        $content = $this->translation->getTranslatedString('NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT', ['%element%' => $mentry->description]);
         $path = $this->router->relativeUrlFor('finances_edit', array('id' => $entry->id));
         $this->notification_service->sendNotificationsToUserWithCategory($mentry->user, "NOTIFICATION_CATEGORY_FINANCES_RECURRING", $subject, $content, $path);
 
         return $entry->id;
     }
-
 }

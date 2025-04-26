@@ -25,7 +25,7 @@
 	{% if not session.notice is null %}
 		<div class="inner-content">
 			<div class="page-content">
-				<h4>{{ lang["NOTICE"] }}</h4>
+				<h4>{{ "NOTICE"|trans }}</h4>
 				<p>{{ session.notice|raw }}</p>
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 				<h3>{{ exercise.notice }}</h3>
 			{% elseif exercise.type == "superset" %}
 				<div class="inner-content with-padding">
-					<h3>{{lang["WORKOUTS_SUPERSET"]}}</h3>
+					<h3>{{"WORKOUTS_SUPERSET"|trans}}</h3>
 					<div class="workout_superset">
 						<div class="exercises" data-type="superset">
 							{% for child in exercise['children'] %}
@@ -56,7 +56,7 @@
 	</div>
 	<div class="inner-content">
 		<div class="inner-content-header light">
-			<h2>{{ lang["WORKOUTS_MUSCLES_USED"] }}</h2>
+			<h2>{{ "WORKOUTS_MUSCLES_USED"|trans }}</h2>
 		</div>
 		<div class="page-content">
 			{% include "workouts/exercise/selected-muscles.twig" with {'data': {"baseMuscleImageThumbnail": baseMuscleImageThumbnail, 'primary': muscles["primary"], 'secondary': muscles["secondary"], 'small': false}} only %}

@@ -14,11 +14,11 @@
 			<a href="{{ url_for_with_last_query_params('timesheets')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"]}}</h2>
+			<h2>{{"TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"|trans}}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_notice_recovery_show', {'project': project.getHash()}) }}">
-				<button class="button button-outlined">{{lang["TIMESHEETS_RECOVERY_KEY"]}}</button>
+				<button class="button button-outlined">{{"TIMESHEETS_RECOVERY_KEY"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -37,31 +37,31 @@
 
 			<form class="form-horizontal">
 
-				<p>{{ lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] }}</p>
+				<p>{{ "TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"|trans }}</p>
 
 				<div class="form-group {% if not parameters.testMessageEncryptedWithKEK  %}hidden{% endif %}">
-					<label for="inputOldPassword">{{lang["OLD_PASSWORD"]}}</label>
+					<label for="inputOldPassword">{{"OLD_PASSWORD"|trans}}</label>
 					<input name="oldpassword" id="inputOldPassword" class="form-control" type="password" {% if not parameters.testMessageEncryptedWithKEK  %}disabled="disabled"{% endif %} required>
 					<a href="#" id="forgotPassword" class="{% if not parameters.testMessageEncryptedWithRecoveryKey  %}hidden{% endif %}">
-						<small>{{lang["TIMESHEETS_FORGOT_PASSWORD"]}}</small>
+						<small>{{"TIMESHEETS_FORGOT_PASSWORD"|trans}}</small>
 					</a>
 				</div>
 				<div class="form-group hidden" id="recoveryCodeWrapper">
-					<label for="inputRecoveryCode">{{lang["TIMESHEETS_RECOVERY_KEY"]}}</label>
+					<label for="inputRecoveryCode">{{"TIMESHEETS_RECOVERY_KEY"|trans}}</label>
 					<textarea name="recoverycode" id="inputRecoveryCode" class="form-control"></textarea>
 				</div>
 
 				<div class="form-group">
-					<label for="inputNewPassword1">{{lang["NEW_PASSWORD"]}}</label>
+					<label for="inputNewPassword1">{{"NEW_PASSWORD"|trans}}</label>
 					<input name="newpassword1" id="inputNewPassword1" class="form-control" type="password" required>
 				</div>
 				<div class="form-group">
-					<label for="inputNewPassword2">{{lang["NEW_PASSWORD_REPLY"]}}</label>
+					<label for="inputNewPassword2">{{"NEW_PASSWORD_REPLY"|trans}}</label>
 					<input name="newpassword2" id="inputNewPassword2" class="form-control" type="password" required>
 				</div>
 
 				<div class="form-group btn">
-					<button type="submit" class="button" id="save_notice_password">{{lang["SAVE"]}}</button>
+					<button type="submit" class="button" id="save_notice_password">{{"SAVE"|trans}}</button>
 				</div>
 			</form>
 		</div>

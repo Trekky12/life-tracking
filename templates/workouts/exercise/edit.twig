@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('workouts_exercises') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["WORKOUTS_EXERCISE"]}}</h2>
+			<h2>{{"WORKOUTS_EXERCISE"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -26,12 +26,12 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputInstructions">{{lang["WORKOUTS_INSTRUCTIONS"]}}</label>
+					<label for="inputInstructions">{{"WORKOUTS_INSTRUCTIONS"|trans}}</label>
 					<textarea class="form-control" id="inputInstructions" name="instructions" rows="10">
 						{%- if not entry is null -%}
 							{{- entry.instructions|raw -}}
@@ -40,28 +40,28 @@
 				</div>
 
 				<div class="form-group">
-					<label for="inputLevel">{{lang["WORKOUTS_LEVEL"]}}</label>
+					<label for="inputLevel">{{"WORKOUTS_LEVEL"|trans}}</label>
 					<input type="number" class="form-control" id="inputLevel" name="level" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.level}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputRating">{{lang["WORKOUTS_RATING"]}}</label>
+					<label for="inputRating">{{"WORKOUTS_RATING"|trans}}</label>
 					<input type="number" class="form-control" id="inputRating" name="rating" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.rating}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="category">{{lang["WORKOUTS_CATEGORY"]}}</label>
+					<label for="category">{{"WORKOUTS_CATEGORY"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="category" name="category">
 							{% for cat in categories %}
-								<option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.category) %} selected {% endif %}>{{lang[cat.name]}}</option>
+								<option value="{{cat.id}}" {% if (not entry is null and cat.id == entry.category) %} selected {% endif %}>{{cat.name|trans}}</option>
 							{% endfor %}
 						</select>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="mainMuscle">{{lang["WORKOUTS_MAIN_MUSCLE"]}}</label>
+					<label for="mainMuscle">{{"WORKOUTS_MAIN_MUSCLE"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="mainMuscle" name="mainMuscle">
 							{% for muscle in muscles %}
@@ -72,7 +72,7 @@
 				</div>
 
 				<div class="form-group">
-					<label for="muscle_groups_primary">{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</label>
+					<label for="muscle_groups_primary">{{"WORKOUTS_MUSCLES_PRIMARY"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="muscle_groups_primary" name="muscle_groups_primary[]" multiple="true">
 							{% for muscle in muscles %}
@@ -82,7 +82,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="muscle_groups_secondary">{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</label>
+					<label for="muscle_groups_secondary">{{"WORKOUTS_MUSCLES_SECONDARY"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="muscle_groups_secondary" name="muscle_groups_secondary[]" multiple="true">
 							{% for muscle in muscles %}
@@ -93,7 +93,7 @@
 				</div>
 
 				<div class="form-group">
-					<label for="mainBodyPart">{{lang["WORKOUTS_MAIN_BODYPART"]}}</label>
+					<label for="mainBodyPart">{{"WORKOUTS_MAIN_BODYPART"|trans}}</label>
 					<div class="select-wrapper form-control">
 						<select id="mainBodyPart" name="mainBodyPart">
 							{% for bodypart in bodyparts %}
@@ -103,7 +103,7 @@
 					</div>
 				</div>
 
-				<h3>{{lang["IMAGE"]}}</h3>
+				<h3>{{"IMAGE"|trans}}</h3>
 				<div class="form-group">
 					{% if not entry is null and entry.get_image() != ''%}
 						<img class="image_uploaded" src="/{{uploads_folder}}/exercises/{{entry.get_image()}}"/>
@@ -114,12 +114,12 @@
 					<div class="form-group">
 						<label class="checkbox" for="checkboxDeleteImage">
 							<input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
-							{{lang["DELETE"]}}
+							{{"DELETE"|trans}}
 						</label>
 					</div>
 				{% endif %}
 
-				<h3>{{lang["THUMBNAIL"]}}</h3>
+				<h3>{{"THUMBNAIL"|trans}}</h3>
 				<div class="form-group">
 					{% if not entry is null and entry.get_thumbnail() != ''%}
 						<img class="image_uploaded" src="/{{uploads_folder}}/exercises/{{entry.get_thumbnail()}}"/>
@@ -130,7 +130,7 @@
 					<div class="form-group">
 						<label class="checkbox" for="checkboxDeleteThumbnail">
 							<input name="delete_thumbnail" type="checkbox" value="1" id="checkboxDeleteThumbnail">
-							{{lang["DELETE"]}}
+							{{"DELETE"|trans}}
 						</label>
 					</div>
 				{% endif %}
@@ -139,13 +139,13 @@
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

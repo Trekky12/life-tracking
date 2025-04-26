@@ -17,7 +17,7 @@
 			<a href="{{ url_for_with_last_query_params('cars') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["CARS"]}}</h2>
+			<h2>{{"CARS"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -36,7 +36,7 @@
 
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
 				</div>
 
@@ -44,20 +44,20 @@
 					{% include "main/user-select.twig" with {'entry':entry, 'module': 'cars'} only %}
 				</div>
 
-				<h3>{{lang["STATS"]}}</h3>
+				<h3>{{"STATS"|trans}}</h3>
 				<div class="form-group">
-					<label for="inputMileageYear">{{lang["MILEAGE_PER_YEAR"]}}</label>
+					<label for="inputMileageYear">{{"MILEAGE_PER_YEAR"|trans}}</label>
 					<input type="number" class="form-control" id="inputMileageYear" name="mileage_per_year" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.mileage_per_year}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="inputTerm">{{lang["MILEAGE_TERM"]}}</label>
+					<label for="inputTerm">{{"MILEAGE_TERM"|trans}}</label>
 					<input type="number" class="form-control" id="inputTerm" name="mileage_term" step="1" pattern="\d*" placeholder="" {% if not entry is null %} value="{{entry.mileage_term}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
-					<label for="dateSelect">{{lang["START"]}}
-						{{lang["DATE"]}}</label>
+					<label for="dateSelect">{{"START"|trans}}
+						{{"DATE"|trans}}</label>
 					<div class="flatpickr-group" id="dateSelect">
 						<input type="text" class="form-control" id="dateSelectField" placeholder="" name="mileage_start_date" value="{% if not entry is null %}{{entry.mileage_start_date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" data-input/>
 
@@ -72,20 +72,20 @@
 				</div>
 
 				<div class="form-group">
-					<label for="inputMileageStart">{{lang["MILEAGE_START"]}}</label>
+					<label for="inputMileageStart">{{"MILEAGE_START"|trans}}</label>
 					<input type="number" class="form-control" id="inputMileageStart" name="mileage_start" step="1" pattern="\d*" placeholder="" value="{% if not entry is null %}{{entry.mileage_start}}{% else %}0{% endif %}">
 				</div>
 
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

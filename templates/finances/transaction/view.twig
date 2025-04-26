@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('users_activities') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["FINANCES_TRANSACTION"]}}</h2>
+			<h2>{{"FINANCES_TRANSACTION"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -17,20 +17,20 @@
 	<div class="inner-content">
 		<div class="page-content">
 
-			<h4>{{lang["DESCRIPTION"]}}</h4>
+			<h4>{{"DESCRIPTION"|trans}}</h4>
 			<p>{{entry.description|raw}}</p>
 
-			<h4>{{lang["VALUE"]}}</h4>
+			<h4>{{"VALUE"|trans}}</h4>
 			<p>{{entry.value}}</p>
 
-			<h4>{{lang["FINANCES_TRANSACTION_ACCOUNT_FROM"]}}</h4>
+			<h4>{{"FINANCES_TRANSACTION_ACCOUNT_FROM"|trans}}</h4>
 			<p>
 				{% if not entry.account_from is null %}
 					{{accounts[entry.account_from].name|raw}}{% else %}-
 				{% endif %}
 			</p>
 
-			<h4>{{lang["FINANCES_TRANSACTION_ACCOUNT_TO"]}}</h4>
+			<h4>{{"FINANCES_TRANSACTION_ACCOUNT_TO"|trans}}</h4>
 			<p>
 				{% if entry.account_to %}
 					{{accounts[entry.account_to].name|raw}}

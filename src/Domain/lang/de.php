@@ -162,9 +162,9 @@ $lang["ADDRESS"] = "Adresse";
 $lang["ACCURACY"] = "Genauigkeit";
 $lang["DIFFERENCE"] = "Differenz";
 
-$lang["HELLO"] = "Hallo";
+$lang["HELLO_USER"] = "Hallo %username%";
 $lang["THISISATESTEMAIL"] = "Dies ist eine Test-Email";
-$lang["YOUR_MONTHLY_STATISTIC"] = "Deine monatliche Statistik für %s";
+$lang["YOUR_MONTHLY_STATISTIC"] = "Deine monatliche Statistik für %month%";
 $lang["YOUR_BALANCE"] = "Deine Bilanz";
 $lang["YOUR_BIGGEST_EXPENSES"] = "Deine größten Ausgaben";
 
@@ -239,36 +239,36 @@ $lang["OTHER_SETTINGS"] = "Sonstige Einstellungen";
 $lang["FORCE_PW_CHANGE"] = "Passwortänderung erzwingen";
 $lang["MAIL_SETTINGS"] = "Benachrichtigungsmails";
 
-$lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Dein Benutzeraccount bei %s";
-$lang["MAIL_USER_ACCOUNT_CREATED"] = "für dich wurde ein Benutzeraccount auf <a href='%s'>%s</a> erstellt.";
-$lang["MAIL_YOUR_USERNAME"] = "Dein Benutzername lautet: %s";
-$lang["MAIL_YOUR_PASSWORD"] = "Passwort: %s";
+$lang["MAIL_YOUR_USER_ACCOUNT_AT"] = "Dein Benutzeraccount bei %url%";
+$lang["MAIL_USER_ACCOUNT_CREATED"] = "für dich wurde ein Benutzeraccount auf <a href='%url%'>%url%</a> erstellt.";
+$lang["MAIL_YOUR_USERNAME"] = "Dein Benutzername lautet: %username%";
+$lang["MAIL_YOUR_PASSWORD"] = "Passwort: %password%";
 $lang["MAIL_FORCE_CHANGE_PASSWORD"] = "Nach dem ersten Anmelden musst du dein Passwort ändern!";
 
 $lang["MAIL_ADDED_TO_CARD"] = "Du wurdest zu einer Karte hinzugefügt";
-$lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%s'>%s</a> im Stapel %s zur Karte \"%s\" hinzugefügt.";
-$lang["NOTIFICATION_ADDED_TO_CARD"] = "du wurdest auf dem Board %s im Stapel %s zur Karte \"%s\" hinzugefügt.";
+$lang["MAIL_ADDED_TO_CARD_DETAIL"] = "du wurdest auf dem Board <a href='%url%'>%board%</a> im Stapel %stack% zur Karte \"%card%\" hinzugefügt.";
+$lang["NOTIFICATION_ADDED_TO_CARD"] = "du wurdest auf dem Board %board% im Stapel %stack% zur Karte \"%card%\" hinzugefügt.";
 
 $lang["MAIL_ADDED_TO_BOARD"] = "Du wurdest zu einem Board hinzugefügt";
-$lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%s'>%s</a> hinzugefügt.";
+$lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%url%'>%board%</a> hinzugefügt.";
 
-$lang["MAIL_SPLITTED_BILL_ADDED_SUBJECT"] = 'Neue geteilte Ausgabe "%s" hinzugefügt';
-$lang["MAIL_SPLITTED_BILL_ADDED_DETAIL"] = '%s hat die Ausgabe "%s" (%s %s) in der Gruppe <a href="%s">%s</a> mit dir geteilt.';
+$lang["MAIL_SPLITTED_BILL_ADDED_SUBJECT"] = 'Neue geteilte Ausgabe "%expense%" hinzugefügt';
+$lang["MAIL_SPLITTED_BILL_ADDED_DETAIL"] = '%user% hat die Ausgabe "%expense%" (%value% %currency%) in der Gruppe <a href="%url">%group%</a> mit dir geteilt.';
 
-$lang["MAIL_SPLITTED_BILL_UPDATE_SUBJECT"] = 'Geteilte Ausgabe "%s" aktualisiert';
-$lang["MAIL_SPLITTED_BILL_UPDATE_DETAIL"] = '%s hat die mit dir geteilte Ausgabe "%s" (%s %s) in der Gruppe <a href="%s">%s</a> aktualisiert.';
+$lang["MAIL_SPLITTED_BILL_UPDATE_SUBJECT"] = 'Geteilte Ausgabe "%expense%" aktualisiert';
+$lang["MAIL_SPLITTED_BILL_UPDATE_DETAIL"] = '%user% hat die mit dir geteilte Ausgabe "%expense%" (%value% %currency%) in der Gruppe <a href="%url%">%group%</a> aktualisiert.';
 
-$lang["MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT"] = '%s hat Schulden beglichen';
-$lang["MAIL_SPLITTED_BILL_SETTLEUP_DETAIL"] = '%s hat Schulden (%s %s) in der Gruppe <a href="%s">%s</a> beglichen.';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_SUBJECT"] = '%user% hat Schulden beglichen';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DETAIL"] = '%user% hat Schulden (%value% %currency%) in der Gruppe <a href="%url%">%group</a> beglichen.';
 
-$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT"] = '%s hat beglichene Schulden aktualisiert';
-$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL"] = '%s hat beglichende Schulden (%s %s) in der Gruppe <a href="%s">%s</a> aktualisiert.';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_SUBJECT"] = '%user% hat beglichene Schulden aktualisiert';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_UPDATE_DETAIL"] = '%user% hat beglichende Schulden (%value% %currency%) in der Gruppe <a href="%url%">%group%</a> aktualisiert.';
 
-$lang["MAIL_SPLITTED_BILL_DELETED_SUBJECT"] = 'Geteilte Ausgabe "%s" gelöscht';
-$lang["MAIL_SPLITTED_BILL_DELETED_DETAIL"] = '%s hat die mit dir geteilte Ausgabe "%s" (%s %s) in der Gruppe <a href="%s">%s</a> gelöscht.';
+$lang["MAIL_SPLITTED_BILL_DELETED_SUBJECT"] = 'Geteilte Ausgabe "%expense%" gelöscht';
+$lang["MAIL_SPLITTED_BILL_DELETED_DETAIL"] = '%user% hat die mit dir geteilte Ausgabe "%expense%" (%value% %currency%) in der Gruppe <a href="%url%">%group%</a> gelöscht.';
 
-$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT"] = '%s hat beglichene Schulden gelöscht';
-$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL"] = '%s hat beglichene Schulden (%s %s) in der Gruppe <a href="%s">%s</a> gelöscht.';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_SUBJECT"] = '%user% hat beglichene Schulden gelöscht';
+$lang["MAIL_SPLITTED_BILL_SETTLEUP_DELETED_DETAIL"] = '%user% hat beglichene Schulden (%value% %currency%) in der Gruppe <a href="%url%">%group%</a> gelöscht.';
 
 $lang["CREATED_BY"] = "Erstellt von";
 $lang["CHANGED_BY"] = "Geändert von";
@@ -293,7 +293,7 @@ $lang["LOGOUT"] = "Abmelden";
 $lang["NOTIFICATIONS"] = "Benachrichtigungen";
 $lang["PUSH_NOTIFICATIONS"] = "Push Benachrichtigungen";
 $lang["NOTIFICATION_FINANCES_RECURRING_ADDED_SUBJECT"] = 'Neuer wiederkehrender Finanzeintrag hinzugefügt';
-$lang["NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT"] = '"%s" wurde hinzugefügt';
+$lang["NOTIFICATION_FINANCES_RECURRING_ADDED_CONTENT"] = '"%element%" wurde hinzugefügt';
 
 $lang["IP_ADDRESS"] = "IP-Adresse";
 $lang["USER_AGENT"] = "User Agent";
@@ -414,14 +414,14 @@ $lang["SPLITBILLS_NUMBERS_WRONG"] = "Die Summe der gezahlten/ausgegeben Werte st
 $lang["SPLITBILLS_ADD_FINANCES"] = "Finanzeintrag automatisch erstellen";
 $lang["CURRENCY"] = "Währung";
 
-$lang["PERSON_OWES_ME"] = "%s schuldet mir %s %s";
-$lang["PERSON_RECEIVES_BY_ME"] = "%s bekommt %s %s von mir";
+$lang["PERSON_OWES_ME"] = "%user% schuldet mir %value% %currency%";
+$lang["PERSON_RECEIVES_BY_ME"] = "%user% bekommt %value% %currency% von mir";
 
-$lang["PERSON_OWES_TOTAL"] = "(schuldet insgesamt %s %s)";
-$lang["PERSON_RECEIVES_TOTAL"] = "(bekommt insgesamt %s %s)";
+$lang["PERSON_OWES_TOTAL"] = "(schuldet insgesamt %value% %currency)";
+$lang["PERSON_RECEIVES_TOTAL"] = "(bekommt insgesamt %value% %currency%)";
 
-$lang["SPEND_BY"] = "Anteil (%s)";
-$lang["PAID_BY"] = "Bezahlt (%s)";
+$lang["SPEND_BY"] = "Anteil (%currency%)";
+$lang["PAID_BY"] = "Bezahlt (%currency%)";
 $lang["SPLITBILLY_PAID_SPEND_BY_PERSON"] = "von";
 
 $lang["TRIPS"] = "Reisen";
@@ -458,8 +458,8 @@ $lang["SPLITBILLS_SETTLE_UP"] = "Schulden begleichen";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "Bezahler";
 $lang["SPLITBILLS_SETTLE_UP_RECEIVER"] = "Empfänger";
 
-$lang["SPLITBILLS_ONLY_PERSON"] = "nur geschuldet von %s";
-$lang["SPLITBILLS_BY_PERSON"] = "komplett bezahlt von %s";
+$lang["SPLITBILLS_ONLY_PERSON"] = "nur geschuldet von %user%";
+$lang["SPLITBILLS_BY_PERSON"] = "komplett bezahlt von %user%";
 $lang["SPLITBILLS_EQUALLY"] = "gleichmäßig";
 $lang["SPLITBILLS_EQUALLY_PAID"] = "jeder hat gleichviel gezahlt";
 $lang["SPLITBILLS_EQUALLY_SPEND"] = "jeder muss gleichviel zahlen";
@@ -585,59 +585,59 @@ $lang["BANLIST"] = "gesperrte IP-Adressen";
 
 $lang["ACTIVITIES"] = "Aktivitäten";
 
-$lang["ACTIVITY_CREATE"] = "%s hat %s erstellt";
-$lang["ACTIVITY_UPDATE"] = "%s hat %s aktualisiert";
-$lang["ACTIVITY_DELETE"] = "%s hat %s gelöscht";
-$lang["ACTIVITY_SAVE"] = "%s hat %s gespeichert";
-$lang["ACTIVITY_DONE"] = "%s hat %s als erledigt markiert";
-$lang["ACTIVITY_ADD"] = "%s hat %s hinzugefügt";
-$lang["ACTIVITY_UNDONE"] = "%s hat %s als nicht erledigt markiert";
-$lang["ACTIVITY_ARCHIVED"] = "%s hat %s archiviert";
-$lang["ACTIVITY_UNARCHIVED"] = "%s hat die Archivierung von %s aufgehoben";
-$lang["ACTIVITY_INVOICED"] = "%s hat %s als in Rechnung gestellt markiert";
-$lang["ACTIVITY_NOT_INVOICED"] = "%s hat %s als nicht in Rechnung gestellt markiert";
-$lang["ACTIVITY_BILLED"] = "%s hat %s als abgerechnet markiert";
-$lang["ACTIVITY_NOT_BILLED"] = "%s hat %s als nicht abgerechnet markiert";
-$lang["ACTIVITY_PAYED"] = "%s hat %s als bezahlt markiert";
-$lang["ACTIVITY_NOT_PAYED"] = "%s hat %s als nicht bezahlt markiert";
-$lang["ACTIVITY_PLANNED"] = "%s hat %s als geplant markiert";
-$lang["ACTIVITY_HAPPENED"] = "%s hat %s als durchgeführt markiert";
+$lang["ACTIVITY_CREATE"] = "%user% hat %element% erstellt";
+$lang["ACTIVITY_UPDATE"] = "%user% hat %element% aktualisiert";
+$lang["ACTIVITY_DELETE"] = "%user% hat %element% gelöscht";
+$lang["ACTIVITY_SAVE"] = "%user% hat %element% gespeichert";
+$lang["ACTIVITY_DONE"] = "%user% hat %element% als erledigt markiert";
+$lang["ACTIVITY_ADD"] = "%user% hat %element% hinzugefügt";
+$lang["ACTIVITY_UNDONE"] = "%user% hat %element% als nicht erledigt markiert";
+$lang["ACTIVITY_ARCHIVED"] = "%user% hat %element% archiviert";
+$lang["ACTIVITY_UNARCHIVED"] = "%user% hat die Archivierung von %element% aufgehoben";
+$lang["ACTIVITY_INVOICED"] = "%user% hat %element% als in Rechnung gestellt markiert";
+$lang["ACTIVITY_NOT_INVOICED"] = "%user% hat %element% als nicht in Rechnung gestellt markiert";
+$lang["ACTIVITY_BILLED"] = "%user% hat %element% als abgerechnet markiert";
+$lang["ACTIVITY_NOT_BILLED"] = "%user% hat %element% als nicht abgerechnet markiert";
+$lang["ACTIVITY_PAYED"] = "%user% hat %element% als bezahlt markiert";
+$lang["ACTIVITY_NOT_PAYED"] = "%user% hat %element% als nicht bezahlt markiert";
+$lang["ACTIVITY_PLANNED"] = "%user% hat %element% als geplant markiert";
+$lang["ACTIVITY_HAPPENED"] = "%user% hat %element% als durchgeführt markiert";
 
-$lang["ACTIVITY_CREATE_ME"] = "Du hast %s erstellt";
-$lang["ACTIVITY_UPDATE_ME"] = "Du hast %s aktualisiert";
-$lang["ACTIVITY_DELETE_ME"] = "Du hast %s gelöscht";
-$lang["ACTIVITY_SAVE_ME"] = "Du hast %s gespeichert";
-$lang["ACTIVITY_ADD_ME"] = "Du hast %s hinzugefügt";
-$lang["ACTIVITY_DONE_ME"] = "Du hast %s als erledigt markiert";
-$lang["ACTIVITY_UNDONE_ME"] = "Du hast %s als nicht erledigt markiert";
-$lang["ACTIVITY_ARCHIVED_ME"] = "Du hast %s archiviert";
-$lang["ACTIVITY_UNARCHIVED_ME"] = "Du hast die Archivierung von %s aufgehoben";
-$lang["ACTIVITY_INVOICED_ME"] = "Du hast %s als in Rechnung gestellt markiert";
-$lang["ACTIVITY_NOT_INVOICED_ME"] = "Du hast %s als nicht in Rechnung gestellt markiert";
-$lang["ACTIVITY_BILLED_ME"] = "Du hast %s als abgerechnet markiert";
-$lang["ACTIVITY_NOT_BILLED_ME"] = "Du hast %s als nicht abgerechnet markiert";
-$lang["ACTIVITY_PAYED_ME"] = "Du hast %s als bezahlt markiert";
-$lang["ACTIVITY_NOT_PAYED_ME"] = "Du hast %s als nicht bezahlt markiert";
-$lang["ACTIVITY_PLANNED_ME"] = "Du hast %s als geplant markiert";
-$lang["ACTIVITY_HAPPENED_ME"] = "Du hast %s als durchgeführt markiert";
+$lang["ACTIVITY_CREATE_ME"] = "Du hast %element% erstellt";
+$lang["ACTIVITY_UPDATE_ME"] = "Du hast %element% aktualisiert";
+$lang["ACTIVITY_DELETE_ME"] = "Du hast %element% gelöscht";
+$lang["ACTIVITY_SAVE_ME"] = "Du hast %element% gespeichert";
+$lang["ACTIVITY_ADD_ME"] = "Du hast %element% hinzugefügt";
+$lang["ACTIVITY_DONE_ME"] = "Du hast %element% als erledigt markiert";
+$lang["ACTIVITY_UNDONE_ME"] = "Du hast %element% als nicht erledigt markiert";
+$lang["ACTIVITY_ARCHIVED_ME"] = "Du hast %element% archiviert";
+$lang["ACTIVITY_UNARCHIVED_ME"] = "Du hast die Archivierung von %element% aufgehoben";
+$lang["ACTIVITY_INVOICED_ME"] = "Du hast %element% als in Rechnung gestellt markiert";
+$lang["ACTIVITY_NOT_INVOICED_ME"] = "Du hast %element% als nicht in Rechnung gestellt markiert";
+$lang["ACTIVITY_BILLED_ME"] = "Du hast %element% als abgerechnet markiert";
+$lang["ACTIVITY_NOT_BILLED_ME"] = "Du hast %element% als nicht abgerechnet markiert";
+$lang["ACTIVITY_PAYED_ME"] = "Du hast %element% als bezahlt markiert";
+$lang["ACTIVITY_NOT_PAYED_ME"] = "Du hast %element% als nicht bezahlt markiert";
+$lang["ACTIVITY_PLANNED_ME"] = "Du hast %element% als geplant markiert";
+$lang["ACTIVITY_HAPPENED_ME"] = "Du hast %element% als durchgeführt markiert";
 
-$lang["ACTIVITY_CREATE_SYSTEM"] = "%s wurde erstellt";
-$lang["ACTIVITY_UPDATE_SYSTEM"] = "%s wurde aktualisiert";
-$lang["ACTIVITY_DELETE_SYSTEM"] = "%s wurde gelöscht";
-$lang["ACTIVITY_SAVE_SYSTEM"] = "%s wurde gespeichert";
-$lang["ACTIVITY_ADD_SYSTEM"] = "%s wurde hinzugefügt";
-$lang["ACTIVITY_DONE_SYSTEM"] = "%s wurde als erledigt markiert";
-$lang["ACTIVITY_UNDONE_SYSTEM"] = "%s wurde als nicht erledigt markiert";
-$lang["ACTIVITY_ARCHIVED_SYSTEM"] = "%s wurde archiviert";
-$lang["ACTIVITY_UNARCHIVED_SYSTEM"] = "Die Archivierung von %s wurde aufgehoben";
-$lang["ACTIVITY_INVOICED_SYSTEM"] = "%s wurde als in Rechnung gestellt markiert";
-$lang["ACTIVITY_NOT_INVOICED_SYSTEM"] = "%s wurde als nicht in Rechnung gestellt markiert";
-$lang["ACTIVITY_BILLED_SYSTEM"] = "%s wurde als abgerechnet markiert";
-$lang["ACTIVITY_NOT_BILLED_SYSTEM"] = "%s wurde als nicht abgerechnet markiert";
-$lang["ACTIVITY_PAYED_SYSTEM"] = "%s wurde als bezahlt markiert";
-$lang["ACTIVITY_NOT_PAYED_SYSTEM"] = "%s wurde als nicht bezahlt markiert";
-$lang["ACTIVITY_PLANNED_SYSTEM"] = "%s wurde als geplant markiert";
-$lang["ACTIVITY_HAPPENED_SYSTEM"] = "%s wurde als durchgeführt markiert";
+$lang["ACTIVITY_CREATE_SYSTEM"] = "%element% wurde erstellt";
+$lang["ACTIVITY_UPDATE_SYSTEM"] = "%element% wurde aktualisiert";
+$lang["ACTIVITY_DELETE_SYSTEM"] = "%element% wurde gelöscht";
+$lang["ACTIVITY_SAVE_SYSTEM"] = "%element% wurde gespeichert";
+$lang["ACTIVITY_ADD_SYSTEM"] = "%element% wurde hinzugefügt";
+$lang["ACTIVITY_DONE_SYSTEM"] = "%element% wurde als erledigt markiert";
+$lang["ACTIVITY_UNDONE_SYSTEM"] = "%element% wurde als nicht erledigt markiert";
+$lang["ACTIVITY_ARCHIVED_SYSTEM"] = "%element% wurde archiviert";
+$lang["ACTIVITY_UNARCHIVED_SYSTEM"] = "Die Archivierung von %element% wurde aufgehoben";
+$lang["ACTIVITY_INVOICED_SYSTEM"] = "%element% wurde als in Rechnung gestellt markiert";
+$lang["ACTIVITY_NOT_INVOICED_SYSTEM"] = "%element% wurde als nicht in Rechnung gestellt markiert";
+$lang["ACTIVITY_BILLED_SYSTEM"] = "%element% wurde als abgerechnet markiert";
+$lang["ACTIVITY_NOT_BILLED_SYSTEM"] = "%element% wurde als nicht abgerechnet markiert";
+$lang["ACTIVITY_PAYED_SYSTEM"] = "%element% wurde als bezahlt markiert";
+$lang["ACTIVITY_NOT_PAYED_SYSTEM"] = "%element% wurde als nicht bezahlt markiert";
+$lang["ACTIVITY_PLANNED_SYSTEM"] = "%element% wurde als geplant markiert";
+$lang["ACTIVITY_HAPPENED_SYSTEM"] = "%element% wurde als durchgeführt markiert";
 
 $lang["DATAOBJECT_ACITIVY"] = "Aktivität";
 $lang["DATAOBJECT_BOARDS_BOARD"] = "Board";
@@ -705,7 +705,7 @@ $lang["CREATE_ROUTE"] = "Route";
 $lang["EXCHANGE_RATE"] = "Umrechnungskurs";
 $lang["EXCHANGE_FEE"] = "Gebühr";
 
-$lang["CRAWLER_DATASETS_DELETED"] = "%s Datensätze gelöscht";
+$lang["CRAWLER_DATASETS_DELETED"] = "%count% Datensätze gelöscht";
 $lang["CRAWLER_DATASETS_CLEAN"] = "Bereinigen";
 
 $lang["CRAWLER_DATASET_SAVE_LIST"] = "Merkliste";

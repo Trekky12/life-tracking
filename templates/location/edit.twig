@@ -10,7 +10,7 @@
 			<a href="{{ url_for_with_last_query_params('location') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["MENU_LOCATION"]}}</h2>
+			<h2>{{"MENU_LOCATION"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -30,15 +30,15 @@
 
 				{#
 																                <div class="form-group">
-																                    <label for="inputIdentifier">{{lang["IDENTIFIER"]}}</label>
+																                    <label for="inputIdentifier">{{"IDENTIFIER"|trans}}</label>
 																                    <input type="text" class="form-control" id="inputIdentifier" name="identifier" {% if not entry is null %}value="{{entry.identifier}}{% endif %}">
 																                </div>
 																                #}
 
 				<div class="mapWrapper">
 					<div class="form-group map-btn">
-						<button id="update-location" class="update-location button button-outlined">{{lang["SET_CURRENT_LOCATION"]}}</button>
-						<button id="delete-location" class="delete-location button button-text {% if not hasMap %}hidden{% endif %}">{{lang["REMOVE_LOCATION"]}}</button>
+						<button id="update-location" class="update-location button button-outlined">{{"SET_CURRENT_LOCATION"|trans}}</button>
+						<button id="delete-location" class="delete-location button button-text {% if not hasMap %}hidden{% endif %}">{{"REMOVE_LOCATION"|trans}}</button>
 					</div>
 					<input type="hidden" id="geoLat" class="geo-lat" name="gps_lat" value="{% if not entry is null %}{{entry.gps_lat}}{% endif %}">
 					<input type="hidden" id="geoLng" class="geo-lng" name="gps_lng" value="{% if not entry is null %}{{entry.gps_lng}}{% endif %}">
@@ -47,13 +47,13 @@
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

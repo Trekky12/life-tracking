@@ -65,7 +65,7 @@ class CardMailService {
                 $variables = array(
                     'header' => '',
                     'subject' => $subject,
-                    'headline' => sprintf($this->translation->getTranslatedString('HELLO') . ' %s', $user->name),
+                    'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%' => $user->name]),
                     'content' => $this->translation->getTranslatedString('MAIL_CARD_REMINDER_DETAIL')
                 );
 

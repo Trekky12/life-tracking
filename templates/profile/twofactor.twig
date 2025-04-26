@@ -5,7 +5,7 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["TWOFACTOR_AUTHENTICATION"]}}</h2>
+			<h2>{{"TWOFACTOR_AUTHENTICATION"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -24,7 +24,7 @@
 					<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
 					<div class="form-group">
-						<p>{{ lang["TWOFACTOR_TEXT"] }}</p>
+						<p>{{ "TWOFACTOR_TEXT"|trans }}</p>
 					</div>
 					<div class="form-group">
 						<img src="{{ qr }}"/>
@@ -32,12 +32,12 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputVerificationCode">{{lang["TWOFACTOR_CODE"]}}</label>
+						<label for="inputVerificationCode">{{"TWOFACTOR_CODE"|trans}}</label>
 						<input name="code" id="inputVerificationCode" class="form-control" type="number" pattern="\d*">
 					</div>
 
 					<div class="form-group">
-						<button type="submit" class="button">{{lang["SAVE"]}}</button>
+						<button type="submit" class="button">{{"SAVE"|trans}}</button>
 					</div>
 				</form>
 
@@ -47,7 +47,7 @@
 					<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
 					<div class="form-group">
-						<button type="submit" class="button button-outlined">{{lang["TWOFACTOR_DISABLE"]}}</button>
+						<button type="submit" class="button button-outlined">{{"TWOFACTOR_DISABLE"|trans}}</button>
 					</div>
 				</form>
 			{% endif %}

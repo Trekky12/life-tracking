@@ -8,14 +8,14 @@
 			<a href="{% if view == "overview" %}{{ url_for_with_last_query_params('timesheets_project_categorybudget_view', {'project': project.hash}) }}{% else %}{{ url_for('timesheets', {'project': project.hash}) }}{% endif %}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"]}}
+			<h2>{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}
 				|
 				{{ project.name }}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('timesheets_project_categorybudget_edit', {'project': project.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -31,10 +31,10 @@
 							{% if project.customers_name_singular %}
 								{{project.customers_name_singular}}
 							{% else %}
-								{{lang["TIMESHEETS_CUSTOMER"]}}
+								{{"TIMESHEETS_CUSTOMER"|trans}}
 							{% endif %}
 						</th>
-						<th>{{lang["NAME"]}}</th>
+						<th>{{"NAME"|trans}}</th>
 						<th></th>
 						<th></th>
 						<th></th>

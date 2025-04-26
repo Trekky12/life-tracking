@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('workouts_muscles') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["WORKOUTS_MUSCLE"]}}</h2>
+			<h2>{{"WORKOUTS_MUSCLE"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -26,11 +26,11 @@
 				{% endif %}
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
 				</div>
 
-				<h3>{{lang["WORKOUTS_MUSCLES_PRIMARY_IMAGE"]}}</h3>
+				<h3>{{"WORKOUTS_MUSCLES_PRIMARY_IMAGE"|trans}}</h3>
 				<div class="form-group">
 					{% if not entry is null and entry.get_image_primary() != ''%}
 						<img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_primary(true)}}"/>
@@ -41,12 +41,12 @@
 					<div class="form-group">
 						<label class="checkbox" for="checkboxDeleteImagePrimary">
 							<input name="delete_image_primary" type="checkbox" value="1" id="checkboxDeleteImagePrimary">
-							{{lang["DELETE"]}}
+							{{"DELETE"|trans}}
 						</label>
 					</div>
 				{% endif %}
 
-				<h3>{{lang["WORKOUTS_MUSCLES_SECONDARY_IMAGE"]}}</h3>
+				<h3>{{"WORKOUTS_MUSCLES_SECONDARY_IMAGE"|trans}}</h3>
 				<div class="form-group">
 					{% if not entry is null and entry.get_image_secondary() != ''%}
 						<img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{entry.get_image_secondary(true)}}"/>
@@ -57,7 +57,7 @@
 					<div class="form-group">
 						<label class="checkbox" for="checkboxDeleteImageSecondary">
 							<input name="delete_image_secondary" type="checkbox" value="1" id="checkboxDeleteImageSecondary">
-							{{lang["DELETE"]}}
+							{{"DELETE"|trans}}
 						</label>
 					</div>
 				{% endif %}
@@ -65,13 +65,13 @@
 				<div class="form-group">
 					<button type="submit" class="button">
 						{% if not entry is null %}
-							{{lang["SAVE"]}}
+							{{"SAVE"|trans}}
 						{% else %}
-							{{lang["INSERT"]}}
+							{{"INSERT"|trans}}
 						{% endif %}
 					</button>
 					{% if not entry is null %}
-						<button id="cancel" class="button button-text">{{lang["CANCEL"]}}</button>
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
 					{% endif %}
 				</div>
 			</form>

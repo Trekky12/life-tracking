@@ -5,7 +5,7 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["PROFILE"]}}</h2>
+			<h2>{{"PROFILE"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -23,102 +23,102 @@
 				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
 				<div class="form-group">
-					<label for="inputName">{{lang["NAME"]}}</label>
+					<label for="inputName">{{"NAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputName" name="name" value="{{user.name}}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputLastName">{{lang["LASTNAME"]}}</label>
+					<label for="inputLastName">{{"LASTNAME"|trans}}</label>
 					<input type="text" class="form-control" id="inputLastName" name="lastname" value="{{user.lastname}}">
 				</div>
 
 				<div class="form-group">
-					<label for="inputMail">{{lang["MAIL"]}}</label>
+					<label for="inputMail">{{"MAIL"|trans}}</label>
 					<input type="email" class="form-control" id="inputMail" name="mail" value="{{user.mail}}">
 				</div>
 
 				<div class="form-group hidden">
 					<a href="{{ url_for('users_change_password') }}">
-						<button type="button" class="button">{{lang["CHANGE_PASSWORD"]}}</button>
+						<button type="button" class="button">{{"CHANGE_PASSWORD"|trans}}</button>
 					</a>
 					<a href="{{ url_for('users_profile_image') }}">
-						<button type="button" class="button">{{lang["PROFILE_IMAGE"]}}</button>
+						<button type="button" class="button">{{"PROFILE_IMAGE"|trans}}</button>
 					</a>
 					<a href="{{ url_for('users_mobile_favorites') }}">
-						<button type="button" class="button">{{lang["MOBILE_FAVORITES"]}}</button>
+						<button type="button" class="button">{{"MOBILE_FAVORITES"|trans}}</button>
 					</a>
 				</div>
 
-				<h3>{{lang["MODULES"]}}</h3>
+				<h3>{{"MODULES"|trans}}</h3>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxLocationModule">
 						<input name="module_location" type="checkbox" value="1" id="checkboxLocationModule" {% if user.module_location == 1 %} checked {% endif %}>
-						{{lang["MENU_LOCATION"]}}
+						{{"MENU_LOCATION"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxFinanceModule">
 						<input name="module_finance" type="checkbox" value="1" id="checkboxFinanceModule" {% if user.module_finance == 1 %} checked {% endif %}>
-						{{lang["MENU_FINANCES"]}}
+						{{"MENU_FINANCES"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxCarsModule">
 						<input name="module_cars" type="checkbox" value="1" id="checkboxCarsModule" {% if user.module_cars == 1 %} checked {% endif %}>
-						{{lang["CARS"]}}
+						{{"CARS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxBoardsModule">
 						<input name="module_boards" type="checkbox" value="1" id="checkboxBoardsModule" {% if user.module_boards == 1 %} checked {% endif %}>
-						{{lang["BOARDS"]}}
+						{{"BOARDS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxCrawlersModule">
 						<input name="module_crawlers" type="checkbox" value="1" id="checkboxCrawlersModule" {% if user.module_crawlers == 1 %} checked {% endif %}>
-						{{lang["CRAWLERS"]}}
+						{{"CRAWLERS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxSplitbillsModule">
 						<input name="module_splitbills" type="checkbox" value="1" id="checkboxSplitbillsModule" {% if user.module_splitbills == 1 %} checked {% endif %}>
-						{{lang["SPLITBILLS"]}}
+						{{"SPLITBILLS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxTripsModule">
 						<input name="module_trips" type="checkbox" value="1" id="checkboxTripsModule" {% if user.module_trips == 1 %} checked {% endif %}>
-						{{lang["TRIPS"]}}
+						{{"TRIPS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxTimesheetsModule">
 						<input name="module_timesheets" type="checkbox" value="1" id="checkboxTimesheetsModule" {% if user.module_timesheets == 1 %} checked {% endif %}>
-						{{lang["TIMESHEETS"]}}
+						{{"TIMESHEETS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxWorkoutsModule">
 						<input name="module_workouts" type="checkbox" value="1" id="checkboxWorkoutsModule" {% if user.module_workouts == 1 %} checked {% endif %}>
-						{{lang["WORKOUTS"]}}
+						{{"WORKOUTS"|trans}}
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxRecipesModule">
 						<input name="module_recipes" type="checkbox" value="1" id="checkboxRecipesModule" {% if user.module_recipes == 1 %} checked {% endif %}>
-						{{lang["RECIPES"]}}
+						{{"RECIPES"|trans}}
 					</label>
 				</div>
 
-				<h3>{{lang["PWA_SETTINGS"]}}</h3>
+				<h3>{{"PWA_SETTINGS"|trans}}</h3>
 				<div class="form-group">
-					<label for="inputStartURL">{{lang["START_URL"]}}</label>
+					<label for="inputStartURL">{{"START_URL"|trans}}</label>
 					<input type="text" class="form-control" id="inputStartURL" name="start_url" value="{{user.start_url}}">
 				</div>
 
 				<div class="form-group">
-					<button type="submit" class="button">{{lang["SAVE"]}}</button>
+					<button type="submit" class="button">{{"SAVE"|trans}}</button>
 				</div>
 			</form>
 		</div>

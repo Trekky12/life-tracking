@@ -20,21 +20,21 @@
 
 	<li {% if active == 'index' %} class="active" {% endif %}>
 		<a href="{{ url_for('index') }}">{{ fontawesome('fas fa-house') }}
-			{{lang["MENU_INDEX"]}}</a>
+			{{"MENU_INDEX"|trans}}</a>
 	</li>
 	{% if user.hasModule("location") %}
 		<li {% if active == modules['location']['rootRoute'] or active == 'location_edit' or active == 'steps' %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['location']['rootRoute']) }}">{{ fontawesome(modules['location']['icon']) }}
-				{{lang[modules['location']['title']]}}</a>
+				{{ modules['location']['title']|trans }}</a>
 			{#<ul class="dropdown-content">
 																																				<li>
 																																					<a href="{{ url_for('location_edit') }}">{{ fontawesome('fas fa-location-arrow') }}
-																																						{{lang["ADD_LOCATION"]}}</a>
+																																						{{ "ADD_LOCATION"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('steps') }}">{{ fontawesome('far fa-chart-bar') }}
-																																						{{lang["STEPS"]}}</a>
+																																						{{ "STEPS"|trans }}</a>
 																																				</li>
 																																			</ul>#}
 		</li>
@@ -42,39 +42,39 @@
 	{% if user.hasModule("finances") %}
 		<li {% if active == modules['finances']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['finances']['rootRoute']) }}">{{ fontawesome(modules['finances']['icon']) }}
-				{{lang[modules['finances']['title']]}}</a>
+				{{ modules['finances']['title']|trans }}</a>
 			{#<ul class="dropdown-content">
 																																				<li>
 																																					<a href="{{ url_for('finances_categories') }}">{{ fontawesome('fas fa-tags') }}
-																																						{{lang["FINANCES_CATEGORIES"]}}</a>
+																																						{{ "FINANCES_CATEGORIES"|trans }}</a>
 																																				</li>
 																																				<li>
 																																					<a href="{{ url_for('finances_categories_assignment') }}">{{ fontawesome('fas fa-wand-magic') }}
-																																						{{lang["FINANCES_CATEGORY_ASSIGNMENTS"]}}</a>
+																																						{{ "FINANCES_CATEGORY_ASSIGNMENTS"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('finances_recurring') }}">{{ fontawesome('fas fa-calendar-days') }}
-																																						{{lang["FINANCES_RECURRING"]}}</a>
+																																						{{ "FINANCES_RECURRING"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('finances_paymethod') }}">{{ fontawesome('fas fa-credit-card') }}
-																																						{{lang["FINANCES_PAYMETHODS"]}}</a>
+																																						{{ "FINANCES_PAYMETHODS"|trans }}</a>
 																																				</li>
 																																				<li>
 																																					<a href="{{ url_for('finances_account') }}">{{ fontawesome('fas fa-wallet') }}
-																																						{{lang["FINANCES_ACCOUNTS"]}}</a>
+																																						{{ "FINANCES_ACCOUNTS"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('finances_budgets') }}">{{ fontawesome('far fa-money-bill-1') }}
-																																						{{lang["BUDGET"]}}</a>
+																																						{{ "BUDGET"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('finances_stats') }}">{{ fontawesome('fas fa-chart-pie') }}
-																																						{{lang["STATS"]}}</a>
+																																						{{ "STATS"|trans }}</a>
 																																				</li>
 																																			</ul>#}
 		</li>
@@ -82,16 +82,16 @@
 	{% if user.hasModule("cars") %}
 		<li {% if active == modules['cars']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['cars']['rootRoute']) }}">{{ fontawesome(modules['cars']['icon']) }}
-				{{lang[modules['cars']['title']]}}</a>
+				{{ modules['cars']['title']|trans }}</a>
 			{#<ul class="dropdown-content">
 																																				<li>
 																																					<a href="{{ url_for('cars') }}">{{ fontawesome('fas fa-car') }}
-																																						{{lang["CARS"]}}</a>
+																																						{{ "CARS"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('car_service_stats') }}">{{ fontawesome('fas fa-chart-pie') }}
-																																						{{lang["STATS"]}}</a>
+																																						{{ "STATS"|trans }}</a>
 																																				</li>
 																																			</ul>#}
 		</li>
@@ -99,56 +99,56 @@
 	{% if user.hasModule("boards") %}
 		<li {% if active == modules['boards']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['boards']['rootRoute']) }}">{{ fontawesome(modules['boards']['icon']) }}
-				{{lang[modules['boards']['title']]}}</a>
+				{{ modules['boards']['title']|trans }}</a>
 		</li>
 	{% endif %}
 	{% if user.hasModule("crawlers") %}
 		<li {% if active == modules['crawlers']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['crawlers']['rootRoute']) }}">{{ fontawesome(modules['crawlers']['icon']) }}
-				{{lang[modules['crawlers']['title']]}}</a>
+				{{ modules['crawlers']['title']|trans }}</a>
 		</li>
 	{% endif %}
 	{% if user.hasModule("splitbills") %}
 		<li {% if active == modules['splitbills']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['splitbills']['rootRoute']) }}">{{ fontawesome(modules['splitbills']['icon']) }}
-				{{lang[modules['splitbills']['title']]}}</a>
+				{{ modules['splitbills']['title']|trans }}</a>
 		</li>
 	{% endif %}
 	{% if user.hasModule("trips") %}
 		<li {% if active == modules['trips']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['trips']['rootRoute']) }}">{{ fontawesome(modules['trips']['icon']) }}
-				{{lang[modules['trips']['title']]}}</a>
+				{{ modules['trips']['title']|trans }}</a>
 		</li>
 	{% endif %}
 	{% if user.hasModule("timesheets") %}
 		<li {% if active == modules['timesheets']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['timesheets']['rootRoute']) }}">{{ fontawesome(modules['timesheets']['icon']) }}
-				{{lang[modules['timesheets']['title']]}}</a>
+				{{ modules['timesheets']['title']|trans }}</a>
 		</li>
 	{% endif %}
 	{% if user.hasModule("workouts") %}
 		<li {% if active == modules['workouts']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['workouts']['rootRoute']) }}">{{ fontawesome(modules['workouts']['icon']) }}
-				{{lang[modules['workouts']['title']]}}</a>
+				{{ modules['workouts']['title']|trans }}</a>
 
 			{#<ul class="dropdown-content">
 																																				<li>
 																																					<a href="{{ url_for('workouts_exercises_view') }}">{{ fontawesome('fas fa-dumbbell') }}
-																																						{{lang["WORKOUTS_EXERCISES"]}}</a>
+																																						{{ "WORKOUTS_EXERCISES"|trans }}</a>
 																																				</li>
 																																				<li>
-																																					<a href="{{ url_for('workouts_templates') }}">{{lang["WORKOUTS_TEMPLATE_PLANS"]}}</a>
+																																					<a href="{{ url_for('workouts_templates') }}">{{ "WORKOUTS_TEMPLATE_PLANS"|trans }}</a>
 																																				</li>
 																																				{% if user.isAdmin() %}
 																															
 																																					<li>
-																																						<a href="{{ url_for('workouts_exercises') }}">{{lang["WORKOUTS_EXERCISES_MANAGE"]}}</a>
+																																						<a href="{{ url_for('workouts_exercises') }}">{{ "WORKOUTS_EXERCISES_MANAGE"|trans }}</a>
 																																					</li>
 																																					<li>
-																																						<a href="{{ url_for('workouts_muscles') }}">{{lang["WORKOUTS_MUSCLES"]}}</a>
+																																						<a href="{{ url_for('workouts_muscles') }}">{{ "WORKOUTS_MUSCLES"|trans }}</a>
 																																					</li>
 																																					<li>
-																																						<a href="{{ url_for('workouts_bodyparts') }}">{{lang["WORKOUTS_BODYPARTS"]}}</a>
+																																						<a href="{{ url_for('workouts_bodyparts') }}">{{ "WORKOUTS_BODYPARTS"|trans }}</a>
 																																					</li>
 																																				{% endif %}
 																																			</ul>#}
@@ -158,21 +158,21 @@
 	{% if user.hasModule("recipes") %}
 		<li {% if active == modules['recipes']['rootRoute'] %} class="active" {% endif %}>
 			<a href="{{ url_for(modules['recipes']['rootRoute']) }}">{{ fontawesome(modules['recipes']['icon']) }}
-				{{lang[modules['recipes']['title']]}}</a>
+				{{ modules['recipes']['title']|trans }}</a>
 
 			{#<ul class="dropdown-content">
 																																				<li>
-																																					<a href="{{ url_for('recipes_cookbooks') }}">{{lang["RECIPES_COOKBOOKS"]}}</a>
+																																					<a href="{{ url_for('recipes_cookbooks') }}">{{ "RECIPES_COOKBOOKS"|trans }}</a>
 																																				</li>
 																																				<li>
-																																					<a href="{{ url_for('recipes_mealplans') }}">{{lang["RECIPES_MEALPLANS"]}}</a>
+																																					<a href="{{ url_for('recipes_mealplans') }}">{{ "RECIPES_MEALPLANS"|trans }}</a>
 																																				</li>
 																																				<li>
-																																					<a href="{{ url_for('recipes_shoppinglists') }}">{{lang["RECIPES_SHOPPINGLISTS"]}}</a>
+																																					<a href="{{ url_for('recipes_shoppinglists') }}">{{ "RECIPES_SHOPPINGLISTS"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
-																																					<a href="{{ url_for('recipes_groceries') }}">{{lang["RECIPES_GROCERIES"]}}</a>
+																																					<a href="{{ url_for('recipes_groceries') }}">{{ "RECIPES_GROCERIES"|trans }}</a>
 																																				</li>
 																																			</ul>#}
 		</li>
@@ -181,30 +181,30 @@
 	{% if user.isAdmin() %}
 		<li {% if active == 'settings' %} class="active" {% endif %}>
 			<a href="{{ url_for('users') }}">{{ fontawesome('fas fa-gears') }}
-				{{lang["SETTINGS"]}}</a>
+				{{ "SETTINGS"|trans }}</a>
 			{#<ul class="dropdown-content">
 																																				<li>
 																																					<a href="{{ url_for('users') }}">{{ fontawesome('fas fa-user') }}
-																																						{{lang["USERS"]}}</a>
+																																						{{ "USERS"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('notifications_clients') }}">{{ fontawesome('fas fa-bell') }}
-																																						{{lang["NOTIFICATIONS"]}}</a>
+																																						{{ "NOTIFICATIONS"|trans }}</a>
 																																				</li>
 																																				<li>
 																																					<a href="{{ url_for('notifications_categories') }}">{{ fontawesome('fas fa-tags') }}
-																																						{{lang["CATEGORIES"]}}</a>
+																																						{{ "CATEGORIES"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('login_tokens') }}">{{ fontawesome('fas fa-key') }}
-																																						{{lang["LOGIN_TOKENS"]}}</a>
+																																						{{ "LOGIN_TOKENS"|trans }}</a>
 																																				</li>
 																															
 																																				<li>
 																																					<a href="{{ url_for('banlist') }}">{{ fontawesome('fas fa-key') }}
-																																						{{lang["BANLIST"]}}</a>
+																																						{{ "BANLIST"|trans }}</a>
 																																				</li>
 																																			</ul>#}
 		</li>
@@ -212,16 +212,16 @@
 
 	<li {% if active == 'activities' %} class="active" {% endif %}>
 		<a href="{{ url_for('users_activities') }}">{{ fontawesome('fas fa-clock-rotate-left') }}
-			{{lang["ACTIVITIES"]}}
+			{{ "ACTIVITIES"|trans }}
 		</a>
 	</li>
 	<li {% if active == 'help' %} class="active" {% endif %}>
-		<a href="{{ url_for('help') }}">{{ fontawesome('far fa-circle-question') }}{{lang["HELP"]}}
+		<a href="{{ url_for('help') }}">{{ fontawesome('far fa-circle-question') }}{{ "HELP"|trans }}
 		</a>
 	</li>
 	<hr class="divider">
 	<li>
-		<a href="{{ url_for('logout') }}">{{ fontawesome('fas fa-right-from-bracket') }}{{lang["LOGOUT"]}}
+		<a href="{{ url_for('logout') }}">{{ fontawesome('fas fa-right-from-bracket') }}{{ "LOGOUT"|trans }}
 		</a>
 	</li>
 </ul></nav>

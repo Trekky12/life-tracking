@@ -5,13 +5,13 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["LOGIN_TOKENS"]}}</h2>
+			<h2>{{"LOGIN_TOKENS"|trans}}</h2>
 		</div>
 		{% if users is not empty %}
 			<div class="buttons">
 				<a href="{{ url_for('login_tokens_delete_old') }}">
 					<button class="button button-outlined">{{ fontawesome('fas fa-trash') }}
-						{{lang["LOGIN_TOKENS_CLEAN"]}}</button>
+						{{"LOGIN_TOKENS_CLEAN"|trans}}</button>
 				</a>
 			</div>
 		{% endif %}
@@ -32,14 +32,14 @@
 			<table id="tokens_table" class="table table-hover small" data-user="{% if users is not empty %}1{% else %}0{% endif %}">
 				<thead>
 					<tr>
-						<th>{{lang["THIS_DEVICE"]}}</th>
-						<th>{{lang["CHANGED_ON"]}}</th>
-						<th>{{lang["CREATED_ON"]}}</th>
+						<th>{{"THIS_DEVICE"|trans}}</th>
+						<th>{{"CHANGED_ON"|trans}}</th>
+						<th>{{"CREATED_ON"|trans}}</th>
 						{% if users is not empty %}
-							<th>{{lang["LOGIN"]}}</th>
+							<th>{{"LOGIN"|trans}}</th>
 						{% endif %}
-						<th>{{lang["USER_AGENT"]}}</th>
-						<th>{{lang["IP_ADDRESS"]}}</th>
+						<th>{{"USER_AGENT"|trans}}</th>
+						<th>{{"IP_ADDRESS"|trans}}</th>
 						<th></th>
 					</tr>
 				</thead>

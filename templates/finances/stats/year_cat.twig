@@ -16,11 +16,11 @@
 			</a>
 			<h2>
 				{% if type == 0 %}
-					{{lang["FINANCES_SPENDINGS"]}}
+					{{"FINANCES_SPENDINGS"|trans}}
 				{% else %}
-					{{lang["FINANCES_INCOMES"]}}
+					{{"FINANCES_INCOMES"|trans}}
 				{% endif %}
-				{{lang["IN"]}}
+				{{"IN"|trans}}
 				{{year}}
 			</h2>
 		</div>
@@ -37,18 +37,18 @@
 			<table id="stats_month_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["CATEGORY"]}}</th>
-						<th>{{lang["COUNT"]}}</th>
-						<th>{{lang["SUM"]}}</th>
+						<th>{{"CATEGORY"|trans}}</th>
+						<th>{{"COUNT"|trans}}</th>
+						<th>{{"SUM"|trans}}</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for entry in stats %}
 						<tr>
-							<td data-title="{{lang["CATEGORY"]}}">{{entry.category|raw}}</td>
-							<td data-title="{{lang["COUNT"]}}">{{entry.count}}</td>
-							<td data-title="{{lang["SUM"]}}">{{entry.sum}}</td>
+							<td data-title="{{"CATEGORY"|trans}}">{{entry.category|raw}}</td>
+							<td data-title="{{"COUNT"|trans}}">{{entry.count}}</td>
+							<td data-title="{{"SUM"|trans}}">{{entry.sum}}</td>
 							<td>
 								<a href="{{ url_for('finances_stats_category_detail', {'year' : entry.year, 'type' :entry.type, 'category' : entry.category_id}) }}">{{ fontawesome('fas fa-chart-pie') }}</a>
 							</td>

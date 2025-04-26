@@ -14,8 +14,8 @@
 			<a href="{{ url_for_with_last_query_params('finances_stats') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["FINANCES_SPENDINGS"]}}/{{lang["FINANCES_INCOMES"]}}
-				{{lang["IN"]}}
+			<h2>{{"FINANCES_SPENDINGS"|trans}}/{{"FINANCES_INCOMES"|trans}}
+				{{"IN"|trans}}
 				{{year}}
 			</h2>
 		</div>
@@ -26,28 +26,28 @@
 	<div class="inner-content">
 		<div class="page-content">
 
-			<canvas id="financeSummaryChart" data-values1="{{data1}}" data-values2="{{data2}}" data-labels="{{labels}}" data-label1="{{lang["FINANCES_SPENDINGS"]}}" data-label2="{{lang["FINANCES_INCOMES"]}}"></canvas>
+			<canvas id="financeSummaryChart" data-values1="{{data1}}" data-values2="{{data2}}" data-labels="{{labels}}" data-label1="{{"FINANCES_SPENDINGS"|trans}}" data-label2="{{"FINANCES_INCOMES"|trans}}"></canvas>
 
 			<table id="stats_year_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["MONTH"]}}</th>
-						<th>{{lang["FINANCES_INCOMES"]}}</th>
-						<th>{{lang["FINANCES_SPENDINGS"]}}</th>
-						<th>{{lang["DIFFERENCE"]}}</th>
+						<th>{{"MONTH"|trans}}</th>
+						<th>{{"FINANCES_INCOMES"|trans}}</th>
+						<th>{{"FINANCES_SPENDINGS"|trans}}</th>
+						<th>{{"DIFFERENCE"|trans}}</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for month, entry in stats %}
 						<tr>
-							<td data-title="{{lang["MONTH"]}}">{{month}}</td>
-							<td data-title="{{lang["FINANCES_INCOMES"]}}">
+							<td data-title="{{"MONTH"|trans}}">{{month}}</td>
+							<td data-title="{{"FINANCES_INCOMES"|trans}}">
 								<a href="{{ url_for('finances_stats_month_type', {'type' : 1, 'year' : year, 'month' : month }) }}">{{entry[1]}}</a>
 							</td>
-							<td data-title="{{lang["FINANCES_SPENDINGS"]}}">
+							<td data-title="{{"FINANCES_SPENDINGS"|trans}}">
 								<a href="{{ url_for('finances_stats_month_type', {'type' : 0, 'year' : year, 'month' : month }) }}">{{entry[0]}}</a>
 							</td>
-							<td data-title="{{lang["DIFFERENCE"]}}">{{entry[1] - entry[0]}}</td>
+							<td data-title="{{"DIFFERENCE"|trans}}">{{entry[1] - entry[0]}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

@@ -14,13 +14,13 @@
 			<a href="{{ url_for_with_last_query_params('recipes') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["RECIPE"]}}
+			<h2>{{"RECIPE"|trans}}
 				-
 				{{ recipe.name|raw }}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('recipes_recipe_add_to_cookbook', {'recipe': recipe.hash}) }}" id="add_to_cookbook">
-				<button class="button button-outlined">{{lang["RECIPES_ADD_TO_COOKBOOK"]}}
+				<button class="button button-outlined">{{"RECIPES_ADD_TO_COOKBOOK"|trans}}
 					{{ fontawesome('fas fa-book') }}</button>
 			</a>
 			{% if recipe.getOwner() == user.id %}
@@ -46,19 +46,19 @@
 					{% if recipe.preparation_time %}
 						<div>
 							{{ fontawesome('fas fa-user-clock') }}<span>{{recipe.preparation_time}}
-								{{ lang["RECIPES_MINUTES"] }}</span>
+								{{ "RECIPES_MINUTES"|trans }}</span>
 						</div>
 					{% endif %}
 					{% if recipe.waiting_time %}
 						<div>
 							{{ fontawesome('fas fa-hourglass') }}<span>{{recipe.waiting_time}}
-								{{ lang["RECIPES_MINUTES"] }}</span>
+								{{ "RECIPES_MINUTES"|trans }}</span>
 						</div>
 					{% endif %}
 					{% if recipe.servings %}
 						<div>
 							{{ fontawesome('fas fa-users') }}<span>{{recipe.servings}}
-								{{ lang["RECIPES_SERVINGS"] }}</span>
+								{{ "RECIPES_SERVINGS"|trans }}</span>
 						</div>
 					{% endif %}
 				</div>
@@ -77,7 +77,7 @@
 
 				<div class="recipe-ingredients">
 					<div class="recipe-ingredients-title">{{ fontawesome('fas fa-pepper-hot') }}
-						{{ lang["RECIPES_INGREDIENTS"] }}</div>
+						{{ "RECIPES_INGREDIENTS"|trans }}</div>
 					<ul class="recipe-ingredient-entries">
 						{% for step_ingredients in ingredients %}
 							{% for ingredient in step_ingredients %}
@@ -115,13 +115,13 @@
 						{% if step["preparation_time"] %}
 							<div>
 								{{ fontawesome('fas fa-user-clock') }}<span>{{step["preparation_time"]}}
-									{{ lang["RECIPES_MINUTES"] }}</span>
+									{{ "RECIPES_MINUTES"|trans }}</span>
 							</div>
 						{% endif %}
 						{% if step["waiting_time"] %}
 							<div>
 								{{ fontawesome('fas fa-hourglass') }}<span>{{step["waiting_time"]}}
-									{{ lang["RECIPES_MINUTES"] }}</span>
+									{{ "RECIPES_MINUTES"|trans }}</span>
 							</div>
 						{% endif %}
 					</div>
@@ -132,7 +132,7 @@
 					{% if step.id in ingredients|keys %}
 						<div class="recipe-step-ingredients">
 							<div class="recipe-step-ingredients-title">{{ fontawesome('fas fa-pepper-hot') }}
-								{{ lang["RECIPES_INGREDIENTS"] }}</div>
+								{{ "RECIPES_INGREDIENTS"|trans }}</div>
 							<ul class="recipe-ingredient-entries">
 								{% for ingredient in ingredients[step.id] %}
 									<li class="ingredient-list-entry custom-checkbox">

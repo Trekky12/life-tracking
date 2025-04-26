@@ -5,13 +5,13 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{lang["USERS"]}}</h2>
+			<h2>{{"USERS"|trans}}</h2>
 		</div>
 		{% if user.isAdmin() %}
 			<div class="buttons">
 				<a href="{{ url_for('users_edit') }}">
 					<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-						{{lang["ADD"]}}</button>
+						{{"ADD"|trans}}</button>
 				</a>
 			</div>
 		{% endif %}
@@ -28,11 +28,11 @@
 			<table id="users_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["LOGIN"]}}</th>
-						<th>{{lang["NAME"]}}</th>
-						<th>{{lang["LASTNAME"]}}</th>
-						<th>{{lang["MAIL"]}}</th>
-						<th>{{lang["ROLE"]}}</th>
+						<th>{{"LOGIN"|trans}}</th>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{"LASTNAME"|trans}}</th>
+						<th>{{"MAIL"|trans}}</th>
+						<th>{{"ROLE"|trans}}</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -56,12 +56,12 @@
 							<td>
 								{% if entry.mail %}
 									<a href="{{ url_for('users_test_mail', {'user' : entry.id}) }}">{{ fontawesome('fas fa-envelope') }}
-										{{lang["TESTMAIL"]}}</a>
+										{{"TESTMAIL"|trans}}</a>
 								{% endif %}
 							</td>
 							<td>
 								{% if user.id != entry.id %}
-									<a href="{{ url_for('users_take_identity', {'user': entry.id}) }}">Identität übernehmen{{lang["1APPLICATION_PASSWORDS"]}}</a>
+									<a href="{{ url_for('users_take_identity', {'user': entry.id}) }}">{{"TAKE_IDENTITY"|trans}}</a>
 								{% endif %}
 							</td>
 

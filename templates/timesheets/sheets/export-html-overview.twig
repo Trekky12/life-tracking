@@ -17,7 +17,7 @@
 			<a href="{{ url_for_with_last_query_params('timesheets_export', {'project' : project.hash}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS"]}}
+			<h2>{{"TIMESHEETS"|trans}}
 				|
 				{{project.name|raw}}</h2>
 		</div>
@@ -37,7 +37,7 @@
 	<div id="alertError" class="alert danger hidden">
 		<span class="closebtn">&times;</span>
 		<span class="alert-message">
-			<p>{{ lang["ENTRY_ERROR"] }}</p>
+			<p>{{ "ENTRY_ERROR"|trans }}</p>
 			<p id="alertErrorDetail"></p>
 		</span>
 	</div>
@@ -51,11 +51,11 @@
 					<div class="filter-row">
 						<div class="filter-group">
 							<div class="filter-element">
-								<button class="button print-btn" onclick="window.print()">{{ lang["PRINT"] }}</button>
+								<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
 							</div>
 							<div class="filter-element">
-								<button type="button" class="button button-outlined" id="excelExport">{{lang["EXPORT_EXCEL"]}}
-									{{lang["TIMESHEETS_EXPORT"]}}</button>
+								<button type="button" class="button button-outlined" id="excelExport">{{"EXPORT_EXCEL"|trans}}
+									{{"TIMESHEETS_EXPORT"|trans}}</button>
 							</div>
 						</div>
 					</div>
@@ -72,13 +72,13 @@
 							{%- if project.customers_name_singular %}
 								{{- project.customers_name_singular -}}
 							{% else %}
-								{{- lang["TIMESHEETS_CUSTOMER"] -}}
+								{{- "TIMESHEETS_CUSTOMER"|trans -}}
 							{% endif -%}
 						</th>
 						{% for field in fields %}
 							<th>{{field.description | raw}}</th>
 						{% endfor %}
-						<th>{{lang["COUNT"]}}</th>
+						<th>{{"COUNT"|trans}}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -105,7 +105,7 @@
 							{%- if project.customers_name_plural %}
 								{{- project.customers_name_plural -}}
 							{% else %}
-								{{- lang["TIMESHEETS_CUSTOMERS"] -}}
+								{{- "TIMESHEETS_CUSTOMERS"|trans -}}
 							{% endif -%}
 						</th>
 						{% for field in fields %}
@@ -114,14 +114,14 @@
 						<th data-type="sum-body" class="body-sum">{{sum}}</th>
 					</tr>
 					<tr>
-						<th><input type="text" placeholder="{{ lang['INSERT_ADDITIONAL_VALUES'] }}" class="form-control"/></th>
+						<th><input type="text" placeholder="{{ "INSERT_ADDITIONAL_VALUES"|trans }}" class="form-control"/></th>
 						{% for field in fields %}
 							<th><input type="text" class="form-control"/></th>
 						{% endfor %}
 						<th><input type="number" class="form-control additional-field" step="1"/></th>
 					</tr>
 					<tr>
-						<th>{{lang["TOTAL"]}}</th>
+						<th>{{"TOTAL"|trans}}</th>
 						{% for field in fields %}
 							<th></th>
 						{% endfor %}

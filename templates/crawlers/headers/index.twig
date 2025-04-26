@@ -8,19 +8,19 @@
 			<a href="{{ url_for_with_last_query_params('crawlers') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["CRAWLERS"]}}
-				{{lang["HEADLINES"]}}
+			<h2>{{"CRAWLERS"|trans}}
+				{{"HEADLINES"|trans}}
 				|
 				{{ crawler.name }}</h2>
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('crawlers_headers_clone', {'crawler': crawler.hash}) }}">
 				<button class="button button-outlined">{{ fontawesome('fas fa-clone') }}
-					{{lang["CLONE"]}}</button>
+					{{"CLONE"|trans}}</button>
 			</a>
 			<a href="{{ url_for('crawlers_headers_edit', {'crawler': crawler.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
-					{{lang["ADD"]}}</button>
+					{{"ADD"|trans}}</button>
 			</a>
 		</div>
 	</div>
@@ -32,11 +32,11 @@
 			<table id="crawlers_headers_table" class="table table-hover small">
 				<thead>
 					<tr>
-						<th>{{lang["HEADLINE"]}}</th>
-						<th>{{lang["FIELD_NAME"]}}</th>
-						<th>{{lang["FIELD_LINK"]}}</th>
-						<th>{{lang["FIELD_CONTENT"]}}</th>
-						<th>{{lang["POSITION"]}}</th>
+						<th>{{"HEADLINE"|trans}}</th>
+						<th>{{"FIELD_NAME"|trans}}</th>
+						<th>{{"FIELD_LINK"|trans}}</th>
+						<th>{{"FIELD_CONTENT"|trans}}</th>
+						<th>{{"POSITION"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>

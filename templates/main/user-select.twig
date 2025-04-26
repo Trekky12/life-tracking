@@ -6,12 +6,12 @@
         <option value="{{user_id}}" selected="true">{{login}}</option>
     {% endfor %}
 </select>
-<label for="users_query">{{lang["USERS"]}}</label>
+<label for="users_query">{{"USERS"|trans}}</label>
 <input type="text" id="users_query" class="form-control"/>
 
 <div id="users_collection-wrapper">
     <ul class="hidden users-collection">
-        <li class="autoComplete_result">{{ lang["NOTHING_FOUND"] }}</li>
+        <li class="autoComplete_result">{{ "NOTHING_FOUND"|trans }}</li>
     </ul>
 </div>
 <div id="users_chips">

@@ -1,6 +1,6 @@
 <h4>{{'now'|date(i18n.dateformatTwig.date)}}</h4>
 {% if data|length == 0 %}
-	<p>{{lang["NO_DATA"]}}</p>
+	<p>{{"NO_DATA"|trans}}</p>
 {% else %}
 	<table>
 		<tbody>

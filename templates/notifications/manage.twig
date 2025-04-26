@@ -13,7 +13,7 @@
 			<a href="{{ url_for_with_last_query_params('notifications')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["NOTIFICATIONS"]}}</h2>
+			<h2>{{"NOTIFICATIONS"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -21,7 +21,7 @@
 {% block body %}
 	<div class="inner-content">
 		<div class="inner-content-header light">
-			<h2>{{lang["MAIL_SETTINGS"]}}</h2>
+			<h2>{{"MAIL_SETTINGS"|trans}}</h2>
 		</div>
 		<div class="page-content">
 			<div id="mail_notifications_categories_list_user">
@@ -30,7 +30,7 @@
 						{% if cat.identifier == 'MAIL_CATEGORY_SPLITTED_BILLS' %}
 							{% if user.hasModule("splitbills") %}
 								<div class="form-group">
-									{{ lang[cat.name] }}
+									{{ cat.name|trans }}
 									{% for group in splitbill["user_groups"]  %}
 										<div>
 											<label class="checkbox">
@@ -44,7 +44,7 @@
 						{% elseif cat.identifier == 'MAIL_CATEGORY_BOARDS_CARD_ADD' %}
 							{% if user.hasModule("boards") %}
 								<div class="form-group">
-									{{ lang[cat.name] }}
+									{{ cat.name|trans }}
 									{% for board in boards["user_boards"]  %}
 										<div>
 											<label class="checkbox">
@@ -58,7 +58,7 @@
 						{% elseif cat.identifier == 'MAIL_CATEGORY_BOARDS_CARD_DUE' %}
 							{% if user.hasModule("boards") %}
 								<div class="form-group">
-									{{ lang[cat.name] }}
+									{{ cat.name|trans }}
 									{% for board in boards["user_boards"]  %}
 										<div>
 											<label class="checkbox">
@@ -74,7 +74,7 @@
 								<div class="form-group">
 									<label class="checkbox">
 										<input name="user_mail_categories[]" value="{{cat.id}}" type="checkbox" class="set_mail_category_user" {% if cat.id in mail["user_categories"] %} checked {% endif %}>
-										{{lang[cat.name]}}
+										{{cat.name|trans}}
 									</label>
 								</div>
 							{% endif %}
@@ -83,7 +83,7 @@
 								<div class="form-group">
 									<label class="checkbox">
 										<input name="user_mail_categories[]" value="{{cat.id}}" type="checkbox" class="set_mail_category_user" {% if cat.id in mail["user_categories"] %} checked {% endif %}>
-										{{lang[cat.name]}}
+										{{cat.name|trans}}
 									</label>
 								</div>
 							{% endif %}
@@ -99,7 +99,7 @@
 
 	<div class="inner-content">
 		<div class="inner-content-header light">
-			<h2>{{lang["NOTIFICATIONS"]}}</h2>
+			<h2>{{"NOTIFICATIONS"|trans}}</h2>
 		</div>
 		<div class="page-content">
 			<div id="notifications_categories_list_user">
@@ -112,15 +112,15 @@
 
 	<div class="inner-content">
 		<div class="inner-content-header light">
-			<h2>{{lang["PUSH_NOTIFICATIONS"]}}</h2>
+			<h2>{{"PUSH_NOTIFICATIONS"|trans}}</h2>
 		</div>
 		<div class="page-content">
 
 			<button id="enable_notifications" class="button hidden">
-				{{lang["ENABLE_NOTIFICATIONS"]}}
+				{{"ENABLE_NOTIFICATIONS"|trans}}
 			</button>
 
-			<p class="hidden" id="ifttt_enable">{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE"] }}</p>
+			<p class="hidden" id="ifttt_enable">{{ "PUSH_NOT_AVAILABLE_IFTTT_ENABLE"|trans }}</p>
 
 			<div id="notifications_categories_list" class="hidden">
 				{% include 'notifications/notification_categories.twig' with {'type': 'client'} %}
@@ -137,10 +137,10 @@
 
 					<div class="ifttt_client_wrapper">
 
-						<p>{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLED"] }}</p>
+						<p>{{ "PUSH_NOT_AVAILABLE_IFTTT_ENABLED"|trans }}</p>
 
 						<input type="hidden" name="ifttt_url" id="ifttt_url" value="{{ ifttt_client.endpoint }}"/>
-						<button id="ifttt_url_remove" class="button button-outlined small">{{ lang["DELETE_IFTTT_URL"] }}</button>
+						<button id="ifttt_url_remove" class="button button-outlined small">{{ "DELETE_IFTTT_URL"|trans }}</button>
 
 						<div class="notifications_categories_list_ifttt" class="hidden">
 							{% include 'notifications/notification_categories.twig' with {'type': 'client'} %}
@@ -153,10 +153,10 @@
 				{% endfor %}
 
 				<div class="ifttt_client_wrapper">
-					<p>{{ lang["PUSH_NOT_AVAILABLE_IFTTT_ENABLE_DESCRIPTION"] }}</p>
+					<p>{{ "PUSH_NOT_AVAILABLE_IFTTT_ENABLE_DESCRIPTION"|trans }}</p>
 					<label for="ifttt_url" class="text">IFTTT-URL</label>
 					<input type="text" name="ifttt_url" id="ifttt_url" value=""/>
-					<button id="ifttt_url_save" class="button">{{ lang["SAVE_IFTTT_URL"] }}</button>
+					<button id="ifttt_url_save" class="button">{{ "SAVE_IFTTT_URL"|trans }}</button>
 				</div>
 			</div>
 

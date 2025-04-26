@@ -13,7 +13,7 @@
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
 
-			<h2>{{lang["RECIPES_COOKBOOKS"]}}
+			<h2>{{"RECIPES_COOKBOOKS"|trans}}
 				|
 				{{ cookbook.name|raw }}</h2>
 		</div>
@@ -22,7 +22,7 @@
 
 {% block body %}
 	<div class="recipe-filter">
-		<input type="text" id="filterSearchRecipes" placeholder="{{ lang["SEARCHING"] }}"/>
+		<input type="text" id="filterSearchRecipes" placeholder="{{ "SEARCHING"|trans }}"/>
 	</div>
 	<div class="content">
 		<div id="recipes_list" data-cookbook="{{ cookbook.hash }}"></div>
@@ -30,7 +30,7 @@
 			<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
 		</div>
 		<div id="loadMoreRecipes" class="centered hidden">
-			<button type="button" class="button">{{ lang["LOAD_MORE"] }}</button>
+			<button type="button" class="button">{{ "LOAD_MORE"|trans }}</button>
 		</div>
 	</div>
 

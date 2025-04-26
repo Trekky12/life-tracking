@@ -8,7 +8,7 @@
 			<a href="{{ url_for_with_last_query_params('workouts_muscles') }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["IMAGE"]}}</h2>
+			<h2>{{"IMAGE"|trans}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -31,12 +31,12 @@
 						<div class="form-group">
 							<label class="checkbox" for="checkboxDeleteImage">
 								<input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
-								{{lang["DELETE"]}}
+								{{"DELETE"|trans}}
 							</label>
 						</div>
 						{%endif%}
 						<div class="form-group">
-							<button type="submit" class="button">{{lang["SAVE"]}}</button>
+							<button type="submit" class="button">{{"SAVE"|trans}}</button>
 						</div>
 					</form>
 				</div>

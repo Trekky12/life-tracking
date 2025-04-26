@@ -9,7 +9,7 @@
 				<a href="#" class="headline">
 					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
 					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-					{{ lang["WORKOUTS_INSTRUCTIONS"] }}
+					{{ "WORKOUTS_INSTRUCTIONS"|trans }}
 				</a>
 				<p class="content">{{ exercise['exercise'].getInstructions()|raw }}</p>
 			</div>
@@ -19,11 +19,11 @@
 				<a href="#" class="headline">
 					<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
 					<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-					{{ lang["WORKOUTS_MUSCLES"] }}
+					{{ "WORKOUTS_MUSCLES"|trans }}
 				</a>
 				<div class="content">
 					{% if exercise['primary_muscles']|length > 0  %}
-						<h4>{{lang["WORKOUTS_MUSCLES_PRIMARY"]}}</h4>
+						<h4>{{"WORKOUTS_MUSCLES_PRIMARY"|trans}}</h4>
 						<p>
 							{% for muscle in exercise['primary_muscles'] %}
 								{{ muscle.name }}
@@ -34,7 +34,7 @@
 					{% endif %}
 
 					{% if exercise['secondary_muscles']|length > 0 %}
-						<h4>{{lang["WORKOUTS_MUSCLES_SECONDARY"]}}</h4>
+						<h4>{{"WORKOUTS_MUSCLES_SECONDARY"|trans}}</h4>
 						<p>
 							{% for muscle in exercise['secondary_muscles'] %}
 								{{ muscle.name }}
@@ -52,7 +52,7 @@
 			<a href="#" class="headline">
 				<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
 				<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-				{{ lang["NOTICE"] }}
+				{{ "NOTICE"|trans }}
 			</a>
 			<p class="content">
 				<textarea name="exercises[{{ exercise_idx }}][notice]" disabled="disabled"></textarea>
@@ -62,40 +62,40 @@
 			<a href="#" class="headline">
 				<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
 				<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-				{{ lang["WORKOUTS_SETS"] }}
+				{{ "WORKOUTS_SETS"|trans }}
 			</a>
 			<div class="content">
 				<div class="set-list">
 					<div class="set set-dummy hidden">
 						<span class="set-nr"></span>.
-						{{ lang["WORKOUTS_SET"] }}:
+						{{ "WORKOUTS_SET"|trans }}:
 						{% if exercise['exercise'].isCategoryReps() or exercise['exercise'].isCategoryRepsWeight() %}
 							<input type="number" min="0" max="999" step="1" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][repeats]" disabled="disabled"/>
-							<label>{{ lang["WORKOUTS_REPEATS_SHORT"] }}</label>
+							<label>{{ "WORKOUTS_REPEATS_SHORT"|trans }}</label>
 						{% endif %}
 						{% if exercise['exercise'].isCategoryRepsWeight() %}
 							<input type="number" step="any" min="0" max="999" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][weight]" disabled="disabled"/>
-							<label>{{ lang["WORKOUTS_KG"] }}</label>
+							<label>{{ "WORKOUTS_KG"|trans }}</label>
 						{% endif %}
 
 						{% if exercise['exercise'].isCategoryTime() or exercise['exercise'].isCategoryDistanceTime() %}
 							<input type="number" step="any" min="0" max="999" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][time]" disabled="disabled"/>
 							<div class="select-wrapper">
 								<select name="exercises[{{ exercise_idx }}][sets][dummy][time_type]" disabled="disabled">
-									<option value="sec">{{ lang["WORKOUTS_SECONDS"] }}</option>
-									<option value="min">{{ lang["WORKOUTS_MINUTES"] }}</option>
+									<option value="sec">{{ "WORKOUTS_SECONDS"|trans }}</option>
+									<option value="min">{{ "WORKOUTS_MINUTES"|trans }}</option>
 								</select>
 							</div>
 						{% endif %}
 						{% if exercise['exercise'].isCategoryDistanceTime() %}
 							<input type="number" step="any" min="0" max="999" pattern="\d*" size="5" name="exercises[{{ exercise_idx }}][sets][dummy][distance]" disabled="disabled"/>
-							<label>{{ lang["WORKOUTS_KM"] }}</label>
+							<label>{{ "WORKOUTS_KM"|trans }}</label>
 						{% endif %}
 					</div>
 				</div>
 				<div class="buttons">
-					<button type="button" class="add_set button button-outlined small">{{ lang["WORKOUTS_SET_ADD"] }}</button>
-					<button type="button" class="remove_set button button-text small">{{ lang["WORKOUTS_SET_REMOVE"] }}</button>
+					<button type="button" class="add_set button button-outlined small">{{ "WORKOUTS_SET_ADD"|trans }}</button>
+					<button type="button" class="remove_set button button-text small">{{ "WORKOUTS_SET_REMOVE"|trans }}</button>
 				</div>
 			</div>
 		</div>

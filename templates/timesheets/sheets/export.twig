@@ -18,7 +18,7 @@
 			<a href="{{ url_for_with_last_query_params('timesheets')}}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{lang["TIMESHEETS"]}}
+			<h2>{{"TIMESHEETS"|trans}}
 				|
 				{{project.name|raw}}</h2>
 		</div>
@@ -71,47 +71,47 @@
 							{% if project.customers_name_singular %}
 								{{project.customers_name_singular}}
 							{% else %}
-								{{lang["TIMESHEETS_CUSTOMER"]}}
+								{{"TIMESHEETS_CUSTOMER"|trans}}
 							{% endif %}:</label>
 						<div class="select-wrapper">
 							<select class="regular" id="timesheet_view_customer" name="customer">
-								<option value="" {% if customer is null %} selected {% endif %}>{{ lang["ALL"] }}</option>
+								<option value="" {% if customer is null %} selected {% endif %}>{{ "ALL"|trans }}</option>
 								{% for c in customers %}
 									<option value="{{c.id}}" {% if c.id == customer %} selected {% endif %}>{{c.name|raw}}</option>
 								{% endfor %}
 							</select>
 						</div>
 					{% endif %}
-					<label for="timesheet_view_happened">{{lang["TIMESHEETS_HAPPENED"]}}:</label>
+					<label for="timesheet_view_happened">{{"TIMESHEETS_HAPPENED"|trans}}:</label>
 					<div class="select-wrapper">
 						<select name="happened" id="timesheet_view_happened" class="regular">
-							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED_AND_HAPPENED"]}}</option>
-							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_PLANNED"]}}</option>
-							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_HAPPENED"]}}</option>
+							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{"TIMESHEETS_PLANNED_AND_HAPPENED"|trans}}</option>
+							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{"TIMESHEETS_PLANNED"|trans}}</option>
+							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{"TIMESHEETS_HAPPENED"|trans}}</option>
 						</select>
 					</div>
-					<label for="timesheet_view_invoiced">{{lang["TIMESHEETS_INVOICED"]}}:</label>
+					<label for="timesheet_view_invoiced">{{"TIMESHEETS_INVOICED"|trans}}:</label>
 					<div class="select-wrapper">
 						<select name="invoiced" id="timesheet_view_invoiced" class="regular">
-							<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_INVOICED_AND_NOT_INVOICED"]}}</option>
-							<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_INVOICED"]}}</option>
-							<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_INVOICED"]}}</option>
+							<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{"TIMESHEETS_INVOICED_AND_NOT_INVOICED"|trans}}</option>
+							<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{"TIMESHEETS_INVOICED"|trans}}</option>
+							<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_INVOICED"|trans}}</option>
 						</select>
 					</div>
-					<label for="timesheet_view_billed">{{lang["TIMESHEETS_BILLED"]}}:</label>
+					<label for="timesheet_view_billed">{{"TIMESHEETS_BILLED"|trans}}:</label>
 					<div class="select-wrapper">
 						<select name="billed" id="timesheet_view_billed" class="regular">
-							<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_BILLED_AND_NOT_BILLED"]}}</option>
-							<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_BILLED"]}}</option>
-							<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_BILLED"]}}</option>
+							<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{"TIMESHEETS_BILLED_AND_NOT_BILLED"|trans}}</option>
+							<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_BILLED"|trans}}</option>
+							<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_BILLED"|trans}}</option>
 						</select>
 					</div>
-					<label for="timesheet_view_payed">{{lang["TIMESHEETS_PAYED"]}}:</label>
+					<label for="timesheet_view_payed">{{"TIMESHEETS_PAYED"|trans}}:</label>
 					<div class="select-wrapper">
 						<select name="payed" id="timesheet_view_payed" class="regular">
-							<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{lang["TIMESHEETS_PAYED_AND_NOT_PAYED"]}}</option>
-							<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{lang["TIMESHEETS_PAYED"]}}</option>
-							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{lang["TIMESHEETS_NOT_PAYED"]}}</option>
+							<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{"TIMESHEETS_PAYED_AND_NOT_PAYED"|trans}}</option>
+							<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_PAYED"|trans}}</option>
+							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_PAYED"|trans}}</option>
 						</select>
 					</div>
 				</div>
@@ -120,30 +120,30 @@
 					<div>
 						<label class="radio" for="radioExcel">
 							<input name="type" type="radio" value="excel" id="radioExcel" checked>
-							{{lang["EXPORT_EXCEL"]}}
+							{{"EXPORT_EXCEL"|trans}}
 						</label>
 					</div>
 					<div class="hidden">
 						<label class="radio" for="radioWord">
 							<input name="type" type="radio" value="word" id="radioWord">
-							{{lang["EXPORT_WORD"]}}
+							{{"EXPORT_WORD"|trans}}
 						</label>
 					</div>
 					<div>
 						<label class="radio" for="radioHTML">
 							<input name="type" type="radio" value="html" id="radioHTML">
-							{{lang["EXPORT_HTML_WITH_NOTICES"]}}
+							{{"EXPORT_HTML_WITH_NOTICES"|trans}}
 						</label>
 					</div>
 					{% if customers %}
 						<div>
 							<label class="radio" for="radioHTMLOverview">
 								<input name="type" type="radio" value="html-overview" id="radioHTMLOverview">
-								{{lang["EXPORT_HTML_TABLE_OVERVIEW"]}}
+								{{"EXPORT_HTML_TABLE_OVERVIEW"|trans}}
 								{% if project.customers_name_plural %}
 									{{project.customers_name_plural}}
 								{% else %}
-									{{lang["TIMESHEETS_CUSTOMERS"]}}
+									{{"TIMESHEETS_CUSTOMERS"|trans}}
 								{% endif %}
 							</label>
 						</div>
@@ -162,7 +162,7 @@
 				</div>
 
 				<div class="form-group">
-					<input type="submit" class="button no-loading" value="{{lang["TIMESHEETS_EXPORT"]}}"/>
+					<input type="submit" class="button no-loading" value="{{"TIMESHEETS_EXPORT"|trans}}"/>
 				</div>
 			</form>
 		</div>
