@@ -25,22 +25,22 @@
 		<div
 			class="buttons">
 			{#{% if categories %}
-										<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
-											<button class="button button-text">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</button>
-										</a>
-									{% endif %}
-									<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&invoiced={{ invoiced }}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
-										<button class="button button-text">{{"TIMESHEETS_EXPORT"|trans}}</button>
-									</a>
-									<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
-										<button class="button button-text">{{ fontawesome('fas fa-right-to-bracket') }}
-											{% if project.is_day_based == 1 %}
-												{{"TIMESHEETS_FAST_DAY_BASED"|trans}}
-											{% else %}
-												{{"TIMESHEETS_FAST_PROJECT_BASED"|trans}}
-											{% endif %}
-											{{ fontawesome('fas fa-right-from-bracket') }}</button>
-									</a>#}
+																<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
+																	<button class="button button-text">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</button>
+																</a>
+															{% endif %}
+															<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&invoiced={{ invoiced }}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
+																<button class="button button-text">{{"TIMESHEETS_EXPORT"|trans}}</button>
+															</a>
+															<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
+																<button class="button button-text">{{ fontawesome('fas fa-right-to-bracket') }}
+																	{% if project.is_day_based == 1 %}
+																		{{"TIMESHEETS_FAST_DAY_BASED"|trans}}
+																	{% else %}
+																		{{"TIMESHEETS_FAST_PROJECT_BASED"|trans}}
+																	{% endif %}
+																	{{ fontawesome('fas fa-right-from-bracket') }}</button>
+															</a>#}
 			<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{"ADD"|trans}}</button>
@@ -131,38 +131,40 @@
 							</select>
 						</div>
 					{% endif %}
-					<label for="timesheet_view_happened">{{"TIMESHEETS_HAPPENED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="happened" id="timesheet_view_happened" class="regular">
-							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{"TIMESHEETS_PLANNED_AND_HAPPENED"|trans}}</option>
-							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{"TIMESHEETS_PLANNED"|trans}}</option>
-							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{"TIMESHEETS_HAPPENED"|trans}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_invoiced">{{"TIMESHEETS_INVOICED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="invoiced" id="timesheet_view_invoiced" class="regular">
-							<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{"TIMESHEETS_INVOICED_AND_NOT_INVOICED"|trans}}</option>
-							<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{"TIMESHEETS_INVOICED"|trans}}</option>
-							<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_INVOICED"|trans}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_billed">{{"TIMESHEETS_BILLED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="billed" id="timesheet_view_billed" class="regular">
-							<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{"TIMESHEETS_BILLED_AND_NOT_BILLED"|trans}}</option>
-							<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_BILLED"|trans}}</option>
-							<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_BILLED"|trans}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_payed">{{"TIMESHEETS_PAYED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="payed" id="timesheet_view_payed" class="regular">
-							<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{"TIMESHEETS_PAYED_AND_NOT_PAYED"|trans}}</option>
-							<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_PAYED"|trans}}</option>
-							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_PAYED"|trans}}</option>
-						</select>
-					</div>
+					{% if project.has_billing %}
+						<label for="timesheet_view_happened">{{"TIMESHEETS_HAPPENED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="happened" id="timesheet_view_happened" class="regular">
+								<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{"TIMESHEETS_PLANNED_AND_HAPPENED"|trans}}</option>
+								<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{"TIMESHEETS_PLANNED"|trans}}</option>
+								<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{"TIMESHEETS_HAPPENED"|trans}}</option>
+							</select>
+						</div>
+						<label for="timesheet_view_invoiced">{{"TIMESHEETS_INVOICED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="invoiced" id="timesheet_view_invoiced" class="regular">
+								<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{"TIMESHEETS_INVOICED_AND_NOT_INVOICED"|trans}}</option>
+								<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{"TIMESHEETS_INVOICED"|trans}}</option>
+								<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_INVOICED"|trans}}</option>
+							</select>
+						</div>
+						<label for="timesheet_view_billed">{{"TIMESHEETS_BILLED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="billed" id="timesheet_view_billed" class="regular">
+								<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{"TIMESHEETS_BILLED_AND_NOT_BILLED"|trans}}</option>
+								<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_BILLED"|trans}}</option>
+								<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_BILLED"|trans}}</option>
+							</select>
+						</div>
+						<label for="timesheet_view_payed">{{"TIMESHEETS_PAYED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="payed" id="timesheet_view_payed" class="regular">
+								<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{"TIMESHEETS_PAYED_AND_NOT_PAYED"|trans}}</option>
+								<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_PAYED"|trans}}</option>
+								<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_PAYED"|trans}}</option>
+							</select>
+						</div>
+					{% endif %}
 				</div>
 
 				<div class="filter-row">
@@ -259,26 +261,28 @@
 						<span id="selected_items">0</span>
 						{{ "TIMESHEETS_ITEMS_SELECED"|trans }}</span>
 				</div>
-				<div class="filter-row filter-group">
-					<div class="options-element">
-						<div class="select-wrapper">
-							<select id="applyOptions" name="options">
-								<option value="">{{ "TIMESHEETS_OPTIONS_CHOOSE"|trans}}</option>
-								<option value="planned">{{ "TIMESHEETS_APPLY_PLANNED"|trans }}</option>
-								<option value="happened">{{ "TIMESHEETS_APPLY_HAPPENED"|trans }}</option>
-								<option value="invoiced">{{ "TIMESHEETS_APPLY_INVOICED"|trans }}</option>
-								<option value="not_invoiced">{{ "TIMESHEETS_APPLY_NOT_INVOICED"|trans }}</option>
-								<option value="billed">{{ "TIMESHEETS_APPLY_BILLED"|trans }}</option>
-								<option value="not_billed">{{ "TIMESHEETS_APPLY_NOT_BILLED"|trans }}</option>
-								<option value="payed">{{ "TIMESHEETS_APPLY_PAYED"|trans }}</option>
-								<option value="not_payed">{{ "TIMESHEETS_APPLY_NOT_PAYED"|trans }}</option>
-							</select>
+				{% if project.has_billing %}
+					<div class="filter-row filter-group">
+						<div class="options-element">
+							<div class="select-wrapper">
+								<select id="applyOptions" name="options">
+									<option value="">{{ "TIMESHEETS_OPTIONS_CHOOSE"|trans}}</option>
+									<option value="planned">{{ "TIMESHEETS_APPLY_PLANNED"|trans }}</option>
+									<option value="happened">{{ "TIMESHEETS_APPLY_HAPPENED"|trans }}</option>
+									<option value="invoiced">{{ "TIMESHEETS_APPLY_INVOICED"|trans }}</option>
+									<option value="not_invoiced">{{ "TIMESHEETS_APPLY_NOT_INVOICED"|trans }}</option>
+									<option value="billed">{{ "TIMESHEETS_APPLY_BILLED"|trans }}</option>
+									<option value="not_billed">{{ "TIMESHEETS_APPLY_NOT_BILLED"|trans }}</option>
+									<option value="payed">{{ "TIMESHEETS_APPLY_PAYED"|trans }}</option>
+									<option value="not_payed">{{ "TIMESHEETS_APPLY_NOT_PAYED"|trans }}</option>
+								</select>
+							</div>
+						</div>
+						<div class="filter-element">
+							<button type="button" class="button button-outlined small" id="apply_options">{{ "TIMESHEETS_APPLY"|trans }}</button>
 						</div>
 					</div>
-					<div class="filter-element">
-						<button type="button" class="button button-outlined small" id="apply_options">{{ "TIMESHEETS_APPLY"|trans }}</button>
-					</div>
-				</div>
+				{% endif %}
 				{% if categories %}
 					<div class="filter-row">
 						<div class="options-element categories-filter">

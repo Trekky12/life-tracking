@@ -45,6 +45,8 @@ class Project extends \App\Domain\DataObject {
 
         $this->report_headline = $this->exists('report_headline', $data) ? filter_var($data['report_headline'], FILTER_UNSAFE_RAW) : null;
 
+        $this->has_billing = $this->exists('has_billing', $data) ? filter_var($data['has_billing'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }

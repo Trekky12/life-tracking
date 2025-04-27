@@ -506,6 +506,7 @@ $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "total range";
 $lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "current month";
 $lang["TIMESHEETS_TIME"] = "sum";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
+$lang["TIMESHEETS_HAS_BILLING"] = "billable";
 $lang["TIMESHEETS_TIME_CONVERSION_RATE"] = "time conversion rate";
 $lang["TIMESHEETS_DURATION_MODIFICATION"] = "modify time calculation";
 $lang["TIMESHEETS_TIME_MODIFICATION"] = "new duration (HH:MM)";

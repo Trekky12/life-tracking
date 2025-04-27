@@ -82,38 +82,40 @@
 							</select>
 						</div>
 					{% endif %}
-					<label for="timesheet_view_happened">{{"TIMESHEETS_HAPPENED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="happened" id="timesheet_view_happened" class="regular">
-							<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{"TIMESHEETS_PLANNED_AND_HAPPENED"|trans}}</option>
-							<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{"TIMESHEETS_PLANNED"|trans}}</option>
-							<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{"TIMESHEETS_HAPPENED"|trans}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_invoiced">{{"TIMESHEETS_INVOICED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="invoiced" id="timesheet_view_invoiced" class="regular">
-							<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{"TIMESHEETS_INVOICED_AND_NOT_INVOICED"|trans}}</option>
-							<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{"TIMESHEETS_INVOICED"|trans}}</option>
-							<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_INVOICED"|trans}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_billed">{{"TIMESHEETS_BILLED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="billed" id="timesheet_view_billed" class="regular">
-							<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{"TIMESHEETS_BILLED_AND_NOT_BILLED"|trans}}</option>
-							<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_BILLED"|trans}}</option>
-							<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_BILLED"|trans}}</option>
-						</select>
-					</div>
-					<label for="timesheet_view_payed">{{"TIMESHEETS_PAYED"|trans}}:</label>
-					<div class="select-wrapper">
-						<select name="payed" id="timesheet_view_payed" class="regular">
-							<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{"TIMESHEETS_PAYED_AND_NOT_PAYED"|trans}}</option>
-							<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_PAYED"|trans}}</option>
-							<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_PAYED"|trans}}</option>
-						</select>
-					</div>
+					{% if project.has_billing %}
+						<label for="timesheet_view_happened">{{"TIMESHEETS_HAPPENED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="happened" id="timesheet_view_happened" class="regular">
+								<option value="" {% if happened is null or happened is same as("") %} selected {% endif %}>{{"TIMESHEETS_PLANNED_AND_HAPPENED"|trans}}</option>
+								<option value="0" {% if happened is same as(0) %} selected {% endif %}>{{"TIMESHEETS_PLANNED"|trans}}</option>
+								<option value="1" {% if happened is same as(1) %} selected {% endif %}>{{"TIMESHEETS_HAPPENED"|trans}}</option>
+							</select>
+						</div>
+						<label for="timesheet_view_invoiced">{{"TIMESHEETS_INVOICED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="invoiced" id="timesheet_view_invoiced" class="regular">
+								<option value="" {% if invoiced is null or invoiced is same as("") %} selected {% endif %}>{{"TIMESHEETS_INVOICED_AND_NOT_INVOICED"|trans}}</option>
+								<option value="1" {% if invoiced is same as(1) %} selected {% endif %}>{{"TIMESHEETS_INVOICED"|trans}}</option>
+								<option value="0" {% if invoiced is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_INVOICED"|trans}}</option>
+							</select>
+						</div>
+						<label for="timesheet_view_billed">{{"TIMESHEETS_BILLED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="billed" id="timesheet_view_billed" class="regular">
+								<option value="" {% if billed is null or billed is same as("") %} selected {% endif %}>{{"TIMESHEETS_BILLED_AND_NOT_BILLED"|trans}}</option>
+								<option value="1" {% if billed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_BILLED"|trans}}</option>
+								<option value="0" {% if billed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_BILLED"|trans}}</option>
+							</select>
+						</div>
+						<label for="timesheet_view_payed">{{"TIMESHEETS_PAYED"|trans}}:</label>
+						<div class="select-wrapper">
+							<select name="payed" id="timesheet_view_payed" class="regular">
+								<option value="" {% if payed is null or payed is same as("") %} selected {% endif %}>{{"TIMESHEETS_PAYED_AND_NOT_PAYED"|trans}}</option>
+								<option value="1" {% if payed is same as(1) %} selected {% endif %}>{{"TIMESHEETS_PAYED"|trans}}</option>
+								<option value="0" {% if payed is same as(0) %} selected {% endif %}>{{"TIMESHEETS_NOT_PAYED"|trans}}</option>
+							</select>
+						</div>
+					{% endif %}
 				</div>
 
 				<div class="form-group">

@@ -168,33 +168,35 @@
 					</div>
 				{% endif %}
 
-				<div class="form-group">
-					<label class="checkbox" for="checkboxHappened">
-						<input name="is_happened" type="checkbox" value="1" id="checkboxHappened" {% if entry.is_happened == 1 %} checked {% endif %}>
-						{{"TIMESHEETS_HAPPENED"|trans}}
-					</label>
-				</div>
+				{% if project.has_billing %}
+					<div class="form-group">
+						<label class="checkbox" for="checkboxHappened">
+							<input name="is_happened" type="checkbox" value="1" id="checkboxHappened" {% if entry.is_happened == 1 %} checked {% endif %}>
+							{{"TIMESHEETS_HAPPENED"|trans}}
+						</label>
+					</div>
 
-				<div class="form-group">
-					<label class="checkbox" for="checkboxInvoiced">
-						<input name="is_invoiced" type="checkbox" value="1" id="checkboxInvoiced" {% if entry.is_invoiced == 1 %} checked {% endif %}>
-						{{"TIMESHEETS_INVOICED"|trans}}
-					</label>
-				</div>
+					<div class="form-group">
+						<label class="checkbox" for="checkboxInvoiced">
+							<input name="is_invoiced" type="checkbox" value="1" id="checkboxInvoiced" {% if entry.is_invoiced == 1 %} checked {% endif %}>
+							{{"TIMESHEETS_INVOICED"|trans}}
+						</label>
+					</div>
 
-				<div class="form-group">
-					<label class="checkbox" for="checkboxBilled">
-						<input name="is_billed" type="checkbox" value="1" id="checkboxBilled" {% if entry.is_billed == 1 %} checked {% endif %}>
-						{{"TIMESHEETS_BILLED"|trans}}
-					</label>
-				</div>
+					<div class="form-group">
+						<label class="checkbox" for="checkboxBilled">
+							<input name="is_billed" type="checkbox" value="1" id="checkboxBilled" {% if entry.is_billed == 1 %} checked {% endif %}>
+							{{"TIMESHEETS_BILLED"|trans}}
+						</label>
+					</div>
 
-				<div class="form-group">
-					<label class="checkbox" for="checkboxPayed">
-						<input name="is_payed" type="checkbox" value="1" id="checkboxPayed" {% if entry.is_payed == 1 %} checked {% endif %}>
-						{{"TIMESHEETS_PAYED"|trans}}
-					</label>
-				</div>
+					<div class="form-group">
+						<label class="checkbox" for="checkboxPayed">
+							<input name="is_payed" type="checkbox" value="1" id="checkboxPayed" {% if entry.is_payed == 1 %} checked {% endif %}>
+							{{"TIMESHEETS_PAYED"|trans}}
+						</label>
+					</div>
+				{% endif %}
 
 				{% if series | length > 0 %}
 					<div class="form-group">

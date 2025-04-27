@@ -123,6 +123,13 @@
 					<input type="text" class="form-control" id="inputReportHeadline" name="report_headline" {% if not entry is null %} value="{{entry.report_headline|raw}}" {% endif %}>
 				</div>
 
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHasBilling">
+						<input name="has_billing" type="checkbox" value="1" id="checkboxHasBilling" {% if entry is not null and entry.has_billing == 1 %} checked {% endif %}>
+						{{"TIMESHEETS_HAS_BILLING"|trans}}
+					</label>
+				</div>
+
 				<h3>{{"TIMESHEETS_CALENDAR"|trans}}</h3>
 				<div class="form-group">
 					<label for="inputSlotMinTime">{{"TIMESHEETS_SLOT_MIN_TIME"|trans}}</label>
