@@ -62,13 +62,13 @@ INSERT INTO splitbill_bill_recurring (id, sbgroup, user, name, notice, settleup,
 INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paymethod_spend, paid_foreign, spend_foreign) VALUES
 (1, 1, 1, '10.00', '10.00', NULL, NULL, NULL);
 
-INSERT INTO timesheets_projects (id, user, name, hash, salt, iterations, masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithRecoveryKey,  recoveryKeyEncryptedWithMasterKey, testMessageEncryptedWithRecoveryKey, slot_min_time, slot_max_time) VALUES 
-(1, 1, 'Test timesheets project 1', 'ABCabc123', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00'),
-(3, 1, 'Test timesheets project 2', 'GHIghi789', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00');
+INSERT INTO timesheets_projects (id, user, name, hash, salt, iterations, masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithRecoveryKey,  recoveryKeyEncryptedWithMasterKey, testMessageEncryptedWithRecoveryKey, slot_min_time, slot_max_time, has_billing, has_end) VALUES 
+(1, 1, 'Test timesheets project 1', 'ABCabc123', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00', 1, 1),
+(3, 1, 'Test timesheets project 2', 'GHIghi789', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00', 1, 1);
 
-INSERT INTO timesheets_projects (id, user, name, hash) VALUES 
-(2, 1, 'Test timesheets project (no access to owner)', 'DEFdef456'),
-(4, 1, 'Test timesheets project 3', 'JKLjkl012');
+INSERT INTO timesheets_projects (id, user, name, hash, has_billing, has_end) VALUES 
+(2, 1, 'Test timesheets project (no access to owner)', 'DEFdef456', 1, 1),
+(4, 1, 'Test timesheets project 3', 'JKLjkl012', 1, 1);
 INSERT INTO timesheets_projects_users (project, user) VALUES 
 (1, 1),
 (1, 2),
@@ -363,32 +363,32 @@ INSERT INTO global_widgets (id, user, name, options, position) VALUES
 (3, 2, 'last_refuel', '{\"car\":\"1\"}', 999);
 
 
-INSERT INTO activities (id, createdOn, user, type, module, controller, object, object_id, object_description, parent_object, parent_object_id, parent_object_description, link) VALUES
-(1, '2021-05-23 09:50:46', 1, 'create', 'finances', NULL, 'App\\Domain\\Finances\\FinancesEntry', 3, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/3'),
-(2, '2021-05-23 10:06:27', 1, 'create', 'finances', NULL, 'App\\Domain\\Finances\\FinancesEntry', 4, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/4'),
-(3, '2021-05-23 10:10:25', 1, 'create', 'finances', NULL, 'App\\Domain\\Finances\\FinancesEntry', 5, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/5'),
-(4, '2021-05-23 10:20:37', 1, 'create', 'finances', NULL, 'App\\Domain\\Finances\\FinancesEntry', 6, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/6'),
-(5, '2021-05-23 10:28:36', 1, 'create', 'notifications', NULL, 'App\\Domain\\Notifications\\Categories\\Category', 5, 'Test Notification Category 2', NULL, NULL, NULL, '/notifications/categories/edit/5'),
-(6, '2021-05-23 10:28:37', 1, 'update', 'notifications', NULL, 'App\\Domain\\Notifications\\Categories\\Category', 5, 'Test Notification Category 2 Updated', NULL, NULL, NULL, '/notifications/categories/edit/5'),
-(7, '2021-05-23 10:28:38', 1, 'delete', 'notifications', NULL, 'App\\Domain\\Notifications\\Categories\\Category', 5, 'Test Notification Category 2 Updated', NULL, NULL, NULL, '/notifications/categories/edit/5'),
-(8, '2021-05-23 10:28:46', 1, 'delete', 'notifications', NULL, 'App\\Domain\\Notifications\\Clients\\NotificationClient', 7, ' (2021-05-23 12:28:40)', NULL, NULL, NULL, '/notifications/clients/'),
-(9, '2021-05-23 10:28:48', 1, 'create', 'general', NULL, 'App\\Domain\\User\\User', 17, 'a_test', NULL, NULL, NULL, '/users/edit/17'),
-(10, '2021-05-23 10:28:50', 1, 'update', 'general', NULL, 'App\\Domain\\User\\User', 17, 'a_test', NULL, NULL, NULL, '/users/edit/17'),
-(11, '2021-05-23 10:28:51', 1, 'delete', 'general', NULL, 'App\\Domain\\User\\User', 17, 'a_test', NULL, NULL, NULL, '/users/edit/17'),
-(12, '2021-05-23 10:28:59', 1, 'create', 'boards', NULL, 'App\\Domain\\Board\\Board', 3, 'Test Board 2', NULL, NULL, NULL, '/boards/edit/3'),
-(13, '2021-05-23 10:29:00', 1, 'update', 'boards', NULL, 'App\\Domain\\Board\\Board', 3, 'Test Board 2 Updated', NULL, NULL, NULL, '/boards/edit/3'),
-(14, '2021-05-23 10:29:01', 1, 'delete', 'boards', NULL, 'App\\Domain\\Board\\Board', 3, 'Test Board 2 Updated', NULL, NULL, NULL, '/boards/edit/3'),
-(15, '2021-05-23 10:29:02', 2, 'create', 'boards', NULL, 'App\\Domain\\Board\\Card\\Card', 2, 'Test Card 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(16, '2021-05-23 10:29:03', 2, 'update', 'boards', NULL, 'App\\Domain\\Board\\Card\\Card', 2, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(17, '2021-05-23 10:29:04', 2, 'delete', 'boards', NULL, 'App\\Domain\\Board\\Card\\Card', 2, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(18, '2021-05-23 10:29:06', 1, 'create', 'boards', NULL, 'App\\Domain\\Board\\Card\\Card', 3, 'Test Card 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(19, '2021-05-23 10:29:07', 1, 'update', 'boards', NULL, 'App\\Domain\\Board\\Card\\Card', 3, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(20, '2021-05-23 10:29:08', 1, 'delete', 'boards', NULL, 'App\\Domain\\Board\\Card\\Card', 3, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(21, '2021-05-23 10:29:11', 2, 'create', 'boards', NULL, 'App\\Domain\\Board\\Label\\Label', 2, 'Test Label 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(22, '2021-05-23 10:29:12', 2, 'update', 'boards', NULL, 'App\\Domain\\Board\\Label\\Label', 2, 'Test Label 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(23, '2021-05-23 10:29:13', 2, 'delete', 'boards', NULL, 'App\\Domain\\Board\\Label\\Label', 2, 'Test Label 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(24, '2021-05-23 10:29:15', 1, 'create', 'boards', NULL, 'App\\Domain\\Board\\Label\\Label', 3, 'Test Label 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
-(25, '2021-05-23 10:29:16', 1, 'update', 'boards', NULL, 'App\\Domain\\Board\\Label\\Label', 3, 'Test Label 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123');
+INSERT INTO activities (id, createdOn, user, type, module, object, object_id, object_description, parent_object, parent_object_id, parent_object_description, link) VALUES
+(1, '2021-05-23 09:50:46', 1, 'create', 'finances', 'App\\Domain\\Finances\\FinancesEntry', 3, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/3'),
+(2, '2021-05-23 10:06:27', 1, 'create', 'finances', 'App\\Domain\\Finances\\FinancesEntry', 4, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/4'),
+(3, '2021-05-23 10:10:25', 1, 'create', 'finances', 'App\\Domain\\Finances\\FinancesEntry', 5, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/5'),
+(4, '2021-05-23 10:20:37', 1, 'create', 'finances', 'App\\Domain\\Finances\\FinancesEntry', 6, 'Test Entry (4.00 €)', NULL, NULL, NULL, '/finances/edit/6'),
+(5, '2021-05-23 10:28:36', 1, 'create', 'notifications', 'App\\Domain\\Notifications\\Categories\\Category', 5, 'Test Notification Category 2', NULL, NULL, NULL, '/notifications/categories/edit/5'),
+(6, '2021-05-23 10:28:37', 1, 'update', 'notifications', 'App\\Domain\\Notifications\\Categories\\Category', 5, 'Test Notification Category 2 Updated', NULL, NULL, NULL, '/notifications/categories/edit/5'),
+(7, '2021-05-23 10:28:38', 1, 'delete', 'notifications', 'App\\Domain\\Notifications\\Categories\\Category', 5, 'Test Notification Category 2 Updated', NULL, NULL, NULL, '/notifications/categories/edit/5'),
+(8, '2021-05-23 10:28:46', 1, 'delete', 'notifications', 'App\\Domain\\Notifications\\Clients\\NotificationClient', 7, ' (2021-05-23 12:28:40)', NULL, NULL, NULL, '/notifications/clients/'),
+(9, '2021-05-23 10:28:48', 1, 'create', 'general', 'App\\Domain\\User\\User', 17, 'a_test', NULL, NULL, NULL, '/users/edit/17'),
+(10, '2021-05-23 10:28:50', 1, 'update', 'general', 'App\\Domain\\User\\User', 17, 'a_test', NULL, NULL, NULL, '/users/edit/17'),
+(11, '2021-05-23 10:28:51', 1, 'delete', 'general', 'App\\Domain\\User\\User', 17, 'a_test', NULL, NULL, NULL, '/users/edit/17'),
+(12, '2021-05-23 10:28:59', 1, 'create', 'boards', 'App\\Domain\\Board\\Board', 3, 'Test Board 2', NULL, NULL, NULL, '/boards/edit/3'),
+(13, '2021-05-23 10:29:00', 1, 'update', 'boards', 'App\\Domain\\Board\\Board', 3, 'Test Board 2 Updated', NULL, NULL, NULL, '/boards/edit/3'),
+(14, '2021-05-23 10:29:01', 1, 'delete', 'boards', 'App\\Domain\\Board\\Board', 3, 'Test Board 2 Updated', NULL, NULL, NULL, '/boards/edit/3'),
+(15, '2021-05-23 10:29:02', 2, 'create', 'boards', 'App\\Domain\\Board\\Card\\Card', 2, 'Test Card 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(16, '2021-05-23 10:29:03', 2, 'update', 'boards', 'App\\Domain\\Board\\Card\\Card', 2, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(17, '2021-05-23 10:29:04', 2, 'delete', 'boards', 'App\\Domain\\Board\\Card\\Card', 2, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(18, '2021-05-23 10:29:06', 1, 'create', 'boards', 'App\\Domain\\Board\\Card\\Card', 3, 'Test Card 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(19, '2021-05-23 10:29:07', 1, 'update', 'boards', 'App\\Domain\\Board\\Card\\Card', 3, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(20, '2021-05-23 10:29:08', 1, 'delete', 'boards', 'App\\Domain\\Board\\Card\\Card', 3, 'Test Card 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(21, '2021-05-23 10:29:11', 2, 'create', 'boards', 'App\\Domain\\Board\\Label\\Label', 2, 'Test Label 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(22, '2021-05-23 10:29:12', 2, 'update', 'boards', 'App\\Domain\\Board\\Label\\Label', 2, 'Test Label 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(23, '2021-05-23 10:29:13', 2, 'delete', 'boards', 'App\\Domain\\Board\\Label\\Label', 2, 'Test Label 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(24, '2021-05-23 10:29:15', 1, 'create', 'boards', 'App\\Domain\\Board\\Label\\Label', 3, 'Test Label 2', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123'),
+(25, '2021-05-23 10:29:16', 1, 'update', 'boards', 'App\\Domain\\Board\\Label\\Label', 3, 'Test Label 2 Updated', 'App\\Domain\\Board\\Board', 1, 'Test Board', '/boards/view/ABCabc123');
 
 INSERT INTO activities_users (createdOn, activity, user) VALUES
 ('2021-05-23 09:50:46', 1, 1),

@@ -1041,46 +1041,53 @@ const timesheetPayed = document.querySelector("#timesheet_view_payed");
 const timesheetHappened = document.querySelector("#timesheet_view_happened");
 const timesheetCustomer = document.querySelector("#timesheet_view_customer");
 
-var timesheetsSheetsTable = new JSTable('#timesheets_sheets_table', {
-    perPage: 20,
-    perPageSelect: [10, 20, 50, 100, 200],
-    labels: tableLabels,
-    layout: layout,
-    columns: [
-        {
-            select: 1,
-            sortable: true,
-            sort: "desc"
-        },
-        {
-            select: [0, 6, 7, 8, 9],
-            sortable: false,
-            searchable: false
-        }
-    ],
-    deferLoading: jsObject.datacount,
-    serverSide: true,
-    ajax: jsObject.timesheets_table,
-    ajaxParams: {
-        "from": jsObject.dateFrom,
-        "to": jsObject.dateTo,
-        "categories": timesheetCategories ? timesheetCategories.value : [],
-        "invoiced": timesheetInvoiced ? timesheetInvoiced.value : '',
-        "billed": timesheetBilled ? timesheetBilled.value : '',
-        "payed": timesheetPayed ? timesheetPayed.value : '',
-        "happened": timesheetHappened ? timesheetHappened.value : '',
-        "customer": timesheetCustomer ? timesheetCustomer.value : '',
-    }
-});
+const timesheetsSheetsTableContainer = document.getElementById('timesheets_sheets_table');
+if (timesheetsSheetsTableContainer) {
+    const hasEnd = timesheetsSheetsTableContainer.dataset.hasEnd === "1";
 
-timesheetsSheetsTable.on("fetchData", function (data) {
-    let footer = document.querySelector("#timesheets_sheets_table tfoot tr th:nth-child(5)");
-    footer.innerHTML = data.sum;
-});
-timesheetsSheetsTable.on("update", function () {
-    let selected_items = document.querySelector("#tableFooterFilter #selected_items");
-    selected_items.innerHTML = 0;
-});
+    var timesheetsSheetsTable = new JSTable(timesheetsSheetsTableContainer, {
+        perPage: 20,
+        perPageSelect: [10, 20, 50, 100, 200],
+        labels: tableLabels,
+        layout: layout,
+        columns: [
+            {
+                select: 1,
+                sortable: true,
+                sort: "desc"
+            },
+            {
+                select: hasEnd ? [0, 6, 7, 8, 9] : [0, 4, 5, 6, 7],
+                sortable: false,
+                searchable: false
+            }
+        ],
+        deferLoading: jsObject.datacount,
+        serverSide: true,
+        ajax: jsObject.timesheets_table,
+        ajaxParams: {
+            "from": jsObject.dateFrom,
+            "to": jsObject.dateTo,
+            "categories": timesheetCategories ? timesheetCategories.value : [],
+            "invoiced": timesheetInvoiced ? timesheetInvoiced.value : '',
+            "billed": timesheetBilled ? timesheetBilled.value : '',
+            "payed": timesheetPayed ? timesheetPayed.value : '',
+            "happened": timesheetHappened ? timesheetHappened.value : '',
+            "customer": timesheetCustomer ? timesheetCustomer.value : '',
+        }
+    });
+
+    if (hasEnd) {
+        timesheetsSheetsTable.on("fetchData", function (data) {
+            let footer = document.querySelector("#timesheets_sheets_table tfoot tr th:nth-child(5)");
+            footer.innerHTML = data.sum;
+        });
+    }
+    timesheetsSheetsTable.on("update", function () {
+        let selected_items = document.querySelector("#tableFooterFilter #selected_items");
+        selected_items.innerHTML = 0;
+    });
+}
 
 var timesheetsProjectCategoriesTable = new JSTable("#project_categories_table", {
     perPage: 20,

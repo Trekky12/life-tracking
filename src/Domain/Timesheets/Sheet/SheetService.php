@@ -115,7 +115,7 @@ class SheetService extends Service {
 
     private function getTableDataIndex($project, $from, $to, $selected_categories = [], $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null, $count = 20) {
 
-        $range = $this->getMapper()->getMinMaxDate("start", "end", $project->id, "project");
+        $range = $this->getMapper()->getMinMaxDate("start", $project->has_end ? "end" : "start", $project->id, "project");
         $minTotal = $range["min"];
         $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
@@ -258,8 +258,10 @@ class SheetService extends Service {
             $row[] = '<input type="checkbox" name="check_row" data-id="' . $sheet->id . '">';
             $row[] = $date;
             $row[] = $start;
-            $row[] = $end;
-            $row[] = $time;
+            if (!$filter || $project->has_end) {
+                $row[] = $end;
+                $row[] = $time;
+            }
             if (!$filter || $customers) {
                 $row[] = $sheet->customerName;
             }

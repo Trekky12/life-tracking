@@ -30,7 +30,7 @@ const dateTimePickerStart = document.querySelector('#datetimePickerStart');
 const dateTimePickerEnd = document.querySelector('#datetimePickerEnd');
 const dateTimePickerEndField = document.querySelector('#datetimePickerEndField');
 
-if (dateTimePickerStart && dateTimePickerEnd) {
+if (dateTimePickerStart) {
 
     flatpickr(dateTimePickerStart, {
         "wrap": true,
@@ -46,7 +46,8 @@ if (dateTimePickerStart && dateTimePickerEnd) {
             setEndDate();
         }
     });
-
+}
+if (dateTimePickerEnd) {
     flatpickr(dateTimePickerEnd, {
         "wrap": true,
         "altInput": true,
@@ -65,6 +66,9 @@ if (dateTimePickerStart && dateTimePickerEnd) {
 }
 
 function setEndDate() {
+    if (!dateTimePickerStart || !dateTimePickerEnd) {
+        return;
+    }
     let default_duration = dateTimePickerEndField.dataset.defaultDuration;
     let selectedDate = dateTimePickerStart._flatpickr.selectedDates[0];
     if (default_duration > 0) {

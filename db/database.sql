@@ -863,6 +863,7 @@ CREATE TABLE IF NOT EXISTS timesheets_projects (
     repeat_multiplier int(5) DEFAULT 1,
     report_headline VARCHAR(255) DEFAULT NULL,
     has_billing INT(1) DEFAULT 0,
+    has_end INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE

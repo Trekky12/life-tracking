@@ -130,6 +130,13 @@
 					</label>
 				</div>
 
+				<div class="form-group">
+					<label class="checkbox" for="checkboxHasEnd">
+						<input name="has_end" type="checkbox" value="1" id="checkboxHasEnd" {% if entry is not null and entry.has_end == 1 %} checked {% endif %}>
+						{{"TIMESHEETS_HAS_END"|trans}}
+					</label>
+				</div>
+
 				<h3>{{"TIMESHEETS_CALENDAR"|trans}}</h3>
 				<div class="form-group">
 					<label for="inputSlotMinTime">{{"TIMESHEETS_SLOT_MIN_TIME"|trans}}</label>

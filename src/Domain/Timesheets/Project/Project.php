@@ -47,6 +47,8 @@ class Project extends \App\Domain\DataObject {
 
         $this->has_billing = $this->exists('has_billing', $data) ? filter_var($data['has_billing'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
+        $this->has_end = $this->exists('has_end', $data) ? filter_var($data['has_end'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
