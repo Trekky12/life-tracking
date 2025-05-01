@@ -80,7 +80,9 @@ class FinancesWriter extends ObjectActivityWriter {
         $this->current_user->setUser(null);
         $this->transaction_mapper->setUser($entry->user);
 
-        if (!is_null($entry->paymethod)) {
+        $is_paymethod_selectable = !is_null($entry) ? $this->finances_service->isPaymethodSelectable($entry->id) : true;
+
+        if (!is_null($entry->paymethod) && $is_paymethod_editable) {
 
             $paymethod = $this->paymethod_service->getPaymethodOfUser($entry->paymethod, $entry->user);
 
@@ -151,7 +153,26 @@ class FinancesWriter extends ObjectActivityWriter {
                 $entry->transaction_round_up_savings = null;
             }
         }
-        // Reset user back to initial!
+        /**
+         * No Paymethod but maybe there was one before? 
+         * So delete a possible transaction
+         */
+        else {
+            if (!is_null($entry->transaction)) {
+                $this->transaction_remover->delete($entry->transaction, ["is_finance_entry_based_delete" => true]);
+                $this->getMapper()->set_transaction($entry->id, null);
+                $entry->transaction = null;
+            }
+            if (!is_null($entry->transaction_round_up_savings)) {
+                $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
+                $this->getMapper()->set_transaction_round_up_savings($entry->id, null);
+                $entry->transaction_round_up_savings = null;
+            }
+        }
+
+        /**
+         * Reset user back to initial!
+         */
         if (!is_null($me)) {
             $this->current_user->setUser($me);
             $this->transaction_mapper->setUser($me->id);

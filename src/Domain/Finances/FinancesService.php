@@ -11,6 +11,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Finances\Category\CategoryService;
 use App\Domain\Finances\Assignment\AssignmentService;
 use App\Domain\Finances\Paymethod\PaymethodService;
+use App\Domain\Splitbill\Bill\SplitbillBillService;
 use App\Domain\Main\Utility\Utility;
 
 class FinancesService extends Service {
@@ -21,15 +22,19 @@ class FinancesService extends Service {
     private $cat_service;
     private $cat_assignments_service;
     private $paymethod_service;
+    private $splitbill_bill_service;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            Translator $translation,
-            RouteParser $router,
-            FinancesMapper $finance_mapper,
-            CategoryService $cat_service,
-            AssignmentService $cat_assignments_service,
-            PaymethodService $paymethod_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        Translator $translation,
+        RouteParser $router,
+        FinancesMapper $finance_mapper,
+        CategoryService $cat_service,
+        AssignmentService $cat_assignments_service,
+        PaymethodService $paymethod_service,
+        SplitbillBillService $splitbill_bill_service
+    ) {
         parent::__construct($logger, $user);
 
         $this->translation = $translation;
@@ -38,6 +43,7 @@ class FinancesService extends Service {
         $this->cat_service = $cat_service;
         $this->cat_assignments_service = $cat_assignments_service;
         $this->paymethod_service = $paymethod_service;
+        $this->splitbill_bill_service = $splitbill_bill_service;
     }
 
     public function financeTableIndex($from, $to, $count = 20) {
@@ -116,8 +122,8 @@ class FinancesService extends Service {
             $row[] = $dataset[3];
             $row[] = $dataset[4];
             $row[] = $dataset[5];
-            $row[] = '<a href="' . $this->router->urlFor('finances_edit', ['id' => $dataset[6]]) . '">'.Utility::getFontAwesomeIcon('fas fa-pen-to-square').'</a>';
-            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete">'.Utility::getFontAwesomeIcon('fas fa-trash').'</span></a>' : '';
+            $row[] = '<a href="' . $this->router->urlFor('finances_edit', ['id' => $dataset[6]]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
+            $row[] = is_null($dataset[7]) ? '<a href="#" data-url="' . $this->router->urlFor('finances_delete', ['id' => $dataset[6]]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</span></a>' : '';
 
             $rendered_data[] = $row;
         }
@@ -130,7 +136,9 @@ class FinancesService extends Service {
         $categories = $this->cat_service->getAllCategoriesOrderedByName();
         $paymethods = $this->paymethod_service->getAllPaymethodsOrderedByName();
 
-        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods]);
+        $is_paymethod_selectable = !is_null($entry) ? $this->isPaymethodSelectable($entry_id) : true;
+
+        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'is_paymethod_selectable' => $is_paymethod_selectable]);
     }
 
     public function isSplittedBillEntry($id) {
@@ -139,6 +147,24 @@ class FinancesService extends Service {
             return true;
         }
         return false;
+    }
+
+    public function isPaymethodSelectable($id) {
+        $entry = $this->getMapper()->get($id);
+
+        if (!is_null($entry->bill)) {
+            // There is a bill but the user has nothing paid => no paymethod selectable! => no transaction is generated
+            if ($entry->bill_paid == 0) {
+                return false;
+            }
+            // There is a bill and the user has something paid but he is also the owner of the bill => change paymethod on bill instead!
+            else {
+                if ($this->splitbill_bill_service->isOwner($entry->bill)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public function getDefaultOrAssignedCategory(FinancesEntry $entry) {
@@ -167,5 +193,4 @@ class FinancesService extends Service {
     public function getMarkers($from, $to) {
         return $this->getMapper()->getMarkers($from, $to);
     }
-
 }

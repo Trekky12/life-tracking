@@ -31,6 +31,10 @@
 					<input type="hidden" name="bill" value="{% if not entry is null %}{{entry.bill}}{% endif %}">
 				{% endif %}
 
+				{% if not entry is null and not entry.bill_paid is null %}
+					<input type="hidden" name="bill_paid" value="{% if not entry is null %}{{entry.bill_paid}}{% endif %}">
+				{% endif %}
+
 				{% if not entry is null and not entry.bill is null and not entry.paymethod is null %}
 					<input type="hidden" name="paymethod" value="{% if not entry is null %}{{entry.paymethod}}{% endif %}">
 				{% endif %}
@@ -73,14 +77,15 @@
 					<label for="dateSelect">{{"DATE"|trans}}</label>
 					<div class="flatpickr-group" id="dateSelect">
 						<input type="text" class="form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="dateSelectField" name="date" value="{% if not entry is null %}{{entry.date}}{% else %}{{"now"|date('Y-m-d')}}{% endif %}" {% if not entry is null and not entry.bill is null %} disabled="disabled" {% endif %} data-input/>
+						{% if entry is null or (not entry is null and entry.bill is null) %}
+							<a class="flatpickr-input-button" title="toggle" data-toggle>
+								{{ fontawesome('fas fa-calendar-days') }}
+							</a>
 
-						<a class="flatpickr-input-button" title="toggle" data-toggle>
-							{{ fontawesome('fas fa-calendar-days') }}
-						</a>
-
-						<a class="flatpickr-input-button" title="clear" data-clear>
-							{{ fontawesome('fas fa-xmark') }}
-						</a>
+							<a class="flatpickr-input-button" title="clear" data-clear>
+								{{ fontawesome('fas fa-xmark') }}
+							</a>
+						{% endif %}
 					</div>
 				</div>
 				{% if not entry is null %}
@@ -97,7 +102,7 @@
 				<div class="form-group">
 					<label for="paymethod">{{"FINANCES_PAYMETHOD"|trans}}</label>
 					<div class="select-wrapper form-control">
-						<select class="{% if not entry is null and not entry.bill is null and not entry.paymethod is null %}disabled{% endif %}" id="paymethod" name="paymethod" value="{% if not entry is null %}{{entry.value}}{% endif %}" {% if not entry is null and not entry.bill is null and not entry.paymethod is null %} disabled="disabled" {% endif %}>
+						<select class="{% if not is_paymethod_selectable %}disabled{% endif %}" id="paymethod" name="paymethod" {% if not is_paymethod_selectable %} disabled="disabled" {% endif %}>
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods %}
 								<option value="{{method.id}}" {% if (not entry is null and method.id == entry.paymethod) or (entry is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>

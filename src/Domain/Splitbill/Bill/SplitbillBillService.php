@@ -222,6 +222,9 @@ class SplitbillBillService extends Service {
             if ($bill->user == $user) {
                 $row[] = '<a href="' . $this->router->urlFor('splitbill_bills_edit', ['id' => $bill->id, 'group' => $group->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
                 $row[] = '<a href="#" data-url="' . $this->router->urlFor('splitbill_bills_delete', ['id' => $bill->id, 'group' => $group->getHash()]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
+            } else {
+                $row[] = null;
+                $row[] = null;
             }
 
             $rendered_data[] = $row;

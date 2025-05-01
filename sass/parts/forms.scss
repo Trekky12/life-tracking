@@ -201,6 +201,10 @@ textarea {
 select {
     border: 1px solid variables.$color_border-input;
     border-radius: 0px;
+
+    &:disabled {
+        background: variables.$color_gray;
+    }
 }
 
 textarea {
