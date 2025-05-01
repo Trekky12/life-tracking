@@ -34,9 +34,9 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function set_default($default, $type = 'sheet') {
-        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id = :id AND type = :type";
-        $bindings = array("id" => $default, "is_default" => 1, "type" => $type);
+    public function set_default($project_id, $type = 'sheet') {
+        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE project = :project_id AND type = :type";
+        $bindings = array("project_id" => $project_id, "is_default" => 1, "type" => $type);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -45,9 +45,9 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function unset_default($default, $type = 'sheet') {
-        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE id != :id AND type = :type";
-        $bindings = array("id" => $default, "is_default" => 0, "type" => $type);
+    public function unset_default($project_id, $type = 'sheet', $id) {
+        $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE project = :project_id AND type = :type  AND id != :id";
+        $bindings = array("project_id" => $project_id, "is_default" => 0, "type" => $type, "id" => $id);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 
@@ -56,10 +56,10 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function get_default($type = 'sheet') {
-        $sql = "SELECT id FROM " . $this->getTableName() . " WHERE is_default = :is_default AND type = :type";
+    public function get_default($project_id, $type = 'sheet') {
+        $sql = "SELECT id FROM " . $this->getTableName() . " WHERE project = :project_id AND is_default = :is_default AND type = :type";
 
-        $bindings = array("is_default" => 1, "type" => $type);
+        $bindings = array("project_id" => $project_id, "is_default" => 1, "type" => $type);
         $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " LIMIT 1";
@@ -72,5 +72,4 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         }
         return null;
     }
-
 }
