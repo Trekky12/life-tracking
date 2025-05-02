@@ -150,6 +150,125 @@ function confirmDialog(message, warning = "") {
     });
 }
 
+function createInputDialog(message, callback, pw) {
+    var inputModal = document.createElement('div');
+    inputModal.id = 'input-modal';
+    inputModal.classList.add('modal');
+    inputModal.classList.add('vertical-centered');
+
+    var modalInner = document.createElement('div');
+    modalInner.classList.add('modal-inner');
+
+    var form = document.createElement('form');
+
+    var modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+    var labelParagraph = document.createElement('p');
+    labelParagraph.textContent = message;
+    modalContent.appendChild(labelParagraph);
+
+    let inputGroup = document.createElement('div');
+    inputGroup.classList.add("form-group");
+    var inputField = document.createElement('input');
+    inputField.type = pw ? "password" : "text";
+    inputField.classList.add("form-control");
+
+    inputGroup.appendChild(inputField);
+    modalContent.appendChild(inputGroup);
+
+    if (pw) {
+        let labelGroup = document.createElement('div');
+        labelGroup.classList.add("form-group");
+
+        let label = document.createElement('label');
+        label.classList.add("form-control");
+        var inputCheckbox = document.createElement('input');
+        inputCheckbox.type = "checkbox";
+
+        inputCheckbox.onclick = function () {
+            if (inputField.type === "password") {
+                inputField.type = "text";
+            } else {
+                inputField.type = "password";
+            }
+        };
+
+        label.appendChild(inputCheckbox);
+
+        label.appendChild(document.createTextNode(" Show password"));
+        labelGroup.appendChild(label);
+
+        modalContent.appendChild(labelGroup);
+    }
+
+    var modalFooter = document.createElement('div');
+    modalFooter.classList.add('modal-footer');
+
+    var buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('buttons');
+
+    var confirmButton = document.createElement('button');
+    confirmButton.type = 'button';
+    confirmButton.classList.add('button');
+    confirmButton.textContent = lang.ok;
+
+    var cancelButton = document.createElement('button');
+    cancelButton.classList.add('button', 'button-text', 'cancel');
+    cancelButton.type = 'button';
+    cancelButton.textContent = lang.cancel;
+
+    buttonsDiv.appendChild(confirmButton);
+    buttonsDiv.appendChild(cancelButton);
+
+    modalFooter.appendChild(buttonsDiv);
+
+    form.appendChild(modalContent);
+    form.appendChild(modalFooter);
+
+    modalInner.appendChild(form);
+
+    inputModal.appendChild(modalInner);
+
+    document.body.appendChild(inputModal);
+
+    inputModal.style.display = "block";
+
+    inputField.focus();
+
+    confirmButton.onclick = function () {
+        inputModal.remove();
+        callback(inputField.value);
+    };
+
+    cancelButton.onclick = function () {
+        inputModal.remove();
+        callback(false);
+        document.removeEventListener('keydown', confirmKeyEvent);
+    };
+
+    document.addEventListener('keydown', confirmKeyEvent);
+
+    function confirmKeyEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            inputModal.remove();
+            callback(inputField.value);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        } else if (event.key === 'Escape' || event.keyCode === 27) {
+            event.preventDefault();
+            inputModal.remove();
+            callback(false);
+            document.removeEventListener('keydown', confirmKeyEvent);
+        }
+    }
+}
+
+function inputDialog(message, pw) {
+    return new Promise((resolve, reject) => {
+        createInputDialog(message, resolve, pw);
+    });
+}
+
 async function deleteObject(dataset) {
 
     let url = dataset.url;

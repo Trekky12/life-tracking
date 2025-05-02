@@ -494,9 +494,9 @@ function initMap() {
             }, this);
 
             let saveButton = createButton(container, "save");
-            L.DomEvent.on(saveButton, 'click', function () {
-                let name = prompt(lang.trips_route_name_prompt);
-                if (name !== null) {
+            L.DomEvent.on(saveButton, 'click', async function () {
+                let name = await inputDialog(lang.trips_route_name_prompt, false);
+                if (name !== false) {
                     getCSRFToken().then(function (token) {
                         let data = { 'name': name, 'start_date': fromInput.value, 'end_date': toInput.value, 'waypoints': routeControl.getWaypoints(), 'profile': routeControl.getRouter().options.profile };
                         data['csrf_name'] = token.csrf_name;
