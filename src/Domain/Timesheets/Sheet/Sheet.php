@@ -88,7 +88,7 @@ class Sheet extends \App\Domain\DataObject {
 
         $date = '';
         $start = '';
-        $end = '';
+        $end = null;
 
         // only show time on end date when start date and end date are on the same day
         if (!is_null($this->start) && !is_null($this->end) && $this->getStartDateTime()->format('Y-m-d') == $this->getEndDateTime()->format('Y-m-d')) {

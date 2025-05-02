@@ -21,14 +21,16 @@ class SheetNoticeService extends Service {
     protected $sheet_mapper;
     protected $noticefield_service;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            SheetNoticeMapper $mapper,
-            ProjectService $project_service,
-            SheetService $sheet_service,
-            SheetMapper $sheet_mapper,
-            NoticeFieldService $noticefield_service,
-            Settings $settings) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        SheetNoticeMapper $mapper,
+        ProjectService $project_service,
+        SheetService $sheet_service,
+        SheetMapper $sheet_mapper,
+        NoticeFieldService $noticefield_service,
+        Settings $settings
+    ) {
         parent::__construct($logger, $user);
 
         $this->mapper = $mapper;
@@ -58,10 +60,16 @@ class SheetNoticeService extends Service {
         $fmtDate->setPattern($dateFormatPHP["date"]);
 
         list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
-        $sheet_title = sprintf("%s %s - %s", $date, $start, $end);
-        
-        list($date_formatted, $start_formatted, $end_formatted) = $sheet->getDateStartEnd($language, 'yyyy-MM-dd','yyyy-MM-dd_HH-mm' , "HH-mm");
-        $sheet_title_formatted = sprintf("%s_%s-%s", $date_formatted, $start_formatted, $end_formatted);
+        $sheet_title = sprintf("%s %s", $date, $start);
+        if (!is_null($end)) {
+            $sheet_title = sprintf("%s - %s", $sheet_title, $end);
+        }
+
+        list($date_formatted, $start_formatted, $end_formatted) = $sheet->getDateStartEnd($language, 'yyyy-MM-dd', 'yyyy-MM-dd_HH-mm', "HH-mm");
+        $sheet_title_formatted = sprintf("%s_%s", $date_formatted, $start_formatted);
+        if (!is_null($end_formatted)) {
+            $sheet_title_formatted = sprintf("%s - %s", $sheet_title_formatted, $end_formatted);
+        }
 
         $sheet_categories = $this->sheet_mapper->getCategoriesWithNamesFromSheet($sheet_id);
 
@@ -106,5 +114,4 @@ class SheetNoticeService extends Service {
 
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
-
 }
