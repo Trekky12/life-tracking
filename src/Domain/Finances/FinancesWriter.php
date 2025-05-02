@@ -80,7 +80,7 @@ class FinancesWriter extends ObjectActivityWriter {
         $this->current_user->setUser(null);
         $this->transaction_mapper->setUser($entry->user);
 
-        $is_paymethod_selectable = !is_null($entry) ? $this->finances_service->isPaymethodSelectable($entry->id) : true;
+        $is_paymethod_editable = !is_null($entry) ? $this->finances_service->isPaymethodSelectable($entry->id) : true;
 
         if (!is_null($entry->paymethod) && $is_paymethod_editable) {
 
