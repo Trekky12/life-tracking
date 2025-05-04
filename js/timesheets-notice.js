@@ -113,27 +113,58 @@ async function loadData() {
                         }
 
                     } else {
-                        console.log(field_name + " not found, appending manually!");
 
-                        const formGroup = document.createElement('div');
-                        formGroup.className = 'form-group';
+                        let view = notice_field.dataset.view;
 
-                        const label = document.createElement('label');
-                        label.setAttribute('for', `input_${field_name}`);
-                        label.innerHTML = field_name;
+                        if (view == "edit") {
+                            console.log(field_name + " not found, appending manually!");
 
-                        const textarea = document.createElement('textarea');
-                        textarea.className = 'form-control';
-                        textarea.id = `input_${field_name}`;
-                        textarea.name = field_name;
-                        textarea.dataset.name = field_name;
-                        textarea.dataset.default = 0;
-                        textarea.dataset.saved = 1;
-                        textarea.value = field_value;
+                            const field = document.createElement('div');
+                            field.className = 'timesheet-notice-field';
 
-                        formGroup.appendChild(label);
-                        formGroup.appendChild(textarea);
-                        notice_field.appendChild(formGroup);
+                            const formGroup = document.createElement('div');
+                            formGroup.className = 'form-group';
+
+                            const label = document.createElement('label');
+                            label.setAttribute('for', `input_${field_name}`);
+                            label.innerHTML = field_name;
+
+                            const textarea = document.createElement('textarea');
+                            textarea.className = 'form-control';
+                            textarea.id = `input_${field_name}`;
+                            textarea.name = field_name;
+                            textarea.dataset.name = field_name;
+                            textarea.dataset.default = 0;
+                            textarea.dataset.saved = 1;
+                            textarea.value = field_value;
+
+                            formGroup.appendChild(label);
+                            formGroup.appendChild(textarea);
+
+                            field.appendChild(formGroup);
+
+                            notice_field.appendChild(field);
+                        } else if (view == "view") {
+                            console.log(field_name + " not found, appending manually!");
+
+                            const field = document.createElement('div');
+                            field.className = 'timesheet-notice-field';
+
+                            const label = document.createElement('h4');
+                            label.innerHTML = field_name + ":";
+
+                            const content = document.createElement('p');
+                            content.className = 'notice-field';
+                            content.dataset.name = field_name;
+                            content.dataset.default = 0;
+                            content.dataset.saved = 1;
+                            content.innerHTML = field_value;
+
+                            field.appendChild(label);
+                            field.appendChild(content);
+
+                            notice_field.appendChild(field);
+                        }
 
                     }
 

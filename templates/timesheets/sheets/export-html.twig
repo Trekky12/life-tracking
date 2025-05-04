@@ -97,7 +97,7 @@
 					<h4>{{"DIFFERENCE"|trans}}:
 						{{ sheet["time"] }}</h4>
 
-					<div class="timesheet-notice" data-id="{{ sheet["id"] }}" data-type="sheet">
+					<div class="timesheet-notice" data-id="{{ sheet["id"] }}" data-type="sheet" data-view="export">
 						{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
 					</div>
 				</div>
