@@ -35,7 +35,7 @@ abstract class Service {
     }
 
     public function isOwner($id) {
-        $user = $this->current_user->getUser()->id;
+        $user = $this->current_user->getUser()?->id;
         if (!is_null($id)) {
             $element = $this->getMapper()->get($id);
 

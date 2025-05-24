@@ -30,50 +30,54 @@
 
 {% block body %}
 
-	<div class="inner-content">
-		<div class="page-content">
-			<div class="search-filter">
-				<div class="filter-row">
-					<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
-						<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields" checked="checked">
-						{{"TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"|trans}}
-					</label>
+	<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+		<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+	</div>
+
+	<div id="alertError" class="alert danger hidden">
+		<span class="closebtn">&times;</span>
+		<span class="alert-message">
+			<p>{{ "ENTRY_ERROR"|trans }}</p>
+			<p id="alertErrorDetail"></p>
+		</span>
+	</div>
+
+	<div id="timesheetEncryptionWrapper" class="hidden">
+
+		<div class="inner-content">
+			<div class="page-content">
+				<div class="search-filter">
+					<div class="filter-row">
+						<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
+							<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields" checked="checked">
+							{{"TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"|trans}}
+						</label>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="inner-content">
-		<div class="page-content">
+		<div class="inner-content">
+			<div class="page-content">
 
-			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
-				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-			</div>
+				<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}">
 
-			<div id="alertError" class="alert danger hidden">
-				<span class="closebtn">&times;</span>
-				<span class="alert-message">
-					<p>{{ "ENTRY_ERROR"|trans }}</p>
-					<p id="alertErrorDetail"></p>
-				</span>
-			</div>
-			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden" data-projectname="{{project.name}}">
+					<div class="timesheet-notice-wrapper">
 
-				<div class="timesheet-notice-wrapper">
+						<h3 class="sheet_title">{{ project.name }}</h3>
+						<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
+							<span id="lastSaved"></span>
+						</small>
 
-					<h3 class="sheet_title">{{ project.name }}</h3>
-					<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
-						<span id="lastSaved"></span>
-					</small>
-
-					<div class="timesheet-notice" data-id="{{ project.id }}" data-type="project" data-view="view">
-						{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
+						<div class="timesheet-notice" data-id="{{ project.id }}" data-type="project" data-view="view">
+							{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
+						</div>
 					</div>
-				</div>
 
-				<div class="form-group btn">
-					<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
-						{{"TIMESHEETS_EXPORT"|trans}}</button>
+					<div class="form-group btn">
+						<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
+							{{"TIMESHEETS_EXPORT"|trans}}</button>
+					</div>
 				</div>
 			</div>
 		</div>

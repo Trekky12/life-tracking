@@ -1,10 +1,11 @@
 "use strict";
 
-
-const timesheetNoticeWrapper = document.querySelector("#timesheetNoticeWrapper");
-if (!timesheetNoticeWrapper) {
+const timesheetEncryptionWrapper = document.querySelector('#timesheetEncryptionWrapper');
+if (!timesheetEncryptionWrapper) {
     throw "No notices here";
 }
+
+const timesheetNoticeWrapper = document.querySelector("#timesheetNoticeWrapper");
 const loadingIconTimesheetNotice = document.querySelector("#loadingIconTimesheetNotice");
 
 const timesheetNoticeForm = document.querySelector("#timesheetNoticeForm");
@@ -17,6 +18,10 @@ const alertErrorDetail = alertError.querySelector("#alertErrorDetail");
 const projectID = parseInt(timesheetNoticeWrapper.dataset.project);
 
 let checkboxHideEmptyNoticeFields = document.getElementById('checkboxHideEmptyNoticeFields');
+
+const loadingFilesIcon = document.getElementById('loadingIconFileUpload');
+const fileInput = document.querySelector('#fileupload');
+const filesContainer = document.getElementById('files');
 
 if (!window.crypto || !window.crypto.subtle) {
     alertErrorDetail.innerHTML = lang.decrypt_error;
@@ -221,8 +226,12 @@ async function loadData() {
     //     }
     // }));
 
+    if (filesContainer) {
+        loadFiles();
+    }
+
     loadingIconTimesheetNotice.classList.add("hidden");
-    timesheetNoticeWrapper.classList.remove("hidden");
+    timesheetEncryptionWrapper.classList.remove("hidden");
 }
 
 async function getNotice(dataset) {
@@ -265,7 +274,7 @@ async function getNotice(dataset) {
 
         let CEK;
         try {
-            const decryptedCEK = await decryptData(masterKey, encryptedCEK);
+            const decryptedCEK = await decryptTextData(masterKey, encryptedCEK);
             const rawCEK = base64_to_buf(decryptedCEK);
             CEK = await createKeyObject(rawCEK);
         } catch (e) {
@@ -275,7 +284,7 @@ async function getNotice(dataset) {
 
         if (notice) {
             try {
-                let decrypted_notice = await decryptData(CEK, notice);
+                let decrypted_notice = await decryptTextData(CEK, notice);
 
                 if (timesheetLastSaved) {
                     currentNotice = decrypted_notice;
@@ -355,10 +364,10 @@ async function saveNotice(autoSave = false) {
     const CEK = await createKeyObject(rawCEK);
 
     // encrypt CEK with masterKey
-    data["encryptedCEK"] = await encryptData(masterKey, buff_to_base64(rawCEK));
+    data["encryptedCEK"] = await encryptTextData(masterKey, buff_to_base64(rawCEK));
 
     // encrypt data with CEK
-    data["notice"] = await encryptData(CEK, noticeData);
+    data["notice"] = await encryptTextData(CEK, noticeData);
 
     try {
         let token = await getCSRFToken();
@@ -442,3 +451,202 @@ if (checkboxHideEmptyNoticeFields) {
         return;
     });
 }
+
+
+async function loadFiles() {
+
+    loadingFilesIcon.classList.remove('hidden');
+
+    const response = await fetch(jsObject.timesheets_sheets_files, {
+        method: 'GET',
+        credentials: "same-origin",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const data = await response.json();
+
+    data.forEach(async function (el) {
+        await addFile(el);
+    });
+
+    loadingFilesIcon.classList.add('hidden');
+
+    if (fileInput) {
+        fileInput.classList.remove('hidden');
+    }
+
+}
+
+async function addFile(data) {
+
+    let CEK;
+    try {
+        const decryptedCEK = await decryptTextData(masterKey, data["encryptedCEK"]);
+        const rawCEK = base64_to_buf(decryptedCEK);
+        CEK = await createKeyObject(rawCEK);
+    } catch (e) {
+        console.error(`Unable to decrypt CEK - ${e}`);
+        throw e;
+    }
+
+    try {
+        let fileBuff = await decryptData(CEK, data["data"]);
+        let base64file = buff_to_base64(fileBuff);
+        const wrapper = document.createElement("div");
+        wrapper.className = "timesheet-notice-file";
+
+        if (data["type"].startsWith("image/")) {
+            const img = document.createElement('img');
+            img.src = `data:${data["type"]};base64,${base64file}`;
+            img.alt = data["name"];
+
+            wrapper.appendChild(img);
+
+        } else {
+            const par = document.createElement('p');
+            par.textContent = data["name"];
+
+            wrapper.appendChild(par);
+        }
+
+        let iconWrapper = document.createElement("div");
+        iconWrapper.className = "timesheet-notice-file-icons"
+
+        let a_download = document.createElement("a");
+        a_download["href"] = `data:${data["type"]};base64,${base64file}`;
+        a_download.download = data["name"];
+        let span_download = document.createElement("span");
+        span_download.innerHTML = document.getElementById('iconDownload').innerHTML;
+        a_download.appendChild(span_download);
+
+        iconWrapper.appendChild(a_download);
+
+        let iconTrash = document.getElementById('iconTrash');
+
+        if (iconTrash) {
+
+            let a_delete = document.createElement("a");
+            a_delete["href"] = "#";
+            a_delete.dataset.url = data['delete'];
+            a_delete.className = 'delete-timesheet-file'
+            let span_delete = document.createElement("span");
+            span_delete.innerHTML = document.getElementById('iconTrash').innerHTML;
+            a_delete.appendChild(span_delete);
+
+            iconWrapper.appendChild(a_delete);
+
+        }
+
+        wrapper.appendChild(iconWrapper);
+
+        filesContainer.appendChild(wrapper);
+
+    } catch (e) {
+        console.error(`Unable to decrypt file - ${e}`);
+        throw e;
+    }
+}
+
+if (fileInput) {
+    fileInput.addEventListener('change', async function (e) {
+
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        if (!masterKey) {
+            return;
+        }
+
+        let token = await getCSRFToken();
+
+        loadingFilesIcon.classList.remove('hidden');
+
+        const arrayBuffer = await file.arrayBuffer();
+
+        // create CEK
+        const rawCEK = window.crypto.getRandomValues(new Uint8Array(32));
+        const CEK = await createKeyObject(rawCEK);
+
+        // encrypt CEK with masterKey
+        const encryptedCEK = await encryptTextData(masterKey, buff_to_base64(rawCEK));
+
+        const encryptedBytes = await encryptBinaryData(CEK, arrayBuffer);
+
+        const encryptedBlob = new Blob([encryptedBytes], { type: 'application/octet-stream' });
+
+        const form = new FormData();
+        form.append('file', encryptedBlob, file.name);
+        form.append('type', file.type);
+        form.append('encryptedCEK', encryptedCEK);
+        form.append('csrf_name', token.csrf_name);
+        form.append('csrf_value', token.csrf_value);
+
+        try {
+            const response = await fetch(fileInput.dataset.url, {
+                method: 'POST',
+                credentials: "same-origin",
+                body: form
+            });
+            const data = await response.json();
+
+            loadingFilesIcon.classList.add('hidden');
+
+            if (data['status'] === 'success') {
+                fileInput.value = "";
+
+                addFile(data);
+
+            }
+        } catch (error) {
+            loadingFilesIcon.classList.add('hidden');
+            console.log(error);
+        }
+    });
+}
+
+document.addEventListener('click', async function (event) {
+    let deleteTimesheetFile = event.target.closest('.delete-timesheet-file');
+
+    if (deleteTimesheetFile) {
+        event.preventDefault();
+
+        let confirm_text = lang.really_delete;
+
+        if (!await confirmDialog(confirm_text, null)) {
+            loadingWindowOverlay.classList.add("hidden");
+            return false;
+        }
+
+        let url = deleteTimesheetFile.dataset.url;
+
+        loadingFilesIcon.classList.remove('hidden');
+
+        try {
+            let token = await getCSRFToken(true);
+            let data = {};
+            data['csrf_name'] = token.csrf_name;
+            data['csrf_value'] = token.csrf_value;
+
+            let response = await fetch(url, {
+                method: 'DELETE',
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            let result = await response.json();
+            if (result["is_deleted"]) {
+                deleteTimesheetFile.parentElement.parentElement.remove();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        loadingFilesIcon.classList.add('hidden');
+    }
+
+});

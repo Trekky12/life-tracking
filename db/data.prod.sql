@@ -1,4 +1,4 @@
-INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('lastRunRecurringSplitbills', 0, 'Date'), ('lastRunRecurringTransactions', 0, 'Date'); 
+INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('lastRunRecurringSplitbills', 0, 'Date'), ('lastRunRecurringTransactions', 0, 'Date'), ('version', 11, 'Integer'); 
 
 INSERT INTO global_users (login, password, role) VALUES ('admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin');
 

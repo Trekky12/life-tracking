@@ -25,8 +25,11 @@ koala-config.json
 
 public/test*
 
-/files/*
-!/files/.gitkeep 
+/files/tmp/*
+!/files/tmp/.gitkeep 
+
+/files/sheets/*
+!/files/sheets/.gitkeep 
 
 tests/.phpunit.result.cache
 tests/.rnd

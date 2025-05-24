@@ -40,7 +40,7 @@ async function getRecoveryCode() {
 
     const recoveryKeyEncryptedWithMasterKey = parameters.data.recoveryKeyEncryptedWithMasterKey;
     try {
-        const recoveryKey = await decryptData(masterKey, recoveryKeyEncryptedWithMasterKey);
+        const recoveryKey = await decryptTextData(masterKey, recoveryKeyEncryptedWithMasterKey);
         const rawRecoveryKey = base64_to_buf(recoveryKey);
 
         const recoveryKeyWords = bip39.entropyToMnemonic(rawRecoveryKey);

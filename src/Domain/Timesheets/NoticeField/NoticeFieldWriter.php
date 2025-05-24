@@ -71,7 +71,7 @@ class NoticeFieldWriter extends ObjectActivityWriter {
 
         // Set all other non-default, since there can only be one default category
         if ($field->is_default == 1) {
-            $this->getMapper()->unset_default($field->project, $field->type, $id);
+            $this->getMapper()->unset_default($field->project, $id, $field->type);
         }
 
         // when there is no default make this the default

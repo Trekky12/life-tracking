@@ -11,6 +11,7 @@ use App\Domain\Timesheets\Sheet\SheetMapper;
 use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Base\Settings;
 use App\Application\Payload\Payload;
+use App\Domain\Timesheets\SheetFile\SheetFileMapper;
 
 class SheetNoticeService extends Service {
 
@@ -20,6 +21,7 @@ class SheetNoticeService extends Service {
     protected $settings;
     protected $sheet_mapper;
     protected $noticefield_service;
+    protected $sheet_files_mapper;
 
     public function __construct(
         LoggerInterface $logger,
@@ -29,7 +31,8 @@ class SheetNoticeService extends Service {
         SheetService $sheet_service,
         SheetMapper $sheet_mapper,
         NoticeFieldService $noticefield_service,
-        Settings $settings
+        Settings $settings,
+        SheetFileMapper $sheet_files_mapper
     ) {
         parent::__construct($logger, $user);
 
@@ -39,6 +42,7 @@ class SheetNoticeService extends Service {
         $this->sheet_mapper = $sheet_mapper;
         $this->noticefield_service = $noticefield_service;
         $this->settings = $settings;
+        $this->sheet_files_mapper = $sheet_files_mapper;
     }
 
     public function edit($hash, $sheet_id, $requestData) {
@@ -79,6 +83,8 @@ class SheetNoticeService extends Service {
 
         $view = array_key_exists("view", $requestData) ? filter_var($requestData["view"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
 
+        $hasFiles = in_array($sheet->id, array_keys($this->sheet_files_mapper->hasFiles([$sheet->id])));
+
         $response_data = [
             'sheet' => $sheet,
             'sheet_categories' => $sheet_categories,
@@ -88,7 +94,8 @@ class SheetNoticeService extends Service {
             'project' => $project,
             'hasTimesheetNotice' => true,
             'fields' => $fields,
-            'view' => $view
+            'view' => $view,
+            'hasFiles' => $hasFiles
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response_data);

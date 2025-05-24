@@ -475,6 +475,10 @@ return function (App $app) {
                     $group_notice->post('/save/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeSaveAction::class)->setName('timesheets_sheets_notice_save');
                     $group_notice->get('/view/', \App\Application\Action\Timesheets\SheetNotice\SheetNoticeViewAction::class)->setName('timesheets_sheets_notice_view');
                 });
+
+                $group_sheets->post('/{sheet:[0-9]+}/file', \App\Application\Action\Timesheets\SheetFile\SheetFileSaveAction::class)->setName('timesheets_sheets_file_upload');
+                $group_sheets->delete('/{sheet:[0-9]+}/file', \App\Application\Action\Timesheets\SheetFile\SheetFileDeleteAction::class)->setName('timesheets_sheets_file_delete');
+                $group_sheets->get('/{sheet:[0-9]+}/files', \App\Application\Action\Timesheets\SheetFile\SheetFilesAction::class)->setName('timesheets_sheets_files');
             });
 
             $group_project->group('/fast', function (RouteCollectorProxy $group_fast) {

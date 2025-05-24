@@ -42,93 +42,95 @@
 		</span>
 	</div>
 
-	<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}" class="hidden">
-		<div class="inner-content">
-			<div class="page-content">
-				<h2 id="reportHeadline">{{ project.report_headline | raw}}</h2>
-				<h3 id="excelHeaderTime" data-from="{{ from }}" data-to="{{ to }}">{{- from|date(i18n.dateformatTwig.date) -}}&nbsp;-&nbsp;{{- to|date(i18n.dateformatTwig.date) -}}</h3>
-				<div class="search-filter">
-					<div class="filter-row">
-						<div class="filter-group">
-							<div class="filter-element">
-								<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
-							</div>
-							<div class="filter-element">
-								<button type="button" class="button button-outlined" id="excelExport">{{"EXPORT_EXCEL"|trans}}
-									{{"TIMESHEETS_EXPORT"|trans}}</button>
+	<div id="timesheetEncryptionWrapper" class="hidden">
+		<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}">
+			<div class="inner-content">
+				<div class="page-content">
+					<h2 id="reportHeadline">{{ project.report_headline | raw}}</h2>
+					<h3 id="excelHeaderTime" data-from="{{ from }}" data-to="{{ to }}">{{- from|date(i18n.dateformatTwig.date) -}}&nbsp;-&nbsp;{{- to|date(i18n.dateformatTwig.date) -}}</h3>
+					<div class="search-filter">
+						<div class="filter-row">
+							<div class="filter-group">
+								<div class="filter-element">
+									<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
+								</div>
+								<div class="filter-element">
+									<button type="button" class="button button-outlined" id="excelExport">{{"EXPORT_EXCEL"|trans}}
+										{{"TIMESHEETS_EXPORT"|trans}}</button>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="inner-content timesheet-notice-wrapper dt-container dt-wrapper">
+			<div class="inner-content timesheet-notice-wrapper dt-container dt-wrapper">
 
-			<table id="overviewTable" class="table table-hover small dt-table" data-fields="{{fields|length}}">
-				<thead>
-					<tr>
-						<th>
-							{%- if project.customers_name_singular %}
-								{{- project.customers_name_singular -}}
-							{% else %}
-								{{- "TIMESHEETS_CUSTOMER"|trans -}}
-							{% endif -%}
-						</th>
-						{% for field in fields %}
-							<th>{{field.description | raw}}</th>
-						{% endfor %}
-						<th>{{"COUNT"|trans}}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for row in data %}
+				<table id="overviewTable" class="table table-hover small dt-table" data-fields="{{fields|length}}">
+					<thead>
 						<tr>
-							<td>{{ row["customerName"] }}</td>
+							<th>
+								{%- if project.customers_name_singular %}
+									{{- project.customers_name_singular -}}
+								{% else %}
+									{{- "TIMESHEETS_CUSTOMER"|trans -}}
+								{% endif -%}
+							</th>
 							{% for field in fields %}
-								<td>
-									{% if row["customer"] %}
-										<div class="timesheet-notice is-table" data-id="{{ row["customer"] }}" data-type="customer">
-											<span class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></span>
-										</div>
-									{% endif %}
-								</td>
+								<th>{{field.description | raw}}</th>
 							{% endfor %}
-							<td>{{ row["count"] }}</td>
+							<th>{{"COUNT"|trans}}</th>
 						</tr>
-					{% endfor %}
-				</tbody>
-				<tfoot>
-					<tr class="body-sum-row">
-						<th>
-							{{data|length}}&nbsp;
-							{%- if project.customers_name_plural %}
-								{{- project.customers_name_plural -}}
-							{% else %}
-								{{- "TIMESHEETS_CUSTOMERS"|trans -}}
-							{% endif -%}
-						</th>
-						{% for field in fields %}
-							<th></th>
+					</thead>
+					<tbody>
+						{% for row in data %}
+							<tr>
+								<td>{{ row["customerName"] }}</td>
+								{% for field in fields %}
+									<td>
+										{% if row["customer"] %}
+											<div class="timesheet-notice is-table" data-id="{{ row["customer"] }}" data-type="customer">
+												<span class="notice-field" data-name="{{field.name}}" data-default="{{field.is_default}}"></span>
+											</div>
+										{% endif %}
+									</td>
+								{% endfor %}
+								<td>{{ row["count"] }}</td>
+							</tr>
 						{% endfor %}
-						<th data-type="sum-body" class="body-sum">{{sum}}</th>
-					</tr>
-					<tr>
-						<th><input type="text" placeholder="{{ "INSERT_ADDITIONAL_VALUES"|trans }}" class="form-control"/></th>
-						{% for field in fields %}
-							<th><input type="text" class="form-control"/></th>
-						{% endfor %}
-						<th><input type="number" class="form-control additional-field" step="1"/></th>
-					</tr>
-					<tr>
-						<th>{{"TOTAL"|trans}}</th>
-						{% for field in fields %}
-							<th></th>
-						{% endfor %}
-						<th data-type="sum-foot" class="total-value">{{sum}}</th>
-					</tr>
-				</tfoot>
-			</table>
+					</tbody>
+					<tfoot>
+						<tr class="body-sum-row">
+							<th>
+								{{data|length}}&nbsp;
+								{%- if project.customers_name_plural %}
+									{{- project.customers_name_plural -}}
+								{% else %}
+									{{- "TIMESHEETS_CUSTOMERS"|trans -}}
+								{% endif -%}
+							</th>
+							{% for field in fields %}
+								<th></th>
+							{% endfor %}
+							<th data-type="sum-body" class="body-sum">{{sum}}</th>
+						</tr>
+						<tr>
+							<th><input type="text" placeholder="{{ "INSERT_ADDITIONAL_VALUES"|trans }}" class="form-control"/></th>
+							{% for field in fields %}
+								<th><input type="text" class="form-control"/></th>
+							{% endfor %}
+							<th><input type="number" class="form-control additional-field" step="1"/></th>
+						</tr>
+						<tr>
+							<th>{{"TOTAL"|trans}}</th>
+							{% for field in fields %}
+								<th></th>
+							{% endfor %}
+							<th data-type="sum-foot" class="total-value">{{sum}}</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
 		</div>
 	</div>
 {% endblock %}

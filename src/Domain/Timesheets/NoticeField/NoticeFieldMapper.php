@@ -45,9 +45,9 @@ class NoticeFieldMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function unset_default($project_id, $type = 'sheet', $id) {
+    public function unset_default($project_id, $id, $type = 'sheet') {
         $sql = "UPDATE " . $this->getTableName() . " SET is_default = :is_default WHERE project = :project_id AND type = :type  AND id != :id";
-        $bindings = array("project_id" => $project_id, "is_default" => 0, "type" => $type, "id" => $id);
+        $bindings = array("project_id" => $project_id, "is_default" => 0, "id" => $id, "type" => $type);
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
 

@@ -392,6 +392,7 @@ function initialize() {
         if (!('indexedDB' in window)) {
             return;
         }
+        console.log("delete database");
         window.indexedDB.deleteDatabase('lifeTrackingData');
     }
 

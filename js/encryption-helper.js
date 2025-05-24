@@ -26,7 +26,7 @@ function deriveKEK(keyMaterial, salt, iterations) {
     );
 }
 
-async function encryptData(key, data) {
+async function encryptTextData(key, data) {
     try {
         const iv = window.crypto.getRandomValues(new Uint8Array(16));
 
@@ -53,6 +53,37 @@ async function encryptData(key, data) {
     }
 }
 
+async function encryptBinaryData(key, data) {
+    try {
+        const iv = window.crypto.getRandomValues(new Uint8Array(16));
+
+        const encryptedContent = await window.crypto.subtle.encrypt(
+            {
+                name: "AES-GCM",
+                iv: iv,
+            },
+            key,
+            data
+        );
+
+        const encryptedContentArr = new Uint8Array(encryptedContent);
+        let buff = new Uint8Array(iv.byteLength + encryptedContentArr.byteLength);
+        buff.set(iv, 0);
+        buff.set(encryptedContentArr, iv.byteLength);
+        return buff;
+    } catch (e) {
+        console.error(`Error Encrypting - ${e}`);
+        //alertDetail.innerHTML = lang.encrypt_error;
+        //alert.classList.remove("hidden");
+        throw e;
+    }
+}
+
+async function decryptTextData(key, encryptedData) {
+    const decryptedContent = await decryptData(key, encryptedData);
+    return new TextDecoder().decode(decryptedContent);
+}
+
 async function decryptData(key, encryptedData) {
     try {
         const encryptedDataBuff = base64_to_buf(encryptedData);
@@ -67,7 +98,7 @@ async function decryptData(key, encryptedData) {
             key,
             data
         );
-        return new TextDecoder().decode(decryptedContent);
+        return decryptedContent;
     } catch (e) {
         console.log(`Error Decrypting - ${e}`);
         throw e;
@@ -83,7 +114,10 @@ async function createKeyObject(rawKey) {
 }
 
 function buff_to_base64(buff) {
-    return btoa(String.fromCharCode.apply(null, buff));
+    const binary = Array.from(new Uint8Array(buff))
+        .map((b) => String.fromCharCode(b))
+        .join('');
+    return btoa(binary);
 }
 
 function base64_to_buf(b64) {
@@ -117,7 +151,7 @@ async function getEncryptionParameters() {
 
 async function getRawMasterKeyFromKEK(KEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithKEK) {
     try {
-        const testMessage = await decryptData(KEK, testMessageEncryptedWithKEK);
+        const testMessage = await decryptTextData(KEK, testMessageEncryptedWithKEK);
 
         if (testMessage !== "test") {
             throw "Wrong message!";
@@ -130,7 +164,7 @@ async function getRawMasterKeyFromKEK(KEK, testMessageEncryptedWithKEK, masterKe
     let rawMasterKey;
 
     try {
-        const savedMasterKey = await decryptData(KEK, masterKeyEncryptedWithKEK);
+        const savedMasterKey = await decryptTextData(KEK, masterKeyEncryptedWithKEK);
         rawMasterKey = base64_to_buf(savedMasterKey);
     } catch (e) {
         console.error(`Unable to decrypt masterKey - ${e}`);

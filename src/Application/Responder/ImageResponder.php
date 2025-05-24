@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Responder\Trips;
+namespace App\Application\Responder;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -8,7 +8,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use App\Application\Responder\JSONResponder;
 
-class EventImageResponder extends JSONResponder {
+class ImageResponder extends JSONResponder {
 
     public function __construct(ResponseFactoryInterface $responseFactory, Translator $translation) {
         parent::__construct($responseFactory, $translation);

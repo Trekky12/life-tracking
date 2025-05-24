@@ -117,7 +117,7 @@ async function setPassword() {
         const recoveryKey = await createKeyObject(rawRecoveryKey);
 
         const masterKeyEncryptedWithRecoveryKey = parameters.data.masterKeyEncryptedWithRecoveryKey;
-        const masterKey = await decryptData(recoveryKey, masterKeyEncryptedWithRecoveryKey);
+        const masterKey = await decryptTextData(recoveryKey, masterKeyEncryptedWithRecoveryKey);
         rawMasterKey = base64_to_buf(masterKey);
     }
     // no testmessage => no masterkey => create new entry
@@ -140,13 +140,13 @@ async function setPassword() {
         let rawRecoveryKey = window.crypto.getRandomValues(new Uint8Array(32));
         let recoveryKey = await createKeyObject(rawRecoveryKey)
 
-        let masterKeyEncryptedWithRecoveryKey = await encryptData(recoveryKey, buff_to_base64(rawMasterKey));
+        let masterKeyEncryptedWithRecoveryKey = await encryptTextData(recoveryKey, buff_to_base64(rawMasterKey));
         newData['masterKeyEncryptedWithRecoveryKey'] = masterKeyEncryptedWithRecoveryKey;
 
-        let recoveryKeyEncryptedWithMasterKey = await encryptData(masterKey, buff_to_base64(rawRecoveryKey));
+        let recoveryKeyEncryptedWithMasterKey = await encryptTextData(masterKey, buff_to_base64(rawRecoveryKey));
         newData['recoveryKeyEncryptedWithMasterKey'] = recoveryKeyEncryptedWithMasterKey;
 
-        const testMessageEncryptedWithRecoveryKey = await encryptData(recoveryKey, "test");
+        const testMessageEncryptedWithRecoveryKey = await encryptTextData(recoveryKey, "test");
         newData['testMessageEncryptedWithRecoveryKey'] = testMessageEncryptedWithRecoveryKey;
     }
 
@@ -160,11 +160,11 @@ async function setPassword() {
     const KEK = await deriveKEK(keyMaterial, newSalt, newIterations);
 
     // Encrypt test message with new KEK
-    const testMessageEncryptedWithKEK = await encryptData(KEK, "test");
+    const testMessageEncryptedWithKEK = await encryptTextData(KEK, "test");
     newData['testMessageEncryptedWithKEK'] = testMessageEncryptedWithKEK;
 
     // Encrypt rawMasterKey with new KEK
-    const masterKeyEncryptedWithKEK = await encryptData(KEK, buff_to_base64(rawMasterKey));
+    const masterKeyEncryptedWithKEK = await encryptTextData(KEK, buff_to_base64(rawMasterKey));
     newData['masterKeyEncryptedWithKEK'] = masterKeyEncryptedWithKEK;
 
     let newToken = await getCSRFToken()

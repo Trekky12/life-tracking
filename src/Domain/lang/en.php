@@ -676,6 +676,7 @@ $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY"] = "timesheets category";
 $lang["DATAOBJECT_TIMESHEETS_SHEET_NOTICE"] = "notice to timesheets sheet";
 $lang["DATAOBJECT_TIMESHEETS_CUSTOMER_NOTICE"] = "notice to customer";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_NOTICE"] = "notice to timesheets project";
+$lang["DATAOBJECT_TIMESHEETS_SHEET_FILE"] = "file to timesheets sheet";
 $lang["DATAOBJECT_TRIPS_EVENT"] = "trip event";
 $lang["DATAOBJECT_TRIPS_TRIP"] = "trip";
 $lang["DATAOBJECT_TRIPS_ROUTE"] = "route";
@@ -949,5 +950,7 @@ $lang["SETUP_GO_TO_MAIN"] = "Go to the frontpage...";
 
 $lang["INSERT_ADDITIONAL_VALUES"] = "Add additional elements";
 $lang["TOTAL"] = "Total";
+
+$lang["FILES"] = "Files";
 
 return $lang;

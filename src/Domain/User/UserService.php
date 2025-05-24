@@ -99,7 +99,7 @@ class UserService extends Service {
             $variables = array(
                 'header' => '',
                 'subject' => $subject,
-                'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%', $entry->name]),
+                'headline' => $this->translation->getTranslatedString('HELLO_USER', ['%username%' => $entry->name]),
                 'content' => $this->translation->getTranslatedString('THISISATESTEMAIL')
             );
 
@@ -123,22 +123,21 @@ class UserService extends Service {
         $roles = $this->getRoles();
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, "roles" => $roles]);
     }
-    
+
     public function setTwoFactorAuthSecret($secret) {
         $user = $this->current_user->getUser();
         $this->mapper->update_secret($user->id, $secret);
     }
-    
+
     public function getData($data) {
-        
+
         $response_data = ["data" => [], "status" => "success"];
         $query = array_key_exists('query', $data) ? Utility::filter_string_polyfill($data['query']) : "";
         $module = array_key_exists('module', $data) ? Utility::filter_string_polyfill($data['module']) : null;
         $users = filter_var_array($data["users"], FILTER_SANITIZE_NUMBER_INT);
-        
+
         $response_data["data"] = $this->mapper->getUsersWithModule($query, $module, $users);
-        
+
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
-
 }

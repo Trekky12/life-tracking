@@ -30,67 +30,95 @@
 
 {% block body %}
 
-	<div class="inner-content">
-		<div class="page-content">
-			<div class="search-filter">
-				<div class="filter-row">
-					<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
-						<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields" checked="checked">
-						{{"TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"|trans}}
-					</label>
-				</div>
-			</div>
-		</div>
+	<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+		<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
 	</div>
 
-	<div class="inner-content">
-		<div class="page-content">
+	<div id="alertError" class="alert danger hidden">
+		<span class="closebtn">&times;</span>
+		<span class="alert-message">
+			<p>{{ "ENTRY_ERROR"|trans }}</p>
+			<p id="alertErrorDetail"></p>
+		</span>
+	</div>
 
-			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
-				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-			</div>
-
-			<div id="alertError" class="alert danger hidden">
-				<span class="closebtn">&times;</span>
-				<span class="alert-message">
-					<p>{{ "ENTRY_ERROR"|trans }}</p>
-					<p id="alertErrorDetail"></p>
-				</span>
-			</div>
-			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden" data-name="{{sheet_title_formatted}}" data-projectname="{{project.name}}">
-
-				<div class="timesheet-notice-wrapper">
-
-					<h3 class="sheet_title">{{ sheet_title }}</h3>
-					<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
-						<span id="lastSaved"></span>
-					</small>
-					{% if sheet_customer %}
-						<h4 class="sheet_customer">
-							{%- if project.customers_name_singular %}
-								{{- project.customers_name_singular -}}
-							{% else %}
-								{{- "TIMESHEETS_CUSTOMER"|trans -}}
-							{% endif -%}:&nbsp;
-							{{- sheet_customer -}}
-						</h4>
-					{% endif %}
-					{% if sheet_categories %}
-						<h4 class="sheet_categories">{{- "CATEGORIES"|trans -}}:&nbsp;
-							{{- sheet_categories -}}
-						</h4>
-					{% endif %}
-
-					<div class="timesheet-notice" data-id="{{ sheet.id }}" data-type="sheet" data-view="view">
-						{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
+	<div id="timesheetEncryptionWrapper" class="hidden">
+		<div class="inner-content">
+			<div class="page-content">
+				<div class="search-filter">
+					<div class="filter-row">
+						<label id="checkboxHideEmptyNoticeFieldsLabel" for="checkboxHideEmptyNoticeFields">
+							<input type="checkbox" value="1" id="checkboxHideEmptyNoticeFields" checked="checked">
+							{{"TIMESHEETS_EXPORT_HIDE_EMPTY_FIELDS"|trans}}
+						</label>
 					</div>
-				</div>
-
-				<div class="form-group btn">
-					<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
-						{{"TIMESHEETS_EXPORT"|trans}}</button>
 				</div>
 			</div>
 		</div>
+
+		<div class="inner-content">
+			<div class="page-content">
+
+				<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-name="{{sheet_title_formatted}}" data-projectname="{{project.name}}">
+
+					<div class="timesheet-notice-wrapper">
+
+						<h3 class="sheet_title">{{ sheet_title }}</h3>
+						<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
+							<span id="lastSaved"></span>
+						</small>
+						{% if sheet_customer %}
+							<h4 class="sheet_customer">
+								{%- if project.customers_name_singular %}
+									{{- project.customers_name_singular -}}
+								{% else %}
+									{{- "TIMESHEETS_CUSTOMER"|trans -}}
+								{% endif -%}:&nbsp;
+								{{- sheet_customer -}}
+							</h4>
+						{% endif %}
+						{% if sheet_categories %}
+							<h4 class="sheet_categories">{{- "CATEGORIES"|trans -}}:&nbsp;
+								{{- sheet_categories -}}
+							</h4>
+						{% endif %}
+
+						<div class="timesheet-notice" data-id="{{ sheet.id }}" data-type="sheet" data-view="view">
+							{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
+						</div>
+					</div>
+
+					<div class="form-group btn">
+						<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
+							{{"TIMESHEETS_EXPORT"|trans}}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% if hasFiles %}
+			<div class="inner-content">
+				<div class="page-content">
+
+					<h3>{{"FILES"|trans}}</h3>
+
+					<div id="files"></div>
+
+					<div class="form-group">
+						<div id="loadingIconFileUpload" class="centered loading-icon hidden">
+							<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		{% endif %}
+
+	</div>
+{% endblock %}
+
+{% block bottom %}
+	<div class="hidden">
+		<div id="iconDownload">{{ fontawesome('fas fa-download') }}</div>
 	</div>
 {% endblock %}

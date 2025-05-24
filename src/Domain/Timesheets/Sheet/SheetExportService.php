@@ -242,7 +242,7 @@ class SheetExportService extends Service {
          * @see https://github.com/PHPOffice/PhpSpreadsheet/issues/28
          * so a temporary file in a specific directory is generated and later deleted 
          */
-        $path = __DIR__ . '/../../../../files/';
+        $path = __DIR__ . '/../../../../files/tmp/';
         $excelFileName = @tempnam($path, 'phpxltmp');
         $writer->save($excelFileName);
 
@@ -334,7 +334,7 @@ class SheetExportService extends Service {
          * @see https://github.com/PHPOffice/PhpSpreadsheet/issues/28
          * so a temporary file in a specific directory is generated and later deleted 
          */
-        $path = __DIR__ . '/../../../../files/';
+        $path = __DIR__ . '/../../../../files/tmp/';
         $wordFileName = @tempnam($path, 'phpwordtmp');
         $writer->save($wordFileName);
 

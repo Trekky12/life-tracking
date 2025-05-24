@@ -147,3 +147,29 @@
         margin: 0 auto;
     }
 }
+#files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    container-type: inline-size;
+
+    .timesheet-notice-file {
+        padding: 1rem;
+        border: 1px solid variables.$color_light_gray;
+        border-radius: 5px;
+        flex: 0 1 auto;
+        //max-width: calc(50cqw - 0.5rem);
+        max-width: 100%;
+    }
+
+    .timesheet-notice-file-icons {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: flex-end;
+        span {
+            margin-left: 1rem;
+            @include mixins.font-size(2);
+        }
+    }
+}

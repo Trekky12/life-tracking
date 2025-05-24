@@ -56,10 +56,12 @@
 						<p id="alertErrorDetail"></p>
 					</span>
 				</div>
-				<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden">
-					<div class="timesheet-notice-wrapper">
-						<div class="timesheet-notice" data-id="{{ project.id }}" data-type="project">
-							<p class="notice-field" data-name="legend"></p>
+				<div id="timesheetEncryptionWrapper" class="hidden">
+					<div id="timesheetNoticeWrapper" data-project="{{ project.id }}">
+						<div class="timesheet-notice-wrapper">
+							<div class="timesheet-notice" data-id="{{ project.id }}" data-type="project">
+								<p class="notice-field" data-name="legend"></p>
+							</div>
 						</div>
 					</div>
 				</div>

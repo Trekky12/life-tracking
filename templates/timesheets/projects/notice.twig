@@ -24,44 +24,48 @@
 {% endblock %}
 
 {% block body %}
-	<div class="inner-content">
-		<div class="page-content">
 
-			<div id="loadingIconTimesheetNotice" class="centered loading-icon">
-				<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
-			</div>
+	<div id="loadingIconTimesheetNotice" class="centered loading-icon">
+		<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+	</div>
 
-			<div id="alertError" class="alert danger hidden">
-				<span class="closebtn">&times;</span>
-				<span class="alert-message">
-					<p>{{ "ENTRY_ERROR"|trans }}</p>
-					<p id="alertErrorDetail"></p>
-				</span>
-			</div>
-			<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" class="hidden" data-projectname="{{project.name}}">
+	<div id="alertError" class="alert danger hidden">
+		<span class="closebtn">&times;</span>
+		<span class="alert-message">
+			<p>{{ "ENTRY_ERROR"|trans }}</p>
+			<p id="alertErrorDetail"></p>
+		</span>
+	</div>
 
-				<form id="timesheetNoticeForm" class="form-horizontal" action="{{ url_for('timesheets_project_notice_save', {'project': project.hash}) }}" method="POST">
-					<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-					<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+	<div id="timesheetEncryptionWrapper" class="hidden">
+		<div class="inner-content">
+			<div class="page-content">
 
-					<div class="timesheet-notice-wrapper">
+				<div id="timesheetNoticeWrapper" data-project="{{ project.id }}" data-projectname="{{project.name}}">
 
-						<h3 class="sheet_title">{{ project.name }}</h3>
-						<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
-							<span id="lastSaved"></span>
-						</small>
+					<form id="timesheetNoticeForm" class="form-horizontal" action="{{ url_for('timesheets_project_notice_save', {'project': project.hash}) }}" method="POST">
+						<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+						<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
-						<div class="timesheet-notice" data-id="{{ project.id }}" data-type="project" data-view="edit">
-							{% include "timesheets/noticefield/fields-edit.twig" with {fields} only %}
+						<div class="timesheet-notice-wrapper">
+
+							<h3 class="sheet_title">{{ project.name }}</h3>
+							<small id="lastSavedWrapper" class="hidden">{{ "LAST_SAVED"|trans}}:
+								<span id="lastSaved"></span>
+							</small>
+
+							<div class="timesheet-notice" data-id="{{ project.id }}" data-type="project" data-view="edit">
+								{% include "timesheets/noticefield/fields-edit.twig" with {fields} only %}
+							</div>
 						</div>
-					</div>
 
-					<div class="form-group btn">
-						<button type="submit" class="button">{{"SAVE"|trans}}</button>
-						<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
-							{{"TIMESHEETS_EXPORT"|trans}}</button>
-					</div>
-				</form>
+						<div class="form-group btn">
+							<button type="submit" class="button">{{"SAVE"|trans}}</button>
+							<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
+								{{"TIMESHEETS_EXPORT"|trans}}</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -16,6 +16,7 @@ use App\Domain\Timesheets\Project\Project;
 use App\Domain\Main\Utility\Utility;
 use App\Domain\Main\Translator;
 use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
+use App\Domain\Timesheets\SheetFile\SheetFileMapper;
 use App\Domain\Timesheets\Customer\CustomerService;
 use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
@@ -36,6 +37,7 @@ class SheetService extends Service {
     protected $project_category_budget_service;
     protected $activity_creator;
     protected $project_mapper;
+    protected $sheet_files_mapper;
 
     public function __construct(
         LoggerInterface $logger,
@@ -52,7 +54,8 @@ class SheetService extends Service {
         NoticeFieldService $noticefield_service,
         ProjectCategoryBudgetService $project_category_budget_service,
         ActivityCreator $activity_creator,
-        ProjectMapper $project_mapper
+        ProjectMapper $project_mapper,
+        SheetFileMapper $sheet_files_mapper
     ) {
         parent::__construct($logger, $user);
 
@@ -70,6 +73,7 @@ class SheetService extends Service {
 
         $this->activity_creator = $activity_creator;
         $this->project_mapper = $project_mapper;
+        $this->sheet_files_mapper = $sheet_files_mapper;
     }
 
     public function view($hash, $from, $to, $categories, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
@@ -240,6 +244,7 @@ class SheetService extends Service {
             return $sheet->id;
         }, $sheets);
         $hasNotices = $this->sheet_notice_mapper->hasNotices($sheet_ids);
+        $hasFiles = $this->sheet_files_mapper->hasFiles($sheet_ids);
 
         $project_categories = $this->project_category_service->getCategoriesFromProject($project->id);
         $customers = $this->customer_service->getCustomersFromProject($project->id);
@@ -253,6 +258,8 @@ class SheetService extends Service {
             if ($project->has_duration_modifications > 0 && $sheet->duration_modified > 0 && $sheet->duration !== $sheet->duration_modified) {
                 $time = DateUtility::splitDateInterval($sheet->duration_modified) . ' (' . $time . ')';
             }
+
+            $hasNotice = (in_array($sheet->id, $hasNotices));
 
             $row = [];
             $row[] = '<input type="checkbox" name="check_row" data-id="' . $sheet->id . '">';
@@ -269,9 +276,9 @@ class SheetService extends Service {
                 $row[] = $sheet->categories;
             }
 
-            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) . '</a>';
+            $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) .  (in_array($sheet->id, array_keys($hasFiles)) ? (' / ' . $hasFiles[$sheet->id] . ' ' . $this->translation->getTranslatedString("FILES")) : '') . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
-            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" data-warning="' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_SHEET_DELETE_WARNING_NOTICE") : "") . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
+            $row[] = '<a href="#" data-url="' . $this->router->urlFor('timesheets_sheets_delete', ['id' => $sheet->id, 'project' => $project->getHash()]) . '" data-warning="' . (in_array($sheet->id, $hasNotices) || in_array($sheet->id, array_keys($hasFiles)) ? $this->translation->getTranslatedString("TIMESHEETS_SHEET_DELETE_WARNING_NOTICE") : "") . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
 
             $rendered_data[] = ["data" => $row, "attributes" => ["data-invoiced" => $sheet->is_invoiced, "data-billed" => $sheet->is_billed, "data-payed" => $sheet->is_payed, "data-happened" => $sheet->is_happened]];
         }
@@ -622,6 +629,7 @@ class SheetService extends Service {
             return $sheet->id;
         }, $sheets);
         $hasNotices = $this->sheet_notice_mapper->hasNotices($sheet_ids);
+        $hasFiles = $this->sheet_files_mapper->hasFiles($sheet_ids);
 
         $customers = $this->customer_service->getCustomersFromProject($project->id, 0);
 
@@ -684,7 +692,7 @@ class SheetService extends Service {
                     'previous' => $previous_sheets,
                     'remaining' => $remaining_sheets,
                     'sheet_notice' => $timesheet->id ? $this->router->urlFor('timesheets_sheets_notice_view', ['sheet' => $timesheet->id, 'project' => $project->getHash()]) . "?view=calendar" : null,
-                    'has_sheet_notice' => in_array($timesheet->id, $hasNotices),
+                    'has_sheet_notice' => in_array($timesheet->id, $hasNotices) || in_array($timesheet->id, array_keys($hasFiles)),
                     'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null
                 ]
             ];
