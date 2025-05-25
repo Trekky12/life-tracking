@@ -2,34 +2,39 @@
 
 {% set active = 'login' %}
 
+{% block javascript %}
+	<script src="{{baseURL}}/static/js/login.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+{% endblock %}
+
+
 {% block bottom %}
-    <div class="center-block">
-        <form class="form small horizontal" role="form" name="login" id="login" method="post">
-            <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-            <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                
-            <div class="form-group">
-                <label for="inputUsername" class="control-label hidden">{{"LOGIN"|trans}}</label>
-                <input name="username" class="form-control" id="inputUsername" placeholder="{{"LOGIN"|trans}}" value="" autofocus="" required="" type="text">
-            </div>
-            <div class="form-group">
-                <label for="inputPassword" class="control-label hidden">{{"PASSWORD"|trans}}</label>
-                <input name="password" class="form-control" id="inputPassword" placeholder="{{"PASSWORD"|trans}}" required="" type="password">
-            </div>
-            <div class="form-group">
-                <label for="inputCode" class="control-label hidden">{{"TWOFACTOR_CODE"|trans}}</label>
-                <input name="code" class="form-control" id="inputCode" placeholder="{{"TWOFACTOR_CODE"|trans}}" type="text">
-            </div>
-            <div class="form-group">
-                <label class="checkbox" for="remember">
-                    <input name="remember" type="checkbox" value="1" id="remember">
-                        {{"REMEMBER_LOGIN"|trans}}
-                </label>
-            </div>
-            <div class="form-group">
-                <button type="submit" id="submit" class="button">{{"DO_LOGIN"|trans}}</button>
-            </div>
-        </form>
-    </div>
+	<div class="center-block">
+		<form class="form small horizontal" role="form" name="login" id="login" method="post">
+			<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+			<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+			<div class="form-group">
+				<label for="inputUsername" class="control-label hidden">{{"LOGIN"|trans}}</label>
+				<input name="username" class="form-control" id="inputUsername" placeholder="{{"LOGIN"|trans}}" value="" autofocus="" required="" type="text">
+			</div>
+			<div class="form-group">
+				<label for="inputPassword" class="control-label hidden">{{"PASSWORD"|trans}}</label>
+				<input name="password" class="form-control" id="inputPassword" placeholder="{{"PASSWORD"|trans}}" required="" type="password">
+			</div>
+			<div class="form-group">
+				<label for="inputCode" class="control-label hidden">{{"TWOFACTOR_CODE"|trans}}</label>
+				<input name="code" class="form-control" id="inputCode" placeholder="{{"TWOFACTOR_CODE"|trans}}" type="text">
+			</div>
+			<div class="form-group">
+				<label class="checkbox" for="remember">
+					<input name="remember" type="checkbox" value="1" id="remember">
+					{{"REMEMBER_LOGIN"|trans}}
+				</label>
+			</div>
+			<div class="form-group">
+				<button type="submit" id="submit" class="button">{{"DO_LOGIN"|trans}}</button>
+			</div>
+		</form>
+	</div>
 
 {% endblock %}

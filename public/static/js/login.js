@@ -1,0 +1,1 @@
+"use strict";document.body.classList.contains("login")&&"indexedDB"in window&&(console.log("delete database"),window.indexedDB.deleteDatabase("lifeTrackingData"));

@@ -387,15 +387,6 @@ function initialize() {
         });
     }
 
-    if (document.body.classList.contains("login")) {
-        // Delete IndexedDBs
-        if (!('indexedDB' in window)) {
-            return;
-        }
-        console.log("delete database");
-        window.indexedDB.deleteDatabase('lifeTrackingData');
-    }
-
     /**
      * Delete
      * https://elliotekj.com/2016/11/05/jquery-to-pure-js-event-listeners-on-dynamically-created-elements/
