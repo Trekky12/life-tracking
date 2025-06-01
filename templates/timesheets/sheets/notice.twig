@@ -86,21 +86,21 @@
 
 		<div class="inner-content">
 			<div class="page-content">
+				<div id="timesheetFilesWrapper">
+					<h3>{{"FILES"|trans}}</h3>
 
-				<h3>{{"FILES"|trans}}</h3>
+					<div class="timesheet-files" data-id="{{ sheet.id }}"></div>
 
-				<div id="files"></div>
+					<div class="form-group">
+						<div id="loadingIconFileUpload" class="centered loading-icon hidden">
+							<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+						</div>
+					</div>
 
-				<div class="form-group">
-					<div id="loadingIconFileUpload" class="centered loading-icon hidden">
-						<span class="spinning">{{ fontawesome('fas fa-circle-notch') }}</span>
+					<div class="form-group">
+						<input name="fileupload" id="fileupload" class="form-control hidden" type="file" data-url="{{ url_for('timesheets_sheets_file_upload', {'sheet': sheet.id, 'project': project.hash}) }}"/>
 					</div>
 				</div>
-
-				<div class="form-group">
-					<input name="fileupload" id="fileupload" class="form-control hidden" type="file" data-url="{{ url_for('timesheets_sheets_file_upload', {'sheet': sheet.id, 'project': project.hash}) }}"/>
-				</div>
-
 			</div>
 		</div>
 	</div>

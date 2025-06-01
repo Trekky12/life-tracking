@@ -21,7 +21,6 @@ let checkboxHideEmptyNoticeFields = document.getElementById('checkboxHideEmptyNo
 
 const loadingFilesIcon = document.getElementById('loadingIconFileUpload');
 const fileInput = document.querySelector('#fileupload');
-const filesContainer = document.getElementById('files');
 
 if (!window.crypto || !window.crypto.subtle) {
     alertErrorDetail.innerHTML = lang.decrypt_error;
@@ -62,7 +61,7 @@ async function loadData() {
         return;
     }
 
-    let notice_fields = Array.from(timesheetNoticeWrapper.querySelectorAll('.timesheet-notice'));
+    let notice_fields = Array.from(timesheetEncryptionWrapper.querySelectorAll('.timesheet-notice'));
 
     // Sequential
     for (const notice_field of notice_fields) {
@@ -226,8 +225,9 @@ async function loadData() {
     //     }
     // }));
 
-    if (filesContainer) {
-        loadFiles();
+    let notice_file_fields = Array.from(timesheetEncryptionWrapper.querySelectorAll('.timesheet-files'));
+    for (const file_field of notice_file_fields) {
+        await loadFiles(file_field);
     }
 
     loadingIconTimesheetNotice.classList.add("hidden");
@@ -430,10 +430,27 @@ if (checkboxHideEmptySheets) {
         document.querySelectorAll('.timesheet-notice-wrapper[data-empty="1"]').forEach(function (el) {
             if (checkboxHideEmptySheets.checked) {
                 el.classList.add("hidden");
+                el.dataset.hidden = 1;
             } else {
                 el.classList.remove("hidden");
+                el.dataset.hidden = 0;
             }
         });
+
+        document.querySelectorAll('.timesheet-wrapper').forEach(function (wrapper) {
+            const notice = wrapper.querySelector('.timesheet-notice-wrapper');
+            const files = wrapper.querySelector('.timesheet-files-wrapper');
+
+            const noticeEmpty = notice?.dataset.empty === "1";
+            const filesEmpty = files?.dataset.empty === "1";
+
+            if (checkboxHideEmptySheets.checked && noticeEmpty && filesEmpty) {
+                wrapper.classList.add("hidden");
+            } else {
+                wrapper.classList.remove("hidden");
+            }
+        });
+
         return;
     });
 }
@@ -453,11 +470,11 @@ if (checkboxHideEmptyNoticeFields) {
 }
 
 
-async function loadFiles() {
+async function loadFiles(filesContainer) {
 
-    loadingFilesIcon.classList.remove('hidden');
+    let parent_id = filesContainer.dataset.id;
 
-    const response = await fetch(jsObject.timesheets_sheets_files, {
+    const response = await fetch(jsObject.timesheets_sheets_files + '?id=' + parent_id, {
         method: 'GET',
         credentials: "same-origin",
         headers: {
@@ -467,11 +484,18 @@ async function loadFiles() {
 
     const data = await response.json();
 
-    data.forEach(async function (el) {
-        await addFile(el);
-    });
-
-    loadingFilesIcon.classList.add('hidden');
+    if (data.length == 0) {
+        const wrapper = filesContainer.closest(".timesheet-files-wrapper");
+        if (wrapper) {
+            wrapper.classList.add("hidden");
+            wrapper.dataset.hidden = 1;
+            wrapper.dataset.empty = 1;
+        }
+    } else {
+        data.forEach(async function (el) {
+            await addFile(filesContainer, el);
+        });
+    }
 
     if (fileInput) {
         fileInput.classList.remove('hidden');
@@ -479,7 +503,7 @@ async function loadFiles() {
 
 }
 
-async function addFile(data) {
+async function addFile(filesContainer, data) {
 
     let CEK;
     try {
@@ -596,7 +620,7 @@ if (fileInput) {
             if (data['status'] === 'success') {
                 fileInput.value = "";
 
-                addFile(data);
+                addFile(fileInput.closest('#timesheetFilesWrapper').querySelector(".timesheet-files"), data);
 
             }
         } catch (error) {

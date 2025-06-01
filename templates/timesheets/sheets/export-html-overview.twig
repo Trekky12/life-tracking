@@ -48,19 +48,6 @@
 				<div class="page-content">
 					<h2 id="reportHeadline">{{ project.report_headline | raw}}</h2>
 					<h3 id="excelHeaderTime" data-from="{{ from }}" data-to="{{ to }}">{{- from|date(i18n.dateformatTwig.date) -}}&nbsp;-&nbsp;{{- to|date(i18n.dateformatTwig.date) -}}</h3>
-					<div class="search-filter">
-						<div class="filter-row">
-							<div class="filter-group">
-								<div class="filter-element">
-									<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
-								</div>
-								<div class="filter-element">
-									<button type="button" class="button button-outlined" id="excelExport">{{"EXPORT_EXCEL"|trans}}
-										{{"TIMESHEETS_EXPORT"|trans}}</button>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 
@@ -131,6 +118,25 @@
 					</tfoot>
 				</table>
 			</div>
+
+			<div class="inner-content">
+				<div class="page-content">
+					<div class="search-filter">
+						<div class="filter-row">
+							<div class="filter-group">
+								<div class="filter-element">
+									<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
+								</div>
+								<div class="filter-element">
+									<button type="button" class="button button-outlined" id="excelExport">{{"EXPORT_EXCEL"|trans}}
+										{{"TIMESHEETS_EXPORT"|trans}}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 {% endblock %}

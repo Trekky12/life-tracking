@@ -49,17 +49,6 @@
 				<div class="page-content">
 					<div class="search-filter">
 						<div class="filter-row">
-							<div class="filter-group">
-								<div class="filter-element">
-									<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
-								</div>
-								<div class="filter-element">
-									<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
-										{{"TIMESHEETS_EXPORT"|trans}}</button>
-								</div>
-							</div>
-						</div>
-						<div class="filter-row">
 							<label id="checkboxHideEmptySheetsLabel" for="checkboxHideEmptySheets">
 								<input type="checkbox" value="1" id="checkboxHideEmptySheets">
 								{{"TIMESHEETS_EXPORT_HIDE_EMPTY_SHEETS"|trans}}
@@ -76,7 +65,7 @@
 			</div>
 
 			{% for sheet in sheets %}
-				<div class="inner-content timesheet-notice-wrapper">
+				<div class="inner-content timesheet-wrapper">
 					<div class="page-content">
 						<h3 class="sheet_title">{{ sheet["title"] }}</h3>
 						{% if sheet["customer"] %}
@@ -98,12 +87,43 @@
 						<h4>{{"DIFFERENCE"|trans}}:
 							{{ sheet["time"] }}</h4>
 
-						<div class="timesheet-notice" data-id="{{ sheet["id"] }}" data-type="sheet" data-view="export">
-							{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
+						<div class="timesheet-notice-wrapper">
+							<div class="timesheet-notice" data-id="{{ sheet["id"] }}" data-type="sheet" data-view="export">
+								{% include "timesheets/noticefield/fields-view.twig" with {fields} only %}
+							</div>
+						</div>
+
+						<div class="timesheet-files-wrapper">
+							<h3>{{"FILES"|trans}}</h3>
+							<div class="timesheet-files" data-id="{{ sheet["id"] }}"></div>
 						</div>
 					</div>
 				</div>
 			{% endfor %}
+
+			<div class="inner-content">
+				<div class="page-content">
+					<div class="search-filter">
+						<div class="filter-row">
+							<div class="filter-group">
+								<div class="filter-element">
+									<button class="button print-btn" onclick="window.print()">{{ "PRINT"|trans }}</button>
+								</div>
+								<div class="filter-element">
+									<button type="button" class="button button-outlined" id="wordExport">{{"EXPORT_WORD"|trans}}
+										{{"TIMESHEETS_EXPORT"|trans}}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+	</div>
+{% endblock %}
+
+{% block bottom %}
+	<div class="hidden">
+		<div id="iconDownload">{{ fontawesome('fas fa-download') }}</div>
 	</div>
 {% endblock %}

@@ -231,7 +231,7 @@
                 'timesheets_project_notice_data': '{{url_for('timesheets_project_notice_data', {'project': project.hash})}}',
                 'timesheets_notice_params': '{{url_for('timesheets_notice_params', {'project': project.hash})}}',
                 'timesheets_notice_params_save': '{{url_for('timesheets_notice_params_save', {'project': project.hash})}}',
-                'timesheets_sheets_files' : '{{url_for('timesheets_sheets_files', {'project': project.hash, 'sheet': sheet.id})}}',
+                'timesheets_sheets_files' : '{{url_for('timesheets_sheets_files', {'project': project.hash})}}',
 {% endif %}
 {% if not hasTimesheetCalendar is null %}
                 'timesheets_calendar_events': '{{url_for('timesheets_calendar_events', {'project': project.hash})}}',
