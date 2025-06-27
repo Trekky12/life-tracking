@@ -15,6 +15,7 @@ const boardSidebar = document.getElementById('board-sidebar');
 let wasMobile = isMobile();
 
 const max_opacity = 0.8;
+let isMapMove = false;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     scrollToTab(document.querySelector('a.tabbar-tab.active'), true);
@@ -158,6 +159,11 @@ if (navigation && header && navigationOverlay) {
         // open navigation only with single touch
         if (evt.touches.length > 1) {
             isMultitouchMove = true;
+            return;
+        }
+
+        // skip if map was moved
+        if (isMapMove) {
             return;
         }
 

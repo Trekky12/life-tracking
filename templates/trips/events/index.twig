@@ -85,9 +85,14 @@
 						{% endif %}
 					{% endfor %}
 				</div>
-				<a id="createRoute" href="#">
-					<button class="button small trips_overview blue">{{ "CREATE_ROUTE"|trans }}</button>
-				</a>
+				<div class="misc-buttons">
+					<a id="createRoute">
+						<button class="button small trips_overview blue">{{ "CREATE_ROUTE"|trans }}</button>
+					</a>
+					<a id="reloadTrip">
+						<button class="button small trips_overview button-outlined" type="button">{{ fontawesome('fas fa-rotate') }}</button>
+					</a>
+				</div>
 			</div>
 
 			{% for item in range %}

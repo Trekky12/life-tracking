@@ -129,6 +129,21 @@ body.trips .inner-content .page-header {
             a {
                 margin-left: 1rem;
             }
+
+            i,
+            svg {
+                margin-bottom: 5px;
+                @include mixins.font-size(2);
+
+                @media screen and (min-width: variables.$size_tablet) {
+                    margin-left: 5px;
+                }
+
+
+                &:hover {
+                    color: variables.$color_blue;
+                }
+            }
         }
     }
 }
@@ -146,11 +161,15 @@ body.trips .inner-content .page-header {
         justify-content: space-between;
     }
 
-    #createRoute button {
+    .misc-buttons {
+        display: flex;
+        flex-shrink: 0;
+
         margin-bottom: 1rem;
 
         @media screen and (min-width: variables.$size_mobile_navigation) {
             margin-bottom: 0;
+            justify-content: flex-end;
         }
     }
 }
@@ -179,7 +198,6 @@ svg:hover {
 }
 
 .leaflet-routing-btn {
-
     &.add,
     &.reverse {
         svg {

@@ -99,6 +99,15 @@ if (routeBtn) {
     });
 }
 
+const reloadTripBtn = document.getElementById('reloadTrip');
+if (reloadTripBtn !== null) {
+    reloadTripBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        loadingWindowOverlay.classList.remove("hidden");
+        window.location.reload();
+    });
+}
+
 initMap();
 
 function getMarkers(from, to) {
@@ -736,6 +745,21 @@ function initMap() {
         let marker = L.marker(e.latlng, {});
         addWaypoint(marker);
         routeControl.show();
+    });
+
+    mymap.on("movestart zoomstart", function (e) {
+        isMapMove = true;
+    });
+    mymap.on("moveend zoomend", function (e) {
+        isMapMove = false;
+    });
+
+    mymap.on("fullscreenchange", function (e) {
+        if (mymap.isFullscreen()) {
+            isMapMove = false;
+        } else {
+            isMapMove = true;
+        }
     });
 }
 
