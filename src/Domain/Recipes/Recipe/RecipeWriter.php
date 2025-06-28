@@ -67,9 +67,7 @@ class RecipeWriter extends ObjectActivityWriter
                     new \Intervention\Image\Drivers\Gd\Driver()
                 );
                 $img = $manager->read($complete_file_name . '.' . $file_extension);
-                $img->resize(400, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
+                $img = $img->scale(width: 400);
                 $img->save($complete_file_name . '-small.' . $file_extension);
 
                 $this->logger->notice("Upload Recipe Image, Image Set", array("id" => $id, "image" => $image->getClientFilename()));

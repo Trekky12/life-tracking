@@ -4,7 +4,7 @@ namespace App\Domain\Trips\Event;
 
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 use App\Application\Payload\Payload;
 
 class TripEventImageService {
@@ -68,13 +68,11 @@ class TripEventImageService {
             /**
              * Create Thumbnail
              */
-            $img = Image::make($complete_file_name . '.' . $file_extension);
-            /**
-             * @link http://image.intervention.io/api/resize
-             */
-            $img->resize(200, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $manager = new ImageManager(
+                new \Intervention\Image\Drivers\Gd\Driver()
+            );
+            $img = $manager->read($complete_file_name . '.' . $file_extension);
+            $img = $img->scale(width: 200);
             $img->save($complete_file_name . '-small.' . $file_extension);
 
             $this->mapper->update_image($event->id, $file_name . '.' . $file_extension);

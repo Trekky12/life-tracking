@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 
 class MuscleWriter extends ObjectActivityWriter {
 
@@ -41,10 +41,11 @@ class MuscleWriter extends ObjectActivityWriter {
                 /**
                  * Create Thumbnail
                  */
-                $img = Image::make($complete_file_name . '.' . $file_extension);
-                $img->resize(500, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
+                $manager = new ImageManager(
+                    new \Intervention\Image\Drivers\Gd\Driver()
+                );
+                $img = $manager->read($complete_file_name . '.' . $file_extension);
+                $img = $img->scale(width: 500);
                 $img->save($complete_file_name . '-small.' . $file_extension);
 
                 $this->logger->notice("Upload Muscle Primary Image, Image Set", array("id" => $id, "image" => $image->getClientFilename()));
@@ -69,10 +70,11 @@ class MuscleWriter extends ObjectActivityWriter {
                 /**
                  * Create Thumbnail
                  */
-                $img = Image::make($complete_file_name . '.' . $file_extension);
-                $img->resize(500, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
+                $manager = new ImageManager(
+                    new \Intervention\Image\Drivers\Gd\Driver()
+                );
+                $img = $manager->read($complete_file_name . '.' . $file_extension);
+                $img = $img->scale(width: 500);
                 $img->save($complete_file_name . '-small.' . $file_extension);
 
                 $this->logger->notice("Upload Muscle Secondary Image, Image Set", array("id" => $id, "image" => $image->getClientFilename()));

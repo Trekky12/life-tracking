@@ -68,22 +68,10 @@ class ProfileService extends Service {
                 new \Intervention\Image\Drivers\Gd\Driver()
             );
             $img = $manager->read($complete_file_name . '.' . $file_extension);
-            /**
-             * @link http://image.intervention.io/api/resize
-             */
-            /* $img->resize( 100, null, function ($constraint) {
-              $constraint->aspectRatio();
-              } ); */
-            $img->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->crop(100, 100);
+            $img = $img->cover(100, 100);
             $img->save($complete_file_name . '-small.' . $file_extension);
 
-            $img->resize(50, 50, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->crop(50, 50);
+            $img = $img->cover(50, 50);
             $img->save($complete_file_name . '-mini.' . $file_extension);
 
             $this->user_service->updateImage($user->id, $file_name . '.' . $file_extension);

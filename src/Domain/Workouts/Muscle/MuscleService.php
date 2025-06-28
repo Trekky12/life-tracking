@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
 use App\Domain\Base\Settings;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 use App\Domain\Settings\SettingsMapper;
 
 class MuscleService extends Service {
@@ -123,13 +123,11 @@ class MuscleService extends Service {
             /**
              * Create Thumbnail
              */
-            $img = Image::make($complete_file_name . '.' . $file_extension);
-            /**
-             * @link http://image.intervention.io/api/resize
-             */
-            $img->resize(500, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $manager = new ImageManager(
+                new \Intervention\Image\Drivers\Gd\Driver()
+            );
+            $img = $manager->read($complete_file_name . '.' . $file_extension);
+            $img = $img->scale(width: 500);
             $img->save($complete_file_name . '-small.' . $file_extension);
 
             $this->settings_mapper->addOrUpdateSetting('basemuscle_image',  $file_name . '.' . $file_extension, "String");
