@@ -1046,8 +1046,8 @@ if (timesheetsSheetsTableContainer) {
     const hasEnd = timesheetsSheetsTableContainer.dataset.hasEnd === "1";
 
     var timesheetsSheetsTable = new JSTable(timesheetsSheetsTableContainer, {
-        perPage: 20,
-        perPageSelect: [10, 20, 50, 100, 200],
+        perPage: 100,
+        perPageSelect: [20, 50, 100, 200, 500],
         labels: tableLabels,
         layout: layout,
         columns: [

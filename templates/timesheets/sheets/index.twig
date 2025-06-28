@@ -182,7 +182,7 @@
 			<table id="timesheets_sheets_table" class="table table-hover small" data-has-end="{{ project.has_end }}">
 				<thead>
 					<tr>
-						<th><input type="checkbox" id="checkAllRows"></th>
+						<th><input type="checkbox" class="checkAllRows"></th>
 						<th>{{"DATE"|trans}}</th>
 						<th>
 							{% if not project.has_end %}
@@ -244,7 +244,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<th></th>
+						<th><input type="checkbox" class="checkAllRows"></th>
 						<th></th>
 						<th></th>
 						{% if project.has_end %}

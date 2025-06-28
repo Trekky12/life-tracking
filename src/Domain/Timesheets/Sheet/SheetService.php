@@ -95,7 +95,7 @@ class SheetService extends Service {
           } */
         $include_empty_categories = true;
 
-        $response_data = $this->getTableDataIndex($project, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
+        $response_data = $this->getTableDataIndex($project, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, 100);
 
         $response_data["users"] = $this->user_service->getAll();
         $response_data["categories"] = $project_categories;
@@ -444,6 +444,18 @@ class SheetService extends Service {
 
         $customer_fields = $this->noticefield_service->getNoticeFields($project->id, 'customer');
 
+        $range = $this->getMapper()->getMinMaxDate("start", $project->has_end ? "end" : "start", $project->id, "project");
+        $minTotal = $range["min"];
+        $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
+
+        // Month Filter
+        $d1 = new \DateTime('first day of this month');
+        $minMonth = $d1->format('Y-m-d');
+        $d2 = new \DateTime('last day of this month');
+        $maxMonth = $d2->format('Y-m-d');
+
+        $quarters = $this->getQuarterDates();
+
         return new Payload(Payload::$RESULT_HTML, [
             "project" => $project,
             "categories" => $project_categories,
@@ -457,7 +469,16 @@ class SheetService extends Service {
             "customers" => $customers,
             "customer" => $customer,
             "customer_fields" => $customer_fields,
-            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
+            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id),
+            "min" => [
+                "total" => $minTotal,
+                "month" => $minMonth,
+            ],
+            "max" => [
+                "total" => $maxTotal,
+                "month" => $maxMonth,
+            ],
+            "quarters" => $quarters
         ]);
     }
 

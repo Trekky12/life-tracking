@@ -102,11 +102,25 @@
         margin-top: 1rem;
 
         .options-element {
-            margin-right: 1rem;
+            width: 100%;
+
+            @media screen and (min-width: variables.$size_mobile_navigation) {
+                margin-right: 1rem;
+                width: variables.$size_mini;
+            }
+
+            .select-wrapper, select{
+                width: 100%;
+            }
         }
 
+        
         .options-element ~ .filter-element {
-            margin-top: 0;
+            margin-top: 1rem;
+
+            @media screen and (min-width: variables.$size_mobile_navigation) {
+                margin-top: 0;
+            }
         }
 
         @media screen and (min-width: variables.$size_very_big) {

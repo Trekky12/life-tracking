@@ -35,7 +35,9 @@
 
 			<form method="GET" action="{{ url_for('timesheets_sheets_export', {'project' : project.hash}) }}" class="search-filter">
 
-				<div class="filter-row">
+				<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+				<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+				<div class="filter-row space-between">
 					<div class="filter-element">
 						<div class="flatpickr-group" id="dateRange">
 							<input type="text" value="{{from}} to {{to}}" data-input/>
@@ -48,12 +50,32 @@
 								{{ fontawesome('fas fa-xmark') }}
 							</a>
 						</div>
-
-						<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-						<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
-
+					</div>
+					{% if project.show_quarters_buttons == 1 %}
+						<div class="filter-group">
+							<div class="filter-element">
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ quarters["last"]["start"] }}" data-to="{{ quarters["last"]["end"] }}">{{ quarters["last"]["name"] }}</button>
+							</div>
+							<div class="filter-element">
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ quarters["current"]["start"] }}" data-to="{{ quarters["current"]["end"] }}">{{ quarters["current"]["name"] }}</button>
+							</div>
+							<div class="filter-element">
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ quarters["next"]["start"] }}" data-to="{{ quarters["next"]["end"] }}">{{ quarters["next"]["name"] }}</button>
+							</div>
+						</div>
+					{% endif %}
+					<div class="filter-group">
+						{% if project.show_month_button == 1 %}
+							<div class="filter-element">
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ "SHOW_THIS_MONTH"|trans }}</button>
+							</div>
+						{% endif %}
+						<div class="filter-element">
+							<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["total"] }}" data-to="{{ max["total"] }}">{{ "SHOW_ALL"|trans }}</button>
+						</div>
 					</div>
 				</div>
+
 				{% if categories %}
 					<div class="filter-row">
 						<div class="categories-filter filter-element">

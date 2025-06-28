@@ -591,9 +591,9 @@ if (checkBoxRepeat && repeatsContent) {
 
 
 document.addEventListener('click', function (event) {
-    let checkAllRowsInput = event.target.closest('#checkAllRows');
+    let checkAllRowsInput = event.target.closest('.checkAllRows');
     if (checkAllRowsInput) {
-        let checkboxes = document.querySelectorAll('#timesheets_sheets_table tbody input[type="checkbox"]');
+        let checkboxes = document.querySelectorAll('#timesheets_sheets_table input[type="checkbox"]');
         checkboxes.forEach(function (checkbox) {
             if (checkAllRowsInput.checked) {
                 checkbox.checked = true;
