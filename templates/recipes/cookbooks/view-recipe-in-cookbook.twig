@@ -19,16 +19,19 @@
 				{{ recipe.name|raw }}</h2>
 		</div>
 		<div class="buttons">
-			<a href="#" data-url="{{ url_for('recipes_cookbooks_remove_recipe', {'cookbook' : cookbook.hash}) }}?recipe={{ recipe.id }}" class="btn-delete">
-				<button class="button button-outlined">{{"RECIPES_REMOVE_FROM_COOKBOOK"|trans}}
-					{{ fontawesome('fas fa-book') }}</button>
+			<a href="#" data-url="{{ url_for('recipes_cookbooks_remove_recipe', {'cookbook' : cookbook.hash}) }}?recipe={{ recipe.id }}" class="btn-delete" data-confirm="{{'RECIPES_REMOVE_FROM_COOKBOOK_CONFIRM'|trans}}">
+				<button class="button button-outlined">{{ fontawesome('fas fa-book') }}
+					{{"RECIPES_REMOVE_FROM_COOKBOOK"|trans}}
+				</button>
 			</a>
 			{% if recipe.getOwner() == user.id %}
 				<a href="{{ url_for('recipes_edit', {'id' : recipe.id}) }}">
-					<button class="button button-text">{{ fontawesome('fas fa-pen-to-square') }}</button>
+					<button class="button button-text">{{ fontawesome('fas fa-pen-to-square') }}
+						{{"EDIT"|trans}}</button>
 				</a>
 				<a href="#" data-url="{{ url_for('recipes_delete', {'id' : recipe.id}) }}" class="btn-delete">
-					<button class="button button-text">{{ fontawesome('fas fa-trash') }}</button>
+					<button class="button button-text">{{ fontawesome('fas fa-trash') }}
+						{{"DELETE"|trans}}</button>
 				</a>
 			{% endif %}
 		</div>

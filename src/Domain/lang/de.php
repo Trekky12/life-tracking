@@ -877,6 +877,7 @@ $lang["RECIPES_ADD_STEP"] = "Schritt hinzufügen";
 $lang["RECIPES_MINUTES"] = "min.";
 $lang["RECIPES_ADD_TO_COOKBOOK"] = "Zum Kochbuch hinzufügen";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Aus Kochbuch entfernen";
+$lang["RECIPES_REMOVE_FROM_COOKBOOK_CONFIRM"] = "Soll das Rezept aus dem Kochbuch entfernt werden?";
 
 $lang["RECIPES_SHOPPINGLISTS"] = "Einkaufslisten";
 $lang["RECIPES_SHOPPINGLIST"] = "Einkaufsliste";

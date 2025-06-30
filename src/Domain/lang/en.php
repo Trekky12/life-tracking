@@ -878,6 +878,7 @@ $lang["RECIPES_ADD_STEP"] = "Add step";
 $lang["RECIPES_MINUTES"] = "min.";
 $lang["RECIPES_ADD_TO_COOKBOOK"] = "Add to cookbook";
 $lang["RECIPES_REMOVE_FROM_COOKBOOK"] = "Remove from cookbook";
+$lang["RECIPES_REMOVE_FROM_COOKBOOK_CONFIRM"] = "Do you really want to remove the recipe from the cookbook?";
 
 $lang["RECIPES_SHOPPINGLISTS"] = "shopping lists";
 $lang["RECIPES_SHOPPINGLIST"] = "shopping list";

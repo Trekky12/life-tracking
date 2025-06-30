@@ -38,13 +38,13 @@
 							<td>{{grocery.name|raw}}</td>
 							<td>{{grocery.unit}}</td>
 							<td>
-								{% if grocery.getOwner() == user.id %}
+								{% if grocery.getOwner() == user.id or user.isAdmin() %}
 									<a href="{{ url_for('recipes_groceries_edit', {'id' : grocery.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 								{% endif %}
 							</td>
 
 							<td>
-								{% if grocery.getOwner() == user.id %}
+								{% if grocery.getOwner() == user.id or user.isAdmin() %}
 									<a href="#" data-url="{{ url_for('recipes_groceries_delete', {'id' : grocery.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
 								{% endif %}
 							</td>

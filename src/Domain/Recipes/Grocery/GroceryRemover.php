@@ -19,7 +19,7 @@ class GroceryRemover extends ObjectActivityRemover {
     }
 
     public function delete($id, $additionalData = null): Payload {
-        if ($this->grocery_service->isOwner($id) === false) {
+        if ($this->grocery_service->isOwner($id) === false && !$this->current_user->getUser()->isAdmin()) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
         return parent::delete($id, $additionalData);

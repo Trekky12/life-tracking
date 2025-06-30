@@ -5,6 +5,10 @@ const addStepBtn = document.querySelector('#add-step-btn');
 const step_dummy = document.querySelector('#templates .step-dummy');
 const ingredient_dummy = document.querySelector('#templates .step-ingredient-dummy');
 
+function createUniqueID() {
+    return Math.floor(Math.random() * Date.now());
+}
+
 addStepBtn.addEventListener('click', function (event) {
     event.preventDefault();
 
@@ -62,10 +66,11 @@ document.addEventListener('click', function (event) {
 
         ingredientsList.appendChild(new_ingredient);
 
+        let uniqueID = createUniqueID();
         let ingredient_selector = new_ingredient.querySelector('.step-ingredient-select');
-        ingredient_selector.id = ingredient_selector.id + "-" + step_idx + "-" + ingredient_idx;
-        ingredient_selector.parentElement.id = ingredient_selector.parentElement.id + "-" + step_idx + "-" + ingredient_idx;
-        ingredient_selector.previousElementSibling.id = ingredient_selector.previousElementSibling.id + "-" + step_idx + "-" + ingredient_idx;
+        ingredient_selector.id = ingredient_selector.id + "-" + uniqueID;
+        ingredient_selector.parentElement.id = ingredient_selector.parentElement.id + "-" + uniqueID;
+        ingredient_selector.previousElementSibling.id = ingredient_selector.previousElementSibling.id + "-" + uniqueID;
 
         createChoiceIngredients(ingredient_selector);
     }
@@ -102,6 +107,7 @@ function updateStepFields() {
 function createSortableSteps(element) {
     new Sortable(element, {
         scroll: true,
+        scrollSensitivity: 100,
         draggable: ".step",
         swapThreshold: 0.9,
         fallbackOnBody: true,
@@ -159,7 +165,6 @@ function createSortableIngredients(step_ingredients_wrapper) {
 }
 
 async function createChoiceIngredients(element) {
-
     new autoComplete({
         data: {
             src: async () => {

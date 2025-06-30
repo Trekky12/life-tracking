@@ -29,7 +29,7 @@ class GroceryService extends Service
 
     public function edit($entry_id)
     {
-        if ($this->isOwner($entry_id) === false) {
+        if ($this->isOwner($entry_id) === false && !$this->current_user->getUser()->isAdmin()) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 

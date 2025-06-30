@@ -20,15 +20,18 @@
 		</div>
 		<div class="buttons">
 			<a href="{{ url_for('recipes_recipe_add_to_cookbook', {'recipe': recipe.hash}) }}" id="add_to_cookbook">
-				<button class="button button-outlined">{{"RECIPES_ADD_TO_COOKBOOK"|trans}}
-					{{ fontawesome('fas fa-book') }}</button>
+				<button class="button button-outlined">{{ fontawesome('fas fa-book') }}
+					{{"RECIPES_ADD_TO_COOKBOOK"|trans}}
+				</button>
 			</a>
 			{% if recipe.getOwner() == user.id %}
 				<a href="{{ url_for('recipes_edit', {'id' : recipe.id}) }}">
-					<button class="button button-text">{{ fontawesome('fas fa-pen-to-square') }}</button>
+					<button class="button button-text">{{ fontawesome('fas fa-pen-to-square') }}
+						{{"EDIT"|trans}}</button>
 				</a>
 				<a href="#" data-url="{{ url_for('recipes_delete', {'id' : recipe.id}) }}" class="btn-delete">
-					<button class="button button-text">{{ fontawesome('fas fa-trash') }}</button>
+					<button class="button button-text">{{ fontawesome('fas fa-trash') }}
+						{{"DELETE"|trans}}</button>
 				</a>
 			{% endif %}
 		</div>
