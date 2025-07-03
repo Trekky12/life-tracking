@@ -485,6 +485,7 @@ $lang["CURRENT_YEAR"] = "current year";
 $lang["APPLICATION_PASSWORDS"] = "application passwords";
 
 $lang["TIMESHEETS"] = "timesheets";
+$lang["TIMESHEETS_PROJECT"] = "timesheet project";
 $lang["TIMESHEETS_PROJECTS"] = "timesheet projects";
 $lang["TIMESHEETS_OVERVIEW"] = "Overview";
 $lang["TIMESHEETS_FAST_DAY_BASED"] = "Come/Leave";
@@ -500,6 +501,7 @@ $lang["EXPORT_EXCEL"] = "Excel";
 $lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (with notices)";
 $lang["EXPORT_HTML_TABLE_OVERVIEW"] = "overview";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "day based (instead project based)";
+$lang["TIMESHEETS_PROJECT_CATEGORY"] = "Category";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "total range";
@@ -927,6 +929,8 @@ $lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"] = "Label for customer (singular)";
 $lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Label for customers (plural)";
 
 $lang["TIMESHEETS_NOTICE_PASSWORD"] = "notice password";
+
+$lang["TIMESHEETS_WARNING_NO_CATEGORY_ASSIGNED"] = "There was no category selected!";
 
 $lang["PRINT"] = "Print";
 

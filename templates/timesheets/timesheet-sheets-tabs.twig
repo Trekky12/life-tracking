@@ -13,5 +13,14 @@
 				{{"TIMESHEETS_FAST_PROJECT_BASED"|trans}}
 			{% endif %}
 		</a>
+
+		<a class="tabbar-tab {% if active == 'timesheets_customers' %}active{% endif %}" href="{{ url_for('timesheets_customers', {'project' : project.hash}) }}">
+			{% if project.customers_name_plural %}
+				{{project.customers_name_plural}}
+			{% else %}
+				{{"TIMESHEETS_CUSTOMERS"|trans}}
+			{% endif %}
+		</a>
+		<a class="tabbar-tab {% if active == 'timesheets_project_categories' %}active{% endif %}" href="{{ url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{"CATEGORIES"|trans}}</a>
 	</div>
 </div>

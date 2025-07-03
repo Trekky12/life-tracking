@@ -1027,7 +1027,7 @@ var timesheetsProjectsTable = new JSTable("#timesheets_projects_table", {
             sort: "asc"
         },
         {
-            select: [1, 2, 3, 4, 5, 6, 7],
+            select: [1, 2, 3, 4, 5],
             sortable: false,
             searchable: false
         }

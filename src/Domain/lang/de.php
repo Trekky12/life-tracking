@@ -484,6 +484,7 @@ $lang["CURRENT_YEAR"] = "aktuelles Jahr";
 $lang["APPLICATION_PASSWORDS"] = "Anwendungspasswörter";
 
 $lang["TIMESHEETS"] = "Zeiterfassung";
+$lang["TIMESHEETS_PROJECT"] = "Zeiterfassungsprojekt";
 $lang["TIMESHEETS_PROJECTS"] = "Zeiterfassungsprojekte";
 $lang["TIMESHEETS_OVERVIEW"] = "Übersicht";
 $lang["TIMESHEETS_FAST_DAY_BASED"] = "Kommen/Gehen";
@@ -499,6 +500,7 @@ $lang["EXPORT_EXCEL"] = "Excel";
 $lang["EXPORT_HTML_WITH_NOTICES"] = "HTML (mit Notizen)";
 $lang["EXPORT_HTML_TABLE_OVERVIEW"] = "Übersicht";
 $lang["TIMESHEETS_IS_DAY_BASED"] = "Tagesbasiert (anstatt Projektbasiert)";
+$lang["TIMESHEETS_PROJECT_CATEGORY"] = "Zeiterfassungskategorie";
 $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Zeiterfassungskategorien";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Standardansicht";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "kompletter Zeitraum";
@@ -926,6 +928,8 @@ $lang["TIMESHEETS_CUSTOMERS_NAME_SINGULAR"] = "Beschreibung für Kunde (Singular
 $lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Beschreibung für Kunden (Plural)";
 
 $lang["TIMESHEETS_NOTICE_PASSWORD"] = "Passwort für Notizen";
+
+$lang["TIMESHEETS_WARNING_NO_CATEGORY_ASSIGNED"] = "Es wurde keine Kategorie ausgewählt!";
 
 $lang["PRINT"] = "Drucken";
 

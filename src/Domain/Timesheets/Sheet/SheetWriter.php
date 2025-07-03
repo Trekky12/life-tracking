@@ -86,6 +86,12 @@ class SheetWriter extends ObjectActivityWriter {
             $payload->addFlashMessage('additional_flash_message', $result["message"]);
         }
 
+        $categories = count($this->getMapper()->getCategoriesFromSheet($entry->id));
+        if($categories == 0){
+            $payload->addFlashMessage('additional_flash_message_type', 'warning');
+            $payload->addFlashMessage('additional_flash_message', $this->translation->getTranslatedString("TIMESHEETS_WARNING_NO_CATEGORY_ASSIGNED"));
+        }
+
 
         /**
          * Add repeating entries

@@ -436,15 +436,14 @@ if (calendarEl) {
             let categoriesName = categories.querySelector(".categoriesName");
             if (info.event.extendedProps.categories) {
                 categoriesName.textContent = info.event.extendedProps.categories;
+                categories.classList.remove("hidden");
             } else {
                 categoriesName.textContent = "";
                 categories.classList.add("hidden");
             }
 
-            let is_part_of_series = info.event.extendedProps.reference_sheet != null || info.event.extendedProps.series.length > 0;
-
             let state = eventModal.querySelector(".state");
-            if (info.event.extendedProps.is_invoiced == 0 && info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_happened == 0 && !is_part_of_series) {
+            if (info.event.extendedProps.is_invoiced == 0 && info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_happened == 0) {
                 state.classList.add("hidden");
             } else {
                 state.classList.remove("hidden");
@@ -476,63 +475,163 @@ if (calendarEl) {
                 } else {
                     happened.classList.add("hidden");
                 }
+            }
 
-                let series = eventModal.querySelector(".series");
-                let previous = eventModal.querySelector('.previous');
-                let following = eventModal.querySelector('.following');
-                let following_last = eventModal.querySelector('.following-last');
+            let series = eventModal.querySelector(".series");
+            let previous = eventModal.querySelector('.previous');
+            let following = eventModal.querySelector('.following');
+            let following_last = eventModal.querySelector('.following-last');
+            let following_delete_btn = eventModal.querySelector('.btn-deletefollowing');
 
-                let previous_list = previous.querySelector('ul');
-                previous_list.innerHTML = "";
+            let previous_list = previous.querySelector('ul');
+            previous_list.innerHTML = "";
 
-                let following_list = following.querySelector('ul');
-                following_list.innerHTML = "";
+            let following_list = following.querySelector('ul');
+            following_list.innerHTML = "";
 
-                let following_delete_btn = eventModal.querySelector('.btn-deletefollowing');
+            let is_part_of_series = info.event.extendedProps.reference_sheet != null || info.event.extendedProps.series.length > 0;
 
-                if (is_part_of_series) {
-                    series.classList.remove("hidden");
-                    series.querySelector('.count').innerHTML = info.event.extendedProps.series.length;
+            if (!is_part_of_series) {
+                series.classList.add("hidden");
+                series.querySelector('.count').innerHTML = "";
 
-                    if (info.event.extendedProps.previous.length > 0) {
-                        previous.classList.remove("hidden");
-                        info.event.extendedProps.previous.forEach(item => {
-                            const li = document.createElement('li');
-                            li.textContent = item;
-                            previous_list.appendChild(li);
-                        });
-                    } else {
-                        previous.classList.add("hidden");
-                    }
+                previous.classList.add("hidden");
+                following.classList.add("hidden");
+                following_delete_btn.classList.add("hidden");
 
-                    if (info.event.extendedProps.remaining.length > 0) {
-                        following_last.classList.add("hidden");
-                        following.classList.remove("hidden");
-                        info.event.extendedProps.remaining.forEach(item => {
-                            const li = document.createElement('li');
-                            li.textContent = item;
-                            following_list.appendChild(li);
-                        });
+            } else {
+                series.classList.remove("hidden");
+                series.querySelector('.count').innerHTML = info.event.extendedProps.series.length;
 
-                        following_delete_btn.classList.remove("hidden");
-                    } else {
-                        following_last.classList.remove("hidden");
-                        following.classList.add("hidden");
-                        following_delete_btn.classList.add("hidden");
-                    }
-
+                if (info.event.extendedProps.previous.length > 0) {
+                    previous.classList.remove("hidden");
+                    info.event.extendedProps.previous.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        previous_list.appendChild(li);
+                    });
                 } else {
-                    series.classList.add("hidden");
-                    series.querySelector('.count').innerHTML = "";
-
                     previous.classList.add("hidden");
+                }
 
+                if (info.event.extendedProps.remaining.length > 0) {
+                    following_last.classList.add("hidden");
+                    following.classList.remove("hidden");
+                    info.event.extendedProps.remaining.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        following_list.appendChild(li);
+                    });
+
+                    following_delete_btn.classList.remove("hidden");
+                } else {
+                    following_last.classList.remove("hidden");
                     following.classList.add("hidden");
                     following_delete_btn.classList.add("hidden");
                 }
             }
 
-            let sheetNoticeButton = eventModal.querySelector(".sheet-notice-btn");
+            let sheetCategoryBudgetsWrapper = eventModal.querySelector(".sheet-category-budgets-wrapper");
+            let sheetCategoryBudgets = sheetCategoryBudgetsWrapper.querySelector(".sheet-category-budgets");
+            sheetCategoryBudgets.innerHTML = "";
+
+            const budgets = info.event.extendedProps.categorybudgets;
+            if (budgets) {
+                sheetCategoryBudgetsWrapper.classList.remove("hidden");
+
+                budgets.forEach(budget => {
+                    const budgetDiv = document.createElement("div");
+                    budgetDiv.classList.add("budget-entry");
+
+                    var h4 = document.createElement("h4");
+                    var title = budget.name ? budget.name : "";
+
+                    if (budget.start && budget.end) {
+                        title += " (" + moment(budget.start).format(i18n.dateformatJS.date) + " - " + moment(budget.en).format(i18n.dateformatJS.date) + ")";
+                    }
+                    h4.innerHTML = title;
+                    budgetDiv.appendChild(h4);
+
+                    if (budget.category_names && budget.category_names.length > 0) {
+                        var categoriesDiv = document.createElement("div");
+                        categoriesDiv.className = "categories-list";
+                        categoriesDiv.innerHTML = lang.categories + ": " + budget.category_names;
+                        budgetDiv.appendChild(categoriesDiv);
+                    }
+
+                    if (budget.notice) {
+                        var small = document.createElement("small");
+                        small.innerHTML = budget.notice;
+                        budgetDiv.appendChild(small);
+                    }
+
+                    var valuesDiv = document.createElement("div");
+                    valuesDiv.className = "values";
+
+                    var span1 = document.createElement("span");
+                    span1.innerHTML = "0";
+                    valuesDiv.appendChild(span1);
+
+                    var span2 = document.createElement("span");
+                    span2.innerHTML = (budget.categorization !== "count") ? splitDateInterval(budget.sum, true) : budget.sum;
+                    valuesDiv.appendChild(span2);
+
+                    var span3 = document.createElement("span");
+                    span3.innerHTML = (budget.categorization !== "count") ? splitDateInterval(budget.value, true) : budget.value;
+                    valuesDiv.appendChild(span3);
+
+                    budgetDiv.appendChild(valuesDiv);
+
+                    var progressBar = document.createElement("div");
+                    progressBar.className = "progress-bar";
+
+                    var progressClass = "green";
+                    if (budget.warning3 > 0 && budget.sum >= budget.warning3) {
+                        progressClass = "red";
+                    }
+                    else if (budget.warning2 > 0 && budget.sum >= budget.warning2) {
+                        progressClass = "orange";
+                    }
+                    else if (budget.warning1 > 0 && budget.sum >= budget.warning1) {
+                        progressClass = "yellow";
+                    }
+
+                    var progress = document.createElement("div");
+                    progress.className = "progress " + progressClass;
+                    progress.style.width = budget.percent + "%";
+
+                    if (parseFloat(budget.percent) >= 25) {
+                        progress.innerHTML = budget.percent + "%";
+                    }
+
+                    progressBar.appendChild(progress);
+
+                    if (budget.percent && parseFloat(budget.percent) < 25) {
+                        var progressText = document.createElement("div");
+                        progressText.className = "progress progress-text";
+                        progressText.innerHTML = budget.percent + "%";
+                        progressBar.appendChild(progressText);
+                    }
+
+                    budgetDiv.appendChild(progressBar);
+
+                    if (budget.diff !== null && typeof budget.diff !== "undefined") {
+                        var remainingDiv = document.createElement("div");
+                        remainingDiv.className = "remaining";
+
+                        remainingDiv.innerHTML = lang.remaining + ": " + ((budget.categorization !== "count") ? splitDateInterval(budget.diff, true) : budget.diff);
+
+                        budgetDiv.appendChild(remainingDiv);
+                    }
+
+                    sheetCategoryBudgets.appendChild(budgetDiv);
+                });
+
+            } else {
+                sheetCategoryBudgetsWrapper.classList.add("hidden");
+            }
+
+            let sheetNoticeButton = eventModal.querySelector(".sheet-notice-btn a");
             if (info.event.extendedProps.sheet_notice) {
                 sheetNoticeButton.href = info.event.extendedProps.sheet_notice;
                 sheetNoticeButton.classList.remove("hidden");

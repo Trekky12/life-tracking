@@ -130,8 +130,7 @@ class ProjectCategoryBudgetService extends Service {
             "categorybudgets" => $budgets,
             "project" => $project,
             'categories' => $project_categories,
-            "has_category_budgets" => $this->hasCategoryBudgets($project->id),
-            "view" => "overview"
+            "has_category_budgets" => $this->hasCategoryBudgets($project->id)
         ]);
     }
 

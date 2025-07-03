@@ -715,3 +715,23 @@ function createRipple(el, event) {
 
     el.appendChild(circle);
 }
+
+function splitDateInterval(totalSeconds, hideSeconds) {
+    if (totalSeconds === null || totalSeconds === undefined) {
+        return '';
+    }
+
+    var prefix = totalSeconds < 0 ? "-" : "";
+    totalSeconds = Math.abs(totalSeconds);
+
+    var totalMinutes = totalSeconds / 60;
+    var hours = Math.floor(totalMinutes / 60);
+    var minutes = Math.floor(totalMinutes - hours * 60);
+    var seconds = Math.floor(totalSeconds - totalMinutes * 60);
+
+    function pad(num) {
+        return num < 10 ? '0' + num : '' + num;
+    }
+
+    return prefix + (hideSeconds ? pad(hours) + ':' + pad(minutes) : pad(hours) + ':' + pad(minutes) + ':' + pad(seconds));
+}

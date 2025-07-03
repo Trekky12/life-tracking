@@ -22,6 +22,7 @@ use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Timesheets\Project\ProjectMapper;
+use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetMapper;
 
 class SheetService extends Service {
 
@@ -38,6 +39,7 @@ class SheetService extends Service {
     protected $activity_creator;
     protected $project_mapper;
     protected $sheet_files_mapper;
+    protected $project_category_budget_mapper;
 
     public function __construct(
         LoggerInterface $logger,
@@ -55,7 +57,8 @@ class SheetService extends Service {
         ProjectCategoryBudgetService $project_category_budget_service,
         ActivityCreator $activity_creator,
         ProjectMapper $project_mapper,
-        SheetFileMapper $sheet_files_mapper
+        SheetFileMapper $sheet_files_mapper,
+        ProjectCategoryBudgetMapper $project_category_budget_mapper
     ) {
         parent::__construct($logger, $user);
 
@@ -74,6 +77,7 @@ class SheetService extends Service {
         $this->activity_creator = $activity_creator;
         $this->project_mapper = $project_mapper;
         $this->sheet_files_mapper = $sheet_files_mapper;
+        $this->project_category_budget_mapper = $project_category_budget_mapper;
     }
 
     public function view($hash, $from, $to, $categories, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
@@ -692,6 +696,8 @@ class SheetService extends Service {
                 $previous_sheets = array_slice($series, 0, $index);
             }
 
+            $categorybudgets = $timesheet->customer ? $this->project_category_budget_mapper->getBudgetForCategories($project->id, [], null, $timesheet->customer): null;
+
             $event = [
                 'title' => implode(" | ", $title),
                 'start' => $st->format('Y-m-d H:i:s'),
@@ -714,7 +720,8 @@ class SheetService extends Service {
                     'remaining' => $remaining_sheets,
                     'sheet_notice' => $timesheet->id ? $this->router->urlFor('timesheets_sheets_notice_view', ['sheet' => $timesheet->id, 'project' => $project->getHash()]) . "?view=calendar" : null,
                     'has_sheet_notice' => in_array($timesheet->id, $hasNotices) || in_array($timesheet->id, array_keys($hasFiles)),
-                    'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null
+                    'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null,
+                    'categorybudgets' => $categorybudgets
                 ]
             ];
 

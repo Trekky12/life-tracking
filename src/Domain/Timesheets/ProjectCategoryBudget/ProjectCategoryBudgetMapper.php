@@ -157,12 +157,14 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
       return $stmt->fetchAll(\PDO::FETCH_BOTH);
       } */
 
-    public function getBudgetForCategories($project_id, $categories = [], $sheet_id = null) {
+    public function getBudgetForCategories($project_id, $categories = [], $sheet_id = null, $customer = null) {
 
         $cat_bindings = array();
         foreach ($categories as $idx => $cat) {
             $cat_bindings[":cat_" . $idx] = $cat;
         }
+        
+        $bindings = ["project" => $project_id];
 
         $sql = "SELECT  b.*, 
                         GROUP_CONCAT(bc.category ORDER BY bc.category SEPARATOR '|') as categories, 
@@ -187,10 +189,14 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                 . "             ) "
                 . ")";
         }
+
+        if (!is_null($customer)) {
+            $bindings["customer"] = $customer;
+            $sql .= " AND customer.id = :customer ";
+        }
+
         $sql .= " GROUP BY b.id";
         $sql .= " ORDER BY customer_name, main_category_name, b.position, b.name";
-
-        $bindings = ["project" => $project_id];
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute(array_merge($bindings, $cat_bindings));

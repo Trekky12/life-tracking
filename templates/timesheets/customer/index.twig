@@ -26,6 +26,10 @@
 	</div>
 {% endblock %}
 
+{% block tabbar %}
+	{% include "timesheets/timesheet-sheets-tabs.twig" with {'active':'timesheets_customers'} %}
+{% endblock %}
+
 {% block body %}
 	<div class="inner-content">
 		<div class="page-content">

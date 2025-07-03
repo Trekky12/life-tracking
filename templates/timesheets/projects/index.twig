@@ -28,9 +28,6 @@
 						<th></th>
 						<th></th>
 						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -40,21 +37,6 @@
 								<a href="{{ url_for('timesheets_sheets', {'project' : project.hash}) }}">{{ project.name|raw }}</a>
 							</td>
 							<td>{{times[project.id]}}</td>
-							<td>
-								<a href="{{ url_for('timesheets_project_categorybudget', {'project' : project.hash}) }}">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</a>
-							</td>
-							<td>
-								<a href="{{ url_for('timesheets_customers', {'project' : project.hash}) }}">
-									{% if project.customers_name_plural %}
-										{{project.customers_name_plural}}
-									{% else %}
-										{{"TIMESHEETS_CUSTOMERS"|trans}}
-									{% endif %}
-								</a>
-							</td>
-							<td>
-								<a href="{{ url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{"TIMESHEETS_PROJECT_CATEGORIES"|trans}}</a>
-							</td>
 							<td>
 								<a href="{{ url_for('timesheets_notice_password', {'project' : project.hash}) }}">{{"TIMESHEETS_NOTICE_PASSWORD"|trans}}</a>
 							</td>
