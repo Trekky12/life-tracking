@@ -129,8 +129,7 @@ class ProjectCategoryBudgetService extends Service {
         return new Payload(Payload::$RESULT_HTML, [
             "categorybudgets" => $budgets,
             "project" => $project,
-            'categories' => $project_categories,
-            "has_category_budgets" => $this->hasCategoryBudgets($project->id)
+            'categories' => $project_categories
         ]);
     }
 

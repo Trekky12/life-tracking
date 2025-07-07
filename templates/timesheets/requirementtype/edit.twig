@@ -1,0 +1,95 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets_requirement_types', {'project': project.hash})}}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"TIMESHEETS_REQUIREMENT_TYPES"|trans}}
+				|
+				{{ project.name }}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<form class="form-horizontal" action="{{ url_for('timesheets_requirement_types_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
+
+				<div class="form-group">
+					<label for="inputName">{{"NAME"|trans}}</label>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
+				</div>
+
+				<div class="form-group">
+					<h4>{{"TIMESHEETS_VALIDITY_PERIOD"|trans}}</h4>
+					<label class="checkbox" for="radioValidityPeriodMonth">
+						<input name="validity_period" type="radio" value="month" id="radioValidityPeriodMonth" {% if (entry is null) or (entry is not null and entry.validity_period == "month" )%} checked="checked" {% endif %}>
+						{{"MONTH"|trans}}
+					</label>
+					<br/>
+					<label class="checkbox" for="radioValidityPeriodQuarter">
+						<input name="validity_period" type="radio" value="quarter" id="radioValidityPeriodQuarter" {% if (entry is not null and entry.validity_period == "quarter" )%} checked="checked" {% endif %}>
+						{{"QUARTER"|trans}}
+					</label>
+					<br/>
+					<label class="checkbox" for="radioValidityPeriodYear">
+						<input name="validity_period" type="radio" value="year" id="radioValidityPeriodYear" {% if (entry is not null and entry.validity_period == "year" )%} checked="checked" {% endif %}>
+						{{"YEAR"|trans}}
+					</label>
+				</div>
+
+				<div class="form-group">
+					<label for="inputDescription">{{"DESCRIPTION"|trans}}</label>
+					<input type="text" class="form-control" id="inputDescription" name="description" {% if not entry is null %} value="{{entry.description|raw}}" {% endif %}>
+				</div>
+
+				<div class="form-group">
+					<label for="inputPosition">{{"POSITION"|trans}}</label>
+					<input type="number" class="form-control" id="inputPosition" name="position" step="1" pattern="\d*" {% if not entry is null %} value="{{entry.position}}" {% endif %}>
+				</div>
+
+				<div class="form-group">
+					<label for="datatype">{{"DATA_TYPE"|trans}}</label>
+					<div class="select-wrapper form-control">
+						<select id="datatype" name="datatype">
+							{% for key, name in dataTypes %}
+								<option value="{{key}}" {% if not entry is null and key == entry.datatype %} selected {% endif %}>{{name|trans}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<label class="hidden" for="initialization">{{"DATATYPE_INITIALIZATION"|trans}}</label>
+					<textarea class="form-control hidden" id="initialization" name="initialization">
+						{%- if entry -%}
+							{{entry.initialization}}
+						{%- endif -%}
+					</textarea>
+				</div>
+
+				<div class="form-group btn">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{"SAVE"|trans}}
+						{% else %}
+							{{"INSERT"|trans}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

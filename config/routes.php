@@ -537,6 +537,20 @@ return function (App $app) {
 
                 $group_noticespassword->get('/recovery', \App\Application\Action\Timesheets\NoticePassword\NoticePasswordShowRecoveryAction::class)->setName('timesheets_notice_recovery_show');
             });
+
+            $group_project->group('/requirementtypes', function (RouteCollectorProxy $group_requirements) {
+                $group_requirements->get('/', \App\Application\Action\Timesheets\RequirementType\RequirementTypeListAction::class)->setName('timesheets_requirement_types');
+                $group_requirements->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\RequirementType\RequirementTypeEditAction::class)->setName('timesheets_requirement_types_edit');
+                $group_requirements->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\RequirementType\RequirementTypeSaveAction::class)->setName('timesheets_requirement_types_save');
+                $group_requirements->delete('/delete/{id}', \App\Application\Action\Timesheets\RequirementType\RequirementTypeDeleteAction::class)->setName('timesheets_requirement_types_delete');
+
+                $group_requirements->group('/{requirementtype:[0-9]+}/customers', function (RouteCollectorProxy $group_customer_requirements) {
+                    $group_customer_requirements->get('/', \App\Application\Action\Timesheets\CustomerRequirement\CustomerRequirementListAction::class)->setName('timesheets_customers_requirements');
+                    $group_customer_requirements->get('/edit/', \App\Application\Action\Timesheets\CustomerRequirement\CustomerRequirementEditAction::class)->setName('timesheets_customers_requirements_edit');
+                    $group_customer_requirements->post('/save/', \App\Application\Action\Timesheets\CustomerRequirement\CustomerRequirementSaveAction::class)->setName('timesheets_customers_requirements_save');
+                    $group_customer_requirements->delete('/delete/{id}', \App\Application\Action\Timesheets\CustomerRequirement\CustomerRequirementDeleteAction::class)->setName('timesheets_customers_requirements_delete');
+                });
+            });
         });
     });
 

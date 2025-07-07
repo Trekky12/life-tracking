@@ -2,9 +2,7 @@
 	<div class="tabbar-scrollarea">
 		<a class="tabbar-tab {% if active == 'timesheets_sheets' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_sheets', {'project' : project.hash}) }}">{{"TIMESHEETS"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'timesheets_calendar' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}">{{"TIMESHEETS_CALENDAR"|trans}}</a>
-		{% if has_category_budgets %}
-			<a class="tabbar-tab {% if active == 'timesheets_project_categorybudget_view' %}active{% endif %}" href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</a>
-		{% endif %}
+		<a class="tabbar-tab {% if active == 'timesheets_project_categorybudget_view' %}active{% endif %}" href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'timesheets_export' %}active{% endif %}" href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&invoiced={{ invoiced }}&billed={{ billed }}&payed={{ payed }}&happened={{ happened }}&customer={{ customer }}">{{"TIMESHEETS_EXPORT"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'timesheets_fast' %}active{% endif %}" href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
 			{% if project.is_day_based == 1 %}
@@ -22,5 +20,6 @@
 			{% endif %}
 		</a>
 		<a class="tabbar-tab {% if active == 'timesheets_project_categories' %}active{% endif %}" href="{{ url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{"CATEGORIES"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'timesheets_requirement_types' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_requirement_types', {'project' : project.hash}) }}">{{"TIMESHEETS_REQUIREMENT_TYPES"|trans}}</a>
 	</div>
 </div>

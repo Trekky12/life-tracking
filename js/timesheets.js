@@ -631,6 +631,50 @@ if (calendarEl) {
                 sheetCategoryBudgetsWrapper.classList.add("hidden");
             }
 
+            let requirementsWrapperDiv = eventModal.querySelector(".requirements-wrapper");
+            let requirementsDiv = requirementsWrapperDiv.querySelector(".requirements");
+            requirementsDiv.innerHTML = "";
+
+            const requirements = info.event.extendedProps.customer_requirements;
+            if (requirements) {
+                requirementsWrapperDiv.classList.remove("hidden");
+
+                requirements.forEach(requirement => {
+                    const requirementDiv = document.createElement("div");
+                    requirementDiv.classList.add("requirement-entry");
+
+                    var req = document.createElement("span");
+                    if (requirement.is_valid) {
+                        requirementDiv.classList.add("valid");
+                        req.innerHTML = requirement.requirement_type_name + ": " + lang.timesheets_requirements_done;
+                    } else {
+                        requirementDiv.classList.add("invalid");
+                        req.innerHTML = requirement.requirement_type_name + ": " + lang.timesheets_requirements_open;
+                    }
+                    requirementDiv.appendChild(req);
+
+                    if (!requirement.is_valid) {
+                        let aMessage = document.createElement("a");
+                        aMessage.href = requirement.url;
+
+                        let urlButton = document.createElement('button');
+                        urlButton.type = 'button';
+                        urlButton.classList.add('button', 'small', 'button-text');
+                        urlButton.textContent = lang.add;
+
+                        aMessage.appendChild(urlButton);
+
+                        requirementDiv.appendChild(aMessage);
+                    }
+
+                    requirementsDiv.appendChild(requirementDiv);
+                });
+
+            } else {
+                requirementsWrapperDiv.classList.add("hidden");
+            }
+
+
             let sheetNoticeButton = eventModal.querySelector(".sheet-notice-btn a");
             if (info.event.extendedProps.sheet_notice) {
                 sheetNoticeButton.href = info.event.extendedProps.sheet_notice;

@@ -1,0 +1,98 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{% if view =="calendar" %}{{ url_for_with_last_query_params('timesheets_calendar', {'project' : project.hash}) }}{% else %}{{ url_for_with_last_query_params('timesheets_requirement_types', {'project' : project.hash}) }}{% endif %}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{ "TIMESHEETS_REQUIREMENTS"|trans }}|
+				{{requirement_type.name}}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('timesheets_customers_requirements_edit', {'project': project.hash, 'requirementtype': requirement_type.id}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{"ADD"|trans}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+
+	<div class="page-header page-sub-header">
+		<div class="page-headline">
+			<h2>{{"TIMESHEETS_REQUIREMENTS_OPEN"|trans}}</h2>
+		</div>
+	</div>
+
+	<div class="inner-content">
+		<div class="page-content">
+			<ul>
+				{% for customer in customers_states %}
+					{% if customer.is_valid == 0 %}
+						<li><a href="{{customer.url}}">{{customer.customer_name}}</a></li>
+					{% endif %}
+				{% endfor %}
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="page-header page-sub-header">
+		<div class="page-headline">
+			<h2>{{"TOTAL"|trans}}</h2>
+		</div>
+	</div>
+
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="customers_requirements_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>
+							{% if project.customers_name_singular %}
+								{{project.customers_name_singular}}
+							{% else %}
+								{{"TIMESHEETS_CUSTOMER"|trans}}
+							{% endif %}
+						</th>
+						<th>{{"DATE"|trans}}</th>
+						{%- if requirement_type.datatype != "checkbox" -%}
+							<th>{{"TIMESHEETS_REQUIREMENT_VALUE"|trans}}</th>
+						{%- endif -%}
+						<th>{{"TIMESHEETS_REQUIREMENT_VALID"|trans}}</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for requirement in requirements %}
+						<tr>
+							<td>{{customers[requirement.customer].name}}</td>
+							<td>{{requirement.createdOn|date(i18n.dateformatTwig.date)}}</td>
+							{%- if requirement_type.datatype != "checkbox" -%}
+								<td>
+									{{- requirement.value -}}
+								</td>
+							{%- endif -%}
+							<td>
+								{%- if requirement.is_valid -%}
+									{{"YES"|trans}}
+								{%- else -%}
+									{{- "NO"|trans -}}
+								{%- endif -%}
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('timesheets_customers_requirements_delete', {'id' : requirement.id, 'project' : project.hash, 'requirementtype' : requirement_type.id}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}

@@ -1389,6 +1389,46 @@ var noticefieldsTable = new JSTable("#noticefields_table", {
     ]
 });
 
+var requirementsTypesTable = new JSTable("#requirement_types_table", {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
+    labels: tableLabels,
+    layout: layout,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [2, 3, 4],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+
+var requirementsTypesTable = new JSTable("#customers_requirements_table", {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
+    labels: tableLabels,
+    layout: layout,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [3],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
+
 var transactionsRecurringTable = new JSTable("#transaction_recurring_table", {
     perPage: 20,
     perPageSelect: [10, 20, 50, 100, 200],

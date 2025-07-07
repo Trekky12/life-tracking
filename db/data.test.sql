@@ -118,6 +118,10 @@ INSERT INTO timesheets_sheets_notices (id, createdBy, changedBy, sheet, customer
 (2, 1, 1, NULL, 1, NULL, 'I1XB3V9JGDNgl+nHaOQOPSqHxaetSiXJ7+0WAu6JzYH3Fabv9SZ3Tck46ucD/5c2TxbKfZHPu8m31BWe1GrHQL126zKCF/Y=', 'UWP3DZPrzX2wPPuEDROfa/YozTRhRgIizZJLOuy0AQdD4/c4iffMxwekzZ7KBBAiWqA1AUJRriIqfmKTHm82ThnYa1AXJ7IVIZGPkQ==', 1, 0),
 (3, 1, 1, NULL, NULL, 1, 'RDYoI2trIJkeaMd7j6AoiJ6+0zUlpctL9XcupYKXrn0QMlA3Gl8QaZa72jFUX+NF9gSxRrW0pTX9gRdCHZKGZMSdITspkezIoZOp1tV9', 'BsMkxp9O1Vj7tVzJCOW9hgNR5BljwPBES3XL/QVY1b4Lk+ITJu2LjTYAjiAz5QpqLVdO5RmrMF7ZgBO9oavW1QGuRNlq7u3R/b/E5w==', 1, 0);
 
+INSERT INTO timesheets_requirement_types (id, project, user, name, description, datatype, initialization, position, validity_period) VALUES
+(1, 1, 1, 'Test Requirement 1', null, 'checkbox', NULL, 999, 'month'),
+(2, 2, 2, 'Test Requirement 2', null, 'checkbox', NULL, 999, 'quarter');
+
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 
 (2, 1, 'Test Trip (no access to owner)', 'DEFdef456', NULL);

@@ -403,8 +403,7 @@ class SheetExportService extends Service {
             "project" => $project,
             "hasTimesheetNotice" => true,
             "sheets" => $sheets,
-            "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet'),
-            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
+            "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet')
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);
@@ -436,8 +435,7 @@ class SheetExportService extends Service {
             "fields" => $sorted_fields,
             "from" => $from,
             "to" => $to,
-            "sum" => $sum,
-            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
+            "sum" => $sum
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);

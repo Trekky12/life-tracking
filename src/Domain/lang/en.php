@@ -26,6 +26,7 @@ $lang["TIME"] = "Time";
 $lang["TYPE"] = "Type";
 $lang["YEAR"] = "Year";
 $lang["MONTH"] = "Month";
+$lang["QUARTER"] = "Quarter";
 $lang["SUM"] = "Sum";
 
 $lang["DAY"] = "Day";
@@ -699,7 +700,9 @@ $lang["DATAOBJECT_RECIPES_SHOPPINGLIST"] = "shopping list";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "project budget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "notice field";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
-$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "timsheet project customer";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "timesheet project customer";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER_REQUIREMENT"] = "requirement";
+$lang["DATAOBJECT_TIMESHEETS_REQUIREMENT_TYPE"] = "requirement type";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -918,6 +921,7 @@ $lang["DATATYPE_TEXTFIELD"] = "textfield";
 $lang["DATATYPE_TEXTAREA"] = "textarea";
 $lang["DATATYPE_SELECT"] = "dropdown";
 $lang["DATATYPE_HTML"] = "HTML";
+$lang["DATATYPE_CHECKBOX"] = "Checkbox";
 $lang["DATATYPE_INITIALIZATION"] = "Initialization (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Add notice";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Edit notice";
@@ -931,6 +935,18 @@ $lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Label for customers (plural)";
 $lang["TIMESHEETS_NOTICE_PASSWORD"] = "notice password";
 
 $lang["TIMESHEETS_WARNING_NO_CATEGORY_ASSIGNED"] = "There was no category selected!";
+
+$lang["TIMESHEETS_REQUIREMENT"] = "Requirement";
+$lang["TIMESHEETS_REQUIREMENTS"] = "Requirements";
+$lang["TIMESHEETS_VALIDITY_PERIOD"] = "validity period";
+$lang["TIMESHEETS_REQUIREMENTS_OPEN"] = "Open";
+$lang["TIMESHEETS_REQUIREMENTS_DONE"] = "Done";
+
+$lang["TIMESHEETS_REQUIREMENT_TYPE"] = "Type of requirement";
+$lang["TIMESHEETS_REQUIREMENT_TYPES"] = "Type of requirements";
+
+$lang["TIMESHEETS_REQUIREMENT_VALUE"] = "Value";
+$lang["TIMESHEETS_REQUIREMENT_VALID"] = "Valid";
 
 $lang["PRINT"] = "Print";
 

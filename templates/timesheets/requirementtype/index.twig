@@ -1,0 +1,70 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets')}}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"TIMESHEETS_REQUIREMENT_TYPES"|trans}}
+				|
+				{{ project.name }}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('timesheets_requirement_types_edit', {'project': project.hash}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{"ADD"|trans}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "timesheets/timesheet-sheets-tabs.twig" with {'active':'timesheets_requirement_types'} %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="requirement_types_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{"NAME"|trans}}</th>
+						<th>{{"TIMESHEETS_VALIDITY_PERIOD"|trans}}</th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for requirement in requirement_types %}
+						<tr>
+							<td>{{requirement.name}}</td>
+							<td>
+								{%- if requirement.validity_period == "month" -%}
+									{{- "MONTH"|trans -}}
+								{%- elseif requirement.validity_period == "quarter" -%}
+									{{- "QUARTER"|trans -}}
+								{%- elseif requirement.validity_period == "year" -%}
+									{{- "YEAR"|trans -}}
+								{%- endif -%}
+							</td>
+							<td>
+								<a href="{{ url_for('timesheets_customers_requirements', {'requirementtype' : requirement.id, 'project' : project.hash}) }}">{{ "TIMESHEETS_REQUIREMENTS"|trans }}</a>								
+							</td>
+							<td>
+								<a href="{{ url_for('timesheets_requirement_types_edit', {'id' : requirement.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('timesheets_requirement_types_delete', {'id' : requirement.id, 'project' : project.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}

@@ -26,6 +26,7 @@ $lang["TIME"] = "Uhrzeit";
 $lang["TYPE"] = "Typ";
 $lang["YEAR"] = "Jahr";
 $lang["MONTH"] = "Monat";
+$lang["QUARTER"] = "Quartal";
 $lang["SUM"] = "Summe";
 
 $lang["DAY"] = "Tag";
@@ -699,6 +700,8 @@ $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "Feld für Notizen";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
 $lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "Zeiterfasungsprojekt Kunde";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER_REQUIREMENT"] = "Nachweis";
+$lang["DATAOBJECT_TIMESHEETS_REQUIREMENT_TYPE"] = "Nachweisart";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -917,6 +920,7 @@ $lang["DATATYPE_TEXTFIELD"] = "Textfeld";
 $lang["DATATYPE_TEXTAREA"] = "Textbereich";
 $lang["DATATYPE_SELECT"] = "Dropdown";
 $lang["DATATYPE_HTML"] = "HTML";
+$lang["DATATYPE_CHECKBOX"] = "Checkbox";
 $lang["DATATYPE_INITIALIZATION"] = "Initialisierung (Dropdown)";
 $lang["TIMESHEETS_NOTICE_ADD"] = "Bemerkung hinzufügen";
 $lang["TIMESHEETS_NOTICE_EDIT"] = "Bemerkung bearbeiten";
@@ -930,6 +934,18 @@ $lang["TIMESHEETS_CUSTOMERS_NAME_PLURAL"] = "Beschreibung für Kunden (Plural)";
 $lang["TIMESHEETS_NOTICE_PASSWORD"] = "Passwort für Notizen";
 
 $lang["TIMESHEETS_WARNING_NO_CATEGORY_ASSIGNED"] = "Es wurde keine Kategorie ausgewählt!";
+
+$lang["TIMESHEETS_REQUIREMENT"] = "Nachweis";
+$lang["TIMESHEETS_REQUIREMENTS"] = "Nachweise";
+$lang["TIMESHEETS_VALIDITY_PERIOD"] = "Gültigkeitsdauer";
+$lang["TIMESHEETS_REQUIREMENTS_OPEN"] = "Offen";
+$lang["TIMESHEETS_REQUIREMENTS_DONE"] = "Erledigt";
+
+$lang["TIMESHEETS_REQUIREMENT_TYPE"] = "Nachweisart";
+$lang["TIMESHEETS_REQUIREMENT_TYPES"] = "Nachweisarten";
+
+$lang["TIMESHEETS_REQUIREMENT_VALUE"] = "Wert";
+$lang["TIMESHEETS_REQUIREMENT_VALID"] = "Gültig";
 
 $lang["PRINT"] = "Drucken";
 

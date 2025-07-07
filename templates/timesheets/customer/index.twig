@@ -47,7 +47,13 @@
 					{% for customer in customers %}
 						<tr>
 							<td>{{customer.name}}</td>
-							<td>{{customer.archive}}</td>
+							<td>
+								{%- if customer.archive -%}
+									{{- "YES"|trans -}}
+								{%- else -%}
+									{{- "NO"|trans -}}
+								{%- endif -%}
+							</td>
 							<td>
 								<a href="{{ url_for('timesheets_customers_notice_edit', {'customer' : customer.id, 'project' : project.hash}) }}">
 									{% if customer.id in hasNotices %}

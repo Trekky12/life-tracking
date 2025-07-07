@@ -23,6 +23,7 @@ use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Timesheets\Project\ProjectMapper;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetMapper;
+use App\Domain\Timesheets\CustomerRequirement\CustomerRequirementService;
 
 class SheetService extends Service {
 
@@ -40,6 +41,7 @@ class SheetService extends Service {
     protected $project_mapper;
     protected $sheet_files_mapper;
     protected $project_category_budget_mapper;
+    protected $customer_requirement_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -58,7 +60,8 @@ class SheetService extends Service {
         ActivityCreator $activity_creator,
         ProjectMapper $project_mapper,
         SheetFileMapper $sheet_files_mapper,
-        ProjectCategoryBudgetMapper $project_category_budget_mapper
+        ProjectCategoryBudgetMapper $project_category_budget_mapper,
+        CustomerRequirementService $customer_requirement_service
     ) {
         parent::__construct($logger, $user);
 
@@ -78,6 +81,7 @@ class SheetService extends Service {
         $this->project_mapper = $project_mapper;
         $this->sheet_files_mapper = $sheet_files_mapper;
         $this->project_category_budget_mapper = $project_category_budget_mapper;
+        $this->customer_requirement_service = $customer_requirement_service;
     }
 
     public function view($hash, $from, $to, $categories, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
@@ -115,8 +119,6 @@ class SheetService extends Service {
 
         $response_data["customers"] = $customers;
         $response_data["customer"] = $customer;
-
-        $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
@@ -427,8 +429,7 @@ class SheetService extends Service {
             "project" => $project,
             "categories" => $project_categories,
             "customers" => $customers,
-            "entry" => $entry,
-            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id)
+            "entry" => $entry
         ]);
     }
 
@@ -473,7 +474,6 @@ class SheetService extends Service {
             "customers" => $customers,
             "customer" => $customer,
             "customer_fields" => $customer_fields,
-            "has_category_budgets" => $this->project_category_budget_service->hasCategoryBudgets($project->id),
             "min" => [
                 "total" => $minTotal,
                 "month" => $minMonth,
@@ -622,7 +622,6 @@ class SheetService extends Service {
         $response_data["hasTimesheetNotice"] = $has_legend;
         $response_data["from"] = $from;
         $response_data["to"] = $to;
-        $response_data["has_category_budgets"] = $this->project_category_budget_service->hasCategoryBudgets($project->id);
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
@@ -657,6 +656,8 @@ class SheetService extends Service {
         $hasFiles = $this->sheet_files_mapper->hasFiles($sheet_ids);
 
         $customers = $this->customer_service->getCustomersFromProject($project->id, 0);
+
+        $customers_states = $this->customer_requirement_service->getCustomersState($project, null, "calendar");
 
         $events = [];
 
@@ -721,7 +722,8 @@ class SheetService extends Service {
                     'sheet_notice' => $timesheet->id ? $this->router->urlFor('timesheets_sheets_notice_view', ['sheet' => $timesheet->id, 'project' => $project->getHash()]) . "?view=calendar" : null,
                     'has_sheet_notice' => in_array($timesheet->id, $hasNotices) || in_array($timesheet->id, array_keys($hasFiles)),
                     'customer_notice' => $timesheet->customer ? $this->router->urlFor('timesheets_customers_notice_view', ['customer' => $timesheet->customer, 'project' => $project->getHash()]) . "?view=calendar" : null,
-                    'categorybudgets' => $categorybudgets
+                    'categorybudgets' => $categorybudgets,
+                    'customer_requirements' => $timesheet->customer && in_array($timesheet->customer, array_keys($customers_states)) ? $customers_states[$timesheet->customer] : null
                 ]
             ];
 
@@ -755,25 +757,28 @@ class SheetService extends Service {
         $nextQuarter = $currentQuarter === 4 ? 1 : $currentQuarter + 1;
         $nextYear = $currentQuarter === 4 ? $year + 1 : $year;
 
-        $quarters = [
-            1 => ['start' => 'January', 'end' => 'March'],
-            2 => ['start' => 'April', 'end' => 'June'],
-            3 => ['start' => 'July', 'end' => 'September'],
-            4 => ['start' => 'October', 'end' => 'December']
-        ];
-
         return [
-            'last' => $this->getQuarterStartEnd($lastYear, $lastQuarter, $quarters),
-            'current' => $this->getQuarterStartEnd($year, $currentQuarter, $quarters),
-            'next' => $this->getQuarterStartEnd($nextYear, $nextQuarter, $quarters),
+            'last' => $this->getQuarterStartEnd($lastYear, $lastQuarter),
+            'current' => $this->getQuarterStartEnd($year, $currentQuarter),
+            'next' => $this->getQuarterStartEnd($nextYear, $nextQuarter),
         ];
     }
 
-    private function getQuarterStartEnd($year, $quarter, $quarters) {
+    private function getQuarterStartEnd($year, $quarter) {
+        $quarters = SheetService::getQuarterMonths();
         return [
             'start' => (new \DateTime("first day of {$quarters[$quarter]['start']} $year"))->format('Y-m-d'),
             'end' => (new \DateTime("last day of {$quarters[$quarter]['end']} $year"))->format('Y-m-d'),
             'name' => sprintf("Q%s/%s", $quarter, $year)
+        ];
+    }
+
+    public static function getQuarterMonths(){
+        return [
+            1 => ['start' => 'January', 'end' => 'March'],
+            2 => ['start' => 'April', 'end' => 'June'],
+            3 => ['start' => 'July', 'end' => 'September'],
+            4 => ['start' => 'October', 'end' => 'December']
         ];
     }
 }
