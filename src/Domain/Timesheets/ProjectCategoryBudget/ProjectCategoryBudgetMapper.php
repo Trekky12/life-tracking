@@ -163,7 +163,7 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
         foreach ($categories as $idx => $cat) {
             $cat_bindings[":cat_" . $idx] = $cat;
         }
-        
+
         $bindings = ["project" => $project_id];
 
         $sql = "SELECT  b.*, 
@@ -302,7 +302,14 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
             $sql .= " and sheet.customer = :customer";
         }
 
-        $sql .= " and sheet.is_happened = 1";
+        if ($budget["counter"] == "happened") {
+            $sql .= " and sheet.is_happened = 1";
+        } elseif ($budget["counter"] == "past") {
+            $sql .= " AND ("
+                . "     (sheet.start <= NOW() AND sheet.end <= NOW() ) OR"
+                . "     (sheet.start <= NOW() AND sheet.end IS NULL ) OR"
+                . "     (sheet.end <= NOW() AND sheet.start IS NULL )) ";
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute(array_merge($bindings, $cat_bindings));

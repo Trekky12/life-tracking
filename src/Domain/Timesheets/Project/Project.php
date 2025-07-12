@@ -22,6 +22,7 @@ class Project extends \App\Domain\DataObject {
 
         $this->default_duration = $this->exists('default_duration', $data) ? filter_var($data['default_duration'], FILTER_SANITIZE_NUMBER_INT) : null;
 
+        $this->show_week_button = $this->exists('show_week_button', $data) ? intval(filter_var($data['show_week_button'], FILTER_SANITIZE_NUMBER_INT)) : 0;
         $this->show_month_button = $this->exists('show_month_button', $data) ? intval(filter_var($data['show_month_button'], FILTER_SANITIZE_NUMBER_INT)) : 0;
         $this->show_quarters_buttons = $this->exists('show_quarters_buttons', $data) ? intval(filter_var($data['show_quarters_buttons'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 

@@ -1,0 +1,1 @@
+ALTER TABLE timesheets_projects ADD show_week_button INT(1) DEFAULT 1 AFTER default_duration;

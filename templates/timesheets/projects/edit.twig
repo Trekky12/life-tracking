@@ -21,11 +21,11 @@
 			<h2>{{"TIMESHEETS_PROJECT"|trans}}</h2>
 		</div>
 		{% if not entry is null %}
-		<div class="buttons">
-			<a href="{{ url_for('timesheets_project_notice_edit', {'project': entry.getHash()}) }}">
-				<button class="button button-outlined">{{"NOTICE"|trans}}</button>
-			</a>
-		</div>
+			<div class="buttons">
+				<a href="{{ url_for('timesheets_project_notice_edit', {'project': entry.getHash()}) }}">
+					<button class="button button-outlined">{{"NOTICE"|trans}}</button>
+				</a>
+			</div>
 		{% endif %}
 	</div>
 {% endblock %}
@@ -73,11 +73,18 @@
 					<div class="select-wrapper form-control">
 						<select id="defaultView" name="default_view">
 							<option value="all" {% if (not entry is null and 'all' == entry.default_view) %} selected {% endif %}>{{"TIMESHEETS_DEFAULT_VIEW_ALL"|trans}}</option>
+							<option value="week" {% if (not entry is null and 'week' == entry.default_view) %} selected {% endif %}>{{"TIMESHEETS_DEFAULT_VIEW_WEEK"|trans}}</option>
 							<option value="month" {% if (not entry is null and 'month' == entry.default_view) %} selected {% endif %}>{{"TIMESHEETS_DEFAULT_VIEW_MONTH"|trans}}</option>
 						</select>
 					</div>
 				</div>
 
+				<div class="form-group">
+					<label class="checkbox" for="checkboxShowWeekButton">
+						<input name="show_week_button" type="checkbox" value="1" id="checkboxShowWeekButton" {% if entry is not null and entry.show_week_button == 1 %} checked {% endif %}>
+						{{"TIMESHEETS_SHOW_WEEK_BUTTON"|trans}}
+					</label>
+				</div>
 				<div class="form-group">
 					<label class="checkbox" for="checkboxShowMonthButton">
 						<input name="show_month_button" type="checkbox" value="1" id="checkboxShowMonthButton" {% if entry is not null and entry.show_month_button == 1 %} checked {% endif %}>

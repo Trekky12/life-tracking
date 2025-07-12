@@ -398,9 +398,9 @@ $lang["CAST_SIGNED"] = "Ganzzahl";
 $lang["CAST_TIME"] = "Zeit (HH:MM:SS)";
 $lang["CAST_UNSIGNED"] = "positiv Ganzzahl";
 
+$lang["SHOW_THIS_WEEK"] = "Diese Woche";
 $lang["SHOW_THIS_MONTH"] = "Dieser Monat";
 $lang["SHOW_ALL"] = "Gesamter Zeitraum";
-
 
 $lang["SPLITBILL_GROUPS"] = "Gruppen mit geteilten Ausgaben";
 $lang["SPLITBILLS"] = "geteilte Ausgaben";
@@ -506,6 +506,7 @@ $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Zeiterfassungskategorien";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Standardansicht";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "kompletter Zeitraum";
 $lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "aktueller Monat";
+$lang["TIMESHEETS_DEFAULT_VIEW_WEEK"] = "aktuelle Woche";
 $lang["TIMESHEETS_TIME"] = "Zeit";
 $lang["TIMESHEETS_TIME_SUM"] = "Summe";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "Zeitberechnung anpassbar";
@@ -549,6 +550,7 @@ $lang["TIMESHEETS_INVOICED_AND_NOT_INVOICED"] = "in Rechnung und nicht in Rechnu
 $lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "abgerechnet und nicht abgerechnet";
 $lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "bezahlt und nicht bezahlt";
 $lang["TIMESHEETS_PLANNED_AND_HAPPENED"] = "geplant und durchgeführt";
+$lang["TIMESHEETS_SHOW_WEEK_BUTTON"] = "zeige Button für Woche";
 $lang["TIMESHEETS_SHOW_MONTH_BUTTON"] = "zeige Button für Monat";
 $lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"] = "zeige Buttons für Quartale";
 $lang["TIMESHEETS_QUARTER_1"] = "Q1";
@@ -900,6 +902,10 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "Anzahl Einträge";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_INCLUDE_ENTRIES_WITHOUT_CATEGORY"] = "Einträge ohne zugeordnete Kategorien einbeziehen";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_ENTRIES_WITHOUT_CATEGORY"] = "Einträge ohne zugeordnete Kategorien";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_EXACT_MATCH"] = "Nur Einträge mit exakt den gewählten Kategorien einbeziehen";
+
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_COUNT_HAPPENED"] = "Zähle als durchgeführt markierte Einträge";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_COUNT_PAST"] = "Zähle alle vergangenen Einträge";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_COUNT_ALL"] = "Zähle alle Einträge";
 
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Passwort für die Verschlüsselung der Notizen";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "Für die Verschlüsselung der Notizen muss ein Passwort vergeben werden.";

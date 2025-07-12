@@ -1,0 +1,1 @@
+ALTER TABLE timesheets_categorybudgets ADD counter ENUM('past','happened', 'all') default 'happened' AFTER position; 

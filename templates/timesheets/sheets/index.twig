@@ -25,22 +25,22 @@
 		<div
 			class="buttons">
 			{#{% if categories %}
-																																		<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
-																																			<button class="button button-text">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</button>
-																																		</a>
-																																	{% endif %}
-																																	<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&invoiced={{ invoiced }}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
-																																		<button class="button button-text">{{"TIMESHEETS_EXPORT"|trans}}</button>
-																																	</a>
-																																	<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
-																																		<button class="button button-text">{{ fontawesome('fas fa-right-to-bracket') }}
-																																			{% if project.is_day_based == 1 %}
-																																				{{"TIMESHEETS_FAST_DAY_BASED"|trans}}
-																																			{% else %}
-																																				{{"TIMESHEETS_FAST_PROJECT_BASED"|trans}}
-																																			{% endif %}
-																																			{{ fontawesome('fas fa-right-from-bracket') }}</button>
-																																	</a>#}
+																																					<a href="{{ url_for('timesheets_project_categorybudget_view', {'project':project.hash}) }}">
+																																						<button class="button button-text">{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</button>
+																																					</a>
+																																				{% endif %}
+																																				<a href="{{ url_for('timesheets_export', {'project':project.hash}) }}?from={{ from }}&to={{ to }}&{{categories_selected_query | url_encode}}&invoiced={{ invoiced }}&billed={{ billed }}&payed={{ payed }}&customer={{ customer }}">
+																																					<button class="button button-text">{{"TIMESHEETS_EXPORT"|trans}}</button>
+																																				</a>
+																																				<a href="{{ url_for('timesheets_fast', {'project':project.hash}) }}">
+																																					<button class="button button-text">{{ fontawesome('fas fa-right-to-bracket') }}
+																																						{% if project.is_day_based == 1 %}
+																																							{{"TIMESHEETS_FAST_DAY_BASED"|trans}}
+																																						{% else %}
+																																							{{"TIMESHEETS_FAST_PROJECT_BASED"|trans}}
+																																						{% endif %}
+																																						{{ fontawesome('fas fa-right-from-bracket') }}</button>
+																																				</a>#}
 			<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{"ADD"|trans}}</button>
@@ -89,6 +89,11 @@
 						</div>
 					{% endif %}
 					<div class="filter-group">
+						{% if project.show_week_button == 1 %}
+							<div class="filter-element">
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["week"] }}" data-to="{{ max["week"] }}">{{ "SHOW_THIS_WEEK"|trans }}</button>
+							</div>
+						{% endif %}
 						{% if project.show_month_button == 1 %}
 							<div class="filter-element">
 								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ "SHOW_THIS_MONTH"|trans }}</button>

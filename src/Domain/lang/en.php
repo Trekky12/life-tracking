@@ -400,6 +400,7 @@ $lang["CAST_SIGNED"] = "signed integer";
 $lang["CAST_TIME"] = "time (HH:MM:SS)";
 $lang["CAST_UNSIGNED"] = "unsigned integer";
 
+$lang["SHOW_THIS_WEEK"] = "this week";
 $lang["SHOW_THIS_MONTH"] = "this month";
 $lang["SHOW_ALL"] = "total range";
 
@@ -507,6 +508,7 @@ $lang["TIMESHEETS_PROJECT_CATEGORIES"] = "Categories";
 $lang["TIMESHEETS_DEFAULT_VIEW"] = "Default view";
 $lang["TIMESHEETS_DEFAULT_VIEW_ALL"] = "total range";
 $lang["TIMESHEETS_DEFAULT_VIEW_MONTH"] = "current month";
+$lang["TIMESHEETS_DEFAULT_VIEW_WEEK"] = "current week";
 $lang["TIMESHEETS_TIME"] = "time";
 $lang["TIMESHEETS_TIME_SUM"] = "sum";
 $lang["TIMESHEETS_HAS_DURATION_MODIFICATIONS"] = "time calculation modifiable";
@@ -550,6 +552,7 @@ $lang["TIMESHEETS_INVOICED_AND_NOT_INVOICED"] = "invoiced and not invoiced";
 $lang["TIMESHEETS_BILLED_AND_NOT_BILLED"] = "billed and not billed";
 $lang["TIMESHEETS_PAYED_AND_NOT_PAYED"] = "payed and not payed";
 $lang["TIMESHEETS_PLANNED_AND_HAPPENED"] = "planned and happened";
+$lang["TIMESHEETS_SHOW_WEEK_BUTTON"] = "show button for week";
 $lang["TIMESHEETS_SHOW_MONTH_BUTTON"] = "show button for month";
 $lang["TIMESHEETS_SHOW_QUARTERS_BUTTONS"] = "show buttons for quarters";
 $lang["TIMESHEETS_QUARTER_1"] = "Q1";
@@ -901,6 +904,10 @@ $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_NUMBER_ENTRIES"] = "number of entries"
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_INCLUDE_ENTRIES_WITHOUT_CATEGORY"] = "Include entries with no assigned categories";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_ENTRIES_WITHOUT_CATEGORY"] = "entries with no assigned categories";
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_EXACT_MATCH"] = "Include only entries with exact the selected categories";
+
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_COUNT_HAPPENED"] = "Count as happened marked entries";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_COUNT_PAST"] = "Count all past entries";
+$lang["TIMESHEETS_PROJECT_CATEGORY_BUDGET_COUNT_ALL"] = "Count all entries";
 
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES"] = "Password for the sheet notice encryption";
 $lang["TIMESHEETS_PROJECT_PASSWORD_SHEETS_NOTICES_DESCRIPTION"] = "To encrypt the sheet notices a password is neeeded.";

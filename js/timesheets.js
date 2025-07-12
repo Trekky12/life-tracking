@@ -415,7 +415,7 @@ if (calendarEl) {
             dateContent.textContent = info.event.extendedProps.date;
 
             let customer = eventModal.querySelector(".customer");
-            let customerName = customer.querySelector(".customerName");
+            let customerName = customer.querySelector(".customer-name");
             if (info.event.extendedProps.customer) {
                 customerName.textContent = info.event.extendedProps.customer;
                 customer.classList.remove("hidden");

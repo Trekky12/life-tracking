@@ -40,6 +40,8 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
+        $this->counter = $this->exists('counter', $data) ? trim(Utility::filter_string_polyfill($data['counter'])) : null;
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
@@ -48,6 +50,9 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
             $this->categorization = "duration";
         }
 
+        if (!in_array($this->counter, array("past", "happened", "all"))) {
+            $this->counter = "happened";
+        }
 
         /**
          * Set value from request

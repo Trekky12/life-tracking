@@ -129,6 +129,13 @@ class SheetService extends Service {
         $minTotal = $range["min"];
         $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
+
+        // Week Filter
+        $d1 = new \DateTime('monday this week');
+        $minWeek = $d1->format('Y-m-d');
+        $d2 = new \DateTime('sunday this week');
+        $maxWeek = $d2->format('Y-m-d');
+
         // Month Filter
         $d1 = new \DateTime('first day of this month');
         $minMonth = $d1->format('Y-m-d');
@@ -137,7 +144,10 @@ class SheetService extends Service {
 
         $quarters = $this->getQuarterDates();
 
-        if ($project->default_view == "month") {
+        if ($project->default_view == "week") {
+            $from = !is_null($from) ? $from : $minWeek;
+            $to = !is_null($to) ? $to : $maxWeek;
+        } elseif ($project->default_view == "month") {
             $from = !is_null($from) ? $from : $minMonth;
             $to = !is_null($to) ? $to : $maxMonth;
         } elseif ($project->default_view == "all") {
@@ -170,10 +180,12 @@ class SheetService extends Service {
             "min" => [
                 "total" => $minTotal,
                 "month" => $minMonth,
+                "week" => $minWeek
             ],
             "max" => [
                 "total" => $maxTotal,
                 "month" => $maxMonth,
+                "week" => $maxWeek
             ],
             "quarters" => $quarters
         ];
@@ -453,6 +465,12 @@ class SheetService extends Service {
         $minTotal = $range["min"];
         $maxTotal = $range["max"] > date('Y-m-d') ? $range["max"] : date('Y-m-d');
 
+        // Week Filter
+        $d1 = new \DateTime('monday this week');
+        $minWeek = $d1->format('Y-m-d');
+        $d2 = new \DateTime('sunday this week');
+        $maxWeek = $d2->format('Y-m-d');
+
         // Month Filter
         $d1 = new \DateTime('first day of this month');
         $minMonth = $d1->format('Y-m-d');
@@ -477,10 +495,12 @@ class SheetService extends Service {
             "min" => [
                 "total" => $minTotal,
                 "month" => $minMonth,
+                "week" => $minWeek
             ],
             "max" => [
                 "total" => $maxTotal,
                 "month" => $maxMonth,
+                "week" => $maxWeek
             ],
             "quarters" => $quarters
         ]);
@@ -697,7 +717,7 @@ class SheetService extends Service {
                 $previous_sheets = array_slice($series, 0, $index);
             }
 
-            $categorybudgets = $timesheet->customer ? $this->project_category_budget_mapper->getBudgetForCategories($project->id, [], null, $timesheet->customer): null;
+            $categorybudgets = $timesheet->customer ? $this->project_category_budget_mapper->getBudgetForCategories($project->id, [], null, $timesheet->customer) : null;
 
             $event = [
                 'title' => implode(" | ", $title),
@@ -773,7 +793,7 @@ class SheetService extends Service {
         ];
     }
 
-    public static function getQuarterMonths(){
+    public static function getQuarterMonths() {
         return [
             1 => ['start' => 'January', 'end' => 'March'],
             2 => ['start' => 'April', 'end' => 'June'],

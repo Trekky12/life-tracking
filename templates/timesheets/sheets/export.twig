@@ -65,6 +65,11 @@
 						</div>
 					{% endif %}
 					<div class="filter-group">
+						{% if project.show_week_button == 1 %}
+							<div class="filter-element">
+								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["week"] }}" data-to="{{ max["week"] }}">{{ "SHOW_THIS_WEEK"|trans }}</button>
+							</div>
+						{% endif %}
 						{% if project.show_month_button == 1 %}
 							<div class="filter-element">
 								<button type="button" class="button button-outlined small daterange-filter-btn" data-from="{{ min["month"] }}" data-to="{{ max["month"] }}">{{ "SHOW_THIS_MONTH"|trans }}</button>
