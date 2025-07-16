@@ -539,8 +539,23 @@ async function addFile(filesContainer, data) {
         iconWrapper.className = "timesheet-notice-file-icons"
 
         let a_download = document.createElement("a");
-        a_download["href"] = `data:${data["type"]};base64,${base64file}`;
+        // Not working on ios
+        //@see https://stackoverflow.com/questions/55760169/alternative-for-download-attribute-in-safari-ios
+        //a_download["href"] = `data:${data["type"]};base64,${base64file}`;
         a_download.download = data["name"];
+
+        const byteCharacters = atob(base64file);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: data["type"] });
+        const blobUrl = URL.createObjectURL(blob);
+
+        a_download.setAttribute("href", blobUrl);
+        a_download.setAttribute("target", "_blank");
+
         let span_download = document.createElement("span");
         span_download.innerHTML = document.getElementById('iconDownload').innerHTML;
         a_download.appendChild(span_download);
