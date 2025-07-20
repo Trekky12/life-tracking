@@ -77,7 +77,7 @@ class OwnerTest extends BoardTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("<input name=\"hash\" type=\"hidden\" value=\"" . $result_data["hash"] . "\">", $body);
-        $this->assertStringContainsString("<input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" value=\"" . $data["name"] . "\">", $body);
+        $this->assertStringContainsString("<input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\"  value=\"" . $data["name"] . "\" >", $body);
 
 
         $matches = [];

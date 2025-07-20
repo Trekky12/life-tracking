@@ -242,9 +242,12 @@ class CrawlerService extends Service {
         return SessionUtility::getSessionVar("crawler_filter_{$hash}", $default);
     }
 
-    public function index() {
-        $crawlers = $this->mapper->getUserItems('name');
-        return new Payload(Payload::$RESULT_HTML, ['crawlers' => $crawlers]);
+    public function index($archive = 0) {
+        $crawlers = $this->mapper->getUserItems('name', false, null, $archive);
+        return new Payload(Payload::$RESULT_HTML, [
+            'crawlers' => $crawlers,
+            'archive' => $archive
+        ]);
     }
 
     public function edit($entry_id) {

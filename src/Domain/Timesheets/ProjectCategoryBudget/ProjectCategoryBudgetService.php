@@ -36,7 +36,7 @@ class ProjectCategoryBudgetService extends Service {
         $this->customer_service = $customer_service;
     }
 
-    public function index($hash, $view) {
+    public function index($hash, $view, $is_hidden = 0) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -44,14 +44,15 @@ class ProjectCategoryBudgetService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $categorybudgets = $this->mapper->getFromProject($project->id);
+        $categorybudgets = $this->mapper->getFromProject($project->id, 'name', $is_hidden);
         $customers = $this->customer_service->getCustomersFromProject($project->id);
 
         return new Payload(Payload::$RESULT_HTML, [
             'categorybudgets' => $categorybudgets,
             "project" => $project,
             'customers' => $customers,
-            "view" => $view
+            "view" => $view,
+            "is_hidden" => $is_hidden
         ]);
     }
 

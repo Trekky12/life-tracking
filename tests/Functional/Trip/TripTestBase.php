@@ -6,7 +6,7 @@ use Tests\Functional\Base\BaseTestCase;
 
 class TripTestBase extends BaseTestCase {
 
-    protected $uri_overview = "/trips/";
+    protected $uri_overview = "/trips/?filter=";
     protected $uri_edit = "/trips/edit/";
     protected $uri_save = "/trips/save/";
     protected $uri_delete = "/trips/delete/";

@@ -23,6 +23,7 @@ class Plan extends \App\Domain\DataObject {
         $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
         $this->category = $this->exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->level = $this->exists('level', $data) ? filter_var($data['level'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->archive = $this->exists('archive', $data) ? filter_var($data['archive'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";

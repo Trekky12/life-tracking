@@ -21,12 +21,16 @@ class SplitbillGroupService extends Service {
         $this->user_service = $user_service;
     }
 
-    public function index() {
-        $groups = $this->mapper->getUserItems('t.createdOn DESC, name');
+    public function index($archive = 0) {
+        $groups = $this->mapper->getUserItems('t.createdOn DESC, name', false, null, $archive);
 
         $balances = $this->bill_mapper->getBalances();
 
-        return new Payload(Payload::$RESULT_HTML, ['groups' => $groups, 'balances' => $balances]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'groups' => $groups,
+            'balances' => $balances,
+            'archive' => $archive
+        ]);
     }
 
     public function edit($entry_id) {
@@ -39,5 +43,4 @@ class SplitbillGroupService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
-
 }

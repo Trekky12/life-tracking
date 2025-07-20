@@ -46,7 +46,7 @@
 
 				<div class="form-group">
 					<label for="inputName">{{"NAME"|trans}}</label>
-					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %}value="{{entry.name|raw}}"{% endif %}>
+					<input type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% endif %}>
 				</div>
 
 				<div class="form-group">
@@ -57,6 +57,13 @@
 							<option value="changedOn" {% if (not entry is null and entry.filter == "changedOn") %} selected {% endif %}>{{"SHOW_NEW_UPDATED_ENTRIES"|trans}}</option>
 						</select>
 					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="checkbox" for="checkboxArchived">
+						<input name="archive" type="checkbox" value="1" id="checkboxArchived" {% if entry is not null and entry.archive == 1 %} checked {% endif %}>
+						{{"ARCHIVED"|trans}}
+					</label>
 				</div>
 
 				<div class="form-group">

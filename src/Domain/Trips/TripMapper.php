@@ -31,6 +31,9 @@ class TripMapper extends \App\Domain\Mapper {
                 . " ORDER BY t.createdOn DESC, name";
 
         switch ($filter) {
+            case "past_upcoming":
+                $sql = "SELECT l.* FROM (" . $sql2 . ") as l WHERE min_date IS NOT NULL AND max_date IS NOT NULL";
+                break;
             case "past":
                 $sql = "SELECT l.* FROM (" . $sql2 . ") as l WHERE min_date < CURDATE() AND max_date < CURDATE()";
                 break;

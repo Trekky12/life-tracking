@@ -27,8 +27,8 @@ class ProjectService extends Service {
         $this->sheet_mapper = $sheet_mapper;
     }
 
-    public function index() {
-        $projects = $this->mapper->getUserItems('t.createdOn DESC, name');
+    public function index($archive = 0) {
+        $projects = $this->mapper->getUserItems('t.createdOn DESC, name', false, null, $archive);
 
         $times = $this->sheet_mapper->getTimes($projects);
 
@@ -49,7 +49,11 @@ class ProjectService extends Service {
             }
         }
 
-        return new Payload(Payload::$RESULT_HTML, ['projects' => $projects, 'times' => $new_times]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'projects' => $projects, 
+            'times' => $new_times,
+            'archive' => $archive
+        ]);
     }
 
     public function edit($entry_id) {

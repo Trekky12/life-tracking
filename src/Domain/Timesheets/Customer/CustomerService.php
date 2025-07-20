@@ -27,7 +27,7 @@ class CustomerService extends Service {
         $this->customer_notice_mapper = $customer_notice_mapper;
     }
 
-    public function index($hash) {
+    public function index($hash, $archive = 0) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -35,7 +35,7 @@ class CustomerService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $customers = $this->mapper->getFromProject($project->id);
+        $customers = $this->mapper->getFromProject($project->id, 'name', $archive);
 
         // get information about notices
         $customers_ids = array_map(function ($customer) {
@@ -43,7 +43,12 @@ class CustomerService extends Service {
         }, $customers);
         $hasNotices = $this->customer_notice_mapper->hasNotices($customers_ids);
 
-        return new Payload(Payload::$RESULT_HTML, ['customers' => $customers, "project" => $project, 'hasNotices' => $hasNotices]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'customers' => $customers, 
+            "project" => $project, 
+            'hasNotices' => $hasNotices,
+            "archive" => $archive
+        ]);
     }
 
     public function edit($hash, $entry_id) {

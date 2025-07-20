@@ -189,6 +189,8 @@ $lang["REMAINING"] = "remaining";
 $lang["EDIT"] = "edit";
 $lang["REMAINING_BUDGET"] = "remaining Budget";
 $lang["HIDE_ENTRY"] = "hide entry";
+$lang["SHOW_HIDDEN"] = "Show hidden";
+$lang["SHOW_NOT_HIDDEN"] = "Show not hidden";
 
 $lang["FINANCES_PAYMETHOD"] = "payment method";
 $lang["FINANCES_PAYMETHODS"] = "payment methods";
@@ -402,7 +404,7 @@ $lang["CAST_UNSIGNED"] = "unsigned integer";
 
 $lang["SHOW_THIS_WEEK"] = "this week";
 $lang["SHOW_THIS_MONTH"] = "this month";
-$lang["SHOW_ALL"] = "total range";
+$lang["SHOW_COMPLETE_RANGE"] = "total range";
 
 $lang["SPLITBILL_GROUPS"] = "Groups with splitted bills";
 $lang["SPLITBILLS"] = "splitted bills";
@@ -455,7 +457,8 @@ $lang["SEARCH_ADDRESS"] = "search address";
 
 $lang["TRIPS_OVERVIEW"] = "Overview";
 $lang["TRIPS_PLANNED"] = "planned trips";
-$lang["TRIPS_PAST"] = "past trips";
+$lang["TRIPS_PAST_UPCOMING"] = "past and upcoming trips";
+$lang["TRIPS_ALL"] = "all trips";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "settle up";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "sender";
@@ -815,6 +818,9 @@ $lang["WORKOUTS_DISTANCE"] = "distance";
 $lang["LOAD_MORE"] = "load more";
 
 $lang["ALL"] = "all";
+$lang["SHOW_ALL"] = "Show all";
+$lang["SHOW_ARCHIVED"] = "Show archived";
+$lang["SHOW_NOT_ARCHIVED"] = "Show not archived";
 
 $lang["WORKOUTS_EXPORT"] = "Export";
 $lang["WORKOUTS_SESSION"] = "training session";

@@ -13,8 +13,7 @@ use App\Domain\Main\Translator;
 use App\Domain\Settings\SettingsMapper;
 use App\Domain\Main\Utility\DateUtility;
 
-class PlanService extends Service
-{
+class PlanService extends Service {
 
     protected $exercise_mapper;
     protected $bodypart_mapper;
@@ -43,15 +42,16 @@ class PlanService extends Service
         $this->settings_mapper = $settings_mapper;
     }
 
-    public function index($is_template = false)
-    {
-        $plans = $this->mapper->getAllPlans('id', $is_template);
+    public function index($is_template = false, $archive = 0) {
+        $plans = $this->mapper->getAllPlans('id', $is_template, $archive);
 
-        return new Payload(Payload::$RESULT_HTML, ['plans' => $plans]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'plans' => $plans,
+            'archive' => $archive
+        ]);
     }
 
-    public function edit($entry_id, $is_template = false, $use_template = null)
-    {
+    public function edit($entry_id, $is_template = false, $use_template = null) {
         $entry = null;
         if (!empty($entry_id)) {
             $filtered = !$is_template;
@@ -101,8 +101,7 @@ class PlanService extends Service
         ]);
     }
 
-    public function view($hash, $is_template = false): Payload
-    {
+    public function view($hash, $is_template = false): Payload {
 
         $plan = $this->getFromHash($hash);
 
@@ -133,8 +132,7 @@ class PlanService extends Service
         ]);
     }
 
-    public function getPlanExercises($plan_id, $selected_exercises = null)
-    {
+    public function getPlanExercises($plan_id, $selected_exercises = null) {
 
         $exercises = $this->exercise_mapper->getAll();
         $bodyparts = $this->bodypart_mapper->getAll();
@@ -222,8 +220,7 @@ class PlanService extends Service
         return [$exercises_print, $all_selected_muscles];
     }
 
-    public function getWorkoutDays($plan_id)
-    {
+    public function getWorkoutDays($plan_id) {
         return $this->mapper->getWorkoutDays($plan_id);
     }
 }

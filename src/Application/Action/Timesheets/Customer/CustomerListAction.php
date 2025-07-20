@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Timesheets\Customer;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Timesheets\Customer\CustomerService;
 use App\Application\Responder\HTMLTemplateResponder;
@@ -19,7 +19,8 @@ class CustomerListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $project_hash = $request->getAttribute('project');
-        $index = $this->service->index($project_hash);
+        $archive = $request->getParam('archive', 0);
+        $index = $this->service->index($project_hash, $archive);
         return $this->responder->respond($index->withTemplate('timesheets/customer/index.twig'));
     }
 

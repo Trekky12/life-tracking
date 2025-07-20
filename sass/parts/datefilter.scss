@@ -49,20 +49,9 @@
     }
 }
 
-#tableHeaderFilter,
-.search-filter {
-    //padding: 5px 10px;
-    .categories-filter {
-        flex-grow: 1;
-        flex-basis: 30%;
-    }
-
-    margin-bottom: 1rem;
-}
-
 #tableFooterFilter {
     border-top: 1px solid variables.$color_gray;
-    margin-top: 1rem;
+    padding-top: 1rem;
 
     .categories-filter {
         width: 100%;
@@ -187,6 +176,11 @@
     button {
         //padding-top: 0.5rem;
         //padding-bottom: 0.5rem;
+    }
+
+    .categories-filter {
+        flex-grow: 1;
+        flex-basis: 30%;
     }
 }
 

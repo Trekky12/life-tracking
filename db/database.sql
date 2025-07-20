@@ -519,6 +519,7 @@ CREATE TABLE IF NOT EXISTS crawlers (
     name varchar(255) DEFAULT NULL,
     hash VARCHAR(255) DEFAULT NULL,
     filter VARCHAR(50) NULL DEFAULT 'createdOn',
+    archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -605,6 +606,7 @@ CREATE TABLE IF NOT EXISTS splitbill_groups (
     currency varchar(100) DEFAULT NULL,
     exchange_rate varchar(100) DEFAULT NULL,
     exchange_fee varchar(100) DEFAULT NULL,
+    archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -865,6 +867,7 @@ CREATE TABLE IF NOT EXISTS timesheets_projects (
     report_headline VARCHAR(255) DEFAULT NULL,
     has_billing INT(1) DEFAULT 0,
     has_end INT(1) DEFAULT 0,
+    archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -1162,6 +1165,7 @@ CREATE TABLE IF NOT EXISTS workouts_plans (
     notice TEXT DEFAULT NULL,
     category INT(10) NULL,
     level INT(10) NULL,
+    archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE

@@ -9,10 +9,15 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
     protected $select_results_of_user_only = false;
     protected $insert_user = true;
 
-    public function getFromProject($id, $order = 'name') {
+    public function getFromProject($id, $order = 'name', $is_hidden = null) {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE project = :id ";
 
         $bindings = array("id" => $id);
+
+        if (!is_null($is_hidden) && strlen($is_hidden) > 0) {
+            $sql .= " AND is_hidden = :is_hidden ";
+            $bindings["is_hidden"] = $is_hidden;
+        }
 
         if (!is_null($order)) {
             $sql .= " ORDER BY {$order}";

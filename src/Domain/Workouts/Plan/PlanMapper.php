@@ -13,7 +13,7 @@ class PlanMapper extends \App\Domain\Mapper {
     //protected $user_table = "timesheets_projects_users";
     //protected $element_name = "project";
 
-    public function getAllPlans($sorted, $is_template = false) {
+    public function getAllPlans($sorted, $is_template = false, $archive = null) {
         $sql = "SELECT p.id, p.*, "
                 . "COUNT(CASE WHEN pe.type = 'day' THEN 1 END) AS days,"
                 . "COUNT(CASE WHEN pe.type = 'exercise' THEN 1 END) AS exercises "
@@ -26,6 +26,11 @@ class PlanMapper extends \App\Domain\Mapper {
         ];
         if (!$is_template) {
             $this->addSelectFilterForUser($sql, $bindings, "p.");
+        }
+
+        if (!is_null($archive) && strlen($archive) > 0) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
         }
 
         $sql .= " GROUP BY p.id ";

@@ -26,6 +26,31 @@
 {% block body %}
 	<div class="inner-content">
 		<div class="page-content">
+			<form method="GET" id="tableHeaderFilter" class="search-filter">
+				<div class="filter-row">
+					<div class="filter-group">
+						<div class="filter-element">
+							<div class="select-wrapper form-control">
+								<select name="archive">
+									<option value="0" {% if archive == 0 %} selected {% endif %}>{{"SHOW_NOT_ARCHIVED"|trans}}</option>
+									<option value="1" {% if archive == 1 %} selected {% endif %}>{{"SHOW_ARCHIVED"|trans}}</option>
+									<option value="" {% if archive is empty %} selected {% endif %}>{{"SHOW_ALL"|trans}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="filter-row">
+					<div class="filter-element">
+						<input type="submit" class="button" value="{{"SHOW"|trans}}"/>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="inner-content">
+		<div class="page-content">
 			<table id="workouts_plans_table" class="table table-hover small">
 				<thead>
 					<tr>

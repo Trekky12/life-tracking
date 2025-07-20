@@ -19,10 +19,12 @@ class ProjectCategoryBudgetListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $project_hash = $request->getAttribute('project');
-        
+
+        $is_hidden = $request->getParam('is_hidden', 0);
+
         $view = $request->getQueryParam('view');
 
-        $index = $this->service->index($project_hash, $view);
+        $index = $this->service->index($project_hash, $view, $is_hidden);
         return $this->responder->respond($index->withTemplate('timesheets/projectcategorybudget/index.twig'));
     }
 

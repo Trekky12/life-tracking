@@ -12,16 +12,14 @@ use App\Domain\Board\Card\CardMapper;
 use App\Domain\Board\Label\LabelMapper;
 use App\Application\Payload\Payload;
 
-class BoardService extends Service
-{
+class BoardService extends Service {
 
     private $user_service;
     private $stack_mapper;
     private $card_mapper;
     private $label_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, BoardMapper $mapper, UserService $user_service, StackMapper $stack_mapper, CardMapper $card_mapper, LabelMapper $label_mapper)
-    {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, BoardMapper $mapper, UserService $user_service, StackMapper $stack_mapper, CardMapper $card_mapper, LabelMapper $label_mapper) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->user_service = $user_service;
@@ -30,13 +28,11 @@ class BoardService extends Service
         $this->label_mapper = $label_mapper;
     }
 
-    public function getAllOrderedByName()
-    {
-        return $this->mapper->getUserItems('name');
+    public function getAllOrderedByName($archive = null) {
+        return $this->mapper->getUserItems('name', false, null, $archive);
     }
 
-    public function view($hash, $sidebar = [])
-    {
+    public function view($hash, $sidebar = []) {
 
         $board = $this->getFromHash($hash);
 
@@ -63,8 +59,7 @@ class BoardService extends Service
         return new Payload(Payload::$RESULT_HTML, $data);
     }
 
-    public function data($hash)
-    {
+    public function data($hash) {
 
         // No hash defined!
         if (is_null($hash)) {
@@ -106,8 +101,7 @@ class BoardService extends Service
         return new Payload(Payload::$RESULT_JSON, $data);
     }
 
-    public function setArchive($data)
-    {
+    public function setArchive($data) {
         if (array_key_exists("state", $data) && in_array($data["state"], array(0, 1))) {
             SessionUtility::setSessionVar('show_archive', $data["state"]);
         }
@@ -115,19 +109,19 @@ class BoardService extends Service
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function getBoardsOfUser($user)
-    {
+    public function getBoardsOfUser($user) {
         return $this->mapper->getElementsOfUser($user);
     }
 
-    public function index()
-    {
-        $boards = $this->getAllOrderedByName();
-        return new Payload(Payload::$RESULT_HTML, ['boards' => $boards]);
+    public function index($archive = 0) {
+        $boards = $this->getAllOrderedByName($archive);
+        return new Payload(Payload::$RESULT_HTML, [
+            'boards' => $boards,
+            'archive' => $archive
+        ]);
     }
 
-    public function edit($entry_id)
-    {
+    public function edit($entry_id) {
         if ($this->isOwner($entry_id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
@@ -138,8 +132,7 @@ class BoardService extends Service
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
 
-    public function getStacks($hash, $show_archive = 1)
-    {
+    public function getStacks($hash, $show_archive = 1) {
         $board = $this->getFromHash($hash);
 
         if (!$this->isMember($board->id)) {
@@ -148,11 +141,10 @@ class BoardService extends Service
         $stacks = $this->stack_mapper->getStacksFromBoard($board->id, $show_archive);
 
         $data = ["status" => "success", "data"];
-        foreach($stacks as $stack){
+        foreach ($stacks as $stack) {
             $data["data"][$stack->id] = ["name" => $stack->name];
         }
 
         return new Payload(Payload::$RESULT_JSON, $data);
     }
-
 }

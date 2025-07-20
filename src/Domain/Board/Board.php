@@ -11,8 +11,8 @@ class Board extends \App\Domain\DataObject {
     public function parseData(array $data) {
 
         $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
-
         $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
+        $this->archive = $this->exists('archive', $data) ? filter_var($data['archive'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
@@ -22,5 +22,4 @@ class Board extends \App\Domain\DataObject {
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
         return $this->name;
     }
-
 }

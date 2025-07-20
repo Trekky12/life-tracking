@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Trips\Trip;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Trips\TripService;
 use App\Application\Responder\HTMLTemplateResponder;
@@ -19,7 +19,7 @@ class TripListAction {
 
     public function __invoke(Request $request, Response $response): Response {
         
-        $filter = $request->getParam('filter');
+        $filter = $request->getParam('filter', 'past_upcoming');
         
         $index = $this->service->index($filter);
         

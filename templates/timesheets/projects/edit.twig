@@ -58,6 +58,13 @@
 				</div>
 
 				<div class="form-group">
+					<label class="checkbox" for="checkboxArchived">
+						<input name="archive" type="checkbox" value="1" id="checkboxArchived" {% if entry is not null and entry.archive == 1 %} checked {% endif %}>
+						{{"ARCHIVED"|trans}}
+					</label>
+				</div>
+
+				<div class="form-group">
 					{% include "main/user-select.twig" with {'entry':entry, 'module': 'timesheets'} only %}
 				</div>
 

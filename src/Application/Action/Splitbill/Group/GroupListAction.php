@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Splitbill\Group;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Application\Responder\HTMLTemplateResponder;
@@ -18,7 +18,8 @@ class GroupListAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $index = $this->service->index();
+        $archive = $request->getParam('archive', 0);
+        $index = $this->service->index($archive);
         return $this->responder->respond($index->withTemplate('splitbills/groups/index.twig'));
     }
 

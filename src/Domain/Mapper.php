@@ -47,11 +47,11 @@ abstract class Mapper {
         $data_array = $data->get_fields($remove_user, true, false);
 
         $sql = "INSERT INTO " . $this->getTableName() . " "
-                . "        (" . implode(", ", array_keys($data_array)) . ") "
-                . "VALUES  (" . implode(", ", ( array_map(function($row) {
-                            return ":" . $row;
-                        }, array_keys($data_array)))) .
-                "           )";
+            . "        (" . implode(", ", array_keys($data_array)) . ") "
+            . "VALUES  (" . implode(", ", (array_map(function ($row) {
+                return ":" . $row;
+            }, array_keys($data_array)))) .
+            "           )";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -249,7 +249,7 @@ abstract class Mapper {
             }
 
             $sql = "INSERT INTO " . $this->getTableName($this->user_table) . " ({$this->element_name}, user) "
-                    . "VALUES " . implode(", ", $keys_array) . "";
+                . "VALUES " . implode(", ", $keys_array) . "";
 
             $stmt = $this->db->prepare($sql);
             $result = $stmt->execute($data_array);
@@ -281,9 +281,9 @@ abstract class Mapper {
 
         if (!is_null($table)) {
             $sql = "SELECT u.id, u.login "
-                    . "FROM " . $this->getTableName($table) . " ut," . $this->getTableName("global_users") . " u "
-                    . "WHERE ut.user = u.id "
-                    . "AND ut.{$element} = :id";
+                . "FROM " . $this->getTableName($table) . " ut," . $this->getTableName("global_users") . " u "
+                . "WHERE ut.user = u.id "
+                . "AND ut.{$element} = :id";
 
             $bindings = array("id" => $id);
 
@@ -292,9 +292,9 @@ abstract class Mapper {
 
             $results = [];
             while ($row = $stmt->fetch()) {
-                if($only_id){
+                if ($only_id) {
                     $results[] = intval($row["id"]);
-                }else{
+                } else {
                     $results[intval($row["id"])] = $row["login"];
                 }
             }
@@ -321,17 +321,22 @@ abstract class Mapper {
     protected function getUserItemsSQL($select = "DISTINCT t.*") {
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t LEFT JOIN " . $this->getTableName($this->user_table) . " tu ";
         $sql .= " ON t.id = tu.{$this->element_name} ";
-        $sql .= " WHERE tu.user = :user OR t.user = :user";
+        $sql .= " WHERE (tu.user = :user OR t.user = :user) ";
 
         return $sql;
     }
 
-    public function getUserItems($sorted = false, $limit = false, $user_id = null) {
+    public function getUserItems($sorted = false, $limit = false, $user_id = null, $archive = null) {
         $sql = $this->getUserItemsSQL();
 
         $bindings = array("user" => $this->user_id);
         if (!is_null($user_id)) {
             $bindings["user"] = $user_id;
+        }
+
+        if (!is_null($archive) && strlen($archive) > 0) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
         }
 
         if ($sorted && !is_null($sorted)) {
@@ -438,5 +443,4 @@ abstract class Mapper {
     public function getDataObject() {
         return $this->dataobject;
     }
-
 }

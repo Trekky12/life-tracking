@@ -189,6 +189,8 @@ $lang["REMAINING"] = "verbleibend";
 $lang["EDIT"] = "Bearbeiten";
 $lang["REMAINING_BUDGET"] = "verbleibendes Budget";
 $lang["HIDE_ENTRY"] = "Eintrag verbergen";
+$lang["SHOW_HIDDEN"] = "Verborgene anzeigen";
+$lang["SHOW_NOT_HIDDEN"] = "Nicht verborgene anzeigen";
 
 $lang["FINANCES_PAYMETHOD"] = "Zahlungsmethode";
 $lang["FINANCES_PAYMETHODS"] = "Zahlungsmethoden";
@@ -400,7 +402,7 @@ $lang["CAST_UNSIGNED"] = "positiv Ganzzahl";
 
 $lang["SHOW_THIS_WEEK"] = "Diese Woche";
 $lang["SHOW_THIS_MONTH"] = "Dieser Monat";
-$lang["SHOW_ALL"] = "Gesamter Zeitraum";
+$lang["SHOW_COMPLETE_RANGE"] = "Gesamter Zeitraum";
 
 $lang["SPLITBILL_GROUPS"] = "Gruppen mit geteilten Ausgaben";
 $lang["SPLITBILLS"] = "geteilte Ausgaben";
@@ -453,7 +455,8 @@ $lang["SEARCH_ADDRESS"] = "Suche Adresse";
 
 $lang["TRIPS_OVERVIEW"] = "Übersicht";
 $lang["TRIPS_PLANNED"] = "geplante Reisen";
-$lang["TRIPS_PAST"] = "vergangene Reisen";
+$lang["TRIPS_PAST_UPCOMING"] = "vergangene und kommende Reisen";
+$lang["TRIPS_ALL"] = "alle Reisen";
 
 $lang["SPLITBILLS_SETTLE_UP"] = "Schulden begleichen";
 $lang["SPLITBILLS_SETTLE_UP_SENDER"] = "Bezahler";
@@ -813,6 +816,9 @@ $lang["WORKOUTS_DISTANCE"] = "Distanz";
 $lang["LOAD_MORE"] = "Mehr laden";
 
 $lang["ALL"] = "alle";
+$lang["SHOW_ALL"] = "Alle anzeigen";
+$lang["SHOW_ARCHIVED"] = "Archivierte anzeigen";
+$lang["SHOW_NOT_ARCHIVED"] = "Nicht archivierte anzeigen";
 
 $lang["WORKOUTS_EXPORT"] = "Export";
 $lang["WORKOUTS_SESSION"] = "Trainingseinheit";

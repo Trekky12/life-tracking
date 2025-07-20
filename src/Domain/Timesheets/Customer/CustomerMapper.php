@@ -14,7 +14,7 @@ class CustomerMapper extends \App\Domain\Mapper {
 
         $bindings = array("id" => $id);
 
-        if (!is_null($archive)) {
+        if (!is_null($archive) && strlen($archive) > 0) {
             $sql .= " AND archive = :archive ";
             $bindings["archive"] = $archive;
         }
