@@ -10,6 +10,11 @@
 			</a>
 			<h2>{{"RECIPES_GROCERY"|trans}}</h2>
 		</div>
+		<div class="buttons">
+			<a href="{{ url_for('groceries_merge_view', {'id' : entry.id}) }}">
+				<button class="button button-outlined">{{"MERGE"|trans}}</button>
+			</a>
+		</div>
 	</div>
 {% endblock %}
 

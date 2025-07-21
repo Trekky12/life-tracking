@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+
+{% set active = 'recipes' %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('recipes_groceries')}}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"RECIPES_GROCERY"|trans}}
+				|
+				{{ entry.name| raw }}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<form class="form-horizontal" action="{{ url_for('groceries_merge') }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				<input type="hidden" name="grocery" value="{{entry.id}}">
+
+				<div class="form-group">
+					<label for="grocery">{{"RECIPES_GROCERIES"|trans}}</label>
+					<div class="select-wrapper form-control">
+						<select id="grocery" name="merge">
+							{% for grocery in groceries %}
+								{% if grocery.id != entry.id %}
+									<option value="{{grocery.id}}">{{grocery.name|raw}}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="button">{{"MERGE"|trans}}</button>
+					<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+{% endblock %}

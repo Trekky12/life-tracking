@@ -9,26 +9,22 @@ use App\Application\Payload\Payload;
 use App\Domain\Main\Translator;
 use App\Domain\Main\Utility\Utility;
 
-class GroceryService extends Service
-{
+class GroceryService extends Service {
 
     private $translation;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, GroceryMapper $mapper, Translator $translation)
-    {
+    public function __construct(LoggerInterface $logger, CurrentUser $user, GroceryMapper $mapper, Translator $translation) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->translation = $translation;
     }
 
-    public function index()
-    {
+    public function index() {
         $groceries = $this->mapper->getAll();
         return new Payload(Payload::$RESULT_HTML, ['groceries' => $groceries]);
     }
 
-    public function edit($entry_id)
-    {
+    public function edit($entry_id) {
         if ($this->isOwner($entry_id) === false && !$this->current_user->getUser()->isAdmin()) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
@@ -37,8 +33,7 @@ class GroceryService extends Service
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
 
-    public function getIngredients($selected = null)
-    {
+    public function getIngredients($selected = null) {
         $all_groceries = $this->mapper->getAll();
 
         $groceries = [];
@@ -61,8 +56,7 @@ class GroceryService extends Service
         return new Payload(Payload::$RESULT_JSON, $groceries);
     }
 
-    public function getGroceries($data)
-    {
+    public function getGroceries($data) {
         $response_data = ["data" => [], "status" => "success"];
 
         $query = array_key_exists('query', $data) ? Utility::filter_string_polyfill($data['query']) : "";
@@ -89,9 +83,40 @@ class GroceryService extends Service
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function getGroceryByName($grocery_input){
-        return $this->mapper->getGroceryByName($grocery_input);
+    public function view_merge($entry_id) {
+        if ($this->isOwner($entry_id) === false && !$this->current_user->getUser()->isAdmin()) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $entry = $this->getEntry($entry_id);
+
+        return new Payload(Payload::$RESULT_HTML, [
+            'entry' => $entry,
+            'groceries' => $this->mapper->getAll('name')
+        ]);
     }
 
-    
+    public function mergeGroceries($data) {
+        $grocery = array_key_exists("grocery", $data) && !empty($data["grocery"]) ? intval(filter_var($data["grocery"], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $merge = array_key_exists("merge", $data) && !empty($data["merge"]) ? intval(filter_var($data["merge"], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+        if (!is_null($grocery) && !is_null($merge)) {
+
+            if (($this->isOwner($grocery) === false || $this->isOwner($merge) === false) && !$this->current_user->getUser()->isAdmin()) {
+                return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+            }
+
+            $this->mapper->mergeGroceries($grocery, $merge);
+
+            $this->logger->notice("Merge Grocery 1 with Grocery 2", array("grocery1" => $grocery, "grocery2" => $merge));
+
+            return new Payload(Payload::$STATUS_UPDATE, null, $data);
+        }
+
+        return new Payload(Payload::$STATUS_ERROR);
+    }
+
+    public function getGroceryByName($grocery_input) {
+        return $this->mapper->getGroceryByName($grocery_input);
+    }
 }

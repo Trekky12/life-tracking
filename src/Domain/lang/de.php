@@ -878,6 +878,7 @@ $lang["RECIPES_INGREDIENTS"] = "Zutaten";
 $lang["RECIPES_INGREDIENT"] = "Zutat";
 $lang["RECIPES_MEALPLANS"] = "Speisepläne";
 $lang["RECIPES_MEALPLAN"] = "Speiseplan";
+$lang["MERGE"] = "Zusammenführen";
 
 $lang["RECIPES_PREPARATION_TIME"] = "Vorbereitungszeit";
 $lang["RECIPES_WAITING_TIME"] = "Wartezeit";

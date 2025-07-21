@@ -159,5 +159,4 @@ class RecipeService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
-
 }

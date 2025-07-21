@@ -880,6 +880,7 @@ $lang["RECIPES_INGREDIENTS"] = "ingredients";
 $lang["RECIPES_INGREDIENT"] = "ingredient";
 $lang["RECIPES_MEALPLANS"] = "mealplans";
 $lang["RECIPES_MEALPLAN"] = "mealplan";
+$lang["MERGE"] = "merge";
 
 $lang["RECIPES_PREPARATION_TIME"] = "preparation time";
 $lang["RECIPES_WAITING_TIME"] = "waiting time";

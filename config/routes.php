@@ -670,6 +670,9 @@ return function (App $app) {
             $group_groceries->delete('/delete/{id}', \App\Application\Action\Recipes\Grocery\GroceryDeleteAction::class)->setName('recipes_groceries_delete');
 
             $group_groceries->get('/search', \App\Application\Action\Recipes\Grocery\GrocerySearchAction::class)->setName('groceries_search');
+
+            $group_groceries->get('/merge/{id}', \App\Application\Action\Recipes\Grocery\GroceryMergeViewAction::class)->setName('groceries_merge_view');
+            $group_groceries->post('/merge', \App\Application\Action\Recipes\Grocery\GroceryMergeAction::class)->setName('groceries_merge');
         });
 
         $group->group('/mealplans', function (RouteCollectorProxy $group_mealplans) {

@@ -1325,7 +1325,7 @@ var recipesGroceriesTable = new JSTable("#recipes_groceries_table", {
             sort: "asc"
         },
         {
-            select: [1, 2],
+            select: [3, 4],
             sortable: false,
             searchable: false
         }

@@ -28,6 +28,7 @@
 					<tr>
 						<th>{{"NAME"|trans}}</th>
 						<th>{{"UNIT"|trans}}</th>
+						<th>{{"RECIPES_INGREDIENT"|trans}}</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -37,6 +38,13 @@
 						<tr>
 							<td>{{grocery.name|raw}}</td>
 							<td>{{grocery.unit}}</td>
+							<td>
+								{%- if grocery.is_food -%}
+									{{"YES"|trans}}
+								{%- else -%}
+									{{- "NO"|trans -}}
+								{%- endif -%}
+							</td>
 							<td>
 								{% if grocery.getOwner() == user.id or user.isAdmin() %}
 									<a href="{{ url_for('recipes_groceries_edit', {'id' : grocery.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
