@@ -57,7 +57,7 @@
 				<div class="form-group">
 					<label for="timeEnd">{{ "END"|trans }}
 						{{"TIME"|trans}}</label>
-					<input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% else %}{{"now"|date('H:i:s')}}{% endif %}">
+					<input type="time" step="1" class="form-control" id="timeEnd" name="end_time" value="{% if not entry is null %}{{entry.end_time}}{% endif %}">
 				</div>
 
 				<div class="form-group">
