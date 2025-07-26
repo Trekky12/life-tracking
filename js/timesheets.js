@@ -536,7 +536,7 @@ if (calendarEl) {
             sheetCategoryBudgets.innerHTML = "";
 
             const budgets = info.event.extendedProps.categorybudgets;
-            if (budgets) {
+            if (budgets && budgets.length > 0) {
                 sheetCategoryBudgetsWrapper.classList.remove("hidden");
 
                 budgets.forEach(budget => {
@@ -552,12 +552,21 @@ if (calendarEl) {
                     h4.innerHTML = title;
                     budgetDiv.appendChild(h4);
 
+                    var categoriesDiv = document.createElement("div");
+                    categoriesDiv.className = "categories-list";
+
                     if (budget.category_names && budget.category_names.length > 0) {
-                        var categoriesDiv = document.createElement("div");
-                        categoriesDiv.className = "categories-list";
                         categoriesDiv.innerHTML = lang.categories + ": " + budget.category_names;
-                        budgetDiv.appendChild(categoriesDiv);
+
+                        if (budget.no_category == 1) {
+                            categoriesDiv.innerHTML = lang.categories + ": " + budget.category_names + ", " + lang.timesheets_project_category_budget_entries_without_category;
+                        }
+
+                    } else if (budget.no_category == 1) {
+                        categoriesDiv.innerHTML = lang.timesheets_project_category_budget_entries_without_category;
                     }
+
+                    budgetDiv.appendChild(categoriesDiv);
 
                     if (budget.notice) {
                         var small = document.createElement("small");
