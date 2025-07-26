@@ -36,44 +36,46 @@
 								{% else %}
 									{{"CATEGORY"|trans}}:
 								{% endif %}
-								{% for cat in budget_categories[budget.id] %}
-									{{categories[cat].name|raw}}
-									{% if loop.index < budget_categories[budget.id]|length %},{%endif%}
-									{% endfor %}
-								</div>
-							{% endif %}
-
-							<div class="values">
-								<span>0
-									{{currency}}</span>
-								<span class="{%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}">{{budget.sum}}
-									{{currency}}</span>
-								<span>{{budget.value}}
-									{{currency}}</span>
-							</div>
-
-							<div class="progress-bar">
-								<div class="progress {%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}" style="width:{{budget.percent}}%">
-									{%if budget.percent >= 25 %}
-										{{budget.percent}}%{%endif%}</div>
-									{%if budget.percent < 25 %}
-										<div class="progress progress-text">{{budget.percent}}%</div>
-									{% endif %}
-									<div class="state" style="width:{{date_status}}%"></div>
-								</div>
-
-								<div class="remaining">
-									{{"REMAINING"|trans}}:
-									{{budget.diff}}
-									{{currency}}
-								</div>
-
-
+								{%- for cat in budget_categories[budget.id] -%}
+									{{- categories[cat].name|raw -}}
+									{%- if loop.index < budget_categories[budget.id]|length -%}
+										,&nbsp;
+									{%- endif -%}
+								{%- endfor -%}
 							</div>
 						{% endif %}
-					{% endfor %}
 
-				</div>
+						<div class="values">
+							<span>0
+								{{currency}}</span>
+							<span class="{%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}">{{budget.sum}}
+								{{currency}}</span>
+							<span>{{budget.value}}
+								{{currency}}</span>
+						</div>
+
+						<div class="progress-bar">
+							<div class="progress {%if budget.percent > 80 %}red{%elseif budget.percent > 50%}orange{%else%}green{%endif%}" style="width:{{budget.percent}}%">
+								{%if budget.percent >= 25 %}
+									{{budget.percent}}%{%endif%}</div>
+								{%if budget.percent < 25 %}
+									<div class="progress progress-text">{{budget.percent}}%</div>
+								{% endif %}
+								<div class="state" style="width:{{date_status}}%"></div>
+							</div>
+
+							<div class="remaining">
+								{{"REMAINING"|trans}}:
+								{{budget.diff}}
+								{{currency}}
+							</div>
+
+
+						</div>
+					{% endif %}
+				{% endfor %}
+
 			</div>
+		</div>
 
-		{% endblock %}
+	{% endblock %}
