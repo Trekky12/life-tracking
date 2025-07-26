@@ -69,9 +69,9 @@ $lang["FINANCES_TRANSACTION_ACCOUNT_FROM"] = "vom Konto";
 $lang["FINANCES_TRANSACTION_ACCOUNT_TO"] = "auf Konto";
 $lang["FINANCES_TRANSACTION_ADD"] = "Buchung hinzufügen";
 $lang["FINANCES_TRANSACTION_UPDATE_HAS_ENTRY"] = "Diese Buchung hat einen zugehörigen Finanzeintrag.<br>Änderungen wirken sich nicht auf diesen aus.<br>Bei Änderungen des Finanzeintrags wird die Buchung wieder zurückgesetzt!";
-$lang["FINANCES_TRANSACTION_UPDATE_HAS_SPLITTED_BILL"] = "Diese Buchung hat eine zugehörigen geteilte Ausgabe.<br>Änderungen wirken sich nicht auf diese aus.<br>Bei Änderungen der geteilten Ausgabe wird die Buchung wieder zurückgesetzt!";
+$lang["FINANCES_TRANSACTION_UPDATE_HAS_SPLITTED_BILL"] = "Diese Buchung hat eine zugehörige geteilte Ausgabe.<br>Änderungen wirken sich nicht auf diese aus.<br>Bei Änderungen der geteilten Ausgabe wird die Buchung wieder zurückgesetzt!";
 $lang["FINANCES_TRANSACTION_DELETE_HAS_ENTRY"] = "Diese Buchung hat einen zugehörigen Finanzeintrag, dieser wird nicht gelöscht! Bei Änderungen des Finanzeintrags wird die Buchung wieder erstellt.";
-$lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"] = "Diese Buchung hat eine zugehörigen geteilte Ausgabe, diese wird nicht gelöscht! Bei Änderungen der geteilten Ausgabe wird die Buchung wieder erstellt.";
+$lang["FINANCES_TRANSACTION_DELETE_HAS_SPLITTED_BILL"] = "Diese Buchung hat eine zugehörige geteilte Ausgabe, diese wird nicht gelöscht! Bei Änderungen der geteilten Ausgabe wird die Buchung wieder erstellt.";
 
 $lang["FINANCES_TRANSACTIONS_RECURRING"] = "wiederkehrende Buchungen";
 $lang["FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
@@ -704,7 +704,7 @@ $lang["DATAOBJECT_RECIPES_SHOPPINGLIST"] = "Einkaufsliste";
 $lang["DATAOBJECT_TIMESHEETS_PROJECT_CATEGORY_BUDGET"] = "Projektbudget";
 $lang["DATAOBJECT_TIMESHEETS_NOTICEFIELD"] = "Feld für Notizen";
 $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
-$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "Zeiterfasungsprojekt Kunde";
+$lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "Zeiterfassungsprojekt Kunde";
 $lang["DATAOBJECT_TIMESHEETS_CUSTOMER_REQUIREMENT"] = "Nachweis";
 $lang["DATAOBJECT_TIMESHEETS_REQUIREMENT_TYPE"] = "Nachweisart";
 
