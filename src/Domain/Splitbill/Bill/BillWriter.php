@@ -74,97 +74,127 @@ class BillWriter extends BaseBillWriter {
         $users_preSave = $this->mapper->getBillUsers($id);
 
         $payload = parent::save($id, $data, $additionalData);
-        $bill = $payload->getResult();
 
         if ($payload->getStatus() == Payload::$NO_ACCESS) {
             return $payload;
         }
 
-        $group = $this->group_service->getFromHash($additionalData["group"]);
-        $users = $this->user_service->getAll();
-        $balances = $this->getMapper()->getBalance($bill->id);
-        $totalValue = $this->getMapper()->getBillSpend($bill->id);
+        // Update finance entries and transactions when paymethod is changed
+        if ($payload->getStatus() == Payload::$STATUS_UPDATE_PAYMETHOD) {
+            $balance = $payload->getResult();
+            $bill = $this->service->getEntry($id);
+            $user_id = $this->current_user->getUser()->id;
 
-        $me = $this->current_user->getUser();
+            if ($bill->settleup != 1) {
 
-        foreach ($balances as $balance) {
-            /**
-             * Create Finance Entry for User
-             */
-            $userObj = $users[$balance["user"]];
+                $finance_entry = $this->finance_mapper->getEntryFromBill($user_id, $bill->id);
 
-            if ($group->add_finances > 0 && $userObj->module_finance == 1) {
-
-                // Before creating/deleting a finance entry the user is checked
-                // for access rights, but when an entry for another user is created the 
-                // current user has no access rights
-                // So the current user needs to be set to the
-                // recurring splitted bill creator
-                $this->current_user->setUser(null);
-                $this->finance_mapper->setUser($balance["user"]);
-                $this->transaction_mapper->setUser($balance["user"]);
-
-                if ($bill->settleup != 1) {
-
-                    $finance_entry = $this->finance_mapper->getEntryFromBill($balance["user"], $bill->id);
-
-                    if ($balance["spend"] > 0) {
-
-                        $data = [
-                            "id" => null,
-                            "date" => $bill->date,
-                            "time" => $bill->time,
-                            "description" => $bill->name,
-                            "type" => 0,
-                            "value" => $balance["spend"],
-                            "user" => $balance["user"],
-                            "common" => 1,
-                            "common_value" => $totalValue,
-                            "bill" => $bill->id,
-                            "bill_paid" => $balance["paid"],
-                            "lng" => $bill->lng,
-                            "lat" => $bill->lat,
-                            "acc" => $bill->acc,
-                            "paymethod" => $balance["paymethod_spend"]
-                        ];
-
-                        if (!is_null($finance_entry)) {
-                            $data["id"] = $finance_entry->id;
-                            $data["description"] = $finance_entry->description;
-                        }
-
-                        $this->finances_entry_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
-                    } else {
-
-                        // Entry was updated and the user has no longer "paid" something? => delete the corresponding finance entry of the user
-                        if (!is_null($finance_entry)) {
-                            $this->finances_entry_remover->delete($finance_entry->id, ["is_bill_based_delete" => true]);
-                        }
-
-                        // Splitted bill was paid by the user but not spend by him? => Create only transaction
-                        $this->createTransaction($balance, $bill);                        
-                    }
+                if ($finance_entry) {
+                    // Update finance entry -> this triggers the transaction logic
+                    $data = $finance_entry->copy();
+                    $data["id"] = $finance_entry->id;
+                    $data["paymethod"] = $balance["paymethod_spend"];
+                    $this->finances_entry_writer->save($data["id"], $data, ["is_bill_based_save" => true, "use_user_from_data" => true]);
                 } else {
-                    // Create settle up transaction
+                    // Splitted bill was paid by the user but not spend by him? => Create only transaction
                     $this->createTransaction($balance, $bill);
-                    $this->createSettleUpIncomingTransaction($balance, $bill);
                 }
+            } else {
+                // Create settle up transaction
+                $this->createTransaction($balance, $bill);
+                $this->createSettleUpIncomingTransaction($balance, $bill);
             }
         }
 
-        // Reset user back to initial!
-        if (!is_null($me)) {
-            $this->current_user->setUser($me);
-            $this->finance_mapper->setUser($me->id);
-            $this->transaction_mapper->setUser($me->id);
+        if (in_array($payload->getStatus(), [Payload::$STATUS_NEW, Payload::$STATUS_UPDATE, Payload::$STATUS_NO_UPDATE])) {
+
+            $bill = $payload->getResult();
+
+            $group = $this->group_service->getFromHash($additionalData["group"]);
+            $users = $this->user_service->getAll();
+            $balances = $this->getMapper()->getBalance($bill->id);
+            $totalValue = $this->getMapper()->getBillSpend($bill->id);
+
+            $me = $this->current_user->getUser();
+
+            foreach ($balances as $balance) {
+                /**
+                 * Create Finance Entry for User
+                 */
+                $userObj = $users[$balance["user"]];
+
+                if ($group->add_finances > 0 && $userObj->module_finance == 1) {
+
+                    // Before creating/deleting a finance entry the user is checked
+                    // for access rights, but when an entry for another user is created the 
+                    // current user has no access rights
+                    // So the current user needs to be set to the
+                    // recurring splitted bill creator
+                    $this->current_user->setUser(null);
+                    $this->finance_mapper->setUser($balance["user"]);
+                    $this->transaction_mapper->setUser($balance["user"]);
+
+                    if ($bill->settleup != 1) {
+
+                        $finance_entry = $this->finance_mapper->getEntryFromBill($balance["user"], $bill->id);
+
+                        if ($balance["spend"] > 0) {
+
+                            $data = [
+                                "id" => null,
+                                "date" => $bill->date,
+                                "time" => $bill->time,
+                                "description" => $bill->name,
+                                "type" => 0,
+                                "value" => $balance["spend"],
+                                "user" => $balance["user"],
+                                "common" => 1,
+                                "common_value" => $totalValue,
+                                "bill" => $bill->id,
+                                "bill_paid" => $balance["paid"],
+                                "lng" => $bill->lng,
+                                "lat" => $bill->lat,
+                                "acc" => $bill->acc,
+                                "paymethod" => $balance["paymethod_spend"]
+                            ];
+
+                            if (!is_null($finance_entry)) {
+                                $data["id"] = $finance_entry->id;
+                                $data["description"] = $finance_entry->description;
+                            }
+
+                            $this->finances_entry_writer->save($data["id"], $data, ["is_bill_based_save" => true, "use_user_from_data" => true]);
+                        } else {
+
+                            // Entry was updated and the user has no longer "paid" something? => delete the corresponding finance entry of the user
+                            if (!is_null($finance_entry)) {
+                                $this->finances_entry_remover->delete($finance_entry->id, ["is_bill_based_delete" => true]);
+                            }
+
+                            // Splitted bill was paid by the user but not spend by him? => Create only transaction
+                            $this->createTransaction($balance, $bill);
+                        }
+                    } else {
+                        // Create settle up transaction
+                        $this->createTransaction($balance, $bill);
+                        $this->createSettleUpIncomingTransaction($balance, $bill);
+                    }
+                }
+            }
+
+            // Reset user back to initial!
+            if (!is_null($me)) {
+                $this->current_user->setUser($me);
+                $this->finance_mapper->setUser($me->id);
+                $this->transaction_mapper->setUser($me->id);
+            }
+
+            /**
+             * Notify Users
+             */
+            $is_new_bill = $payload->getStatus() == Payload::$STATUS_NEW;
+            $this->bill_notification_service->notifyUsers("edit", $bill, $group, $is_new_bill, $users_preSave);
         }
-
-        /**
-         * Notify Users
-         */
-        $is_new_bill = $payload->getStatus() == Payload::$STATUS_NEW;
-        $this->bill_notification_service->notifyUsers("edit", $bill, $group, $is_new_bill, $users_preSave);
-
         return $payload;
     }
 
@@ -214,13 +244,13 @@ class BillWriter extends BaseBillWriter {
                 $data["description"] = $transaction_entry->description;
             }
 
-            $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
+            $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true, "use_user_from_data" => true]);
 
             // Round up savings
             if (!is_null($paymethod_spend->round_up_savings_account) && $paymethod_spend->round_up_savings > 0) {
 
                 $saving = (ceil($value / $paymethod_spend->round_up_savings) * $paymethod_spend->round_up_savings) - $value;
-    
+
                 if ($saving > 0) {
                     $data2 = [
                         "id" => null,
@@ -239,11 +269,10 @@ class BillWriter extends BaseBillWriter {
                         $data2["id"] = $transaction_entry_round_up_savings->id;
                         $data2["description"] = $transaction_entry_round_up_savings->description;
                     }
-    
-                    $this->transaction_writer->save($data2["id"], $data2, ["is_bill_based_save" => true]);
+
+                    $this->transaction_writer->save($data2["id"], $data2, ["is_bill_based_save" => true, "use_user_from_data" => true]);
                 }
             }
-
         } else {
             if (!is_null($transaction_entry)) {
                 $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);
@@ -280,8 +309,7 @@ class BillWriter extends BaseBillWriter {
                 $data["description"] = $transaction_entry->description;
             }
 
-            $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true]);
-
+            $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true, "use_user_from_data" => true]);
         } else {
             if (!is_null($transaction_entry)) {
                 $this->transaction_remover->delete($transaction_entry->id, ["is_bill_based_delete" => true]);

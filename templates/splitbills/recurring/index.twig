@@ -88,9 +88,7 @@
 								{% endif %}
 							</td>
 							<td>
-								{% if bill.user == user.id %}
-									<a href="{{ url_for('splitbill_bill_recurring_edit', {'id' : bill.id, 'group': group.getHash()}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
-								{% endif %}
+								<a href="{{ url_for('splitbill_bill_recurring_edit', {'id' : bill.id, 'group': group.getHash()}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 							</td>
 							<td>
 								{% if bill.user == user.id %}

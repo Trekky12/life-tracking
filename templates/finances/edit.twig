@@ -102,7 +102,7 @@
 				<div class="form-group">
 					<label for="paymethod">{{"FINANCES_PAYMETHOD"|trans}}</label>
 					<div class="select-wrapper form-control">
-						<select class="{% if not is_paymethod_selectable %}disabled{% endif %}" id="paymethod" name="paymethod" {% if not is_paymethod_selectable %} disabled="disabled" {% endif %}>
+						<select class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="paymethod" name="paymethod" {% if not entry is null and not entry.bill is null %} disabled="disabled" {% endif %}>
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods %}
 								<option value="{{method.id}}" {% if (not entry is null and method.id == entry.paymethod) or (entry is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>

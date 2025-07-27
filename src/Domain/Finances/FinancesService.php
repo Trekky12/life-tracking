@@ -136,9 +136,11 @@ class FinancesService extends Service {
         $categories = $this->cat_service->getAllCategoriesOrderedByName();
         $paymethods = $this->paymethod_service->getAllPaymethodsOrderedByName();
 
-        $is_paymethod_selectable = !is_null($entry) ? $this->isPaymethodSelectable($entry_id) : true;
-
-        return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'categories' => $categories, 'paymethods' => $paymethods, 'is_paymethod_selectable' => $is_paymethod_selectable]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'entry' => $entry,
+            'categories' => $categories,
+            'paymethods' => $paymethods
+        ]);
     }
 
     public function isSplittedBillEntry($id) {
@@ -147,24 +149,6 @@ class FinancesService extends Service {
             return true;
         }
         return false;
-    }
-
-    public function isPaymethodSelectable($id) {
-        $entry = $this->getMapper()->get($id);
-
-        if (!is_null($entry->bill)) {
-            // There is a bill but the user has nothing paid => no paymethod selectable! => no transaction is generated
-            if ($entry->bill_paid == 0) {
-                return false;
-            }
-            // There is a bill and the user has something paid but he is also the owner of the bill => change paymethod on bill instead!
-            else {
-                if ($this->splitbill_bill_service->isOwner($entry->bill)) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     public function getDefaultOrAssignedCategory(FinancesEntry $entry) {

@@ -73,7 +73,8 @@ class FinancesEntry extends \App\Domain\DataObject {
             'acc' => $this->acc,
             'description' => $this->description,
             'value' => $this->value,
-            'type' => 1];
+            'type' => 1
+        ];
     }
 
     public function get_fields($remove_user_element = false, $insert = true, $update = false) {
@@ -90,7 +91,6 @@ class FinancesEntry extends \App\Domain\DataObject {
             $temp["category"] = $this->category;
             $temp["description"] = $this->description;
             $temp["changedOn"] = $this->changedOn;
-            $temp["paymethod"] = $this->paymethod;
             $temp["notice"] = $this->notice;
             if (!$remove_user_element) {
                 $temp["user"] = $this->user;
@@ -109,5 +109,4 @@ class FinancesEntry extends \App\Domain\DataObject {
         $currency = $settings->getAppSettings()['i18n']['currency'];
         return sprintf("%s (%s %s)", $this->description, $this->value, $currency);
     }
-
 }

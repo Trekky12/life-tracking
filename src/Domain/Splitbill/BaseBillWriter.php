@@ -29,10 +29,27 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
 
         $group = $this->group_service->getFromHash($additionalData["group"]);
 
-        if (!$this->group_service->isMember($group->id) || $this->getService()->isOwner($id) === false) {
+        if (!$this->group_service->isMember($group->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        if(!$this->service->isChildOf($group->id, $id)){
+        if (!is_null($id) && !$this->service->isChildOf($group->id, $id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        // Members can only update their paymethod
+        if ($this->getService()->isOwner($id) === false) {
+
+            $splitbill_groups_users = $this->group_service->getUsers($group->id);
+            list($balances, $sum_paid, $sum_spend, $totalValue, $totalValueForeign) = $this->filterBalances($data, $splitbill_groups_users);
+
+            $user_id = $this->current_user->getUser()->id;
+            if (array_key_exists($user_id, $balances)) {
+
+                $balance = $balances[$user_id];
+                $update = $this->getMapper()->updatePaymethod($id, $balance["user"], $balance["paymethod_spend"], $balance["paymethod_paid"]);
+
+                return new Payload(Payload::$STATUS_UPDATE_PAYMETHOD, $balance);
+            }
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
@@ -65,9 +82,9 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
         $existing_balance = $this->getMapper()->getBalance($bill->id);
 
         $removed_users = array_diff(array_keys($existing_balance), array_keys($splitbill_groups_users));
-        
+
         list($balances, $sum_paid, $sum_spend, $totalValue, $totalValueForeign) = $this->filterBalances($data, $splitbill_groups_users);
-        
+
         // floating point comparison
         if (!empty($balances) && $totalValue > 0 && (abs(($totalValue - $sum_paid) / $totalValue) < 0.00001) && (abs(($totalValue - $sum_spend) / $totalValue) < 0.00001)) {
             $this->logger->info('Add balance for bill', array("bill" => $bill->id, "balances" => $balances));
@@ -120,7 +137,7 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
                 $paid_foreign = array_key_exists("paid_foreign", $bdata) ? floatval(filter_var($bdata["paid_foreign"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
 
                 // add entry
-                $balances[] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod_spend" => $paymethod_spend, "paymethod_paid" => $paymethod_paid, "spend_foreign" => $spend_foreign, "paid_foreign" => $paid_foreign];
+                $balances[$user] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod_spend" => $paymethod_spend, "paymethod_paid" => $paymethod_paid, "spend_foreign" => $spend_foreign, "paid_foreign" => $paid_foreign];
             }
         }
         return array($balances, $sum_paid, $sum_spend, $totalValue, $totalValueForeign);
@@ -149,5 +166,4 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
     public function getModule(): string {
         return "splitbills";
     }
-
 }

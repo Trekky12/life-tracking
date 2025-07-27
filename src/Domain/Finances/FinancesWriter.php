@@ -80,18 +80,17 @@ class FinancesWriter extends ObjectActivityWriter {
         $this->current_user->setUser(null);
         $this->transaction_mapper->setUser($entry->user);
 
-        $is_paymethod_editable = !is_null($entry) ? $this->finances_service->isPaymethodSelectable($entry->id) : true;
-
-        if (!is_null($entry->paymethod) && $is_paymethod_editable) {
+        if (!is_null($entry->paymethod)) {
 
             $paymethod = $this->paymethod_service->getPaymethodOfUser($entry->paymethod, $entry->user);
+            $value = is_null($entry->bill) ? $entry->value : $entry->bill_paid;
 
-            if (!is_null($paymethod->account)) {
+            if (!is_null($paymethod->account) && floatval($value) > 0) {
 
                 $data = [
                     "date" => $entry->date,
                     "time" => $entry->time,
-                    "value" => is_null($entry->bill) ? $entry->value : $entry->bill_paid,
+                    "value" => $value,
                     "account_from" => null,
                     "account_to" => null,
                     "description" => $entry->description,
@@ -118,7 +117,6 @@ class FinancesWriter extends ObjectActivityWriter {
                  */
                 if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0 && $entry->type == 0) {
 
-                    $value = is_null($entry->bill) ? $entry->value : $entry->bill_paid;
                     $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
 
                     if ($saving > 0) {

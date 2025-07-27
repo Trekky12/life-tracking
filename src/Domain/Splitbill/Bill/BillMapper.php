@@ -10,51 +10,6 @@ class BillMapper extends BaseBillMapper {
     protected $dataobject = \App\Domain\Splitbill\Bill\Bill::class;
     protected $bill_balance_table = "splitbill_bill_users";
 
-    public function getTotalBalance($group) {
-        $sql = "SELECT bb.user, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTableName() . " b "
-            . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
-            . " ON b.id = bb.bill "
-            . " WHERE b.sbgroup = :group "
-            . " GROUP BY bb.user"
-            . " ORDER by balance, paid DESC, spend DESC";
-
-        $bindings = array("group" => $group);
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
-
-        $results = [];
-        while ($row = $stmt->fetch()) {
-            $results[intval($row["user"])] = [
-                "user" => intval($row["user"]),
-                "spend" => floatval($row["spend"]),
-                "paid" => floatval($row["paid"]),
-                "balance" => floatval($row["balance"]),
-                "owe" => 0
-            ];
-        }
-        return $results;
-    }
-
-    public function getSettledUpSpendings($group, $settleup = 1) {
-        $sql = "SELECT bb.user, SUM(bb.spend) as spend FROM " . $this->getTableName() . " b "
-            . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "
-            . " ON b.id = bb.bill "
-            . " WHERE b.sbgroup = :group AND b.settleup = :settleup "
-            . " GROUP BY bb.user";
-
-        $bindings = array("group" => $group, "settleup" => $settleup);
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($bindings);
-
-        $results = [];
-        while ($row = $stmt->fetch()) {
-            $results[intval($row["user"])] = floatval($row["spend"]);
-        }
-        return $results;
-    }
-
     public function getBalances() {
         $sql = "SELECT b.sbgroup, SUM(bb.paid) as paid, SUM(bb.spend) as spend, SUM(bb.paid-bb.spend) as balance FROM " . $this->getTableName() . " b "
             . " LEFT JOIN " . $this->getTableName($this->bill_balance_table) . " bb "

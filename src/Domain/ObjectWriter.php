@@ -32,7 +32,7 @@ abstract class ObjectWriter {
         }
 
         $user = $this->current_user->getUser();
-        $use_user_from_data = is_array($additionalData) && ((array_key_exists("is_bill_based_save", $additionalData) && $additionalData["is_bill_based_save"]) || (array_key_exists("use_user_from_data", $additionalData) && $additionalData["use_user_from_data"]));
+        $use_user_from_data = is_array($additionalData) && (array_key_exists("use_user_from_data", $additionalData) && $additionalData["use_user_from_data"]);
 
         // Add user only if not empty (not cron!)
         if (!is_null($user) && !$use_user_from_data) {
