@@ -411,8 +411,9 @@ class SheetExportService extends Service {
 
     private function exportHTMLOverview($project, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields = []) {
 
+        $dateFormatSQL = $this->settings->getAppSettings()['i18n']['dateformatSQL'];
         $include_empty_categories = false;
-        $data = $this->getMapper()->getOverview($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
+        $data = $this->getMapper()->getOverview($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $dateFormatSQL["dateTimesheetsExport"]);
 
         $fields = $this->notice_fields_service->getNoticeFields($project->id, 'customer');
 

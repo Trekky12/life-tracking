@@ -687,7 +687,7 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getOverview($project, $from, $to, $categories, $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null) {
+    public function getOverview($project, $from, $to, $categories, $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null, $dateformat = "YYYY-MM-DD") {
 
         $bindings = [
             "searchQuery" => "%",
@@ -712,7 +712,7 @@ class SheetMapper extends \App\Domain\Mapper {
             $bindings["customer"] = $customer;
         }
 
-        $select = "COUNT(DISTINCT t.id) as count, tcus.name as customerName, tcus.id as customer";
+        $select = "COUNT(DISTINCT t.id) as count, tcus.name as customerName, tcus.id as customer, GROUP_CONCAT(DISTINCT DATE_FORMAT(t.start, '{$dateformat}') ORDER BY t.start SEPARATOR ', ') AS dates";
         list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, 'tcus.id');
 
         $sql = $tableSQL;

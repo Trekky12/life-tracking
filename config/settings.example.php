@@ -69,6 +69,9 @@ return [
                 'month_name' => 'MMMM',
                 'month_name_full' => 'dd. MMMM y',
             ],
+            'dateformatSQL' => [
+                'dateTimesheetsExport' => '%d.%m.'
+            ],
             'currency' => '€',
             'routing' => 'de'
         ],

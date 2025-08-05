@@ -67,6 +67,7 @@
 								<th>{{field.description | raw}}</th>
 							{% endfor %}
 							<th>{{"COUNT"|trans}}</th>
+							<th>{{"DATE"|trans}}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -83,6 +84,7 @@
 									</td>
 								{% endfor %}
 								<td>{{ row["count"] }}</td>
+								<td>{{ row["dates"] }}</td>
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -100,6 +102,7 @@
 								<th></th>
 							{% endfor %}
 							<th data-type="sum-body" class="body-sum">{{sum}}</th>
+							<th></th>
 						</tr>
 						<tr>
 							<th><input type="text" placeholder="{{ "INSERT_ADDITIONAL_VALUES"|trans }}" class="form-control"/></th>
@@ -107,6 +110,7 @@
 								<th><input type="text" class="form-control"/></th>
 							{% endfor %}
 							<th><input type="number" class="form-control additional-field" step="1"/></th>
+							<th><input type="text" class="form-control additional-field" step="1"/></th>
 						</tr>
 						<tr>
 							<th>{{"TOTAL"|trans}}</th>
@@ -114,6 +118,7 @@
 								<th></th>
 							{% endfor %}
 							<th data-type="sum-foot" class="total-value">{{sum}}</th>
+							<th></th>
 						</tr>
 					</tfoot>
 				</table>
