@@ -316,8 +316,8 @@ async function captureScreenshots() {
         console.log(`✅ ${file}`);
 
         file = `10_timesheets-37.jpg`
-        await page.click('#noticefieldsfilter div.selectr-container');
-        await page.click('#noticefieldsfilter li.selectr-option');
+        await page.click('#timesheets-export-overview-filter div.selectr-container');
+        await page.click('#timesheets-export-overview-filter li.selectr-option');
         await page.keyboard.press('Escape');
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await page.screenshot({ path: `${folder}/${file}` });

@@ -53,6 +53,10 @@ class Sheet extends \App\Domain\DataObject {
         $this->repeat_unit = $this->exists('repeat_unit', $data) ? Utility::filter_string_polyfill($data['repeat_unit']) : null;
         $this->repeat_multiplier = $this->exists('repeat_multiplier', $data) ? filter_var($data['repeat_multiplier'], FILTER_SANITIZE_NUMBER_INT) : null;
 
+
+        $this->start_modified = $this->exists('start_modified', $data) ? Utility::filter_string_polyfill($data['start_modified']) : null;
+        $this->end_modified = $this->exists('end_modified', $data) ? Utility::filter_string_polyfill($data['end_modified']) : null;
+
         /* if (empty($this->name) && $this->settleup == 0) {
           $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
           } */
@@ -66,6 +70,16 @@ class Sheet extends \App\Domain\DataObject {
     public function getEndDateTime($fallback = null) {
         $end = new \DateTime($this->end ?? '');
         return !is_null($this->end) ? $end : $fallback;
+    }
+
+    public function getStartModifiedDateTime($fallback = null) {
+        $start = new \DateTime($this->start_modified ?? '');
+        return !is_null($this->start_modified) ? $start : $fallback;
+    }
+
+    public function getEndModifiedDateTime($fallback = null) {
+        $end = new \DateTime($this->end_modified ?? '');
+        return !is_null($this->end_modified) ? $end : $fallback;
     }
 
     public function calculateDuration($fallback = null) {
@@ -103,6 +117,39 @@ class Sheet extends \App\Domain\DataObject {
         } elseif (!is_null($this->end)) {
             $date = $fmtDate->format($this->getEndDateTime());
             $end = $fmtTime->format($this->getEndDateTime());
+        }
+
+        return array($date, $start, $end);
+    }
+
+    public function getDateStartEndModified($language, $dateFormat, $datetimeShortFormat, $timeFormat) {
+
+        $fmtDate = new \IntlDateFormatter($language);
+        $fmtDate->setPattern($dateFormat);
+
+        $fmtDateTime = new \IntlDateFormatter($language);
+        $fmtDateTime->setPattern($datetimeShortFormat);
+
+        $fmtTime = new \IntlDateFormatter($language);
+        $fmtTime->setPattern($timeFormat);
+
+        $date = '';
+        $start = '';
+        $end = null;
+
+        // only show time on end date when start date and end date are on the same day
+        if (!is_null($this->start_modified) && !is_null($this->end_modified) && $this->getStartModifiedDateTime()->format('Y-m-d') == $this->getEndModifiedDateTime()->format('Y-m-d')) {
+            $end = $fmtTime->format($this->getEndModifiedDateTime());
+        } elseif (!is_null($this->end_modified)) {
+            $end = $fmtDateTime->format($this->getEndModifiedDateTime());
+        }
+
+        if (!is_null($this->start_modified)) {
+            $date = $fmtDate->format($this->getStartModifiedDateTime());
+            $start = $fmtTime->format($this->getStartModifiedDateTime());
+        } elseif (!is_null($this->end_modified)) {
+            $date = $fmtDate->format($this->getEndModifiedDateTime());
+            $end = $fmtTime->format($this->getEndModifiedDateTime());
         }
 
         return array($date, $start, $end);

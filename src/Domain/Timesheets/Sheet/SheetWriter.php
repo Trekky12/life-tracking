@@ -65,6 +65,8 @@ class SheetWriter extends ObjectActivityWriter {
 
         $this->service->setDuration($entry, $project, $duration_modification);
 
+        $updated_entry = $this->service->getEntry($entry->id);
+
         try {
 
             $this->mapper->deleteCategoriesFromSheet($id);
@@ -87,7 +89,7 @@ class SheetWriter extends ObjectActivityWriter {
         }
 
         $categories = count($this->getMapper()->getCategoriesFromSheet($entry->id));
-        if($categories == 0){
+        if ($categories == 0) {
             $payload->addFlashMessage('additional_flash_message_type', 'warning');
             $payload->addFlashMessage('additional_flash_message', $this->translation->getTranslatedString("TIMESHEETS_WARNING_NO_CATEGORY_ASSIGNED"));
         }
@@ -101,8 +103,6 @@ class SheetWriter extends ObjectActivityWriter {
             && array_key_exists("repeat_count", $data) && !empty($data["repeat_count"])
         ) {
             $repeat_count = intval(filter_var($data["repeat_count"], FILTER_SANITIZE_NUMBER_INT));
-
-            $updated_entry = $this->service->getEntry($entry->id);
 
             $start_date = new \DateTime($updated_entry->start ?? '');
             $end_date = new \DateTime($updated_entry->end ?? '');
@@ -155,7 +155,6 @@ class SheetWriter extends ObjectActivityWriter {
                 }
 
                 // Update remainings
-                $updated_entry = $this->service->getEntry($entry->id);
 
                 $start_date = new \DateTime($updated_entry->start ?? '');
                 $end_date = new \DateTime($updated_entry->end ?? '');
@@ -191,6 +190,34 @@ class SheetWriter extends ObjectActivityWriter {
                     $repeat_unit = $sheet->repeat_unit;
                     $repeat_multiplier = $sheet->repeat_multiplier;
                 }
+            }
+        }
+
+        /**
+         * start/end modify
+         */
+        if (
+            array_key_exists("set_date_modified", $data) && !empty($data["set_date_modified"])
+            && array_key_exists("start_modified", $data) && !empty($data["start_modified"])
+        ) {
+
+            $start_modified = Utility::filter_string_polyfill($data['start_modified']);
+            $end_modified = null;
+
+            if (!is_null($updated_entry->start) && !is_null($updated_entry->end)) {
+                $start_date = new \DateTime($updated_entry->start);
+                $end_date = new \DateTime($updated_entry->end);
+
+                $start_date_modified = new \DateTime($start_modified);
+                $end_date_modified = clone $start_date_modified;
+                $end_date_modified->add($start_date->diff($end_date));
+                $end_modified = $end_date_modified->format('Y-m-d H:i:s');
+            }
+
+            $this->mapper->set_start_end_modified($entry->id, $start_modified, $end_modified);
+        } else {
+            if (!is_null($updated_entry->start_modified) || !is_null($updated_entry->end_modified)) {
+                $this->mapper->set_start_end_modified($entry->id, null, null);
             }
         }
 

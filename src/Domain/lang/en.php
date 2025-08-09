@@ -585,6 +585,8 @@ $lang["TIMESHEETS_SERIES_FOLLOWING_ENTRIES_LAST"] = "This is the last entry of t
 $lang["TIMESHEETS_UPDATE_THIS_AND_FOLLOWING"] = "Update this and all following entries";
 $lang["ARCHIVED"] = "Archived";
 $lang["TIMESHEETS_REPORT_HEADLINE"] = "Export Headline";
+$lang["TIMESHEETS_DATE_MODIFIED"] = "Modified Date";
+$lang["TIMESHEETS_GROUP_BY"] = "group by";
 
 $lang["LAST_SAVED"] = "last saved";
 

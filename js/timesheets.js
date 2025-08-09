@@ -740,6 +740,37 @@ if (checkBoxRepeat && repeatsContent) {
 
 }
 
+const dateTimePickerStartModified = document.querySelector('#datetimePickerStartModified');
+if (dateTimePickerStartModified) {
+
+    flatpickr(dateTimePickerStartModified, {
+        "wrap": true,
+        "altInput": true,
+        "altFormat": i18n.dateformatTwig.datetimeShort,
+        "altInputClass": "datepicker dateTimePickerStartModified",
+        "dateFormat": "Y-m-d H:i",
+        "locale": i18n.template,
+        "enableTime": true,
+        "time_24hr": true,
+        "minuteIncrement": 1
+    });
+}
+
+const checkBoxDateModified = document.querySelector('#checkBoxDateModified');
+const dateModifiedContent = document.querySelector(".date-modified-content");
+
+if (checkBoxDateModified && dateModifiedContent) {
+    checkBoxDateModified.addEventListener('click', function (event) {
+
+        if (checkBoxDateModified.checked) {
+            dateModifiedContent.classList.remove("hidden");
+        } else {
+            dateModifiedContent.classList.add("hidden");
+            dateTimePickerStartModified._flatpickr.clear();
+        }
+    });
+}
+
 
 
 document.addEventListener('click', function (event) {
@@ -781,8 +812,8 @@ function hideEventModal() {
     }
 }
 
-const noticeFieldsFilter = document.getElementById('noticefieldsfilter');
-if (noticeFieldsFilter) {
+const timesheetsExportOverviewFilter = document.getElementById('timesheets-export-overview-filter');
+if (timesheetsExportOverviewFilter) {
     document.querySelectorAll('.search-filter input[name="type"]').forEach(function (input) {
         setNoticeFieldFilter(input);
         input.addEventListener('click', function (e) {
@@ -792,9 +823,9 @@ if (noticeFieldsFilter) {
 
     function setNoticeFieldFilter(input) {
         if (input.checked && input.value === 'html-overview') {
-            noticeFieldsFilter.classList.remove('hidden');
+            timesheetsExportOverviewFilter.classList.remove('hidden');
         } else {
-            noticeFieldsFilter.classList.add('hidden');
+            timesheetsExportOverviewFilter.classList.add('hidden');
         }
     }
 }

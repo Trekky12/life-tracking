@@ -44,7 +44,7 @@ class SheetExportService extends Service {
         $this->project_category_budget_service = $project_category_budget_service;
     }
 
-    public function export($hash, $type, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields = []) {
+    public function export($hash, $type, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields = [], $date_modified = true) {
 
         $project = $this->project_service->getFromHash($hash);
 
@@ -60,7 +60,7 @@ class SheetExportService extends Service {
         }
 
         if (strcmp($type ?? '', "html-overview") == 0) {
-            return $this->exportHTMLOverview($project, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields);
+            return $this->exportHTMLOverview($project, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields, $date_modified);
         }
 
         return $this->exportHTML($project, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer);
@@ -409,11 +409,11 @@ class SheetExportService extends Service {
         return new Payload(Payload::$RESULT_HTML, $response);
     }
 
-    private function exportHTMLOverview($project, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields = []) {
+    private function exportHTMLOverview($project, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields = [], $date_modified = true) {
 
         $dateFormatSQL = $this->settings->getAppSettings()['i18n']['dateformatSQL'];
         $include_empty_categories = false;
-        $data = $this->getMapper()->getOverview($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $dateFormatSQL["dateTimesheetsExport"]);
+        $data = $this->getMapper()->getOverview($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $dateFormatSQL["dateTimesheetsExport"], $date_modified);
 
         $fields = $this->notice_fields_service->getNoticeFields($project->id, 'customer');
 

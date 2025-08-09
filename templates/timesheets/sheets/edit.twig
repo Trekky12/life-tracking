@@ -265,6 +265,32 @@
 					</div>
 				</div>
 
+				{% if project.has_duration_modifications > 0 %}
+					<div class="form-group">
+						<label class="checkbox" for="checkBoxDateModified">
+							<input name="set_date_modified" type="checkbox" id="checkBoxDateModified" value="1" {% if not entry is null and not entry.start_modified is null %} checked {% endif %}>
+							{{"TIMESHEETS_DATE_MODIFIED"|trans}}
+						</label>
+					</div>
+
+					<div class="date-modified-content {% if entry is null or (entry is not null and entry.start_modified is null) %}hidden{% endif %}">
+						<div class="form-group">
+							<label for="datetimePickerStartModifiedField">{{"TIMESHEETS_DATE_MODIFIED"|trans}}</label>
+							<div class="flatpickr-group" id="datetimePickerStartModified">
+								<input type="text" class="form-control" id="datetimePickerStartModifiedField" placeholder="" name="start_modified" value="{% if not entry is null and not entry.start_modified is null %}{{entry.start_modified}}{% endif %}" data-input/>
+
+								<a class="flatpickr-input-button" title="toggle" data-toggle>
+									{{ fontawesome('fas fa-calendar-days') }}
+								</a>
+
+								<a class="flatpickr-input-button" title="clear" data-clear>
+									{{ fontawesome('fas fa-xmark') }}
+								</a>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+
 				<div class="form-group btn">
 					<button type="submit" class="button" name="action">
 						{% if not entry is null %}

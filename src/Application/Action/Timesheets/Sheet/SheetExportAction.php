@@ -38,7 +38,9 @@ class SheetExportAction {
 
         $noticefields = array_key_exists("noticefields", $requestData) ? filter_var_array($requestData["noticefields"], FILTER_SANITIZE_NUMBER_INT) : [];
 
-        $payload = $this->service->export($hash, $type, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields);
+        $date_modified = array_key_exists('date_modified', $requestData) && $requestData['date_modified'] !== '' ? intval(filter_var($requestData['date_modified'], FILTER_SANITIZE_NUMBER_INT)) > 0 : true;
+
+        $payload = $this->service->export($hash, $type, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields, $date_modified);
 
         $template = 'timesheets/sheets/export-html.twig';
         if (strcmp($type ?? '', "html-overview") == 0) {

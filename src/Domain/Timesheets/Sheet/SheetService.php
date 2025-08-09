@@ -272,6 +272,8 @@ class SheetService extends Service {
 
             list($date, $start, $end) = $sheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
+            list($date_modified, $start_modified, $end_modified) = $sheet->getDateStartEndModified($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+
             $time = DateUtility::splitDateInterval($sheet->duration);
             if ($project->has_duration_modifications > 0 && $sheet->duration_modified > 0 && $sheet->duration !== $sheet->duration_modified) {
                 $time = DateUtility::splitDateInterval($sheet->duration_modified) . ' (' . $time . ')';
@@ -292,6 +294,11 @@ class SheetService extends Service {
             }
             if (!$filter || $project_categories) {
                 $row[] = $sheet->categories;
+            }
+            if (!$filter || $project->has_duration_modifications) {
+                $row[] = $sheet->start_modified && $sheet->start != $sheet->start_modified ? $date_modified : '';
+                $row[] = $sheet->start_modified && $sheet->start != $sheet->start_modified ? $start_modified : '';
+                $row[] = $sheet->start_modified && $sheet->start != $sheet->start_modified ? $end_modified : '';
             }
 
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) .  (in_array($sheet->id, array_keys($hasFiles)) ? (' / ' . $hasFiles[$sheet->id] . ' ' . $this->translation->getTranslatedString("FILES")) : '') . '</a>';

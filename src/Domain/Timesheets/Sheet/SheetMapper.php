@@ -53,7 +53,7 @@ class SheetMapper extends \App\Domain\Mapper {
     /**
      * Table
      */
-    private function getTableSQL($select, $categories, $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null, $group_by = 't.id') {
+    private function getTableSQL($select, $categories, $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null, $group_by = 't.id', $date_modified = false) {
         $cat_bindings = array();
         if (!is_null($categories)) {
             foreach ($categories as $idx => $cat) {
@@ -61,20 +61,35 @@ class SheetMapper extends \App\Domain\Mapper {
             }
         }
 
+        $start = "t.start";
+        $end = "t.end";
+        if ($date_modified) {
+            $start = "COALESCE(t.start_modified, t.start)";
+            $end = "COALESCE(t.end_modified, t.end)";
+        }
+
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
-            . " LEFT JOIN " . $this->getTableName("timesheets_sheets_categories") . " tcs ON t.id = tcs.sheet"
-            . " LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
             . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " tcus ON tcus.id = t.customer "
+            . " LEFT JOIN ( "
+            . "     SELECT  "
+            . "         tcs.sheet,"
+            . "         GROUP_CONCAT(tc.name ORDER BY tc.name SEPARATOR ', ') AS categories "
+            . "     FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs "
+            . "     LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc ON tc.id = tcs.category "
+            . "     GROUP BY tcs.sheet "
+            . " ) AS c ON c.sheet = t.id "
             . " WHERE t.project = :project "
             . " AND ("
-            . "     (DATE(t.start) >= :from AND DATE(t.end) <= :to ) OR"
-            . "     (DATE(t.start) >= :from AND DATE(t.start) <= :to AND t.end IS NULL ) OR"
-            . "     (DATE(t.end) >= :from AND DATE(t.end) <= :to AND t.start IS NULL )"
+            . "     (DATE({$start}) >= :from AND DATE({$end}) <= :to ) OR"
+            . "     (DATE({$start}) >= :from AND DATE({$start}) <= :to AND t.end IS NULL ) OR"
+            . "     (DATE({$end}) >= :from AND DATE(t.end) <= :to AND t.start IS NULL )"
             . " ) AND ("
             . "     t.start LIKE :searchQuery OR "
             . "     t.end LIKE :searchQuery OR "
+            . "     t.start_modified LIKE :searchQuery OR "
+            . "     t.end_modified LIKE :searchQuery OR "
             . "     tcus.name LIKE :searchQuery OR "
-            . "     (tcs.sheet IN ( "
+            . "     (t.id IN ( "
             . "              SELECT tcs2.sheet "
             . "                 FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs2 "
             . "                 LEFT JOIN " . $this->getTableName("timesheets_categories") . " tc2 ON tc2.id = tcs2.category "
@@ -84,19 +99,25 @@ class SheetMapper extends \App\Domain\Mapper {
             . ")";
 
         if (!empty($cat_bindings)) {
-            $sql .= " AND (tcs.sheet IN ( "
-                . "             SELECT sheet "
-                . "             FROM " . $this->getTableName("timesheets_sheets_categories") . " "
-                . "             WHERE category IN (" . implode(',', array_keys($cat_bindings)) . ")"
-                . "             GROUP BY sheet "
-                . "             HAVING COUNT(sheet) >= " . count($cat_bindings) . " "
-                . ") ";
+            $sql .= " AND ("
+                . " EXISTS ("
+                . "     SELECT 1"
+                . "     FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs3"
+                . "     WHERE tcs3.sheet = t.id"
+                . "       AND tcs3.category IN (" . implode(',', array_keys($cat_bindings)) . ")"
+                . "     GROUP BY tcs3.sheet"
+                . "     HAVING COUNT(DISTINCT tcs3.category) >= " . count($cat_bindings)
+                . " )";
 
             if ($include_empty_categories) {
-                $sql .= " OR tcs.category is NULL";
+                $sql .= " OR NOT EXISTS ("
+                    . "     SELECT 1"
+                    . "     FROM " . $this->getTableName("timesheets_sheets_categories") . " tcs4"
+                    . "     WHERE tcs4.sheet = t.id"
+                    . " )";
             }
 
-            $sql .= " )";
+            $sql .= ")";
         }
 
         if (!is_null($invoiced)) {
@@ -148,7 +169,7 @@ class SheetMapper extends \App\Domain\Mapper {
             $bindings["customer"] = $customer;
         }
 
-        list($tableSQL, $cat_bindings) = $this->getTableSQL("DISTINCT t.id", $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
+        list($tableSQL, $cat_bindings) = $this->getTableSQL("t.id", $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
 
         $sql = "SELECT COUNT(t.id) FROM ";
         $sql .= "(" . $tableSQL . ") as t";
@@ -244,8 +265,7 @@ class SheetMapper extends \App\Domain\Mapper {
                 break;
         }
 
-        $select = "DISTINCT "
-            . "t.id, "
+        $select = "t.id, "
             . "t.createdBy, "
             . "t.createdOn, "
             . "t.changedBy, "
@@ -255,7 +275,9 @@ class SheetMapper extends \App\Domain\Mapper {
             . "t.end, "
             . "t.duration, "
             . "t.duration_modified, "
-            . "GROUP_CONCAT(tc.name SEPARATOR ', ') as categories, "
+            . "t.start_modified, "
+            . "t.end_modified, "
+            . "c.categories, "
             . "t.is_invoiced, "
             . "t.is_billed, "
             . "t.is_payed, "
@@ -687,7 +709,7 @@ class SheetMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getOverview($project, $from, $to, $categories, $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null, $dateformat = "YYYY-MM-DD") {
+    public function getOverview($project, $from, $to, $categories, $include_empty_categories = true, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null, $dateformat = "YYYY-MM-DD", $date_modified = true) {
 
         $bindings = [
             "searchQuery" => "%",
@@ -712,8 +734,13 @@ class SheetMapper extends \App\Domain\Mapper {
             $bindings["customer"] = $customer;
         }
 
-        $select = "COUNT(DISTINCT t.id) as count, tcus.name as customerName, tcus.id as customer, GROUP_CONCAT(DISTINCT DATE_FORMAT(t.start, '{$dateformat}') ORDER BY t.start SEPARATOR ', ') AS dates";
-        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, 'tcus.id');
+        $start = "t.start";
+        if ($date_modified) {
+            $start = "COALESCE(t.start_modified, t.start)";
+        }
+
+        $select = "COUNT(t.id) as count, tcus.name as customerName, tcus.id as customer, GROUP_CONCAT(DATE_FORMAT(DATE({$start}), '{$dateformat}') ORDER BY DATE({$start}) SEPARATOR ', ') AS dates";
+        list($tableSQL, $cat_bindings) = $this->getTableSQL($select, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, 'tcus.id', $date_modified);
 
         $sql = $tableSQL;
         $sql .= " ORDER BY customerName";
@@ -804,5 +831,20 @@ class SheetMapper extends \App\Domain\Mapper {
             $results[$key] = new $this->dataobject($row);
         }
         return $results;
+    }
+
+    public function set_start_end_modified($id, $start_modified, $end_modified) {
+        $sql = "UPDATE " . $this->getTableName() . " SET start_modified = :start_modified, end_modified = :end_modified WHERE id  = :id";
+        $bindings = [
+            "id" => $id,
+            "start_modified" => $start_modified,
+            "end_modified" => $end_modified,
+        ];
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
     }
 }

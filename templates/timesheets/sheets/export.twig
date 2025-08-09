@@ -178,8 +178,8 @@
 						</div>
 					{% endif %}
 				</div>
-				<div class="form-group hidden" id="noticefieldsfilter">
-					<div class="filter-row">
+				<div class="hidden" id="timesheets-export-overview-filter">
+					<div class="form-group filter-row">
 						<div class="categories-filter filter-element">
 							<select id="noticefields-filter" multiple name="noticefields[]" class="noticefield" autocomplete="off">
 								{% for field in customer_fields %}
@@ -188,6 +188,21 @@
 							</select>
 						</div>
 					</div>
+					{% if project.has_duration_modifications > 0 %}
+						<div class="form-group filter-row">
+							<div class="filter-element">
+								<label for="timesheet_export_modified">{{"TIMESHEETS_GROUP_BY"|trans}}:</label>
+								<div class="select-wrapper">
+									<select name="date_modified" id="timesheet_export_modified" class="regular">
+										<option value="1" selected>{{"TIMESHEETS_DATE_MODIFIED"|trans}}</option>
+										<option value="0">{{"DATE"|trans}}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<input type="hidden" name="date_modified" value="0"/>
+					{% endif %}
 				</div>
 
 				<div>

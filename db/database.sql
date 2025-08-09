@@ -925,6 +925,8 @@ CREATE TABLE IF NOT EXISTS timesheets_sheets (
     customer INTEGER unsigned DEFAULT NULL,
     repeat_unit varchar(255) DEFAULT NULL,
     repeat_multiplier int(5) DEFAULT NULL,
+    start_modified DATETIME DEFAULT NULL,
+    end_modified DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(createdBy) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
