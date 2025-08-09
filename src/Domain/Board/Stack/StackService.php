@@ -73,7 +73,7 @@ class StackService extends Service {
             ];
             $type = $data["archive"] == 0 ? 'unarchived' : 'archived';
 
-            if (array_key_exists("cards", $data) && in_array($data["cards"], array(0, 1))) {
+            if (array_key_exists("cards", $data) && intval($data["cards"]) == 1) {
 
                 $cards = $this->card_mapper->getCardIDsFromStack($entry_id, $data["archive"] == 0 ? 1 : 0);
 
