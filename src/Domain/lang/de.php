@@ -256,7 +256,7 @@ $lang["MAIL_ADDED_TO_BOARD"] = "Du wurdest zu einem Board hinzugefügt";
 $lang["MAIL_ADDED_TO_BOARD_DETAIL"] = "du wurdest zum Board <a href='%url%'>%board%</a> hinzugefügt.";
 
 $lang["MAIL_SPLITTED_BILL_ADDED_SUBJECT"] = 'Neue geteilte Ausgabe "%expense%" hinzugefügt';
-$lang["MAIL_SPLITTED_BILL_ADDED_DETAIL"] = '%user% hat die Ausgabe "%expense%" (%value% %currency%) in der Gruppe <a href="%url">%group%</a> mit dir geteilt.';
+$lang["MAIL_SPLITTED_BILL_ADDED_DETAIL"] = '%user% hat die Ausgabe "%expense%" (%value% %currency%) in der Gruppe <a href="%url%">%group%</a> mit dir geteilt.';
 
 $lang["MAIL_SPLITTED_BILL_UPDATE_SUBJECT"] = 'Geteilte Ausgabe "%expense%" aktualisiert';
 $lang["MAIL_SPLITTED_BILL_UPDATE_DETAIL"] = '%user% hat die mit dir geteilte Ausgabe "%expense%" (%value% %currency%) in der Gruppe <a href="%url%">%group%</a> aktualisiert.';
