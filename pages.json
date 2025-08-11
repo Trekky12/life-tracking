@@ -2,7 +2,7 @@
     {
         "name": "2_activities",
         "url": "http://tracking.localhost/profile/activity",
-        "height": 2000
+        "height": 1000
     },
     {
         "name": "2_applicationpasswords",
@@ -411,11 +411,13 @@
     },
     {
         "name": "10_timesheets-13",
-        "url": "http://tracking.localhost/timesheets/ABCabc123/noticefields/edit/1"
+        "url": "http://tracking.localhost/timesheets/ABCabc123/noticefields/edit/1",
+        "height": 1000
     },
     {
         "name": "10_timesheets-14",
-        "url": "http://tracking.localhost/timesheets/ABCabc123/noticefields/edit/"
+        "url": "http://tracking.localhost/timesheets/ABCabc123/noticefields/edit/",
+        "height": 1000
     },
     {
         "name": "10_timesheets-15",
@@ -441,6 +443,22 @@
         "name": "10_timesheets-30",
         "url": "http://tracking.localhost/timesheets/ABCabc123/sheets/edit/2",
         "height": 1300
+    },
+    {
+        "name": "10_timesheets-39",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/requirementtypes/"
+    },
+    {
+        "name": "10_timesheets-40",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/requirementtypes/edit/1"
+    },
+    {
+        "name": "10_timesheets-41",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/requirementtypes/1/customers/"
+    },
+    {
+        "name": "10_timesheets-42",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/requirementtypes/1/customers/edit/"
     },
     {
         "name": "11_workouts",

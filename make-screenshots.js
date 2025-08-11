@@ -64,6 +64,10 @@ async function captureScreenshots() {
         await page.waitForNavigation();
         console.log(`✅ Delete created finance entry`);
 
+        await page.setViewport({
+            width: width,
+            height: height
+        });
         file = `7_crawlers-5b.jpg`
         await page.goto("http://tracking.localhost/crawlers/ABCabc123/view/");
         await page.click('#crawler_links > li:first-child');
@@ -181,6 +185,10 @@ async function captureScreenshots() {
         await page.screenshot({ path: `${folder}/${file}` });
         console.log(`✅ ${file}`);
 
+        await page.setViewport({
+            width: width,
+            height: 1100
+        });
         file = `10_timesheets-21.jpg`
         await page.type('#input-modal input[type="password"]', '123');
         await page.keyboard.press('Enter');
@@ -188,11 +196,11 @@ async function captureScreenshots() {
         await page.screenshot({ path: `${folder}/${file}` });
         console.log(`✅ ${file}`);
 
-        file = `10_timesheets-22.jpg`
         await page.setViewport({
             width: width,
-            height: 1000
+            height: 1500
         });
+        file = `10_timesheets-22.jpg`
         await page.goto("http://tracking.localhost/timesheets/ABCabc123/sheets/notice/1/edit/");
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await page.type('#input-modal input[type="password"]', '123');
@@ -217,12 +225,20 @@ async function captureScreenshots() {
         await page.screenshot({ path: `${folder}/${file}` });
         console.log(`✅ ${file}`);
 
+        await page.setViewport({
+            width: width,
+            height: 1300
+        });
         file = `10_timesheets-27.jpg`
         await page.goto("http://tracking.localhost/timesheets/ABCabc123/sheets/notice/1/view/");
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await page.screenshot({ path: `${folder}/${file}` });
         console.log(`✅ ${file}`);
 
+        await page.setViewport({
+            width: width,
+            height: height
+        });
         file = `10_timesheets-28.jpg`
         await page.goto("http://tracking.localhost/timesheets/ABCabc123/customers/notice/1/view/");
         await new Promise((resolve) => setTimeout(resolve, 1000));
