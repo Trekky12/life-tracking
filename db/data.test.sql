@@ -1,4 +1,5 @@
-INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('version', 11, 'Integer'); 
+INSERT INTO global_settings (name, value, type) VALUES ('version', 17, 'Integer');
+INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date');
 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (2, 'user', '$2y$10$tC4twYpdcq0TibT6MZsdI.Tmu36UkTxFNymd2icHv5KVB1oEu5mBW', 'user', 'user', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
@@ -45,22 +46,24 @@ INSERT INTO splitbill_groups_user (sbgroup, user) VALUES
 (3, 2),
 (2, 2);
 INSERT INTO splitbill_bill (id, sbgroup, user, name, date, time, lat, lng, acc, notice, settleup, exchange_rate, exchange_fee, spend_by, paid_by) VALUES
-(1, 1, 1,'Test bill', '2020-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL),
+(1, 1, 1,'Test bill', '2020-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', 'same', 'same'),
 (2, 3, 1, 'Test', '2021-05-18', '15:00:00', NULL, NULL, NULL, NULL, 0, '40', '1.75', 'individual', 'individual'),
 (3, 2, 2,'Test bill 2', '2022-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL),
 (4, 1, 2,'Test bill 3', '2022-01-01', '09:00:00', NULL, NULL, NULL, NULL, 0, '1', '0', NULl, NULL);
-INSERT INTO splitbill_bill_users (id, bill, user, paid, spend, paymethod_spend, paid_foreign, spend_foreign) VALUES
-(1, 1, 1, '10.00', '10.00', NULL, NULL, NULL),
-(2, 2, 1, '2.54', '1.27', 1, '100.00', '50.00'),
-(3, 2, 3, '0.00', '1.27', NULL, '0.00', '50.00'),
-(4, 4, 2, '10.00', '10.00', NULL, NULL, NULL);
+INSERT INTO splitbill_bill_users (id, bill, user, paid, spend, paymethod, paid_foreign, spend_foreign) VALUES
+(1, 1, 1, '5.00', '5.00', NULL, NULL, NULL),
+(2, 1, 2, '5.00', '5.00', NULL, NULL, NULL),
+(3, 2, 1, '2.54', '1.27', 1, '100.00', '50.00'),
+(4, 2, 3, '0.00', '1.27', NULL, '0.00', '50.00'),
+(5, 4, 2, '10.00', '10.00', NULL, NULL, NULL);
 
-INSERT INTO splitbill_bill_recurring (id, sbgroup, user, name, notice, settleup, exchange_rate, exchange_fee) VALUES
-(1, 1, 1,'Test bill', NULL, 0, '1', '0'),
-(2, 2, 2,'Test bill 2', NULL, 0, '1', '0'),
-(3, 1, 2,'Test bill 3', NULL, 0, '1', '0');
-INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paymethod_spend, paid_foreign, spend_foreign) VALUES
-(1, 1, 1, '10.00', '10.00', NULL, NULL, NULL);
+INSERT INTO splitbill_bill_recurring (id, sbgroup, user, name, notice, settleup, exchange_rate, exchange_fee, spend_by, paid_by) VALUES
+(1, 1, 1,'Test bill', NULL, 0, '1', '0', 'same', 'same'),
+(2, 2, 2,'Test bill 2', NULL, 0, '1', '0', NULL, NULL),
+(3, 1, 2,'Test bill 3', NULL, 0, '1', '0', NULL, NULL);
+INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paid_foreign, spend_foreign) VALUES
+(1, 1, 1, '5.00', '5.00', NULL, NULL),
+(2, 1, 2, '5.00', '5.00', NULL, NULL);
 
 INSERT INTO timesheets_projects (id, user, name, hash, salt, iterations, masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithRecoveryKey,  recoveryKeyEncryptedWithMasterKey, testMessageEncryptedWithRecoveryKey, slot_min_time, slot_max_time, has_billing, has_end) VALUES 
 (1, 1, 'Test timesheets project 1', 'ABCabc123', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00', 1, 1),
@@ -118,9 +121,17 @@ INSERT INTO timesheets_sheets_notices (id, createdBy, changedBy, sheet, customer
 (2, 1, 1, NULL, 1, NULL, 'I1XB3V9JGDNgl+nHaOQOPSqHxaetSiXJ7+0WAu6JzYH3Fabv9SZ3Tck46ucD/5c2TxbKfZHPu8m31BWe1GrHQL126zKCF/Y=', 'UWP3DZPrzX2wPPuEDROfa/YozTRhRgIizZJLOuy0AQdD4/c4iffMxwekzZ7KBBAiWqA1AUJRriIqfmKTHm82ThnYa1AXJ7IVIZGPkQ==', 1, 0),
 (3, 1, 1, NULL, NULL, 1, 'RDYoI2trIJkeaMd7j6AoiJ6+0zUlpctL9XcupYKXrn0QMlA3Gl8QaZa72jFUX+NF9gSxRrW0pTX9gRdCHZKGZMSdITspkezIoZOp1tV9', 'BsMkxp9O1Vj7tVzJCOW9hgNR5BljwPBES3XL/QVY1b4Lk+ITJu2LjTYAjiAz5QpqLVdO5RmrMF7ZgBO9oavW1QGuRNlq7u3R/b/E5w==', 1, 0);
 
+INSERT INTO timesheets_sheets_files (id, user, sheet, name, type, filename, encryptedCEK) VALUES
+(1, 1, 1, 'Document.pdf', 'application/pdf', '1_1_a633c2370d87b1090723b570bb92d767e0cd836a7d11ff78da1c2aba77d4b752_Document.pdf.enc', 'zuIyj7C46mylOwe5mo0a/vUZV6Y7apoFMm3A/AlwvKgwLmxGXdugYZqv6WznerWtHLWldwc/tXID2YJ/vqnsnEwoi+TIDmQd7Hfk1w=='),
+(2, 1, 1, 'vaclav-pechar-9SndaPlK5bI-unsplash.jpg', 'image/jpeg', '1_1_334cab3637f4ce8dfebfbfc3e186ab00a24e22b1c614722cdf8248e0935bdf59_vaclav-pechar-9SndaPlK5bI-unsplash.jpg.enc', 'DIZ5hnxQHsW6Om7rYYP3qvT+xADxk/rbw3zcL2anhN+Gk/61k5XqeJIIVsHB+umWBy527qAxqbVzbaVZ9R1PpAEAnpSA3WN+XhDovA==');
+
+
 INSERT INTO timesheets_requirement_types (id, project, user, name, description, datatype, initialization, position, validity_period) VALUES
 (1, 1, 1, 'Test Requirement 1', null, 'checkbox', NULL, 999, 'month'),
 (2, 2, 2, 'Test Requirement 2', null, 'checkbox', NULL, 999, 'quarter');
+
+INSERT INTO timesheets_customers_requirements (id, user, requirement_type, customer, value, start, end) VALUES
+(1, 1, 1, 1, '1', CURDATE(), LAST_DAY(CURDATE()));
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 

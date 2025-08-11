@@ -90,35 +90,35 @@
 					<label>{{"FINANCES_PAYMETHOD"|trans}}
 						({{"PAID"|trans}})</label>
 					<div class="select-wrapper form-control">
-						<select name="balance[{{ me }}][paymethod_spend]">
+						<select name="balance[{{ me }}][paymethod]">
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods[me] %}
-								<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod_spend"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
 							{% endfor %}
 						</select>
 					</div>
 
 					{% for user_id in group_users|keys|filter(user_id => user_id != me) %}
-						<input type="hidden" name="balance[{{ user_id }}][paymethod_spend]" value="{{ balance[user_id]["paymethod_spend"] }}">
+						<input type="hidden" name="balance[{{ user_id }}][paymethod]" value="{{ balance[user_id]["paymethod"] }}">
 					{% endfor %}
 
 				</div>
 
 				{% if isSettleUp %}
 					<div class="form-group">
-						<label>{{"FINANCES_PAYMETHOD"|trans}}
+						<label>{{"FINANCES_ACCOUNT"|trans}}
 							({{"RECEIVED"|trans}})</label>
 						<div class="select-wrapper form-control">
-							<select name="balance[{{ me }}][paymethod_paid]">
+							<select name="balance[{{ me }}][account_to]">
 								<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
-								{% for method in paymethods[me] %}
-									<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod_paid"]) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% for account in accounts[me] %}
+									<option value="{{account.id}}" {% if (not balance is empty and account.id == balance[me]["account_to"]) %} selected {% endif %}>{{account.name|raw}}</option>
 								{% endfor %}
 							</select>
 						</div>
 
 						{% for user_id in group_users|keys|filter(user_id => user_id != me) %}
-							<input type="hidden" name="balance[{{ user_id }}][paymethod_paid]" value="{{ balance[user_id]["paymethod_paid"] }}">
+							<input type="hidden" name="balance[{{ user_id }}][account_to]" value="{{ balance[user_id]["account_to"] }}">
 						{% endfor %}
 
 					</div>

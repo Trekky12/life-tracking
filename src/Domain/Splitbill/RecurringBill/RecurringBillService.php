@@ -11,6 +11,7 @@ use App\Domain\User\UserService;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Application\Payload\Payload;
+use App\Domain\Finances\Account\AccountService;
 
 class RecurringBillService extends BaseBillService {
 
@@ -19,8 +20,19 @@ class RecurringBillService extends BaseBillService {
     private $router;
     private $group_service;
     private $paymethod_service;
+    private $account_service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, RecurringBillMapper $mapper, Settings $settings, UserService $user_service, RouteParser $router, SplitbillGroupService $group_service, PaymethodService $paymethod_service) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        RecurringBillMapper $mapper,
+        Settings $settings,
+        UserService $user_service,
+        RouteParser $router,
+        SplitbillGroupService $group_service,
+        PaymethodService $paymethod_service,
+        AccountService $account_service
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
         $this->settings = $settings;
@@ -28,6 +40,7 @@ class RecurringBillService extends BaseBillService {
         $this->router = $router;
         $this->group_service = $group_service;
         $this->paymethod_service = $paymethod_service;
+        $this->account_service = $account_service;
     }
 
     public function index($hash): Payload {
@@ -70,6 +83,7 @@ class RecurringBillService extends BaseBillService {
         list($balance, $totalValue, $totalValueForeign) = $this->getBillbalance($entry_id);
 
         $paymethods = $this->paymethod_service->getAllfromUsers($group_users);
+        $accounts = $this->account_service->getAllfromUsers($group_users);
 
         list($totalBalance, $myTotalBalance) = $this->calculateBalance($group->id);
 
@@ -117,13 +131,14 @@ class RecurringBillService extends BaseBillService {
             'totalValue' => $totalValue,
             'type' => $type,
             'paymethods' => $paymethods,
+            'accounts' => $accounts,
             'totalValueForeign' => $totalValueForeign,
             'isSettleUp' => $isSettleUp,
             'paid_by' => $paid_by,
             'spend_by' => $spend_by,
             'settleUpPrefill' => $settleUpPrefill,
             'me' => $this->current_user->getUser()->id,
-            'isOwner' => !is_null($entry_id) ? $this->isOwner($entry_id): true,
+            'isOwner' => !is_null($entry_id) ? $this->isOwner($entry_id) : true,
             'units' => RecurringBill::getUnits()
         ];
 

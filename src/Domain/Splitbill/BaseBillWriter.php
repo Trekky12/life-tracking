@@ -46,7 +46,7 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
             if (array_key_exists($user_id, $balances)) {
 
                 $balance = $balances[$user_id];
-                $update = $this->getMapper()->updatePaymethod($id, $balance["user"], $balance["paymethod_spend"], $balance["paymethod_paid"]);
+                $update = $this->getMapper()->updatePaymethod($id, $balance["user"], $balance["paymethod"], $balance["account_to"]);
 
                 return new Payload(Payload::$STATUS_UPDATE_PAYMETHOD, $balance);
             }
@@ -90,7 +90,7 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
             $this->logger->info('Add balance for bill', array("bill" => $bill->id, "balances" => $balances));
 
             foreach ($balances as $balance) {
-                $this->getMapper()->addOrUpdateBalance($bill->id, $balance["user"], $balance["paid"], $balance["spend"], $balance["paymethod_spend"], $balance["paymethod_paid"], $balance["paid_foreign"], $balance["spend_foreign"]);
+                $this->getMapper()->addOrUpdateBalance($bill->id, $balance["user"], $balance["paid"], $balance["spend"], $balance["paymethod"], $balance["account_to"], $balance["paid_foreign"], $balance["spend_foreign"]);
             }
 
             // delete entries for users removed from the group
@@ -127,8 +127,8 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
             if (array_key_exists($user, $group_users)) {
                 $spend = array_key_exists("spend", $bdata) ? floatval(filter_var($bdata["spend"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
                 $paid = array_key_exists("paid", $bdata) ? floatval(filter_var($bdata["paid"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : 0;
-                $paymethod_spend = array_key_exists("paymethod_spend", $bdata) && !empty($bdata["paymethod_spend"]) ? intval(filter_var($bdata["paymethod_spend"], FILTER_SANITIZE_NUMBER_INT)) : null;
-                $paymethod_paid = array_key_exists("paymethod_paid", $bdata) && !empty($bdata["paymethod_paid"]) ? intval(filter_var($bdata["paymethod_paid"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                $paymethod = array_key_exists("paymethod", $bdata) && !empty($bdata["paymethod"]) ? intval(filter_var($bdata["paymethod"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                $account_to = array_key_exists("account_to", $bdata) && !empty($bdata["account_to"]) ? intval(filter_var($bdata["account_to"], FILTER_SANITIZE_NUMBER_INT)) : null;
 
                 $sum_paid += $paid;
                 $sum_spend += $spend;
@@ -137,7 +137,7 @@ abstract class BaseBillWriter extends ObjectActivityWriter {
                 $paid_foreign = array_key_exists("paid_foreign", $bdata) ? floatval(filter_var($bdata["paid_foreign"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
 
                 // add entry
-                $balances[$user] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod_spend" => $paymethod_spend, "paymethod_paid" => $paymethod_paid, "spend_foreign" => $spend_foreign, "paid_foreign" => $paid_foreign];
+                $balances[$user] = ["user" => $user, "spend" => $spend, "paid" => $paid, "paymethod" => $paymethod, "account_to" => $account_to, "spend_foreign" => $spend_foreign, "paid_foreign" => $paid_foreign];
             }
         }
         return array($balances, $sum_paid, $sum_spend, $totalValue, $totalValueForeign);

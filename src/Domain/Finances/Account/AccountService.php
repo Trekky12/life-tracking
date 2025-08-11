@@ -32,4 +32,8 @@ class AccountService extends Service {
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry]);
     }
 
+    public function getAccountOfUser($id, $user_id){
+        return $this->mapper->getofUser($id, $user_id);
+    }
+
 }

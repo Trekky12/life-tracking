@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Activity\ActivityCreator;
 use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
+use App\Domain\Finances\Account\AccountService;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Splitbill\Group\GroupMapper;
 use App\Domain\User\UserService;
@@ -33,6 +34,7 @@ class BillWriter extends BaseBillWriter {
     protected $transaction_remover;
     protected $transaction_mapper;
     protected $paymethod_service;
+    protected $account_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -52,7 +54,8 @@ class BillWriter extends BaseBillWriter {
         TransactionWriter $transaction_writer,
         TransactionRemover $transaction_remover,
         TransactionMapper $transaction_mapper,
-        PaymethodService $paymethod_service
+        PaymethodService $paymethod_service,
+        AccountService $account_service
     ) {
         parent::__construct($logger, $user, $activity, $group_service, $group_mapper, $translation);
         $this->mapper = $mapper;
@@ -67,6 +70,7 @@ class BillWriter extends BaseBillWriter {
         $this->transaction_remover = $transaction_remover;
         $this->transaction_mapper = $transaction_mapper;
         $this->paymethod_service = $paymethod_service;
+        $this->account_service = $account_service;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -93,7 +97,7 @@ class BillWriter extends BaseBillWriter {
                     // Update finance entry -> this triggers the transaction logic
                     $data = $finance_entry->copy();
                     $data["id"] = $finance_entry->id;
-                    $data["paymethod"] = $balance["paymethod_spend"];
+                    $data["paymethod"] = $balance["paymethod"];
                     $this->finances_entry_writer->save($data["id"], $data, ["is_bill_based_save" => true, "use_user_from_data" => true]);
                 } else {
                     // Splitted bill was paid by the user but not spend by him? => Create only transaction
@@ -155,7 +159,7 @@ class BillWriter extends BaseBillWriter {
                                 "lng" => $bill->lng,
                                 "lat" => $bill->lat,
                                 "acc" => $bill->acc,
-                                "paymethod" => $balance["paymethod_spend"]
+                                "paymethod" => $balance["paymethod"]
                             ];
 
                             if (!is_null($finance_entry)) {
@@ -222,10 +226,10 @@ class BillWriter extends BaseBillWriter {
         $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0);
         $transaction_entry_round_up_savings = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 1);
 
-        $paymethod_spend = $this->paymethod_service->getPaymethodOfUser($balance["paymethod_spend"], $balance["user"]);
+        $paymethod = $this->paymethod_service->getPaymethodOfUser($balance["paymethod"], $balance["user"]);
         $value = $balance["paid"];
 
-        if ($value > 0 && !is_null($paymethod_spend) && !is_null($paymethod_spend->account)) {
+        if ($value > 0 && !is_null($paymethod) && !is_null($paymethod->account)) {
             $data = [
                 "id" => null,
                 "date" => $bill->date,
@@ -234,7 +238,7 @@ class BillWriter extends BaseBillWriter {
                 "value" => $value,
                 "user" => $balance["user"],
                 "bill_entry" => $bill->id,
-                "account_from" => $paymethod_spend->account,
+                "account_from" => $paymethod->account,
                 "account_to" => null,
                 "is_round_up_savings" => 0
             ];
@@ -247,9 +251,9 @@ class BillWriter extends BaseBillWriter {
             $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true, "use_user_from_data" => true]);
 
             // Round up savings
-            if (!is_null($paymethod_spend->round_up_savings_account) && $paymethod_spend->round_up_savings > 0) {
+            if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0) {
 
-                $saving = (ceil($value / $paymethod_spend->round_up_savings) * $paymethod_spend->round_up_savings) - $value;
+                $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
 
                 if ($saving > 0) {
                     $data2 = [
@@ -260,8 +264,8 @@ class BillWriter extends BaseBillWriter {
                         "value" => $saving,
                         "user" => $balance["user"],
                         "bill_entry" => $bill->id,
-                        "account_from" => $paymethod_spend->account,
-                        "account_to" => $paymethod_spend->round_up_savings_account,
+                        "account_from" => $paymethod->account,
+                        "account_to" => $paymethod->round_up_savings_account,
                         "is_round_up_savings" => 1
                     ];
 
@@ -287,10 +291,10 @@ class BillWriter extends BaseBillWriter {
     private function createSettleUpIncomingTransaction($balance, $bill) {
         $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0, true);
 
-        $paymethod_paid = $this->paymethod_service->getPaymethodOfUser($balance["paymethod_paid"], $balance["user"]);
+        $account_to = $this->account_service->getAccountOfUser($balance["account_to"], $balance["user"]);
         $value = $balance["spend"];
 
-        if ($value > 0 && !is_null($paymethod_paid->account)) {
+        if ($value > 0 && !is_null($account_to)) {
             $data = [
                 "id" => null,
                 "date" => $bill->date,
@@ -300,7 +304,7 @@ class BillWriter extends BaseBillWriter {
                 "user" => $balance["user"],
                 "bill_entry" => $bill->id,
                 "account_from" => null,
-                "account_to" => $paymethod_paid->account,
+                "account_to" => $account_to->id,
                 "is_round_up_savings" => 0
             ];
 

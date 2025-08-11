@@ -8,7 +8,7 @@ class BaseBillMapper extends \App\Domain\Mapper {
     protected $insert_user = true;
     protected $bill_balance_table = "";
 
-    public function addOrUpdateBalance($bill, $user, $paid, $spend, $paymethod_spend = null, $paymethod_paid = null, $paid_foreign = null, $spend_foreign = null) {
+    public function addOrUpdateBalance($bill, $user, $paid, $spend, $paymethod = null, $account_to = null, $paid_foreign = null, $spend_foreign = null) {
 
         $bindings = ["user" => $user, "bill" => $bill];
 
@@ -18,16 +18,16 @@ class BaseBillMapper extends \App\Domain\Mapper {
 
         // no entry present, so create one
         if ($stmt->rowCount() > 0) {
-            return $this->updateBalance($bill, $user, $paid, $spend, $paymethod_spend, $paymethod_paid, $paid_foreign, $spend_foreign);
+            return $this->updateBalance($bill, $user, $paid, $spend, $paymethod, $account_to, $paid_foreign, $spend_foreign);
         } else {
-            return $this->addBalance($bill, $user, $paid, $spend, $paymethod_spend, $paymethod_paid, $paid_foreign, $spend_foreign);
+            return $this->addBalance($bill, $user, $paid, $spend, $paymethod, $account_to, $paid_foreign, $spend_foreign);
         }
     }
 
-    private function addBalance($bill, $user, $paid, $spend, $paymethod_spend = null, $paymethod_paid = null, $paid_foreign = null, $spend_foreign = null) {
-        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod_spend" => $paymethod_spend, "paymethod_paid" => $paymethod_paid, "paid_foreign" => $paid_foreign, "spend_foreign" => $spend_foreign];
+    private function addBalance($bill, $user, $paid, $spend, $paymethod = null, $account_to = null, $paid_foreign = null, $spend_foreign = null) {
+        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod" => $paymethod, "account_to" => $account_to, "paid_foreign" => $paid_foreign, "spend_foreign" => $spend_foreign];
 
-        $sql = "INSERT INTO " . $this->getTableName($this->bill_balance_table) . " (user, paid, spend, bill, paymethod_spend, paymethod_paid, paid_foreign, spend_foreign) VALUES (:user, :paid, :spend, :bill, :paymethod_spend, :paymethod_paid, :paid_foreign, :spend_foreign)";
+        $sql = "INSERT INTO " . $this->getTableName($this->bill_balance_table) . " (user, paid, spend, bill, paymethod, account_to, paid_foreign, spend_foreign) VALUES (:user, :paid, :spend, :bill, :paymethod, :account_to, :paid_foreign, :spend_foreign)";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
@@ -38,10 +38,10 @@ class BaseBillMapper extends \App\Domain\Mapper {
         return true;
     }
 
-    private function updateBalance($bill, $user, $paid, $spend, $paymethod_spend = null, $paymethod_paid = null, $paid_foreign = null, $spend_foreign = null) {
-        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod_spend" => $paymethod_spend, "paymethod_paid" => $paymethod_paid, "paid_foreign" => $paid_foreign, "spend_foreign" => $spend_foreign];
+    private function updateBalance($bill, $user, $paid, $spend, $paymethod = null, $account_to = null, $paid_foreign = null, $spend_foreign = null) {
+        $bindings = ["user" => $user, "bill" => $bill, "paid" => $paid, "spend" => $spend, "paymethod" => $paymethod, "account_to" => $account_to, "paid_foreign" => $paid_foreign, "spend_foreign" => $spend_foreign];
 
-        $sql = "UPDATE " . $this->getTableName($this->bill_balance_table) . " SET paid = :paid, spend = :spend, paymethod_spend = :paymethod_spend, paymethod_paid = :paymethod_paid, paid_foreign = :paid_foreign, spend_foreign = :spend_foreign WHERE user = :user AND bill = :bill";
+        $sql = "UPDATE " . $this->getTableName($this->bill_balance_table) . " SET paid = :paid, spend = :spend, paymethod = :paymethod, account_to = :account_to, paid_foreign = :paid_foreign, spend_foreign = :spend_foreign WHERE user = :user AND bill = :bill";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);
@@ -66,7 +66,7 @@ class BaseBillMapper extends \App\Domain\Mapper {
     }
 
     public function getBalance($id) {
-        $sql = "SELECT user, spend, paid, paid-spend as balance, paymethod_spend, paymethod_paid, paid_foreign, spend_foreign FROM " . $this->getTableName($this->bill_balance_table) . " WHERE bill = :id";
+        $sql = "SELECT user, spend, paid, paid-spend as balance, paymethod, account_to, paid_foreign, spend_foreign FROM " . $this->getTableName($this->bill_balance_table) . " WHERE bill = :id";
 
         $bindings = array("id" => $id);
 
@@ -94,10 +94,10 @@ class BaseBillMapper extends \App\Domain\Mapper {
         return 0;
     }
 
-    public function updatePaymethod($bill, $user, $paymethod_spend = null, $paymethod_paid = null) {
-        $bindings = ["user" => $user, "bill" => $bill, "paymethod_spend" => $paymethod_spend, "paymethod_paid" => $paymethod_paid, ];
+    public function updatePaymethod($bill, $user, $paymethod = null, $account_to = null) {
+        $bindings = ["user" => $user, "bill" => $bill, "paymethod" => $paymethod, "account_to" => $account_to, ];
 
-        $sql = "UPDATE " . $this->getTableName($this->bill_balance_table) . " SET paymethod_spend = :paymethod_spend, paymethod_paid = :paymethod_paid WHERE user = :user AND bill = :bill";
+        $sql = "UPDATE " . $this->getTableName($this->bill_balance_table) . " SET paymethod = :paymethod, account_to = :account_to WHERE user = :user AND bill = :bill";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);

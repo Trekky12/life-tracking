@@ -11,6 +11,7 @@ use App\Domain\User\UserService;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Application\Payload\Payload;
+use App\Domain\Finances\Account\AccountService;
 use App\Domain\Main\Utility\Utility;
 
 class SplitbillBillService extends BaseBillService {
@@ -20,6 +21,7 @@ class SplitbillBillService extends BaseBillService {
     private $router;
     private $group_service;
     private $paymethod_service;
+    private $account_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -29,7 +31,8 @@ class SplitbillBillService extends BaseBillService {
         UserService $user_service,
         RouteParser $router,
         SplitbillGroupService $group_service,
-        PaymethodService $paymethod_service
+        PaymethodService $paymethod_service,
+        AccountService $account_service
     ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
@@ -38,6 +41,7 @@ class SplitbillBillService extends BaseBillService {
         $this->router = $router;
         $this->group_service = $group_service;
         $this->paymethod_service = $paymethod_service;
+        $this->account_service = $account_service;
     }
 
     public function view($hash): Payload {
@@ -86,6 +90,7 @@ class SplitbillBillService extends BaseBillService {
         list($balance, $totalValue, $totalValueForeign) = $this->getBillbalance($entry_id);
 
         $paymethods = $this->paymethod_service->getAllfromUsers($group_users);
+        $accounts = $this->account_service->getAllfromUsers($group_users);
 
         list($totalBalance, $myTotalBalance) = $this->calculateBalance($group->id);
 
@@ -133,6 +138,7 @@ class SplitbillBillService extends BaseBillService {
             'totalValue' => $totalValue,
             'type' => $type,
             'paymethods' => $paymethods,
+            'accounts' => $accounts,
             'totalValueForeign' => $totalValueForeign,
             'isSettleUp' => $isSettleUp,
             'paid_by' => $paid_by,

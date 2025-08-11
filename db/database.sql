@@ -650,15 +650,15 @@ CREATE TABLE IF NOT EXISTS splitbill_bill_users (
     user INTEGER unsigned DEFAULT NULL,
     paid DECIMAL(10,2) DEFAULT NULL,
     spend DECIMAL(10,2) DEFAULT NULL,
-    paymethod_spend int(11) UNSIGNED DEFAULT NULL,
-    paymethod_paid int(11) UNSIGNED DEFAULT NULL,
     paid_foreign DECIMAL(10,2) DEFAULT NULL,
     spend_foreign DECIMAL(10,2) DEFAULT NULL,
+    paymethod int(11) UNSIGNED DEFAULT NULL,
+    account_to int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(bill) REFERENCES splitbill_bill(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(paymethod_spend) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(paymethod_paid) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(account_to) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -692,15 +692,15 @@ CREATE TABLE IF NOT EXISTS splitbill_bill_recurring_users (
     user INTEGER unsigned DEFAULT NULL,
     paid DECIMAL(10,2) DEFAULT NULL,
     spend DECIMAL(10,2) DEFAULT NULL,
-    paymethod_spend int(11) UNSIGNED DEFAULT NULL,
-    paymethod_paid int(11) UNSIGNED DEFAULT NULL,
     paid_foreign DECIMAL(10,2) DEFAULT NULL,
     spend_foreign DECIMAL(10,2) DEFAULT NULL,
+    paymethod int(11) UNSIGNED DEFAULT NULL,
+    account_to int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(bill) REFERENCES splitbill_bill_recurring(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(paymethod_spend) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(paymethod_paid) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(account_to) REFERENCES finances_accounts(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
