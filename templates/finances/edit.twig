@@ -101,7 +101,7 @@
 
 				<div class="form-group">
 					<label for="paymethod">{{"FINANCES_PAYMETHOD"|trans}}</label>
-					<div class="select-wrapper form-control">
+					<div class="select-wrapper form-control {% if not entry is null and not entry.bill is null %}disabled{% endif %}">
 						<select class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="paymethod" name="paymethod" {% if not entry is null and not entry.bill is null %} disabled="disabled" {% endif %}>
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods %}

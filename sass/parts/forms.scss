@@ -197,6 +197,10 @@ textarea {
             position: relative;
             z-index: 1;
         }
+
+        &.disabled:after{
+            background-color: variables.$color_gray;
+        }
     }
 }
 
