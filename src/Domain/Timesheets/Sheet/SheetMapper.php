@@ -847,4 +847,23 @@ class SheetMapper extends \App\Domain\Mapper {
             throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
         }
     }
+
+    public function getLastSheetofToday($project) {
+        $sql = "SELECT * FROM " . $this->getTableName() . "  "
+            . "WHERE project = :project "
+            . " AND DATE(end) = CURDATE() "
+            . " AND DATE_ADD(end, INTERVAL 1 HOUR) < NOW()";
+
+        $bindings = array("project" => $project);
+
+        $sql .= " ORDER BY start DESC LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return new $this->dataobject($stmt->fetch());
+        }
+        return null;
+    }
 }

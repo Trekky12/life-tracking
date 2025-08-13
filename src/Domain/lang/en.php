@@ -349,6 +349,10 @@ $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "internal notifications";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "notify on execution of recurring finance entries";
 $lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "notify on assignment to cards on boards";
+$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER"] = "daily reminder to check entries";
+
+$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_TITLE"] = "Reminder to check entries";
+$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_MESSAGE"] = "Please don't forget to check the entries of today of \"%project%\".";
 
 $lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monthly finance statistics (1. of month at 06:00 Uhr)";
 $lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";

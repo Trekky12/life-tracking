@@ -14,6 +14,20 @@
 				{% endfor %}
 			</div>
 		{% endif %}
+	{% elseif cat.identifier == 'NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER' %}
+		{% if user.hasModule("timesheets") %}
+			<div class="form-group">
+				{{ cat.name|trans }}
+				{% for project in timesheets["user_projects"]  %}
+					<div>
+						<label class="checkbox">
+							<input name="{{type}}_notification_categories[]" value="{{cat.id}}_{{ project }}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and "%s_%s"|format(cat.id, project) in notifications["user_categories"] %} checked {% endif %}>
+							{{timesheets["projects"][project].name}}
+						</label>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
 	{% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
 		{% if user.hasModule("boards") %}
 			<div class="form-group">

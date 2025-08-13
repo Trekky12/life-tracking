@@ -348,6 +348,10 @@ $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "interne Benachrichtigungen";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "benachrichtige beim Ausführen von wiederkehrenden Finanzeinträgen";
 $lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "benachrichtige beim Hinzufügen zu Karten bei Boards";
+$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER"] = "tägliche Erinnerung an Kontrolle von durchgeführten Terminen";
+
+$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_TITLE"] = "Erinnerung an durchgeführte Termine";
+$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_MESSAGE"] = "Bitte denke daran die heute durchgeführten Termine von \"%project%\" zu kontrollieren.";
 
 $lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monatliche Finanzstatistik (am 1. des Monats um 06:00 Uhr)";
 $lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";

@@ -14,6 +14,7 @@ use App\Application\Payload\Payload;
 use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Board\BoardService;
 use App\Domain\Main\Utility\Utility;
+use App\Domain\Timesheets\Project\ProjectService;
 
 class NotificationsService extends Service {
 
@@ -27,6 +28,7 @@ class NotificationsService extends Service {
     private $boards_service;
     private $mail_users_mapper;
     private $mail_cat_mapper;
+    private $timesheet_project_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -41,7 +43,8 @@ class NotificationsService extends Service {
         SplitbillGroupService $splitbill_group_service,
         BoardService $boards_service,
         MailNotificationUsersMapper $mail_users_mapper,
-        MailNotificationCategoryMapper $mail_cat_mapper
+        MailNotificationCategoryMapper $mail_cat_mapper,
+        ProjectService $timesheet_project_service
     ) {
         parent::__construct($logger, $user);
         $this->translation = $translation;
@@ -53,6 +56,7 @@ class NotificationsService extends Service {
         $this->helper = $helper;
         $this->splitbill_group_service = $splitbill_group_service;
         $this->boards_service = $boards_service;
+        $this->timesheet_project_service = $timesheet_project_service;
 
         $this->mail_users_mapper = $mail_users_mapper;
         $this->mail_cat_mapper = $mail_cat_mapper;
@@ -73,7 +77,7 @@ class NotificationsService extends Service {
         return 0;
     }
 
-    public function getUnreadNotifications(){
+    public function getUnreadNotifications() {
         $result = [];
         $result["unseen"] = $this->getUnreadNotificationsCountByUser();
 
@@ -116,20 +120,20 @@ class NotificationsService extends Service {
         return new Payload(Payload::$RESULT_JSON, $result);
     }
 
-    private function sendNotificationsToUsersWithCategory($identifier, $title, $message) {
+    public function sendNotificationsToUsersWithCategory($identifier, $title, $message, $path = null, $object_id = null) {
         try {
             $category_id = $this->cat_service->getCategoryByIdentifier($identifier);
 
             // Push Notifications
             $clients = $this->client_service->getClientsByCategory($category_id->id);
             foreach ($clients as $client) {
-                $res = $this->sendNotification($client, $title, $message);
+                $res = $this->sendNotification($client, $title, $message, $path);
             }
 
             // Save notification for the users (frontend)
-            $users = $this->user_notifications_service->getUsersByCategory($category_id->id);
+            $users = $this->user_notifications_service->getUsersByCategory($category_id->id, $object_id);
             foreach ($users as $user) {
-                $notification = new Notification(["title" => $title, "message" => $message, "user" => $user, "category" => $category_id->id]);
+                $notification = new Notification(["title" => $title, "message" => $message, "user" => $user, "category" => $category_id->id, "link" => $path]);
                 $id = $this->mapper->insert($notification);
             }
         } catch (\Exception $e) {
@@ -270,6 +274,9 @@ class NotificationsService extends Service {
         $boards_user_boards = $this->boards_service->getUserElements();
         $boards_all_boards = $this->boards_service->getAll();
 
+        $timesheet_user_groups = $this->timesheet_project_service->getUserElements();
+        $timesheet_all_groups = $this->timesheet_project_service->getAll();
+
         $mail_categories = $this->mail_cat_mapper->getAll();
 
         $user = $this->current_user->getUser();
@@ -296,6 +303,10 @@ class NotificationsService extends Service {
                 "boards" => $boards_all_boards,
                 "user_boards" => $boards_user_boards
             ],
+            "timesheets" => [
+                "projects" => $timesheet_all_groups,
+                "user_projects" => $timesheet_user_groups
+            ]
         ]);
     }
 

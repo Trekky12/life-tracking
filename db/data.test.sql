@@ -1,5 +1,5 @@
-INSERT INTO global_settings (name, value, type) VALUES ('version', 17, 'Integer');
-INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date');
+INSERT INTO global_settings (name, value, type) VALUES ('version', 18, 'Integer');
+INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('lastRunRecurringSplitbills', 0, 'Date'), ('lastRunRecurringTransactions', 0, 'Date'), ('isCronRunning', 0, 'Boolean');
 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (2, 'user', '$2y$10$tC4twYpdcq0TibT6MZsdI.Tmu36UkTxFNymd2icHv5KVB1oEu5mBW', 'user', 'user', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
@@ -227,7 +227,8 @@ INSERT INTO notifications_categories (id, name, identifier, internal) VALUES
 (1, 'Test Notification Category', 'test_notification_cat', 0),
 (2, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1),
 (3, 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 1),
-(4, 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 1);
+(4, 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 1),
+(5, 'NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER', 'NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER', 1);
 
 
 INSERT INTO notifications_categories_user (category, user) VALUES 

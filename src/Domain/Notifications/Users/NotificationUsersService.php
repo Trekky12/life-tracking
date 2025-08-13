@@ -19,8 +19,8 @@ class NotificationUsersService extends Service {
         return $this->mapper->getCategoriesByUser($user);
     }
 
-    public function getUsersByCategory($category) {
-        return $this->mapper->getUsersByCategory($category);
+    public function getUsersByCategory($category, $object_id = null) {
+        return $this->mapper->getUsersByCategory($category, $object_id);
     }
 
     public function setCategoryForUser($data) {

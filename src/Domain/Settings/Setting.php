@@ -13,6 +13,7 @@ class Setting extends \App\Domain\DataObject {
         $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         $this->value = $this->exists('value', $data) ? Utility::filter_string_polyfill($data['value']) : null;
         $this->type = $this->exists('type', $data) ? Utility::filter_string_polyfill($data['type']) : "String";
+        $this->reference = $this->exists('reference', $data) ? intval(filter_var($data['reference'], FILTER_SANITIZE_NUMBER_INT)) : null;
 
         if (!in_array($this->type, array("String", "Integer", "Boolean", "Date"))) {
             $this->parsing_errors[] = "WRONG_TYPE";

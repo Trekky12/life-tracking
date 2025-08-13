@@ -62,10 +62,15 @@ class NotificationUsersMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getUsersByCategory($category) {
+    public function getUsersByCategory($category, $object_id = null) {
         $sql = "SELECT user FROM " . $this->getTableName() . " WHERE category = :category";
 
         $bindings = array("category" => $category);
+
+        if (!is_null($object_id)) {
+            $sql .= " AND object_id = :object_id";
+            $bindings["object_id"] = $object_id;
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -98,5 +103,4 @@ class NotificationUsersMapper extends \App\Domain\Mapper {
         }
         return false;
     }
-
 }
