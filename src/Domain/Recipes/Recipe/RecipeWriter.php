@@ -144,7 +144,7 @@ class RecipeWriter extends ObjectActivityWriter
         if (array_key_exists("ingredients", $step_data) && is_array($step_data["ingredients"])) {
             foreach ($step_data["ingredients"] as $idx => $ingredient_data) {
 
-                $grocery_input = array_key_exists("ingredient", $ingredient_data) && !empty($ingredient_data["ingredient"]) ? trim(Utility::filter_string_polyfill($ingredient_data["ingredient"])) : null;
+                $grocery_input = array_key_exists("ingredient", $ingredient_data) && !empty($ingredient_data["ingredient"]) ? Utility::filter_string_polyfill($ingredient_data["ingredient"]) : null;
                 $amount = array_key_exists("amount", $ingredient_data) && !empty($ingredient_data["amount"]) ? filter_var($ingredient_data["amount"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
                 $unit = array_key_exists("unit", $ingredient_data) && !empty($ingredient_data["unit"]) ? filter_var($ingredient_data["unit"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
                 $notice = array_key_exists("notice", $ingredient_data) && !empty($ingredient_data["notice"]) ? Utility::filter_string_polyfill($ingredient_data["notice"]) : null;

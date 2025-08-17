@@ -69,9 +69,9 @@ class ShoppinglistEntryService extends Service {
 
         $amount = array_key_exists("amount", $data) && !empty($data["amount"]) ? filter_var($data["amount"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
         $unit = array_key_exists("unit", $data) && !empty($data["unit"]) ? filter_var($data["unit"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;
-        $grocery_input = array_key_exists("grocery_input", $data) && !empty($data["grocery_input"]) ? trim(Utility::filter_string_polyfill($data["grocery_input"])) : null;
+        $grocery_input = array_key_exists("grocery_input", $data) && !empty($data["grocery_input"]) ? Utility::filter_string_polyfill($data["grocery_input"]) : null;
         $grocery_id = array_key_exists("id", $data) && !empty($data["id"]) ? intval(filter_var($data["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $notice = array_key_exists("notice", $data) && !empty($data["notice"]) ? trim(Utility::filter_string_polyfill($data["notice"])) : null;
+        $notice = array_key_exists("notice", $data) && !empty($data["notice"]) ? Utility::filter_string_polyfill($data["notice"]) : null;
 
         $grocery = null;
 

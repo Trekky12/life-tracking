@@ -10,7 +10,7 @@ class WidgetObject extends \App\Domain\DataObject {
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? trim(Utility::filter_string_polyfill($data['name'])) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         
         $this->options = $this->exists('options', $data) ? $data['options'] : null;
         

@@ -10,10 +10,10 @@ class RecurringBill extends \App\Domain\DataObject {
 
     public function parseData(array $data) {
 
-        $this->name = $this->exists('name', $data) ? trim(Utility::filter_string_polyfill($data['name'])) : null;
+        $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
         $this->sbgroup = $this->exists('sbgroup', $data) ? filter_var($data['sbgroup'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->notice = $this->exists('notice', $data) ? trim(Utility::filter_string_polyfill($data['notice'])) : null;
+        $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
 
         $this->settleup = $this->exists('settleup', $data) ? intval(filter_var($data['settleup'], FILTER_SANITIZE_NUMBER_INT)) : 0;
 

@@ -17,7 +17,7 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
 
         $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->categorization = $this->exists('categorization', $data) ? trim(Utility::filter_string_polyfill($data['categorization'])) : null;
+        $this->categorization = $this->exists('categorization', $data) ? Utility::filter_string_polyfill($data['categorization']) : null;
 
         $this->warning1 = $this->exists('warning1', $data) ? filter_var($data['warning1'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->warning2 = $this->exists('warning2', $data) ? filter_var($data['warning2'], FILTER_SANITIZE_NUMBER_INT) : null;
@@ -40,7 +40,7 @@ class ProjectCategoryBudget extends \App\Domain\DataObject {
 
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
 
-        $this->counter = $this->exists('counter', $data) ? trim(Utility::filter_string_polyfill($data['counter'])) : null;
+        $this->counter = $this->exists('counter', $data) ? Utility::filter_string_polyfill($data['counter']) : null;
 
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";

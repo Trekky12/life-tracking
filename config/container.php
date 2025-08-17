@@ -151,7 +151,7 @@ return [
             $pdo = new PDO("mysql:host=" . $db_settings['host'] . ";dbname=" . $db_settings['dbname'], $db_settings['user'], $db_settings['pass']);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            $pdo->exec("set names utf8");
+            $pdo->exec("set names utf8mb4");
             return $pdo;
         } catch (\PDOException $e) {
             $logger->critical($e->getMessage());

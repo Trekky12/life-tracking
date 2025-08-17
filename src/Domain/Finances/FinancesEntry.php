@@ -15,9 +15,9 @@ class FinancesEntry extends \App\Domain\DataObject {
         $this->time = $this->exists('time', $data) ? Utility::filter_string_polyfill($data['time']) : date('H:i:s');
         // Default category 1 => not categorized, otherwise the statistics is not that easy
         $this->category = $this->exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->description = $this->exists('description', $data) ? trim(Utility::filter_string_polyfill($data['description'])) : null;
+        $this->description = $this->exists('description', $data) ? Utility::filter_string_polyfill($data['description']) : null;
         $this->value = $this->exists('value', $data) ? filter_var($data['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->notice = $this->exists('notice', $data) ? trim(Utility::filter_string_polyfill($data['notice'])) : null;
+        $this->notice = $this->exists('notice', $data) ? Utility::filter_string_polyfill($data['notice']) : null;
 
         $this->common = $this->exists('common', $data) ? filter_var($data['common'], FILTER_SANITIZE_NUMBER_INT) : 0;
         $this->common_value = $this->exists('common_value', $data) ? filter_var($data['common_value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
