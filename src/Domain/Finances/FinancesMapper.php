@@ -19,6 +19,7 @@ class FinancesMapper extends \App\Domain\Mapper {
                 . " f.type LIKE :searchQuery OR "
                 . " fc.name LIKE :searchQuery OR "
                 . " f.description LIKE :searchQuery OR "
+                . " f.notice LIKE :searchQuery OR "
                 . " f.value LIKE :searchQuery )";
         return $sql;
     }
