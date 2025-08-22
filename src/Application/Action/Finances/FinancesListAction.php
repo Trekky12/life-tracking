@@ -23,7 +23,7 @@ class FinancesListAction {
 
         $requestData = $request->getQueryParams();
 
-        $table_count = FigRequestCookies::get($request, 'perPage_financeTable', 20);
+        $table_count = FigRequestCookies::get($request, 'perPage_financeTable', 10);
         $table_count_val = intval($table_count->getValue());
 
         $d = new \DateTime('first day of this month');
