@@ -147,8 +147,8 @@ class CronService extends Service {
                     $notifiedToday = !is_null($lastRunTimesheetNotifyProject) && $lastRunTimesheetNotifyProject->getDayDiff() == 0;
 
                     if (!$notifiedToday) {
-                        $lastSheetOfToday = $this->sheet_service->getLastSheetofToday($project->id);
-                        if ($lastSheetOfToday) {
+                        $isLastSheetOfTheDayOverSince1hour = $this->sheet_service->isLastSheetOfTheDayOverSince1hour($project->id);
+                        if ($isLastSheetOfTheDayOverSince1hour) {
                             $this->logger->debug("Send notification to users", ["project" => $project->id]);
 
                             $title = $this->translation->getTranslatedString("NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_TITLE");

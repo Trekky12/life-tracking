@@ -848,11 +848,11 @@ class SheetMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function getLastSheetofToday($project) {
-        $sql = "SELECT * FROM " . $this->getTableName() . "  "
+    public function isLastSheetOfTheDayOverSince1hour($project) {
+        $sql = "SELECT MAX(end) FROM " . $this->getTableName() . "  "
             . "WHERE project = :project "
             . " AND DATE(end) = CURDATE() "
-            . " AND DATE_ADD(end, INTERVAL 1 HOUR) < NOW()";
+            . " HAVING DATE_ADD(MAX(end), INTERVAL 1 HOUR) < NOW()";
 
         $bindings = array("project" => $project);
 
@@ -862,8 +862,8 @@ class SheetMapper extends \App\Domain\Mapper {
         $stmt->execute($bindings);
 
         if ($stmt->rowCount() > 0) {
-            return new $this->dataobject($stmt->fetch());
+            return true;
         }
-        return null;
+        return false;
     }
 }

@@ -456,8 +456,8 @@ class SheetService extends Service {
         return $this->mapper->getLastSheetWithStartDateToday($project_id);
     }
 
-    public function getLastSheetofToday($project_id) {
-        return $this->mapper->getLastSheetofToday($project_id);
+    public function isLastSheetOfTheDayOverSince1hour($project_id) {
+        return $this->mapper->isLastSheetOfTheDayOverSince1hour($project_id);
     }
 
     public function showExport($hash, $from, $to, $categories, $invoiced = null, $billed = null, $payed = null, $happened = null, $customer = null): Payload {
