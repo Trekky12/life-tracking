@@ -22,93 +22,80 @@ let map_marker = [];
 let lastAccuracy = 9999999;
 let timeout = null;
 
-/**
+document.addEventListener("DOMContentLoaded", async function () {
+    /**
  * Init maps
  */
-mapContainers.forEach(function (mapContainer, idx) {
-    map[idx] = null;
-    map_marker[idx] = null;
-    drawMap(mapContainer, idx);
-});
+    mapContainers.forEach(function (mapContainer, idx) {
+        map[idx] = null;
+        map_marker[idx] = null;
+        drawMap(mapContainer, idx);
+    });
 
-/**
- * Add Geolocation to first map
- * @param {type} index of map
- */
-function getLocation(index) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            locationRetrieved(position, index);
-        }, locationError, geoOptions);
+    // automatically get location on new entries
+    // and set first index
+    if (latField !== null &&
+        lngField !== null &&
+        accField !== null &&
+        idField === null &&
+        latField.value.length === 0 &&
+        lngField.value.length === 0 &&
+        accField.value.length === 0) {
+        getLocation(0);
     } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
-}
+        // automatically store location on all other pages
+        try {
+            const lastTime = await getLastLocationTime();
+            let currentTime = Math.round(Date.now() / 1000);
 
-// automatically get location on new entries
-// and set first index
-if (latField !== null &&
-    lngField !== null &&
-    accField !== null &&
-    idField === null &&
-    latField.value.length === 0 &&
-    lngField.value.length === 0 &&
-    accField.value.length === 0) {
-    getLocation(0);
-} else {
-    // automatically store location on all other pages
-    getLastLocationTime().then(function (lastTime) {
-        let currentTime = Math.round(Date.now() / 1000);
-
-        if (currentTime >= lastTime + 5 * 60) {
-            getLocation(-1);
+            if (currentTime >= lastTime + 5 * 60) {
+                getLocation(-1);
+            }
+        } catch (error) {
+            console.log(error);
         }
-    }).catch(function (error) {
-        console.log(error);
-    });
 
-}
+    }
 
-if (updateLocButtons !== null) {
-    updateLocButtons.forEach(function (updateLoc, idx) {
-        updateLoc.addEventListener('click', function (e) {
-            e.preventDefault();
-            clearTimeout(timeout);
-            lastAccuracy = 9999999;
-            // we assume the index of the button is the same like the index of the map
-            getLocation(idx);
+    if (updateLocButtons !== null) {
+        updateLocButtons.forEach(function (updateLoc, idx) {
+            updateLoc.addEventListener('click', function (e) {
+                e.preventDefault();
+                clearTimeout(timeout);
+                lastAccuracy = 9999999;
+                // we assume the index of the button is the same like the index of the map
+                getLocation(idx);
+            });
         });
-    });
-}
+    }
 
-if (deleteLocButtons !== null) {
-    deleteLocButtons.forEach(function (deleteLoc, idx) {
-        deleteLoc.addEventListener('click', function (e) {
-            e.preventDefault();
-            let mapContainer = deleteLoc.parentNode.parentNode.querySelector('.geo-map');
-            removeMap(deleteLoc, mapContainer, idx);
+    if (deleteLocButtons !== null) {
+        deleteLocButtons.forEach(function (deleteLoc, idx) {
+            deleteLoc.addEventListener('click', function (e) {
+                e.preventDefault();
+                let mapContainer = deleteLoc.parentNode.parentNode.querySelector('.geo-map');
+                removeMap(deleteLoc, mapContainer, idx);
+            });
         });
-    });
-}
+    }
 
-if (getAdressButtons !== null) {
-    getAdressButtons.forEach(function (addressButton, idx) {
-        addressButton.addEventListener('click', function (e) {
-            e.preventDefault();
+    if (getAdressButtons !== null) {
+        getAdressButtons.forEach(function (addressButton, idx) {
+            addressButton.addEventListener('click', async function (e) {
+                e.preventDefault();
 
-            let address = addressButton.previousElementSibling.value;
-            let lat = addressButton.parentNode.querySelector('input.geo-lat');
-            let lng = addressButton.parentNode.querySelector('input.geo-lng');
+                let address = addressButton.previousElementSibling.value;
+                let lat = addressButton.parentNode.querySelector('input.geo-lat');
+                let lng = addressButton.parentNode.querySelector('input.geo-lng');
 
-            let mapContainer = addressButton.nextElementSibling;
+                let mapContainer = addressButton.nextElementSibling;
 
-            if (address) {
-                fetch(jsObject.get_location_of_address + '?address=' + address, {
-                    method: 'GET',
-                    credentials: "same-origin"
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data) {
+                if (address) {
+                    const response = await fetch(jsObject.get_location_of_address + '?address=' + address, {
+                        method: 'GET',
+                        credentials: "same-origin"
+                    });
+                    const data = await response.json();
                     console.log(data);
                     if (data.status == "success") {
                         let result = data.data;
@@ -126,13 +113,27 @@ if (getAdressButtons !== null) {
                     } else {
                         alert(lang.nothing_found);
                     }
-                });
-            }
+                }
+            });
         });
-    });
+    }
+});
+
+/**
+ * Add Geolocation to first map
+ * @param {type} index of map
+ */
+function getLocation(index) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            locationRetrieved(position, index);
+        }, locationError, geoOptions);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
 }
 
-function locationRetrieved(position, index) {
+async function locationRetrieved(position, index) {
     console.log(position);
 
     if (position.coords.accuracy < lastAccuracy && index >= 0) {
@@ -173,15 +174,16 @@ function locationRetrieved(position, index) {
         console.log("Accuracy reached");
         // Store location
         // but first check last store
-        getLastLocationTime().then(function (lastTime) {
+        try {
+            const lastTime = await getLastLocationTime();
             let currentTime = Math.round(Date.now() / 1000);
 
             if (currentTime >= lastTime + 5 * 60) {
                 storeLocation(position);
             }
-        }).catch(function (error) {
+        } catch (error) {
             console.log(error);
-        });
+        }
 
     }
 }
@@ -355,32 +357,30 @@ function removeMap(deleteLoc, mapContainer, index) {
     clearTimeout(timeout);
 }
 
-function getLastLocationTime() {
-    return fetch(jsObject.location_last, {
+async function getLastLocationTime() {
+    const response = await fetch(jsObject.location_last, {
         method: 'GET',
         credentials: "same-origin",
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        if (data.status == "success") {
-            return data.ts;
-        }
-        throw "Error";
     });
+    const data = await response.json();
+    if (data.status == "success") {
+        return data.ts;
+    }
+    throw "Error: " + JSON.stringify(data);
 }
 
-function storeLocation(position) {
+async function storeLocation(position) {
 
     let data = { "gps_loc": position.coords.latitude + "," + position.coords.longitude, "gps_acc": position.coords.accuracy };
 
-    return getCSRFToken().then(function (token) {
+    try {
+        const token = await getCSRFToken();
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
-
-        return fetch(jsObject.location_record, {
+        const response = await fetch(jsObject.location_record, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
@@ -388,12 +388,10 @@ function storeLocation(position) {
             },
             body: JSON.stringify(data)
         });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        console.log(data);
-    }).catch(function (error) {
+        const result = await response.json();
+        console.log(result);
+    } catch (error) {
         console.log(error);
-    });
+    }
 
 }

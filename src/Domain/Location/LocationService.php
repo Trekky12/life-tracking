@@ -93,7 +93,7 @@ class LocationService extends Service {
 
             return new Payload(Payload::$RESULT_JSON, ["status" => "success", "ts" => $date->getTimestamp()]);
         }
-        return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        return new Payload(Payload::$RESULT_JSON, ["status" => "error", "message" => "user has no location module"]);
     }
 
     public function getAddress($data) {

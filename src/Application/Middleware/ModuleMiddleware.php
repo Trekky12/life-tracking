@@ -50,6 +50,12 @@ class ModuleMiddleware {
             }
 
             $hasAccess = $user->hasModule($current_module);
+
+            // always allow /location/last
+            if($current_module == "location" && $route == "/location/last"){
+                $hasAccess = true;
+            }
+
             // Has access
             if (!is_null($user) && $hasAccess) {
                 return $handler->handle($request->withAttribute("module", $current_module));
