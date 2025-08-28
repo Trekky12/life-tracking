@@ -14,6 +14,7 @@ use App\Domain\Finances\Paymethod\PaymethodService;
 use App\Domain\Finances\Transaction\TransactionMapper;
 use App\Domain\Finances\Transaction\TransactionRemover;
 use App\Domain\Main\Translator;
+use App\Domain\Splitbill\Bill\SplitbillBillService;
 
 class FinancesWriter extends ObjectActivityWriter {
 
@@ -24,6 +25,7 @@ class FinancesWriter extends ObjectActivityWriter {
     private $transaction_mapper;
     private $transaction_remover;
     private $translation;
+    private $bill_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -36,7 +38,8 @@ class FinancesWriter extends ObjectActivityWriter {
         TransactionWriter $transaction_writer,
         TransactionMapper $transaction_mapper,
         TransactionRemover $transaction_remover,
-        Translator $translation
+        Translator $translation,
+        SplitbillBillService $bill_service
     ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
@@ -47,6 +50,7 @@ class FinancesWriter extends ObjectActivityWriter {
         $this->transaction_mapper = $transaction_mapper;
         $this->transaction_remover = $transaction_remover;
         $this->translation = $translation;
+        $this->bill_service = $bill_service;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
@@ -116,6 +120,15 @@ class FinancesWriter extends ObjectActivityWriter {
                  * Round up savings
                  */
                 if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0 && $entry->type == 0) {
+
+                    /**
+                     * If this is from a bill do not calculate exchange_fee for round-up savings
+                     * because this is a separate transaction
+                     */
+                    if(!is_null($entry->bill)){
+                        $bill = $this->bill_service->getEntry($entry->bill);
+                        $value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
+                    }
 
                     $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
 

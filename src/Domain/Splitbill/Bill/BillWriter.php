@@ -253,6 +253,12 @@ class BillWriter extends BaseBillWriter {
             // Round up savings
             if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0) {
 
+                /**
+                 * do not calculate exchange_fee for round-up savings
+                 * because this is a separate transaction
+                 */
+                $value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
+
                 $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
 
                 if ($saving > 0) {
