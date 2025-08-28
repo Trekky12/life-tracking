@@ -47,7 +47,7 @@
 				</div>
 
 				<div class="form-group">
-					<label for="inputRate">{{"EXCHANGE_RATE"|trans}}</label>
+					<label for="inputRate">{{"EXCHANGE_RATE"|trans}} (=> {{ i18n.currency }})</label>
 					<input type="number" step="any" inputmode="decimal" class="form-control" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}1{% endif %}">
 				</div>
 

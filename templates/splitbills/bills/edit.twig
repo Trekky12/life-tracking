@@ -87,9 +87,9 @@
 					<div class="two-columns">
 						<div class="form-group left">
 							<label for="inputRate">{{"EXCHANGE_RATE"|trans}}
-								({{ i18n.currency }}
+								({{ group.currency }}
 								=>
-								{{ group.currency }})
+								{{ i18n.currency }})
 							</label>
 							<input type="number" {% if isOwner %} required {% else %} disabled="disabled" {% endif %} step="any" inputmode="decimal" class="form-control {%if not isOwner %}disabled{% endif %}" id="inputRate" name="exchange_rate" value="{% if not entry is null %}{{entry.exchange_rate}}{% else %}{{ group.exchange_rate }}{% endif %}">
 						</div>

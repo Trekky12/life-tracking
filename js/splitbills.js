@@ -264,7 +264,7 @@ if (splitbillsForm) {
     }
 
     function getValueInLocalCurrency(input) {
-        let value = (input.value / exchange_rate.value);
+        let value = (input.value * exchange_rate.value);
         value = value + value * (parseFloat(exchange_fee.value) / 100);
         return value.toFixed(2)
     }
