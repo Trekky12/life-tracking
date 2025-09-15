@@ -109,7 +109,7 @@ class TransactionMapper extends \App\Domain\Mapper {
     /**
      * Bills
      */
-    public function getEntryFromBill($user, $bill_id, $round_up_savings = null, $is_incoming = null) {
+    public function getEntryFromBill($user, $bill_id, $round_up_savings = null, $is_incoming = null, $is_exchange_fee = null) {
 
         $bindings = ["user" => $user, "bill" => $bill_id];
 
@@ -122,6 +122,11 @@ class TransactionMapper extends \App\Domain\Mapper {
 
         if (!is_null($is_incoming)) {
             $sql .= " AND account_to IS NOT NULL ";
+        }
+
+        if (!is_null($is_exchange_fee)) {
+            $sql .= "AND is_exchange_fee = :is_exchange_fee";
+            $bindings["is_exchange_fee"] = $is_exchange_fee;
         }
 
         $stmt = $this->db->prepare($sql);

@@ -26,6 +26,7 @@ class Transaction extends \App\Domain\DataObject {
 
         $this->is_round_up_savings = $this->exists('is_round_up_savings', $data) ? filter_var($data['is_round_up_savings'], FILTER_SANITIZE_NUMBER_INT) : 0;
     
+        $this->is_exchange_fee = $this->exists('is_exchange_fee', $data) ? filter_var($data['is_exchange_fee'], FILTER_SANITIZE_NUMBER_INT) : 0;
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

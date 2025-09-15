@@ -223,13 +223,23 @@ class BillWriter extends BaseBillWriter {
     }
 
     private function createTransaction($balance, $bill) {
-        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0);
-        $transaction_entry_round_up_savings = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 1);
+        $transaction_entry = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0, 0);
+        $transaction_entry_round_up_savings = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 1, 0);
+        $transaction_entry_exchange_fee = $this->transaction_mapper->getEntryFromBill($balance["user"], $bill->id, 0, 1);
 
         $paymethod = $this->paymethod_service->getPaymethodOfUser($balance["paymethod"], $balance["user"]);
         $value = $balance["paid"];
 
         if ($value > 0 && !is_null($paymethod) && !is_null($paymethod->account)) {
+
+             /**
+             * make a separate transaction for the bill and for the 
+             * exchange fee, for round-up savings the exchange fee is not needed
+             */
+            $new_value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
+            $exchange_fee = $value - $new_value;
+            $value = $new_value;
+
             $data = [
                 "id" => null,
                 "date" => $bill->date,
@@ -240,7 +250,8 @@ class BillWriter extends BaseBillWriter {
                 "bill_entry" => $bill->id,
                 "account_from" => $paymethod->account,
                 "account_to" => null,
-                "is_round_up_savings" => 0
+                "is_round_up_savings" => 0,
+                "is_exchange_fee" => 0
             ];
 
             if (!is_null($transaction_entry)) {
@@ -250,19 +261,42 @@ class BillWriter extends BaseBillWriter {
 
             $this->transaction_writer->save($data["id"], $data, ["is_bill_based_save" => true, "use_user_from_data" => true]);
 
-            // Round up savings
-            if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0) {
+            /**
+             * Exchange fee transaction
+             */
+            if ($exchange_fee > 0) {
 
-                /**
-                 * do not calculate exchange_fee for round-up savings
-                 * because this is a separate transaction
-                 */
-                $value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
+                $data2 = [
+                    "id" => null,
+                    "date" => $bill->date,
+                    "time" => $bill->time,
+                    "description" => sprintf("%s %s", $this->translation->getTranslatedString("EXCHANGE_FEE"), $bill->name),
+                    "value" => $exchange_fee,
+                    "user" => $balance["user"],
+                    "bill_entry" => $bill->id,
+                    "account_from" => $paymethod->account,
+                    "account_to" => null,
+                    "is_round_up_savings" => 0,
+                    "is_exchange_fee" => 1
+                ];
+
+                if (!is_null($transaction_entry_exchange_fee)) {
+                    $data["id"] = $transaction_entry_exchange_fee->id;
+                    $data["description"] = $transaction_entry_exchange_fee->description;
+                }
+
+                $this->transaction_writer->save($data2["id"], $data2, ["is_bill_based_save" => true, "use_user_from_data" => true]);
+            }
+
+            /**
+             * Round up savings
+             */
+            if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0) {
 
                 $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
 
                 if ($saving > 0) {
-                    $data2 = [
+                    $data3 = [
                         "id" => null,
                         "date" => $bill->date,
                         "time" => $bill->time,
@@ -272,15 +306,16 @@ class BillWriter extends BaseBillWriter {
                         "bill_entry" => $bill->id,
                         "account_from" => $paymethod->account,
                         "account_to" => $paymethod->round_up_savings_account,
-                        "is_round_up_savings" => 1
+                        "is_round_up_savings" => 1,
+                        "is_exchange_fee" => 0
                     ];
 
                     if (!is_null($transaction_entry_round_up_savings)) {
-                        $data2["id"] = $transaction_entry_round_up_savings->id;
-                        $data2["description"] = $transaction_entry_round_up_savings->description;
+                        $data3["id"] = $transaction_entry_round_up_savings->id;
+                        $data3["description"] = $transaction_entry_round_up_savings->description;
                     }
 
-                    $this->transaction_writer->save($data2["id"], $data2, ["is_bill_based_save" => true, "use_user_from_data" => true]);
+                    $this->transaction_writer->save($data3["id"], $data3, ["is_bill_based_save" => true, "use_user_from_data" => true]);
                 }
             }
         } else {
@@ -290,6 +325,10 @@ class BillWriter extends BaseBillWriter {
 
             if (!is_null($transaction_entry_round_up_savings)) {
                 $this->transaction_remover->delete($transaction_entry_round_up_savings->id, ["is_bill_based_delete" => true]);
+            }
+
+            if (!is_null($transaction_entry_exchange_fee)) {
+                $this->transaction_remover->delete($transaction_entry_exchange_fee->id, ["is_bill_based_delete" => true]);
             }
         }
     }
@@ -311,7 +350,8 @@ class BillWriter extends BaseBillWriter {
                 "bill_entry" => $bill->id,
                 "account_from" => null,
                 "account_to" => $account_to->id,
-                "is_round_up_savings" => 0
+                "is_round_up_savings" => 0,
+                "is_exchange_fee" => 0
             ];
 
             if (!is_null($transaction_entry)) {

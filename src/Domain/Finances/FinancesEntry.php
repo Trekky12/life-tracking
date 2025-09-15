@@ -36,6 +36,7 @@ class FinancesEntry extends \App\Domain\DataObject {
         $this->transaction = $this->exists('transaction', $data) ? filter_var($data['transaction'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         $this->transaction_round_up_savings = $this->exists('transaction_round_up_savings', $data) ? filter_var($data['transaction_round_up_savings'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->transaction_exchange_fee = $this->exists('transaction_exchange_fee', $data) ? filter_var($data['transaction_exchange_fee'], FILTER_SANITIZE_NUMBER_INT) : null;
 
         if (is_null($this->bill)) {
             /**
@@ -101,6 +102,7 @@ class FinancesEntry extends \App\Domain\DataObject {
         $temp = parent::get_fields($remove_user_element, $insert, $update);
         unset($temp["transaction"]);
         unset($temp["transaction_round_up_savings"]);
+        unset($temp["transaction_exchange_fee"]);
 
         return $temp;
     }

@@ -199,7 +199,8 @@ CREATE TABLE IF NOT EXISTS finances_transactions (
     account_from int(11) UNSIGNED DEFAULT NULL,
     account_to int(11) UNSIGNED DEFAULT NULL,   
     is_confirmed INT(1) DEFAULT 0, 
-    is_round_up_savings INT(1) DEFAULT 0, 
+    is_round_up_savings INT(1) DEFAULT 0,
+    is_exchange_fee INT(1) DEFAULT 0, 
     finance_entry int(11) UNSIGNED DEFAULT NULL,
     bill_entry int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
@@ -727,6 +728,7 @@ CREATE TABLE IF NOT EXISTS finances (
     paymethod int(11) UNSIGNED DEFAULT NULL,
     transaction int(11) UNSIGNED DEFAULT NULL,
     transaction_round_up_savings int(11) UNSIGNED DEFAULT NULL,
+    transaction_exchange_fee int(11) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category) REFERENCES finances_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -734,6 +736,7 @@ CREATE TABLE IF NOT EXISTS finances (
     FOREIGN KEY(paymethod) REFERENCES finances_paymethods(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(transaction) REFERENCES finances_transactions(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY(transaction_round_up_savings) REFERENCES finances_transactions(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(transaction_exchange_fee) REFERENCES finances_transactions(id) ON DELETE SET NULL ON UPDATE CASCADE,
     UNIQUE(bill, user)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

@@ -91,6 +91,19 @@ class FinancesWriter extends ObjectActivityWriter {
 
             if (!is_null($paymethod->account) && floatval($value) > 0) {
 
+                /**
+                 * If this is from a bill make a separate transaction for the bill and for the 
+                 * exchange fee, for round-up savings the exchange fee is not needed
+                 */
+                $exchange_fee = 0;
+                if(!is_null($entry->bill)){
+                    $bill = $this->bill_service->getEntry($entry->bill);
+                    $new_value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
+
+                    $exchange_fee = $value - $new_value;
+                    $value = $new_value;
+                }
+
                 $data = [
                     "date" => $entry->date,
                     "time" => $entry->time,
@@ -102,7 +115,8 @@ class FinancesWriter extends ObjectActivityWriter {
                     "finance_entry" => $entry->id,
                     "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
                     "id" => !is_null($entry->transaction) ? $entry->transaction : null,
-                    "is_round_up_savings" => 0
+                    "is_round_up_savings" => 0,
+                    "is_exchange_fee" => 0
                 ];
 
                 if ($entry->type == 0) {
@@ -117,23 +131,49 @@ class FinancesWriter extends ObjectActivityWriter {
                 $entry->transaction = $transaction_entry->id;
 
                 /**
+                 * Exchange fee transaction
+                 */
+                if ($exchange_fee > 0) {
+
+                    $data2 = [
+                        "date" => $entry->date,
+                        "time" => $entry->time,
+                        "value" => $exchange_fee,
+                        "account_from" => $paymethod->account,
+                        "account_to" => null,
+                        "description" => sprintf("%s %s", $this->translation->getTranslatedString("EXCHANGE_FEE"), $entry->description),
+                        "user" => $entry->user,
+                        "finance_entry" => $entry->id,
+                        "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
+                        "id" => !is_null($entry->transaction_exchange_fee) ? $entry->transaction_exchange_fee : null,
+                        "is_round_up_savings" => 0,
+                        "is_exchange_fee" => 1
+                    ];
+
+                    $transaction_exchange_fee_payload = $this->transaction_writer->save($data2["id"], $data2, ["is_finance_entry_based_save" => true]);
+                    $transaction_exchange_fee_entry = $transaction_exchange_fee_payload->getResult();
+                    $this->getMapper()->set_transaction_exchange_fee($entry->id, $transaction_exchange_fee_entry->id);
+                    $entry->transaction_exchange_fee = $transaction_exchange_fee_entry->id;
+                }
+
+                 /**
+                 * If exchange_fee is zero but there is a transaction, delete this
+                 */
+                if ($exchange_fee == 0 && !is_null($entry->transaction_exchange_fee)) {
+                    $this->transaction_remover->delete($entry->transaction_exchange_fee, ["is_finance_entry_based_delete" => true]);
+                    $this->getMapper()->set_transaction_exchange_fee($entry->id, null);
+                    $entry->transaction_exchange_fee = null;
+                }
+
+                /**
                  * Round up savings
                  */
                 if (!is_null($paymethod->round_up_savings_account) && $paymethod->round_up_savings > 0 && $entry->type == 0) {
 
-                    /**
-                     * If this is from a bill do not calculate exchange_fee for round-up savings
-                     * because this is a separate transaction
-                     */
-                    if(!is_null($entry->bill)){
-                        $bill = $this->bill_service->getEntry($entry->bill);
-                        $value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
-                    }
-
                     $saving = (ceil($value / $paymethod->round_up_savings) * $paymethod->round_up_savings) - $value;
 
                     if ($saving > 0) {
-                        $data2 = [
+                        $data3 = [
                             "date" => $entry->date,
                             "time" => $entry->time,
                             "value" => $saving,
@@ -144,10 +184,11 @@ class FinancesWriter extends ObjectActivityWriter {
                             "finance_entry" => $entry->id,
                             "bill_entry" => !is_null($entry->bill) ? $entry->bill : null,
                             "id" => !is_null($entry->transaction_round_up_savings) ? $entry->transaction_round_up_savings : null,
-                            "is_round_up_savings" => 1
+                            "is_round_up_savings" => 1,
+                            "is_exchange_fee" => 0
                         ];
 
-                        $transaction_round_up_savings_payload = $this->transaction_writer->save($data2["id"], $data2, ["is_finance_entry_based_save" => true]);
+                        $transaction_round_up_savings_payload = $this->transaction_writer->save($data3["id"], $data3, ["is_finance_entry_based_save" => true]);
                         $transaction_round_up_savings_entry = $transaction_round_up_savings_payload->getResult();
                         $this->getMapper()->set_transaction_round_up_savings($entry->id, $transaction_round_up_savings_entry->id);
                         $entry->transaction_round_up_savings = $transaction_round_up_savings_entry->id;
@@ -178,6 +219,11 @@ class FinancesWriter extends ObjectActivityWriter {
                 $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
                 $this->getMapper()->set_transaction_round_up_savings($entry->id, null);
                 $entry->transaction_round_up_savings = null;
+            }
+            if (!is_null($entry->transaction_exchange_fee)) {
+                $this->transaction_remover->delete($entry->transaction_exchange_fee, ["is_finance_entry_based_delete" => true]);
+                $this->getMapper()->set_transaction_exchange_Fee($entry->id, null);
+                $entry->transaction_exchange_fee = null;
             }
         }
 

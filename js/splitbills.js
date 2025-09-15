@@ -196,9 +196,15 @@ if (splitbillsForm) {
         exchange_rate.addEventListener('input', function (e) {
             calculateValueInLocalCurrency();
 
-            splittbillsButtons.forEach(function (btn) {
-                btn.classList.add("button-outlined");
-            });
+            let sum_paid = getSum(inputs_paid);
+            let sum_spend = getSum(inputs_spend);
+            let totalValue = getTotal();
+
+            if (totalValue !== sum_paid || totalValue !== sum_spend) {
+                splittbillsButtons.forEach(function (btn) {
+                    btn.classList.add("button-outlined");
+                });
+            }
         });
     }
 
@@ -206,9 +212,15 @@ if (splitbillsForm) {
         exchange_fee.addEventListener('input', function (e) {
             calculateValueInLocalCurrency();
 
-            splittbillsButtons.forEach(function (btn) {
-                btn.classList.add("button-outlined");
-            });
+            let sum_paid = getSum(inputs_paid);
+            let sum_spend = getSum(inputs_spend);
+            let totalValue = getTotal();
+
+            if (totalValue !== sum_paid || totalValue !== sum_spend) {
+                splittbillsButtons.forEach(function (btn) {
+                    btn.classList.add("button-outlined");
+                });
+            }
         });
     }
 

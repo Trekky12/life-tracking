@@ -59,6 +59,9 @@ class FinancesRemover extends ObjectActivityRemover
                 if (!is_null($entry->transaction_round_up_savings)) {
                     $this->transaction_remover->delete($entry->transaction_round_up_savings, ["is_finance_entry_based_delete" => true]);
                 }
+                if (!is_null($entry->transaction_exchange_fee)) {
+                    $this->transaction_remover->delete($entry->transaction_exchange_fee, ["is_finance_entry_based_delete" => true]);
+                }
                 // when deleting a bill, the user can already be null
                 if(!is_null($me)){
                     $this->current_user->setUser($me);

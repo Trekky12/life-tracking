@@ -272,6 +272,17 @@ class FinancesMapper extends \App\Domain\Mapper {
         }
     }
 
+    public function set_transaction_exchange_fee($id, $transaction) {
+        $sql = "UPDATE " . $this->getTableName() . " SET transaction_exchange_fee = :transaction WHERE id  = :id";
+        $bindings = array("id" => $id, "transaction" => $transaction);
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
     public function statsBudget($budget) {
 
         $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTableName() . " f,   " . $this->getTableName("finances_categories") . " fc,  " . $this->getTableName("finances_budgets_categories") . " fbc "
