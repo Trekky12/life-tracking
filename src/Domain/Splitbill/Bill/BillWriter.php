@@ -156,6 +156,7 @@ class BillWriter extends BaseBillWriter {
                                 "common_value" => $totalValue,
                                 "bill" => $bill->id,
                                 "bill_paid" => $balance["paid"],
+                                "bill_paid_foreign" => $balance["paid_foreign"],
                                 "lng" => $bill->lng,
                                 "lat" => $bill->lat,
                                 "acc" => $bill->acc,
@@ -229,16 +230,20 @@ class BillWriter extends BaseBillWriter {
 
         $paymethod = $this->paymethod_service->getPaymethodOfUser($balance["paymethod"], $balance["user"]);
         $value = $balance["paid"];
+        $exchange_fee = 0;
 
         if ($value > 0 && !is_null($paymethod) && !is_null($paymethod->account)) {
 
-             /**
+            /**
              * make a separate transaction for the bill and for the 
              * exchange fee, for round-up savings the exchange fee is not needed
              */
-            $new_value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
-            $exchange_fee = $value - $new_value;
-            $value = $new_value;
+            if (!is_null($balance["paid_foreign"])) {
+                $bill_paid = $balance["paid_foreign"] * (float)$bill->exchange_rate;
+                $exchange_fee = number_format($bill_paid * ((float)$bill->exchange_fee / 100), 2);
+
+                $value = number_format($bill_paid, 2);
+            }
 
             $data = [
                 "id" => null,

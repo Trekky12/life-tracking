@@ -725,6 +725,7 @@ CREATE TABLE IF NOT EXISTS finances (
     acc DECIMAL(10,3) DEFAULT NULL,
     bill INTEGER unsigned DEFAULT NULL,
     bill_paid DECIMAL(10,2) DEFAULT NULL,
+    bill_paid_foreign DECIMAL(10,2) DEFAULT NULL,
     paymethod int(11) UNSIGNED DEFAULT NULL,
     transaction int(11) UNSIGNED DEFAULT NULL,
     transaction_round_up_savings int(11) UNSIGNED DEFAULT NULL,

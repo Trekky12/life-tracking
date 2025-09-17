@@ -35,6 +35,10 @@
 					<input type="hidden" name="bill_paid" value="{% if not entry is null %}{{entry.bill_paid}}{% endif %}">
 				{% endif %}
 
+				{% if not entry is null and not entry.bill_paid_foreign is null %}
+					<input type="hidden" name="bill_paid_foreign" value="{% if not entry is null %}{{entry.bill_paid_foreign}}{% endif %}">
+				{% endif %}
+
 				{% if not entry is null and not entry.bill is null and not entry.paymethod is null %}
 					<input type="hidden" name="paymethod" value="{% if not entry is null %}{{entry.paymethod}}{% endif %}">
 				{% endif %}

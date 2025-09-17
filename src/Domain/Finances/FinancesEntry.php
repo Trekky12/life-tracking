@@ -31,6 +31,8 @@ class FinancesEntry extends \App\Domain\DataObject {
 
         $this->bill = $this->exists('bill', $data) ? filter_var($data['bill'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->bill_paid = $this->exists('bill_paid', $data) ? filter_var($data['bill_paid'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->bill_paid_foreign = $this->exists('bill_paid_foreign', $data) ? filter_var($data['bill_paid_foreign'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+
 
         $this->paymethod = $this->exists('paymethod', $data) ? filter_var($data['paymethod'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->transaction = $this->exists('transaction', $data) ? filter_var($data['transaction'], FILTER_SANITIZE_NUMBER_INT) : null;

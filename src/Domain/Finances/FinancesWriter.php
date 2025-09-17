@@ -87,22 +87,29 @@ class FinancesWriter extends ObjectActivityWriter {
         if (!is_null($entry->paymethod)) {
 
             $paymethod = $this->paymethod_service->getPaymethodOfUser($entry->paymethod, $entry->user);
-            $value = is_null($entry->bill) ? $entry->value : $entry->bill_paid;
+            $value = $entry->value;
+            $exchange_fee = 0;
+
+           
+            if (!is_null($entry->bill)) {
+                $bill = $this->bill_service->getEntry($entry->bill);
+
+                if (!is_null($entry->bill_paid_foreign)) {
+
+                     /**
+                     * If this is from a bill make a separate transaction for the bill and for the 
+                     * exchange fee, for round-up savings the exchange fee is not needed
+                     */
+                    $bill_paid = $entry->bill_paid_foreign * (float)$bill->exchange_rate;
+                    $exchange_fee = number_format($bill_paid * ((float)$bill->exchange_fee / 100), 2);
+
+                    $value = number_format($bill_paid, 2);
+                } else {
+                    $value = $entry->bill_paid;
+                }
+            } 
 
             if (!is_null($paymethod->account) && floatval($value) > 0) {
-
-                /**
-                 * If this is from a bill make a separate transaction for the bill and for the 
-                 * exchange fee, for round-up savings the exchange fee is not needed
-                 */
-                $exchange_fee = 0;
-                if(!is_null($entry->bill)){
-                    $bill = $this->bill_service->getEntry($entry->bill);
-                    $new_value = number_format($value / (1 + ((float)$bill->exchange_fee / 100)), 2);
-
-                    $exchange_fee = $value - $new_value;
-                    $value = $new_value;
-                }
 
                 $data = [
                     "date" => $entry->date,
