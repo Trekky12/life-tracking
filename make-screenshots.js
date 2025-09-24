@@ -332,8 +332,8 @@ async function captureScreenshots() {
         console.log(`✅ ${file}`);
 
         file = `10_timesheets-37.jpg`
-        await page.click('#timesheets-export-overview-filter div.selectr-container');
-        await page.click('#timesheets-export-overview-filter li.selectr-option');
+        await page.click('#timesheets-export-filter-noticefields div.selectr-container');
+        await page.click('#timesheets-export-filter-noticefields li.selectr-option');
         await page.keyboard.press('Escape');
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await page.screenshot({ path: `${folder}/${file}` });
@@ -439,7 +439,7 @@ async function captureScreenshotsNotHeadless() {
         file = `2_notifications-3.jpg`;
         await page.setViewport({
             width: width,
-            height: 1400
+            height: 1500
         });
         await page.goto("http://tracking.localhost/notifications/manage/");
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -449,7 +449,7 @@ async function captureScreenshotsNotHeadless() {
         file = `2_notifications-4.jpg`;
         await page.setViewport({
             width: width,
-            height: 1800
+            height: 2100
         });
         await page.goto("http://tracking.localhost/notifications/manage/");
         await page.type('#ifttt_url', 'test');
@@ -474,6 +474,10 @@ async function captureScreenshotsNotHeadless() {
         console.log(`✅ ${file}`);
 
         file = `2_notifications-2.jpg`;
+        await page.setViewport({
+            width: width,
+            height: 1700
+        });
         await page.click('#enable_notifications');
         await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
         await page.screenshot({ path: `${folder}/${file}` });
