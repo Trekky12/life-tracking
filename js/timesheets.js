@@ -764,6 +764,7 @@ if (checkBoxDateModified && dateModifiedContent) {
 
         if (checkBoxDateModified.checked) {
             dateModifiedContent.classList.remove("hidden");
+            dateTimePickerStartModified._flatpickr.setDate("3000-01-01 00:00:00");
         } else {
             dateModifiedContent.classList.add("hidden");
             dateTimePickerStartModified._flatpickr.clear();
@@ -812,20 +813,27 @@ function hideEventModal() {
     }
 }
 
-const timesheetsExportOverviewFilter = document.getElementById('timesheets-export-overview-filter');
-if (timesheetsExportOverviewFilter) {
+const timesheetsExportFilter = document.getElementById('timesheets-export-filter');
+if (timesheetsExportFilter) {
+    const timesheetsExportFilterNoticeFields = timesheetsExportFilter.querySelector('#timesheets-export-filter-noticefields');
+    const timesheetsExportFilterModified = timesheetsExportFilter.querySelector('#timesheets-export-filter-modified');
+    
     document.querySelectorAll('.search-filter input[name="type"]').forEach(function (input) {
-        setNoticeFieldFilter(input);
         input.addEventListener('click', function (e) {
-            setNoticeFieldFilter(input);
+            setExportFilter(input);
         });
     });
 
-    function setNoticeFieldFilter(input) {
+    const checkedType = document.querySelector('.search-filter input[name="type"]:checked');
+    setExportFilter(checkedType);
+
+    function setExportFilter(input) {
         if (input.checked && input.value === 'html-overview') {
-            timesheetsExportOverviewFilter.classList.remove('hidden');
-        } else {
-            timesheetsExportOverviewFilter.classList.add('hidden');
+            timesheetsExportFilterNoticeFields.classList.remove('hidden');
+            timesheetsExportFilterModified.classList.remove('hidden');
+        }  else {
+            timesheetsExportFilterNoticeFields.classList.add('hidden');
+            timesheetsExportFilterModified.classList.add('hidden');
         }
     }
 }

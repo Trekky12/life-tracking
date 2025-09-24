@@ -104,21 +104,22 @@ class SheetExportService extends Service {
         if ($project->has_duration_modifications > 0) {
             $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
             $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE_CALCULATED"));
+            $sheet->setCellValue('F4', $this->translation->getTranslatedString("TIMESHEETS_DATE_MODIFIED"));
         } else {
             $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE"));
         }
 
         $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
-        $sheet->setCellValue('F4', $customerDescription);
-        $sheet->setCellValue('G4', $this->translation->getTranslatedString("CATEGORIES"));
-        $sheet->getStyle('A4:G4')->applyFromArray(
+        $sheet->setCellValue('G4', $customerDescription);
+        $sheet->setCellValue('H4', $this->translation->getTranslatedString("CATEGORIES"));
+        $sheet->getStyle('A4:H4')->applyFromArray(
             [
                 'borders' => [
                     'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
                 ],
             ]
         );
-        $sheet->getStyle('A4:G4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:H4')->getFont()->setBold(true);
 
         $excelTime = "[$-F400]h:mm:ss AM/PM";
         $excelDate = $dateFormatPHP['date'];
@@ -166,12 +167,17 @@ class SheetExportService extends Service {
                 $sheet->getStyle('E' . $row)->getNumberFormat()->setFormatCode($excelTimeDuration);
             }
 
+            if (!is_null($timesheet->start_modified)) {
+                $sheet->setCellValue('F' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($timesheet->start_modified));
+                $sheet->getStyle('F' . $row)->getNumberFormat()->setFormatCode($excelDateTime);
+            }
+
             if (!is_null($timesheet->customerName)) {
-                $sheet->setCellValue('F' . $row, $timesheet->customerName);
+                $sheet->setCellValue('G' . $row, $timesheet->customerName);
             }
 
             if (!is_null($timesheet->categories)) {
-                $sheet->setCellValue('G' . $row, $timesheet->categories);
+                $sheet->setCellValue('H' . $row, $timesheet->categories);
             }
 
             /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
@@ -181,7 +187,7 @@ class SheetExportService extends Service {
                     } */
 
             $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
-            $sheet->getStyle('A' . $row . ':G' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+            $sheet->getStyle('A' . $row . ':H' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
             $idx++;
         }
@@ -200,7 +206,7 @@ class SheetExportService extends Service {
         $sheet->setCellValue('E' . $sumRow, "=SUM(E" . $firstRow . ":E" . ($sumRow - 1) . ")");
         $sheet->getStyle('E' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDuration);
 
-        $sheet->getStyle('A' . $sumRow . ':G' . $sumRow)->applyFromArray(
+        $sheet->getStyle('A' . $sumRow . ':H' . $sumRow)->applyFromArray(
             [
                 'borders' => [
                     'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
@@ -217,6 +223,7 @@ class SheetExportService extends Service {
         $sheet->getColumnDimension('E')->setAutoSize(true);
         $sheet->getColumnDimension('F')->setAutoSize(true);
         $sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('H')->setAutoSize(true);
 
         // sheet protection
         $sheet->getProtection()->setSheet(true);
@@ -231,8 +238,10 @@ class SheetExportService extends Service {
 
         if ($project->has_duration_modifications > 0) {
             $sheet->getColumnDimension('D')->setVisible(true);
+            $sheet->getColumnDimension('F')->setVisible(true);
         } else {
             $sheet->getColumnDimension('D')->setVisible(false);
+            $sheet->getColumnDimension('F')->setVisible(false);
         }
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
