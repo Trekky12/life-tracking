@@ -755,9 +755,9 @@ function initMap() {
 
     mymap.on("fullscreenchange", function (e) {
         if (mymap.isFullscreen()) {
-            isMapMove = false;
+            isMapFullscreen = true;
         } else {
-            isMapMove = true;
+            isMapFullscreen = false;
         }
     });
 }

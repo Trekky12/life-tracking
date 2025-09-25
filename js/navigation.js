@@ -16,6 +16,24 @@ let wasMobile = isMobile();
 
 const max_opacity = 0.8;
 let isMapMove = false;
+let isMapFullscreen = false;
+
+let menuList = document.querySelector('#site-navigation ul');
+let navi_width = 256;
+
+let xStartPosition = null;
+let xMovePosition = null;
+let yStartPosition = null;
+let yMovePosition = null;
+let isOpenAllowed = null;
+let isCloseAllowed = null;
+let threshold_edge = 100;
+let xMinDistanceClose = 50;
+let xMinDistanceOpen = 50;
+let yMinDistance = 50;
+let currentPos = 0;
+let skip = false;
+let isMultitouchMove = false;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     scrollToTab(document.querySelector('a.tabbar-tab.active'), true);
@@ -24,10 +42,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 if (/^(iPhone|iPad|iPod)/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
     body.classList.add("ios");
 }
-if (navigation && header && navigationOverlay) {
-    let menuList = navigation.getElementsByTagName('ul')[0];
 
-    let navi_width = 256;
+if (navigation && header && navigationOverlay) {
 
     menuButton.addEventListener('click', function (evt) {
 
@@ -55,56 +71,6 @@ if (navigation && header && navigationOverlay) {
         menuButton.click();
     });
 
-    function openMenu() {
-
-        menuButton.setAttribute('aria-expanded', 'true');
-        menuList.setAttribute('aria-expanded', 'true');
-        menuButton.classList.add("open");
-        body.classList.add("navigation-drawer-toggled");
-
-        if (isMobile()) {
-            navigationOverlay.classList.add("visible");
-            navigationOverlay.style.removeProperty('transition-duration');
-            navigationOverlay.style.opacity = max_opacity;
-        }
-
-        navigation.classList.add("animate");
-        //navigation.style.removeProperty('transition-duration');
-        navigation.style.removeProperty('transform');
-        //navigation.style.transform = 'translateX(0px)';
-        navigation.classList.add("toggled");
-
-        document.activeElement.blur();
-
-        currentPos = navi_width;
-    }
-
-
-    function closeMenu() {
-
-        menuButton.setAttribute('aria-expanded', 'false');
-        menuList.setAttribute('aria-expanded', 'false');
-
-        menuButton.classList.remove("open");
-        body.classList.remove("navigation-drawer-toggled");
-
-        navigationOverlay.style.removeProperty("transition-duration");
-        navigationOverlay.style.opacity = 0;
-
-        // set hidden after opacity animation
-        setTimeout(function (e) {
-            navigationOverlay.classList.remove("visible");
-        }, 200);
-
-        navigation.classList.add("animate");
-        //navigation.style.removeProperty("transition-duration");
-        navigation.style.removeProperty("transform");
-        navigation.classList.remove("toggled");
-
-        currentPos = 0;
-        reset();
-    }
-
     // https://stackoverflow.com/a/23230280
     // https://github.com/freetitelu/touch-sidewipe
     if (isMobile()) {
@@ -113,292 +79,331 @@ if (navigation && header && navigationOverlay) {
         document.addEventListener('touchend', handleTouchEnd, false);
     }
 
-    let xStartPosition = null;
-    let xMovePosition = null;
-    let yStartPosition = null;
-    let yMovePosition = null;
-    let isOpenAllowed = null;
-    let isCloseAllowed = null;
-    let threshold_edge = 100;
-    let xMinDistanceClose = 50;
-    let xMinDistanceOpen = 50;
-    let yMinDistance = 50;
-    let currentPos = 0;
-    let skip = false;
-    let isMultitouchMove = false;
-
-    function handleTouchStart(evt) {
-        // open navigation only with single touch
-        if (evt.touches.length > 1) {
-            return;
-        }
-
-        const firstTouch = evt.touches[0];
-        xStartPosition = firstTouch.clientX;
-        yStartPosition = firstTouch.clientY;
-
-        isOpenAllowed = xStartPosition < threshold_edge && !navigation.classList.contains('toggled');
-        isCloseAllowed = navigation.classList.contains('toggled'); // && (window.innerWidth - xStartPosition) > navi_width
-
-        skip = false;
-        isMultitouchMove = false;
-        //        console.log("start");
-    }
-
-    function handleTouchMove(evt) {
-        // First touch after app is resumed is ignored to not trigger navigation drawer
-        if (isAppResumed) {
-            isAppResumed = false;
-            return;
-        }
-
-        if (!xStartPosition) {
-            return;
-        }
-
-        // open navigation only with single touch
-        if (evt.touches.length > 1) {
-            isMultitouchMove = true;
-            return;
-        }
-
-        // skip if map was moved
-        if (isMapMove) {
-            return;
-        }
-
-        // Save previous xMovePosition
-        let xMovePositionPrevious = xMovePosition;
-
-        xMovePosition = evt.touches[0].clientX;
-        yMovePosition = evt.touches[0].clientY;
-
-        let isOpen = navigation.classList.contains('toggled');
-
-        // is open and min distance not reached
-        let xDistance = Math.abs(xStartPosition - xMovePosition);
-        let yDistance = Math.abs(yStartPosition - yMovePosition);
-
-        skip = false;
-        if (isOpen && xDistance < xMinDistanceClose) {
-            //            console.log("skip");
-            skip = true;
-            return;
-        }
-
-        if (!isOpen && xDistance < xMinDistanceOpen) {
-            skip = true;
-            return;
-        }
-
-        /*if(isOpen && yDistance > yMinDistance){
-         xMovePosition = null;
-         return;
-         }*/
-
-        let posUp = xMovePosition;
-
-        let swipe = xStartPosition < xMovePosition;
-
-        // swipe open
-        if (swipe && isOpenAllowed) {
-            moveNavigationToPosition(posUp);
-
-            // swipe from right to left (open) and then go back to right
-            if (xMovePositionPrevious && xMovePositionPrevious > xMovePosition) {
-                //                console.log("zu lassen?");
-                //                console.log(xStartPosition);
-                //                console.log(xMovePositionPrevious);
-                //                console.log(xMovePosition);
-                xStartPosition = xMovePositionPrevious;
-                // force close
-                isCloseAllowed = true;
-            }
-        }
-
-        // swipe close
-        if (!swipe && isCloseAllowed) {
-            moveNavigationToPosition(posUp);
-
-            // swipe from left to right (close) and then go back to left
-            if (xMovePositionPrevious && xMovePositionPrevious < xMovePosition) {
-                //                console.log("offen lassen?");
-                //                console.log(xStartPosition);
-                //                console.log(xMovePositionPrevious);
-                //                console.log(xMovePosition);
-                xStartPosition = xMovePositionPrevious;
-                // force open
-                isOpenAllowed = true;
-            }
-        }
-
-        //}
-    }
-
-    function moveNavigationToPosition(pos) {
-
-        if (pos > navi_width) {
-            pos = navi_width;
-        }
-        if (pos < 0) {
-            pos = 0;
-        }
-
-        navigation.classList.remove("animate");
-        //navigation.style.transitionDuration = 0 + 's';
-        navigation.style.transform = 'translateX(' + (-navi_width + pos) + 'px)';
-
-        currentPos = pos;
-
-        let percent_open = pos / navi_width;
-        if (percent_open <= 0) {
-            percent_open = 0;
-        }
-        if (percent_open >= 1) {
-            percent_open = 1;
-        }
-
-        navigationOverlay.classList.add("visible");
-        navigationOverlay.style.transitionDuration = 0 + 's';
-        navigationOverlay.style.opacity = percent_open * max_opacity;
-
-
-        // Manually trigger X animation
-        /*
-         bar1.style.transitionDuration = 0 + 's';
-         bar1.style.top = 4 + (percent_open * 4) + 'px';
-         bar1.style.width = (1 - percent_open) * 100 + '%';
-         bar1.style.left = (percent_open * 50) + '%';
-         
-         bar2.style.transitionDuration = 0 + 's';
-         bar2.style.transform = 'rotate(' + (percent_open * 45) + 'deg)';
-         
-         bar3.style.transitionDuration = 0 + 's';
-         bar3.style.transform = 'rotate(-' + (percent_open * 45) + 'deg)';
-         
-         bar4.style.transitionDuration = 0 + 's';
-         bar4.style.top = 20 - (percent_open * 4) + 'px';
-         bar4.style.width = (1 - percent_open) * 100 + '%';
-         bar4.style.left = (percent_open * 50) + '%';
-         */
-    }
-
-    function handleTouchEnd(evt) {
-        // First touch after app is resumed is ignored to not trigger navigation drawer
-        if (isAppResumed) {
-            isAppResumed = false;
-            xStartPosition = null;
-            xMovePosition = null;
-            return;
-        }
-
-        if (!xStartPosition || !xMovePosition) {
-            return;
-        }
-
-        // if multiple touches were detected on move 
-        // and the navigation drawer is not moved 
-        // skip the rest
-        if (isMultitouchMove && currentPos == 0) {
-            return;
-        }
-
-        let isOpen = navigation.classList.contains('toggled');
-
-        // close/open menu when distance travelled is too small (min distance not reached)
-        // and menu is already faded out/in
-        if (skip && currentPos > 0) {
-            //                console.log("close because distance to small");
-            if (isOpen) {
-                openMenu();
-            } else {
-                closeMenu();
-            }
-        }
-        if (!skip) {
-            if (!isOpen) {
-                if (xMovePosition > xStartPosition && isOpenAllowed) {
-                    openMenu();
-                } else {
-                    //                    console.log("close1");
-                    closeMenu();
-                }
-            } else {
-                if (xMovePosition < xStartPosition && isCloseAllowed) {
-                    //                    console.log("close2");
-                    closeMenu();
-                } else {
-                    openMenu();
-                }
-            }
-        }
-        reset();
-    }
-
-    function reset() {
-        xStartPosition = null;
-        isOpenAllowed = null;
-        isCloseAllowed = null;
-        xMovePosition = null;
-    }
-
     window.addEventListener('resize', handleResize);
 
-    function handleResize() {
-        if ((!wasMobile && isMobile()) || (wasMobile && !isMobile())) {
-            navigation.classList.remove('toggled');
-            body.classList.remove("navigation-drawer-toggled");
-            setCookie('navigationdrawer_desktophidden', 0);
+}
 
-            navigationOverlay.style.opacity = 0;
-            navigationOverlay.classList.remove("visible");
-        }
-        wasMobile = isMobile();
+function openMenu() {
+
+    menuButton.setAttribute('aria-expanded', 'true');
+    menuList.setAttribute('aria-expanded', 'true');
+    menuButton.classList.add("open");
+    body.classList.add("navigation-drawer-toggled");
+
+    if (isMobile()) {
+        navigationOverlay.classList.add("visible");
+        navigationOverlay.style.removeProperty('transition-duration');
+        navigationOverlay.style.opacity = max_opacity;
     }
 
-    /**
-     * Hide header on scroll down
-     * @see https://www.w3schools.com/howto/howto_js_navbar_hide_scroll.asp
-     */
-    let prevScrollpos = window.pageYOffset;
-    document.addEventListener('scroll', function () {
-        var currentScrollPos = window.pageYOffset;
+    navigation.classList.add("animate");
+    //navigation.style.removeProperty('transition-duration');
+    navigation.style.removeProperty('transform');
+    //navigation.style.transform = 'translateX(0px)';
+    navigation.classList.add("toggled");
 
-        if (Math.abs(prevScrollpos - currentScrollPos) < 10) {
-            return;
-        }
+    document.activeElement.blur();
 
-        let headerHeight = header.offsetHeight;
-        //let hideHeaderValue = (headerHeight * -1) + 'px';
-
-        if (prevScrollpos <= currentScrollPos) {
-
-            header.style.top = -headerHeight + 'px';
-        } else {
-            header.style.removeProperty("top");
-        }
-        header.style.top = (prevScrollpos <= currentScrollPos) ? -headerHeight + 'px' : "0";
-
-        FBAs.forEach(function (fba) {
-            if (prevScrollpos <= currentScrollPos) {
-                fba.style.bottom = "-100px";
-            } else {
-                fba.style.removeProperty("bottom");
-            }
-        });
-
-        if (boardSidebar) {
-            boardSidebar.style.top = (prevScrollpos <= currentScrollPos) ? "0" : headerHeight + 'px';
-        }
-        prevScrollpos = currentScrollPos;
-    });
+    currentPos = navi_width;
 }
+
+function closeMenu() {
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuList.setAttribute('aria-expanded', 'false');
+
+    menuButton.classList.remove("open");
+    body.classList.remove("navigation-drawer-toggled");
+
+    navigationOverlay.style.removeProperty("transition-duration");
+    navigationOverlay.style.opacity = 0;
+
+    // set hidden after opacity animation
+    setTimeout(function (e) {
+        navigationOverlay.classList.remove("visible");
+    }, 200);
+
+    navigation.classList.add("animate");
+    //navigation.style.removeProperty("transition-duration");
+    navigation.style.removeProperty("transform");
+    navigation.classList.remove("toggled");
+
+    currentPos = 0;
+    reset();
+}
+
+function handleTouchStart(evt) {
+    // open navigation only with single touch
+    if (evt.touches.length > 1) {
+        return;
+    }
+
+    const firstTouch = evt.touches[0];
+    xStartPosition = firstTouch.clientX;
+    yStartPosition = firstTouch.clientY;
+
+    isOpenAllowed = xStartPosition < threshold_edge && !navigation.classList.contains('toggled');
+    isCloseAllowed = navigation.classList.contains('toggled'); // && (window.innerWidth - xStartPosition) > navi_width
+
+    skip = false;
+    isMultitouchMove = false;
+    //        console.log("start");
+}
+
+function handleTouchMove(evt) {
+    // First touch after app is resumed is ignored to not trigger navigation drawer
+    if (isAppResumed) {
+        isAppResumed = false;
+        return;
+    }
+
+    if (!xStartPosition) {
+        return;
+    }
+
+    // open navigation only with single touch
+    if (evt.touches.length > 1) {
+        isMultitouchMove = true;
+        return;
+    }
+
+    // skip if map was moved
+    if (isMapMove) {
+        return;
+    }
+
+    // skip if map is fullscreen
+    if (isMapFullscreen) {
+        return;
+    }
+
+    // Save previous xMovePosition
+    let xMovePositionPrevious = xMovePosition;
+
+    xMovePosition = evt.touches[0].clientX;
+    yMovePosition = evt.touches[0].clientY;
+
+    let isOpen = navigation.classList.contains('toggled');
+
+    // is open and min distance not reached
+    let xDistance = Math.abs(xStartPosition - xMovePosition);
+    let yDistance = Math.abs(yStartPosition - yMovePosition);
+
+    skip = false;
+    if (isOpen && xDistance < xMinDistanceClose) {
+        //            console.log("skip");
+        skip = true;
+        return;
+    }
+
+    if (!isOpen && xDistance < xMinDistanceOpen) {
+        skip = true;
+        return;
+    }
+
+    /*if(isOpen && yDistance > yMinDistance){
+     xMovePosition = null;
+     return;
+     }*/
+
+    let posUp = xMovePosition;
+
+    let swipe = xStartPosition < xMovePosition;
+
+    // swipe open
+    if (swipe && isOpenAllowed) {
+        moveNavigationToPosition(posUp);
+
+        // swipe from right to left (open) and then go back to right
+        if (xMovePositionPrevious && xMovePositionPrevious > xMovePosition) {
+            //                console.log("zu lassen?");
+            //                console.log(xStartPosition);
+            //                console.log(xMovePositionPrevious);
+            //                console.log(xMovePosition);
+            xStartPosition = xMovePositionPrevious;
+            // force close
+            isCloseAllowed = true;
+        }
+    }
+
+    // swipe close
+    if (!swipe && isCloseAllowed) {
+        moveNavigationToPosition(posUp);
+
+        // swipe from left to right (close) and then go back to left
+        if (xMovePositionPrevious && xMovePositionPrevious < xMovePosition) {
+            //                console.log("offen lassen?");
+            //                console.log(xStartPosition);
+            //                console.log(xMovePositionPrevious);
+            //                console.log(xMovePosition);
+            xStartPosition = xMovePositionPrevious;
+            // force open
+            isOpenAllowed = true;
+        }
+    }
+
+    //}
+}
+
+function moveNavigationToPosition(pos) {
+
+    if (pos > navi_width) {
+        pos = navi_width;
+    }
+    if (pos < 0) {
+        pos = 0;
+    }
+
+    navigation.classList.remove("animate");
+    //navigation.style.transitionDuration = 0 + 's';
+    navigation.style.transform = 'translateX(' + (-navi_width + pos) + 'px)';
+
+    currentPos = pos;
+
+    let percent_open = pos / navi_width;
+    if (percent_open <= 0) {
+        percent_open = 0;
+    }
+    if (percent_open >= 1) {
+        percent_open = 1;
+    }
+
+    navigationOverlay.classList.add("visible");
+    navigationOverlay.style.transitionDuration = 0 + 's';
+    navigationOverlay.style.opacity = percent_open * max_opacity;
+
+
+    // Manually trigger X animation
+    /*
+     bar1.style.transitionDuration = 0 + 's';
+     bar1.style.top = 4 + (percent_open * 4) + 'px';
+     bar1.style.width = (1 - percent_open) * 100 + '%';
+     bar1.style.left = (percent_open * 50) + '%';
+     
+     bar2.style.transitionDuration = 0 + 's';
+     bar2.style.transform = 'rotate(' + (percent_open * 45) + 'deg)';
+     
+     bar3.style.transitionDuration = 0 + 's';
+     bar3.style.transform = 'rotate(-' + (percent_open * 45) + 'deg)';
+     
+     bar4.style.transitionDuration = 0 + 's';
+     bar4.style.top = 20 - (percent_open * 4) + 'px';
+     bar4.style.width = (1 - percent_open) * 100 + '%';
+     bar4.style.left = (percent_open * 50) + '%';
+     */
+}
+
+function handleTouchEnd(evt) {
+    // First touch after app is resumed is ignored to not trigger navigation drawer
+    if (isAppResumed) {
+        isAppResumed = false;
+        xStartPosition = null;
+        xMovePosition = null;
+        return;
+    }
+
+    if (!xStartPosition || !xMovePosition) {
+        return;
+    }
+
+    // if multiple touches were detected on move 
+    // and the navigation drawer is not moved 
+    // skip the rest
+    if (isMultitouchMove && currentPos == 0) {
+        return;
+    }
+
+    let isOpen = navigation.classList.contains('toggled');
+
+    // close/open menu when distance travelled is too small (min distance not reached)
+    // and menu is already faded out/in
+    if (skip && currentPos > 0) {
+        //                console.log("close because distance to small");
+        if (isOpen) {
+            openMenu();
+        } else {
+            closeMenu();
+        }
+    }
+    if (!skip) {
+        if (!isOpen) {
+            if (xMovePosition > xStartPosition && isOpenAllowed) {
+                openMenu();
+            } else {
+                //                    console.log("close1");
+                closeMenu();
+            }
+        } else {
+            if (xMovePosition < xStartPosition && isCloseAllowed) {
+                //                    console.log("close2");
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        }
+    }
+    reset();
+}
+
+function reset() {
+    xStartPosition = null;
+    isOpenAllowed = null;
+    isCloseAllowed = null;
+    xMovePosition = null;
+}
+
+function handleResize() {
+    if ((!wasMobile && isMobile()) || (wasMobile && !isMobile())) {
+        navigation.classList.remove('toggled');
+        body.classList.remove("navigation-drawer-toggled");
+        setCookie('navigationdrawer_desktophidden', 0);
+
+        navigationOverlay.style.opacity = 0;
+        navigationOverlay.classList.remove("visible");
+    }
+    wasMobile = isMobile();
+}
+
+/**
+ * Hide header on scroll down
+ * @see https://www.w3schools.com/howto/howto_js_navbar_hide_scroll.asp
+ */
+let prevScrollpos = window.pageYOffset;
+document.addEventListener('scroll', function () {
+    var currentScrollPos = window.pageYOffset;
+
+    if (Math.abs(prevScrollpos - currentScrollPos) < 10) {
+        return;
+    }
+
+    let headerHeight = header.offsetHeight;
+    //let hideHeaderValue = (headerHeight * -1) + 'px';
+
+    if (prevScrollpos <= currentScrollPos) {
+
+        header.style.top = -headerHeight + 'px';
+    } else {
+        header.style.removeProperty("top");
+    }
+    header.style.top = (prevScrollpos <= currentScrollPos) ? -headerHeight + 'px' : "0";
+
+    FBAs.forEach(function (fba) {
+        if (prevScrollpos <= currentScrollPos) {
+            fba.style.bottom = "-100px";
+        } else {
+            fba.style.removeProperty("bottom");
+        }
+    });
+
+    if (boardSidebar) {
+        boardSidebar.style.top = (prevScrollpos <= currentScrollPos) ? "0" : headerHeight + 'px';
+    }
+    prevScrollpos = currentScrollPos;
+});
 
 /**
  * Add ripple effect to icons
  */
 const rippleIcons = document.querySelectorAll('.icon-ripple-wrapper');
-
 rippleIcons.forEach(function (rippleIcon) {
 
     if (!isTouchEnabled()) {
@@ -448,8 +453,6 @@ tabbarScroller.forEach(function (tabbarScroller) {
 
 const tabbarScrollArea = document.querySelector('.tabbar-scrollarea');
 const tabbarTabs = document.querySelectorAll('a.tabbar-tab');
-
-
 tabbarTabs.forEach(function (tabbarTab) {
     tabbarTab.addEventListener('click', function (evt) {
         tabbarTabs.forEach(function (btn) {
