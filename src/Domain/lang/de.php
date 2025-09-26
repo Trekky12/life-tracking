@@ -718,6 +718,8 @@ $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
 $lang["ROUTING_ERROR"] = "Konnte Route nicht berechnen.";
 $lang["ROUTING_ERROR_TOO_MANY_REQUESTS"] = "Konnte Route nicht berechnen. Bitte probiere es später nochmals";
+$lang["ROUTING_ADD_START_TO_ROUTE"] = "Startpunkt zur Route hinzufügen";
+$lang["ROUTING_ADD_END_TO_ROUTE"] = "Endpunkt zur Route hinzufügen";
 
 $lang["TRIPS_EVENT_IMAGE"] = "Eventbild";
 $lang["CREATE_ROUTE"] = "Route";

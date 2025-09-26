@@ -88,7 +88,6 @@ function copyJSTask(cb) {
         .src([
             './node_modules/flatpickr/dist/flatpickr.min.js',
             './node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.js',
-            './node_modules/leaflet-curve/leaflet.curve.js',
             './node_modules/leaflet-extra-markers/dist/js/leaflet.extra-markers.min.js',
             './node_modules/leaflet-fullscreen/dist/Leaflet.fullscreen.min.js',
             './node_modules/leaflet/dist/leaflet.js',

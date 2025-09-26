@@ -210,14 +210,14 @@ class Event extends \App\Domain\DataObject {
             if (!empty($end)) {
                 $popup .= "{$to} ";
             }
-            $popup .= "{$end1}<br/>";
+            $popup .= "{$end1}";
         } else if (!empty($start1)) {
             // there is only a start date or start and end date are the same
-            $popup .= "{$start1}<br/>";
+            $popup .= "{$start1}";
         }
         if (empty($start1) && !empty($end1)) {
             // end date without start date
-            $popup .= "{$end1}<br/>";
+            $popup .= "{$end1}";
         }
 
         $this->popup = $popup;

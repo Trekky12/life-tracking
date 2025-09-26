@@ -720,6 +720,8 @@ $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
 $lang["ROUTING_ERROR"] = "Could not calculate the route.";
 $lang["ROUTING_ERROR_TOO_MANY_REQUESTS"] = "Could not calculate the route. Please try later again.";
+$lang["ROUTING_ADD_START_TO_ROUTE"] = "add start point to route";
+$lang["ROUTING_ADD_END_TO_ROUTE"] = "add end point to route";
 
 $lang["TRIPS_EVENT_IMAGE"] = "Event image";
 $lang["CREATE_ROUTE"] = "Route";

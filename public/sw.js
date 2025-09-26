@@ -93,7 +93,6 @@ const staticAssets = [
     '/static/assets/js/jstable.min.js?ver=' + version,
     '/static/assets/js/leaflet-easyPrint.min.js?ver=' + version,
     '/static/assets/js/leaflet-routing-machine.min.js?ver=' + version,
-    '/static/assets/js/leaflet.curve.js?ver=' + version,
     '/static/assets/js/leaflet.extra-markers.min.js?ver=' + version,
     '/static/assets/js/leaflet.js?ver=' + version,
     '/static/assets/js/leaflet.markercluster.js?ver=' + version,

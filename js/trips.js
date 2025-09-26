@@ -196,9 +196,6 @@ function drawMarkers(data) {
         /**
          * Popup
          */
-        //let popup = "<h4>" + marker.data.name + "</h4>" + marker.data.popup;
-        let navigationBtn = getAddToRouteLink(start_marker);
-
         let popup = document.createElement("div");
         if (!marker.isWaypoint) {
             let headline = document.createElement("h4");
@@ -209,13 +206,11 @@ function drawMarkers(data) {
 
             popup.appendChild(headline);
             popup.appendChild(pInner);
-        }
-        popup.appendChild(navigationBtn);
-
-        if (marker.isWaypoint) {
+        } else {
+            let buttonWrapper = document.createElement("p");
             let deleteBtn = getDeleteWaypointLink(marker.data.id, start_marker, true);
-            popup.appendChild(document.createElement("br"));
-            popup.appendChild(deleteBtn);
+            buttonWrapper.appendChild(deleteBtn);
+            popup.appendChild(buttonWrapper);
         }
 
         start_marker.bindPopup(popup);
@@ -242,8 +237,9 @@ function drawMarkers(data) {
         /**
          * End Marker
          */
+        let end_marker = null;
         if (marker.data.end_lat !== null && marker.data.end_lng !== null && marker.data.start_lat !== marker.data.end_lat && marker.data.start_lng !== marker.data.end_lng) {
-            let end_marker = L.marker([marker.data.end_lat, marker.data.end_lng], options);
+            end_marker = L.marker([marker.data.end_lat, marker.data.end_lng], options);
             end_marker.data = marker;
             end_marker.name = marker.data.name;
             end_marker.address = marker.data.end_address;
@@ -252,6 +248,7 @@ function drawMarkers(data) {
             let tripLine = [[marker.data.start_lat, marker.data.start_lng], [marker.data.end_lat, marker.data.end_lng]];
 
             if (marker.isCarrental) {
+                end_marker.bindPopup(popup);
                 layerCarRentals.addLayer(end_marker);
             } else if (marker.isHotel) {
                 layerHotels.addLayer(end_marker);
@@ -259,12 +256,10 @@ function drawMarkers(data) {
                 layerEvents.addLayer(end_marker);
             } else if (marker.isTrain) {
                 let trainPolyline = [];
-                //trainPolyline[0] = L.polyline(tripLine, { color: 'black', weight: '5' }).bindPopup(popup);
-                //trainPolyline[1] = L.polyline(tripLine, { color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0' }).bindPopup(popup);
-                //trainPolyline[2] = L.polyline(tripLine, { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);
 
                 let middle = calculateMidPoint(start_marker, end_marker);
-                trainPolyline[0] = L.curve([
+
+                /*trainPolyline[0] = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
                 ], { color: 'black', weight: '5' }).bindPopup(popup);
@@ -275,7 +270,13 @@ function drawMarkers(data) {
                 trainPolyline[2] = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
-                ], { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);
+                ], { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);*/
+
+                let points = quadraticBezierPoints(start_marker, middle, end_marker);
+
+                trainPolyline[0] = L.polyline(points, { color: 'black', weight: '5' }).bindPopup(popup);
+                trainPolyline[1] = L.polyline(points, { color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0' }).bindPopup(popup);
+                trainPolyline[2] = L.polyline(points, { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(popup);
 
                 layerTrains.addLayer(L.layerGroup(trainPolyline));
 
@@ -283,49 +284,68 @@ function drawMarkers(data) {
                 layerTrains.removeLayer(start_marker);
             } else if (marker.isPlane) {
                 let middle = calculateMidPoint(start_marker, end_marker);
-                let planeCuve = L.curve([
+
+                /*let planePolyline = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
-                ], { color: 'black', weight: '3', dashArray: '10, 10' }).bindPopup(popup);
+                ], { color: 'black', weight: '3', dashArray: '10, 10' }).bindPopup(popup);*/
 
-                //let planePolyline = L.polyline(tripLine, {color: 'black', weight: '3'}).bindPopup(marker.popup);
+                let points = quadraticBezierPoints(start_marker, middle, end_marker);
+
+                let planePolyline = L.polyline(points, { color: 'black', weight: '3', dashArray: '10, 10' }).bindPopup(popup);
 
                 layerPlanes.addLayer(start_marker);
-                layerPlanes.addLayer(planeCuve);
+                layerPlanes.addLayer(planePolyline);
             } else if (marker.isCar) {
                 let streetPolyline = [];
-                //streetPolyline[0] = L.polyline(tripLine, { color: 'gray', weight: '5' }).bindPopup(popup);
-                //streetPolyline[1] = L.polyline(tripLine, { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
 
                 let middle = calculateMidPoint(start_marker, end_marker);
-                streetPolyline[0] = L.curve([
+
+                /*streetPolyline[0] = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
                 ], { color: 'gray', weight: '5' }).bindPopup(popup);
                 streetPolyline[1] = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
-                ], { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+                ], { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);*/
+
+                let points = quadraticBezierPoints(start_marker, middle, end_marker);
+
+                streetPolyline[0] = L.polyline(points, { color: 'gray', weight: '5' }).bindPopup(popup);
+                streetPolyline[1] = L.polyline(points, { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
 
                 layerCars.addLayer(L.layerGroup(streetPolyline));
 
                 // remove start marker when there is a polyline
                 layerCars.removeLayer(start_marker);
             } else if (marker.isShip) {
-                let shipPolyline = [];
-                //shipPolyline[0] = L.polyline(tripLine, { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
                 let middle = calculateMidPoint(start_marker, end_marker);
-                shipPolyline[0] = L.curve([
+
+                /*shipPolyline[0] = L.curve([
                     'M', [marker.data.start_lat, marker.data.start_lng],
                     'Q', middle, [marker.data.end_lat, marker.data.end_lng]
-                ], { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+                ], { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);*/
 
-                layerShips.addLayer(L.layerGroup(shipPolyline));
+                let points = quadraticBezierPoints(start_marker, middle, end_marker);
+
+                let shipPolyline = L.polyline(points, { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(popup);
+
+                layerShips.addLayer(shipPolyline);
 
                 // remove start marker when there is a polyline
                 layerShips.removeLayer(start_marker);
             }
 
+        }
+
+        /**
+         * Add to Route Button
+         */
+        popup.appendChild(document.createElement("br"));
+        popup.appendChild(getAddToRouteLink(start_marker, end_marker !== null ? lang.routing_add_start_to_route : lang.routing_add_to_route));
+        if (end_marker !== null) {
+            popup.appendChild(getAddToRouteLink(end_marker, lang.routing_add_end_to_route));
         }
 
     }
@@ -682,14 +702,17 @@ function initMap() {
                 };
                 let marker = L.marker(wp.latLng, options);
                 let popup = document.createElement("div");
-                let navigationBtn = getAddToRouteLink(marker);
+                let navigationBtn = getAddToRouteLink(marker, lang.routing_add_to_route);
                 let saveBtn = saveWaypointLink(marker, wp);
                 let deleteBtn = getDeleteWaypointLink(null, marker, false);
+
+                let wrapper = document.createElement("p");
+                wrapper.appendChild(saveBtn);
+                wrapper.appendChild(document.createElement("br"));
+                wrapper.appendChild(deleteBtn);
+                popup.appendChild(wrapper);
+                popup.appendChild(document.createElement("br"));
                 popup.appendChild(navigationBtn);
-                popup.appendChild(document.createElement("br"));
-                popup.appendChild(saveBtn);
-                popup.appendChild(document.createElement("br"));
-                popup.appendChild(deleteBtn);
                 marker.bindPopup(popup);
                 return marker;
             },
@@ -789,6 +812,25 @@ function calculateMidPoint(start, end) {
     return [midpointY, midpointX];
 }
 
+function quadraticBezierPoints(start, middle, end, steps = 10) {
+    let latlng1 = start.getLatLng();
+    let latlng2 = end.getLatLng();
+
+    const points = [];
+    for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const x = (1 - t) * (1 - t) * latlng1.lng +
+            2 * (1 - t) * t * middle[1] +
+            t * t * latlng2.lng;
+        const y = (1 - t) * (1 - t) * latlng1.lat +
+            2 * (1 - t) * t * middle[0] +
+            t * t * latlng2.lat;
+        points.push([y, x]);
+    }
+    return points;
+}
+
+
 function createButton(container, type, active = false) {
     var btn = L.DomUtil.create('button', '', container);
     btn.setAttribute('type', 'button');
@@ -860,17 +902,19 @@ tripDays.forEach(function (day) {
     });
 });
 
-function getAddToRouteLink(marker) {
+function getAddToRouteLink(marker, label) {
+    let buttonWrapper = document.createElement("p");
     let navigationBtn = document.createElement("a");
     navigationBtn.classList.add("navigation-btn");
-    navigationBtn.innerHTML = lang.routing_add_to_route;
+    navigationBtn.innerHTML = label;
 
     navigationBtn.addEventListener("click", function () {
         addWaypoint(marker);
         routeControl.show();
     });
+    buttonWrapper.appendChild(navigationBtn);
 
-    return navigationBtn;
+    return buttonWrapper;
 }
 
 function saveWaypointLink(marker, waypoint) {
@@ -907,7 +951,7 @@ function saveWaypointLink(marker, waypoint) {
             // create new saved marker
             let waypoint_marker = L.marker(marker.getLatLng(), { saved: true });
             let popup = document.createElement("div");
-            let navigationBtn = getAddToRouteLink(waypoint_marker);
+            let navigationBtn = getAddToRouteLink(waypoint_marker, lang.routing_add_to_route);
             let deleteBtn = getDeleteWaypointLink(data['id'], waypoint_marker, true);
             popup.appendChild(navigationBtn);
             popup.appendChild(document.createElement("br"));
