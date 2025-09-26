@@ -233,6 +233,11 @@ return function (App $app) {
         });
     });
 
+    $app->group('/settings', function (RouteCollectorProxy $group) {
+        $group->get('/', \App\Application\Action\Admin\SettingsAction::class)->setName('settings');
+        $group->post('/save', \App\Application\Action\Admin\SettingsSaveAction::class)->setName('settings_save');
+    })->add(\App\Application\Middleware\AdminMiddleware::class);
+
     $app->group('/users', function (RouteCollectorProxy $group) {
         $group->get('/', \App\Application\Action\User\UserListAction::class)->setName('users');
         $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\User\UserEditAction::class)->setName('users_edit');

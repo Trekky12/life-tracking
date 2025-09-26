@@ -20,7 +20,7 @@
 
 {% block tabbar %}
 	{% if users is not empty %}
-		{% include "main/settings-tabs.twig" with {'active':'login_tokens'} only %}
+		{% include "settings/settings-tabs.twig" with {'active':'login_tokens'} only %}
 	{% else %}
 		{% include "profile/profile-tabs.twig" with {'active':'users_login_tokens'} only %}
 	{% endif %}

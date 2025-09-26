@@ -5,19 +5,22 @@ namespace App\Domain\Main;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use App\Domain\Base\Settings;
+use App\Domain\Settings\SettingsMapper;
 
 class Helper {
 
     private $logger;
     protected $twig;
     protected $settings;
-    private $baseURL;
+    protected $settings_mapper;
+    private $baseURL = null;
 
-    public function __construct(LoggerInterface $logger, Twig $twig, Settings $settings) {
+    public function __construct(LoggerInterface $logger, Twig $twig, Settings $settings, SettingsMapper $settings_mapper) {
         $this->logger = $logger;
         $this->twig = $twig;
 
         $this->settings = $settings;
+        $this->settings_mapper = $settings_mapper;
     }
 
     public function request($URL, $method = 'GET', $data = array(), $headers = null) {
@@ -62,7 +65,7 @@ class Helper {
             curl_close($ch);
 
             return array($status_code, $result);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error("CURL", array("URL" => $URL, "method" => $method, "data" => $data, "error" => $e->getMessage()));
 
             print $e->getMessage();
@@ -110,13 +113,18 @@ class Helper {
     }
 
     public function setBaseURL($baseURL) {
+        $this->settings_mapper->addOrUpdateSetting("url", $baseURL, "String");
         $this->baseURL = $baseURL;
         // add base URL to view
         $this->twig->getEnvironment()->addGlobal("baseURL", $baseURL);
     }
 
     public function getBaseURL() {
-        return $this->baseURL;
-    }
+        if (!is_null($this->baseURL)) {
+            return $this->baseURL;
+        }
 
+        $url = $this->settings_mapper->getSetting("url");
+        return $url->getValue();
+    }
 }

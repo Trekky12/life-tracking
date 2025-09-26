@@ -25,9 +25,6 @@ return [
         'exclude' => []
     ],
     'app' => [
-        'cachemiss' => '1',
-        // Base URL for cron
-        'url' => 'https://example.com',
         // i18n settings
         'i18n' => [
             'template' => 'en',
@@ -58,16 +55,6 @@ return [
                 'month_name_full' => 'dd. MMMM y',
                 'mealplan_list' => 'EEEE dd. MMMM yyyy',
                 'weekday' => 'EEE'
-            ],
-            'dateformatExcel' => [
-                'date' => 'dd.mm.yyyy',
-                'time' => 'HH:mm:ss',
-                'datetime' => 'dd.MM.yyyy HH:mm:ss',
-                'datetimeShort' => 'dd.MM.yyyy HH:mm',
-                'trips_buttons' => 'EEE dd. MMM',
-                'trips_list' => 'EEEE dd. MMMM yyyy',
-                'month_name' => 'MMMM',
-                'month_name_full' => 'dd. MMMM y',
             ],
             'dateformatSQL' => [
                 'dateTimesheetsExport' => '%d.%m.'

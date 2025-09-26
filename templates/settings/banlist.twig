@@ -1,6 +1,6 @@
 {% extends "base.twig" %}
 
-{% set active = 'settings' %}
+{% set active = 'banlist' %}
 
 {% block pageheader %}
 	<div class="page-header">
@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block tabbar %}
-	{% include "main/settings-tabs.twig" with {'active':'banlist'} only %}
+	{% include "settings/settings-tabs.twig" with {'active':'banlist'} only %}
 {% endblock %}
 
 {% block body %}

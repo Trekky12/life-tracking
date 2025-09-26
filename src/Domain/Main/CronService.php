@@ -71,8 +71,6 @@ class CronService extends Service {
         $this->notifications_service = $notifications_service;
         $this->router = $router;
         $this->translation = $translation;
-
-        $helper->setBaseURL($settings->getAppSettings()['url']);
     }
 
     public function cron(): Payload {

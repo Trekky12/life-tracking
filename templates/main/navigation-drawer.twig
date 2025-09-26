@@ -180,7 +180,7 @@
 	<hr class="divider">
 	{% if user.isAdmin() %}
 		<li {% if active == 'settings' %} class="active" {% endif %}>
-			<a href="{{ url_for('users') }}">{{ fontawesome('fas fa-gears') }}
+			<a href="{{ url_for('settings') }}">{{ fontawesome('fas fa-gears') }}
 				{{ "SETTINGS"|trans }}</a>
 			{#<ul class="dropdown-content">
 																																				<li>

@@ -1,5 +1,6 @@
 <div class="tabbar-scroller">
 	<div class="tabbar-scrollarea">
+		<a class="tabbar-tab {% if active == 'settings' %}active{% endif %}" href="{{ url_for('settings') }}">{{"SETTINGS"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'users' %}active{% endif %}" href="{{ url_for('users') }}">{{"USERS"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'notifications_clients' %}active{% endif %}" href="{{ url_for('notifications_clients') }}">{{"NOTIFICATIONS"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'notifications_categories' %}active{% endif %}" href="{{ url_for('notifications_categories') }}">{{"CATEGORIES"|trans}}</a>

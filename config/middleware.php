@@ -64,6 +64,11 @@ return function (App $app) {
     $app->add('App\Application\Middleware\BaseURLMiddleware');
 
     /**
+     * Add Cache Miss
+     */
+    $app->add('App\Application\Middleware\CacheMissMiddleware');
+
+    /**
      * Check if initial setup is done
      */
     $app->add('App\Application\Middleware\InitialSetupMiddleware');
