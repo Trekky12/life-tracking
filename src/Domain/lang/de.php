@@ -871,7 +871,9 @@ $lang["HELP"] = "Hilfe";
 $lang["TAKE_IDENTITY"] = "Identität übernehmen";
 
 $lang["NO_OPTIONS"] = "Keine Auswahl verfügbar.";
-$lang["DIFFERENCE_CALCULATED"] = "Differenz (berechnet)";
+$lang["TIMESHEETS_DIFFERENCE_CALCULATED_EXCEL"] = "Differenz\n(berechnet)";
+$lang["TIMESHEETS_DATE_MODIFIED_EXCEL"] = "Datum\n(angepasst)";
+$lang["TIMESHEETS_START_MODIFIED_EXCEL"] = "Beginn\n(angepasst)";
 
 $lang["HIDE"] = "Ausblenden";
 $lang["SHOW"] = "Anzeigen";

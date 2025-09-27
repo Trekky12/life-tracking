@@ -89,12 +89,12 @@ class SheetExportService extends Service {
         // Project Name
         $sheet->setCellValue('A1', $project->name);
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(18);
-        $sheet->mergeCells("A1:G1");
+        $sheet->mergeCells("A1:M1");
 
         // Range
         $sheet->setCellValue('A2', $fmtDate->format($fromDate) . " " . $this->translation->getTranslatedString("TO") . " " . $fmtDate->format($toDate));
         $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(14);
-        $sheet->mergeCells("A2:G2");
+        $sheet->mergeCells("A2:M2");
 
         // Table Header
         $sheet->setCellValue('A4', $this->translation->getTranslatedString("DATE"));
@@ -103,23 +103,31 @@ class SheetExportService extends Service {
 
         if ($project->has_duration_modifications > 0) {
             $sheet->setCellValue('D4', $this->translation->getTranslatedString("DIFFERENCE"));
-            $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE_CALCULATED"));
-            $sheet->setCellValue('F4', $this->translation->getTranslatedString("TIMESHEETS_DATE_MODIFIED"));
+            $sheet->setCellValue('E4', $this->translation->getTranslatedString("TIMESHEETS_DIFFERENCE_CALCULATED_EXCEL"));
+            $sheet->setCellValue('F4', $this->translation->getTranslatedString("TIMESHEETS_DATE_MODIFIED_EXCEL"));
+            $sheet->setCellValue('G4', $this->translation->getTranslatedString("TIMESHEETS_START_MODIFIED_EXCEL"));
         } else {
             $sheet->setCellValue('E4', $this->translation->getTranslatedString("DIFFERENCE"));
         }
 
         $customerDescription = $project->customers_name_singular ? $project->customers_name_singular : $this->translation->getTranslatedString("TIMESHEETS_CUSTOMER");
-        $sheet->setCellValue('G4', $customerDescription);
-        $sheet->setCellValue('H4', $this->translation->getTranslatedString("CATEGORIES"));
-        $sheet->getStyle('A4:H4')->applyFromArray(
+        $sheet->setCellValue('H4', $customerDescription);
+        $sheet->setCellValue('I4', $this->translation->getTranslatedString("CATEGORIES"));
+
+        $sheet->setCellValue('J4', $this->translation->getTranslatedString("TIMESHEETS_HAPPENED"));
+        $sheet->setCellValue('K4', $this->translation->getTranslatedString("TIMESHEETS_INVOICED"));
+        $sheet->setCellValue('L4', $this->translation->getTranslatedString("TIMESHEETS_BILLED"));
+        $sheet->setCellValue('M4', $this->translation->getTranslatedString("TIMESHEETS_PAYED"));
+
+        $sheet->getStyle('A4:M4')->applyFromArray(
             [
                 'borders' => [
                     'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
                 ],
             ]
         );
-        $sheet->getStyle('A4:H4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:M4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:M4')->getAlignment()->setWrapText(true)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
         $excelTime = "[$-F400]h:mm:ss AM/PM";
         $excelDate = $dateFormatPHP['date'];
@@ -156,6 +164,7 @@ class SheetExportService extends Service {
                 $sheet->setCellValue('C' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($end));
                 $sheet->getStyle('C' . $row)->getNumberFormat()->setFormatCode($excelTime);
             }
+            $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
 
             if (!is_null($timesheet->start) && !is_null($timesheet->end)) {
 
@@ -168,16 +177,21 @@ class SheetExportService extends Service {
             }
 
             if (!is_null($timesheet->start_modified)) {
-                $sheet->setCellValue('F' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($timesheet->start_modified));
-                $sheet->getStyle('F' . $row)->getNumberFormat()->setFormatCode($excelDateTime);
+                $start_modified = new \DateTime($timesheet->start_modified);
+
+                $sheet->setCellValue('F' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($start_modified->format('Y-m-d')));
+                $sheet->getStyle('F' . $row)->getNumberFormat()->setFormatCode($excelDate);
+
+                $sheet->setCellValue('G' . $row, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($start_modified));
+                $sheet->getStyle('G' . $row)->getNumberFormat()->setFormatCode($excelTime);
             }
 
             if (!is_null($timesheet->customerName)) {
-                $sheet->setCellValue('G' . $row, $timesheet->customerName);
+                $sheet->setCellValue('H' . $row, $timesheet->customerName);
             }
 
             if (!is_null($timesheet->categories)) {
-                $sheet->setCellValue('H' . $row, $timesheet->categories);
+                $sheet->setCellValue('I' . $row, $timesheet->categories);
             }
 
             /* $notice = $this->sheet_notice_mapper->getNotice($timesheet->id);
@@ -186,15 +200,23 @@ class SheetExportService extends Service {
                     $sheet->getStyle('G' . $row)->getAlignment()->setWrapText(true);
                     } */
 
-            $sheet->getStyle('A' . $row)->getNumberFormat()->setFormatCode($excelDate);
-            $sheet->getStyle('A' . $row . ':H' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+            $sheet->setCellValue('J' . $row, $timesheet->is_happened == 1 ? "x" : "");
+            $sheet->setCellValue('K' . $row, $timesheet->is_invoiced == 1 ? "x" : "");
+            $sheet->setCellValue('L' . $row, $timesheet->is_billed == 1 ? "x" : "");
+            $sheet->setCellValue('M' . $row, $timesheet->is_payed == 1 ? "x" : "");
+
+            $sheet->getStyle('A' . $row . ':M' . $row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 
             $idx++;
         }
 
         // Table Footer
         $firstRow = (1 + $offset);
-        $sumRow = ($idx + 1 + $offset);
+        $lastRow = $firstRow + $idx - 1;
+        $sumRow =  $firstRow + $idx + 1;
+
+        // hide empty between lastRow and footer
+        $sheet->getRowDimension($lastRow + 1)->setVisible(false);
 
         if ($project->has_duration_modifications > 0) {
             $totalSecondsModified = $this->getMapper()->tableSum($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, "%", "t.duration_modified");
@@ -203,10 +225,10 @@ class SheetExportService extends Service {
             $sheet->setCellValue('D' . $sumRow, $sum);
         }
 
-        $sheet->setCellValue('E' . $sumRow, "=SUM(E" . $firstRow . ":E" . ($sumRow - 1) . ")");
+        $sheet->setCellValue('E' . $sumRow, "=SUM(E" . $firstRow . ":E" . $lastRow . ")");
         $sheet->getStyle('E' . $sumRow)->getNumberFormat()->setFormatCode($excelTimeDuration);
 
-        $sheet->getStyle('A' . $sumRow . ':H' . $sumRow)->applyFromArray(
+        $sheet->getStyle('A' . $sumRow . ':M' . $sumRow)->applyFromArray(
             [
                 'borders' => [
                     'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE],
@@ -224,25 +246,41 @@ class SheetExportService extends Service {
         $sheet->getColumnDimension('F')->setAutoSize(true);
         $sheet->getColumnDimension('G')->setAutoSize(true);
         $sheet->getColumnDimension('H')->setAutoSize(true);
+        $sheet->getColumnDimension('I')->setAutoSize(true);
+        $sheet->getColumnDimension('J')->setAutoSize(true);
+        $sheet->getColumnDimension('K')->setAutoSize(true);
+        $sheet->getColumnDimension('L')->setAutoSize(true);
+        $sheet->getColumnDimension('M')->setAutoSize(true);
+
+        $sheet->setAutoFilter("A" . $offset . ":M" . $lastRow);
 
         // sheet protection
-        $sheet->getProtection()->setSheet(true);
-        $sheet->getStyle("A" . $firstRow . ":C" . ($sumRow - 1))
+        /*$protection = $sheet->getProtection();
+        $protection->setSheet(true);
+        $protection->setSort(false);
+        $protection->setAutoFilter(false);
+
+        $sheet->getStyle("A" . $offset . ":M" . $lastRow)
             ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
             );
-        $sheet->getStyle("A1:F2")
+        $sheet->getStyle("A1:M2")
             ->getProtection()->setLocked(
                 \PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED
             );
+        */
 
         if ($project->has_duration_modifications > 0) {
             $sheet->getColumnDimension('D')->setVisible(true);
             $sheet->getColumnDimension('F')->setVisible(true);
+            $sheet->getColumnDimension('G')->setVisible(true);
         } else {
             $sheet->getColumnDimension('D')->setVisible(false);
             $sheet->getColumnDimension('F')->setVisible(false);
+            $sheet->getColumnDimension('G')->setVisible(false);
         }
+
+        $sheet->setSelectedCell('A' . $sumRow + 1);
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 

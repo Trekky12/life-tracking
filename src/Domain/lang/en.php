@@ -873,7 +873,9 @@ $lang["HELP"] = "help";
 $lang["TAKE_IDENTITY"] = "take identity";
 
 $lang["NO_OPTIONS"] = "No options available.";
-$lang["DIFFERENCE_CALCULATED"] = "difference (calculated)";
+$lang["TIMESHEETS_DIFFERENCE_CALCULATED_EXCEL"] = "difference\n(calculated)";
+$lang["TIMESHEETS_DATE_MODIFIED_EXCEL"] = "date\n(angepasst)";
+$lang["TIMESHEETS_START_MODIFIED_EXCEL"] = "time\n(angepasst)";
 
 $lang["HIDE"] = "Hide";
 $lang["SHOW"] = "Show";
