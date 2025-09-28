@@ -61,11 +61,9 @@ class SheetMapper extends \App\Domain\Mapper {
             }
         }
 
-        $start = "t.start";
-        $end = "t.end";
+        $dateFilter = "(" . $this->filterDate("t.start", "t.end") . ") OR (".$this->filterDate("t.start_modified", "t.end_modified").")";
         if ($date_modified) {
-            $start = "COALESCE(t.start_modified, t.start)";
-            $end = "COALESCE(t.end_modified, t.end)";
+            $dateFilter = $this->filterDate("COALESCE(t.start_modified, t.start)", "COALESCE(t.end_modified, t.end)");
         }
 
         $sql = "SELECT {$select} FROM " . $this->getTableName() . " t"
@@ -79,11 +77,8 @@ class SheetMapper extends \App\Domain\Mapper {
             . "     GROUP BY tcs.sheet "
             . " ) AS c ON c.sheet = t.id "
             . " WHERE t.project = :project "
+            . " AND (" . $dateFilter . ")"
             . " AND ("
-            . "     (DATE({$start}) >= :from AND DATE({$end}) <= :to ) OR"
-            . "     (DATE({$start}) >= :from AND DATE({$start}) <= :to AND t.end IS NULL ) OR"
-            . "     (DATE({$end}) >= :from AND DATE(t.end) <= :to AND t.start IS NULL )"
-            . " ) AND ("
             . "     t.start LIKE :searchQuery OR "
             . "     t.end LIKE :searchQuery OR "
             . "     t.start_modified LIKE :searchQuery OR "
@@ -865,5 +860,11 @@ class SheetMapper extends \App\Domain\Mapper {
             return true;
         }
         return false;
+    }
+
+    private function filterDate($startColumn, $endColumn){
+        return "     (DATE({$startColumn}) >= :from AND DATE({$endColumn}) <= :to ) OR"
+            . "     (DATE({$startColumn}) >= :from AND DATE({$startColumn}) <= :to AND t.end IS NULL ) OR"
+            . "     (DATE({$endColumn}) >= :from AND DATE({$endColumn}) <= :to AND t.start IS NULL )";
     }
 }
