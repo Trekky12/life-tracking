@@ -40,4 +40,17 @@ class CrawlerMapper extends \App\Domain\Mapper {
         return null;
     }
 
+    public function setLastAccess($id, $user, $date) {
+        $sql = "UPDATE " . $this->getTableName($this->user_table) . " SET lastAccess = :lastAccess WHERE user = :user AND crawler = :crawler";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "lastAccess" => $date,
+            "user" => $user,
+            "crawler" => $id
+        ]);
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
+
 }

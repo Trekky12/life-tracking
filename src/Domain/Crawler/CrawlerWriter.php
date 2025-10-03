@@ -24,10 +24,27 @@ class CrawlerWriter extends ObjectActivityWriter {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
+        $lastAccess = [];
+        if(!is_null($id)){
+            $users_preSave = $this->mapper->getUsers($id);
+            foreach($users_preSave as $user_id => $username){
+                $lastAccess[$user_id] = $this->mapper->getLastAccess($id, $user_id);
+            }
+        }
+
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
 
         $this->setHash($entry);
+
+        if(!empty($lastAccess)){
+            $users_afterSave = $this->mapper->getUsers($id);
+            foreach($users_afterSave as $user_id => $username){
+                if(array_key_exists($user_id, $lastAccess)){
+                    $this->mapper->setLastAccess($id, $user_id, $lastAccess[$user_id]);
+                }
+            }
+        }
 
         return $payload;
     }
