@@ -14,17 +14,20 @@ class AccountService extends Service {
         $this->mapper = $mapper;
     }
 
-    public function getAllAccountsOrderedByName() {
-        return $this->mapper->getAll('name');
+    public function getAllAccountsOrderedByName($archive = null) {
+        return $this->mapper->getAll('name', false, $archive);
     }
 
     public function getAllfromUsers($group_users) {
         return $this->mapper->getAllfromUsers($group_users);
     }
 
-    public function index() {
-        $accounts = $this->getAllAccountsOrderedByName();
-        return new Payload(Payload::$RESULT_HTML, ['accounts' => $accounts]);
+    public function index($archive = null) {
+        $accounts = $this->getAllAccountsOrderedByName($archive);
+        return new Payload(Payload::$RESULT_HTML, [
+            'accounts' => $accounts,
+            "archive" => $archive
+        ]);
     }
 
     public function edit($entry_id) {

@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS finances_accounts (
     hash VARCHAR(255) DEFAULT NULL,    
     name varchar(255) NOT NULL,
     value DECIMAL(10,2) NOT NULL,
+    archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE

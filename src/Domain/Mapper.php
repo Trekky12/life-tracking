@@ -63,11 +63,16 @@ abstract class Mapper {
         }
     }
 
-    public function getAll($sorted = false, $limit = false) {
+    public function getAll($sorted = false, $limit = false, $archive = null) {
         $sql = "SELECT * FROM " . $this->getTableName();
 
         $bindings = array();
         $this->addSelectFilterForUser($sql, $bindings);
+
+        if (!is_null($archive) && strlen($archive) > 0) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
+        }
 
         if ($sorted && !is_null($sorted)) {
             $sql .= " ORDER BY {$sorted}";

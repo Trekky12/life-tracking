@@ -1,0 +1,1 @@
+ALTER TABLE finances_accounts ADD archive INT(1) DEFAULT 0 AFTER value;

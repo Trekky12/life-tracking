@@ -1,4 +1,4 @@
-INSERT INTO global_settings (name, value, type) VALUES ('version', 19, 'Integer');
+INSERT INTO global_settings (name, value, type) VALUES ('version', 23, 'Integer');
 INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('lastRunRecurringSplitbills', 0, 'Date'), ('lastRunRecurringTransactions', 0, 'Date'), ('isCronRunning', 0, 'Boolean');
 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
