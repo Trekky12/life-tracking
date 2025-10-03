@@ -10,20 +10,23 @@ class CustomerRequirementMapper extends \App\Domain\Mapper {
     protected $insert_user = true;
 
     public function getFromType($id, $valid = null, $order = 'id ASC') {
+
+        $valid_query = "(CURRENT_DATE BETWEEN start AND end) AND (DATE(createdOn) BETWEEN start AND end)";
+
         $sql = "SELECT *, CASE
-                    WHEN DATE(createdOn) BETWEEN start AND end THEN 1
+                    WHEN " . $valid_query . " THEN 1
                     ELSE 0
                 END AS is_valid 
                 FROM " . $this->getTableName() . " WHERE requirement_type = :id ";
 
         $bindings = array("id" => $id);
 
-        if (!is_null($valid)) {
+        if (!is_null($valid) && strlen($valid) > 0) {
 
             if ($valid) {
-                $sql .= " AND DATE(createdOn) BETWEEN start AND end";
+                $sql .= " AND " . $valid_query;
             } else {
-                $sql .= " AND NOT DATE(createdOn) BETWEEN start AND end";
+                $sql .= " AND NOT " . $valid_query;
             }
         }
 

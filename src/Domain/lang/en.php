@@ -972,6 +972,9 @@ $lang["TIMESHEETS_REQUIREMENT_TYPES"] = "Type of requirements";
 $lang["TIMESHEETS_REQUIREMENT_VALUE"] = "Value";
 $lang["TIMESHEETS_REQUIREMENT_VALID"] = "Valid";
 
+$lang["SHOW_TIMESHEETS_REQUIREMENT_VALID"] = "Show valid";
+$lang["SHOW_TIMESHEETS_REQUIREMENT_NOT_VALID"] = "Show not valid";
+
 $lang["PRINT"] = "Print";
 
 $lang["FINANCES_ROUND_UP_SAVINGS"] = "Round up savings";

@@ -35,8 +35,7 @@ class CustomerRequirementService extends Service {
         $this->router = $router;
     }
 
-    public function index($hash, $requirementtype_id, $requestData) {
-
+    public function index($hash, $requirementtype_id, $valid = 0) {
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
@@ -49,7 +48,7 @@ class CustomerRequirementService extends Service {
 
         $requirement_type = $this->requirementtype_service->getEntry($requirementtype_id);
 
-        $requirements = $this->mapper->getFromType($requirementtype_id);
+        $requirements = $this->mapper->getFromType($requirementtype_id, $valid);
 
         $customers = $this->customer_service->getCustomersFromProject($project->id, false);
 
@@ -60,7 +59,8 @@ class CustomerRequirementService extends Service {
             "requirement_type" => $requirement_type,
             "project" => $project,
             "customers" => $customers,
-            "customers_states" => $customers_states
+            "customers_states" => $customers_states,
+            "valid" => $valid
         ]);
     }
 

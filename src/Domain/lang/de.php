@@ -970,6 +970,9 @@ $lang["TIMESHEETS_REQUIREMENT_TYPES"] = "Nachweisarten";
 $lang["TIMESHEETS_REQUIREMENT_VALUE"] = "Wert";
 $lang["TIMESHEETS_REQUIREMENT_VALID"] = "Gültig";
 
+$lang["SHOW_TIMESHEETS_REQUIREMENT_VALID"] = "Gültige anzeigen";
+$lang["SHOW_TIMESHEETS_REQUIREMENT_NOT_VALID"] = "Nicht gültige anzeigen";
+
 $lang["PRINT"] = "Drucken";
 
 $lang["FINANCES_ROUND_UP_SAVINGS"] = "Kleingeldsparen";
