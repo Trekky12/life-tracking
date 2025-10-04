@@ -82,7 +82,9 @@
 						<select id="account_from" name="account_from" value="{% if not entry is null %}{{entry.account_from}}{% endif %}">
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for account in accounts %}
-								<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_from) %} selected {% endif %}>{{account.name|raw}}</option>
+								{% if (entry is not null or account.archive != 1) %}
+									<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_from) %} selected {% endif %}>{{account.name|raw}}</option>
+								{% endif %}
 							{% endfor %}
 						</select>
 					</div>
@@ -93,7 +95,9 @@
 						<select id="account_to" name="account_to" value="{% if not entry is null %}{{entry.account_to}}{% endif %}">
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for account in accounts %}
-								<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_to) %} selected {% endif %}>{{account.name|raw}}</option>
+								{% if (entry is not null or account.archive != 1) %}
+									<option value="{{account.id}}" {% if (not entry is null and account.id == entry.account_to) %} selected {% endif %}>{{account.name|raw}}</option>
+								{% endif %}
 							{% endfor %}
 						</select>
 					</div>
