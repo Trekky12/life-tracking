@@ -225,7 +225,9 @@ $lang["ADD_TIME"] = "Uhrzeit hinzufügen";
 $lang["ADD_DESCRIPTION"] = "Beschreibung hinzufügen";
 
 $lang["ARCHIVE"] = "Archivieren";
+$lang["UNARCHIVE"] = "Archivierung aufheben";
 $lang["ARCHIVE_WITH_CARDS"] = "Mit Karten archivieren";
+$lang["UNARCHIVE_WITH_CARDS"] = "Archivierung mit Karten aufheben";
 $lang["REALLY_ARCHIVE"] = "Soll der Eintrag wirklich archiviert werden?";
 $lang["UPDATE"] = "Aktualisieren";
 

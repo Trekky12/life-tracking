@@ -142,6 +142,12 @@ document.addEventListener('click', async function (event) {
         const archiveButtons = savedStackEl.querySelectorAll('.stack-header .btn-archive-stack');
         archiveButtons.forEach(function (archiveBtn) {
             archiveBtn.dataset.archive = archive;
+
+            if(archiveBtn.dataset.cards){
+                archiveBtn.innerText = archive == 0 ? lang.boards_archive_with_cards : lang.boards_unarchive_with_cards;
+            }else{
+                archiveBtn.innerText = archive == 0 ? lang.boards_archive : lang.boards_unarchive;
+            }
         });
         stack.archive = archive;
 
@@ -195,6 +201,12 @@ document.addEventListener('click', async function (event) {
             const archiveButtons = savedStackEl.querySelectorAll('.stack-header .btn-archive-stack');
             archiveButtons.forEach(function (archiveBtn) {
                 archiveBtn.dataset.archive = archive_undo;
+
+                if(archiveBtn.dataset.cards){
+                    archiveBtn.innerText = archive_undo == 0 ? lang.boards_archive_with_cards : lang.boards_unarchive_with_cards;
+                }else{
+                    archiveBtn.innerText = archive_undo == 0 ? lang.boards_archive : lang.boards_unarchive;
+                }
             });
             stack.archive = archive_undo;
 
@@ -1293,6 +1305,12 @@ function createStack(stack_data) {
         archiveBtn.dataset.id = stack_data.id;
         archiveBtn.dataset.archive = stack_data.archive;
         archiveBtn.dataset.url = jsObject.stack_archive + stack_data.id;
+
+        if(archiveBtn.dataset.cards){
+            archiveBtn.innerText = stack_data.archive == 0 ? lang.boards_archive_with_cards : lang.boards_unarchive_with_cards;
+        }else{
+            archiveBtn.innerText = stack_data.archive == 0 ? lang.boards_archive : lang.boards_unarchive;
+        }
     });
 
     if (stack_data.cards) {
