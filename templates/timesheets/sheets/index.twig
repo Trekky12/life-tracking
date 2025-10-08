@@ -225,6 +225,10 @@
 							<th></th>
 							<th></th>
 						{% endif %}
+						<th>{{"TIMESHEETS_HAPPENED"|trans}}</th>
+						<th>{{"TIMESHEETS_INVOICED"|trans}}</th>
+						<th>{{"TIMESHEETS_BILLED"|trans}}</th>
+						<th>{{"TIMESHEETS_PAYED"|trans}}</th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -251,9 +255,13 @@
 								<td>{{ sheet["data"][8]|raw }}</td>
 								<td>{{ sheet["data"][9]|raw }}</td>
 							{% endif %}
-							<td>{{ sheet["data"][10]|raw }}</td>
-							<td>{{ sheet["data"][11]|raw }}</td>
-							<td>{{ sheet["data"][12]|raw }}</td>
+							<td>{{ sheet["data"][10] }}</td>
+							<td>{{ sheet["data"][11] }}</td>
+							<td>{{ sheet["data"][12] }}</td>
+							<td>{{ sheet["data"][13] }}</td>
+							<td>{{ sheet["data"][14]|raw }}</td>
+							<td>{{ sheet["data"][15]|raw }}</td>
+							<td>{{ sheet["data"][16]|raw }}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -277,6 +285,10 @@
 							<th></th>
 							<th></th>
 						{% endif %}
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>

@@ -258,6 +258,18 @@ class SheetMapper extends \App\Domain\Mapper {
             case 5:
                 $sort = "customerName";
                 break;
+            case 10:
+                $sort = "t.is_happened";
+                break;
+            case 11:
+                $sort = "t.is_invoiced";
+                break;
+            case 12:
+                $sort = "t.is_billed";
+                break;
+            case 13:
+                $sort = "t.is_payed";
+                break;
         }
 
         $select = "t.id, "

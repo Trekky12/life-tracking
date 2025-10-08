@@ -1057,7 +1057,7 @@ if (timesheetsSheetsTableContainer) {
                 sort: "desc"
             },
             {
-                select: hasEnd ? [0, 6, 7, 8, 9, 10, 11, 12] : [0, 4, 5, 6, 7, 8, 9, 10],
+                select: hasEnd ? [0, 6, 7, 8, 9, 14, 15, 16] : [0, 4, 5, 6, 7, 12, 13, 14],
                 sortable: false,
                 searchable: false
             }
