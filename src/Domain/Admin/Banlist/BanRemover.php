@@ -25,7 +25,7 @@ class BanRemover extends ObjectRemover {
      * @return type
      */
     public function deleteEntry($ip) {
-        return $this->mapper->deleteFailedLoginAttempts($ip);
+        return $this->getMapper()->unBan($ip, false);
     }
 
 }

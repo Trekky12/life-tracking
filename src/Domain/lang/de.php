@@ -198,7 +198,7 @@ $lang["DROPDOWN_NO_PAYMETHOD"] = "- Keine -";
 
 $lang["NO_ACCESS"] = "Kein Zugriff erlaubt";
 $lang["WRONG_LOGIN"] = "Falsche Zugangsdaten!";
-$lang["BANNED"] = "Zuviele fehlgeschlagene Login-Versuche. Du wurdest gesperrt. ";
+$lang["BANNED"] = "Zuviele fehlgeschlagene Login-Versuche oder Seitenaufrufe. Du wurdest gesperrt. ";
 
 $lang["MODULES"] = "Module";
 

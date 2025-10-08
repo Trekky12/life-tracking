@@ -198,7 +198,7 @@ $lang["DROPDOWN_NO_PAYMETHOD"] = "- None -";
 
 $lang["NO_ACCESS"] = "No Access allowed";
 $lang["WRONG_LOGIN"] = "Wrong login!";
-$lang["BANNED"] = "Too many failed login attempts. You are banned!";
+$lang["BANNED"] = "Too many failed login attempts or pages not found. You are banned!";
 
 $lang["MODULES"] = "Modules";
 

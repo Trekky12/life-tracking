@@ -10,8 +10,16 @@ class BanMapper extends \App\Domain\Mapper {
     protected $insert_user = false;
     protected $id = 'ip';
 
-    public function getBlockedIPAdresses($attempts = 2) {
-        $sql = "SELECT COUNT(ip) as attempts, createdOn, ip, username, changedOn FROM " . $this->getTableName() . " GROUP BY ip HAVING COUNT(ip) > :attempts ";
+    public function getBlockedIPAdresses($attempts = 2, $with_username = true) {
+        $sql = "SELECT COUNT(ip) as attempts, createdOn, ip, username, changedOn FROM " . $this->getTableName();
+
+        if($with_username){
+            $sql .= " WHERE username IS NOT NULL ";
+        }else{
+            $sql .= " WHERE createdOn >= NOW() - INTERVAL 5 MINUTE ";
+        }
+
+        $sql .= "GROUP BY ip HAVING COUNT(ip) > :attempts ";
 
         $bindings = array("attempts" => $attempts);
 
@@ -25,10 +33,16 @@ class BanMapper extends \App\Domain\Mapper {
         return $results;
     }
 
-    public function getFailedLoginAttempts($ip) {
+    public function getEntries($ip, $with_username = true) {
         $sql = "SELECT COUNT(ip) FROM " . $this->getTableName() . " WHERE ip = :ip";
 
         $bindings = array("ip" => $ip);
+
+        if($with_username){
+            $sql .= " AND username IS NOT NULL ";
+        }else{
+            $sql .= " AND createdOn >= NOW() - INTERVAL 5 MINUTE ";
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -39,10 +53,15 @@ class BanMapper extends \App\Domain\Mapper {
         return 0;
     }
 
-    public function deleteFailedLoginAttempts($ip) {
+
+    public function unBan($ip, $with_username = true) {
         $sql = "DELETE FROM " . $this->getTableName() . " WHERE ip = :ip";
 
         $bindings = array("ip" => $ip);
+
+        if($with_username){
+            $sql .= " AND username IS NOT NULL ";
+        }
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($bindings);

@@ -32,16 +32,18 @@ class LoginService {
     protected $current_user;
     protected $applicationpassword_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            Twig $twig,
-            Flash $flash,
-            Settings $settings,
-            Translator $translation,
-            CurrentUser $current_user,
-            UserService $user_service,
-            TokenService $token_service,
-            BanlistService $banlist_service,
-            ApplicationPasswordMapper $applicationpassword_mapper) {
+    public function __construct(
+        LoggerInterface $logger,
+        Twig $twig,
+        Flash $flash,
+        Settings $settings,
+        Translator $translation,
+        CurrentUser $current_user,
+        UserService $user_service,
+        TokenService $token_service,
+        BanlistService $banlist_service,
+        ApplicationPasswordMapper $applicationpassword_mapper
+    ) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->flash = $flash;
@@ -79,7 +81,7 @@ class LoginService {
             $this->twig->getEnvironment()->addGlobal("user_token", $token);
 
             $this->token_service->updateToken($token);
-            
+
             return true;
         }
 
@@ -115,7 +117,7 @@ class LoginService {
 
                     // add user to view
                     $this->twig->getEnvironment()->addGlobal("user", $user);
-                    $this->banlist_service->deleteFailedLoginAttempts(Utility::getIP());
+                    $this->banlist_service->unBan(Utility::getIP(), true);
 
                     $this->logger->notice('HTTP Application login successfully', array("login" => $username, "application" => $pw["name"]));
 
@@ -148,7 +150,7 @@ class LoginService {
                     $this->current_user->setUser($user);
                     // add user to view
                     $this->twig->getEnvironment()->addGlobal("user", $user);
-                    $this->banlist_service->deleteFailedLoginAttempts(Utility::getIP());
+                    $this->banlist_service->unBan(Utility::getIP(), true);
 
                     $this->logger->notice('LOGIN successfully', array("login" => $username));
 
@@ -192,15 +194,14 @@ class LoginService {
 
     private function verifySecret($user, $code) {
         if (!is_null($user->secret)) {
-            
-            if(empty($code)){
+
+            if (empty($code)) {
                 return false;
             }
-            
+
             $tfa = new TwoFactorAuth(new EndroidQrCodeWithLogoProvider());
             return $tfa->verifyCode($user->secret, $code);
         }
         return true;
     }
-
 }
