@@ -301,10 +301,12 @@ class SheetService extends Service {
                 $row[] = $sheet->start_modified && $sheet->start != $sheet->start_modified ? $end_modified : '';
             }
 
-            $row[] = $sheet->is_happened == 1 ? "x" : "";
-            $row[] = $sheet->is_invoiced == 1 ? "x" : "";
-            $row[] = $sheet->is_billed == 1 ? "x" : "";
-            $row[] = $sheet->is_payed == 1 ? "x" : "";
+            if (!$filter || $project->has_billing) {
+                $row[] = $sheet->is_happened == 1 ? "x" : "";
+                $row[] = $sheet->is_invoiced == 1 ? "x" : "";
+                $row[] = $sheet->is_billed == 1 ? "x" : "";
+                $row[] = $sheet->is_payed == 1 ? "x" : "";
+            }
 
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_notice_edit', ['sheet' => $sheet->id, 'project' => $project->getHash()]) . '">' . (in_array($sheet->id, $hasNotices) ? $this->translation->getTranslatedString("TIMESHEETS_NOTICE_EDIT") : $this->translation->getTranslatedString("TIMESHEETS_NOTICE_ADD")) .  (in_array($sheet->id, array_keys($hasFiles)) ? (' / ' . $hasFiles[$sheet->id] . ' ' . $this->translation->getTranslatedString("FILES")) : '') . '</a>';
             $row[] = '<a href="' . $this->router->urlFor('timesheets_sheets_edit', ['id' => $sheet->id, 'project' => $project->getHash()]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';

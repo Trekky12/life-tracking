@@ -1044,6 +1044,35 @@ const timesheetCustomer = document.querySelector("#timesheet_view_customer");
 const timesheetsSheetsTableContainer = document.getElementById('timesheets_sheets_table');
 if (timesheetsSheetsTableContainer) {
     const hasEnd = timesheetsSheetsTableContainer.dataset.hasEnd === "1";
+    const hasCustomers = timesheetsSheetsTableContainer.dataset.hasCustomers === "1";
+    const hasCategories = timesheetsSheetsTableContainer.dataset.hasCategories === "1";
+    const hasDurationModifications = timesheetsSheetsTableContainer.dataset.hasDurationModifications === "1";
+    const hasBilling = timesheetsSheetsTableContainer.dataset.hasBilling === "1";
+
+    let offsetCategoriesColumn = 2;
+    let offsetDurationModificationsColumn = 2;
+    let offsetLastColumns = 2;
+    if (hasEnd) {
+        offsetLastColumns += 2;
+        offsetCategoriesColumn += 2;
+        offsetDurationModificationsColumn += 2;
+    }
+    if (hasCustomers) {
+        offsetLastColumns += 1;
+        offsetCategoriesColumn += 1;
+        offsetDurationModificationsColumn += 1;
+    }
+    if (hasCategories) {
+        offsetLastColumns += 1;
+        offsetDurationModificationsColumn += 1;
+    }
+    if (hasDurationModifications) {
+        offsetLastColumns += 3;
+    }
+    if (hasBilling) {
+        offsetLastColumns += 4;
+    }
+
 
     var timesheetsSheetsTable = new JSTable(timesheetsSheetsTableContainer, {
         perPage: 100,
@@ -1052,12 +1081,17 @@ if (timesheetsSheetsTableContainer) {
         layout: layout,
         columns: [
             {
+                select: 0,
+                sortable: false,
+                searchable: false
+            },
+            {
                 select: 1,
                 sortable: true,
                 sort: "desc"
             },
             {
-                select: hasEnd ? [0, 6, 7, 8, 9, 14, 15, 16] : [0, 4, 5, 6, 7, 12, 13, 14],
+                select: [offsetCategoriesColumn + 1, offsetDurationModificationsColumn + 1, offsetDurationModificationsColumn + 2, offsetDurationModificationsColumn + 3, offsetLastColumns + 1, offsetLastColumns + 2, offsetLastColumns + 3],
                 sortable: false,
                 searchable: false
             }
