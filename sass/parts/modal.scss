@@ -81,12 +81,14 @@
         background: variables.$color_blue;
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         .modal-close {
             color: #FFFFFF;
             font-weight: 600;
-            @include mixins.font-size(2);
+            @include mixins.font-size(3);
             cursor: pointer;
+            padding: 0 0.5rem 0 3rem;
         }
     }
 
