@@ -47,6 +47,7 @@
     "autoprefixer": "^10.4.21",
     "bourbon": "^7.3.0",
     "bourbon-neat": "^4.0.0",
+    "browserify": "^17.0.1",
     "gulp": "^5.0.1",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",

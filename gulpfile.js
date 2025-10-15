@@ -327,7 +327,7 @@ function copyDOCXJS(cb) {
 
 function browserifyBIP39() {
     return shell.task([
-        `browserify -r bip39 -s bip39 \
+        `npx browserify -r bip39 -s bip39 \
          --exclude=./wordlists/japanese.json \
          --exclude=./wordlists/spanish.json \
          --exclude=./wordlists/italian.json \
