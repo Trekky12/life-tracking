@@ -157,7 +157,7 @@ class SheetService extends Service {
 
         $include_empty_categories = true;
 
-        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, 1, 'DESC', $count);
+        $data = $this->getMapper()->getTableData($project->id, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, 'date', 'DESC', $count);
         $rendered_data = $this->renderTableRows($project, $data, false);
         $datacount = $this->getMapper()->tableCount($project->id, $from, $to, $selected_categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
 
@@ -212,6 +212,7 @@ class SheetService extends Service {
         $searchQuery = empty($search) || $search === "null" ? "%" : "%" . $search . "%";
 
         $sortColumnIndex = array_key_exists("sortColumn", $requestData) ? filter_var($requestData["sortColumn"], FILTER_SANITIZE_NUMBER_INT) : null;
+        $sortColumnName = array_key_exists("sortColumnName", $requestData) ? Utility::filter_string_polyfill($requestData["sortColumnName"]) : null;
         $sortDirection = array_key_exists("sortDirection", $requestData) ? Utility::filter_string_polyfill($requestData["sortDirection"]) : null;
 
         $categoriesList = array_key_exists("categories", $requestData) ? Utility::filter_string_polyfill($requestData["categories"]) : null;
@@ -232,7 +233,7 @@ class SheetService extends Service {
         $recordsTotal = $this->mapper->tableCount($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer);
         $recordsFiltered = $this->mapper->tableCount($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $searchQuery);
 
-        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $sortColumnIndex, $sortDirection, $length, $start, $searchQuery);
+        $data = $this->mapper->getTableData($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $sortColumnName, $sortDirection, $length, $start, $searchQuery);
         $rendered_data = $this->renderTableRows($project, $data, true);
 
         $totalSeconds = $this->mapper->tableSum($project->id, $from, $to, $categories, $include_empty_categories, $invoiced, $billed, $payed, $happened, $customer, $searchQuery);
@@ -253,7 +254,7 @@ class SheetService extends Service {
         return $response_data;
     }
 
-    private function renderTableRows($project, array $sheets, $filter = false) {
+    private function renderTableRows($project, array $sheets, $initialView = false) {
         $language = $this->settings->getAppSettings()['i18n']['php'];
         $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
 
@@ -285,23 +286,23 @@ class SheetService extends Service {
             $row[] = '<input type="checkbox" name="check_row" data-id="' . $sheet->id . '">';
             $row[] = $date;
             $row[] = $start;
-            if (!$filter || $project->has_end) {
+            if (!$initialView || $project->has_end) {
                 $row[] = $end;
                 $row[] = $time;
             }
-            if (!$filter || $customers) {
+            if (!$initialView || $customers) {
                 $row[] = $sheet->customerName;
             }
-            if (!$filter || $project_categories) {
+            if (!$initialView || $project_categories) {
                 $row[] = $sheet->categories;
             }
-            if (!$filter || $project->has_duration_modifications) {
+            if (!$initialView || $project->has_duration_modifications) {
                 $row[] = $sheet->start_modified && $sheet->start != $sheet->start_modified ? $date_modified : '';
                 $row[] = $sheet->start_modified && $sheet->start != $sheet->start_modified ? $start_modified : '';
                 $row[] = $sheet->start_modified && $sheet->start != $sheet->start_modified ? $end_modified : '';
             }
 
-            if (!$filter || $project->has_billing) {
+            if (!$initialView || $project->has_billing) {
                 $row[] = $sheet->is_happened == 1 ? "x" : "";
                 $row[] = $sheet->is_invoiced == 1 ? "x" : "";
                 $row[] = $sheet->is_billed == 1 ? "x" : "";

@@ -61,7 +61,7 @@ class SheetMapper extends \App\Domain\Mapper {
             }
         }
 
-        $dateFilter = "(" . $this->filterDate("t.start", "t.end") . ") OR (".$this->filterDate("t.start_modified", "t.end_modified").")";
+        $dateFilter = "(" . $this->filterDate("t.start", "t.end") . ") OR (" . $this->filterDate("t.start_modified", "t.end_modified") . ")";
         if ($date_modified) {
             $dateFilter = $this->filterDate("COALESCE(t.start_modified, t.start)", "COALESCE(t.end_modified, t.end)");
         }
@@ -243,31 +243,31 @@ class SheetMapper extends \App\Domain\Mapper {
 
         $sort = "id";
         switch ($sortColumn) {
-            case 1:
+            case 'date':
                 $sort = "IFNULL(DATE(t.start),DATE(t.end))";
                 break;
-            case 2:
+            case 'start':
                 $sort = "TIME(t.start)";
                 break;
-            case 3:
+            case 'end':
                 $sort = "TIME(t.end)";
                 break;
-            case 4:
+            case 'difference':
                 $sort = "t.duration";
                 break;
-            case 5:
+            case 'customer':
                 $sort = "customerName";
                 break;
-            case 10:
+            case 'is_happened':
                 $sort = "t.is_happened";
                 break;
-            case 11:
+            case 'is_invoiced':
                 $sort = "t.is_invoiced";
                 break;
-            case 12:
+            case 'is_billed':
                 $sort = "t.is_billed";
                 break;
-            case 13:
+            case 'is_payed':
                 $sort = "t.is_payed";
                 break;
         }
@@ -874,7 +874,7 @@ class SheetMapper extends \App\Domain\Mapper {
         return false;
     }
 
-    private function filterDate($startColumn, $endColumn){
+    private function filterDate($startColumn, $endColumn) {
         return "     (DATE({$startColumn}) >= :from AND DATE({$endColumn}) <= :to ) OR"
             . "     (DATE({$startColumn}) >= :from AND DATE({$startColumn}) <= :to AND t.end IS NULL ) OR"
             . "     (DATE({$endColumn}) >= :from AND DATE({$endColumn}) <= :to AND t.start IS NULL )";

@@ -188,8 +188,8 @@
 				<thead>
 					<tr>
 						<th><input type="checkbox" class="checkAllRows"></th>
-						<th>{{"DATE"|trans}}</th>
-						<th>
+						<th data-col-name="date">{{"DATE"|trans}}</th>
+						<th data-col-name="start">
 							{% if not project.has_end %}
 								{{"TIMESHEETS_TIME"|trans}}
 							{% elseif project.is_day_based == 1 %}
@@ -199,17 +199,17 @@
 							{% endif %}
 						</th>
 						{% if project.has_end %}
-							<th>
+							<th data-col-name="end">
 								{% if project.is_day_based == 1 %}
 									{{"TIMESHEETS_LEAVE_DAY_BASED"|trans}}
 								{% else %}
 									{{"TIMESHEETS_LEAVE_PROJECT_BASED"|trans}}
 								{% endif %}
 							</th>
-							<th>{{"DIFFERENCE"|trans}}</th>
+							<th data-col-name="difference">{{"DIFFERENCE"|trans}}</th>
 						{% endif %}
 						{% if customers %}
-							<th>
+							<th data-col-name="customer">
 								{% if project.customers_name_singular %}
 									{{project.customers_name_singular}}
 								{% else %}
@@ -226,10 +226,10 @@
 							<th></th>
 						{% endif %}
 						{% if project.has_billing %}
-							<th>{{"TIMESHEETS_HAPPENED"|trans}}</th>
-							<th>{{"TIMESHEETS_INVOICED"|trans}}</th>
-							<th>{{"TIMESHEETS_BILLED"|trans}}</th>
-							<th>{{"TIMESHEETS_PAYED"|trans}}</th>
+							<th data-col-name="is_happened">{{"TIMESHEETS_HAPPENED"|trans}}</th>
+							<th data-col-name="is_invoiced">{{"TIMESHEETS_INVOICED"|trans}}</th>
+							<th data-col-name="is_billed">{{"TIMESHEETS_BILLED"|trans}}</th>
+							<th data-col-name="is_payed">{{"TIMESHEETS_PAYED"|trans}}</th>
 						{% endif %}
 						<th></th>
 						<th></th>
