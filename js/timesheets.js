@@ -414,6 +414,18 @@ if (calendarEl) {
             let dateContent = eventModal.querySelector(".date");
             dateContent.textContent = info.event.extendedProps.date;
 
+            let modifiedDateWrapper = eventModal.querySelector(".modified-date-wrapper");
+            let modifiedDateDiv = modifiedDateWrapper.querySelector(".modified-date");
+            modifiedDateDiv.innerHTML = "";
+
+            const modifiedDate = info.event.extendedProps.date_modified;
+            if (modifiedDate) {
+                modifiedDateWrapper.classList.remove("hidden");
+                modifiedDateDiv.innerText = modifiedDate;
+            } else {
+                modifiedDateWrapper.classList.add("hidden");
+            }
+
             let customer = eventModal.querySelector(".customer");
             let customerName = customer.querySelector(".customer-name");
             if (info.event.extendedProps.customer) {

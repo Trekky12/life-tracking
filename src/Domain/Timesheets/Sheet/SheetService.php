@@ -714,6 +714,7 @@ class SheetService extends Service {
             }
 
             list($date, $start, $end) = $timesheet->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+            list($date_modified, $start_modified, $end_modified) = $timesheet->getDateStartEndModified($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
 
             $series = $this->getMapper()->getSeriesSheets($project->id, $timesheet->id);
             $series_ids = array_keys(
@@ -748,6 +749,7 @@ class SheetService extends Service {
                     'start' => $st->format('Y-m-d H:i:s'),
                     'end' => $e->format('Y-m-d H:i:s'),
                     'date' => sprintf("%s %s - %s", $date, $start, $end),
+                    'date_modified' => $date_modified ? sprintf("%s %s - %s", $date_modified, $start_modified, $end_modified) : '',
                     'customer' => $timesheet->customerName ? $timesheet->customerName : '',
                     'categories' => $timesheet->categories ? $timesheet->categories : '',
                     'is_happened' => $timesheet->is_happened,

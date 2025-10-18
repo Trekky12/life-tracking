@@ -76,6 +76,11 @@
 			<div class="modal-content">
 				<h2 class="date"></h2>
 
+				<div class="modified-date-wrapper hidden">
+					<h3>{{"TIMESHEETS_DATE_MODIFIED"|trans}}</h3>
+					<div class="modified-date"></div>
+				</div>
+
 				<div class="customer">
 					<h3>
 						{% if project.customers_name_singular %}
@@ -85,10 +90,10 @@
 						{% endif %}
 					</h3>
 					<div class="customer-info">
-					<span class="customer-name"></span>
-					<a href="#" class="customer-notice-btn">
-						<button class="button button-text small">{{"NOTICE"|trans}}</button>
-					</a>
+						<span class="customer-name"></span>
+						<a href="#" class="customer-notice-btn">
+							<button class="button button-text small">{{"NOTICE"|trans}}</button>
+						</a>
 					</div>
 				</div>
 
@@ -111,10 +116,12 @@
 
 				<div class="state">
 					<h3>{{"TIMESHEETS_STATE"|trans}}</h3>
-					<p class="invoiced hidden">{{"TIMESHEETS_INVOICED"|trans}}</p>
-					<p class="billed hidden">{{"TIMESHEETS_BILLED"|trans}}</p>
-					<p class="payed hidden">{{"TIMESHEETS_PAYED"|trans}}</p>
-					<p class="happened hidden">{{"TIMESHEETS_HAPPENED"|trans}}</p>
+					<ul>
+						<li class="invoiced hidden">{{"TIMESHEETS_INVOICED"|trans}}</li>
+						<li class="billed hidden">{{"TIMESHEETS_BILLED"|trans}}</li>
+						<li class="payed hidden">{{"TIMESHEETS_PAYED"|trans}}</li>
+						<li class="happened hidden">{{"TIMESHEETS_HAPPENED"|trans}}</li>
+					</ul>
 					<p class="series hidden">{{"TIMESHEETS_IS_PART_OF_SERIES"|trans}}
 						(<span class="count"></span>
 						{{"TIMESHEETS_SERIES_COUNT"|trans}})</p>
