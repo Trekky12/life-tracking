@@ -693,9 +693,8 @@ class SheetMapper extends \App\Domain\Mapper {
             . " LEFT JOIN " . $this->getTableName("timesheets_customers") . " tcus ON tcus.id = t.customer "
             . " WHERE t.project = :project_id"
             . " AND ("
-            . "     (t.start >= :start AND t.end <= :end ) OR"
-            . "     (t.start >= :start AND t.start <= :end AND t.end IS NULL ) OR"
-            . "     (t.end >= :start AND t.end <= :end AND t.start IS NULL )"
+            . "     (t.start <= :end) AND "
+            . "     (t.end >= :start OR t.end IS NULL) "
             . " )"
             . " ORDER BY t.start";
 
