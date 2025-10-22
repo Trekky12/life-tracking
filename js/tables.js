@@ -1073,6 +1073,15 @@ if (timesheetsSheetsTableContainer) {
         offsetLastColumns += 4;
     }
 
+    let columns = [offsetLastColumns + 1, offsetLastColumns + 2, offsetLastColumns + 3];
+    if (hasCategories) {
+        columns.push(offsetCategoriesColumn + 1);
+    }
+    if (hasDurationModifications) {
+        columns.push(offsetDurationModificationsColumn + 1);
+        columns.push(offsetDurationModificationsColumn + 2);
+        columns.push(offsetDurationModificationsColumn + 3);
+    }
 
     var timesheetsSheetsTable = new JSTable(timesheetsSheetsTableContainer, {
         perPage: 100,
@@ -1091,7 +1100,7 @@ if (timesheetsSheetsTableContainer) {
                 sort: "desc"
             },
             {
-                select: [offsetCategoriesColumn + 1, offsetDurationModificationsColumn + 1, offsetDurationModificationsColumn + 2, offsetDurationModificationsColumn + 3, offsetLastColumns + 1, offsetLastColumns + 2, offsetLastColumns + 3],
+                select: columns,
                 sortable: false,
                 searchable: false
             }
