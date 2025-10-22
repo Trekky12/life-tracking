@@ -43,7 +43,7 @@ class TripEventService extends Service {
     private function getTripEvents($trip, $from, $to) {
 
         // always show all events (hide the one not in range)
-        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, start_time, end_date, end_time, position", true);
+        $events = $this->mapper->getFromTrip($trip->id, null, null, "start_date, CASE WHEN start_time IS NULL AND end_time IS NULL THEN 0 ELSE 1 END, CASE WHEN start_time IS NULL AND end_time IS NULL THEN position END, start_time, end_time", true);
 
         list($min, $max) = $this->mapper->getMinMaxEventsDate($trip->id);
 
