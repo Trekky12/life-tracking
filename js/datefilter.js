@@ -31,12 +31,19 @@ if (datepickerRange && datepickerStart && datepickerEnd) {
                 datepickerEnd.value = dateArr[1];
             }
 
+        },
+        "onClose": function (selectedDates, dateStr, instance) {
+            // If only one date is selected
+            if (selectedDates.length === 1) {
+                const startDate = selectedDates[0];
+                instance.setDate([startDate, startDate], true);
+            }
         }
     });
 }
 
 const dateRangeFilterButtons = document.querySelectorAll('.daterange-filter-btn');
-dateRangeFilterButtons.forEach(function (dateRangeFilterBtn){
+dateRangeFilterButtons.forEach(function (dateRangeFilterBtn) {
     dateRangeFilterBtn.addEventListener('click', function (event) {
         event.preventDefault();
         let from = dateRangeFilterBtn.dataset.from;
