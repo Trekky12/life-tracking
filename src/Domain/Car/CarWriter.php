@@ -22,7 +22,13 @@ class CarWriter extends ObjectActivityWriter {
         if ($this->car_service->isOwner($id) === false) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        return parent::save($id, $data, $additionalData);
+
+        $payload = parent::save($id, $data, $additionalData);
+        $entry = $payload->getResult();
+
+        $this->setHash($entry);
+
+        return $payload;
     }
 
     public function getObjectViewRoute(): string {

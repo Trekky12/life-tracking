@@ -4,27 +4,19 @@
 let fuelChart = document.querySelector("#fuelChart");
 if (fuelChart) {
 
-    let datasets = [];
-    let data = JSON.parse(fuelChart.dataset.values);
-
-    for (let car_idx in data) {
-        let car = data[car_idx];
-        datasets.push(
-            {
-                label: lang.consumption + ' ' + car["name"],
-                data: car["data"],
-                fill: false,
-                borderColor: randomColor({
-                    hue: 'blue',
-                    luminosity: 'bright'
-                })
-            });
-    }
-
     new Chart(fuelChart, {
         data: {
-            datasets: datasets,
             labels: JSON.parse(fuelChart.dataset.labels),
+            datasets: [
+                {
+                    data: JSON.parse(fuelChart.dataset.values),
+                    fill: false,
+                    borderColor: randomColor({
+                        hue: 'blue',
+                        luminosity: 'bright'
+                    })
+                }
+            ]
         },
         type: 'line',
         options: {
@@ -37,6 +29,11 @@ if (fuelChart) {
                             day: i18n.dateformatJS.date
                         }
                     }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
                 }
             }
         }

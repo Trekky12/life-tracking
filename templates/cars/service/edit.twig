@@ -16,10 +16,10 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<a href="{{ url_for_with_last_query_params('car_service') }}">
+			<a href="{{ url_for_with_last_query_params('car_service', {'car': car.getHash()}) }}">
 				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
 			</a>
-			<h2>{{"CAR_SERVICE"|trans}}</h2>
+			<h2>{{"CAR_SERVICE"|trans}} | {{car.name|raw}}</h2>
 		</div>
 	</div>
 {% endblock %}
@@ -28,7 +28,7 @@
 	<div class="inner-content">
 		<div class="page-content">
 
-			<form class="form-horizontal" id="gasolineForm" action="{{ url_for('car_service_save', {'id' : entry.id}) }}" method="POST">
+			<form class="form-horizontal" id="gasolineForm" action="{{ url_for('car_service_save', {'id' : entry.id, 'car': car.getHash()}) }}" method="POST">
 				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
 				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
 
@@ -39,20 +39,6 @@
 					<input name="fuel_distance" type="hidden" value="{{entry.fuel_distance}}">
 					<input name="fuel_consumption" type="hidden" value="{{entry.fuel_consumption}}">
 				{% endif %}
-
-				<div class="form-group">
-					<label for="car">{{"CAR"|trans}}</label>
-					<div class="select-wrapper form-control">
-						<select id="car" name="car">
-							{% for car in cars %}
-								{% if car.id in user_cars %}
-									<option value="{{car.id}}" {% if (not entry is null and car.id == entry.car) %} selected {% endif %}>{{car.name|raw}}</option>
-								{% endif %}
-							{% endfor %}
-						</select>
-					</div>
-				</div>
-
 
 				<div class="form-group">
 					<label for="dateSelect">{{"DATE"|trans}}</label>

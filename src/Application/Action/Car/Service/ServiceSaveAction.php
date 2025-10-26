@@ -18,11 +18,12 @@ class ServiceSaveAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
+        $car_hash = $request->getAttribute('car');
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        $entry = $this->service->save($id, $data);
+        $entry = $this->service->save($id, $data, ["car" => $car_hash]);
 
-        return $this->responder->respond($entry->withRouteName('car_service'));
+        return $this->responder->respond($entry->withRouteName('car_service')->withRouteParams(["car" => $car_hash]));
     }
 
 }

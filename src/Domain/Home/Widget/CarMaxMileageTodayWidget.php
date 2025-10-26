@@ -30,15 +30,11 @@ class CarMaxMileageTodayWidget implements Widget {
     }
 
     private function createList() {
-        $user_cars = $this->car_service->getUserCars();
-
-        $cars = $this->car_service->getAllCarsOrderedByName();
+        $cars = $this->car_service->getAllOrderedByName();
 
         $result = [];
-
-        foreach ($user_cars as $car_id) {
-            $car = $cars[$car_id];
-            $result[$car_id] = ["name" => $car->name];
+        foreach ($cars as $car) {
+            $result[$car->id] = ["name" => $car->name, "hash" => $car->getHash()];
         }
 
         return $result;
@@ -50,11 +46,10 @@ class CarMaxMileageTodayWidget implements Widget {
 
     public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
-        $totalMileagesWithStartDate = $this->carservice_mapper->getTotalMileage(true);
-        $current_mileage_year = array_key_exists($id, $totalMileagesWithStartDate) ? $totalMileagesWithStartDate[$id]["diff"] : null;
+        $totalMileagesWithStartDate = $this->carservice_mapper->getTotalMileage($id, true);
 
         $car = $this->car_service->getCar($id);
-        $mileage = $this->service->getAllowedMileage($car, $current_mileage_year);
+        $mileage = $this->service->getAllowedMileage($car, $totalMileagesWithStartDate["diff"]);
         if ($mileage) {
             return sprintf("%s %s", $mileage["remaining"], $this->translation->getTranslatedString("KM"));
         }
@@ -79,6 +74,8 @@ class CarMaxMileageTodayWidget implements Widget {
     }
 
     public function getLink(?WidgetObject $widget = null) {
-        return $this->router->urlFor('car_service_stats');
+        $id = $widget->getOptions()["car"];
+        $hash = $this->cars[$id]["hash"];
+        return $this->router->urlFor('car_service_stats', ['car' => $hash ]);
     }
 }

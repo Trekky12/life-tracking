@@ -11,6 +11,7 @@ class Car extends \App\Domain\DataObject {
     public function parseData(array $data) {
 
         $this->name = $this->exists('name', $data) ? Utility::filter_string_polyfill($data['name']) : null;
+        $this->hash = $this->exists('hash', $data) ? filter_var($data['hash'], FILTER_SANITIZE_SPECIAL_CHARS) : null;
 
         $this->mileage_per_year = $this->exists('mileage_per_year', $data) ? filter_var($data['mileage_per_year'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->mileage_term = $this->exists('mileage_term', $data) ? filter_var($data['mileage_term'], FILTER_SANITIZE_NUMBER_INT) : null;

@@ -39,8 +39,9 @@ class CarsTest extends BaseTestCase {
     public function testModuleCars() {
         $response = $this->request('GET', "/cars/");
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals("/cars/refuel/", $response->getHeaderLine("Location"));
+        $this->assertEquals(200, $response->getStatusCode());
+        $body = (string) $response->getBody();
+        $this->assertStringNotContainsString('Kein Zugriff erlaubt', $body);
     }
 
     public function testModuleBoards() {

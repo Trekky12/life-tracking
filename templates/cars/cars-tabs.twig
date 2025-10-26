@@ -1,8 +1,7 @@
 <div class="tabbar-scroller">
 	<div class="tabbar-scrollarea">
-		<a class="tabbar-tab {% if active == 'car_service_refuel' %}active{% endif %}" href="{{ url_for('car_service_refuel') }}">{{"CAR_REFUEL"|trans}}</a>
-		<a class="tabbar-tab {% if active == 'car_service' %}active{% endif %}" href="{{ url_for('car_service') }}">{{"CAR_SERVICE"|trans}}</a>
-		<a class="tabbar-tab {% if active == 'car_service_stats' %}active{% endif %}" href="{{ url_for('car_service_stats') }}">{{"STATS"|trans}}</a>
-		<a class="tabbar-tab {% if active == 'cars' %}active{% endif %}" href="{{ url_for('cars') }}">{{"CARS"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'car_service_refuel' %}active{% endif %}" href="{{ url_for('car_service_refuel', {'car': hash}) }}">{{"CAR_REFUEL"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'car_service' %}active{% endif %}" href="{{ url_for('car_service', {'car': hash}) }}">{{"CAR_SERVICE"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'car_service_stats' %}active{% endif %}" href="{{ url_for('car_service_stats', {'car': hash}) }}">{{"STATS"|trans}}</a>
 	</div>
 </div>

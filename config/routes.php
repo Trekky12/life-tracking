@@ -152,36 +152,34 @@ return function (App $app) {
 
     $app->group('/cars', function (RouteCollectorProxy $group) {
 
-        $group->get('/', function (Request $request, Response $response) {
-            return $response->withHeader('Location', $this->get(RouteParser::class)->urlFor('car_service_refuel'))->withStatus(302);
-        });
+        $group->get('/', \App\Application\Action\Car\Car\CarListAction::class)->setName('cars');
+        $group->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarEditAction::class)->setName('cars_edit');
+        $group->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarSaveAction::class)->setName('cars_save');
+        $group->delete('/delete/{id}', \App\Application\Action\Car\Car\CarDeleteAction::class)->setName('cars_delete');
 
-        $group->get('/stats/', \App\Application\Action\Car\Stats\CarServiceStatsAction::class)->setName('car_service_stats');
         $group->post('/setYearlyMileageCalcTyp', \App\Application\Action\Car\Stats\CalculationTypeAction::class)->setName('set_mileage_type');
 
-        $group->group('/service', function (RouteCollectorProxy $group_service) {
-            $group_service->get('/', \App\Application\Action\Car\Service\ServiceListAction::class)->setName('car_service');
-            $group_service->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Service\ServiceEditAction::class)->setName('car_service_edit');
-            $group_service->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Service\ServiceSaveAction::class)->setName('car_service_save');
-            $group_service->delete('/delete/{id}', \App\Application\Action\Car\Service\ServiceDeleteAction::class)->setName('car_service_delete');
+        $group->group('/{car}', function (RouteCollectorProxy $car_group) {
 
-            $group_service->get('/table/', \App\Application\Action\Car\Service\ServiceTableAction::class)->setName('car_service_service_table');
-        });
+            $car_group->get('/stats/', \App\Application\Action\Car\Stats\CarServiceStatsAction::class)->setName('car_service_stats');
 
-        $group->group('/refuel', function (RouteCollectorProxy $group_refuel) {
-            $group_refuel->get('/', \App\Application\Action\Car\Service\RefuelListAction::class)->setName('car_service_refuel');
-            $group_refuel->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Service\RefuelEditAction::class)->setName('car_service_refuel_edit');
-            $group_refuel->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Service\RefuelSaveAction::class)->setName('car_service_refuel_save');
-            $group_refuel->delete('/delete/{id}', \App\Application\Action\Car\Service\RefuelDeleteAction::class)->setName('car_service_refuel_delete');
+            $car_group->group('/service', function (RouteCollectorProxy $group_service) {
+                $group_service->get('/', \App\Application\Action\Car\Service\ServiceListAction::class)->setName('car_service');
+                $group_service->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Service\ServiceEditAction::class)->setName('car_service_edit');
+                $group_service->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Service\ServiceSaveAction::class)->setName('car_service_save');
+                $group_service->delete('/delete/{id}', \App\Application\Action\Car\Service\ServiceDeleteAction::class)->setName('car_service_delete');
 
-            $group_refuel->get('/table/', \App\Application\Action\Car\Service\FuelTableAction::class)->setName('car_service_fuel_table');
-        });
+                $group_service->get('/table/', \App\Application\Action\Car\Service\ServiceTableAction::class)->setName('car_service_service_table');
+            });
 
-        $group->group('/control', function (RouteCollectorProxy $group_control) {
-            $group_control->get('/', \App\Application\Action\Car\Car\CarListAction::class)->setName('cars');
-            $group_control->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarEditAction::class)->setName('cars_edit');
-            $group_control->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Car\CarSaveAction::class)->setName('cars_save');
-            $group_control->delete('/delete/{id}', \App\Application\Action\Car\Car\CarDeleteAction::class)->setName('cars_delete');
+            $car_group->group('/refuel', function (RouteCollectorProxy $group_refuel) {
+                $group_refuel->get('/', \App\Application\Action\Car\Service\RefuelListAction::class)->setName('car_service_refuel');
+                $group_refuel->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Car\Service\RefuelEditAction::class)->setName('car_service_refuel_edit');
+                $group_refuel->post('/save/[{id:[0-9]+}]', \App\Application\Action\Car\Service\RefuelSaveAction::class)->setName('car_service_refuel_save');
+                $group_refuel->delete('/delete/{id}', \App\Application\Action\Car\Service\RefuelDeleteAction::class)->setName('car_service_refuel_delete');
+
+                $group_refuel->get('/table/', \App\Application\Action\Car\Service\FuelTableAction::class)->setName('car_service_fuel_table');
+            });
         });
     });
 

@@ -12,14 +12,18 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{"MENU_FUEL"|trans}}
-				{{"STATS"|trans}}</h2>
+			<a href="{{ url_for_with_last_query_params('cars')}}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"STATS"|trans}}
+				|
+				{{car.name|raw}}</h2>
 		</div>
 	</div>
 {% endblock %}
 
 {% block tabbar %}
-	{% include "cars/cars-tabs.twig" with {'active':'car_service_stats'} only %}
+	{% include "cars/cars-tabs.twig" with {'active':'car_service_stats', 'hash': car.getHash()} only %}
 {% endblock %}
 
 {% block body %}
@@ -57,54 +61,46 @@
 				</div>
 			</div>
 
-			{% for car, entries in table %}
-				<h2>{{cars[car].name|raw}}
-					{% if totalMileages[car]["diff"] > 0 %}({{totalMileages[car]["diff"]}}
-						{{"KM"|trans}})
-					{% endif %}
-				</h2>
+			{% if mileage_year is not null and car.mileage_per_year > 0 and car.mileage_term > 0 %}
 
-				{% if car in mileage_year|keys and mileage_year[car] is not null and cars[car].mileage_per_year > 0 and cars[car].mileage_term > 0 %}
-
-					<p class="no-margin-bottom">
-						<strong>{{"MILEAGE_TRAVELLED"|trans}}:
-							{{mileage_year[car]["current"]}}
-							{{"KM"|trans}},
-							{{"STATE_TODAY_MAX"|trans}}:
-							{{mileage_year[car]["possible"]}}
-							{{"KM"|trans}}
-							({{mileage_year[car]["remaining"]}}
-							{{"KM"|trans}}
-							{{"REMAINING"|trans}})</strong>
-					</p>
-					<p class="small">
-						<em>{{"START"|trans}}:
-							{{cars[car].mileage_start_date|date(i18n.dateformatTwig.date)}},
-							{{"MILEAGE_PER_YEAR"|trans}}:
-							{{cars[car].mileage_per_year}},
-							{{"MILEAGE_TERM"|trans}}:
-							{{cars[car].mileage_term}}</em>
-					</p>
-				{% endif %}
-				<table class="mileage_year_table table table-hover small">
-					<thead>
+				<p class="no-margin-bottom">
+					<strong>{{"MILEAGE_TRAVELLED"|trans}}:
+						{{mileage_year["current"]}}
+						{{"KM"|trans}},
+						{{"STATE_TODAY_MAX"|trans}}:
+						{{mileage_year["possible"]}}
+						{{"KM"|trans}}
+						({{mileage_year["remaining"]}}
+						{{"KM"|trans}}
+						{{"REMAINING"|trans}})</strong>
+				</p>
+				<p class="small">
+					<em>{{"START"|trans}}:
+						{{car.mileage_start_date|date(i18n.dateformatTwig.date)}},
+						{{"MILEAGE_PER_YEAR"|trans}}:
+						{{car.mileage_per_year}},
+						{{"MILEAGE_TERM"|trans}}:
+						{{car.mileage_term}}</em>
+				</p>
+			{% endif %}
+			<table class="mileage_year_table table table-hover small">
+				<thead>
+					<tr>
+						<th>{{"DATE"|trans}}</th>
+						<th>{{"MILEAGE_PER_YEAR"|trans}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in table %}
 						<tr>
-							<th>{{"DATE"|trans}}</th>
-							<th>{{"MILEAGE_PER_YEAR"|trans}}</th>
+							<td data-title="{{"DATE"|trans}}">{{entry.start|date(i18n.dateformatTwig.date)}}
+								-
+								{{entry.end|date(i18n.dateformatTwig.date)}}</td>
+							<td data-title="{{"MILEAGE_PER_YEAR"|trans}}">{{entry.diff}}</td>
 						</tr>
-					</thead>
-					<tbody>
-						{% for entry in entries %}
-							<tr>
-								<td data-title="{{"DATE"|trans}}">{{entry.start|date(i18n.dateformatTwig.date)}}
-									-
-									{{entry.end|date(i18n.dateformatTwig.date)}}</td>
-								<td data-title="{{"MILEAGE_PER_YEAR"|trans}}">{{entry.diff}}</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			{% endfor %}
+					{% endfor %}
+				</tbody>
+			</table>
 		</div>
 	</div>
 {% endblock %}

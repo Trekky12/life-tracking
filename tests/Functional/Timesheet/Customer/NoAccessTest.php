@@ -74,11 +74,10 @@ class NoAccessTest extends TimesheetTestBase {
     public function testPostChildSaveID() {
 
         $data = [
-            "id" => $this->TEST_CUSTOMER_ID,
             "name" => "Test Customer"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_CUSTOMER_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
@@ -116,9 +115,5 @@ class NoAccessTest extends TimesheetTestBase {
         $this->assertArrayHasKey("is_deleted", $json);
         $this->assertFalse($json["is_deleted"]);
         $this->assertSame("Kein Zugriff erlaubt", $json["error"]);
-    }
-
-    protected function getURIChildOverview($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_overview);
     }
 }

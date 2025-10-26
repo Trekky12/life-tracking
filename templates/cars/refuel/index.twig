@@ -5,10 +5,15 @@
 {% block pageheader %}
 	<div class="page-header">
 		<div class="page-headline">
-			<h2>{{"CAR_REFUEL"|trans}}</h2>
+			<a href="{{ url_for_with_last_query_params('cars')}}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"CAR_REFUEL"|trans}}
+				|
+				{{car.name|raw}}</h2>
 		</div>
 		<div class="buttons">
-			<a href="{{ url_for('car_service_refuel_edit') }}">
+			<a href="{{ url_for('car_service_refuel_edit', {'car': car.getHash()}) }}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{"ADD"|trans}}</button>
 			</a>
@@ -17,7 +22,7 @@
 {% endblock %}
 
 {% block tabbar %}
-	{% include "cars/cars-tabs.twig" with {'active':'car_service_refuel'} only %}
+	{% include "cars/cars-tabs.twig" with {'active':'car_service_refuel', 'hash': car.getHash()} only %}
 {% endblock %}
 
 {% block body %}
@@ -27,7 +32,6 @@
 				<thead>
 					<tr>
 						<th>{{"DATE"|trans}}</th>
-						<th>{{"CAR"|trans}}</th>
 						<th>{{"MILEAGE"|trans}}</th>
 						<th>{{"PRICE"|trans}}</th>
 						<th>{{"VOLUME"|trans}}</th>
@@ -43,16 +47,15 @@
 					{% for entry in fuel_table %}
 						<tr>
 							<td>{{entry[0]}}</td>
-							<td>{{entry[1]|raw}}</td>
+							<td>{{entry[1]}}</td>
 							<td>{{entry[2]}}</td>
 							<td>{{entry[3]}}</td>
 							<td>{{entry[4]}}</td>
 							<td>{{entry[5]}}</td>
 							<td>{{entry[6]}}</td>
-							<td>{{entry[7]}}</td>
+							<td>{{entry[7]|raw}}</td>
 							<td>{{entry[8]|raw}}</td>
 							<td>{{entry[9]|raw}}</td>
-							<td>{{entry[10]|raw}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

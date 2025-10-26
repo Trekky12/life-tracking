@@ -18,8 +18,9 @@ class ServiceEditAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
+        $hash = $request->getAttribute('car');
         $entry_id = $request->getAttribute('id');
-        $data = $this->service->edit($entry_id);
+        $data = $this->service->edit($hash, $entry_id);
         return $this->responder->respond($data->withTemplate('cars/service/edit.twig'));
     }
 

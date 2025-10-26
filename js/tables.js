@@ -250,10 +250,13 @@ var usersTable = new JSTable("#users_table", {
 let mileageTables = document.querySelectorAll('table.mileage_year_table');
 mileageTables.forEach(function (item, idx) {
     new JSTable(item, {
-        perPage: 20,
+        perPage: 100,
         perPageSelect: [10, 20, 50, 100, 200],
         labels: tableLabels,
-        layout: layout,
+        layout: {
+            top: "",
+            bottom: ""
+        },
         columns: [
             {
                 select: 0,
@@ -485,7 +488,7 @@ var fuelTable = new JSTable("#fuel_table", {
             }
         },
         {
-            select: [9, 10],
+            select: [8, 9],
             sortable: false,
             searchable: false
         }
@@ -513,7 +516,7 @@ var serviceTable = new JSTable("#service_table", {
             }
         },
         {
-            select: [8, 9],
+            select: [7, 8],
             sortable: false,
             searchable: false
         }

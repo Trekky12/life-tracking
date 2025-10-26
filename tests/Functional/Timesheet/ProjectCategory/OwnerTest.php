@@ -156,8 +156,4 @@ class OwnerTest extends TimesheetTestBase {
 
         return $matches;
     }
-
-    protected function getURIChildOverview($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_overview);
-    }
 }

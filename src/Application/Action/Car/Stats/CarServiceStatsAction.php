@@ -18,7 +18,8 @@ class CarServiceStatsAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $stats = $this->service->stats();
+        $hash = $request->getAttribute('car');
+        $stats = $this->service->stats($hash);
         return $this->responder->respond($stats->withTemplate('cars/stats.twig'));
     }
 

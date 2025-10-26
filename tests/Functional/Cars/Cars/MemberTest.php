@@ -7,6 +7,7 @@ use Tests\Functional\Cars\CarTestBase;
 class MemberTest extends CarTestBase {
 
     protected $TEST_CAR_ID = 1;
+    protected $TEST_CAR_HASH = "ABCabc123";
 
     protected function setUp(): void {
         $this->login("user", "user");
@@ -54,6 +55,7 @@ class MemberTest extends CarTestBase {
 
         $data = [
             "id" => $this->TEST_CAR_ID,
+            "hash" => $this->TEST_CAR_HASH,
             "name" => "Test Car Updated",
             "users" => [1, 2],
             "mileage_per_year" => 15000,
@@ -76,5 +78,17 @@ class MemberTest extends CarTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
+    }
+
+    /** 
+     * View Project (members can access)
+     */
+    public function testGetViewParent() {
+        $response = $this->request('GET', $this->getURIView($this->TEST_CAR_HASH));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString("fuel_table", $body);
     }
 }

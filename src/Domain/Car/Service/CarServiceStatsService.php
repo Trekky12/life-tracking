@@ -19,130 +19,95 @@ class CarServiceStatsService extends Service {
         $this->car_service = $car_service;
     }
 
-    public function stats() {
-        $user_cars = $this->car_service->getUserCars();
-        $cars = $this->car_service->getAllCarsOrderedByName();
+    public function stats($hash) {
 
-        $list = $this->mapper->getAllofCars('date ASC, mileage ASC', false, $user_cars);
+        $car = $this->car_service->getFromHash($hash);
 
-
+        if (!$this->car_service->isMember($car->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
         /**
-         * Create Labels
+         * Chart
          */
+        $list = $this->mapper->getAllOfType($car->id, 'date ASC, mileage ASC', false);
         $data = [];
         $labels = [];
         $raw_data = [];
         foreach ($list as $el) {
-            if (!empty($el->fuel_consumption) && !empty($el->date)) {
-                $raw_data[] = array("label" => $el->date, "car" => $el->car, "consumption" => $el->fuel_consumption);
+            if (!empty($el->refill_consumption) && !empty($el->date)) {
+                $raw_data[] = array("label" => $el->date, "car" => $el->car, "consumption" => $el->refill_consumption);
             }
         }
-        /**
-         * Fill each array for each cars with null
-         */
-        foreach ($user_cars as $uc) {
-            $data[$uc]["data"] = array_fill(0, count($raw_data), null);
-            $data[$uc]["name"] = htmlspecialchars_decode($cars[$uc]->name);
-        }
-        /**
-         * Replace null values with correct values at corresponding positions
-         */
+
         foreach ($raw_data as $idx => $el) {
             $labels[] = $el["label"];
-            $data[$el["car"]]["data"][$idx] = $el["consumption"];
+            $data[] = $el["consumption"];
         }
 
-        // Get intervals
-        $minMileages = $this->mapper->minMileage();
+        /**
+         * Mileage Table
+         */
 
-        // Get total distance
-        $totalMileages = $this->mapper->getTotalMileage();
-        $totalMileagesWithStartDate = $this->mapper->getTotalMileage(true);
-                
-        $table = [];
+        // Get intervals
+        $minMileage = $this->mapper->minMileage($car->id);
 
         // Get Calculation type
         $calculation_type = SessionUtility::getSessionVar('mileage_type', 0);
-
-        $mileage_year = [];
-
-        foreach ($minMileages as $car_id => $min) {
-            // is allowed?
-            if (in_array($car_id, $user_cars)) {
-
-                if (!array_key_exists($car_id, $table)) {
-                    $table[$car_id] = array();
-                }
-
-                // Start Date
-                if (intval($calculation_type) === 0) {
-                    $mindate = !is_null($cars[$car_id]->mileage_start_date) ? $cars[$car_id]->mileage_start_date : $min["date"];
-                    // First Entry
-                } elseif (intval($calculation_type) === 1) {
-                    $mindate = $min["date"];
-                    // 01.01.
-                } else {
-                    $date = \DateTime::createFromFormat("Y-m-d", $min["date"]);
-                    $date->modify('first day of january ' . $date->format('Y'));
-                    $mindate = $date->format("Y-m-d");
-                }
-
-                /**
-                 * Table Data
-                 */
-                $last_mileage = $cars[$car_id]->mileage_start;
-                $diff = 0;
-                do {
-                    $miledata = $this->mapper->sumMileageInterval($car_id, $mindate);
-
-                    // calculate diff 
-                    $diff = $miledata["max"] - $last_mileage;
-                    $miledata["diff"] = $diff;
-
-                    if ($miledata["diff"] > 0) {
-                        $table[$car_id][] = $miledata;
-                    }
-
-                    // this end date is new min date
-                    $mindate = $miledata["end"];
-                    $last_mileage = $miledata["max"];
-                } while ($diff > 0);
-
-                /**
-                 * Get Mileage per Year
-                 */
-                // Get first element in the array => recent year
-                //$recent_year = end($table[$car_id]);
-
-
-                /**
-                 * Calculate only per year
-                 */
-                // $year_start = new \DateTime($recent_year["start"]);
-                // $year_end = new \DateTime($recent_year["end"]);
-                // $max_mileage_year = $cars[$car]->mileage_per_year;
-                // $current_mileage_year = $recent_year["diff"];
-
-                /**
-                 * Calculate per term with specific start date
-                 */
-                $current_mileage_year = array_key_exists($car_id, $totalMileagesWithStartDate) ? $totalMileagesWithStartDate[$car_id]["diff"] : null;
-                $mileage_year[$car_id] = $this->getAllowedMileage($cars[$car_id], $current_mileage_year);
-            }
+        // Start Date
+        if (intval($calculation_type) === 0) {
+            $mindate = !is_null($car->mileage_start_date) ? $car->mileage_start_date : $minMileage["date"];
+            // First Entry
+        } elseif (intval($calculation_type) === 1) {
+            $mindate = $minMileage["date"];
+            // 01.01.
+        } else {
+            $date = \DateTime::createFromFormat("Y-m-d", $minMileage["date"]);
+            $date->modify('first day of january ' . $date->format('Y'));
+            $mindate = $date->format("Y-m-d");
         }
+
+        /**
+         * Table Data
+         */
+        $table = [];
+        $last_mileage = $car->mileage_start;
+        $terms = $car->mileage_term;
+        $current_date = new \DateTime('now');
+        $i = 0;
+        do {
+            $miledata = $this->mapper->sumMileageInterval($car->id, $mindate);
+
+            // calculate diff 
+            $miledata["diff"] = $miledata["max"] - $last_mileage;
+
+            $table[] = $miledata;
+
+            // this end date is new min date
+            $mindate = $miledata["end"];
+            $last_mileage = $miledata["max"];
+
+            $i++;
+        } while ($i < $terms && new \DateTime($mindate) <= $current_date);
+
+        /**
+         * Calculate per term with specific start date
+         */
+        $mileage_year = $this->getAllowedMileage($car);
 
         return new Payload(Payload::$RESULT_HTML, [
             'data' => $data,
             "labels" => json_encode($labels),
             "table" => $table,
-            "cars" => $cars,
-            "totalMileages" => $totalMileages,
             "mileage_calc_type" => $calculation_type,
-            "mileage_year" => $mileage_year
+            "mileage_year" => $mileage_year,
+            "car" => $car
         ]);
     }
 
-    public function getAllowedMileage($car, $current_mileage_year) {
+    public function getAllowedMileage($car) {
+        $totalMileageWithStartDate = $this->mapper->getTotalMileage($car->id, true);
+        $current_mileage_year =  $totalMileageWithStartDate["diff"];
+
         $current_date = new \DateTime('now');
         $year_start = new \DateTime($car->mileage_start_date ?? '');
         $year_end = clone $year_start;
@@ -166,5 +131,4 @@ class CarServiceStatsService extends Service {
 
         return null;
     }
-
 }

@@ -18,8 +18,9 @@ class ServiceTableAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
+        $hash = $request->getAttribute('car');
         $requestData = $request->getQueryParams();
-        $payload = $this->service->serviceTable($requestData);
+        $payload = $this->service->serviceTable($hash, $requestData);
         return $this->responder->respond($payload);
     }
 

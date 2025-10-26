@@ -18,7 +18,8 @@ class ServiceListAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $index = $this->service->indexService();
+        $hash = $request->getAttribute('car');
+        $index = $this->service->indexService($hash);
         return $this->responder->respond($index->withTemplate('cars/service/index.twig'));
     }
 

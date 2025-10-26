@@ -161,8 +161,4 @@ class OwnerTest extends CrawlerTestBase {
         preg_match($re, $body, $matches);
         return $matches;
     }
-
-    protected function getURIChildOverview($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_overview);
-    }
 }

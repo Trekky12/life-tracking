@@ -18,7 +18,8 @@ class RefuelListAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $index = $this->service->indexRefuel();
+        $hash = $request->getAttribute('car');
+        $index = $this->service->indexRefuel($hash);
         return $this->responder->respond($index->withTemplate('cars/refuel/index.twig'));
     }
 

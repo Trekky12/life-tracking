@@ -211,40 +211,40 @@
     },
     {
         "name": "5_cars",
-        "url": "http://tracking.localhost/cars/refuel/"
+        "url": "http://tracking.localhost/cars/ABCabc123/refuel/"
     },
     {
         "name": "5_cars-1",
-        "url": "http://tracking.localhost/cars/control/"
+        "url": "http://tracking.localhost/cars/"
     },
     {
         "name": "5_cars-2",
-        "url": "http://tracking.localhost/cars/control/edit/",
+        "url": "http://tracking.localhost/cars/edit/",
         "height": 1000
     },
     {
         "name": "5_cars-3",
-        "url": "http://tracking.localhost/cars/refuel/edit/",
+        "url": "http://tracking.localhost/cars/ABCabc123/refuel/edit/",
         "height": 1200
     },
     {
         "name": "5_cars-4",
-        "url": "http://tracking.localhost/cars/service/edit/",
+        "url": "http://tracking.localhost/cars/ABCabc123/service/edit/",
         "height": 1500
     },
     {
         "name": "5_cars-5",
-        "url": "http://tracking.localhost/cars/refuel/edit/1",
+        "url": "http://tracking.localhost/cars/ABCabc123/refuel/edit/1",
         "height": 1700
     },
     {
         "name": "5_cars-6",
-        "url": "http://tracking.localhost/cars/service/edit/2",
+        "url": "http://tracking.localhost/cars/ABCabc123/service/edit/2",
         "height": 1500
     },
     {
         "name": "5_cars-7",
-        "url": "http://tracking.localhost/cars/stats/",
+        "url": "http://tracking.localhost/cars/ABCabc123/stats/",
         "height": 1500
     },
     {

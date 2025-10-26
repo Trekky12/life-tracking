@@ -18,11 +18,12 @@ class RefuelSaveAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
+        $car_hash = $request->getAttribute('car');
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        $entry = $this->service->save($id, $data);
+        $entry = $this->service->save($id, $data, ["car" => $car_hash]);
 
-        return $this->responder->respond($entry->withRouteName('car_service_refuel'));
+        return $this->responder->respond($entry->withRouteName('car_service_refuel')->withRouteParams(["car" => $car_hash]));
     }
 
 }

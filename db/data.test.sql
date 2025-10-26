@@ -1,4 +1,4 @@
-INSERT INTO global_settings (name, value, type) VALUES ('version', 23, 'Integer');
+INSERT INTO global_settings (name, value, type) VALUES ('version', 24, 'Integer');
 INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('lastRunRecurringSplitbills', 0, 'Date'), ('lastRunRecurringTransactions', 0, 'Date'), ('isCronRunning', 0, 'Boolean');
 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
@@ -171,7 +171,7 @@ INSERT INTO finances_budgets_categories (budget, category) VALUES (1,1);
 INSERT INTO finances_categories_assignment (id, user, description, category, min_value, max_value) VALUES
 (1, 1, 'Test assignment', 1, NULL, NULL);
 
-INSERT INTO cars (id, user, name, mileage_per_year, mileage_term, mileage_start_date) VALUES (1, 1, 'Test Car', '10000', '4', '2020-01-28');
+INSERT INTO cars (id, user, name, hash, mileage_per_year, mileage_term, mileage_start_date) VALUES (1, 1, 'Test Car', 'ABCabc123', '10000', '4', '2020-01-28');
 INSERT INTO cars_user (car, user) VALUES 
 (1, 1),
 (1, 2); 

@@ -8,7 +8,6 @@ class NoAccessTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_ID = 1;
     protected $TEST_PROJECT_HASH = "ABCabc123";
-    protected $TEST_SHEET_ID = 1;
 
     protected function setUp(): void {
         $this->login("user2", "user2");

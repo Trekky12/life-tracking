@@ -26,55 +26,70 @@ class CarServiceService extends Service {
         $this->translation = $translation;
     }
 
-    public function indexRefuel($count = 20) {
-        $user_cars = $this->car_service->getUserCars();
+    public function indexRefuel($hash, $count = 20) {
 
-        $fuel_list = $this->getMapper()->getTableDataFuel($user_cars, 'date', 'DESC', $count);
-        $fuel_table = $this->renderFuelTableRows($fuel_list);
-        $fuel_datacount = $this->getMapper()->tableCount($user_cars, 0);
+        $car = $this->car_service->getFromHash($hash);
 
-        $cars = $this->car_service->getAllCarsOrderedByName();
+        if (!$this->car_service->isMember($car->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $fuel_list = $this->getMapper()->getTableDataFuel($car->id, 'date', 'DESC', $count);
+        $fuel_table = $this->renderFuelTableRows($car, $fuel_list);
+        $fuel_datacount = $this->getMapper()->tableCount($car->id, 0);
 
         return new Payload(Payload::$RESULT_HTML, [
             'fuel_table' => $fuel_table,
             'datacount' => $fuel_datacount,
-            'cars' => $cars,
+            'car' => $car,
+            'hasCarTable' => true
         ]);
     }
 
-    public function indexService($count = 20) {
-        $user_cars = $this->car_service->getUserCars();
+    public function indexService($hash, $count = 20) {
 
-        $service_list = $this->getMapper()->getTableDataService($user_cars, 'date', 'DESC', $count);
-        $service_table = $this->renderServiceTableRows($service_list);
-        $service_datacount = $this->getMapper()->tableCount($user_cars, 1);
+        $car = $this->car_service->getFromHash($hash);
 
-        $cars = $this->car_service->getAllCarsOrderedByName();
+        if (!$this->car_service->isMember($car->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $service_list = $this->getMapper()->getTableDataService($car->id, 'date', 'DESC', $count);
+        $service_table = $this->renderServiceTableRows($car, $service_list);
+        $service_datacount = $this->getMapper()->tableCount($car->id, 1);
 
         return new Payload(Payload::$RESULT_HTML, [
-            'cars' => $cars,
+            'car' => $car,
             'service_table' => $service_table,
-            'datacount2' => $service_datacount
+            'datacount2' => $service_datacount,
+            'hasCarTable' => true
         ]);
     }
 
-    private function renderFuelTableRows(array $table) {
+    private function renderFuelTableRows($car, array $table) {
         foreach ($table as &$row) {
-            $row[9] = '<a href="' . $this->router->urlFor('car_service_refuel_edit', ['id' => $row[9]]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
-            $row[10] = '<a href="#" data-url="' . $this->router->urlFor('car_service_refuel_delete', ['id' => $row[10]]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
+            $row[8] = '<a href="' . $this->router->urlFor('car_service_refuel_edit', ['car' => $car->getHash(), 'id' => $row[8]]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
+            $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_refuel_delete', ['car' => $car->getHash(), 'id' => $row[9]]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
         }
         return $table;
     }
 
-    private function renderServiceTableRows(array $table) {
+    private function renderServiceTableRows($car, array $table) {
         foreach ($table as &$row) {
-            $row[8] = '<a href="' . $this->router->urlFor('car_service_edit', ['id' => $row[8]]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
-            $row[9] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['id' => $row[9]]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
+            $row[7] = '<a href="' . $this->router->urlFor('car_service_edit', ['car' => $car->getHash(), 'id' => $row[7]]) . '">' . Utility::getFontAwesomeIcon('fas fa-pen-to-square') . '</a>';
+            $row[8] = '<a href="#" data-url="' . $this->router->urlFor('car_service_delete', ['car' => $car->getHash(), 'id' => $row[8]]) . '" class="btn-delete">' . Utility::getFontAwesomeIcon('fas fa-trash') . '</a>';
         }
         return $table;
     }
 
-    public function fuelTable($requestData) {
+    public function fuelTable($hash, $requestData) {
+
+        $car = $this->car_service->getFromHash($hash);
+
+        if (!$this->car_service->isMember($car->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -86,15 +101,13 @@ class CarServiceService extends Service {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? Utility::filter_string_polyfill($requestData["sortDirection"]) : null;
 
-        $user_cars = $this->car_service->getUserCars();
-
-        $recordsTotal = $this->getMapper()->countwithCars($user_cars);
-        $recordsFiltered = $this->getMapper()->tableCount($user_cars, 0, $searchQuery);
+        $recordsTotal = $this->getMapper()->tableCount($car->id, 0);
+        $recordsFiltered = $this->getMapper()->tableCount($car->id, 0, $searchQuery);
 
         $lang = [0 => $this->translation->getTranslatedString("FUEL_PARTLY"), 1 => $this->translation->getTranslatedString("FUEL_FULL")];
 
-        $data = $this->getMapper()->getTableDataFuel($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
-        $table = $this->renderFuelTableRows($data);
+        $data = $this->getMapper()->getTableDataFuel($car->id, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $table = $this->renderFuelTableRows($car, $data);
 
         $response_data = [
             "recordsTotal" => intval($recordsTotal),
@@ -104,7 +117,14 @@ class CarServiceService extends Service {
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function serviceTable($requestData) {
+    public function serviceTable($hash, $requestData) {
+
+        $car = $this->car_service->getFromHash($hash);
+
+        if (!$this->car_service->isMember($car->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
         $start = array_key_exists("start", $requestData) ? filter_var($requestData["start"], FILTER_SANITIZE_NUMBER_INT) : null;
         $length = array_key_exists("length", $requestData) ? filter_var($requestData["length"], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -116,13 +136,11 @@ class CarServiceService extends Service {
 
         $sortDirection = array_key_exists("sortDirection", $requestData) ? Utility::filter_string_polyfill($requestData["sortDirection"]) : null;
 
-        $user_cars = $this->car_service->getUserCars();
+        $recordsTotal = $this->getMapper()->tableCount($car->id, 1);
+        $recordsFiltered = $this->getMapper()->tableCount($car->id, 1, $searchQuery);
 
-        $recordsTotal = $this->getMapper()->countwithCars($user_cars, 1);
-        $recordsFiltered = $this->getMapper()->tableCount($user_cars, 1, $searchQuery);
-
-        $data = $this->getMapper()->getTableDataService($user_cars, $sortColumn, $sortDirection, $length, $start, $searchQuery);
-        $table = $this->renderServiceTableRows($data);
+        $data = $this->getMapper()->getTableDataService($car->id, $sortColumn, $sortDirection, $length, $start, $searchQuery);
+        $table = $this->renderServiceTableRows($car, $data);
 
         $response_data = [
             "recordsTotal" => intval($recordsTotal),
@@ -153,20 +171,22 @@ class CarServiceService extends Service {
         return $this->mapper->getMarkers($from, $to, $user_cars);
     }
 
-    public function edit($entry_id) {
-        if (!is_null($entry_id) && !$this->hasAccessToCarOfEntry($entry_id)) {
-            throw new \Exception($this->translation->getTranslatedString('NO_ACCESS'), 404);
+    public function edit($hash, $entry_id) {
+
+        $car = $this->car_service->getFromHash($hash);
+
+        if (!$this->car_service->isMember($car->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+        if (!$this->isChildOf($car->id, $entry_id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
         $entry = $this->getEntry($entry_id);
 
-        $user_cars = $this->car_service->getUserCars();
-        $cars = $this->car_service->getAllCarsOrderedByName();
-
         return new Payload(Payload::$RESULT_HTML, [
             'entry' => $entry,
-            'cars' => $cars,
-            'user_cars' => $user_cars
+            'car' => $car
         ]);
     }
 }

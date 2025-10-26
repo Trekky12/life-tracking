@@ -18,8 +18,9 @@ class RefuelDeleteAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
+        $car_hash = $request->getAttribute('car');
         $id = $request->getAttribute('id');
-        $payload = $this->service->delete($id);
+        $payload = $this->service->delete($id, ["car" => $car_hash]);
         return $this->responder->respond($payload);
     }
 

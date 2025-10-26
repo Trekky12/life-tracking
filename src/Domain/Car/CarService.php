@@ -23,8 +23,8 @@ class CarService extends Service {
         return $this->mapper->getElementsOfUser($user);
     }
 
-    public function getAllCarsOrderedByName() {
-        return $this->mapper->getAll('name');
+    public function getAllOrderedByName($archive = null) {
+        return $this->mapper->getUserItems('name', false, null, $archive);
     }
 
     public function getCar($id) {

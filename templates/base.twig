@@ -163,8 +163,10 @@
                 'delete_marker_url': '{{ url_for("delete_marker") }}',
                 'get_address_url': '{{ url_for("get_address") }}',
                 'finances_table': "{{url_for("finances_table")}}",
-                'fuel_table': "{{url_for("car_service_fuel_table")}}",
-                'service_table': "{{url_for("car_service_service_table")}}",
+{% if not hasCarTable is null %}
+                'fuel_table': "{{url_for("car_service_fuel_table", {'car': car.getHash()})}}",
+                'service_table': "{{url_for("car_service_service_table", {'car': car.getHash()})}}",
+{% endif %}
                 'datacount': '{{datacount}}',
                 'datacount2': '{{datacount2}}',
                 'set_mileage_type': '{{url_for("set_mileage_type")}}',

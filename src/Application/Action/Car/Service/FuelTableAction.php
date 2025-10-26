@@ -18,8 +18,9 @@ class FuelTableAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
+        $hash = $request->getAttribute('car');
         $requestData = $request->getQueryParams();
-        $payload = $this->service->fuelTable($requestData);
+        $payload = $this->service->fuelTable($hash, $requestData);
         return $this->responder->respond($payload);
     }
 

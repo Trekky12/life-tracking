@@ -14,20 +14,36 @@ class CarServiceWriter extends ObjectActivityWriter {
 
     protected $car_service;
     protected $translation;
+    protected $service;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, CarServiceMapper $mapper, CarService $car_service, Translator $translation) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ActivityCreator $activity,
+        CarServiceMapper $mapper,
+        CarService $car_service,
+        Translator $translation,
+        CarServiceService $service,
+    ) {
         parent::__construct($logger, $user, $activity);
         $this->mapper = $mapper;
         $this->car_service = $car_service;
         $this->translation = $translation;
+        $this->service = $service;
     }
 
     public function save($id, $data, $additionalData = null): Payload {
 
-        $user_cars = $this->car_service->getUserCars();
-        if (!array_key_exists("car", $data) || !in_array($data["car"], $user_cars)) {
+        $car = $this->car_service->getFromHash($additionalData["car"]);
+
+        if (!$this->car_service->isMember($car->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+        if (!$this->service->isChildOf($car->id, $id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $data['car'] = $car->id;
 
         $payload = parent::save($id, $data, $additionalData);
         $entry = $payload->getResult();
@@ -72,9 +88,9 @@ class CarServiceWriter extends ObjectActivityWriter {
             }
         }
     }
-    
-        
-    public function getParentMapper(){
+
+
+    public function getParentMapper() {
         return $this->car_service->getMapper();
     }
 
@@ -83,11 +99,14 @@ class CarServiceWriter extends ObjectActivityWriter {
     }
 
     public function getObjectViewRouteParams($entry): array {
-        return ["id" => $entry->id];
+        $car = $this->getParentMapper()->get($entry->getParentID());
+        return [
+            "car" => $car->getHash(),
+            "id" => $entry->id
+        ];
     }
 
     public function getModule(): string {
         return "cars";
     }
-
 }

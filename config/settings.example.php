@@ -113,7 +113,7 @@ return [
             ],
             "cars" => [
                 "url" => "/cars/",
-                "rootRoute" => "car_service_refuel",
+                "rootRoute" => "cars",
                 "icon" => "fas fa-road",
                 "title" => "MENU_CAR_REFUEL_SERVICE"
             ],

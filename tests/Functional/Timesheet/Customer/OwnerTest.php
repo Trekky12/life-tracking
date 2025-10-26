@@ -149,7 +149,4 @@ class OwnerTest extends TimesheetTestBase {
         $this->assertStringContainsString('{"is_deleted":true,"error":""}', $body);
     }
 
-    protected function getURIChildOverview($hash) {
-        return str_replace("HASH", $hash, $this->uri_child_overview);
-    }
 }

@@ -28,13 +28,11 @@ class CarLastRefuelWidget implements Widget {
     }
 
     private function createList() {
-        $user_cars = $this->car_service->getUserCars();
-
-        $cars = $this->car_service->getAllCarsOrderedByName();
+        $cars = $this->car_service->getAllOrderedByName();
 
         $result = [];
-        foreach ($user_cars as $car_id) {
-            $result[$car_id] = ["name" => $cars[$car_id]->name];
+        foreach ($cars as $car) {
+            $result[$car->id] = ["name" => $car->name, "hash" => $car->getHash()];
         }
 
         return $result;
@@ -46,7 +44,7 @@ class CarLastRefuelWidget implements Widget {
 
     public function getContent(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
-        return $this->carservice_mapper->getTableDataFuel([$id], "mileage", "DESC", 2);
+        return $this->carservice_mapper->getTableDataFuel($id, "mileage", "DESC", 2);
     }
 
     public function getTitle(?WidgetObject $widget = null) {
@@ -67,7 +65,9 @@ class CarLastRefuelWidget implements Widget {
     }
 
     public function getLink(?WidgetObject $widget = null) {
-        return $this->router->urlFor('car_service');
+        $id = $widget->getOptions()["car"];
+        $hash = $this->cars[$id]["hash"];
+        return $this->router->urlFor('car_service', ['car' => $hash ]);
     }
 
 }

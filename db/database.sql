@@ -237,10 +237,12 @@ CREATE TABLE IF NOT EXISTS cars (
     changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
+    hash VARCHAR(255) DEFAULT NULL,
     mileage_per_year INT(20) DEFAULT NULL,
     mileage_term INT(3) DEFAULT NULL,
     mileage_start_date DATE DEFAULT NULL,
     mileage_start INT(20) DEFAULT NULL,
+    UNIQUE(hash),
     PRIMARY KEY (id),
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

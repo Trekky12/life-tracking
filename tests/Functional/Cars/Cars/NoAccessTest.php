@@ -7,6 +7,7 @@ use Tests\Functional\Cars\CarTestBase;
 class NoAccessTest extends CarTestBase {
 
     protected $TEST_CAR_ID = 1;
+    protected $TEST_CAR_HASH = "ABCabc123";
 
     protected function setUp(): void {
         $this->login("user2", "user2");
@@ -55,6 +56,7 @@ class NoAccessTest extends CarTestBase {
 
         $data = [
             "id" => $this->TEST_CAR_ID,
+            "hash" => $this->TEST_CAR_HASH,
             "name" => "Test Car Updated",
             "users" => [1, 2],
             "mileage_per_year" => 15000,
@@ -77,5 +79,17 @@ class NoAccessTest extends CarTestBase {
 
         $body = (string) $response->getBody();
         $this->assertStringContainsString("Kein Zugriff erlaubt", $body);
+    }
+
+    /** 
+     * View Project (member)
+     */
+    public function testGetViewParent() {
+        $response = $this->request('GET', $this->getURIView($this->TEST_CAR_HASH));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString("<p>Kein Zugriff erlaubt</p>", $body);
     }
 }

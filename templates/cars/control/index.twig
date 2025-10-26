@@ -16,10 +16,6 @@
 	</div>
 {% endblock %}
 
-{% block tabbar %}
-	{% include "cars/cars-tabs.twig" with {'active':'cars'} only %}
-{% endblock %}
-
 {% block body %}
 	<div class="inner-content">
 		<div class="page-content">
@@ -34,7 +30,7 @@
 				<tbody>
 					{% for car in cars %}
 						<tr>
-							<td>{{car.name|raw}}</td>
+							<td><a href="{{ url_for('car_service_refuel', {'car' : car.getHash()}) }}">{{car.name|raw}}</a></td>
 							<td>
 								{% if car.user == user.id %}
 									<a href="{{ url_for('cars_edit', {'id' : car.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
