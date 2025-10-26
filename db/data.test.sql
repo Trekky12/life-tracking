@@ -1,4 +1,4 @@
-INSERT INTO global_settings (name, value, type) VALUES ('version', 24, 'Integer');
+INSERT INTO global_settings (name, value, type) VALUES ('version', 25, 'Integer');
 INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('lastRunRecurringSplitbills', 0, 'Date'), ('lastRunRecurringTransactions', 0, 'Date'), ('isCronRunning', 0, 'Boolean');
 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
@@ -176,8 +176,8 @@ INSERT INTO cars_user (car, user) VALUES
 (1, 1),
 (1, 2); 
 
-INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, fuel_volume, fuel_type, lat, lng, acc) VALUES 
-(1, 1, 1, 1, '2020-01-01', 0, 0, '50.00', 1, '52.51958898995020', '13.38857889175415', '0.000');
+INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, refill_amount, refill_full, lat, lng, acc) VALUES 
+(1, 1, 1, 1, '2020-01-01', 0, 0, '50.00', 'full', '52.51958898995020', '13.38857889175415', '0.000');
 INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, notice, service_oil_before, service_oil_after, service_water_wiper_before, service_water_wiper_after, service_air_front_left_before, service_air_front_left_after, service_air_front_right_before, service_air_front_right_after, service_air_back_left_before, service_air_back_left_after, service_air_back_right_before, service_air_back_right_after, service_tire_change, service_garage) VALUES
 (2, 1, 1, 1, '2020-01-01', 0, 1, 'Test', 0, 100, 0, 100, '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', 1, 1);
 

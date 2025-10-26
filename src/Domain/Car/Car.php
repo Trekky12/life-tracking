@@ -19,6 +19,10 @@ class Car extends \App\Domain\DataObject {
 
         $this->mileage_start = $this->exists('mileage_start', $data) ? filter_var($data['mileage_start'], FILTER_SANITIZE_NUMBER_INT) : null;
         
+        $this->refill_type = $this->exists('refill_type', $data) ? Utility::filter_string_polyfill($data['refill_type']) : null;
+
+        $this->archive = $this->exists('archive', $data) ? filter_var($data['archive'], FILTER_SANITIZE_NUMBER_INT) : 0;
+
         if (!is_null($this->mileage_start_date) && !preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $this->mileage_start_date)) {
             $this->mileage_start_date = date('Y-m-d');
         }
@@ -27,9 +31,14 @@ class Car extends \App\Domain\DataObject {
             $this->mileage_start = 0;
         }
 
+        if (!in_array($this->refill_type, ["fuel", "battery"])) {
+            $this->refill_type = "fuel";
+        }
+
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }
+        
     }
 
     public function getDescription(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {

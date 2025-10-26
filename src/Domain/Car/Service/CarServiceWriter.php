@@ -75,7 +75,7 @@ class CarServiceWriter extends ObjectActivityWriter {
         /**
          * Calculate Consumption when full
          */
-        if ($entry->mileage && $entry->fuel_calc_consumption && $entry->fuel_type == 1 && !is_null($lastMileage)) {
+        if ($entry->mileage && $entry->calc_refill_consumption && $entry->refill_full == 1 && !is_null($lastMileage)) {
 
             $lastFull = $this->mapper->getLastFull($id, $entry->mileage, $entry->car);
             if ($lastFull) {

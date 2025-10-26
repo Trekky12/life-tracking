@@ -36,8 +36,8 @@
 				{% if not entry is null %}
 					{# Hidden fields for ID to recognize updates and for not available fields so they don't get overwritten with null #}
 					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-					<input name="fuel_distance" type="hidden" value="{{entry.fuel_distance}}">
-					<input name="fuel_consumption" type="hidden" value="{{entry.fuel_consumption}}">
+					<input name="refill_distance" type="hidden" value="{{entry.refill_distance}}">
+					<input name="refill_consumption" type="hidden" value="{{entry.refill_consumption}}">
 				{% endif %}
 
 				<div class="form-group">

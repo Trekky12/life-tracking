@@ -19,18 +19,18 @@ class CarServiceEntry extends \App\Domain\DataObject {
         // 0 => refuel, 1 => service
         $this->type = $this->exists('type', $data) ? filter_var($data['type'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
-        $this->fuel_price = $this->exists('fuel_price', $data) ? filter_var($data['fuel_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->fuel_volume = $this->exists('fuel_volume', $data) ? filter_var($data['fuel_volume'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->fuel_total_price = $this->exists('fuel_total_price', $data) ? filter_var($data['fuel_total_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $this->fuel_location = $this->exists('fuel_location', $data) ? Utility::filter_string_polyfill($data['fuel_location']) : null;
+        $this->refill_price = $this->exists('refill_price', $data) ? filter_var($data['refill_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->refill_amount = $this->exists('refill_amount', $data) ? filter_var($data['refill_amount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->refill_total_price = $this->exists('refill_total_price', $data) ? filter_var($data['refill_total_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->refill_location = $this->exists('refill_location', $data) ? Utility::filter_string_polyfill($data['refill_location']) : null;
 
         // 0=>full, 1 => partly
-        $this->fuel_type = $this->exists('fuel_type', $data) ? filter_var($data['fuel_type'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->refill_full = $this->exists('refill_full', $data) ? filter_var($data['refill_full'], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        $this->fuel_distance = $this->exists('fuel_distance', $data) ? filter_var($data['fuel_distance'], FILTER_SANITIZE_NUMBER_INT) : null;
-        $this->fuel_consumption = $this->exists('fuel_consumption', $data) ? filter_var($data['fuel_consumption'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $this->refill_distance = $this->exists('refill_distance', $data) ? filter_var($data['refill_distance'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $this->refill_consumption = $this->exists('refill_consumption', $data) ? filter_var($data['refill_consumption'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
-        $this->fuel_calc_consumption = $this->exists('fuel_calc_consumption', $data) ? filter_var($data['fuel_calc_consumption'], FILTER_SANITIZE_NUMBER_INT) : 0;
+        $this->calc_refill_consumption = $this->exists('calc_refill_consumption', $data) ? filter_var($data['calc_refill_consumption'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
         $this->service_oil_before = $this->exists('service_oil_before', $data) ? filter_var($data['service_oil_before'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->service_oil_after = $this->exists('service_oil_after', $data) ? filter_var($data['service_oil_after'], FILTER_SANITIZE_NUMBER_INT) : null;

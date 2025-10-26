@@ -174,6 +174,9 @@ $lang["COMMON_VALUE"] = "Common value";
 
 $lang["CAR"] = "Car";
 $lang["CARS"] = "Cars";
+$lang["CARS_REFILL_TYPE"] = "Type of fuel";
+$lang["CARS_REFILL_TYPE_FUEL"] = "combustion engine";
+$lang["CARS_REFILL_TYPE_BATTERY"] = "electrical";
 
 $lang["FINANCES_CATEGORY_ASSIGNMENTS"] = "category assignments";
 $lang["MIN_VALUE"] = "min. value";

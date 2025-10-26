@@ -14,8 +14,8 @@ class CarServiceMapper extends \App\Domain\Mapper {
             . "WHERE id != :id "
             . " AND mileage IS NOT NULL "
             . " AND mileage <= :mileage"
-            . " AND fuel_volume IS NOT NULL "
-            //. " AND fuel_total_price IS NOT NULL "
+            . " AND refill_amount IS NOT NULL "
+            //. " AND refill_total_price IS NOT NULL "
             . " AND car = :car "
             . " AND type = :type ";
 
@@ -36,7 +36,7 @@ class CarServiceMapper extends \App\Domain\Mapper {
     }
 
     public function setDistance($id, $lastMileage = 0) {
-        $sql = "UPDATE " . $this->getTableName() . " SET fuel_distance  = mileage - :mileage WHERE id = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET refill_distance  = mileage - :mileage WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -54,10 +54,10 @@ class CarServiceMapper extends \App\Domain\Mapper {
             . "WHERE id != :id "
             . " AND mileage IS NOT NULL "
             . " AND mileage <= :mileage "
-            . " AND fuel_volume IS NOT NULL "
-            //. " AND fuel_total_price IS NOT NULL "
-            . " AND fuel_type = 1 "
-            . " AND fuel_type IS NOT NULL"
+            . " AND refill_amount IS NOT NULL "
+            //. " AND refill_total_price IS NOT NULL "
+            . " AND refill_full = 1 "
+            . " AND refill_full IS NOT NULL"
             . " AND car = :car "
             . " AND type = :type ";
 
@@ -76,7 +76,7 @@ class CarServiceMapper extends \App\Domain\Mapper {
     }
 
     public function getVolume($car, $date, $lastDate) {
-        $sql = "SELECT SUM(fuel_volume) FROM " . $this->getTableName() . " "
+        $sql = "SELECT SUM(refill_amount) FROM " . $this->getTableName() . " "
             . "WHERE car = :car "
             . " AND date <= :date "
             . " AND date > :lastDate "
@@ -95,7 +95,7 @@ class CarServiceMapper extends \App\Domain\Mapper {
     }
 
     public function setConsumption($id, $consumption = 0) {
-        $sql = "UPDATE " . $this->getTableName() . " SET fuel_consumption  = :consumption WHERE id = :id";
+        $sql = "UPDATE " . $this->getTableName() . " SET refill_consumption  = :consumption WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -198,12 +198,12 @@ class CarServiceMapper extends \App\Domain\Mapper {
             . " ("
             . " cs.date LIKE :searchQuery OR "
             . " cs.mileage LIKE :searchQuery OR "
-            . " cs.fuel_price LIKE :searchQuery OR "
+            . " cs.refill_price LIKE :searchQuery OR "
             . " c.name LIKE :searchQuery OR "
-            . " cs.fuel_volume LIKE :searchQuery OR "
-            . " cs.fuel_total_price LIKE :searchQuery OR"
-            . " cs.fuel_consumption LIKE :searchQuery OR"
-            . " cs.fuel_location LIKE :searchQuery OR"
+            . " cs.refill_amount LIKE :searchQuery OR "
+            . " cs.refill_total_price LIKE :searchQuery OR"
+            . " cs.refill_consumption LIKE :searchQuery OR"
+            . " cs.refill_location LIKE :searchQuery OR"
             . " cs.notice LIKE :searchQuery "
             . ")"
             . " AND c.id = :car "
@@ -237,34 +237,34 @@ class CarServiceMapper extends \App\Domain\Mapper {
                 $sort = "mileage";
                 break;
             case 2:
-                $sort = "fuel_price";
+                $sort = "refill_price";
                 break;
             case 3:
-                $sort = "fuel_volume";
+                $sort = "refill_amount";
                 break;
             case 4:
-                $sort = "fuel_total_price";
+                $sort = "refill_total_price";
                 break;
             case 5:
-                $sort = "fuel_type";
+                $sort = "refill_full";
                 break;
             case 6:
-                $sort = "fuel_consumption";
+                $sort = "refill_consumption";
                 break;
             case 7:
-                $sort = "fuel_location";
+                $sort = "refill_location";
                 break;
         }
 
         $partly = $this->translation->getTranslatedString("FUEL_PARTLY");
         $full = $this->translation->getTranslatedString("FUEL_FULL");
 
-        $select = "cs.date, cs.mileage, cs.fuel_price, cs.fuel_volume, cs.fuel_total_price, "
+        $select = "cs.date, cs.mileage, cs.refill_price, cs.refill_amount, cs.refill_total_price, "
             . "CASE "
-            . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 0 THEN '{$partly}' "
-            . " WHEN cs.fuel_volume > 0 AND cs.fuel_type = 1 THEN '{$full}'"
-            . " ELSE '' END as fuel_type, "
-            . "cs.fuel_consumption, cs.fuel_location, "
+            . " WHEN cs.refill_amount > 0 AND cs.refill_full = 0 THEN '{$partly}' "
+            . " WHEN cs.refill_amount > 0 AND cs.refill_full = 1 THEN '{$full}'"
+            . " ELSE '' END as refill_full, "
+            . "cs.refill_consumption, cs.refill_location, "
             . "cs.id, cs.id";
 
         list($sql, $bindings) = $this->getTableSQL($select, $searchQuery, $car_id, $type);

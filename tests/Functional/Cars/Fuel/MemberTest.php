@@ -46,12 +46,12 @@ class MemberTest extends BaseTestCase {
             "type" => 0,
             "date" => date('Y-m-d'),
             "mileage" => 1000,
-            "fuel_type" => 1,
-            "fuel_calc_consumption" => 1,
-            "fuel_price" => 150,
-            "fuel_volume" => 50,
-            "fuel_total_price" => 75,
-            "fuel_location" => "Test Location",
+            "refill_full" => 1,
+            "calc_refill_consumption" => 1,
+            "refill_price" => 150,
+            "refill_amount" => 50,
+            "refill_total_price" => 75,
+            "refill_location" => "Test Location",
             "notice" => "Test",
             "lat" => "10.00000000000000",
             "lng" => "5.00000000000000",
@@ -116,12 +116,12 @@ class MemberTest extends BaseTestCase {
             "type" => 0,
             "date" => date('Y-m-d'),
             "mileage" => 1500,
-            "fuel_type" => 0,
-            "fuel_calc_consumption" => 1,
-            "fuel_price" => 150,
-            "fuel_volume" => 50,
-            "fuel_total_price" => 75,
-            "fuel_location" => "Test Location",
+            "refill_full" => 0,
+            "calc_refill_consumption" => 1,
+            "refill_price" => 150,
+            "refill_amount" => 50,
+            "refill_total_price" => 75,
+            "refill_location" => "Test Location",
             "notice" => "Test",
             "lat" => "10.00000000000000",
             "lng" => "5.00000000000000",
@@ -203,15 +203,15 @@ class MemberTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data, $hash) {
 
-        $price = number_format($data["fuel_price"], 2);
-        $volume = number_format($data["fuel_volume"], 2);
-        $total_price = number_format($data["fuel_total_price"], 2);
-        $consumption = $data["fuel_type"] == 1 ? number_format(5, 2) : "";
+        $price = number_format($data["refill_price"], 2);
+        $volume = number_format($data["refill_amount"], 2);
+        $total_price = number_format($data["refill_total_price"], 2);
+        $consumption = $data["refill_full"] == 1 ? number_format(5, 2) : "";
 
-        $type = $data["fuel_type"] == 1 ? "vollgetankt" : "nachgetankt";
+        $type = $data["refill_full"] == 1 ? "vollgetankt" : "nachgetankt";
 
         $matches = [];
-        $re = '/<tr>\s*<td>' . preg_quote($data["date"] ?? '') . '<\/td>\s*<td>' . preg_quote($data["mileage"] ?? '') . '<\/td>\s*<td>' . preg_quote($price ?? '') . '<\/td>\s*<td>' . preg_quote($volume ?? '') . '<\/td>\s*<td>' . preg_quote($total_price ?? '') . '<\/td>\s*<td>' . preg_quote($type ?? '') . '<\/td>\s*<td>' . preg_quote($consumption ?? '') . '<\/td>\s*<td>' . preg_quote($data["fuel_location"] ?? '') . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>' . preg_quote($data["date"] ?? '') . '<\/td>\s*<td>' . preg_quote($data["mileage"] ?? '') . '<\/td>\s*<td>' . preg_quote($price ?? '') . '<\/td>\s*<td>' . preg_quote($volume ?? '') . '<\/td>\s*<td>' . preg_quote($total_price ?? '') . '<\/td>\s*<td>' . preg_quote($type ?? '') . '<\/td>\s*<td>' . preg_quote($consumption ?? '') . '<\/td>\s*<td>' . preg_quote($data["refill_location"] ?? '') . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

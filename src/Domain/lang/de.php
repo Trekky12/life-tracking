@@ -174,6 +174,9 @@ $lang["COMMON_VALUE"] = "Gemeinsamer Betrag";
 
 $lang["CAR"] = "Auto";
 $lang["CARS"] = "Autos";
+$lang["CARS_REFILL_TYPE"] = "Kraftstoffart";
+$lang["CARS_REFILL_TYPE_FUEL"] = "Verbrenner";
+$lang["CARS_REFILL_TYPE_BATTERY"] = "Elektrisch";
 
 $lang["FINANCES_CATEGORY_ASSIGNMENTS"] = "Kategorie Zuweisungen";
 $lang["MIN_VALUE"] = "min. Betrag";

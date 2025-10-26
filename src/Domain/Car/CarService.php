@@ -24,17 +24,20 @@ class CarService extends Service {
     }
 
     public function getAllOrderedByName($archive = null) {
-        return $this->mapper->getUserItems('name', false, null, $archive);
+        return $this->mapper->getUserItems('t.createdOn DESC, name', false, null, $archive);
     }
 
     public function getCar($id) {
         return $this->mapper->get($id);
     }
 
-    public function index() {
-        $cars = $this->mapper->getUserItems('t.createdOn DESC, name');
+    public function index($archive = 0) {
+        $cars = $this->getAllOrderedByName($archive);
 
-        return new Payload(Payload::$RESULT_HTML, ["cars" => $cars]);
+        return new Payload(Payload::$RESULT_HTML, [
+            "cars" => $cars,
+            'archive' => $archive
+        ]);
     }
 
     public function edit($entry_id) {
@@ -47,5 +50,4 @@ class CarService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, ['entry' => $entry, 'users' => $users]);
     }
-
 }

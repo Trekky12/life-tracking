@@ -36,8 +36,8 @@
 				{% if not entry is null %}
 					{# Hidden fields for ID to recognize updates and for not available fields so they don't get overwritten with null #}
 					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
-					<input name="fuel_distance" type="hidden" value="{{entry.fuel_distance}}">
-					<input name="fuel_consumption" type="hidden" value="{{entry.fuel_consumption}}">
+					<input name="refill_distance" type="hidden" value="{{entry.refill_distance}}">
+					<input name="refill_consumption" type="hidden" value="{{entry.refill_consumption}}">
 				{% endif %}
 
 				<div class="form-group">
@@ -63,38 +63,38 @@
 					<div class="form-group two-columns">
 						<div class="left">
 							<label class="radio" for="radioPart">
-								<input name="fuel_type" type="radio" data-toggle="radio" value="0" id="radioPart" {% if entry is null or (not entry is null and entry.fuel_type == 0) %} checked {% endif %}>
+								<input name="refill_full" type="radio" data-toggle="radio" value="0" id="radioPart" {% if entry is null or (not entry is null and entry.refill_full == 0) %} checked {% endif %}>
 								{{"FUEL_PARTLY"|trans}}
 							</label>
 						</div>
 						<div class="right">
 							<label class="radio" for="radioFull">
-								<input name="fuel_type" type="radio" data-toggle="radio" value="1" id="radioFull" {% if not entry is null and entry.fuel_type == 1 %} checked {% endif %}>
+								<input name="refill_full" type="radio" data-toggle="radio" value="1" id="radioFull" {% if not entry is null and entry.refill_full == 1 %} checked {% endif %}>
 								{{"FUEL_FULL"|trans}}
 							</label>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="checkbox" for="checkboxCalcConsumption">
-							<input name="fuel_calc_consumption" type="checkbox" id="checkboxCalcConsumption" value="1" {% if entry is null or entry.fuel_calc_consumption == 1 %} checked {% endif %}>
+							<input name="calc_refill_consumption" type="checkbox" id="checkboxCalcConsumption" value="1" {% if entry is null or entry.calc_refill_consumption == 1 %} checked {% endif %}>
 							{{"CALC_CONSUMPTION"|trans}}
 						</label>
 					</div>
 					<div class="form-group">
-						<label for="inputGPrice">{{"PRICE"|trans}}/l</label>
-						<input type="number" class="form-control" id="inputGPrice" name="fuel_price" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.fuel_price}}" {% endif %}>
+						<label for="inputGPrice">{{"PRICE"|trans}}/{% if car.refill_type == "fuel" %}l{% else %}kWh{% endif %}</label>
+						<input type="number" class="form-control" id="inputGPrice" name="refill_price" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.refill_price}}" {% endif %}>
 					</div>
 					<div class="form-group">
-						<label for="inputGVol">{{"VOLUME"|trans}}</label>
-						<input type="number" class="form-control" id="inputGVol" name="fuel_volume" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.fuel_volume}}" {% endif %}>
+						<label for="inputGVol">{{"VOLUME"|trans}} ({% if car.refill_type == "fuel" %}l{% else %}kWh{% endif %})</label>
+						<input type="number" class="form-control" id="inputGVol" name="refill_amount" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.refill_amount}}" {% endif %}>
 					</div>
 					<div class="form-group">
 						<label for="inputGTotalPrice">{{"TOTAL_PRICE"|trans}}</label>
-						<input type="number" class="form-control" id="inputGTotalPrice" name="fuel_total_price" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.fuel_total_price}}" {% endif %}>
+						<input type="number" class="form-control" id="inputGTotalPrice" name="refill_total_price" step="any" inputmode="decimal" placeholder="" {% if not entry is null %} value="{{entry.refill_total_price}}" {% endif %}>
 					</div>
 					<div class="form-group">
 						<label for="inputGLocation">{{"LOCATION"|trans}}</label>
-						<input type="text" class="form-control" id="inputGLocation" name="fuel_location" placeholder="" {% if not entry is null %} value="{{entry.fuel_location|raw}}" {% endif %}>
+						<input type="text" class="form-control" id="inputGLocation" name="refill_location" placeholder="" {% if not entry is null %} value="{{entry.refill_location|raw}}" {% endif %}>
 					</div>
 				</div>
 
