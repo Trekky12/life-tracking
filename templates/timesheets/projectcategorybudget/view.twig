@@ -74,7 +74,7 @@
 							</div>
 
 							<div class="progress-bar">
-								<div class="progress {%if budget.warning3 > 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 > 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 > 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}" style="width:{{budget.percent}}%">
+								<div class="progress {%if budget.warning3 >= 0 and budget.sum >= budget.warning3 %}red{%elseif budget.warning2 >= 0 and budget.sum >= budget.warning2%}orange{%elseif budget.warning1 >= 0 and budget.sum >= budget.warning1 %}yellow{%else%}green{%endif%}" style="width:{{budget.percent}}%">
 									{%if budget.percent >= 25 %}
 										{{budget.percent}}%{%endif%}</div>
 									{%if budget.percent and budget.percent < 25 %}

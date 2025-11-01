@@ -235,9 +235,9 @@ class ProjectCategoryBudgetMapper extends \App\Domain\Mapper {
                     ELSE COUNT(sheet.id) 
                  END as sum, 
                  CASE 
-                    WHEN STRCMP('{$budget["categorization"]}', 'duration') = 0 THEN ROUND(((SUM(sheet.duration)/{$budget["value"]})*100),2)
-                    WHEN STRCMP('{$budget["categorization"]}', 'duration_modified') = 0 THEN ROUND(((SUM(sheet.duration_modified)/{$budget["value"]})*100),2)
-                    ELSE ROUND(((COUNT(sheet.id)/{$budget["value"]})*100),2)
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration') = 0 THEN ROUND(((SUM(sheet.duration)/COALESCE(NULLIF({$budget["value"]}, 0), 1))*100),2)
+                    WHEN STRCMP('{$budget["categorization"]}', 'duration_modified') = 0 THEN ROUND(((SUM(sheet.duration_modified)/COALESCE(NULLIF({$budget["value"]}, 0), 1))*100),2)
+                    ELSE ROUND(((COUNT(sheet.id)/COALESCE(NULLIF({$budget["value"]}, 0), 1))*100),2)
                   END as percent, 
                    CASE 
                     WHEN STRCMP('{$budget["categorization"]}', 'duration') = 0 THEN {$budget["value"]}-SUM(sheet.duration)

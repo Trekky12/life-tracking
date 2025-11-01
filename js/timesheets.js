@@ -607,13 +607,13 @@ if (calendarEl) {
                     progressBar.className = "progress-bar";
 
                     var progressClass = "green";
-                    if (budget.warning3 > 0 && budget.sum >= budget.warning3) {
+                    if (budget.warning3 >= 0 && budget.sum >= budget.warning3) {
                         progressClass = "red";
                     }
-                    else if (budget.warning2 > 0 && budget.sum >= budget.warning2) {
+                    else if (budget.warning2 >= 0 && budget.sum >= budget.warning2) {
                         progressClass = "orange";
                     }
-                    else if (budget.warning1 > 0 && budget.sum >= budget.warning1) {
+                    else if (budget.warning1 >= 0 && budget.sum >= budget.warning1) {
                         progressClass = "yellow";
                     }
 
