@@ -784,6 +784,8 @@ $lang["WIDGET_CURRENTWEATHER"] = "current weather";
 $lang["WIDGET_WEATHERFORECAST"] = "weather forecast";
 $lang["WIDGET_TIMESHEETS_FAST_CREATE"] = "fast creation of times";
 $lang["WIDGET_TIMESHEETS_CALENDAR"] = "calendar";
+$lang["WIDGET_EFA_OFFSET"] = "offset (minutes)";
+$lang["WIDGET_EFA_OFFSET_TITLE"] = "in %offset% min.";
 
 $lang["WORKOUTS"] = "workouts";
 $lang["WORKOUTS_EXERCISES"] = "exercises";

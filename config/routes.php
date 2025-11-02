@@ -713,12 +713,14 @@ return function (App $app) {
             $location_group->post('/record', \App\Application\Action\Location\LocationRecordAction::class)->setName('location_record');
         });
         $group->group('/crawlers', function (RouteCollectorProxy $crawler_group) {
-            $crawler_group->post('/record', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class)->setName('crawler_record');
+            $crawler_group->post('/record', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class);
         });
         $group->group('/notifications', function (RouteCollectorProxy $notifications_group) {
             $notifications_group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         });
 
         $group->post('/workout', \App\Application\Action\Workouts\Exercise\ExerciseSaveAction::class);
+
+        $group->get('/widget/{id:[0-9]+}', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetAPIDataAction::class);
     });
 };

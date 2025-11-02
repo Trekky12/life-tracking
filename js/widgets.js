@@ -18,7 +18,18 @@ function load(item) {
     let widget = item.dataset.widget;
     let options = item.dataset.options;
 
-    return fetch(jsObject.frontpage_widget_request + id + '?widget=' + widget + '&options=' + options, {
+    let url = jsObject.frontpage_widget_request + id;
+    if (widget || options) {
+        url += '?';
+        if (widget) {
+            url += 'widget=' + widget;
+        }
+        if (options) {
+            url += 'options=' + options;
+        }
+    }
+
+    return fetch(url, {
         method: 'GET',
         credentials: "same-origin",
         headers: {

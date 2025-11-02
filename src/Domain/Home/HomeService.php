@@ -324,6 +324,9 @@ class HomeService extends Service {
 
     public function getWidgetData($id, $widget = null, $options = []) {
 
+        $language = $this->settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+
         $response_data = [];
 
         if (!is_null($id)) {
@@ -341,6 +344,17 @@ class HomeService extends Service {
 
         if ($widget_object->name == "efa") {
             $url = $widget_object->getOptions()["url"];
+
+            $offset = $widget_object->getOptions()["offset"];
+            if (!empty($offset)) {
+                $itdTime = new \DateTime();
+                $itdTime->add(new \DateInterval('PT' . $offset . 'M'));
+
+                $url .= "&itdTime=" . sprintf('%02d:%02d', $itdTime->format('H'), $itdTime->format('i'));
+
+                $response_data["offset"] = $offset;
+            }
+
             list($status, $result) = $this->helper->request($url);
             $content = Widget\EFAWidget::formatEFARequestData($status, $result);
         } elseif ($widget_object->name == "currentweather") {
@@ -351,17 +365,18 @@ class HomeService extends Service {
             $url = $widget_object->getOptions()["url"];
             list($status, $result) = $this->helper->request($url);
 
-            $language = $this->settings->getAppSettings()['i18n']['php'];
-            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
-
             $fmtDate = new \IntlDateFormatter($language);
             $fmtDate->setPattern($dateFormatPHP["weekday"]);
-
             $content = Widget\WeatherForecastWidget::formatWeatherForecastRequestData($status, $result, $fmtDate);
         }
         $widget_data = $this->getWidgetForFrontend($widget_object, $content);
         $response_data["data"] = $widget_data["content"];
         $response_data["url"] = $widget_data["url"];
+        $response_data["title"] = $widget_data["title"];
+
+        $fmtDateQuery = new \IntlDateFormatter($language);
+        $fmtDateQuery->setPattern($dateFormatPHP["datetime"]);
+        $response_data["datetime"] = $fmtDateQuery->format(new \DateTime());
 
         $payload = new Payload(Payload::$RESULT_HTML, $response_data);
 

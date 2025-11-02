@@ -17,7 +17,14 @@ class EFAWidget implements Widget {
     }
 
     public function getTitle(?WidgetObject $widget = null) {
-        return $widget->getOptions()["title"];
+        $title = $widget->getOptions()["title"];
+        $offset = $widget->getOptions()["offset"];
+
+        if (!empty($offset)) {
+            $title .= " (" . $this->translation->getTranslatedString("WIDGET_EFA_OFFSET_TITLE", ["%offset%" => $offset]) . ")";
+        }
+
+        return $title;
     }
 
     public function getOptions(?WidgetObject $widget = null) {
@@ -33,6 +40,12 @@ class EFAWidget implements Widget {
                 "value" => !is_null($widget) ? $widget->getOptions()["url"] : null,
                 "name" => "url",
                 "type" => "input"
+            ],
+            [
+                "label" => $this->translation->getTranslatedString("WIDGET_EFA_OFFSET"),
+                "value" => !is_null($widget) ? $widget->getOptions()["offset"] : null,
+                "name" => "offset",
+                "type" => "number"
             ]
         ];
     }
@@ -74,6 +87,7 @@ class EFAWidget implements Widget {
 
                     $dep["realtimeTripStatus"] = (string) $departure->attributes()->realtimeTripStatus;
                     $dep["realtimeStatus"] = (string) $departure->attributes()->realtimeStatus;
+                    $dep["occupancy"] = (string) $departure->attributes()->occupancy;
 
                     $xml_result["departureList"][] = $dep;
                 }
@@ -127,7 +141,8 @@ class EFAWidget implements Widget {
                     "direction" => $departure["servingLine"]["direction"],
                     "time" => $time,
                     "delay" => $delay,
-                    "cancelled" => $cancelled ? "CANCELLED" : ""
+                    "cancelled" => $cancelled ? "CANCELLED" : "",
+                    "occupancy" => $departure["occupancy"]
                 ];
             }
         }

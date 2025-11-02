@@ -240,6 +240,16 @@ function createWidgetOption(element) {
         input.classList.add("form-control");
         input.name = element.name;
         input.value = element.value;
+        input.type = "text";
+
+        return input;
+    }else if (element.type == "number") {
+
+        let input = document.createElement("input");
+        input.classList.add("form-control");
+        input.name = element.name;
+        input.value = element.value;
+        input.type = "number";
 
         return input;
     }
