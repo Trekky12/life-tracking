@@ -67,7 +67,7 @@ class CarLastRefuelWidget implements Widget {
     public function getLink(?WidgetObject $widget = null) {
         $id = $widget->getOptions()["car"];
         $hash = $this->cars[$id]["hash"];
-        return $this->router->urlFor('car_service', ['car' => $hash ]);
+        return $this->router->urlFor('car_service_refuel', ['car' => $hash ]);
     }
 
 }
