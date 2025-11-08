@@ -133,8 +133,12 @@
 							{% endfor %}
 						</select>
 					</div>
-					<input id="setCount" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="3" class="small"/>
+					<input id="setCount" type="number" min="0" max="999" step="1" pattern="\d*" size="5" value="3" class="small"/>
 					<label for="setCount">{{ "WORKOUTS_SETS"|trans }}</label>
+					<input id="setRepeat" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="" class="small"/>
+					<label for="setRepeat">{{ "WORKOUTS_REPEATS"|trans }}</label>
+					<input id="setWeight" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="" class="small"/>
+					<label for="setWeight">{{ "WORKOUTS_KG"|trans }}</label>
 					<button type="button" class="button button-outlined small" id="addExercise">{{ "ADD"|trans }}</button>
 				</div>
 

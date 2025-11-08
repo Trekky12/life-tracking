@@ -13,10 +13,10 @@
         display: flex;
         flex-direction: column;
         padding: 1rem;
-        
+
         border: 1px solid variables.$color_blue_light_gray;
         border-radius: 5px;
-        
+
         margin: 0.5rem;
 
         //user-select: none;
@@ -196,7 +196,6 @@
         }
 
         &.choose {
-
             .sets,
             .notices {
                 display: none;
@@ -264,7 +263,7 @@
             }
         }
 
-        .exercises{
+        .exercises {
             width: 100%;
         }
     }
@@ -322,16 +321,23 @@
     }
 }
 
-#setCount {
+#setCount,
+#setRepeat,
+#setWeight {
     padding: 0.2rem;
     @include mixins.font-size(1.6);
-    max-width: 50px;
+    max-width: 70px;
+    margin-left: 10px;
+}
+
+#addExercise {
+    margin-left: 10px;
 }
 
 #addExerciseToSession {
     max-width: 50%;
 
-    select{
+    select {
         max-width: 100%;
     }
 }
@@ -411,10 +417,8 @@
 }
 
 body.workouts.sortable-select {
-
     .exercise.selected,
     .exercise-session {
-
         .bodypart,
         .instructions,
         .notices,

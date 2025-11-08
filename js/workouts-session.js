@@ -2,16 +2,16 @@
 
 const exercisesSession = document.querySelector('#workoutExercises .content');
 const addExerciseBtn = document.querySelector('#addExercise');
-const addExerciseSelect = document.querySelector('#addExerciseToSession select');
-const addExerciseSetNr = document.querySelector('#setCount');
 addExerciseBtn.addEventListener('click', function (event) {
-    let exercise = addExerciseSelect.value;
-    let sets = addExerciseSetNr.value;
+    let exercise = document.querySelector('#addExerciseToSession select').value;
+    let sets = document.querySelector('#setCount').value;
+    let repeat = document.querySelector('#setRepeat').value;
+    let weight = document.querySelector('#setWeight').value;
 
     let workoutElements = exercisesSession.querySelectorAll('[data-type="workout-element"]');
     let nextID = workoutElements.length;
 
-    return fetch(jsObject.workouts_exercises_data + '?exercise=' + exercise + '&sets=' + sets + '&count=' + nextID, {
+    return fetch(jsObject.workouts_exercises_data + '?exercise=' + exercise + '&sets=' + sets + '&repeat=' + repeat + '&weight=' + weight + '&count=' + nextID, {
         method: 'GET',
         credentials: "same-origin",
         headers: {

@@ -19,13 +19,15 @@ class ExerciseService extends Service {
     private $bodypart_mapper;
     protected $settings_mapper;
 
-    public function __construct(LoggerInterface $logger,
-            CurrentUser $user,
-            ExerciseMapper $mapper,
-            Settings $settings,
-            MuscleMapper $muscle_mapper,
-            BodypartMapper $bodypart_mapper,
-            SettingsMapper $settings_mapper) {
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        ExerciseMapper $mapper,
+        Settings $settings,
+        MuscleMapper $muscle_mapper,
+        BodypartMapper $bodypart_mapper,
+        SettingsMapper $settings_mapper
+    ) {
         parent::__construct($logger, $user);
         $this->mapper = $mapper;
 
@@ -109,7 +111,7 @@ class ExerciseService extends Service {
         $bodyparts = $this->bodypart_mapper->getAll();
         $muscles = $this->muscle_mapper->getAll();
 
-        $exercise_ids = array_map(function($exercise) {
+        $exercise_ids = array_map(function ($exercise) {
             return $exercise->id;
         }, $exercises);
 
@@ -205,12 +207,21 @@ class ExerciseService extends Service {
         $exercise_id = array_key_exists('exercise', $data) ? filter_var($data['exercise'], FILTER_SANITIZE_NUMBER_INT) : -1;
         $exercise_idx = array_key_exists('count', $data) ? filter_var($data['count'], FILTER_SANITIZE_NUMBER_INT) : -1;
 
+        $repeat = array_key_exists('repeat', $data) ? filter_var($data['repeat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $weight = array_key_exists('weight', $data) ? filter_var($data['weight'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+
         try {
             $exercise = $this->mapper->get($exercise_id);
+
+            $setsData = [];
+            for ($i = 0; $i < $sets; ++$i) {
+                $setsData[] = ["repeats" => $repeat, "weight" => $weight];
+            }
+
             $response_data["data"] = [
                 "exercise" => $exercise,
                 "idx" => $exercise_idx,
-                "sets" => range(0, $sets - 1),
+                "sets" => $setsData,
                 "type" => "exercise",
                 "notice" => null,
                 "is_child" => 0,
@@ -223,5 +234,4 @@ class ExerciseService extends Service {
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
-
 }
