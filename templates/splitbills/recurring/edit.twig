@@ -45,7 +45,7 @@
 
 				<div class="form-group">
 					<label for="inputName">{{"NAME"|trans}}</label>
-					<input type="text"  {% if isOwner %} required {% else %} disabled="disabled" {% endif %} class="form-control {%if not isOwner %}disabled{% endif %}" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% elseif isSettleUp %} value="{{"SPLITBILLS_SETTLE_UP"|trans}}" {% endif %}>
+					<input type="text" {% if isOwner %} required {% else %} disabled="disabled" {% endif %} class="form-control {%if not isOwner %}disabled{% endif %}" id="inputName" name="name" {% if not entry is null %} value="{{entry.name|raw}}" {% elseif isSettleUp %} value="{{"SPLITBILLS_SETTLE_UP"|trans}}" {% endif %}>
 				</div>
 
 				{% if foreignCurrency %}
@@ -93,7 +93,9 @@
 						<select name="balance[{{ me }}][paymethod]">
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods[me] %}
-								<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% if (method.archive != 1 or (balance is not empty and method.id == balance[me]["paymethod"])) %}
+									<option value="{{method.id}}" {% if (balance is not empty and method.id == balance[me]["paymethod"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% endif %}
 							{% endfor %}
 						</select>
 					</div>
@@ -112,7 +114,9 @@
 							<select name="balance[{{ me }}][account_to]">
 								<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 								{% for account in accounts[me] %}
-									<option value="{{account.id}}" {% if (not balance is empty and account.id == balance[me]["account_to"]) %} selected {% endif %}>{{account.name|raw}}</option>
+									{% if (account.archive != 1 or (balance is not empty and account.id == balance[me]["account_to"])) %}
+										<option value="{{account.id}}" {% if (balance is not empty and account.id == balance[me]["account_to"]) %} selected {% endif %}>{{account.name|raw}}</option>
+									{% endif %}
 								{% endfor %}
 							</select>
 						</div>

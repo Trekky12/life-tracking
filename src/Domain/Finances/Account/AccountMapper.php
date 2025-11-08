@@ -49,7 +49,7 @@ class AccountMapper extends \App\Domain\Mapper {
         return null;
     }
 
-    public function getAllfromUsers($users = [], $sorted = false) {
+    public function getAllfromUsers($users = [], $archive = null, $sorted = false) {
 
         $user_ids = array_keys($users);
 
@@ -59,6 +59,11 @@ class AccountMapper extends \App\Domain\Mapper {
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE user IN (" . implode(',', $user_ids) . ")";
 
         $bindings = array();
+
+        if (!is_null($archive) && strlen($archive) > 0) {
+            $sql .= " AND archive = :archive ";
+            $bindings["archive"] = $archive;
+        }
 
         if ($sorted && !is_null($sorted)) {
             $sql .= " ORDER BY {$sorted}";

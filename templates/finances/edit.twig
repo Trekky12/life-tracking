@@ -109,7 +109,9 @@
 						<select class="{% if not entry is null and not entry.bill is null %}disabled{% endif %}" id="paymethod" name="paymethod" {% if not entry is null and not entry.bill is null %} disabled="disabled" {% endif %}>
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods %}
-								<option value="{{method.id}}" {% if (not entry is null and method.id == entry.paymethod) or (entry is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% if (method.archive != 1 or (entry is not empty and method.id == entry.paymethod)) %}
+									<option value="{{method.id}}" {% if (entry is not null and method.id == entry.paymethod) or (entry is null and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% endif %}
 							{% endfor %}
 						</select>
 					</div>

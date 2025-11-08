@@ -115,7 +115,9 @@
 						<select name="balance[{{ me }}][paymethod]">
 							<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 							{% for method in paymethods[me] %}
-								<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% if (method.archive != 1 or (balance is not empty and method.id == balance[me]["paymethod"])) %}
+									<option value="{{method.id}}" {% if (not balance is empty and method.id == balance[me]["paymethod"]) or (balance is empty and method.is_default == 1) %} selected {% endif %}>{{method.name|raw}}</option>
+								{% endif %}
 							{% endfor %}
 						</select>
 					</div>
@@ -134,7 +136,9 @@
 							<select name="balance[{{ me }}][account_to]">
 								<option value="">{{"DROPDOWN_NO_PAYMETHOD"|trans}}</option>
 								{% for account in accounts[me] %}
-									<option value="{{account.id}}" {% if (not balance is empty and account.id == balance[me]["account_to"]) %} selected {% endif %}>{{account.name|raw}}</option>
+									{% if (account.archive != 1 or (balance is not empty and account.id == balance[me]["account_to"])) %}
+										<option value="{{account.id}}" {% if (balance is not empty and account.id == balance[me]["account_to"]) %} selected {% endif %}>{{account.name|raw}}</option>
+									{% endif %}
 								{% endfor %}
 							</select>
 						</div>

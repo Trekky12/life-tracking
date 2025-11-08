@@ -32,12 +32,14 @@
 								<div class="form-group">
 									{{ cat.name|trans }}
 									{% for group in splitbill["user_groups"]  %}
-										<div>
-											<label class="checkbox">
-												<input name="user_mail_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, group) in mail["user_categories"] %} checked {% endif %}>
-												{{splitbill["groups"][group].name}}
-											</label>
-										</div>
+										{% if splitbill["groups"][group].archive != 1 or (type == "user" and "%s_%s"|format(cat.id, group) in mail["user_categories"]) %}
+											<div>
+												<label class="checkbox">
+													<input name="user_mail_categories[]" value="{{cat.id}}_{{ group }}" type="checkbox" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, group) in mail["user_categories"] %} checked {% endif %}>
+													{{splitbill["groups"][group].name}}
+												</label>
+											</div>
+										{% endif %}
 									{% endfor %}
 								</div>
 							{% endif %}
@@ -46,12 +48,14 @@
 								<div class="form-group">
 									{{ cat.name|trans }}
 									{% for board in boards["user_boards"]  %}
-										<div>
-											<label class="checkbox">
-												<input name="user_mail_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in mail["user_categories"] %} checked {% endif %}>
-												{{boards["boards"][board].name}}
-											</label>
-										</div>
+										{% if boards["boards"][board].archive != 1 or (type == "user" and "%s_%s"|format(cat.id, board) in mail["user_categories"]) %}
+											<div>
+												<label class="checkbox">
+													<input name="user_mail_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in mail["user_categories"] %} checked {% endif %}>
+													{{boards["boards"][board].name}}
+												</label>
+											</div>
+										{% endif %}
 									{% endfor %}
 								</div>
 							{% endif %}
@@ -60,12 +64,14 @@
 								<div class="form-group">
 									{{ cat.name|trans }}
 									{% for board in boards["user_boards"]  %}
-										<div>
-											<label class="checkbox">
-												<input name="user_mail_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in mail["user_categories"] %} checked {% endif %}>
-												{{boards["boards"][board].name}}
-											</label>
-										</div>
+										{% if boards["boards"][board].archive != 1 or (type == "user" and "%s_%s"|format(cat.id, board) in mail["user_categories"]) %}
+											<div>
+												<label class="checkbox">
+													<input name="user_mail_categories[]" value="{{cat.id}}_{{ board }}" type="checkbox" class="set_mail_category_user" {% if "%s_%s"|format(cat.id, board) in mail["user_categories"] %} checked {% endif %}>
+													{{boards["boards"][board].name}}
+												</label>
+											</div>
+										{% endif %}
 									{% endfor %}
 								</div>
 							{% endif %}

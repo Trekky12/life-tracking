@@ -18,18 +18,22 @@ class PaymethodService extends Service {
         $this->account_service = $account_service;
     }
 
-    public function getAllPaymethodsOrderedByName() {
-        return $this->mapper->getAll('name');
+    public function getAllPaymethodsOrderedByName($archive = null) {
+        return $this->mapper->getAll('name', false, $archive);
     }
 
     public function getAllfromUsers($group_users) {
         return $this->mapper->getAllfromUsers($group_users);
     }
 
-    public function index() {
-        $paymethods = $this->getAllPaymethodsOrderedByName();
+    public function index($archive = null) {
+        $paymethods = $this->getAllPaymethodsOrderedByName($archive);
         $accounts = $this->account_service->getAllAccountsOrderedByName();
-        return new Payload(Payload::$RESULT_HTML, ['paymethods' => $paymethods, 'accounts' => $accounts]);
+        return new Payload(Payload::$RESULT_HTML, [
+            'paymethods' => $paymethods, 
+            'accounts' => $accounts,
+            "archive" => $archive
+        ]);
     }
 
     public function edit($entry_id) {

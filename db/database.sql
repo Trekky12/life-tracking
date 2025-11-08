@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS finances_paymethods (
     changedOn TIMESTAMP NULL,
     user INTEGER unsigned DEFAULT NULL,
     name varchar(255) DEFAULT NULL,
+    archive INT(1) DEFAULT 0,
     is_default int(1) DEFAULT 0,
     account int(11) UNSIGNED DEFAULT NULL,
     round_up_savings int(1) DEFAULT 0,

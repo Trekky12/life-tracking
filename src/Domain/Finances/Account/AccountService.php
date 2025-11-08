@@ -18,8 +18,8 @@ class AccountService extends Service {
         return $this->mapper->getAll('name', false, $archive);
     }
 
-    public function getAllfromUsers($group_users) {
-        return $this->mapper->getAllfromUsers($group_users);
+    public function getAllfromUsers($group_users, $archive = null) {
+        return $this->mapper->getAllfromUsers($group_users, $archive);
     }
 
     public function index($archive = null) {
