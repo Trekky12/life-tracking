@@ -195,7 +195,7 @@ function createInputDialog(message, callback, pw) {
 
         label.appendChild(inputCheckbox);
 
-        label.appendChild(document.createTextNode(" Show password"));
+        label.appendChild(document.createTextNode(" " + lang.show_password));
         labelGroup.appendChild(label);
 
         modalContent.appendChild(labelGroup);
