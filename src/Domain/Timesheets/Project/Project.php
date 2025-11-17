@@ -52,6 +52,10 @@ class Project extends \App\Domain\DataObject {
 
         $this->archive = $this->exists('archive', $data) ? filter_var($data['archive'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
+        $this->has_location = $this->exists('has_location', $data) ? intval(filter_var($data['has_location'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+
+        $this->create_only_notices = $this->exists('create_only_notices', $data) ? intval(filter_var($data['create_only_notices'], FILTER_SANITIZE_NUMBER_INT)) : 0;
+        
         if (empty($this->name)) {
             $this->parsing_errors[] = "NAME_CANNOT_BE_EMPTY";
         }

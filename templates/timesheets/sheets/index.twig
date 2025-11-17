@@ -41,7 +41,7 @@
 																																															{% endif %}
 																																															{{ fontawesome('fas fa-right-from-bracket') }}</button>
 																																													</a>#}
-			<a href="{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}">
+			<a href="{% if project.create_only_notices %}{{ url_for('timesheets_sheets_create', {'project':project.hash}) }}{% else %}{{ url_for('timesheets_sheets_edit', {'project':project.hash}) }}{% endif %}">
 				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 					{{"ADD"|trans}}</button>
 			</a>

@@ -1007,5 +1007,6 @@ $lang["INSERT_ADDITIONAL_VALUES"] = "Add additional elements";
 $lang["TOTAL"] = "Total";
 
 $lang["FILES"] = "Files";
+$lang["SHOW_PASSWORD"] = "Show password";
 
 return $lang;

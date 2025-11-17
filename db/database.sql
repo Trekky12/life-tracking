@@ -878,6 +878,8 @@ CREATE TABLE IF NOT EXISTS timesheets_projects (
     report_headline VARCHAR(255) DEFAULT NULL,
     has_billing INT(1) DEFAULT 0,
     has_end INT(1) DEFAULT 0,
+    has_location INT(1) DEFAULT 0,
+    create_only_notices INT(1) DEFAULT 0,
     archive INT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE(hash),

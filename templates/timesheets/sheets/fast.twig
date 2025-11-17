@@ -92,11 +92,13 @@
 			</div>
 		{% endif %}
 
-		<div class="mapWrapper">
-			<input type="hidden" id="geoLat" class="geo-lat" name="lat" value="">
-			<input type="hidden" id="geoLng" class="geo-lng" name="lng" value="">
-			<input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="">
-		</div>
+		{% if project.has_location %}
+			<div class="mapWrapper">
+				<input type="hidden" id="geoLat" class="geo-lat" name="lat" value="">
+				<input type="hidden" id="geoLng" class="geo-lng" name="lng" value="">
+				<input type="hidden" id="geoAcc" class="geo-acc" name="acc" value="">
+			</div>
+		{% endif %}
 
 		<div id="alertErrorTimesheetFast" class="alert danger hidden">
 			<span class="closebtn">&times;</span>
