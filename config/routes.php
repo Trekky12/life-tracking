@@ -722,7 +722,10 @@ return function (App $app) {
             $notifications_group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         });
 
-        $group->post('/workout', \App\Application\Action\Workouts\Exercise\ExerciseSaveAction::class);
+        $group->group('/workouts', function (RouteCollectorProxy $workouts_group) {
+            $workouts_group->post('/exercise', \App\Application\Action\Workouts\Exercise\ExerciseSaveAction::class);
+            $workouts_group->post('/template', \App\Application\Action\Workouts\Template\TemplateSaveAction::class);
+        });
 
         $group->get('/widget/{id:[0-9]+}', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetAPIDataAction::class);
     });
