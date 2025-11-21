@@ -776,7 +776,7 @@ if (checkBoxDateModified && dateModifiedContent) {
 
         if (checkBoxDateModified.checked) {
             dateModifiedContent.classList.remove("hidden");
-            dateTimePickerStartModified._flatpickr.setDate("3000-01-01 00:00:00");
+            // dateTimePickerStartModified._flatpickr.setDate("3000-01-01 00:00:00");
         } else {
             dateModifiedContent.classList.add("hidden");
             dateTimePickerStartModified._flatpickr.clear();
