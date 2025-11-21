@@ -45,9 +45,9 @@ class OwnerTest extends BaseTestCase {
         $data = [
             "type" => 0,
             "date" => date('Y-m-d'),
-            "mileage" => 1000,
+            "mileage" => 1200,
             "refill_full" => 1,
-            "calc_refill_consumption" => 1,
+            "calc_refill_consumption" => 0,
             "refill_price" => 150,
             "refill_amount" => 50,
             "refill_total_price" => 75,
@@ -207,7 +207,7 @@ class OwnerTest extends BaseTestCase {
         $price = number_format($data["refill_price"], 2);
         $volume = number_format($data["refill_amount"], 2);
         $total_price = number_format($data["refill_total_price"], 2);
-        $consumption = $data["refill_full"] == 1 ? number_format(5, 2) : "";
+        $consumption = "";
 
         $type = $data["refill_full"] == 1 ? "vollgetankt" : "nachgetankt";
 
