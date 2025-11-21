@@ -19,14 +19,16 @@ function load(item) {
     let options = item.dataset.options;
 
     let url = jsObject.frontpage_widget_request + id;
+    let params = []
     if (widget || options) {
         url += '?';
         if (widget) {
-            url += 'widget=' + widget;
+            params.push('widget=' + widget);
         }
         if (options) {
-            url += 'options=' + options;
+            params.push('options=' + options);
         }
+        url += params.join('&');
     }
 
     return fetch(url, {
