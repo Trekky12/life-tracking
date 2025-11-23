@@ -22,19 +22,7 @@ class SheetViewAction {
         $hash = $request->getAttribute('project');
 
         $requestData = $request->getQueryParams();
-
-        list($from, $to) = DateUtility::getDateRange($requestData, null, null); //, $defaultFrom);
-
-        $categories = array_key_exists("categories", $requestData) ? filter_var_array($requestData["categories"], FILTER_SANITIZE_NUMBER_INT) : [];
-
-        $invoiced = array_key_exists('invoiced', $requestData) && $requestData['invoiced'] !== '' ? intval(filter_var($requestData['invoiced'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $payed = array_key_exists('payed', $requestData) && $requestData['payed'] !== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $happened = array_key_exists('happened', $requestData) && $requestData['happened'] !== '' ? intval(filter_var($requestData['happened'], FILTER_SANITIZE_NUMBER_INT)) : null;
-
-        $customer = array_key_exists('customer', $requestData) && $requestData['customer'] !== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
-
-        $index = $this->service->view($hash, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer);
+        $index = $this->service->view($hash, $requestData);
 
         return $this->responder->respond($index->withTemplate('timesheets/sheets/index.twig'));
     }

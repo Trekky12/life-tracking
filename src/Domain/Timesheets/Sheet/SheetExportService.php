@@ -10,6 +10,7 @@ use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\SheetNotice\SheetNoticeMapper;
 use App\Domain\Timesheets\NoticeField\NoticeFieldService;
 use App\Domain\Main\Utility\DateUtility;
+use App\Domain\Main\Utility\Utility;
 use App\Domain\Main\Translator;
 use App\Application\Payload\Payload;
 use App\Domain\Timesheets\ProjectCategoryBudget\ProjectCategoryBudgetService;
@@ -44,13 +45,30 @@ class SheetExportService extends Service {
         $this->project_category_budget_service = $project_category_budget_service;
     }
 
-    public function export($hash, $type, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer, $noticefields = [], $date_modified = true) {
+    public function export($hash, $requestData) {
 
         $project = $this->project_service->getFromHash($hash);
 
         if (!$this->project_service->isMember($project->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
+
+
+        $type = array_key_exists("type", $requestData) ? Utility::filter_string_polyfill($requestData["type"]) : null;
+
+        list($from, $to) = DateUtility::getDateRange($requestData);
+        $categories = array_key_exists("categories", $requestData) ? filter_var_array($requestData["categories"], FILTER_SANITIZE_NUMBER_INT) : [];
+
+        $invoiced = array_key_exists('invoiced', $requestData) && $requestData['invoiced'] !== '' ? intval(filter_var($requestData['invoiced'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $payed = array_key_exists('payed', $requestData) && $requestData['payed'] !== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
+        $happened = array_key_exists('happened', $requestData) && $requestData['happened'] !== '' ? intval(filter_var($requestData['happened'], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+        $customer = array_key_exists('customer', $requestData) && $requestData['customer'] !== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
+
+        $noticefields = array_key_exists("noticefields", $requestData) ? filter_var_array($requestData["noticefields"], FILTER_SANITIZE_NUMBER_INT) : [];
+
+        $date_modified = array_key_exists('date_modified', $requestData) && $requestData['date_modified'] !== '' ? intval(filter_var($requestData['date_modified'], FILTER_SANITIZE_NUMBER_INT)) > 0 : true;
 
         if (strcmp($type ?? '', "word") == 0) {
             return $this->exportWord($project, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer);

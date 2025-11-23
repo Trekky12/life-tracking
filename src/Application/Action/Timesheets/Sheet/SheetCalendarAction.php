@@ -6,7 +6,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Timesheets\Sheet\SheetService;
 use App\Application\Responder\HTMLTemplateResponder;
-use App\Domain\Main\Utility\DateUtility;
 
 class SheetCalendarAction {
 
@@ -20,24 +19,8 @@ class SheetCalendarAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $hash = $request->getAttribute('project');
-
         $requestData = $request->getQueryParams();
-
-        list($from, $to) = DateUtility::getDateRange($requestData, null, null); //, $defaultFrom);
-
-        $categories = array_key_exists("categories", $requestData) ? filter_var_array($requestData["categories"], FILTER_SANITIZE_NUMBER_INT) : [];
-
-        $invoiced = array_key_exists('invoiced', $requestData) && $requestData['invoiced'] !== '' ? intval(filter_var($requestData['invoiced'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $billed = array_key_exists('billed', $requestData) && $requestData['billed'] !== '' ? intval(filter_var($requestData['billed'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $payed = array_key_exists('payed', $requestData) && $requestData['payed'] !== '' ? intval(filter_var($requestData['payed'], FILTER_SANITIZE_NUMBER_INT)) : null;
-        $happened = array_key_exists('happened', $requestData) && $requestData['happened'] !== '' ? intval(filter_var($requestData['happened'], FILTER_SANITIZE_NUMBER_INT)) : null;
-
-        $customer = array_key_exists('customer', $requestData) && $requestData['customer'] !== '' ? intval(filter_var($requestData['customer'], FILTER_SANITIZE_NUMBER_INT)) : null;
-
-        $index = $this->service->calendar($hash, $from, $to, $categories, $invoiced, $billed, $payed, $happened, $customer);
-
-        //$print = array_key_exists('print', $requestData) && $requestData['print'] !== '' ? (filter_var($requestData['print'], FILTER_SANITIZE_NUMBER_INT)) == 1 : false;
-        //$template = $print ? 'timesheets/sheets/calendar-print.twig' : 'timesheets/sheets/calendar.twig';
+        $index = $this->service->calendar($hash, $requestData);
 
         return $this->responder->respond($index->withTemplate('timesheets/sheets/calendar.twig'));
     }
