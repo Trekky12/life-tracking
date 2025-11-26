@@ -25,9 +25,10 @@ class SheetExportAction {
         $requestData = $request->getQueryParams();
 
         $payload = $this->service->export($hash, $requestData);
+        $result = $payload->getResult();
 
         $template = 'timesheets/sheets/export-html.twig';
-        if (strcmp($type ?? '', "html-overview") == 0) {
+        if (is_array($result) && array_key_exists("type", $result) && strcmp($result['type'] ?? '', "html-overview") == 0) {
             $template = 'timesheets/sheets/export-html-overview.twig';
         }
         return $this->responder->respond($payload->withTemplate($template));

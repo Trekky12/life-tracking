@@ -53,7 +53,6 @@ class SheetExportService extends Service {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-
         $type = array_key_exists("type", $requestData) ? Utility::filter_string_polyfill($requestData["type"]) : null;
 
         list($from, $to) = DateUtility::getDateRange($requestData);
@@ -468,7 +467,8 @@ class SheetExportService extends Service {
             "project" => $project,
             "hasTimesheetNotice" => true,
             "sheets" => $sheets,
-            "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet')
+            "fields" => $this->notice_fields_service->getNoticeFields($project->id, 'sheet'),
+            "type" => "html"
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);
@@ -501,7 +501,8 @@ class SheetExportService extends Service {
             "fields" => $sorted_fields,
             "from" => $from,
             "to" => $to,
-            "sum" => $sum
+            "sum" => $sum,
+            "type" => "html-overview"
         ];
 
         return new Payload(Payload::$RESULT_HTML, $response);
