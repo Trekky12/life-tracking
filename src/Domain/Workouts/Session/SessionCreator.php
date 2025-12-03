@@ -2,55 +2,115 @@
 
 namespace App\Domain\Workouts\Session;
 
-use App\Domain\ObjectActivityWriter;
 use Psr\Log\LoggerInterface;
-use App\Domain\Activity\ActivityCreator;
-use App\Domain\Base\CurrentUser;
 use App\Application\Payload\Payload;
+use App\Domain\Base\CurrentUser;
+use App\Domain\Service;
 use App\Domain\Workouts\Plan\PlanService;
-use App\Domain\Workouts\Plan\PlanMapper;
+use App\Domain\Workouts\Exercise\ExerciseMapper;
 use App\Domain\Main\Utility\Utility;
 
-class SessionWriter extends ObjectActivityWriter {
+class SessionCreator extends Service {
 
-    private $service;
+    private $session_writer;
     private $plan_service;
-    private $plan_mapper;
+    private $exercise_mapper;
 
-    public function __construct(LoggerInterface $logger, CurrentUser $user, ActivityCreator $activity, SessionService $service, SessionMapper $mapper, PlanService $plan_service, PlanMapper $plan_mapper) {
-        parent::__construct($logger, $user, $activity);
-        $this->service = $service;
+    public function __construct(
+        LoggerInterface $logger,
+        CurrentUser $user,
+        SessionMapper $mapper,
+        SessionWriter $session_writer,
+        PlanService $plan_service,
+        ExerciseMapper $exercise_mapper
+    ) {
+        parent::__construct($logger, $user);
         $this->mapper = $mapper;
+        $this->session_writer = $session_writer;
         $this->plan_service = $plan_service;
-        $this->plan_mapper = $plan_mapper;
+        $this->exercise_mapper = $exercise_mapper;
     }
 
-    public function save($id, $data, $additionalData = null): Payload {
+    public function create($hash, $id = null) {
 
-        $plan = $this->plan_service->getFromHash($additionalData["plan"]);
+        $plan = $this->plan_service->getFromHash($hash);
 
         if (!$this->plan_service->isOwner($plan->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
-        /**
-         * NOTICE
-         * All queries for this item are filtered for the current user,
-         * ($select_results_of_user_only = true, $insert_user = true)
-         * so actually no need check for match with parent item
-         */
-        if (!$this->service->isChildOf($plan->id, $id)) {
+
+        $data = [
+            "date" => date('Y-m-d'),
+            "start_time" => date("H:i:s")
+        ];
+
+        $this->logger->debug('Create new workout session', array("plan" => $plan, "data" => $data));
+
+        $entry = $this->session_writer->save(null, $data, ["plan" => $plan->getHash()]);
+
+        $days = $this->plan_service->getWorkoutDays($plan->id);
+        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id);
+
+        $exercisesList = $this->exercise_mapper->getAll('name');
+
+        $response_data = [
+            'entry' => $entry->getResult(),
+            'plan' => $plan,
+            'exercises' => $exercises,
+            'exercisesList' => $exercisesList,
+            'workoutdays' => $days,
+            'isWorkoutCreate' => true
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function continue($hash, $session) {
+
+        $plan = $this->plan_service->getFromHash($hash);
+
+        if (!$this->plan_service->isOwner($plan->id)) {
             return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
         }
 
-        $data['plan'] = $plan->id;
+        if (!$this->isChildOf($plan->id, $session)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
 
-        $payload = parent::save($id, $data, $additionalData);
-        $entry = $payload->getResult();
+        $entry = $this->getEntry($session);
 
-        /**
-         * Save exercises
-         */
-        $this->mapper->deleteExercises($id);
+        $days = $this->plan_service->getWorkoutDays($plan->id);
+
+        $session_exercises = $this->mapper->getExercises($session);
+        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $session_exercises, true);
+
+        $exercisesList = $this->exercise_mapper->getAll('name');
+
+        // todo: if entries has day then skip all following entries after other day!
+
+        $response_data = [
+            'entry' => $entry,
+            'plan' => $plan,
+            'exercises' => $exercises,
+            'exercisesList' => $exercisesList,
+            //'workoutdays' => $days,
+            'isWorkoutCreate' => true
+        ];
+
+        return new Payload(Payload::$RESULT_HTML, $response_data);
+    }
+
+    public function saveExercise($hash, $session, $data) {
+        $plan = $this->plan_service->getFromHash($hash);
+
+        if (!$this->plan_service->isOwner($plan->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        if (!$this->isChildOf($plan->id, $session)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
         if (array_key_exists("exercises", $data) && is_array($data["exercises"])) {
             $exercises = [];
             foreach ($data["exercises"] as $idx => $exercise) {
@@ -60,6 +120,8 @@ class SessionWriter extends ObjectActivityWriter {
                 $notice = array_key_exists("notice", $exercise) && !empty($exercise["notice"]) ? Utility::filter_string_polyfill($exercise["notice"]) : null;
                 $is_child = array_key_exists("is_child", $exercise) && !empty($exercise["is_child"]) ? intval(filter_var($exercise["is_child"], FILTER_SANITIZE_NUMBER_INT)) : 0;
                 $plans_exercises_id = array_key_exists("plans_exercises_id", $exercise) && !empty($exercise["plans_exercises_id"]) ? intval(filter_var($exercise["plans_exercises_id"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                $position = array_key_exists("position", $exercise) && !empty($exercise["position"]) ? intval(filter_var($exercise["position"], FILTER_SANITIZE_NUMBER_INT)) : 999;
+
 
                 $sets = [];
                 if (array_key_exists("sets", $exercise) && is_array($exercise["sets"])) {
@@ -78,9 +140,10 @@ class SessionWriter extends ObjectActivityWriter {
                     }
                 }
 
+
                 $exercises[] = [
                     "id" => $exercise_id,
-                    "position" => $idx,
+                    "position" => $position,
                     "sets" => $sets,
                     "type" => $type,
                     "notice" => $notice,
@@ -88,30 +151,10 @@ class SessionWriter extends ObjectActivityWriter {
                     "plans_exercises_id" => $plans_exercises_id
                 ];
             }
-
-            $this->mapper->addExercises($entry->id, $exercises);
+            $this->mapper->addExercises($session, $exercises);
         }
 
+        $payload = new Payload(Payload::$STATUS_NEW);
         return $payload;
-    }
-
-    public function getParentMapper() {
-        return $this->plan_mapper;
-    }
-
-    public function getObjectViewRoute(): string {
-        return 'workouts_sessions';
-    }
-
-    public function getObjectViewRouteParams($entry): array {
-        $plan = $this->getParentMapper()->get($entry->getParentID());
-        return [
-            "plan" => $plan->getHash(),
-            "id" => $entry->id
-        ];
-    }
-
-    public function getModule(): string {
-        return "workouts";
     }
 }

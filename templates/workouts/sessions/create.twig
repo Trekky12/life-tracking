@@ -1,0 +1,114 @@
+{% extends "base.twig" %}
+
+{% set active = 'workouts' %}
+
+{% block javascript %}
+	<script src="{{baseURL}}/static/assets/js/Sortable.min.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/workouts.js?ver={{CACHEMISS}}"></script>
+	<script src="{{baseURL}}/static/js/workouts-session.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('workouts_sessions', {'plan': plan.hash}) }}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"WORKOUTS_SESSION"|trans}}
+				|
+				{{ plan.name }}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<h2>{{entry.date|date(i18n.dateformatTwig.date)}}</h2>
+
+			{% if workoutdays|length > 0 %}
+				<div class="form-group">
+					<label for="workoutsDaySelect">{{"WORKOUTS_DAY"|trans}}</label>
+					<div class="select-wrapper">
+						<select id="workoutsDaySelect">
+							<option value="-1" selected>{{ "CHOOSE"|trans }}</option>
+							{% for id, day in workoutdays %}
+								<option value="{{ id }}">{{ day }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+			{% endif %}
+
+			<div class="workout-selection selected_exercises" id="workoutExercises">
+				<div class="workout-selection-content" data-type="main" data-view="create">
+					{% for exercise in exercises %}
+						{% if exercise.type == "exercise" %}
+							{% include "workouts/sessions/create-single-exercise.twig" with {'data': exercise, 'hidden': (workoutdays|length > 0) , 'buttons': true} only %}
+						{% elseif exercise.type == "day" %}
+							<form>
+								<div class="workout_day_split exercise-session {% if workoutdays|length > 0 %}hidden{% endif %}" data-type="workout-element" data-category="day" data-id="{{ exercise['id'] }}">
+									<div class="content">
+										<h3>{{ exercise.notice }}</h3>
+										<input type="hidden" name="exercises[{{ exercise['idx'] }}][notice]" value="{{ exercise['notice'] }}" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
+										<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="day" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
+										<input type="hidden" name="exercises[{{ exercise['idx'] }}][plans_exercises_id]" value="{{ exercise['plans_exercises_id'] }}" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
+									</div>
+								</div>
+							</form>
+						{% elseif exercise.type == "superset" %}
+							<form>
+								<div class="workout_superset exercise-session {% if workoutdays|length > 0%}hidden{% endif %}" data-type="workout-element" data-category="superset" data-finished="{{ exercise['is_finished'] }}" data-idx="{{ exercise['idx'] }}">
+									<div class="content">
+										<div class="details-wrapper view-exercise ">
+											<h3 class="title">{{"WORKOUTS_SUPERSET"|trans}}
+												({{ exercise['children'] | map(ex => ex["exercise"].name|raw) | join(', ') }})</h3>
+											<div class="details-content">
+												<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="superset" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
+												<input type="hidden" name="exercises[{{ exercise['idx'] }}][plans_exercises_id]" value="{{ exercise['plans_exercises_id'] }}" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
+												<div class="exercises" data-type="superset">
+													{% for child in exercise['children'] %}
+														{% include "workouts/sessions/create-single-exercise.twig" with {'data': child, 'hidden': (workoutdays|length > 0), 'buttons': false} only %}
+													{% endfor %}
+												</div>
+												<div class="buttons">
+													<button type="button" class="save_exercise button small">{{ "SAVE"|trans }}</button>
+													<button type="button" class="skip_exercise button button-outlined small">{{ "WORKOUTS_EXERCISE_SKIP"|trans }}</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+
+			<h3>{{ "WORKOUTS_ADD_EXERCISE"|trans }}</h3>
+			<div class="form-group">
+				<div class="select-wrapper" id="addExerciseToSession">
+					<select>
+						{% for exercise in exercisesList %}
+							<option value="{{ exercise.id }}">{{ exercise.name|raw }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<input id="setCount" type="number" min="0" max="999" step="1" pattern="\d*" size="5" value="3" class="small"/>
+				<label for="setCount">{{ "WORKOUTS_SETS"|trans }}</label>
+				<input id="setRepeat" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="" class="small"/>
+				<label for="setRepeat">{{ "WORKOUTS_REPEATS"|trans }}</label>
+				<input id="setWeight" type="number" min="0" max="999" step="any" pattern="\d*" size="5" value="" class="small"/>
+				<label for="setWeight">{{ "WORKOUTS_KG"|trans }}</label>
+				<button type="button" class="button button-outlined small" id="addExercise">{{ "ADD"|trans }}</button>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="hidden">
+		<div id="iconMinus">{{ fontawesome('fas fa-minus') }}</div>
+		<div id="iconHandle">{{ fontawesome('fas fa-up-down-left-right') }}</div>
+	</div>
+{% endblock %}

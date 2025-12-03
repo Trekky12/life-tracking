@@ -25,7 +25,7 @@
 		<div class="buttons">
 
 			{% if not plan.is_template %}
-				<a href="{{ url_for('workouts_sessions_edit', {'plan':plan.hash}) }}">
+				<a href="{{ url_for('workouts_sessions_create', {'plan':plan.hash}) }}">
 					<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
 						{{"WORKOUTS_SESSION_ADD"|trans}}</button>
 				</a>

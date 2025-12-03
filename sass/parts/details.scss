@@ -1,0 +1,54 @@
+@use "mixins";
+@use "variables";
+
+.details-wrapper {
+    @include mixins.font-size(1.4);
+
+    word-break: break-word;
+    hyphens: auto;
+
+    width: 100%;
+
+    & > .details-content {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin: 0;
+        display: none;
+    }
+
+    & > .details-headline {
+        display: block;
+
+        span.angle-down {
+            display: inline-block;
+        }
+
+        span.angle-up {
+            display: none;
+        }
+
+        svg {
+            transition: all 250ms;
+            @include mixins.font-size(1.4);
+            color: variables.$color_text-main;
+            position: relative;
+            margin-right: 5px;
+        }
+    }
+
+    &.active {
+        & > .details-content {
+            display: block;
+        }
+
+        & > .details-headline {
+            span.angle-down {
+                display: none;
+            }
+
+            span.angle-up {
+                display: inline-block;
+            }
+        }
+    }
+}

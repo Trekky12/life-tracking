@@ -132,13 +132,48 @@ class PlanService extends Service {
         ]);
     }
 
-    public function getPlanExercises($plan_id, $selected_exercises = null) {
+    public function getPlanExercises($plan_id, $session_exercises = [], $show_planned = false) {
 
         $exercises = $this->exercise_mapper->getAll();
         $bodyparts = $this->bodypart_mapper->getAll();
         $muscles = $this->muscle_mapper->getAll();
-        if (is_null($selected_exercises)) {
-            $selected_exercises = $this->mapper->getExercises($plan_id);
+
+        $plan_exercises = $this->mapper->getExercises($plan_id);
+        $selected_exercises = $session_exercises;
+
+        if ($show_planned) {
+            $session_exercises_ids = array_map(function ($exercise) {
+                return $exercise["plans_exercises_id"];
+            }, $session_exercises);
+
+            // Check session day and filter to plan session of the saved day
+            $session_day = null;
+            $day_start = true;
+            foreach ($session_exercises as $se) {
+                if ($se["type"] == "day") {
+                    $session_day = $se;
+                    $day_start = false;
+                    break;
+                }
+            }
+            foreach ($plan_exercises as $pe) {
+                if (!is_null($session_day) && $pe["type"] == "day") {
+                    if ($pe["id"] == $se["plans_exercises_id"]) {
+                        $day_start = true;
+                    } else {
+                        $day_start = false;
+                    }
+                }
+
+                if ($day_start && !in_array($pe['id'], $session_exercises_ids)) {
+                    $pe['is_finished'] = 0;
+                    $selected_exercises[] = $pe;
+                }
+            }
+        } else {
+            if (empty($session_exercises)) {
+                $selected_exercises = $plan_exercises;
+            }
         }
 
         $exercise_ids = array_map(function ($exercise) {
@@ -198,14 +233,16 @@ class PlanService extends Service {
                 "mainMuscle" => !is_null($exercise) && array_key_exists($exercise->mainMuscle, $muscles) ? $muscles[$exercise->mainMuscle]->name : '',
                 "primary_muscles" => $primary,
                 "secondary_muscles" => $secondary,
-                "id" => $idx,
+                "id" => array_key_exists("id", $se) ? $se["id"] : null,
                 "sets" => $se["sets"],
                 "idx" => $exercise_idx,
                 "type" => $se["type"],
                 "notice" => $se["notice"],
                 "is_child" => $se["is_child"],
                 "children" => [],
-                "set_description" => !is_null($exercise) ? $set_description : null
+                "set_description" => !is_null($exercise) ? $set_description : null,
+                "plans_exercises_id" => $se["plans_exercises_id"],
+                "is_finished" => is_null($session_exercises) || empty($session_exercises) ? 0 : $se["is_finished"],
             ];
 
             // add as child

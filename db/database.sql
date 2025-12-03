@@ -1236,9 +1236,11 @@ CREATE TABLE IF NOT EXISTS workouts_sessions_exercises (
     type VARCHAR(255) NULL DEFAULT NULL,
     notice TEXT DEFAULT NULL,
     is_child INT(1) DEFAULT 0,
+    plans_exercises_id int(11) unsigned DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(session) REFERENCES workouts_sessions(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(plans_exercises_id) REFERENCES workouts_plans_exercises_id(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS recipes_cookbooks (

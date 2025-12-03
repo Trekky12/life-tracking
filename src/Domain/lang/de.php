@@ -866,9 +866,16 @@ $lang["WORKOUTS_LEVEL_BEGINNER"] = "Anfänger";
 $lang["WORKOUTS_LEVEL_INTERMEDIATE"] = "Fortgeschrittene";
 $lang["WORKOUTS_LEVEL_ADVANCED"] = "Profis";
 
-$lang["WORKOUTS_PLAN_EXERCISE_ADDED"] = "Übung hinzugefügt.";
-$lang["WORKOUTS_PLAN_WORKOUTDAY_ADDED"] = "Trainingstag hinzugefügt.";
-$lang["WORKOUTS_PLAN_SUPERSET_ADDED"] = "Supersatz hinzugefügt.";
+$lang["WORKOUTS_EXERCISE_ADDED"] = "Übung hinzugefügt.";
+$lang["WORKOUTS_WORKOUTDAY_ADDED"] = "Trainingstag hinzugefügt.";
+$lang["WORKOUTS_SUPERSET_ADDED"] = "Supersatz hinzugefügt.";
+$lang["WORKOUTS_EXERCISE_REMOVED"] = "Übung entfernt.";
+$lang["WORKOUTS_SET_ADDED"] = "Satz hinzugefügt.";
+$lang["WORKOUTS_WORKOUTDAY_REMOVED"] = "Trainingstag entfernt.";
+$lang["WORKOUTS_SUPERSET_REMOVED"] = "Supersatz entfernt.";
+$lang["WORKOUTS_SET_REMOVED"] = "Satz entfernt.";
+$lang["WORKOUTS_EXERCISE_SKIP"] = "Überspringen";
+$lang["WORKOUTS_SESSION_CONTINUE"] = "Fortsetzen";
 
 $lang["SAVE_IFTTT_URL"] = "IFTTT-URL speichern";
 $lang["DELETE_IFTTT_URL"] = "IFTTT-URL löschen";

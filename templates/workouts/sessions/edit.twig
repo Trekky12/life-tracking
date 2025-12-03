@@ -49,7 +49,7 @@
 				</div>
 
 				<div class="form-group">
-					<label for="timeEnd">{{ "START"|trans }}
+					<label for="timeStart">{{ "START"|trans }}
 						{{"TIME"|trans}}</label>
 					<input type="time" step="1" class="form-control" id="timeStart" name="start_time" value="{% if not entry is null %}{{entry.start_time}}{% endif %}">
 				</div>
@@ -84,7 +84,7 @@
 				{% endif %}
 
 				<div class="workout-selection selected_exercises" id="workoutExercises">
-					<div class="content" data-type="main">
+					<div class="workout-selection-content" data-type="main" data-view="edit">
 						{% for exercise in exercises %}
 							{% if exercise.type == "exercise" %}
 								{% include "workouts/sessions/edit-single-exercise.twig" with {'data': exercise, 'hidden': (entry is null and workoutdays|length > 0) } only %}
@@ -94,6 +94,7 @@
 										<h3>{{ exercise.notice }}</h3>
 										<input type="hidden" name="exercises[{{ exercise['idx'] }}][notice]" value="{{ exercise['notice'] }}" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
 										<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="day" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
+										<input type="hidden" name="exercises[{{ exercise['idx'] }}][plans_exercises_id]" value="{{ exercise['plans_exercises_id'] }}" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
 									</div>
 									<div class="icons hidden">
 										<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
@@ -105,6 +106,7 @@
 									<div class="content">
 										<h3>{{"WORKOUTS_SUPERSET"|trans}}</h3>
 										<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="superset" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
+										<input type="hidden" name="exercises[{{ exercise['idx'] }}][plans_exercises_id]" value="{{ exercise['plans_exercises_id'] }}" {% if (entry is null and workoutdays|length > 0) %} disabled="disabled" {% endif %}/>
 										<div class="exercises" data-type="superset">
 											{% for child in exercise['children'] %}
 												{% include "workouts/sessions/edit-single-exercise.twig" with {'data': child, 'hidden': (entry is null and workoutdays|length > 0)} only %}

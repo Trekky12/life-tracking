@@ -35,6 +35,7 @@
 						<th>{{ "WORKOUTS_DAYS"|trans }}</th>
 						<th></th>
 						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -44,6 +45,9 @@
 								<a href="{{ url_for('workouts_sessions_view', {'plan':plan.hash, 'id' : session.id}) }}">{{session.date}}</a>
 							</td>
 							<td>{{session.days}}</td>
+							<td>
+								<a href="{{ url_for('workouts_sessions_continue', {'plan':plan.hash, 'session' : session.id}) }}">{{ "WORKOUTS_SESSION_CONTINUE"|trans }}</a>
+							</td>
 							<td>
 								<a href="{{ url_for('workouts_sessions_edit', {'plan':plan.hash, 'id' : session.id}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
 							</td>

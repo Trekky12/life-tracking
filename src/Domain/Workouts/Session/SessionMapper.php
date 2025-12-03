@@ -56,10 +56,11 @@ class SessionMapper extends \App\Domain\Mapper {
             $data_array["type" . $idx] = $exercise["type"];
             $data_array["notice" . $idx] = $exercise["notice"];
             $data_array["is_child" . $idx] = $exercise["is_child"];
-            $keys_array[] = "(:session" . $idx . " , :exercise" . $idx . ", :position" . $idx . ", :sets" . $idx . ", :type" . $idx . ", :notice" . $idx . ", :is_child" . $idx . ")";
+            $data_array["plans_exercises_id" . $idx] = $exercise["plans_exercises_id"];
+            $keys_array[] = "(:session" . $idx . " , :exercise" . $idx . ", :position" . $idx . ", :sets" . $idx . ", :type" . $idx . ", :notice" . $idx . ", :is_child" . $idx . ", :plans_exercises_id" . $idx . ")";
         }
 
-        $sql = "INSERT INTO " . $this->getTableName("workouts_sessions_exercises") . " (session, exercise, position, sets, type, notice, is_child) "
+        $sql = "INSERT INTO " . $this->getTableName("workouts_sessions_exercises") . " (session, exercise, position, sets, type, notice, is_child, plans_exercises_id) "
                 . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
@@ -73,7 +74,7 @@ class SessionMapper extends \App\Domain\Mapper {
     }
 
     public function getExercises($session_id) {
-        $sql = "SELECT exercise, sets, type, notice, is_child FROM " . $this->getTableName("workouts_sessions_exercises") . " WHERE session = :session ORDER BY position";
+        $sql = "SELECT exercise, sets, type, notice, is_child, plans_exercises_id FROM " . $this->getTableName("workouts_sessions_exercises") . " WHERE session = :session ORDER BY position";
 
         $bindings = [
             "session" => $session_id
@@ -84,7 +85,15 @@ class SessionMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[] = ["exercise" => !is_null($row["exercise"]) ? intval($row["exercise"]) : null, "sets" => json_decode($row["sets"], true), "type" => $row["type"], "notice" => $row["notice"], "is_child" => $row["is_child"]];
+            $results[] = [
+                "exercise" => !is_null($row["exercise"]) ? intval($row["exercise"]) : null, 
+                "sets" => json_decode($row["sets"], true), 
+                "type" => $row["type"], 
+                "notice" => $row["notice"], 
+                "is_child" => $row["is_child"], 
+                "plans_exercises_id" => $row["plans_exercises_id"],
+                "is_finished" => 1
+            ];
         }
         return $results;
     }

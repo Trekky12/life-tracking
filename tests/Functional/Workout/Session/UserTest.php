@@ -49,15 +49,17 @@ class UserTest extends BaseTestCase {
             "notice" => "test",
             "exercises" => [
                 0 => [
-                    "id" => 3,
+                    "id" => 1,
                     "type" => "exercise",
                     "is_child" => 0,
+                    "plans_exercises_id" => '',
                     "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
                     "type" => "exercise",
                     "is_child" => 0,
+                    "plans_exercises_id" => '',
                     "sets" => [
                         0 => [
                             "repeats" => 1,
@@ -71,9 +73,10 @@ class UserTest extends BaseTestCase {
                     "notice" => ''
                 ],
                 2 => [
-                    "id" => 1,
+                    "id" => 3,
                     "type" => "exercise",
                     "is_child" => 0,
+                    "plans_exercises_id" => '',
                     "notice" => ''
                 ]
             ]
@@ -143,12 +146,14 @@ class UserTest extends BaseTestCase {
                     "id" => 1,
                     "type" => "exercise",
                     "is_child" => 0,
+                    "plans_exercises_id" => '',
                     "notice" => ''
                 ],
                 1 => [
                     "id" => 2,
                     "type" => "exercise",
                     "is_child" => 0,
+                    "plans_exercises_id" => '',
                     "sets" => [
                         0 => [
                             "repeats" => 1,
@@ -159,6 +164,13 @@ class UserTest extends BaseTestCase {
                             "weight" => 4
                         ]
                     ],
+                    "notice" => ''
+                ],
+                2 => [
+                    "id" => 3,
+                    "type" => "exercise",
+                    "is_child" => 0,
+                    "plans_exercises_id" => '',
                     "notice" => ''
                 ]
             ]
@@ -209,7 +221,7 @@ class UserTest extends BaseTestCase {
 
     protected function getElementInTable($body, $data) {
         $matches = [];
-        $re = '/<tr>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildView($this->TEST_PLAN_HASH)) . '(?<id_view>.*)">' . preg_quote($data["date"] ?? '') . '<\/a>\s*<\/td>\s*<td>\s*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($this->TEST_PLAN_HASH)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($this->TEST_PLAN_HASH)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        $re = '/<tr>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildView($this->TEST_PLAN_HASH)) . '(?<id_view>.*)">' . preg_quote($data["date"] ?? '') . '<\/a>\s*<\/td>\s*<td>\s*<\/td>\s*<td>[\s\S]*<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($this->TEST_PLAN_HASH)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($this->TEST_PLAN_HASH)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
         preg_match($re, $body, $matches);
 
         return $matches;

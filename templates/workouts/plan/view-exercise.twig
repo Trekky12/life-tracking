@@ -1,29 +1,31 @@
 <div class="exercise" data-id="{{ exercise['exercise'].id }}">
-	<div class="exercise-content">
-		<small class="bodypart">{{ exercise['mainBodyPart'] }}
-			/
-			{{ exercise['mainMuscle'] }}</small>
-		<h3 class="title">{{ exercise['exercise'].name }}</h3>
-		<div class="instructions">
-			<a href="#" class="headline">{{ "WORKOUTS_INSTRUCTIONS"|trans }}</a>
-			<p class="content">{{ exercise['exercise'].getInstructions()|raw }}</p>
-		</div>
-		<div class="sets">
-			<a href="#" class="headline">{{ "WORKOUTS_SETS"|trans }}</a>
-			<div class="content">
-				{% for set in exercise['set_description'] %}
-					<div class="set">
-						{{ loop.index }}.
-						{{ "WORKOUTS_SET"|trans }}:
-						{{ set }}
-					</div>
-				{% endfor %}
+	<div class="exercise-inner-content">
+		<div class="exercise-content">
+			<small class="bodypart">{{ exercise['mainBodyPart'] }}
+				/
+				{{ exercise['mainMuscle'] }}</small>
+			<h3 class="title">{{ exercise['exercise'].name }}</h3>
+			<div class="details-instructions">
+				<a href="#" class="details-headline">{{ "WORKOUTS_INSTRUCTIONS"|trans }}</a>
+				<p class="details-content">{{ exercise['exercise'].getInstructions()|raw }}</p>
+			</div>
+			<div class="details-wrapper sets">
+				<a href="#" class="details-headline">{{ "WORKOUTS_SETS"|trans }}</a>
+				<div class="details-content">
+					{% for set in exercise['set_description'] %}
+						<div class="set">
+							{{ loop.index }}.
+							{{ "WORKOUTS_SET"|trans }}:
+							{{ set }}
+						</div>
+					{% endfor %}
+				</div>
 			</div>
 		</div>
+		{% if exercise['exercise'].get_thumbnail() != ''%}
+			<div class="thumbnail">
+				<img src="/{{uploads_folder}}/exercises/{{exercise['exercise'].get_thumbnail()}}"/>
+			</div>
+		{% endif %}
 	</div>
-	{% if exercise['exercise'].get_thumbnail() != ''%}
-		<div class="thumbnail">
-			<img src="/{{uploads_folder}}/exercises/{{exercise['exercise'].get_thumbnail()}}"/>
-		</div>
-	{% endif %}
 </div>

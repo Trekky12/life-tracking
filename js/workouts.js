@@ -3,13 +3,11 @@
 const hideSelectionBtn = document.querySelector('#hide_exercise_selection');
 const exercisesAvailableView = document.querySelector('.available_exercises');
 const exercisesSelectedView = document.querySelector('.selected_exercises');
-const exercisesSelected = exercisesSelectedView.querySelector('.content');
+const exercisesSelected = exercisesSelectedView.querySelector('.workout-selection-content');
 
 document.addEventListener('click', function (event) {
     let plus = event.target.closest('.exercise .plus');
     let minus = event.target.closest('.minus');
-
-    let headline = event.target.closest('.exercise .headline');
 
     let exercise = event.target.closest('.exercise');
 
@@ -27,7 +25,7 @@ document.addEventListener('click', function (event) {
 
     if (minus) {
         event.preventDefault();
-        let element = minus.parentElement.parentElement;
+        let element = minus.closest('[data-type="workout-element"]');
         let cat = element.dataset.category;
 
         if (cat === "day") {
@@ -44,8 +42,13 @@ document.addEventListener('click', function (event) {
             exercises_day.forEach(function (exercise) {
                 exercise.remove();
             });
+            showToast(lang.workouts_workoutday_removed, "blue");
+        } else if (cat === "superset") {
+            element.remove();
+            showToast(lang.workouts_superset_removed, "blue");
         } else {
             element.remove();
+            showToast(lang.workouts_exercise_removed, "blue");
         }
         loadSelectedMuscles();
         updateFields();
@@ -90,15 +93,10 @@ document.addEventListener('click', function (event) {
         exercisesSelected.appendChild(new_exercise);
 
         //new_exercise.scrollIntoView();
-        showToast(lang.workouts_plan_exercise_added, "blue");
+        showToast(lang.workouts_exercise_added, "blue");
 
         loadSelectedMuscles();
         adjustAvailableExercisesColumnHeight();
-    }
-
-    if (headline) {
-        event.preventDefault();
-        event.target.parentElement.classList.toggle('active');
     }
 
     if (add_set) {
@@ -112,6 +110,7 @@ document.addEventListener('click', function (event) {
         if (sets.length > 0) {
             let last_set = sets[sets.length - 1];
             last_set.remove();
+            showToast(lang.workouts_set_removed, "blue");
         }
     }
 
@@ -159,7 +158,7 @@ document.addEventListener('click', function (event) {
         exercisesSelected.appendChild(workout_day);
 
         workout_day.scrollIntoView();
-        showToast(lang.workouts_plan_workoutday_added, "blue");
+        showToast(lang.workouts_workoutday_added, "blue");
     }
 
     if (add_superset) {
@@ -168,6 +167,7 @@ document.addEventListener('click', function (event) {
         let workout_superset = document.createElement("div");
         workout_superset.classList.add("workout_superset");
         workout_superset.dataset.type = "workout-element";
+        workout_superset.dataset.category = "superset";
 
         let workout_superset_content = document.createElement("div");
         workout_superset_content.classList.add("content");
@@ -208,7 +208,9 @@ document.addEventListener('click', function (event) {
         exercisesSelected.appendChild(workout_superset);
 
         workout_superset.scrollIntoView();
-        showToast(lang.workouts_plan_superset_added, "blue");
+        showToast(lang.workouts_superset_added, "blue");
+
+        // todo: check if create mode => change input fields and add save buttons
 
         createSortable(div_exercises);
 
@@ -276,7 +278,7 @@ function loadSelectedMuscles() {
             exercise_ids.push(item.dataset.id);
         });
 
-        let data = {'exercises': exercise_ids};
+        let data = { 'exercises': exercise_ids };
 
         getCSRFToken().then(function (token) {
             data['csrf_name'] = token.csrf_name;
@@ -317,12 +319,14 @@ function addSet(exercise) {
     set_nr.innerHTML = set_id;
 
     let inputs = new_set.querySelectorAll('input, select');
+    console.log(inputs);
     inputs.forEach(function (input, idx) {
         input.setAttribute('name', input.name.replace("dummy", set_id - 1));
         input.removeAttribute('disabled');
     });
 
     setsList.appendChild(new_set);
+    showToast(lang.workouts_set_added, "blue");
 }
 
 if (hideSelectionBtn) {

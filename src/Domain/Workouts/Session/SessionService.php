@@ -11,8 +11,7 @@ use App\Domain\Workouts\Plan\Plan;
 use App\Domain\Workouts\Plan\PlanService;
 use Psr\Log\LoggerInterface;
 
-class SessionService extends Service
-{
+class SessionService extends Service {
 
     private $plan_service;
     private $exercise_mapper;
@@ -33,8 +32,7 @@ class SessionService extends Service
         $this->settings_mapper = $settings_mapper;
     }
 
-    public function index($hash): Payload
-    {
+    public function index($hash): Payload {
 
         $plan = $this->plan_service->getFromHash($hash);
 
@@ -52,8 +50,7 @@ class SessionService extends Service
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    public function edit($hash, $entry_id)
-    {
+    public function edit($hash, $entry_id) {
 
         $plan = $this->plan_service->getFromHash($hash);
 
@@ -75,11 +72,11 @@ class SessionService extends Service
         $days = $this->plan_service->getWorkoutDays($plan->id);
 
         // load planned exercises on new entries
-        $selected_exercises = null;
+        $session_exercises = [];
         if (!is_null($entry_id)) {
-            $selected_exercises = $this->mapper->getExercises($entry_id);
+            $session_exercises = $this->mapper->getExercises($entry_id);
         }
-        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $selected_exercises);
+        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $session_exercises);
 
         $exercisesList = $this->exercise_mapper->getAll('name');
 
@@ -94,8 +91,7 @@ class SessionService extends Service
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    public function view($hash, $entry_id): Payload
-    {
+    public function view($hash, $entry_id): Payload {
 
         $plan = $this->plan_service->getFromHash($hash);
 
@@ -114,8 +110,9 @@ class SessionService extends Service
 
         $session = $this->getEntry($entry_id);
 
-        $selected_exercises = $this->mapper->getExercises($entry_id);
-        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $selected_exercises);
+        $session_exercises = $this->mapper->getExercises($entry_id);
+        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $session_exercises);
+        //var_dump($exercises);
 
         // Get Muscle Image
         $baseMuscleImage = $this->settings_mapper->getSetting('basemuscle_image');
@@ -139,8 +136,7 @@ class SessionService extends Service
         ]);
     }
 
-    public function stats($hash = null): Payload
-    {
+    public function stats($hash = null): Payload {
         $plan_id = null;
         if (!is_null($hash)) {
             $plan = $this->plan_service->getFromHash($hash);
@@ -242,8 +238,7 @@ class SessionService extends Service
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    private function checkSkip($data)
-    {
+    private function checkSkip($data) {
         foreach ($data as $sets) {
             foreach ($sets as $set) {
                 if (!is_null($set["y"])) {

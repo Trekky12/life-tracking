@@ -32,7 +32,7 @@
 	{% endif %}
 
 	<div class="workout-selection view workouts-session-view">
-		{% for exercise in exercises %}
+		{% for exercise in exercises|filter(exercise => exercise.is_finished == 1) %}
 			{% if exercise.type == "exercise" %}
 				<div class="inner-content">
 					{% include "workouts/plan/view-single-exercise.twig" with {'exercise':exercise, "baseMuscleImageThumbnail": baseMuscleImageThumbnail} only %}

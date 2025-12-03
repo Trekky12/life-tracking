@@ -15,10 +15,10 @@ class PlanMapper extends \App\Domain\Mapper {
 
     public function getAllPlans($sorted, $is_template = false, $archive = null) {
         $sql = "SELECT p.id, p.*, "
-                . "COUNT(CASE WHEN pe.type = 'day' THEN 1 END) AS days,"
-                . "COUNT(CASE WHEN pe.type = 'exercise' THEN 1 END) AS exercises "
-                . " FROM " . $this->getTableName() . " p LEFT JOIN " . $this->getTableName("workouts_plans_exercises") . " pe ON p.id = pe.plan "
-                . " WHERE is_template = :is_template ";
+            . "COUNT(CASE WHEN pe.type = 'day' THEN 1 END) AS days,"
+            . "COUNT(CASE WHEN pe.type = 'exercise' THEN 1 END) AS exercises "
+            . " FROM " . $this->getTableName() . " p LEFT JOIN " . $this->getTableName("workouts_plans_exercises") . " pe ON p.id = pe.plan "
+            . " WHERE is_template = :is_template ";
         //$sql = "SELECT * FROM " . $this->getTableName() . "  WHERE is_template = :is_template";
 
         $bindings = [
@@ -51,7 +51,6 @@ class PlanMapper extends \App\Domain\Mapper {
     }
 
     public function getPlan() {
-        
     }
 
     public function deleteExercises($plan_id) {
@@ -82,7 +81,7 @@ class PlanMapper extends \App\Domain\Mapper {
         }
 
         $sql = "INSERT INTO " . $this->getTableName("workouts_plans_exercises") . " (plan, exercise, position, sets, type, notice, is_child) "
-                . "VALUES " . implode(", ", $keys_array) . "";
+            . "VALUES " . implode(", ", $keys_array) . "";
 
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($data_array);
@@ -95,7 +94,7 @@ class PlanMapper extends \App\Domain\Mapper {
     }
 
     public function getExercises($plan_id) {
-        $sql = "SELECT id, exercise, sets, type, notice, is_child FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position";
+        $sql = "SELECT id, exercise, sets, type, notice, is_child FROM " . $this->getTableName("workouts_plans_exercises") . " WHERE plan = :plan ORDER BY position, createdOn";
 
         $bindings = [
             "plan" => $plan_id
@@ -106,7 +105,15 @@ class PlanMapper extends \App\Domain\Mapper {
 
         $results = [];
         while ($row = $stmt->fetch()) {
-            $results[$row["id"]] = ["exercise" => !is_null($row["exercise"]) ? intval($row["exercise"]) : null, "sets" => json_decode($row["sets"], true), "type" => $row["type"], "notice" => $row["notice"], "is_child" => $row["is_child"]];
+            $results[$row["id"]] = [
+                "id" => $row["id"],
+                "exercise" => !is_null($row["exercise"]) ? intval($row["exercise"]) : null,
+                "sets" => json_decode($row["sets"], true),
+                "type" => $row["type"],
+                "notice" => $row["notice"],
+                "is_child" => $row["is_child"],
+                "plans_exercises_id" => $row["id"]
+            ];
         }
         return $results;
     }
@@ -127,5 +134,4 @@ class PlanMapper extends \App\Domain\Mapper {
         }
         return $results;
     }
-
 }

@@ -200,7 +200,7 @@ class ExerciseService extends Service {
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
 
-    public function getExercise($data) {
+    public function getExercise($data, $view = "edit") {
 
         $response_data = ["data" => [], "status" => "success"];
         $sets = array_key_exists('sets', $data) ? filter_var($data['sets'], FILTER_SANITIZE_NUMBER_INT) : 3;
@@ -225,9 +225,12 @@ class ExerciseService extends Service {
                 "type" => "exercise",
                 "notice" => null,
                 "is_child" => 0,
-                "children" => []
+                "plans_exercises_id" => null,
+                "children" => [],
+                "is_finished" => 0
             ];
             $response_data["hidden"] = false;
+            $response_data["buttons"] = ($view == "create");
         } catch (\Exception $e) {
             $response_data["status"] = "error";
         }

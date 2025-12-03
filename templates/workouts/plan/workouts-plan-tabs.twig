@@ -1,4 +1,4 @@
-<div class="tabbar-scroller no-scroll">
+<div class="tabbar-scroller">
 	<div class="tabbar-scrollarea">
 		<a class="tabbar-tab {% if active == 'workouts_plan_view' %}active{% endif %}" href="{{ url_for_with_last_query_params('workouts_plan_view', {'plan': plan.hash}) }}">{{"WORKOUTS_PLAN"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'workouts_sessions' %}active{% endif %}" href="{{ url_for('workouts_sessions', {'plan':plan.hash}) }}">{{"WORKOUTS_SESSIONS"|trans}}</a>

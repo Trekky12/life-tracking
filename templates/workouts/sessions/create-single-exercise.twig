@@ -1,0 +1,106 @@
+{% if buttons %}
+	<form>
+	{% endif %}
+	<div class="exercise exercise-session {% if hidden %}hidden{% endif %}" data-type="workout-element" data-category="exercise" {% if buttons %} data-finished="{{ data['is_finished'] }}" data-idx="{{ data['idx'] }}" {% endif %}>
+		<div class="details-wrapper view-exercise ">
+			<h3 class="title">{{ data["exercise"].name|raw }}</h3>
+			<div class="details-content">
+				<div class="exercise-inner-content">
+					<div class="exercise-content">
+						<div class="sets">
+							<div class="set-list">
+								<div class="set set-dummy hidden">
+									<span class="set-nr"></span>.
+									{{ "WORKOUTS_SET"|trans }}:
+									{% if data["exercise"].isCategoryReps() or data["exercise"].isCategoryRepsWeight() %}
+										<input type="number" min="0" max="999" step="1" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][dummy][repeats]" disabled="disabled"/>
+										<label>{{ "WORKOUTS_REPEATS_SHORT"|trans }}</label>
+									{% endif %}
+									{% if data["exercise"].isCategoryRepsWeight() %}
+										<input type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][dummy][weight]" disabled="disabled"/>
+										<label>{{ "WORKOUTS_KG"|trans }}</label>
+									{% endif %}
+
+									{% if data["exercise"].isCategoryTime() or data["exercise"].isCategoryDistanceTime() %}
+										<input type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][dummy][time]" disabled="disabled"/>
+										<div class="select-wrapper">
+											<select name="exercises[{{ data['idx'] }}][sets][dummy][time_type]" disabled="disabled">
+												<option value="sec">{{ "WORKOUTS_SECONDS"|trans }}</option>
+												<option value="min">{{ "WORKOUTS_MINUTES"|trans }}</option>
+											</select>
+										</div>
+									{% endif %}
+									{% if data["exercise"].isCategoryDistanceTime() %}
+										<input type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][dummy][distance]" disabled="disabled"/>
+										<label>{{ "WORKOUTS_KM"|trans }}</label>
+									{% endif %}
+								</div>
+								{% for set in data["sets"] %}
+									<div class="set">
+										{{ loop.index }}.
+										{{ "WORKOUTS_SET"|trans }}:
+
+										{% if data["exercise"].isCategoryReps() or data["exercise"].isCategoryRepsWeight() %}
+											<input id="repeats_{{ loop.index-1 }}" type="number" min="0" max="999" step="1" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][{{ loop.index-1 }}][repeats]" value="{{ set["repeats"] }}" {% if hidden %} disabled="disabled" {% endif %}/>
+											<label for="repeats_{{ loop.index-1 }}">{{ "WORKOUTS_REPEATS_SHORT"|trans }}</label>
+										{% endif %}
+										{% if data["exercise"].isCategoryRepsWeight() %}
+											<input id="weights_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][{{ loop.index-1 }}][weight]" value="{{ set["weight"] }}" {% if hidden %} disabled="disabled" {% endif %}/>
+											<label for="weights_{{ loop.index-1 }}">{{ "WORKOUTS_KG"|trans }}</label>
+										{% endif %}
+
+										{% if data["exercise"].isCategoryTime() or data["exercise"].isCategoryDistanceTime() %}
+											<input id="time_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][{{ loop.index-1 }}][time]" value="{{ set["time"] }}" {% if hidden %} disabled="disabled" {% endif %}/>
+											<div class="select-wrapper">
+												<select name="exercises[{{ data['idx'] }}][sets][{{ loop.index-1 }}][time_type]" {% if hidden %} disabled="disabled" {% endif %}>
+													<option value="sec" {% if set["time_type"] == "sec" %} selected="true" {% endif %}>{{ "WORKOUTS_SECONDS"|trans }}</option>
+													<option value="min" {% if set["time_type"] == "min" %} selected="true" {% endif %}>{{ "WORKOUTS_MINUTES"|trans }}</option>
+												</select>
+											</div>
+										{% endif %}
+										{% if data["exercise"].isCategoryDistanceTime() %}
+											<input id="distance_{{ loop.index-1 }}" type="number" min="0" max="999" step="any" pattern="\d*" size="5" name="exercises[{{ data['idx'] }}][sets][{{ loop.index-1 }}][distance]" value="{{ set["distance"] }}" {% if hidden %} disabled="disabled" {% endif %}/>
+											<label for="distance_{{ loop.index-1 }}">{{ "WORKOUTS_KM"|trans }}</label>
+										{% endif %}
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+						<div class="buttons">
+							<button type="button" class="add_set button button-text small">{{ "WORKOUTS_SET_ADD"|trans }}</button>
+							<button type="button" class="remove_set button button-text small">{{ "WORKOUTS_SET_REMOVE"|trans }}</button>
+						</div>
+						<input type="hidden" name="exercises[{{ data['idx'] }}][id]" value="{{ data['exercise'].id }}" {% if hidden %} disabled="disabled" {% endif %}/>
+						<input type="hidden" name="exercises[{{ data['idx'] }}][type]" value="{{ data['type'] }}" {% if hidden %} disabled="disabled" {% endif %}/>
+						<input type="hidden" name="exercises[{{ data['idx'] }}][is_child]" value="{{ data['is_child'] }}" {% if hidden %} disabled="disabled" {% endif %}/>
+						<input type="hidden" name="exercises[{{ data['idx'] }}][plans_exercises_id]" value="{{ data['plans_exercises_id'] }}" {% if hidden %} disabled="disabled" {% endif %}/>
+
+						<div class="details-wrapper view-notices">
+							<a href="#" class="details-headline">
+								<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+								<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+								{{ "NOTICE"|trans }}
+							</a>
+							<p class="details-content">
+								<textarea name="exercises[{{ data['idx'] }}][notice]" {% if hidden %} disabled="disabled" {% endif %}>{{ data["notice"] }}</textarea>
+							</p>
+						</div>
+						{% if buttons %}
+							<div class="buttons">
+								<button type="button" class="save_exercise button small">{{ "SAVE"|trans }}</button>
+								<button type="button" class="skip_exercise button button-outlined small">{{ "WORKOUTS_EXERCISE_SKIP"|trans }}</button>
+							</div>
+						{% endif %}
+					</div>
+					{% if data["exercise"].get_thumbnail() != ''%}
+						<div class="thumbnail">
+							<img src="/{{uploads_folder}}/exercises/{{data['exercise'].get_thumbnail()}}"/>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if buttons %}
+	</form>
+{% endif %}

@@ -582,6 +582,11 @@ return function (App $app) {
                 $group_session->get('/view/{id:[0-9]+}', \App\Application\Action\Workouts\Session\SessionViewAction::class)->setName('workouts_sessions_view');
 
                 $group_session->get('/stats', \App\Application\Action\Workouts\Session\SessionStatsAction::class)->setName('workouts_sessions_stats');
+
+                $group_session->get('/create', \App\Application\Action\Workouts\Session\SessionCreateAction::class)->setName('workouts_sessions_create');
+                $group_session->get('/{session:[0-9]+}', \App\Application\Action\Workouts\Session\SessionContinueAction::class)->setName('workouts_sessions_continue');
+                $group_session->post('/{session:[0-9]+}/saveExercise/[{id:[0-9]+}]', \App\Application\Action\Workouts\Session\SessionSaveExerciseAction::class)->setName('workouts_sessions_exercise_save');
+
             });
         });
 

@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Workouts\Exercise;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Workouts\Exercise\ExerciseService;
 use App\Application\Responder\JSONHTMLTemplateResponder;
@@ -19,9 +19,14 @@ class ExercisesDataAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $data = $request->getQueryParams();
-        $payload = $this->service->getExercise($data);
+        $view = $request->getQueryParam('view');
+        $payload = $this->service->getExercise($data, $view);
 
-        return $this->responder->respond($payload->withTemplate('workouts/sessions/edit-single-exercise.twig'));
+        $template = 'workouts/sessions/edit-single-exercise.twig';
+        if ($view == 'create') {
+            $template = 'workouts/sessions/create-single-exercise.twig';
+        }
+
+        return $this->responder->respond($payload->withTemplate($template));
     }
-
 }
