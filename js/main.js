@@ -383,7 +383,9 @@ function initialize() {
         reloadBtn.addEventListener('click', function (e) {
             e.preventDefault();
             loadingWindowOverlay.classList.remove("hidden");
-            window.location.reload();
+            setTimeout(function () {
+                window.location.reload();
+            }, 20);
         });
     }
 
@@ -405,7 +407,9 @@ function initialize() {
         if (is_internal_link) {
             event.preventDefault();
             await storeQueryParams();
-            window.location.href = link.getAttribute("href");
+            setTimeout(function () {
+                window.location.href = link.getAttribute("href");
+            }, 20);
         }
 
         // Remove loading spinner if not all required form fields are filled
@@ -566,6 +570,15 @@ document.addEventListener('click', function (event) {
     if (closebtn) {
         event.preventDefault();
         event.target.parentElement.classList.add("hidden");
+    }
+
+    /**
+     * Details
+     */
+    let headline = event.target.closest('.details-wrapper .details-headline');
+    if (headline) {
+        event.preventDefault();
+        event.target.closest('.details-wrapper').classList.toggle('active');
     }
 
 });
