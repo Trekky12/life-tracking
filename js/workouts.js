@@ -69,12 +69,12 @@ document.addEventListener('click', function (event) {
 
         new_exercise.querySelector('.sets').classList.remove('hidden');
 
-        let input_id = document.createElement("input");
-        input_id.type = 'hidden';
-        input_id.name = 'exercises[' + nextID + '][id]';
-        input_id.value = exercise.dataset.id;
+        let input_exercise_id = document.createElement("input");
+        input_exercise_id.type = 'hidden';
+        input_exercise_id.name = 'exercises[' + nextID + '][exercise]';
+        input_exercise_id.value = exercise.dataset.id;
 
-        new_exercise.appendChild(input_id);
+        new_exercise.appendChild(input_exercise_id);
 
         let sets = parseInt(document.querySelector('#defaultSetCount').value);
         let set = 0;

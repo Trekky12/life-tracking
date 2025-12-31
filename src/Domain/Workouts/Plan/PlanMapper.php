@@ -53,25 +53,38 @@ class PlanMapper extends \App\Domain\Mapper {
     public function getPlan() {
     }
 
-    public function deleteExercises($plan_id) {
+    public function deleteExercises($plan_id, $exercises = []) {
         $sql = "DELETE FROM " . $this->getTableName("workouts_plans_exercises") . "  WHERE plan = :plan";
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
+
+        $bindings = [
             "plan" => $plan_id
-        ]);
+        ];
+
+        if (!empty($exercises)) {
+            $keys_array = [];
+            foreach ($exercises as $idx => $exercise) {
+                $bindings["exercise" . $idx] = $exercise;
+                $keys_array[] = ":exercise" . $idx;
+            }
+            $sql .= " AND id IN (" . implode(',', $keys_array) . ")";
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($bindings);
+
         if (!$result) {
             throw new \Exception($this->translation->getTranslatedString('DELETE_FAILED'));
         }
         return true;
     }
 
-    public function addExercises($plan_id, $exercises = array()) {
+    public function addExercises($plan_id, $exercises = []) {
 
-        $data_array = array();
-        $keys_array = array();
+        $data_array = [];
+        $keys_array = [];
         foreach ($exercises as $idx => $exercise) {
             $data_array["plan" . $idx] = $plan_id;
-            $data_array["exercise" . $idx] = $exercise["id"];
+            $data_array["exercise" . $idx] = $exercise["exercise"];
             $data_array["position" . $idx] = $exercise["position"];
             $data_array["sets" . $idx] = json_encode($exercise["sets"]);
             $data_array["type" . $idx] = $exercise["type"];
@@ -91,6 +104,41 @@ class PlanMapper extends \App\Domain\Mapper {
         } else {
             return $this->db->lastInsertId();
         }
+    }
+
+    public function updateExercises($plan_id, $exercises = []) {
+
+        $sql = "UPDATE " . $this->getTableName("workouts_plans_exercises") . "
+            SET exercise = :exercise,
+                position = :position,
+                sets = :sets,
+                type = :type,
+                notice = :notice,
+                is_child = :is_child
+            WHERE id = :id AND plan = :plan";
+
+        $stmt = $this->db->prepare($sql);
+
+        foreach ($exercises as $exercise) {
+            $result = $stmt->execute([
+                ':id'       => $exercise['id'],
+                ':plan'     => $plan_id,
+                ':exercise' => $exercise['exercise'],
+                ':position' => $exercise['position'],
+                ':sets'     => json_encode($exercise['sets']),
+                ':type'     => $exercise['type'],
+                ':notice'   => $exercise['notice'],
+                ':is_child' => $exercise['is_child'],
+            ]);
+
+            if (!$result) {
+                throw new \Exception(
+                    $this->translation->getTranslatedString('UPDATE_FAILED')
+                );
+            }
+        }
+
+        return true;
     }
 
     public function getExercises($plan_id) {

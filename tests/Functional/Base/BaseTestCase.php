@@ -77,7 +77,6 @@ class BaseTestCase extends TestCase {
     private $tokens = [];
 
     public static function setUpBeforeClass(): void {
-        
     }
 
     public function request($requestMethod, $requestUri, $requestData = [], $auth = array(), $files = null) {
@@ -307,11 +306,11 @@ class BaseTestCase extends TestCase {
     protected function getURIChildDelete($hash) {
         return str_replace("HASH", $hash, $this->uri_child_delete);
     }
-    
-    protected function getURIWithHash($uri, $hash){
+
+    protected function getURIWithHash($uri, $hash) {
         return str_replace("HASH", $hash, $uri);
     }
-    protected function getURIWithHashAndID($uri, $hash, $id){
+    protected function getURIWithHashAndID($uri, $hash, $id) {
         return str_replace("ID", $id, str_replace("HASH", $hash, $uri));
     }
 
@@ -349,7 +348,7 @@ class BaseTestCase extends TestCase {
 
         if (array_key_exists("tokens", $matches)) {
             $tokens = json_decode($matches["tokens"], true);
-            if(count($tokens) > 0){
+            if (count($tokens) > 0) {
                 $csrf_name = $tokens[0]["csrf_name"];
                 $csrf_value = $tokens[0]["csrf_value"];
                 return array("csrf_name" => $csrf_name, "csrf_value" => $csrf_value);
@@ -412,8 +411,20 @@ class BaseTestCase extends TestCase {
         return $input_fields;
     }
 
-    protected function compareInputFields($body, $data) {
+    protected function compareInputFields($body, $data, $remove_subkey = null) {
         $input_fields = $this->getInputFields($body);
+
+        if (!is_null($remove_subkey)) {
+            [$parent, $child] = explode('|', $remove_subkey, 2);
+
+            if (isset($input_fields[$parent]) && is_array($input_fields[$parent])) {
+                foreach ($input_fields[$parent] as &$item) {
+                    if (is_array($item)) {
+                        unset($item[$child]);
+                    }
+                }
+            }
+        }
 
         foreach ($data as $key => $val) {
             $this->assertArrayHasKey($key, $input_fields, $key . " missing");
@@ -428,11 +439,11 @@ class BaseTestCase extends TestCase {
          * Get the node value
          */
         $value = $node->getAttribute('value');
-        
+
         $type = $node->nodeName;
-        if ($type == "input" && $node->getAttribute('type') == "checkbox" ) {
+        if ($type == "input" && $node->getAttribute('type') == "checkbox") {
             $value = $node->hasAttribute('checked') ? 1 : 0;
-        }elseif ($type == "input" && $node->getAttribute('type') == "radio" && !$node->hasAttribute('checked')){
+        } elseif ($type == "input" && $node->getAttribute('type') == "radio" && !$node->hasAttribute('checked')) {
             // skip not selected radio boxes
             return;
         } elseif ($type == "select") {
@@ -496,5 +507,4 @@ class BaseTestCase extends TestCase {
             $input_fields[$name] = $value;
         }
     }
-
 }

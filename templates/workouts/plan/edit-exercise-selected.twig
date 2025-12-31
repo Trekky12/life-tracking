@@ -140,8 +140,9 @@
 			<span class="minus">{{ fontawesome('fas fa-minus') }}</span>
 			<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 		</div>
-		<input type="hidden" name="exercises[{{ exercise['idx'] }}][id]" value="{{ exercise['exercise'].id }}"/>
+		<input type="hidden" name="exercises[{{ exercise['idx'] }}][exercise]" value="{{ exercise['exercise'].id }}"/>
 		<input type="hidden" name="exercises[{{ exercise['idx'] }}][type]" value="exercise"/>
 		<input type="hidden" name="exercises[{{ exercise['idx'] }}][is_child]" value="{{ exercise['is_child'] }}"/>
+		<input type="hidden" name="exercises[{{ exercise['idx'] }}][id]" value="{{ exercise['id'] }}"/>
 	</div>
 </div>

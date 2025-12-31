@@ -47,13 +47,13 @@ class UserTest extends BaseTestCase {
             "name" => "Test Workout Plan 1",
             "exercises" => [
                 0 => [
-                    "id" => 3,
+                    "exercise" => 3,
                     "type" => "exercise",
                     "is_child" => 0,
                     "notice" => ''
                 ],
                 1 => [
-                    "id" => 2,
+                    "exercise" => 2,
                     "type" => "exercise",
                     "is_child" => 0,
                     "sets" => [
@@ -69,7 +69,7 @@ class UserTest extends BaseTestCase {
                     "notice" => ''
                 ],
                 2 => [
-                    "id" => 1,
+                    "exercise" => 1,
                     "type" => "exercise",
                     "is_child" => 0,
                     "notice" => ''
@@ -82,13 +82,13 @@ class UserTest extends BaseTestCase {
                     "type" => "superset"
                 ],
                 5 => [
-                    "id" => 1,
+                    "exercise" => 1,
                     "type" => "exercise",
                     "is_child" => 1,
                     "notice" => ''
                 ],
                 6 => [
-                    "id" => 2,
+                    "exercise" => 2,
                     "type" => "exercise",
                     "is_child" => 1,
                     "notice" => ''
@@ -141,7 +141,7 @@ class UserTest extends BaseTestCase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
-        $this->compareInputFields($body, $data);
+        $this->compareInputFields($body, $data, "exercises|id");
 
         return intval($matches["id"]);
     }
@@ -154,13 +154,13 @@ class UserTest extends BaseTestCase {
             "name" => "Test Workout Plan 1 Updated",
             "exercises" => [
                 0 => [
-                    "id" => 1,
+                    "exercise" => 1,
                     "type" => "exercise",
                     "is_child" => 0,
                     "notice" => ''
                 ],
                 1 => [
-                    "id" => 2,
+                    "exercise" => 2,
                     "type" => "exercise",
                     "is_child" => 0,
                     "sets" => [
@@ -213,7 +213,7 @@ class UserTest extends BaseTestCase {
         $response = $this->request('GET', $this->uri_edit . $entry_id);
 
         $body = (string) $response->getBody();
-        $this->compareInputFields($body, $data);
+        $this->compareInputFields($body, $data, "exercises|id");
     }
 
     /** 

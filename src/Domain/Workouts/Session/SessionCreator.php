@@ -48,21 +48,7 @@ class SessionCreator extends Service {
 
         $entry = $this->session_writer->save(null, $data, ["plan" => $plan->getHash()]);
 
-        $days = $this->plan_service->getWorkoutDays($plan->id);
-        list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id);
-
-        $exercisesList = $this->exercise_mapper->getAll('name');
-
-        $response_data = [
-            'entry' => $entry->getResult(),
-            'plan' => $plan,
-            'exercises' => $exercises,
-            'exercisesList' => $exercisesList,
-            'workoutdays' => $days,
-            'isWorkoutCreate' => true
-        ];
-
-        return new Payload(Payload::$RESULT_HTML, $response_data);
+        return $entry;
     }
 
     public function continue($hash, $session) {
@@ -79,23 +65,24 @@ class SessionCreator extends Service {
 
         $entry = $this->getEntry($session);
 
-        $days = $this->plan_service->getWorkoutDays($plan->id);
-
         $session_exercises = $this->mapper->getExercises($session);
         list($exercises, $muscles) = $this->plan_service->getPlanExercises($plan->id, $session_exercises, true);
 
         $exercisesList = $this->exercise_mapper->getAll('name');
-
-        // todo: if entries has day then skip all following entries after other day!
 
         $response_data = [
             'entry' => $entry,
             'plan' => $plan,
             'exercises' => $exercises,
             'exercisesList' => $exercisesList,
-            //'workoutdays' => $days,
             'isWorkoutCreate' => true
         ];
+
+        // select day only when no exercises are already saved
+        if (empty($session_exercises)) {
+            $days = $this->plan_service->getWorkoutDays($plan->id);
+            $response_data['workoutdays'] = $days;
+        }
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
