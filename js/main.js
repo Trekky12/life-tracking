@@ -656,6 +656,13 @@ function getDisplay(element) {
     return element.currentStyle ? element.currentStyle.display : getComputedStyle(element, null).display;
 }
 
+function isOffline(error) {
+    if (error instanceof TypeError && error.message.startsWith("NetworkError")) {
+        setOffline(true);
+    }
+    return document.body.classList.contains('offline');
+}
+
 // Store query params
 async function storeQueryParams() {
     try {

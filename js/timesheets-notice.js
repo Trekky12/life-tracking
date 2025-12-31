@@ -412,7 +412,7 @@ async function saveNotice(autoSave = false) {
         console.log(error);
 
         if (!autoSave) {
-            if (document.body.classList.contains('offline')) {
+            if (isOffline(error)) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(timesheetNoticeForm.action, timesheetNoticeForm.method, formData);
             } else {

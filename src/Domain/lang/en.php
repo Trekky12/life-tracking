@@ -333,6 +333,8 @@ $lang["BOARD_UNSAVED_STACK"] = "The stack is not saved yet and therefore can't b
 $lang["BOARD_UNSAVED_CARD"] = "The card is not saved yet and therefore can't be opened!";
 $lang["BOARD_ARCHIVE_ERROR"] = "Archiving failed!";
 $lang["BOARD_DELETE_ERROR"] = "Deleting failed!";
+$lang["BOARD_SAVE_STACK"] = "The stack was saved";
+$lang["BOARD_SAVE_CARD"] = "The card was saved";
 
 $lang["NOTHING_FOUND"] = "nothing found";
 $lang["LOADING"] = "Loading...";

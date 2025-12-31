@@ -30,7 +30,7 @@ function add_save_dataset_function() {
                 window.location.reload();
             }).catch(function (error) {
                 console.log(error);
-                if (document.body.classList.contains('offline')) {
+                if (isOffline(error)) {
                     let formData = new URLSearchParams(data).toString();
                     saveDataWhenOffline(jsObject.crawler_dataset_save, 'POST', formData);
                 }

@@ -51,18 +51,19 @@ function renderBoard() {
     }
 }
 
-function loadBoard() {
-    return fetch(jsObject.boards_data, {
-        method: 'GET',
-        credentials: "same-origin",
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(function (response) {
-        return response.json();
-    }).catch(function (error) {
+async function loadBoard() {
+    try {
+        const response = await fetch(jsObject.boards_data, {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return await response.json();
+    } catch (error) {
         console.log(error);
-    });
+    }
 }
 
 document.addEventListener('click', async function (event) {
@@ -87,7 +88,7 @@ document.addEventListener('click', async function (event) {
         let stack_id = stack_edit.closest('.stack').dataset.stack;
 
         if (!stack_id) {
-            window.alert(lang.boards_error_open_stack);
+            showToast(lang.boards_error_open_stack, "red");
             return;
         }
         document.getElementById('loading-overlay').classList.remove('hidden');
@@ -189,7 +190,7 @@ document.addEventListener('click', async function (event) {
             console.log(error);
             loadingWindowOverlay.classList.remove("hidden");
 
-            window.alert(lang.boards_error_archive);
+            showToast(lang.boards_error_archive, "red");
 
             let archive_undo = archive == 0 ? 1 : 0;
 
@@ -227,7 +228,7 @@ document.addEventListener('click', async function (event) {
                 });
             }
 
-            if (document.body.classList.contains('offline')) {
+            if (isOffline(error)) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(url, 'POST', formData);
             }
@@ -300,7 +301,7 @@ document.addEventListener('click', async function (event) {
             }).catch(function (error) {
                 console.log(error);
 
-                window.alert(lang.boards_error_archive);
+                showToast(lang.boards_error_archive, "red");
 
                 if (archive) {
                     savedCardEl.classList.remove("archived");
@@ -313,7 +314,7 @@ document.addEventListener('click', async function (event) {
                 }
                 card.archive = archive;
 
-                if (document.body.classList.contains('offline')) {
+                if (isOffline(error)) {
                     let formData = new URLSearchParams(data).toString();
                     saveDataWhenOffline(url, 'POST', formData);
                 }
@@ -360,10 +361,10 @@ document.addEventListener('click', async function (event) {
         }).catch(function (error) {
             console.log(error);
 
-            window.alert(lang.boards_error_delete);
+            showToast(lang.boards_error_delete, "red");
             savedStackEl.classList.remove("hidden");
 
-            if (document.body.classList.contains('offline')) {
+            if (isOffline(error)) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(url, 'POST', formData);
             }
@@ -412,10 +413,10 @@ document.addEventListener('click', async function (event) {
         }).catch(function (error) {
             console.log(error);
 
-            window.alert(lang.boards_error_delete);
+            showToast(lang.boards_error_delete, "red");
             savedCardEl.classList.remove("hidden");
 
-            if (document.body.classList.contains('offline')) {
+            if (isOffline(error)) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(url, 'POST', formData);
             }
@@ -503,7 +504,7 @@ document.addEventListener('click', async function (event) {
         let card_id = board_card.closest('.board-card').dataset.card;
 
         if (!card_id) {
-            window.alert(lang.boards_error_open_card);
+            showToast(lang.boards_error_open_card, "red");
             return;
         }
 
@@ -956,10 +957,11 @@ async function saveStack(dialog, url) {
         stack.querySelector(".create-card").dataset.stack = stack_data.id;
 
         //document.getElementById('loading-overlay').classList.add('hidden');
+        showToast(lang.boards_save_stack, "green");
 
     } catch (error) {
         console.log(error);
-        window.alert(lang.boards_error_save_stack);
+        showToast(lang.boards_error_save_stack, "red");
 
         if (savedStack) {
             let updatedStack = document.querySelector('.stack-wrapper .stack[data-stack="' + formData.id + '"');
@@ -969,7 +971,7 @@ async function saveStack(dialog, url) {
             document.querySelector('.stack-wrapper').removeChild(stack);
         }
 
-        if (document.body.classList.contains('offline')) {
+        if (isOffline(error)) {
             saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
     } finally {
@@ -1038,10 +1040,11 @@ async function saveCard(dialog, url) {
 
         //closeDialog(dialog, true);
         //document.getElementById('loading-overlay').classList.add('hidden');
+        showToast(lang.boards_save_card, "green");
 
     } catch (error) {
         console.log(error);
-        window.alert(lang.boards_error_save_card);
+        showToast(lang.boards_error_save_card, "red");
 
         if (savedCard) {
             stackEl.querySelector('.card-wrapper').replaceChild(savedCardEl, card);
@@ -1049,7 +1052,7 @@ async function saveCard(dialog, url) {
             stackEl.querySelector('.card-wrapper').removeChild(card);
         }
 
-        if (document.body.classList.contains('offline')) {
+        if (isOffline(error)) {
             saveDataWhenOffline(url + id, 'POST', formData2, false);
         }
     } finally {
@@ -1089,7 +1092,7 @@ async function saveLabel(dialog, url) {
         window.location.reload(true);
     } catch (error) {
         console.log(error);
-        if (document.body.classList.contains('offline')) {
+        if (isOffline(error)) {
             saveDataWhenOffline(url + id, 'POST', formData2, true);
         }
     } finally {
@@ -1180,7 +1183,7 @@ setInterval(async function () {
 
 async function updateBoard() {
     let newData = await loadBoard();
-    if (JSON.stringify(boardData) !== JSON.stringify(newData)) {
+    if (newData && JSON.stringify(boardData) !== JSON.stringify(newData)) {
         console.log("Update Board Data");
         loadingIconBoard.classList.remove("hidden");
         boardData = newData;

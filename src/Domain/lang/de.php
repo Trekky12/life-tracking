@@ -332,6 +332,8 @@ $lang["BOARD_UNSAVED_STACK"] = "Der Stapel wurde noch nicht gespeichert und kann
 $lang["BOARD_UNSAVED_CARD"] = "Die Karte wurde noch nicht gespeichert und kann daher nicht geöffnet werden!";
 $lang["BOARD_ARCHIVE_ERROR"] = "Archivieren fehlgeschlagen!";
 $lang["BOARD_DELETE_ERROR"] = "Löschen fehlgeschlagen!";
+$lang["BOARD_SAVE_STACK"] = "Der Stapel wurde gespeichert";
+$lang["BOARD_SAVE_CARD"] = "Die Karte wurde gespeichert";
 
 $lang["NOTHING_FOUND"] = "Nichts gefunden";
 $lang["LOADING"] = "Lade...";

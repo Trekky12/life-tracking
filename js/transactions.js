@@ -26,7 +26,7 @@ function add_confirm_transaction_function() {
                 window.location.reload();
             }).catch(function (error) {
                 console.log(error);
-                if (document.body.classList.contains('offline')) {
+                if (isOffline(error)) {
                     let formData = new URLSearchParams(data).toString();
                     saveDataWhenOffline(jsObject.finances_transaction_confirm, 'POST', formData);
                 }

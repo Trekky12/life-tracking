@@ -28,7 +28,7 @@ document.addEventListener('click', async function (event) {
         } catch (error) {
             console.log(error);
             check_entry.checked = !check_entry.checked;
-            if (document.body.classList.contains('offline')) {
+            if (isOffline(error)) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(jsObject.crawler_dataset_save, 'POST', formData);
             }

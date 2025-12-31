@@ -124,7 +124,7 @@ function createRecipeEntry(target, recipe, date, position, id, notice) {
         }
     }).catch(function (error) {
         console.log(error);
-        if (document.body.classList.contains('offline')) {
+        if (isOffline(error)) {
             let formData = new URLSearchParams(data).toString();
             saveDataWhenOffline(jsObject.recipes_mealplan_move_recipe, 'POST', formData);
         }

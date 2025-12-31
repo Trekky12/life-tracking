@@ -173,7 +173,7 @@ async function addEntryToList() {
         }
     } catch (error) {
         console.log(error);
-        if (document.body.classList.contains('offline')) {
+        if (isOffline(error)) {
             let formData = new URLSearchParams(data).toString();
             saveDataWhenOffline(jsObject.recipes_shoppinglists_add_entry, 'POST', formData);
         }

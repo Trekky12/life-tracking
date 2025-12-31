@@ -176,7 +176,7 @@ function setCategories(data) {
         window.location.reload(true);
     }).catch(function (error) {
         console.log(error);
-        if (document.body.classList.contains('offline')) {
+        if (isOffline(error)) {
             let formData = new URLSearchParams(data).toString();
             saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
         }
@@ -300,7 +300,7 @@ if (applyOptionsBtn) {
             window.location.reload(true);
         }).catch(function (error) {
             console.log(error);
-            if (document.body.classList.contains('offline')) {
+            if (isOffline(error)) {
                 let formData = new URLSearchParams(data).toString();
                 saveDataWhenOffline(jsObject.timesheets_sheets_set_categories, 'POST', formData);
             }

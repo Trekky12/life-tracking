@@ -52,16 +52,8 @@
     /* Stack */
 
     .stack-wrapper {
-        padding-left: 5px;
-        padding-right: 5px;
-        
         position: relative;
         overflow-x: auto;
-
-        @media screen and (min-width: variables.$size_mobile_navigation) {
-            padding-left: 20px;
-            padding-right: 20px;
-        }
 
         @media screen and (min-width: variables.$size_mobile) {
             min-height: calc(100vh - #{variables.$header_height} - 20px - 36px - 20px);
@@ -611,22 +603,10 @@ body.boards-view {
     }
 
     .site-content {
-        padding-left: 0;
-        padding-right: 0;
         max-width: none;
 
         @media screen and (min-width: variables.$size_mobile_navigation) {
             padding-bottom: 0;
-        }
-    }
-
-    .page-header {
-        padding-left: 5px;
-        padding-right: 5px;
-
-        @media screen and (min-width: variables.$size_mobile_navigation) {
-            padding-left: 20px;
-            padding-right: 20px;
         }
     }
 }
