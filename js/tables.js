@@ -1474,6 +1474,25 @@ var requirementsTypesTable = new JSTable("#customers_requirements_table", {
     ]
 });
 
+var remindersTable = new JSTable("#reminders_table", {
+    perPage: 20,
+    perPageSelect: [10, 20, 50, 100, 200],
+    labels: tableLabels,
+    layout: layout,
+    columns: [
+        {
+            select: 0,
+            sortable: true,
+            sort: "asc"
+        },
+        {
+            select: [1, 2],
+            sortable: false,
+            searchable: false
+        }
+    ]
+});
+
 
 var transactionsRecurringTable = new JSTable("#transaction_recurring_table", {
     perPage: 20,

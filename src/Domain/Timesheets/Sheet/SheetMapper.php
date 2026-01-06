@@ -873,6 +873,39 @@ class SheetMapper extends \App\Domain\Mapper {
         return false;
     }
 
+    public function isLastSheetOfTheDayOver($project) {
+        $sql = "SELECT MAX(end) FROM " . $this->getTableName() . "  "
+            . "WHERE project = :project "
+            . " AND DATE(end) = CURDATE() "
+            . " HAVING MAX(end) < NOW()";
+
+        $bindings = array("project" => $project);
+
+        $sql .= " ORDER BY start DESC LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getLastCompletedSheet(int $projectId): ?array {
+        $sql = "SELECT id FROM " . $this->getTableName() . " 
+                WHERE project = :project
+                    AND DATE(end) = CURDATE()
+                    AND end <= NOW()
+                ORDER BY end DESC
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['project' => $projectId]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+    }
+
+
     private function filterDate($startColumn, $endColumn) {
         return "     (DATE({$startColumn}) >= :from AND DATE({$endColumn}) <= :to ) OR"
             . "     (DATE({$startColumn}) >= :from AND DATE({$startColumn}) <= :to AND t.end IS NULL ) OR"

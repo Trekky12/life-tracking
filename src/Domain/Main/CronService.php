@@ -17,6 +17,7 @@ use App\Domain\Main\Helper;
 use App\Domain\Base\Settings;
 use App\Domain\Notifications\NotificationsService;
 use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\Reminder\ReminderService;
 use App\Domain\Timesheets\Sheet\SheetService;
 use App\Domain\User\UserService;
 use Slim\Routing\RouteParser;
@@ -34,6 +35,7 @@ class CronService extends Service {
     protected $sheet_service;
     protected $timesheet_project_service;
     protected $notifications_service;
+    protected $reminder_service;
     protected $router;
     protected $translation;
 
@@ -53,6 +55,7 @@ class CronService extends Service {
         SheetService $sheet_service,
         ProjectService $timesheet_project_service,
         NotificationsService $notifications_service,
+        ReminderService $reminder_service,
         RouteParser $router,
         Translator $translation
     ) {
@@ -71,6 +74,7 @@ class CronService extends Service {
         $this->notifications_service = $notifications_service;
         $this->router = $router;
         $this->translation = $translation;
+        $this->reminder_service = $reminder_service;
     }
 
     public function cron(): Payload {
@@ -133,34 +137,49 @@ class CronService extends Service {
                 $this->settings_mapper->updateLastRun("lastRunRecurringTransactions");
             }
 
-            // Check timesheet reminder beginning @ 18:00
-            if (intval($date->format("H")) >= 18) {
-                $projects = $this->timesheet_project_service->getAll();
-                foreach ($projects as $project) {
+            // Check timesheet reminders
+            $timesheet_reminders = $this->reminder_service->getRemindersByProject();
 
-                    $lastRunTimesheetNotifyProject = $this->settings_mapper->getSetting('lastRunTimesheetNotifyProject', $project->id);
-                    if (is_null($lastRunTimesheetNotifyProject)) {
-                        $this->settings_mapper->addSetting('lastRunTimesheetNotifyProject', 0, 'Date', $project->id);
+            foreach ($timesheet_reminders as $project => $reminders) {
+                foreach ($reminders as $reminder) {
+
+                    $ready = false;
+                    $timesheet = null;
+
+                    switch ($reminder->trigger_type) {
+                        case 'after_each_sheet':
+                            $lastSheet = $this->sheet_service->getLastCompletedSheet($reminder->project);
+                            if ($lastSheet) {
+                                $ready = true;
+                                $timesheet = $lastSheet['id'];
+                            }
+                            break;
+
+                        case 'after_last_sheet':
+                            $ready = $this->sheet_service->isLastSheetOfTheDayOver($reminder->project);
+                            break;
+
+                        case 'after_last_sheet_plus_1h':
+                            $ready = $this->sheet_service->isLastSheetOfTheDayOverSince1hour($reminder->project);
+                            break;
+
+                        default:
+                            break;
                     }
-                    $notifiedToday = !is_null($lastRunTimesheetNotifyProject) && $lastRunTimesheetNotifyProject->getDayDiff() == 0;
 
-                    if (!$notifiedToday) {
-                        $isLastSheetOfTheDayOverSince1hour = $this->sheet_service->isLastSheetOfTheDayOverSince1hour($project->id);
-                        if ($isLastSheetOfTheDayOverSince1hour) {
-                            $this->logger->debug("Send notification to users", ["project" => $project->id]);
+                    if ($ready && !$this->reminder_service->wasNotificationSent($reminder->project, $reminder->id, $timesheet)) {
 
-                            $title = $this->translation->getTranslatedString("NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_TITLE");
-                            $message = $this->translation->getTranslatedString("NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_MESSAGE", ['%project%' => $project->name]);
-                            $path = $this->router->relativeUrlFor('timesheets_sheets', array('project' => $project->getHash())) . "?from=" . $date->format('Y-m-d') . "&to=" . $date->format('Y-m-d');
+                        $project = $this->timesheet_project_service->getProject($reminder->project);
+                        $path = $this->router->relativeUrlFor('timesheets_sheets', array('project' => $project->getHash())) . "?from=" . $date->format('Y-m-d') . "&to=" . $date->format('Y-m-d');
 
-                            $this->notifications_service->sendNotificationsToUsersWithCategory("NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER", $title, $message, $path, $project->id);
+                        $message = $this->reminder_service->getNextMessage($reminder->id);
+                        
+                        $this->notifications_service->sendNotificationsToUsersWithReminder($reminder->id, $reminder->title, $message["message"], $path);
 
-                            $this->settings_mapper->updateLastRun("lastRunTimesheetNotifyProject", $project->id);
-                        }
+                        $this->reminder_service->markAsSent($reminder->project, $reminder->id, $message["id"], $timesheet);
                     }
                 }
             }
-
 
             $this->settings_mapper->updateSetting("isCronRunning", 0);
 

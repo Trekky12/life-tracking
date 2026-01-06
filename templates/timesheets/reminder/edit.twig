@@ -1,0 +1,109 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block javascript %}
+	<script src="{{baseURL}}/static/js/timesheets-reminder.js?ver={{CACHEMISS}}"></script>
+{% endblock %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets_reminders', {'project': project.hash})}}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"TIMESHEETS_REMINDERS"|trans}}
+				|
+				{{ project.name }}</h2>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+
+			<form class="form-horizontal" action="{{ url_for('timesheets_reminders_save', {'id' : entry.id, 'project' : project.hash}) }}" method="POST">
+				<input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+				<input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+				{% if not entry is null %}
+					<input name="id" id="entry_id" type="hidden" value="{{entry.id}}">
+				{% endif %}
+
+				<div class="form-group">
+					<label for="inputName">{{"NAME"|trans}}</label>
+					<input required type="text" class="form-control" id="inputName" name="name" {% if not entry is null %} value="{{entry.name}}" {% endif %}>
+				</div>
+
+				<div class="form-group">
+					<h4>{{"TIMESHEETS_REMINDER_TRIGGER_TYPE"|trans}}</h4>
+					<label class="checkbox" for="radio1">
+						<input name="trigger_type" type="radio" value="after_last_sheet_plus_1h" id="radio1" {% if (entry is null) or (entry is not null and entry.trigger_type == "after_last_sheet_plus_1h" )%} checked="checked" {% endif %}>
+						{{"TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_LAST_SHEET_PLUS_1"|trans}}
+					</label>
+					<br/>
+					<label class="checkbox" for="radio2">
+						<input name="trigger_type" type="radio" value="after_last_sheet" id="radio2" {% if (entry is not null and entry.trigger_type == "after_last_sheet" )%} checked="checked" {% endif %}>
+						{{"TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_LAST_SHEET"|trans}}
+					</label>
+					<br/>
+					<label class="checkbox" for="radio3">
+						<input name="trigger_type" type="radio" value="after_each_sheet" id="radio3" {% if (entry is not null and entry.trigger_type == "after_each_sheet" )%} checked="checked" {% endif %}>
+						{{"TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_EACH_SHEET"|trans}}
+					</label>
+				</div>
+
+				<div class="form-group">
+					<label for="inputTitle">{{"TIMESHEETS_REMINDER_TITLE"|trans}}</label>
+					<textarea class="form-control" id="inputTitle" name="title">
+						{%- if not entry is null -%}
+							{{- entry.title|raw -}}
+						{%- endif -%}
+					</textarea>
+				</div>
+
+				<div class="form-group">
+					<label>{{"TIMESHEETS_REMINDER_MESSAGES"|trans}}</label>
+					<div id="messages-wrapper">
+						{% if messages|length == 0 %}
+							<div class="reminder-message">
+								<input type="text" class="form-control" name="messages[0][message]"/>
+								<a href="#" class="remove-reminder-message">{{ fontawesome('fas fa-trash') }}</a>
+							</div>
+						{% endif %}
+
+						{% for idx, message in messages %}
+							<div class="reminder-message">
+								<input type="text" class="form-control" name="messages[{{ idx }}][message]" value="{{ message.message | raw }}"/>
+								<input type="hidden" name="messages[{{ idx }}][id]" value="{{ message.id }}"/>
+								<a href="#" class="remove-reminder-message">{{ fontawesome('fas fa-trash') }}</a>
+							</div>
+						{% endfor %}
+					</div>
+					<button type="button" id="add-message" class="button button-text small">{{"TIMESHEETS_REMINDER_ADD_MESSAGE"|trans}}</button>
+				</div>
+
+				<div class="form-group btn">
+					<button type="submit" class="button">
+						{% if not entry is null %}
+							{{"SAVE"|trans}}
+						{% else %}
+							{{"INSERT"|trans}}
+						{% endif %}
+					</button>
+					{% if not entry is null %}
+						<button id="cancel" class="button button-text">{{"CANCEL"|trans}}</button>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block bottom %}
+	<div class="hidden">
+		<div id="iconTrash">{{ fontawesome('fas fa-trash') }}</div>
+	</div>
+{% endblock %}

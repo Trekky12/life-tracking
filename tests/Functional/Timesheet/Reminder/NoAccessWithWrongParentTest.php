@@ -1,17 +1,17 @@
 <?php
 
-namespace Tests\Functional\Timesheet\RequirementType;
+namespace Tests\Functional\Timesheet\Reminder;
 
 use Tests\Functional\Timesheet\TimesheetTestBase;
 
 class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     protected $TEST_PROJECT_HASH = "ABCabc123";
-    protected $TEST_REQUIREMENT_TYPE_ID = 2;
+    protected $TEST_REMINDER_ID = 2;
 
-    protected $uri_child_edit = "/timesheets/HASH/requirementtypes/edit/";
-    protected $uri_child_save = "/timesheets/HASH/requirementtypes/save/";
-    protected $uri_child_delete = "/timesheets/HASH/requirementtypes/delete/";
+    protected $uri_child_edit = "/timesheets/HASH/reminders/edit/";
+    protected $uri_child_save = "/timesheets/HASH/reminders/save/";
+    protected $uri_child_delete = "/timesheets/HASH/reminders/delete/";
 
     protected function setUp(): void {
         $this->login("user", "user");
@@ -26,7 +26,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
      * Access a specific child
      */
     public function testGetChildEditID() {
-        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $this->TEST_REQUIREMENT_TYPE_ID);
+        $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $this->TEST_REMINDER_ID);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
@@ -39,11 +39,11 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
     public function testPostChildSaveID() {
 
         $data = [
-            "id" => $this->TEST_REQUIREMENT_TYPE_ID,
-            "name" => "Test Requirement Type"
+            "id" => $this->TEST_REMINDER_ID,
+            "name" => "Test Reminder"
         ];
 
-        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_REQUIREMENT_TYPE_ID, $data);
+        $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $this->TEST_REMINDER_ID, $data);
 
         $body = (string) $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
@@ -54,7 +54,7 @@ class NoAccessWithWrongParentTest extends TimesheetTestBase {
 
     public function testDeleteElement() {
 
-        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_REQUIREMENT_TYPE_ID);
+        $response = $this->request('DELETE', $this->getURIChildDelete($this->TEST_PROJECT_HASH) . $this->TEST_REMINDER_ID);
 
         $this->assertEquals(200, $response->getStatusCode());
 

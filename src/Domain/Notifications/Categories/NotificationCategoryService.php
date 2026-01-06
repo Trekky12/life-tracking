@@ -25,7 +25,7 @@ class NotificationCategoryService extends Service {
     private function getCustomCategories() {
         $categories = $this->mapper->getAll('name');
         $categories_filtered = array_filter($categories, function($cat) {
-            return !$cat->isInternal();
+            return !$cat->isInternal() && !$cat->hasReminder();
         });
 
         return $categories_filtered;
@@ -33,7 +33,7 @@ class NotificationCategoryService extends Service {
 
     public function isInternalCategory($id) {
         $cat = $this->mapper->get($id);
-        if ($cat->isInternal()) {
+        if ($cat->isInternal() && !$cat->hasReminder()) {
             return true;
         }
         return false;
@@ -61,6 +61,10 @@ class NotificationCategoryService extends Service {
     
     public function getUserCategories(){
         return $this->mapper->getUserCategories('t.createdOn DESC, name');
+    }
+
+    public function getCategoryByReminder($reminder) {
+        return $this->mapper->getCategoryByReminder($reminder);
     }
 
 }

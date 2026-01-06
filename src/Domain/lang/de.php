@@ -355,10 +355,6 @@ $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "interne Benachrichtigungen";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "benachrichtige beim Ausführen von wiederkehrenden Finanzeinträgen";
 $lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "benachrichtige beim Hinzufügen zu Karten bei Boards";
-$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER"] = "tägliche Erinnerung an Kontrolle von durchgeführten Terminen";
-
-$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_TITLE"] = "Erinnerung an durchgeführte Termine";
-$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_MESSAGE"] = "Bitte denke daran die heute durchgeführten Termine von \"%project%\" zu kontrollieren.";
 
 $lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monatliche Finanzstatistik (am 1. des Monats um 06:00 Uhr)";
 $lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "benachrichtige bei Erstellen/Änderungen bei geteilten Ausgaben";
@@ -722,6 +718,7 @@ $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "wiederkehrende Buchung";
 $lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "Zeiterfassungsprojekt Kunde";
 $lang["DATAOBJECT_TIMESHEETS_CUSTOMER_REQUIREMENT"] = "Nachweis";
 $lang["DATAOBJECT_TIMESHEETS_REQUIREMENT_TYPE"] = "Nachweisart";
+$lang["DATAOBJECT_TIMESHEETS_REMINDER"] = "Erinnerung";
 
 $lang["WITHOUT_DATE"] = "ohne Datum";
 $lang["ADD_TO_ROUTE"] = "zur Route hinzufügen";
@@ -990,6 +987,17 @@ $lang["TIMESHEETS_REQUIREMENT_VALID"] = "Gültig";
 
 $lang["SHOW_TIMESHEETS_REQUIREMENT_VALID"] = "Gültige anzeigen";
 $lang["SHOW_TIMESHEETS_REQUIREMENT_NOT_VALID"] = "Nicht gültige anzeigen";
+
+$lang["TIMESHEETS_REMINDER"] = "Erinnerung";
+$lang["TIMESHEETS_REMINDERS"] = "Erinnerungen";
+
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE"] = "Auslöser";
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_LAST_SHEET_PLUS_1"] = "1 Stunde nach dem letzten Eintrag am Tag";
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_LAST_SHEET"] = "nach dem letzten Eintrag am Tag";
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_EACH_SHEET"] = "nach jedem Eintrag";
+$lang["TIMESHEETS_REMINDER_TITLE"] = "Titel";
+$lang["TIMESHEETS_REMINDER_MESSAGES"] = "Nachrichten";
+$lang["TIMESHEETS_REMINDER_ADD_MESSAGE"] = "Nachricht hinzufügen";
 
 $lang["PRINT"] = "Drucken";
 

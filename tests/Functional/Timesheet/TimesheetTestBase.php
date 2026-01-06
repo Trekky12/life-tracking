@@ -112,4 +112,12 @@ class TimesheetTestBase extends BaseTestCase {
 
         return $matches;
     }
+
+    protected function getReminderInTable($body, $data, $hash) {
+        $matches = [];
+        $re = '/<tr>\s*<td>' . preg_quote($data["name"] ?? '') . '<\/td>\s*<td>\s*<a href="' . str_replace('/', "\/", $this->getURIChildEdit($hash)) . '(?<id_edit>[0-9]*)">.*?<\/a>\s*<\/td>\s*<td>\s*<a href="#" data-url="' . str_replace('/', "\/", $this->getURIChildDelete($hash)) . '(?<id_delete>[0-9]*)" class="btn-delete">.*?<\/a>\s*<\/td>\s*<\/tr>/';
+        preg_match($re, $body, $matches);
+
+        return $matches;
+    }
 }

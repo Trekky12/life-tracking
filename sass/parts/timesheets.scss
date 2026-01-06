@@ -200,3 +200,13 @@
         }
     }
 }
+
+.reminder-message{
+    display: flex;
+    align-items: center;
+
+    input{
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+    }
+}

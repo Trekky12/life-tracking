@@ -427,98 +427,6 @@ CREATE TABLE IF NOT EXISTS global_widgets (
   FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS notifications_categories (
-    id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changedOn TIMESTAMP NULL,
-    user INTEGER unsigned DEFAULT NULL,
-    name varchar(255) NOT NULL,
-    identifier varchar(255) NOT NULL,
-    internal int(1) DEFAULT 0,
-    PRIMARY KEY (id),
-    UNIQUE(identifier),
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS notifications_categories_user (
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    category INTEGER unsigned DEFAULT NULL,
-    user INTEGER unsigned DEFAULT NULL,
-    UNIQUE(category, user),
-    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS notifications_clients (
-    id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changedOn TIMESTAMP NULL,
-    user INTEGER unsigned NOT NULL,
-    endpoint VARCHAR(512) NOT NULL,
-    authToken VARCHAR(255) NULL,
-    publicKey VARCHAR(255) NULL,
-    contentEncoding VARCHAR(255) NULL,
-    ip VARCHAR(255) NULL,
-    agent VARCHAR(255) NULL,
-    type VARCHAR(255) NULL DEFAULT NULL,
-    PRIMARY KEY (id),
-    UNIQUE(endpoint),
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS notifications_subscription_clients (
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    category INTEGER unsigned DEFAULT NULL,
-    client INTEGER unsigned DEFAULT NULL,
-    object_id int(11) unsigned NULL,
-    UNIQUE(category, client, object_id),
-    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS notifications_subscription_users (
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    category INTEGER unsigned DEFAULT NULL,
-    user INTEGER unsigned DEFAULT NULL,
-    object_id int(11) unsigned NULL,
-    UNIQUE(category, user, object_id),
-    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS notifications (
-    id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changedOn TIMESTAMP NULL,
-    category INTEGER unsigned DEFAULT NULL,
-    user INTEGER unsigned DEFAULT NULL,
-    title varchar(255) NOT NULL,
-    message varchar(255) NOT NULL,
-    seen TIMESTAMP NULL,
-    link varchar(255) DEFAULT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS mail_categories (
-    id int(11) unsigned NOT NULL AUTO_INCREMENT,
-    name varchar(255) NOT NULL,
-    identifier varchar(255) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE(identifier)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS mail_subscription_users (
-    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    category INTEGER unsigned DEFAULT NULL,
-    user INTEGER unsigned DEFAULT NULL,
-    object_id int(11) unsigned NULL,
-    UNIQUE(category, user, object_id),
-    FOREIGN KEY(category) REFERENCES mail_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE IF NOT EXISTS crawlers (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     user INTEGER unsigned DEFAULT NULL,
@@ -1093,6 +1001,44 @@ CREATE TABLE IF NOT EXISTS timesheets_customers_requirements (
     FOREIGN KEY(customer) REFERENCES timesheets_customers(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS timesheets_reminders (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    project INTEGER unsigned DEFAULT NULL,
+    name varchar(255) NOT NULL,
+    trigger_type ENUM('after_last_sheet_plus_1h','after_last_sheet', 'after_each_sheet') DEFAULT 'after_last_sheet_plus_1h',
+    title TEXT DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS timesheets_reminders_messages (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    reminder INTEGER unsigned NOT NULL,
+    message TEXT NOT NULL,
+    send_count INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY(reminder) REFERENCES timesheets_reminders(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS timesheets_reminders_sent (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    project INTEGER unsigned DEFAULT NULL, 
+    reminder INTEGER unsigned DEFAULT NULL,
+    timesheet INTEGER unsigned DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(reminder) REFERENCES timesheets_reminders(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(timesheet) REFERENCES timesheets_sheets(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS activities (
     id int(11) unsigned NOT NULL AUTO_INCREMENT,
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -1240,7 +1186,7 @@ CREATE TABLE IF NOT EXISTS workouts_sessions_exercises (
     PRIMARY KEY (id),
     FOREIGN KEY(session) REFERENCES workouts_sessions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(exercise) REFERENCES workouts_exercises(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(plans_exercises_id) REFERENCES workouts_plans_exercises_id(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY(plans_exercises_id) REFERENCES workouts_plans_exercises(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS recipes_cookbooks (
@@ -1411,4 +1357,98 @@ CREATE TABLE IF NOT EXISTS recipes_shoppinglists_entries (
     PRIMARY KEY (id),
     FOREIGN KEY(shoppinglist) REFERENCES recipes_shoppinglists(id) ON DELETE CASCADE ON UPDATE CASCADE,    
     FOREIGN KEY(grocery) REFERENCES recipes_groceries(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS notifications_categories (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    name varchar(255) NULL,
+    identifier varchar(255) NULL,
+    internal int(1) DEFAULT 0,
+    reminder INTEGER unsigned DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(identifier),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(reminder) REFERENCES timesheets_reminders(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS notifications_categories_user (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    UNIQUE(category, user),
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS notifications_clients (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    user INTEGER unsigned NOT NULL,
+    endpoint VARCHAR(512) NOT NULL,
+    authToken VARCHAR(255) NULL,
+    publicKey VARCHAR(255) NULL,
+    contentEncoding VARCHAR(255) NULL,
+    ip VARCHAR(255) NULL,
+    agent VARCHAR(255) NULL,
+    type VARCHAR(255) NULL DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(endpoint),
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS notifications_subscription_clients (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    client INTEGER unsigned DEFAULT NULL,
+    object_id int(11) unsigned NULL,
+    UNIQUE(category, client, object_id),
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(client) REFERENCES notifications_clients(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS notifications_subscription_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    object_id int(11) unsigned NULL,
+    UNIQUE(category, user, object_id),
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS notifications (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changedOn TIMESTAMP NULL,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    title varchar(255) NOT NULL,
+    message varchar(255) NOT NULL,
+    seen TIMESTAMP NULL,
+    link varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(category) REFERENCES notifications_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS mail_categories (
+    id int(11) unsigned NOT NULL AUTO_INCREMENT,
+    name varchar(255) NOT NULL,
+    identifier varchar(255) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(identifier)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS mail_subscription_users (
+    createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category INTEGER unsigned DEFAULT NULL,
+    user INTEGER unsigned DEFAULT NULL,
+    object_id int(11) unsigned NULL,
+    UNIQUE(category, user, object_id),
+    FOREIGN KEY(category) REFERENCES mail_categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

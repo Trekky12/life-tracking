@@ -35,17 +35,17 @@ class PlanWriter extends ObjectActivityWriter {
 
             $exercises_new = [];
             $exercises_update = [];
-            foreach ($data["exercises"] as $idx => $exercise) {
+            foreach ($data["exercises"] as $idx => $ex) {
 
-                $plan_exercise_id = array_key_exists("id", $exercise) && !empty($exercise["id"]) ? intval(filter_var($exercise["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
-                $exercise_id = array_key_exists("exercise", $exercise) && !empty($exercise["exercise"]) ? intval(filter_var($exercise["exercise"], FILTER_SANITIZE_NUMBER_INT)) : null;
-                $type = array_key_exists("type", $exercise) && !empty($exercise["type"]) ? Utility::filter_string_polyfill($exercise["type"]) : 'exercise';
-                $notice = array_key_exists("notice", $exercise) && !empty($exercise["notice"]) ? Utility::filter_string_polyfill($exercise["notice"]) : null;
-                $is_child = array_key_exists("is_child", $exercise) && !empty($exercise["is_child"]) ? intval(filter_var($exercise["is_child"], FILTER_SANITIZE_NUMBER_INT)) : 0;
+                $plan_exercise_id = array_key_exists("id", $ex) && !empty($ex["id"]) ? intval(filter_var($ex["id"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                $exercise_id = array_key_exists("exercise", $ex) && !empty($ex["exercise"]) ? intval(filter_var($ex["exercise"], FILTER_SANITIZE_NUMBER_INT)) : null;
+                $type = array_key_exists("type", $ex) && !empty($ex["type"]) ? Utility::filter_string_polyfill($ex["type"]) : 'exercise';
+                $notice = array_key_exists("notice", $ex) && !empty($ex["notice"]) ? Utility::filter_string_polyfill($ex["notice"]) : null;
+                $is_child = array_key_exists("is_child", $ex) && !empty($ex["is_child"]) ? intval(filter_var($ex["is_child"], FILTER_SANITIZE_NUMBER_INT)) : 0;
 
                 $sets = [];
-                if (array_key_exists("sets", $exercise) && is_array($exercise["sets"])) {
-                    foreach ($exercise["sets"] as $set) {
+                if (array_key_exists("sets", $ex) && is_array($ex["sets"])) {
+                    foreach ($ex["sets"] as $set) {
                         $repeats = array_key_exists("repeats", $set) && !empty($set["repeats"]) ? intval(filter_var($set["repeats"], FILTER_SANITIZE_NUMBER_INT)) : null;
                         $weight = array_key_exists("weight", $set) && !empty($set["weight"]) ? floatval(filter_var($set["weight"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
                         $time = array_key_exists("time", $set) && !empty($set["time"]) ? floatval(filter_var($set["time"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)) : null;
@@ -70,23 +70,23 @@ class PlanWriter extends ObjectActivityWriter {
                 }
             }
 
-            // add new exercises (id == null)
+            // add new (id == null)
             if (!empty($exercises_new)) {
                 $this->mapper->addExercises($entry->id, $exercises_new);
             }
 
-            // update exercises
+            // update
             if (!empty($exercises_update)) {
                 $this->mapper->updateExercises($entry->id, $exercises_update);
             }
 
-            // delete missing exercises
+            // delete missing
             $exercises_removed = array_diff($exercises_preSave, $exercises_afterSave);
             if (!empty($exercises_removed)) {
                 $this->mapper->deleteExercises($entry->id, $exercises_removed);
             }
         } else {
-            $this->mapper->deleteExercises($id);
+            $this->mapper->deleteExercises($entry->id);
         }
 
         return $payload;

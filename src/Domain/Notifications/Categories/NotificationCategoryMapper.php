@@ -61,4 +61,18 @@ class NotificationCategoryMapper extends \App\Domain\Mapper {
         return $results;
     }
 
+     public function getCategoryByReminder($reminder) {
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE reminder = :reminder";
+
+        $bindings = ["reminder" => $reminder];
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($bindings);
+
+        if ($stmt->rowCount() > 0) {
+            return new $this->dataobject($stmt->fetch());
+        }
+        return null;
+    }
+
 }

@@ -133,6 +133,10 @@ INSERT INTO timesheets_requirement_types (id, project, user, name, description, 
 INSERT INTO timesheets_customers_requirements (id, user, requirement_type, customer, value, start, end) VALUES
 (1, 1, 1, 1, '1', CURDATE(), LAST_DAY(CURDATE()));
 
+INSERT INTO timesheets_reminders (id, project, user, name, trigger_type) VALUES
+(1, 1, 1, 'Test Reminder 1', 'after_last_sheet_plus_1h'),
+(2, 2, 2, 'Test Reminder 2', 'after_last_sheet');
+
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 
 (2, 1, 'Test Trip (no access to owner)', 'DEFdef456', NULL);
@@ -227,8 +231,7 @@ INSERT INTO notifications_categories (id, name, identifier, internal) VALUES
 (1, 'Test Notification Category', 'test_notification_cat', 0),
 (2, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1),
 (3, 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 1),
-(4, 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 1),
-(5, 'NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER', 'NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER', 1);
+(4, 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 1);
 
 
 INSERT INTO notifications_categories_user (category, user) VALUES 

@@ -15,6 +15,7 @@ use App\Domain\Splitbill\Group\SplitbillGroupService;
 use App\Domain\Board\BoardService;
 use App\Domain\Main\Utility\Utility;
 use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\Reminder\ReminderService;
 
 class NotificationsService extends Service {
 
@@ -29,6 +30,7 @@ class NotificationsService extends Service {
     private $mail_users_mapper;
     private $mail_cat_mapper;
     private $timesheet_project_service;
+    private $reminder_service;
 
     public function __construct(
         LoggerInterface $logger,
@@ -44,7 +46,8 @@ class NotificationsService extends Service {
         BoardService $boards_service,
         MailNotificationUsersMapper $mail_users_mapper,
         MailNotificationCategoryMapper $mail_cat_mapper,
-        ProjectService $timesheet_project_service
+        ProjectService $timesheet_project_service,
+        ReminderService $reminder_service
     ) {
         parent::__construct($logger, $user);
         $this->translation = $translation;
@@ -57,6 +60,7 @@ class NotificationsService extends Service {
         $this->splitbill_group_service = $splitbill_group_service;
         $this->boards_service = $boards_service;
         $this->timesheet_project_service = $timesheet_project_service;
+        $this->reminder_service = $reminder_service;
 
         $this->mail_users_mapper = $mail_users_mapper;
         $this->mail_cat_mapper = $mail_cat_mapper;
@@ -95,7 +99,7 @@ class NotificationsService extends Service {
 
         $categories = $this->cat_service->getAllCategories();
         array_map(function ($cat) {
-            if ($cat->isInternal()) {
+            if ($cat->isInternal() && !$cat->hasReminder()) {
                 $cat->name = $this->translation->getTranslatedString($cat->name);
             }
             return $cat;
@@ -158,6 +162,27 @@ class NotificationsService extends Service {
             $user_has_category = $this->user_notifications_service->doesUserHaveCategory($category->id, $user_id, $object_id);
             if ($user_has_category) {
                 $notification = new Notification(["title" => $title, "message" => $message, "user" => $user_id, "category" => $category->id, "link" => $path]);
+                $id = $this->mapper->insert($notification);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error("Error with Notifications", array("error" => $e->getMessage(), "code" => $e->getCode()));
+        }
+    }
+
+    public function sendNotificationsToUsersWithReminder($reminder, $title, $message, $path = null, $object_id = null) {
+        try {
+            $category_id = $this->cat_service->getCategoryByReminder($reminder);
+
+            // Push Notifications
+            $clients = $this->client_service->getClientsByCategory($category_id->id);
+            foreach ($clients as $client) {
+                $res = $this->sendNotification($client, $title, $message, $path);
+            }
+
+            // Save notification for the users (frontend)
+            $users = $this->user_notifications_service->getUsersByCategory($category_id->id, $object_id);
+            foreach ($users as $user) {
+                $notification = new Notification(["title" => $title, "message" => $message, "user" => $user, "category" => $category_id->id, "link" => $path]);
                 $id = $this->mapper->insert($notification);
             }
         } catch (\Exception $e) {
@@ -257,11 +282,11 @@ class NotificationsService extends Service {
     public function manage() {
         $notification_categories = $this->cat_service->getUserCategories();
         $notification_categories_internal = array_filter($notification_categories, function ($cat) {
-            return $cat->isInternal();
+            return $cat->isInternal() && !$cat->hasReminder();
         });
 
         $notification_categories_individual = array_filter($notification_categories, function ($cat) {
-            return !$cat->isInternal();
+            return !$cat->isInternal() && !$cat->hasReminder();
         });
 
         $notification_user_categories = $this->getCategoriesOfCurrentUser();
@@ -276,6 +301,7 @@ class NotificationsService extends Service {
 
         $timesheet_user_groups = $this->timesheet_project_service->getUserElements();
         $timesheet_all_groups = $this->timesheet_project_service->getAll();
+        $timesheet_reminders = $this->reminder_service->getRemindersByProject();
 
         $mail_categories = $this->mail_cat_mapper->getAll();
 
@@ -305,7 +331,8 @@ class NotificationsService extends Service {
             ],
             "timesheets" => [
                 "projects" => $timesheet_all_groups,
-                "user_projects" => $timesheet_user_groups
+                "user_projects" => $timesheet_user_groups,
+                "reminders" => $timesheet_reminders
             ]
         ]);
     }

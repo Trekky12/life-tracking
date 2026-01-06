@@ -479,6 +479,14 @@ class SheetService extends Service {
         return $this->mapper->isLastSheetOfTheDayOverSince1hour($project_id);
     }
 
+    public function isLastSheetOfTheDayOver($project_id) {
+        return $this->mapper->isLastSheetOfTheDayOver($project_id);
+    }
+
+    public function getLastCompletedSheet($project_id) {
+        return $this->mapper->getLastCompletedSheet($project_id);
+    }
+
     public function showExport($hash, $requestData): Payload {
         $project = $this->project_service->getFromHash($hash);
 

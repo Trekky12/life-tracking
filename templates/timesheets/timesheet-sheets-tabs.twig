@@ -21,5 +21,7 @@
 		</a>
 		<a class="tabbar-tab {% if active == 'timesheets_project_categories' %}active{% endif %}" href="{{ url_for('timesheets_project_categories', {'project' : project.hash}) }}">{{"CATEGORIES"|trans}}</a>
 		<a class="tabbar-tab {% if active == 'timesheets_requirement_types' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_requirement_types', {'project' : project.hash}) }}">{{"TIMESHEETS_REQUIREMENT_TYPES"|trans}}</a>
+		<a class="tabbar-tab {% if active == 'timesheets_reminders' %}active{% endif %}" href="{{ url_for_with_last_query_params('timesheets_reminders', {'project' : project.hash}) }}">{{"TIMESHEETS_REMINDERS"|trans}}</a>
+
 	</div>
 </div>

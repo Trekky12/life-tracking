@@ -356,10 +356,6 @@ $lang["NOTIFICATIONS_CATEGORIES_INTERNAL"] = "internal notifications";
 $lang["NOTIFICATION_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
 $lang["NOTIFICATION_CATEGORY_FINANCES_RECURRING"] = "notify on execution of recurring finance entries";
 $lang["NOTIFICATION_CATEGORY_BOARDS_CARD_ADD"] = "notify on assignment to cards on boards";
-$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER"] = "daily reminder to check entries";
-
-$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_TITLE"] = "Reminder to check entries";
-$lang["NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER_MESSAGE"] = "Please don't forget to check the entries of today of \"%project%\".";
 
 $lang["MAIL_CATEGORY_FINANCE_STATISTIC"] = "monthly finance statistics (1. of month at 06:00 Uhr)";
 $lang["MAIL_CATEGORY_SPLITTED_BILLS"] = "notify on create/update of splitted bills";
@@ -724,6 +720,7 @@ $lang["DATAOBJECT_FINANCES_TRANSACTION_RECURRING"] = "recurring transaction";
 $lang["DATAOBJECT_TIMESHEETS_CUSTOMER"] = "timesheet project customer";
 $lang["DATAOBJECT_TIMESHEETS_CUSTOMER_REQUIREMENT"] = "requirement";
 $lang["DATAOBJECT_TIMESHEETS_REQUIREMENT_TYPE"] = "requirement type";
+$lang["DATAOBJECT_TIMESHEETS_REMINDER"] = "reminder";
 
 $lang["WITHOUT_DATE"] = "without date";
 $lang["ADD_TO_ROUTE"] = "add to route";
@@ -992,6 +989,17 @@ $lang["TIMESHEETS_REQUIREMENT_VALID"] = "Valid";
 
 $lang["SHOW_TIMESHEETS_REQUIREMENT_VALID"] = "Show valid";
 $lang["SHOW_TIMESHEETS_REQUIREMENT_NOT_VALID"] = "Show not valid";
+
+$lang["TIMESHEETS_REMINDER"] = "reminder";
+$lang["TIMESHEETS_REMINDERS"] = "reminders";
+
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE"] = "Trigger";
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_LAST_SHEET_PLUS_1"] = "1 hour after the last sheet of the day";
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_LAST_SHEET"] = "after the last sheet of the day";
+$lang["TIMESHEETS_REMINDER_TRIGGER_TYPE_AFTER_EACH_SHEET"] = "after each entry";
+$lang["TIMESHEETS_REMINDER_TITLE"] = "Title";
+$lang["TIMESHEETS_REMINDER_MESSAGES"] = "Messages";
+$lang["TIMESHEETS_REMINDER_ADD_MESSAGE"] = "Add message";
 
 $lang["PRINT"] = "Print";
 

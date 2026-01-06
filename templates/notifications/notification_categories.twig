@@ -16,22 +16,6 @@
 				{% endfor %}
 			</div>
 		{% endif %}
-	{% elseif cat.identifier == 'NOTIFICATION_CATEGORY_TIMESHEET_CHECK_REMINDER' %}
-		{% if user.hasModule("timesheets") %}
-			<div class="form-group">
-				{{ cat.name|trans }}
-				{% for project in timesheets["user_projects"]  %}
-					{% if timesheets["projects"][project].archive != 1 or (type == "user" and "%s_%s"|format(cat.id, project) in notifications["user_categories"]) %}
-						<div>
-							<label class="checkbox">
-								<input name="{{type}}_notification_categories[]" value="{{cat.id}}_{{ project }}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and "%s_%s"|format(cat.id, project) in notifications["user_categories"] %} checked {% endif %}>
-								{{timesheets["projects"][project].name}}
-							</label>
-						</div>
-					{% endif %}
-				{% endfor %}
-			</div>
-		{% endif %}
 	{% elseif cat.identifier == 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD' %}
 		{% if user.hasModule("boards") %}
 			<div class="form-group">
@@ -54,6 +38,23 @@
 				<input name="{{type}}_notification_categories[]" value="{{cat.id}}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and cat.id in notifications["user_categories"] %} checked {% endif %}>
 				{{cat.name|trans}}
 			</label>
+		</div>
+	{% endif %}
+{% endfor %}
+
+
+{% for project, reminders in timesheets["reminders"]  %}
+	{% if project in timesheets["user_projects"] and (timesheets["projects"][project].archive != 1 or (type == "user" and "%s"|format(reminder.category) in notifications["user_categories"])) %}
+		<div class="form-group">
+			{{timesheets["projects"][project].name}}
+			{% for reminder in reminders  %}
+				<div>
+					<label class="checkbox">
+						<input name="{{type}}_notification_categories[]" value="{{reminder.category}}" type="checkbox" class="set_notifications_category_{{type}}" {% if type == "user" and "%s"|format(reminder.category) in notifications["user_categories"] %} checked {% endif %}>
+						{{reminder.name}}
+					</label>
+				</div>
+			{% endfor %}
 		</div>
 	{% endif %}
 {% endfor %}

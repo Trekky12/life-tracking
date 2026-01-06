@@ -557,6 +557,13 @@ return function (App $app) {
                     $group_customer_requirements->delete('/delete/{id}', \App\Application\Action\Timesheets\CustomerRequirement\CustomerRequirementDeleteAction::class)->setName('timesheets_customers_requirements_delete');
                 });
             });
+
+            $group_project->group('/reminders', function (RouteCollectorProxy $group_reminders) {
+                $group_reminders->get('/', \App\Application\Action\Timesheets\Reminder\ReminderListAction::class)->setName('timesheets_reminders');
+                $group_reminders->get('/edit/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Reminder\ReminderEditAction::class)->setName('timesheets_reminders_edit');
+                $group_reminders->post('/save/[{id:[0-9]+}]', \App\Application\Action\Timesheets\Reminder\ReminderSaveAction::class)->setName('timesheets_reminders_save');
+                $group_reminders->delete('/delete/{id}', \App\Application\Action\Timesheets\Reminder\ReminderDeleteAction::class)->setName('timesheets_reminders_delete');
+            });
         });
     });
 

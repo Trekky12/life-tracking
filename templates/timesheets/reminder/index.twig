@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+
+{% set active = 'timesheets' %}
+
+{% block pageheader %}
+	<div class="page-header">
+		<div class="page-headline">
+			<a href="{{ url_for_with_last_query_params('timesheets')}}">
+				<div tabindex="-1" class="icon-ripple-wrapper back-arrow">{{ fontawesome('fas fa-arrow-left') }}</div>
+			</a>
+			<h2>{{"TIMESHEETS_REMINDERS"|trans}}
+				|
+				{{ project.name }}</h2>
+		</div>
+		<div class="buttons">
+			<a href="{{ url_for('timesheets_reminders_edit', {'project': project.hash}) }}">
+				<button class="button button-add-item">{{ fontawesome('fas fa-plus') }}
+					{{"ADD"|trans}}</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block tabbar %}
+	{% include "timesheets/timesheet-sheets-tabs.twig" with {'active':'timesheets_reminders'} %}
+{% endblock %}
+
+{% block body %}
+	<div class="inner-content">
+		<div class="page-content">
+			<table id="reminders_table" class="table table-hover small">
+				<thead>
+					<tr>
+						<th>{{"NAME"|trans}}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for reminder in reminders %}
+						<tr>
+							<td>{{reminder.name}}</td>
+							<td>
+								<a href="{{ url_for('timesheets_reminders_edit', {'id' : reminder.id, 'project' : project.hash}) }}">{{ fontawesome('fas fa-pen-to-square') }}</a>
+							</td>
+							<td>
+								<a href="#" data-url="{{ url_for('timesheets_reminders_delete', {'id' : reminder.id, 'project' : project.hash}) }}" class="btn-delete">{{ fontawesome('fas fa-trash') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}
