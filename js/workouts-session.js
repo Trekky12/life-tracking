@@ -120,7 +120,7 @@ function setNextUnfinishedWorkoutElementActive(currentIdx = null) {
         next.querySelectorAll('.view-exercise').forEach(function (view) {
             view.classList.add("active");
         });
-        next.scrollIntoView({ block: "center", smooth: "smooth" });
+        next.scrollIntoView({ block: "start", smooth: "smooth" });
     }
 
 }
@@ -168,7 +168,7 @@ document.addEventListener('click', async function (event) {
         exerciseHeader.querySelectorAll('.view-exercise').forEach(function (view) {
             view.classList.add('active');
         });
-        exerciseHeader.scrollIntoView({ block: "center", smooth: "smooth" });
+        exerciseHeader.scrollIntoView({ block: "start", smooth: "smooth" });
         return;
     }
 });
