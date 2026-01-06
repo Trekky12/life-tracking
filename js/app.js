@@ -685,6 +685,10 @@ function setNotificationCount(count) {
         badge.dataset.badge = unseenCount;
         if (unseenCount > 0) {
             badge.classList.add("has-Notification");
+
+            if(window.location.pathname == "/notifications/"){
+                window.location.reload(true);
+            }
         } else {
             badge.classList.remove("has-Notification");
         }
