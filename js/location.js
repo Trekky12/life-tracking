@@ -281,6 +281,16 @@ mymap.on('overlayadd', function (eventLayer) {
 });
 
 
+/**
+ * Do not trigger navigation drawer
+ */
+mymap.on("movestart zoomstart", function (e) {
+    isMapMove = true;
+});
+mymap.on("moveend zoomend", function (e) {
+    isMapMove = false;
+});
+
 
 /**
  * Fade Filter
