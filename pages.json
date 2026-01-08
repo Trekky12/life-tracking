@@ -17,6 +17,10 @@
         "url": "http://tracking.localhost/banlist/"
     },
     {
+        "name": "2_settings",
+        "url": "http://tracking.localhost/settings/"
+    },
+    {
         "name": "2_frontpage",
         "url": "http://tracking.localhost"
     },
@@ -461,6 +465,14 @@
         "url": "http://tracking.localhost/timesheets/ABCabc123/requirementtypes/1/customers/edit/"
     },
     {
+        "name": "10_timesheets-43",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/reminders/"
+    },
+    {
+        "name": "10_timesheets-44",
+        "url": "http://tracking.localhost/timesheets/ABCabc123/reminders/edit/1"
+    },
+    {
         "name": "11_workouts",
         "url": "http://tracking.localhost/workouts/plans/"
     },
@@ -543,6 +555,10 @@
         "name": "11_workouts-21",
         "url": "http://tracking.localhost/workouts/ABCabc123/sessions/edit/",
         "height": 1500
+    },
+    {
+        "name": "11_workouts-22",
+        "url": "http://tracking.localhost/workouts/ABCabc123/sessions/2"
     },
     {
         "name": "11_workouts-23",

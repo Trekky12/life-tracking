@@ -48,7 +48,11 @@ class MemberTest extends TimesheetTestBase {
             "name" => "Test Reminder",
             "trigger_type" => "after_last_sheet_plus_1h",
             "title" => "title",
-            "message" => "message"
+            "messages" => [
+                    [
+                        "message" => "message"
+                    ]
+            ]
         ];
 
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH), $data);
@@ -96,7 +100,7 @@ class MemberTest extends TimesheetTestBase {
         $this->assertArrayHasKey("save", $matches);
         $this->assertArrayHasKey("id", $matches);
 
-        $this->compareInputFields($body, $data);
+        $this->compareInputFields($body, $data, "messages|id");
 
         return intval($matches["id"]);
     }
@@ -108,7 +112,11 @@ class MemberTest extends TimesheetTestBase {
             "name" => "Test Reminder Update",
             "trigger_type" => "after_last_sheet",
             "title" => "title2",
-            "message" => "message2"
+            "messages" => [
+                    [
+                        "message" => "message2"
+                    ]
+            ]
         ];
 
         $response = $this->request('POST', $this->getURIChildSave($this->TEST_PROJECT_HASH) . $entry_id, $data);
@@ -141,7 +149,7 @@ class MemberTest extends TimesheetTestBase {
         $response = $this->request('GET', $this->getURIChildEdit($this->TEST_PROJECT_HASH) . $child_id);
 
         $body = (string) $response->getBody();
-        $this->compareInputFields($body, $data);
+        $this->compareInputFields($body, $data, "messages|id");
     }
 
     #[Depends('testGetElementUpdated')]

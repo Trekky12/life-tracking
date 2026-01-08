@@ -19,7 +19,11 @@ class HelpAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $payload = $this->service->getHelpPage();
-        return $this->responder->respond($payload->withTemplate('main/help.twig'));
-    }
 
+        $additionalData = $payload->getAdditionalData();
+        if (array_key_exists("template", $additionalData)) {
+            return $this->responder->respond($payload->withTemplate('help/' . $additionalData['template'] . '.twig'));
+        }
+        return $this->responder->respond($payload->withTemplate('/help/en.twig'));
+    }
 }

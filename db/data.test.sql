@@ -1,4 +1,4 @@
-INSERT INTO global_settings (name, value, type) VALUES ('version', 25, 'Integer');
+INSERT INTO global_settings (name, value, type) VALUES ('version', 29, 'Integer');
 INSERT INTO global_settings (name, value, type) VALUES ('lastRunRecurring', 0, 'Date'), ('lastRunFinanceSummary', 0, 'Date'), ('lastRunCardReminder', 0, 'Date'), ('lastRunRecurringSplitbills', 0, 'Date'), ('lastRunRecurringTransactions', 0, 'Date'), ('isCronRunning', 0, 'Boolean');
 
 INSERT INTO global_users (id, login, password, name, role, module_location, module_finance, module_cars, module_boards, module_crawlers, module_splitbills, module_trips, module_timesheets, module_workouts, module_recipes, force_pw_change) VALUES (1, 'admin', '$2y$10$gbDsuY1GyMJo78ueqWy/SOstNf2DeLpN3mKTUS9Yp.bwG7i4y4.KK', 'admin', 'admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0); 
@@ -65,9 +65,9 @@ INSERT INTO splitbill_bill_recurring_users (id, bill, user, paid, spend, paid_fo
 (1, 1, 1, '5.00', '5.00', NULL, NULL),
 (2, 1, 2, '5.00', '5.00', NULL, NULL);
 
-INSERT INTO timesheets_projects (id, user, name, hash, salt, iterations, masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithRecoveryKey,  recoveryKeyEncryptedWithMasterKey, testMessageEncryptedWithRecoveryKey, slot_min_time, slot_max_time, has_billing, has_end) VALUES 
-(1, 1, 'Test timesheets project 1', 'ABCabc123', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00', 1, 1),
-(3, 1, 'Test timesheets project 2', 'GHIghi789', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00', 1, 1);
+INSERT INTO timesheets_projects (id, user, name, hash, salt, iterations, masterKeyEncryptedWithKEK, testMessageEncryptedWithKEK, masterKeyEncryptedWithRecoveryKey,  recoveryKeyEncryptedWithMasterKey, testMessageEncryptedWithRecoveryKey, slot_min_time, slot_max_time, has_billing, has_end, repeat_count) VALUES 
+(1, 1, 'Test timesheets project 1', 'ABCabc123', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00', 1, 1, 1),
+(3, 1, 'Test timesheets project 2', 'GHIghi789', 'bJSjt2P+pQp7lPtVw/wrmQ==', 600000,'wJjNlENc9sAeIzmYJKNajPKusdW+SootsO6sMIHbeB+oQNw3DDZakUSCtlcr4F3Sj4cotV8hFXWk8FtF/nJ2yay6qfdw1USAOF5Zaw==', 'te9piA8ud2ngRzV5ylzVsi6n6/eQSym4ZdcHKdhiErtQrz3a', 'aGBUK/76w+1qnIr7xRFV/jzZirvELBmMI3JyeuVnLZJGPgoEhkYIHDYkEHDJHIAI5v1kwF04KKEjbb7wIN9zrA4w5f7VKBNGvrGrKQ==', 'iRWXdt/kaa4cWCi6l8ZP7NEbom+uaJ53oSuAwFYQSjdSLQBqGVkYD1N6x/5xK1Mm+Ds+0v2Km0wPGgVSOi4lu179EZuxL+wtMFdjDA==', 'FaN93vlzaUqVd8XeraPTWGehppGwlrmBluXApYGEehOFmzi8', '09:00:00', '17:00:00', 1, 1, 1);
 
 INSERT INTO timesheets_projects (id, user, name, hash, has_billing, has_end) VALUES 
 (2, 1, 'Test timesheets project (no access to owner)', 'DEFdef456', 1, 1),
@@ -133,9 +133,13 @@ INSERT INTO timesheets_requirement_types (id, project, user, name, description, 
 INSERT INTO timesheets_customers_requirements (id, user, requirement_type, customer, value, start, end) VALUES
 (1, 1, 1, 1, '1', CURDATE(), LAST_DAY(CURDATE()));
 
-INSERT INTO timesheets_reminders (id, project, user, name, trigger_type) VALUES
-(1, 1, 1, 'Test Reminder 1', 'after_last_sheet_plus_1h'),
-(2, 2, 2, 'Test Reminder 2', 'after_last_sheet');
+INSERT INTO timesheets_reminders (id, project, user, name, trigger_type, title) VALUES
+(1, 1, 1, 'Test Reminder 1', 'after_last_sheet_plus_1h', 'Test Reminder 1'),
+(2, 2, 2, 'Test Reminder 2', 'after_last_sheet', 'Test Reminder 2');
+
+INSERT INTO timesheets_reminders_messages (id, reminder, message) VALUES
+(1, 1, 'Message 1'),
+(2, 2, 'Message 2');
 
 INSERT INTO trips (id, user, name, hash, notice) VALUES 
 (1, 1, 'Test Trip', 'ABCabc123', NULL), 
@@ -181,7 +185,7 @@ INSERT INTO cars_user (car, user) VALUES
 (1, 2); 
 
 INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, refill_amount, refill_full, lat, lng, acc) VALUES 
-(1, 1, 1, 1, '2020-01-01', 0, 0, '50.00', 'full', '52.51958898995020', '13.38857889175415', '0.000');
+(1, 1, 1, 1, '2020-01-01', 0, 0, '50.00', 1, '52.51958898995020', '13.38857889175415', '0.000');
 INSERT INTO cars_service (id, createdBy, changedBy, car, date, mileage, type, notice, service_oil_before, service_oil_after, service_water_wiper_before, service_water_wiper_after, service_air_front_left_before, service_air_front_left_after, service_air_front_right_before, service_air_front_right_after, service_air_back_left_before, service_air_back_left_after, service_air_back_right_before, service_air_back_right_after, service_tire_change, service_garage) VALUES
 (2, 1, 1, 1, '2020-01-01', 0, 1, 'Test', 0, 100, 0, 100, '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', '1.0', '2.0', 1, 1);
 
@@ -227,11 +231,12 @@ INSERT INTO boards_cards_user (card, user) VALUES
 (1, 1),
 (1, 2);
 
-INSERT INTO notifications_categories (id, name, identifier, internal) VALUES 
-(1, 'Test Notification Category', 'test_notification_cat', 0),
-(2, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1),
-(3, 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 1),
-(4, 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 1);
+INSERT INTO notifications_categories (id, name, identifier, internal, reminder) VALUES 
+(1, 'Test Notification Category', 'test_notification_cat', 0, NULL),
+(2, 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 'NOTIFICATION_CATEGORY_SPLITTED_BILLS', 1, NULL),
+(3, 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 'NOTIFICATION_CATEGORY_FINANCES_RECURRING', 1, NULL),
+(4, 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 'NOTIFICATION_CATEGORY_BOARDS_CARD_ADD', 1, NULL),
+(5, NULL, NULL, 1, 1);
 
 
 INSERT INTO notifications_categories_user (category, user) VALUES 
@@ -320,12 +325,12 @@ INSERT INTO workouts_plans_exercises (id, plan, exercise, position, sets, type, 
 
 
 INSERT INTO workouts_sessions (id, user, plan, date) VALUES
-(1, 1, 1, '2020-08-29');
+(1, 1, 1, '2020-08-29'),
+(2, 1, 1, '2020-08-30');
 
-INSERT INTO workouts_sessions_exercises (id, session, exercise, position, sets, type, notice, is_child) VALUES
-(1, 1, 1, 0, '[{\"repeats\":10,\"weight\":null,\"time\":null,\"distance\":null},{\"repeats\":20,\"weight\":null,\"time\":null,\"distance\":null},{\"repeats\":30,\"weight\":null,\"time\":null,\"distance\":null}]', 'exercise', NULL, 0),
-(2, 1, 2, 1, '[{\"repeats\":10,\"weight\":5,\"time\":null,\"distance\":null},{\"repeats\":20,\"weight\":10,\"time\":null,\"distance\":null},{\"repeats\":30,\"weight\":20,\"time\":null,\"distance\":null}]', 'exercise', NULL, 0),
-(3, 1, 3, 2, '[{\"repeats\":null,\"weight\":null,\"time\":30,\"distance\":1}]', 'exercise', NULL, 0);
+INSERT INTO workouts_sessions_exercises (id, session, exercise, position, sets, type, notice, is_child, plans_exercises_id) VALUES
+(1, 1, 1, 0, '[{\"repeats\":10,\"weight\":null,\"time\":null,\"distance\":null},{\"repeats\":20,\"weight\":null,\"time\":null,\"distance\":null},{\"repeats\":30,\"weight\":null,\"time\":null,\"distance\":null}]', 'exercise', NULL, 0, 1),
+(2, 1, 2, 1, '[{\"repeats\":10,\"weight\":5,\"time\":null,\"distance\":null},{\"repeats\":20,\"weight\":10,\"time\":null,\"distance\":null},{\"repeats\":30,\"weight\":20,\"time\":null,\"distance\":null}]', 'exercise', NULL, 0, 2);
 
 
 INSERT INTO recipes_cookbooks (id, user, name, hash) VALUES 

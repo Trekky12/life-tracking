@@ -1,18 +1,12 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
-const livereload = require('gulp-livereload');
 const rename = require('gulp-rename');
 const minifyCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
-const postcss = require('gulp-postcss');
-const autoprefixer = require('autoprefixer');
 const replace = require('gulp-replace');
 const concat = require('gulp-concat');
 const shell = require('gulp-shell');
 
-/**
- * SASS style
- */
 function sassTask(cb) {
     return gulp.src('sass/style.scss')
         .pipe(sass({
@@ -23,60 +17,11 @@ function sassTask(cb) {
         .pipe(gulp.dest('public/static'));
 }
 
-/**
- * minify JS
- */
 function uglifyTask(cb) {
     return gulp.src(['js/*.js', '!js/*.min.js'])
         .pipe(terser())
-        .on('error', printError)
-        //.pipe( rename( {
-        //    suffix: '.min'
-        //} ) )
         .pipe(gulp.dest('public/static/js'))
-        .pipe(livereload());
 }
-
-/**
- * watch
- */
-function watchTask(cb) {
-    livereload.listen();
-    gulp.watch(['sass/**/*.scss'], sassTask)
-    gulp.watch('js/*.js', uglifyTask);
-}
-
-
-/**
- * Copy fonts from node_modules to /public/static/assets
- */
-/*
-function copyFontsFontAwesome4Task(cb) {
-    return gulp.src( './node_modules/font-awesome/fonts/**.*' )
-        .pipe( gulp.dest( 'public/static/assets/fonts' ) );
-}
-
-function copyFontsFontAwesome5Task(cb) {
-    return gulp.src( './node_modules/@fortawesome/fontawesome-free/webfonts/**.*' )
-        .pipe( gulp.dest( 'public/static/assets/fonts/font-awesome' ) );
-}
-
-function replaceFontAwesome5Webfonts(cb) {
-    return gulp
-        .src( './node_modules/@fortawesome/fontawesome-free/css/all.css')
-        .pipe( replace("../webfonts/", "../fonts/font-awesome/") )
-        .pipe( minifyCSS() )
-        .pipe( rename("font-awesome5.min.css") )
-        .pipe( gulp.dest( 'public/static/assets/css' ) );
-}
-
-function copyFontAwesome5JS(cb) {
-    return gulp
-        .src( './node_modules/@fortawesome/fontawesome-free/js/all.min.js')
-        .pipe( rename("font-awesome5.min.js") )
-        .pipe( gulp.dest( 'public/static/assets/js' ) );
-}
-*/
 
 function copyFontsFontAwesome5SVG(cb) {
     return gulp.src('./node_modules/@fortawesome/fontawesome-free/svgs/**/*.svg')
@@ -341,23 +286,12 @@ function browserifyBIP39() {
     ])();
 }
 
-function printError(error) {
-    console.log('---- Error ----');
-    console.log("message", error.cause.message);
-    console.log("file", error.cause.filename);
-    console.log("line", error.cause.line);
-    console.log("col", error.cause.col);
-    console.log("pos", error.cause.pos);
-    console.log("");
-
-    // this will ensure that gulp will stop processing the pipeline without a crash
-    this.emit('end');
+function watchTask(cb) {
+    gulp.watch(['sass/**/*.scss'], sassTask)
+    gulp.watch('js/*.js', uglifyTask);
 }
 
+exports.default = watchTask;
 exports.sass = sassTask;
 exports.uglify = uglifyTask;
-exports.default = watchTask;
 exports.copy = gulp.series(copyJSTask, copyAndMinifyJS, renameJS, renameJS2, renameJS3, copyFlatpickrI10n, copyFlatpickrI10nEN, copyCSSTask, copyAndMinifyCSS, replaceLeafletFullscreenIcon, copyLeafletFullscreenIcons, copyLeafletExtraMarkersIcons, copyLeafletIcons, replaceLeafletIconCSS, replaceLeafletExtraMarkersIconCSS, copyLeafletRoutingIcons, replaceLeafletRoutingIconCSS, copyFontsWeatherIconsTask, replaceAutocompleteIcons, replaceFontWeatherIcons, copyAutocompleteIcon, copyFontsFontAwesome5SVG, copyDOCXJS, browserifyBIP39);
-
-exports.weather = gulp.series(copyFontsWeatherIconsTask, replaceFontWeatherIcons);
-exports.test = browserifyBIP39;

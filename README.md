@@ -40,24 +40,41 @@
 * timesheets
   * track start/end time for individual projects
   * export timesheets to Excel
+  * end-to-end-encrypted notices/files on sheets
+* workouts
+  * add exercises to trainig plans and track training sessions
+* recipes
+  * create/edit recipes
+  * cookbooks
+  * mealplans
+  * shoppinglists
+
+More information can be found in the help file ([en](/docs/help-en.md)/[de](/docs/help-de.md)).
 
 ## Installation
 
 * the application requires the class 'IntlDateFormatter'
   * installation is described at http://php.net/manual/en/intl.installation.php
 * the web-root of your domain need to point to the ``public`` directory
-* create a new database and import the file ``database.sql`` in the ``db`` directory
-* import the file ``data.prod.sql`` in the ``db`` directory
 * copy the file ``settings.example.php`` in the folder ``src`` and rename it to ``settings.php``
+* create a new database
 * insert your database credentials in ``settings.php``
 * insert the default location and i18n settings in ``settings.php``
 * install the required composer dependencies with ``composer install``
+* open ``http://<your-domain>`` and create the database tables
 * you can login at ``http://<your-domain>`` with the default user ``admin`` and password ``admin``
-* create a cronjob which calls ``http://<your-domain>/cron`` every hour or run the console command ``cron`` with ``php bin/console.php cron``
-
+* create a cronjob which calls ``http://<your-domain>/cron`` every minute or run the console command ``cron`` with ``php bin/console.php cron``
 
 ## Notes
-* when using push notifications PHP 7.1 with GMP is needed
+* when using push notifications min. PHP 7.1 with GMP is needed
 
-
-More information available on http://www.haegi.org
+# Development
+* ``composer`` is used for the PHP dependencies
+* ``gulp`` is used to minify the javascript and create the css from sass
+  * ``gulp uglify`` to minify the javascript at ``js/*.js``
+  * ``gulp sass`` to create the css
+* ``npm`` is used for the JavaScript dependencies
+  * After updating the javascript dependencies with npm the dependencies can be copied to the static folder with ``gulp copy``
+  * The screenshots for the help page and docs can be created with ``npm run make-screenshots``
+* PHPUnit is used to run the testsuite ``lifetracking``
+  * ``'vendor/bin/phpunit' --configuration phpunit.xml --testsuite 'lifetracking'``
