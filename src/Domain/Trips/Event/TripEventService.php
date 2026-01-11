@@ -134,7 +134,7 @@ class TripEventService extends Service {
         ];
     }
 
-    public function getMarkers($hash, $from, $to) {
+    public function getMapMarkers($hash, $from, $to) {
 
         $trip = $this->trip_service->getFromHash($hash);
 
@@ -253,5 +253,9 @@ class TripEventService extends Service {
         }
         $response_data = ['status' => 'error'];
         return new Payload(Payload::$RESULT_JSON, $response_data);
+    }
+
+    public function getMarkers($from, $to, $user_trips) {
+        return $this->mapper->getMarkers($from, $to, $user_trips);
     }
 }

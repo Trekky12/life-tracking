@@ -10,29 +10,61 @@ use App\Domain\Finances\FinancesService;
 use App\Domain\Car\CarService;
 use App\Domain\Car\Service\CarServiceService;
 use App\Application\Payload\Payload;
+use App\Domain\Base\Settings;
+use App\Domain\Main\Translator;
+use App\Domain\Splitbill\Bill\SplitbillBillService;
+use App\Domain\Splitbill\Group\SplitbillGroupService;
+use App\Domain\Timesheets\Project\ProjectService;
+use App\Domain\Timesheets\Sheet\SheetService;
+use App\Domain\Trips\Event\TripEventService;
+use App\Domain\Trips\TripService;
 
 class LocationService extends Service {
 
     private $helper;
+    private $translation;
+    private $settings;
     private $finances_service;
     private $car_service;
     private $car_service_service;
+    private $splitbill_group_service;
+    private $splitbill_bill_service;
+    private $timesheet_project_service;
+    private $timesheet_sheet_service;
+    private $trip_service;
+    private $trip_event_service;
 
     public function __construct(
         LoggerInterface $logger,
         CurrentUser $user,
         Helper $helper,
+        Translator $translation,
+        Settings $settings,
         LocationMapper $mapper,
         FinancesService $finances_service,
         CarService $car_service,
-        CarServiceService $car_service_service
+        CarServiceService $car_service_service,
+        SplitbillGroupService $splitbill_group_service,
+        SplitbillBillService $splitbill_bill_service,
+        ProjectService $timesheet_project_service,
+        SheetService $timesheet_sheet_service,
+        TripService $trip_service,
+        TripEventService $trip_event_service
     ) {
         parent::__construct($logger, $user);
         $this->helper = $helper;
+        $this->translation = $translation;
+        $this->settings = $settings;
         $this->mapper = $mapper;
         $this->finances_service = $finances_service;
         $this->car_service = $car_service;
         $this->car_service_service = $car_service_service;
+        $this->splitbill_group_service = $splitbill_group_service;
+        $this->splitbill_bill_service = $splitbill_bill_service;
+        $this->timesheet_project_service = $timesheet_project_service;
+        $this->timesheet_sheet_service = $timesheet_sheet_service;
+        $this->trip_service = $trip_service;
+        $this->trip_event_service = $trip_event_service;
     }
 
     public function index($from, $to, $hide) {
@@ -73,15 +105,58 @@ class LocationService extends Service {
             return $loc->getPosition();
         }, $finance_locations);
 
-        $user_cars = $this->car_service->getUserCars();
-
-
+        $user_cars = $this->car_service->getUserElements();
         $carservice_locations = $this->car_service_service->getMarkers($from, $to, $user_cars);
         $carservice_markers = array_map(function ($loc) {
             return $loc->getPosition();
         }, $carservice_locations);
 
-        $response_data = array_merge($location_markers, $finance_markers, $carservice_markers);
+        $user_projects = $this->splitbill_group_service->getUserElements();
+        $splitbill_locations = $this->splitbill_bill_service->getMarkers($from, $to, $user_projects);
+        $splitbill_markers = array_map(function ($loc) {
+            return $loc->getPosition();
+        }, $splitbill_locations);
+
+        $user_projects = $this->timesheet_project_service->getUserElements();
+        $sheet_locations = $this->timesheet_sheet_service->getMarkers($from, $to, $user_projects);
+        $sheet_markers = array_map(function ($loc) {
+            return $loc->getPosition($this->translation, $this->settings);
+        }, $sheet_locations);
+
+        $user_trips = $this->trip_service->getUserElements();
+        $trip_events_locations = $this->trip_event_service->getMarkers($from, $to, $user_trips);
+        $trip_events_markers = array_map(function ($loc) {
+
+            $data = $loc->getPosition();
+
+            $language = $this->settings->getAppSettings()['i18n']['php'];
+            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+
+            $dateFormatter = new \IntlDateFormatter($language);
+            $timeFormatter = new \IntlDateFormatter($language);
+            $datetimeFormatter = new \IntlDateFormatter($language);
+            $dateFormatter->setPattern($dateFormatPHP['date']);
+            $timeFormatter->setPattern($dateFormatPHP['time']);
+            $datetimeFormatter->setPattern($dateFormatPHP['datetime']);
+
+            $fromTranslation = $this->translation->getTranslatedString("FROM");
+            $toTranslation = $this->translation->getTranslatedString("TO");
+
+            $loc->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>');
+
+            $data['popup'] = $loc->popup;
+
+            return $data;
+        }, $trip_events_locations);
+
+        $response_data = array_merge(
+            $location_markers,
+            $finance_markers,
+            $carservice_markers,
+            $splitbill_markers,
+            $sheet_markers,
+            $trip_events_markers
+        );
 
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }

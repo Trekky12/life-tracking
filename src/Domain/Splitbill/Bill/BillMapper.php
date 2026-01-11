@@ -131,4 +131,34 @@ class BillMapper extends BaseBillMapper {
         }
         return $results;
     }
+
+    public function getMarkers($from, $to, $user_groups = []) {
+
+        if (empty($user_groups)) {
+            return [];
+        }
+
+        $bindings = [
+            "from" => $from, 
+            "to" => $to
+        ];
+
+        $group_bindings = [];
+        foreach ($user_groups as $idx => $group) {
+            $group_bindings[":group_" . $idx] = $group;
+        }
+
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+        $sql .= " AND sbgroup IN (" . implode(',', array_keys($group_bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(array_merge($bindings, $group_bindings));
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
 }

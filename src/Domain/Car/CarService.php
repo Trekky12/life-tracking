@@ -18,11 +18,6 @@ class CarService extends Service {
         $this->user_service = $user_service;
     }
 
-    public function getUserCars() {
-        $user = $this->current_user->getUser()->id;
-        return $this->mapper->getElementsOfUser($user);
-    }
-
     public function getAllOrderedByName($archive = null) {
         return $this->mapper->getUserItems('t.createdOn DESC, name', false, null, $archive);
     }

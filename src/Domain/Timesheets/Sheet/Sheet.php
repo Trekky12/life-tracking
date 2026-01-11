@@ -203,4 +203,24 @@ class Sheet extends \App\Domain\DataObject {
 
         return 2;
     }
+
+    public function getPosition(\App\Domain\Main\Translator $translator, \App\Domain\Base\Settings $settings) {
+
+        $language = $settings->getAppSettings()['i18n']['php'];
+        $dateFormatPHP = $settings->getAppSettings()['i18n']['dateformatPHP'];
+
+        list($date, $start, $end) = $this->getDateStartEnd($language, $dateFormatPHP['date'], $dateFormatPHP['datetime'], $dateFormatPHP['time']);
+        $sheet_title = sprintf("%s %s", $date, $start);
+        if (!is_null($end)) {
+            $sheet_title = sprintf("%s - %s", $sheet_title, $end);
+        }
+
+        return [
+            'id' => $this->id,
+            'dt' => $sheet_title,
+            'description' => $this->getDescription($translator, $settings),
+            'type' => 4, 
+            'data' => $this->get_fields()
+        ];
+    }
 }

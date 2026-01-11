@@ -133,6 +133,7 @@ class Event extends \App\Domain\DataObject {
         $data['isWaypoint'] = $this->isWaypoint();
         $data['isShip'] = $this->isShip();
         $data['isWithoutDate'] = $this->isWithoutDate();
+        $data['type'] = 5;
 
         $data['data'] = $this->get_fields();
 

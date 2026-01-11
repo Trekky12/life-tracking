@@ -102,4 +102,41 @@ class EventMapper extends \App\Domain\Mapper {
         }
     }
 
+    public function getMarkers($from, $to, $user_trips = []) {
+
+        if (empty($user_trips)) {
+            return [];
+        }
+
+        $bindings = [
+            "from" => $from,
+            "to" => $to
+        ];
+
+        $trip_bindings = [];
+        foreach ($user_trips as $idx => $trip) {
+            $trip_bindings[":trip_" . $idx] = $trip;
+        }
+
+
+        $sql = "SELECT * FROM " . $this->getTableName() . " as t 
+                WHERE ((start_lat IS NOT NULL AND start_lng IS NOT NULL) OR (end_lat IS NOT NULL AND end_lng IS NOT NULL))
+                AND (
+                     (start_date >= :from AND end_date <= :to ) OR 
+                     (start_date >= :from AND end_date <= :to AND end_date IS NULL ) OR
+                     (end_date >= :from AND end_date <= :to AND start_date IS NULL )
+                    )
+                AND trip IN (" . implode(',', array_keys($trip_bindings)) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(array_merge($bindings, $trip_bindings));
+
+        $results = [];
+        while ($row = $stmt->fetch()) {
+            $key = reset($row);
+            $results[$key] = new $this->dataobject($row);
+        }
+        return $results;
+    }
+
 }

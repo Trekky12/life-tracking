@@ -10,23 +10,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(mymap);
 
-var greenIcon = new L.Icon({
-    iconUrl: '/static/assets/images/leaflet-custom/marker-icon-green.png',
-    shadowUrl: '/static/assets/images/leaflet/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var yellowIcon = new L.Icon({
-    iconUrl: '/static/assets/images/leaflet-custom/marker-icon-yellow.png',
-    shadowUrl: '/static/assets/images/leaflet/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
 
 const from = document.getElementById('inputStart').value;
 const to = document.getElementById('inputEnd').value;
@@ -43,6 +26,9 @@ var clusterToggleLayer = new L.LayerGroup();
 let layerLocation = new L.LayerGroup();
 let layerFinances = new L.LayerGroup();
 let layerCars = new L.LayerGroup();
+let layerSplittedBills = new L.LayerGroup();
+let layerTimesheets = new L.LayerGroup();
+let layerTrips = new L.LayerGroup();
 let layerDirections = new L.LayerGroup();
 
 /**
@@ -51,6 +37,9 @@ let layerDirections = new L.LayerGroup();
 let layerLocationMarkers = new L.LayerGroup();
 let layerFinancesMarkers = new L.LayerGroup();
 let layerCarsMarkers = new L.LayerGroup();
+let layerSplittedBillsMarkers = new L.LayerGroup();
+let layerTimesheetsMarkers = new L.LayerGroup();
+
 // Clusters
 let layerLocationClusters = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
@@ -70,7 +59,18 @@ let layerCarsClusters = L.markerClusterGroup({
     },
     maxClusterRadius: 50
 });
-
+let layerSplittedBillsClusters = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        return createClusterIcon(cluster, "splittedbills");
+    },
+    maxClusterRadius: 50
+});
+let layerTimesheetsClusters = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        return createClusterIcon(cluster, "timesheets");
+    },
+    maxClusterRadius: 50
+});
 
 // when acc circle is visible (mouseover on marker) and the map is zoomed 
 // the mouseout event which removes the circle is not triggered 
@@ -81,115 +81,120 @@ mymap.on('zoom', function () {
 
 getMarkers();
 
-function getMarkers() {
-    return fetch(jsObject.marker_url + '?from=' + from + '&to=' + to, {
-        method: 'GET',
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
+async function getMarkers() {
+    try {
+        const response = await fetch(jsObject.location_markers + '?from=' + from + '&to=' + to, {
+            method: 'GET',
+            credentials: "same-origin",
+        });
+        const data = await response.json();
         markers = data;
         drawMarkers(data, false);
-    }).catch(function (error) {
+    } catch (error) {
         console.log(error);
-    });
+    }
 }
 
-function drawMarkers(markers, hideClusters = false) {
+function drawMarkers(markersData, hideClusters = false) {
 
-    let my_latlngs = [];
-    let my_markers = [];
+    let directions = [];
+    let markers = [];
 
     let marker_idx = 0;
-    for (marker_idx in markers) {
+    for (marker_idx in markersData) {
 
-        let marker = markers[marker_idx];
+        let markerData = markersData[marker_idx];
 
-        let type = marker.type;
+        if (markerData.type >= 4) {
+            if (markerData.data.start_lat === null && markerData.data.end_lat !== null) {
+                markerData.data.start_lat = markerData.data.end_lat;
+            }
+            if (markerData.data.start_lng === null && !markerData.data.end_lng !== null) {
+                markerData.data.start_lng = markerData.data.end_lng;
+            }
+
+            if (markerData.data.start_lat !== null && markerData.data.start_lng !== null) {
+                markerData.lat = markerData.data.start_lat;
+                markerData.lng = markerData.data.start_lng;
+            }
+        }
 
         // ignore markers without location data
-        if (marker.lat === null || marker.lng === null) {
+        if (markerData.lat === null || markerData.lng === null) {
             continue;
         }
 
-        // create popup
-        var dateString = marker.dt + '<br/>';
-        var accuracyString = "";
-        if (marker.acc > 0) {
-            accuracyString = lang.accuracy + ' : ' + marker.acc + ' m<br/>';
-        }
-        var addressString = '<a href="#" data-lat="' + marker.lat + '" data-lng="' + marker.lng + '" class="btn-get-address">' + lang.address + '</a>';
-        var stepsString = marker.steps > 0 ? lang.steps + ': ' + marker.steps + '<br/>' : '';
-        var removeString = '<br/><br/><a href="#" data-url="' + jsObject.delete_marker_url + marker.id + '" class="btn-delete">' + lang.delete_text + '</a>';
-
-        let popup = dateString + accuracyString + stepsString + addressString;
-
-        let options = {};
-        let circle_color = '#3388ff';
-
-        switch (type) {
-            case 0:
-                popup += removeString;
-                break;
-            case 1:
-                options['icon'] = greenIcon;
-                circle_color = 'green';
-                popup += '<br/><br/><strong>' + marker.description + ' - ' + marker.value + ' ' + i18n.currency + '</strong>';
-                break;
-            case 2:
-                options['icon'] = yellowIcon;
-                circle_color = 'yellow';
-
-                let description = marker.description == 0 ? lang.car_refuel : lang.car_service;
-                popup += '<br/><br/><strong>' + description + '</strong>';
-                break;
-
+        if (markerData.type == 0) {
+            directions.push([markerData.lat, markerData.lng, marker_idx]);
         }
 
-        // create marker object
-        var my_marker = L.marker([marker.lat, marker.lng], options).bindPopup(popup);
+        let start_marker = createMarker(markerData);
+        markers.push(start_marker);
 
-        // add accuracy circle
-        if (marker.acc > 0) {
-            my_marker.on('mouseover', function (e) {
-                addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
-            });
+        if (markerData.data && markerData.data.end_lat !== null && markerData.data.end_lng !== null && markerData.data.start_lat !== markerData.data.end_lat && markerData.data.start_lng !== markerData.data.end_lng) {
+            markerData.lat = markerData.data.end_lat;
+            markerData.lng = markerData.data.end_lng;
+            markerData.acc = markerData.data.end_acc;
 
-            my_marker.on('mouseout', function (e) {
-                removeCircleLayer();
-            });
+            let end_marker = createMarker(markerData);
 
-            my_marker.on('popupopen', function (e) {
-                addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
-            });
+            
 
-            my_marker.on('popupclose', function (e) {
-                removeCircleLayer();
-            });
+            if (markerData.type == 5) {
+                if (markerData.isCarrental) {
+                    end_marker.bindPopup(start_marker.getPopup());
+                } else if (markerData.isTrain) {
+                    let trainPolyline = [];
+                    let middle = calculateMidPoint(start_marker, end_marker);
+                    let points = quadraticBezierPoints(start_marker, middle, end_marker);
 
+                    trainPolyline[0] = L.polyline(points, { color: 'black', weight: '5' }).bindPopup(start_marker.getPopup());
+                    trainPolyline[1] = L.polyline(points, { color: 'black', weight: '3', dashArray: '20, 20', dashOffset: '0' }).bindPopup(start_marker.getPopup());
+                    trainPolyline[2] = L.polyline(points, { color: 'white', weight: '3', dashArray: '20, 20', dashOffset: '20' }).bindPopup(start_marker.getPopup());
+
+                    layerTrips.addLayer(L.layerGroup(trainPolyline));
+
+                    // remove start marker when there is a polyline
+                    layerTrips.removeLayer(start_marker);
+                    layerTrips.removeLayer(end_marker);
+                } else if (markerData.isPlane) {
+                    let middle = calculateMidPoint(start_marker, end_marker);
+                    let points = quadraticBezierPoints(start_marker, middle, end_marker);
+
+                    let planePolyline = L.polyline(points, { color: 'black', weight: '3', dashArray: '10, 10' }).bindPopup(start_marker.getPopup());
+
+                    layerTrips.addLayer(planePolyline);
+
+                    layerTrips.removeLayer(end_marker);
+                } else if (markerData.isCar) {
+                    let streetPolyline = [];
+
+                    let middle = calculateMidPoint(start_marker, end_marker);
+                    let points = quadraticBezierPoints(start_marker, middle, end_marker);
+
+                    streetPolyline[0] = L.polyline(points, { color: 'gray', weight: '5' }).bindPopup(start_marker.getPopup());
+                    streetPolyline[1] = L.polyline(points, { color: 'white', weight: '1', dashArray: '10, 10', dashOffset: '0' }).bindPopup(start_marker.getPopup());
+
+                    layerTrips.addLayer(L.layerGroup(streetPolyline));
+
+                    // remove start marker when there is a polyline
+                    layerTrips.removeLayer(start_marker);
+                    layerTrips.removeLayer(end_marker);
+                } else if (markerData.isShip) {
+                    let middle = calculateMidPoint(start_marker, end_marker);
+                    let points = quadraticBezierPoints(start_marker, middle, end_marker);
+
+                    let shipPolyline = L.polyline(points, { color: 'blue', weight: '5', dashArray: '10, 10', dashOffset: '0' }).bindPopup(start_marker.getPopup());
+
+                    layerTrips.addLayer(shipPolyline);
+
+                    layerTrips.removeLayer(start_marker);
+                    layerTrips.removeLayer(end_marker);
+                }
+            }
+            markers.push(end_marker);
         }
 
-        // add marker to marker group and cluster group
-        switch (type) {
-            case 0:
-                layerLocationMarkers.addLayer(my_marker);
-                layerLocationClusters.addLayer(my_marker);
-                my_latlngs.push([marker.lat, marker.lng, marker_idx]);
-                break;
-            case 1:
-                layerFinancesMarkers.addLayer(my_marker);
-                layerFinancesClusters.addLayer(my_marker);
-                break;
-            case 2:
-                layerCarsMarkers.addLayer(my_marker);
-                layerCarsClusters.addLayer(my_marker);
-                break;
-        }
-
-        my_markers.push(my_marker);
     }
 
     // toggle between clusters/individual markers
@@ -197,23 +202,30 @@ function drawMarkers(markers, hideClusters = false) {
         layerLocation.addLayer(layerLocationMarkers);
         layerFinances.addLayer(layerFinancesMarkers);
         layerCars.addLayer(layerCarsMarkers);
+        layerSplittedBills.addLayer(layerSplittedBillsMarkers);
+        layerTimesheets.addLayer(layerTimesheetsMarkers);
     } else {
         layerLocation.addLayer(layerLocationClusters);
         layerFinances.addLayer(layerFinancesClusters);
         layerCars.addLayer(layerCarsClusters);
+        layerSplittedBills.addLayer(layerSplittedBillsClusters);
+        layerTimesheets.addLayer(layerTimesheetsClusters);
     }
     mymap.addLayer(layerLocation);
     mymap.addLayer(layerFinances);
     mymap.addLayer(layerCars);
+    mymap.addLayer(layerSplittedBills);
+    mymap.addLayer(layerTimesheets);
+    mymap.addLayer(layerTrips);
 
     // fit bounds of markers
-    if (my_markers.length > 0) {
-        var group = new L.featureGroup(my_markers);
+    if (markers.length > 0) {
+        var group = new L.featureGroup(markers);
         mymap.fitBounds(group.getBounds());
     }
 
     // create directions polyline
-    var polyline = L.polyline(my_latlngs);
+    var polyline = L.polyline(directions);
     layerDirections.addLayer(polyline);
 
     // dummy layer control
@@ -230,7 +242,11 @@ function drawMarkers(markers, hideClusters = false) {
     controlLayer.addOverlay(layerLocation, "<span id='layerLocation'>" + document.getElementById('iconLocation').innerHTML + "</span>");
     controlLayer.addOverlay(layerFinances, "<span id='layerFinances'>" + document.getElementById('iconFinances').innerHTML + "</span>");
     controlLayer.addOverlay(layerCars, "<span id='layerCars'>" + document.getElementById('iconCars').innerHTML + "</span>");
+    controlLayer.addOverlay(layerSplittedBills, "<span id='layerSplittedBills'>" + document.getElementById('iconSplittedBills').innerHTML + "</span>");
+    controlLayer.addOverlay(layerTimesheets, "<span id='layerTimesheets'>" + document.getElementById('iconTimesheets').innerHTML + "</span>");
+    controlLayer.addOverlay(layerTrips, "<span id='layerTrips'>" + document.getElementById('iconTrips').innerHTML + "</span>");
     controlLayer.addOverlay(layerDirections, "<span id='layerDirections'>" + document.getElementById('iconDirections').innerHTML + "</span>");
+
     controlLayer.addTo(mymap);
 
     // empty circle layer
@@ -256,10 +272,14 @@ mymap.on('overlayremove', function (eventLayer) {
         layerLocation.removeLayer(layerLocationClusters);
         layerFinances.removeLayer(layerFinancesClusters);
         layerCars.removeLayer(layerCarsClusters);
+        layerSplittedBills.removeLayer(layerSplittedBillsClusters);
+        layerTimesheets.removeLayer(layerTimesheetsClusters);
 
         layerLocation.addLayer(layerLocationMarkers);
         layerFinances.addLayer(layerFinancesMarkers);
         layerCars.addLayer(layerCarsMarkers);
+        layerSplittedBills.addLayer(layerSplittedBillsMarkers);
+        layerTimesheets.addLayer(layerTimesheetsMarkers);
     }
 });
 mymap.on('overlayadd', function (eventLayer) {
@@ -273,10 +293,14 @@ mymap.on('overlayadd', function (eventLayer) {
         layerLocation.removeLayer(layerLocationMarkers);
         layerFinances.removeLayer(layerFinancesMarkers);
         layerCars.removeLayer(layerCarsMarkers);
+        layerSplittedBills.removeLayer(layerSplittedBillsMarkers);
+        layerTimesheets.removeLayer(layerTimesheetsMarkers);
 
         layerLocation.addLayer(layerLocationClusters);
         layerFinances.addLayer(layerFinancesClusters);
         layerCars.addLayer(layerCarsClusters);
+        layerSplittedBills.addLayer(layerSplittedBillsClusters);
+        layerTimesheets.addLayer(layerTimesheetsClusters);
     }
 });
 
@@ -290,6 +314,18 @@ mymap.on("movestart zoomstart", function (e) {
 mymap.on("moveend zoomend", function (e) {
     isMapMove = false;
 });
+
+// current location
+var lc = L.control.locate({
+    strings: {
+        title: lang.set_current_location,
+        showPopup: false
+    },
+    locateOptions: {
+        enableHighAccuracy: true
+    }
+});
+mymap.addControl(lc);
 
 
 /**
@@ -312,7 +348,7 @@ if (locationFilter !== null) {
 
 function createClusterIcon(cluster, c) {
     var childCount = cluster.getChildCount();
-    return new L.DivIcon({html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster ' + c, iconSize: new L.Point(40, 40)});
+    return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster ' + c, iconSize: new L.Point(40, 40) });
 
 }
 
@@ -338,4 +374,157 @@ function addCircleLayer(lat, lng, radius, color) {
 
 function removeCircleLayer() {
     circleLayer.clearLayers();
+}
+
+function createMarker(data) {
+    // create popup
+    var dateString = data.dt + '<br/>';
+    var accuracyString = "";
+    if (data.acc > 0) {
+        accuracyString = lang.accuracy + ' : ' + data.acc + ' m<br/>';
+    }
+    var addressString = '<a href="#" data-lat="' + data.lat + '" data-lng="' + data.lng + '" class="btn-get-address">' + lang.address + '</a>';
+    var stepsString = data.steps > 0 ? lang.steps + ': ' + data.steps + '<br/>' : '';
+    var removeString = '<br/><br/><a href="#" data-url="' + jsObject.delete_marker_url + data.id + '" class="btn-delete">' + lang.delete_text + '</a>';
+
+    let popup = "";
+    if(data.popup){
+        popup = data.popup;
+    }else{
+        popup = dateString + accuracyString + stepsString + addressString;
+    }
+
+    let options = {};
+    let circle_color = '#3388ff';
+
+    switch (data.type) {
+        case 0:
+            options['icon'] = L.ExtraMarkers.icon({
+                markerColor: 'blue',
+                shape: 'circle',
+                innerHTML: document.getElementById('iconLocation').innerHTML
+            });
+            popup += removeString;
+            break;
+        case 1:
+            options['icon'] = L.ExtraMarkers.icon({
+                markerColor: 'green',
+                shape: 'circle',
+                innerHTML: document.getElementById('iconFinances').innerHTML
+            });
+            circle_color = 'green';
+            popup += '<br/><br/><strong>' + data.description + ' - ' + data.value + ' ' + i18n.currency + '</strong>';
+            break;
+        case 2:
+            options['icon'] = L.ExtraMarkers.icon({
+                markerColor: 'yellow',
+                shape: 'circle',
+                innerHTML: document.getElementById('iconCars').innerHTML
+            });
+            circle_color = 'yellow';
+
+            let description = data.description == 0 ? lang.car_refuel : lang.car_service;
+            popup += '<br/><br/><strong>' + description + '</strong>';
+            break;
+        case 3:
+            options['icon'] = L.ExtraMarkers.icon({
+                markerColor: 'orange',
+                shape: 'circle',
+                innerHTML: document.getElementById('iconSplittedBills').innerHTML
+            });
+            circle_color = 'orange';
+            popup += '<br/><br/><strong>' + data.description + '</strong>';
+            break;
+        case 4:
+            options['icon'] = L.ExtraMarkers.icon({
+                markerColor: 'pink',
+                shape: 'circle',
+                innerHTML: document.getElementById('iconTimesheets').innerHTML
+            });
+            circle_color = 'pink';
+            break;
+        case 5:
+            if (data.isCarrental) {
+                options['icon'] = L.ExtraMarkers.icon({
+                    markerColor: 'red',
+                    shape: 'circle',
+                    innerHTML: document.getElementById('iconCarRentals').innerHTML
+                });
+            } else if (data.isHotel) {
+                options['icon'] = L.ExtraMarkers.icon({
+                    markerColor: 'blue',
+                    shape: 'circle',
+                    innerHTML: document.getElementById('iconHotels').innerHTML
+                });
+            } else if (data.isEvent) {
+                options['icon'] = L.ExtraMarkers.icon({
+                    markerColor: 'yellow',
+                    shape: 'circle',
+                    innerHTML: document.getElementById('iconEvents').innerHTML
+                });
+            } else if (data.isPlane) {
+                options['icon'] = L.ExtraMarkers.icon({
+                    markerColor: 'black',
+                    shape: 'circle',
+                    innerHTML: document.getElementById('iconPlanes').innerHTML
+                });
+            }
+            break;
+
+    }
+
+    // create marker object
+    var marker = L.marker([data.lat, data.lng], options);
+
+    // add accuracy circle
+    if (marker.acc > 0) {
+        marker.on('mouseover', function (e) {
+            addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
+        });
+
+        marker.on('mouseout', function (e) {
+            removeCircleLayer();
+        });
+
+        marker.on('popupopen', function (e) {
+            addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
+        });
+
+        marker.on('popupclose', function (e) {
+            removeCircleLayer();
+        });
+
+    }
+
+
+    // add marker to marker group and cluster group
+    switch (data.type) {
+        case 0:
+            layerLocationMarkers.addLayer(marker);
+            layerLocationClusters.addLayer(marker);
+            break;
+        case 1:
+            layerFinancesMarkers.addLayer(marker);
+            layerFinancesClusters.addLayer(marker);
+            break;
+        case 2:
+            layerCarsMarkers.addLayer(marker);
+            layerCarsClusters.addLayer(marker);
+            break;
+        case 3:
+            layerSplittedBillsMarkers.addLayer(marker);
+            layerSplittedBillsClusters.addLayer(marker);
+            break;
+        case 4:
+            layerTimesheetsMarkers.addLayer(marker);
+            layerTimesheetsClusters.addLayer(marker);
+            break;
+        case 5:
+            layerTrips.addLayer(marker);
+            break;
+    }
+
+    marker.bindPopup(popup);
+
+    return marker;
 }

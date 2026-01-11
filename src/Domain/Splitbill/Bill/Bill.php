@@ -78,4 +78,16 @@ class Bill extends \App\Domain\DataObject {
         return $this->sbgroup;
     }
 
+    public function getPosition() {
+        return [
+            'id' => $this->id,
+            'dt' => $this->date,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
+            'acc' => $this->acc,
+            'description' => $this->name,
+            'type' => 3
+        ];
+    }
+
 }

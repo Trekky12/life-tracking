@@ -247,4 +247,8 @@ class SplitbillBillService extends BaseBillService {
         }
         return $rendered_data;
     }
+
+    public function getMarkers($from, $to, $user_groups) {
+        return $this->mapper->getMarkers($from, $to, $user_groups);
+    }
 }

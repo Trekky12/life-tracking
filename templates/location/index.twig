@@ -3,11 +3,16 @@
 {% set active = 'location' %}
 
 {% block style %}
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/L.Control.Locate.min.css?ver={{CACHEMISS}}"/>
+	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/leaflet.extra-markers.min.css?ver={{CACHEMISS}}"/>
 	<link rel="stylesheet" type="text/css" href="{{baseURL}}/static/assets/css/MarkerCluster.css?ver={{CACHEMISS}}"/>
 {% endblock %}
 
 {% block javascript %}
+	<script src="{{baseURL}}/static/assets/js/L.Control.Locate.min.js?ver={{CACHEMISS}}" type="text/javascript" charset="utf-8"></script>
+	<script src="{{baseURL}}/static/assets/js/leaflet.extra-markers.min.js?ver={{CACHEMISS}}" type="text/javascript"></script>
 	<script src="{{baseURL}}/static/assets/js/leaflet.markercluster.js?ver={{CACHEMISS}}" type="text/javascript"></script>
+	<script src="{{baseURL}}/static/js/location-helper.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/location.js?ver={{CACHEMISS}}"></script>
 	<script src="{{baseURL}}/static/js/datefilter.js?ver={{CACHEMISS}}"></script>
 {% endblock %}
@@ -65,5 +70,15 @@
 		<div id="iconFinances">{{ fontawesome('fas fa-money-bill') }}</div>
 		<div id="iconCars">{{ fontawesome('fas fa-road') }}</div>
 		<div id="iconDirections">{{ fontawesome('fas fa-left-right') }}</div>
+		<div id="iconSplittedBills">{{ fontawesome('far fa-handshake') }}</div>
+		<div id="iconTimesheets">{{ fontawesome('far fa-clock') }}</div>
+		<div id="iconTrips">{{ fontawesome('far fa-map') }}</div>
+		<div id="iconPlanes">{{ fontawesome('fas fa-plane') }}</div>
+		<div id="iconTrains">{{ fontawesome('fas fa-train') }}</div>
+		<div id="iconStreets">{{ fontawesome('fas fa-road') }}</div>
+		<div id="iconShips">{{ fontawesome('fas fa-ship') }}</div>
+		<div id="iconCarRentals">{{ fontawesome('fas fa-car') }}</div>
+		<div id="iconHotels">{{ fontawesome('fas fa-bed') }}</div>
+		<div id="iconEvents">{{ fontawesome('fas fa-calendar') }}</div>
 	</div>
 {% endblock %}

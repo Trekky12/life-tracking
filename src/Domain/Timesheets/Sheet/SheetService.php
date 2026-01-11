@@ -865,4 +865,8 @@ class SheetService extends Service {
             4 => ['start' => 'October', 'end' => 'December']
         ];
     }
+
+    public function getMarkers($from, $to, $user_projects) {
+        return $this->mapper->getMarkers($from, $to, $user_projects);
+    }
 }

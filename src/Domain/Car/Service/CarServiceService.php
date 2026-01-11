@@ -152,7 +152,7 @@ class CarServiceService extends Service {
 
     public function hasAccessToCarOfEntry($id) {
         $entry = $this->mapper->get($id);
-        $user_cars = $this->car_service->getUserCars();
+        $user_cars = $this->car_service->getUserElements();
         if (!in_array($entry->car, $user_cars)) {
             return false;
         }

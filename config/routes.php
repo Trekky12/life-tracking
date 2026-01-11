@@ -129,7 +129,7 @@ return function (App $app) {
 
     $app->group('/location', function (RouteCollectorProxy $group) {
         $group->get('/', \App\Application\Action\Location\LocationMapAction::class)->setName('location');
-        $group->get('/markers', \App\Application\Action\Location\LocationMarkersAction::class)->setName('getMarkers');
+        $group->get('/markers', \App\Application\Action\Location\LocationMarkersAction::class)->setName('location_markers');
         $group->delete('/delete/[{id}]', \App\Application\Action\Location\LocationDeleteAction::class)->setName('delete_marker');
         $group->get('/address/[{id}]', \App\Application\Action\Location\LocationAddressAction::class)->setName('get_address');
 

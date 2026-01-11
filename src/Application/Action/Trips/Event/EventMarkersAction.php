@@ -24,7 +24,7 @@ class EventMarkersAction {
         $requestData = $request->getQueryParams();
         list($from, $to) = DateUtility::getDateRange($requestData, null, null);
 
-        $markers = $this->service->getMarkers($hash, $from, $to);
+        $markers = $this->service->getMapMarkers($hash, $from, $to);
 
         return $this->responder->respond($markers);
     }
