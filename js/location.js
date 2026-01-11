@@ -4,6 +4,8 @@
 
 'use strict';
 
+const detailsModal = document.getElementById("details-modal");
+
 var mymap = L.map('mapid').setView([default_location.lat, default_location.lng], default_location.zoom);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -18,6 +20,7 @@ var controlLayer = null;
 var circleLayer = new L.LayerGroup();
 
 let markers = [];
+let tableCount = [];
 
 /**
  * Layers for Control
@@ -88,8 +91,8 @@ async function getMarkers() {
             credentials: "same-origin",
         });
         const data = await response.json();
-        markers = data;
-        drawMarkers(data, false);
+        drawMarkers(data["markers"], false);
+        addRouteDetails(data["count"]);
     } catch (error) {
         console.log(error);
     }
@@ -138,7 +141,7 @@ function drawMarkers(markersData, hideClusters = false) {
 
             let end_marker = createMarker(markerData);
 
-            
+
 
             if (markerData.type == 5) {
                 if (markerData.isCarrental) {
@@ -388,9 +391,9 @@ function createMarker(data) {
     var removeString = '<br/><br/><a href="#" data-url="' + jsObject.delete_marker_url + data.id + '" class="btn-delete">' + lang.delete_text + '</a>';
 
     let popup = "";
-    if(data.popup){
+    if (data.popup) {
         popup = data.popup;
-    }else{
+    } else {
         popup = dateString + accuracyString + stepsString + addressString;
     }
 
@@ -527,4 +530,72 @@ function createMarker(data) {
     marker.bindPopup(popup);
 
     return marker;
+}
+
+document.getElementById("show-details-modal").addEventListener('click', function (e) {
+    detailsModal.classList.add('visible');
+});
+
+document.getElementById("modal-close-btn").addEventListener('click', function (e) {
+    detailsModal.classList.remove('visible');
+});
+
+function addRouteDetails(countData) {
+    let modalContent = detailsModal.querySelector(".modal-content");
+    modalContent.innerHTML = "";
+
+    for (const [type, values] of Object.entries(countData)) {
+
+        // skip empty sections
+        if (!values || (Array.isArray(values) && values.length === 0) || (typeof values === "object" && Object.keys(values).length === 0)) {
+            continue;
+        }
+
+        const total = Object.values(values).reduce((sum, val) => sum + Number(val), 0);
+
+        const details = document.createElement("details");
+        details.classList.add("dt-wrapper");
+        const summary = document.createElement("summary");
+        const title = lang[`${type}_module_name`] ?? type;
+        summary.textContent = `${title} (${total})`;
+        details.appendChild(summary);
+
+        const table = document.createElement("table");
+        table.classList.add("table", "table-hover", "small", "dt-table");
+
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+
+        const thDate = document.createElement("th");
+        thDate.textContent = lang.date;
+
+        const thCount = document.createElement("th");
+        thCount.textContent = lang.count;
+
+        headRow.appendChild(thDate);
+        headRow.appendChild(thCount);
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+
+        for (const [date, count] of Object.entries(values)) {
+
+            const tr = document.createElement("tr");
+
+            const tdDate = document.createElement("td");
+            tdDate.textContent = date;
+
+            const tdCount = document.createElement("td");
+            tdCount.textContent = count;
+
+            tr.appendChild(tdDate);
+            tr.appendChild(tdCount);
+            tbody.appendChild(tr);
+        }
+
+        table.appendChild(tbody);
+        details.appendChild(table);
+        modalContent.appendChild(details);
+    }
 }

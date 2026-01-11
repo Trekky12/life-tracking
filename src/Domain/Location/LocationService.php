@@ -95,39 +95,110 @@ class LocationService extends Service {
     }
 
     public function getMarkers($from, $to) {
+
+        $count = [
+            "location" => [],
+            "finances" => [],
+            "cars" => [],
+            "splitbills" => [],
+            "timesheets" => [],
+            "trips" => []
+        ];
+
         $locations = $this->mapper->getMarkers($from, $to);
-        $location_markers = array_map(function ($loc) {
-            return $loc->getPosition();
+        $location_markers = array_map(function ($loc) use (&$count) {
+
+            $position = $loc->getPosition();
+
+            $language = $this->settings->getAppSettings()['i18n']['php'];
+            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+            $dateFormatter = new \IntlDateFormatter($language);
+            $dateFormatter->setPattern($dateFormatPHP['date']);
+            $date = $dateFormatter->format(new \DateTime($position["dt"]));
+            if (!array_key_exists($date, $count["location"])) {
+                $count["location"][$date] = 0;
+            }
+            $count["location"][$date]++;
+
+            return $position;
         }, $locations);
 
         $finance_locations = $this->finances_service->getMarkers($from, $to);
-        $finance_markers = array_map(function ($loc) {
-            return $loc->getPosition();
+        $finance_markers = array_map(function ($loc) use (&$count) {
+
+            $position = $loc->getPosition();
+
+            $language = $this->settings->getAppSettings()['i18n']['php'];
+            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+            $dateFormatter = new \IntlDateFormatter($language);
+            $dateFormatter->setPattern($dateFormatPHP['date']);
+            $date = $dateFormatter->format(new \DateTime($position["dt"]));
+            if (!array_key_exists($date, $count["finances"])) {
+                $count["finances"][$date] = 0;
+            }
+            $count["finances"][$date]++;
+
+            return $position;
         }, $finance_locations);
 
         $user_cars = $this->car_service->getUserElements();
         $carservice_locations = $this->car_service_service->getMarkers($from, $to, $user_cars);
-        $carservice_markers = array_map(function ($loc) {
-            return $loc->getPosition();
+        $carservice_markers = array_map(function ($loc) use (&$count) {
+
+            $position = $loc->getPosition();
+
+            $language = $this->settings->getAppSettings()['i18n']['php'];
+            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+            $dateFormatter = new \IntlDateFormatter($language);
+            $dateFormatter->setPattern($dateFormatPHP['date']);
+            $date = $dateFormatter->format(new \DateTime($position["dt"]));
+            if (!array_key_exists($date, $count["cars"])) {
+                $count["cars"][$date] = 0;
+            }
+            $count["cars"][$date]++;
+
+            return $position;
         }, $carservice_locations);
 
         $user_projects = $this->splitbill_group_service->getUserElements();
         $splitbill_locations = $this->splitbill_bill_service->getMarkers($from, $to, $user_projects);
-        $splitbill_markers = array_map(function ($loc) {
-            return $loc->getPosition();
+        $splitbill_markers = array_map(function ($loc) use (&$count) {
+
+            $position = $loc->getPosition();
+
+            $language = $this->settings->getAppSettings()['i18n']['php'];
+            $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
+            $dateFormatter = new \IntlDateFormatter($language);
+            $dateFormatter->setPattern($dateFormatPHP['date']);
+            $date = $dateFormatter->format(new \DateTime($position["dt"]));
+            if (!array_key_exists($date, $count["splitbills"])) {
+                $count["splitbills"][$date] = 0;
+            }
+            $count["splitbills"][$date]++;
+
+            return $position;
         }, $splitbill_locations);
 
         $user_projects = $this->timesheet_project_service->getUserElements();
         $sheet_locations = $this->timesheet_sheet_service->getMarkers($from, $to, $user_projects);
-        $sheet_markers = array_map(function ($loc) {
-            return $loc->getPosition($this->translation, $this->settings);
+        $sheet_markers = array_map(function ($loc) use (&$count) {
+
+            $position = $loc->getPosition($this->translation, $this->settings);
+
+            $date = $position["dt"];
+            if (!array_key_exists($date, $count["timesheets"])) {
+                $count["timesheets"][$date] = 0;
+            }
+            $count["timesheets"][$date]++;
+
+            return $position;
         }, $sheet_locations);
 
         $user_trips = $this->trip_service->getUserElements();
         $trip_events_locations = $this->trip_event_service->getMarkers($from, $to, $user_trips);
-        $trip_events_markers = array_map(function ($loc) {
+        $trip_events_markers = array_map(function ($loc) use (&$count) {
 
-            $data = $loc->getPosition();
+            $position = $loc->getPosition();
 
             $language = $this->settings->getAppSettings()['i18n']['php'];
             $dateFormatPHP = $this->settings->getAppSettings()['i18n']['dateformatPHP'];
@@ -142,21 +213,29 @@ class LocationService extends Service {
             $fromTranslation = $this->translation->getTranslatedString("FROM");
             $toTranslation = $this->translation->getTranslatedString("TO");
 
-            $loc->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>');
+            $position['popup'] = $loc->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>', true);
 
-            $data['popup'] = $loc->popup;
+            $date = $loc->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '', '', ' ', false);
+            if (!array_key_exists($date, $count["trips"])) {
+                $count["trips"][$date] = 0;
+            }
+            $count["trips"][$date]++;
 
-            return $data;
+            return $position;
         }, $trip_events_locations);
 
-        $response_data = array_merge(
-            $location_markers,
-            $finance_markers,
-            $carservice_markers,
-            $splitbill_markers,
-            $sheet_markers,
-            $trip_events_markers
-        );
+        $response_data = [
+            "markers" => 
+                array_merge(
+                    $location_markers,
+                    $finance_markers,
+                    $carservice_markers,
+                    $splitbill_markers,
+                    $sheet_markers,
+                    $trip_events_markers
+                ),
+            "count" => $count
+        ];
 
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }

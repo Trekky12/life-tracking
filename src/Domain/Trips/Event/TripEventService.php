@@ -97,7 +97,7 @@ class TripEventService extends Service {
         foreach ($events as $ev) {
 
             // create Popup
-            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
+            $ev->popup = $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, ', ', '');
 
             if (empty($ev->start_date) && empty($ev->end_date)) {
                 $dateRange["all"]["events"][] = $ev;
@@ -160,7 +160,7 @@ class TripEventService extends Service {
         $markers = [];
         foreach ($events as $ev) {
             // create Popup
-            $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>');
+            $ev->popup = $ev->createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $fromTranslation, $toTranslation, '<br/>', '<br/>');
             $markers[] = $ev->getPosition();
         }
 

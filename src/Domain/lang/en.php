@@ -397,6 +397,8 @@ $lang["NO_INITIAL_SORTING"] = "no initial sorting";
 $lang["DEFAULT_FILTER"] = "default filter";
 
 $lang["ADD_LOCATION"] = 'add location';
+$lang["LOCATION_SHOW_DETAILS"] = "show details";
+$lang["LOCATION_DETAILS"] = "details";
 
 $lang["DATA_TYPE"] = "data type";
 $lang["CAST_NONE"] = "default";
@@ -894,6 +896,7 @@ $lang["TIMESHEETS_START_MODIFIED_EXCEL"] = "time\n(angepasst)";
 
 $lang["HIDE"] = "Hide";
 $lang["SHOW"] = "Show";
+$lang["FILTER_RESULT"] = "Filter";
 
 $lang["RECIPE"] = "Recipe";
 $lang["RECIPES"] = "Recipes";

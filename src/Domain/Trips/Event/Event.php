@@ -140,7 +140,7 @@ class Event extends \App\Domain\DataObject {
         return $data;
     }
 
-    public function createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $from, $to, $loc_prefix = '<br/>', $loc_suffix = '<br/>') {
+    public function createPopup($dateFormatter, $timeFormatter, $datetimeFormatter, $from, $to, $loc_prefix = '<br/>', $loc_suffix = '<br/>', $date_separator = '<br/>', $show_address = true) {
         $start = null;
         if (!is_null($this->start_date) && !is_null($this->start_time)) {
             $d = new \DateTime($this->start_date . ' ' . $this->start_time);
@@ -176,19 +176,22 @@ class Event extends \App\Domain\DataObject {
         }
 
         $start_address = null;
-        $start_link = "<a href=\"https://www.google.com/maps?q={$this->start_lat},{$this->start_lng}\" target=\"_blank\" class=\"geo-link start_address\" data-lat=\"{$this->start_lat}\" data-lng=\"{$this->start_lng}\">";
-        if (!is_null($this->start_address)) {
-            $start_address = "{$start_link}{$this->start_address}</a>{$loc_suffix}";
-        } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
-            $start_address = " {$start_link}" . Utility::getFontAwesomeIcon('fas fa-location-dot') . "</a>{$loc_suffix}";
-        }
-
         $end_address = null;
-        $end_link = "<a href=\"https://www.google.com/maps?q={$this->end_lat},{$this->end_lng}\" target=\"_blank\" class=\"geo-link end_address\" data-lat=\"{$this->end_lat}\" data-lng=\"{$this->end_lng}\">";
-        if (!is_null($this->end_address)) {
-            $end_address = "{$end_link}{$this->end_address}</a>{$loc_suffix}";
-        } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
-            $start_address = " {$end_link}" . Utility::getFontAwesomeIcon('fas fa-location-dot') . "</a>{$loc_suffix}";
+        if($show_address){
+            $start_link = "<a href=\"https://www.google.com/maps?q={$this->start_lat},{$this->start_lng}\" target=\"_blank\" class=\"geo-link start_address\" data-lat=\"{$this->start_lat}\" data-lng=\"{$this->start_lng}\">";
+            if (!is_null($this->start_address)) {
+                $start_address = "{$start_link}{$this->start_address}</a>{$loc_suffix}";
+            } elseif (!is_null($this->start_lat) && !is_null($this->start_lat)) {
+                $start_address = " {$start_link}" . Utility::getFontAwesomeIcon('fas fa-location-dot') . "</a>{$loc_suffix}";
+            }
+
+            $end_address = null;
+            $end_link = "<a href=\"https://www.google.com/maps?q={$this->end_lat},{$this->end_lng}\" target=\"_blank\" class=\"geo-link end_address\" data-lat=\"{$this->end_lat}\" data-lng=\"{$this->end_lng}\">";
+            if (!is_null($this->end_address)) {
+                $end_address = "{$end_link}{$this->end_address}</a>{$loc_suffix}";
+            } elseif (!is_null($this->end_lat) && !is_null($this->end_lng)) {
+                $start_address = " {$end_link}" . Utility::getFontAwesomeIcon('fas fa-location-dot') . "</a>{$loc_suffix}";
+            }
         }
 
         // same start and end date? hide end date
@@ -207,7 +210,7 @@ class Event extends \App\Domain\DataObject {
             if (!empty($end)) {
                 $popup .= "{$from} ";
             }
-            $popup .= "{$start1}<br/>";
+            $popup .= "{$start1}{$date_separator}";
             if (!empty($end)) {
                 $popup .= "{$to} ";
             }
@@ -221,7 +224,7 @@ class Event extends \App\Domain\DataObject {
             $popup .= "{$end1}";
         }
 
-        $this->popup = $popup;
+        return $popup;
     }
 
     public function getNotice() {

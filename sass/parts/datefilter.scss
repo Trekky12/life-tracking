@@ -32,20 +32,30 @@
 
         .search-form-inner {
             padding: 1rem 1rem 0rem 1rem;
-        }
 
-        input[type="submit"] {
-            margin-top: 1rem;
-        }
+            .filter-content {
+                display: flex;
+                gap: 10px;
+                flex-direction: column;
+                margin-bottom: 1rem;
 
-        input {
-            width: 100%;
+                @media screen and (min-width: variables.$size_mobile_navigation) {
+                    flex-direction: row;
+                }
+            }
+
+            #dateRange {
+                flex-grow: 1;
+            }
         }
     }
 
     @media screen and (min-width: variables.$size_mobile) {
         max-width: variables.$size_content-width-xsmall;
         margin: 0 auto;
+    }
+    @media screen and (min-width: variables.$size_mobile_navigation) {
+        max-width: variables.$size_content-width-small;
     }
 }
 

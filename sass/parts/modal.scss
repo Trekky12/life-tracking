@@ -72,6 +72,11 @@
     .modal-content,
     .modal-footer {
         padding: .4em 1em;
+
+        summary{
+            @include mixins.font-size(1.6);
+            font-weight: 600;
+        }
     }
 
     .modal-header {
