@@ -71,7 +71,10 @@ class ReminderMapper extends \App\Domain\Mapper {
     }
 
     public function getRemindersByProject(){
-        $sql = "SELECT r.*, nc.id as category FROM " . $this->getTableName() . " r, " . $this->getTableName("notifications_categories") . " nc WHERE r.id = nc.reminder ORDER BY project";
+        $sql = "SELECT r.*, nc.id as category 
+                FROM " . $this->getTableName() . " r, " . $this->getTableName("notifications_categories") . " nc 
+                WHERE r.id = nc.reminder 
+                ORDER BY project, FIELD(trigger_type, 'after_each_sheet','after_last_sheet','after_last_sheet_plus_1h')";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
