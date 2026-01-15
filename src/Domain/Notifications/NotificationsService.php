@@ -267,10 +267,10 @@ class NotificationsService extends Service {
         return new Payload(Payload::$RESULT_HTML);
     }
 
-    public function notifyByCategory($requestData) {
-        $category = array_key_exists("type", $requestData) ? Utility::filter_string_polyfill($requestData["type"]) : "";
-        $title = array_key_exists("title", $requestData) ? filter_var($requestData["title"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
-        $message = array_key_exists("message", $requestData) ? filter_var($requestData["message"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
+    public function notifyByCategory($params) {
+        $category = array_key_exists("category", $params) ? Utility::filter_string_polyfill($params["category"]) : "";
+        $title = array_key_exists("title", $params) ? filter_var($params["title"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
+        $message = array_key_exists("message", $params) ? filter_var($params["message"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
 
         $this->sendNotificationsToUsersWithCategory($category, $title, $message);
 

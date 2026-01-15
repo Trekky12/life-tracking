@@ -593,7 +593,6 @@ return function (App $app) {
                 $group_session->get('/create', \App\Application\Action\Workouts\Session\SessionCreateAction::class)->setName('workouts_sessions_create');
                 $group_session->get('/{session:[0-9]+}', \App\Application\Action\Workouts\Session\SessionContinueAction::class)->setName('workouts_sessions_continue');
                 $group_session->post('/{session:[0-9]+}/saveExercise/[{id:[0-9]+}]', \App\Application\Action\Workouts\Session\SessionSaveExerciseAction::class)->setName('workouts_sessions_exercise_save');
-
             });
         });
 
@@ -731,7 +730,7 @@ return function (App $app) {
             $crawler_group->post('/record', \App\Application\Action\Crawler\Dataset\DatasetRecordAction::class);
         });
         $group->group('/notifications', function (RouteCollectorProxy $notifications_group) {
-            $notifications_group->get('/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
+            $notifications_group->map(['GET', 'POST'], '/notify', \App\Application\Action\Notifications\NotificationsNotifyByCategoryAction::class);
         });
 
         $group->group('/workouts', function (RouteCollectorProxy $workouts_group) {

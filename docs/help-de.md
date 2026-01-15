@@ -984,5 +984,12 @@ Es ist möglich nutzerspezifische individuelle Benachrichtigungskategorien festz
 Über den folgenden Aufruf können so automatisiert Benachrichtigungen an Nutzer, die die entsprechende Kategorie abonniert haben, gesendet werden.
 
 ``` 
-curl "http://<user>:<password>@<domain>/api/notifications/notify?type=test_notification_cat&title=Test%20title&message=Test%20message" 
+curl "http://<user>:<password>@<domain>/api/notifications/notify?category=test_notification_cat&title=Test%20title&message=Test%20message" 
+```
+
+oder mit [apprise](https://appriseit.com/services/json/):
+
+``` 
+apprise -vv -t "Test title" -b "Test message" \
+   "json://<user>:<password>@<domain>/api/notifications/notify?:category=test_notification_cat"
 ```

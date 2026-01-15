@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Notifications;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Notifications\NotificationsService;
 use App\Application\Responder\JSONResultResponder;
@@ -18,8 +18,8 @@ class NotificationsNotifyByCategoryAction {
     }
 
     public function __invoke(Request $request, Response $response): Response {
-        $requestData = $request->getQueryParams();
-        $payload = $this->service->notifyByCategory($requestData);
+        $params = $request->getParams();
+        $payload = $this->service->notifyByCategory($params);
 
         return $this->responder->respond($payload);
     }

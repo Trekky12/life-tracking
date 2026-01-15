@@ -590,7 +590,7 @@ Profil: Schritte zurücksetzen (21)
 			<p>Zusätzlich lässt sich die Laufleistung bei Leasing oder Finanzierung eines Autos anzeigen.
 				<br/>
 				Hierzu wird anhand des zuletzt erfassten Kilometerstands (Tanken oder Wartung), dem Start der Laufzeit, 
-																																																																																																																																																										                der Laufzeit in Jahren und dem Start Kilometerstand der heutige maximale Kilometerstand angezeigt.</p>
+																																																																																																																																																														                der Laufzeit in Jahren und dem Start Kilometerstand der heutige maximale Kilometerstand angezeigt.</p>
 			<div class="image-gallery">
 				<div class="image">
 					<a href="{{baseURL}}/static/help/de/5_cars-7.jpg" target="_blank"><img src="{{baseURL}}/static/help/de/5_cars-7.jpg" width="300"/></a>
@@ -665,7 +665,7 @@ curl --header "Content-Type: application/json" \
 
 			<h3>Crawler Überschriften/Spalten</h3>
 			<p>Die einzelnen Spalten der Tabelle können pro Crawler festgelegt werden. Dazu muss festgelegt werden wie die Überschrift lautet und welches Datenfeld eines Datensatzes in der Spalte angezeigt werden soll (Feldname). 
-																																																																																																																																																										                Zusätzlich kann das Datenfeld für die Verlinkung gesetzt werden. Dies ist beispielsweise im Beispiel oben sinnvoll. Das Feld
+																																																																																																																																																														                Zusätzlich kann das Datenfeld für die Verlinkung gesetzt werden. Dies ist beispielsweise im Beispiel oben sinnvoll. Das Feld
 				<code>name</code>
 				kann als Feldname festgelegt werden und das Feld
 				<code>url</code>
@@ -677,7 +677,7 @@ curl --header "Content-Type: application/json" \
 			<p>Soll eine Spalte den ursprünglichen Wert vor einer Aktualisierung enthalten, so kann dies über die entsprechende Checkbox ausgewählt werden. In dieser Spalte wird dann nur für aktualisierte Datensätze der vorherige Wert angezeigt. Beispielsweise können so zwei Spalten für den Feldnamen
 				<code>price</code>
 				festgelegt werden, um Preisänderungen zu sehen. 
-																																																																																																																																																										                Dabei ist zu beachten, dass immer nur der direkt vorherige Wert gespeichert wird. Änderungen über einen längeren Zeitraum lassen sich nicht anzeigen.</p>
+																																																																																																																																																														                Dabei ist zu beachten, dass immer nur der direkt vorherige Wert gespeichert wird. Änderungen über einen längeren Zeitraum lassen sich nicht anzeigen.</p>
 			<p>Über Prefix und Suffix lassen sich Präfix und Suffixe anwenden. Beispielsweise kann so die Währung hinter einen Wert gesetzt werden.</p>
 			<div class="image-gallery">
 				<div class="image">
@@ -693,7 +693,7 @@ curl --header "Content-Type: application/json" \
 
 			<h3>Crawler Links</h3>
 			<p>Unterhalb der Liste lassen sich zusätzlich noch Links für den Schnellzugriff anlegen.
-																																																																																																																																																										                Dabei können maximal zwei Ebenen abgebildet werden.</p>
+																																																																																																																																																														                Dabei können maximal zwei Ebenen abgebildet werden.</p>
 			<div class="image-gallery">
 				<div class="image">
 					<a href="{{baseURL}}/static/help/de/7_crawlers-5.jpg" target="_blank"><img src="{{baseURL}}/static/help/de/7_crawlers-5.jpg" width="300"/></a>
@@ -1046,8 +1046,8 @@ curl --header "Content-Type: application/json" \
 		<div class="page-content">
 			<p>Im Modul Workouts lassen sich Fitness-Trainings anlegen und verwalten.</p>
 			<p>Beim Anlegen eines Trainingsplan kann aus den verfügbaren Übungen ausgewählt werden. Die Liste kann durchsucht und nach Körperbereich gefiltert werden. 
-																																																																																																																																																										                Die Anzahl der durchzuführenden Sätze kann unten festgelegt werden. Durch Anklicken des Plus-Symbols wird die Übung dann in den Trainingsplan übernommen.
-																																																																																																																																																										                Dort können dann eine Bemerkung und die Sätze festgelegt werden.</p>
+																																																																																																																																																														                Die Anzahl der durchzuführenden Sätze kann unten festgelegt werden. Durch Anklicken des Plus-Symbols wird die Übung dann in den Trainingsplan übernommen.
+																																																																																																																																																														                Dort können dann eine Bemerkung und die Sätze festgelegt werden.</p>
 			<p>Übungen lassen sich über das Minus-Symbol wieder aus dem Trainingsplan entfernen und über das Kreuz-Symbol verschieben.</p>
 			<p>Zusätzlich können Trainingstage und Supersätze festgelegt werden.</p>
 
@@ -1329,8 +1329,14 @@ curl --header "Content-Type: application/json" \
 			</div>
 			<p>Über den folgenden Aufruf können so automatisiert Benachrichtigungen an Nutzer, die die entsprechende Kategorie abonniert haben, gesendet werden.</p>
 			<pre>
-curl "http://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/notifications/notify?type=test_notification_cat&title=Test%20title&message=Test%20message"
-            </pre>
+curl "http://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/notifications/notify?category=test_notification_cat&title=Test%20title&message=Test%20message"
+</pre>
+			<p>beispielweise mit
+				<a href="https://appriseit.com/services/json/" target="_blank">apprise</a>:</p>
+			<pre>
+apprise -vv -t "Test title" -b "Test message" \
+   "json://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/notifications/notify?:category=test_notification_cat"
+</pre>
 		</div>
 	</div>
 {% endblock %}

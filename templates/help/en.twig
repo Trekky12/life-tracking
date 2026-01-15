@@ -1321,8 +1321,14 @@ curl --header "Content-Type: application/json" \
 			</div>
 			<p>Notifications can be automatically sent to users who have subscribed to the corresponding category using the following call.</p>
 			<pre>
-curl "http://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/notifications/notify?type=test_notification_cat&title=Test%20title&message=Test%20message"
+curl "http://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/notifications/notify?category=test_notification_cat&title=Test%20title&message=Test%20message"
             </pre>
+			<p>for example with
+				<a href="https://appriseit.com/services/json/" target="_blank">apprise</a>:</p>
+			<pre>
+apprise -vv -t "Test title" -b "Test message" \
+   "json://&lt;user&gt;:&lt;password&gt;@&lt;domain&gt;/api/notifications/notify?:category=test_notification_cat"
+</pre>			
 		</div>
 	</div>
 {% endblock %}

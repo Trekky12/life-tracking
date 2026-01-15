@@ -986,5 +986,12 @@ It is possible to define user-specific custom notification categories.
 Notifications can be automatically sent to users who have subscribed to the corresponding category using the following call.
 
 ``` 
-curl "http://<user>:<password>@<domain>/api/notifications/notify?type=test_notification_cat&title=Test%20title&message=Test%20message"
+curl "http://<user>:<password>@<domain>/api/notifications/notify?category=test_notification_cat&title=Test%20title&message=Test%20message"
+```
+
+or with [apprise](https://appriseit.com/services/json/):
+
+``` 
+apprise -vv -t "Test title" -b "Test message" \
+   "json://<user>:<password>@<domain>/api/notifications/notify?:category=test_notification_cat"
 ```
