@@ -85,8 +85,6 @@ class Utility {
         $string = str_replace("\0", '', $string);
         // strip tags
         $string = strip_tags($string);
-        // encode quotes
-        $string = str_replace(["'", '"'],['&#39;', '&#34;'],$string);
 
         // trim
         return trim($string);
