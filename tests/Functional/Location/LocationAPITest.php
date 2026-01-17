@@ -69,7 +69,7 @@ class LocationAPITest extends BaseTestCase {
         $this->assertIsArray($json);
 
         $found = false;
-        foreach ($json as $marker) {
+        foreach ($json["markers"] as $marker) {
             if ($marker["lat"] == 52.520007 && $marker["lng"] == 13.404954 && $marker["acc"] == $location_data["gps_acc"] && $marker["steps"] == $location_data["steps"]) {
                 $found = true;
             }
@@ -95,7 +95,7 @@ class LocationAPITest extends BaseTestCase {
         $this->assertIsArray($json);
 
         $found = false;
-        foreach ($json as $marker) {
+        foreach ($json["markers"] as $marker) {
             if ($marker["lat"] == 52.520007 && $marker["lng"] == 13.404954 && $marker["acc"] == $location_data["gps_acc"] && $marker["steps"] == $location_data["steps"]) {
                 $found = true;
             }

@@ -62,7 +62,7 @@ class LocationSelfTest extends BaseTestCase {
         $this->assertIsArray($json);
 
         $my_marker_id = -1;
-        foreach ($json as $marker) {
+        foreach ($json["markers"] as $marker) {
             if ($marker["lat"] == $location_data["gps_lat"] && $marker["lng"] == $location_data["gps_lng"] && $marker["acc"] == $location_data["gps_acc"]) {
                 $my_marker_id = $marker["id"];
             }
