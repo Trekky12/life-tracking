@@ -462,6 +462,7 @@ return function (App $app) {
             $group_project->group('/calendar', function (RouteCollectorProxy $group_calendar) {
                 $group_calendar->get('/', \App\Application\Action\Timesheets\Sheet\SheetCalendarAction::class)->setName('timesheets_calendar');
                 $group_calendar->get('/entries', \App\Application\Action\Timesheets\Sheet\SheetCalendarEventsAction::class)->setName('timesheets_calendar_events');
+                $group_calendar->post('/setView', \App\Application\Action\Timesheets\Sheet\SheetCalendarSetViewAndDateAction::class)->setName('set_timesheets_calendar_view');
             });
 
             $group_project->group('/sheets', function (RouteCollectorProxy $group_sheets) {

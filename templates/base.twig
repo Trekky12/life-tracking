@@ -238,6 +238,7 @@
 {% endif %}
 {% if not hasTimesheetCalendar is null %}
                 'timesheets_calendar_events': '{{url_for('timesheets_calendar_events', {'project': project.hash})}}',
+                'timesheets_calendar_view': '{{url_for('set_timesheets_calendar_view', {'project': project.hash})}}',
 {% endif %}
 {% if not isTripEventEdit is null %}
                 'trip_event_image_upload': '{{  url_for('trips_event_image', {'id' : entry.id, 'trip' : trip.hash}) }}',

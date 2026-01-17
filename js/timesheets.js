@@ -325,8 +325,8 @@ if (calendarEl) {
     let from = calendarEl.dataset.from;
     let to = calendarEl.dataset.to;
 
-    let initialView = localStorage.getItem('calendarView_' + projectID) || 'timeGridWeek';
-    let savedDate = localStorage.getItem('calendarDate_' + projectID);
+    let initialView = calendarEl.dataset.calendarview || 'timeGridWeek';
+    let savedDate = calendarEl.dataset.calendardate;
     let initialDate = savedDate ? new Date(savedDate) : from ? new Date(from) : new Date();
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -357,9 +357,8 @@ if (calendarEl) {
                 hiddenDays: hiddendays
             }
         },
-        datesSet: function (info) {
-            localStorage.setItem('calendarView_' + projectID, info.view.type);
-            localStorage.setItem('calendarDate_' + projectID, info.view.currentStart);
+        datesSet: async function (info) {
+            setView(info.view);
 
             if (info.view.type !== 'dayGridMonth') {
                 calendar.setOption('eventContent', function (arg) {
@@ -829,7 +828,7 @@ const timesheetsExportFilter = document.getElementById('timesheets-export-filter
 if (timesheetsExportFilter) {
     const timesheetsExportFilterNoticeFields = timesheetsExportFilter.querySelector('#timesheets-export-filter-noticefields');
     const timesheetsExportFilterModified = timesheetsExportFilter.querySelector('#timesheets-export-filter-modified');
-    
+
     document.querySelectorAll('.search-filter input[name="type"]').forEach(function (input) {
         input.addEventListener('click', function (e) {
             setExportFilter(input);
@@ -843,10 +842,38 @@ if (timesheetsExportFilter) {
         if (input.checked && input.value === 'html-overview') {
             timesheetsExportFilterNoticeFields.classList.remove('hidden');
             timesheetsExportFilterModified.classList.remove('hidden');
-        }  else {
+        } else {
             timesheetsExportFilterNoticeFields.classList.add('hidden');
             timesheetsExportFilterModified.classList.add('hidden');
         }
+    }
+}
+
+async function setView(view) {
+    try {
+
+        const d = view.currentStart;
+        const calendardate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+        var data = { 'calendarview': view.type, 'calendardate': calendardate };
+
+        let token = await getCSRFToken();
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
+        const response = await fetch(jsObject.timesheets_calendar_view, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        return await response.json();
+
+    } catch (error) {
+        console.log(error);
     }
 }
 

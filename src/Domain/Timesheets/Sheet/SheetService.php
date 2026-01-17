@@ -694,6 +694,9 @@ class SheetService extends Service {
         }, $project_notice_fields);
         $has_legend = in_array("legend", $project_notice_fields_names);
 
+
+        $view = $this->project_mapper->getCalendarViewAndDate($project->id, $this->current_user->getUser()->id);
+
         $response_data = [];
 
         $response_data["project"] = $project;
@@ -704,6 +707,8 @@ class SheetService extends Service {
         $response_data["hasTimesheetNotice"] = $has_legend;
         $response_data["from"] = $from;
         $response_data["to"] = $to;
+        $response_data["calendarview"] = is_array($view) && array_key_exists("calendarview", $view) ? $view["calendarview"] : null;
+        $response_data["calendardate"] = is_array($view) && array_key_exists("calendardate", $view) ? $view["calendardate"] : null;
 
         return new Payload(Payload::$RESULT_HTML, $response_data);
     }
@@ -868,5 +873,23 @@ class SheetService extends Service {
 
     public function getMarkers($from, $to, $user_projects) {
         return $this->mapper->getMarkers($from, $to, $user_projects);
+    }
+
+
+    public function setCalendarViewAndDate($hash, $data) {
+        $project = $this->project_service->getFromHash($hash);
+
+        if (!$this->project_service->isMember($project->id)) {
+            return new Payload(Payload::$NO_ACCESS, "NO_ACCESS");
+        }
+
+        $view = array_key_exists("calendarview", $data) ? Utility::filter_string_polyfill($data["calendarview"]) : null;
+        $date = array_key_exists("calendardate", $data) ? new \DateTime(Utility::filter_string_polyfill($data["calendardate"]))->format('Y-m-d') : null;
+
+        $this->project_mapper->setCalendarViewAndDate($project->id, $this->current_user->getUser()->id, ["calendarview" => $view, "calendardate" => $date]);
+
+        $response_data = ['status' => 'done'];
+
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 }

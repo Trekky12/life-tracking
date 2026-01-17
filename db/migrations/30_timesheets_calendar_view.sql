@@ -1,0 +1,1 @@
+ALTER TABLE timesheets_projects_users ADD calendarview VARCHAR(255) DEFAULT NULL AFTER user, ADD calendardate DATE DEFAULT NULL AFTER calendarview; 

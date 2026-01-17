@@ -798,6 +798,8 @@ CREATE TABLE IF NOT EXISTS timesheets_projects_users (
     createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     project INTEGER unsigned DEFAULT NULL,
     user INTEGER unsigned DEFAULT NULL,
+    calendarview VARCHAR(255) DEFAULT NULL,
+    calendardate DATE DEFAULT NULL, 
     UNIQUE(project, user),
     FOREIGN KEY(project) REFERENCES timesheets_projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE CASCADE ON UPDATE CASCADE
