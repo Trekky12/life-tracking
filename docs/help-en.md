@@ -993,5 +993,5 @@ or with [apprise](https://appriseit.com/services/json/):
 
 ``` 
 apprise -vv -t "Test title" -b "Test message" \
-   "json://<user>:<password>@<domain>/api/notifications/notify?:category=test_notification_cat"
+   "jsons://<user>:<password>@<domain>/api/notifications/notify?:category=test_notification_cat"
 ```
