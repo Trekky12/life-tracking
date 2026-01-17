@@ -219,11 +219,11 @@ textarea {
 
 .form-group {
     position: relative;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+}
 
-    &.btn button {
-        margin-bottom: 2rem;
-    }
+.form-group-btn{
+    padding-top: 2rem;
 }
 
 .form-control {

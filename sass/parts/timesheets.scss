@@ -148,6 +148,12 @@
     }
 }
 
+#timesheetNoticeWrapper, #timesheetFilesWrapper {
+    h3 {
+        margin-top: 0;
+    }
+}
+
 .timesheet-files {
     display: flex;
     flex-wrap: wrap;
@@ -201,11 +207,11 @@
     }
 }
 
-.reminder-message{
+.reminder-message {
     display: flex;
     align-items: center;
 
-    input{
+    input {
         margin-right: 1rem;
         margin-bottom: 0.5rem;
     }

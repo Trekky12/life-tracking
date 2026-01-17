@@ -44,7 +44,7 @@
 					<input type="hidden" id="geoLng" class="geo-lng" name="gps_lng" value="{% if not entry is null %}{{entry.gps_lng}}{% endif %}">
 					<input type="hidden" id="geoAcc" class="geo-acc" name="gps_acc" value="{% if not entry is null %}{{entry.gps_acc}}{% endif %}">
 				</div>
-				<div class="form-group">
+				<div class="form-group-btn">
 					<button type="submit" class="button">
 						{% if not entry is null %}
 							{{"SAVE"|trans}}

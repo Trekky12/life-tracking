@@ -24,22 +24,22 @@
 				<div class="form-group">
 					{% if image.getValue() %}
 						<img class="image_uploaded" src="/{{uploads_folder}}/muscles/{{image.getValue()}}"/>
-						{%endif%}
-						<input name="image" id="image" class="form-control" type="file">
-					</div>
-					{% if image.getValue() %}
-						<div class="form-group">
-							<label class="checkbox" for="checkboxDeleteImage">
-								<input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
-								{{"DELETE"|trans}}
-							</label>
-						</div>
-						{%endif%}
-						<div class="form-group">
-							<button type="submit" class="button">{{"SAVE"|trans}}</button>
-						</div>
-					</form>
+					{% endif %}
+					<input name="image" id="image" class="form-control" type="file">
 				</div>
-			</div>
+				{% if image.getValue() %}
+					<div class="form-group">
+						<label class="checkbox" for="checkboxDeleteImage">
+							<input name="delete_image" type="checkbox" value="1" id="checkboxDeleteImage">
+							{{"DELETE"|trans}}
+						</label>
+					</div>
+				{% endif %}
+				<div class="form-group-btn">
+					<button type="submit" class="button">{{"SAVE"|trans}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
 
-		{% endblock %}
+{% endblock %}
