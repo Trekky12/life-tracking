@@ -928,6 +928,10 @@ $lang["RECIPES_SHOPPINGLIST"] = "shopping list";
 $lang["RECIPES_SHOPPINGLIST_ERROR_ADD"] = "Error adding the entry to the list!";
 $lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"] = "New entries found! Please refresh.";
 
+$lang["RECIPES_COOKMODE_ENABLE"] = "Enable cookmode";
+$lang["RECIPES_COOKMODE_ENABLED"] = "cookmode active";
+$lang["RECIPES_COOKMODE_ERROR"] = "Not able to activate cookmode";
+
 $lang["ADD_NOTICE"] = "Add notice";
 
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"] = "project budgets";

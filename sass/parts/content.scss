@@ -7,24 +7,25 @@
     margin-bottom: 1rem;
 
     background-color: variables.$color_background-body;
-    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2),
-        0 1px 1px 0 rgba(0, 0, 0, .14),
-        0 1px 3px 0 rgba(0, 0, 0, .12);
+    box-shadow:
+        0 2px 1px -1px rgba(0, 0, 0, 0.2),
+        0 1px 1px 0 rgba(0, 0, 0, 0.14),
+        0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
     border: none;
     border-radius: 4px;
 
-    &> :first-child {
+    & > :first-child {
         border-top-left-radius: inherit;
         border-top-right-radius: inherit;
     }
 
-    &> :last-child {
+    & > :last-child {
         border-bottom-left-radius: inherit;
         border-bottom-right-radius: inherit;
     }
 
-    &.with-padding{
+    &.with-padding {
         padding: 1rem;
     }
 
@@ -115,14 +116,15 @@
     margin-bottom: 2rem;
 }
 
-
 .page-header {
-
     &.multiple-buttons {
         flex-direction: column;
+        flex-wrap: wrap;
+        gap: 0.5rem;
 
         @media screen and (min-width: variables.$size_tablet) {
             flex-direction: row;
+            align-items: center;
         }
     }
 
@@ -151,10 +153,13 @@
     .buttons {
         display: flex;
         flex-direction: row;
-        margin-top: 1rem;
-
         flex-wrap: wrap;
         justify-content: center;
+
+        @media screen and (min-width: variables.$size_tablet) {
+            flex-grow: 1;
+            justify-content: flex-end;
+        }
 
         a {
             margin-left: 0.5rem;
@@ -180,9 +185,7 @@
             }*/
         }
 
-
         @media screen and (min-width: variables.$size_mobile_navigation) {
-            margin-left: 1rem;
             margin-top: 0;
 
             a {
@@ -195,7 +198,6 @@
                 //padding-right: 1rem !important;
             }
         }
-
     }
 }
 

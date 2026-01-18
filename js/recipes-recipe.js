@@ -113,3 +113,38 @@ if (filterSearchRecipes) {
         getRecipes(true);
     });
 }
+
+let cookmodeWakeLock = null;
+const cookmodeButton = document.getElementById("cookmodeButton");
+
+async function enableCookmode() {
+    try {
+        cookmodeWakeLock = await navigator.wakeLock.request("screen");
+        cookmodeButton.textContent = "🕓 " + lang.recipes_cookmode_enabled;
+
+        document.addEventListener("visibilitychange", async function () {
+            if (cookmodeWakeLock !== null && document.visibilityState === "visible") {
+                cookmodeWakeLock = await navigator.wakeLock.request("screen");
+            }
+        });
+    } catch (err) {
+        console.error("Error retrieving wakelock:", err.name, err.message);
+        showToast(lang.recipes_cookmode_error, "red");
+    }
+}
+
+function disableCookmode() {
+    if (cookmodeWakeLock) {
+        cookmodeWakeLock.release();
+        cookmodeWakeLock = null;
+        cookmodeButton.textContent = "🍳 " + lang.recipes_cookmode_enable;
+    }
+}
+
+cookmodeButton.addEventListener("click", function () {
+    if (cookmodeWakeLock) {
+        disableCookmode();
+    } else {
+        enableCookmode();
+    }
+});

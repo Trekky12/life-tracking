@@ -926,6 +926,10 @@ $lang["RECIPES_SHOPPINGLIST"] = "Einkaufsliste";
 $lang["RECIPES_SHOPPINGLIST_ERROR_ADD"] = "Fehler beim Hinzufügen des Eintrags zur Einkaufsliste!";
 $lang["RECIPES_SHOPPINGLIST_NEW_ENTRIES_FOUND"] = "Neue Einträge gefunden! Bitte aktualisieren.";
 
+$lang["RECIPES_COOKMODE_ENABLE"] = "Kochmodus einschalten";
+$lang["RECIPES_COOKMODE_ENABLED"] = "Kochmodus aktiv";
+$lang["RECIPES_COOKMODE_ERROR"] = "Kochmodus kann nicht aktiviert werden";
+
 $lang["ADD_NOTICE"] = "Notiz hinzufügen";
 
 $lang["TIMESHEETS_PROJECT_CATEGORY_BUDGETS"] = "Projektbudgets";
