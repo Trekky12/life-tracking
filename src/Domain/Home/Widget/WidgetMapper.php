@@ -57,4 +57,16 @@ class WidgetMapper extends \App\Domain\Mapper {
         return $stmt->rowCount();
     }
 
+    public function set_hidden($id, $hidden) {
+        $sql = "UPDATE " . $this->getTableName() . " SET is_hidden = :is_hidden WHERE id=:id";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            "is_hidden" => $hidden,
+            "id" => $id
+        ]);
+
+        if (!$result) {
+            throw new \Exception($this->translation->getTranslatedString('UPDATE_FAILED'));
+        }
+    }
 }

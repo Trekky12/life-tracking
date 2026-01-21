@@ -243,7 +243,7 @@ function createWidgetOption(element) {
         input.type = "text";
 
         return input;
-    }else if (element.type == "number") {
+    } else if (element.type == "number") {
 
         let input = document.createElement("input");
         input.classList.add("form-control");
@@ -287,4 +287,45 @@ async function populateDependentWidgetOption(element) {
         }
 
     }
+}
+
+
+let widgetsHide = document.querySelectorAll('a.btn-hide');
+widgetsHide.forEach(function (item, idx) {
+    item.addEventListener('click', function (event) {
+        event.preventDefault();
+        setHiddenState(item.dataset.id, item.dataset.state == "0" ? 1 : 0);
+    });
+});
+
+async function setHiddenState(id, state) {
+    const data = { 'state': state, 'id': id };
+
+    try {
+        const token = await getCSRFToken();
+
+        data['csrf_name'] = token.csrf_name;
+        data['csrf_value'] = token.csrf_value;
+
+        const response = await fetch(jsObject.frontpage_widget_hide, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+
+        allowedReload = true;
+        window.location.reload();
+    } catch (error) {
+
+        console.log(error);
+        if (isOffline(error)) {
+            let formData = new URLSearchParams(data).toString();
+            saveDataWhenOffline(jsObject.crawler_dataset_save, 'POST', formData);
+        }
+    }
+
 }

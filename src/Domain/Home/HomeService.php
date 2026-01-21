@@ -117,7 +117,12 @@ class HomeService extends Service {
     }
 
     public function getUserStartPage() {
-        $widgets = $this->widget_mapper->getAll('position');
+        $all_widgets = $this->widget_mapper->getAll('position');
+
+        $widgets = array_filter($all_widgets, function ($widget) {
+            return $widget->is_hidden == 0;
+        });
+
         $list = [];
         if (count($widgets) > 0) {
             foreach ($widgets as $widget_object) {
@@ -278,7 +283,8 @@ class HomeService extends Service {
             "hasOptions" => $options ? count($options) : false,
             "reload" => 0,
             "content" => !is_null($content) ? $content : '',
-            "options" => $widget_object->getOptions()
+            "options" => $widget_object->getOptions(),
+            "is_hidden" => $widget_object->is_hidden,
         ];
 
         $widget = $this->getWidget($widget_object->name);
@@ -381,5 +387,22 @@ class HomeService extends Service {
         $payload = new Payload(Payload::$RESULT_HTML, $response_data);
 
         return $payload->withTemplate('home/widgets/' . $widget_object->name . '.twig');
+    }
+
+
+    public function hideWidget($data) {
+
+        $response_data = ['status' => 'error'];
+
+        if (array_key_exists("id", $data) && array_key_exists("state", $data) && in_array($data["state"], array(0, 1))) {
+
+            $widget_id = intval($data["id"]);
+            $state = intval($data["state"]);
+
+            $this->widget_mapper->set_hidden($widget_id, $state);
+
+            $response_data = ['status' => 'success'];
+        }
+        return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 }

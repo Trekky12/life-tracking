@@ -43,7 +43,7 @@
 
 	<div class="grid active">
 		{% for widget in list %}
-			<div class="card" data-widget="{{ widget["id"] }}">
+			<div class="card widget" data-widget="{{ widget["id"] }}" data-hidden="{{ widget["is_hidden"] }}">
 				<div class="card-content">
 					<div class="card-header has-buttons">
 						<h3 class="card-headline">
@@ -52,6 +52,7 @@
 							{{ widget["id"] }})
 						</h3>
 						<div class="buttons">
+							<a href="#" class="btn-hide" data-id="{{ widget["id"] }}" data-state="{% if widget["is_hidden"] %}1{% else %}0{% endif %}">{% if widget["is_hidden"] %}{{ fontawesome('far fa-eye') }}{% else %}{{ fontawesome('far fa-eye-slash') }}{% endif %}</a>
 							<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 							{% if widget["hasOptions"] %}
 								<a href="#" class="btn-edit" data-id="{{ widget["id"] }}">{{ fontawesome('fas fa-pen-to-square') }}</a>

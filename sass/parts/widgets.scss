@@ -55,7 +55,7 @@ tr.departures__departure[data-cancelled*="CANCELLED"] {
         @include mixins.font-size(4);
     }
 
-    &+.loading-icon {
+    & + .loading-icon {
         padding: 10rem;
     }
 }
@@ -101,6 +101,10 @@ table.timesheets_project_budget_widget {
         margin-right: 1rem;
         margin-bottom: 1rem;
     }
+}
+
+.card.widget[data-hidden="1"] .card-header {
+    background-color: variables.$color_blue_light_gray;
 }
 
 .widget-content {

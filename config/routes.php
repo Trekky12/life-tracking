@@ -228,6 +228,8 @@ return function (App $app) {
             $group_frontpage->delete('/delete/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDeleteAction::class)->setName('users_profile_frontpage_widget_delete');
 
             $group_frontpage->get('/data/[{id:[0-9]+}]', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetDataAction::class)->setName('frontpage_widget_request');
+
+            $group_frontpage->post('/hide', \App\Application\Action\Profile\FrontpageWidgets\FrontpageWidgetHideAction::class)->setName('users_profile_frontpage_widget_hide');
         });
     });
 

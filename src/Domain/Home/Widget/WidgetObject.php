@@ -15,6 +15,8 @@ class WidgetObject extends \App\Domain\DataObject {
         $this->options = $this->exists('options', $data) ? $data['options'] : null;
         
         $this->position = $this->exists('position', $data) ? filter_var($data['position'], FILTER_SANITIZE_NUMBER_INT) : 999;
+
+        $this->is_hidden = $this->exists('is_hidden', $data) ? filter_var($data['is_hidden'], FILTER_SANITIZE_NUMBER_INT) : 0;
     }
 
 

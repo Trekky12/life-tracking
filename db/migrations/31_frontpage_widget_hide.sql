@@ -1,0 +1,1 @@
+ALTER TABLE global_widgets ADD is_hidden INT(1) DEFAULT 0 AFTER position;

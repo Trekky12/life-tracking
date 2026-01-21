@@ -423,6 +423,7 @@ CREATE TABLE IF NOT EXISTS global_widgets (
   name varchar(255) NOT NULL,
   options text,
   position INT(10) NULL,
+  is_hidden INT(1) DEFAULT 0,
   PRIMARY KEY (id),
   FOREIGN KEY(user) REFERENCES global_users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
