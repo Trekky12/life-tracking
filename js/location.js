@@ -480,9 +480,9 @@ function createMarker(data) {
     var marker = L.marker([data.lat, data.lng], options);
 
     // add accuracy circle
-    if (marker.acc > 0) {
+    if (data.acc > 0) {
         marker.on('mouseover', function (e) {
-            addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
+            addCircleLayer(data.lat, data.lng, data.acc, circle_color);
         });
 
         marker.on('mouseout', function (e) {
@@ -490,7 +490,7 @@ function createMarker(data) {
         });
 
         marker.on('popupopen', function (e) {
-            addCircleLayer(marker.lat, marker.lng, marker.acc, circle_color);
+            addCircleLayer(data.lat, data.lng, data.acc, circle_color);
         });
 
         marker.on('popupclose', function (e) {
