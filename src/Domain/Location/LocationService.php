@@ -18,6 +18,7 @@ use App\Domain\Timesheets\Project\ProjectService;
 use App\Domain\Timesheets\Sheet\SheetService;
 use App\Domain\Trips\Event\TripEventService;
 use App\Domain\Trips\TripService;
+use App\Domain\Main\Utility\DateUtility;
 
 class LocationService extends Service {
 
@@ -67,14 +68,22 @@ class LocationService extends Service {
         $this->trip_event_service = $trip_event_service;
     }
 
-    public function index($from, $to, $hide) {
-        // Filtered markers
+    public function index($hide, $requestData) {
 
+        list($from, $to) = DateUtility::getDateRange($requestData);
+
+        // Filtered markers
         list($hide_clusters) = $this->getHidden($hide);
+
+        $minLat = array_key_exists('minLat', $requestData) ? filter_var($requestData['minLat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $maxLat = array_key_exists('maxLat', $requestData) ? filter_var($requestData['maxLat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $minLng = array_key_exists('minLng', $requestData) ? filter_var($requestData['minLng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $maxLng = array_key_exists('maxLng', $requestData) ? filter_var($requestData['maxLng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         return new Payload(Payload::$RESULT_HTML, [
             "from" => $from,
             "to" => $to,
+            "has_bounds" => !is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng),
             "hide" => [
                 "clusters" => $hide_clusters
             ]
@@ -94,7 +103,13 @@ class LocationService extends Service {
         return array($hide_clusters);
     }
 
-    public function getMarkers($from, $to) {
+    public function getAllMarkers($requestData) {
+        list($from, $to) = DateUtility::getDateRange($requestData);
+
+        $minLat = array_key_exists('minLat', $requestData) ? filter_var($requestData['minLat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $maxLat = array_key_exists('maxLat', $requestData) ? filter_var($requestData['maxLat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $minLng = array_key_exists('minLng', $requestData) ? filter_var($requestData['minLng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $maxLng = array_key_exists('maxLng', $requestData) ? filter_var($requestData['maxLng'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
 
         $count = [
             "location" => [],
@@ -105,7 +120,7 @@ class LocationService extends Service {
             "trips" => []
         ];
 
-        $locations = $this->mapper->getMarkers($from, $to);
+        $locations = $this->mapper->getMarkers($from, $to, $minLat, $maxLat, $minLng, $maxLng);
         $location_markers = array_map(function ($loc) use (&$count) {
 
             $position = $loc->getPosition();
@@ -123,7 +138,7 @@ class LocationService extends Service {
             return $position;
         }, $locations);
 
-        $finance_locations = $this->finances_service->getMarkers($from, $to);
+        $finance_locations = $this->finances_service->getMarkers($from, $to, $minLat, $maxLat, $minLng, $maxLng);
         $finance_markers = array_map(function ($loc) use (&$count) {
 
             $position = $loc->getPosition();
@@ -142,7 +157,7 @@ class LocationService extends Service {
         }, $finance_locations);
 
         $user_cars = $this->car_service->getUserElements();
-        $carservice_locations = $this->car_service_service->getMarkers($from, $to, $user_cars);
+        $carservice_locations = $this->car_service_service->getMarkers($user_cars, $from, $to, $minLat, $maxLat, $minLng, $maxLng);
         $carservice_markers = array_map(function ($loc) use (&$count) {
 
             $position = $loc->getPosition();
@@ -160,8 +175,8 @@ class LocationService extends Service {
             return $position;
         }, $carservice_locations);
 
-        $user_projects = $this->splitbill_group_service->getUserElements();
-        $splitbill_locations = $this->splitbill_bill_service->getMarkers($from, $to, $user_projects);
+        $user_groups = $this->splitbill_group_service->getUserElements();
+        $splitbill_locations = $this->splitbill_bill_service->getMarkers($user_groups, $from, $to, $minLat, $maxLat, $minLng, $maxLng);
         $splitbill_markers = array_map(function ($loc) use (&$count) {
 
             $position = $loc->getPosition();
@@ -180,7 +195,7 @@ class LocationService extends Service {
         }, $splitbill_locations);
 
         $user_projects = $this->timesheet_project_service->getUserElements();
-        $sheet_locations = $this->timesheet_sheet_service->getMarkers($from, $to, $user_projects);
+        $sheet_locations = $this->timesheet_sheet_service->getMarkers($user_projects, $from, $to, $minLat, $maxLat, $minLng, $maxLng);
         $sheet_markers = array_map(function ($loc) use (&$count) {
 
             $position = $loc->getPosition($this->translation, $this->settings);
@@ -195,7 +210,7 @@ class LocationService extends Service {
         }, $sheet_locations);
 
         $user_trips = $this->trip_service->getUserElements();
-        $trip_events_locations = $this->trip_event_service->getMarkers($from, $to, $user_trips);
+        $trip_events_locations = $this->trip_event_service->getMarkers($user_trips, $from, $to, $minLat, $maxLat, $minLng, $maxLng);
         $trip_events_markers = array_map(function ($loc) use (&$count) {
 
             $position = $loc->getPosition();
@@ -225,15 +240,15 @@ class LocationService extends Service {
         }, $trip_events_locations);
 
         $response_data = [
-            "markers" => 
-                array_merge(
-                    $location_markers,
-                    $finance_markers,
-                    $carservice_markers,
-                    $splitbill_markers,
-                    $sheet_markers,
-                    $trip_events_markers
-                ),
+            "markers" =>
+            array_merge(
+                $location_markers,
+                $finance_markers,
+                $carservice_markers,
+                $splitbill_markers,
+                $sheet_markers,
+                $trip_events_markers
+            ),
             "count" => $count
         ];
 

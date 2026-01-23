@@ -871,8 +871,8 @@ class SheetService extends Service {
         ];
     }
 
-    public function getMarkers($from, $to, $user_projects) {
-        return $this->mapper->getMarkers($from, $to, $user_projects);
+    public function getMarkers($user_projects, $from, $to, $minLat, $maxLat, $minLng, $maxLng) {
+        return $this->mapper->getMarkers($user_projects, $from, $to, $minLat, $maxLat, $minLng, $maxLng);
     }
 
 

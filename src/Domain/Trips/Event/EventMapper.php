@@ -13,8 +13,8 @@ class EventMapper extends \App\Domain\Mapper {
         $bindings = array("id" => $id);
 
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE trip = :id ";
-        
-        if(!$show_waypoints){
+
+        if (!$show_waypoints) {
             $sql .= " AND type != 'WAYPOINT' ";
         }
 
@@ -41,8 +41,8 @@ class EventMapper extends \App\Domain\Mapper {
 
     public function getMinMaxEventsDate($id) {
         $sql = "SELECT MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
-                . " FROM " . $this->getTableName() . ""
-                . " WHERE trip = :id ";
+            . " FROM " . $this->getTableName() . ""
+            . " WHERE trip = :id ";
         $bindings = ["id" => $id];
         $this->addSelectFilterForUser($sql, $bindings);
         $sql .= " LIMIT 1";
@@ -61,8 +61,8 @@ class EventMapper extends \App\Domain\Mapper {
     public function getMinMaxEventsDates() {
         $bindings = [];
         $sql = "SELECT trip, MIN(start_date) as start_min, MAX(start_date) as start_max, MIN(end_date) as end_min, MAX(end_date) as end_max "
-                . " FROM " . $this->getTableName() . ""
-                . " GROUP BY trip";
+            . " FROM " . $this->getTableName() . ""
+            . " GROUP BY trip";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);
@@ -102,16 +102,33 @@ class EventMapper extends \App\Domain\Mapper {
         }
     }
 
-    public function getMarkers($from, $to, $user_trips = []) {
+    public function getMarkers($user_trips, $from, $to, $minLat, $maxLat, $minLng, $maxLng) {
 
         if (empty($user_trips)) {
             return [];
         }
 
-        $bindings = [
-            "from" => $from,
-            "to" => $to
-        ];
+        $hasBounds = !is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng);
+        if ($hasBounds) {
+            $query = "((start_lat BETWEEN :minLat AND :maxLat AND start_lng BETWEEN :minLng AND :maxLng) OR (end_lat BETWEEN :minLat AND :maxLat AND end_lng BETWEEN :minLng AND :maxLng))";
+            $bindings = [
+                "minLat" => $minLat,
+                "maxLat" => $maxLat,
+                "minLng" => $minLng,
+                "maxLng" => $maxLng
+            ];
+        } else {
+            $query = "((start_lat IS NOT NULL AND start_lng IS NOT NULL) OR (end_lat IS NOT NULL AND end_lng IS NOT NULL))
+                AND (
+                     (start_date >= :from AND end_date <= :to ) OR 
+                     (start_date >= :from AND end_date <= :to AND end_date IS NULL ) OR
+                     (end_date >= :from AND end_date <= :to AND start_date IS NULL )
+                    )";
+            $bindings = [
+                "from" => $from,
+                "to" => $to
+            ];
+        }
 
         $trip_bindings = [];
         foreach ($user_trips as $idx => $trip) {
@@ -120,12 +137,7 @@ class EventMapper extends \App\Domain\Mapper {
 
 
         $sql = "SELECT * FROM " . $this->getTableName() . " as t 
-                WHERE ((start_lat IS NOT NULL AND start_lng IS NOT NULL) OR (end_lat IS NOT NULL AND end_lng IS NOT NULL))
-                AND (
-                     (start_date >= :from AND end_date <= :to ) OR 
-                     (start_date >= :from AND end_date <= :to AND end_date IS NULL ) OR
-                     (end_date >= :from AND end_date <= :to AND start_date IS NULL )
-                    )
+                WHERE " . $query . "
                 AND trip IN (" . implode(',', array_keys($trip_bindings)) . ")";
 
         $stmt = $this->db->prepare($sql);
@@ -138,5 +150,4 @@ class EventMapper extends \App\Domain\Mapper {
         }
         return $results;
     }
-
 }

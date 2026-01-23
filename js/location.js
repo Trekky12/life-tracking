@@ -5,6 +5,7 @@
 'use strict';
 
 const detailsModal = document.getElementById("details-modal");
+const loadingOverlay = document.getElementById('loading-overlay');
 
 var mymap = L.map('mapid').setView([default_location.lat, default_location.lng], default_location.zoom);
 
@@ -12,15 +13,9 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(mymap);
 
-
-const from = document.getElementById('inputStart').value;
-const to = document.getElementById('inputEnd').value;
-
-var controlLayer = null;
 var circleLayer = new L.LayerGroup();
 
 let markers = [];
-let tableCount = [];
 
 /**
  * Layers for Control
@@ -75,6 +70,32 @@ let layerTimesheetsClusters = L.markerClusterGroup({
     maxClusterRadius: 50
 });
 
+// layer control
+let controlLayer = L.control.layers(null, null, {
+    collapsed: false
+});
+
+controlLayer.addOverlay(clusterToggleLayer, "<span id='toggleClustering'>" + document.getElementById('iconClustering').innerHTML + "</span>");
+controlLayer.addOverlay(layerLocation, "<span id='layerLocation'>" + document.getElementById('iconLocation').innerHTML + "</span>");
+controlLayer.addOverlay(layerFinances, "<span id='layerFinances'>" + document.getElementById('iconFinances').innerHTML + "</span>");
+controlLayer.addOverlay(layerCars, "<span id='layerCars'>" + document.getElementById('iconCars').innerHTML + "</span>");
+controlLayer.addOverlay(layerSplittedBills, "<span id='layerSplittedBills'>" + document.getElementById('iconSplittedBills').innerHTML + "</span>");
+controlLayer.addOverlay(layerTimesheets, "<span id='layerTimesheets'>" + document.getElementById('iconTimesheets').innerHTML + "</span>");
+controlLayer.addOverlay(layerTrips, "<span id='layerTrips'>" + document.getElementById('iconTrips').innerHTML + "</span>");
+controlLayer.addOverlay(layerDirections, "<span id='layerDirections'>" + document.getElementById('iconDirections').innerHTML + "</span>");
+
+controlLayer.addTo(mymap);
+
+// empty circle layer
+circleLayer.addTo(mymap);
+
+mymap.addLayer(layerLocation);
+mymap.addLayer(layerFinances);
+mymap.addLayer(layerCars);
+mymap.addLayer(layerSplittedBills);
+mymap.addLayer(layerTimesheets);
+mymap.addLayer(layerTrips);
+
 // when acc circle is visible (mouseover on marker) and the map is zoomed 
 // the mouseout event which removes the circle is not triggered 
 // so do this manually
@@ -82,10 +103,45 @@ mymap.on('zoom', function () {
     removeCircleLayer();
 });
 
-getMarkers();
+let fitBounds = true;
 
-async function getMarkers() {
+document.addEventListener("DOMContentLoaded", async function () {
+
+    const params = new URLSearchParams(window.location.search);
+    const hasBounds = params.has('minLat') && params.has('minLng') && params.has('maxLat') && params.has('maxLng');
+
+    if (hasBounds) {
+        const minLat = parseFloat(params.get('minLat'));
+        const minLng = parseFloat(params.get('minLng'));
+        const maxLat = parseFloat(params.get('maxLat'));
+        const maxLng = parseFloat(params.get('maxLng'));
+
+        const bounds = L.latLngBounds(
+            [minLat, minLng],
+            [maxLat, maxLng]
+        );
+        mymap.fitBounds(bounds);
+
+        await getMarkersInBounds(minLat, maxLat, minLng, maxLng);
+        fitBounds = false;
+
+        mymap.on('moveend', async function () {
+            markers = [];
+            var b = mymap.getBounds();
+            await getMarkersInBounds(b.getSouthWest().lat, b.getNorthEast().lat, b.getSouthWest().lng, b.getNorthEast().lng, false);
+        });
+
+    } else {
+        await getMarkersInDateRange();
+    }
+});
+
+async function getMarkersInDateRange() {
     try {
+        loadingOverlay.classList.remove('hidden');
+        const from = document.getElementById('inputStart').value;
+        const to = document.getElementById('inputEnd').value;
+
         const response = await fetch(jsObject.location_markers + '?from=' + from + '&to=' + to, {
             method: 'GET',
             credentials: "same-origin",
@@ -93,12 +149,51 @@ async function getMarkers() {
         const data = await response.json();
         drawMarkers(data["markers"], false);
         addRouteDetails(data["count"]);
+        loadingOverlay.classList.add('hidden');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getMarkersInBounds(minLat, maxLat, minLng, maxLng) {
+    try {
+        loadingOverlay.classList.remove('hidden');
+        const response = await fetch(`${jsObject.location_markers}?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`, {
+            method: 'GET',
+            credentials: "same-origin",
+        });
+        const data = await response.json();
+        drawMarkers(data["markers"], false);
+        addRouteDetails(data["count"]);
+        loadingOverlay.classList.add('hidden');
     } catch (error) {
         console.log(error);
     }
 }
 
 function drawMarkers(markersData, hideClusters = false) {
+
+    layerLocation.clearLayers();
+    layerLocationClusters.clearLayers();
+    layerLocationMarkers.clearLayers();
+
+    layerFinances.clearLayers();
+    layerFinancesClusters.clearLayers();
+    layerFinancesMarkers.clearLayers();
+
+    layerCars.clearLayers();
+    layerCarsClusters.clearLayers();
+    layerCarsMarkers.clearLayers();
+
+    layerSplittedBills.clearLayers();
+    layerSplittedBillsClusters.clearLayers();
+    layerSplittedBillsMarkers.clearLayers();
+
+    layerTimesheets.clearLayers();
+    layerTimesheetsMarkers.clearLayers();
+    layerTimesheetsClusters.clearLayers();
+
+    layerDirections.clearLayers();
 
     let directions = [];
     let markers = [];
@@ -140,8 +235,6 @@ function drawMarkers(markersData, hideClusters = false) {
             markerData.acc = markerData.data.end_acc;
 
             let end_marker = createMarker(markerData);
-
-
 
             if (markerData.type == 5) {
                 if (markerData.isCarrental) {
@@ -214,15 +307,9 @@ function drawMarkers(markersData, hideClusters = false) {
         layerSplittedBills.addLayer(layerSplittedBillsClusters);
         layerTimesheets.addLayer(layerTimesheetsClusters);
     }
-    mymap.addLayer(layerLocation);
-    mymap.addLayer(layerFinances);
-    mymap.addLayer(layerCars);
-    mymap.addLayer(layerSplittedBills);
-    mymap.addLayer(layerTimesheets);
-    mymap.addLayer(layerTrips);
 
     // fit bounds of markers
-    if (markers.length > 0) {
+    if (markers.length > 0 && fitBounds) {
         var group = new L.featureGroup(markers);
         mymap.fitBounds(group.getBounds());
     }
@@ -235,25 +322,6 @@ function drawMarkers(markersData, hideClusters = false) {
     if (!hideClusters) {
         clusterToggleLayer.addTo(mymap);
     }
-
-    // layer control
-    controlLayer = L.control.layers(null, null, {
-        collapsed: false
-    });
-
-    controlLayer.addOverlay(clusterToggleLayer, "<span id='toggleClustering'>" + document.getElementById('iconClustering').innerHTML + "</span>");
-    controlLayer.addOverlay(layerLocation, "<span id='layerLocation'>" + document.getElementById('iconLocation').innerHTML + "</span>");
-    controlLayer.addOverlay(layerFinances, "<span id='layerFinances'>" + document.getElementById('iconFinances').innerHTML + "</span>");
-    controlLayer.addOverlay(layerCars, "<span id='layerCars'>" + document.getElementById('iconCars').innerHTML + "</span>");
-    controlLayer.addOverlay(layerSplittedBills, "<span id='layerSplittedBills'>" + document.getElementById('iconSplittedBills').innerHTML + "</span>");
-    controlLayer.addOverlay(layerTimesheets, "<span id='layerTimesheets'>" + document.getElementById('iconTimesheets').innerHTML + "</span>");
-    controlLayer.addOverlay(layerTrips, "<span id='layerTrips'>" + document.getElementById('iconTrips').innerHTML + "</span>");
-    controlLayer.addOverlay(layerDirections, "<span id='layerDirections'>" + document.getElementById('iconDirections').innerHTML + "</span>");
-
-    controlLayer.addTo(mymap);
-
-    // empty circle layer
-    circleLayer.addTo(mymap);
 }
 /**
  * Hide directions when location history is disabled
@@ -534,6 +602,7 @@ function createMarker(data) {
 
 document.getElementById("show-details-modal").addEventListener('click', function (e) {
     detailsModal.classList.add('visible');
+    detailsModal.focus();
 });
 
 document.getElementById("modal-close-btn").addEventListener('click', function (e) {
@@ -598,4 +667,21 @@ function addRouteDetails(countData) {
         details.appendChild(table);
         modalContent.appendChild(details);
     }
+}
+
+
+const filterMapBtn = document.getElementById("filter-map");
+if (filterMapBtn) {
+    filterMapBtn.addEventListener('click', function (e) {
+
+        const bounds = mymap.getBounds();
+        const params = new URLSearchParams({
+            minLat: bounds.getSouthWest().lat.toFixed(6),
+            minLng: bounds.getSouthWest().lng.toFixed(6),
+            maxLat: bounds.getNorthEast().lat.toFixed(6),
+            maxLng: bounds.getNorthEast().lng.toFixed(6)
+        });
+
+        window.location.href = `?${params.toString()}`;
+    });
 }

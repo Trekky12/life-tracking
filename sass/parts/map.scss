@@ -5,13 +5,12 @@
     body.location {
         .site-header {
             box-shadow: none;
-
         }
 
         .site-body {
             top: variables.$header_height;
         }
-        &.has-tabbar .site-body{
+        &.has-tabbar .site-body {
             top: variables.$header_height + variables.$header_height_tabbar;
         }
     }
@@ -31,7 +30,7 @@
     }
 }
 
-body.has-tabbar.location #mapid{
+body.has-tabbar.location #mapid {
     top: variables.$header_height + variables.$header_height_tabbar + 50;
 
     @media screen and (min-width: variables.$size_mobile) {
@@ -67,9 +66,7 @@ body.has-tabbar.location #mapid{
     }
 }
 
-
 @media screen and (min-width: variables.$size_mobile_navigation) {
-
     //.geo-map.visible~.map-btn {
     .map-btn.map-visible {
         display: flex;
@@ -98,7 +95,6 @@ body.has-tabbar.location #mapid{
         margin-bottom: 2rem;
     }
 }
-
 
 // Marker Clusters
 
@@ -175,23 +171,20 @@ body.has-tabbar.location #mapid{
 }
 
 .leaflet-control-layers-overlays {
-
     label {
         display: block !important;
         text-align: center;
     }
 
-    input[type=checkbox]+span:hover {
+    input[type="checkbox"] + span:hover {
         cursor: pointer;
-
     }
 
-    input[type=checkbox] {
+    input[type="checkbox"] {
         display: none;
     }
 
-    input[type=checkbox]+span {
-
+    input[type="checkbox"] + span {
         svg {
             color: variables.$color_border-input;
             margin-left: 1rem;
@@ -201,20 +194,16 @@ body.has-tabbar.location #mapid{
 
             @media screen and (min-width: variables.$size_mobile_navigation) {
                 @include mixins.font-size(3);
-
             }
         }
     }
 
-    input[type=checkbox]:checked+span {
+    input[type="checkbox"]:checked + span {
         svg {
             color: variables.$color_blue;
         }
     }
-
-
 }
-
 
 .leaflet-popup-content {
     p {
@@ -223,7 +212,6 @@ body.has-tabbar.location #mapid{
 }
 
 .leaflet-routing-alternatives-container {
-
     h2,
     table {
         display: none;
@@ -284,7 +272,6 @@ body.trips {
         color: variables.$color_blue;
     }
 
-
     &.calc {
         float: left !important;
     }
@@ -304,7 +291,7 @@ body.trips {
 }
 
 .leaflet-routing-container {
-    transition: none !important
+    transition: none !important;
 }
 
 @media only screen and (max-width: 640px) {
@@ -317,4 +304,19 @@ body.trips {
 
 #trip-map.leaflet-pseudo-fullscreen {
     z-index: 1000;
+}
+
+.button-show-marker-details {
+    border-radius: 24px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+    background-color: variables.$color_navigation_background;
+    color: variables.$color_blue;
+    min-width: 50px;
 }

@@ -355,20 +355,35 @@ class CarServiceMapper extends \App\Domain\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_NUM);
     }
 
-    public function getMarkers($from, $to, $user_cars = []) {
+    public function getMarkers($user_cars, $from, $to, $minLat, $maxLat, $minLng, $maxLng) {
 
         if (empty($user_cars)) {
             return [];
         }
 
-        $bindings = ["from" => $from, "to" => $to];
+        $hasBounds = !is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng);
+        if ($hasBounds) {
+            $query = "lat BETWEEN :minLat AND :maxLat AND lng BETWEEN :minLng AND :maxLng";
+            $bindings = [
+                "minLat" => $minLat,
+                "maxLat" => $maxLat,
+                "minLng" => $minLng,
+                "maxLng" => $maxLng
+            ];
+        } else {
+            $query = "date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL";
+            $bindings = [
+                "from" => $from,
+                "to" => $to
+            ];
+        }
 
         $car_bindings = array();
         foreach ($user_cars as $idx => $car) {
             $car_bindings[":car_" . $idx] = $car;
         }
 
-        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE " . $query;
         $sql .= " AND car IN (" . implode(',', array_keys($car_bindings)) . ")";
 
         $stmt = $this->db->prepare($sql);

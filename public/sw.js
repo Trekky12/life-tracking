@@ -178,7 +178,7 @@ self.addEventListener('fetch', event => {
     }
 
     // Do not cache /export routes
-    if (/.*(\/export\/download)($|\?)/.test(req.url)) {
+    if (/.*(\/export\/download)($|\?)/.test(req.url) || /.*(\/location\/markers\?)/.test(req.url)) {
         //console.log("Not cached please: " + req.url);
         return;
     }

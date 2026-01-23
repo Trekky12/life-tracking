@@ -20,9 +20,7 @@ class LocationMarkersAction {
 
     public function __invoke(Request $request, Response $response): Response {
         $requestData = $request->getQueryParams();
-        list($from, $to) = DateUtility::getDateRange($requestData);
-
-        $markers = $this->service->getMarkers($from, $to);
+        $markers = $this->service->getAllMarkers($requestData);
 
         return $this->responder->respond($markers);
     }

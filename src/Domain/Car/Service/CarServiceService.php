@@ -167,8 +167,8 @@ class CarServiceService extends Service {
         return new Payload(Payload::$STATUS_UPDATE, null);
     }
 
-    public function getMarkers($from, $to, $user_cars) {
-        return $this->mapper->getMarkers($from, $to, $user_cars);
+    public function getMarkers($user_cars, $from, $to, $minLat, $maxLat, $minLng, $maxLng) {
+        return $this->mapper->getMarkers($user_cars, $from, $to, $minLat, $maxLat, $minLng, $maxLng);
     }
 
     public function edit($hash, $entry_id) {

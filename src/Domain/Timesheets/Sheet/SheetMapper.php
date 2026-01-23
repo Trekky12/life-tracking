@@ -912,16 +912,28 @@ class SheetMapper extends \App\Domain\Mapper {
             . "     (DATE({$endColumn}) >= :from AND DATE({$endColumn}) <= :to AND {$startColumn} IS NULL )";
     }
 
-    public function getMarkers($from, $to, $user_projects = []) {
+    public function getMarkers($user_projects, $from, $to, $minLat, $maxLat, $minLng, $maxLng) {
 
         if (empty($user_projects)) {
             return [];
         }
 
-        $bindings = [
-            "from" => $from,
-            "to" => $to
-        ];
+        $hasBounds = !is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng);
+        if ($hasBounds) {
+            $query = "((start_lat BETWEEN :minLat AND :maxLat AND start_lng BETWEEN :minLng AND :maxLng) OR (end_lat BETWEEN :minLat AND :maxLat AND end_lng BETWEEN :minLng AND :maxLng))";
+            $bindings = [
+                "minLat" => $minLat,
+                "maxLat" => $maxLat,
+                "minLng" => $minLng,
+                "maxLng" => $maxLng
+            ];
+        } else {
+            $query = "((start_lat IS NOT NULL AND start_lng IS NOT NULL) OR (end_lat IS NOT NULL AND end_lng IS NOT NULL)) AND (" . $this->filterDate("t.start", "t.end"). ")";
+            $bindings = [
+                "from" => $from,
+                "to" => $to
+            ];
+        }
 
         $project_bindings = [];
         foreach ($user_projects as $idx => $project) {
@@ -929,8 +941,7 @@ class SheetMapper extends \App\Domain\Mapper {
         }
 
         $sql = "SELECT * FROM " . $this->getTableName() . " as t 
-                WHERE ((start_lat IS NOT NULL AND start_lng IS NOT NULL) OR (end_lat IS NOT NULL AND end_lng IS NOT NULL))
-                AND (" . $this->filterDate("t.start", "t.end"). ") 
+                WHERE " . $query . "
                 AND project IN (" . implode(',', array_keys($project_bindings)) . ")";
 
         $stmt = $this->db->prepare($sql);

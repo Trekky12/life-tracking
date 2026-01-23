@@ -2,7 +2,7 @@
 
 namespace App\Application\Action\Location;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Domain\Location\LocationService;
 use App\Application\Responder\HTMLTemplateResponder;
@@ -24,9 +24,7 @@ class LocationMapAction {
         // Filtered markers
         $hide = $request->getQueryParam('hide');
 
-        list($from, $to) = DateUtility::getDateRange($requestData);
-
-        $index = $this->service->index($from, $to, $hide);
+        $index = $this->service->index($hide, $requestData);
 
         return $this->responder->respond($index->withTemplate('location/index.twig'));
     }

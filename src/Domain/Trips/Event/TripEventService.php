@@ -255,7 +255,7 @@ class TripEventService extends Service {
         return new Payload(Payload::$RESULT_JSON, $response_data);
     }
 
-    public function getMarkers($from, $to, $user_trips) {
-        return $this->mapper->getMarkers($from, $to, $user_trips);
+    public function getMarkers($user_trips, $from, $to, $minLat, $maxLat, $minLng, $maxLng) {
+        return $this->mapper->getMarkers($user_trips, $from, $to, $minLat, $maxLat, $minLng, $maxLng);
     }
 }

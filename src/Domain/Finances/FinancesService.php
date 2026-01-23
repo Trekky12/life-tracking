@@ -174,7 +174,7 @@ class FinancesService extends Service {
         return $this->getMapper()->deleteEntrywithBill($bill, $user);
     }
 
-    public function getMarkers($from, $to) {
-        return $this->getMapper()->getMarkers($from, $to);
+    public function getMarkers($from, $to, $minLat, $maxLat, $minLng, $maxLng){
+        return $this->mapper->getMarkers($from, $to, $minLat, $maxLat, $minLng, $maxLng);
     }
 }

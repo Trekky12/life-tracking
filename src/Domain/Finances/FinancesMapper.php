@@ -9,18 +9,18 @@ class FinancesMapper extends \App\Domain\Mapper {
 
     private function getTableSQL($select) {
         $sql = "SELECT {$select} "
-                . " FROM " . $this->getTableName() . " f LEFT JOIN " . $this->getTableName('finances_categories') . " fc "
-                . " ON f.category = fc.id "
-                . " WHERE (DATE(f.date) >= :from "
-                . "   AND DATE(f.date) <= :to ) "
-                . " AND "
-                . " (f.date LIKE :searchQuery OR "
-                . " f.time LIKE :searchQuery OR "
-                . " f.type LIKE :searchQuery OR "
-                . " fc.name LIKE :searchQuery OR "
-                . " f.description LIKE :searchQuery OR "
-                . " f.notice LIKE :searchQuery OR "
-                . " f.value LIKE :searchQuery )";
+            . " FROM " . $this->getTableName() . " f LEFT JOIN " . $this->getTableName('finances_categories') . " fc "
+            . " ON f.category = fc.id "
+            . " WHERE (DATE(f.date) >= :from "
+            . "   AND DATE(f.date) <= :to ) "
+            . " AND "
+            . " (f.date LIKE :searchQuery OR "
+            . " f.time LIKE :searchQuery OR "
+            . " f.type LIKE :searchQuery OR "
+            . " fc.name LIKE :searchQuery OR "
+            . " f.description LIKE :searchQuery OR "
+            . " f.notice LIKE :searchQuery OR "
+            . " f.value LIKE :searchQuery )";
         return $sql;
     }
 
@@ -68,8 +68,8 @@ class FinancesMapper extends \App\Domain\Mapper {
         }
 
         $select = "f.date, f.time, "
-                . "f.type, "
-                . "fc.name as category, f.description, f.value, f.id, f.bill";
+            . "f.type, "
+            . "fc.name as category, f.description, f.value, f.id, f.bill";
         $sql = $this->getTableSQL($select);
 
         $this->addSelectFilterForUser($sql, $bindings, "f.");
@@ -112,7 +112,7 @@ class FinancesMapper extends \App\Domain\Mapper {
         $this->addSelectFilterForUser($sql, $bindings);
 
         $sql .= " GROUP BY YEAR(date), type"
-                . " ORDER BY YEAR(date) DESC";
+            . " ORDER BY YEAR(date) DESC";
 
 
         $stmt = $this->db->prepare($sql);
@@ -122,8 +122,8 @@ class FinancesMapper extends \App\Domain\Mapper {
 
     public function statsYear($year) {
         $sql = "SELECT YEAR(date) as year, MONTH(date) as month, type, SUM(value) as sum, COUNT(value) as count "
-                . "FROM " . $this->getTableName() . " "
-                . "WHERE YEAR(date) = :year ";
+            . "FROM " . $this->getTableName() . " "
+            . "WHERE YEAR(date) = :year ";
 
         $bindings = array("year" => $year);
         $this->addSelectFilterForUser($sql, $bindings);
@@ -139,10 +139,10 @@ class FinancesMapper extends \App\Domain\Mapper {
 
     public function statsCategory($year, $type) {
         $sql = "SELECT YEAR(date) as year, type, fc.name as category, fc.id as category_id, SUM(value) as sum, COUNT(value) as count "
-                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
-                . "WHERE f.category = fc.id "
-                . " AND YEAR(date) = :year "
-                . "AND f.type = :type ";
+            . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
+            . "WHERE f.category = fc.id "
+            . " AND YEAR(date) = :year "
+            . "AND f.type = :type ";
 
         $bindings = array("year" => $year, "type" => $type);
         $this->addSelectFilterForUser($sql, $bindings, "f.");
@@ -160,9 +160,9 @@ class FinancesMapper extends \App\Domain\Mapper {
     public function statsCategoryDetail($year, $type, $category) {
 
         $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTableName() . " "
-                . "WHERE category = :category "
-                . "AND YEAR(date) = :year "
-                . "AND type = :type ";
+            . "WHERE category = :category "
+            . "AND YEAR(date) = :year "
+            . "AND type = :type ";
 
         $bindings = array("year" => $year, "type" => $type, "category" => $category);
         $this->addSelectFilterForUser($sql, $bindings);
@@ -175,11 +175,11 @@ class FinancesMapper extends \App\Domain\Mapper {
     public function statsMonthType($year, $month, $type) {
 
         $sql = "SELECT YEAR(date) as year, MONTH(date) as month, type, fc.name as category, SUM(value) as sum, COUNT(value) as count, f.category as category_id "
-                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
-                . "WHERE f.category = fc.id "
-                . "AND MONTH(date) = :month "
-                . "AND YEAR(date) = :year "
-                . "AND type = :type ";
+            . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
+            . "WHERE f.category = fc.id "
+            . "AND MONTH(date) = :month "
+            . "AND YEAR(date) = :year "
+            . "AND type = :type ";
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type);
         $this->addSelectFilterForUser($sql, $bindings, "f.");
@@ -194,10 +194,10 @@ class FinancesMapper extends \App\Domain\Mapper {
     public function statsMonthCategory($year, $month, $type, $category) {
 
         $sql = "SELECT id, date, time, type, description, value, bill FROM " . $this->getTableName() . " "
-                . "WHERE category = :category "
-                . "AND MONTH(date) = :month "
-                . "AND YEAR(date) = :year "
-                . "AND type = :type ";
+            . "WHERE category = :category "
+            . "AND MONTH(date) = :month "
+            . "AND YEAR(date) = :year "
+            . "AND type = :type ";
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type, "category" => $category);
         $this->addSelectFilterForUser($sql, $bindings);
@@ -209,11 +209,11 @@ class FinancesMapper extends \App\Domain\Mapper {
 
     public function statsMailBalance($user, $month, $year, $type) {
         $sql = "SELECT SUM(value) FROM " . $this->getTableName() . " "
-                . "WHERE MONTH(date) = :month "
-                . "AND YEAR(date) = :year "
-                . "AND type = :type "
-                . "AND user = :user "
-                . "GROUP BY type";
+            . "WHERE MONTH(date) = :month "
+            . "AND YEAR(date) = :year "
+            . "AND type = :type "
+            . "AND user = :user "
+            . "GROUP BY type";
 
         $bindings = array("year" => $year, "month" => $month, "type" => $type, "user" => $user);
 
@@ -224,12 +224,12 @@ class FinancesMapper extends \App\Domain\Mapper {
 
     public function statsMailExpenses($user, $month, $year, $limit = 5) {
         $sql = "SELECT f.date, f.description, fc.name as category, f.value "
-                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
-                . "WHERE f.category = fc.id "
-                . "AND MONTH(f.date) = :month "
-                . "AND YEAR(f.date) = :year "
-                . "AND f.type = :type "
-                . "AND f.user = :user ";
+            . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
+            . "WHERE f.category = fc.id "
+            . "AND MONTH(f.date) = :month "
+            . "AND YEAR(f.date) = :year "
+            . "AND f.type = :type "
+            . "AND f.user = :user ";
 
         $bindings = array("year" => $year, "month" => $month, "type" => 0, "user" => $user);
         $sql .= "ORDER BY value desc LIMIT {$limit}";
@@ -286,12 +286,12 @@ class FinancesMapper extends \App\Domain\Mapper {
     public function statsBudget($budget) {
 
         $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTableName() . " f,   " . $this->getTableName("finances_categories") . " fc,  " . $this->getTableName("finances_budgets_categories") . " fbc "
-                . "WHERE f.category = fbc.category "
-                . "AND fc.id = f.category "
-                . "AND fbc.budget = :budget "
-                . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
-                . "AND YEAR(date) = YEAR(CURRENT_DATE()) "
-                . "AND f.type = :type ";
+            . "WHERE f.category = fbc.category "
+            . "AND fc.id = f.category "
+            . "AND fbc.budget = :budget "
+            . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
+            . "AND YEAR(date) = YEAR(CURRENT_DATE()) "
+            . "AND f.type = :type ";
 
         $bindings = array("budget" => $budget, "type" => 0);
         $this->addSelectFilterForUser($sql, $bindings, "f.");
@@ -304,11 +304,11 @@ class FinancesMapper extends \App\Domain\Mapper {
     public function statsBudgetRemains() {
 
         $sql = "SELECT f.id, f.date, f.time, f.type, f.description, fc.name as category, f.value, f.bill FROM " . $this->getTableName() . " f,   " . $this->getTableName("finances_categories") . " fc  "
-                . "WHERE f.category NOT IN (SELECT category FROM " . $this->getTableName("finances_budgets_categories") . " ) "
-                . "AND fc.id = f.category "
-                . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
-                . "AND YEAR(date) = YEAR(CURRENT_DATE()) "
-                . "AND f.type = :type ";
+            . "WHERE f.category NOT IN (SELECT category FROM " . $this->getTableName("finances_budgets_categories") . " ) "
+            . "AND fc.id = f.category "
+            . "AND MONTH(date) = MONTH(CURRENT_DATE()) "
+            . "AND YEAR(date) = YEAR(CURRENT_DATE()) "
+            . "AND f.type = :type ";
 
         $bindings = array("type" => 0);
         $this->addSelectFilterForUser($sql, $bindings, "f.");
@@ -318,9 +318,25 @@ class FinancesMapper extends \App\Domain\Mapper {
         return $stmt->fetchAll(\PDO::FETCH_BOTH);
     }
 
-    public function getMarkers($from, $to) {
-        $bindings = ["from" => $from, "to" => $to];
-        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+    public function getMarkers($from, $to, $minLat, $maxLat, $minLng, $maxLng) {
+
+        $hasBounds = !is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng);
+        if ($hasBounds) {
+            $query = "lat BETWEEN :minLat AND :maxLat AND lng BETWEEN :minLng AND :maxLng";
+            $bindings = [
+                "minLat" => $minLat,
+                "maxLat" => $maxLat,
+                "minLng" => $minLng,
+                "maxLng" => $maxLng
+            ];
+        } else {
+            $query = "date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL";
+            $bindings = [
+                "from" => $from,
+                "to" => $to
+            ];
+        }
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE " . $query;
 
         $this->addSelectFilterForUser($sql, $bindings);
 
@@ -371,10 +387,10 @@ class FinancesMapper extends \App\Domain\Mapper {
 
     public function statsLastExpenses($limit = 5) {
         $sql = "SELECT f.date, f.time, f.description, fc.name as category, f.value "
-                . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
-                . "WHERE f.category = fc.id "
-                . "AND f.type = :type "
-                . "AND date <= CURRENT_DATE() ";
+            . "FROM " . $this->getTableName() . " f, " . $this->getTableName("finances_categories") . " fc "
+            . "WHERE f.category = fc.id "
+            . "AND f.type = :type "
+            . "AND date <= CURRENT_DATE() ";
 
         $bindings = array("type" => 0);
         $this->addSelectFilterForUser($sql, $bindings, "f.");
@@ -385,5 +401,4 @@ class FinancesMapper extends \App\Domain\Mapper {
         $stmt->execute($bindings);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-
 }

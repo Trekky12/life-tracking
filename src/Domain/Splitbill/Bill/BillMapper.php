@@ -132,23 +132,35 @@ class BillMapper extends BaseBillMapper {
         return $results;
     }
 
-    public function getMarkers($from, $to, $user_groups = []) {
+    public function getMarkers($user_groups, $from, $to, $minLat, $maxLat, $minLng, $maxLng) {
 
         if (empty($user_groups)) {
             return [];
         }
 
-        $bindings = [
-            "from" => $from, 
-            "to" => $to
-        ];
+        $hasBounds = !is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng);
+        if ($hasBounds) {
+            $query = "lat BETWEEN :minLat AND :maxLat AND lng BETWEEN :minLng AND :maxLng";
+            $bindings = [
+                "minLat" => $minLat,
+                "maxLat" => $maxLat,
+                "minLng" => $minLng,
+                "maxLng" => $maxLng
+            ];
+        } else {
+            $query = "date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL";
+            $bindings = [
+                "from" => $from,
+                "to" => $to
+            ];
+        }
 
         $group_bindings = [];
         foreach ($user_groups as $idx => $group) {
             $group_bindings[":group_" . $idx] = $group;
         }
 
-        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE date >= :from AND date <= :to AND lat IS NOT NULL AND lng IS NOT NULL ";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE  " . $query;
         $sql .= " AND sbgroup IN (" . implode(',', array_keys($group_bindings)) . ")";
 
         $stmt = $this->db->prepare($sql);

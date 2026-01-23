@@ -33,56 +33,48 @@
 
 {% block body %}
 
-	<div id="location-filter" class="page-content">
-		<form method="GET" id="search-form" class="page-content collapsed">
-			<div class="search-form-inner">
-				<div class="filter-content">
-					<div class="flatpickr-group" id="dateRange">
-						<input type="text" value="{{from}} to {{to}}" data-input/>
+	{% if not has_bounds %}
+		<div id="location-filter" class="page-content">
+			<form method="GET" id="search-form" class="page-content collapsed">
+				<div class="search-form-inner">
+					<div class="filter-content">
+						<div class="flatpickr-group" id="dateRange">
+							<input type="text" value="{{from}} to {{to}}" data-input/>
 
-						<a class="flatpickr-input-button" title="toggle" data-toggle>
-							{{ fontawesome('fas fa-calendar-days') }}
-						</a>
+							<a class="flatpickr-input-button" title="toggle" data-toggle>
+								{{ fontawesome('fas fa-calendar-days') }}
+							</a>
 
-						<a class="flatpickr-input-button" title="clear" data-clear>
-							{{ fontawesome('fas fa-xmark') }}
-						</a>
+							<a class="flatpickr-input-button" title="clear" data-clear>
+								{{ fontawesome('fas fa-xmark') }}
+							</a>
+						</div>
+						<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
+						<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
+						<button type="submit" class="button">{{ "FILTER"|trans }}</button>
+
+						<button type="button" class="button button-outlined" id="filter-map">{{ fontawesome('fas fa-magnifying-glass-location') }}</button>
 					</div>
-					<input type="hidden" id="inputStart" name="from" value="{{from}}"/>
-					<input type="hidden" id="inputEnd" name="to" value="{{to}}"/>
-					<button type="submit" class="button">{{ fontawesome('fas fa-magnifying-glass') }}</button>
-					<button type="button" class="button button-outlined" id="show-details-modal">{{ fontawesome('fas fa-table-list') }}</button>
 				</div>
-			</div>
-		</form>
-		<span id="show-filter" class="hiddenSearch" aria-hidden="true">
-			<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
-			<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
-		</span>
-	</div>
+			</form>
+			<span id="show-filter" class="hiddenSearch" aria-hidden="true">
+				<span class="angle-down">{{ fontawesome("fas fa-angle-down") }}</span>
+				<span class="angle-up">{{ fontawesome("fas fa-angle-up") }}</span>
+			</span>
+		</div>
+	{% endif %}
 
 {% endblock %}
 
 {% block bottom %}
-	<div id="mapid"></div>
+	<div id="mapid">
+		<button type="button" class="button button-show-marker-details" id="show-details-modal">{{ fontawesome('fas fa-table-list') }}</button>
+	</div>
 	<div id="details-modal" class="modal">
 		<div class="modal-inner">
 			<div class="modal-header">{{"LOCATION_DETAILS"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
 			</div>
-			<div class="modal-content">
-				<details>
-					<summary>123 Finanzeinträge</summary>
-					<table>
-						<thead>
-							<tr>
-								<th>{{ "DATE"|trans }}</th>
-								<th>{{ "COUNT"|trans }}</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</details>
-			</div>
+			<div class="modal-content"></div>
 		</div>
 	</div>
 	<div class="hidden">
