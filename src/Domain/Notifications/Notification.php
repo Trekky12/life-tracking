@@ -13,7 +13,7 @@ class Notification extends \App\Domain\DataObject {
         $this->user = $this->exists('user', $data) ? filter_var($data['user'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->category = $this->exists('category', $data) ? filter_var($data['category'], FILTER_SANITIZE_NUMBER_INT) : null;
         $this->title = $this->exists('title', $data) ? Utility::filter_string_polyfill($data['title']) : null;
-        $this->message = $this->exists('message', $data) ? Utility::filter_string_polyfill($data['message']) : null;
+        $this->message = $this->exists('message', $data) ? Utility::filter_string_polyfill($data['message'], false) : null;
         $this->seen = $this->exists('seen', $data) ? Utility::filter_string_polyfill($data['seen']) : null;
         $this->link = $this->exists('link', $data) ? Utility::filter_string_polyfill($data['link']) : null;
 

@@ -1,0 +1,1 @@
+ALTER TABLE notifications CHANGE message message TEXT NOT NULL; 

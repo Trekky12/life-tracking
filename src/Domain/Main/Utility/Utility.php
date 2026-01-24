@@ -78,13 +78,16 @@ class Utility {
     /**
      * @see https://stackoverflow.com/questions/69207368/constant-filter-sanitize-string-is-deprecated
      */
-    public static function filter_string_polyfill(string $string): string {
+    public static function filter_string_polyfill(string $string, bool $strip_tags = false): string {
         // ensure UTF-8 validity
         $string = mb_convert_encoding($string, 'UTF-8', 'UTF-8');
         // remove NULL bytes
         $string = str_replace("\0", '', $string);
+        
         // strip tags
-        $string = strip_tags($string);
+        if($strip_tags) {
+            $string = strip_tags($string);
+        }
 
         // trim
         return trim($string);

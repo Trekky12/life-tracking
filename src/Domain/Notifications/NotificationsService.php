@@ -270,7 +270,9 @@ class NotificationsService extends Service {
     public function notifyByCategory($params) {
         $category = array_key_exists("category", $params) ? Utility::filter_string_polyfill($params["category"]) : "";
         $title = array_key_exists("title", $params) ? filter_var($params["title"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
-        $message = array_key_exists("message", $params) ? filter_var($params["message"], FILTER_UNSAFE_RAW, FILTER_FLAG_NO_ENCODE_QUOTES) : "";
+        $message = array_key_exists("message", $params) ? html_entity_decode($params['message'], ENT_QUOTES | ENT_HTML5, 'UTF-8') : "";
+
+        $this->logger->debug('[PUSH] Query', ["params" => $params]);
 
         $this->sendNotificationsToUsersWithCategory($category, $title, $message);
 
