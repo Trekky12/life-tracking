@@ -69,96 +69,94 @@
 
 		</div>
 	</div>
-	<div id="event-modal" class="modal">
-		<div class="modal-inner">
-			<div class="modal-header">{{"DATAOBJECT_TIMESHEETS_SHEET"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
+	<dialog id="sheet-modal">
+		<div class="modal-header">{{"DATAOBJECT_TIMESHEETS_SHEET"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
+		</div>
+		<div class="modal-content">
+			<h2 class="date"></h2>
+
+			<div class="modified-date-wrapper hidden">
+				<h3>{{"TIMESHEETS_DATE_MODIFIED"|trans}}</h3>
+				<div class="modified-date"></div>
 			</div>
-			<div class="modal-content">
-				<h2 class="date"></h2>
 
-				<div class="modified-date-wrapper hidden">
-					<h3>{{"TIMESHEETS_DATE_MODIFIED"|trans}}</h3>
-					<div class="modified-date"></div>
-				</div>
-
-				<div class="customer">
-					<h3>
-						{% if project.customers_name_singular %}
-							{{project.customers_name_singular}}
-						{% else %}
-							{{"TIMESHEETS_CUSTOMER"|trans}}
-						{% endif %}
-					</h3>
-					<div class="customer-info">
-						<span class="customer-name"></span>
-						<a href="#" class="customer-notice-btn">
-							<button class="button button-text small">{{"NOTICE"|trans}}</button>
-						</a>
-					</div>
-				</div>
-
-				<div class="categories">
-					<h3>
-						{{"CATEGORIES"|trans}}
-					</h3>
-					<p class="categoriesName"></p>
-				</div>
-
-				<div class="requirements-wrapper hidden">
-					<h3>{{"TIMESHEETS_REQUIREMENTS"|trans}}</h3>
-					<div class="requirements"></div>
-				</div>
-
-				<div class="sheet-category-budgets-wrapper hidden">
-					<h3>{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</h3>
-					<div class="sheet-category-budgets"></div>
-				</div>
-
-				<div class="state">
-					<h3>{{"TIMESHEETS_STATE"|trans}}</h3>
-					<ul>
-						<li class="invoiced hidden">{{"TIMESHEETS_INVOICED"|trans}}</li>
-						<li class="billed hidden">{{"TIMESHEETS_BILLED"|trans}}</li>
-						<li class="payed hidden">{{"TIMESHEETS_PAYED"|trans}}</li>
-						<li class="happened hidden">{{"TIMESHEETS_HAPPENED"|trans}}</li>
-					</ul>
-					<p class="series hidden">{{"TIMESHEETS_IS_PART_OF_SERIES"|trans}}
-						(<span class="count"></span>
-						{{"TIMESHEETS_SERIES_COUNT"|trans}})</p>
-				</div>
-
-				<div class="previous hidden">
-					<h3>{{"TIMESHEETS_SERIES_PREVIOUS_ENTRIES"|trans}}</h3>
-					<ul></ul>
-				</div>
-
-				<div class="following hidden">
-					<h3>{{"TIMESHEETS_SERIES_FOLLOWING_ENTRIES"|trans}}</h3>
-					<ul></ul>
-				</div>
-				<div class="following-last hidden">
-					<p>
-						<b>{{"TIMESHEETS_SERIES_FOLLOWING_ENTRIES_LAST"|trans}}</b>
-					</p>
-				</div>
-
-				<div class="sheet-notice-btn">
-					<a href="#">
-						<button class="button button-outlined">{{"DATAOBJECT_TIMESHEETS_SHEET_NOTICE"|trans}}</button>
+			<div class="customer">
+				<h3>
+					{% if project.customers_name_singular %}
+						{{project.customers_name_singular}}
+					{% else %}
+						{{"TIMESHEETS_CUSTOMER"|trans}}
+					{% endif %}
+				</h3>
+				<div class="customer-info">
+					<span class="customer-name"></span>
+					<a href="#" class="customer-notice-btn">
+						<button class="button button-text small">{{"NOTICE"|trans}}</button>
 					</a>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<div class="buttons">
-					<a href="" class="btn-edit">
-						<button class="button" type="button">{{"EDIT"|trans}}</button>
-					</a>
-					<button class="button danger btn-delete" type="button">{{"DELETE"|trans}}</button>
-					<button class="button danger btn-delete btn-deletefollowing hidden" type="button" data-deletefollowing="1">{{"DELETE_THIS_AND_FOLLOWING"|trans}}</button>
-				</div>
+
+			<div class="categories">
+				<h3>
+					{{"CATEGORIES"|trans}}
+				</h3>
+				<p class="categoriesName"></p>
+			</div>
+
+			<div class="requirements-wrapper hidden">
+				<h3>{{"TIMESHEETS_REQUIREMENTS"|trans}}</h3>
+				<div class="requirements"></div>
+			</div>
+
+			<div class="sheet-category-budgets-wrapper hidden">
+				<h3>{{"TIMESHEETS_PROJECT_CATEGORY_BUDGETS"|trans}}</h3>
+				<div class="sheet-category-budgets"></div>
+			</div>
+
+			<div class="state">
+				<h3>{{"TIMESHEETS_STATE"|trans}}</h3>
+				<ul>
+					<li class="invoiced hidden">{{"TIMESHEETS_INVOICED"|trans}}</li>
+					<li class="billed hidden">{{"TIMESHEETS_BILLED"|trans}}</li>
+					<li class="payed hidden">{{"TIMESHEETS_PAYED"|trans}}</li>
+					<li class="happened hidden">{{"TIMESHEETS_HAPPENED"|trans}}</li>
+				</ul>
+				<p class="series hidden">{{"TIMESHEETS_IS_PART_OF_SERIES"|trans}}
+					(<span class="count"></span>
+					{{"TIMESHEETS_SERIES_COUNT"|trans}})</p>
+			</div>
+
+			<div class="previous hidden">
+				<h3>{{"TIMESHEETS_SERIES_PREVIOUS_ENTRIES"|trans}}</h3>
+				<ul></ul>
+			</div>
+
+			<div class="following hidden">
+				<h3>{{"TIMESHEETS_SERIES_FOLLOWING_ENTRIES"|trans}}</h3>
+				<ul></ul>
+			</div>
+			<div class="following-last hidden">
+				<p>
+					<b>{{"TIMESHEETS_SERIES_FOLLOWING_ENTRIES_LAST"|trans}}</b>
+				</p>
+			</div>
+
+			<div class="sheet-notice-btn">
+				<a href="#">
+					<button class="button button-outlined">{{"DATAOBJECT_TIMESHEETS_SHEET_NOTICE"|trans}}</button>
+				</a>
 			</div>
 		</div>
-	</div>
+		<div class="modal-footer">
+			<div class="buttons">
+				<a href="" class="btn-edit">
+					<button class="button" type="button">{{"EDIT"|trans}}</button>
+				</a>
+				<button class="button danger btn-delete" type="button">{{"DELETE"|trans}}</button>
+				<button class="button danger btn-delete btn-deletefollowing hidden" type="button" data-deletefollowing="1">{{"DELETE_THIS_AND_FOLLOWING"|trans}}</button>
+			</div>
+		</div>
+	</dialog>
 	<div class="hidden">
 		<div id="iconNotice">{{ fontawesome('fas fa-align-left') }}</div>
 		<div id="iconCheck">{{ fontawesome('fas fa-check') }}</div>

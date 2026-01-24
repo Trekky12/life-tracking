@@ -311,7 +311,7 @@ if (applyOptionsBtn) {
 
 var calendarEl = document.getElementById('timesheets_calendar');
 
-const eventModal = document.getElementById("event-modal");
+const sheetModal = document.getElementById("sheet-modal");
 
 if (calendarEl) {
 
@@ -410,10 +410,10 @@ if (calendarEl) {
         eventClick: function (info) {
             //alert('Event: ' + info.event.title);
             console.log(info.event.extendedProps);
-            let dateContent = eventModal.querySelector(".date");
+            let dateContent = sheetModal.querySelector(".date");
             dateContent.textContent = info.event.extendedProps.date;
 
-            let modifiedDateWrapper = eventModal.querySelector(".modified-date-wrapper");
+            let modifiedDateWrapper = sheetModal.querySelector(".modified-date-wrapper");
             let modifiedDateDiv = modifiedDateWrapper.querySelector(".modified-date");
             modifiedDateDiv.innerHTML = "";
 
@@ -425,7 +425,7 @@ if (calendarEl) {
                 modifiedDateWrapper.classList.add("hidden");
             }
 
-            let customer = eventModal.querySelector(".customer");
+            let customer = sheetModal.querySelector(".customer");
             let customerName = customer.querySelector(".customer-name");
             if (info.event.extendedProps.customer) {
                 customerName.textContent = info.event.extendedProps.customer;
@@ -443,7 +443,7 @@ if (calendarEl) {
                 customerNoticeButton.classList.add("hidden");
             }
 
-            let categories = eventModal.querySelector(".categories");
+            let categories = sheetModal.querySelector(".categories");
             let categoriesName = categories.querySelector(".categoriesName");
             if (info.event.extendedProps.categories) {
                 categoriesName.textContent = info.event.extendedProps.categories;
@@ -453,34 +453,34 @@ if (calendarEl) {
                 categories.classList.add("hidden");
             }
 
-            let state = eventModal.querySelector(".state");
+            let state = sheetModal.querySelector(".state");
             if (info.event.extendedProps.is_invoiced == 0 && info.event.extendedProps.is_billed == 0 && info.event.extendedProps.is_payed == 0 && info.event.extendedProps.is_happened == 0) {
                 state.classList.add("hidden");
             } else {
                 state.classList.remove("hidden");
 
-                let invoiced = eventModal.querySelector(".invoiced");
+                let invoiced = sheetModal.querySelector(".invoiced");
                 if (info.event.extendedProps.is_invoiced == 1) {
                     invoiced.classList.remove("hidden");
                 } else {
                     invoiced.classList.add("hidden");
                 }
 
-                let billed = eventModal.querySelector(".billed");
+                let billed = sheetModal.querySelector(".billed");
                 if (info.event.extendedProps.is_billed == 1) {
                     billed.classList.remove("hidden");
                 } else {
                     billed.classList.add("hidden");
                 }
 
-                let payed = eventModal.querySelector(".payed");
+                let payed = sheetModal.querySelector(".payed");
                 if (info.event.extendedProps.is_payed == 1) {
                     payed.classList.remove("hidden");
                 } else {
                     payed.classList.add("hidden");
                 }
 
-                let happened = eventModal.querySelector(".happened");
+                let happened = sheetModal.querySelector(".happened");
                 if (info.event.extendedProps.is_happened == 1) {
                     happened.classList.remove("hidden");
                 } else {
@@ -488,11 +488,11 @@ if (calendarEl) {
                 }
             }
 
-            let series = eventModal.querySelector(".series");
-            let previous = eventModal.querySelector('.previous');
-            let following = eventModal.querySelector('.following');
-            let following_last = eventModal.querySelector('.following-last');
-            let following_delete_btn = eventModal.querySelector('.btn-deletefollowing');
+            let series = sheetModal.querySelector(".series");
+            let previous = sheetModal.querySelector('.previous');
+            let following = sheetModal.querySelector('.following');
+            let following_last = sheetModal.querySelector('.following-last');
+            let following_delete_btn = sheetModal.querySelector('.btn-deletefollowing');
 
             let previous_list = previous.querySelector('ul');
             previous_list.innerHTML = "";
@@ -542,7 +542,7 @@ if (calendarEl) {
                 }
             }
 
-            let sheetCategoryBudgetsWrapper = eventModal.querySelector(".sheet-category-budgets-wrapper");
+            let sheetCategoryBudgetsWrapper = sheetModal.querySelector(".sheet-category-budgets-wrapper");
             let sheetCategoryBudgets = sheetCategoryBudgetsWrapper.querySelector(".sheet-category-budgets");
             sheetCategoryBudgets.innerHTML = "";
 
@@ -651,7 +651,7 @@ if (calendarEl) {
                 sheetCategoryBudgetsWrapper.classList.add("hidden");
             }
 
-            let requirementsWrapperDiv = eventModal.querySelector(".requirements-wrapper");
+            let requirementsWrapperDiv = sheetModal.querySelector(".requirements-wrapper");
             let requirementsDiv = requirementsWrapperDiv.querySelector(".requirements");
             requirementsDiv.innerHTML = "";
 
@@ -695,7 +695,7 @@ if (calendarEl) {
             }
 
 
-            let sheetNoticeButton = eventModal.querySelector(".sheet-notice-btn a");
+            let sheetNoticeButton = sheetModal.querySelector(".sheet-notice-btn a");
             if (info.event.extendedProps.sheet_notice) {
                 sheetNoticeButton.href = info.event.extendedProps.sheet_notice;
                 sheetNoticeButton.classList.remove("hidden");
@@ -703,10 +703,10 @@ if (calendarEl) {
                 sheetNoticeButton.classList.add("hidden");
             }
 
-            let editButton = eventModal.querySelector(".btn-edit");
+            let editButton = sheetModal.querySelector(".btn-edit");
             editButton.href = info.event.extendedProps.edit;
 
-            let deleteButtons = eventModal.querySelectorAll(".btn-delete");
+            let deleteButtons = sheetModal.querySelectorAll(".btn-delete");
             deleteButtons.forEach(deleteButton => {
                 deleteButton.dataset.url = info.event.extendedProps.delete;
 
@@ -719,18 +719,18 @@ if (calendarEl) {
             });
 
             freeze();
-            eventModal.classList.add('visible');
+            sheetModal.showModal();
         }
     });
     calendar.render();
 
     document.getElementById("modal-close-btn").addEventListener('click', function (e) {
-        hideEventModal();
+        hideSheetModal();
     });
     // Hide when clicking outside of modal
-    eventModal.addEventListener('click', function (e) {
-        if (e.target === eventModal) {
-            hideEventModal();
+    sheetModal.addEventListener('click', function (e) {
+        if (e.target === sheetModal) {
+            hideSheetModal();
         }
     });
 }
@@ -805,22 +805,22 @@ document.addEventListener('click', function (event) {
     }
 
     // Hide modal when any link on the modal is clicked
-    let modalButtons = event.target.closest('#event-modal a');
+    let modalButtons = event.target.closest('#sheet-modal a');
     if (modalButtons) {
-        hideEventModal();
+        hideSheetModal();
     }
 });
 
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' || event.keyCode === 27) {
-        hideEventModal();
+        hideSheetModal();
     }
 });
 
-function hideEventModal() {
+function hideSheetModal() {
     unfreeze();
-    if (eventModal) {
-        eventModal.classList.remove('visible');
+    if (sheetModal) {
+        sheetModal.close();
     }
 }
 

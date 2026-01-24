@@ -44,25 +44,23 @@
 {% block body %}
 	<div class="inner-content">
 
-		<div id="route-modal" class="modal">
-			<div class="modal-inner">
-				<div class="modal-header">{{"TRIPS_ROUTES"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
-				</div>
-				<div class="modal-content">
-					<table>
-						<thead>
-							<tr>
-								<th>{{ "NAME"|trans }}</th>
-								<th>{{ "DATE"|trans }}</th>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>
+		<dialog id="route-modal">
+			<div class="modal-header">{{"TRIPS_ROUTES"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
 			</div>
-		</div>
+			<div class="modal-content">
+				<table>
+					<thead>
+						<tr>
+							<th>{{ "NAME"|trans }}</th>
+							<th>{{ "DATE"|trans }}</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</dialog>
 		<div id="trip-map"></div>
 		<div class="page-content" id="trip_overview">
 

@@ -6,7 +6,7 @@ const filterSearchRecipes = document.getElementById('filterSearchRecipes');
 const noticeModal = document.getElementById("notice-modal");
 const noticeModalClose = document.getElementById("modal-close-btn");
 
-document.addEventListener('click', function (event) {
+document.addEventListener('click', async function (event) {
     let minus = event.target.closest('.minus');
     let add_notice = event.target.closest('.create-notice');
 
@@ -15,12 +15,13 @@ document.addEventListener('click', function (event) {
         let element = minus.parentElement.parentElement;
         let id = element.dataset.id;
 
-        let data = {"mealplan_recipe_id": id};
-        getCSRFToken(true).then(function (token) {
+        let data = { "mealplan_recipe_id": id };
+        try {
+            let token = await getCSRFToken(true);
             data['csrf_name'] = token.csrf_name;
             data['csrf_value'] = token.csrf_value;
 
-            return fetch(jsObject.recipes_mealplan_remove_recipe, {
+            let response = await fetch(jsObject.recipes_mealplan_remove_recipe, {
                 method: 'DELETE',
                 credentials: "same-origin",
                 headers: {
@@ -28,15 +29,14 @@ document.addEventListener('click', function (event) {
                 },
                 body: JSON.stringify(data)
             });
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            if (data["is_deleted"]) {
+
+            let result = await response.json();
+            if (result["is_deleted"]) {
                 element.remove();
             }
-        }).catch(function (error) {
+        } catch (error) {
             console.log(error);
-        });
+        }
 
     }
 
@@ -49,7 +49,7 @@ document.addEventListener('click', function (event) {
         noticeModal.querySelector("input[name='date']").value = date;
 
         freeze();
-        noticeModal.classList.add('visible');
+        noticeModal.showModal();
 
     }
 });
@@ -95,43 +95,40 @@ function move_recipe(evt) {
 
 }
 
-function createRecipeEntry(target, recipe, date, position, id, notice) {
+async function createRecipeEntry(target, recipe, date, position, id, notice) {
 
-    var data = {'recipe': recipe, 'date': date, 'position': position, 'id': id, 'notice': notice};
+    var data = { 'recipe': recipe, 'date': date, 'position': position, 'id': id, 'notice': notice };
 
-    return getCSRFToken().then(function (token) {
+    try {
+        const token = await getCSRFToken();
         data['csrf_name'] = token.csrf_name;
         data['csrf_value'] = token.csrf_value;
-
-        return fetch(jsObject.recipes_mealplan_move_recipe, {
+        const response = await fetch(jsObject.recipes_mealplan_move_recipe, {
             method: 'POST',
             credentials: "same-origin",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-
         });
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        if (data['status'] === 'success') {
-            let id = data["id"];
-            target.dataset.id = id;
+        const result = await response.json();
+        if (result['status'] === 'success') {
+            let result_id = result["id"];
+            target.dataset.id = result_id;
             target.querySelector('.minus').classList.remove("hidden");
         } else {
             target.remove();
         }
-    }).catch(function (error) {
+    } catch (error) {
         console.log(error);
         if (isOffline(error)) {
             let formData = new URLSearchParams(data).toString();
             saveDataWhenOffline(jsObject.recipes_mealplan_move_recipe, 'POST', formData);
         }
-    });
+    }
 }
 
-function getRecipes() {
+async function getRecipes() {
     let start = 0;
     let count = 5;
     let query = filterSearchRecipes ? filterSearchRecipes.value : '';
@@ -140,15 +137,15 @@ function getRecipes() {
 
     loadingIconRecipes.classList.remove("hidden");
 
-    return fetch(url, {
-        method: 'GET',
-        credentials: "same-origin",
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
         recipesList.innerHTML = '';
         if (data.status !== 'error') {
             loadingIconRecipes.classList.add("hidden");
@@ -164,9 +161,9 @@ function getRecipes() {
                 recipesList.appendChild(nothing_found);
             }
         }
-    }).catch(function (error) {
+    } catch (error) {
         console.log(error);
-    });
+    }
 }
 
 getRecipes();
@@ -180,7 +177,7 @@ if (filterSearchRecipes) {
 
 if (noticeModalClose) {
     noticeModalClose.addEventListener('click', function (e) {
-        noticeModal.classList.remove('visible');
+        noticeModal.close();
         noticeModal.querySelector('form').reset();
         unfreeze();
     });
@@ -205,10 +202,7 @@ noticeModal.querySelector("form").addEventListener('submit', function (e) {
         document.getElementById('loading-overlay').classList.add('hidden');
         unfreeze();
         noticeModal.querySelector('form').reset();
-        noticeModal.classList.remove("visible");
+        noticeModal.close();
     });
-
-
-
 
 });

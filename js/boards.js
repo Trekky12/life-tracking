@@ -144,9 +144,9 @@ document.addEventListener('click', async function (event) {
         archiveButtons.forEach(function (archiveBtn) {
             archiveBtn.dataset.archive = archive;
 
-            if(archiveBtn.dataset.cards){
+            if (archiveBtn.dataset.cards) {
                 archiveBtn.innerText = archive == 0 ? lang.boards_archive_with_cards : lang.boards_unarchive_with_cards;
-            }else{
+            } else {
                 archiveBtn.innerText = archive == 0 ? lang.boards_archive : lang.boards_unarchive;
             }
         });
@@ -203,9 +203,9 @@ document.addEventListener('click', async function (event) {
             archiveButtons.forEach(function (archiveBtn) {
                 archiveBtn.dataset.archive = archive_undo;
 
-                if(archiveBtn.dataset.cards){
+                if (archiveBtn.dataset.cards) {
                     archiveBtn.innerText = archive_undo == 0 ? lang.boards_archive_with_cards : lang.boards_unarchive_with_cards;
-                }else{
+                } else {
                     archiveBtn.innerText = archive_undo == 0 ? lang.boards_archive : lang.boards_unarchive;
                 }
             });
@@ -620,13 +620,13 @@ var editor = null;
 
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' || event.keyCode === 27) {
-        if (isVisible(stackModal)) {
+        if (stackModal.open) {
             closeDialog(stackModal);
         }
-        if (isVisible(labelModal)) {
+        if (labelModal.open) {
             closeDialog(labelModal);
         }
-        if (isVisible(cardModal)) {
+        if (cardModal.open) {
             closeDialog(cardModal);
         }
     }
@@ -745,7 +745,7 @@ function openDialog(element, isNew = false) {
     openedDialogData = formToJSON(element.querySelector('form'));
 
     freeze();
-    element.classList.add('visible');
+    element.showModal();
 
     if (!isMobile() && isNew) {
         element.querySelector('input[type="text"]').focus();
@@ -797,7 +797,7 @@ async function closeDialog(element, force = false) {
     }
 
     unfreeze();
-    element.classList.remove('visible');
+    element.close();
 
     // for cards
     if (element === cardModal) {
@@ -1170,9 +1170,9 @@ setArchived();
  * Auto Update page
  */
 setInterval(async function () {
-    var isOpenStack = isVisible(stackModal);
-    var isOpenCard = isVisible(cardModal);
-    var isOpenLabel = isVisible(labelModal);
+    var isOpenStack = stackModal.open;
+    var isOpenCard = cardModal.open;
+    var isOpenLabel = labelModal.open;
     var isSortableSelect = document.body.classList.contains("sortable-select");
     let isOpenStackMenu = isVisibleOnPage('.stack-wrapper .stack-menu');
 
@@ -1194,9 +1194,9 @@ async function updateBoard() {
 
 
 window.addEventListener('beforeunload', function (event) {
-    var isOpenStack = isVisible(stackModal);
-    var isOpenCard = isVisible(cardModal);
-    var isOpenLabel = isVisible(labelModal);
+    var isOpenStack = stackModal.open;
+    var isOpenCard = cardModal.open;
+    var isOpenLabel = labelModal.open;
 
     if (!allowedReload && (isOpenStack === true || isOpenCard === true || isOpenLabel === true)) {
         event.returnValue = lang.boards_really_close_page;
@@ -1309,9 +1309,9 @@ function createStack(stack_data) {
         archiveBtn.dataset.archive = stack_data.archive;
         archiveBtn.dataset.url = jsObject.stack_archive + stack_data.id;
 
-        if(archiveBtn.dataset.cards){
+        if (archiveBtn.dataset.cards) {
             archiveBtn.innerText = stack_data.archive == 0 ? lang.boards_archive_with_cards : lang.boards_unarchive_with_cards;
-        }else{
+        } else {
             archiveBtn.innerText = stack_data.archive == 0 ? lang.boards_archive : lang.boards_unarchive;
         }
     });

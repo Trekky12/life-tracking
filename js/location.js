@@ -601,12 +601,12 @@ function createMarker(data) {
 }
 
 document.getElementById("show-details-modal").addEventListener('click', function (e) {
-    detailsModal.classList.add('visible');
+    detailsModal.showModal();
     detailsModal.focus();
 });
 
 document.getElementById("modal-close-btn").addEventListener('click', function (e) {
-    detailsModal.classList.remove('visible');
+    detailsModal.close();
 });
 
 function addRouteDetails(countData) {
@@ -624,6 +624,7 @@ function addRouteDetails(countData) {
 
         const details = document.createElement("details");
         details.classList.add("dt-wrapper");
+        details.setAttribute("open", "");
         const summary = document.createElement("summary");
         const title = lang[`${type}_module_name`] ?? type;
         summary.textContent = `${title} (${total})`;

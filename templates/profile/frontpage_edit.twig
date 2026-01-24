@@ -25,21 +25,19 @@
 {% endblock %}
 
 {% block body %}
-	<div id="widget-modal" class="modal">
-		<div class="modal-inner">
-			<div class="modal-header">{{"WIDGET_OPTIONS"|trans}}<span class="edit-bar"></span>
-			</div>
-			<form>
-				<div class="modal-content"></div>
-				<div class="modal-footer">
-					<div class="buttons">
-						<input id="add-widget-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{"ADD"|trans}}"/>
-						<button id="modal-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
-					</div>
-				</div>
-			</form>
+	<dialog id="widget-modal">
+		<div class="modal-header">{{"WIDGET_OPTIONS"|trans}}<span class="edit-bar"></span>
 		</div>
-	</div>
+		<form>
+			<div class="modal-content"></div>
+			<div class="modal-footer">
+				<div class="buttons">
+					<input id="add-widget-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{"ADD"|trans}}"/>
+					<button id="modal-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
+				</div>
+			</div>
+		</form>
+	</dialog>
 
 	<div class="grid active">
 		{% for widget in list %}
@@ -52,7 +50,13 @@
 							{{ widget["id"] }})
 						</h3>
 						<div class="buttons">
-							<a href="#" class="btn-hide" data-id="{{ widget["id"] }}" data-state="{% if widget["is_hidden"] %}1{% else %}0{% endif %}">{% if widget["is_hidden"] %}{{ fontawesome('far fa-eye') }}{% else %}{{ fontawesome('far fa-eye-slash') }}{% endif %}</a>
+							<a href="#" class="btn-hide" data-id="{{ widget["id"] }}" data-state="{% if widget["is_hidden"] %}1{% else %}0{% endif %}">
+								{% if widget["is_hidden"] %}
+									{{ fontawesome('far fa-eye') }}
+								{% else %}
+									{{ fontawesome('far fa-eye-slash') }}
+								{% endif %}
+							</a>
 							<span class="handle">{{ fontawesome('fas fa-up-down-left-right') }}</span>
 							{% if widget["hasOptions"] %}
 								<a href="#" class="btn-edit" data-id="{{ widget["id"] }}">{{ fontawesome('fas fa-pen-to-square') }}</a>

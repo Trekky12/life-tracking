@@ -56,14 +56,9 @@ function getNewTokens(token) {
 }
 
 function createConfirmDialog(message, warning, callback) {
-    var confirmModal = document.createElement('div');
+    var confirmModal = document.createElement('dialog');
     confirmModal.id = 'confirm-modal';
-    confirmModal.classList.add('modal');
     confirmModal.classList.add('vertical-centered');
-    confirmModal.classList.add('small');
-
-    var modalInner = document.createElement('div');
-    modalInner.classList.add('modal-inner');
 
     var form = document.createElement('form');
 
@@ -104,20 +99,20 @@ function createConfirmDialog(message, warning, callback) {
     form.appendChild(modalContent);
     form.appendChild(modalFooter);
 
-    modalInner.appendChild(form);
-
-    confirmModal.appendChild(modalInner);
+    confirmModal.appendChild(form);
 
     document.body.appendChild(confirmModal);
 
-    confirmModal.classList.add('visible');
+    confirmModal.showModal();
 
     confirmButton.onclick = function () {
+        confirmModal.close();
         confirmModal.remove();
         callback(true);
     };
 
     cancelButton.onclick = function () {
+        confirmModal.close();
         confirmModal.remove();
         callback(false);
         document.removeEventListener('keydown', confirmKeyEvent);
@@ -128,11 +123,13 @@ function createConfirmDialog(message, warning, callback) {
     function confirmKeyEvent(event) {
         if (event.key === "Enter") {
             event.preventDefault();
+            confirmModal.close();
             confirmModal.remove();
             callback(true);
             document.removeEventListener('keydown', confirmKeyEvent);
         } else if (event.key === 'Escape' || event.keyCode === 27) {
             event.preventDefault();
+            confirmModal.close();
             confirmModal.remove();
             callback(false);
             document.removeEventListener('keydown', confirmKeyEvent);
@@ -151,13 +148,9 @@ function confirmDialog(message, warning = "") {
 }
 
 function createInputDialog(message, callback, pw) {
-    var inputModal = document.createElement('div');
+    var inputModal = document.createElement('dialog');
     inputModal.id = 'input-modal';
-    inputModal.classList.add('modal');
     inputModal.classList.add('vertical-centered');
-
-    var modalInner = document.createElement('div');
-    modalInner.classList.add('modal-inner');
 
     var form = document.createElement('form');
 
@@ -225,22 +218,22 @@ function createInputDialog(message, callback, pw) {
     form.appendChild(modalContent);
     form.appendChild(modalFooter);
 
-    modalInner.appendChild(form);
-
-    inputModal.appendChild(modalInner);
+    inputModal.appendChild(form);
 
     document.body.appendChild(inputModal);
 
-    inputModal.style.display = "block";
+    inputModal.showModal();
 
     inputField.focus();
 
     confirmButton.onclick = function () {
+        inputModal.close();
         inputModal.remove();
         callback(inputField.value);
     };
 
     cancelButton.onclick = function () {
+        inputModal.close();
         inputModal.remove();
         callback(false);
         document.removeEventListener('keydown', confirmKeyEvent);
@@ -251,11 +244,13 @@ function createInputDialog(message, callback, pw) {
     function confirmKeyEvent(event) {
         if (event.key === "Enter") {
             event.preventDefault();
+            inputModal.close();
             inputModal.remove();
             callback(inputField.value);
             document.removeEventListener('keydown', confirmKeyEvent);
         } else if (event.key === 'Escape' || event.keyCode === 27) {
             event.preventDefault();
+            inputModal.close();
             inputModal.remove();
             callback(false);
             document.removeEventListener('keydown', confirmKeyEvent);

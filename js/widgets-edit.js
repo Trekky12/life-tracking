@@ -40,7 +40,7 @@ const widgetModalContent = widgetModal.querySelector('.modal-content');
 const modalCloseBtn = document.getElementById("modal-close-btn");
 
 modalCloseBtn.addEventListener('click', function (e) {
-    widgetModal.style.display = 'none';
+    widgetModal.close();
 });
 
 const addWidgetBtn = document.getElementById("add-widget");
@@ -149,7 +149,7 @@ async function setModalContent(data, id = null) {
 
         document.getElementById('add-widget-modal').value = lang.update;
     }
-    widgetModal.style.display = 'block';
+    widgetModal.showModal();
 }
 
 function saveWidget(type, options = {}) {

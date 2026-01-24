@@ -611,7 +611,7 @@ function initMap() {
                                         setRoutingProfile(data["profile"]);
                                     }
                                     routeControl.setWaypoints(data["waypoints"]);
-                                    routeModal.classList.remove('visible');
+                                    routeModal.showModal();
 
                                     // select the day
                                     if (data["start_date"]) {
@@ -669,7 +669,7 @@ function initMap() {
                 }).catch(function (error) {
                     console.log(error);
                 }).finally(function () {
-                    routeModal.classList.add('visible');
+                    routeModal.showModal();
                     loadingOverlay.classList.add('hidden');
                     unfreeze();
                 });
@@ -973,7 +973,7 @@ function getDeleteWaypointLink(id, marker, isSaved = false) {
 }
 
 document.getElementById("modal-close-btn").addEventListener('click', function (e) {
-    routeModal.classList.remove('visible');
+    routeModal.close();
 });
 
 function setRoutingProfile(profile) {

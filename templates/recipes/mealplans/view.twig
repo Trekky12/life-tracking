@@ -104,26 +104,24 @@
 	</div>
 {% endblock %}
 {% block bottom %}
-	<div id="notice-modal" class="modal">
-		<div class="modal-inner">
-			<div class="modal-header">{{"ADD_NOTICE"|trans}}</div>
-			<form>
-				<div class="modal-content">
-					<input name="date" type="hidden" value="">
-					<div class="form-group">
-						<label for="inputNotice">{{"NOTICE"|trans}}</label>
-						<input class="form-control" id="inputNotice" name="notice" type="text">
-					</div>
+	<dialog id="notice-modal">
+		<div class="modal-header">{{"ADD_NOTICE"|trans}}</div>
+		<form>
+			<div class="modal-content">
+				<input name="date" type="hidden" value="">
+				<div class="form-group">
+					<label for="inputNotice">{{"NOTICE"|trans}}</label>
+					<input class="form-control" id="inputNotice" name="notice" type="text">
 				</div>
-				<div class="modal-footer">
-					<div class="buttons">
-						<input id="add-notice-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{"ADD"|trans}}"/>
-						<button id="modal-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
-					</div>
+			</div>
+			<div class="modal-footer">
+				<div class="buttons">
+					<input id="add-notice-modal" type="submit" class="button submit-btn" tabindex="-1" value="{{"ADD"|trans}}"/>
+					<button id="modal-close-btn" class="button button-text cancel" type="button">{{"CANCEL"|trans}}</button>
 				</div>
-			</form>
-		</div>
-	</div>
+			</div>
+		</form>
+	</dialog>
 	<div id="templates" class="hidden">
 		<div class="mealplan-recipe">
 			<div class="title">

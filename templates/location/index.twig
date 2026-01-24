@@ -70,13 +70,11 @@
 	<div id="mapid">
 		<button type="button" class="button button-show-marker-details" id="show-details-modal">{{ fontawesome('fas fa-table-list') }}</button>
 	</div>
-	<div id="details-modal" class="modal">
-		<div class="modal-inner">
-			<div class="modal-header">{{"LOCATION_DETAILS"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
-			</div>
-			<div class="modal-content"></div>
+	<dialog id="details-modal">
+		<div class="modal-header">{{"LOCATION_DETAILS"|trans}}<span class="modal-close" id="modal-close-btn">&times;</span>
 		</div>
-	</div>
+		<div class="modal-content"></div>
+	</dialog>
 	<div class="hidden">
 		<div id="iconClustering">{{ fontawesome('fas fa-object-group') }}</div>
 		<div id="iconLocation">{{ fontawesome('fas fa-location-arrow') }}</div>
