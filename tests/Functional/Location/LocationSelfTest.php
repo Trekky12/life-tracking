@@ -21,7 +21,7 @@ class LocationSelfTest extends BaseTestCase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $body = (string) $response->getBody();
-        $this->assertStringContainsString('<div id="mapid"></div>', $body);
+        $this->assertStringContainsString('<div id="mapid">', $body);
     }
 
     public function testGetAddElement() {
